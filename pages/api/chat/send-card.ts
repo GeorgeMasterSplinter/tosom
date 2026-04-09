@@ -1,6 +1,7 @@
 // pages/api/chat/send-card.ts
 import prisma from "@/lib/prisma";
-import { getServerSession } from "next-auth";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(req, res) {
   const session = await getServerSession(req, res, authOptions);
@@ -8,7 +9,9 @@ export default async function handler(req, res) {
 
   const { matchId, cardId } = req.body;
 
-  const card = await prisma.bliKjentCard.findUnique({ where: { id: cardId } });
+  const card = await prisma.bliKjentCard.findUnique({
+    where: { id: cardId },
+  });
 
   const conversation = await prisma.conversation.findFirst({
     where: { matchId },

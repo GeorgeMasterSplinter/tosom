@@ -1,13 +1,14 @@
-import NextAuth from "next-auth";
+import NextAuth, { SessionStrategy } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaClient } from "@prisma/client";
 import { compare } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
-export default NextAuth({
+export const authOptions = {
   session: {
-    strategy: "jwt",
+    strategy: "jwt" as const,
+
   },
 
   providers: [
@@ -51,4 +52,7 @@ export default NextAuth({
       return session;
     },
   },
-});
+};
+
+// 👇 Dette er viktig — NextAuth må fortsatt eksporteres som default
+export default NextAuth(authOptions);

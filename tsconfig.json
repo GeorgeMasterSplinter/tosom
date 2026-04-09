@@ -18,10 +18,13 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"]
-    }
+    },
+
+    "ignoreDeprecations": "6.0"
   },
   "include": [
     "next-env.d.ts",
+    "types/**/*.d.ts",
     "**/*.mts",
     "**/*.ts",
     "**/*.tsx"

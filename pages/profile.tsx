@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { getSession } from "next-auth/react";
-import prisma from "../../lib/prisma";
 
-export default function EditProfile({ profile }: any) {
+export default function ProfilePage({ profile }: any) {
   const [form, setForm] = useState(profile);
 
   async function handleSubmit(e: any) {
@@ -24,32 +23,32 @@ export default function EditProfile({ profile }: any) {
       <form onSubmit={handleSubmit}>
         <label>Navn</label>
         <input
-          value={form.name}
+          value={form.name || ""}
           onChange={(e) => setForm({ ...form, name: e.target.value })}
         />
 
         <label>Alder</label>
         <input
           type="number"
-          value={form.age}
+          value={form.age || ""}
           onChange={(e) => setForm({ ...form, age: Number(e.target.value) })}
         />
 
         <label>Kjønn</label>
         <input
-          value={form.gender}
+          value={form.gender || ""}
           onChange={(e) => setForm({ ...form, gender: e.target.value })}
         />
 
         <label>Bio</label>
         <textarea
-          value={form.bio}
+          value={form.bio || ""}
           onChange={(e) => setForm({ ...form, bio: e.target.value })}
         />
 
         <label>Interesser</label>
         <textarea
-          value={form.interests}
+          value={form.interests || ""}
           onChange={(e) => setForm({ ...form, interests: e.target.value })}
         />
 
@@ -68,11 +67,14 @@ export async function getServerSideProps(context: any) {
     };
   }
 
+  // Import Prisma ONLY on the server
+  const prisma = (await import("../lib/prisma")).default;
+
   const profile = await prisma.profile.findUnique({
     where: { userId: session.user.id },
   });
 
   return {
-    props: { profile },
+    props: { profile: JSON.parse(JSON.stringify(profile)) },
   };
 }

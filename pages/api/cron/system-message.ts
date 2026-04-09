@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 
 export default async function handler(req, res) {
-  const now = new Date();
+  const now: Date = new Date();
 
   const matches = await prisma.match.findMany({
     include: {
@@ -11,8 +11,11 @@ export default async function handler(req, res) {
   });
 
   for (const m of matches) {
-    const chatUntil = new Date(m.chatUntil);
-    const diffDays = Math.ceil((chatUntil - now) / (1000 * 60 * 60 * 24));
+    const chatUntil: Date = new Date(m.chatUntil);
+
+    const diffDays = Math.ceil(
+      (chatUntil.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
+    );
 
     // 14-dagers varsel
     if (diffDays === 14) {

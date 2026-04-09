@@ -36,7 +36,7 @@ export default function Step1() {
         <input
           type="number"
           value={form.age}
-          onChange={(e) => setForm({ ...form, age: Number(e.target.value) })}
+          onChange={(e) => setForm({ ...form, age: e.target.value })}
         />
 
         <label>Kjønn</label>
@@ -54,7 +54,7 @@ export default function Step1() {
         <input
           type="number"
           value={form.height}
-          onChange={(e) => setForm({ ...form, height: Number(e.target.value) })}
+          onChange={(e) => setForm({ ...form, height: e.target.value })}
         />
 
         <label>Bosted</label>

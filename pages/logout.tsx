@@ -1,10 +1,20 @@
-import { signOut } from "next-auth/react";
+import { getSession, signOut } from "next-auth/react";
 
-export default function Logout() {
-  return (
-    <div style={{ padding: 40 }}>
-      <h1>Logging out…</h1>
-      {signOut({ callbackUrl: "/login" })}
-    </div>
-  );
+export default function LogoutPage() {
+  return null;
+}
+
+export async function getServerSideProps(context: any) {
+  const session = await getSession(context);
+
+  if (session) {
+    await signOut({ redirect: false });
+  }
+
+  return {
+    redirect: {
+      destination: "/login",
+      permanent: false,
+    },
+  };
 }

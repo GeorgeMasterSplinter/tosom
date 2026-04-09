@@ -1,87 +1,66 @@
 import { useState } from "react";
 import { getSession } from "next-auth/react";
-import prisma from "../../lib/prisma";
-import OnboardingLayout from "../../components/OnboardingLayout";
 
-export default function EditProfile({ profile }: any) {
+export default function EditProfile({ profile }) {
   const [form, setForm] = useState(profile);
 
-  async function handleSubmit(e: any) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
-    await fetch("/api/profile", {
+    await fetch("/api/profile/update", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
     });
 
-    window.location.href = "/profile";
+    alert("Profil oppdatert");
   }
 
   return (
-    <OnboardingLayout>
-      <div style={{ padding: 40 }}>
-        <h1>Rediger profil</h1>
+    <div>
+      <h1>Rediger profil</h1>
 
-        <form onSubmit={handleSubmit}>
-          <label>Navn</label>
-          <input
-            value={form.name || ""}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-          />
+      <form onSubmit={handleSubmit}>
+        <label>Navn</label>
+        <input
+          value={form.name || ""}
+          onChange={(e) => setForm({ ...form, name: e.target.value })}
+        />
 
-          <label>Alder</label>
-          <input
-            type="number"
-            value={form.age || ""}
-            onChange={(e) => setForm({ ...form, age: Number(e.target.value) })}
-          />
+        <label>Bio</label>
+        <textarea
+          value={form.bio || ""}
+          onChange={(e) => setForm({ ...form, bio: e.target.value })}
+        />
 
-          <label>Kjønn</label>
-          <input
-            value={form.gender || ""}
-            onChange={(e) => setForm({ ...form, gender: e.target.value })}
-          />
-
-          <label>Bio</label>
-          <textarea
-            value={form.bio || ""}
-            onChange={(e) => setForm({ ...form, bio: e.target.value })}
-          />
-
-          <label>Interesser</label>
-          <textarea
-            value={form.interests || ""}
-            onChange={(e) => setForm({ ...form, interests: e.target.value })}
-          />
-
-          <button type="submit">Lagre</button>
-        </form>
-      </div>
-    </OnboardingLayout>
+        <button type="submit">Lagre</button>
+      </form>
+    </div>
   );
 }
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context) {
   const session = await getSession(context);
 
   if (!session) {
     return {
-      redirect: { destination: "/login", permanent: false },
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
     };
   }
+
+  // Import Prisma *only on the server*
+  const prisma = (await import("../../lib/prisma")).default;
 
   const profile = await prisma.profile.findUnique({
     where: { userId: session.user.id },
   });
 
-  if (!profile) {
-    return {
-      redirect: { destination: "/onboarding", permanent: false },
-    };
-  }
-
   return {
-    props: { profile },
+    props: {
+      profile: JSON.parse(JSON.stringify(profile)),
+    },
   };
 }

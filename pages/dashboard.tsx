@@ -1,170 +1,103 @@
-{matches.map((m) => {
-  const now = new Date();
-  const chatEnded = new Date(m.chatUntil) < now;
-  const decisionPhase = new Date(m.decideUntil) < now;
+import { useEffect, useState } from "react";
+import Link from "next/link";
+
+export default function Dashboard() {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    fetch("/api/dashboard")
+      .then((res) => res.json())
+      .then(setData);
+  }, []);
+
+  if (!data) return <div className="p-6 text-neutral-400">Laster…</div>;
+
+  const { journey, matches } = data;
 
   return (
-    <div
-      key={m.id}
-      className="bg-neutral-900 p-4 rounded-xl border border-neutral-800"
-    >
-      <div className="flex justify-between items-center mb-3">
-        <div>
-          <div className="text-lg font-semibold">
-            {m.matchUser.profile.name}
-          </div>
-          <div className="text-neutral-400 text-sm">
-            Matchscore: {m.score}
-          </div>
-        </div>
+    <div className="p-6 space-y-8 text-white bg-neutral-950 min-h-screen">
 
-        {!decisionPhase && (
+      {/* Journey status */}
+      {journey && (
+        <div className="bg-neutral-900 p-4 rounded-xl border border-neutral-800">
+          <h2 className="text-lg font-semibold mb-2">Din reise</h2>
+          <p className="text-neutral-400 mb-4">
+            Du er på dag {journey.day} av 8.
+          </p>
           <Link
-            href={`/chat/${m.id}`}
-            className="bg-blue-600 px-4 py-2 rounded-lg"
+            href="/onboarding"
+            className="bg-blue-600 px-4 py-2 rounded-lg inline-block"
           >
-            Åpne chat
+            Fortsett reisen
           </Link>
-        )}
-      </div>
-
-      {/* Breakdown */}
-      <div className="grid grid-cols-2 gap-2 text-sm text-neutral-400">
-        <div>Base: {m.breakdown.base}</div>
-        <div>Deep: {m.breakdown.deep}</div>
-        <div>Resonans: {m.breakdown.resonance}</div>
-        <div>Semantikk: {m.breakdown.semantic}</div>
-      </div>
-
-      {/* Radar Chart */}
-      <div className="mt-4">
-        <RadarChart breakdown={m.breakdown} />
-      </div>
-
-      {/* Timers */}
-      <div className="mt-3 text-xs text-neutral-500">
-        Chat til: {new Date(m.chatUntil).toLocaleDateString()}
-        <br />
-        Beslutning til: {new Date(m.decideUntil).toLocaleDateString()}
-      </div>
-
-      {/* Decision phase */}
-      {decisionPhase && (
-        <div className="mt-4 p-3 bg-neutral-800 rounded-lg">
-          {!m.decision_userA ? (
-            <div className="space-y-2">
-              <div className="text-neutral-300">Vil du gå videre?</div>
-              <button
-                onClick={() => sendDecision(m.id, "yes")}
-                className="bg-green-600 px-4 py-2 rounded-lg w-full"
-              >
-                Ja, jeg vil gå videre
-              </button>
-              <button
-                onClick={() => sendDecision(m.id, "no")}
-                className="bg-red-600 px-4 py-2 rounded-lg w-full"
-              >
-                Nei, det føles ikke riktig
-              </button>
-            </div>
-          ) : (
-            <div className="text-neutral-400">
-              Du har valgt: {m.decision_userA === "yes" ? "JA" : "NEI"}
-            </div>
-          )}
         </div>
       )}
 
-      {/* Reveal result */}
-      {m.decision_userA && m.decision_userB && (
-        <div className="mt-4 p-3 bg-neutral-900 rounded-lg border border-neutral-700">
-          {m.decision_userA === "yes" && m.decision_userB === "yes" && (
-            <div className="text-green-400">
-              🎉 Dere valgte begge JA!  
-              Kontaktinfo blir tilgjengelig her.
-            </div>
-          )}
+      {/* Matches */}
+      <div className="space-y-4">
+        <h2 className="text-lg font-semibold">Dine matcher</h2>
 
-          {m.decision_userA === "yes" && m.decision_userB === "no" && (
-            <div className="text-neutral-400">
-              Matchen din valgte NEI.  
-              Det betyr ikke at noe er galt med deg.
-            </div>
-          )}
-
-          {m.decision_userA === "no" && m.decision_userB === "yes" && (
-            <div className="text-neutral-400">
-              Du valgte NEI.  
-              Matchen får en vennlig beskjed.
-            </div>
-          )}
-
-          {m.decision_userA && m.decision_userB && (
-  <div className="mt-4 p-4 bg-neutral-900 rounded-lg border border-neutral-700 space-y-3">
-
-    {/* JA + JA */}
-    {m.decision_userA === "yes" && m.decision_userB === "yes" && (
-      <div className="space-y-3">
-        <div className="text-green-400 text-lg font-semibold">
-          🎉 Dere valgte begge JA!
-        </div>
-
-        <div className="text-neutral-300">
-          Her er kontaktinformasjonen deres.  
-          Ta kontakt når det føles riktig.
-        </div>
-
-        <div className="bg-neutral-800 p-3 rounded-lg border border-neutral-700 space-y-2">
-          <div>
-            <span className="text-neutral-400">Navn:</span>
-            <span className="ml-2 text-white">{m.matchUser.profile.name}</span>
+        {matches.length === 0 && (
+          <div className="text-neutral-400">
+            Ingen matcher ennå. Vi jobber med saken.
           </div>
+        )}
 
-          {m.matchUser.profile.email && (
-            <div>
-              <span className="text-neutral-400">E‑post:</span>
-              <span className="ml-2 text-white">{m.matchUser.profile.email}</span>
+        {matches.map((m) => {
+          const chatLocked = new Date(m.chatUntil) < new Date();
+          const decisionPhase = new Date(m.decideUntil) < new Date();
+
+          return (
+            <div
+              key={m.id}
+              className="bg-neutral-900 p-4 rounded-xl border border-neutral-800"
+            >
+              <div className="flex justify-between items-center mb-3">
+                <div>
+                  <div className="text-lg font-semibold">
+                    {m.matchUser.profile.name}
+                  </div>
+                  <div className="text-neutral-400 text-sm">
+                    Matchscore: {m.score}
+                  </div>
+                </div>
+
+                {!decisionPhase && !chatLocked && (
+                  <Link
+                    href={`/chat/${m.id}`}
+                    className="bg-blue-600 px-4 py-2 rounded-lg"
+                  >
+                    Åpne chat
+                  </Link>
+                )}
+              </div>
+
+              {/* Breakdown */}
+              <div className="grid grid-cols-2 gap-2 text-sm text-neutral-400">
+                <div>Base: {m.breakdown.base}</div>
+                <div>Deep: {m.breakdown.deep}</div>
+                <div>Resonans: {m.breakdown.resonance}</div>
+                <div>Semantikk: {m.breakdown.semantic}</div>
+              </div>
+
+              {/* Timers */}
+              <div className="mt-3 text-xs text-neutral-500">
+                Chat til: {new Date(m.chatUntil).toLocaleDateString()}
+                <br />
+                Beslutning til: {new Date(m.decideUntil).toLocaleDateString()}
+              </div>
+
+              {/* Chat locked */}
+              {chatLocked && (
+                <div className="mt-2 text-xs text-red-400">
+                  Chatten er avsluttet.
+                </div>
+              )}
+
             </div>
-          )}
-
-          {m.matchUser.profile.phone && (
-            <div>
-              <span className="text-neutral-400">Telefon:</span>
-              <span className="ml-2 text-white">{m.matchUser.profile.phone}</span>
-            </div>
-          )}
-        </div>
+          );
+        })}
       </div>
-    )}
-
-    {/* JA + NEI */}
-    {m.decision_userA === "yes" && m.decision_userB === "no" && (
-      <div className="text-neutral-400">
-        Matchen din valgte NEI.  
-        Det betyr ikke at noe er galt med deg.
-      </div>
-    )}
-
-    {/* NEI + JA */}
-    {m.decision_userA === "no" && m.decision_userB === "yes" && (
-      <div className="text-neutral-400">
-        Du valgte NEI.  
-        Matchen får en vennlig beskjed.
-      </div>
-    )}
-
-    {/* NEI + NEI */}
-    {m.decision_userA === "no" && m.decision_userB === "no" && (
-      <div className="text-neutral-500">
-        Dere valgte begge NEI.  
-        Matchen avsluttes stille.
-      </div>
-    )}
-  </div>
-)}
-
-        </div>
-      )}
-    </div> // ← riktig plassering
+    </div>
   );
-})}
+}

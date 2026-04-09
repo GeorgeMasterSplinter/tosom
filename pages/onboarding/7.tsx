@@ -26,7 +26,7 @@ export default function Step7() {
     <OnboardingLayout>
       <h1>Steg 7: Selvrefleksjon</h1>
       <p>
-        Dette er din mulighet til å vise hvem du er — ikke bare hva du gjør. 
+        Dette er din mulighet til å vise hvem du er — ikke bare hva du gjør.
         Svarene dine hjelper oss å forstå deg på et dypere nivå.
       </p>
 
@@ -50,4 +50,25 @@ export default function Step7() {
         <textarea
           value={form.proudOf}
           onChange={(e) => setForm({ ...form, proudOf: e.target.value })}
-          placeholder
+          placeholder="Hva er du stolt av?"
+        />
+
+        <label>Hva frykter du i relasjoner?</label>
+        <textarea
+          value={form.fears}
+          onChange={(e) => setForm({ ...form, fears: e.target.value })}
+          placeholder="Hva er du redd for skal skje?"
+        />
+
+        <label>Hva håper du å finne i en partner?</label>
+        <textarea
+          value={form.partnerHope}
+          onChange={(e) => setForm({ ...form, partnerHope: e.target.value })}
+          placeholder="Hva ønsker du deg i en relasjon?"
+        />
+
+        <button type="submit">Neste</button>
+      </form>
+    </OnboardingLayout>
+  );
+}

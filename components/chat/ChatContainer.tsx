@@ -29,7 +29,7 @@ export default function ChatContainer({ matchId }) {
       setMessages((prev) => [...prev, newMessage]);
     });
 
-    return () => unsubscribe && unsubscribe();
+    return;
   }, [matchId]);
 
   if (!match) {

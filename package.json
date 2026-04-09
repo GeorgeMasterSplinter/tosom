@@ -9,11 +9,19 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "16.2.2",
-    "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "@prisma/client": "^5.14.0",
+    "bcryptjs": "^3.0.3",
+    "chart.js": "^4.5.1",
+    "next": "14.2.5",
+    "next-auth": "^4.24.13",
+    "prisma": "^5.14.0",
+    "react": "^18.2.0",
+    "react-chartjs-2": "^5.3.1",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@types/node": "25.5.2",
+    "@types/react": "19.2.14",
     "eslint": "9.39.4",
     "eslint-config-next": "16.2.2"
   }

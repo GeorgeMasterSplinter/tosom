@@ -1,0 +1,218 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// -----------------------------
+// USER
+// -----------------------------
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+
+  profile Profile?
+
+  // Matches der brukeren er "eier"
+  matches Match[] @relation("MatchOwner")
+
+  // Matches der brukeren er "den andre"
+  matchedBy Match[] @relation("MatchUser")
+
+  messages Message[]
+  journeys Journey[]
+
+  systemMessages SystemMessage[]
+}
+
+// -----------------------------
+// PROFILE
+// -----------------------------
+model Profile {
+  id        String @id @default(cuid())
+  userId    String @unique
+  name      String
+  email     String?
+  phone     String?
+  age       Int?
+  bio       String?
+
+  user      User   @relation(fields: [userId], references: [id])
+}
+
+
+  // --- Fakta ---
+  gender             String?
+  height             Int?
+  location           String?
+  children           String?
+  relationshipStatus String?
+
+  // --- Livsstil ---
+  dayRhythm      String?
+  weekendStyle   String?
+  travelStyle    String?
+  activityLevel  String?
+  socialLevel    String?
+  financialStyle String?
+
+  // --- Personlighet ---
+  structureVsSpontaneity String?
+  calmVsIntense          String?
+  emotionalVsLogical     String?
+  conflictStyle          String?
+  planningStyle          String?
+
+  // --- Relasjonsstil ---
+  loveLanguage String?
+  whatIGive    String?
+  whatINeed    String?
+  expectations String?
+  dealbreakers String?
+
+  // --- Hverdagsbeskrivelse ---
+  dailyLife      String?
+  relaxStyle     String?
+  energySources  String?
+  energyDrainers String?
+
+  // --- Fremtidsønsker ---
+  wantChildren     String?
+  wantCohabitation String?
+  wantMarriage     String?
+  futureVision     String?
+
+  // --- Selvrefleksjon ---
+  selfView    String?
+  workingOn   String?
+  proudOf     String?
+  fears       String?
+  partnerHope String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// -----------------------------
+// MATCH REQUEST
+// -----------------------------
+model MatchRequest {
+  id           String   @id @default(cuid())
+  userId       String
+  matchReadyAt DateTime
+  processed    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+}
+
+// -----------------------------
+// MATCH
+// -----------------------------
+model Match {
+  id String @id @default(cuid())
+
+  // Hvem som får matchen
+  userId String
+  user   User   @relation("MatchOwner", fields: [userId], references: [id])
+
+  // Hvem de matches med
+  matchUserId String
+  matchUser   User   @relation("MatchUser", fields: [matchUserId], references: [id])
+
+  score     Int
+  breakdown Json
+  quality   String
+
+  chatUntil   DateTime
+  decideUntil DateTime
+
+  decision_userA String?
+  decision_userB String?
+
+  createdAt DateTime @default(now())
+
+  conversation Conversation?
+}
+
+// -----------------------------
+// CONVERSATION + MESSAGES
+// -----------------------------
+model Conversation {
+  id        String   @id @default(cuid())
+  matchId   String   @unique
+  createdAt DateTime @default(now())
+
+  match    Match     @relation(fields: [matchId], references: [id])
+  messages Message[]
+}
+
+model Message {
+  id             String   @id @default(cuid())
+  conversationId String
+  senderId       String
+  content        String
+  createdAt      DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id])
+  sender       User         @relation(fields: [senderId], references: [id])
+}
+
+// -----------------------------
+// JOURNEY
+// -----------------------------
+model Journey {
+  id        String   @id @default(cuid())
+  userId    String
+  day       Int      @default(1)
+  completed Boolean  @default(false)
+  startedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User          @relation(fields: [userId], references: [id])
+  tasks JourneyTask[]
+}
+
+model JourneyTask {
+  id        String   @id @default(cuid())
+  journeyId String
+  day       Int
+  question  String
+  answer    String?
+  completed Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  journey Journey @relation(fields: [journeyId], references: [id])
+}
+
+// -----------------------------
+// BLI KJENT KORT
+// -----------------------------
+model BliKjentCard {
+  id        String       @id @default(cuid())
+  text      String
+  category  CardCategory
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+enum CardCategory {
+  LIGHT
+  MEDIUM
+  DEEP
+}
+
+model SystemMessage {
+  id        String   @id @default(cuid())
+  userId    String
+  matchId   String?
+  type      String // "14_day_warning", "7_day_warning", "1_day_warning", "chat_closed", "partner_yes", "partner_no"
+  content   String
+  createdAt DateTime @default(now())
+  read      Boolean  @default(false)
+
+  user User @relation(fields: [userId], references: [id])
+}

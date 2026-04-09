@@ -6,8 +6,8 @@ export default function Home() {
       </h1>
 
       <p className="text-gray-400 text-lg md:text-xl mt-6 max-w-xl text-center leading-relaxed">
-        ToSom er en rolig, moden og målrettet plattform for voksne som ønsker
-        ekte relasjoner – ikke endeløs sveiping.
+        
+        UNDER CONSTRUCTION
       </p>
 
       <div className="mt-12 flex gap-4">

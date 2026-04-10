@@ -1,4 +1,4 @@
-import Header from '../../components/Header'
+
 
 export default function MessagesList() {
   // Midlertidige dummy-samtaler

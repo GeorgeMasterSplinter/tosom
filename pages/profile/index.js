@@ -35,7 +35,7 @@ export default function MyProfile() {
   if (!profile) {
     return (
       <>
-        <Header />
+      
         <main className="min-h-screen bg-black text-white px-6 py-20">
           Laster profil…
         </main>
@@ -45,7 +45,7 @@ export default function MyProfile() {
 
   return (
     <>
-      <Header />
+      
 
       <main className="min-h-screen bg-black text-white px-6 py-20">
         <h1 className="text-3xl font-semibold mb-6">Min profil</h1>

@@ -34,7 +34,7 @@ export default function ProfilePage() {
 
   return (
     <>
-      <Header />
+     
 
       <main className="min-h-screen bg-black text-white px-6 py-24 flex flex-col items-center">
         {!profile ? (

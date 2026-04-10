@@ -25,7 +25,7 @@ export default function MessagesList() {
 
   return (
     <>
-      <Header />
+    
 
       <main className="min-h-screen bg-black text-white px-6 py-24 flex flex-col items-center">
         <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-center">

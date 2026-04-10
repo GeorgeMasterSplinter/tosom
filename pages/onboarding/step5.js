@@ -15,7 +15,7 @@ export default function Step5() {
 
   return (
     <>
-      <Header />
+      
 
       <main className="min-h-screen bg-black text-white flex flex-col items-center px-6 py-24">
         <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-center">

@@ -1,4 +1,7 @@
 import Pusher from "pusher-js";
+import { EventEmitter } from 'events'
+
+export const events = new EventEmitter()
 
 export function subscribeToMatchChannel(matchId, callback) {
   const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {

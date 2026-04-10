@@ -3,7 +3,6 @@
 export default function Home() {
   return (
     <>
-      <Header />
 
       {/* HERO */}
       <section className="w-full bg-black text-white py-32 px-6 flex flex-col items-center">

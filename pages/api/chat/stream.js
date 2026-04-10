@@ -1,23 +1,12 @@
-import { events } from '../../../lib/realtime'
+import { EventEmitter } from 'events'
 
-export default function handler(req, res) {
-  res.setHeader('Content-Type', 'text/event-stream')
-  res.setHeader('Cache-Control', 'no-cache')
-  res.setHeader('Connection', 'keep-alive')
+export const events = new EventEmitter()
 
-  const { userId } = req.query
+// Hvis du har andre funksjoner, behold dem:
+export function sendMessage(payload) {
+  events.emit('message', payload)
+}
 
-  const send = (event) => {
-    if (event.to === userId || event.from === userId) {
-      res.write(`data: ${JSON.stringify(event)}\n\n`)
-    }
-  }
-
-  events.on('message', send)
-  events.on('typing', send)
-
-  req.on('close', () => {
-    events.off('message', send)
-    events.off('typing', send)
-  })
+export function sendTyping(payload) {
+  events.emit('typing', payload)
 }

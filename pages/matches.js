@@ -18,7 +18,7 @@ export default function Matches() {
 
   return (
     <>
-      <Header />
+    
 
       <main className="min-h-screen bg-black text-white px-6 py-20">
         <h1 className="text-3xl font-semibold mb-8">Dine matcher</h1>

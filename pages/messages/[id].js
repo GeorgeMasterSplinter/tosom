@@ -70,7 +70,7 @@ export default function Chat() {
 
   return (
     <>
-      <Header />
+      
 
       <main className="min-h-screen bg-black text-white px-6 py-20">
         <h1 className="text-2xl font-semibold mb-6">Chat</h1>

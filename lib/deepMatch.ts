@@ -1,15 +1,33 @@
+type ScoredMatch = {
+  profile: MatchUser;
+  score: number;
+  layers: {
+    base: number;
+    semantic: number;
+    resonance: number;
+  };
+};
+
+type MatchUser = {
+  id: string;
+  userId: string;
+  gender: string | null;
+  age: number | null;
+  location: string | null;
+  bio: string | null;
+  interests: string[];
+  wantChildren: boolean | null;
+  wantCohabitation: boolean | null;
+  wantMarriage: boolean | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
 import prisma from "./prisma";
 import { deepSemanticScore } from "./semantic";
 import { emotionalResonance } from "./resonance";
 import { baseCompatibilityScore } from "./baseScore";
 
-export async function deepMatch(userId: string) {
-  const user = await prisma.profile.findUnique({ where: { userId } });
-  if (!user) return [];
-
-  const others = await prisma.profile.findMany({
-    where: { userId: { not: userId } },
-  });
+export async function deepMatch(user: MatchUser, others: MatchUser[]) {
 
   // LAG 1: Hard filters
   const filtered = others.filter((p) => {
@@ -20,7 +38,7 @@ export async function deepMatch(userId: string) {
   });
 
   // LAG 2–4: Deep scoring
-  const scored = [];
+  const scored: ScoredMatch[] = [];
 
   for (const p of filtered) {
     const base = baseCompatibilityScore(user, p); // 0–100

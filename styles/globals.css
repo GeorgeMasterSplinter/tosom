@@ -1,26 +1,119 @@
-html,
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+ /* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+ 
+/* Global color palette */
+.bg-background {
+  background-color: #FAFAF9;
+}
+.text-dark {
+  color: #1A1A1A;
+}
+.text-secondary {
+  color: #4A4A4A;
+}
+.bg-beige {
+  background-color: #EDEAE6;
+}
+.bg-light-gray {
+  background-color: #F3F3F2;
+}
+.text-gold {
+  color: #CBAA7A;
+}
+
 body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  background-color: white;
+  color: #1A1A1A; /* dempet sort */
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.75;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+ /* P - elementer med jevn spacing */
+p {
+  margin-bottom: 1.25rem;
+  line-height: 1.65;
 }
 
-* {
-  box-sizing: border-box;
+ /* Sekundær tekstfarge */
+.text-secondary {
+  color: #4A4A4A;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+ /* Fade-in animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
-  body {
-    color: white;
-    background: black;
+
+.animate-fadeIn {
+  animation: fadeIn 0.6s ease forwards;
+}
+
+ /* Rolig fade-in for refleksjonsboks */
+@keyframes fadeInSubtle {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeInSubtle 0.6s ease-out;
+}
+
+.delay-200 {
+  animation-delay: 0.2s;
+}
+
+.delay-500 {
+  animation-delay: 0.5s;
+}
+
+ /* Premium touches */
+  .hover-scale-102 {
+    transition: transform 200ms ease-out;
+  }
+  .hover-scale-102:hover {
+    transform: scale(1.02);
+  }
+  .shadow-pulse {
+    box-shadow: 0 0 0 2px rgba(203,170,122,0.2);
+  }
+  .animate-fade-subtle {
+    animation: fadeIn 250ms ease-out forwards;
+  }
+img {
+  -webkit-user-drag: none;
+}
+
+button {
+  @apply transition active:scale-[0.98];
+}
+
+ /* Timeline pulse animation */
+@keyframes pulseDot {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+
+section {
+  margin-top: 24px;
+  margin-bottom: 24px;
 }

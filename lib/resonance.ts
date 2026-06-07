@@ -1,25 +1,33 @@
-// lib/resonance.ts
+// lib/resonance.ts — basert på det nye Profile-schema-et (bio, interests, gender, age)
 
 export async function emotionalResonance(a, b) {
-  const combinedA = `
-    ${a.selfView}
-    ${a.workingOn}
-    ${a.fears}
-    ${a.partnerHope}
-  `;
+  let resonance = 0;
 
-  const combinedB = `
-    ${b.selfView}
-    ${b.workingOn}
-    ${b.fears}
-    ${b.partnerHope}
-  `;
+  // Felles interesser — kjerne i resonans
+  if (Array.isArray(a.interests) && Array.isArray(b.interests)) {
+    const common = a.interests.filter((i) => b.interests.includes(i));
+    resonance += common.length * 12; // maks 60 poeng
+  }
 
-  // --- AI CALL (pseudo) ---
-  // const score = await llm.compareTone(combinedA, combinedB);
+  // Bio-ordoverlap — emosjonell djupde
+  if (a.bio && b.bio) {
+    const wordsA = new Set(a.bio.toLowerCase().split(/\s+/).filter((w) => w.length > 3));
+    const wordsB = new Set(b.bio.toLowerCase().split(/\s+/).filter((w) => w.length > 3));
+    const overlap = [...wordsA].filter((w) => wordsB.has(w));
+    resonance += Math.min(overlap.length * 5, 30); // maks 30 poeng
+  }
 
-  // For nå: dummy-score
-  const score = Math.random() * 100;
+  // Samkjønna attraksjon kan auke resonans (dersom begge har gender definert)
+  if (a.gender && b.gender && a.gender === b.gender) {
+    resonance += 10;
+  }
 
-  return score;
+  // Aldersnearleik — nærmare = sterkare resonans
+  if (a.age && b.age) {
+    const diff = Math.abs(a.age - b.age);
+    if (diff <= 3) resonance += 10;
+    else if (diff <= 7) resonance += 5;
+  }
+
+  return Math.min(resonance, 100);
 }

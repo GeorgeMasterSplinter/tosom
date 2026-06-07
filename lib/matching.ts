@@ -1,34 +1,15 @@
-import prisma from "./prisma";
-import { MATCH_WEIGHTS } from "@/config/matching";
+// lib/matching.ts — re-exporter alle nye moduler for bakoverkompatibilitet
+// og beheld gammel calculateMatchScore for eksisterande kode som brukar det.
 
-import { baseCompatibilityScore as baseScore } from "./baseScore";
-import { emotionalResonance as resonanceScore } from "./resonance";
-import { deepSemanticScore as semanticScore } from "./semantic";
+// Gammel scoring (berre for bakoverkompatibilitet)
+export { calculateMatchScore } from "./matching/calculateMatchScore";
 
-export async function calculateMatchScore(userA, userB) {
-  const base = baseScore(userA, userB);          
-  const resonance = await resonanceScore(userA, userB); 
-  const semantic = await semanticScore(userA, userB);   
+// Nye moduler
+export { calculateScore, ScoreResult, ScoreInput } from "./matching/scorer";
+export { generateExplanation } from "./matching/explainer";
+export { rankMatches, deduplicateMatches, RankedMatch } from "./matching/ranking";
+export { recordMatchFeedback, getFeedbackProfile } from "./matching/feedback";
+export { getWeights, getWeightsWithOverride, validateWeights } from "./matching/weightConfig";
 
-  const total =
-    base * MATCH_WEIGHTS.base +
-    resonance * MATCH_WEIGHTS.resonance +
-    semantic * MATCH_WEIGHTS.semantic;
-
-  return {
-    totalScore: Math.round(total),
-    breakdown: {
-      base,
-      resonance,
-      semantic,
-    },
-    matchQuality:
-      total > 85
-        ? "excellent"
-        : total > 70
-        ? "strong"
-        : total > 55
-        ? "moderate"
-        : "weak",
-  };
-}
+// Caching-stubs
+export { getCachedScore, setCachedScore } from "./matching/scorer";

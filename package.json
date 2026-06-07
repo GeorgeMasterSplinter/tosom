@@ -10,23 +10,36 @@
   },
   "dependencies": {
     "@prisma/client": "^5.14.0",
+    "@supabase/supabase-js": "^2.103.3",
+    "@uploadthing/react": "^6.8.0",
     "bcryptjs": "^3.0.3",
     "chart.js": "^4.5.1",
+    "cookie": "^1.1.1",
+    "date-fns": "^4.1.0",
+    "formidable": "^3.5.4",
+    "framer-motion": "^12.38.0",
     "jsonwebtoken": "^9.0.3",
-    "next": "14.2.5",
+    "next": "^15.1.6",
     "next-auth": "^4.24.13",
     "prisma": "^5.14.0",
     "pusher-js": "^8.5.0",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.3.1",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "uploadthing": "^6.13.3",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.2",
+    "@types/formidable": "^3.5.1",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "25.5.2",
     "@types/pusher-js": "^4.2.2",
     "@types/react": "19.2.14",
+    "autoprefixer": "^10.4.27",
     "eslint": "^8.57.0",
-    "eslint-config-next": "^14.2.5"
+    "eslint-config-next": "^14.2.5",
+    "postcss": "^8.5.9",
+    "tailwindcss": "^4.2.2"
   }
 }

@@ -1,0 +1,65 @@
+// getJourneyState.ts — hentar eller opprettar journey-state for ein bruker
+// Compatibel med Prisma-schema: JourneyProgress har userId, phase, day
+import prisma from "@/lib/prisma";
+import { buildJourneyState, advanceDay, JOURNEY_TOTAL_DAYS } from "./journeyEngine";
+
+/**
+ * Hentar eller opprettar journey for ein bruker og returnerar journey-state.
+ */
+export async function getOrCreateJourney(userId: string) {
+  let journey = await prisma.journeyProgress.findUnique({
+    where: { userId },
+  });
+
+  if (!journey) {
+    journey = await prisma.journeyProgress.create({
+      data: {
+        userId,
+        phase: "EARLY",
+        day: 1,
+      },
+    });
+  }
+
+  return buildJourneyState(journey.day, journey.day);
+}
+
+/**
+ * Sjekkar om journey er fullført for ein bruker.
+ */
+export async function isJourneyComplete(userId: string): Promise<boolean> {
+  const journey = await prisma.journeyProgress.findUnique({
+    where: { userId },
+    select: { day: true },
+  });
+
+  return journey ? journey.day >= JOURNEY_TOTAL_DAYS : false;
+}
+
+/**
+ * Hentar journey-status for ein bruker (kort format).
+ */
+export async function getJourneyStatus(userId: string): Promise<{
+  day: number;
+  phase: string;
+  isComplete: boolean;
+  phaseLabel: string;
+}> {
+  const journey = await prisma.journeyProgress.findUnique({
+    where: { userId },
+    select: { day: true, phase: true },
+  });
+
+  if (!journey) {
+    return { day: 0, phase: "EARLY", isComplete: false, phaseLabel: "Ikkje starta" };
+  }
+
+  const state = buildJourneyState(journey.day, journey.day);
+
+  return {
+    day: journey.day,
+    phase: journey.phase,
+    isComplete: state.isComplete,
+    phaseLabel: state.phaseLabel,
+  };
+}

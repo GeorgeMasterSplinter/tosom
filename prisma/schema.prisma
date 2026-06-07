@@ -1,218 +1,386 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
+//
+// ENUMS
+//
+
+enum Role {
+  USER
+  ADMIN
 }
 
-// -----------------------------
-// USER
-// -----------------------------
+enum JourneyPhase {
+  EARLY
+  BUILDING_TRUST
+  DEEPER
+  CHECKIN
+}
+
+enum MatchStatus {
+  pending
+  active
+  matched
+  expired
+  ended
+  unmatched
+}
+
+enum QueueStatus {
+  PENDING
+  MATCHED
+  EXPIRED
+}
+
+enum MessageCategory {
+  user
+  system
+  system_message
+  continue_choice
+}
+
+enum MessageState {
+  SENT
+  DELIVERED
+  READ
+  DELETED
+}
+
+enum AdminAction {
+  USER_BAN
+  USER_UNBAN
+  USER_VERIFY
+  USER_DEACTIVATE
+  USER_ACTIVATE
+  CONTENT_DELETE
+  JOURNEY_RESET
+  CONVERSATION_FREEZE
+  SYSTEM_ALERT
+  SETTINGS_CHANGE
+}
+
+enum AuditAction {
+  USER_BAN
+  USER_UNBAN
+  USER_VERIFY
+  USER_DEACTIVATE
+  USER_ACTIVATE
+  CONTENT_DELETE
+  JOURNEY_RESET
+  CONVERSATION_FREEZE
+  ADMIN_LOGIN
+  TWOFA_ENABLE
+  TWOFA_DISABLE
+  ADMIN_SETTINGS_CHANGE
+  PASSWORD_RESET
+}
+
+enum NotificationType {
+  MATCH
+  MESSAGE
+  JOURNEY
+  SYSTEM
+  ADMIN
+}
+
+enum SystemMessageType {
+  INFO
+  WARNING
+  ALERT
+}
+
+//
+// MODELS
+//
+
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
+  id               String           @id @default(cuid())
+  email            String           @unique
+  password         String?
+  onboardingStep   Int              @default(1)
+  onboardingComplete Boolean        @default(false)
+  role             Role              @default(USER)
+  verified         Boolean           @default(false)
+  bannedAt         DateTime?
+  deletedAt        DateTime?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
 
-  profile Profile?
+  profile          Profile?                       @relation("UserProfile")
+  conversationsA   Conversation[]                 @relation("ConversationToUserA")
+  conversationsB   Conversation[]                 @relation("ConversationToUserB")
+  messages         Message[]
+  matchesA         Match[]                        @relation("UserAMatches")
+  matchesB         Match[]                        @relation("UserBMatches")
+  journey          JourneyProgress?               @relation("UserJourney")
+  notifications    Notification[]
+  resetTokens      PasswordResetToken[]
+  twoFactor        TwoFactorSecret?
+  auditLogs        AuditLog[]                     @relation("AdminAuditLogs")
+  matchQueues      MatchQueue[]
+  matchFeedbacks   MatchFeedback[]
 
-  // Matches der brukeren er "eier"
-  matches Match[] @relation("MatchOwner")
-
-  // Matches der brukeren er "den andre"
-  matchedBy Match[] @relation("MatchUser")
-
-  messages Message[]
-  journeys Journey[]
-
-  systemMessages SystemMessage[]
+  @@index([role])
+  @@index([email])
 }
 
-// -----------------------------
-// PROFILE
-// -----------------------------
 model Profile {
-  id        String @id @default(cuid())
-  userId    String @unique
-  name      String
-  email     String?
-  phone     String?
-  age       Int?
-  bio       String?
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  firstName   String?
+  lastName    String?
+  age         Int?
+  gender      String?
+  bio         String?
+  interests   String[]
+  photos      String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  user      User   @relation(fields: [userId], references: [id])
+  user        User     @relation("UserProfile", fields: [userId], references: [id])
 }
 
-
-  // --- Fakta ---
-  gender             String?
-  height             Int?
-  location           String?
-  children           String?
-  relationshipStatus String?
-
-  // --- Livsstil ---
-  dayRhythm      String?
-  weekendStyle   String?
-  travelStyle    String?
-  activityLevel  String?
-  socialLevel    String?
-  financialStyle String?
-
-  // --- Personlighet ---
-  structureVsSpontaneity String?
-  calmVsIntense          String?
-  emotionalVsLogical     String?
-  conflictStyle          String?
-  planningStyle          String?
-
-  // --- Relasjonsstil ---
-  loveLanguage String?
-  whatIGive    String?
-  whatINeed    String?
-  expectations String?
-  dealbreakers String?
-
-  // --- Hverdagsbeskrivelse ---
-  dailyLife      String?
-  relaxStyle     String?
-  energySources  String?
-  energyDrainers String?
-
-  // --- Fremtidsønsker ---
-  wantChildren     String?
-  wantCohabitation String?
-  wantMarriage     String?
-  futureVision     String?
-
-  // --- Selvrefleksjon ---
-  selfView    String?
-  workingOn   String?
-  proudOf     String?
-  fears       String?
-  partnerHope String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-// -----------------------------
-// MATCH REQUEST
-// -----------------------------
-model MatchRequest {
-  id           String   @id @default(cuid())
-  userId       String
-  matchReadyAt DateTime
-  processed    Boolean  @default(false)
-  createdAt    DateTime @default(now())
-}
-
-// -----------------------------
-// MATCH
-// -----------------------------
 model Match {
-  id String @id @default(cuid())
+  id        String      @id @default(cuid())
+  userAId   String
+  userBId   String
+  status    MatchStatus @default(active)
+  score     Float?
+  reviewed  Boolean     @default(false)
+  expiresAt DateTime?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
 
-  // Hvem som får matchen
-  userId String
-  user   User   @relation("MatchOwner", fields: [userId], references: [id])
+  userA     User              @relation("UserAMatches", fields: [userAId], references: [id])
+  userB     User              @relation("UserBMatches", fields: [userBId], references: [id])
+  history   MatchHistory[]
+  feedbacks MatchFeedback[]
 
-  // Hvem de matches med
-  matchUserId String
-  matchUser   User   @relation("MatchUser", fields: [matchUserId], references: [id])
-
-  score     Int
-  breakdown Json
-  quality   String
-
-  chatUntil   DateTime
-  decideUntil DateTime
-
-  decision_userA String?
-  decision_userB String?
-
-  createdAt DateTime @default(now())
-
-  conversation Conversation?
+  @@index([status])
+  @@index([userAId])
+  @@index([userBId])
+  @@index([createdAt])
+  @@index([expiresAt])
 }
 
-// -----------------------------
-// CONVERSATION + MESSAGES
-// -----------------------------
-model Conversation {
+model MatchHistory {
   id        String   @id @default(cuid())
-  matchId   String   @unique
+  matchId   String
+  event     String
   createdAt DateTime @default(now())
 
-  match    Match     @relation(fields: [matchId], references: [id])
-  messages Message[]
+  match     Match    @relation(fields: [matchId], references: [id])
+}
+
+model MatchQueue {
+  id        String        @id @default(cuid())
+  userId    String
+  status    QueueStatus   @default(PENDING)
+  createdAt DateTime      @default(now())
+
+  user      User          @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model MatchFeedback {
+  id        String   @id @default(cuid())
+  matchId   String
+  userId    String
+  rating    Int
+  reason    String?
+  createdAt DateTime @default(now())
+
+  match     Match    @relation(fields: [matchId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([matchId])
+  @@index([userId])
+  @@index([rating])
+}
+
+model Conversation {
+  id             String        @id @default(cuid())
+  userAId        String
+  userBId        String
+  matchId        String?
+  endedAt        DateTime?
+  lastMessageAt  DateTime?
+  lastMessagePreview String?
+  unreadCountA   Int           @default(0)
+  unreadCountB   Int           @default(0)
+  frozenAt       DateTime?
+  frozenBy       String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  journeyStep    JourneyStep?  @relation("ConvToStep")
+
+  userA          User          @relation("ConversationToUserA", fields: [userAId], references: [id])
+  userB          User          @relation("ConversationToUserB", fields: [userBId], references: [id])
+  messages       Message[]
+
+  @@index([userAId, userBId])
+  @@index([matchId])
+  @@index([endedAt])
+  @@index([frozenAt])
 }
 
 model Message {
-  id             String   @id @default(cuid())
+  id             String          @id @default(cuid())
   conversationId String
   senderId       String
   content        String
-  createdAt      DateTime @default(now())
+  type           MessageCategory @default(user)
+  state          MessageState    @default(SENT)
+  deliveredAt    DateTime?
+  readAt         DateTime?
+  deletedAt      DateTime?
+  editedAt       DateTime?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
 
-  conversation Conversation @relation(fields: [conversationId], references: [id])
-  sender       User         @relation(fields: [senderId], references: [id])
+  conversation   Conversation    @relation(fields: [conversationId], references: [id])
+  sender         User            @relation(fields: [senderId], references: [id])
 }
 
-// -----------------------------
-// JOURNEY
-// -----------------------------
-model Journey {
-  id        String   @id @default(cuid())
-  userId    String
-  day       Int      @default(1)
-  completed Boolean  @default(false)
-  startedAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model JourneyProgress {
+  id           String       @id @default(cuid())
+  userId       String       @unique
+  phase        JourneyPhase @default(EARLY)
+  day          Int          @default(1)
+  pausedAt     DateTime?
+  resumedAt    DateTime?
+  completedAt  DateTime?
+  continueA    String?
+  continueB    String?
+  updatedAt    DateTime     @updatedAt
 
-  user  User          @relation(fields: [userId], references: [id])
-  tasks JourneyTask[]
+  user         User              @relation("UserJourney", fields: [userId], references: [id])
+  milestones   JourneyMilestone[]
+
+  @@index([userId])
 }
 
-model JourneyTask {
-  id        String   @id @default(cuid())
-  journeyId String
-  day       Int
-  question  String
-  answer    String?
-  completed Boolean  @default(false)
-  createdAt DateTime @default(now())
+model JourneyMilestone {
+  id         String   @id @default(cuid())
+  progressId String?
+  day        Int
+  title      String
+  summary    String
+  createdAt  DateTime @default(now())
 
-  journey Journey @relation(fields: [journeyId], references: [id])
+  progress   JourneyProgress? @relation(fields: [progressId], references: [id])
+
+  @@index([progressId])
+  @@index([day])
 }
 
-// -----------------------------
-// BLI KJENT KORT
-// -----------------------------
-model BliKjentCard {
-  id        String       @id @default(cuid())
-  text      String
-  category  CardCategory
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
-}
+model JourneyStep {
+  id             String        @id @default(cuid())
+  conversationId String        @unique
+  conversation   Conversation  @relation("ConvToStep", fields: [conversationId], references: [id])
 
-enum CardCategory {
-  LIGHT
-  MEDIUM
-  DEEP
+  phase          JourneyPhase
+  order          Int
+  title          String
+  description    String
+  dynamic        Boolean       @default(false)
+  isSystemMessage Boolean      @default(false)
+  systemMessage  String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 }
 
 model SystemMessage {
+  id        String             @id @default(cuid())
+  content   String
+  type      SystemMessageType  @default(INFO)
+  createdAt DateTime           @default(now())
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType @default(SYSTEM)
+  message   String
+  metadata  Json?
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  user      User             @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+  @@index([type])
+}
+
+model PasswordResetToken {
   id        String   @id @default(cuid())
   userId    String
-  matchId   String?
-  type      String // "14_day_warning", "7_day_warning", "1_day_warning", "chat_closed", "partner_yes", "partner_no"
-  content   String
+  tokenHash String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
   createdAt DateTime @default(now())
-  read      Boolean  @default(false)
 
-  user User @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([tokenHash])
+}
+
+model TwoFactorSecret {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  secret    String   @unique
+  enabled   Boolean  @default(false)
+  backupCodes String[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model AuditLog {
+  id         String      @id @default(cuid())
+  adminId    String
+  action     AuditAction
+  metadata   String?
+  createdAt  DateTime    @default(now())
+
+  admin      User        @relation("AdminAuditLogs", fields: [adminId], references: [id])
+
+  @@index([adminId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+model SystemLog {
+  id        String   @id @default(cuid())
+  level     String
+  message   String
+  module    String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@index([level])
+  @@index([module])
+  @@index([createdAt])
+}
+
+model RateLimitLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  route     String
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([route])
+  @@index([createdAt])
 }

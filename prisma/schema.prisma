@@ -384,3 +384,43 @@ model RateLimitLog {
   @@index([route])
   @@index([createdAt])
 }
+
+model PerformanceMetric {
+  id      String   @id @default(cuid())
+  route   String
+  metric  String   // "api_latency" | "db_latency"
+  valueMs Int
+  createdAt DateTime @default(now())
+
+  @@index([route])
+  @@index([metric])
+  @@index([createdAt])
+}
+
+model RouteHit {
+  id      String   @id @default(cuid())
+  route   String
+  method  String   @default("GET")
+  status  Int      @default(200)
+  createdAt DateTime @default(now())
+
+  @@index([route])
+  @@index([createdAt])
+}
+
+model AIRequestLog {
+  id        String   @id @default(cuid())
+  userId    String
+  feature   String
+  model     String
+  tokensIn  Int
+  tokensOut Int
+  latencyMs Int
+  success   Boolean
+  traceId   String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([feature])
+  @@index([createdAt])
+}

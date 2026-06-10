@@ -49,7 +49,7 @@ export async function generateSupportMessage(
   const input = `Generer ein støttemelding for reisedag ${context.day}:
 
 Mood: ${context.mood || 'Ukjent'}
-Struggling with: ${context.struggle || 'Ingen oppgitt utfordring}
+Struggling with: ${context.struggle || 'Ingen oppgitt utfordring'}
 
 Gjekk ei kort, ærleg og støttande melding som:
 1. Validerer kjensler

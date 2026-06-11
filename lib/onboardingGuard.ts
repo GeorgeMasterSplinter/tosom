@@ -17,17 +17,17 @@ export async function setOnboardingStep(userId: string, step: number) {
 }
 
 export async function getOnboardingComplete(userId: string): Promise<boolean> {
-  const profile = await prisma.profile.findUnique({
-    where: { userId },
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
     select: { onboardingComplete: true },
   });
 
-  return profile?.onboardingComplete || false;
+  return user?.onboardingComplete || false;
 }
 
 export async function setOnboardingComplete(userId: string) {
-  await prisma.profile.update({
-    where: { userId },
+  await prisma.user.update({
+    where: { id: userId },
     data: { onboardingComplete: true },
   });
 }

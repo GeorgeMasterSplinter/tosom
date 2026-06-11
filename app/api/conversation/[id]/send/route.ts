@@ -1,44 +1,37 @@
-import { NextResponse } from "next/server";
+
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { createSystemMessage } from "@/lib/createSystemMessage";
 import { runJourneyStep } from "@/lib/journey/runJourneyStep";
 import { getJourneyImpulse } from "@/lib/journey/getJourneyImpulse";
-import { getJourneyState } from "@/lib/journey/getJourneyState";
+import { journeyStateAPI } from "@/lib/journey/journeyStateEngine";
 import { isJourneyCompleted } from "@/lib/journey/journeyPhases";
 import { checkRateLimit } from "@/lib/rateLimit";
 import { messageSendSchema, continueChoiceSchema } from "@/lib/validation/message";
 
 export async function POST(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  request: Request,
+  context: { params: Promise<{ id: string }> }
+): Promise<Response> {
   const session = await getServerSession();
 
   if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { "Content-Type": "application/json" } });
   }
 
-  const { id } = await params;
-  const conversationId = id;
-  const body = await req.json();
+  const { id: conversationId } = await context.params;
+  const body = await request.json();
 
-  // Rate limiting: maks 60 meldingar/minutt per user
+  // Rate limiting: maks 60 meldinger/minutt per user
   if (checkRateLimit(`msg:${session.user.id}`, 60, 60_000)) {
-    return NextResponse.json(
-      { error: "For mange førespurslar. Vent eit par sekund." },
-      { status: 429 }
-    );
+    return new Response(JSON.stringify({ error: "For mange forespørsler. Vent et par sekund." }), { status: 429, headers: { "Content-Type": "application/json" } });
   }
 
   // ── continue_choice (dag 30/35-avslutning) ──
   if (body.type === "continue_choice") {
     const parse = continueChoiceSchema.safeParse(body);
     if (!parse.success) {
-      return NextResponse.json(
-        { error: parse.error.errors[0]?.message || "Ugyldig continue_choice" },
-        { status: 400 }
-      );
+      return new Response(JSON.stringify({ error: parse.error.issues[0]?.message || "Ugyldig continue_choice" }), { status: 400, headers: { "Content-Type": "application/json" } });
     }
     const { choice } = parse.data;
 
@@ -51,32 +44,31 @@ export async function POST(
         ],
       },
       include: {
-        userA: true,
-        userB: true,
-        journeyProgress: true,
+        userA: { include: { profile: true } },
+        userB: { include: { profile: true } },
       },
     });
 
     if (!conversation) {
-      return NextResponse.json({ error: "Not allowed" }, { status: 403 });
+      return new Response(JSON.stringify({ error: "Not allowed" }), { status: 403, headers: { "Content-Type": "application/json" } });
     }
 
-    if (
-      session.user.id === conversation.userAId
-        ? conversation.journeyProgress?.continueA
-        : conversation.journeyProgress?.continueB
-    ) {
-      return NextResponse.json({ error: "Already answered" }, { status: 400 });
-    }
-
-    // JourneyProgress har userId unique (ikkje conversationId).
-    // Bruk userA som eier journey for samtalen.
+    // Fetch JourneyProgress separately (it's not a relation on Conversation)
     const journey = await prisma.journeyProgress.findUnique({
       where: { userId: conversation.userAId },
     });
 
     if (!journey) {
-      return NextResponse.json({ error: "No journey" }, { status: 404 });
+      return new Response(JSON.stringify({ error: "No journey" }), { status: 404, headers: { "Content-Type": "application/json" } });
+    }
+
+    // Check if already answered
+    const answered = session.user.id === conversation.userAId
+      ? journey.continueA
+      : journey.continueB;
+
+    if (answered) {
+      return new Response(JSON.stringify({ error: "Already answered" }), { status: 400, headers: { "Content-Type": "application/json" } });
     }
 
     const updateData =
@@ -96,12 +88,12 @@ export async function POST(
       if (bothYes) {
         await createSystemMessage(
           conversationId,
-          "Begge har valgt å fortsetje. Ta dere god tid, og bygg vidare på det de har starta."
+          "Begge har valgt å fortsette. Ta dere god tid, og bygg videre på det de har starta."
         );
       } else if (bothNo) {
         await createSystemMessage(
           conversationId,
-          "Begge har valgt å avslutte. Takk for at dere ga kvarandre ein sjanse."
+          "Begge har valgt å avslutte. Takk for at dere ga hverandre en sjanse."
         );
         await prisma.conversation.update({
           where: { id: conversationId },
@@ -110,21 +102,18 @@ export async function POST(
       } else {
         await createSystemMessage(
           conversationId,
-          "Éin av dere ønskjer å fortsetje, og éin ønskjer å avslutte. Det viktigaste er at valet kjennest riktig for kvar enkelt."
+          "Éin av dere ønsker å fortsette, og én ønsker å avslutte. Det viktigste er at valet kjennes riktig for hver enkelt."
         );
       }
     }
 
-    return NextResponse.json({ ok: true });
+    return new Response(JSON.stringify({ ok: true }), { status: 200, headers: { "Content-Type": "application/json" } });
   }
 
-  // Valider vanleg melding med Zod
+  // Valider vanlig melding med Zod
   const parse = messageSendSchema.safeParse(body);
   if (!parse.success) {
-    return NextResponse.json(
-      { error: parse.error.errors[0]?.message || "Ugyldig melding" },
-      { status: 400 }
-    );
+    return new Response(JSON.stringify({ error: parse.error.issues[0]?.message || "Ugyldig melding" }), { status: 400, headers: { "Content-Type": "application/json" } });
   }
   const { content, type } = parse.data;
 
@@ -137,17 +126,16 @@ export async function POST(
       ],
     },
     include: {
-      userA: true,
-      userB: true,
-      journeyProgress: true,
+      userA: { include: { profile: true } },
+      userB: { include: { profile: true } },
     },
   });
 
   if (!conversation) {
-    return NextResponse.json({ error: "Not allowed" }, { status: 403 });
+    return new Response(JSON.stringify({ error: "Not allowed" }), { status: 403, headers: { "Content-Type": "application/json" } });
   }
 
-  // ── vanleg brukarmelding ──
+  // ── vanlig brukarmelding ──
   const message = await prisma.message.create({
     data: {
       conversationId,
@@ -165,43 +153,51 @@ export async function POST(
   if (messageCount === 1) {
     await createSystemMessage(
       conversationId,
-      "Ta det roleg. Ingen forventningar. Berre sei hei og sjå korleis samtalen går."
+      "Ta det rolig. Ingen forventninger. Bare sei hei og se hvordan samtalen går."
     );
   }
 
   // Kjør journey-motor for dag-spur
   await runJourneyStep(conversationId);
 
-  // Hent journey-tilstand (getJourneyState tek userId, ikkje conversationId)
-  const journeyState = await getJourneyState(conversation.userAId);
-  const { phase, completedSteps, totalSteps } = journeyState;
+  // Hent journey-progresjon for å kjenne dag
+  const journeyProgress = await prisma.journeyProgress.findUnique({
+    where: { userId: conversation.userAId },
+    select: { day: true },
+  });
+  const currentDay = journeyProgress?.day ?? 1;
+  const totalDays = 30;
+
+  // Hent journey-tilstand frå journeyStateAPI
+  const journeyState = journeyStateAPI.getJourneyState({ matchContext: { matchState: 'in_journey' }, currentDay });
+  const { phase } = journeyState;
 
   // Hvis reisen er ferdig → send avslutning og lukk
-  if (completedSteps >= totalSteps || isJourneyCompleted(completedSteps)) {
+  if (currentDay >= totalDays || isJourneyCompleted(currentDay)) {
     if (!conversation.endedAt) {
       await createSystemMessage(
         conversationId,
-        "Dei har fullført heile reisa. Takk for at dere tok dykketid til å bli kjent."
+        "Dei har fullført hele reisa. Takk for at dere tok dere tid til å bli kjent."
       );
       await prisma.conversation.update({
         where: { id: conversationId },
         data: { endedAt: new Date() },
       });
     }
-    return NextResponse.json({ message, journeyEnded: true });
+    return new Response(JSON.stringify({ message, journeyEnded: true }), { status: 200, headers: { "Content-Type": "application/json" } });
   }
 
   // Dag 1–35: send impulser
-  if (completedSteps >= 1 && completedSteps <= 35 && !conversation.endedAt) {
+  if (currentDay >= 1 && currentDay <= 35 && !conversation.endedAt) {
     const otherUser =
       session.user.id === conversation.userAId
         ? conversation.userB
         : conversation.userA;
 
-    const otherName = otherUser?.firstName || otherUser?.lastName || "Ukjent";
-    if (otherName && otherName !== "Ukjent") {
+    const otherName = `${otherUser?.profile?.firstName ?? ""} ${otherUser?.profile?.lastName ?? ""}`.trim() || "Ukjent";
+    if (otherName !== "Ukjent") {
       const impulse = getJourneyImpulse({
-        day: completedSteps,
+        day: currentDay,
         name: otherName,
       });
 
@@ -225,14 +221,18 @@ export async function POST(
   }
 
   // Dag 35: still continue-spørsmål til begge
-  if (completedSteps === 35 && !conversation.endedAt) {
-    if (!journeyState.continueA && !journeyState.continueB) {
+  if (currentDay === 35 && !conversation.endedAt) {
+    const progress = await prisma.journeyProgress.findUnique({
+      where: { userId: conversation.userAId },
+      select: { continueA: true, continueB: true },
+    });
+    if (!progress?.continueA && !progress?.continueB) {
       await createSystemMessage(
         conversationId,
-        "Dei har snakka ei stund no. Vil dere fortsetje å bygge vidare på dette, eller er det tid for å avslutte? Svar på spørsmålet under."
+        "Dei har snakka ei stund nå. Vil dere fortsette å bygge videre på dette, eller er det tid for å avslutte? Svar på spørsmålet under."
       );
     }
   }
 
-  return NextResponse.json({ message });
+  return new Response(JSON.stringify({ message }), { status: 200, headers: { "Content-Type": "application/json" } });
 }

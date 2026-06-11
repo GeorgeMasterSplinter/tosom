@@ -1,5 +1,4 @@
 // testData.ts — testdata for matching-systemet
-// To profiler med ulik alder, interesser, bio og bilete.
 // Kjør med: npx ts-node lib/matching/testData.ts
 
 import { calculateScore, generateExplanation } from "./scorer";
@@ -14,7 +13,7 @@ const profileA = {
   lastName: "Hansen",
   age: 28,
   gender: "male",
-  bio: "Eg elskar fjellet, natural og gode samtal om livet. Ønskar ein djup relasjon med nokon som deler same verdier. Har jobba som arkitekt i 5 år.",
+  bio: "Eg elskar fjellet, natural og gode samtal om livet. Ønskar ein djup relasjon med nokon som delar same verdier. Har jobba som arkitektur i 5 år.",
   interests: ["fjell", "vandring", "fotografi", "litteratur", "matlagning", "arkitektur", "karriere"],
   photos: ["p1.jpg", "p2.jpg", "p3.jpg"],
 };
@@ -25,7 +24,7 @@ const profileB = {
   lastName: "Solheim",
   age: 27,
   gender: "female",
-  bio: "Kjemiingeniør på dagtid, amatør-fotograf om kvelden. Trur på åpenheit og ærligheit i relasjonar. Ser etter ein som deler livsgleden.",
+  bio: "Kjemiingeniør på dagtid, amatør-fotograf om kvelden. Trur på åpenheit og ærligheit i relasjonar. Ser etter ein som delar livsgleden.",
   interests: ["fotografi", "vandring", "natur", "matlagning", "arkitektur", "litteratur", "reiser"],
   photos: ["b1.jpg", "b2.jpg"],
 };
@@ -57,17 +56,14 @@ function runTest(label: string, a: Record<string, unknown>, b: Record<string, un
   console.log(`\n📊 TOTAL: ${scoreResult.totalScore}/100 (${scoreResult.matchQuality})`);
   console.log(`\n🏷️ TIER: ${explanation.tierLabel}`);
   console.log(`\n📋 BREAKDOWN:`);
-  for (const item of explanation.breakdown) {
-    console.log(`   ${item.label.padEnd(20)} ${String(item.score).padStart(3)}/100`);
-  }
+  console.log(`   base: ${scoreResult.breakdown.base}/100`);
+  console.log(`   resonance: ${scoreResult.breakdown.resonance}/100`);
+  console.log(`   semantic: ${scoreResult.breakdown.semantic}/100`);
+  console.log(`   intimacy: ${scoreResult.breakdown.intimacy}/100`);
+  console.log(`   future: ${scoreResult.breakdown.future}/100`);
 
   console.log(`\n💬 SAMMENDRAG:`);
-  console.log(`   ${explanation.summary}`);
-
-  console.log(`\n📝 FORKLARINGAR:`);
-  for (const item of explanation.breakdown) {
-    console.log(`   • ${item.label}: ${item.explanation}`);
-  }
+  console.log(`   ${explanation.explanation}`);
 
   // Verifiser totalen
   const weights = { base: 0.4, resonance: 0.25, semantic: 0.25, intimacy: 0.05, future: 0.05 };

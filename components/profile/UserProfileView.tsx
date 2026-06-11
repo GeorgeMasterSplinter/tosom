@@ -1,9 +1,9 @@
 "use client";
 
-/** UserProfileView — visning og redigering av brukerens eigen profil
- *  UP4–UP10 — props, layout, header, redigerbar bio, verdiar, interesser, bilder
+/** UserProfileView — visning og redigering av brukerens egen profil
+ *  UP4–UP10 — props, layout, header, redigerbar bio, verdier, interesser, bilder
  *  UP11–UP20 — matchklar-logikk, validering, lagre/lukk
- *  UP17 — rolige fargar, same stil som PartnerProfileView
+ *  UP17 — rolige farger, same stil som PartnerProfileView
  *  UP19 — scroll-støtte
  *  UP20 — ingen backend, berre UI */
 
@@ -60,15 +60,15 @@ export default function UserProfileView({
     p.photos.length >= 1;
 
   /* UP13/UP14 — Validering */
-  const validationError = canSetMatchReady ? null : "Profilen din er ikkje komplett enno.";
+  const validationError = canSetMatchReady ? null : "Profilen din er ikke komplett ennå.";
 
   /* UP10 — Bilder: klikk for å bytte eller fjerne (dummy) */
   const handlePhotoToggle = (idx: number) => {
     setP((prev) => {
       const photos = [...prev.photos];
-      // Dummy: fjern hvis eksisterande, legg til nytt placeholder hvis ikkje
+      // Dummy: fjern hvis eksisterende, legg til nytt placeholder hvis ikke
       if (photos[idx]) {
-        // Dummy "fjerne" — vis ikkje
+        // Dummy "fjerne" — vis ikke
         photos[idx] = "";
       } else {
         photos[idx] = `https://placehold.co/400x500/e2e8f0/94a3b8?text=Bilde+${idx + 1}`;
@@ -140,17 +140,17 @@ export default function UserProfileView({
               rows={3}
             />
             <p className="text-xs text-[#4A4A4A]/40 mt-1">
-              {p.bio.length} / 500 teikn
+              {p.bio.length} / 500 tegn
             </p>
           </section>
 
           {/* UP8 — Verdier */}
           <section>
             <h3 className="text-sm font-medium text-[#4A4A4A]/70 mb-2">
-              Verdiar
+              Verdier
             </h3>
             <div className="flex flex-wrap gap-2">
-              {["Ærlegheit", "Trygghet", "Vekst", "Nyskaping", "Empati", "Respekt", "Uavhengighet"].map(
+              {["Ærlighet", "Trygghet", "Vekst", "Nyskapning", "Empati", "Respekt", "Uavhengighet"].map(
                 (v) => {
                   const active = p.values.includes(v);
                   return (
@@ -170,7 +170,7 @@ export default function UserProfileView({
               )}
             </div>
             <p className="text-xs text-[#4A4A4A]/40 mt-1">
-              {p.values.length} valde
+              {p.values.length} valgt
             </p>
           </section>
 
@@ -200,7 +200,7 @@ export default function UserProfileView({
               )}
             </div>
             <p className="text-xs text-[#4A4A4A]/40 mt-1">
-              {p.interests.length} valde
+              {p.interests.length} valgt
             </p>
           </section>
 
@@ -235,7 +235,7 @@ export default function UserProfileView({
               onClick={handleAddPhoto}
               className="mt-3 text-xs text-emerald-700 hover:text-emerald-800 underline"
             >
-              + Legg til bilete
+              + Legg til bilder
             </button>
           </section>
 
@@ -248,7 +248,7 @@ export default function UserProfileView({
                 </h3>
                 {/* UP12 — Tekst under toggle */}
                 <p className="text-xs text-[#4A4A4A]/50 mt-0.5">
-                  {p.readyForMatch ? "Du er klar for ein ny match." : "Fullfør profilen din før du matcher."}
+                  {p.readyForMatch ? "Du er klar for en ny match." : "Fullfør profilen din før du matcher."}
                 </p>
               </div>
               {/* Toggle-switch */}
@@ -279,7 +279,7 @@ export default function UserProfileView({
               onClick={handleSave}
               className="flex-1 py-3 text-sm rounded-xl bg-emerald-100 text-emerald-800 hover:bg-emerald-200 transition-colors font-medium"
             >
-              Lagre endringar
+              Lagre endringer
             </button>
             {onClose && (
               <button

@@ -1,18 +1,18 @@
-import { NextRequest, NextResponse } from 'next/server'
+
 import { markRead } from '@/lib/notifications/dispatcher'
 
 export async function POST(
-  request: NextRequest,
-  { params }: { params: { id: string } },
-) {
+  request: Request,
+  context: { params: Promise<{ id: string }> }
+): Promise<Response> {
   try {
-    const notificationId = params.id
+    const { id: notificationId } = await context.params
 
     await markRead(notificationId)
 
-    return NextResponse.json({ success: true })
+    return new Response(JSON.stringify({ success: true }), { status: 200, headers: { 'Content-Type': 'application/json' } })
   } catch (error) {
     console.error('[notifications read POST] Error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500, headers: { 'Content-Type': 'application/json' } })
   }
 }

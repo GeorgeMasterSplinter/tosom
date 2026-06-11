@@ -1,17 +1,25 @@
 // lib/baseScore.ts — basert på det nye Profile-schema-et (firstName, lastName, age, gender, bio, interests, photos)
 
-export function baseCompatibilityScore(a, b) {
+interface ScoreableProfile {
+  interests?: string[] | null;
+  age?: number | string | null;
+  bio?: string | null;
+}
+
+export function baseCompatibilityScore(a: ScoreableProfile, b: ScoreableProfile): number {
   let s = 0;
 
   // Interesser — felles item tel 5 poeng
   if (Array.isArray(a.interests) && Array.isArray(b.interests)) {
-    const common = a.interests.filter((i) => b.interests.includes(i));
+    const interestsA = a.interests;
+    const interestsB = b.interests;
+    const common = interestsA.filter((i) => interestsB.includes(i));
     s += common.length * 5;
   }
 
   // Aldersnearleik — jo nærare, jo fleire poeng (max 20)
   if (a.age && b.age) {
-    const diff = Math.abs(a.age - b.age);
+    const diff = Math.abs(Number(a.age) - Number(b.age));
     if (diff <= 2) s += 20;
     else if (diff <= 5) s += 15;
     else if (diff <= 10) s += 10;

@@ -12,7 +12,6 @@ export async function captureError(
 ): Promise<void> {
   const { module, message, userId, metadata } = context
 
-  // Lagre til SystemLog
   const stack = error instanceof Error
     ? { name: error.name, message: error.message, stack: error.stack }
     : { name: typeof error, message: String(error) }
@@ -28,16 +27,15 @@ export async function captureError(
       level: 'ERROR',
       message,
       module,
-      metadata: safeMetadata,
+      metadata: safeMetadata as any,
     },
   })
 
-  // Log til console
   logger.error(message, module, safeMetadata, error instanceof Error ? error : undefined)
 }
 
-function sanitizeMetadata(metadata?: Record<string, unknown>): Record<string, unknown> | null {
-  if (!metadata) return null
+function sanitizeMetadata(metadata?: Record<string, unknown>): Record<string, unknown> {
+  if (!metadata) return {}
 
   const safe = { ...metadata }
 

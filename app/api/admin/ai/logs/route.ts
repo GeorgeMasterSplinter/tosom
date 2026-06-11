@@ -1,26 +1,25 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { listAIRequests, getAIStats } from '@/lib/admin/ai'
+import { getSystemLogs } from '@/lib/admin/system'
 import { requireAdmin } from '@/lib/admin/requireAuth'
 
-export async function GET(request: NextRequest) {
+export async function GET(
+  request: Request
+): Promise<Response> {
   try {
-    const { adminId } = await request.json()
-    await requireAdmin(adminId)
+    const { adminId: _adminId } = await request.json()
+    await requireAdmin()
 
-    const { searchParams } = request.nextUrl
-    const filter = {
-      userId: searchParams.get('userId') || undefined,
-      sinceHours: searchParams.get('sinceHours') ? parseInt(searchParams.get('sinceHours')) : undefined,
-      search: searchParams.get('search') || undefined,
-      feature: searchParams.get('feature') || undefined,
-    }
+    const url = new URL(request.url)
+    const sinceHoursRaw = url.searchParams.get('sinceHours')
+    const logs = await getSystemLogs({
+      userId: url.searchParams.get('userId') || undefined,
+      level: 'ERROR',
+      sinceHours: sinceHoursRaw ? parseInt(sinceHoursRaw) : undefined,
+      search: url.searchParams.get('search') || undefined,
+    })
 
-    const requests = await listAIRequests(filter)
-    const stats = await getAIStats(filter.sinceHours ?? 24)
-
-    return NextResponse.json({ requests, stats })
+    return new Response(JSON.stringify({ logs }), { status: 200, headers: { 'Content-Type': 'application/json' } })
   } catch (error) {
     console.error('[admin ai logs GET] Error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500, headers: { 'Content-Type': 'application/json' } })
   }
 }

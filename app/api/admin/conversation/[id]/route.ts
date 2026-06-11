@@ -1,20 +1,41 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { getConversationMetadata } from '@/lib/admin/conversation'
+
+import { getConversationMetadata } from "@/lib/admin/conversation";
 
 export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } },
-) {
+  request: Request,
+  context: { params: Promise<{ id: string }> }
+): Promise<Response> {
   try {
-    const metadata = await getConversationMetadata(params.id)
+    const { id } = await context.params;
+
+    const metadata = await getConversationMetadata(id);
 
     if (!metadata) {
-      return NextResponse.json({ error: 'Conversation not found' }, { status: 404 })
+      return new Response(
+        JSON.stringify({ error: "Conversation not found" }),
+        {
+          status: 404,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
     }
 
-    return NextResponse.json({ conversation: metadata })
+    return new Response(
+      JSON.stringify({ conversation: metadata }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      }
+    );
   } catch (error) {
-    console.error('[admin conversation GET] Error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    console.error("[admin conversation GET] Error:", error);
+
+    return new Response(
+      JSON.stringify({ error: "Internal server error" }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" }
+      }
+    );
   }
 }

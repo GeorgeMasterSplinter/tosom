@@ -1,24 +1,26 @@
-import { NextRequest, NextResponse } from 'next/server'
+
 import { getTraceDetails } from '@/lib/admin/observability'
 import { requireAdmin } from '@/lib/admin/requireAuth'
 
-export async function GET(request: NextRequest) {
+export async function GET(
+  request: Request
+): Promise<Response> {
   try {
     const { adminId } = await request.json()
-    await requireAdmin(adminId)
+    await requireAdmin()
 
-    const { searchParams } = request.nextUrl
-    const traceId = searchParams.get('traceId')
+    const url = new URL(request.url)
+    const traceId = url.searchParams.get('traceId')
 
     if (!traceId) {
-      return NextResponse.json({ error: 'traceId is required' }, { status: 400 })
+      return new Response(JSON.stringify({ error: 'traceId is required' }), { status: 400, headers: { 'Content-Type': 'application/json' } })
     }
 
     const traces = await getTraceDetails(traceId)
 
-    return NextResponse.json({ traces })
+    return new Response(JSON.stringify({ traces }), { status: 200, headers: { 'Content-Type': 'application/json' } })
   } catch (error) {
     console.error('[admin observability traces GET] Error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500, headers: { 'Content-Type': 'application/json' } })
   }
 }

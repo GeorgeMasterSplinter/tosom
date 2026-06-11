@@ -1,61 +1,105 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function ProfileView({ profile }: { profile: any }) {
-  const router = useRouter();
   const [isMatching, setIsMatching] = useState(false);
   const [hasMatched, setHasMatched] = useState(false);
-  const [isOpeningChat, setIsOpeningChat] = useState(false);
+
+  const alleInteresser = [
+    ...(profile.hobbyTags ?? []),
+    ...(profile.musicTags ?? []),
+  ];
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-10">
-      <section className="flex flex-col items-center text-center">
-        <div className="w-40 h-40 rounded-full overflow-hidden bg-[#E5E5E5]">
-          {profile.imageUrl ? (
-            <img
-              src={profile.imageUrl}
-              alt={profile.name}
-              className="w-full h-full object-cover"
-            />
-          ) : null}
-        </div>
-
-        <h1 className="text-3xl font-semibold text-[#1A1A1A] mt-6">
-          {profile.name}, {profile.age}
-        </h1>
-
-        <p className="text-[#4A4A4A] mt-2 text-[15px]">
-          {profile.location || "Ukjent sted"}
-        </p>
-      </section>
-
-      {profile.images && profile.images.length > 1 && (
-        <section className="mt-10">
-          <h2 className="text-xl font-semibold text-[#1A1A1A] mb-4 tracking-tight">
-            Bilder
-          </h2>
-
-          <div className="grid grid-cols-2 gap-4">
-            {profile.images.slice(1).map((img: any) => (
-              <div
-                key={img.id}
-                className="w-full h-40 rounded-lg overflow-hidden bg-[#E5E5E5]"
-              >
-                <img
-                  src={img.url}
-                  alt="Profilbilde"
-                  className="w-full h-full object-cover"
-                />
+    <main className="min-h-screen bg-gray-950">
+      <div className="max-w-xl mx-auto py-10 space-y-10">
+        {/* Sekjon: Oversikt */}
+        <section className="text-center space-y-3">
+          <div className="w-32 h-32 mx-auto rounded-full overflow-hidden bg-gray-800 ring-1 ring-white/10">
+            {profile.imageUrl ? (
+              <img
+                src={profile.imageUrl}
+                alt={profile.name}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-gray-600 text-4xl font-light">
+                {(profile.name ?? "U")[0].toUpperCase()}
               </div>
-            ))}
+            )}
           </div>
-        </section>
-      )}
 
-      <section className="mt-10">
-        <div className="flex gap-4">
+          <div>
+            <h1 className="text-3xl font-light text-white">
+              {profile.name}
+            </h1>
+            {profile.age && (
+              <p className="text-gray-400 mt-1">{profile.age} år</p>
+            )}
+          </div>
+
+          {profile.location && (
+            <p className="text-gray-500 text-sm">{profile.location}</p>
+          )}
+        </section>
+
+        {/* Seksjon: Om meg */}
+        <section>
+          <h2 className="text-lg font-medium text-white">Om meg</h2>
+          {profile.bio ? (
+            <p className="text-gray-300 leading-relaxed mt-3">
+              {profile.bio}
+            </p>
+          ) : (
+            <p className="text-gray-500 mt-3">Ingen beskrivelse ennå.</p>
+          )}
+        </section>
+
+        {/* Seksjon: Interesser */}
+        <section>
+          <h2 className="text-lg font-medium text-white">Interesser</h2>
+          {alleInteresser.length > 0 ? (
+            <div className="flex flex-wrap gap-2 mt-3">
+              {alleInteresser.map((tag: string) => (
+                <span
+                  key={tag}
+                  className="inline-block rounded-full px-3 py-1 bg-white/10 text-gray-200 border border-white/10 backdrop-blur-sm"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500 mt-3">Ingen interesser lagt inn ennå.</p>
+          )}
+        </section>
+
+        {/* Seksjon: Bilder */}
+        <section>
+          <h2 className="text-lg font-medium text-white">Bilder</h2>
+          {profile.images && profile.images.length > 1 ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+              {profile.images.slice(1).map((img: any) => (
+                <div
+                  key={img.id}
+                  className="rounded-xl shadow-md shadow-black/20 overflow-hidden aspect-[4/5]"
+                >
+                  <img
+                    src={img.url}
+                    alt="Profilbilde"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500 mt-3">Ingen bilder ennå.</p>
+          )}
+        </section>
+
+        {/* Seksjon: Handlingar */}
+        <section className="flex gap-4">
           <button
             type="button"
             disabled={isMatching || hasMatched}
@@ -67,68 +111,24 @@ export default function ProfileView({ profile }: { profile: any }) {
                   method: "POST",
                   body: JSON.stringify({ targetUserId: profile.id }),
                 });
-              } catch (err) {
+              } catch {
                 setHasMatched(false);
-                console.error("Match failed", err);
               }
               setIsMatching(false);
             }}
-            className="flex-1 py-3 bg-[#1A1A1A] text-white rounded-lg text-center text-[15px] font-medium transition-colors hover:bg-[#000] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 py-3 bg-white text-gray-950 rounded-full text-sm font-medium transition-colors hover:bg-gray-100 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {hasMatched ? "Matchet" : isMatching ? "Matcher…" : "Match"}
+            {hasMatched ? "Matcha" : isMatching ? "Matcher…" : "Match"}
           </button>
 
           <button
             type="button"
-            className="flex-1 py-3 border border-[#1A1A1A] text-[#1A1A1A] rounded-lg text-center text-[15px] font-medium transition-colors hover:bg-[#1A1A1A] hover:text-white active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 py-3 border border-white/20 text-white rounded-full text-sm font-medium transition-colors hover:bg-white/10 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Send melding
           </button>
-        </div>
-      </section>
-
-      <div className="space-y-10 mt-10">
-        <section>
-          <h2 className="text-xl font-semibold text-[#1A1A1A] tracking-tight">
-            Om meg
-          </h2>
-          <p className="text-[#4A4A4A] leading-relaxed text-[15px] mt-3">
-            {profile.bio}
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-xl font-semibold text-[#1A1A1A] tracking-tight">
-            Hobbyer
-          </h2>
-          <div className="flex flex-wrap gap-2 mt-3">
-            {profile.hobbyTags?.map((tag: string) => (
-              <span
-                key={tag}
-                className="px-3 py-1 bg-[#F5F5F5] rounded-full text-sm text-[#333]"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        </section>
-
-        <section>
-          <h2 className="text-xl font-semibold text-[#1A1A1A] tracking-tight">
-            Musikk
-          </h2>
-          <div className="flex flex-wrap gap-2 mt-3">
-            {profile.musicTags?.map((tag: string) => (
-              <span
-                key={tag}
-                className="px-3 py-1 bg-[#F5F5F5] rounded-full text-sm text-[#333]"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
         </section>
       </div>
-    </div>
+    </main>
   );
 }

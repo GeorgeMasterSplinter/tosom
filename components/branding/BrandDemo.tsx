@@ -1,5 +1,5 @@
 /** ToSom BrandDemo
- *  BR11 — Vis alle fargar, typografi, knappar, ikon og eksempeltekst */
+ *  BR11 — Vis alle farger, typografi, knapper, ikon og eksempeltekst */
 
 'use client';
 
@@ -50,7 +50,7 @@ export function BrandDemo() {
       {/* Typografi */}
       <section>
         <BrandTitle variant="heading2" className="mb-4">Typografi</BrandTitle>
-        <BrandSubtitle className="mb-6">Inter — roleg, moden, lesbar</BrandSubtitle>
+        <BrandSubtitle className="mb-6">Inter — rolig, moden, lesbar</BrandSubtitle>
         <div className="space-y-4">
           <div>
             <BrandText variant="heading1">title — text-xl font-semibold</BrandText>
@@ -88,9 +88,9 @@ export function BrandDemo() {
         </div>
       </section>
 
-      {/* Knappar */}
+      {/* Knapper */}
       <section>
-        <BrandTitle variant="heading2" className="mb-4">Knappar</BrandTitle>
+        <BrandTitle variant="heading2" className="mb-4">Knapper</BrandTitle>
         <BrandSubtitle className="mb-6">Primær, sekundær, tertiær, ghost, success</BrandSubtitle>
         <div className="flex flex-wrap gap-4">
           <BrandButton variant="primary">Primær</BrandButton>
@@ -125,16 +125,16 @@ export function BrandDemo() {
       {/* Tone of voice */}
       <section>
         <BrandTitle variant="heading2" className="mb-4">Tone of Voice</BrandTitle>
-        <BrandSubtitle className="mb-6">Varm · Rolig · Moden · Kortfatta · Trygg</BrandSubtitle>
+        <BrandSubtitle className="mb-6">Varm · Rolig · Moden · Kortfattet · Trygg</BrandSubtitle>
         <div className="space-y-3 p-6 rounded-xl bg-accent border border-beige">
           <BrandText variant="bodyLarge">
-            Hei, eg heiter Kari og bur i Bergen. Eg leitar etter ein som vil dela gode matkveldar og stille stunder.
+            Hei, jeg heter Kari og bor i Bergen. Jeg leter etter en som vil dele gode matkvelder og stille stunder.
           </BrandText>
           <BrandText variant="bodyLarge" className="text-secondary">
-            Eg trivst best med ein kopp kaffe og ei god bok. Kanskje du også?
+            Jeg trives best med en kopp kaffe og en god bok. Kanskje du også?
           </BrandText>
           <BrandText variant="bodyMedium" className="text-gray-500">
-            Svar gjerne med kva som gjorde deg glad sist.
+            Svar gjerne med hva som gjorde deg glad sist.
           </BrandText>
         </div>
       </section>

@@ -68,7 +68,7 @@ function ModalContent({ entry }: { entry: ModalEntry }) {
     default:
       return (
         <div className="space-y-4">
-          <p className="text-sm text-[#4A4A4A]/60">Modal av typen «{type}» er ikkje implementert enno.</p>
+          <p className="text-sm text-[#4A4A4A]/60">Modal av typen «{type}» er ikke implementert ennå.</p>
           {p.onClose && typeof p.onClose === "function" ? (
             <button onClick={p.onClose} className="px-5 py-2 text-xs rounded-xl bg-white border border-[#e2e8f0] text-[#4A4A4A]/60 hover:bg-[#f8fafc] transition-colors">← Lukk</button>
           ) : null}

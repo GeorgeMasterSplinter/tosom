@@ -1,25 +1,26 @@
-import { NextRequest, NextResponse } from 'next/server'
+
 import { getRateLimitLogs } from '@/lib/admin/system'
 import { getGlobalRateLimitStats } from '@/lib/system/rateMonitor'
 import { requireAdmin } from '@/lib/admin/requireAuth'
 
-export async function GET(request: NextRequest) {
+export async function GET(request: Request): Promise<Response> {
   try {
     const { adminId } = await request.json()
-    await requireAdmin(adminId)
+    await requireAdmin()
 
-    const { searchParams } = request.nextUrl
-    const userId = searchParams.get('userId') || undefined
-    const sinceHours = searchParams.get('sinceHours')
-      ? parseInt(searchParams.get('sinceHours'))
+    const url = new URL(request.url)
+    const userId = url.searchParams.get('userId') || undefined
+    const sinceHoursRaw = url.searchParams.get('sinceHours')
+      ? parseInt(url.searchParams.get('sinceHours') ?? '')
       : undefined
 
+    const sinceHours = sinceHoursRaw
     const stats = await getGlobalRateLimitStats(sinceHours ?? 24)
     const logs = await getRateLimitLogs({ userId, sinceHours })
 
-    return NextResponse.json({ stats, logs })
+    return new Response(JSON.stringify({ stats, logs }), { status: 200, headers: { 'Content-Type': 'application/json' } })
   } catch (error) {
     console.error('[admin system rate-limits GET] Error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500, headers: { 'Content-Type': 'application/json' } })
   }
 }

@@ -5,23 +5,20 @@ export default async function Page() {
   const users = await prisma.user.findMany({
     select: {
       id: true,
-      name: true,
       email: true,
       createdAt: true,
       onboardingStep: true,
       profile: {
         select: {
+          firstName: true,
+          lastName: true,
           age: true,
         }
       },
-      journeyTasks: {
+      journey: {
         select: {
-          step: true,
-          completed: true,
-          createdAt: true,
-        },
-        orderBy: {
-          step: 'asc'
+          phase: true,
+          day: true,
         }
       }
     },
@@ -49,7 +46,11 @@ export default async function Page() {
             {users.map((user) => (
               <tr key={user.id} className="hover:bg-[#1A1A1A]/5 transition-colors">
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <p className="text-sm font-medium leading-relaxed text-[#1A1A1A]">{user.name || user.email || user.id}</p>
+                  <p className="text-sm font-medium leading-relaxed text-[#1A1A1A]">
+                    {user.profile?.firstName && user.profile?.lastName
+                      ? `${user.profile.firstName} ${user.profile.lastName}`.trim()
+                      : user.email || 'N/A'}
+                  </p>
                   <p className="text-xs leading-relaxed text-[#4A4A4A]">ID: {user.id}</p>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm leading-relaxed text-[#4A4A4A]">
@@ -57,17 +58,14 @@ export default async function Page() {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <p className="text-sm leading-relaxed text-[#1A1A1A]">
-                    {user.journeyTasks.length > 0 
-                      ? `Step ${user.journeyTasks[user.journeyTasks.length - 1]?.step || 1} — ${user.journeyTasks[user.journeyTasks.length - 1]?.completed ? 'Completed' : 'In Progress'}`
+                    {user.journey 
+                      ? `Step ${user.journey.day || 1} — ${user.journey.phase || 'Not Started'}`
                       : 'Not Started'
                     }
                   </p>
-                  <p className="text-xs leading-relaxed text-[#4A4A4A]">
-                    {user.journeyTasks.length} tasks
-                  </p>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm leading-relaxed text-[#4A4A4A]">
-                  {new Date(user.createdAt).toLocaleDateString("no-NO")}
+                  {user.createdAt ? new Date(user.createdAt).toLocaleDateString("no-NO") : 'N/A'}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
                   <Link 

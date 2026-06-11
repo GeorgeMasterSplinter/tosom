@@ -10,10 +10,14 @@ export default async function AdminConversationsPage() {
       createdAt: true,
       updatedAt: true,
       matchId: true,
-      startedAt: true,
       endedAt: true,
+      lastMessageAt: true,
+      lastMessagePreview: true,
+      unreadCountA: true,
+      unreadCountB: true,
+      frozenAt: true,
+      frozenBy: true,
       journeyStep: true,
-      journeyProgress: true,
       _count: { select: { messages: true } },
     },
     orderBy: { updatedAt: 'desc' }
@@ -41,9 +45,6 @@ export default async function AdminConversationsPage() {
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Messages
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Started
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Last Activity
@@ -76,10 +77,7 @@ export default async function AdminConversationsPage() {
                   {conversation._count.messages}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {new Date(conversation.createdAt).toLocaleDateString()}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {new Date(conversation.updatedAt).toLocaleDateString()}
+                  {conversation.updatedAt ? new Date(conversation.updatedAt).toLocaleDateString() : 'N/A'}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <Link 

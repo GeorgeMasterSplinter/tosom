@@ -27,42 +27,44 @@ export default function ProfileEditPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-stone-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-8 h-8 border-2 border-stone-300 border-t-stone-600 rounded-full animate-spin mx-auto" />
-          <p className="mt-4 text-sm text-stone-500">Lastar profil …</p>
+          <div className="w-8 h-8 border-2 border-gray-700 border-t-white rounded-full animate-spin mx-auto" />
+          <p className="mt-4 text-sm text-gray-500">Laster profil…</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-stone-50">
-      <header className="bg-white border-b border-stone-200">
-        <div className="max-w-3xl mx-auto px-4 py-8">
-          <h1 className="text-2xl font-light text-stone-800 tracking-tight">Profil</h1>
-          <p className="mt-1 text-sm text-stone-500">
-            Oppdater opplysingane dine — dei påverkar korleis du blir matcha.
+    <div className="min-h-screen bg-gray-950 text-white">
+      <div className="max-w-xl mx-auto py-10 space-y-10">
+        {/* Header */}
+        <div>
+          <h1 className="text-3xl font-light text-white">Rediger profil</h1>
+          <p className="text-gray-400 mt-1">
+            Oppdater opplysningene dine — de påvirker hvordan du blir matchet.
           </p>
         </div>
-      </header>
 
-      <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
+        {/* Feilmelding */}
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3">
+          <div className="text-red-400 text-sm bg-red-950/50 border border-red-900/30 rounded-xl px-4 py-3">
             {error}
           </div>
         )}
 
+        {/* Lagringsmelding */}
         {showSaved && (
-          <div className="bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg px-4 py-3 flex items-center gap-2">
+          <div className="text-green-400 text-sm bg-green-950/50 border border-green-900/30 rounded-xl px-4 py-3 flex items-center gap-2">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
-            Profil lagra
+            Profil lagret
           </div>
         )}
 
+        {/* Skjema */}
         <ProfileEditForm
           initialProfile={profile}
           onSaved={() => setShowSaved(true)}

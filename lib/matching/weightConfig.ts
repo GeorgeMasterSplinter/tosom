@@ -3,16 +3,22 @@
 /**
  * Default vekter (må summere til 1.0)
  */
-const DEFAULT_WEIGHTS = {
+const DEFAULT_WEIGHTS: Record<string, number> = {
   base: 0.4,
   resonance: 0.25,
   semantic: 0.25,
   intimacy: 0.05,
   future: 0.05,
-} as const;
+};
 
 type WeightKey = keyof typeof DEFAULT_WEIGHTS;
-type Weights = Record<WeightKey, number>;
+type Weights = {
+  base: number;
+  resonance: number;
+  semantic: number;
+  intimacy: number;
+  future: number;
+};
 
 /**
  * Last vekter fra config/matching.ts, med fallback til defaults.
@@ -28,11 +34,11 @@ export function getWeights(): Weights {
 
       // Map known keys
       const weights: Weights = {
-        base: raw.base ?? DEFAULT_WEIGHTS.base,
-        resonance: raw.resonance ?? DEFAULT_WEIGHTS.resonance,
-        semantic: raw.semantic ?? DEFAULT_WEIGHTS.semantic,
-        intimacy: raw.intimacy ?? DEFAULT_WEIGHTS.intimacy,
-        future: raw.future ?? DEFAULT_WEIGHTS.future,
+        base: raw.base ?? 0.4,
+        resonance: raw.resonance ?? 0.25,
+        semantic: raw.semantic ?? 0.25,
+        intimacy: raw.intimacy ?? 0.05,
+        future: raw.future ?? 0.05,
       };
 
       // Validate sum
@@ -41,7 +47,13 @@ export function getWeights(): Weights {
         console.warn(
           `[weightConfig] Vekt-sum er ${sum} (ikkje 1.0). Brukar default-viktane.`,
         );
-        return { ...DEFAULT_WEIGHTS };
+        return {
+          base: 0.4,
+          resonance: 0.25,
+          semantic: 0.25,
+          intimacy: 0.05,
+          future: 0.05,
+        };
       }
 
       return weights;
@@ -51,7 +63,13 @@ export function getWeights(): Weights {
   }
 
   // Fallback til default
-  return { ...DEFAULT_WEIGHTS };
+  return {
+    base: 0.4,
+    resonance: 0.25,
+    semantic: 0.25,
+    intimacy: 0.05,
+    future: 0.05,
+  };
 }
 
 /**
@@ -61,7 +79,7 @@ export function getWeightsWithOverride(
   overrides: Partial<Record<WeightKey, number>>,
 ): Weights {
   const base = getWeights();
-  return { ...base, ...overrides };
+  return { ...base, ...overrides } as Weights;
 }
 
 /**

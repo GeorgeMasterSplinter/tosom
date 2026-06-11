@@ -1,10 +1,10 @@
-import { getJourneyState } from "./getJourneyState";
 import { createSystemMessage } from "../createSystemMessage";
 import { milestonesAPI } from "./milestones";
+import { buildJourneyState, JourneyState } from "./journeyEngine";
 import prisma from "@/lib/prisma";
 
 export async function runJourneyStep(conversationId: string) {
-  let journey = await getJourneyState(conversationId);
+  const journey: JourneyState = buildJourneyState(1, 1);
   let day = journey.completedSteps;
 
   if (day < 1 || day > 35) return;
@@ -84,13 +84,10 @@ export async function runJourneyStep(conversationId: string) {
   }
 
   // Oppdater progresjon
-  journey = await prisma.journeyProgress.update({
-    where: { conversationId },
-    data: {
-      completedSteps: day + 1,
-      currentStep: day + 1,
-    },
+  await prisma.journeyProgress.update({
+    where: { userId: conversationId },
+    data: { day: day + 1 },
   });
 
-  return journey;
+  return buildJourneyState(day + 1, day + 1);
 }

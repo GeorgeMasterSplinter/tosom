@@ -32,13 +32,12 @@ export default function ConversationView({ conversationId }: { conversationId: s
       setJourney(data.journey);
       setIsNewConversation(data.isNewConversation);
 
-      // Sjekk om bruker allerede har valgt
       if (data.journey?.userAId && data.journey?.userBId && currentUserId) {
         const userField = currentUserId === data.journey.userAId ? "continueA" : "continueB";
         setHasChosen(!!data.journey[userField]);
       }
-    } catch (err) {
-      console.error("Failed to refresh messages", err);
+    } catch {
+      // Feilhåndtering er skjult for brukeren
     }
   };
 
@@ -69,7 +68,6 @@ export default function ConversationView({ conversationId }: { conversationId: s
       type: "user",
     };
 
-    // Optimistic UI
     setMessages((prev) => [...prev, optimisticMessage]);
     const toSend = input;
     setInput("");
@@ -87,26 +85,20 @@ export default function ConversationView({ conversationId }: { conversationId: s
         body: JSON.stringify({ content: toSend }),
       });
 
-      if (!res.ok) throw new Error("Failed to send");
+      if (!res.ok) throw new Error("Sending feila");
 
       const data = await res.json();
 
-      // Erstatt optimistic med ekte melding
       setMessages((prev) =>
         prev.map((m) => (m.id === optimisticMessage.id ? data.message : m))
       );
 
-      // Hent oppdaterte meldinger fra server
       await refreshMessages();
-    } catch (err) {
-      console.error("Send failed", err);
-
-      // Fjern optimistic message
+    } catch {
       setMessages((prev) =>
         prev.filter((m) => m.id !== optimisticMessage.id)
       );
 
-      // Sett input tilbake
       setInput(toSend);
     } finally {
       setSending(false);
@@ -114,25 +106,28 @@ export default function ConversationView({ conversationId }: { conversationId: s
   }
 
   return (
-    <div className="flex flex-col h-screen bg-[#FAFAFA]">
+    <div className="flex flex-col h-screen bg-gray-950 text-white">
       {/* Header */}
-      <div className="px-4 py-3 border-b border-[#E5E5E5] bg-white">
-        <h1 className="text-[17px] font-medium">Samtale</h1>
+      <div className="sticky top-0 bg-gray-950/80 backdrop-blur-sm py-4 z-10 border-b border-white/10">
+        <div className="max-w-2xl mx-auto px-4">
+          <h1 className="text-2xl font-light text-white">Samtale</h1>
+          <p className="text-gray-400 text-sm">Med din match</p>
+        </div>
       </div>
 
       {/* Meldingsliste */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-6">
+      <div className="flex-1 overflow-y-auto max-w-2xl mx-auto w-full px-4 py-4 space-y-10 pb-32 pt-4">
         {loading && (
-          <div className="text-center text-[#777] text-[14px]">Laster meldinger…</div>
+          <div className="text-center text-gray-400 text-sm">Laster meldinger…</div>
         )}
 
         {!loading && messages.length === 0 && (
-          <div className="text-center text-[#777] text-[14px]">
+          <div className="text-center text-gray-400 text-sm">
             Ingen meldinger ennå.
           </div>
         )}
 
-        {/* MatchBanner: vis kun når samtalen er ny, matchInfo finst, og bruker ikkje har skrive ennå */}
+        {/* MatchBanner */}
         {!loading && matchInfo && showBanner && isNewConversation && (
           <div className="relative">
             <MatchBanner
@@ -157,7 +152,7 @@ export default function ConversationView({ conversationId }: { conversationId: s
 
         {isTyping && <TypingIndicator />}
 
-        {/* ContinueChoice: vis på dag 30 hvis bruker ikke har valgt ennå */}
+        {/* ContinueChoice */}
         {!loading && journey && journey.currentDay >= 30 && !hasChosen && journey.conversationId === conversationId && (
           <ContinueChoice
             onChoose={async (choice) => {
@@ -174,21 +169,21 @@ export default function ConversationView({ conversationId }: { conversationId: s
       </div>
 
       {/* Inputfelt */}
-      <div className="border-t border-[#E5E5E5] bg-white p-3">
-        <div className="flex items-center gap-2">
+      <div className="sticky bottom-0 bg-gray-950/80 backdrop-blur-sm py-4 z-10 border-t border-white/10">
+        <div className="max-w-2xl mx-auto px-4 flex gap-3">
           <input
             type="text"
-            placeholder="Skriv en melding…"
+            placeholder="Skriv ei melding…"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onFocus={() => setShowBanner(false)}
-            className="flex-1 px-3 py-2 border border-[#DADADA] rounded-lg text-[15px] focus:outline-none"
+            className="flex-1 rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/20"
             disabled={sending}
           />
           <button
             onClick={sendMessage}
             disabled={sending || !input.trim()}
-            className="px-4 py-2 bg-[#1A1A1A] text-white rounded-lg text-[15px] font-medium active:scale-[0.97] disabled:opacity-40"
+            className="rounded-xl bg-white text-gray-900 font-medium px-4 py-3 hover:bg-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Send
           </button>

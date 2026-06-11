@@ -60,17 +60,17 @@ function validateStep(
   if (completed) return {};
   const errors: ValidationErrors = {};
   if (step === "name_age") {
-    if (name.length <= 1) errors.name = "Skriv inn eit namn.";
-    if (age < 18 || age > 99) errors.age = "Alder må vere mellom 18 og 99.";
+    if (name.length <= 1) errors.name = "Skriv inn et navn.";
+    if (age < 18 || age > 99) errors.age = "Alder må være mellom 18 og 99.";
   }
   if (step === "values" && values.length < 3)
-    errors.values = "Velg minst 3 verdiar.";
+    errors.values = "Velg minst 3 verdier.";
   if (step === "interests" && interests.length < 3)
     errors.interests = "Velg minst 3 interesser.";
   if (step === "bio" && bio.length < 20)
-    errors.bio = "Skriv inn minst 20 teikn.";
+    errors.bio = "Skriv inn minst 20 tegn.";
   if (step === "photos" && photos.length < 1)
-    errors.photos = "Legg til minst eitt bilete.";
+    errors.photos = "Legg til minst ett bilde.";
   if (step === "ready" && !readyForMatch)
     errors.ready = "Slå på 'Klar for match'.";
   return errors;
@@ -81,9 +81,9 @@ const stepTitles: Record<OnboardingStep, string> = {
   welcome: "Velkommen til ToSom",
   name_age: "Kven er du?",
   values: "Hva er viktig for deg?",
-  interests: "Hva liker du å gjere?",
-  bio: "Fortell litt om deg sjølv",
-  photos: "Legg til bilete",
+  interests: "Hva liker du å gjøre?",
+  bio: "Fortell litt om deg selv",
+  photos: "Legg til bilder",
   ready: "Klar for match?",
   completed: "Profilen din er klar",
 };
@@ -142,7 +142,7 @@ export default function OnboardingScreen({
               {stepTitles.welcome}
             </h2>
             <p className="text-sm text-[#4A4A4A]/60 max-w-sm">
-              Her handlar det om ro, tryggleik og ekte møte.
+              Her handlar det om ro, trygghet og ekte møte.
             </p>
           </div>
           <button
@@ -164,7 +164,7 @@ export default function OnboardingScreen({
           <div className="space-y-4">
             <div>
               <label className="text-xs text-[#4A4A4A]/60 mb-1 block">
-                Namn
+                Navn
               </label>
               <input
                 type="text"
@@ -173,7 +173,7 @@ export default function OnboardingScreen({
                 className={`w-full px-4 py-3 text-sm rounded-xl border ${
                   errors.name ? "border-red-300 bg-red-50" : "border-[#e2e8f0] bg-[#f8fafc]"
                 } focus:outline-none focus:ring-1 focus:ring-emerald-200`}
-                placeholder="Kva heter du?"
+                placeholder="Hva heter du?"
               />
               {errors.name && (
                 <p className="text-xs text-red-600 mt-1">{errors.name}</p>
@@ -220,7 +220,7 @@ export default function OnboardingScreen({
             ))}
           </div>
           <p className="text-xs text-[#4A4A4A]/40">
-            {values.length} valde / minst 3 påkrevd
+            {values.length} valgte / minst 3 påkrevd
           </p>
           {errors.values && (
             <p className="text-xs text-amber-700 bg-amber-50 px-3 py-2 rounded-lg">
@@ -249,7 +249,7 @@ export default function OnboardingScreen({
             ))}
           </div>
           <p className="text-xs text-[#4A4A4A]/40">
-            {interests.length} valde / minst 3 påkrevd
+            {interests.length} valgte / minst 3 påkrevd
           </p>
           {errors.interests && (
             <p className="text-xs text-amber-700 bg-amber-50 px-3 py-2 rounded-lg">
@@ -273,7 +273,7 @@ export default function OnboardingScreen({
               errors.bio ? "border-red-300 bg-red-50" : "border-[#e2e8f0]"
             }`}
             rows={4}
-            placeholder="Fortell litt om deg sjølv..."
+            placeholder="Fortell litt om deg selv..."
           />
           <div className="flex justify-between items-center">
             {errors.bio && (
@@ -282,7 +282,7 @@ export default function OnboardingScreen({
               </p>
             )}
             <p className="text-xs text-[#4A4A4A]/40">
-              {bio.length} / 500 teikn
+              {bio.length} / 500 tegn
             </p>
           </div>
         </div>
@@ -306,7 +306,7 @@ export default function OnboardingScreen({
                   {url ? (
                     <img
                       src={url}
-                      alt={`Bilete ${idx + 1}`}
+                      alt={`Bilde ${idx + 1}`}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -336,7 +336,7 @@ export default function OnboardingScreen({
             })}
           </div>
           <p className="text-xs text-[#4A4A4A]/40">
-            {photos.length} bilete / minst 1 påkrevd
+            {photos.length} bilder / minst 1 påkrevd
           </p>
           {errors.photos && (
             <p className="text-xs text-amber-700 bg-amber-50 px-3 py-2 rounded-lg">
@@ -354,7 +354,7 @@ export default function OnboardingScreen({
             {stepTitles.ready}
           </h2>
           <p className="text-sm text-[#4A4A4A]/60">
-            Når du er klar, byrjar vi å lete etter nokon som passar deg.
+            Når du er klar, starter vi å lete etter noen som passer deg.
           </p>
           <div className="flex items-center justify-between">
             <span className="text-sm text-[#4A4A4A]">
@@ -391,7 +391,7 @@ export default function OnboardingScreen({
               {stepTitles.completed}
             </h2>
             <p className="text-sm text-[#4A4A4A]/60 max-w-sm">
-              Vi gir beskjed når vi finn ein match.
+              Vi gir beskjed når vi finner en match.
             </p>
           </div>
           <button

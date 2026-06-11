@@ -27,7 +27,7 @@ export default function DashboardTop({
   });
 
   const statusMap: Record<string, { label: string; color: string }> = {
-    not_started: { label: "Ikkje starta", color: "bg-[#F7F1E3] text-[#4A4A4A]" },
+    not_started: { label: "Ikke startet", color: "bg-[#F7F1E3] text-[#4A4A4A]" },
     in_progress: { label: "På veg", color: "bg-[#E7EEF4] text-[#2F3A45]" },
     completed: { label: "Fullført", color: "bg-[#E6F3EC] text-[#2F4538]" },
   };

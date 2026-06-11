@@ -21,8 +21,17 @@ export async function queryLogs(filter: FilterOptions = {}): Promise<any[]> {
   applyDateFilter(where, filter.sinceHours)
   if (filter.level) where.level = filter.level
   if (filter.module) where.module = filter.module
-  if (filter.search) where.message = { contains: filter.search, mode: 'insensitive' }
-  if (filter.traceId) where.metadata = { path: ['traceId'], contains: filter.traceId }
+  if (filter.search) where.message = { contains: filter.search, mode: 'insensitive' as const }
+  // JSON path queries use raw queries
+  if (filter.traceId) {
+    // Use raw query for JSON path contains
+    return prisma.$queryRaw`
+      SELECT * FROM "SystemLog"
+      WHERE "metadata"->>'traceId' = ${filter.traceId}
+      ORDER BY "createdAt" DESC
+      LIMIT 200
+    ` as any
+  }
 
   return prisma.systemLog.findMany({
     where,
@@ -36,8 +45,9 @@ export async function queryErrors(filter: FilterOptions = {}): Promise<any[]> {
 }
 
 export async function queryByTraceId(traceId: string): Promise<any[]> {
-  return prisma.systemLog.findMany({
-    where: { metadata: { path: ['traceId'], contains: traceId } },
-    orderBy: { createdAt: 'asc' as const },
-  })
+  return prisma.$queryRaw`
+    SELECT * FROM "SystemLog"
+    WHERE "metadata"->>'traceId' = ${traceId}
+    ORDER BY "createdAt" ASC
+  ` as any
 }

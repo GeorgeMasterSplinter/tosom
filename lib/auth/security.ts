@@ -2,26 +2,27 @@
  * ToSom Auth Security
  * 
  * Sikkerheitslag for autentisering og autorisasjon.
+ * Brukar getServerSession (NextAuth) sidan det ikkje eksisterer ein Session model i Prisma.
  */
 
-import { prisma } from '@/lib/prisma'
+import { getServerSession } from 'next-auth/next'
+import { authOptions } from '@/lib/auth/auth-options'
 import { logWarn } from '@/lib/system/log'
+import { Role } from '@prisma/client'
 
 /**
- * Verifiser at ein brukar er authentisert
+ * Verifiser at ein brukar er authentisert via NextAuth session.
+ * Returnerar null dersom ikkje innlogga.
  */
-export async function verifySession(token: string): Promise<{ userId: string; role: string } | null> {
+export async function verifySession(): Promise<{ userId: string; role: Role } | null> {
   try {
-    const session = await prisma.session.findUnique({
-      where: { token },
-      select: { userId: true, role: true, expiresAt: true },
-    })
+    const session = await getServerSession(authOptions)
 
-    if (!session || session.expiresAt < new Date()) {
+    if (!session?.user?.id) {
       return null
     }
 
-    return { userId: session.userId, role: session.role }
+    return { userId: session.user.id, role: ((session.user as any).role as Role) || Role.USER }
   } catch {
     return null
   }
@@ -30,8 +31,8 @@ export async function verifySession(token: string): Promise<{ userId: string; ro
 /**
  * Krev authentisering — returnerer userId eller kastar feil
  */
-export async function requireAuth(token: string): Promise<string> {
-  const session = await verifySession(token)
+export async function requireAuth(): Promise<string> {
+  const session = await verifySession()
   if (!session) {
     throw new Error('UNAUTHORIZED')
   }
@@ -41,12 +42,12 @@ export async function requireAuth(token: string): Promise<string> {
 /**
  * Krev admin-rettar — returnerer userId eller kastar feil
  */
-export async function requireAdmin(token: string): Promise<string> {
-  const session = await verifySession(token)
+export async function requireAdmin(): Promise<string> {
+  const session = await verifySession()
   if (!session) {
     throw new Error('UNAUTHORIZED')
   }
-  if (session.role !== 'ADMIN') {
+  if (session.role !== Role.ADMIN) {
     throw new Error('FORBIDDEN')
   }
   return session.userId
@@ -54,33 +55,16 @@ export async function requireAdmin(token: string): Promise<string> {
 
 /**
  * Detekter anomali i sesjon (IP/agent-endring)
+ * Merk: Ikkje implementert utan IP-logging i DB.
  */
 export async function detectSessionAnomaly(
-  userId: string,
-  currentIp: string,
-  userAgent: string,
+  _userId: string,
+  _currentIp: string,
+  _userAgent: string,
 ): Promise<boolean> {
-  try {
-    const sessions = await prisma.session.findMany({
-      where: { userId },
-      select: { ipHash: true, userAgentHash: true },
-    })
-
-    for (const session of sessions) {
-      if (session.ipHash !== currentIp || session.userAgentHash !== userAgent) {
-        await logWarn(`Session anomaly detected for user ${userId}`, 'auth/security', {
-          type: 'session_anomaly',
-          userId,
-          currentIp,
-        })
-        return true
-      }
-    }
-
-    return false
-  } catch {
-    return false
-  }
+  // IP-basert anomali-deteksjon krev IP-logging som ikkje er implementert.
+  // Returnerer false som standard for å unngå falske positive.
+  return false
 }
 
 /**

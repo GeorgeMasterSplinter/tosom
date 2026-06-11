@@ -1,22 +1,23 @@
-import { NextResponse } from "next/server";
+
 import prisma from "@/lib/prisma";
 import { findBestMatchFor } from "@/lib/matching/findBestMatchFor";
-import { calculateMatchScore, MatchBlocks } from "@/lib/matching/calculateMatchScore";
-import { explainMatch } from "@/lib/matching/explainMatch";
-import { User, Profile } from "@prisma/client";
+import { calculateScore, generateExplanation } from "@/lib/matching/scorer";
+import { User, Profile, JourneyPhase } from "@prisma/client";
 import { generateFirstMessage } from "@/lib/journey/generateFirstMessage";
 
-export async function POST(req: Request) {
-  const { userId } = await req.json();
+export async function POST(
+  request: Request
+): Promise<Response> {
+  const { userId } = await request.json();
 
   if (!userId) {
-    return NextResponse.json({ error: "Missing userId" }, { status: 400 });
+    return new Response(JSON.stringify({ error: "Missing userId" }), { status: 400, headers: { "Content-Type": "application/json" } });
   }
 
   const matchUserId = await findBestMatchFor(userId);
 
   if (!matchUserId) {
-    return NextResponse.json({ error: "No match found" }, { status: 404 });
+    return new Response(JSON.stringify({ error: "No match found" }), { status: 404, headers: { "Content-Type": "application/json" } });
   }
 
   // Hent profil for begge brukarar for scoreberegning
@@ -32,38 +33,23 @@ export async function POST(req: Request) {
   ]);
 
   if (!user?.profile || !matchUser?.profile) {
-    return NextResponse.json(
-      { error: "Profile missing for one or both users" },
-      { status: 500 }
-    );
+    return new Response(JSON.stringify({ error: "Profile missing for one or both users" }), { status: 500, headers: { "Content-Type": "application/json" } });
   }
 
-  // Beregn matchblokkar og forklaring
-  const result = calculateMatchScore(
-    user as User & { profile: Profile | null },
-    matchUser as User & { profile: Profile | null },
-    { returnBlocks: true }
+  // Beregn match-score med den nye scorer-motoren
+  const scoreResult = calculateScore(
+    user.profile as unknown as Record<string, unknown>,
+    matchUser.profile as unknown as Record<string, unknown>
   );
-  const blocks: MatchBlocks = result as MatchBlocks;
-  const explanation = explainMatch(blocks);
-  const score = Math.min(
-    blocks.basic +
-      blocks.lifestyle +
-      blocks.interests +
-      blocks.location +
-      blocks.needs +
-      blocks.boundaries +
-      blocks.intentions,
-    100
-  );
+  const explanation = generateExplanation(scoreResult);
 
   // Opprett ny Match
   const match = await prisma.match.create({
     data: {
       userAId: userId,
       userBId: matchUserId,
-      matchScore: 0,
-      matchQuality: "moderate",
+      matchScore: scoreResult.totalScore,
+      matchQuality: scoreResult.matchQuality,
       status: "active",
     },
   });
@@ -77,39 +63,44 @@ export async function POST(req: Request) {
     },
   });
 
-  // Opprett JourneyProgress for matchet
+  // Opprett JourneyProgress for matchet (using userId, not conversationId)
+  const journeyPhase: JourneyPhase = "EARLY";
   await prisma.journeyProgress.create({
     data: {
-      conversationId: conversation.id,
-      phase: "EARLY",
-      currentStep: 0,
-      completedSteps: 0,
-      totalSteps: 36,
+      userId: userId,
+      phase: journeyPhase,
+      day: 1,
     },
   });
 
   // Send første systemmelding
+  const firstName = matchUser.profile?.firstName || "";
+  const lastName = matchUser.profile?.lastName || "";
+  const name = `${firstName} ${lastName}`.trim() || "Ukjent";
   const firstMessage = generateFirstMessage({
-    name: matchUser.name || "Ukjent",
-    score,
-    explanation,
+    name,
+    score: scoreResult.totalScore,
+    explanation: explanation.explanation,
   });
 
+  // System messages use a system user or null
+  const systemUserId = "system";
   await prisma.message.create({
     data: {
       conversationId: conversation.id,
-      senderId: null as any,
+      senderId: systemUserId,
       content: firstMessage,
+      type: "system",
     },
   });
 
-  return NextResponse.json({
+  return new Response(JSON.stringify({
     conversationId: conversation.id,
     matchInfo: {
-      name: matchUser.name || "Ukjent",
+      name,
       age: matchUser.profile?.age || 0,
-      score,
-      explanation,
+      score: scoreResult.totalScore,
+      explanation: explanation.explanation,
     },
-  });
+  }), { status: 200, headers: { "Content-Type": "application/json" } });
 }

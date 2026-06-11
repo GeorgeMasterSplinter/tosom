@@ -43,6 +43,7 @@ enum MessageCategory {
   system
   system_message
   continue_choice
+  image
 }
 
 enum MessageState {

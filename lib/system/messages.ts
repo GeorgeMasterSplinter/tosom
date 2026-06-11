@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma'
-import { SystemMessageType } from '@prisma/client'
-import { dispatchEvent, NotificationType } from '@/lib/notifications/dispatcher'
+import { SystemMessageType, NotificationType } from '@prisma/client'
+import { dispatchEvent } from '@/lib/notifications/dispatcher'
 
 export async function sendSystemMessage(userId: string, content: string, type: SystemMessageType = SystemMessageType.INFO): Promise<void> {
   await prisma.systemMessage.create({

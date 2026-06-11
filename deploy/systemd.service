@@ -1,0 +1,32 @@
+[Unit]
+Description=ToSom Production Application
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=tosom
+Group=tosom
+WorkingDirectory=/opt/tosom
+ExecStart=/usr/bin/node server.js
+Restart=always
+RestartSec=10
+Environment=NODE_ENV=production
+Environment=TOSOM_ENV=production
+Environment=LOG_LEVEL=info
+Environment=PORT=3000
+# Last ned secrets fra secrets-manager
+EnvironmentFile=/opt/tosom/.env.prod
+# Sikkerheitsoppsett
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/tosom/.next /opt/tosom/tmp
+CapabilityBoundingSet=
+AmbientCapabilities=
+TimeoutStartSec=30
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

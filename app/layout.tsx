@@ -2,7 +2,7 @@ import "@/styles/globals.css";
 
 export const metadata = {
   title: "ToSom",
-  description: "Nordic-inspired dating platform",
+  description: "Nordisk datingplattform",
 };
 
 export default function RootLayout({

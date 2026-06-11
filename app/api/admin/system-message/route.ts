@@ -1,30 +1,32 @@
-import { NextRequest, NextResponse } from 'next/server'
+
 import { sendSystemMessage } from '@/lib/system/messages'
 import { SystemMessageType } from '@prisma/client'
 import { requireAdmin } from '@/lib/admin/requireAuth'
 
-export async function POST(request: NextRequest) {
+export async function POST(
+  request: Request
+): Promise<Response> {
   try {
     const { adminId, targetUserId, content, type } = await request.json()
 
     if (!adminId) {
-      return NextResponse.json({ error: 'adminId is required' }, { status: 400 })
+      return new Response(JSON.stringify({ error: 'adminId is required' }), { status: 400, headers: { 'Content-Type': 'application/json' } })
     }
     if (!targetUserId) {
-      return NextResponse.json({ error: 'targetUserId is required' }, { status: 400 })
+      return new Response(JSON.stringify({ error: 'targetUserId is required' }), { status: 400, headers: { 'Content-Type': 'application/json' } })
     }
     if (!content) {
-      return NextResponse.json({ error: 'content is required' }, { status: 400 })
+      return new Response(JSON.stringify({ error: 'content is required' }), { status: 400, headers: { 'Content-Type': 'application/json' } })
     }
 
-    await requireAdmin(adminId)
+    await requireAdmin()
 
     const messageType = (type as SystemMessageType) || SystemMessageType.INFO
     await sendSystemMessage(targetUserId, content, messageType)
 
-    return NextResponse.json({ success: true })
+    return new Response(JSON.stringify({ success: true }), { status: 200, headers: { 'Content-Type': 'application/json' } })
   } catch (error) {
     console.error('[admin system-message POST] Error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500, headers: { 'Content-Type': 'application/json' } })
   }
 }

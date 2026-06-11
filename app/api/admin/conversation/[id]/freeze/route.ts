@@ -1,32 +1,35 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { freezeConversation, unfreezeConversation, isFrozen } from '@/lib/chat/freeze'
 import { requireAdmin } from '@/lib/admin/requireAuth'
+import { freezeConversation, unfreezeConversation, isFrozen } from '@/lib/chat/freeze'
 
 export async function POST(
-  request: NextRequest,
-  { params }: { params: { id: string } },
+  request: Request,
+  context: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const body = await request.json()
-    const { adminId } = body
-    const conversationId = params.id
+  const { id: conversationId } = await context.params
 
-    if (!adminId) {
-      return NextResponse.json({ error: 'adminId is required' }, { status: 400 })
-    }
+  const body = await request.json()
+  const { adminId } = body
 
-    const frozen = await isFrozen(conversationId)
-    const action = frozen ? 'unfreeze' : 'freeze'
-
-    if (frozen) {
-      await unfreezeConversation(conversationId, adminId)
-    } else {
-      await freezeConversation(conversationId, adminId)
-    }
-
-    return NextResponse.json({ success: true, frozen: !frozen, action })
-  } catch (error) {
-    console.error('[conversation freeze POST] Error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  if (!adminId) {
+    return new Response(JSON.stringify({ error: 'adminId is required' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' }
+    })
   }
+
+  const frozen = await isFrozen(conversationId)
+
+  if (frozen) {
+    await unfreezeConversation(conversationId, adminId)
+  } else {
+    await freezeConversation(conversationId, adminId)
+  }
+
+  return new Response(
+    JSON.stringify({ success: true, frozen: !frozen }),
+    {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    }
+  )
 }

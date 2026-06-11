@@ -13,7 +13,7 @@ export function generateResetToken(): string {
  */
 export function hashToken(token: string): string {
   const salt = randomBytes(16).toString("hex");
-  const hash = scryptSync(token, salt, 64, { keyLength: 32 }).toString("hex");
+  const hash = scryptSync(token, salt, 32).toString("hex");
   return `${salt}:${hash}`;
 }
 
@@ -22,7 +22,7 @@ export function hashToken(token: string): string {
  */
 export function verifyToken(token: string, storedHash: string): boolean {
   const [salt, hash] = storedHash.split(":");
-  const inputHash = scryptSync(token, salt, 64, { keyLength: 32 }).toString("hex");
+  const inputHash = scryptSync(token, salt, 32).toString("hex");
   return timingSafeEqual(Buffer.from(hash, "hex"), Buffer.from(inputHash, "hex"));
 }
 
@@ -46,7 +46,7 @@ export async function storeResetToken(userId: string, token: string, expiresAt: 
 }
 
 /**
- * Hente og verify token. Returnerer null ved feil/utgått.
+ * Hente og verify token. Returnerar null ved feil/utgått.
  */
 export async function verifyResetToken(token: string): Promise<boolean> {
   const record = await prisma.passwordResetToken.findFirst({

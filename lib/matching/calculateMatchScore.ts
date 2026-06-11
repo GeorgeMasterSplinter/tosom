@@ -71,44 +71,15 @@ export function calculateMatchScore(
   // Samanliknar livsstil-felt frå Steg 3 og 4.
   // Kvart matchande livsstilstrekkk gjev 3 poeng.
 
-  const lifestyleFields: (keyof Pick<
-    Profile,
-    | "jobStatus"
-    | "livingSituation"
-    | "children"
-    | "lifeRhythm"
-    | "activityLevel"
-    | "socialLevel"
-    | "financialStyle"
-    | "weekendStyle"
-    | "travelStyle"
-    | "structureStyle"
-    | "energyStyle"
-    | "communicationStyle"
-    | "planningStyle"
-  >)[] = [
-    "jobStatus",
-    "livingSituation",
-    "children",
-    "lifeRhythm",
-    "activityLevel",
-    "socialLevel",
-    "financialStyle",
-    "weekendStyle",
-    "travelStyle",
-    "structureStyle",
-    "energyStyle",
-    "communicationStyle",
-    "planningStyle",
-  ];
-
-  const matchedLifestyle = lifestyleFields.filter((field) => {
-    const valA = a[field];
-    const valB = b[field];
-    return valA && valB && valA === valB;
-  }).length;
-
-  blocks.lifestyle = Math.min(matchedLifestyle * 3, 30);
+  // Profile has no lifestyle fields — use bio length similarity as proxy
+  const bioA = (a.bio ?? "").trim().toLowerCase();
+  const bioB = (b.bio ?? "").trim().toLowerCase();
+  if (bioA && bioB) {
+    const wordsA = bioA.split(/\s+/);
+    const wordsB = bioB.split(/\s+/);
+    const shared = wordsA.filter((w) => wordsB.includes(w)).length;
+    blocks.lifestyle = Math.min(shared > 0 ? 3 : 0, 30);
+  }
 
   // ============
   // 3. INTERESSER (maks 20 poeng)
@@ -122,10 +93,8 @@ export function calculateMatchScore(
   // ============
   // 4. LOKASJON (maks 10 poeng)
   // ============
-  // Ein fast bonus dersom begge er i same stad.
-  if (a.location && b.location && a.location === b.location) {
-    blocks.location += 10;
-  }
+  // Profile har ingen location-felt — fjerna lokasjons-bonus.
+  blocks.location = 0;
 
   // ============
   // 5. BEHOVKOMPATIBILITET (maks 20 poeng)

@@ -20,11 +20,11 @@ export const authOptions: NextAuthOptions = {
           where: { email: credentials.email },
         });
 
-        if (!user || !user.hashedPassword) {
+        if (!user || !user.password) {
           return null;
         }
 
-        const valid = await verifyPassword(credentials.password, user.hashedPassword);
+        const valid = await verifyPassword(credentials.password, user.password);
 
         if (!valid) {
           return null;
@@ -33,7 +33,7 @@ export const authOptions: NextAuthOptions = {
         return {
           id: user.id,
           email: user.email,
-          name: user.name,
+          name: user.email,
         };
       },
     }),
@@ -47,13 +47,13 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     jwt: ({ token, user }) => {
       if (user) {
-        token.id = user.id;
+        (token as any).id = user.id;
       }
       return token;
     },
     session: ({ session, token }) => {
       if (session.user) {
-        session.user.id = token.id as string;
+        (session.user as any).id = (token as any).id;
       }
       return session;
     },

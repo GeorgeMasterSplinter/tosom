@@ -2,30 +2,30 @@
 
 import { matchFlowAPI, type MatchState } from "../../lib/match/matchFlow";
 
-/** MatchFlowPreview – viser kva fase brukaren er i
- *  TODO: Her skal vi kople til faktisk backend-status for match.
- *  TODO: Her skal vi bruke ekte tidsstempel for 48-timars vindauket. */
+/** MatchFlowPreview – visar hva fasen brukaren er i
+ *  TODO: Her skal vi kopple til faktisk backend-status for match.
+ *  TODO: Her skal vi bruke ekte tidsstempel for 48-timers vindu. */
 
 const stateLabels: Record<MatchState, string> = {
-  idle: "Ikkje starta",
+  idle: "Ikke startet",
   ready_for_match: "Klar for match",
-  searching: "Leitar etter ein match",
-  matched: "Du har ein match!",
-  in_journey: "I ei 30-dagars reise",
-  completed: "Reisa er ferdig",
+  searching: "Leiter etter en match",
+  matched: "Du har fått en match!",
+  in_journey: "I en 30-dagers reise",
+  completed: "Reisen er ferdig",
 };
 
 const stateDescriptions: Record<MatchState, string> = {
-  idle: "Du har ikkje starta matchprosessen ennå.",
+  idle: "Du har ikke startet matchprosessen ennå.",
   ready_for_match:
     "Finn match når du er klar. Du kan trykke knappen for å starte.",
   searching:
-    "Vi leitar etter ein match til deg. Dette tek typisk opptil 48 timar.",
-  matched: "Gratulerer! Du har fått ein match. Aksepter for å starte reisa.",
+    "Vi leter etter en match til deg. Dette tar typisk opptil 48 timer.",
+  matched: "Gratulerer! Du har fått en match. Aksepter å starte reisen.",
   in_journey:
-    "Du er i ein 30-dagars reise med din match. Når den er over kan du starte på nytt.",
+    "Du er i en 30-dagers reise med din match. Når den er over kan du starte på nytt.",
   completed:
-    "Denne matchen er ferdig. Du kan starte ein ny reise når du er klar.",
+    "Denne matchen er ferdig. Du kan starte en ny reise når du er klar.",
 };
 
 export default function MatchFlowPreview({
@@ -34,7 +34,7 @@ export default function MatchFlowPreview({
   matchState?: MatchState;
 }) {
   // MF34 — Dummy-kontekst (hardt kodda for no)
-  // TODO: Denne skal komme frå backend seinare.
+  // TODO: Denne skal komme fra backend seinere.
   const state = matchState ?? "in_journey";
 
   return (
@@ -53,8 +53,8 @@ export default function MatchFlowPreview({
         {matchFlowAPI.getMatchStateDescription(state)}
       </p>
       <p className="text-xs text-[#4A4A4A]">
-        Systemmelding: Når du trykkjer “Finn match”, startar vi eit 48-timars
-        vindauge der vi finn éin person til deg.
+        Systemmelding: Når du trykker Finn match, starter vi et 48-timers
+        vindu der vi finner éin person til deg.
       </p>
     </div>
   );

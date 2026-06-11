@@ -1,17 +1,17 @@
-import { NextRequest, NextResponse } from 'next/server'
+
 import { prisma } from '@/lib/prisma'
 import { markRead } from '@/lib/chat/messageState'
 
 export async function POST(
-  request: NextRequest,
-  { params }: { params: { id: string } },
-) {
+  request: Request,
+  context: { params: Promise<{ id: string }> }
+): Promise<Response> {
   try {
     const { messageId } = await request.json()
-    const conversationId = params.id
+    const { id: conversationId } = await context.params
 
     if (!messageId) {
-      return NextResponse.json({ error: 'messageId is required' }, { status: 400 })
+      return new Response(JSON.stringify({ error: 'messageId is required' }), { status: 400, headers: { 'Content-Type': 'application/json' } })
     }
 
     // Verify user has access to this conversation
@@ -21,14 +21,14 @@ export async function POST(
     })
 
     if (!conv) {
-      return NextResponse.json({ error: 'Conversation not found' }, { status: 404 })
+      return new Response(JSON.stringify({ error: 'Conversation not found' }), { status: 404, headers: { 'Content-Type': 'application/json' } })
     }
 
     // Mark all messages in conversation as read
     await prisma.message.updateMany({
       where: {
         conversationId,
-        senderId: { not: conv.userAId }, // Mark messages from B as read when A views
+        senderId: { not: conv.userAId },
         deletedAt: null,
       },
       data: {
@@ -46,9 +46,9 @@ export async function POST(
       },
     })
 
-    return NextResponse.json({ success: true })
+    return new Response(JSON.stringify({ success: true }), { status: 200, headers: { 'Content-Type': 'application/json' } })
   } catch (error) {
     console.error('[read POST] Error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500, headers: { 'Content-Type': 'application/json' } })
   }
 }

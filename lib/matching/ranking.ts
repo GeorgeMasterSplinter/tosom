@@ -32,7 +32,8 @@ export function rankMatches(
   let filtered = matches;
 
   if (opts?.minScore != null) {
-    filtered = matches.filter((m) => m.scoreResult.totalScore >= opts.minScore);
+    const minScore = opts.minScore;
+    filtered = matches.filter((m) => m.scoreResult.totalScore >= minScore);
   }
 
   return filtered.sort((a, b) => b.scoreResult.totalScore - a.scoreResult.totalScore);

@@ -61,11 +61,11 @@ export default function OnboardingDemo() {
   const { currentStep, profileDraft, progress } = state;
   const stepTitles: Record<OnboardingStep, string> = {
     welcome: "Velkommen til ToSom",
-    name_age: "Kven er du?",
+    name_age: "Hvem er du?",
     values: "Hva er viktig for deg?",
-    interests: "Hva liker du å gjere?",
-    bio: "Fortell litt om deg sjølv",
-    photos: "Legg til bilete",
+    interests: "Hva liker du å gjøre?",
+    bio: "Fortell litt om deg selv",
+    photos: "Legg til bilder",
     ready: "Klar for match?",
     completed: "Profilen din er klar",
   };

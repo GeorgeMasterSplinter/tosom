@@ -1,25 +1,24 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { listNotifications } from '@/lib/admin/notifications'
 import { requireAdmin } from '@/lib/admin/requireAuth'
 
-export async function GET(request: NextRequest) {
+export async function GET(request: Request) {
   try {
     const { adminId } = await request.json()
-    await requireAdmin(adminId)
+    await requireAdmin()
 
-    const { searchParams } = request.nextUrl
+    const url = new URL(request.url)
     const filter = {
-      userId: searchParams.get('userId') || undefined,
-      type: searchParams.get('type') || undefined,
-      read: searchParams.get('read') ? searchParams.get('read') === 'true' : undefined,
-      search: searchParams.get('search') || undefined,
+      userId: url.searchParams.get('userId') || undefined,
+      type: url.searchParams.get('type') || undefined,
+      read: url.searchParams.get('read') ? url.searchParams.get('read') === 'true' : undefined,
+      search: url.searchParams.get('search') || undefined,
     }
 
     const notifications = await listNotifications(filter)
 
-    return NextResponse.json({ notifications })
+    return new Response(JSON.stringify({ notifications }), { status: 200, headers: { 'Content-Type': 'application/json' } })
   } catch (error) {
     console.error('[admin notifications GET] Error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500, headers: { 'Content-Type': 'application/json' } })
   }
 }

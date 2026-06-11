@@ -58,7 +58,7 @@ export default function ChatPanel({
         <ChatView chatState={chatState} />
       </div>
 
-      {/* ChatInputBar nederst (hvis ikkje låst) */}
+      {/* ChatInputBar nederst (hvis ikke låst) */}
       <ChatInputBar
         chatLocked={chatState.chatLocked}
         photosAllowed={chatState.photosAllowed}

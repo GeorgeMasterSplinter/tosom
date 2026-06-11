@@ -1,37 +1,39 @@
-import { NextRequest, NextResponse } from 'next/server'
+
 import { generateReflectionPrompt, generateSupportMessage } from '@/lib/ai/features/journeyGuidance'
-import { requireAuth } from '@/lib/auth/session'
+import { requireAuth } from '@/lib/admin/requireAuth'
 import { captureError } from '@/lib/system/errors'
 import { logInfo } from '@/lib/system/log'
 import { validateAIRequest, enforceAIRateLimit } from '@/lib/ai/security'
 
-export async function POST(request: NextRequest) {
+export async function POST(
+  request: Request
+): Promise<Response> {
   try {
-    const { userId, type, day, context } = await request.json()
+    const { userId, type, day, context: ctx } = await request.json()
 
     if (!userId || !type || !day) {
-      return NextResponse.json({ error: 'userId, type (reflection|support) og day is required' }, { status: 400 })
+      return new Response(JSON.stringify({ error: 'userId, type (reflection|support) og day is required' }), { status: 400, headers: { 'Content-Type': 'application/json' } })
     }
 
     const session = await requireAuth(userId)
     if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } })
     }
 
-    const inputText = type === 'reflection' ? '' : JSON.stringify(context)
+    const inputText = type === 'reflection' ? '' : JSON.stringify(ctx)
     const validation = validateAIRequest(userId, inputText)
     if (!validation.valid) {
-      return NextResponse.json({ error: validation.error }, { status: 400 })
+      return new Response(JSON.stringify({ error: validation.error }), { status: 400, headers: { 'Content-Type': 'application/json' } })
     }
 
     const allowed = enforceAIRateLimit(userId)
     if (!allowed) {
-      return NextResponse.json({ error: 'AI rate limit exceeded' }, { status: 429 })
+      return new Response(JSON.stringify({ error: 'AI rate limit exceeded' }), { status: 429, headers: { 'Content-Type': 'application/json' } })
     }
 
     const result = type === 'reflection'
-      ? await generateReflectionPrompt(day, context)
-      : await generateSupportMessage({ day, ...context })
+      ? await generateReflectionPrompt(day, ctx)
+      : await generateSupportMessage({ day, ...ctx })
 
     await logInfo('Journey guidance generated', 'ai/features', {
       userId,
@@ -39,13 +41,13 @@ export async function POST(request: NextRequest) {
       feature: `journeyGuidance/${type}`,
     })
 
-    return NextResponse.json({ result })
+    return new Response(JSON.stringify({ result }), { status: 200, headers: { 'Content-Type': 'application/json' } })
   } catch (error) {
     await captureError(error, {
       module: 'ai/journey-guidance',
       message: 'Journey guidance API failed',
       metadata: { feature: 'journeyGuidance' },
     })
-    return NextResponse.json({ error: 'AI service failed' }, { status: 500 })
+    return new Response(JSON.stringify({ error: 'AI service failed' }), { status: 500, headers: { 'Content-Type': 'application/json' } })
   }
 }

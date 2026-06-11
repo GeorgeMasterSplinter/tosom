@@ -18,6 +18,8 @@ export default async function UserProfilePage({ params }: Props) {
           bio: true,
           gender: true,
           location: true,
+          firstName: true,
+          lastName: true,
           jobStatus: true,
           livingSituation: true,
           children: true,
@@ -46,6 +48,7 @@ export default async function UserProfilePage({ params }: Props) {
           lifePace: true,
           longTermExpectation: true,
           lifeDirection: true,
+          photos: true,
         }
       }
     }
@@ -69,7 +72,7 @@ export default async function UserProfilePage({ params }: Props) {
           </div>
           <div>
             <p className="text-gray-400">Name</p>
-            <p>{user.name || "N/A"}</p>
+            <p>{`${user.profile?.firstName ?? ""} ${user.profile?.lastName ?? ""}`.trim() || "N/A"}</p>
           </div>
           <div>
             <p className="text-gray-400">Email</p>
@@ -166,21 +169,23 @@ export default async function UserProfilePage({ params }: Props) {
         </div>
       </div>
 
-      {/* Images Section */}
-      {user.image && (
+      {/* Photos Section */}
+      {user.profile?.photos && user.profile.photos.length > 0 && (
         <div className="bg-gray-800 rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-4">Images</h2>
+          <h2 className="text-xl font-semibold mb-4">Photos</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            <div className="aspect-square bg-gray-700 rounded-lg flex items-center justify-center">
-              <img 
-                src={user.image} 
-                alt="User profile" 
-                className="w-full h-full object-cover rounded-lg"
-                onError={(e) => {
-                  e.currentTarget.src = '/placeholder-image.jpg';
-                }}
-              />
-            </div>
+            {user.profile.photos.map((photo, index) => (
+              <div key={index} className="aspect-square bg-gray-700 rounded-lg flex items-center justify-center">
+                <img 
+                  src={photo} 
+                  alt={`Profile photo ${index + 1}`} 
+                  className="w-full h-full object-cover rounded-lg"
+                  onError={(e) => {
+                    e.currentTarget.src = '/placeholder-image.jpg';
+                  }}
+                />
+              </div>
+            ))}
           </div>
         </div>
       )}

@@ -14,7 +14,6 @@ async function logToDatabase(
   module: string,
   metadata?: Record<string, unknown>,
 ): Promise<void> {
-  // Sikkerheitsfiltret: fjern sensitive felt
   const safeMetadata = sanitizeMetadata(metadata)
 
   await prisma.systemLog.create({
@@ -22,19 +21,18 @@ async function logToDatabase(
       level,
       message,
       module,
-      metadata: safeMetadata,
+      metadata: (safeMetadata || undefined) as any,
     },
   })
 }
 
 function sanitizeMetadata(
   metadata?: Record<string, unknown>,
-): Record<string, unknown> | null {
-  if (!metadata) return null
+): Record<string, unknown> | undefined {
+  if (!metadata) return undefined
 
   const safe = { ...metadata }
 
-  // Fjern sensitive felt uansett kva dei heiter
   for (const key of Object.keys(safe)) {
     const lowerKey = key.toLowerCase()
     if (

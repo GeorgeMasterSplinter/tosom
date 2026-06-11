@@ -166,7 +166,7 @@ export default function LaunchDemo() {
             </p>
             <ul className="list-disc list-inside space-y-0.5">
               <li>
-                Hvis onboarding ikkje completed → <code className="bg-[#f1f5f9] px-1 rounded">goTo("onboarding")</code>
+                Hvis onboarding ikke completed → <code className="bg-[#f1f5f9] px-1 rounded">goTo("onboarding")</code>
               </li>
               <li>
                 Hvis onboarding completed → <code className="bg-[#f1f5f9] px-1 rounded">goTo("dashboard")</code>

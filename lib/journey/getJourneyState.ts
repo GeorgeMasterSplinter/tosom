@@ -63,3 +63,6 @@ export async function getJourneyStatus(userId: string): Promise<{
     phaseLabel: state.phaseLabel,
   };
 }
+
+// Alias for backward compatibility — imported as getJourneyState in some routes.
+export const getJourneyState = getOrCreateJourney;

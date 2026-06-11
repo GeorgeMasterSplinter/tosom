@@ -1,125 +1,153 @@
-import { NextResponse } from "next/server";
+
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth/auth-options";
+import { findBestMatchFor } from "@/lib/matching/findBestMatchFor";
 import { calculateScore, generateExplanation } from "@/lib/matching/scorer";
-import { checkRateLimit } from "@/lib/rateLimit";
-import { matchCreateSchema } from "@/lib/validation/match";
+import { User, Profile, JourneyPhase } from "@prisma/client";
+import { generateFirstMessage } from "@/lib/journey/generateFirstMessage";
+import { logInfo } from "@/lib/system/log";
+import { captureError } from "@/lib/system/errors";
+import { isProd } from "@/config/runtime";
 
-export async function POST(req: Request) {
-  const session = await getServerSession();
+export async function POST(
+  request: Request
+): Promise<Response> {
+  try {
+    const { userId } = await request.json();
 
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  // Rate limiting: maks 20 match-førespurslar/minutt per user
-  if (checkRateLimit(`match:${session.user.id}`, 20, 60_000)) {
-    return NextResponse.json(
-      { error: "For mange match-førespurslar. Vent eit par sekund." },
-      { status: 429 }
-    );
-  }
-
-  const body = await req.json();
-  const parse = matchCreateSchema.safeParse(body);
-  if (!parse.success) {
-    return NextResponse.json(
-      { error: parse.error.errors[0]?.message || "Ugyldig data" },
-      { status: 400 }
-    );
-  }
-  const { targetUserId } = parse.data;
-
-  // Hent profiler for scoring
-  const [profileA, profileB] = await Promise.all([
-    prisma.profile.findUnique({ where: { userId: session.user.id } }),
-    prisma.profile.findUnique({ where: { userId: targetUserId } }),
-  ]);
-
-  if (!profileA || !profileB) {
-    return NextResponse.json({ error: "Profile not found" }, { status: 404 });
-  }
-
-  // Kalkuler match-score med ny 5-vektet motor
-  const scoreResult = calculateScore(profileA, profileB);
-
-  // Generer forklaring
-  const explanation = generateExplanation(scoreResult);
-
-  // Opprett match i transaksjon
-  const match = await prisma.match.create({
-    data: {
-      userAId: session.user.id,
-      userBId: targetUserId,
-      status: "active",
-      score: scoreResult.totalScore,
-    },
-  });
-
-  // Start journey for begge brukarar (DB-basert no)
-  const journeyA = await prisma.journeyProgress.findUnique({
-    where: { userId: session.user.id },
-    select: { day: true, phase: true },
-  });
-
-  const journeyB = await prisma.journeyProgress.findUnique({
-    where: { userId: targetUserId },
-    select: { day: true, phase: true },
-  });
-
-  // Sjekk om den andre brukaren allereie har likt deg
-  const reverseMatch = await prisma.match.findFirst({
-    where: {
-      userAId: targetUserId,
-      userBId: session.user.id,
-    },
-  });
-
-  // Hvis gjensidig match → opprett conversation + systemmelding i transaksjon
-  if (reverseMatch) {
-    const result = await prisma.$transaction(async (tx) => {
-      const conversation = await tx.conversation.create({
-        data: {
-          userAId: session.user.id,
-          userBId: targetUserId,
-          matchId: match.id,
-        },
+    if (!userId) {
+      return new Response(JSON.stringify({ error: "Missing userId" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" }
       });
+    }
 
-      await tx.message.create({
-        data: {
-          conversationId: conversation.id,
-          senderId: session.user.id,
-          content: "Dere har ein match! Ta et roleg første steg og si hei 👋",
-          type: "system",
-        },
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" }
       });
+    }
 
-      return conversation;
+    if (session.user.id !== userId) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+
+    const matchUserId = await findBestMatchFor(userId);
+
+    if (!matchUserId) {
+      return new Response(JSON.stringify({ error: "No match found" }), {
+        status: 404,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+
+    const [user, matchUser] = await Promise.all([
+      prisma.user.findUnique({
+        where: { id: userId },
+        include: { profile: true },
+      }),
+      prisma.user.findUnique({
+        where: { id: matchUserId },
+        include: { profile: true },
+      }),
+    ]);
+
+    if (!user?.profile || !matchUser?.profile) {
+      return new Response(JSON.stringify({ error: "Profile missing for one or both users" }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+
+    // Beregn match-score med den nye scorer-motoren
+    const scoreResult = calculateScore(
+      user.profile as unknown as Record<string, unknown>,
+      matchUser.profile as unknown as Record<string, unknown>
+    );
+    const explanation = generateExplanation(scoreResult);
+
+    const match = await prisma.match.create({
+      data: {
+        userAId: userId,
+        userBId: matchUserId,
+        matchScore: scoreResult.totalScore,
+        matchQuality: scoreResult.matchQuality,
+        status: "active",
+      },
     });
 
-    return NextResponse.json({
-      success: true,
-      mutual: true,
-      conversationId: result.id,
+    const conversation = await prisma.conversation.create({
+      data: {
+        userAId: userId,
+        userBId: matchUserId,
+        matchId: match.id,
+      },
+    });
+
+    // JourneyProgress uses userId (not conversationId), and has day (not currentStep/completedSteps/totalSteps)
+    await prisma.journeyProgress.create({
+      data: {
+        userId: userId,
+        phase: JourneyPhase.EARLY,
+        day: 1,
+      },
+    });
+
+    // Get name from profile, not User model
+    const firstName = matchUser.profile?.firstName || "";
+    const lastName = matchUser.profile?.lastName || "";
+    const name = `${firstName} ${lastName}`.trim() || "Ukjent";
+
+    const firstMessage = generateFirstMessage({
+      name,
+      score: scoreResult.totalScore,
+      explanation: explanation.explanation,
+    });
+
+    await prisma.message.create({
+      data: {
+        conversationId: conversation.id,
+        senderId: userId,
+        content: firstMessage,
+      },
+    });
+
+    await logInfo("New match created", "match", {
+      userId,
       matchId: match.id,
       score: scoreResult.totalScore,
-      quality: scoreResult.matchQuality,
-      breakdown: scoreResult.breakdown,
-      explanation,
-      journeyA: { day: journeyA?.day ?? 1, phase: journeyA?.phase ?? "EARLY" },
-      journeyB: { day: journeyB?.day ?? 1, phase: journeyB?.phase ?? "EARLY" },
+    });
+
+    return new Response(
+      JSON.stringify({
+        conversationId: conversation.id,
+        matchInfo: {
+          name,
+          age: matchUser.profile?.age || 0,
+          score: scoreResult.totalScore,
+          explanation: explanation.explanation,
+        },
+      }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      }
+    );
+  } catch (error) {
+    await captureError(error, {
+      module: "match",
+      message: "Match API failed",
+    });
+
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" }
     });
   }
-
-  return NextResponse.json({
-    success: true,
-    mutual: false,
-    matchId: match.id,
-    score: scoreResult.totalScore,
-    quality: scoreResult.matchQuality,
-    breakdown: scoreResult.breakdown,
-    explanation,
-    journeyA: { day: journeyA?.day ?? 1, phase: journeyA?.phase ?? "EARLY" },
-  });
 }

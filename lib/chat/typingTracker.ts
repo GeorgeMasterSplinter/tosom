@@ -29,19 +29,20 @@ export async function startTyping(conversationId: string, userId: string): Promi
     timestamp: Date.now(),
   };
 
-  await supabase
-    .from("typing_status")
-    .insert({
-      conversation_id: conversationId,
-      user_id: userId,
-      is_typing: true,
-      updated_at: new Date().toISOString(),
-    })
-    .select()
-    .single()
-    .catch((err) => {
-      console.error("[typingTracker] Feil ved sending av typing-start:", err);
-    });
+  try {
+    await supabase
+      .from("typing_status")
+      .insert({
+        conversation_id: conversationId,
+        user_id: userId,
+        is_typing: true,
+        updated_at: new Date().toISOString(),
+      })
+      .select()
+      .single();
+  } catch (err) {
+    console.error("[typingTracker] Feil ved sending av typing-start:", err);
+  }
 }
 
 /**
@@ -50,15 +51,16 @@ export async function startTyping(conversationId: string, userId: string): Promi
 export async function stopTyping(conversationId: string, userId: string): Promise<void> {
   if (!supabase) return;
 
-  await supabase
-    .from("typing_status")
-    .update({ is_typing: false, updated_at: new Date().toISOString() })
-    .match({ conversation_id: conversationId, user_id: userId })
-    .select()
-    .single()
-    .catch((err) => {
-      console.error("[typingTracker] Feil ved sending av typing-stopp:", err);
-    });
+  try {
+    await supabase
+      .from("typing_status")
+      .update({ is_typing: false, updated_at: new Date().toISOString() })
+      .match({ conversation_id: conversationId, user_id: userId })
+      .select()
+      .single();
+  } catch (err) {
+    console.error("[typingTracker] Feil ved sending av typing-stopp:", err);
+  }
 }
 
 /**
@@ -83,8 +85,8 @@ export function onTypingEvent(
         table: "typing_status",
         filter: `conversation_id=eq.${conversationId}`,
       },
-      (payload) => {
-        const { new: newRow }: { new: { conversation_id: string; user_id: string; is_typing: boolean; updated_at: string } } = payload;
+      (payload: any) => {
+        const newRow: { conversation_id: string; user_id: string; is_typing: boolean; updated_at: string } | undefined = (payload as any).new;
         if (newRow) {
           callback({
             conversationId: newRow.conversation_id,

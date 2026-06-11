@@ -1,19 +1,27 @@
 // lib/semantic.ts — basert på det nye Profile-schema-et (bio, interests, photos)
 
-export async function deepSemanticScore(a, b) {
+interface ScoreableProfile {
+  interests?: string[] | null;
+  bio?: string | null;
+  photos?: string[] | null;
+}
+
+export function deepSemanticScore(a: ScoreableProfile, b: ScoreableProfile): number {
   let score = 0;
 
   // Intersektjon av interesser — tyngste semantiske signal
   if (Array.isArray(a.interests) && Array.isArray(b.interests)) {
-    const setA = new Set(a.interests.map((i) => i.toLowerCase()));
-    const setB = new Set(b.interests.map((i) => i.toLowerCase()));
+    const interestsA = a.interests;
+    const interestsB = b.interests;
+    const setA = new Set(interestsA.map((i) => i.toLowerCase()));
+    const setB = new Set(interestsB.map((i) => i.toLowerCase()));
     const intersection = [...setA].filter((i) => setB.has(i));
     const union = new Set([...setA, ...setB]).size;
     const jaccard = union > 0 ? intersection.length / union : 0;
     score += jaccard * 40; // maks 40
   }
 
-  // Bio-semanisk overlap — delar dei samme nøkkelord/emne?
+  // Bio-semanisk overlap — delar dei same nøkkelord/emne?
   if (a.bio && b.bio) {
     const wordsA = new Set(a.bio.toLowerCase().split(/\s+/).filter((w) => w.length > 3));
     const wordsB = new Set(b.bio.toLowerCase().split(/\s+/).filter((w) => w.length > 3));

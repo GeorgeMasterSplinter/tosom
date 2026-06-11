@@ -1,6 +1,6 @@
 export default function SystemMessage({ content }: { content: string }) {
   return (
-    <div className="text-center text-[13px] text-[#777] px-6 leading-relaxed">
+    <div className="text-center text-gray-400 text-sm py-2">
       {content}
     </div>
   );

@@ -1,20 +1,22 @@
-import { NextRequest, NextResponse } from 'next/server'
+
 import { generateMatchSummary, generateCompatibilityScore } from '@/lib/ai/features/matchInsights'
-import { requireAuth } from '@/lib/auth/session'
+import { requireAuth } from '@/lib/admin/requireAuth'
 import { captureError } from '@/lib/system/errors'
 import { logInfo } from '@/lib/system/log'
 
-export async function POST(request: NextRequest) {
+export async function POST(
+  request: Request
+): Promise<Response> {
   try {
     const { userId, profileA, profileB } = await request.json()
     
     if (!userId || !profileA || !profileB) {
-      return NextResponse.json({ error: 'userId, profileA og profileB is required' }, { status: 400 })
+      return new Response(JSON.stringify({ error: 'userId, profileA og profileB is required' }), { status: 400, headers: { 'Content-Type': 'application/json' } })
     }
 
     const session = await requireAuth(userId)
     if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } })
     }
 
     const result = await generateMatchSummary(
@@ -27,13 +29,13 @@ export async function POST(request: NextRequest) {
       feature: 'matchInsights/generateMatchSummary',
     })
 
-    return NextResponse.json({ result })
+    return new Response(JSON.stringify({ result }), { status: 200, headers: { 'Content-Type': 'application/json' } })
   } catch (error) {
     await captureError(error, {
       module: 'ai/match-insights',
       message: 'Match insights API failed',
       metadata: { feature: 'matchInsights' },
     })
-    return NextResponse.json({ error: 'AI service failed' }, { status: 500 })
+    return new Response(JSON.stringify({ error: 'AI service failed' }), { status: 500, headers: { 'Content-Type': 'application/json' } })
   }
 }

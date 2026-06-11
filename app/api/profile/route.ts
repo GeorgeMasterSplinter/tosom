@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/options";
 import prisma from "@/lib/prisma";
@@ -9,26 +9,26 @@ export async function GET() {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const profile = await prisma.profile.findUnique({
     where: { userId: session.user.id },
   });
 
-  return NextResponse.json({ profile: profile || null });
+  return Response.json({ profile: profile || null });
 }
 
 export async function PUT(request: Request) {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
-    return NextResponse.json({ error: "Du må være logget inn" }, { status: 401 });
+    return Response.json({ error: "Du må være logget inn" }, { status: 401 });
   }
 
   // Rate limiting: maks 5 profil-oppdateringar/minutt
   if (checkRateLimit(`profile:${session.user.id}`, 5, 60_000)) {
-    return NextResponse.json(
+    return Response.json(
       { error: "For mange forsøk. Vent eit par sekund." },
       { status: 429 }
     );
@@ -40,8 +40,8 @@ export async function PUT(request: Request) {
     // Zod-validering
     const parse = profileUpdateSchema.safeParse(body);
     if (!parse.success) {
-      return NextResponse.json(
-        { error: parse.error.errors[0]?.message || "Ugyldig data" },
+      return Response.json(
+        { error: parse.error.issues[0]?.message || "Ugyldig data" },
         { status: 400 }
       );
     }
@@ -71,9 +71,9 @@ export async function PUT(request: Request) {
       },
     });
 
-    return NextResponse.json({ success: true });
+    return Response.json({ success: true });
   } catch (error) {
     console.error("Failed to update profile:", error);
-    return NextResponse.json({ error: "Kunne ikke oppdatere profilen" }, { status: 500 });
+    return Response.json({ error: "Kunne ikke oppdatere profilen" }, { status: 500 });
   }
 }

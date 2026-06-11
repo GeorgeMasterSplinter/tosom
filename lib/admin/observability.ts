@@ -61,8 +61,11 @@ export async function getRouteHeatmap(sinceHours: number = 24): Promise<{
 }
 
 export async function getTraceDetails(traceId: string): Promise<any[]> {
-  return prisma.systemLog.findMany({
-    where: { metadata: { path: ['traceId'], contains: traceId } },
-    orderBy: { createdAt: 'asc' as const },
-  })
+  // SystemLog metadata is Json — use raw SQL for JSON containment
+  const rows = await prisma.$queryRaw<any[]>`
+    SELECT * FROM "SystemLog"
+    WHERE "metadata"::text LIKE '%' || ${traceId} || '%'
+    ORDER BY "createdAt" ASC
+  `
+  return rows
 }

@@ -1,33 +1,54 @@
 import { prisma } from "@/lib/prisma";
-import { NextRequest, NextResponse } from "next/server";
+
 import { adminAuthGuard } from "@/lib/auth/adminAuthGuard";
 
-export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function POST(
+  request: Request,
+  context: { params: Promise<{ id: string }> }
+): Promise<Response> {
   const auth = await adminAuthGuard();
   if (auth) return auth;
 
-  const { id } = await params;
+  const { id } = await context.params;
+
   try {
-    // Find match
     const match = await prisma.match.findUnique({
       where: { id }
     });
 
     if (!match) {
-      return NextResponse.json({ error: "Match not found" }, { status: 404 });
+      return new Response(
+        JSON.stringify({ error: "Match not found" }),
+        {
+          status: 404,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
     }
 
-    // Reset matchScore, matchReason and set status to PENDING
     await prisma.match.update({
       where: { id },
       data: {
-        status: "PENDING",
+        status: "pending",
       }
     });
 
-    return NextResponse.json({ ok: true });
+    return new Response(
+      JSON.stringify({ ok: true }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      }
+    );
   } catch (error) {
     console.error("Error in reset match:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+
+    return new Response(
+      JSON.stringify({ error: "Internal server error" }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" }
+      }
+    );
   }
 }

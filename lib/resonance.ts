@@ -1,11 +1,20 @@
 // lib/resonance.ts — basert på det nye Profile-schema-et (bio, interests, gender, age)
 
-export async function emotionalResonance(a, b) {
+interface ScoreableProfile {
+  interests?: string[] | null;
+  bio?: string | null;
+  gender?: string | null;
+  age?: number | string | null;
+}
+
+export function emotionalResonance(a: ScoreableProfile, b: ScoreableProfile): number {
   let resonance = 0;
 
   // Felles interesser — kjerne i resonans
   if (Array.isArray(a.interests) && Array.isArray(b.interests)) {
-    const common = a.interests.filter((i) => b.interests.includes(i));
+    const interestsA = a.interests;
+    const interestsB = b.interests;
+    const common = interestsA.filter((i) => interestsB.includes(i));
     resonance += common.length * 12; // maks 60 poeng
   }
 
@@ -24,7 +33,7 @@ export async function emotionalResonance(a, b) {
 
   // Aldersnearleik — nærmare = sterkare resonans
   if (a.age && b.age) {
-    const diff = Math.abs(a.age - b.age);
+    const diff = Math.abs(Number(a.age) - Number(b.age));
     if (diff <= 3) resonance += 10;
     else if (diff <= 7) resonance += 5;
   }

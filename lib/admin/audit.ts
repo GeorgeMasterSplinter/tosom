@@ -5,19 +5,18 @@
  */
 
 import { prisma } from '@/lib/prisma'
+import type { AuditAction } from '@prisma/client'
 
 export async function recordAdminAction(
   adminId: string,
-  action: string,
-  targetId?: string,
+  action: AuditAction,
   metadata?: Record<string, unknown>,
 ): Promise<void> {
   await prisma.auditLog.create({
     data: {
       adminId,
       action,
-      targetId,
-      metadata: metadata ?? null,
+      metadata: metadata ? JSON.stringify(metadata) : null,
     },
   })
 }
@@ -65,19 +64,15 @@ export async function getAuditLogs(filter: {
   adminId?: string
   action?: string
   sinceHours?: number
-  search?: string
 }): Promise<any[]> {
   const where: any = {}
 
   if (filter.adminId) where.adminId = filter.adminId
-  if (filter.action) where.action = filter.action
+  if (filter.action) where.action = filter.action as AuditAction
   if (filter.sinceHours) {
     where.createdAt = {
       gte: new Date(Date.now() - filter.sinceHours * 60 * 60 * 1000),
     }
-  }
-  if (filter.search) {
-    where.metadata = { path: ['targetId'], contains: filter.search }
   }
 
   return prisma.auditLog.findMany({

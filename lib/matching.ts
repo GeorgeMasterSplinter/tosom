@@ -5,9 +5,11 @@
 export { calculateMatchScore } from "./matching/calculateMatchScore";
 
 // Nye moduler
-export { calculateScore, ScoreResult, ScoreInput } from "./matching/scorer";
+export { calculateScore } from "./matching/scorer";
+export type { ScoreResult, ScoreInput } from "./matching/scorer";
 export { generateExplanation } from "./matching/explainer";
-export { rankMatches, deduplicateMatches, RankedMatch } from "./matching/ranking";
+export { rankMatches, deduplicateMatches } from "./matching/ranking";
+export type { RankedMatch } from "./matching/ranking";
 export { recordMatchFeedback, getFeedbackProfile } from "./matching/feedback";
 export { getWeights, getWeightsWithOverride, validateWeights } from "./matching/weightConfig";
 

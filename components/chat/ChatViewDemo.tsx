@@ -1,12 +1,12 @@
 "use client";
 
-/** ChatViewDemo – sjølvstendig demo av ChatView med ekte ChatFlow + JourneyStateEngine
- *  CF31 — Vis ChatView med dummy-data (ikkje i DashboardLayout)
+/** ChatViewDemo — selvstendig demo av ChatView med ekte ChatFlow + JourneyStateEngine
+ *  CF31 — Vis ChatView med dummy-data (ikke i DashboardLayout)
  *  CF32 — Dummy chatState
  *  CF33 — Koble ChatFlow (getChatState) til JourneyStateEngine
  *  CF34 — Koble systemMessagesAPI via ChatFlow
  *  CF35–CF37 — Implementer chatLocked, photosAllowed, journeyCompleted
- *  CF38 — Bokmål, varmt, rolegt, kort
+ *  CF38 — Bokmål, varmt, rolig, kort
  *  CF39 — Ingen ubrukte imports
  *  CF40 — Ingen nye features */
 
@@ -74,7 +74,7 @@ export default function ChatViewDemo() {
             className="text-xs px-2 py-1 bg-white/80 rounded-lg border border-black/5 outline-none"
           >
             <option value="ready_for_match">Klar for match</option>
-            <option value="searching">Leitar</option>
+            <option value="searching">Leiter</option>
             <option value="matched">Matcha</option>
             <option value="in_journey">I reise</option>
             <option value="completed">Ferdig</option>
@@ -91,9 +91,9 @@ export default function ChatViewDemo() {
       {/* ChatView med ekte ChatFlow-data */}
       <ChatView chatState={chatState} />
 
-      {/* CF38 — Bokmål, varmt, rolegt, kort */}
+      {/* CF38 — Bokmål, varmt, rolig, kort */}
       <p className="text-xs text-[#4A4A4A]/40 text-center">
-        Dette er ein demo av ChatView. Alle meldingar er genererte frå ChatFlow.
+        Dette er en demo av ChatView. Alle meldinger er genererte fra ChatFlow.
       </p>
     </div>
   );

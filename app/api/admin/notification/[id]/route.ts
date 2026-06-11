@@ -1,24 +1,24 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { getNotification } from '@/lib/admin/notifications'
 import { requireAdmin } from '@/lib/admin/requireAuth'
 
 export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } },
-) {
+  request: Request,
+  context: { params: Promise<{ id: string }> }
+): Promise<Response> {
   try {
     const { adminId } = await request.json()
-    await requireAdmin(adminId)
+    await requireAdmin()
 
-    const notification = await getNotification(params.id)
+    const { id } = await context.params
+    const notification = await getNotification(id)
 
     if (!notification) {
-      return NextResponse.json({ error: 'Notification not found' }, { status: 404 })
+      return new Response(JSON.stringify({ error: 'Notification not found' }), { status: 404, headers: { 'Content-Type': 'application/json' } })
     }
 
-    return NextResponse.json({ notification })
+    return new Response(JSON.stringify({ notification }), { status: 200, headers: { 'Content-Type': 'application/json' } })
   } catch (error) {
     console.error('[admin notification GET] Error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500, headers: { 'Content-Type': 'application/json' } })
   }
 }

@@ -11,11 +11,15 @@ export default async function ProfilePage({ params }: Props) {
   const profile = await getProfileById(id);
 
   if (!profile) {
-    return <div>Profil ikke funnet</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-950">
+        <p className="text-white text-lg font-light">Profilen ble ikke funnet.</p>
+      </div>
+    );
   }
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-gray-950">
       <ProfileView profile={profile} />
     </main>
   );

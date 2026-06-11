@@ -1,24 +1,25 @@
-import { NextRequest, NextResponse } from 'next/server'
+
 import { getMessages } from '@/lib/chat/pagination'
 
 export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } },
-) {
+  request: Request,
+  context: { params: Promise<{ id: string }> }
+): Promise<Response> {
   try {
-    const { searchParams } = request.nextUrl
-    const cursor = searchParams.get('cursor')
+    const { searchParams } = new URL(request.url)
+    const cursor = searchParams.get('cursor') ?? undefined
     const limit = parseInt(searchParams.get('limit') || '30')
 
     if (limit < 1 || limit > 100) {
-      return NextResponse.json({ error: 'Limit must be between 1 and 100' }, { status: 400 })
+      return new Response(JSON.stringify({ error: 'Limit must be between 1 and 100' }), { status: 400, headers: { 'Content-Type': 'application/json' } })
     }
 
-    const result = await getMessages(params.id, cursor, limit)
+    const { id } = await context.params
+    const result = await getMessages(id, cursor, limit)
 
-    return NextResponse.json(result)
+    return new Response(JSON.stringify(result), { status: 200, headers: { 'Content-Type': 'application/json' } })
   } catch (error) {
     console.error('[messages GET] Error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500, headers: { 'Content-Type': 'application/json' } })
   }
 }

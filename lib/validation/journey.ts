@@ -1,17 +1,17 @@
 import { z } from "zod";
 
 /**
- * Validering for journey-aksjonar (app/api/journey/**/*.route.ts).
+ * Validation for journey actions.
  */
 export const journeyStepSchema = z.object({
-  conversationId: z.string().min(1, "conversationId er påkrevd"),
+  conversationId: z.string().min(1, "conversationId er pakkraevd"),
   action: z.enum(["next", "skip", "complete"]),
 });
 
 export type JourneyStepInput = z.infer<typeof journeyStepSchema>;
 
 /**
- * Validering for admin-journey-søk.
+ * Validation for admin journey search.
  */
 export const journeyFilterSchema = z.object({
   page: z.coerce.number().min(1).default(1),

@@ -1,18 +1,20 @@
-import { NextResponse } from "next/server";
+
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 
-export async function POST(req: Request) {
+export async function POST(
+  request: Request
+): Promise<Response> {
   const session = await getServerSession();
 
   if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { "Content-Type": "application/json" } });
   }
 
-  const { targetUserId } = await req.json();
+  const { targetUserId } = await request.json();
 
   if (!targetUserId) {
-    return NextResponse.json({ error: "Missing targetUserId" }, { status: 400 });
+    return new Response(JSON.stringify({ error: "Missing targetUserId" }), { status: 400, headers: { "Content-Type": "application/json" } });
   }
 
   let conversation = await prisma.conversation.findFirst({
@@ -31,7 +33,6 @@ export async function POST(req: Request) {
   });
 
   if (!conversation) {
-    // Finn aktiv match mellom brukarane
     let matchId: string;
     const existingMatch = await prisma.match.findFirst({
       where: {
@@ -68,8 +69,8 @@ export async function POST(req: Request) {
     });
   }
 
-  return NextResponse.json({
+  return new Response(JSON.stringify({
     success: true,
     conversationId: conversation.id,
-  });
+  }), { status: 200, headers: { "Content-Type": "application/json" } });
 }

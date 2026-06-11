@@ -2,6 +2,9 @@ import { prisma } from '@/lib/prisma'
 import { NotificationType } from '@prisma/client'
 import { incrementUnread } from './unread'
 
+// Re-export for backward compatibility (types only; Prisma enums are types not values)
+export type { NotificationType } from '@prisma/client'
+
 export async function dispatchEvent(
   type: NotificationType,
   userId: string,
@@ -13,10 +16,9 @@ export async function dispatchEvent(
       userId,
       type,
       message,
-      metadata: metadata ? JSON.stringify(metadata) : null,
+      metadata: metadata ? (metadata as any) : undefined,
     },
   })
-
   await incrementUnread(userId)
 }
 

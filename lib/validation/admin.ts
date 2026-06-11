@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 /**
- * Validering for admin-aksjonar (app/api/admin/**/*.route.ts).
+ * Validation for admin actions.
  */
 export const adminActionSchema = z.object({
   action: z.enum([
@@ -16,14 +16,14 @@ export const adminActionSchema = z.object({
     "alert",
     "settings_change",
   ]),
-  targetId: z.string().min(1, "targetId er påkrevd"),
+  targetId: z.string().min(1, "targetId er pakkraevd"),
   reason: z.string().max(500).optional(),
 });
 
 export type AdminActionInput = z.infer<typeof adminActionSchema>;
 
 /**
- * Validering for admin-søk/filter.
+ * Validation for admin search/filters.
  */
 export const adminFilterSchema = z.object({
   page: z.coerce.number().min(1).default(1),

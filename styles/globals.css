@@ -1,6 +1,18 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-background: #FAFAF9;
+  --color-light-gray: #F3F3F2;
+  --color-beige: #EDEAE6;
+  --color-dark: #1A1A1A;
+  --color-secondary: #4A4A4A;
+  --color-gold: #CBAA7A;
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+}
 
  /* Smooth scrolling */
 html {

@@ -48,6 +48,19 @@ export default function LandingView() {
           </p>
         </section>
 
+        {/* Under utvikling */}
+        <section className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4">
+          <h2 className="text-lg font-light text-white">Under utvikling</h2>
+          <p className="text-gray-300 leading-relaxed">
+            ToSom er under aktiv utvikling.
+            Vi bygger en rolig, varm og moderne plattform for ekte relasjoner.
+            Design, funksjoner og opplevelser forbedres fortløpende mens vi gjør oss klare for lansering.
+          </p>
+          <p className="text-gray-500 text-sm">
+            © 2025 ToSom. Alle rettigheter forbeholdt.
+          </p>
+        </section>
+
         {/* Footer */}
         <p className="text-center text-gray-500 text-sm py-10">
           © 2026 ToSom — bygget for ekte relasjoner

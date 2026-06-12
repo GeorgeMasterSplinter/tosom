@@ -606,7 +606,7 @@ export default function DashboardView() {
                 </div>
                 <PremiumButton
                   variant="primary"
-                  onClick={() => router.push(`/conversation/${data.conversation.conversationId}`)}
+                  onClick={() => { const c = data.conversation!; router.push(`/conversation/${c.conversationId}`); }}
                 >
                   Fortsett samtale
                 </PremiumButton>

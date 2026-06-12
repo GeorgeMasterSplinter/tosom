@@ -575,7 +575,7 @@ export default function DashboardView() {
                 </div>
                 <PremiumButton
                   variant="secondary"
-                  onClick={() => router.push(`/profile/${data.match.id}`)}
+                  onClick={() => { const m = data.match!; router.push(`/profile/${m.id}`); }}
                 >
                   Se profil
                 </PremiumButton>

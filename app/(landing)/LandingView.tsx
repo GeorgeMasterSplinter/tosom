@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import Section from "@/components/ui/Section";
 import Typography from "@/components/ui/Typography";
+import FadeIn from "@/components/ui/FadeIn";
+import PremiumButton from "@/components/ui/PremiumButton";
 
 const { H1, H2, BodyMd } = Typography;
 
@@ -13,19 +15,18 @@ export default function LandingView() {
     <div className="min-h-screen bg-gray-950 text-white">
       <Section className="space-y-16">
         {/* Hero */}
-        <div className="text-center space-y-6">
-          <H1 className="text-white leading-tight">
-            ToSom — en reise for to mennesker som vil hverandre godt
-          </H1>
-          <BodyMd className="text-gray-400 text-lg max-w-xl mx-auto leading-relaxed">
-            Ingen swiping. Ingen jag. Ingen støy. Bare to mennesker som møtes, i sitt eget tempo.
-          </BodyMd>
-          <button
-            onClick={() => router.push("/login")}
-            className="mt-8 inline-block rounded-xl bg-white text-gray-900 font-medium px-6 py-4 hover:bg-gray-200 transition"
-          >
-            Start reisen
-          </button>
+        <div className="text-center space-y-6 py-24 md:py-32">
+          <FadeIn>
+            <div className="space-y-6">
+              <H1 className="text-white">ToSom — en reise for to</H1>
+              <BodyMd className="text-gray-400 text-lg max-w-xl mx-auto">
+                En varm, moderne og guidet plattform for ekte relasjoner.
+              </BodyMd>
+              <PremiumButton variant="primary" onClick={() => router.push("/login")}>
+                Start reisen
+              </PremiumButton>
+            </div>
+          </FadeIn>
         </div>
 
         {/* Privat profil */}

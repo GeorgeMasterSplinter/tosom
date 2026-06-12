@@ -2,6 +2,29 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/auth-options";
 import prisma from "@/lib/prisma";
 
+interface MatchInfo {
+  id: string;
+  name: string;
+  age?: number | null;
+  bio?: string | null;
+  score: number | null;
+}
+
+interface ConvoInfo {
+  partnerName: string;
+  lastMessage: string;
+  time: Date;
+  conversationId: string;
+}
+
+interface JourneyInfo {
+  day: number;
+  totalDays: number;
+  phase: string;
+  tittel: string;
+  beskrivelse: string;
+}
+
 export async function GET(request: Request) {
   const session = await getServerSession(authOptions);
 
@@ -56,7 +79,7 @@ export async function GET(request: Request) {
     });
 
     // Finn match-partnar (den andre brukaren)
-    let matchInfo = null;
+    let matchInfo: MatchInfo | null = null;
     if (match) {
       const partner =
         match.userAId === session.user.id
@@ -74,7 +97,7 @@ export async function GET(request: Request) {
     }
 
     // Finn samtale-partnar og siste melding
-    let convoInfo = null;
+    let convoInfo: ConvoInfo | null = null;
     if (conversation && conversation.messages.length > 0) {
       const msg = conversation.messages[0];
       const partner =
@@ -96,7 +119,7 @@ export async function GET(request: Request) {
     }
 
     // Formatter reise-info
-    let journeyInfo = null;
+    let journeyInfo: JourneyInfo | null = null;
     if (journey) {
       const totalDays = 35;
       journeyInfo = {

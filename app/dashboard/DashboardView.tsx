@@ -177,6 +177,19 @@ export default function DashboardView() {
   const [journeyLoading, setJourneyLoading] = useState(true);
   const [journeyError, setJourneyError] = useState<string | null>(null);
 
+  /* Welcome modal state */
+  const [showWelcome, setShowWelcome] = useState(false);
+
+  /* Check onboarding status */
+  useEffect(() => {
+    try {
+      const onboarded = localStorage.getItem("tosom_onboarded");
+      if (!onboarded) {
+        setShowWelcome(true);
+      }
+    } catch { /* localStorage not available */ }
+  }, []);
+
   /* Fetch dashboard data */
   useEffect(() => {
     let cancelled = false;

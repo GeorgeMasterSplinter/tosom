@@ -1,7 +1,6 @@
-"use client";
-
 import MatchProfileView from "./MatchProfileView";
 
-export default function MatchProfilePage({ params }: { params: { id: string } }) {
-  return <MatchProfileView matchId={params.id} />;
+export default async function MatchProfilePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  return <MatchProfileView matchId={id} />;
 }

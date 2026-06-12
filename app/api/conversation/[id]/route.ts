@@ -2,8 +2,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/auth-options";
 import { getConversation, addMessage } from "@/lib/conversationStore";
 
-/* ------ Data-types ------ */
-
 interface Message {
   senderId: string;
   content: string;
@@ -18,13 +16,12 @@ interface ConversationData {
   createdAt: Date;
 }
 
-/* ------ GET: hent conversation ------ */
-
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions);
+  const { id } = await params;
 
   if (!session?.user?.id) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -34,7 +31,7 @@ export async function GET(
   }
 
   try {
-    const conversation = getConversation(params.id);
+    const conversation = getConversation(id);
 
     if (!conversation) {
       return new Response(
@@ -43,7 +40,6 @@ export async function GET(
       );
     }
 
-    // Sjekk at brukaren er ein del av conversationen
     if (conversation.userAId !== session.user.id && conversation.userBId !== session.user.id) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 403,
@@ -69,13 +65,12 @@ export async function GET(
   }
 }
 
-/* ------ POST: send melding ------ */
-
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions);
+  const { id } = await params;
 
   if (!session?.user?.id) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -95,7 +90,7 @@ export async function POST(
       );
     }
 
-    const success = addMessage(params.id, session.user.id, content);
+    const success = addMessage(id, session.user.id, content);
 
     if (!success) {
       return new Response(

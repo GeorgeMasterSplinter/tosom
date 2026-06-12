@@ -16,7 +16,6 @@ export default function OnboardingLayout({ children, step, totalSteps }: Onboard
         className="w-full max-w-lg bg-white/5 border border-white/10 backdrop-blur-xl rounded-3xl p-8 md:p-10 space-y-6"
         style={{ animation: "fadeIn 0.4s ease-out" }}
       >
-        {/* Steg-indikator */}
         <div className="flex justify-center gap-2">
           {Array.from({ length: totalSteps }).map((_, i) => (
             <div
@@ -27,7 +26,6 @@ export default function OnboardingLayout({ children, step, totalSteps }: Onboard
             />
           ))}
         </div>
-
         <FadeIn>{children}</FadeIn>
       </div>
     </div>

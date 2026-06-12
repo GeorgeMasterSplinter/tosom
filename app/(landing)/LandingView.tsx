@@ -6,7 +6,7 @@ import Typography from "@/components/ui/Typography";
 import FadeIn from "@/components/ui/FadeIn";
 import PremiumButton from "@/components/ui/PremiumButton";
 
-const { H1, H2, BodyMd } = Typography;
+const { H1, H2, H3, BodyMd } = Typography;
 
 export default function LandingView() {
   const router = useRouter();
@@ -29,29 +29,46 @@ export default function LandingView() {
           </FadeIn>
         </div>
 
-        {/* Privat profil */}
-        <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4">
-          <H2 className="text-white">Bygg din egen historie</H2>
-          <BodyMd className="text-gray-300 leading-relaxed">
-            Du lager en privat profil som viser hvem du er — ikke hvem du tror du må være.
-          </BodyMd>
-        </div>
-
-        {/* Guidet matching */}
-        <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4">
-          <H2 className="text-white">Vi hjelper deg å vise hvem du er</H2>
-          <BodyMd className="text-gray-300 leading-relaxed">
-            Forskningbasert veiledning hjelper deg å lage en profil som gir ekte kompatibilitet.
-          </BodyMd>
-        </div>
-
-        {/* En reise for to */}
-        <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4">
-          <H2 className="text-white">Når dere matcher, starter reisen</H2>
-          <BodyMd className="text-gray-300 leading-relaxed">
-            En varm, rolig og guidet reise som bygger nærhet, forståelse og trygghet.
-          </BodyMd>
-        </div>
+        {/* Filosofi */}
+        <FadeIn>
+          <div className="space-y-8">
+            <div className="text-center space-y-4">
+              <H2 className="text-white">Filosofien bak ToSom</H2>
+              <BodyMd className="text-gray-400 max-w-xl mx-auto">
+                Ei moderne, varm og rolig tilnærming til relasjonar.
+              </BodyMd>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Kort 1 */}
+              <FadeIn>
+                <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4 h-full">
+                  <H3 className="text-white">Bygg din egen historie</H3>
+                  <BodyMd className="text-gray-300 leading-relaxed">
+                    Du lager en privat profil som viser hvem du er — ikke hvem du tror du må være.
+                  </BodyMd>
+                </div>
+              </FadeIn>
+              {/* Kort 2 */}
+              <FadeIn>
+                <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4 h-full">
+                  <H3 className="text-white">Vi hjelper deg å vise hvem du er</H3>
+                  <BodyMd className="text-gray-300 leading-relaxed">
+                    Forskningbasert veiledning hjelper deg å lage en profil som gir ekte kompatibilitet.
+                  </BodyMd>
+                </div>
+              </FadeIn>
+              {/* Kort 3 */}
+              <FadeIn>
+                <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4 h-full">
+                  <H3 className="text-white">Når dere matcher, starter reisen</H3>
+                  <BodyMd className="text-gray-300 leading-relaxed">
+                    En varm, rolig og guidet reise som bygger nærhet, forståelse og trygghet.
+                  </BodyMd>
+                </div>
+              </FadeIn>
+            </div>
+          </div>
+        </FadeIn>
 
         {/* Under utvikling */}
         <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Section from "@/components/ui/Section";
 import Typography from "@/components/ui/Typography";
 import FadeIn from "@/components/ui/FadeIn";
@@ -21,6 +22,7 @@ interface ProfileData {
 }
 
 export default function ProfileView({ profile }: { profile: ProfileData }) {
+  const router = useRouter();
   const [isMatching, setIsMatching] = useState(false);
   const [hasMatched, setHasMatched] = useState(false);
 
@@ -29,14 +31,26 @@ export default function ProfileView({ profile }: { profile: ProfileData }) {
     ...(profile.musicTags ?? []),
   ];
 
+  const canEdit = profile.id !== undefined;
+
   return (
     <div className="min-h-screen bg-gray-950 text-white">
       <Section className="space-y-16 py-12">
         {/* Header */}
         <FadeIn>
-          <div className="space-y-2">
-            <H1 className="text-white">Profil</H1>
-            <BodyMd className="text-gray-400">Utforsk denne brukaren</BodyMd>
+          <div className="flex justify-between items-start gap-6">
+            <div className="space-y-2">
+              <H1 className="text-white">Profil</H1>
+              <BodyMd className="text-gray-400">Utforsk denne brukaren</BodyMd>
+            </div>
+            {canEdit && (
+              <PremiumButton
+                variant="secondary"
+                onClick={() => router.push(`/profile/edit?id=${profile.id}`)}
+              >
+                Rediger profil
+              </PremiumButton>
+            )}
           </div>
         </FadeIn>
 
@@ -69,7 +83,7 @@ export default function ProfileView({ profile }: { profile: ProfileData }) {
               </div>
             </div>
 
-            {/* GlassPanel */}
+            {/* GlassPanel: Om meg */}
             <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4">
               <H2 className="text-white">Om meg</H2>
               {profile.bio ? (

@@ -1,131 +1,69 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme {
-  --color-background: #FAFAF9;
-  --color-light-gray: #F3F3F2;
-  --color-beige: #EDEAE6;
-  --color-dark: #1A1A1A;
-  --color-secondary: #4A4A4A;
-  --color-gold: #CBAA7A;
-  --font-weight-light: 300;
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
+/* Premium animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
- /* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
-}
- 
-/* Global color palette */
-.bg-background {
-  background-color: #FAFAF9;
-}
-.text-dark {
-  color: #1A1A1A;
-}
-.text-secondary {
-  color: #4A4A4A;
-}
-.bg-beige {
-  background-color: #EDEAE6;
-}
-.bg-light-gray {
-  background-color: #F3F3F2;
-}
-.text-gold {
-  color: #CBAA7A;
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
 }
 
-body {
-  background-color: white;
-  color: #1A1A1A; /* dempet sort */
-  -webkit-font-smoothing: antialiased;
-  line-height: 1.75;
+@keyframes headerFade {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
- /* P - elementer med jevn spacing */
-p {
-  margin-bottom: 1.25rem;
-  line-height: 1.65;
+@keyframes progressPulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4); }
+  100% { box-shadow: 0 0 0 12px rgba(255, 215, 0, 0); }
 }
 
- /* Sekundær tekstfarge */
-.text-secondary {
-  color: #4A4A4A;
+@keyframes goldGlow {
+  0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.3); }
+  100% { box-shadow: 0 0 12px 4px rgba(255, 215, 0, 0.15); }
 }
 
- /* Fade-in animations */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(4px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-.animate-fadeIn {
-  animation: fadeIn 0.6s ease forwards;
+@keyframes dotPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.3); }
 }
 
- /* Rolig fade-in for refleksjonsboks */
-@keyframes fadeInSubtle {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in {
-  animation: fadeInSubtle 0.6s ease-out;
-}
-
-.delay-200 {
-  animation-delay: 0.2s;
-}
-
-.delay-500 {
-  animation-delay: 0.5s;
-}
-
- /* Premium touches */
-  .hover-scale-102 {
-    transition: transform 200ms ease-out;
-  }
-  .hover-scale-102:hover {
-    transform: scale(1.02);
-  }
-  .shadow-pulse {
-    box-shadow: 0 0 0 2px rgba(203,170,122,0.2);
-  }
-  .animate-fade-subtle {
-    animation: fadeIn 250ms ease-out forwards;
-  }
-img {
-  -webkit-user-drag: none;
-}
-
-button {
-  @apply transition active:scale-[0.98];
-}
-
- /* Timeline pulse animation */
-@keyframes pulseDot {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.25); }
+@keyframes bounceIn {
+  0% { transform: scale(0.95); }
+  50% { transform: scale(1.02); }
   100% { transform: scale(1); }
 }
 
-section {
-  margin-top: 24px;
-  margin-bottom: 24px;
-}
+.animate-fadeInUp { animation: fadeInUp 0.3s ease-out; }
+.animate-scaleIn { animation: scaleIn 0.25s ease-out; }
+.animate-headerFade { animation: headerFade 0.4s ease-out; }
+.animate-progressPulse { animation: progressPulse 1.2s ease-out; }
+.animate-goldGlow { animation: goldGlow 2s ease-out; }
+.animate-dotPulse { animation: dotPulse 1.5s ease-in-out infinite; }
+.animate-bounceIn { animation: bounceIn 0.3s ease-out; }
+
+/* Gold accent utilities */
+.text-gold { color: #D4A853; }
+.bg-gold { background-color: #D4A853; }
+.border-gold { border-color: #D4A853; }
+.border-gold\/20 { border-color: rgba(212, 168, 83, 0.2); }
+.border-gold\/30 { border-color: rgba(212, 168, 83, 0.3); }
+.bg-gold\/10 { background-color: rgba(212, 168, 83, 0.1); }
+.bg-gold\/20 { background-color: rgba(212, 168, 83, 0.2); }
+.ring-gold\/20 { --tw-ring-color: rgba(212, 168, 83, 0.2); }
+.ring-gold\/30 { --tw-ring-color: rgba(212, 168, 83, 0.3); }
+.focus\:border-gold\/50:focus { border-color: rgba(212, 168, 83, 0.5); }
+
+/* Smooth scroll */
+html { scroll-behavior: smooth; }
+
+/* Premium scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); }
+::-webkit-scrollbar-thumb { background: rgba(212, 168, 83, 0.3); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(212, 168, 83, 0.5); }

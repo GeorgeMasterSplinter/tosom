@@ -70,6 +70,60 @@ export default function LandingView() {
           </div>
         </FadeIn>
 
+        {/* Hvordan det fungerer */}
+        <FadeIn>
+          <div className="space-y-8">
+            <div className="text-center space-y-4">
+              <H2 className="text-white">Hvordan det fungerer</H2>
+              <BodyMd className="text-gray-400 max-w-xl mx-auto">
+                En enkel, varm og guidet prosess – steg for steg.
+              </BodyMd>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              {/* Steg 1 */}
+              <FadeIn>
+                <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4 h-full text-center">
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gold/20 border border-gold/30 text-gold font-bold text-lg">1</div>
+                  <H3 className="text-white">Logg inn</H3>
+                  <BodyMd className="text-gray-300 leading-relaxed">
+                    Opprett konto og kom i gang på få minutter.
+                  </BodyMd>
+                </div>
+              </FadeIn>
+              {/* Steg 2 */}
+              <FadeIn>
+                <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4 h-full text-center">
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gold/20 border border-gold/30 text-gold font-bold text-lg">2</div>
+                  <H3 className="text-white">Fyll ut profilen</H3>
+                  <BodyMd className="text-gray-300 leading-relaxed">
+                    Forskningbasert veiledning hjelper deg å lage en autentisk profil.
+                  </BodyMd>
+                </div>
+              </FadeIn>
+              {/* Steg 3 */}
+              <FadeIn>
+                <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4 h-full text-center">
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gold/20 border border-gold/30 text-gold font-bold text-lg">3</div>
+                  <H3 className="text-white">Mottak matches</H3>
+                  <BodyMd className="text-gray-300 leading-relaxed">
+                    Algoritmen din finner People som matcher sanne behov dine.
+                  </BodyMd>
+                </div>
+              </FadeIn>
+              {/* Steg 4 */}
+              <FadeIn>
+                <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4 h-full text-center">
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gold/20 border border-gold/30 text-gold font-bold text-lg">4</div>
+                  <H3 className="text-white">Start reisen</H3>
+                  <BodyMd className="text-gray-300 leading-relaxed">
+                    En guidet, varm og rolig samtale starter — steg for steg.
+                  </BodyMd>
+                </div>
+              </FadeIn>
+            </div>
+          </div>
+        </FadeIn>
+
         {/* Under utvikling */}
         <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4">
           <H2 className="text-white">Under utvikling</H2>

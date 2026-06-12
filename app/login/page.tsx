@@ -46,10 +46,10 @@ export default function LoginPage() {
             </div>
 
             {/* GlassPanel: Login-form */}
-            <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-6">
+            <div className="bg-white/5 border border-gold/20 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-6 transition-all duration-300 ease-out hover:scale-[1.02]">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label htmlFor="email" className="mb-2 block text-xs uppercase tracking-wider text-gray-500">
+                  <label htmlFor="email" className="mb-2 block text-xs uppercase tracking-wider text-gold">
                     E-post
                   </label>
                   <input
@@ -60,7 +60,7 @@ export default function LoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="du@eksempel.no"
-                    className="w-full border-b border-white/10 bg-transparent py-3 text-white placeholder-gray-600 outline-none transition focus:border-gold/50"
+                    className="w-full border-b border-gold/20 bg-transparent py-3 text-white placeholder-gray-600 outline-none transition focus:border-gold"
                   />
                 </div>
 

@@ -1,8 +1,26 @@
 "use client";
 
 import { useState } from "react";
+import Section from "@/components/ui/Section";
+import Typography from "@/components/ui/Typography";
+import FadeIn from "@/components/ui/FadeIn";
+import PremiumButton from "@/components/ui/PremiumButton";
 
-export default function ProfileView({ profile }: { profile: any }) {
+const { H1, H2, BodyMd, BodySm } = Typography;
+
+interface ProfileData {
+  id?: string;
+  name?: string;
+  age?: number | null;
+  location?: string | null;
+  bio?: string | null;
+  imageUrl?: string | null;
+  hobbyTags?: string[];
+  musicTags?: string[];
+  images?: Array<{ id: string; url: string }>;
+}
+
+export default function ProfileView({ profile }: { profile: ProfileData }) {
   const [isMatching, setIsMatching] = useState(false);
   const [hasMatched, setHasMatched] = useState(false);
 
@@ -12,123 +30,141 @@ export default function ProfileView({ profile }: { profile: any }) {
   ];
 
   return (
-    <main className="min-h-screen bg-gray-950">
-      <div className="max-w-xl mx-auto py-10 space-y-10">
-        {/* Sekjon: Oversikt */}
-        <section className="text-center space-y-3">
-          <div className="w-32 h-32 mx-auto rounded-full overflow-hidden bg-gray-800 ring-1 ring-white/10">
-            {profile.imageUrl ? (
-              <img
-                src={profile.imageUrl}
-                alt={profile.name}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-gray-600 text-4xl font-light">
-                {(profile.name ?? "U")[0].toUpperCase()}
-              </div>
-            )}
+    <div className="min-h-screen bg-gray-950 text-white">
+      <Section className="space-y-16 py-12">
+        {/* Header */}
+        <FadeIn>
+          <div className="space-y-2">
+            <H1 className="text-white">Profil</H1>
+            <BodyMd className="text-gray-400">Utforsk denne brukaren</BodyMd>
           </div>
+        </FadeIn>
 
-          <div>
-            <h1 className="text-3xl font-light text-white">
-              {profile.name}
-            </h1>
-            {profile.age && (
-              <p className="text-gray-400 mt-1">{profile.age} år</p>
-            )}
-          </div>
-
-          {profile.location && (
-            <p className="text-gray-500 text-sm">{profile.location}</p>
-          )}
-        </section>
-
-        {/* Seksjon: Om meg */}
-        <section>
-          <h2 className="text-lg font-medium text-white">Om meg</h2>
-          {profile.bio ? (
-            <p className="text-gray-300 leading-relaxed mt-3">
-              {profile.bio}
-            </p>
-          ) : (
-            <p className="text-gray-500 mt-3">Ingen beskrivelse ennå.</p>
-          )}
-        </section>
-
-        {/* Seksjon: Interesser */}
-        <section>
-          <h2 className="text-lg font-medium text-white">Interesser</h2>
-          {alleInteresser.length > 0 ? (
-            <div className="flex flex-wrap gap-2 mt-3">
-              {alleInteresser.map((tag: string) => (
-                <span
-                  key={tag}
-                  className="inline-block rounded-full px-3 py-1 bg-white/10 text-gray-200 border border-white/10 backdrop-blur-sm"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          ) : (
-            <p className="text-gray-500 mt-3">Ingen interesser lagt inn ennå.</p>
-          )}
-        </section>
-
-        {/* Seksjon: Bilder */}
-        <section>
-          <h2 className="text-lg font-medium text-white">Bilder</h2>
-          {profile.images && profile.images.length > 1 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-              {profile.images.slice(1).map((img: any) => (
-                <div
-                  key={img.id}
-                  className="rounded-xl shadow-md shadow-black/20 overflow-hidden aspect-[4/5]"
-                >
+        {/* Oversikt */}
+        <FadeIn>
+          <div className="space-y-6">
+            <div className="text-center space-y-6">
+              <div className="w-32 h-32 mx-auto rounded-full overflow-hidden bg-gray-800 ring-1 ring-white/10">
+                {profile.imageUrl ? (
                   <img
-                    src={img.url}
-                    alt="Profilbilde"
+                    src={profile.imageUrl}
+                    alt={profile.name ?? "Profil"}
                     className="w-full h-full object-cover"
                   />
-                </div>
-              ))}
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-gray-600 text-4xl font-light">
+                    {(profile.name?.[0] ?? "U").toUpperCase()}
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <H2 className="text-white">{profile.name ?? "Ukjent"}</H2>
+                {profile.age && (
+                  <BodySm className="text-gray-400">{profile.age} år</BodySm>
+                )}
+                {profile.location && (
+                  <BodySm className="text-gray-500">{profile.location}</BodySm>
+                )}
+              </div>
             </div>
-          ) : (
-            <p className="text-gray-500 mt-3">Ingen bilder ennå.</p>
-          )}
-        </section>
 
-        {/* Seksjon: Handlingar */}
-        <section className="flex gap-4">
-          <button
-            type="button"
-            disabled={isMatching || hasMatched}
-            onClick={async () => {
-              setIsMatching(true);
-              setHasMatched(true);
-              try {
-                await fetch("/api/match", {
-                  method: "POST",
-                  body: JSON.stringify({ targetUserId: profile.id }),
-                });
-              } catch {
-                setHasMatched(false);
-              }
-              setIsMatching(false);
-            }}
-            className="flex-1 py-3 bg-white text-gray-950 rounded-full text-sm font-medium transition-colors hover:bg-gray-100 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {hasMatched ? "Matcha" : isMatching ? "Matcher…" : "Match"}
-          </button>
+            {/* GlassPanel */}
+            <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4">
+              <H2 className="text-white">Om meg</H2>
+              {profile.bio ? (
+                <BodyMd className="text-gray-300 leading-relaxed">
+                  {profile.bio}
+                </BodyMd>
+              ) : (
+                <BodyMd className="text-gray-500">Ingen beskrivelse enno.</BodyMd>
+              )}
+            </div>
+          </div>
+        </FadeIn>
 
-          <button
-            type="button"
-            className="flex-1 py-3 border border-white/20 text-white rounded-full text-sm font-medium transition-colors hover:bg-white/10 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Send melding
-          </button>
-        </section>
-      </div>
-    </main>
+        {/* Interesser */}
+        <FadeIn>
+          <div className="space-y-4">
+            <H2 className="text-white">Interesser</H2>
+            <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-6">
+              {alleInteresser.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {alleInteresser.map((tag: string) => (
+                    <span
+                      key={tag}
+                      className="inline-block rounded-full px-3 py-1 bg-white/10 text-gray-200 border border-white/10 backdrop-blur-sm"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <BodyMd className="text-gray-500">Ingen interesser lagt inn enno.</BodyMd>
+              )}
+            </div>
+          </div>
+        </FadeIn>
+
+        {/* Bilder */}
+        <FadeIn>
+          <div className="space-y-4">
+            <H2 className="text-white">Bilder</H2>
+            <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-6">
+              {profile.images && profile.images.length > 1 ? (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {profile.images.slice(1).map((img: { id: string; url: string }) => (
+                    <div
+                      key={img.id}
+                      className="rounded-xl shadow-md shadow-black/20 overflow-hidden aspect-[4/5]"
+                    >
+                      <img
+                        src={img.url}
+                        alt="Profilbilde"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <BodyMd className="text-gray-500">Ingen bilder enno.</BodyMd>
+              )}
+            </div>
+          </div>
+        </FadeIn>
+
+        {/* Handlingar */}
+        <FadeIn>
+          <div className="flex gap-4">
+            <PremiumButton
+              variant="primary"
+              onClick={async () => {
+                setIsMatching(true);
+                setHasMatched(true);
+                try {
+                  await fetch("/api/match", {
+                    method: "POST",
+                    body: JSON.stringify({ targetUserId: profile.id }),
+                  });
+                } catch {
+                  setHasMatched(false);
+                }
+                setIsMatching(false);
+              }}
+              className="flex-1"
+            >
+              {hasMatched ? "Matcha" : isMatching ? "Matcher…" : "Match"}
+            </PremiumButton>
+
+            <PremiumButton
+              variant="secondary"
+              className="flex-1"
+            >
+              Send melding
+            </PremiumButton>
+          </div>
+        </FadeIn>
+      </Section>
+    </div>
   );
 }

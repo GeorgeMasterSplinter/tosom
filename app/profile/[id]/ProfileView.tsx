@@ -6,8 +6,76 @@ import Section from "@/components/ui/Section";
 import Typography from "@/components/ui/Typography";
 import FadeIn from "@/components/ui/FadeIn";
 import PremiumButton from "@/components/ui/PremiumButton";
+import Skeleton from "@/components/ui/Skeleton";
 
 const { H1, H2, BodyMd, BodySm } = Typography;
+
+/* ------ Profile skeleton for parent loading state ------ */
+
+export function ProfileSkeleton() {
+  return (
+    <div className="min-h-screen bg-gray-950 text-white">
+      <Section className="space-y-16 py-12">
+        {/* Header */}
+        <div className="flex justify-between items-start gap-6">
+          <div className="space-y-2">
+            <Skeleton width="w-32" height="h-8" rounded="rounded-md" />
+            <Skeleton width="w-48" height="h-4" rounded="rounded-md" />
+          </div>
+          <Skeleton width="w-32" height="h-10" rounded="rounded-xl" />
+        </div>
+
+        {/* Profilbilde + info */}
+        <div className="space-y-6">
+          <div className="text-center space-y-6">
+            <Skeleton width="w-32" height="w-32" rounded="rounded-full" className="mx-auto" />
+            <div className="space-y-2">
+              <Skeleton width="w-40" height="h-8" rounded="rounded-md" />
+              <Skeleton width="w-20" height="h-4" rounded="rounded-md" />
+              <Skeleton width="w-24" height="h-4" rounded="rounded-md" />
+            </div>
+          </div>
+
+          {/* Om meg */}
+          <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4">
+            <Skeleton width="w-24" height="h-6" rounded="rounded-md" />
+            <Skeleton width="w-full" height="h-4" rounded="rounded-md" />
+            <Skeleton width="w-3/4" height="h-4" rounded="rounded-md" />
+          </div>
+
+          {/* Interesser */}
+          <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-6">
+            <Skeleton width="w-28" height="h-6" rounded="rounded-md" />
+            <div className="flex flex-wrap gap-2">
+              <Skeleton width="w-20" height="h-8" rounded="rounded-full" />
+              <Skeleton width="w-24" height="h-8" rounded="rounded-full" />
+              <Skeleton width="w-16" height="h-8" rounded="rounded-full" />
+              <Skeleton width="w-22" height="h-8" rounded="rounded-full" />
+            </div>
+          </div>
+
+          {/* Bilder */}
+          <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-6">
+            <Skeleton width="w-24" height="h-6" rounded="rounded-md" />
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <Skeleton width="w-full" height="h-48" rounded="rounded-xl" className="aspect-[4/5]" />
+              <Skeleton width="w-full" height="h-48" rounded="rounded-xl" className="aspect-[4/5]" />
+              <Skeleton width="w-full" height="h-48" rounded="rounded-xl" className="aspect-[4/5]" />
+            </div>
+          </div>
+
+          {/* Handlingar */}
+          <div className="flex gap-4">
+            <Skeleton width="w-full" height="h-12" rounded="rounded-xl" />
+            <Skeleton width="w-full" height="h-12" rounded="rounded-xl" />
+          </div>
+        </div>
+      </Section>
+    </div>
+  );
+}
+
+/* ------ Data-types ------ */
 
 interface ProfileData {
   id?: string;
@@ -20,6 +88,8 @@ interface ProfileData {
   musicTags?: string[];
   images?: Array<{ id: string; url: string }>;
 }
+
+/* ------ Visning ------ */
 
 export default function ProfileView({ profile }: { profile: ProfileData }) {
   const router = useRouter();
@@ -41,7 +111,7 @@ export default function ProfileView({ profile }: { profile: ProfileData }) {
           <div className="flex justify-between items-start gap-6">
             <div className="space-y-2">
               <H1 className="text-white">Profil</H1>
-              <BodyMd className="text-gray-400">Utforsk denne brukaren</BodyMd>
+              <BodyMd className="text-gold">Utforsk denne brukaren</BodyMd>
             </div>
             {canEdit && (
               <PremiumButton
@@ -58,7 +128,7 @@ export default function ProfileView({ profile }: { profile: ProfileData }) {
         <FadeIn>
           <div className="space-y-6">
             <div className="text-center space-y-6">
-              <div className="w-32 h-32 mx-auto rounded-full overflow-hidden bg-gray-800 ring-1 ring-white/10">
+              <div className="w-32 h-32 mx-auto rounded-full overflow-hidden bg-gray-800 ring-2 ring-gold/30">
                 {profile.imageUrl ? (
                   <img
                     src={profile.imageUrl}
@@ -66,7 +136,7 @@ export default function ProfileView({ profile }: { profile: ProfileData }) {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-gray-600 text-4xl font-light">
+                  <div className="w-full h-full flex items-center justify-center text-gold text-4xl font-light">
                     {(profile.name?.[0] ?? "U").toUpperCase()}
                   </div>
                 )}
@@ -75,7 +145,7 @@ export default function ProfileView({ profile }: { profile: ProfileData }) {
               <div className="space-y-2">
                 <H2 className="text-white">{profile.name ?? "Ukjent"}</H2>
                 {profile.age && (
-                  <BodySm className="text-gray-400">{profile.age} år</BodySm>
+                  <BodySm className="text-gold">{profile.age} år</BodySm>
                 )}
                 {profile.location && (
                   <BodySm className="text-gray-500">{profile.location}</BodySm>
@@ -84,7 +154,7 @@ export default function ProfileView({ profile }: { profile: ProfileData }) {
             </div>
 
             {/* GlassPanel: Om meg */}
-            <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4">
+            <div className="bg-white/5 border border-gold/20 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4 transition-all duration-300 ease-out hover:scale-[1.02]">
               <H2 className="text-white">Om meg</H2>
               {profile.bio ? (
                 <BodyMd className="text-gray-300 leading-relaxed">
@@ -101,13 +171,13 @@ export default function ProfileView({ profile }: { profile: ProfileData }) {
         <FadeIn>
           <div className="space-y-4">
             <H2 className="text-white">Interesser</H2>
-            <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-6">
+            <div className="bg-white/5 border border-gold/20 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-6 transition-all duration-300 ease-out hover:scale-[1.02]">
               {alleInteresser.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
                   {alleInteresser.map((tag: string) => (
                     <span
                       key={tag}
-                      className="inline-block rounded-full px-3 py-1 bg-white/10 text-gray-200 border border-white/10 backdrop-blur-sm"
+                      className="inline-block rounded-full px-3 py-1 bg-gold/10 text-gold border border-gold/20 backdrop-blur-sm"
                     >
                       {tag}
                     </span>
@@ -124,13 +194,13 @@ export default function ProfileView({ profile }: { profile: ProfileData }) {
         <FadeIn>
           <div className="space-y-4">
             <H2 className="text-white">Bilder</H2>
-            <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-6">
+            <div className="bg-white/5 border border-gold/20 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-6 transition-all duration-300 ease-out hover:scale-[1.02]">
               {profile.images && profile.images.length > 1 ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {profile.images.slice(1).map((img: { id: string; url: string }) => (
                     <div
                       key={img.id}
-                      className="rounded-xl shadow-md shadow-black/20 overflow-hidden aspect-[4/5]"
+                      className="rounded-xl shadow-md shadow-black/20 overflow-hidden aspect-[4/5] ring-1 ring-gold/20 transition-all duration-300 hover:scale-[1.02]"
                     >
                       <img
                         src={img.url}
@@ -165,14 +235,14 @@ export default function ProfileView({ profile }: { profile: ProfileData }) {
                 }
                 setIsMatching(false);
               }}
-              className="flex-1"
+              className="flex-1 transition-all duration-300 ease-out hover:scale-[1.02]"
             >
               {hasMatched ? "Matcha" : isMatching ? "Matcher…" : "Match"}
             </PremiumButton>
 
             <PremiumButton
               variant="secondary"
-              className="flex-1"
+              className="flex-1 transition-all duration-300 ease-out hover:scale-[1.02]"
             >
               Send melding
             </PremiumButton>

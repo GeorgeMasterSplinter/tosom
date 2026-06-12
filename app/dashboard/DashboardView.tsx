@@ -6,6 +6,7 @@ import Section from "@/components/ui/Section";
 import Typography from "@/components/ui/Typography";
 import FadeIn from "@/components/ui/FadeIn";
 import PremiumButton from "@/components/ui/PremiumButton";
+import Skeleton from "@/components/ui/Skeleton";
 
 const { H1, H2, BodyMd, BodySm } = Typography;
 
@@ -38,6 +39,17 @@ interface DashboardData {
   match: MatchInfo | null;
   conversation: ConvoInfo | null;
   journey: JourneyInfo | null;
+}
+
+/* ------ Skeleton-kort ------ */
+
+function SkeletonCard({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4">
+      <H2 className="text-white">{title}</H2>
+      <div className="space-y-4">{children}</div>
+    </div>
+  );
 }
 
 /* ------ Visning ------ */
@@ -76,11 +88,50 @@ export default function DashboardView() {
     };
   }, []);
 
-  /* Loading */
+  /* Loading — skeleton */
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">
-        <BodyMd className="text-gray-400">Laster...</BodyMd>
+      <div className="min-h-screen bg-gray-950 text-white">
+        <Section className="space-y-16 py-12">
+          {/* Header */}
+          <div className="space-y-2">
+            <Skeleton width="w-48" height="h-8" rounded="rounded-md" />
+            <Skeleton width="w-32" height="h-4" rounded="rounded-md" />
+          </div>
+
+          {/* Match skeleton */}
+          <SkeletonCard title="Din match">
+            <div className="flex items-start gap-4">
+              <Skeleton width="w-16" height="h-16" rounded="rounded-xl" />
+              <div className="flex-1 space-y-3">
+                <Skeleton width="w-32" height="h-5" rounded="rounded-md" />
+                <Skeleton width="w-48" height="h-4" rounded="rounded-md" />
+              </div>
+            </div>
+            <Skeleton width="w-24" height="h-12" rounded="rounded-xl" />
+          </SkeletonCard>
+
+          {/* Samtale skeleton */}
+          <SkeletonCard title="Samtale">
+            <div className="space-y-3">
+              <Skeleton width="w-24" height="h-4" rounded="rounded-md" />
+              <Skeleton width="w-full" height="h-4" rounded="rounded-md" />
+              <Skeleton width="w-32" height="h-4" rounded="rounded-md" />
+            </div>
+            <Skeleton width="w-40" height="h-12" rounded="rounded-xl" />
+          </SkeletonCard>
+
+          {/* Reise skeleton */}
+          <SkeletonCard title="Reisen deres">
+            <div className="space-y-3">
+              <Skeleton width="w-28" height="h-4" rounded="rounded-md" />
+              <Skeleton width="w-40" height="h-6" rounded="rounded-md" />
+              <Skeleton width="w-full" height="h-4" rounded="rounded-md" />
+              <Skeleton width="w-3/4" height="h-4" rounded="rounded-md" />
+            </div>
+            <Skeleton width="w-36" height="h-12" rounded="rounded-xl" />
+          </SkeletonCard>
+        </Section>
       </div>
     );
   }
@@ -130,9 +181,9 @@ export default function DashboardView() {
           <FadeIn>
             <div className="space-y-4">
               <H2 className="text-white">Din match</H2>
-              <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4">
+              <div className="bg-white/5 border border-gold/20 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4 transition-all duration-300 ease-out hover:scale-[1.02]">
                 <div className="flex items-start gap-4">
-                  <div className="w-16 h-16 shrink-0 rounded-xl bg-gray-800 ring-1 ring-white/10 flex items-center justify-center text-gray-400 text-lg font-light">
+                  <div className="w-16 h-16 shrink-0 rounded-xl bg-gray-800 ring-2 ring-gold/20 flex items-center justify-center text-gray-400 text-lg font-light">
                     {data.match.name.charAt(0)}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -162,9 +213,9 @@ export default function DashboardView() {
           <FadeIn>
             <div className="space-y-4">
               <H2 className="text-white">Samtale</H2>
-              <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4">
+              <div className="bg-white/5 border border-gold/20 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4 transition-all duration-300 ease-out hover:scale-[1.02]">
                 <div className="space-y-2">
-                  <p className="text-white font-medium text-sm">{data.conversation.partnerName}</p>
+                  <p className="text-gold font-medium text-sm">{data.conversation.partnerName}</p>
                   <p className="text-gray-300 text-sm leading-relaxed">
                     {data.conversation.lastMessage}
                   </p>
@@ -193,9 +244,9 @@ export default function DashboardView() {
           <FadeIn>
             <div className="space-y-4">
               <H2 className="text-white">Reisen deres</H2>
-              <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-6">
+              <div className="bg-white/5 border border-gold/20 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-6 transition-all duration-300 ease-out hover:scale-[1.02]">
                 <div className="space-y-2">
-                  <BodySm className="text-gray-500">
+                  <BodySm className="text-gold">
                     Dag {data.journey.day} av {data.journey.totalDays}
                   </BodySm>
                   <H2 className="text-white text-2xl font-light">{data.journey.tittel}</H2>

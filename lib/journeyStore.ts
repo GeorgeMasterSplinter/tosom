@@ -1,5 +1,10 @@
 interface JourneyStep { id: string; title: string; description: string; }
-interface JourneyData { conversationId: string; steps: JourneyStep[]; currentStep: number; current: JourneyStep; updatedAt: string; }
+
+interface JourneyData {
+  steps: JourneyStep[];
+  current: JourneyStep;
+  index: number;
+}
 
 const journeys = new Map<string, JourneyData>();
 
@@ -11,17 +16,13 @@ const DEFAULT_STEPS: JourneyStep[] = [
 
 export function initJourney(conversationId: string): JourneyData {
   if (journeys.has(conversationId)) return journeys.get(conversationId)!;
-
-  const journey: JourneyData = {
-    conversationId,
-    steps: [...DEFAULT_STEPS],
-    currentStep: 0,
-    current: DEFAULT_STEPS[0],   // 👈 MÅ være her
-    updatedAt: new Date().toISOString()
+  const initialState: JourneyData = {
+    steps: DEFAULT_STEPS,
+    current: DEFAULT_STEPS[0],
+    index: 0,
   };
-
-  journeys.set(conversationId, journey);
-  return journey;
+  journeys.set(conversationId, initialState);
+  return initialState;
 }
 
 export function getJourney(conversationId: string): JourneyData | undefined {
@@ -31,25 +32,18 @@ export function getJourney(conversationId: string): JourneyData | undefined {
 export function advanceJourney(conversationId: string): JourneyData | null {
   const journey = journeys.get(conversationId);
   if (!journey) return null;
-
-  const nextStep = journey.currentStep + 1;
-  if (nextStep >= journey.steps.length) return journey;
-
-  journey.currentStep = nextStep;
-  journey.current = journey.steps[nextStep];   // 👈 MÅ være her
-  journey.updatedAt = new Date().toISOString();
-
+  const newIndex = journey.index + 1;
+  if (newIndex >= journey.steps.length) return journey;
+  journey.index = newIndex;
+  journey.current = journey.steps[newIndex];
   return journey;
 }
 
 export function resetJourney(conversationId: string): JourneyData | null {
   const journey = journeys.get(conversationId);
   if (!journey) return null;
-
-  journey.currentStep = 0;
-  journey.current = journey.steps[0];   // 👈 MÅ være her
-  journey.updatedAt = new Date().toISOString();
-
+  journey.index = 0;
+  journey.current = DEFAULT_STEPS[0];
   return journey;
 }
 

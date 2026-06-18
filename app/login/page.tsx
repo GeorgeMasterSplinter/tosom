@@ -3,6 +3,7 @@
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import Section from "@/components/ui/Section";
+import Card from "@/components/ui/Card";
 import Typography from "@/components/ui/Typography";
 import FadeIn from "@/components/ui/FadeIn";
 import PremiumButton from "@/components/ui/PremiumButton";
@@ -32,24 +33,24 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center px-4">
-      <Section className="space-y-16 py-12">
+    <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] flex items-center justify-center px-[var(--space-sm)]">
+      <Section className="gap-[var(--space-xl)] py-[var(--space-xl)]">
         <FadeIn>
-          <div className="max-w-md mx-auto space-y-8">
+          <div className="max-w-md mx-auto gap-[var(--space-md)]">
             {/* Header */}
-            <div className="text-center space-y-4">
-              <BodySm className="text-gold uppercase tracking-[0.3em]">Velkommen tilbake</BodySm>
-              <H1 className="text-white">Logg inn</H1>
-              <BodyMd className="text-gray-400">
+            <div className="text-center gap-[var(--space-sm)]">
+              <BodySm className="text-[var(--color-gold)] uppercase tracking-[0.2em]">Velkommen tilbake</BodySm>
+              <H1 className="text-[var(--color-text)]">Logg inn</H1>
+              <BodyMd className="text-[var(--color-muted)]">
                 Send ei Magic Link til e-posten din
               </BodyMd>
             </div>
 
-            {/* GlassPanel: Login-form */}
-            <div className="bg-white/5 border border-gold/20 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-6 transition-all duration-300 ease-out hover:scale-[1.02]">
-              <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Login form */}
+            <Card className="gap-[var(--space-md)] transition-all duration-200 ease-out hover:scale-[1.005]">
+              <form onSubmit={handleSubmit} className="gap-[var(--space-md)]">
                 <div>
-                  <label htmlFor="email" className="mb-2 block text-xs uppercase tracking-wider text-gold">
+                  <label htmlFor="email" className="mb-[var(--space-xs)] block text-xs uppercase tracking-wider text-[var(--color-gold)]">
                     E-post
                   </label>
                   <input
@@ -60,7 +61,7 @@ export default function LoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="du@eksempel.no"
-                    className="w-full border-b border-gold/20 bg-transparent py-3 text-white placeholder-gray-600 outline-none transition focus:border-gold"
+                    className="w-full border-b border-[var(--color-gold)]/20 bg-[var(--color-card)] py-[var(--space-sm)] text-[var(--color-text)] placeholder-[var(--color-muted)]/50 outline-none transition-all duration-200 ease-out focus:border-[var(--color-gold)] focus:ring-1 focus:ring-[var(--color-gold)]/30"
                   />
                 </div>
 
@@ -79,14 +80,14 @@ export default function LoginPage() {
 
               {/* Sekundær knapp */}
               <div className="text-center">
-                <BodyMd className="text-gray-500">
+                <BodyMd className="text-[var(--color-muted)]">
                   Har du ingen konto?{" "}
-                  <span className="text-gold cursor-pointer hover:underline">
+                  <span className="text-[var(--color-gold)] cursor-pointer hover:underline transition-colors duration-200 ease-out">
                     Opprett konto
                   </span>
                 </BodyMd>
               </div>
-            </div>
+            </Card>
           </div>
         </FadeIn>
       </Section>

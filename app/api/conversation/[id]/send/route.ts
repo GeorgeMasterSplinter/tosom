@@ -1,4 +1,3 @@
-
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { createSystemMessage } from "@/lib/createSystemMessage";
@@ -136,12 +135,17 @@ export async function POST(
   }
 
   // ── vanlig brukarmelding ──
+  const normalizedType =
+    type === "system_message"
+      ? "system"
+      : type || "user";
+
   const message = await prisma.message.create({
     data: {
       conversationId,
       senderId: session.user.id,
       content,
-      type: type || "user",
+      type: normalizedType,
     },
   });
 

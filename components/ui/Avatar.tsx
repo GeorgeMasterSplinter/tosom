@@ -21,7 +21,8 @@ export function Avatar({ src, alt, size = "md", fallback, className }: AvatarPro
   return (
     <div
       className={cn(
-        "shrink-0 rounded-full ring-1 ring-dark/10 dark:ring-dark-border flex items-center justify-center bg-light-gray dark:bg-dark-card",
+        // CSS variable-driven
+        "shrink-0 rounded-[var(--radius-full)] ring-1 ring-[var(--glass-border)] flex items-center justify-center transition-all [var(--transition-fast)] ease-out",
         sizes[size],
         className
       )}
@@ -30,11 +31,14 @@ export function Avatar({ src, alt, size = "md", fallback, className }: AvatarPro
         <img
           src={src}
           alt={alt}
-          className="w-full h-full rounded-full object-cover"
+          className="w-full h-full rounded-[var(--radius-full)] object-cover"
           loading="lazy"
         />
       ) : (
-        <span className="text-dark dark:text-light font-medium">
+        <span
+          className="font-medium"
+          style={{ color: "var(--color-text)" }}
+        >
           {fallback || alt?.charAt(0).toUpperCase()}
         </span>
       )}

@@ -43,7 +43,7 @@ const steps = [
         <p>🌿 <strong>Steg 1:</strong> Start reisen — del noko enkelt</p>
         <p>🔥 <strong>Steg 2:</strong> Litt djupare — kva ser du fram til?</p>
         <p>💛 <strong>Steg 3:</strong> Felles refleksjon — kva gjer at du trivst?</p>
-        <p className="text-gold pt-2">Etter steg 3 får dere ein liten feiring 🎉</p>
+        <p className="text-[var(--color-gold)] pt-2">Etter steg 3 får dere ein liten feiring 🎉</p>
       </div>
     ),
     buttonLabel: "Finn din match",

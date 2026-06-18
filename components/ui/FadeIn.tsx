@@ -2,13 +2,19 @@
 
 import { useEffect, useRef, useState } from "react";
 
+interface FadeInProps {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+  duration?: number;
+}
+
 export default function FadeIn({
   children,
   className = "",
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
+  delay = 0,
+  duration = 600,
+}: FadeInProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -33,7 +39,13 @@ export default function FadeIn({
   return (
     <div
       ref={ref}
-      className={`${isVisible ? "" : "opacity-0 translate-y-4"} ${className}`}
+      className={className}
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? "translateY(0)" : "translateY(10px)",
+        transition: `opacity ${duration}ms ease-out, transform ${duration}ms ease-out`,
+        transitionDelay: `${delay}ms`,
+      }}
     >
       {children}
     </div>

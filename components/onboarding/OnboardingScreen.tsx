@@ -1,16 +1,12 @@
-"use client";
+import React from "react";
+import clsx from "clsx";
 
-import FadeIn from "@/components/ui/FadeIn";
-import PremiumButton from "@/components/ui/PremiumButton";
-import { ReactNode } from "react";
-
-interface OnboardingScreenProps {
+type OnboardingScreenProps = {
   title?: string;
-  text?: string | ReactNode;
+  text?: string | React.ReactElement;
   buttonLabel?: string;
-  onNext: () => void;
-  onPrev?: () => void;
-  onComplete?: () => void;
+  children?: React.ReactNode;
+  className?: string;
   step?: string;
   name?: string;
   age?: number;
@@ -19,24 +15,26 @@ interface OnboardingScreenProps {
   interests?: string[];
   photos?: string[];
   readyForMatch?: boolean;
-  onNameChange?: (name: string) => void;
-  onAgeChange?: (age: number) => void;
+  onReadyChange?: (readyForMatch: boolean) => void;
+  onComplete?: () => void;
+  onNameChange?: (name: any) => void;
+  onAgeChange?: (age: any) => void;
   onBioChange?: (bio: string) => void;
   onValuesChange?: (values: string[]) => void;
   onInterestsChange?: (interests: string[]) => void;
   onPhotosChange?: (photos: string[]) => void;
-  onReadyChange?: (readyForMatch: boolean) => void;
   onPhotoUpload?: (idx: number) => void;
   onPhotoRemove?: (idx: number) => void;
-}
+  onNext?: () => void;
+  onPrev?: () => void;
+};
 
 export default function OnboardingScreen({
   title,
   text,
   buttonLabel,
-  onNext,
-  onPrev,
-  onComplete,
+  children,
+  className,
   step,
   name,
   age,
@@ -45,51 +43,52 @@ export default function OnboardingScreen({
   interests,
   photos,
   readyForMatch,
+  onReadyChange,
+  onComplete,
   onNameChange,
   onAgeChange,
   onBioChange,
   onValuesChange,
   onInterestsChange,
   onPhotosChange,
-  onReadyChange,
   onPhotoUpload,
   onPhotoRemove,
+  onNext,
+  onPrev,
 }: OnboardingScreenProps) {
   return (
-    <FadeIn>
-      <div className="space-y-6 text-center">
+    <section className={clsx("section", className)}>
+      <div className="fade-in max-w-2xl mx-auto flex flex-col gap-[var(--space-xl)] text-center">
         {title && (
-          <h2 className="text-2xl font-semibold text-gold">{title}</h2>
+          <h1 className="font-semibold text-[var(--color-text)] tracking-tight text-3xl">
+            {title}
+          </h1>
         )}
+
         {text && (
-          typeof text === "string" ? (
-            <p className="text-white/80 leading-relaxed">{text}</p>
-          ) : (
-            <div className="text-white/80 leading-relaxed">{text}</div>
-          )
+          <p className="text-[var(--color-muted)] leading-[var(--line-relaxed)] text-lg">
+            {text}
+          </p>
         )}
-        <div className="pt-2 space-y-3">
+
+        <div className="card fade-in flex flex-col gap-[var(--space-sm)] text-left">
+          {children}
+        </div>
+
+        <div className="flex justify-center gap-[var(--space-md)] mt-[var(--space-md)]">
           {onPrev && (
-            <div className="flex justify-center">
-              <button
-                onClick={onPrev}
-                className="text-white/70 hover:text-white transition-colors text-sm"
-              >
-                Tilbake
-              </button>
-            </div>
+            <button onClick={onPrev} className="btn-secondary">
+              Tilbake
+            </button>
           )}
-          {buttonLabel && (
-            <PremiumButton
-              variant="primary"
-              onClick={onNext}
-              className="hover:scale-[1.02] transition-all duration-300"
-            >
-              {buttonLabel}
-            </PremiumButton>
+
+          {onNext && (
+            <button onClick={onNext} className="btn-primary">
+              {buttonLabel || "Neste"}
+            </button>
           )}
         </div>
       </div>
-    </FadeIn>
+    </section>
   );
 }

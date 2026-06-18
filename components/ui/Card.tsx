@@ -1,7 +1,20 @@
-export default function Card({ children }) {
+import clsx from "clsx";
+
+export default function Card({ 
+  children, 
+  className 
+}: { 
+  children: React.ReactNode; 
+  className?: string 
+}) {
   return (
-        <div className="bg-[#EDEAE6] border border-[#E5E5E5] rounded-xl p-6 shadow-sm hover:scale-101 transition-transform duration-300 ease-in-out">
+    <div
+      className={clsx(
+        "flex flex-col rounded-xl bg-[var(--color-card)] p-[var(--space-md)] shadow-sm",
+        className
+      )}
+    >
       {children}
     </div>
-  )
+  );
 }

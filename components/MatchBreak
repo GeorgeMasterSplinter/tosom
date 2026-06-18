@@ -1,0 +1,55 @@
+import { useEffect, useState } from "react";
+
+export default function MatchBreakdownItem({ label, value, max = 100 }: {
+  label: string;
+  value: number;
+  max?: number;
+}) {
+  const [animatedValue, setAnimatedValue] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+    setIsAnimating(true);
+    setAnimatedValue(0);
+
+    const timer = setTimeout(() => {
+      setAnimatedValue(value);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [value]);
+
+  const getScoreColor = (score: number) => {
+    if (score >= 85) return "text-green-500";
+    if (score >= 70) return "text-blue-500";
+    if (score >= 55) return "text-[var(--color-gold)]";
+    return "text-red-400";
+  };
+
+  const getBarColor = (score: number) => {
+    if (score >= 85) return "bg-green-500";
+    if (score >= 70) return "bg-blue-500";
+    if (score >= 55) return "bg-[var(--color-gold)]";
+    return "bg-red-400";
+  };
+
+  const percentage = Math.round((value / max) * 100);
+
+  return (
+    <div className="flex flex-col gap-1">
+      <div className="flex justify-between items-center">
+        <span className="text-[var(--color-muted)] text-sm">{label}</span>
+        <span className={`font-medium text-sm ${getScoreColor(value)}`}>
+          {isAnimating ? Math.round(animatedValue) : value}%
+        </span>
+      </div>
+
+      <div className="w-full bg-white/10 rounded-full h-2">
+        <div
+          className={`h-2 rounded-full ${getBarColor(value)} transition-all duration-1000 ease-out`}
+          style={{ width: `${percentage}%` }}
+        />
+      </div>
+    </div>
+  );
+}

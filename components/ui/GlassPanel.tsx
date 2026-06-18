@@ -1,7 +1,26 @@
-export default function GlassPanel({ children }: { children: React.ReactNode }) {
+import React from "react";
+import clsx from "clsx";
+
+export default function GlassPanel({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 shadow-lg backdrop-blur-md dark:bg-dark-card/80">
+    <div
+      className={clsx(
+        // Base — CSS variable-driven
+        "rounded-[var(--radius-xl)] border border-[var(--glass-border)] bg-[var(--glass-bg)]",
+        "backdrop-blur-[calc(var(--glass-blur)_+_8px)] shadow-[var(--shadow-lg)]",
+        "p-[var(--space-xl)] md:p-[var(--space-3xl)] transition-all [var(--transition-normal)] ease-out",
+        // Hover
+        "hover:border-[var(--glass-border-hover)] hover:shadow-[var(--shadow-lg)] hover:bg-[var(--glass-bg-hover)]",
+        className
+      )}
+    >
       {children}
     </div>
-  )
+  );
 }

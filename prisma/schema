@@ -7,6 +7,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//
+// ENUMS
+//
+
 enum Role {
   USER
   ADMIN
@@ -34,6 +38,7 @@ enum QueueStatus {
   EXPIRED
 }
 
+// CHANGE 1: Removed system_message from MessageCategory
 enum MessageCategory {
   user
   system
@@ -91,6 +96,7 @@ enum SystemMessageType {
   ALERT
 }
 
+// CHANGE 7: New LogLevel enum
 enum LogLevel {
   INFO
   WARN
@@ -98,11 +104,13 @@ enum LogLevel {
   DEBUG
 }
 
+// CHANGE 8: New PerfMetric enum
 enum PerfMetric {
   api_latency
   db_latency
 }
 
+// CHANGE 9: New HttpMethod enum
 enum HttpMethod {
   GET
   POST
@@ -111,12 +119,17 @@ enum HttpMethod {
   DELETE
 }
 
+// CHANGE 10: New AIFeature enum
 enum AIFeature {
   journeyGuidance
   matchInsights
   messageSuggestions
   profileRewrite
 }
+
+//
+// MODELS
+//
 
 model User {
   id               String           @id @default(cuid())
@@ -144,6 +157,7 @@ model User {
   auditLogs        AuditLog[]                     @relation("AdminAuditLogs")
   matchQueues      MatchQueue[]
   matchFeedbacks   MatchFeedback[]
+  frozenByUser     Conversation[]   @relation("FrozenByUser")
 
   @@index([role])
   @@index([email])
@@ -238,6 +252,8 @@ model Conversation {
   unreadCountB   Int           @default(0)
   frozenAt       DateTime?
   frozenBy       String?
+  // CHANGE 6: Added relation to User for frozenBy
+  frozenByUser   User?         @relation("FrozenByUser", fields: [frozenBy], references: [id])
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
   journeyStep    JourneyStep?  @relation("ConvToStep")
@@ -250,6 +266,7 @@ model Conversation {
   @@index([matchId])
   @@index([endedAt])
   @@index([frozenAt])
+  // CHANGE 4: Index on lastMessageAt
   @@index([lastMessageAt])
 }
 
@@ -270,6 +287,7 @@ model Message {
   conversation   Conversation    @relation(fields: [conversationId], references: [id])
   sender         User            @relation(fields: [senderId], references: [id])
 
+  // CHANGE 3: Index on createdAt
   @@index([createdAt])
 }
 
@@ -292,6 +310,7 @@ model JourneyProgress {
 }
 
 model JourneyMilestone {
+  // CHANGE 2: progressId is now required (removed ?)
   id         String   @id @default(cuid())
   progressId String
   day        Int
@@ -341,6 +360,7 @@ model Notification {
 
   @@index([userId, createdAt])
   @@index([type])
+  // CHANGE 5: Index on readAt
   @@index([readAt])
 }
 
@@ -384,6 +404,7 @@ model AuditLog {
   @@index([createdAt])
 }
 
+// CHANGE 7: SystemLog.level -> LogLevel enum
 model SystemLog {
   id        String      @id @default(cuid())
   level     LogLevel
@@ -408,6 +429,7 @@ model RateLimitLog {
   @@index([createdAt])
 }
 
+// CHANGE 8: PerformanceMetric.metric -> PerfMetric enum
 model PerformanceMetric {
   id      String     @id @default(cuid())
   route   String
@@ -420,6 +442,7 @@ model PerformanceMetric {
   @@index([createdAt])
 }
 
+// CHANGE 9: RouteHit.method -> HttpMethod enum
 model RouteHit {
   id      String     @id @default(cuid())
   route   String
@@ -431,6 +454,7 @@ model RouteHit {
   @@index([createdAt])
 }
 
+// CHANGE 10: AIRequestLog.feature -> AIFeature enum
 model AIRequestLog {
   id        String   @id @default(cuid())
   userId    String

@@ -11,7 +11,7 @@ export default function Skeleton({
 }) {
   return (
     <div
-      className={`${width} ${height} bg-white/10 animate-pulse ${rounded} ${className}`}
+      className={`${width} ${height} rounded-[var(--radius-sm)] bg-[var(--glass-bg)] animate-pulse ${className}`}
     />
   );
 }

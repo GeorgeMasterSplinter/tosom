@@ -1,0 +1,92 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import GlassPanel from "@/components/ui/GlassPanel";
+import FadeIn from "@/components/ui/FadeIn";
+
+export default function DashboardMatchStatus() {
+  const [status, setStatus] = useState<{ state: string } | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function load() {
+      const res = await fetch("/api/match/status");
+      const data = await res.json();
+      setStatus(data);
+      setLoading(false);
+    }
+    load();
+  }, []);
+
+  if (loading) {
+    return (
+      <GlassPanel className="animate-pulse">
+        <p className="text-[var(--color-muted)] leading-[var(--line-relaxed)]">Listrar status…</p>
+      </GlassPanel>
+    );
+  }
+
+  if (!status) {
+    return (
+      <GlassPanel>
+        <p className="text-[var(--color-muted)] leading-[var(--line-relaxed)]">Ingen status tilgjengeleg.</p>
+      </GlassPanel>
+    );
+  }
+
+  const stateStyles: Record<string, { text: string; bg: string; label: string }> = {
+    idle: {
+      text: "text-[var(--color-muted)]",
+      bg: "bg-white/[0.03]",
+      label: "Ikke i kø",
+    },
+    queue: {
+      text: "text-[var(--color-gold)]",
+      bg: "bg-[var(--color-gold)]/10",
+      label: "I kø",
+    },
+    matched: {
+      text: "text-green-500",
+      bg: "bg-green-500/10",
+      label: "Matcha!",
+    },
+  };
+
+  const styles = stateStyles[status.state] || stateStyles.idle;
+
+  return (
+    <FadeIn>
+      <GlassPanel className="flex flex-col gap-[var(--space-md)]">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-semibold text-[var(--color-text)] tracking-tight">
+            Match‑status
+          </h2>
+          <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold ${styles.bg} ${styles.text} border border-current`}>
+            <span className={`w-2 h-2 rounded-full ${styles.text.includes("green") ? "bg-green-500" : status.state === "queue" ? "bg-[var(--color-gold)] animate-pulse" : "bg-[var(--color-muted)]/50"}`} />
+            {styles.label}
+          </span>
+        </div>
+
+        <div className="flex flex-col gap-[var(--space-xs)]">
+          {status.state === "idle" && (
+            <p className="text-[var(--color-muted)] leading-[var(--line-relaxed)]">
+              Du er ikkje i kø. Trykk for å starte matching.
+            </p>
+          )}
+
+          {status.state === "queue" && (
+            <p className="text-[var(--color-gold)] leading-[var(--line-relaxed)]">
+              Du står i kø… vi finn ein match til deg.
+            </p>
+          )}
+
+          {status.state === "matched" && (
+            <p className="text-green-500 leading-[var(--line-relaxed)]">
+              Du har ein match! Gå til chat for å starte samtalen.
+            </p>
+          )}
+        </div>
+      </GlassPanel>
+    </FadeIn>
+  );
+}

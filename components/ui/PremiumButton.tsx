@@ -1,31 +1,46 @@
-export default function PremiumButton({
-  children,
-  variant = "primary",
-  onClick,
-  className = "",
-  disabled = false,
-}: {
+import clsx from "clsx";
+
+export type ButtonVariant = "primary" | "secondary" | "ghost";
+
+interface PremiumButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: ButtonVariant;
   children: React.ReactNode;
-  variant?: "primary" | "secondary";
-  onClick?: () => void;
-  className?: string;
-  disabled?: boolean;
-}) {
-  const baseClasses =
-    "rounded-xl px-6 py-3 font-medium transition-all duration-200 inline-flex items-center justify-center";
+}
 
-  const variantClasses =
-    variant === "primary"
-      ? "bg-gold text-dark hover:bg-gold/90 shadow-md"
-      : "bg-white/10 border border-white/20 text-white hover:bg-white/20";
+const variants: Record<ButtonVariant, string> = {
+  primary:
+    "bg-[var(--color-gold)] text-[var(--color-bg)] font-medium " +
+    "hover:bg-[var(--color-gold)]/90 active:scale-[0.98] " +
+    "border border-[var(--color-gold)]",
+  secondary:
+    "bg-transparent text-[var(--color-gold)] font-medium " +
+    "border border-[var(--color-gold)] hover:bg-[var(--color-gold)]/10 active:scale-[0.98]",
+  ghost:
+    "bg-transparent text-[var(--color-muted)] font-medium " +
+    "hover:text-[var(--color-text)] hover:bg-white/[0.05] active:scale-[0.98]",
+};
 
-  const disabledClass = disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer";
-
+export default function PremiumButton({
+  variant = "primary",
+  children,
+  className = "",
+  ...props
+}: PremiumButtonProps) {
   return (
     <button
-      className={`${baseClasses} ${variantClasses} ${className} ${disabledClass}`}
-      onClick={onClick}
-      disabled={disabled}
+      className={clsx(
+        // Base
+        "inline-flex items-center justify-center gap-2 " +
+        "rounded-full px-6 py-3 text-sm font-medium " +
+        "transition-all duration-200 ease-out",
+        // Shadow for primary
+        variant === "primary" && "shadow-[0_4px_12px_rgba(212,175,55,0.2)] hover:shadow-[0_6px_16px_rgba(212,175,55,0.3)]",
+        // Variant
+        variants[variant],
+        // User className
+        className
+      )}
+      {...props}
     >
       {children}
     </button>

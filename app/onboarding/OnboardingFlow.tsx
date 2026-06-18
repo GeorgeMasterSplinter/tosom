@@ -1,21 +1,29 @@
 "use client";
 
-/** OnboardingFlow — Premium UI Polish DEL 3: Card, PremiumButton, CSS-variablar, glassmorphism */
+/** OnboardingFlow — hovudkomponent for onboarding-prosessen
+ *  OB5–OB10 — flow-logikk, layout, navigasjon, progressbar
+ *  OB10 — ingen backend, berre UI + dummy-data
+ *  Premium UI Polish DEL 3: Card, PremiumButton, CSS-variablar, glassmorphism, dark-mode */
 
 import { useState, useCallback } from "react";
 import type { UserProfile } from "../../lib/profile/userProfile";
 import type { OnboardingState, OnboardingStep } from "../../lib/onboarding/onboardingState";
 import {
   defaultInitialState,
+  calculateProgress,
   nextStep,
   prevStep,
   updateDraft,
 } from "../../lib/onboarding/onboardingState";
-import OnboardingScreen from "./OnboardingScreen";
+;import OnboardingScreen from "../../components/onboarding/OnboardingScreen";
 import Card from "@/components/ui/Card";
 import PremiumButton from "@/components/ui/PremiumButton";
 import FadeIn from "@/components/ui/FadeIn";
+import Typography from "@/components/ui/Typography";
 
+const { BodySm } = Typography;
+
+/* OB5 — Props */
 interface OnboardingFlowProps {
   initialState?: OnboardingState;
   onComplete?: (finalProfile: UserProfile) => void;
@@ -48,9 +56,26 @@ export default function OnboardingFlow({
     if (onComplete) {
       onComplete(state.profileDraft);
     }
+    // Neste steg etter completion
+    setState((prev) => {
+      const steps: OnboardingStep[] = [
+        "welcome",
+        "name_age",
+        "values",
+        "interests",
+        "bio",
+        "photos",
+        "ready",
+        "completed",
+      ];
+      const idx = steps.indexOf(prev.currentStep);
+      if (idx < 0) return prev;
+      return { ...prev, currentStep: "completed", progress: 100 };
+    });
   }, [onComplete, state.profileDraft]);
 
   const { currentStep, profileDraft, progress } = state;
+  const isNotWelcome = currentStep !== "welcome";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-bg)]/[0.95]">
@@ -101,8 +126,20 @@ export default function OnboardingFlow({
           {/* Navigasjon */}
           {currentStep !== "welcome" && currentStep !== "completed" && (
             <div className="flex justify-between px-[var(--space-xs)]">
-              <PremiumButton variant="secondary" onClick={handlePrev} className="text-sm">← Tilbake</PremiumButton>
-              <PremiumButton variant="primary" onClick={handleNext} className="text-sm">Neste →</PremiumButton>
+              <PremiumButton
+                variant="secondary"
+                onClick={handlePrev}
+                className="text-sm"
+              >
+                ← Tilbake
+              </PremiumButton>
+              <PremiumButton
+                variant="primary"
+                onClick={handleNext}
+                className="text-sm"
+              >
+                Neste →
+              </PremiumButton>
             </div>
           )}
         </div>

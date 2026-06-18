@@ -1,4 +1,8 @@
 import { useEffect, useState } from "react";
+import GlassPanel from "@/components/ui/GlassPanel";
+import GlassCard from "@/components/ui/GlassCard";
+import FadeIn from "@/components/ui/FadeIn";
+import PremiumButton from "@/components/ui/PremiumButton";
 
 export interface NotificationMessage {
   id: string;
@@ -9,11 +13,14 @@ export interface NotificationMessage {
 export default function NotificationCenter() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<NotificationMessage[]>([]);
+  const [loading, setLoading] = useState(false);
 
   async function load() {
+    setLoading(true);
     const res = await fetch("/api/system/messages");
     const data = await res.json();
     setMessages(data);
+    setLoading(false);
   }
 
   async function markRead() {
@@ -32,35 +39,46 @@ export default function NotificationCenter() {
       {/* Knapp */}
       <button
         onClick={() => setOpen(!open)}
-        className="text-neutral-300 hover:text-white transition"
+        className="text-[var(--color-muted)] hover:text-[var(--color-gold)] transition-colors duration-200 text-sm font-medium"
       >
-        Varsler
+        {open ? "✕ Varsler" : "🔔 Varsler"}
       </button>
 
       {/* Panel */}
       {open && (
-        <div className="absolute right-0 mt-3 w-80 bg-[#1E2A38]/90 border border-[#CBAA7A]/20 rounded-xl p-4 shadow-xl backdrop-blur">
-          <h3 className="text-lg font-light mb-3">Systemmeldinger</h3>
+        <div className="absolute right-0 mt-[var(--space-sm)] w-80 z-50">
+          <FadeIn>
+            <GlassPanel className="flex flex-col gap-[var(--space-sm)]">
+              <h3 className="text-xl font-semibold text-[var(--color-text)] tracking-tight">
+                Systemmeldinger
+              </h3>
 
-          {messages.length === 0 && (
-            <p className="text-neutral-400 text-sm">
-              Ingen meldinger akkurat nå.
-            </p>
-          )}
+              {loading && <p className="text-[var(--color-muted)] text-sm">Listrar...</p>}
 
-          <div className="flex flex-col gap-3 max-h-80 overflow-y-auto">
-            {messages.map((m: NotificationMessage) => (
-              <div
-                key={m.id}
-                className="bg-[#1E2A38]/60 border border-[#CBAA7A]/20 rounded-lg p-3"
-              >
-                <p className="text-neutral-200 text-sm">{m.content}</p>
-                <p className="text-neutral-500 text-xs mt-1">
-                  {new Date(m.createdAt).toLocaleString("no-NO")}
+              {!loading && messages.length === 0 && (
+                <p className="text-[var(--color-muted)] text-sm">
+                  Ingen meldingar akkurat no.
                 </p>
+              )}
+
+              <div className="flex flex-col gap-[var(--space-xs)] max-h-80 overflow-y-auto">
+                {messages.map((m: NotificationMessage) => (
+                  <GlassCard key={m.id} className="flex flex-col gap-[var(--space-xs)]">
+                    <p className="text-[var(--color-text)] text-sm leading-relaxed">
+                      {m.content}
+                    </p>
+                    <p className="text-[var(--color-muted)]/70 text-xs">
+                      {new Date(m.createdAt).toLocaleString("no-NO")}
+                    </p>
+                  </GlassCard>
+                ))}
               </div>
-            ))}
-          </div>
+
+              <PremiumButton variant="ghost" className="w-full text-xs px-4 py-2" onClick={() => setOpen(false)}>
+                Lukk
+              </PremiumButton>
+            </GlassPanel>
+          </FadeIn>
         </div>
       )}
     </div>

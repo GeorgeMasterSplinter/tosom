@@ -1,15 +1,33 @@
+import React from "react";
+
 export default function Footer() {
   return (
-    <footer className="px-6 py-12 text-center text-[#4A4A4A] border-t border-[#E5E5E5]">
-      <p className="mb-6 leading-relaxed font-normal tracking-wide">
-        ToSom – et rolig sted for voksne som søker noe ekte.
-      </p>
+    <footer className="section fade-in border-t border-[var(--color-card-border)] mt-[var(--space-2xl)]">
+      <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-[var(--space-md)] text-center md:text-left">
+        <p className="text-[var(--color-muted)] text-sm">
+          © {new Date().getFullYear()} ToSom — alle rettar reservert.
+        </p>
 
-      <div className="flex flex-wrap justify-center gap-6 text-sm font-normal leading-relaxed">
-        <a href="/hvordan-det-fungerer" className="hover:text-[#1A1A1A] transition-colors duration-300">Hvordan det fungerer</a>
-        <a href="/om" className="hover:text-[#1A1A1A] transition-colors duration-300">Om ToSom</a>
-        <a href="/personvern" className="hover:text-[#1A1A1A] transition-colors duration-300">Personvern</a>
-        <a href="/kontakt" className="hover:text-[#1A1A1A] transition-colors duration-300">Kontakt</a>
+        <div className="flex gap-[var(--space-md)]">
+          <a
+            href="/privacy"
+            className="text-[var(--color-muted)] hover:text-[var(--color-gold)] transition"
+          >
+            Personvern
+          </a>
+          <a
+            href="/terms"
+            className="text-[var(--color-muted)] hover:text-[var(--color-gold)] transition"
+          >
+            Vilkår
+          </a>
+          <a
+            href="/contact"
+            className="text-[var(--color-muted)] hover:text-[var(--color-gold)] transition"
+          >
+            Kontakt
+          </a>
+        </div>
       </div>
     </footer>
   );

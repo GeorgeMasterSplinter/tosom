@@ -4,6 +4,7 @@
  * Følgjer route-hit frequency for observability.
  */
 
+import { HttpMethod } from "@prisma/client"
 import { prisma } from '@/lib/prisma'
 
 export async function recordRouteHit(
@@ -12,7 +13,11 @@ export async function recordRouteHit(
   status: number = 200,
 ): Promise<void> {
   await prisma.routeHit.create({
-    data: { route, method, status },
+    data: { 
+      route, 
+      method: method as HttpMethod, 
+      status 
+    },
   })
 }
 

@@ -12,7 +12,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="no" style={{ scrollBehavior: "smooth" }}>
-      <body className="bg-gray-950 text-white antialiased" style={{ scrollBehavior: "smooth" }}>
+      <body className="bg-[var(--color-bg)] text-[var(--color-text)] antialiased" style={{ scrollBehavior: "smooth" }}>
         {children}
       </body>
     </html>

@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import ChatHeader from "./chat/ChatHeader";
-import FadeIn from "@/components/animations/FadeIn";
+import GlassPanel from "@/components/ui/GlassPanel";
+import GlassCard from "@/components/ui/GlassCard";
+import FadeIn from "@/components/ui/FadeIn";
 
 type Message = {
   id: string;
@@ -50,7 +52,7 @@ export default function ChatWindow({
       if (days === 0) {
         setTimeLeft("Matchen avsluttes i dag");
       } else {
-        setTimeLeft(`${days} dager igjen`);
+        setTimeLeft(`${days} dagar igjen`);
       }
     }
     updateTime();
@@ -59,7 +61,7 @@ export default function ChatWindow({
   }, [chatUntil]);
 
   return (
-    <div className="w-full border-b border-neutral-200 bg-white">
+    <GlassPanel className="flex flex-col gap-0 overflow-hidden">
       <ChatHeader
         partnerName={partner.name}
         phaseLabel={phaseLabel}
@@ -67,7 +69,8 @@ export default function ChatWindow({
         photosAllowed={photosAllowed}
         onClose={onClose}
       />
-      <div className="flex-1 overflow-y-auto p-4">
+
+      <div className="flex-1 overflow-y-auto p-[var(--space-md)]">
         <FadeIn>
           {messages.map((msg) => {
             const time = new Date(msg.createdAt).toLocaleTimeString([], {
@@ -75,32 +78,40 @@ export default function ChatWindow({
               minute: "2-digit",
             });
             const isOwn = msg.senderId === partner.name;
-            const bubbleClass = "bg-[#1E2A38]/80 p-3 rounded-xl mb-2";
-            const ownBubbleClass = "bg-[#CBAA7A]/80 p-3 rounded-xl align-self-end";
 
             return (
               <div
                 key={msg.id}
-                className={`${bubbleClass} ${isOwn ? "justify-end" : "justify-start"}`}
+                className={`flex ${isOwn ? "justify-end" : "justify-start"} mb-[var(--space-sm)]`}
               >
-                {msg.text && (
-                  <p className="text-sm text-neutral-900">{msg.text}</p>
-                )}
-                {msg.imageUrl && (
-                  <img
-                    src={msg.imageUrl}
-                    alt="Sent image"
-                    className="w-full h-40 object-cover my-2 rounded"
-                  />
-                )}
-                <span className="text-xs text-neutral-500 block mt-1">
-                  {time}
-                </span>
+                <GlassCard
+                  className={`max-w-[75%] px-4 py-3 ${
+                    isOwn
+                      ? "bg-[var(--color-gold)]/15 border-[var(--color-gold)]/30"
+                      : "bg-[var(--color-card)] border-[var(--color-card-border)]"
+                  }`}
+                >
+                  {msg.text && (
+                    <p className={`text-sm leading-relaxed ${isOwn ? "text-[var(--color-text)]" : "text-[var(--color-text)]"}`}>
+                      {msg.text}
+                    </p>
+                  )}
+                  {msg.imageUrl && (
+                    <img
+                      src={msg.imageUrl}
+                      alt="Sent image"
+                      className="w-full h-40 object-cover my-2 rounded-xl border border-white/10"
+                    />
+                  )}
+                  <span className={`text-xs ${isOwn ? "text-[var(--color-gold)]/70" : "text-[var(--color-muted)]/70"} block mt-2`}>
+                    {time}
+                  </span>
+                </GlassCard>
               </div>
             );
           })}
         </FadeIn>
       </div>
-    </div>
+    </GlassPanel>
   );
 }

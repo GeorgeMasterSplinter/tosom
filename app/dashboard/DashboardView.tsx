@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Section from "@/components/ui/Section";
+import Card from "@/components/ui/Card";
 import Typography from "@/components/ui/Typography";
 import FadeIn from "@/components/ui/FadeIn";
 import PremiumButton from "@/components/ui/PremiumButton";
@@ -89,19 +90,19 @@ function JourneySummary({
 
   return (
     <FadeIn>
-      <div className="bg-white/5 border border-gold/20 backdrop-blur-sm rounded-2xl p-6 space-y-4">
-        <H2 className="text-xl font-semibold text-gold">Reisa dykkar</H2>
+      <Card className="gap-[var(--space-md)]">
+        <H2 className="text-[var(--color-gold)] text-xl font-semibold">Reisa dykkar</H2>
 
         {/* Progress bar */}
-        <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+        <div className="w-full h-2 rounded-[var(--radius-full)] overflow-hidden bg-[var(--color-card)]">
           <div
-            className="h-full bg-gold transition-all duration-500"
+            className="h-full bg-[var(--color-gold)] transition-all duration-500"
             style={{ width: `${progressPercent}%` }}
           />
         </div>
 
         {/* Step info */}
-        <BodyMd className="text-white/80">
+        <BodyMd className="text-[var(--color-text)]/80">
           Steg {journey.currentStep + 1} av {journey.steps.length}: {journey.current.title}
         </BodyMd>
 
@@ -110,8 +111,8 @@ function JourneySummary({
             {journey.steps.map((_, i) => (
               <div
                 key={i}
-                className={`w-2 h-2 rounded-full ${
-                  i <= journey.currentStep ? "bg-gold" : "bg-white/20"
+                className={`w-2 h-2 rounded-[var(--radius-full)] ${
+                  i <= journey.currentStep ? "bg-[var(--color-gold)]" : "bg-[var(--color-card)]"
                 }`}
               />
             ))}
@@ -127,7 +128,7 @@ function JourneySummary({
         >
           Fortsett reisa
         </PremiumButton>
-      </div>
+      </Card>
     </FadeIn>
   );
 }
@@ -136,10 +137,10 @@ function JourneySummary({
 
 function SkeletonCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4">
-      <H2 className="text-white">{title}</H2>
-      <div className="space-y-4">{children}</div>
-    </div>
+    <Card className="gap-[var(--space-lg)]">
+      <H2 className="text-[var(--color-text)]">{title}</H2>
+      <div className="gap-[var(--space-sm)]">{children}</div>
+    </Card>
   );
 }
 
@@ -148,7 +149,10 @@ function SkeletonCard({ title, children }: { title: string; children: React.Reac
 function Spinner() {
   return (
     <div className="flex items-center justify-center py-4">
-      <div className="w-8 h-8 border-2 border-gold/30 border-t-gold rounded-full animate-spin" />
+      <div
+        className="w-8 h-8 border-2 border-[var(--color-gold)]/30 border-t-[var(--color-gold)] rounded-[var(--radius-full)] animate-spin"
+        style={{ borderRightColor: "transparent" }}
+      />
     </div>
   );
 }
@@ -340,10 +344,10 @@ export default function DashboardView() {
   /* Loading — skeleton */
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-950 text-white">
-        <Section className="space-y-16 py-12">
+      <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
+        <Section className="gap-[var(--space-xl)] py-[var(--space-xl)]">
           {/* Header */}
-          <div className="space-y-2">
+          <div className="gap-[var(--space-xs)]">
             <Skeleton width="w-48" height="h-8" rounded="rounded-md" />
             <Skeleton width="w-32" height="h-4" rounded="rounded-md" />
           </div>
@@ -352,7 +356,7 @@ export default function DashboardView() {
           <SkeletonCard title="Din match">
             <div className="flex items-start gap-4">
               <Skeleton width="w-16" height="h-16" rounded="rounded-xl" />
-              <div className="flex-1 space-y-3">
+              <div className="flex-1 gap-[var(--space-sm)]">
                 <Skeleton width="w-32" height="h-5" rounded="rounded-md" />
                 <Skeleton width="w-48" height="h-4" rounded="rounded-md" />
               </div>
@@ -362,7 +366,7 @@ export default function DashboardView() {
 
           {/* Samtale skeleton */}
           <SkeletonCard title="Samtale">
-            <div className="space-y-3">
+            <div className="gap-[var(--space-sm)]">
               <Skeleton width="w-24" height="h-4" rounded="rounded-md" />
               <Skeleton width="w-full" height="h-4" rounded="rounded-md" />
               <Skeleton width="w-32" height="h-4" rounded="rounded-md" />
@@ -372,7 +376,7 @@ export default function DashboardView() {
 
           {/* Reise skeleton */}
           <SkeletonCard title="Reisen deres">
-            <div className="space-y-3">
+            <div className="gap-[var(--space-sm)]">
               <Skeleton width="w-28" height="h-4" rounded="rounded-md" />
               <Skeleton width="w-40" height="h-6" rounded="rounded-md" />
               <Skeleton width="w-full" height="h-4" rounded="rounded-md" />
@@ -388,8 +392,8 @@ export default function DashboardView() {
   /* Error */
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">
-        <div className="text-center space-y-4">
+      <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] flex items-center justify-center">
+        <div className="text-center gap-[var(--space-sm)]">
           <BodyMd className="text-red-400">{error}</BodyMd>
           <PremiumButton variant="secondary" onClick={() => window.location.reload()}>
             Prøv igjen
@@ -402,9 +406,9 @@ export default function DashboardView() {
   /* Ingenting å vise */
   if (!data || (!data.match && !data.conversation && !data.journey)) {
     return (
-      <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <BodyMd className="text-gray-400">Ingen data å vise enno.</BodyMd>
+      <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] flex items-center justify-center">
+        <div className="text-center gap-[var(--space-sm)]">
+          <BodyMd className="text-[var(--color-muted)]">Ingen data å vise enno.</BodyMd>
           <PremiumButton variant="primary" onClick={() => router.push("/login")}>
             Kom i gang
           </PremiumButton>
@@ -415,22 +419,22 @@ export default function DashboardView() {
 
   /* Dashboard */
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
-      <Section className="space-y-16 py-12">
+    <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
+      <Section className="gap-[var(--space-xl)] py-[var(--space-xl)]">
         {/* Header */}
         <FadeIn>
-          <div className="space-y-2">
-            <H1 className="text-white">Velkommen tilbake</H1>
-            <BodyMd className="text-gray-400">Her er reisen deres</BodyMd>
+          <div className="gap-[var(--space-xs)]">
+            <H1 className="text-[var(--color-text)]">Velkommen tilbake</H1>
+            <BodyMd className="text-[var(--color-muted)]">Her er reisen deres</BodyMd>
           </div>
         </FadeIn>
 
         {/* Matching status */}
         {matchStatus === "no_match" && (
           <FadeIn>
-            <div className="bg-white/5 border border-gold/20 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4 text-center">
-              <H2 className="text-white">Ingen match enno</H2>
-              <BodyMd className="text-gray-400">Trykk under for å starte matching.</BodyMd>
+            <Card className="gap-[var(--space-sm)] text-center">
+              <H2 className="text-[var(--color-text)]">Ingen match enno</H2>
+              <BodyMd className="text-[var(--color-muted)]">Trykk under for å starte matching.</BodyMd>
               <PremiumButton
                 variant="primary"
                 onClick={handleMatching}
@@ -438,35 +442,35 @@ export default function DashboardView() {
               >
                 {matchingLoading ? "Startar…" : "Finn match"}
               </PremiumButton>
-            </div>
+            </Card>
           </FadeIn>
         )}
 
         {matchStatus === "pending" && (
           <FadeIn>
-            <div className="bg-white/5 border border-gold/20 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4 text-center">
-              <H2 className="text-white">Vi finn ein match til deg…</H2>
-              <BodyMd className="text-gray-400">Dette kan take litt tid.</BodyMd>
+            <Card className="gap-[var(--space-sm)] text-center">
+              <H2 className="text-[var(--color-text)]">Vi finn ein match til deg…</H2>
+              <BodyMd className="text-[var(--color-muted)]">Dette kan take litt tid.</BodyMd>
               <Spinner />
-            </div>
+            </Card>
           </FadeIn>
         )}
 
         {matchStatus === "matched" && (
           <FadeIn>
-            <div className="bg-white/5 border border-gold/20 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-6">
-              <div className="text-center space-y-4">
-                <H2 className="text-white">Du har fått ein match! 🎉</H2>
-                <BodyMd className="text-gray-400">Sjekk profilen din for å starte samtalen.</BodyMd>
+            <Card className="gap-[var(--space-md)]">
+              <div className="text-center gap-[var(--space-sm)]">
+                <H2 className="text-[var(--color-text)]">Du har fått ein match! 🎉</H2>
+                <BodyMd className="text-[var(--color-muted)]">Sjekk profilen din for å starte samtalen.</BodyMd>
               </div>
 
               {/* Match profile loading */}
               {matchProfileLoading && (
-                <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4">
+                <Card className="gap-[var(--space-sm)]">
                   <div className="flex items-center justify-center">
-                    <div className="w-32 h-32 rounded-full bg-gray-800 ring-2 ring-gold/20 animate-pulse" />
+                    <div className="w-32 h-32 rounded-[var(--radius-full)] bg-[var(--color-card)] ring-2 ring-[var(--color-gold)]/20 animate-pulse" />
                   </div>
-                  <div className="space-y-3 text-center">
+                  <div className="gap-[var(--space-xs)] text-center">
                     <Skeleton width="w-40" height="h-8" rounded="rounded-md" />
                     <Skeleton width="w-20" height="h-4" rounded="rounded-md" />
                     <Skeleton width="w-3/4" height="h-4" rounded="rounded-md" />
@@ -477,12 +481,12 @@ export default function DashboardView() {
                       <Skeleton width="w-16" height="h-8" rounded="rounded-full" />
                     </div>
                   </div>
-                </div>
+                </Card>
               )}
 
               {/* Match profile error */}
               {matchProfileError && (
-                <div className="bg-white/5 border border-red-400/30 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 text-center space-y-4">
+                <Card className="gap-[var(--space-sm)] text-center">
                   <BodyMd className="text-red-400">Kunne ikkje hente match-profil</BodyMd>
                   <PremiumButton
                     variant="secondary"
@@ -491,14 +495,14 @@ export default function DashboardView() {
                   >
                     Prøv igjen
                   </PremiumButton>
-                </div>
+                </Card>
               )}
 
               {/* Match profile card */}
               {matchProfile && !matchProfileError && (
-                <div className="bg-white/5 border border-gold/20 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-6">
-                  <div className="text-center space-y-4">
-                    <div className="w-32 h-32 mx-auto rounded-full overflow-hidden bg-gray-800 ring-2 ring-gold/30">
+                <Card className="gap-[var(--space-md)]">
+                  <div className="text-center gap-[var(--space-sm)]">
+                    <div className="w-32 h-32 mx-auto rounded-[var(--radius-full)] overflow-hidden bg-[var(--color-card)] ring-2 ring-[var(--color-gold)]/30">
                       {matchProfile.imageUrl ? (
                         <img
                           src={matchProfile.imageUrl}
@@ -506,21 +510,21 @@ export default function DashboardView() {
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gold text-4xl font-light">
+                        <div className="w-full h-full flex items-center justify-center text-[var(--color-gold)] text-4xl font-light">
                           {matchProfile.name.charAt(0).toUpperCase()}
                         </div>
                       )}
                     </div>
 
-                    <div className="space-y-2">
-                      <H2 className="text-white">{matchProfile.name}</H2>
+                    <div className="gap-[var(--space-xs)]">
+                      <H2 className="text-[var(--color-text)]">{matchProfile.name}</H2>
                       {matchProfile.age && (
-                        <BodySm className="text-gold">{matchProfile.age} år</BodySm>
+                        <BodySm className="text-[var(--color-gold)]">{matchProfile.age} år</BodySm>
                       )}
                     </div>
 
                     {matchProfile.bio && (
-                      <BodyMd className="text-gray-300 leading-relaxed max-w-md mx-auto">
+                      <BodyMd className="text-[var(--color-text)] leading-relaxed max-w-md mx-auto">
                         {matchProfile.bio}
                       </BodyMd>
                     )}
@@ -530,7 +534,7 @@ export default function DashboardView() {
                         {matchProfile.interests.slice(0, 5).map((interest: string) => (
                           <span
                             key={interest}
-                            className="inline-block rounded-full px-3 py-1 bg-gold/10 text-gold border border-gold/20 backdrop-blur-sm text-sm"
+                            className="inline-block rounded-[var(--radius-full)] px-3 py-1 bg-[var(--color-gold)]/10 text-[var(--color-gold)] border border-[var(--color-gold)]/20 backdrop-blur-sm text-sm"
                           >
                             {interest}
                           </span>
@@ -546,28 +550,28 @@ export default function DashboardView() {
                       Sjå profil
                     </PremiumButton>
                   </div>
-                </div>
+                </Card>
               )}
-            </div>
+            </Card>
           </FadeIn>
         )}
 
         {/* Din match */}
         {data.match && (
           <FadeIn>
-            <div className="space-y-4">
-              <H2 className="text-white">Din match</H2>
-              <div className="bg-white/5 border border-gold/20 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4 transition-all duration-300 ease-out hover:scale-[1.02]">
+            <div className="gap-[var(--space-sm)]">
+              <H2 className="text-[var(--color-text)]">Din match</H2>
+              <Card className="gap-[var(--space-sm)] transition-all duration-300 ease-out hover:scale-[1.02]">
                 <div className="flex items-start gap-4">
-                  <div className="w-16 h-16 shrink-0 rounded-xl bg-gray-800 ring-2 ring-gold/20 flex items-center justify-center text-gray-400 text-lg font-light">
+                  <div className="w-16 h-16 shrink-0 rounded-[var(--radius-lg)] bg-[var(--color-card)] ring-2 ring-[var(--color-gold)]/20 flex items-center justify-center text-[var(--color-muted)] text-lg font-light">
                     {data.match.name.charAt(0)}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-white font-medium">
+                    <p className="text-[var(--color-text)] font-medium">
                       {data.match.name}, {data.match.age}
                     </p>
                     {data.match.bio && (
-                      <p className="text-gray-400 text-sm mt-1 leading-relaxed">
+                      <p className="text-[var(--color-muted)] text-sm mt-1 leading-relaxed">
                         {data.match.bio}
                       </p>
                     )}
@@ -579,7 +583,7 @@ export default function DashboardView() {
                 >
                   Se profil
                 </PremiumButton>
-              </div>
+              </Card>
             </div>
           </FadeIn>
         )}
@@ -587,12 +591,12 @@ export default function DashboardView() {
         {/* Samtale */}
         {data.conversation && (
           <FadeIn>
-            <div className="space-y-4">
-              <H2 className="text-white">Samtale</H2>
-              <div className="bg-white/5 border border-gold/20 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4 transition-all duration-300 ease-out hover:scale-[1.02]">
-                <div className="space-y-2">
-                  <p className="text-gold font-medium text-sm">{data.conversation.partnerName}</p>
-                  <p className="text-gray-300 text-sm leading-relaxed">
+            <div className="gap-[var(--space-sm)]">
+              <H2 className="text-[var(--color-text)]">Samtale</H2>
+              <Card className="gap-[var(--space-sm)] transition-all duration-300 ease-out hover:scale-[1.02]">
+                <div className="gap-[var(--space-xs)]">
+                  <p className="text-[var(--color-gold)] font-medium text-sm">{data.conversation.partnerName}</p>
+                  <p className="text-[var(--color-text)] text-sm leading-relaxed">
                     {data.conversation.lastMessage}
                   </p>
                   <BodySm className="mt-2">
@@ -610,7 +614,7 @@ export default function DashboardView() {
                 >
                   Fortsett samtale
                 </PremiumButton>
-              </div>
+              </Card>
             </div>
           </FadeIn>
         )}
@@ -618,21 +622,21 @@ export default function DashboardView() {
         {/* Journey Summary */}
         {journeyLoading ? (
           <FadeIn>
-            <div className="bg-white/5 border border-gold/20 rounded-2xl p-6 space-y-4">
+            <Card className="gap-[var(--space-sm)]">
               <Skeleton width="w-40" height="h-6" rounded="rounded-md" />
               <Skeleton width="w-full" height="h-2" rounded="rounded-full" />
               <Skeleton width="w-3/4" height="h-4" rounded="rounded-md" />
               <Skeleton width="w-48" height="h-10" rounded="rounded-xl" />
-            </div>
+            </Card>
           </FadeIn>
         ) : journeyError ? (
           <FadeIn>
-            <div className="bg-white/5 border border-red-400/30 rounded-2xl p-6 text-center space-y-4">
+            <Card className="gap-[var(--space-sm)] text-center">
               <BodyMd className="text-red-400">{journeyError}</BodyMd>
               <PremiumButton variant="secondary" onClick={() => setJourneyError(null)}>
                 Prøv igjen
               </PremiumButton>
-            </div>
+            </Card>
           </FadeIn>
         ) : journey && conversationId ? (
           <JourneySummary
@@ -650,15 +654,15 @@ export default function DashboardView() {
         {/* Reisen deres */}
         {data.journey && (
           <FadeIn>
-            <div className="space-y-4">
-              <H2 className="text-white">Reisen deres</H2>
-              <div className="bg-white/5 border border-gold/20 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-6 transition-all duration-300 ease-out hover:scale-[1.02]">
-                <div className="space-y-2">
-                  <BodySm className="text-gold">
+            <div className="gap-[var(--space-sm)]">
+              <H2 className="text-[var(--color-text)]">Reisen deres</H2>
+              <Card className="gap-[var(--space-md)] transition-all duration-300 ease-out hover:scale-[1.02]">
+                <div className="gap-[var(--space-xs)]">
+                  <BodySm className="text-[var(--color-gold)]">
                     Dag {data.journey.day} av {data.journey.totalDays}
                   </BodySm>
-                  <H2 className="text-white text-2xl font-light">{data.journey.tittel}</H2>
-                  <BodyMd className="text-gray-300 leading-relaxed">
+                  <H2 className="text-[var(--color-text)] text-2xl font-light">{data.journey.tittel}</H2>
+                  <BodyMd className="text-[var(--color-text)] leading-relaxed">
                     {data.journey.beskrivelse}
                   </BodyMd>
                 </div>
@@ -668,7 +672,7 @@ export default function DashboardView() {
                 >
                   Fortsett reisen
                 </PremiumButton>
-              </div>
+              </Card>
             </div>
           </FadeIn>
         )}

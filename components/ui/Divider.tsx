@@ -1,5 +1,5 @@
 export default function Divider() {
   return (
-    <div className="h-px bg-[#CBAA7A]/20 max-w-4xl mx-auto my-20"></div>
+    <div className="h-px w-full bg-[var(--color-gold)]/20 max-w-[var(--section-max-w, 56rem)] mx-auto my-[var(--space-3xl)]"></div>
   )
 }

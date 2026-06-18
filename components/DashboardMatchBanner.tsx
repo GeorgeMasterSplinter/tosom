@@ -3,7 +3,9 @@
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import Button from "@/components/ui/Button";
+import GlassPanel from "@/components/ui/GlassPanel";
+import PremiumButton from "@/components/ui/PremiumButton";
+import FadeIn from "@/components/ui/FadeIn";
 
 type MatchData = {
   active: boolean;
@@ -24,33 +26,33 @@ export default function DashboardMatchBanner({
 
   if (!data?.active) {
     return (
-      <div className="bg-gradient-to-r from-[#1E2A38] to-[#2A3A4A] border border-[#CBAA7A]/20 rounded-xl p-6 mb-6">
-        <h2 className="text-xl font-bold leading-tight text-white mb-2">
+      <GlassPanel className="flex flex-col gap-[var(--space-md)]">
+        <h2 className="text-2xl font-semibold text-[var(--color-text)] tracking-tight leading-tight">
           Du har ingen aktive matcher
         </h2>
-        <p className="text-neutral-400 mb-4 leading-relaxed">
-          Finn din neste match og start en ny relasjon
+        <p className="text-[var(--color-muted)] leading-[var(--line-relaxed)]">
+          Finn din neste match og start ein ny relasjon
         </p>
-        <div className="flex flex-col sm:flex-row gap-3">
-          <Link href="/find-match">
-            <Button variant="primary">Finn match</Button>
+        <div className="flex flex-col sm:flex-row gap-[var(--space-sm)]">
+          <Link href="/find-match" className="flex-1">
+            <PremiumButton variant="primary" className="w-full">Finn match</PremiumButton>
           </Link>
-          <Link href="/match/history">
-            <Button variant="secondary">Se historikk</Button>
+          <Link href="/match/history" className="flex-1">
+            <PremiumButton variant="secondary" className="w-full">Se historikk</PremiumButton>
           </Link>
         </div>
-      </div>
+      </GlassPanel>
     );
   }
 
   const { name, image } = data.partner || {};
-  const displayName = name || "no name";
+  const displayName = name || "ukjend";
 
   return (
-    <div className="bg-white/80 backdrop-blur-sm border border-[#CBAA7A]/20 rounded-2xl p-6 mb-6 shadow-sm">
-      <div className="flex flex-col items-center text-center space-y-6">
+    <FadeIn>
+      <GlassPanel className="flex flex-col items-center gap-[var(--space-md)] text-center">
         {/* Avatar */}
-        <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-[#CBAA7A]/40 bg-[#1A1A1A]/5">
+        <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-[var(--color-gold)]/40 bg-gradient-to-br from-[var(--color-gold)]/20 to-transparent">
           {image ? (
             <Image
               src={image}
@@ -59,27 +61,28 @@ export default function DashboardMatchBanner({
               className="object-cover"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-[#4A4A4A] text-2xl font-medium">
+            <div className="w-full h-full flex items-center justify-center text-[var(--color-gold)] text-3xl font-semibold">
               {displayName.charAt(0).toUpperCase()}
             </div>
           )}
         </div>
 
         {/* Text */}
-        <div className="space-y-2">
-          <h2 className="text-xl font-semibold leading-tight text-[#1A1A1A]">
-            Du har en ny match med {displayName}!
+        <div className="flex flex-col gap-[var(--space-xs)]">
+          <h2 className="text-2xl font-semibold text-[var(--color-text)] tracking-tight leading-tight">
+            Du har ein ny match med {displayName}!
           </h2>
         </div>
 
         {/* CTA */}
-        <button
+        <PremiumButton
+          variant="primary"
+          className="w-full sm:w-auto px-8"
           onClick={() => data.conversationId && router.push(`/chat/${data.conversationId}`)}
-          className="w-full sm:w-auto px-8 py-3 rounded-full bg-[#CBAA7A] text-[#1A1A1A] text-sm font-medium leading-relaxed hover:bg-[#CBAA7A]/90 transition border border-[#CBAA7A]"
         >
-          Gå til chat
-        </button>
-      </div>
-    </div>
+          Gå til chat →
+        </PremiumButton>
+      </GlassPanel>
+    </FadeIn>
   );
 }

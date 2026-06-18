@@ -25,17 +25,14 @@ export default function JourneyView({ currentDay }: JourneyViewProps) {
   // Fallback-visning
   if (!dayConfig || dayConfig.dayNumber === 0) {
     return (
-      <div className="min-h-screen bg-gray-950 text-white">
-        <div className="max-w-2xl mx-auto py-10 px-4 space-y-10">
-          <div>
-            <h1 className="text-3xl font-light text-white">Reisen deres</h1>
-            <p className="text-gray-400 mt-1">Steg for steg, saman</p>
-          </div>
-          <div className="text-gray-400 text-sm text-center py-2">
-            Reisen din lastast ikke riktig akkurat no.
-          </div>
-        </div>
-      </div>
+      <section className="section fade-in max-w-2xl mx-auto text-center">
+        <h1 className="font-semibold text-[var(--color-text)] tracking-tight text-3xl">
+          Reisen deres
+        </h1>
+        <p className="text-[var(--color-muted)] mt-[var(--space-sm)]">
+          Reisen din lastast ikkje riktig akkurat no.
+        </p>
+      </section>
     );
   }
 
@@ -65,95 +62,101 @@ export default function JourneyView({ currentDay }: JourneyViewProps) {
     : "Denne delen av reisen er utan bilete.";
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
-      <div className="max-w-2xl mx-auto py-10 px-4 space-y-10">
-        {/* Header */}
-        <div className="sticky top-0 bg-gray-950/80 backdrop-blur-sm py-4 z-10 border-b border-white/10 -mx-4 px-4">
-          <div>
-            <h1 className="text-3xl font-light text-white">Reisen deres</h1>
-            <p className="text-gray-400 mt-1">Steg for steg, saman</p>
-          </div>
+    <section className="section fade-in max-w-3xl mx-auto flex flex-col gap-[var(--space-xl)]">
+
+      {/* Header */}
+      <header className="fade-in">
+        <h1 className="font-semibold text-[var(--color-text)] tracking-tight text-2xl">
+          Reisen deres
+        </h1>
+        <p className="text-[var(--color-muted)] mt-[var(--space-xs)]">
+          Steg for steg, saman
+        </p>
+      </header>
+
+      {/* Progresjon */}
+      <JourneyTimeline day={day} />
+
+      {/* Tittel + dagnummer */}
+      <section className="fade-in flex flex-col gap-[var(--space-sm)]">
+        <h2 className="font-semibold text-[var(--color-text)] tracking-tight text-xl">
+          <span className="mr-2">{dayConfig.icon}</span>
+          Dag {dayConfig.dayNumber}: {dayConfig.title}
+        </h2>
+        <p className="text-[var(--color-muted)] leading-[var(--line-relaxed)] text-lg">
+          {phaseConfig.description}
+        </p>
+      </section>
+
+      {/* Fase-status */}
+      <section
+        className={`card fade-in flex flex-col gap-[var(--space-xs)] p-[var(--space-md)] ${phaseBg}`}
+      >
+        <p className="font-medium text-[var(--color-text)] leading-[var(--line-relaxed)]">
+          {faseTekst}
+        </p>
+        <p className="text-[var(--color-muted)] text-sm leading-[var(--line-relaxed)]">
+          {faseUnderTekst}
+        </p>
+      </section>
+
+      {/* Systemmelding */}
+      <section className="fade-in flex flex-col gap-[var(--space-sm)]">
+        <h3 className="font-semibold text-[var(--color-text)] tracking-tight text-lg">
+          Systemmelding
+        </h3>
+        <SystemMessageBox messages={journeyState.messages} />
+      </section>
+
+      {/* Refleksjon */}
+      <section className="fade-in flex flex-col gap-[var(--space-sm)]">
+        <h3 className="font-semibold text-[var(--color-text)] tracking-tight text-lg">
+          Refleksjon
+        </h3>
+        <ReflectionBox
+          reflectionText={dayConfig.reflectionPrompt}
+          reflectionType="info"
+        />
+      </section>
+
+      {/* Dagens innsikt */}
+      <section className="fade-in flex flex-col gap-[var(--space-sm)]">
+        <h3 className="font-semibold text-[var(--color-text)] tracking-tight text-lg">
+          Dagens innsikt
+        </h3>
+        <div className="card fade-in p-[var(--space-lg)] space-y-[var(--space-sm)]">
+          <p className="text-[var(--color-muted)] leading-[var(--line-relaxed)] text-lg">
+            {dayConfig.microInsight}
+          </p>
         </div>
+      </section>
 
-        {/* Progresjon */}
-        <JourneyTimeline day={day} />
+      {/* Progresjonshint */}
+      <section className="fade-in flex flex-col gap-[var(--space-sm)]">
+        <h3 className="font-semibold text-[var(--color-text)] tracking-tight text-lg">
+          Progresjon
+        </h3>
+        <p className="text-[var(--color-muted)] leading-[var(--line-relaxed)] text-lg">
+          {dayConfig.progressionHint}
+        </p>
+      </section>
 
-        {/* Tittel + dagnummer */}
-        <section className="space-y-2">
-          <h2 className="text-xl font-light text-white">
-            <span className="mr-2">{dayConfig.icon}</span>
-            Dag {dayConfig.dayNumber}: {dayConfig.title}
-          </h2>
-          <p className="text-gray-300 leading-relaxed text-sm">
-            {phaseConfig.description}
-          </p>
-        </section>
+      {/* Navigasjon */}
+      <div className="fade-in flex justify-between gap-[var(--space-md)] pt-[var(--space-md)]">
+        <button
+          disabled={day <= 1}
+          className="btn-secondary w-full disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          ← Tidlegare dag
+        </button>
 
-        {/* Fase-status */}
-        <section className={`rounded-2xl p-4 border ${phaseBg} backdrop-blur-sm shadow-md shadow-black/20`}>
-          <p className="text-sm text-gray-200 leading-relaxed font-medium">
-            {faseTekst}
-          </p>
-          <p className="text-xs text-gray-400 leading-relaxed mt-1">
-            {faseUnderTekst}
-          </p>
-        </section>
-
-        {/* Systemmelding */}
-        <section className="space-y-3">
-          <h3 className="text-lg font-medium text-white">Systemmelding</h3>
-          <SystemMessageBox messages={journeyState.messages} />
-        </section>
-
-        {/* Refleksjon */}
-        <section className="space-y-3">
-          <h3 className="text-lg font-medium text-white">Refleksjon</h3>
-          <ReflectionBox
-            reflectionText={dayConfig.reflectionPrompt}
-            reflectionType="info"
-          />
-        </section>
-
-        {/* Dagens innsikt */}
-        <section className="space-y-3">
-          <h3 className="text-lg font-medium text-white">Dagens innsikt</h3>
-          <div className="rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm p-6 shadow-md shadow-black/20 space-y-4">
-            <p className="text-gray-300 leading-relaxed text-sm">
-              {dayConfig.microInsight}
-            </p>
-          </div>
-        </section>
-
-        {/* Progresjonshint */}
-        <section className="space-y-3">
-          <h3 className="text-lg font-medium text-white">Progresjon</h3>
-          <p className="text-gray-300 leading-relaxed text-sm">
-            {dayConfig.progressionHint}
-          </p>
-        </section>
-
-        {/* Progresjonskontroll */}
-        <div className="space-y-3 pt-4">
-          <button
-            onClick={() => {
-              // Navigasjon hanna av journey-engine
-            }}
-            disabled={day <= 1}
-            className="w-full rounded-xl bg-white/10 border border-white/10 text-gray-200 py-3 hover:bg-white/20 transition disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            ← Tidlegare dag
-          </button>
-          <button
-            onClick={() => {
-              // Navigasjon hanna av journey-engine
-            }}
-            disabled={day >= 35}
-            className="w-full rounded-xl bg-white text-gray-900 font-medium py-3 hover:bg-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Neste dag →
-          </button>
-        </div>
+        <button
+          disabled={day >= 35}
+          className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Neste dag →
+        </button>
       </div>
-    </div>
+    </section>
   );
 }

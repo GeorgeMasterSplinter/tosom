@@ -594,11 +594,11 @@ body.landing-page {
   --ts-shadow-gold-soft: 0 0 16px rgba(212, 175, 55, 0.08);
   --ts-shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.2);
 
-  /* ══ Gold Glow Accents ══ */
-  --ts-glow-sm: 0 0 8px rgba(212, 175, 55, 0.15);
-  --ts-glow-md: 0 0 16px rgba(212, 175, 55, 0.2);
-  --ts-glow-lg: 0 0 32px rgba(212, 175, 55, 0.25);
-  --ts-glow-xl: 0 0 64px rgba(212, 175, 55, 0.3);
+  /* ══ Gold Glow Accents (UI 4.3 — softer, refined) ══ */
+  --ts-glow-sm: 0 0 8px rgba(212, 175, 55, 0.10);
+  --ts-glow-md: 0 0 16px rgba(212, 175, 55, 0.14);
+  --ts-glow-lg: 0 0 32px rgba(212, 175, 55, 0.18);
+  --ts-glow-xl: 0 0 64px rgba(212, 175, 55, 0.22);
 
   /* ══ Spacing (expanded) ══ */
   --ts-spacing-xs: 4px;

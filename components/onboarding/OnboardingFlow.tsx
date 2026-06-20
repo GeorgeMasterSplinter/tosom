@@ -41,7 +41,7 @@ export default function OnboardingFlow({
     (partial: Partial<Pick<UserProfile, "name" | "age" | "bio" | "values" | "interests" | "photos" | "readyForMatch">>) => {
       setState((prev) => updateDraft(prev, partial));
     },
-    []
+    [setState]
   );
 
   const handleComplete = useCallback(() => {

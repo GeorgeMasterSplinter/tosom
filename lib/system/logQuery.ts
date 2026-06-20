@@ -9,15 +9,15 @@ interface FilterOptions {
   search?: string
 }
 
-function applyDateFilter(where: any, sinceHours?: number): void {
+function applyDateFilter(where: Record<string, unknown>, sinceHours?: number): void {
   if (sinceHours) {
     const since = new Date(Date.now() - sinceHours * 60 * 60 * 1000)
     where.createdAt = { gte: since }
   }
 }
 
-export async function queryLogs(filter: FilterOptions = {}): Promise<any[]> {
-  const where: any = {}
+export async function queryLogs(filter: FilterOptions = {}): Promise<unknown[]> {
+  const where: Record<string, unknown> = {}
   applyDateFilter(where, filter.sinceHours)
   if (filter.level) where.level = filter.level
   if (filter.module) where.module = filter.module
@@ -30,24 +30,24 @@ export async function queryLogs(filter: FilterOptions = {}): Promise<any[]> {
       WHERE "metadata"->>'traceId' = ${filter.traceId}
       ORDER BY "createdAt" DESC
       LIMIT 200
-    ` as any
+    `
   }
 
   return prisma.systemLog.findMany({
     where,
     orderBy: { createdAt: 'desc' as const },
     take: 200,
-  })
+  }) as unknown as Promise<unknown[]>
 }
 
-export async function queryErrors(filter: FilterOptions = {}): Promise<any[]> {
+export async function queryErrors(filter: FilterOptions = {}): Promise<unknown[]> {
   return queryLogs({ ...filter, level: 'ERROR' })
 }
 
-export async function queryByTraceId(traceId: string): Promise<any[]> {
+export async function queryByTraceId(traceId: string): Promise<unknown[]> {
   return prisma.$queryRaw`
     SELECT * FROM "SystemLog"
     WHERE "metadata"->>'traceId' = ${traceId}
     ORDER BY "createdAt" ASC
-  ` as any
+  ` as unknown as Promise<unknown[]>
 }

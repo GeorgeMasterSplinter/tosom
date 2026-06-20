@@ -44,25 +44,25 @@ export const Modal = ({ open, onClose, title, children, size = "md" }: ModalProp
       {/* Overlay */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
-      {/* Panel */}
+      {/* Panel — using ts-modal-panel class from globals.css */}
       <div
-        className={`relative w-full ${sizeClasses[size]} rounded-[var(--ts-radius-2xl)] border border-[var(--ts-border)] bg-[var(--ts-bg-secondary)] p-8 shadow-[var(--ts-shadow-xl)]`}
+        className={`relative ts-modal-panel ${sizeClasses[size]}`}
         onClick={(e) => e.stopPropagation()}
       >
         {title && (
-          <h2 className="mb-4 text-xl font-semibold" style={{ color: "var(--ts-text-primary)" }}>
+          <h2 className="mb-4 text-xl font-semibold text-ts-primary">
             {title}
           </h2>
         )}
 
-        <div style={{ color: "var(--ts-text-secondary)", lineHeight: "1.65" }}>
+        <div className="text-ts-secondary" style={{ lineHeight: "1.65" }}>
           {children}
         </div>
 
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-full text-[var(--ts-text-muted)] transition-colors hover:bg-[var(--ts-glass-bg)] hover:text-[var(--ts-text-primary)]"
+          className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-full text-ts-subtle transition-colors hover:bg-ts-glass hover:text-ts-primary"
           aria-label="Lukk"
         >
           ✕

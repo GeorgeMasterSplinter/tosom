@@ -57,20 +57,20 @@ export const Toast = ({ message, type = "info", duration = 4000, onClose }: Toas
 
   return (
     <div
-      className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-[var(--ts-radius-md)] border px-5 py-4 text-sm font-medium shadow-lg transition-all duration-300 ${
+      className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-md border border-gold/20 px-5 py-4 text-sm font-medium text-ts-primary shadow-lg transition-all duration-300 ${
         visible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
       }`}
       style={{
         background: config.bg,
         borderColor: config.border,
-        color: "var(--ts-text-primary)",
       }}
       role="alert"
+      aria-live="polite"
     >
       <span className="flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold">
         {config.icon}
       </span>
-      <span style={{ fontFamily: "var(--ts-font-small)" }}>{message}</span>
+      <span>{message}</span>
     </div>
   );
 };

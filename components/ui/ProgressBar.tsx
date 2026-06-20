@@ -13,9 +13,9 @@ interface ProgressBarProps {
 }
 
 const colorClasses: Record<string, string> = {
-  gold: "bg-[var(--ts-gold)]",
+  gold: "bg-ts-gold",
   white: "bg-white",
-  success: "bg-[var(--ts-success)]",
+  success: "bg-ts-success",
 };
 
 const heightClasses: Record<string, string> = {
@@ -37,13 +37,13 @@ export const ProgressBar = ({
     <div className={`w-full ${className}`}>
       {showLabel && (
         <div className="flex justify-between mb-1">
-          <span className="text-xs text-[var(--ts-text-muted)]">
+          <span className="text-xs text-ts-muted">
             {clamped}%
           </span>
         </div>
       )}
       <div
-        className={`w-full rounded-full ${heightClasses[height]} bg-[var(--ts-bg-surface)]`}
+        className={`w-full rounded-full ${heightClasses[height]} bg-ts-surface`}
       >
         <div
           className={`${heightClasses[height]} ${colorClasses[color]} rounded-full transition-all duration-300 ease-out`}

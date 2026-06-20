@@ -34,6 +34,9 @@
   .text-ts-secondary { color: var(--ts-text-secondary); }
   .text-ts-muted { color: var(--ts-text-muted); }
   .text-ts-subtle { color: var(--ts-text-subtle); }
+  .text-ts-success { color: var(--ts-success); }
+  .text-ts-error { color: var(--ts-error); }
+  .text-ts-warning { color: var(--ts-warning); }
 
   /* ══ Background ══ */
   .ts-bg-primary { background-color: var(--ts-bg-primary); }
@@ -42,6 +45,24 @@
   .ts-bg-surface-elevated { background-color: var(--ts-bg-surface-elevated); }
   .ts-bg-calm-deep { background-color: var(--ts-bg-calm-deep); }
   .ts-border { border-color: var(--ts-border); }
+  .ts-border-subtle { border-color: var(--ts-border-subtle); }
+
+  /* ══ Status bg classes ══ */
+  .bg-ts-success { background-color: var(--ts-success); }
+  .bg-ts-error { background-color: var(--ts-error); }
+  .bg-ts-warning { background-color: var(--ts-warning); }
+
+  /* ══ Shadow utility classes ══ */
+  .shadow-gold-sm { box-shadow: var(--ts-glow-sm); }
+  .shadow-gold-md { box-shadow: var(--ts-glow-md); }
+  .shadow-gold-lg { box-shadow: var(--ts-glow-lg); }
+  .shadow-gold-xl { box-shadow: var(--ts-glow-xl); }
+
+  /* ══ Motion transition utility classes ══ */
+  .transition-fast { transition: var(--ts-transition-fast); }
+  .transition-normal { transition: var(--ts-transition-normal); }
+  .transition-slow { transition: var(--ts-transition-slow); }
+  .transition-spring { transition: var(--ts-transition-spring); }
 
   /* ══ Display Typography (Hero) ══ */
   .ts-display-xl {
@@ -218,6 +239,35 @@
 @keyframes goldGlow {
   0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.3); }
   100% { box-shadow: 0 0 12px 4px rgba(212, 175, 55, 0.15); }
+}
+
+/* ═══════════════════════════════════════════
+   UI 4.4 — Emotional micro-animations
+   ═══════════════════════════════════════════ */
+@keyframes gentleBreathe {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50% { opacity: 0.95; transform: scale(1.003); }
+}
+
+@keyframes warmthPulse {
+  0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+  40% { box-shadow: 0 0 20px 2px rgba(212, 175, 55, 0.12); }
+  100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+}
+
+@keyframes gentleFade {
+  0% { opacity: 0; transform: translateY(4px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes softGlow {
+  0%, 100% { text-shadow: 0 0 0 rgba(212, 175, 55, 0); }
+  50% { text-shadow: 0 0 8px rgba(212, 175, 55, 0.08); }
+}
+
+@keyframes breathCard {
+  0%, 100% { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); }
+  50% { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2), 0 0 30px rgba(212, 175, 55, 0.06); }
 }
 
 @keyframes dotPulse {
@@ -868,6 +918,36 @@ textarea.ts-input { resize: vertical; min-height: 100px; }
 ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); }
 ::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.3); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(212, 175, 55, 0.5); }
+
+/* ═══════════════════════════════════════════
+   UI 4.4 — Emotional utility classes
+   ═══════════════════════════════════════════ */
+.emotional-breathe {
+  animation: gentleBreathe 6s ease-in-out infinite;
+}
+.emotional-warmth-pulse {
+  animation: warmthPulse 4s ease-in-out infinite;
+}
+.emotional-gentle-fade {
+  animation: gentleFade 1s ease-out;
+}
+.emotional-soft-glow {
+  animation: softGlow 5s ease-in-out infinite;
+}
+.emotional-breath-card {
+  animation: breathCard 8s ease-in-out infinite;
+}
+
+.emotional-resonance-text {
+  background: linear-gradient(135deg, var(--ts-text-primary), var(--ts-gold-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.emotional-space {
+  padding: var(--ts-spacing-4xl) 0;
+}
 
 /* ── Accessibility: prefers-reduced-motion ── */
 @media (prefers-reduced-motion: reduce) {

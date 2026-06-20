@@ -4,21 +4,22 @@ import clsx from "clsx";
 export default function GlassPanel({
   children,
   className = "",
+  style,
 }: {
   children: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
 }) {
   return (
     <div
       className={clsx(
-        // Base — CSS variable-driven
-        "rounded-[var(--radius-xl)] border border-[var(--glass-border)] bg-[var(--glass-bg)]",
-        "backdrop-blur-[calc(var(--glass-blur)_+_8px)] shadow-[var(--shadow-lg)]",
-        "p-[var(--space-xl)] md:p-[var(--space-3xl)] transition-all [var(--transition-normal)] ease-out",
+        // Base — Tailwind token classes from globals.css
+        "ts-glass-strong ts-spacing-xl md:ts-spacing-3xl",
         // Hover
-        "hover:border-[var(--glass-border-hover)] hover:shadow-[var(--shadow-lg)] hover:bg-[var(--glass-bg-hover)]",
+        "hover:border-ts-gold/20",
         className
       )}
+      style={style}
     >
       {children}
     </div>

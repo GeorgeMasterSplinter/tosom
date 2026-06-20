@@ -40,8 +40,8 @@ export const StepIndicator = ({
                 ${visible ? "opacity-100 scale-100" : "opacity-0 scale-90"}
                 ${
                   isCompleted
-                    ? "bg-[var(--ts-gold)] text-[var(--ts-text-primary)] shadow-[0_0_12px_rgba(212,175,55,0.3)]"
-                    : "border-2 border-[var(--ts-gold)] text-[var(--ts-gold)] shadow-[0_0_8px_rgba(212,175,55,0.2)]"
+                    ? "bg-ts-gold text-ts-primary shadow-gold-md"
+                    : "border-2 border-ts-gold text-ts-gold shadow-gold-sm"
                 }
               `}
             >
@@ -67,7 +67,7 @@ export const StepIndicator = ({
               <span
                 className={`
                   text-xs font-medium transition-colors duration-300
-                  ${isActive ? "text-[var(--ts-gold)]" : "text-[var(--ts-text-muted)]"}
+                  ${isActive ? "text-ts-gold" : "text-ts-muted"}
                 `}
               >
                 {stepLabels[i]}
@@ -77,7 +77,7 @@ export const StepIndicator = ({
               <div
                 className={`
                   w-8 h-0.5 rounded-full transition-all duration-300 ease-out
-                  ${isCompleted ? "bg-[var(--ts-gold)]" : "bg-[var(--ts-border)]"}
+                  ${isCompleted ? "bg-ts-gold" : "bg-ts-border-subtle"}
                 `}
               />
             )}

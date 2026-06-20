@@ -49,7 +49,7 @@ export default function ChatList({ conversations, onSelect }: ChatListProps) {
                     <span className="inline-flex items-center gap-2">
                       <img
                         src={last.imageUrl}
-                        alt="Billemelding"
+                        alt="Bildemelding"
                         className="w-5 h-5 rounded object-cover"
                       />
                       <span className="hidden sm:inline">Billemelding</span>

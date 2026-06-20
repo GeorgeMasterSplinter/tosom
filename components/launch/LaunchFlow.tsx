@@ -93,7 +93,7 @@ export default function LaunchFlow({
                 Velkommen til ToSom
               </h2>
               <p className="text-xs text-[#4A4A4A]/50">
-                Klart for å starta reisa di
+                Klart for å start reisen din
               </p>
             </div>
           )}

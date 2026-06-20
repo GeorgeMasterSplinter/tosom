@@ -24,8 +24,8 @@ export default function DashboardMiddle({
   noticeType?: string;
   matchState?: string;
 }) {
-  // JS22 + JS24 — Bruk journeyStateAPI istaden for getMessagesForState
-  // TODO: matchState skal komme frå backend.
+  // JS22 + JS24 — Bruk journeyStateAPI isteden for getMessagesForState
+  // TODO: matchState skal komme fra backend.
   const journeyState = journeyStateAPI.getJourneyState({
     matchContext: { ...dummyMatchContext, matchState: matchState as any },
   });
@@ -54,7 +54,7 @@ export default function DashboardMiddle({
 
       <div>
         <h3 className="text-sm font-medium text-[#4A4A4A] mb-3">Systemmelding</h3>
-        {/* JS22 — Systemmeldingar frå journeyState */}
+        {/* JS22 — Systemmeldinger fra journeyState */}
         <SystemMessageBox messages={journeyState.messages} />
       </div>
 

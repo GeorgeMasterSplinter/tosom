@@ -13,7 +13,7 @@ const icons = {
 };
 
 export default function ReflectionBox({
-  reflectionText = "Du har ei refleksjon tilgjengeleg i dag.",
+  reflectionText = "Du har en refleksjon tilgjengelig i dag.",
   reflectionType = "neutral",
   onOpen
 }: {

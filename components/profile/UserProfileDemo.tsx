@@ -41,7 +41,7 @@ export default function UserProfileDemo() {
         <div className="bg-white/60 rounded-xl p-3 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
           <p className="text-xs text-[#4A4A4A]/50">
             Klar for match: {profile.readyForMatch ? "Ja" : "Nei"} |
-            Verdiar: {profile.values.length} |
+            Verdier: {profile.values.length} |
             Interesser: {profile.interests.length} |
             Bilder: {profile.photos.length}
           </p>

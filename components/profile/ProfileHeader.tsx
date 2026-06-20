@@ -36,7 +36,7 @@ export default function ProfileHeader({
 
   const statusLabels: Record<string, string> = {
     editing: 'Redigerer',
-    preview: 'Forsørgje',
+    preview: 'Forhåndsvisning',
     published: 'Publisert',
     draft: 'Utkast',
   };

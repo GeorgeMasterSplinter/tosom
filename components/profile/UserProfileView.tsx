@@ -3,9 +3,9 @@
 /** UserProfileView — visning og redigering av brukerens egen profil
  *  UP4–UP10 — props, layout, header, redigerbar bio, verdier, interesser, bilder
  *  UP11–UP20 — matchklar-logikk, validering, lagre/lukk
- *  UP17 — rolige farger, same stil som PartnerProfileView
+ *  UP17 — rolige farger, samme stil som PartnerProfileView
  *  UP19 — scroll-støtte
- *  UP20 — ingen backend, berre UI */
+ *  UP20 — ingen backend, bare UI */
 
 import { useState } from "react";
 import type { UserProfile } from "../../lib/profile/userProfile";
@@ -52,7 +52,7 @@ export default function UserProfileView({
   /* UP11 — Toggle matchklar */
   const toggleReadyForMatch = () => setP((prev) => ({ ...prev, readyForMatch: !prev.readyForMatch }));
 
-  /* UP12 — Kunne setje readyForMatch til true? */
+  /* UP12 — Kunne sette readyForMatch til true? */
   const canSetMatchReady =
     p.bio.length > 20 &&
     p.values.length >= 3 &&
@@ -87,7 +87,7 @@ export default function UserProfileView({
     });
   };
 
-  /* UP15 — Lagre endringar */
+  /* UP15 — Lagre endringer */
   const handleSave = () => onUpdate?.(p);
 
   /* UP6 — Avatar */
@@ -273,7 +273,7 @@ export default function UserProfileView({
             )}
           </section>
 
-          {/* UP15/UP16 — Knappar */}
+          {/* UP15/UP16 — Knapper */}
           <div className="flex gap-3 pt-2">
             <button
               onClick={handleSave}

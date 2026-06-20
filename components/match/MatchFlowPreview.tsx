@@ -2,14 +2,10 @@
 
 import { matchFlowAPI, type MatchState } from "../../lib/match/matchFlow";
 
-/** MatchFlowPreview – visar hva fasen brukaren er i
- *  TODO: Her skal vi kopple til faktisk backend-status for match.
- *  TODO: Her skal vi bruke ekte tidsstempel for 48-timers vindu. */
-
 const stateLabels: Record<MatchState, string> = {
   idle: "Ikke startet",
   ready_for_match: "Klar for match",
-  searching: "Leiter etter en match",
+  searching: "Leter etter en match",
   matched: "Du har fått en match!",
   in_journey: "I en 30-dagers reise",
   completed: "Reisen er ferdig",
@@ -33,8 +29,6 @@ export default function MatchFlowPreview({
 }: {
   matchState?: MatchState;
 }) {
-  // MF34 — Dummy-kontekst (hardt kodda for no)
-  // TODO: Denne skal komme fra backend seinere.
   const state = matchState ?? "in_journey";
 
   return (
@@ -54,7 +48,7 @@ export default function MatchFlowPreview({
       </p>
       <p className="text-xs text-[#4A4A4A]">
         Systemmelding: Når du trykker Finn match, starter vi et 48-timers
-        vindu der vi finner éin person til deg.
+        vindu der vi finner en person til deg.
       </p>
     </div>
   );

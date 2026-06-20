@@ -1,5 +1,5 @@
 /** ToSom OfflineScreen
- *  RM4 — Visar når ingen nettforbindelse */
+ *  RM4 — Viser når ingen nettforbindelse */
 
 'use client';
 

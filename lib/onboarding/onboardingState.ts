@@ -111,12 +111,12 @@ export const onboardingStateAPI = {
 
 /* OB4 — Verdier og interesser tilgjengelige for onboarding */
 export const availableValues = [
-  "Ærlegheit", "Trygghet", "Vekst", "Nyskaping", "Empati",
-  "Respekt", "Uavhengighet", "Djupde", "Autentisitet", "Balanse",
-  "Skapande", "Åpenheit",
+  "Ærlighet", "Trygghet", "Vekst", "Nyskaping", "Empati",
+  "Respekt", "Uavhengighet", "Dyp", "Autentisitet", "Balanse",
+  "Skapende", "Åpenhet",
 ];
 
 export const availableInterests = [
   "Friluftsliv", "Musikk", "Lesing", "Fotografi", "Matlaging",
-  "Reise", "Kunst", "Film", "Dans", "Idrett", "Hagebruk", "Podcast",
+  "Reise", "Kunst", "Film", "Dans", "Sport", "Hagebruk", "Podcast",
 ];

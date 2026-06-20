@@ -4,12 +4,12 @@ import Link from "next/link"
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const navItems = [
-    { label: "Dashboard", href: "/admin" },
-    { label: "Brukarar", href: "/admin/users" },
+    { label: "Oversikt", href: "/admin" },
+    { label: "Brukere", href: "/admin/users" },
     { label: "Matcher", href: "/admin/matches" },
-    { label: "Konversasjonar", href: "/admin/conversations" },
+    { label: "Konversasjoner", href: "/admin/conversations" },
     { label: "Reise", href: "/admin/journey" },
-    { label: "Innstillingar", href: "/admin/settings" },
+    { label: "Innstillinger", href: "/admin/settings" },
   ]
 
   return (
@@ -43,7 +43,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             href="/"
             className="px-3 py-2 rounded-lg text-sm text-[var(--color-muted)] hover:text-[var(--color-text)] hover:bg-white/[0.05] transition-colors duration-200"
           >
-            ← Tilbake til høgskulen
+            ← Tilbake til høgskolen
           </Link>
         </div>
       </aside>

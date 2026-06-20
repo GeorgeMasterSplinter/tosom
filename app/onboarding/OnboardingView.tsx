@@ -8,52 +8,52 @@ import { useRouter } from "next/navigation";
 const STEG = [
   {
     id: 1,
-    tittel: "Grunnleggjande informasjon",
+    tittel: "Grunnleggende informasjon",
     undertekst:
-      "Dette er ikkje for å dømme deg. Dette er for å finne nokon som passar inn i livet ditt.",
+      "Dette er ikke for å dømme deg. Dette er for å finne noen som passer inn i livet ditt.",
     komponent: "BasicInfo",
   },
   {
     id: 2,
-    tittel: "Kva du søker",
+    tittel: "Hva du søker",
     undertekst:
-      "Det er betre å vere ærleg enn å vere høfleg. Du skal finne nokon som passar deg — ikkje alle.",
+      "Det er bedre å være ærlig enn å være høflig. Du skal finne noen som passer deg — ikke alle.",
     komponent: "Seeking",
   },
   {
     id: 3,
-    tittel: "Personlegdom",
-    undertekst: "Ver deg sjølv. Ikkje CV-versjonen av deg.",
+    tittel: "Personlighet",
+    undertekst: "Ver deg selv. Ikke CV-versjonen av deg.",
     komponent: "Personality",
   },
   {
     id: 4,
     tittel: "Livsstil",
-    undertekst: "To menneske møtest i kvardagen — ikkje berre i helgene.",
+    undertekst: "To mennesker møtes i hverdagen — ikke bare i helgene.",
     komponent: "Lifestyle",
   },
   {
     id: 5,
-    tittel: "Verdiar og emosjonelle behov",
-    undertekst: "Dette er ikkje for å imponere. Dette er for å bli forstått.",
+    tittel: "Verdier og emosjonelle behov",
+    undertekst: "Dette er ikke for å imponere. Dette er for å bli forstått.",
     komponent: "Values",
   },
   {
     id: 6,
-    tittel: "Framtid og ønskjer",
-    undertekst: "Du treng ikkje ha alt klart. Del det som betyr noko for deg.",
+    tittel: "Fremtid og ønsker",
+    undertekst: "Du trenger ikke ha alt klart. Del det som betyr noe for deg.",
     komponent: "Future",
   },
   {
     id: 7,
     tittel: "Dine små ting",
-    undertekst: "Det er ofte dei små tinga som gjer livet stort.",
+    undertekst: "Det er ofte de små tingene som gjør livet stort.",
     komponent: "SmallThings",
   },
   {
     id: 8,
-    tittel: "Bilete (valfritt)",
-    undertekst: "Du treng ikkje vise alt. Berre det som følest riktig.",
+    tittel: "Bilder (valfritt)",
+    undertekst: "Du trenger ikke vise alt. Bare det som føles riktig.",
     komponent: "Photos",
   },
   {
@@ -119,14 +119,14 @@ export default function OnboardingView() {
           </h1>
 
           <div className="text-[var(--color-muted)] leading-[var(--line-relaxed)]">
-            Profilen din er no klar. Du kan redigere ho når du vil.
+            Profilen din er nå klar. Du kan redigere henne når du vil.
           </div>
 
           <button
             onClick={() => router.push("/profile/1")}
             className="btn-primary mt-[var(--space-lg)]"
           >
-            Sjå profilen din
+            Se på profilen din
           </button>
         </div>
       </div>

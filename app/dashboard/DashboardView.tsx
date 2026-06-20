@@ -91,7 +91,7 @@ function JourneySummary({
   return (
     <FadeIn>
       <Card className="gap-[var(--space-md)]">
-        <H2 className="text-[var(--color-gold)] text-xl font-semibold">Reisa dykkar</H2>
+           <H2 className="text-[var(--color-gold)] text-xl font-semibold">Din reise</H2>
 
         {/* Progress bar */}
         <div className="w-full h-2 rounded-[var(--radius-full)] overflow-hidden bg-[var(--color-card)]">
@@ -103,7 +103,7 @@ function JourneySummary({
 
         {/* Step info */}
         <BodyMd className="text-[var(--color-text)]/80">
-          Steg {journey.currentStep + 1} av {journey.steps.length}: {journey.current.title}
+           Steg {journey.currentStep + 1} av {journey.steps.length}: {journey.current.title}
         </BodyMd>
 
         <div className="flex items-center justify-between">
@@ -126,7 +126,7 @@ function JourneySummary({
           variant="primary"
           onClick={() => (window.location.href = `/conversation/${conversationId}`)}
         >
-          Fortsett reisa
+          Fortsett reisen
         </PremiumButton>
       </Card>
     </FadeIn>
@@ -204,8 +204,8 @@ export default function DashboardView() {
         setError(null);
         const res = await fetch("/api/dashboard");
         if (!res.ok) {
-          if (res.status === 401) throw new Error("Du er ikkje innlogga");
-          throw new Error("Kunne ikkje hente data");
+          if (res.status === 401) throw new Error("Du er ikke logget inn");
+          throw new Error("Kunne ikke hente data");
         }
         const json = await res.json();
         if (!cancelled) setData(json);
@@ -260,7 +260,7 @@ export default function DashboardView() {
     async function fetchMatchProfile() {
       try {
         const res = await fetch(`/api/profile/${matchId}`);
-        if (!res.ok) throw new Error("Kunne ikkje hente match-profil");
+        if (!res.ok) throw new Error("Kunne ikke hente match-profil");
         const json: MatchProfile = await res.json();
         if (!cancelled) setMatchProfile(json);
       } catch (err: unknown) {
@@ -290,7 +290,7 @@ export default function DashboardView() {
           return;
         }
         const res = await fetch(`/api/journey/${conversationId}`);
-        if (!res.ok) throw new Error("Kunne ikkje hente journey");
+        if (!res.ok) throw new Error("Kunne ikke hente journey");
         const json: JourneyData = await res.json();
         if (!cancelled) setJourney(json);
       } catch (err: unknown) {
@@ -314,7 +314,7 @@ export default function DashboardView() {
         fetch(`/api/journey/${conversationId}`)
           .then((res) => res.json())
           .then((json: JourneyData) => setJourney(json))
-          .catch(() => setJourneyError("Kunne ikkje oppdatere journey"));
+          .catch(() => setJourneyError("Kunne ikke oppdatere journey"));
       }
     });
 
@@ -331,7 +331,7 @@ export default function DashboardView() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({}),
       });
-      if (!res.ok) throw new Error("Kunne ikkje starte matching");
+      if (!res.ok) throw new Error("Kunne ikke starte matching");
       const json = await res.json();
       setMatchStatus(json.status || "pending");
     } catch {
@@ -408,7 +408,7 @@ export default function DashboardView() {
     return (
       <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] flex items-center justify-center">
         <div className="text-center gap-[var(--space-sm)]">
-          <BodyMd className="text-[var(--color-muted)]">Ingen data å vise enno.</BodyMd>
+          <BodyMd className="text-[var(--color-muted)]">Ingen data tilgjengelig ennå.</BodyMd>
           <PremiumButton variant="primary" onClick={() => router.push("/login")}>
             Kom i gang
           </PremiumButton>
@@ -425,7 +425,7 @@ export default function DashboardView() {
         <FadeIn>
           <div className="gap-[var(--space-xs)]">
             <H1 className="text-[var(--color-text)]">Velkommen tilbake</H1>
-            <BodyMd className="text-[var(--color-muted)]">Her er reisen deres</BodyMd>
+            <BodyMd className="text-[var(--color-muted)]">Her er reisen din</BodyMd>
           </div>
         </FadeIn>
 
@@ -433,14 +433,14 @@ export default function DashboardView() {
         {matchStatus === "no_match" && (
           <FadeIn>
             <Card className="gap-[var(--space-sm)] text-center">
-              <H2 className="text-[var(--color-text)]">Ingen match enno</H2>
+               <H2 className="text-[var(--color-text)]">Ingen match ennå</H2>
               <BodyMd className="text-[var(--color-muted)]">Trykk under for å starte matching.</BodyMd>
               <PremiumButton
                 variant="primary"
                 onClick={handleMatching}
                 className="mx-auto"
               >
-                {matchingLoading ? "Startar…" : "Finn match"}
+                {matchingLoading ? "Søker…" : "Finn match"}
               </PremiumButton>
             </Card>
           </FadeIn>
@@ -449,8 +449,8 @@ export default function DashboardView() {
         {matchStatus === "pending" && (
           <FadeIn>
             <Card className="gap-[var(--space-sm)] text-center">
-              <H2 className="text-[var(--color-text)]">Vi finn ein match til deg…</H2>
-              <BodyMd className="text-[var(--color-muted)]">Dette kan take litt tid.</BodyMd>
+               <H2 className="text-[var(--color-text)]">Vi finner en match til deg…</H2>
+               <BodyMd className="text-[var(--color-muted)]">Dette kan ta litt tid.</BodyMd>
               <Spinner />
             </Card>
           </FadeIn>
@@ -460,8 +460,8 @@ export default function DashboardView() {
           <FadeIn>
             <Card className="gap-[var(--space-md)]">
               <div className="text-center gap-[var(--space-sm)]">
-                <H2 className="text-[var(--color-text)]">Du har fått ein match! 🎉</H2>
-                <BodyMd className="text-[var(--color-muted)]">Sjekk profilen din for å starte samtalen.</BodyMd>
+                <H2 className="text-[var(--color-text)]">Du har fått en match! 🎉</H2>
+                <BodyMd className="text-[var(--color-muted)]">Se på profilen for å starte samtalen.</BodyMd>
               </div>
 
               {/* Match profile loading */}
@@ -487,7 +487,7 @@ export default function DashboardView() {
               {/* Match profile error */}
               {matchProfileError && (
                 <Card className="gap-[var(--space-sm)] text-center">
-                  <BodyMd className="text-red-400">Kunne ikkje hente match-profil</BodyMd>
+                   <BodyMd className="text-red-400">Kunne ikke hente match-profil</BodyMd>
                   <PremiumButton
                     variant="secondary"
                     onClick={() => setMatchProfileError(null)}
@@ -547,7 +547,7 @@ export default function DashboardView() {
                       onClick={() => router.push(`/profile/${matchProfile.id}`)}
                       className="mx-auto"
                     >
-                      Sjå profil
+                      Se profil
                     </PremiumButton>
                   </div>
                 </Card>
@@ -577,12 +577,12 @@ export default function DashboardView() {
                     )}
                   </div>
                 </div>
-                <PremiumButton
-                  variant="secondary"
-                  onClick={() => { const m = data.match!; router.push(`/profile/${m.id}`); }}
-                >
-                  Se profil
-                </PremiumButton>
+               <PremiumButton
+                 variant="secondary"
+                 onClick={() => { const m = data.match!; router.push(`/profile/${m.id}`); }}
+               >
+                 Se profil
+               </PremiumButton>
               </Card>
             </div>
           </FadeIn>
@@ -646,7 +646,7 @@ export default function DashboardView() {
               fetch(`/api/journey/${conversationId}`)
                 .then((res) => res.json())
                 .then((json: JourneyData) => setJourney(json))
-                .catch(() => setJourneyError("Kunne ikkje oppdatere journey"));
+                .catch(() => setJourneyError("Kunne ikke oppdatere journey"));
             }}
           />
         ) : null}
@@ -655,7 +655,7 @@ export default function DashboardView() {
         {data.journey && (
           <FadeIn>
             <div className="gap-[var(--space-sm)]">
-              <H2 className="text-[var(--color-text)]">Reisen deres</H2>
+               <H2 className="text-[var(--color-text)]">Reisen din</H2>
               <Card className="gap-[var(--space-md)] transition-all duration-300 ease-out hover:scale-[1.02]">
                 <div className="gap-[var(--space-xs)]">
                   <BodySm className="text-[var(--color-gold)]">

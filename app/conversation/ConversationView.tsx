@@ -173,7 +173,7 @@ export default function ConversationView({ conversationId }: { conversationId: s
         <div className="max-w-2xl mx-auto px-4 flex gap-3">
           <input
             type="text"
-            placeholder="Skriv ei melding…"
+            placeholder="Skriv en melding…"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onFocus={() => setShowBanner(false)}

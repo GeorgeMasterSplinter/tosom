@@ -19,14 +19,14 @@ interface ProfileFormProps {
   submitLabel?: string;
 }
 
-const DEFAULT_VALUES = ['Ærlegheit', 'Trygghet', 'Vekst', 'Nyskaping', 'Empati'];
+const DEFAULT_VALUES = ['Ærlighet', 'Trygghet', 'Vekst', 'Nyskapning', 'Empati'];
 const DEFAULT_INTERESTS = ['Friluftsliv', 'Musikk', 'Lesing', 'Fotografi', 'Matlaging'];
 
 export default function ProfileForm({
   initialValues,
   onSave,
   onCancel,
-  submitLabel = 'Lagre og publisér',
+  submitLabel = 'Lagre og publiser',
 }: ProfileFormProps) {
   const [bio, setBio] = useState(initialValues?.bio ?? '');
   const [selectedValues, setSelectedValues] = useState<string[]>(
@@ -65,22 +65,22 @@ export default function ProfileForm({
             Om meg
           </h2>
           <ProfileInput
-            label="Skriv om deg sjølv"
+            label="Skriv om deg selv"
             value={bio}
             onChange={setBio}
-            placeholder="Eg er opptatt av djupe samtalar og meningsfulle møte..."
+            placeholder="Jeg er opptatt av dype samtaler og meningsfulle møter..."
             type="textarea"
             max={300}
             hint="Minst 21 tegn"
           />
         </GlassPanel>
 
-        {/* Verdiar */}
+        {/* Verdier */}
         <GlassPanel className="flex flex-col gap-[var(--space-md)]">
           <h2 className="text-xl font-semibold text-[var(--color-text)] tracking-tight">
-            Verdiar
+            Verdier
           </h2>
-          <p className="text-sm text-[var(--color-muted)]">Vel minst 3 verdiar:</p>
+          <p className="text-sm text-[var(--color-muted)]">Vel minst 3 verdier:</p>
           <div className="flex flex-wrap gap-[var(--space-xs)]">
             {DEFAULT_VALUES.map((val) => {
               const isSelected = selectedValues.includes(val);
@@ -101,7 +101,7 @@ export default function ProfileForm({
             })}
           </div>
           <span className="text-xs text-[var(--color-muted)]">
-            {selectedValues.length} / 3 valde
+            {selectedValues.length} / 3 valgt
           </span>
         </GlassPanel>
 
@@ -131,14 +131,14 @@ export default function ProfileForm({
             })}
           </div>
           <span className="text-xs text-[var(--color-muted)]">
-            {selectedInterests.length} / 3 valde
+            {selectedInterests.length} / 3 valgt
           </span>
         </GlassPanel>
 
-        {/* Aksjonar */}
+        {/* Aksjoner */}
         <div className="flex flex-wrap gap-[var(--space-sm)]">
           <PremiumButton variant="primary" onClick={handleSubmit} disabled={saving}>
-            {saving ? 'Lagrar...' : submitLabel}
+            {saving ? 'Lagrer...' : submitLabel}
           </PremiumButton>
           {onCancel && (
             <PremiumButton variant="secondary" onClick={onCancel}>

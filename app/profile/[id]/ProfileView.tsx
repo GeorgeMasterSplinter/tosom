@@ -64,7 +64,7 @@ export function ProfileSkeleton() {
             </div>
           </div>
 
-          {/* Handlingar */}
+          {/* Handlinger */}
           <div className="flex gap-4">
             <Skeleton width="w-full" height="h-12" rounded="rounded-xl" />
             <Skeleton width="w-full" height="h-12" rounded="rounded-xl" />
@@ -111,7 +111,7 @@ export default function ProfileView({ profile }: { profile: ProfileData }) {
           <div className="flex justify-between items-start gap-6">
             <div className="space-y-2">
               <H1 className="text-white">Profil</H1>
-              <BodyMd className="text-gold">Utforsk denne brukaren</BodyMd>
+              <BodyMd className="text-gold">Utforsk denne brukeren</BodyMd>
             </div>
             {canEdit && (
               <PremiumButton
@@ -161,7 +161,7 @@ export default function ProfileView({ profile }: { profile: ProfileData }) {
                   {profile.bio}
                 </BodyMd>
               ) : (
-                <BodyMd className="text-gray-500">Ingen beskrivelse enno.</BodyMd>
+                <BodyMd className="text-gray-500">Ingen beskrivelse ennå.</BodyMd>
               )}
             </div>
           </div>
@@ -184,7 +184,7 @@ export default function ProfileView({ profile }: { profile: ProfileData }) {
                   ))}
                 </div>
               ) : (
-                <BodyMd className="text-gray-500">Ingen interesser lagt inn enno.</BodyMd>
+                <BodyMd className="text-gray-500">Ingen interesser lagt inn ennå.</BodyMd>
               )}
             </div>
           </div>
@@ -211,13 +211,13 @@ export default function ProfileView({ profile }: { profile: ProfileData }) {
                   ))}
                 </div>
               ) : (
-                <BodyMd className="text-gray-500">Ingen bilder enno.</BodyMd>
+                <BodyMd className="text-gray-500">Ingen bilder ennå.</BodyMd>
               )}
             </div>
           </div>
         </FadeIn>
 
-        {/* Handlingar */}
+        {/* Handlinger */}
         <FadeIn>
           <div className="flex gap-4">
             <PremiumButton
@@ -237,7 +237,7 @@ export default function ProfileView({ profile }: { profile: ProfileData }) {
               }}
               className="flex-1 transition-all duration-300 ease-out hover:scale-[1.02]"
             >
-              {hasMatched ? "Matcha" : isMatching ? "Matcher…" : "Match"}
+              {hasMatched ? "Matchet" : isMatching ? "Søker…" : "Match"}
             </PremiumButton>
 
             <PremiumButton

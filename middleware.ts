@@ -5,9 +5,13 @@ export function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
 
   if (path.startsWith('/admin')) {
+    // Allow login page to be accessed without token
+    if (path === '/admin/login') {
+      return NextResponse.next();
+    }
     const token = req.cookies.get('admin_token')?.value;
     if (!token) {
-      return NextResponse.redirect(new URL('/', req.url));
+      return NextResponse.redirect(new URL('/admin/login', req.url));
     }
   }
 

@@ -34,10 +34,10 @@ export default function ProfileDetails({ profile }: ProfileDetailsProps) {
           </p>
         </GlassPanel>
 
-        {/* Verdiar */}
+        {/* Verdier */}
         <GlassPanel className="flex flex-col gap-[var(--space-sm)]">
           <h2 className="text-xl font-semibold text-[var(--color-text)] tracking-tight">
-            Verdiar
+            Verdier
           </h2>
           <div className="flex flex-wrap gap-[var(--space-xs)]">
             {profile.values.map((value) => (
@@ -68,11 +68,11 @@ export default function ProfileDetails({ profile }: ProfileDetailsProps) {
           </div>
         </GlassPanel>
 
-        {/* Bilete-galleri */}
+        {/* Bilder-galleri */}
         {profile.photos.length > 0 && (
           <GlassPanel className="flex flex-col gap-[var(--space-sm)]">
             <h2 className="text-xl font-semibold text-[var(--color-text)] tracking-tight">
-              Bilete
+              Bilder
             </h2>
             <div className="flex gap-[var(--space-sm)] overflow-x-auto">
               {profile.photos.map((photo, idx) => (
@@ -92,22 +92,22 @@ export default function ProfileDetails({ profile }: ProfileDetailsProps) {
           </GlassPanel>
         )}
 
-        {/* Profil-samandrag */}
+        {/* Profil-sammendrag */}
         <GlassCard className="flex flex-col gap-[var(--space-sm)]">
           <h3 className="text-lg font-semibold text-[var(--color-text)] tracking-tight">
-            Profil-samandrag
+            Profil-sammendrag
           </h3>
           <div className="flex flex-col gap-[var(--space-xs)] text-sm">
             <div className="flex justify-between">
-              <span className="text-[var(--color-muted)]">Verdiar valde</span>
+              <span className="text-[var(--color-muted)]">Verdier valgt</span>
               <span className="text-[var(--color-text)] font-medium">{profile.values.length} / 5</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-[var(--color-muted)]">Interesser valde</span>
+              <span className="text-[var(--color-muted)]">Interesser valgt</span>
               <span className="text-[var(--color-text)] font-medium">{profile.interests.length} / 10</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-[var(--color-muted)]">Bilete lasta opp</span>
+              <span className="text-[var(--color-muted)]">Bilder lastet opp</span>
               <span className="text-[var(--color-text)] font-medium">{profile.photos.length} / 3</span>
             </div>
           </div>

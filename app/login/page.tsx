@@ -18,7 +18,7 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !email.includes("@")) {
-      setError("Skriv inn ein gyldig e-postadresse.");
+      setError("Skriv inn en gyldig e-postadresse.");
       return;
     }
     setLoading(true);
@@ -26,7 +26,7 @@ export default function LoginPage() {
     try {
       await signIn("email", { email, callbackUrl: "/" });
     } catch {
-      setError("Kunne ikkje sende innloggingslenke. Prøv igjen.");
+      setError("Kunne ikke sende innloggingslenke. Prøv igjen.");
     } finally {
       setLoading(false);
     }
@@ -42,7 +42,7 @@ export default function LoginPage() {
               <BodySm className="text-[var(--color-gold)] uppercase tracking-[0.2em]">Velkommen tilbake</BodySm>
               <H1 className="text-[var(--color-text)]">Logg inn</H1>
               <BodyMd className="text-[var(--color-muted)]">
-                Send ei Magic Link til e-posten din
+                Send en Magic Link til e-posten din
               </BodyMd>
             </div>
 

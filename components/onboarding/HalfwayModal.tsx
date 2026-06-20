@@ -14,7 +14,7 @@ export default function HalfwayModal({ open, onClose }: Props) {
         </h2>
 
         <p className="text-sm leading-relaxed text-[#4A4A4A] mb-8">
-          Du er på vei! Du har nå kommet halfway. Ta det rolig – vi er her for å hjelpe deg.
+          Du er på vei! Du har nå kommet halvveien. Ta det rolig — vi er her for å hjelpe deg.
         </p>
 
         <button

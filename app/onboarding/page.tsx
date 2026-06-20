@@ -8,29 +8,29 @@ import OnboardingScreen from "@/components/onboarding/OnboardingScreen";
 const steps = [
   {
     title: "Velkommen til ToSom",
-    text: "ToSom er ein varm, guidert plattform for ekte relasjonar. Her går reisen dykkar saman — steg for steg, samtal for samtal.",
+    text: "ToSom er en varm, guidet plattform for ekte relasjoner. Her går reisen din sammen — steg for steg, samtale for samtale.",
     buttonLabel: "Kom i gang",
   },
   {
-    title: "Kva er ToSom?",
+    title: "Hva er ToSom?",
     text: (
       <div className="space-y-3 text-left">
-        <p>🎯 Guidert dating — ei reise for to</p>
-        <p>💬 Samtal som byrjar med meining</p>
-        <p>🌱 Fokuserer på djupne, ikkje mengd</p>
-        <p>✨ Premium oppleving, aldri ein gratis app</p>
+        <p>🎯 Guidet dating — en reise for to</p>
+        <p>💬 Samtaler som begynner med mening</p>
+        <p>🌱 Fokuserer på dyp, ikke mengde</p>
+        <p>✨ Premium opplevelse, aldri en gratis app</p>
       </div>
     ),
     buttonLabel: "Neste",
   },
   {
-    title: "Korleis fungerer det?",
+    title: "Hvordan fungerer det?",
     text: (
       <div className="space-y-3 text-left">
-        <p>1️⃣ Du får ein match</p>
-        <p>2️⃣ Samtalen startar med ein guide</p>
-        <p>3️⃣ Felles journey — tre steg mot nærare kjenskap</p>
-        <p>4️⃣ Refleksjonar som gjer dykkar sterkare</p>
+        <p>1️⃣ Du får en match</p>
+        <p>2️⃣ Samtalen starter med en guide</p>
+        <p>3️⃣ Felles journey — tre steg mot nærere kjennskap</p>
+        <p>4️⃣ Refleksjoner som gjør dere sterkere</p>
       </div>
     ),
     buttonLabel: "Neste",
@@ -39,11 +39,11 @@ const steps = [
     title: "Journey — deres felles reise",
     text: (
       <div className="space-y-3 text-left">
-        <p>Journey er hjartet i ToSom. Kvar match startar med:</p>
-        <p>🌿 <strong>Steg 1:</strong> Start reisen — del noko enkelt</p>
-        <p>🔥 <strong>Steg 2:</strong> Litt djupare — kva ser du fram til?</p>
-        <p>💛 <strong>Steg 3:</strong> Felles refleksjon — kva gjer at du trivst?</p>
-        <p className="text-[var(--color-gold)] pt-2">Etter steg 3 får dere ein liten feiring 🎉</p>
+        <p>Journey er hjertet i ToSom. Hver match starter med:</p>
+        <p>🌿 <strong>Steg 1:</strong> Start reisen — del noe enkelt</p>
+        <p>🔥 <strong>Steg 2:</strong> Litt dypere — hva ser du frem til?</p>
+        <p>💛 <strong>Steg 3:</strong> Felles refleksjon — hva gjør at du trives?</p>
+        <p className="text-[var(--color-gold)] pt-2">Etter steg 3 får dere en liten feiring 🎉</p>
       </div>
     ),
     buttonLabel: "Finn din match",

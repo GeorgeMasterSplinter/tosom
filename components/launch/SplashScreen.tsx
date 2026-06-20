@@ -2,7 +2,7 @@
 
 /** SplashScreen.tsx — førsteinntrykk av ToSom
  *  LF5 — fade-in animasjon, etter 1.5s → nextStep()
- *  LF18–LF19 — rolege blå/grønne toner, moden og varm typografi */
+ *  LF18–LF19 — rolige blå/grønne toner, moden og varm typografi */
 
 import { useEffect, useState } from "react";
 import type { LaunchState } from "../../lib/launch/launchState";

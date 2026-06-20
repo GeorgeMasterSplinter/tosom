@@ -43,7 +43,7 @@ export default function MatchProfileView({ matchId }: MatchProfileViewProps) {
         setLoading(true);
         setError(null);
         const res = await fetch(`/api/profile/${matchId}`);
-        if (!res.ok) throw new Error("Kunne ikkje hente match-profil");
+        if (!res.ok) throw new Error("Kunne ikke hente match-profil");
         const json: MatchProfile = await res.json();
         if (!cancelled) setProfile(json);
       } catch (err: unknown) {
@@ -181,7 +181,7 @@ export default function MatchProfileView({ matchId }: MatchProfileViewProps) {
               {profile.bio ? (
                 <BodyMd className="text-gray-300 leading-relaxed">{profile.bio}</BodyMd>
               ) : (
-                <BodyMd className="text-gray-500">Ingen beskrivelse enno.</BodyMd>
+                <BodyMd className="text-gray-500">Ingen beskrivelse ennå.</BodyMd>
               )}
             </div>
           </div>
@@ -204,7 +204,7 @@ export default function MatchProfileView({ matchId }: MatchProfileViewProps) {
                   ))}
                 </div>
               ) : (
-                <BodyMd className="text-gray-500">Ingen interesser lagt inn enno.</BodyMd>
+                <BodyMd className="text-gray-500">Ingen interesser lagt inn ennå.</BodyMd>
               )}
             </div>
           </div>
@@ -235,7 +235,7 @@ export default function MatchProfileView({ matchId }: MatchProfileViewProps) {
           </FadeIn>
         )}
 
-        {/* Handlingar */}
+        {/* Handlinger */}
         <FadeIn>
           <div className="flex justify-center">
             <PremiumButton

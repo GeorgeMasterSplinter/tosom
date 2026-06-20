@@ -12,7 +12,7 @@ interface BrandTextProps {
   variant?: 'default' | 'title' | 'subtitle' | 'heading1' | 'heading2' | 'heading3' | 'heading4' | 'bodyLarge' | 'bodyMedium' | 'bodySmall' | 'caption' | 'overline';
 }
 
-/** Hovud-tekstkomponent — varm, roleg, moden tone */
+/** Hoved-tekstkomponent — varm, roleg, moden tone */
 export function BrandText({ children, className = '', variant = 'default' }: BrandTextProps) {
   const typography = useBrandTypography();
   const variantMap: Record<string, string> = {

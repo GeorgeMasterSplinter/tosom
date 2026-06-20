@@ -14,18 +14,18 @@ export default async function MatchesPage() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Matches</h1>
+      <h1 className="text-2xl font-bold mb-6">Matcher</h1>
 
       <table className="min-w-full bg-gray-800 rounded-lg overflow-hidden">
         <thead>
           <tr className="bg-gray-700 text-left">
-            <th className="px-4 py-3">Match ID</th>
-            <th className="px-4 py-3">User A</th>
-            <th className="px-4 py-3">User B</th>
-            <th className="px-4 py-3">Score</th>
+            <th className="px-4 py-3">Match-ID</th>
+            <th className="px-4 py-3">Brukar A</th>
+            <th className="px-4 py-3">Brukar B</th>
+            <th className="px-4 py-3">Poeng</th>
             <th className="px-4 py-3">Status</th>
-            <th className="px-4 py-3">Created</th>
-            <th className="px-4 py-3">Actions</th>
+            <th className="px-4 py-3">Oppretta</th>
+            <th className="px-4 py-3">Handlinger</th>
           </tr>
         </thead>
 
@@ -63,7 +63,7 @@ export default async function MatchesPage() {
                   href={`/admin/matches/${match.id}`}
                   className="text-blue-400 hover:underline"
                 >
-                  View
+                  Vis
                 </Link>
               </td>
             </tr>

@@ -52,7 +52,7 @@ export default function ChatWindow({
       if (days === 0) {
         setTimeLeft("Matchen avsluttes i dag");
       } else {
-        setTimeLeft(`${days} dagar igjen`);
+        setTimeLeft(`${days} dager igjen`);
       }
     }
     updateTime();
@@ -99,7 +99,7 @@ export default function ChatWindow({
                   {msg.imageUrl && (
                     <img
                       src={msg.imageUrl}
-                      alt="Sent image"
+                      alt="Sendt bilde"
                       className="w-full h-40 object-cover my-2 rounded-xl border border-white/10"
                     />
                   )}

@@ -31,7 +31,7 @@ export default function DashboardMatchBanner({
           Du har ingen aktive matcher
         </h2>
         <p className="text-[var(--color-muted)] leading-[var(--line-relaxed)]">
-          Finn din neste match og start ein ny relasjon
+          Finn din neste match og start en ny relasjon
         </p>
         <div className="flex flex-col sm:flex-row gap-[var(--space-sm)]">
           <Link href="/find-match" className="flex-1">
@@ -46,7 +46,7 @@ export default function DashboardMatchBanner({
   }
 
   const { name, image } = data.partner || {};
-  const displayName = name || "ukjend";
+  const displayName = name || "ukjent";
 
   return (
     <FadeIn>
@@ -70,7 +70,7 @@ export default function DashboardMatchBanner({
         {/* Text */}
         <div className="flex flex-col gap-[var(--space-xs)]">
           <h2 className="text-2xl font-semibold text-[var(--color-text)] tracking-tight leading-tight">
-            Du har ein ny match med {displayName}!
+            Du har en ny match med {displayName}!
           </h2>
         </div>
 

@@ -69,9 +69,9 @@ export default function ProfileView({
           </p>
         </GlassPanel>
 
-        {/* Values */}
+        {/* Verdier */}
         <GlassPanel className="flex flex-col gap-[var(--space-sm)]">
-          <h2 className="text-xl font-semibold text-[var(--color-text)]">Verdiar</h2>
+          <h2 className="text-xl font-semibold text-[var(--color-text)]">Verdier</h2>
           <div className="flex flex-wrap gap-[var(--space-xs)]">
             {profile.values.map((value) => (
               <span
@@ -84,7 +84,7 @@ export default function ProfileView({
           </div>
         </GlassPanel>
 
-        {/* Interests */}
+        {/* Interesser */}
         <GlassPanel className="flex flex-col gap-[var(--space-sm)]">
           <h2 className="text-xl font-semibold text-[var(--color-text)]">Interesser</h2>
           <div className="flex flex-wrap gap-[var(--space-xs)]">
@@ -99,10 +99,10 @@ export default function ProfileView({
           </div>
         </GlassPanel>
 
-        {/* Photos */}
+        {/* Bilder */}
         {profile.photos.length > 0 && (
           <GlassPanel className="flex flex-col gap-[var(--space-sm)]">
-            <h2 className="text-xl font-semibold text-[var(--color-text)]">Bilete</h2>
+            <h2 className="text-xl font-semibold text-[var(--color-text)]">Bilder</h2>
             <div className="flex gap-[var(--space-sm)] overflow-x-auto">
               {profile.photos.map((photo, idx) => (
                 <div

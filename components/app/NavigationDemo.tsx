@@ -126,7 +126,7 @@ export default function NavigationDemo() {
             NS25 — Modal-knappar
           </h3>
           <div className="flex flex-wrap gap-2">
-            <NavButton label="↑ Info-modal" onClick={() => handleOpenModal("info", { title: "Info", message: "Dette er ein test-modal." })} />
+            <NavButton label="↑ Info-modal" onClick={() => handleOpenModal("info", { title: "Info", message: "Dette er en test-modal." })} />
             <NavButton label="↑ Bekreft-modal" onClick={() =>
               handleOpenModal("confirm", {
                 title: "Bekreft",
@@ -147,7 +147,7 @@ export default function NavigationDemo() {
           </h3>
           <button
             onClick={() => {
-              console.log("[NavigationDemo] NS26: Rout-test starta");
+              console.log("[NavigationDemo] NS26: Rout-test starte");
               handleGoTo("onboarding");
               setTimeout(() => handleGoTo("dashboard"), 300);
               setTimeout(() => handleGoTo("chat"), 600);
@@ -192,7 +192,7 @@ export default function NavigationDemo() {
             NS29 — MatchResultView → Chat-integrasjon
           </h3>
           <p className="text-xs text-[#4A4A4A]/40 mb-2">
-            Gå til "Matchfunnen" → klikk "Start reise" → goTo("chat").
+            Gå til "Matchfunnen" → klikk "Start reisen" → goTo("chat").
           </p>
         </div>
 

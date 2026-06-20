@@ -14,16 +14,16 @@ export default function Page() {
           Admin Dashboard
         </h1>
         <p className="text-[var(--color-muted)] leading-[var(--line-relaxed)]">
-          Oversikt over system, brukarar og matcher.
+          Oversikt over system, brukere og matcher.
         </p>
       </GlassPanel>
 
       {/* Stats grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[var(--space-md)]">
         {[
-          { label: "Brukarar", value: "—", color: "text-[var(--color-gold)]" },
+          { label: "Brukere", value: "—", color: "text-[var(--color-gold)]" },
           { label: "Aktive matcher", value: "—", color: "text-green-500" },
-          { label: "Meldingar", value: "—", color: "text-blue-500" },
+          { label: "Meldinger", value: "—", color: "text-blue-500" },
           { label: "System-status", value: "OK", color: "text-green-500" },
         ].map(({ label, value, color }) => (
           <GlassCard key={label} className="flex flex-col gap-[var(--space-xs)]">
@@ -36,17 +36,17 @@ export default function Page() {
       {/* Quick actions */}
       <GlassPanel className="flex flex-col gap-[var(--space-md)]">
         <h2 className="text-xl font-semibold text-[var(--color-text)] tracking-tight">
-          Hurtig-aksjonar
+          Hurtig-aksjoner
         </h2>
         <div className="flex flex-wrap gap-[var(--space-xs)]">
           <PremiumButton variant="primary" className="text-xs px-4 py-2">
-            Sjå alle brukarar →
+            Se alle brukere →
           </PremiumButton>
           <PremiumButton variant="secondary" className="text-xs px-4 py-2">
-            System-loggar
+            System-loggbøker
           </PremiumButton>
           <PremiumButton variant="ghost" className="text-xs px-4 py-2">
-            Rens cache
+            Tøm hurtigbuffer
           </PremiumButton>
         </div>
       </GlassPanel>
@@ -57,7 +57,7 @@ export default function Page() {
           Aktivitet
         </h2>
         <p className="text-[var(--color-muted)] text-sm">
-          Ingen aktivitet å vise enno.
+          Ingen aktivitet å vise ennå.
         </p>
       </GlassPanel>
 

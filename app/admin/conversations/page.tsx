@@ -34,25 +34,25 @@ export default async function AdminConversationsPage() {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Conversation ID
+                Samtale-ID
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                User A
+                Brukar A
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                User B
+                Brukar B
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Status
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Messages
+                Meldinger
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Last Activity
+                Aktivitet
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Action
+                Handling
               </th>
             </tr>
           </thead>
@@ -86,7 +86,7 @@ export default async function AdminConversationsPage() {
                     href={`/admin/conversations/${conversation.id}`} 
                     className="text-blue-600 hover:text-blue-900"
                   >
-                    View
+                    Vis
                   </Link>
                 </td>
               </tr>

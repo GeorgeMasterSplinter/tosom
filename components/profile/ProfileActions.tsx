@@ -39,7 +39,7 @@ export default function ProfileActions({
       {/* Save */}
       {isEditing && hasChanges && onSave && (
         <PremiumButton variant="primary" className="text-xs px-5 py-2.5" onClick={onSave}>
-          ✓ Lagre endringar
+          ✓ Lagre endringer
         </PremiumButton>
       )}
 

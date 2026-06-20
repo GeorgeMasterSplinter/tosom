@@ -4,7 +4,7 @@ import JourneySummary from "./JourneySummary";
 
 export default function ConversationCard({
   partnerName = "Person",
-  lastMessage = "Ingen meldingar enno",
+  lastMessage = "Ingen meldinger ennå",
   timeAgo,
   journey,
   hasUnreadMessages,
@@ -30,7 +30,7 @@ export default function ConversationCard({
         )}
         {day != null && day > 0 && day <= 35 && (
           <p className="text-xs text-[#4A4A4A] leading-relaxed">
-            Dag {day} av reisa
+            Dag {day} av reisen
           </p>
         )}
         {day != null && day > 35 && (
@@ -51,7 +51,7 @@ export default function ConversationCard({
         </p>
         {day != null && (
           <JourneySummary
-            journeyText={day > 35 ? "Moden reise" : `Dag ${day} av reisa`}
+            journeyText={day > 35 ? "Moden reise" : `Dag ${day} av reisen`}
             journeyStatus="in_progress"
           />
         )}

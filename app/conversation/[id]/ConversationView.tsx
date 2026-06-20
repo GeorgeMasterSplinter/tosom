@@ -79,8 +79,8 @@ export default function ConversationView({ conversationId }: ConversationViewPro
         setErrorSending(null);
         const res = await fetch(`/api/conversation/${conversationId}`);
         if (!res.ok) {
-          if (res.status === 401) throw new Error("Du er ikkje innlogga");
-          throw new Error("Kunne ikkje hente samtale");
+          if (res.status === 401) throw new Error("Du er ikke logget inn");
+          throw new Error("Kunne ikke hente samtale");
         }
         const json: Conversation = await res.json();
         if (!cancelled) {
@@ -106,7 +106,7 @@ export default function ConversationView({ conversationId }: ConversationViewPro
         setJourneyLoading(true);
         setJourneyError(null);
         const res = await fetch(`/api/journey/${conversationId}`);
-        if (!res.ok) throw new Error("Kunne ikkje hente journey");
+        if (!res.ok) throw new Error("Kunne ikke hente journey");
         const json: JourneyData = await res.json();
         if (!cancelled) setJourney(json);
       } catch (err: unknown) {
@@ -119,7 +119,7 @@ export default function ConversationView({ conversationId }: ConversationViewPro
     return () => { cancelled = true; };
   }, [conversationId]);
 
-  /* Polling for nye meldingar */
+  /* Polling for nye meldinger */
   useEffect(() => {
     if (!isPolling || loading) return;
     const interval = setInterval(async () => {
@@ -228,10 +228,10 @@ export default function ConversationView({ conversationId }: ConversationViewPro
         setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
       } else {
         const json = await res.json();
-        setErrorSending(json.error || "Kunne ikkje sende melding");
+        setErrorSending(json.error || "Kunne ikke sende melding");
       }
     } catch {
-      setErrorSending("Kunne ikkje sende melding");
+      setErrorSending("Kunne ikke sende melding");
     } finally {
       setSending(false);
     }
@@ -249,10 +249,10 @@ export default function ConversationView({ conversationId }: ConversationViewPro
         emitJourneyUpdated();
         setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
       } else {
-        setJourneyError("Kunne ikkje fullføre steg");
+        setJourneyError("Kunne ikke fullføre steg");
       }
     } catch {
-      setJourneyError("Kunne ikkje fullføre steg");
+      setJourneyError("Kunne ikke fullføre steg");
     } finally {
       setJourneyAdvancing(false);
     }
@@ -382,7 +382,7 @@ export default function ConversationView({ conversationId }: ConversationViewPro
           {/* Meldingar */}
           {conversation.messages.length === 0 ? (
             <div className="text-center py-16">
-              <BodyMd className="text-gray-500">Ingen meldingar enno.</BodyMd>
+              <BodyMd className="text-gray-500">Ingen meldinger ennå.</BodyMd>
               <BodySm className="text-gray-600 mt-2">Start samtalen!</BodySm>
             </div>
           ) : (
@@ -432,7 +432,7 @@ export default function ConversationView({ conversationId }: ConversationViewPro
               value={input}
               onChange={handleInputChange}
               onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend()}
-              placeholder="Skriv ei melding..."
+              placeholder="Skriv en melding..."
               className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 outline-none focus:border-gold/50 transition-all duration-200"
             />
             <PremiumButton

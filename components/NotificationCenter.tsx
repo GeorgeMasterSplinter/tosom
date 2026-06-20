@@ -53,11 +53,11 @@ export default function NotificationCenter() {
                 Systemmeldinger
               </h3>
 
-              {loading && <p className="text-[var(--color-muted)] text-sm">Listrar...</p>}
+              {loading && <p className="text-[var(--color-muted)] text-sm">Laster...</p>}
 
               {!loading && messages.length === 0 && (
                 <p className="text-[var(--color-muted)] text-sm">
-                  Ingen meldingar akkurat no.
+                  Ingen meldinger akkurat nå.
                 </p>
               )}
 

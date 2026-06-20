@@ -2,7 +2,7 @@
 
 /** OnboardingFlow — hovudkomponent for onboarding-prosessen
  *  OB5–OB10 — flow-logikk, layout, navigasjon, progressbar
- *  OB10 — ingen backend, berre UI + dummy-data
+ *  OB10 — ingen backend, bare UI + dummy-data
  *  Premium UI Polish DEL 3: Card, PremiumButton, CSS-variablar, glassmorphism, dark-mode */
 
 import { useState, useCallback } from "react";

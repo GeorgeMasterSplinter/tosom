@@ -20,8 +20,8 @@ export default function DashboardTop({
   journeyStatus?: string;
   matchState?: string;
 }) {
-  // JS23 — Bruk journeyStateAPI istaden for getMessagesForState
-  // TODO: matchState skal komme frå backend.
+  // JS23 — Bruk journeyStateAPI isteden for getMessagesForState
+  // TODO: matchState skal komme fra backend.
   const journeyState = journeyStateAPI.getJourneyState({
     matchContext: { ...dummyMatchContext, matchState: matchState as any },
   });
@@ -49,7 +49,7 @@ export default function DashboardTop({
       </div>
       <div className="h-px bg-black/5" />
       <JourneySummaryMini />
-      {/* JS23 — Systemmeldingar frå journeyState */}
+      {/* JS23 — Systemmeldinger fra journeyState */}
       <SystemMessageBox messages={journeyState.messages} />
     </div>
   );

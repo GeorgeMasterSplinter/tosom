@@ -4,7 +4,7 @@ import { type ChatMessage as ChatMessageType } from "../../lib/chat/chatFlow";
 
 /** ChatMessageBubble – viser éin chatmelding i chatvindauget
  *  CF27 — Eigne meldinger (me): til høgre, E6F3EC
- *  CF28 — Partner-meldingar: til venstre, F7F1E3
+ *  CF28 — Partner-meldinger: til venstre, F7F1E3
  *  CF26 — Systemmeldinger: E7EEF4 med ikon
  *  CF38 — Bokmål, varmt, roligt, kort */
 

@@ -13,7 +13,7 @@ const icons = {
 };
 
 export default function SystemNotice({
-  noticeText = "Systemet har ei oppdatering til deg.",
+  noticeText = "Systemet har en oppdatering til deg.",
   noticeType = "info",
 }: {
   noticeText?: string;

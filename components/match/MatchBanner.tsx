@@ -46,7 +46,7 @@ export default function MatchBanner({
       </div>
 
       <div className="mt-2 text-sm text-blue-700 font-medium">
-        Matchscore: {score} / 100
+        Matchpoeng: {score} / 100
       </div>
 
       {blocks && <MatchBannerBreakdown blocks={blocks} />}

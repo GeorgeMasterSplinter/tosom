@@ -1,7 +1,5 @@
 // ToSom MatchFlow-API – match-tilstandsovergangar
 // Ingen sideeffektar, ingen Date.now, ingen IO.
-// TODO: Kople til backend for faktisk match-logikk.
-// TODO: Her skal vi bruke ekte tidsstempel for 48-timars vindauket.
 
 export type MatchState =
   | "idle"
@@ -20,7 +18,6 @@ export interface MatchContext {
   journeyEndsAt?: string;
 }
 
-// Initial kontekst for ein ny brukar
 function createInitialContext(userId: string): MatchContext {
   return {
     userId,
@@ -28,47 +25,38 @@ function createInitialContext(userId: string): MatchContext {
   };
 }
 
-// MF5 — requestMatch: brukar trykker "Ferdig – søk match"
 function requestMatch(ctx: MatchContext): MatchContext {
-  // TODO: Her skal vi kople til faktisk backend-status for match.
   return {
     ...ctx,
     currentMatchState: "ready_for_match",
   };
 }
 
-// MF6 — startSearchWindow: systemet starter 48-timars søk
 function startSearchWindow(ctx: MatchContext): MatchContext {
-  // TODO: Her skal vi bruke ekte tidsstempel for 48-timars vindauket.
   return {
     ...ctx,
     currentMatchState: "searching",
-    searchStartedAt: "2025-01-01T00:00:00Z", // placeholder
+    searchStartedAt: "2025-01-01T00:00:00Z",
   };
 }
 
-// MF7 — startMatch: ein match er funnen
 function startMatch(ctx: MatchContext): MatchContext {
-  // TODO: currentMatchId skal komme frå backend.
   return {
     ...ctx,
     currentMatchState: "matched",
     currentMatchId: "dummy-match-001",
-    matchStartedAt: "2025-01-02T00:00:00Z", // placeholder
+    matchStartedAt: "2025-01-02T00:00:00Z",
   };
 }
 
-// MF8 — startJourney: begge har akseptert match
 function startJourney(ctx: MatchContext): MatchContext {
-  // TODO: journeyEndsAt skal bereknast frå matchStartedAt + 30 dagar.
   return {
     ...ctx,
     currentMatchState: "in_journey",
-    journeyEndsAt: "2025-01-31T00:00:00Z", // placeholder
+    journeyEndsAt: "2025-01-31T00:00:00Z",
   };
 }
 
-// MF9 — completeJourney: 30 dagar er over
 function completeJourney(ctx: MatchContext): MatchContext {
   return {
     ...ctx,
@@ -78,8 +66,6 @@ function completeJourney(ctx: MatchContext): MatchContext {
   };
 }
 
-// Hjelpefunksjonar for visning
-
 export const matchFlowAPI = {
   createInitialContext,
   requestMatch,
@@ -88,31 +74,30 @@ export const matchFlowAPI = {
   startJourney,
   completeJourney,
 
-  // Visningshjelpear: tekst til kvar tilstand
   getMatchStateLabel(state: MatchState): string {
     const labels: Record<MatchState, string> = {
-      idle: "Ikkje starta",
+      idle: "Ikke startet",
       ready_for_match: "Klar for match",
-      searching: "Leitar etter ein match",
-      matched: "Du har ein match!",
-      in_journey: "Du er i ei 30-dagars reise",
-      completed: "Reisa er ferdig – du kan starte ein ny match",
+      searching: "Leter etter en match",
+      matched: "Du har en match!",
+      in_journey: "Du er i en 30-dagers reise",
+      completed: "Reisen er ferdig – du kan starte en ny match",
     };
     return labels[state];
   },
 
   getMatchStateDescription(state: MatchState): string {
     const descs: Record<MatchState, string> = {
-      idle: "Du har ikkje starta matchprosessen ennå.",
+      idle: "Du har ikke startet matchprosessen ennå.",
       ready_for_match:
         "Finn match når du er klar. Du kan trykke knappen for å starte.",
       searching:
-        "Vi leitar etter ein match til deg. Dette tek typisk opptil 48 timar.",
-      matched: "Gratulerer! Du har fått ein match. Aksepter for å starte reisa.",
+        "Vi leter etter en match til deg. Dette tar typisk opptil 48 timer.",
+      matched: "Gratulerer! Du har fått en match. Aksepter å starte reisen.",
       in_journey:
-        "Du er i ein 30-dagars reise med din match. Når den er over kan du starte på nytt.",
+        "Du er i en 30-dagers reise med din match. Når den er over kan du starte på nytt.",
       completed:
-        "Denne matchen er ferdig. Du kan starte ein ny reise når du er klar.",
+        "Denne matchen er ferdig. Du kan starte en ny reise når du er klar.",
     };
     return descs[state];
   },

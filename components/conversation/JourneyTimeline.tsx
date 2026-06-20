@@ -24,7 +24,7 @@ const phaseStyles: Record<string, { accent: string; text: string }> = {
 
 const milestones = [
   { day: 1, label: "Start" },
-  { day: 15, label: "Bilete" },
+  { day: 15, label: "Bilder" },
   { day: 22, label: "Djupare" },
   { day: 35, label: "Slutt" },
 ];

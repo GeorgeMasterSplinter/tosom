@@ -26,7 +26,7 @@ function ChatPanel({ onClose }: { onClose?: () => void }) {
     <div className="flex flex-col items-center justify-center h-64 space-y-4">
       <div className="text-5xl">💬</div>
       <h3 className="text-lg font-medium text-[#4A4A4A]">Chat</h3>
-      <p className="text-sm text-[#4A4A4A]/50">Ingen meldingar enno.</p>
+      <p className="text-sm text-[#4A4A4A]/50">Ingen meldinger enno.</p>
       {onClose && (
         <button
           onClick={onClose}
@@ -45,7 +45,7 @@ function PartnerProfileView({ id, onClose }: { id?: string; onClose?: () => void
       <div className="text-5xl">👤</div>
       <h3 className="text-lg font-medium text-[#4A4A4A]">Partnerprofil</h3>
       {id && <p className="text-xs text-[#4A4A4A]/40">ID: {id}</p>}
-      <p className="text-sm text-[#4A4A4A]/50">Ingen partnerprofil funnen.</p>
+      <p className="text-sm text-[#4A4A4A]/50">Ingen partnerprofil funnet.</p>
       {onClose && (
         <button
           onClick={onClose}
@@ -84,9 +84,9 @@ function MatchResultView({ matchId, onClose, onStartJourney }: {
   return (
     <div className="flex flex-col items-center justify-center h-64 space-y-4">
       <div className="text-5xl">✨</div>
-      <h3 className="text-lg font-medium text-[#4A4A4A]">Matchfunnen!</h3>
+      <h3 className="text-lg font-medium text-[#4A4A4A]">Matchfunn!</h3>
       {matchId && <p className="text-xs text-[#4A4A4A]/40">Match ID: {matchId}</p>}
-      <p className="text-sm text-[#4A4A4A]/50">Start reisa di no.</p>
+      <p className="text-sm text-[#4A4A4A]/50">Start reisen din no.</p>
       <div className="flex gap-3">
         {onStartJourney && (
           <button
@@ -122,7 +122,7 @@ function DashboardView({
     <div className="flex flex-col items-center justify-center h-64 space-y-4">
       <div className="text-5xl">🏠</div>
       <h3 className="text-lg font-medium text-[#4A4A4A]">Dashboard</h3>
-      <p className="text-sm text-[#4A4A4A]/50">Vel ei handling:</p>
+      <p className="text-sm text-[#4A4A4A]/50">Vel en handling:</p>
       <div className="flex flex-wrap gap-3 justify-center">
         {onOpenChat && (
           <button

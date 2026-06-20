@@ -30,7 +30,7 @@ export default function JourneyView({ currentDay }: JourneyViewProps) {
           Reisen deres
         </h1>
         <p className="text-[var(--color-muted)] mt-[var(--space-sm)]">
-          Reisen din lastast ikkje riktig akkurat no.
+          Reisen din lastes ikke riktig akkurat nå.
         </p>
       </section>
     );
@@ -48,18 +48,18 @@ export default function JourneyView({ currentDay }: JourneyViewProps) {
   const phaseBg = phaseColorMap[phaseConfig.phase] ?? phaseColorMap.EARLY;
 
   const faseTekst = journeyState.journeyCompleted
-    ? "Denne matchen er ferdig. Reisen varer i 35 dagar."
+    ? "Denne matchen er ferdig. Reisen varer i 35 dager."
     : !journeyState.journeyActive
-    ? "Reisen din er ikkje starta enno."
+    ? "Reisen din er ikke startet enno."
     : `Fase ${phaseConfig.phase === "EARLY" ? "1" : "2"}`;
 
   const faseUnderTekst = journeyState.journeyCompleted
-    ? "Takk for at dere gav kvarandre 35 dagar."
+    ? "Takk for at dere gav hverandre 35 dager."
     : !journeyState.journeyActive
     ? "Du kan starte reisen når du er klar."
     : journeyState.photosAllowed
-    ? "Du kan no dele bilete med matchen din."
-    : "Denne delen av reisen er utan bilete.";
+    ? "Du kan nå dele bilder med matchen din."
+    : "Denne delen av reisen er uten bilder.";
 
   return (
     <section className="section fade-in max-w-3xl mx-auto flex flex-col gap-[var(--space-xl)]">
@@ -70,7 +70,7 @@ export default function JourneyView({ currentDay }: JourneyViewProps) {
           Reisen deres
         </h1>
         <p className="text-[var(--color-muted)] mt-[var(--space-xs)]">
-          Steg for steg, saman
+          Steg for steg, sammen
         </p>
       </header>
 
@@ -147,7 +147,7 @@ export default function JourneyView({ currentDay }: JourneyViewProps) {
           disabled={day <= 1}
           className="btn-secondary w-full disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          ← Tidlegare dag
+          ← Tidligere dag
         </button>
 
         <button

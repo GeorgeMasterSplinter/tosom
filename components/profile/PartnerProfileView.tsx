@@ -1,8 +1,8 @@
 "use client";
 
 /** PartnerProfileView — visning av partnerprofil med låste/åpne bilder
- *  PP4–PP10 — props, layout, header, bio, verdiar, interesser, bilder
- *  PP18 — rolige fargar, same stil som ChatPanel/MatchResultView
+ *  PP4–PP10 — props, layout, header, bio, verdier, interesser, bilder
+ *  PP18 — rolige farger, samme stil som ChatPanel/MatchResultView
  *  PP20 — ingen interaktiv logikk
  *  PP22 — TODO-kommentar for backend-kobling
  *  PP26 — responsiv modal

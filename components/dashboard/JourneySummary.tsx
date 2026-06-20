@@ -13,7 +13,7 @@ const icons = {
 };
 
 export default function JourneySummary({
-  journeyText = "Du er på veg gjennom dag‑reisa di. Fortsett når du er klar.",
+  journeyText = "Du er på vei gjennom dag‑reisen din. Fortsett når du er klar.",
   journeyStatus = "in_progress",
 }: {
   journeyText?: string;

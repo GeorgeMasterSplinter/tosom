@@ -1,18 +1,12 @@
 /**
  * ToSom 5.0 — Tone Meter
- *
- * Visualise emotional tone across 5 dimensions:
- *   warmth, clarity, empathy, tension, vulnerability
- *
- * Usage:
- *   import { ToneMeter } from '@/components/ui'
- *   <ToneMeter tone={toneSignal} size="lg" showLabels />
+ * Visualise emotional tone across 5 dimensions.
+ * UI 4.6: React.memo + useMemo + GPU-optimised bar.
  */
 
 import React from 'react';
 import type { ToneSignal } from './emotionTypes';
 
-/* ── Props ── */
 export interface ToneMeterProps {
   tone: ToneSignal;
   size?: 'sm' | 'md' | 'lg';
@@ -21,7 +15,6 @@ export interface ToneMeterProps {
   className?: string;
 }
 
-/* ── Dimension Config ── */
 const dimensions = [
   { key: 'warmth' as const, label: 'Varme', color: '#D4AF37', negative: false },
   { key: 'clarity' as const, label: 'Klarhet', color: '#60A5FA', negative: false },
@@ -30,14 +23,12 @@ const dimensions = [
   { key: 'vulnerability' as const, label: 'Sårbarhet', color: '#A78BFA', negative: false },
 ];
 
-/* ── Size Config ── */
 const sizeMap = {
   sm: { arc: 96, gauge: 8, label: 'text-xs', value: 'text-sm' },
   md: { arc: 128, gauge: 10, label: 'text-sm', value: 'text-base' },
   lg: { arc: 160, gauge: 12, label: 'text-base', value: 'text-lg' },
 };
 
-/* ── Arc Path Generator ── */
 function arcPath(cx: number, cy: number, r: number, progress: number) {
   const angle = Math.PI * (1 + progress);
   const x = cx + r * Math.cos(angle);
@@ -47,9 +38,7 @@ function arcPath(cx: number, cy: number, r: number, progress: number) {
 }
 
 /* ── Ring Value ── */
-const RingValue: React.FC<{ value: number; color: string; size: number; label: string }> = ({
-  value, color, size, label,
-}) => {
+function RingValueInner({ value, color, size, label }: { value: number; color: string; size: number; label: string }) {
   const dim = sizeMap.md;
   const r = (dim.arc / 2) - dim.gauge;
   const cx = dim.arc / 2;
@@ -72,40 +61,44 @@ const RingValue: React.FC<{ value: number; color: string; size: number; label: s
       <span className={`text-white/40 ${dim.label}`}>{label}</span>
     </div>
   );
-};
+}
+RingValueInner.displayName = 'RingValue';
+const RingValue = React.memo(RingValueInner);
 
 /* ── Bar Value ── */
-const BarValue: React.FC<{ value: number; color: string; label: string }> = ({
-  value, color, label,
-}) => (
-  <div className="flex flex-col gap-1.5">
-    <div className="flex items-center justify-between">
-      <span className="text-white/60 text-xs">{label}</span>
-      <span className="text-white font-medium text-xs">{Math.round(value)}%</span>
+function BarValueInner({ value, color, label }: { value: number; color: string; label: string }) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <div className="flex items-center justify-between">
+        <span className="text-white/60 text-xs">{label}</span>
+        <span className="text-white font-medium text-xs">{Math.round(value)}%</span>
+      </div>
+      <div className="h-2 rounded-full bg-white/[0.06] overflow-hidden">
+        <div
+          className="h-full rounded-full transition-[width] duration-700 ease-in-out"
+          style={{ width: `${value}%`, background: `linear-gradient(90deg, ${color}60, ${color})`, boxShadow: `0 0 12px ${color}30`, willChange: 'width' }}
+        />
+      </div>
     </div>
-    <div className="h-2 rounded-full bg-white/[0.06] overflow-hidden">
-      <div
-        className="h-full rounded-full transition-all duration-700 ease-in-out"
-        style={{
-          width: `${value}%`,
-          background: `linear-gradient(90deg, ${color}60, ${color})`,
-          boxShadow: `0 0 12px ${color}30`,
-        }}
-      />
-    </div>
-  </div>
-);
+  );
+}
+BarValueInner.displayName = 'BarValue';
+const BarValue = React.memo(BarValueInner);
 
 /* ── Main ToneMeter ── */
-const ToneMeter: React.FC<ToneMeterProps> = ({
-  tone, size = 'md', showLabels = true, showValues = true, className = '',
-}) => {
+function ToneMeterInner({ tone, size = 'md', showLabels = true, showValues = true, className = '' }: ToneMeterProps) {
   const config = sizeMap[size];
   const isRing = size === 'lg';
 
+  const summary = React.useMemo(() => {
+    if (tone.warmth > 70 && tone.empathy > 70) return 'Dere kommuniserer med varme og forståelse. Dette er en sterk grunnlag.';
+    if (tone.tension > 60) return 'Det er litt spenning her. Ta et djupt pust og fokuser på forståelse.';
+    if (tone.vulnerability > 60) return 'Sårbarhet er et tegn på styrke. Dere bygger dypere forbindelse.';
+    return 'Kommunikasjonen er i rolig flyt. Fortsett å lytte med åpent hjerte.';
+  }, [tone.warmth, tone.empathy, tone.tension, tone.vulnerability]);
+
   return (
     <div className={`w-full ${className}`}>
-      {/* Title */}
       <div className="flex items-center gap-2 mb-4">
         <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#D4AF37]/20 to-transparent flex items-center justify-center">
           <span className="text-lg">🎯</span>
@@ -115,18 +108,10 @@ const ToneMeter: React.FC<ToneMeterProps> = ({
           <p className="text-white/30 text-xs">Analyse av kommunikasjon</p>
         </div>
       </div>
-
-      {/* Visualization */}
       {isRing ? (
         <div className="grid grid-cols-3 gap-4">
           {dimensions.map((d) => (
-            <RingValue
-              key={d.key}
-              value={tone[d.key]}
-              color={d.color}
-              size={config.arc}
-              label={d.label}
-            />
+            <RingValue key={d.key} value={tone[d.key]} color={d.color} size={config.arc} label={d.label} />
           ))}
         </div>
       ) : (
@@ -136,31 +121,16 @@ const ToneMeter: React.FC<ToneMeterProps> = ({
           ))}
         </div>
       )}
-
-      {/* Summary */}
       <div className="mt-6 p-4 rounded-xl bg-white/[0.03] border border-white/5">
-        <p className="text-white/40 text-xs leading-relaxed">
-          {tone.warmth > 70 && tone.empathy > 70
-            ? 'Dere kommuniserer med varme og forståelse. Dette er en sterk grunnlag.'
-            : tone.tension > 60
-            ? 'Det er litt spenning her. Ta et djupt pust og fokuser på forståelse.'
-            : tone.vulnerability > 60
-            ? 'Sårbarhet er et tegn på styrke. Dere bygger dypere forbindelse.'
-            : 'Kommunikasjonen er i rolig flyt. Fortsett å lytte med åpent hjerte.'}
-        </p>
+        <p className="text-white/40 text-xs leading-relaxed">{summary}</p>
       </div>
     </div>
   );
-};
+}
+ToneMeterInner.displayName = 'ToneMeter';
+const ToneMeter = React.memo(ToneMeterInner);
 
-/* ── Pre-built Variants ── */
-export const ToneMeterRing = (props: Omit<ToneMeterProps, 'size'>) => (
-  <ToneMeter {...props} size="lg" />
-);
-
-export const ToneMeterBar = (props: Omit<ToneMeterProps, 'size'>) => (
-  <ToneMeter {...props} size="md" />
-);
-
+export const ToneMeterRing = (props: Omit<ToneMeterProps, 'size'>) => <ToneMeter {...props} size="lg" />;
+export const ToneMeterBar = (props: Omit<ToneMeterProps, 'size'>) => <ToneMeter {...props} size="md" />;
 export { ToneMeter };
 export default ToneMeter;

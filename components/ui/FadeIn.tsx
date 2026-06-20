@@ -1,11 +1,12 @@
 /* ═══════════════════════════════════════════
    ToSom Premium — FadeIn Animation Component
-   Smooth mount transitions (250ms max)
+   GPU-composited transitions (transform + opacity only)
+   Respects prefers-reduced-motion
    ═══════════════════════════════════════════ */
 
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 interface FadeInProps {
   children: React.ReactNode;
@@ -27,45 +28,75 @@ export const FadeIn: React.FC<FadeInProps> = ({
   className = "",
 }) => {
   const [visible, setVisible] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
+  // SSR-safe reduced motion detection
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(mq.matches);
+    const handler = (e: MediaQueryListEvent | any) => setReducedMotion(e.matches);
+    mq.addEventListener?.("change", handler);
+    if (!mq.addEventListener) mq.addListener?.(handler);
+    return () => {
+      mq.removeEventListener?.("change", handler);
+      mq.removeListener?.(handler);
+    };
+  }, []);
+
+  // Ref to store observer for unobserve
+  const observerRef = useRef<IntersectionObserver | null>(null);
+
+  // Memoized observer callback to prevent re-creation
+  const handleIntersect = useCallback(
+    (entry: IntersectionObserverEntry) => {
+      setVisible(entry.isIntersecting);
+      if (entry.isIntersecting && once) {
+        observerRef.current?.unobserve(ref.current!);
+      } else if (!entry.isIntersecting && !once) {
+        setVisible(false);
+      }
+    },
+    [once]
+  );
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          if (once) observer.unobserve(el);
-        } else if (!once) {
-          setVisible(false);
-        }
-      },
+    observerRef.current = new IntersectionObserver(
+      ([entry]) => handleIntersect(entry),
       { threshold, rootMargin: "0px" }
     );
 
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [threshold, once]);
+    observerRef.current.observe(el);
+    return () => observerRef.current?.disconnect();
+  }, [threshold, handleIntersect]);
 
-  const transforms: Record<string, string> = {
-    up: "translateY(12px)",
-    down: "translateY(-12px)",
-    left: "translateX(12px)",
-    right: "translateX(-12px)",
-    scale: "scale(0.96)",
-  };
-
+  // GPU-composited: only transform + opacity animated
   return (
     <div
       ref={ref}
-      className={className}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "none" : transforms[direction],
-        transition: `opacity ${duration}ms ease-out ${delay}ms, transform ${duration}ms ease-out ${delay}ms`,
-      }}
+      className={`ts-fade-in-wrapper ${className}`}
+      style={
+        reducedMotion
+          ? { opacity: 1 } // instantly visible, no animation
+          : {
+              opacity: visible ? 1 : 0,
+              transform: visible
+                ? "none"
+                : ({
+                    up: "translateY(12px)",
+                    down: "translateY(-12px)",
+                    left: "translateX(12px)",
+                    right: "translateX(-12px)",
+                    scale: "scale(0.96)",
+                  }[direction]),
+              transition: `opacity ${duration}ms ease-out ${delay}ms, transform ${duration}ms ease-out ${delay}ms`,
+              willChange: visible ? undefined : "opacity, transform",
+            }
+      }
     >
       {children}
     </div>

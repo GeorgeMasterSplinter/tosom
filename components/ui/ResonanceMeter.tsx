@@ -1,11 +1,12 @@
 /* ═══════════════════════════════════════════
    ToSom Premium — ResonanceMeter Component
    Circular progress ring with gold gradient
+   UI 4.6: React.memo + reduced-motion + useMemo + GPU
    ═══════════════════════════════════════════ */
 
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 
 interface ResonanceMeterProps {
   score: number; // 0-100
@@ -20,43 +21,62 @@ const sizeMap = {
   lg: { circle: 160, text: "text-4xl", stroke: 10 },
 };
 
-export const ResonanceMeter = ({
+function ResonanceMeterInner({
   score,
   label = "Resonans",
   size = "md",
   className = "",
-}: ResonanceMeterProps) => {
+}: ResonanceMeterProps) {
   const [animatedScore, setAnimatedScore] = useState(0);
+  const [reducedMotion, setReducedMotion] = useState(false);
   const s = sizeMap[size];
   const radius = (s.circle - s.stroke) / 2;
   const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (animatedScore / 100) * circumference;
 
   useEffect(() => {
-    const timer = setTimeout(() => setAnimatedScore(Math.min(100, Math.max(0, score))), 100);
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(mq.matches);
+    const handler = (e: MediaQueryListEvent | any) => setReducedMotion(e.matches);
+    mq.addEventListener?.("change", handler);
+    if (!mq.addEventListener) mq.addListener?.(handler);
+    return () => {
+      mq.removeEventListener?.("change", handler);
+      mq.removeListener?.(handler);
+    };
+  }, []);
+
+  const offset = useMemo(
+    () => circumference - (animatedScore / 100) * circumference,
+    [circumference, animatedScore]
+  );
+
+  const colors = useMemo(() => {
+    if (animatedScore >= 80) return { from: "#D4AF37", to: "#E8C766" };
+    if (animatedScore >= 50) return { from: "#D4AF37", to: "#C19A2F" };
+    return { from: "#C19A2F", to: "#A08020" };
+  }, [animatedScore]);
+
+  const gradientId = useMemo(() => `goldGradient-${animatedScore}`, [animatedScore]);
+
+  useEffect(() => {
+    setAnimatedScore(0);
+    const timer = setTimeout(
+      () => setAnimatedScore(Math.min(100, Math.max(0, score))),
+      reducedMotion ? 0 : 100
+    );
     return () => clearTimeout(timer);
-  }, [score]);
-
-  // Color based on score
-  const getColor = (s: number) => {
-    if (s >= 80) return { from: "#D4AF37", to: "#E8C766" }; // Gold
-    if (s >= 50) return { from: "#D4AF37", to: "#C19A2F" }; // Mid gold
-    return { from: "#C19A2F", to: "#A08020" }; // Darker gold
-  };
-
-  const colors = getColor(animatedScore);
+  }, [score, reducedMotion]);
 
   return (
     <div className={`inline-flex flex-col items-center gap-3 ${className}`}>
-      {/* SVG Circular Progress */}
       <div className="relative" style={{ width: s.circle, height: s.circle }}>
         <svg
           width={s.circle}
           height={s.circle}
           viewBox={`0 0 ${s.circle} ${s.circle}`}
-          className="transform -rotate-90"
+          className="-rotate-90"
         >
-          {/* Background circle */}
           <circle
             cx={s.circle / 2}
             cy={s.circle / 2}
@@ -65,40 +85,39 @@ export const ResonanceMeter = ({
             stroke="rgba(255,255,255,0.06)"
             strokeWidth={s.stroke}
           />
-          {/* Progress circle */}
           <circle
             cx={s.circle / 2}
             cy={s.circle / 2}
             r={radius}
             fill="none"
-            stroke={`url(#goldGradient-${animatedScore})`}
+            stroke={`url(#${gradientId})`}
             strokeWidth={s.stroke}
             strokeDasharray={circumference}
             strokeDashoffset={offset}
             strokeLinecap="round"
-            className="transition-all duration-[600ms] ease-out"
+            style={!reducedMotion ? { transition: "stroke-dashoffset 600ms cubic-bezier(0.4,0,0.2,1)" } : undefined}
           />
-          {/* Gradient definition */}
           <defs>
-            <linearGradient id={`goldGradient-${animatedScore}`} x1="0%" y1="0%" x2="100%" y2="100%">
+            <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor={colors.from} />
               <stop offset="100%" stopColor={colors.to} />
             </linearGradient>
           </defs>
         </svg>
-        {/* Center text */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span className={`font-semibold text-white ${s.text}`}>
             {animatedScore}%
           </span>
         </div>
       </div>
-      {/* Label */}
       {label && (
         <span className="text-sm text-white/40 font-medium">{label}</span>
       )}
     </div>
   );
-};
+}
 
+ResonanceMeterInner.displayName = "ResonanceMeter";
+
+export const ResonanceMeter = React.memo(ResonanceMeterInner);
 export default ResonanceMeter;

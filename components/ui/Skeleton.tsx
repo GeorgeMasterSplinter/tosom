@@ -1,9 +1,12 @@
 /* ═══════════════════════════════════════════
    ToSom Premium — Skeleton Loading Components
-   Gold-shimmer skeleton animations
+   GPU-composited shimmer (opacity only, no layout)
+   Respects prefers-reduced-motion
    ═══════════════════════════════════════════ */
 
 "use client";
+
+import React, { useEffect, useState } from "react";
 
 interface SkeletonProps {
   className?: string;
@@ -12,19 +15,40 @@ interface SkeletonProps {
   rounded?: string;
 }
 
-export const Skeleton: React.FC<SkeletonProps> = ({
+function SkeletonInner({
   className = "",
   width = "100%",
   height = "16px",
   rounded = "rounded-md",
-}) => (
-  <div
-    className={`animate-shimmer ${rounded} ${className}`}
-    style={{ width, height }}
-    role="status"
-    aria-hidden="true"
-  />
-);
+}: SkeletonProps) {
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(mq.matches);
+    const handler = (e: MediaQueryListEvent | any) => setReducedMotion(e.matches);
+    mq.addEventListener?.("change", handler);
+    if (!mq.addEventListener) mq.addListener?.(handler);
+    return () => {
+      mq.removeEventListener?.("change", handler);
+      mq.removeListener?.(handler);
+    };
+  }, []);
+
+  return (
+    <div
+      className={`${reducedMotion ? "" : "animate-shimmer "} ${rounded} ${className}`}
+      style={{ width, height, willChange: reducedMotion ? undefined : "opacity" }}
+      role="status"
+      aria-hidden="true"
+    />
+  );
+}
+
+SkeletonInner.displayName = "Skeleton";
+
+export const Skeleton = React.memo(SkeletonInner);
 
 /* ═══════════════════════════════════════════
    Text skeleton — for heading/body text
@@ -99,7 +123,7 @@ interface SkeletonCardProps {
   className?: string;
 }
 
-export const SkeletonCard: React.FC<SkeletonCardProps> = ({ className = "" }) => (
+const SkeletonCardInner: React.FC<SkeletonCardProps> = ({ className = "" }) => (
   <div
     className={`animate-shimmer space-y-4 overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02] p-6 ${className}`}
     role="status"
@@ -110,6 +134,10 @@ export const SkeletonCard: React.FC<SkeletonCardProps> = ({ className = "" }) =>
     <SkeletonText variant="sm" lines={2} />
   </div>
 );
+
+SkeletonCardInner.displayName = "SkeletonCard";
+
+export const SkeletonCard = React.memo(SkeletonCardInner);
 
 /* ═══════════════════════════════════════════
    Default export

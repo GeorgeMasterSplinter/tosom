@@ -3,8 +3,8 @@
 /* ═══════════════════════════════════════════
    ToSom Premium — Toast Component
    success, error, info, warning
-   Gold-accent for success
-   Fade-in/out animasjoner
+   GPU-composited (opacity + transform only)
+   Respects prefers-reduced-motion
    ═══════════════════════════════════════════ */
 
 import { useEffect, useState } from "react";
@@ -43,6 +43,21 @@ const typeConfig: Record<ToastType, { bg: string; border: string; icon: string }
 
 export const Toast = ({ message, type = "info", duration = 4000, onClose }: ToastProps) => {
   const [visible, setVisible] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  // SSR-safe reduced motion detection
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(mq.matches);
+    const handler = (e: MediaQueryListEvent | any) => setReducedMotion(e.matches);
+    mq.addEventListener?.("change", handler);
+    if (!mq.addEventListener) mq.addListener?.(handler);
+    return () => {
+      mq.removeEventListener?.("change", handler);
+      mq.removeListener?.(handler);
+    };
+  }, []);
 
   useEffect(() => {
     setVisible(true);
@@ -55,15 +70,24 @@ export const Toast = ({ message, type = "info", duration = 4000, onClose }: Toas
 
   const config = typeConfig[type];
 
+  // GPU-composited: opacity + translateX/Y (no layout thrashing)
+  const baseClasses = "fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-md border border-ts-gold/20 px-5 py-4 text-sm font-medium text-ts-primary shadow-lg";
+
   return (
     <div
-      className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-md border border-gold/20 px-5 py-4 text-sm font-medium text-ts-primary shadow-lg transition-all duration-300 ${
-        visible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+      className={`${baseClasses} ${
+        reducedMotion
+          ? "opacity-100 translate-y-0"
+          : "transition-[opacity,transform] duration-300 ease-out " + (visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1")
       }`}
-      style={{
-        background: config.bg,
-        borderColor: config.border,
-      }}
+      style={
+        reducedMotion
+          ? { background: config.bg }
+          : {
+              background: config.bg,
+              transition: "opacity 300ms ease-out, transform 300ms ease-out",
+            }
+      }
       role="alert"
       aria-live="polite"
     >

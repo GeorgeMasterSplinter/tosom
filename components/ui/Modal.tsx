@@ -1,9 +1,12 @@
 /* ═══════════════════════════════════════════
    ToSom Premium — Modal Component
-   Overlay · Centered · Draggable-ready
+   Overlay · Centered · GPU-composited (opacity + scale)
+   Respects prefers-reduced-motion
    ═══════════════════════════════════════════ */
 
-import { ReactNode, useEffect } from "react";
+"use client";
+
+import { ReactNode, useEffect, useState } from "react";
 
 export interface ModalProps {
   open: boolean;
@@ -21,6 +24,22 @@ const sizeClasses: Record<"sm" | "md" | "lg" | "xl", string> = {
 };
 
 export const Modal = ({ open, onClose, title, children, size = "md" }: ModalProps) => {
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  // SSR-safe reduced motion detection
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(mq.matches);
+    const handler = (e: MediaQueryListEvent | any) => setReducedMotion(e.matches);
+    mq.addEventListener?.("change", handler);
+    if (!mq.addEventListener) mq.addListener?.(handler);
+    return () => {
+      mq.removeEventListener?.("change", handler);
+      mq.removeListener?.(handler);
+    };
+  }, []);
+
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
@@ -34,6 +53,14 @@ export const Modal = ({ open, onClose, title, children, size = "md" }: ModalProp
 
   if (!open) return null;
 
+  // GPU-composited: opacity + scale (no layout thrashing)
+  const animationStyle = reducedMotion
+    ? { opacity: 1 }
+    : {
+        opacity: 1,
+        animation: "scaleIn 200ms ease-out",
+      };
+
   return (
     <div
       className="fixed inset-0 z-[1000] flex items-center justify-center p-6"
@@ -44,10 +71,11 @@ export const Modal = ({ open, onClose, title, children, size = "md" }: ModalProp
       {/* Overlay */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
-      {/* Panel — using ts-modal-panel class from globals.css */}
+      {/* Panel — GPU-composited modal entrance */}
       <div
         className={`relative ts-modal-panel ${sizeClasses[size]}`}
         onClick={(e) => e.stopPropagation()}
+        style={animationStyle}
       >
         {title && (
           <h2 className="mb-4 text-xl font-semibold text-ts-primary">

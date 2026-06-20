@@ -731,6 +731,61 @@ button:focus-visible,
   box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15);
 }
 
+/* ═══════════════════════════════════════════
+   ToSom UI 4.6 — prefers-reduced-motion
+   Global motion harmonization layer
+   ═══════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  /* Disable all animations */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Disable shimmer on skeletons */
+  .animate-shimmer,
+  .animate-pulse,
+  .animate-fade-in {
+    animation: none !important;
+  }
+
+  /* Disable backface-3d on SVGs during animation */
+  svg circle {
+    transition: none !important;
+  }
+
+  /* Disable floating on hero elements */
+  .animate-float,
+  .floating {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  /* Disable hover transforms */
+  .card:hover,
+  .ts-card:hover,
+  .btn-secondary:hover,
+  .ts-glass:hover {
+    transform: none !important;
+  }
+
+  /* Disable glass hover shadow */
+  .ts-glass:hover {
+    box-shadow: var(--ts-shadow-md) !important;
+  }
+
+  /* Preserve hover effects on buttons/cards for usability */
+  .card:hover,
+  .ts-card:hover {
+    background: var(--color-card-hover, rgba(255, 255, 255, 0.05)) !important;
+    border-color: var(--color-card-border-hover, rgba(255, 255, 255, 0.1)) !important;
+  }
+}
+
 /* ── Global base styles ── */
 body {
   background-color: var(--ts-bg-primary);

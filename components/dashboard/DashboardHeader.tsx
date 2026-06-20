@@ -6,7 +6,7 @@
 "use client";
 
 import { Avatar } from "@/components/ui/Avatar";
-import { FadeInUp } from "@/components/ui/FadeIn";
+import { FadeIn } from "@/components/ui/FadeIn";
 
 interface DashboardHeaderProps {
   name: string;
@@ -24,7 +24,7 @@ export const DashboardHeader = ({ name, avatar, className = "" }: DashboardHeade
   })();
 
   return (
-    <FadeInUp duration={500}>
+    <FadeIn duration={500}>
       <div className={`flex flex-col items-center gap-4 ${className}`}>
         <Avatar
           src={avatar}
@@ -39,7 +39,7 @@ export const DashboardHeader = ({ name, avatar, className = "" }: DashboardHeade
           <div className="mt-3 w-12 h-0.5 mx-auto rounded-full bg-gradient-to-r from-transparent via-[var(--ts-gold)] to-transparent" />
         </div>
       </div>
-    </FadeInUp>
+    </FadeIn>
   );
 };
 

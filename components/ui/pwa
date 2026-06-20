@@ -1,0 +1,147 @@
+/**
+ * ToSom UI 3.0 — PWA Loading Screen
+ *
+ * First-content-for-PWA screen with brand animation.
+ * Shows while service worker and app initialize.
+ *
+ * Usage:
+ *   <PWALoadingScreen />
+ */
+
+import React, { useEffect, useState } from 'react';
+import { Text, View, StyleSheet, Animated } from 'react-native';
+
+const PWALoadingScreen: React.FC = () => {
+  const [progress, setProgress] = useState(0);
+  const fadeAnim = new Animated.Value(0);
+
+  useEffect(() => {
+    // Simulate loading phases
+    const timer = setInterval(() => {
+      setProgress(p => {
+        if (p >= 100) {
+          clearInterval(timer);
+          return 100;
+        }
+        return Math.min(p + 2, 100);
+      });
+    }, 50);
+
+    // Fade in
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 600,
+      useNativeDriver: true,
+    }).start();
+
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <Animated.View
+      style={{
+        ...styles.container,
+        opacity: fadeAnim,
+      }}
+    >
+      {/* Logo mark */}
+      <View style={styles.logoContainer}>
+        <View style={styles.logoRing} />
+        <View style={styles.logoInner} />
+      </View>
+
+      {/* Brand */}
+      <Text style={styles.title}>ToSom</Text>
+
+      {/* Tagline */}
+      <Text style={styles.tagline}>To mennesker. Én reise.</Text>
+
+      {/* Progress bar */}
+      <View style={styles.progressTrack}>
+        <View
+          style={[
+            styles.progressFill,
+            { width: `${progress}%` },
+          ]}
+        />
+      </View>
+
+      {/* Status */}
+      <Text style={styles.status}>
+        {progress < 30 ? 'Laster oppsett...' :
+         progress < 60 ? 'Forbereder reisen...' :
+         progress < 90 ? 'Nesten klar...' :
+         'Velkommen tilbake!'}
+      </Text>
+    </Animated.View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#0A0F1F',
+  },
+  logoContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    borderWidth: 2,
+    borderColor: 'rgba(212,175,55,0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  logoRing: {
+    position: 'absolute',
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    borderWidth: 1,
+    borderColor: 'rgba(212,175,55,0.15)',
+  },
+  logoInner: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(212,175,55,0.1)',
+    borderWidth: 1,
+    borderColor: 'rgba(212,175,55,0.3)',
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: 600,
+    color: '#D4AF37',
+    letterSpacing: -0.5,
+    marginBottom: 8,
+  },
+  tagline: {
+    fontSize: 14,
+    color: 'rgba(255,255,255,0.5)',
+    letterSpacing: 0.5,
+    marginBottom: 40,
+  },
+  progressTrack: {
+    width: 200,
+    height: 3,
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    borderRadius: 2,
+    overflow: 'hidden',
+    marginBottom: 24,
+  },
+  progressFill: {
+    height: '100%',
+    backgroundColor: '#D4AF37',
+    borderRadius: 2,
+  },
+  status: {
+    fontSize: 12,
+    color: 'rgba(255,255,255,0.35)',
+    letterSpacing: 0.3,
+  },
+});
+
+PWALoadingScreen.displayName = 'PWALoadingScreen';
+export default PWALoadingScreen;

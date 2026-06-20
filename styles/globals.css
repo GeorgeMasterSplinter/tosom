@@ -6,29 +6,69 @@
    Tailwind @layer utilities — ToSom tokens
    ═══════════════════════════════════════════ */
 @layer utilities {
-  /* ── Tailwind-compatible color classes (text-ts-*, bg-ts-*, border-ts-*) ── */
+  /* ══ Tailwind-compatible color classes ══ */
   .text-ts-gold { color: var(--ts-gold); }
   .text-ts-gold-light { color: var(--ts-gold-light); }
   .text-ts-gold-dark { color: var(--ts-gold-dark); }
+  .text-ts-gold-noir { color: var(--ts-gold-noir); }
   .bg-ts-gold { background-color: var(--ts-gold); }
   .bg-ts-gold-soft { background-color: var(--ts-gold-soft); }
   .border-ts-gold { border-color: var(--ts-gold); }
   .border-ts-gold\/10 { border-color: rgba(212, 175, 55, 0.1); }
   .border-ts-gold\/20 { border-color: rgba(212, 175, 55, 0.2); }
 
-  /* ── Tailwind-compatible text classes (text-ts-*) ── */
+  /* ══ Calm accent colors ══ */
+  .text-ts-calm-blue { color: var(--ts-calm-blue); }
+  .text-ts-calm-green { color: var(--ts-calm-green); }
+  .text-ts-calm-rose { color: var(--ts-calm-rose); }
+  .text-ts-calm-violet { color: var(--ts-calm-violet); }
+  .bg-ts-calm-blue { background-color: var(--ts-calm-blue); }
+  .bg-ts-calm-green { background-color: var(--ts-calm-green); }
+  .bg-ts-calm-rose { background-color: var(--ts-calm-rose); }
+  .bg-ts-calm-violet { background-color: var(--ts-calm-violet); }
+  .border-ts-calm-blue { border-color: var(--ts-calm-blue); }
+  .border-ts-calm-green { border-color: var(--ts-calm-green); }
+
+  /* ══ Tailwind-compatible text classes ══ */
   .text-ts-primary { color: var(--ts-text-primary); }
   .text-ts-secondary { color: var(--ts-text-secondary); }
   .text-ts-muted { color: var(--ts-text-muted); }
   .text-ts-subtle { color: var(--ts-text-subtle); }
 
-  /* ── Background ── */
+  /* ══ Background ══ */
   .ts-bg-primary { background-color: var(--ts-bg-primary); }
   .ts-bg-secondary { background-color: var(--ts-bg-secondary); }
   .ts-bg-surface { background-color: var(--ts-bg-surface); }
+  .ts-bg-surface-elevated { background-color: var(--ts-bg-surface-elevated); }
+  .ts-bg-calm-deep { background-color: var(--ts-bg-calm-deep); }
   .ts-border { border-color: var(--ts-border); }
 
-  /* ── Typography ── */
+  /* ══ Display Typography (Hero) ══ */
+  .ts-display-xl {
+    font-size: var(--ts-font-display-xl);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+  .ts-display-l {
+    font-size: var(--ts-font-display-l);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+  }
+  .ts-display-m {
+    font-size: var(--ts-font-display-m);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  /* ══ Heading Typography ══ */
+  .ts-font-heading-2xl {
+    font-size: var(--ts-font-heading-2xl);
+    font-weight: 600;
+    line-height: 1.2;
+  }
   .ts-font-heading-xl {
     font-size: var(--ts-font-heading-xl);
     font-weight: 600;
@@ -43,6 +83,11 @@
     font-size: var(--ts-font-heading-m);
     font-weight: 600;
     line-height: 1.3;
+  }
+  .ts-font-heading-s {
+    font-size: var(--ts-font-heading-s);
+    font-weight: 600;
+    line-height: 1.35;
   }
   .ts-font-body {
     font-size: var(--ts-font-body);
@@ -60,7 +105,7 @@
     line-height: 1.5;
   }
 
-  /* ── Spacing ── */
+  /* ══ Spacing (expanded) ══ */
   .ts-spacing-xs { padding: var(--ts-spacing-xs); }
   .ts-spacing-sm { padding: var(--ts-spacing-sm); }
   .ts-spacing-md { padding: var(--ts-spacing-md); }
@@ -68,28 +113,84 @@
   .ts-spacing-xl { padding: var(--ts-spacing-xl); }
   .ts-spacing-2xl { padding: var(--ts-spacing-2xl); }
   .ts-spacing-3xl { padding: var(--ts-spacing-3xl); }
+  .ts-spacing-4xl { padding: var(--ts-spacing-4xl); }
+  .ts-spacing-5xl { padding: var(--ts-spacing-5xl); }
+  .ts-spacing-6xl { padding: var(--ts-spacing-6xl); }
+  .ts-spacing-7xl { padding: var(--ts-spacing-7xl); }
 
-  /* ── Radius ── */
+  /* ══ Spacing (sides) ══ */
+  .py-section { padding-top: var(--ts-spacing-6xl); padding-bottom: var(--ts-spacing-6xl); }
+  .px-section { padding-left: var(--ts-spacing-xl); padding-right: var(--ts-spacing-xl); }
+  .gap-section { gap: var(--ts-spacing-4xl); }
+
+  /* ══ Radius ══ */
   .ts-radius-sm { border-radius: var(--ts-radius-sm); }
   .ts-radius-md { border-radius: var(--ts-radius-md); }
   .ts-radius-lg { border-radius: var(--ts-radius-lg); }
   .ts-radius-xl { border-radius: var(--ts-radius-xl); }
   .ts-radius-2xl { border-radius: var(--ts-radius-2xl); }
+  .ts-radius-3xl { border-radius: var(--ts-radius-3xl); }
 
-  /* ── Shadow ── */
+  /* ══ Shadow ══ */
   .ts-shadow-sm { box-shadow: var(--ts-shadow-sm); }
   .ts-shadow-md { box-shadow: var(--ts-shadow-md); }
   .ts-shadow-lg { box-shadow: var(--ts-shadow-lg); }
   .ts-shadow-xl { box-shadow: var(--ts-shadow-xl); }
   .ts-shadow-gold { box-shadow: var(--ts-shadow-gold); }
   .ts-shadow-gold-hover { box-shadow: var(--ts-shadow-gold-hover); }
+  .ts-shadow-gold-soft { box-shadow: var(--ts-shadow-gold-soft); }
+  .ts-shadow-soft { box-shadow: var(--ts-shadow-soft); }
 
-  /* ── Glass ── */
+  /* ══ Glass ══ */
   .ts-glass {
     background: var(--ts-glass-bg);
     border: 1px solid var(--ts-glass-border);
     backdrop-filter: blur(var(--ts-glass-blur));
   }
+  .ts-glass-strong {
+    background: var(--ts-glass-bg-strong);
+    border: 1px solid var(--ts-glass-border);
+    backdrop-filter: blur(var(--ts-glass-blur-strong));
+  }
+  .ts-glass-ultra {
+    background: var(--ts-glass-bg);
+    border: 1px solid var(--ts-glass-border);
+    backdrop-filter: blur(var(--ts-glass-blur-ultra));
+  }
+
+  /* ══ Gold Glow (UI 4.1) ══ */
+  .gold-glow-sm { box-shadow: var(--ts-glow-sm); }
+  .gold-glow-md { box-shadow: var(--ts-glow-md); }
+  .gold-glow-lg { box-shadow: var(--ts-glow-lg); }
+  .gold-glow-xl { box-shadow: var(--ts-glow-xl); }
+  .gold-glow-text { text-shadow: 0 0 12px rgba(212, 175, 55, 0.2); }
+
+  /* ══ Section Spacing (UI 4.1) ══ */
+  .section-spacing { padding-top: var(--ts-spacing-6xl); padding-bottom: var(--ts-spacing-6xl); }
+  .section-spacing-sm { padding-top: var(--ts-spacing-4xl); padding-bottom: var(--ts-spacing-4xl); }
+  .section-spacing-lg { padding-top: var(--ts-spacing-7xl); padding-bottom: var(--ts-spacing-7xl); }
+
+  /* ══ Soft Shadows (UI 4.1) ══ */
+  .soft-shadow-sm { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); }
+  .soft-shadow-md { box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25); }
+  .soft-shadow-lg { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); }
+
+  /* ══ Calm Gradient Backgrounds (UI 4.1) ══ */
+  .calm-gradient-blue {
+    background: linear-gradient(135deg, var(--ts-bg-primary), var(--ts-calm-blue-soft));
+  }
+  .calm-gradient-gold {
+    background: linear-gradient(135deg, var(--ts-bg-primary), var(--ts-gold-soft));
+  }
+  .calm-gradient-rose {
+    background: linear-gradient(135deg, var(--ts-bg-primary), var(--ts-calm-rose-soft));
+  }
+  .calm-gradient-violet {
+    background: linear-gradient(135deg, var(--ts-bg-primary), var(--ts-calm-violet-soft));
+  }
+
+  /* ══ Border subtlety (UI 4.1) ══ */
+  .border-subtle { border-color: var(--ts-border-subtle); }
 }
 
 /* ═══════════════════════════════════════════
@@ -420,59 +521,86 @@ body.landing-page {
   transform: translateY(-1px);
 }
 
-/* Focus-visible for interactive elements */
-a:focus-visible,
-button:focus-visible,
-[role="button"]:focus-visible,
-[tabindex="0"]:focus-visible {
-  outline: 2px solid var(--ts-gold);
-  outline-offset: 2px;
-  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15);
-}
-
-/* ═══════════════════════════════════════════
-   ToSom Premium — Unified Theme Tokens (v1)
-   ═══════════════════════════════════════════ */
-
-/* ── Theme CSS Variables ── */
+/* ── Theme CSS Variables ── (ToSom UI 4.1 — Nordic Calm & Gold Noir) ── */
 :root {
-  /* Background */
-  --ts-bg-primary: #0A0F1F;
-  --ts-bg-secondary: #111827;
-  --ts-bg-surface: #1A1A1D;
-  --ts-bg-surface-elevated: #222226;
+  /* ══ Layout ══ */
+  --ts-navbar-height: 64px;
+  --ts-sidebar-width: 256px;
+  --ts-container-max: 80rem;
 
-  /* Text */
-  --ts-text-primary: #F5F5F5;
-  --ts-text-secondary: #E5E7EB;
-  --ts-text-muted: rgba(255, 255, 255, 0.65);
-  --ts-text-subtle: rgba(255, 255, 255, 0.45);
+  /* ══ Nordic Calm Background ══ */
+  --ts-bg-primary: #080C18;
+  --ts-bg-secondary: #0C1122;
+  --ts-bg-surface: #111827;
+  --ts-bg-surface-elevated: #1A2332;
+  --ts-bg-calm-deep: #060A14;
+  --ts-bg-calm-warm: #12101A;
 
-  /* Gold Accent */
+  /* ══ Gold Noir Text ══ */
+  --ts-text-primary: #F0ECE4;
+  --ts-text-secondary: #C9C4B8;
+  --ts-text-muted: rgba(201, 196, 184, 0.6);
+  --ts-text-subtle: rgba(201, 196, 184, 0.35);
+  --ts-text-gold-accent: #D4AF37;
+
+  /* ══ Gold Noir Accents ══ */
   --ts-gold: #D4AF37;
   --ts-gold-light: #E8C766;
-  --ts-gold-dark: #C19A2F;
-  --ts-gold-glow: rgba(212, 175, 55, 0.25);
-  --ts-gold-soft: rgba(212, 175, 55, 0.1);
+  --ts-gold-dark: #B8942E;
+  --ts-gold-glow: rgba(212, 175, 55, 0.3);
+  --ts-gold-soft: rgba(212, 175, 55, 0.08);
+  --ts-gold-noir: #C19A2F;
+  --ts-gold-glow-strong: rgba(212, 175, 55, 0.5);
 
-  /* Glassmorphism */
-  --ts-glass-bg: rgba(255, 255, 255, 0.04);
-  --ts-glass-bg-hover: rgba(255, 255, 255, 0.08);
-  --ts-glass-border: rgba(255, 255, 255, 0.08);
-  --ts-glass-border-hover: rgba(255, 255, 255, 0.14);
-  --ts-glass-blur: 12px;
+  /* ══ Nordic Calm Accents ══ */
+  --ts-calm-blue: #4A7B9F;
+  --ts-calm-blue-soft: rgba(74, 123, 159, 0.15);
+  --ts-calm-green: #6BAF8B;
+  --ts-calm-green-soft: rgba(107, 175, 139, 0.15);
+  --ts-calm-rose: #C47DA0;
+  --ts-calm-rose-soft: rgba(196, 125, 160, 0.15);
+  --ts-calm-violet: #8B7BC4;
+  --ts-calm-violet-soft: rgba(139, 123, 196, 0.15);
 
-  /* Border */
-  --ts-border: rgba(255, 255, 255, 0.08);
-  --ts-border-light: rgba(255, 255, 255, 0.06);
+  /* ══ Enhanced Glassmorphism ══ */
+  --ts-glass-bg: rgba(255, 255, 255, 0.025);
+  --ts-glass-bg-hover: rgba(255, 255, 255, 0.055);
+  --ts-glass-bg-strong: rgba(255, 255, 255, 0.07);
+  --ts-glass-border: rgba(255, 255, 255, 0.06);
+  --ts-glass-border-hover: rgba(255, 255, 255, 0.12);
+  --ts-glass-border-gold: rgba(212, 175, 55, 0.2);
+  --ts-glass-blur: 16px;
+  --ts-glass-blur-strong: 24px;
+  --ts-glass-blur-ultra: 40px;
 
-  /* Status */
+  /* ══ Enhanced Border ══ */
+  --ts-border: rgba(255, 255, 255, 0.06);
+  --ts-border-light: rgba(255, 255, 255, 0.04);
+  --ts-border-subtle: rgba(255, 255, 255, 0.03);
+
+  /* ══ Status ══ */
   --ts-success: #4DFF88;
-  --ts-error: #FF4D4D;
+  --ts-error: #FF5C5C;
   --ts-warning: #FBBF24;
-  --ts-info: #60A5FA;
+  --ts-info: #5B9FC4;
 
-  /* Spacing */
+  /* ══ Soft Shadows ══ */
+  --ts-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --ts-shadow-md: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --ts-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.35);
+  --ts-shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.4);
+  --ts-shadow-gold: 0 0 24px rgba(212, 175, 55, 0.12);
+  --ts-shadow-gold-hover: 0 0 32px rgba(212, 175, 55, 0.25);
+  --ts-shadow-gold-soft: 0 0 16px rgba(212, 175, 55, 0.08);
+  --ts-shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.2);
+
+  /* ══ Gold Glow Accents ══ */
+  --ts-glow-sm: 0 0 8px rgba(212, 175, 55, 0.15);
+  --ts-glow-md: 0 0 16px rgba(212, 175, 55, 0.2);
+  --ts-glow-lg: 0 0 32px rgba(212, 175, 55, 0.25);
+  --ts-glow-xl: 0 0 64px rgba(212, 175, 55, 0.3);
+
+  /* ══ Spacing (expanded) ══ */
   --ts-spacing-xs: 4px;
   --ts-spacing-sm: 8px;
   --ts-spacing-md: 16px;
@@ -481,35 +609,76 @@ button:focus-visible,
   --ts-spacing-2xl: 48px;
   --ts-spacing-3xl: 64px;
   --ts-spacing-4xl: 80px;
+  --ts-spacing-5xl: 96px;
+  --ts-spacing-6xl: 120px;
+  --ts-spacing-7xl: 144px;
 
-  /* Radius */
+  /* ══ Radius ══ */
   --ts-radius-sm: 8px;
   --ts-radius-md: 12px;
   --ts-radius-lg: 16px;
   --ts-radius-xl: 20px;
   --ts-radius-2xl: 24px;
+  --ts-radius-3xl: 32px;
   --ts-radius-full: 9999px;
 
-  /* Shadow */
-  --ts-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --ts-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.25);
-  --ts-shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.3);
-  --ts-shadow-xl: 0 12px 40px rgba(0, 0, 0, 0.35);
-  --ts-shadow-gold: 0 0 20px rgba(212, 175, 55, 0.15);
-  --ts-shadow-gold-hover: 0 0 28px rgba(212, 175, 55, 0.25);
+  /* ══ Transition ══ */
+  --ts-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --ts-transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --ts-transition-slow: 350ms cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ts-transition-spring: 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ts-transition-page: 400ms cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* Transition */
-  --ts-transition-fast: 150ms ease;
-  --ts-transition-normal: 250ms ease;
-  --ts-transition-slow: 400ms ease-out;
+  /* ══ Motion Tokens ══ */
+  --ts-motion-duration-instant: 80ms;
+  --ts-motion-duration-faster: 120ms;
+  --ts-motion-duration-fast: 150ms;
+  --ts-motion-duration-normal: 250ms;
+  --ts-motion-duration-slow: 350ms;
+  --ts-motion-duration-slower: 500ms;
+  --ts-motion-duration-slowest: 700ms;
+  --ts-motion-duration-pageTransition: 400ms;
 
-  /* Typography */
-  --ts-font-heading-xl: 32px / 1.2, 600;
-  --ts-font-heading-l: 24px / 1.25, 600;
-  --ts-font-heading-m: 20px / 1.3, 600;
-  --ts-font-body: 16px / 1.65, 400;
-  --ts-font-small: 14px / 1.6, 400;
-  --ts-font-xs: 12px / 1.5, 400;
+  /* ══ Motion Easing ══ */
+  --ts-motion-easing-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ts-motion-easing-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ts-motion-easing-overshoot: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ts-motion-easing-subtleBounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ts-motion-easing-fadeIn: cubic-bezier(0.4, 0, 0.2, 1);
+  --ts-motion-easing-slideIn: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ══ Motion Stagger ══ */
+  --ts-motion-stagger-fast: 50ms;
+  --ts-motion-stagger-normal: 80ms;
+  --ts-motion-stagger-slow: 120ms;
+
+  /* ══ Enhanced Typography ══ */
+  --ts-font-heading-2xl: 48px;
+  --ts-font-heading-xl: 36px;
+  --ts-font-heading-l: 28px;
+  --ts-font-heading-m: 22px;
+  --ts-font-heading-s: 18px;
+  --ts-font-body: 16px;
+  --ts-font-small: 14px;
+  --ts-font-xs: 12px;
+  --ts-font-display-xl: 56px;
+  --ts-font-display-l: 44px;
+  --ts-font-display-m: 36px;
+
+  /* ══ Section Spacing ══ */
+  --ts-section-padding-y: var(--ts-spacing-6xl);
+  --ts-section-padding-x: var(--ts-spacing-xl);
+  --ts-section-gap: var(--ts-spacing-4xl);
+}
+
+/* Focus-visible for interactive elements */
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible,
+[tabindex="0"]:focus-visible {
+  outline: 2px solid var(--ts-gold);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15);
 }
 
 /* ── Global base styles ── */

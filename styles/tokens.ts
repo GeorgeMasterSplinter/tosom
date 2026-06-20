@@ -114,6 +114,78 @@ export const transition = {
   slow: '400ms ease-out',
 } as const;
 
+/* ── Motion / Animation ── */
+export const motion = {
+  /* Durations */
+  instant: '100ms ease',
+  fast: '150ms ease',
+  normal: '250ms ease',
+  slow: '400ms ease-out',
+  slower: '600ms ease-out',
+
+  /* Easing curves */
+  ease: 'ease',
+  easeIn: 'ease-in',
+  easeOut: 'ease-out',
+  easeInOut: 'ease-in-out',
+  spring: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+  linear: 'linear',
+
+  /* Keyframes */
+  fadeIn: 'fadeInUp',
+  fadeOut: 'fadeOutDown',
+  scaleIn: 'scaleIn',
+  scaleOut: 'scaleOut',
+  slideUp: 'fadeInUp',
+  slideDown: 'fadeOutDown',
+  slideLeft: 'slideInLeft',
+  slideRight: 'slideInRight',
+  shimmer: 'shimmer',
+  goldGlow: 'goldGlow',
+  dotPulse: 'dotPulse',
+  bounceIn: 'bounceIn',
+  flipIn: 'flipIn',
+
+  /* Animation utilities */
+  animateFadeIn: '0.25s ease-out forwards',
+  animateScaleIn: '0.2s ease-out forwards',
+  animateSlideUp: '0.3s ease-out forwards',
+  animateShimmer: '1.5s ease-in-out infinite',
+} as const;
+
+/* ── Z-Index Scale ── */
+export const zIndex = {
+  dropdown: 1000,
+  sticky: 1100,
+  elevated: 1200,
+  modal: 1300,
+  drawer: 1400,
+  overlay: 1500,
+  toast: 1600,
+  notification: 1700,
+} as const;
+
+/* ── Breakpoints ── */
+export const breakpoints = {
+  sm: '640px',
+  md: '768px',
+  lg: '1024px',
+  xl: '1280px',
+  '2xl': '1536px',
+} as const;
+
+/* ── Border Radius Tokens ── */
+export const borderRadius = {
+  none: '0px',
+  sm: '4px',
+  md: '8px',
+  lg: '12px',
+  xl: '16px',
+  '2xl': '20px',
+  '3xl': '24px',
+  full: '9999px',
+} as const;
+
 /* ── Export as CSS Variable Map ── */
 export const cssTokens = `
   /* Background */

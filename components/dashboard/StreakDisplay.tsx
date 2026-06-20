@@ -6,7 +6,7 @@
 "use client";
 
 import { Card } from "@/components/ui/Card";
-import { FadeInUp } from "@/components/ui/FadeIn";
+import { FadeIn } from "@/components/ui/FadeIn";
 
 interface StreakDisplayProps {
   days: number;
@@ -15,7 +15,7 @@ interface StreakDisplayProps {
 
 export const StreakDisplay = ({ days, className = "" }: StreakDisplayProps) => {
   return (
-    <FadeInUp duration={500} delay={100}>
+    <FadeIn delay={100} duration={500}>
       <Card
         variant="glass"
         className={`group relative overflow-hidden cursor-default ${className}`}
@@ -45,7 +45,7 @@ export const StreakDisplay = ({ days, className = "" }: StreakDisplayProps) => {
           </div>
         </div>
       </Card>
-    </FadeInUp>
+    </FadeIn>
   );
 };
 

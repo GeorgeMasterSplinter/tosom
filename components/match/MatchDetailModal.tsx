@@ -9,7 +9,7 @@ import { ModalV2 } from "@/components/ui/ModalV2";
 import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
 import { ResonanceMeter } from "@/components/ui/ResonanceMeter";
-import { FadeInUp } from "@/components/ui/FadeIn";
+import { FadeIn } from "@/components/ui/FadeIn";
 
 interface MatchDetail {
   id: string;
@@ -42,7 +42,7 @@ export const MatchDetailModal = ({
       title={match.name}
       size="lg"
     >
-      <FadeInUp duration={400}>
+      <FadeIn duration={400}>
         <div className="flex flex-col items-center gap-6 py-2">
           {/* Avatar */}
           <Avatar
@@ -107,7 +107,7 @@ export const MatchDetailModal = ({
             </Button>
           </div>
         </div>
-      </FadeInUp>
+      </FadeIn>
     </ModalV2>
   );
 };

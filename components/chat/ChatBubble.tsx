@@ -5,7 +5,7 @@
 
 "use client";
 
-import { FadeInUp } from "@/components/ui/FadeIn";
+import { FadeIn } from "@/components/ui/FadeIn";
 
 interface ChatBubbleProps {
   message: string;
@@ -23,7 +23,7 @@ export const ChatBubble = ({
   const isMe = sender === "me";
 
   return (
-    <FadeInUp duration={300} delay={index * 50}>
+    <FadeIn delay={index * 50} duration={300}>
       <div
         className={`flex ${isMe ? "justify-end" : "justify-start"} mb-3`}
       >
@@ -48,7 +48,7 @@ export const ChatBubble = ({
           )}
         </div>
       </div>
-    </FadeInUp>
+    </FadeIn>
   );
 };
 

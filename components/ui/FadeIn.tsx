@@ -1,114 +1,111 @@
+/* ═══════════════════════════════════════════
+   ToSom Premium — FadeIn Animation Component
+   Smooth mount transitions (250ms max)
+   ═══════════════════════════════════════════ */
+
 "use client";
 
 import { useEffect, useRef, useState } from "react";
 
 interface FadeInProps {
   children: React.ReactNode;
-  className?: string;
   delay?: number;
   duration?: number;
+  direction?: "up" | "down" | "left" | "right" | "scale";
+  threshold?: number;
+  once?: boolean;
+  className?: string;
 }
 
-export default function FadeIn({
+export const FadeIn: React.FC<FadeInProps> = ({
   children,
-  className = "",
   delay = 0,
   duration = 250,
-}: FadeInProps) {
+  direction = "up",
+  threshold = 0.1,
+  once = true,
+  className = "",
+}) => {
+  const [visible, setVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(entry.target);
+          setVisible(true);
+          if (once) observer.unobserve(el);
+        } else if (!once) {
+          setVisible(false);
         }
       },
-      { threshold: 0.1 }
+      { threshold, rootMargin: "0px" }
     );
 
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
+    observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [threshold, once]);
+
+  const transforms: Record<string, string> = {
+    up: "translateY(12px)",
+    down: "translateY(-12px)",
+    left: "translateX(12px)",
+    right: "translateX(-12px)",
+    scale: "scale(0.96)",
+  };
 
   return (
     <div
       ref={ref}
       className={className}
       style={{
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? "translateY(0)" : "translateY(10px)",
-        transition: `opacity ${duration}ms ease-out, transform ${duration}ms ease-out`,
-        transitionDelay: `${delay}ms`,
-      }}
-    >
-      {children}
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════
-   FadeIn — named export (alias)
-   ═══════════════════════════════════════════ */
-
-export { FadeIn as FadeIn };
-
-/* ═══════════════════════════════════════════
-   FadeInUp — variant med translateY start
-   ═══════════════════════════════════════════ */
-
-interface FadeInUpProps {
-  children: React.ReactNode;
-  className?: string;
-  delay?: number;
-  duration?: number;
-  stagger?: boolean;
-}
-
-export const FadeInUp = ({
-  children,
-  className = "",
-  delay = 0,
-  duration = 250,
-}: FadeInUpProps) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <div
-      ref={ref}
-      className={className}
-      style={{
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? "translateY(0)" : "translateY(16px)",
-        transition: `opacity ${duration}ms ease-out, transform ${duration}ms ease-out`,
-        transitionDelay: `${delay}ms`,
+        opacity: visible ? 1 : 0,
+        transform: visible ? "none" : transforms[direction],
+        transition: `opacity ${duration}ms ease-out ${delay}ms, transform ${duration}ms ease-out ${delay}ms`,
       }}
     >
       {children}
     </div>
   );
 };
+
+/* ═══════════════════════════════════════════
+   FadeInUp — quick helper
+   ═══════════════════════════════════════════ */
+
+interface FadeInUpProps {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+}
+
+export const FadeInUp: React.FC<FadeInUpProps> = ({ children, delay = 0, className = "" }) => (
+  <FadeIn delay={delay} direction="up" duration={250} className={className}>
+    {children}
+  </FadeIn>
+);
+
+/* ═══════════════════════════════════════════
+   FadeInScale — quick helper
+   ═══════════════════════════════════════════ */
+
+interface FadeInScaleProps {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+}
+
+export const FadeInScale: React.FC<FadeInScaleProps> = ({ children, delay = 0, className = "" }) => (
+  <FadeIn delay={delay} direction="scale" duration={250} className={className}>
+    {children}
+  </FadeIn>
+);
+
+/* ═══════════════════════════════════════════
+   Default export
+   ═══════════════════════════════════════════ */
+
+export default FadeIn;

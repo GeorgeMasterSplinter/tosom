@@ -7,7 +7,7 @@
 
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { FadeInUp } from "@/components/ui/FadeIn";
+import { FadeIn } from "@/components/ui/FadeIn";
 
 interface JourneyCardProps {
   title: string;
@@ -27,7 +27,7 @@ export const JourneyCard = ({
   className = "",
 }: JourneyCardProps) => {
   return (
-    <FadeInUp duration={400}>
+    <FadeIn duration={400}>
       <Card
         variant="glass"
         className={`group relative w-full overflow-hidden ${className}`}
@@ -59,7 +59,7 @@ export const JourneyCard = ({
           </div>
         )}
       </Card>
-    </FadeInUp>
+    </FadeIn>
   );
 };
 

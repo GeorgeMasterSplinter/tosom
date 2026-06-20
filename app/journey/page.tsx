@@ -1,17 +1,15 @@
 /* ═══════════════════════════════════════════
-   ToSom Premium — Journey Page (Redesigned)
-   SectionHero + JourneyMap + JourneyCard + ResonanceMeter
+   ToSom Premium — Journey Page (UI 4.2)
+   Timeline with gold-glow milestones · Calm-gradient segments
+   Gold progress bars · Glass-milestones
    ═══════════════════════════════════════════ */
 
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { SectionHeader } from "@/components/ui/Section";
 import { JourneyMap, JourneyStep } from "@/components/journey/JourneyMap";
-import { JourneyCard } from "@/components/journey/JourneyCard";
 import { ResonanceMeter } from "@/components/ui/ResonanceMeter";
-import { Card } from "@/components/ui/Card";
 import { FadeIn } from "@/components/ui/FadeIn";
 
 interface DayConfig {
@@ -75,78 +73,107 @@ export default function JourneyPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[var(--ts-bg-primary)] to-[#111827] text-white">
-      <div className="max-w-4xl mx-auto px-4 py-12">
-        {/* SectionHero */}
+    <div className="min-h-screen bg-ts-bg-primary text-ts-primary relative overflow-hidden">
+      {/* UI 4.2: calm-gradient-gold subtle bg */}
+      <div className="absolute inset-0 calm-gradient-gold opacity-30 pointer-events-none" />
+      <div className="absolute inset-0 bg-ts-bg-primary/60 pointer-events-none" />
+
+      <div className="max-w-4xl mx-auto px-section py-section relative z-10">
+        {/* SectionHero — UI 4.2: display-xl + gold-glow-text */}
         <FadeIn duration={500}>
-          <SectionHeader
-            badge="Reise"
-            title="Deres felles reise"
-            subtitle="Guidet utvikling, refleksjon og dypere forbindelse"
-          />
+          <div className="text-center space-y-lg mb-4xl">
+            <span className="text-ts-gold uppercase tracking-[0.25em] text-xs font-semibold">
+              Reise
+            </span>
+            <h1 className="ts-display-xl text-gold-glow-text">
+              Deres felles reise
+            </h1>
+            <p className="text-text-muted max-w-xl mx-auto">
+              Guidet utvikling, refleksjon og dypere forbindelse
+            </p>
+          </div>
         </FadeIn>
 
-        {/* JourneyMap */}
+        {/* JourneyMap — UI 4.2: ts-glass-strong + gold-glow-md */}
         <FadeIn duration={500} delay={100}>
-          <Card variant="glass" className="p-6 mb-8">
-            <JourneyMap
-              steps={demoSteps}
-              onSelectStep={(step) => setActiveStep(step)}
-            />
-          </Card>
+          <div className="ts-glass-strong rounded-[var(--ts-radius-2xl)] p-xl shadow-lg mb-4xl gold-glow-md relative overflow-hidden">
+            <div className="absolute inset-0 bg-ts-gold-soft opacity-10 pointer-events-none" />
+            <div className="relative z-10">
+              <JourneyMap
+                steps={demoSteps}
+                onSelectStep={(step) => setActiveStep(step)}
+              />
+            </div>
+          </div>
         </FadeIn>
 
-        {/* ResonanceMeter */}
+        {/* ResonanceMeter — UI 4.2: centered + gold glow */}
         <FadeIn duration={500} delay={200}>
-          <div className="flex justify-center mb-10">
+          <div className="flex justify-center mb-4xl">
             <div className="text-center">
               <ResonanceMeter score={72} label="Samlet resonans" size="lg" />
             </div>
           </div>
         </FadeIn>
 
-        {/* Dagens oppgave */}
+        {/* Dagens oppgave — UI 4.2: calm-gradient-rose card */}
         <FadeIn duration={500} delay={300}>
-          <JourneyCard
-            icon={demoDayConfig.icon}
-            title={`Dag ${demoDayConfig.dayNumber}: ${demoDayConfig.title}`}
-            description={demoDayConfig.microInsight}
-            ctaLabel="Fortsett"
-            ctaOnClick={handleNextDay}
-            className="mb-6"
-          />
+          <div className="ts-glass-strong rounded-[var(--ts-radius-3xl)] p-2xl shadow-lg mb-4xl relative overflow-hidden">
+            <div className="absolute inset-0 calm-gradient-rose opacity-15 pointer-events-none" />
+            <div className="relative z-10 space-xl">
+              <div className="flex items-center gap-lg mb-lg">
+                <span className="text-3xl">{demoDayConfig.icon}</span>
+                <h2 className="ts-font-heading-xl text-text-primary">
+                  Dag {demoDayConfig.dayNumber}: {demoDayConfig.title}
+                </h2>
+              </div>
+              <p className="text-text-secondary leading-relaxed mb-xl">{demoDayConfig.microInsight}</p>
+              <button
+                onClick={handleNextDay}
+                className="inline-flex items-center justify-center rounded-[var(--ts-radius-md)] bg-ts-gold text-ts-bg-primary font-medium px-xl py-md hover:bg-ts-gold-light transition-all duration-[var(--ts-transition-normal)] gold-glow-md hover:gold-glow-lg"
+              >
+                Fortsett
+              </button>
+            </div>
+          </div>
         </FadeIn>
 
-        {/* Refleksjon */}
+        {/* Refleksjon — UI 4.2: ts-glass + gold border */}
         <FadeIn duration={500} delay={400}>
-          <Card variant="glass" className="p-6 mb-6">
-            <h4 className="text-sm font-medium text-white/60 mb-3">Refleksjon</h4>
-            <p className="text-sm text-white/50 leading-relaxed">{demoDayConfig.reflectionPrompt}</p>
-          </Card>
+          <div className="ts-glass rounded-[var(--ts-radius-xl)] p-xl shadow-soft mb-4xl border-ts-gold/10 relative overflow-hidden">
+            <div className="absolute inset-0 bg-ts-calm-warm/50 pointer-events-none" />
+            <div className="relative z-10 space-lg">
+              <h4 className="ts-font-heading-s text-ts-gold font-semibold mb-sm">Refleksjon</h4>
+              <p className="text-text-secondary leading-relaxed">{demoDayConfig.reflectionPrompt}</p>
+            </div>
+          </div>
         </FadeIn>
 
         {/* Progresjon hint */}
         <FadeIn duration={500} delay={500}>
-          <Card variant="glass" className="p-6 mb-8">
-            <h4 className="text-sm font-medium text-white/60 mb-2">Dagens tanke</h4>
-            <p className="text-sm text-white/50 leading-relaxed">{demoDayConfig.progressionHint}</p>
-          </Card>
+          <div className="ts-glass rounded-[var(--ts-radius-xl)] p-xl shadow-soft mb-4xl relative overflow-hidden">
+            <div className="absolute inset-0 bg-ts-calm-warm/50 pointer-events-none" />
+            <div className="relative z-10 space-lg">
+              <h4 className="ts-font-heading-s text-ts-gold font-semibold mb-sm">Dagens tanke</h4>
+              <p className="text-text-secondary leading-relaxed">{demoDayConfig.progressionHint}</p>
+            </div>
+          </div>
         </FadeIn>
 
-        {/* Navigasjon */}
+        {/* Navigasjon — UI 4.2: gold-glow button */}
         <FadeIn duration={500} delay={600}>
-          <div className="flex gap-3">
+          <div className="flex gap-lg">
             <button
               onClick={handlePrevDay}
               disabled={currentDay <= 1}
-              className="flex-1 px-4 py-3 rounded-xl border border-white/10 text-white/60 text-sm font-medium hover:bg-white/[0.04] hover:border-white/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200"
+              className="flex-1 px-lg py-md rounded-[var(--ts-radius-md)] border border-ts-gold/20 text-ts-gold/70 text-sm font-medium hover:bg-ts-gold-soft hover:border-ts-gold/30 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-[var(--ts-transition-fast)]"
             >
               ← Tidligere dag
             </button>
             <button
               onClick={handleNextDay}
               disabled={currentDay >= 35}
-              className="flex-1 px-4 py-3 rounded-xl bg-[var(--ts-gold)] text-[var(--ts-bg-primary)] text-sm font-medium hover:bg-[var(--ts-gold-light)] disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200"
+              className="flex-1 px-lg py-md rounded-[var(--ts-radius-md)] bg-ts-gold text-ts-bg-primary text-sm font-medium hover:bg-ts-gold-light disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-[var(--ts-transition-fast)] gold-glow-md hover:gold-glow-lg"
             >
               Neste dag →
             </button>

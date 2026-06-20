@@ -8,7 +8,7 @@
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Avatar } from "@/components/ui/Avatar";
-import { FadeInUp } from "@/components/ui/FadeIn";
+import { FadeIn } from "@/components/ui/FadeIn";
 
 interface MatchCardProps {
   avatar?: string;
@@ -32,7 +32,7 @@ export const MatchCard = ({
   index = 0,
 }: MatchCardProps) => {
   return (
-    <FadeInUp duration={400} delay={index * 80}>
+    <FadeIn delay={index * 80} duration={400}>
       <Card
         variant="glass"
         className="group relative w-full cursor-default overflow-hidden transition-all duration-300 hover:-translate-y-[2px] hover:border-[var(--ts-gold)]/40 hover:shadow-[0_8px_30px_rgba(212,175,55,0.1)]"
@@ -92,7 +92,7 @@ export const MatchCard = ({
           )}
         </div>
       </Card>
-    </FadeInUp>
+    </FadeIn>
   );
 };
 

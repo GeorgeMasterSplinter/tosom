@@ -6,7 +6,7 @@
 "use client";
 
 import { Card } from "@/components/ui/Card";
-import { FadeInUp } from "@/components/ui/FadeIn";
+import { FadeIn } from "@/components/ui/FadeIn";
 
 interface QuickAction {
   id: string;
@@ -72,7 +72,7 @@ export const QuickActionGrid = ({ actions, className = "" }: QuickActionGridProp
   const items = actions ?? defaultActions;
 
   return (
-    <FadeInUp duration={500} delay={200}>
+    <FadeIn delay={200} duration={500}>
       <Card variant="glass" className={`p-6 ${className}`}>
         <h3 className="text-sm font-medium text-white/60 mb-4">Hurtigtillgang</h3>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -97,7 +97,7 @@ export const QuickActionGrid = ({ actions, className = "" }: QuickActionGridProp
           ))}
         </div>
       </Card>
-    </FadeInUp>
+    </FadeIn>
   );
 };
 

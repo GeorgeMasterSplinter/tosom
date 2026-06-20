@@ -1,0 +1,117 @@
+/**
+ * ToSom UI 3.0 — Desktop Window Chrome Component
+ *
+ * Electron glass title bar with window controls.
+ * Provides native-looking window chrome for desktop builds.
+ *
+ * Usage:
+ *   <DesktopChrome title="ToSom" controls={true}>
+ *     <AppContent />
+ *   </DesktopChrome>
+ */
+
+import React from 'react';
+import { Text, View, TouchableOpacity, type ViewStyle, type TextStyle } from 'react-native';
+
+export interface DesktopChromeProps {
+  children: React.ReactNode;
+  title?: string;
+  controls?: boolean;
+  transparent?: boolean;
+  onMinimize?: () => void;
+  onMaximize?: () => void;
+  onClose?: () => void;
+  titleStyle?: TextStyle;
+  style?: ViewStyle;
+}
+
+const DesktopChrome: React.FC<DesktopChromeProps> = ({
+  children,
+  title = 'ToSom',
+  controls = true,
+  transparent = false,
+  onMinimize,
+  onMaximize,
+  onClose,
+  titleStyle,
+  style,
+}) => {
+  const chromeBarStyle: ViewStyle = {
+    backgroundColor: transparent
+      ? 'rgba(255,255,255,0.02)'
+      : 'rgba(10,15,31,0.98)',
+    backdropFilter: 'blur(6px)',
+    borderBottomWidth: 1,
+    borderColor: 'rgba(255,255,255,0.06)',
+    height: 40,
+    ...style,
+  };
+
+  return (
+    <View style={{ flex: 1 }}>
+      {/* Title bar */}
+      {controls && (
+        <View style={{
+          ...chromeBarStyle,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: controls ? 'space-between' : 'center',
+          paddingHorizontal: controls ? 12 : 16,
+        }}>
+          {/* Left: icon */}
+          <TouchableOpacity style={{ width: 28, height: 28, justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{ fontSize: 14, color: '#D4AF37' }}>◆</Text>
+          </TouchableOpacity>
+
+          {/* Center: title */}
+          <Text style={{
+            fontSize: 12,
+            color: 'rgba(255,255,255,0.65)',
+            fontWeight: 500,
+            letterSpacing: 0.3,
+            ...titleStyle,
+          }}>
+            {title}
+          </Text>
+
+          {/* Right: window controls */}
+          {controls && (
+            <View style={{ flexDirection: 'row', gap: 0 }}>
+              {[
+                { label: '−', action: onMinimize, color: '#FBBF24' },
+                { label: '□', action: onMaximize, color: '#60A5FA' },
+                { label: '✕', action: onClose, color: '#FF4D4D' },
+              ].map((ctrl, i) => (
+                <TouchableOpacity
+                  key={i}
+                  onPress={ctrl.action}
+                  style={{
+                    width: 46,
+                    height: 40,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderLeftWidth: 1,
+                    borderColor: 'rgba(255,255,255,0.04)',
+                    backgroundColor: 'transparent',
+                  }}
+                >
+                  <Text style={{ fontSize: 10, color: ctrl.color, fontWeight: 600 }}>
+                    {ctrl.label}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+        </View>
+      )}
+
+      {/* Content */}
+      <View style={{ flex: 1 }}>
+        {children}
+      </View>
+    </View>
+  );
+};
+
+DesktopChrome.displayName = 'DesktopChrome';
+export default DesktopChrome;

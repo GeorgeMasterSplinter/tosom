@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import { AnalyticsProvider } from "@/components/analytics/AnalyticsProvider";
 
 export const metadata = {
   title: "ToSom — En rolig plass for ekte møter",
@@ -56,6 +57,7 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body className="bg-[var(--ts-bg-primary)] text-[var(--ts-text-primary)] antialiased">
+        <AnalyticsProvider />
         {children}
       </body>
     </html>

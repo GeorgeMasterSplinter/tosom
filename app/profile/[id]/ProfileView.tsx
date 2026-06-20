@@ -14,11 +14,11 @@ const { H1, H2, BodyMd, BodySm } = Typography;
 
 export function ProfileSkeleton() {
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
-      <Section className="space-y-16 py-12">
+    <div className="min-h-screen bg-ts-bg-primary text-ts-primary">
+      <Section className="space-y-2xl py-2xl">
         {/* Header */}
-        <div className="flex justify-between items-start gap-6">
-          <div className="space-y-2">
+        <div className="flex justify-between items-start gap-2xl">
+          <div className="space-y-md">
             <Skeleton width="w-32" height="h-8" rounded="md" />
             <Skeleton width="w-48" height="h-4" rounded="md" />
           </div>
@@ -26,10 +26,10 @@ export function ProfileSkeleton() {
         </div>
 
         {/* Profilbilde + info */}
-        <div className="space-y-6">
-          <div className="text-center space-y-6">
+        <div className="space-y-2xl">
+          <div className="text-center space-y-2xl">
             <Skeleton width="w-32" height="w-32" rounded="full" className="mx-auto" />
-            <div className="space-y-2">
+            <div className="space-y-md">
               <Skeleton width="w-40" height="h-8" rounded="md" />
               <Skeleton width="w-20" height="h-4" rounded="md" />
               <Skeleton width="w-24" height="h-4" rounded="md" />
@@ -37,14 +37,14 @@ export function ProfileSkeleton() {
           </div>
 
           {/* Om meg */}
-          <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4">
+          <div className="ts-glass rounded-[var(--ts-radius-xl)] p-xl shadow-soft space-y-lg">
             <Skeleton width="w-24" height="h-6" rounded="md" />
             <Skeleton width="w-full" height="h-4" rounded="md" />
             <Skeleton width="w-3/4" height="h-4" rounded="md" />
           </div>
 
           {/* Interesser */}
-          <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-6">
+          <div className="ts-glass rounded-[var(--ts-radius-xl)] p-xl shadow-soft space-y-xl">
             <Skeleton width="w-28" height="h-6" rounded="md" />
             <div className="flex flex-wrap gap-2">
               <Skeleton width="w-20" height="h-8" rounded="full" />
@@ -55,9 +55,9 @@ export function ProfileSkeleton() {
           </div>
 
           {/* Bilder */}
-          <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-6">
+          <div className="ts-glass rounded-[var(--ts-radius-xl)] p-xl shadow-soft space-y-xl">
             <Skeleton width="w-24" height="h-6" rounded="md" />
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-lg">
               <Skeleton width="w-full" height="h-48" rounded="xl" className="aspect-[4/5]" />
               <Skeleton width="w-full" height="h-48" rounded="xl" className="aspect-[4/5]" />
               <Skeleton width="w-full" height="h-48" rounded="xl" className="aspect-[4/5]" />
@@ -65,7 +65,7 @@ export function ProfileSkeleton() {
           </div>
 
           {/* Handlinger */}
-          <div className="flex gap-4">
+          <div className="flex gap-lg">
             <Skeleton width="w-full" height="h-12" rounded="xl" />
             <Skeleton width="w-full" height="h-12" rounded="xl" />
           </div>
@@ -104,14 +104,18 @@ export default function ProfileView({ profile }: { profile: ProfileData }) {
   const canEdit = profile.id !== undefined;
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
-      <Section className="space-y-16 py-12">
+    <div className="min-h-screen bg-ts-bg-primary text-ts-primary relative overflow-hidden">
+      {/* UI 4.2: calm-gradient-violet subtle bg */}
+      <div className="absolute inset-0 calm-gradient-violet opacity-30 pointer-events-none" />
+      <div className="absolute inset-0 bg-ts-bg-primary/60 pointer-events-none" />
+
+      <Section className="space-y-2xl py-2xl relative z-10">
         {/* Header */}
         <FadeIn>
-          <div className="flex justify-between items-start gap-6">
-            <div className="space-y-2">
-              <H1 className="text-white">Profil</H1>
-              <BodyMd className="text-gold">Utforsk denne brukeren</BodyMd>
+          <div className="flex justify-between items-start gap-2xl">
+            <div className="space-y-md">
+              <H1 className="text-text-primary">Profil</H1>
+              <BodyMd className="text-ts-gold">Utforsk denne brukeren</BodyMd>
             </div>
             {canEdit && (
               <PremiumButton
@@ -126,42 +130,43 @@ export default function ProfileView({ profile }: { profile: ProfileData }) {
 
         {/* Oversikt */}
         <FadeIn>
-          <div className="space-y-6">
-            <div className="text-center space-y-6">
-              <div className="w-32 h-32 mx-auto rounded-full overflow-hidden bg-gray-800 ring-2 ring-gold/30">
+          <div className="space-y-2xl">
+            <div className="text-center space-y-2xl">
+              <div className="w-32 h-32 mx-auto rounded-full overflow-hidden bg-ts-bg-surface ring-2 ring-ts-gold/30 relative">
+                <div className="absolute inset-0 gold-glow-md rounded-full" />
                 {profile.imageUrl ? (
                   <img
                     src={profile.imageUrl}
                     alt={profile.name ?? "Profil"}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover relative z-10"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-gold text-4xl font-light">
+                  <div className="w-full h-full flex items-center justify-center text-ts-gold text-4xl font-light relative z-10">
                     {(profile.name?.[0] ?? "U").toUpperCase()}
                   </div>
                 )}
               </div>
 
-              <div className="space-y-2">
-                <H2 className="text-white">{profile.name ?? "Ukjent"}</H2>
+              <div className="space-y-md">
+                <H2 className="text-text-primary">{profile.name ?? "Ukjent"}</H2>
                 {profile.age && (
-                  <BodySm className="text-gold">{profile.age} år</BodySm>
+                  <BodySm className="text-ts-gold">{profile.age} år</BodySm>
                 )}
                 {profile.location && (
-                  <BodySm className="text-gray-500">{profile.location}</BodySm>
+                  <BodySm className="text-text-muted">{profile.location}</BodySm>
                 )}
               </div>
             </div>
 
-            {/* GlassPanel: Om meg */}
-            <div className="bg-white/5 border border-gold/20 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4 transition-all duration-300 ease-out hover:scale-[1.02]">
-              <H2 className="text-white">Om meg</H2>
+            {/* Om meg — UI 4.2: ts-glass-strong + gold-border on hover */}
+            <div className="ts-glass-strong rounded-[var(--ts-radius-xl)] p-xl shadow-lg space-y-lg transition-all duration-[var(--ts-transition-normal)] hover:border-ts-gold/20 hover:gold-glow-sm">
+              <H2 className="text-text-primary">Om meg</H2>
               {profile.bio ? (
-                <BodyMd className="text-gray-300 leading-relaxed">
+                <BodyMd className="text-text-secondary leading-relaxed">
                   {profile.bio}
                 </BodyMd>
               ) : (
-                <BodyMd className="text-gray-500">Ingen beskrivelse ennå.</BodyMd>
+                <BodyMd className="text-text-muted">Ingen beskrivelse ennå.</BodyMd>
               )}
             </div>
           </div>
@@ -169,22 +174,22 @@ export default function ProfileView({ profile }: { profile: ProfileData }) {
 
         {/* Interesser */}
         <FadeIn>
-          <div className="space-y-4">
-            <H2 className="text-white">Interesser</H2>
-            <div className="bg-white/5 border border-gold/20 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-6 transition-all duration-300 ease-out hover:scale-[1.02]">
+          <div className="space-y-lg">
+            <H2 className="text-text-primary">Interesser</H2>
+            <div className="ts-glass-strong rounded-[var(--ts-radius-xl)] p-xl shadow-lg space-y-xl transition-all duration-[var(--ts-transition-normal)] hover:border-ts-gold/20 hover:gold-glow-sm">
               {alleInteresser.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
                   {alleInteresser.map((tag: string) => (
                     <span
                       key={tag}
-                      className="inline-block rounded-full px-3 py-1 bg-gold/10 text-gold border border-gold/20 backdrop-blur-sm"
+                      className="inline-block rounded-full px-3 py-1 bg-ts-gold-soft text-ts-gold border border-ts-gold/20"
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
               ) : (
-                <BodyMd className="text-gray-500">Ingen interesser lagt inn ennå.</BodyMd>
+                <BodyMd className="text-text-muted">Ingen interesser lagt inn ennå.</BodyMd>
               )}
             </div>
           </div>
@@ -192,15 +197,15 @@ export default function ProfileView({ profile }: { profile: ProfileData }) {
 
         {/* Bilder */}
         <FadeIn>
-          <div className="space-y-4">
-            <H2 className="text-white">Bilder</H2>
-            <div className="bg-white/5 border border-gold/20 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-6 transition-all duration-300 ease-out hover:scale-[1.02]">
+          <div className="space-y-lg">
+            <H2 className="text-text-primary">Bilder</H2>
+            <div className="ts-glass-strong rounded-[var(--ts-radius-xl)] p-xl shadow-lg space-y-xl transition-all duration-[var(--ts-transition-normal)] hover:border-ts-gold/20 hover:gold-glow-sm">
               {profile.images && profile.images.length > 1 ? (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-lg">
                   {profile.images.slice(1).map((img: { id: string; url: string }) => (
                     <div
                       key={img.id}
-                      className="rounded-xl shadow-md shadow-black/20 overflow-hidden aspect-[4/5] ring-1 ring-gold/20 transition-all duration-300 hover:scale-[1.02]"
+                      className="rounded-xl shadow-md shadow-black/20 overflow-hidden aspect-[4/5] ring-1 ring-ts-gold/20 transition-all duration-300 hover:scale-[1.02] hover:gold-glow-sm"
                     >
                       <img
                         src={img.url}
@@ -211,7 +216,7 @@ export default function ProfileView({ profile }: { profile: ProfileData }) {
                   ))}
                 </div>
               ) : (
-                <BodyMd className="text-gray-500">Ingen bilder ennå.</BodyMd>
+                <BodyMd className="text-text-muted">Ingen bilder ennå.</BodyMd>
               )}
             </div>
           </div>
@@ -219,7 +224,7 @@ export default function ProfileView({ profile }: { profile: ProfileData }) {
 
         {/* Handlinger */}
         <FadeIn>
-          <div className="flex gap-4">
+          <div className="flex gap-lg">
             <PremiumButton
               variant="primary"
               onClick={async () => {
@@ -235,14 +240,14 @@ export default function ProfileView({ profile }: { profile: ProfileData }) {
                 }
                 setIsMatching(false);
               }}
-              className="flex-1 transition-all duration-300 ease-out hover:scale-[1.02]"
+              className="flex-1 gold-glow-md hover:gold-glow-lg transition-all duration-[var(--ts-transition-normal)]"
             >
               {hasMatched ? "Matchet" : isMatching ? "Søker…" : "Match"}
             </PremiumButton>
 
             <PremiumButton
               variant="secondary"
-              className="flex-1 transition-all duration-300 ease-out hover:scale-[1.02]"
+              className="flex-1 gold-glow-md hover:gold-glow-lg transition-all duration-[var(--ts-transition-normal)]"
             >
               Send melding
             </PremiumButton>

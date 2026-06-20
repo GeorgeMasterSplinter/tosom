@@ -259,76 +259,83 @@ export default function ConversationView({ conversationId }: ConversationViewPro
   };
 
   /* Loading — skeleton */
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-950 text-white">
-        <Section className="space-y-16 py-12">
-          <div className="flex items-center gap-4">
-            <Skeleton width="w-12" height="h-12" rounded="full" />
-            <div className="space-y-2">
-              <Skeleton width="w-32" height="h-6" rounded="md" />
-              <Skeleton width="w-20" height="h-4" rounded="md" />
-            </div>
-          </div>
-          <div className="space-y-4">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className={`flex ${i % 2 === 0 ? "justify-end" : "justify-start"}`}>
-                <Skeleton width="w-64" height="h-12" rounded="lg" className={i % 2 === 0 ? "bg-gold/10" : "bg-white/5"} />
-              </div>
-            ))}
-          </div>
-        </Section>
-      </div>
-    );
-  }
+   if (loading) {
+     return (
+       <div className="min-h-screen bg-ts-bg-primary text-ts-primary">
+         <Section className="space-y-2xl py-2xl">
+           <div className="flex items-center gap-lg">
+             <Skeleton width="w-12" height="h-12" rounded="full" />
+             <div className="space-y-md">
+               <Skeleton width="w-32" height="h-6" rounded="md" />
+               <Skeleton width="w-20" height="h-4" rounded="md" />
+             </div>
+           </div>
+           <div className="space-y-lg">
+             {Array.from({ length: 5 }).map((_, i) => (
+               <div key={i} className={`flex ${i % 2 === 0 ? "justify-end" : "justify-start"}`}>
+                 <Skeleton width="w-64" height="h-12" rounded="lg" className={i % 2 === 0 ? "bg-ts-gold-soft" : "bg-ts-glass-bg"} />
+               </div>
+             ))}
+           </div>
+         </Section>
+       </div>
+     );
+   }
 
-  /* Error */
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center px-4">
-        <div className="text-center space-y-4 max-w-md">
-          <BodyMd className="text-red-400">{error}</BodyMd>
-          <PremiumButton variant="secondary" onClick={() => { setIsPolling(false); window.location.reload(); }}>Prøv igjen</PremiumButton>
-        </div>
-      </div>
-    );
-  }
+   /* Error */
+   if (error) {
+     return (
+       <div className="min-h-screen bg-ts-bg-primary text-ts-primary flex items-center justify-center px-section">
+         <div className="text-center space-y-lg max-w-md">
+           <BodyMd className="text-ts-error">{error}</BodyMd>
+           <PremiumButton variant="secondary" onClick={() => { setIsPolling(false); window.location.reload(); }}>Prøv igjen</PremiumButton>
+         </div>
+       </div>
+     );
+   }
 
-  if (!conversation) {
-    return (
-      <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center px-4">
-        <div className="text-center space-y-4">
-          <BodyMd className="text-gray-400">Ingen samtale å vise.</BodyMd>
-        </div>
-      </div>
-    );
-  }
+   if (!conversation) {
+     return (
+       <div className="min-h-screen bg-ts-bg-primary text-ts-primary flex items-center justify-center px-section">
+         <div className="text-center space-y-lg">
+           <BodyMd className="text-text-muted">Ingen samtale å vise.</BodyMd>
+         </div>
+       </div>
+     );
+   }
 
   const isMyMessage = (msg: Message): boolean => msg.senderId === currentUserId;
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white flex flex-col">
-      {/* Header */}
-      <div className="sticky top-0 z-10 bg-gray-950/80 backdrop-blur-sm border-b border-white/10">
-        <Section className="space-y-16 py-4">
+    <div className="min-h-screen bg-ts-bg-primary text-ts-primary flex flex-col relative overflow-hidden">
+      {/* UI 4.2: calm-gradient-blue subtle bg */}
+      <div className="absolute inset-0 calm-gradient-blue opacity-25 pointer-events-none" />
+      <div className="absolute inset-0 bg-ts-bg-primary/50 pointer-events-none" />
+
+      {/* Header — UI 4.2: ts-glass-strong + gold-glow */}
+      <div className="sticky top-0 z-10 ts-glass-strong backdrop-blur-strong border-b-ts-gold/10">
+        <Section className="space-y-lg py-md">
           <FadeIn>
-            <div className="flex items-center gap-4 animate-headerFade">
-              <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-800 ring-2 ring-gold/30">
+            <div className="flex items-center gap-lg animate-headerFade">
+              {/* Avatar — UI 4.2: gold ring + glow */}
+              <div className="w-12 h-12 rounded-full overflow-hidden bg-ts-bg-surface ring-2 ring-ts-gold/30 relative">
+                <div className="absolute inset-0 gold-glow-sm rounded-full" />
                 {partnerProfile?.imageUrl ? (
-                  <img src={partnerProfile.imageUrl} alt={partnerProfile.name} className="w-full h-full object-cover" />
+                  <img src={partnerProfile.imageUrl} alt={partnerProfile.name} className="w-full h-full object-cover relative z-10" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-gold text-lg font-light">
+                  <div className="w-full h-full flex items-center justify-center text-ts-gold text-lg font-light relative z-10">
                     {partnerProfile?.name.charAt(0).toUpperCase()}
                   </div>
                 )}
               </div>
               <div className="flex-1">
-                <H2 className="text-white text-xl font-light">{partnerProfile?.name}</H2>
-                {partnerProfile?.age && <BodySm className="text-gold">{partnerProfile.age} år</BodySm>}
+                <H2 className="text-text-primary text-xl font-light">{partnerProfile?.name}</H2>
+                {partnerProfile?.age && <BodySm className="text-ts-gold">{partnerProfile.age} år</BodySm>}
               </div>
-              <div className="bg-gold/10 border border-gold/20 rounded-full px-3 py-1 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 bg-gold rounded-full animate-pulse"></span>
-                <BodySm className="text-gold">Matcha</BodySm>
+              {/* Match badge — UI 4.2: gold-soft bg */}
+              <div className="bg-ts-gold-soft border border-ts-gold/20 rounded-full px-md py-sm flex items-center gap-xs">
+                <span className="w-1.5 h-1.5 bg-ts-gold rounded-full animate-pulse"></span>
+                <BodySm className="text-ts-gold">Matcha</BodySm>
               </div>
             </div>
           </FadeIn>
@@ -336,12 +343,12 @@ export default function ConversationView({ conversationId }: ConversationViewPro
       </div>
 
       {/* Meldingar + Journey */}
-      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto px-4 py-8" style={{ scrollBehavior: "smooth" }}>
-        <div className="max-w-2xl mx-auto space-y-4">
-          {/* Journey Card */}
+      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto relative z-10 px-section py-2xl" style={{ scrollBehavior: "smooth" }}>
+        <div className="max-w-2xl mx-auto space-y-xl">
+          {/* Journey Card — UI 4.2: ts-glass-strong + gold border */}
           {journeyLoading ? (
             <FadeIn>
-              <div className="mx-auto max-w-md bg-white/5 border border-gold/20 rounded-2xl p-6 space-y-3">
+              <div className="mx-auto max-w-md ts-glass rounded-[var(--ts-radius-xl)] p-xl space-y-lg">
                 <Skeleton width="w-3/4" height="h-6" rounded="md" />
                 <Skeleton width="w-full" height="h-4" rounded="md" />
                 <Skeleton width="w-3/4" height="h-4" rounded="md" />
@@ -350,68 +357,79 @@ export default function ConversationView({ conversationId }: ConversationViewPro
             </FadeIn>
           ) : journeyError ? (
             <FadeIn>
-              <div className="mx-auto max-w-md bg-white/5 border border-red-400/30 rounded-2xl p-6 text-center space-y-3">
-                <BodyMd className="text-red-400">{journeyError}</BodyMd>
+              <div className="mx-auto max-w-md rounded-[var(--ts-radius-xl)] bg-ts-glass-bg/50 border border-ts-error/30 p-xl text-center space-y-lg">
+                <BodyMd className="text-ts-error">{journeyError}</BodyMd>
                 <PremiumButton variant="secondary" onClick={() => setJourneyError(null)}>Prøv igjen</PremiumButton>
               </div>
             </FadeIn>
           ) : journey ? (
             <FadeIn>
-              <div className="mx-auto max-w-md bg-white/5 border border-gold/20 backdrop-blur-sm rounded-2xl p-6 space-y-3 animate-[fadeInUp_0.25s_ease-out]">
+              <div className="mx-auto max-w-md ts-glass-strong rounded-[var(--ts-radius-xl)] p-xl shadow-lg space-y-lg">
                 <div className="flex items-center justify-between">
-                  <BodySm className="text-gold">Steg {journey.currentStep + 1} av {journey.steps.length}</BodySm>
+                  <BodySm className="text-ts-gold">Steg {journey.currentStep + 1} av {journey.steps.length}</BodySm>
                   <div className="flex gap-1">
                     {journey.steps.map((_, i) => (
-                      <div key={i} className={`w-2 h-2 rounded-full ${i <= journey.currentStep ? "bg-gold" : "bg-white/20"}`}></div>
+                      <div key={i} className={`w-2 h-2 rounded-full transition-colors duration-300 ${i <= journey.currentStep ? "bg-ts-gold" : "bg-text-subtle/20"}`}></div>
                     ))}
                   </div>
                 </div>
-                <h3 className="text-lg font-semibold text-gold">{journey.current.title}</h3>
-                <p className="text-white/80 text-sm leading-relaxed">{journey.current.description}</p>
+                <h3 className="text-lg font-semibold text-ts-gold">{journey.current.title}</h3>
+                <p className="text-text-secondary text-sm leading-relaxed">{journey.current.description}</p>
                 {journey.currentStep < journey.steps.length - 1 ? (
                   <PremiumButton variant="primary" onClick={handleCompleteStep} disabled={journeyAdvancing}>
                     {journeyAdvancing ? "Fullfører…" : "Fullfør steg"}
                   </PremiumButton>
                 ) : (
-                  <div className="text-center text-gold font-semibold">🎉 Reisen er fullført!</div>
+                  <div className="text-center text-ts-gold font-semibold">🎉 Reisen er fullført!</div>
                 )}
               </div>
             </FadeIn>
           ) : null}
 
-          {/* Meldingar */}
+          {/* Meldingar — UI 4.2: gold-glow chat bubbles */}
           {conversation.messages.length === 0 ? (
-            <div className="text-center py-16">
-              <BodyMd className="text-gray-500">Ingen meldinger ennå.</BodyMd>
-              <BodySm className="text-gray-600 mt-2">Start samtalen!</BodySm>
+            <div className="text-center py-2xl">
+              <BodyMd className="text-text-muted">Ingen meldinger ennå.</BodyMd>
+              <BodySm className="text-text-subtle mt-sm">Start samtalen!</BodySm>
             </div>
           ) : (
             conversation.messages.map((msg: Message, i: number) => {
               const mine = isMyMessage(msg);
               return (
                 <FadeIn key={i}>
-                  <div className={`flex ${mine ? "justify-end" : "justify-start"} animate-fadeInUp`}>
-                    <div className={`max-w-md px-4 py-3 rounded-2xl ${mine ? "bg-gold/20 border border-gold/30 text-gold" : "bg-white/5 border border-white/10 text-gray-200"}`}>
-                      <p className="text-sm leading-relaxed">{msg.content}</p>
-                      <BodySm className={`mt-1 ${mine ? "text-gold/60" : "text-gray-600"}`}>
-                        {new Date(msg.createdAt).toLocaleTimeString("nb-NO", { hour: "2-digit", minute: "2-digit" })}
-                      </BodySm>
-                    </div>
+                  <div className={`flex ${mine ? "justify-end" : "justify-start"}`}>
+                    {mine ? (
+                      /* Egne meldinger — UI 4.2: gold-soft bg + gold-border-right */
+                      <div className="max-w-md px-lg py-md rounded-[var(--ts-radius-xl)] bg-ts-gold-soft/80 border border-ts-gold/20 shadow-soft">
+                        <p className="text-sm leading-relaxed text-text-primary">{msg.content}</p>
+                        <BodySm className="mt-xs text-ts-gold/60">
+                          {new Date(msg.createdAt).toLocaleTimeString("nb-NO", { hour: "2-digit", minute: "2-digit" })}
+                        </BodySm>
+                      </div>
+                    ) : (
+                      /* Mottatte meldinger — UI 4.2: ts-glass + gold-border-left */
+                      <div className="max-w-md px-lg py-md rounded-[var(--ts-radius-xl)] bg-ts-glass border-ts-gold/10 shadow-soft">
+                        <p className="text-sm leading-relaxed text-text-primary">{msg.content}</p>
+                        <BodySm className="mt-xs text-text-subtle">
+                          {new Date(msg.createdAt).toLocaleTimeString("nb-NO", { hour: "2-digit", minute: "2-digit" })}
+                        </BodySm>
+                      </div>
+                    )}
                   </div>
                 </FadeIn>
               );
             })
           )}
 
-          {/* Typing indicator */}
+          {/* Typing indicator — UI 4.2: gold-glow-text */}
           {partnerTyping && (
             <FadeIn>
-              <div className="flex justify-start mt-2 animate-[scaleIn_0.2s_ease-out]">
-                <div className="max-w-[120px] bg-white/5 border border-white/10 rounded-xl px-4 py-2 animate-pulse text-white/70">
-                  <div className="flex gap-1">
-                    <span className="w-2 h-2 bg-white/40 rounded-full"></span>
-                    <span className="w-2 h-2 bg-white/40 rounded-full"></span>
-                    <span className="w-2 h-2 bg-white/40 rounded-full"></span>
+              <div className="flex justify-start mt-lg">
+                <div className="ts-glass rounded-[var(--ts-radius-xl)] px-lg py-md shadow-soft">
+                  <div className="flex gap-xs">
+                    <span className="w-2 h-2 bg-text-subtle/40 rounded-full animate-pulse"></span>
+                    <span className="w-2 h-2 bg-text-subtle/40 rounded-full animate-pulse" style={{ animationDelay: "150ms" }}></span>
+                    <span className="w-2 h-2 bg-text-subtle/40 rounded-full animate-pulse" style={{ animationDelay: "300ms" }}></span>
                   </div>
                 </div>
               </div>
@@ -422,24 +440,24 @@ export default function ConversationView({ conversationId }: ConversationViewPro
         </div>
       </div>
 
-      {/* Input-felt */}
-      <div className="sticky bottom-0 bg-gray-950/80 backdrop-blur-sm border-t border-white/10 p-4">
-        <div className="max-w-2xl mx-auto space-y-2">
-          {errorSending && <BodySm className="text-red-400">{errorSending}</BodySm>}
-          <div className="flex gap-4">
+      {/* Input-felt — UI 4.2: ts-glass-strong + gold glow on focus */}
+      <div className="sticky bottom-0 ts-glass-strong backdrop-blur-strong border-t-ts-gold/10 p-xl relative z-10">
+        <div className="max-w-2xl mx-auto space-y-lg">
+          {errorSending && <BodySm className="text-ts-error">{errorSending}</BodySm>}
+          <div className="flex gap-lg">
             <input
               type="text"
               value={input}
               onChange={handleInputChange}
               onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend()}
               placeholder="Skriv en melding..."
-              className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 outline-none focus:border-gold/50 transition-all duration-200"
+              className="flex-1 bg-transparent border border-ts-gold/10 rounded-[var(--ts-radius-md)] px-lg py-md text-ts-primary placeholder-text-subtle outline-none focus:border-ts-gold transition-all duration-[var(--ts-transition-normal)] shadow-[0_0_0_3px_rgba(212,175,55,0.2)]"
             />
             <PremiumButton
               variant="primary"
               onClick={handleSend}
               disabled={sending || !input.trim()}
-              className="transition-all duration-300 ease-out hover:scale-[1.02]"
+              className="gold-glow-md hover:gold-glow-lg transition-all duration-[var(--ts-transition-normal)]"
             >
               {sending ? "Sender…" : "Send"}
             </PremiumButton>

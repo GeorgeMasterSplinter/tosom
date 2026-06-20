@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/Button";
 import { ResonanceMeter } from "@/components/ui/ResonanceMeter";
 import { JourneyMap, JourneyStep } from "@/components/journey/JourneyMap";
 import { JourneyCard } from "@/components/journey/JourneyCard";
-import { FadeIn, FadeInUp } from "@/components/ui/FadeIn";
+import { FadeIn } from "@/components/ui/FadeIn";
 
 /* ------ Data types ------ */
 
@@ -146,32 +146,32 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[var(--ts-bg-primary)] to-[#111827] text-white">
       <div className="max-w-5xl mx-auto px-4 py-12">
-        {/* SectionHero */}
-        <FadeInUp duration={500}>
+        {/* SectionHeader */}
+        <FadeIn duration={500}>
           <SectionHeader
             badge="Dashboard"
             title="Ditt rom"
             subtitle="Alt du trenger for reisen deres"
           />
-        </FadeInUp>
+        </FadeIn>
 
         {/* DashboardHeader */}
-        <FadeInUp duration={500} delay={100}>
+        <FadeIn delay={100} duration={500}>
           <div className="flex justify-center mb-10">
             <DashboardHeader name={userName} />
           </div>
-        </FadeInUp>
+        </FadeIn>
 
         {/* StreakDisplay */}
-        <FadeInUp duration={500} delay={200}>
+        <FadeIn delay={200} duration={500}>
           <div className="flex justify-center mb-8">
             <StreakDisplay days={streak || 3} />
           </div>
-        </FadeInUp>
+        </FadeIn>
 
         {/* Match Section */}
         {matchStatus === "matched" && demoMatch && (
-          <FadeInUp duration={500} delay={300}>
+          <FadeIn delay={300} duration={500}>
             <div className="mb-8">
               <Card variant="glass" className="p-6">
                 <div className="flex flex-col items-center gap-4">
@@ -214,19 +214,19 @@ export default function DashboardPage() {
                 </div>
               </Card>
             </div>
-          </FadeInUp>
+          </FadeIn>
         )}
 
         {/* QuickActionGrid */}
-        <FadeInUp duration={500} delay={400}>
+        <FadeIn delay={400} duration={500}>
           <div className="mb-8">
             <QuickActionGrid />
           </div>
-        </FadeInUp>
+        </FadeIn>
 
         {/* Conversation */}
         {conversation && (
-          <FadeInUp duration={500} delay={500}>
+          <FadeIn delay={500} duration={500}>
             <div className="mb-8">
               <Card variant="glass" className="p-6">
                 <div className="flex items-center gap-4">
@@ -245,13 +245,13 @@ export default function DashboardPage() {
                 </div>
               </Card>
             </div>
-          </FadeInUp>
+          </FadeIn>
         )}
 
         {/* Journey + Notifications Row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Journey */}
-          <FadeInUp duration={500} delay={300}>
+          <FadeIn delay={300} duration={500}>
             <Card variant="glass" className="p-6">
               <h3 className="text-sm font-medium text-white/60 mb-4">Din reise</h3>
               <JourneyMap
@@ -264,17 +264,17 @@ export default function DashboardPage() {
                 </Button>
               </div>
             </Card>
-          </FadeInUp>
+          </FadeIn>
 
           {/* Notifications */}
-          <FadeInUp duration={500} delay={400}>
+          <FadeIn delay={400} duration={500}>
             <NotificationFeed notifications={notifications} />
-          </FadeInUp>
+          </FadeIn>
         </div>
 
         {/* No match yet */}
         {matchStatus === "no_match" && (
-          <FadeInUp duration={500} delay={500}>
+          <FadeIn delay={500} duration={500}>
             <Card variant="glass" className="p-6 text-center">
               <svg className="w-12 h-12 mx-auto text-white/10 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -284,7 +284,7 @@ export default function DashboardPage() {
                 Finn match
               </Button>
             </Card>
-          </FadeInUp>
+          </FadeIn>
         )}
       </div>
     </div>

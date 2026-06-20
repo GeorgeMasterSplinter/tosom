@@ -12,138 +12,175 @@ export default function LandingView() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
-      <Section className="space-y-16">
-        {/* Hero */}
-        <div className="text-center space-y-6 py-24 md:py-32">
+    <div className="min-h-screen bg-ts-bg-primary text-ts-primary">
+      {/* Hero Section — UI 4.2 */}
+      <div className="section-spacing flex flex-col items-center justify-center text-center relative overflow-hidden">
+        {/* Subtle gold gradient bg */}
+        <div className="absolute inset-0 calm-gradient-gold opacity-60 pointer-events-none" />
+        <div className="absolute inset-0 bg-ts-bg-primary/80 pointer-events-none" />
+
+        <div className="relative z-10 max-w-3xl mx-auto px-section space-y-2xl">
           <FadeIn>
-            <div className="space-y-6">
-              <H1>ToSom — en reise for to</H1>
-              <BodyMd className="text-[var(--color-muted)] text-lg max-w-xl mx-auto">
+            <div className="space-y-lg">
+              {/* UI 4.2: display-xl + gold glow text */}
+              <h1 className="ts-display-xl text-gold-glow-text">
+                ToSom — en reise for to
+              </h1>
+              <BodyMd className="text-text-muted text-xl max-w-xl mx-auto leading-relaxed">
                 En varm, moderne og guidet plattform for ekte relasjoner.
               </BodyMd>
-              <PremiumButton variant="primary" onClick={() => router.push("/login")}>
+              {/* UI 4.2: gold button + glow on hover */}
+              <PremiumButton
+                variant="primary"
+                onClick={() => router.push("/login")}
+                className="gold-glow-md hover:gold-glow-lg transition-all duration-[var(--ts-transition-normal)]"
+              >
                 Start reisen
               </PremiumButton>
             </div>
           </FadeIn>
         </div>
+      </div>
 
-        {/* Filosofi */}
+      {/* Filosofi — UI 4.2: section spacing + ts-glass cards */}
+      <Section className="space-y-2xl">
         <FadeIn>
-          <div className="space-y-8">
-            <div className="text-center space-y-4">
-              <H2>Filosofien bak ToSom</H2>
-              <BodyMd className="text-[var(--color-muted)] max-w-xl mx-auto">
-                En moderne, varm og rolig tilnærming til relasjoner.
-              </BodyMd>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Kort 1 */}
-              <FadeIn>
-                <div className="bg-[var(--color-card)] border border-[var(--color-card-border)] backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4 h-full transition-all duration-300 ease-out hover:scale-[1.02]">
-                  <H3>Bygg din egen historie</H3>
-                  <BodyMd className="text-[var(--color-text)] leading-relaxed">
-                    Du lager en privat profil som viser hvem du er — ikke hvem du tror du må være.
-                  </BodyMd>
-                </div>
-              </FadeIn>
-              {/* Kort 2 */}
-              <FadeIn>
-                <div className="bg-[var(--color-card)] border border-[var(--color-card-border)] backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4 h-full transition-all duration-300 ease-out hover:scale-[1.02]">
-                  <H3>Vi hjelper deg å vise hvem du er</H3>
-                  <BodyMd className="text-[var(--color-text)] leading-relaxed">
-                    Forskningbasert veiledning hjelper deg å lage en profil som gir ekte kompatibilitet.
-                  </BodyMd>
-                </div>
-              </FadeIn>
-              {/* Kort 3 */}
-              <FadeIn>
-                <div className="bg-[var(--color-card)] border border-[var(--color-card-border)] backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4 h-full transition-all duration-300 ease-out hover:scale-[1.02]">
-                  <H3>Når dere matcher, starter reisen</H3>
-                  <BodyMd className="text-[var(--color-text)] leading-relaxed">
-                    En varm, rolig og guidet reise som bygger nærhet, forståelse og trygghet.
-                  </BodyMd>
-                </div>
-              </FadeIn>
-            </div>
+          <div className="text-center space-y-lg">
+            <h2 className="ts-font-heading-2xl text-text-primary">
+              Filosofien bak ToSom
+            </h2>
+            <BodyMd className="text-text-muted max-w-xl mx-auto">
+              En moderne, varm og rolig tilnærming til relasjoner.
+            </BodyMd>
           </div>
         </FadeIn>
 
-        {/* Hvordan det fungerer */}
-        <FadeIn>
-          <div className="space-y-8">
-            <div className="text-center space-y-4">
-              <H2>Hvordan det fungerer</H2>
-              <BodyMd className="text-[var(--color-muted)] max-w-xl mx-auto">
-                En enkel, varm og guidet prosess – steg for steg.
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2xl">
+          {/* Kort 1 — ts-glass + shadow-soft + gold-border on hover */}
+          <FadeIn>
+            <div className="ts-glass rounded-[var(--ts-radius-xl)] p-xl shadow-soft space-y-lg h-full transition-all duration-[var(--ts-transition-normal)] hover:border-ts-gold/20 hover:gold-glow-sm">
+              <div className="w-12 h-12 rounded-[var(--ts-radius-md)] bg-ts-gold-soft border-border-gold inline-flex items-center justify-center text-ts-gold font-semibold">
+                ✦
+              </div>
+              <h3 className="ts-font-heading-l text-text-primary">Bygg din egen historie</h3>
+              <BodyMd className="text-text-secondary leading-relaxed">
+                Du lager en privat profil som viser hvem du er — ikke hvem du tror du må være.
               </BodyMd>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              {/* Steg 1 */}
-              <FadeIn>
-                <div className="bg-[var(--color-card)] border border-[var(--color-card-border)] backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4 h-full text-center transition-all duration-300 ease-out hover:scale-[1.02]">
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[var(--color-gold)]/20 border border-[var(--color-gold)]/30 text-[var(--color-gold)] font-bold text-lg">1</div>
-                  <H3>Logg inn</H3>
-                  <BodyMd className="text-[var(--color-text)] leading-relaxed">
-                    Opprett konto og kom i gang på få minutter.
-                  </BodyMd>
-                </div>
-              </FadeIn>
-              {/* Steg 2 */}
-              <FadeIn>
-                <div className="bg-[var(--color-card)] border border-[var(--color-card-border)] backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4 h-full text-center transition-all duration-300 ease-out hover:scale-[1.02]">
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[var(--color-gold)]/20 border border-[var(--color-gold)]/30 text-[var(--color-gold)] font-bold text-lg">2</div>
-                  <H3>Fyll ut profilen</H3>
-                  <BodyMd className="text-[var(--color-text)] leading-relaxed">
-                    Forskningbasert veiledning hjelper deg å lage en autentisk profil.
-                  </BodyMd>
-                </div>
-              </FadeIn>
-              {/* Steg 3 */}
-              <FadeIn>
-                <div className="bg-[var(--color-card)] border border-[var(--color-card-border)] backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4 h-full text-center transition-all duration-300 ease-out hover:scale-[1.02]">
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[var(--color-gold)]/20 border border-[var(--color-gold)]/30 text-[var(--color-gold)] font-bold text-lg">3</div>
-                  <H3>Få matches</H3>
-                  <BodyMd className="text-[var(--color-text)] leading-relaxed">
-                    Algoritmen din finner folk som matcher dine sanne behov.
-                  </BodyMd>
-                </div>
-              </FadeIn>
-              {/* Steg 4 */}
-              <FadeIn>
-                <div className="bg-[var(--color-card)] border border-[var(--color-card-border)] backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4 h-full text-center transition-all duration-300 ease-out hover:scale-[1.02]">
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[var(--color-gold)]/20 border border-[var(--color-gold)]/30 text-[var(--color-gold)] font-bold text-lg">4</div>
-                  <H3>Start reisen</H3>
-                  <BodyMd className="text-[var(--color-text)] leading-relaxed">
-                    En guidet, varm og rolig samtale starter — steg for steg.
-                  </BodyMd>
-                </div>
-              </FadeIn>
+          </FadeIn>
+          {/* Kort 2 */}
+          <FadeIn>
+            <div className="ts-glass rounded-[var(--ts-radius-xl)] p-xl shadow-soft space-y-lg h-full transition-all duration-[var(--ts-transition-normal)] hover:border-ts-gold/20 hover:gold-glow-sm">
+              <div className="w-12 h-12 rounded-[var(--ts-radius-md)] bg-ts-gold-soft border-border-gold inline-flex items-center justify-center text-ts-gold font-semibold">
+                ◈
+              </div>
+              <h3 className="ts-font-heading-l text-text-primary">Vi hjelper deg å vise hvem du er</h3>
+              <BodyMd className="text-text-secondary leading-relaxed">
+                Forskningbasert veiledning hjelper deg å lage en profil som gir ekte kompatibilitet.
+              </BodyMd>
             </div>
-          </div>
-        </FadeIn>
+          </FadeIn>
+          {/* Kort 3 */}
+          <FadeIn>
+            <div className="ts-glass rounded-[var(--ts-radius-xl)] p-xl shadow-soft space-y-lg h-full transition-all duration-[var(--ts-transition-normal)] hover:border-ts-gold/20 hover:gold-glow-sm">
+              <div className="w-12 h-12 rounded-[var(--ts-radius-md)] bg-ts-gold-soft border-border-gold inline-flex items-center justify-center text-ts-gold font-semibold">
+                ⊹
+              </div>
+              <h3 className="ts-font-heading-l text-text-primary">Når dere matcher, starter reisen</h3>
+              <BodyMd className="text-text-secondary leading-relaxed">
+                En varm, rolig og guidet reise som bygger nærhet, forståelse og trygghet.
+              </BodyMd>
+            </div>
+          </FadeIn>
+        </div>
+      </Section>
 
-        {/* Under utvikling */}
-        <FadeIn>
-          <div className="bg-[var(--color-card)] border border-[var(--color-card-border)] backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4">
-            <H2>Under utvikling</H2>
-            <BodyMd className="text-[var(--color-text)] leading-relaxed">
+      {/* Hvordan det fungerer — UI 4.2: calm-gradient-blue bg, gold steps */}
+      <Section className="space-y-2xl">
+        <div className="text-center space-y-lg">
+          <h2 className="ts-font-heading-2xl text-text-primary">
+            Hvordan det fungerer
+          </h2>
+          <BodyMd className="text-text-muted max-w-xl mx-auto">
+            En enkel, varm og guidet prosess – steg for steg.
+          </BodyMd>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2xl">
+          {/* Steg 1 */}
+          <FadeIn>
+            <div className="ts-glass rounded-[var(--ts-radius-xl)] p-xl shadow-soft space-y-lg text-center transition-all duration-[var(--ts-transition-normal)] hover:border-ts-gold/20 hover:gold-glow-sm">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-ts-gold-soft border-ts-gold/20 text-ts-gold font-bold text-lg">
+                1
+              </div>
+              <h3 className="ts-font-heading-m text-text-primary">Logg inn</h3>
+              <BodyMd className="text-text-secondary leading-relaxed">
+                Opprett konto og kom i gang på få minutter.
+              </BodyMd>
+            </div>
+          </FadeIn>
+          {/* Steg 2 */}
+          <FadeIn>
+            <div className="ts-glass rounded-[var(--ts-radius-xl)] p-xl shadow-soft space-y-lg text-center transition-all duration-[var(--ts-transition-normal)] hover:border-ts-gold/20 hover:gold-glow-sm">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-ts-gold-soft border-ts-gold/20 text-ts-gold font-bold text-lg">
+                2
+              </div>
+              <h3 className="ts-font-heading-m text-text-primary">Fyll ut profilen</h3>
+              <BodyMd className="text-text-secondary leading-relaxed">
+                Forskningbasert veiledning hjelper deg å lage en autentisk profil.
+              </BodyMd>
+            </div>
+          </FadeIn>
+          {/* Steg 3 */}
+          <FadeIn>
+            <div className="ts-glass rounded-[var(--ts-radius-xl)] p-xl shadow-soft space-y-lg text-center transition-all duration-[var(--ts-transition-normal)] hover:border-ts-gold/20 hover:gold-glow-sm">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-ts-gold-soft border-ts-gold/20 text-ts-gold font-bold text-lg">
+                3
+              </div>
+              <h3 className="ts-font-heading-m text-text-primary">Få matches</h3>
+              <BodyMd className="text-text-secondary leading-relaxed">
+                Algoritmen din finner folk som matcher dine sanne behov.
+              </BodyMd>
+            </div>
+          </FadeIn>
+          {/* Steg 4 */}
+          <FadeIn>
+            <div className="ts-glass rounded-[var(--ts-radius-xl)] p-xl shadow-soft space-y-lg text-center transition-all duration-[var(--ts-transition-normal)] hover:border-ts-gold/20 hover:gold-glow-sm">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-ts-gold-soft border-ts-gold/20 text-ts-gold font-bold text-lg">
+                4
+              </div>
+              <h3 className="ts-font-heading-m text-text-primary">Start reisen</h3>
+              <BodyMd className="text-text-secondary leading-relaxed">
+                En guidet, varm og rolig samtale starter — steg for steg.
+              </BodyMd>
+            </div>
+          </FadeIn>
+        </div>
+      </Section>
+
+      {/* Under utvikling — UI 4.2: calm-gradient-violet bg */}
+      <FadeIn>
+        <div className="mx-section mb-2xl calm-gradient-violet rounded-[var(--ts-radius-3xl)] p-xl shadow-lg relative overflow-hidden">
+          <div className="relative z-10 space-y-lg">
+            <h2 className="ts-font-heading-2xl text-text-primary">
+              Under utvikling
+            </h2>
+            <BodyMd className="text-text-secondary leading-relaxed">
               ToSom er under aktiv utvikling.
               Vi bygger en rolig, varm og moderne plattform for ekte relasjoner.
               Design, funksjoner og opplevelser forbedres fortløpende mens vi gjør oss klare for lansering.
             </BodyMd>
-            <p className="text-[var(--color-muted)] text-sm">
+            <p className="text-text-muted text-sm">
               © 2026 ToSom. Alle rettigheter forbeholdt.
             </p>
           </div>
-        </FadeIn>
+        </div>
+      </FadeIn>
 
-        {/* Footer */}
-        <p className="text-center text-[var(--color-muted)] text-sm py-10">
-          © 2026 ToSom — bygget for ekte relasjoner
-        </p>
-      </Section>
+      {/* Footer */}
+      <footer className="text-center text-text-muted text-sm py-2xl">
+        <p>© 2026 ToSom — bygget for ekte relasjoner</p>
+      </footer>
     </div>
   );
 }

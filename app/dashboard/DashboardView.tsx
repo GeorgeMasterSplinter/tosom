@@ -348,41 +348,41 @@ export default function DashboardView() {
         <Section className="gap-[var(--space-xl)] py-[var(--space-xl)]">
           {/* Header */}
           <div className="gap-[var(--space-xs)]">
-            <Skeleton width="w-48" height="h-8" rounded="rounded-md" />
-            <Skeleton width="w-32" height="h-4" rounded="rounded-md" />
+            <Skeleton width="w-48" height="h-8" rounded="md" />
+            <Skeleton width="w-32" height="h-4" rounded="md" />
           </div>
 
           {/* Match skeleton */}
           <SkeletonCard title="Din match">
             <div className="flex items-start gap-4">
-              <Skeleton width="w-16" height="h-16" rounded="rounded-xl" />
+              <Skeleton width="w-16" height="h-16" rounded="xl" />
               <div className="flex-1 gap-[var(--space-sm)]">
-                <Skeleton width="w-32" height="h-5" rounded="rounded-md" />
-                <Skeleton width="w-48" height="h-4" rounded="rounded-md" />
+                <Skeleton width="w-32" height="h-5" rounded="md" />
+                <Skeleton width="w-48" height="h-4" rounded="md" />
               </div>
             </div>
-            <Skeleton width="w-24" height="h-12" rounded="rounded-xl" />
+            <Skeleton width="w-24" height="h-12" rounded="xl" />
           </SkeletonCard>
 
           {/* Samtale skeleton */}
           <SkeletonCard title="Samtale">
             <div className="gap-[var(--space-sm)]">
-              <Skeleton width="w-24" height="h-4" rounded="rounded-md" />
-              <Skeleton width="w-full" height="h-4" rounded="rounded-md" />
-              <Skeleton width="w-32" height="h-4" rounded="rounded-md" />
+              <Skeleton width="w-24" height="h-4" rounded="md" />
+              <Skeleton width="w-full" height="h-4" rounded="md" />
+              <Skeleton width="w-32" height="h-4" rounded="md" />
             </div>
-            <Skeleton width="w-40" height="h-12" rounded="rounded-xl" />
+            <Skeleton width="w-40" height="h-12" rounded="xl" />
           </SkeletonCard>
 
           {/* Reise skeleton */}
           <SkeletonCard title="Reisen deres">
             <div className="gap-[var(--space-sm)]">
-              <Skeleton width="w-28" height="h-4" rounded="rounded-md" />
-              <Skeleton width="w-40" height="h-6" rounded="rounded-md" />
-              <Skeleton width="w-full" height="h-4" rounded="rounded-md" />
-              <Skeleton width="w-3/4" height="h-4" rounded="rounded-md" />
+              <Skeleton width="w-28" height="h-4" rounded="md" />
+              <Skeleton width="w-40" height="h-6" rounded="md" />
+              <Skeleton width="w-full" height="h-4" rounded="md" />
+              <Skeleton width="w-3/4" height="h-4" rounded="md" />
             </div>
-            <Skeleton width="w-36" height="h-12" rounded="rounded-xl" />
+            <Skeleton width="w-36" height="h-12" rounded="xl" />
           </SkeletonCard>
         </Section>
       </div>
@@ -471,14 +471,14 @@ export default function DashboardView() {
                     <div className="w-32 h-32 rounded-[var(--radius-full)] bg-[var(--color-card)] ring-2 ring-[var(--color-gold)]/20 animate-pulse" />
                   </div>
                   <div className="gap-[var(--space-xs)] text-center">
-                    <Skeleton width="w-40" height="h-8" rounded="rounded-md" />
-                    <Skeleton width="w-20" height="h-4" rounded="rounded-md" />
-                    <Skeleton width="w-3/4" height="h-4" rounded="rounded-md" />
-                    <Skeleton width="w-3/4" height="h-4" rounded="rounded-md" />
+                    <Skeleton width="w-40" height="h-8" rounded="md" />
+                    <Skeleton width="w-20" height="h-4" rounded="md" />
+                    <Skeleton width="w-3/4" height="h-4" rounded="md" />
+                    <Skeleton width="w-3/4" height="h-4" rounded="md" />
                     <div className="flex justify-center gap-2 pt-4">
-                      <Skeleton width="w-20" height="h-8" rounded="rounded-full" />
-                      <Skeleton width="w-24" height="h-8" rounded="rounded-full" />
-                      <Skeleton width="w-16" height="h-8" rounded="rounded-full" />
+                      <Skeleton width="w-20" height="h-8" rounded="full" />
+                      <Skeleton width="w-24" height="h-8" rounded="full" />
+                      <Skeleton width="w-16" height="h-8" rounded="full" />
                     </div>
                   </div>
                 </Card>
@@ -623,10 +623,10 @@ export default function DashboardView() {
         {journeyLoading ? (
           <FadeIn>
             <Card className="gap-[var(--space-sm)]">
-              <Skeleton width="w-40" height="h-6" rounded="rounded-md" />
-              <Skeleton width="w-full" height="h-2" rounded="rounded-full" />
-              <Skeleton width="w-3/4" height="h-4" rounded="rounded-md" />
-              <Skeleton width="w-48" height="h-10" rounded="rounded-xl" />
+              <Skeleton width="w-40" height="h-6" rounded="md" />
+              <Skeleton width="w-full" height="h-2" rounded="full" />
+              <Skeleton width="w-3/4" height="h-4" rounded="md" />
+              <Skeleton width="w-48" height="h-10" rounded="xl" />
             </Card>
           </FadeIn>
         ) : journeyError ? (

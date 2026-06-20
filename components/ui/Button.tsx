@@ -1,67 +1,53 @@
-import React from "react";
-import clsx from "clsx";
+/* ═══════════════════════════════════════════
+   ToSom Premium — Button Component
+   Primary · Secondary · Ghost
+   ═══════════════════════════════════════════ */
 
-type ButtonProps = {
-  children: React.ReactNode;
-  variant?: "primary" | "secondary" | "ghost" | "subtle" | "destructive";
-  loading?: boolean;
-} & React.ButtonHTMLAttributes<HTMLButtonElement>;
+import { ButtonHTMLAttributes, forwardRef } from "react";
 
-export default function Button({
-  children,
-  variant = "primary",
-  loading = false,
-  className,
-  ...props
-}: ButtonProps) {
-  return (
-    <button
-      {...props}
-      disabled={loading || props.disabled}
-      className={clsx(
-        // Base — CSS variable-driven
-        "relative px-[var(--space-md)] py-[var(--space-sm)] rounded-[var(--radius-md)] font-medium",
-        "transition-all [var(--transition-normal)] ease-out",
-        "focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/40",
-        "disabled:opacity-40 disabled:cursor-not-allowed",
-        // Glass layer
-        "backdrop-blur-md border border-[var(--glass-border)]",
-        // Variant
-        {
-          // PRIMARY — Gold Premium
-          primary:
-            variant === "primary" &&
-            "bg-[var(--color-gold)] text-[var(--color-bg)] shadow-[var(--shadow-gold)] hover:bg-[var(--color-gold-light)] hover:shadow-[var(--shadow-gold-hover)] active:scale-[0.97]",
+export type ButtonVariant = "primary" | "secondary" | "ghost";
 
-          // SECONDARY — Dark Nordic Glass
-          secondary:
-            variant === "secondary" &&
-            "bg-[var(--glass-bg)] text-[var(--color-text)] hover:bg-[var(--glass-bg-hover)] hover:border-[var(--glass-border-hover)] active:scale-[0.97]",
-
-          // GHOST — Invisible until hover
-          ghost:
-            variant === "ghost" &&
-            "bg-transparent text-[var(--color-text)] hover:bg-[var(--glass-bg)] active:scale-[0.97]",
-
-          // SUBTLE — Soft, elegant, minimal
-          subtle:
-            variant === "subtle" &&
-            "bg-[var(--glass-bg)] text-[var(--color-text)] hover:bg-[var(--glass-bg-hover)] border-[var(--glass-border)] active:scale-[0.97]",
-
-          // DESTRUCTIVE — Nordic Red
-          destructive:
-            variant === "destructive" &&
-            "bg-[var(--color-error)]/80 text-white hover:bg-[var(--color-error)] active:scale-[0.97]",
-        }[variant],
-        className
-      )}
-    >
-      {/* Loading spinner */}
-      {loading && (
-        <span className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin rounded-full border-2 border-black/20 border-t-black" />
-      )}
-
-      <span className={loading ? "opacity-0" : "opacity-100"}>{children}</span>
-    </button>
-  );
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: ButtonVariant;
+  size?: "sm" | "md" | "lg";
+  href?: string;
 }
+
+const variantClasses: Record<ButtonVariant, string> = {
+  primary:
+    "bg-[var(--ts-gold)] text-[var(--ts-bg-primary)] shadow-[var(--ts-shadow-gold)] hover:bg-[var(--ts-gold-light)] hover:shadow-[var(--ts-shadow-gold-hover)] hover:-translate-y-[1px]",
+  secondary:
+    "bg-[var(--ts-glass-bg)] text-[var(--ts-text-primary)] border border-[var(--ts-glass-border)] backdrop-blur-[var(--ts-glass-blur)] hover:bg-[var(--ts-glass-bg-hover)] hover:border-[var(--ts-glass-border-hover)] hover:-translate-y-[1px]",
+  ghost:
+    "bg-transparent text-[var(--ts-text-muted)] hover:text-[var(--ts-text-primary)] hover:bg-[var(--ts-glass-bg)]",
+};
+
+const sizeClasses: Record<"sm" | "md" | "lg", string> = {
+  sm: "px-3 py-2 text-sm",
+  md: "px-5 py-3 text-base",
+  lg: "px-6 py-4 text-lg",
+};
+
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ variant = "primary", size = "md", className = "", children, href, ...props }, ref) => {
+    const base =
+      "inline-flex items-center justify-center rounded-[var(--ts-radius-md)] font-medium border-none cursor-pointer transition-all duration-[var(--ts-transition-fast)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ts-gold)]/50 focus-visible:ring-offset-2";
+    const classes = `${base} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`.trim();
+
+    if (href) {
+      return (
+        <a href={href} className={classes} ref={ref as any}>
+          {children}
+        </a>
+      );
+    }
+
+    return (
+      <button className={classes} ref={ref} {...props}>
+        {children}
+      </button>
+    );
+  }
+);
+
+Button.displayName = "Button";

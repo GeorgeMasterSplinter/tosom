@@ -19,55 +19,55 @@ export function ProfileSkeleton() {
         {/* Header */}
         <div className="flex justify-between items-start gap-6">
           <div className="space-y-2">
-            <Skeleton width="w-32" height="h-8" rounded="rounded-md" />
-            <Skeleton width="w-48" height="h-4" rounded="rounded-md" />
+            <Skeleton width="w-32" height="h-8" rounded="md" />
+            <Skeleton width="w-48" height="h-4" rounded="md" />
           </div>
-          <Skeleton width="w-32" height="h-10" rounded="rounded-xl" />
+          <Skeleton width="w-32" height="h-10" rounded="xl" />
         </div>
 
         {/* Profilbilde + info */}
         <div className="space-y-6">
           <div className="text-center space-y-6">
-            <Skeleton width="w-32" height="w-32" rounded="rounded-full" className="mx-auto" />
+            <Skeleton width="w-32" height="w-32" rounded="full" className="mx-auto" />
             <div className="space-y-2">
-              <Skeleton width="w-40" height="h-8" rounded="rounded-md" />
-              <Skeleton width="w-20" height="h-4" rounded="rounded-md" />
-              <Skeleton width="w-24" height="h-4" rounded="rounded-md" />
+              <Skeleton width="w-40" height="h-8" rounded="md" />
+              <Skeleton width="w-20" height="h-4" rounded="md" />
+              <Skeleton width="w-24" height="h-4" rounded="md" />
             </div>
           </div>
 
           {/* Om meg */}
           <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-4">
-            <Skeleton width="w-24" height="h-6" rounded="rounded-md" />
-            <Skeleton width="w-full" height="h-4" rounded="rounded-md" />
-            <Skeleton width="w-3/4" height="h-4" rounded="rounded-md" />
+            <Skeleton width="w-24" height="h-6" rounded="md" />
+            <Skeleton width="w-full" height="h-4" rounded="md" />
+            <Skeleton width="w-3/4" height="h-4" rounded="md" />
           </div>
 
           {/* Interesser */}
           <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-6">
-            <Skeleton width="w-28" height="h-6" rounded="rounded-md" />
+            <Skeleton width="w-28" height="h-6" rounded="md" />
             <div className="flex flex-wrap gap-2">
-              <Skeleton width="w-20" height="h-8" rounded="rounded-full" />
-              <Skeleton width="w-24" height="h-8" rounded="rounded-full" />
-              <Skeleton width="w-16" height="h-8" rounded="rounded-full" />
-              <Skeleton width="w-22" height="h-8" rounded="rounded-full" />
+              <Skeleton width="w-20" height="h-8" rounded="full" />
+              <Skeleton width="w-24" height="h-8" rounded="full" />
+              <Skeleton width="w-16" height="h-8" rounded="full" />
+              <Skeleton width="w-22" height="h-8" rounded="full" />
             </div>
           </div>
 
           {/* Bilder */}
           <div className="bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-md shadow-black/20 space-y-6">
-            <Skeleton width="w-24" height="h-6" rounded="rounded-md" />
+            <Skeleton width="w-24" height="h-6" rounded="md" />
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              <Skeleton width="w-full" height="h-48" rounded="rounded-xl" className="aspect-[4/5]" />
-              <Skeleton width="w-full" height="h-48" rounded="rounded-xl" className="aspect-[4/5]" />
-              <Skeleton width="w-full" height="h-48" rounded="rounded-xl" className="aspect-[4/5]" />
+              <Skeleton width="w-full" height="h-48" rounded="xl" className="aspect-[4/5]" />
+              <Skeleton width="w-full" height="h-48" rounded="xl" className="aspect-[4/5]" />
+              <Skeleton width="w-full" height="h-48" rounded="xl" className="aspect-[4/5]" />
             </div>
           </div>
 
           {/* Handlinger */}
           <div className="flex gap-4">
-            <Skeleton width="w-full" height="h-12" rounded="rounded-xl" />
-            <Skeleton width="w-full" height="h-12" rounded="rounded-xl" />
+            <Skeleton width="w-full" height="h-12" rounded="xl" />
+            <Skeleton width="w-full" height="h-12" rounded="xl" />
           </div>
         </div>
       </Section>

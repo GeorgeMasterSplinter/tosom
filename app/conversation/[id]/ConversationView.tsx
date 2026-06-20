@@ -264,16 +264,16 @@ export default function ConversationView({ conversationId }: ConversationViewPro
       <div className="min-h-screen bg-gray-950 text-white">
         <Section className="space-y-16 py-12">
           <div className="flex items-center gap-4">
-            <Skeleton width="w-12" height="h-12" rounded="rounded-full" />
+            <Skeleton width="w-12" height="h-12" rounded="full" />
             <div className="space-y-2">
-              <Skeleton width="w-32" height="h-6" rounded="rounded-md" />
-              <Skeleton width="w-20" height="h-4" rounded="rounded-md" />
+              <Skeleton width="w-32" height="h-6" rounded="md" />
+              <Skeleton width="w-20" height="h-4" rounded="md" />
             </div>
           </div>
           <div className="space-y-4">
             {Array.from({ length: 5 }).map((_, i) => (
               <div key={i} className={`flex ${i % 2 === 0 ? "justify-end" : "justify-start"}`}>
-                <Skeleton width="w-64" height="h-12" rounded="rounded-2xl" className={i % 2 === 0 ? "bg-gold/10" : "bg-white/5"} />
+                <Skeleton width="w-64" height="h-12" rounded="lg" className={i % 2 === 0 ? "bg-gold/10" : "bg-white/5"} />
               </div>
             ))}
           </div>
@@ -342,10 +342,10 @@ export default function ConversationView({ conversationId }: ConversationViewPro
           {journeyLoading ? (
             <FadeIn>
               <div className="mx-auto max-w-md bg-white/5 border border-gold/20 rounded-2xl p-6 space-y-3">
-                <Skeleton width="w-3/4" height="h-6" rounded="rounded-md" />
-                <Skeleton width="w-full" height="h-4" rounded="rounded-md" />
-                <Skeleton width="w-3/4" height="h-4" rounded="rounded-md" />
-                <Skeleton width="w-1/2" height="h-10" rounded="rounded-xl" />
+                <Skeleton width="w-3/4" height="h-6" rounded="md" />
+                <Skeleton width="w-full" height="h-4" rounded="md" />
+                <Skeleton width="w-3/4" height="h-4" rounded="md" />
+                <Skeleton width="w-1/2" height="h-10" rounded="xl" />
               </div>
             </FadeIn>
           ) : journeyError ? (

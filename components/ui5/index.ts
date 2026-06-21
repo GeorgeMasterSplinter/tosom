@@ -8,5 +8,6 @@ export { Footer } from './Footer';
 export { Hero } from './Hero';
 export { GlassPanel } from './GlassPanel';
 export { ThreeStepSection } from './ThreeStep';
+export { MatchingSection } from './Matching';
 export { Timeline } from './Timeline';
-export { TrustSection } from './TrustSection';
+export { TrustSection } from './Trust';

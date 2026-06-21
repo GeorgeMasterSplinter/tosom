@@ -1,12 +1,16 @@
 /**
- * ToSom UI 5.0 - Footer (Dark Blue-Gray Edition)
+ * ToSom UI 5.0 — Footer 2.0 (Round 3 Premium Visual Polish)
  * 
- * Mørk gradient bakgrunn, gull-gradient-linje overst
- * 4 kolonner: Produkt, Selskap, Støtte, Sosiale ikoner
- * © ToSom. Alle rettar reserverte.
- * Mørk blågrå bakgrunn, responsiv
+ * Forbedringar:
+ * - Gull-logo i footer
+ * - Mørkare bakgrunn med ambient glow
+ * - Større spacing mellom kolonnar
+ * - Hover på lenker: gull-glow + scale-[1.02]
+ * - Breiare copyright-separator med gull-skugg
  * Bokmål
  */
+
+'use client';
 
 import { FC } from 'react';
 import Link from 'next/link';
@@ -20,117 +24,78 @@ export const Footer: FC<FooterProps> = ({
   companyName = 'ToSom',
   year = new Date().getFullYear(),
 }) => {
-  const navLinks = {
-    produkt: [
-      { label: 'Hvorfor ToSom', href: '/#why' },
-      { label: 'Slik fungerer det', href: '/#how' },
-      { label: 'Reisen', href: '/#journey' },
-      { label: 'Priser', href: '/#pricing' },
-    ],
-    selskap: [
-      { label: 'Om oss', href: '/about' },
-      { label: 'Karriere', href: '/careers' },
-      { label: 'Presse', href: '/press' },
-      { label: 'Blogger', href: '/blog' },
-    ],
-    støtte: [
-      { label: 'Hjelpesenter', href: '/help' },
-      { label: 'Personvern', href: '/privacy' },
-      { label: 'Vilkår', href: '/terms' },
-      { label: 'Trygghet', href: '/safety' },
-    ],
-  };
+  const produktLinks = [
+    { label: 'Kvifor ToSom', href: '/#why' },
+    { label: 'Slik fungerer det', href: '/#how' },
+    { label: 'Reisen', href: '/#journey' },
+    { label: 'Prisar', href: '/#pricing' },
+  ];
+
+  const selskapLinks = [
+    { label: 'Om oss', href: '/about' },
+    { label: 'Karriere', href: '/careers' },
+    { label: 'Presse', href: '/press' },
+    { label: 'Blogg', href: '/blog' },
+  ];
+
+  const sosialeLinks = [
+    { label: 'Instagram', href: 'https://instagram.com/tosom' },
+    { label: 'LinkedIn', href: 'https://linkedin.com/company/tosom' },
+    { label: 'TikTok', href: 'https://tiktok.com/@tosom' },
+  ];
 
   return (
     <footer
-      className="relative pt-32 pb-8 lg:pt-40 lg:pb-16 overflow-hidden"
-      style={{
-        background: `
-          linear-gradient(180deg, #0C0F14 0%, #10141A 30%, #14181E 50%, #10141A 70%, #0C0F14 100%)
-        `,
-        boxShadow: '0 -24px 80px rgba(0,0,0,0.35)',
-      }}
+      className="py-36 md:py-48 relative overflow-hidden"
+      style={{ background: 'linear-gradient(180deg, #0B0F14 0%, #07090C 100%)' }}
     >
+      {/* Ambient glow bak footer */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute bottom-0 left-0 right-0 h-px pointer-events-none"
         style={{
-          background: `
-            radial-gradient(ellipse 60% 40% at 50% 80%, rgba(80,120,255,0.06), transparent 70%),
-            radial-gradient(circle at center, transparent 55%, rgba(0,0,0,0.27) 100%)
-          `,
+          background: 'linear-gradient(90deg, transparent, rgba(212,175,55,0.15) 30%, rgba(212,175,55,0.15) 70%, transparent)',
+          boxShadow: '0 0 40px rgba(212,175,55,0.1)',
         }}
       />
-      {/* Round 6: Gull line +5% glow */}
-      <div
-        className="h-[2px] w-full relative"
-        style={{
-          background: 'linear-gradient(90deg, transparent, rgba(212,175,55,0.63), transparent)',
-          boxShadow: '0 0 32px rgba(212,175,55,0.42)',
-        }}
-      />
-      <div
-        className="h-[6px] w-full relative -translate-y-[1px]"
-        style={{
-          background: 'linear-gradient(90deg, transparent, rgba(212,175,55,0.21), transparent)',
-          filter: 'blur(4px)',
-        }}
-      />
-
-      <div className="mx-auto max-w-[1600px] px-6 lg:px-8">
-        {/* Round 6: mb +12px */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 lg:gap-20 mb-20 lg:mb-24">
-          {/* Round 6: Logo +10%, stronger gold glow */}
-          <div className="md:col-span-1">
-            <div className="mb-6 relative">
-              <div
-                className="absolute -inset-5 -z-10"
-                style={{
-                  background: 'radial-gradient(circle at center, rgba(212,175,55,0.17), transparent 70%)',
-                  filter: 'blur(14px)',
-                }}
-              />
-              <svg width="62" height="62" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"
-                style={{
-                  filter: 'drop-shadow(0 0 24px rgba(212,175,55,0.28))',
-                }}>
-                <circle cx="15" cy="20" r="12" fill="rgba(212, 175, 55, 0.40)" stroke="#D4AF37" strokeWidth="1.5" />
-                <circle cx="25" cy="20" r="12" fill="rgba(212, 175, 55, 0.25)" stroke="#D4AF37" strokeWidth="1.5" />
-                <circle cx="20" cy="20" r="6" fill="rgba(212, 175, 55, 0.20)" />
+      
+      <div className="mx-auto max-w-6xl px-6 lg:px-8 relative z-10">
+        {/* 4-kolonne grid — meir spacing */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-y-28 md:gap-y-28 gap-x-16 md:gap-x-20">
+          {/* Kolonne 1: Logo + beskrivelse */}
+          <div>
+            {/* Gull-logo */}
+            <div
+              className="mb-4 pulse-icon"
+              style={{
+                filter: 'drop-shadow(0 0 8px rgba(212,175,55,0.25))',
+              }}
+            >
+              <svg width="44" height="44" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="15" cy="20" r="12" fill="none" stroke="#D4AF37" strokeWidth="1.5" />
+                <circle cx="25" cy="20" r="12" fill="none" stroke="#D4AF37" strokeWidth="1.5" />
+                <circle cx="20" cy="20" r="6" fill="none" stroke="#D4AF37" strokeWidth="1" />
               </svg>
             </div>
             <p
-              className="text-sm leading-relaxed"
-              style={{ color: 'rgba(255, 255, 255, 0.35)' }}
+              className="text-sm leading-[1.7]"
+              style={{ color: 'rgba(255, 255, 255, 0.45)' }}
             >
-              En rolig, privat plattform for ekte relasjoner.
+              Ein roleg, privat plattform for ekte relasjonar.
             </p>
           </div>
 
-          {/* Produkt */}
+          {/* Kolonne 2: Produkt */}
           <div>
-            <h4
-              className="text-sm font-semibold mb-5"
-              style={{ color: '#D4AF37' }}
-            >
+            <h4 className="text-white font-semibold text-base tracking-[-0.005em] leading-[1.1] mb-5">
               Produkt
             </h4>
-            <ul className="space-y-3">
-              {navLinks.produkt.map((link) => (
+            <ul className="space-y-3.5">
+              {produktLinks.map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-sm transition-all duration-300 ease-out inline-block"
-                    style={{ color: 'rgba(255, 255, 255, 0.38)' }}
-                    onMouseEnter={(e) => {
-                      (e.target as HTMLElement).style.color = '#D4AF37';
-                      (e.target as HTMLElement).style.textShadow = '0 0 14px rgba(212,175,55,0.45)';
-                      (e.target as HTMLElement).style.transform = 'translateX(3px) scale(1.02)';
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.target as HTMLElement).style.color = 'rgba(255, 255, 255, 0.38)';
-                      (e.target as HTMLElement).style.textShadow = 'none';
-                      (e.target as HTMLElement).style.transform = 'translateX(0) scale(1)';
-                    }}
+                    className="text-gray-400 text-sm hover:text-[#D4AF37] transition-all duration-300 leading-[1.6] hover:drop-shadow-[0_0_6px_rgba(212,175,55,0.4)] inline-block hover:scale-[1.02]"
+                    style={{ transformOrigin: 'left center' }}
                   >
                     {link.label}
                   </Link>
@@ -139,31 +104,18 @@ export const Footer: FC<FooterProps> = ({
             </ul>
           </div>
 
-          {/* Selskap */}
+          {/* Kolonne 3: Selskap */}
           <div>
-            <h4
-              className="text-sm font-semibold mb-5"
-              style={{ color: '#D4AF37' }}
-            >
+            <h4 className="text-white font-semibold text-base tracking-[-0.005em] leading-[1.1] mb-5">
               Selskap
             </h4>
-            <ul className="space-y-3">
-              {navLinks.selskap.map((link) => (
+            <ul className="space-y-3.5">
+              {selskapLinks.map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-sm transition-all duration-300 ease-out inline-block"
-                    style={{ color: 'rgba(255, 255, 255, 0.38)' }}
-                    onMouseEnter={(e) => {
-                      (e.target as HTMLElement).style.color = '#D4AF37';
-                      (e.target as HTMLElement).style.textShadow = '0 0 14px rgba(212,175,55,0.45)';
-                      (e.target as HTMLElement).style.transform = 'translateX(3px) scale(1.02)';
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.target as HTMLElement).style.color = 'rgba(255, 255, 255, 0.38)';
-                      (e.target as HTMLElement).style.textShadow = 'none';
-                      (e.target as HTMLElement).style.transform = 'translateX(0) scale(1)';
-                    }}
+                    className="text-gray-400 text-sm hover:text-[#D4AF37] transition-all duration-300 leading-[1.6] hover:drop-shadow-[0_0_6px_rgba(212,175,55,0.4)] inline-block hover:scale-[1.02]"
+                    style={{ transformOrigin: 'left center' }}
                   >
                     {link.label}
                   </Link>
@@ -172,66 +124,42 @@ export const Footer: FC<FooterProps> = ({
             </ul>
           </div>
 
-          {/* Sosiale ikoner */}
+          {/* Kolonne 4: Følg oss */}
           <div>
-            <h4
-              className="text-sm font-semibold mb-5"
-              style={{ color: '#D4AF37' }}
-            >
+            <h4 className="text-white font-semibold text-base tracking-[-0.005em] leading-[1.1] mb-5">
               Følg oss
             </h4>
-            <div className="flex items-center gap-3">
-              {['twitter', 'instagram', 'linkedin'].map((social) => (
-                <a
-                  key={social}
-                  href="#"
-                  className="w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-300 ease-out relative overflow-hidden"
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.03)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    color: 'rgba(255, 255, 255, 0.30)',
-                    boxShadow: 'inset 0 0 10px rgba(255,255,255,0.03)',
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.target as HTMLElement).style.background = 'rgba(212, 175, 55, 0.15)';
-                    (e.target as HTMLElement).style.borderColor = 'rgba(212, 175, 55, 0.35)';
-                    (e.target as HTMLElement).style.color = '#D4AF37';
-                    (e.target as HTMLElement).style.boxShadow = 'inset 0 0 14px rgba(212,175,55,0.10), 0 0 20px rgba(212,175,55,0.08)';
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.target as HTMLElement).style.background = 'rgba(255, 255, 255, 0.03)';
-                    (e.target as HTMLElement).style.borderColor = 'rgba(255, 255, 255, 0.08)';
-                    (e.target as HTMLElement).style.color = 'rgba(255, 255, 255, 0.30)';
-                    (e.target as HTMLElement).style.boxShadow = 'inset 0 0 10px rgba(255,255,255,0.03)';
-                  }}
-                >
-                  <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor">
-                    <circle cx="8" cy="8" r="3" />
-                  </svg>
-                </a>
+            <ul className="space-y-3.5">
+              {sosialeLinks.map((link) => (
+                <li key={link.label}>
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-400 text-sm hover:text-[#D4AF37] transition-all duration-300 leading-[1.6] hover:drop-shadow-[0_0_6px_rgba(212,175,55,0.4)] inline-block hover:scale-[1.02]"
+                    style={{ transformOrigin: 'left center' }}
+                  >
+                    {link.label}
+                  </a>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </div>
 
-        {/* Nedre footer */}
+        {/* Copyright-linje — meir luft */}
         <div
-          className="pt-10 flex flex-col sm:flex-row items-center justify-between gap-4 relative"
-          style={{
+          className="mt-20 pt-10 text-center"
+          style={{ 
             borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+            boxShadow: '0 1px 0 rgba(212,175,55,0.06)',
           }}
         >
           <p
             className="text-xs"
-            style={{ color: 'rgba(255, 255, 255, 0.20)' }}
+            style={{ color: 'rgba(255, 255, 255, 0.3)' }}
           >
-            © {year} {companyName}. Alle rettigheter reservert.
-          </p>
-          <p
-            className="text-xs"
-            style={{ color: 'rgba(255, 255, 255, 0.16)' }}
-          >
-            En rolig, privat plattform for ekte relasjoner.
+            © {year} {companyName}. Alle rettar reserverte.
           </p>
         </div>
       </div>

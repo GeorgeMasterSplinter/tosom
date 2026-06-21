@@ -224,29 +224,33 @@ model Profile {
 }
 
 model Match {
-  id        String      @id @default(cuid())
-  userAId   String
-  userBId   String
-  status    MatchStatus @default(active)
+  id            String   @id @default(cuid())
+  userAId       String
+  userBId       String
+  status        MatchStatus @default(active)
+  score         Int      @default(0)
+  type          String   @default("pending")
+  explanation   Json?
   resonanceLevel ResonanceLevel @default(GENTLE)
-  reviewed  Boolean     @default(false)
-  acceptedByA DateTime?
-  acceptedByB DateTime?
-  lockedAt  DateTime?
-  expiresAt DateTime?
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  reviewed      Boolean  @default(false)
+  acceptedByA   DateTime?
+  acceptedByB   DateTime?
+  lockedAt      DateTime?
+  expiresAt     DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  userA     User              @relation("UserAMatches", fields: [userAId], references: [id])
-  userB     User              @relation("UserBMatches", fields: [userBId], references: [id])
-  history   MatchHistory[]
-  feedbacks MatchFeedback[]
+  userA         User              @relation("UserAMatches", fields: [userAId], references: [id])
+  userB         User              @relation("UserBMatches", fields: [userBId], references: [id])
+  history       MatchHistory[]
+  feedbacks     MatchFeedback[]
 
   @@index([status])
   @@index([userAId])
   @@index([userBId])
   @@index([createdAt])
   @@index([expiresAt])
+  @@index([score])
 }
 
 model MatchHistory {

@@ -6,6 +6,7 @@
  * - Oppgåver dukkar opp som system-melding
  * - Refleksjonar dukkar opp som system-melding
  * - Bilde-fase: dag 1-14 tillat ikkje, dag 14+ tillar
+ * - Spørsmål-modul integrert
  */
 
 'use client';
@@ -14,6 +15,7 @@ import { useEffect, useState, useRef, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { Header } from '@/components/ui5/Header';
 import { GlassPanel } from '@/components/ui5/GlassPanel';
+import QuestionModal from './components/QuestionModal';
 
 /* ------ Types ------ */
 
@@ -62,12 +64,14 @@ function formatTime(iso: string) {
 export default function ChatPage() {
   const router = useRouter();
   const bottomRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [overview, setOverview] = useState<DashboardOverview | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
+  const [showQuestions, setShowQuestions] = useState(false);
 
   /* Fetch dashboard + chat */
   useEffect(() => {
@@ -104,9 +108,15 @@ export default function ChatPage() {
   }, [messages]);
 
   /* Send message */
-  const handleSend = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!input.trim() || sending || !overview?.conversationId) return;
+  const handleSendMessage = async (text: string) => {
+    const trimmed = text.trim();
+    if (!trimmed || sending || !overview?.conversationId) return;
+
+    // Sjekk for /spørsmål kommando
+    if (trimmed.startsWith('/spørsmål') || trimmed.startsWith('/question')) {
+      setShowQuestions(true);
+      return;
+    }
 
     setSending(true);
     try {
@@ -115,7 +125,7 @@ export default function ChatPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           conversationId: overview.conversationId,
-          content: input.trim(),
+          content: trimmed,
           type: 'text',
         }),
       });
@@ -123,13 +133,20 @@ export default function ChatPage() {
       if (res.ok) {
         const msg = await res.json();
         setMessages((prev) => [...prev, msg]);
-        setInput('');
+        if (!text.startsWith('/')) {
+          setInput('');
+        }
       }
     } catch {
       // Silently fail
     } finally {
       setSending(false);
     }
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    await handleSendMessage(input);
   };
 
   /* Loading */
@@ -412,12 +429,40 @@ export default function ChatPage() {
             </p>
           )}
 
-          <form onSubmit={handleSend} className="flex gap-3">
+          <form onSubmit={handleSubmit} className="flex gap-3">
+            {/* Spørsmål-knapp */}
+            <button
+              type="button"
+              onClick={() => setShowQuestions(true)}
+              className="px-4 py-3 rounded-xl flex-shrink-0 transition-all duration-200 ease-out"
+              style={{
+                background: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                color: 'rgba(255, 255, 255, 0.6)',
+              }}
+              onMouseEnter={(e) => {
+                (e.target as HTMLElement).style.background = 'rgba(212, 175, 55, 0.1)';
+                (e.target as HTMLElement).style.borderColor = 'rgba(212, 175, 55, 0.3)';
+                (e.target as HTMLElement).style.color = '#D4AF37';
+              }}
+              onMouseLeave={(e) => {
+                (e.target as HTMLElement).style.background = 'rgba(255, 255, 255, 0.04)';
+                (e.target as HTMLElement).style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                (e.target as HTMLElement).style.color = 'rgba(255, 255, 255, 0.6)';
+              }}
+              title="Åpne spørsm-generator"
+            >
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M10 2C7.24 2 5 4.24 5 7C5 8.8 5.75 10.4 6.95 11.55C7.4 11.98 7.7 12.55 7.7 13.2V14.5C7.7 14.78 7.92 15 8.2 15H11.8C12.08 15 12.3 14.78 12.3 14.5V13.8C12.3 12.8 13.1 12 14.1 12H15C17.76 12 20 9.76 20 7C20 4.24 17.76 2 15 2H10ZM10 4C11.66 4 13 5.34 13 7C13 8.66 11.66 10 10 10C8.34 10 7 8.66 7 7C7 5.34 8.34 4 10 4ZM10 18C9 18 8 17.5 7.5 16.8C7.3 16.45 7.55 16 7.95 16H12.05C12.45 16 12.7 16.45 12.5 16.8C12 17.5 11 18 10 18Z" fill="currentColor" transform="scale(0.8) translate(2, 2)" />
+              </svg>
+            </button>
+
             <input
+              ref={inputRef}
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Skriv ein melding..."
+              placeholder="Skriv ein melding... eller /spørsmål"
               className="flex-1 rounded-xl px-4 py-3 text-sm transition-all duration-200 ease-out"
               style={{
                 background: 'rgba(255, 255, 255, 0.04)',
@@ -461,6 +506,17 @@ export default function ChatPage() {
           </form>
         </div>
       </div>
+
+      {/* Question Modal */}
+      {showQuestions && (
+        <QuestionModal
+          onClose={() => setShowQuestions(false)}
+          onSend={(text) => {
+            handleSendMessage(text);
+            setShowQuestions(false);
+          }}
+        />
+      )}
     </div>
   );
 }

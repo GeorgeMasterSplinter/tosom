@@ -1,0 +1,103 @@
+/**
+ * GET /api/journey/progress
+ * 
+ * Hent progresjon for reisa — alle dagar, milestones, resonans.
+ * Core-definition: Viser reise utan gamification.
+ */
+
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { requireAuth } from "@/lib/auth/requireAuth";
+
+export async function GET(req: NextRequest) {
+  try {
+    // 1. Auth
+    const result = await requireAuth(req);
+    if (result instanceof NextResponse) {
+      return result;
+    }
+    const user = result.user;
+
+    // 2. Finn journey
+    const journey = await prisma.journeyProgress.findUnique({
+      where: { userId: user.id },
+      select: {
+        id: true,
+        day: true,
+        phase: true,
+        completedDays: true,
+        startedAt: true,
+        endedAt: true,
+        pausedAt: true,
+      },
+    });
+
+    if (!journey) {
+      return NextResponse.json(
+        { error: "Ingen aktiv reise funnen", noJourney: true },
+        { status: 404 }
+      );
+    }
+
+    // 3. Finn milestones for reisa
+    const milestones = await prisma.journeyMilestone.findMany({
+      where: { progressId: journey.id },
+      orderBy: { day: "asc" },
+    });
+
+    // 4. Finn resonance-sessions
+    const conversation = await prisma.conversation.findFirst({
+      where: {
+        userAId: user.id,
+        userBId: { not: user.id },
+      },
+      select: { id: true },
+    });
+
+    const resonanceSessions = conversation
+      ? await prisma.resonanceSession.findMany({
+          where: { conversationId: conversation.id },
+          orderBy: { day: "asc" },
+        })
+      : [];
+
+    // 5. Berekn progresjon
+    const totalDays = 30;
+    const progressPercent = Math.min(100, Math.round((journey.completedDays / totalDays) * 100));
+
+    // 6. Hent alle dag-content for ref
+    const allContent = await prisma.journeyDayContent.findMany({
+      orderBy: { day: "asc" },
+    });
+
+    return NextResponse.json({
+      journey: {
+        day: journey.day,
+        phase: journey.phase,
+        completedDays: journey.completedDays,
+        startedAt: journey.startedAt?.toISOString() ?? null,
+        endedAt: journey.endedAt?.toISOString() ?? null,
+        pausedAt: journey.pausedAt?.toISOString() ?? null,
+      },
+      progress: {
+        completedDays: journey.completedDays,
+        totalDays,
+        percent: progressPercent,
+        isComplete: journey.completedDays >= totalDays,
+      },
+      milestones,
+      resonanceSessions,
+      contentOverview: allContent.map((c) => ({
+        day: c.day,
+        theme: c.theme,
+        completed: milestones.some((m) => m.day === c.day),
+      })),
+    });
+  } catch (error) {
+    console.error("GET /api/journey/progress error:", error);
+    return NextResponse.json(
+      { error: "Internt feil ved henting av progresjon", internal: true },
+      { status: 500 }
+    );
+  }
+}

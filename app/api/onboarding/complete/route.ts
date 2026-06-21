@@ -1,0 +1,90 @@
+/**
+ * POST /api/onboarding/complete
+ * Marker djup profil som fullført og start match-prosess
+ * Core-definition: Berre brukarar med fullført djup profil kan få match
+ */
+
+import { NextRequest, NextResponse } from "next/server"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth/options"
+import prisma from "@/lib/prisma"
+
+export async function POST(req: NextRequest) {
+  const session = await getServerSession(authOptions)
+
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Umagalet" }, { status: 401 })
+  }
+
+  try {
+    // Verifiser at alle djup profil-steg er fylte
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      include: { profile: true },
+    })
+
+    if (!user?.profile) {
+      return NextResponse.json(
+        { error: "Profil finst ikkje" },
+        { status: 404 }
+      )
+    }
+
+    const deepData = user.profile.deepProfileData as Record<string, unknown> | null || {}
+    const deepSteps = [
+      "IDENTITY",
+      "LIFE_SITUATION",
+      "LIFESTYLE",
+      "PERSONALITY",
+      "RELATIONSHIP_STYLE",
+      "COMMUNICATION",
+      "INTIMACY",
+      "FUTURE_VISION",
+      "BOUNDARIES",
+    ]
+
+    const allComplete = deepSteps.every((step) => {
+      const stepData = deepData[step]
+      if (!stepData) return false
+      if (Array.isArray(stepData)) return stepData.length > 0
+      if (typeof stepData === "object" && stepData !== null) return Object.keys(stepData).length > 0
+      if (typeof stepData === "string") return stepData.trim().length > 0
+      return false
+    })
+
+    if (!allComplete) {
+      return NextResponse.json(
+        { error: "Alle djup profil-steg må vera fylte før onboarding kan fullførast" },
+        { status: 400 }
+      )
+    }
+
+    // Oppdater user og profile
+    await prisma.user.update({
+      where: { id: session.user.id },
+      data: {
+        onboardingComplete: true,
+        deepProfileComplete: true,
+        onboardingStep: 99,
+      },
+    })
+
+    await prisma.profile.update({
+      where: { userId: session.user.id },
+      data: {
+        deepProfileStep: "SUMMARY" as any,
+      },
+    })
+
+    return NextResponse.json({
+      success: true,
+      message: "Onboarding fullført — du kan no få din fyrste match",
+    })
+  } catch (error) {
+    console.error("Onboarding complete error:", error)
+    return NextResponse.json(
+      { error: "Kunne ikkje fullføra onboarding" },
+      { status: 500 }
+    )
+  }
+}

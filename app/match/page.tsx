@@ -1,13 +1,17 @@
-/* ═══════════════════════════════════════════
-   ToSom Premium — Match Page (UI 4.2)
-   Calm-gradient-rose bg · Focus-mode match cards
-   Gold-glow names · Resonans-indicator bars
-   ═══════════════════════════════════════════ */
+/**
+ * ToSom UI 5.0 — Match
+ * 
+ * Rom, warm og fokusert match-opplevelse
+ * Ein match per 24 timer — ingen swipe, ingen feed
+ */
 
-"use client";
+'use client';
 
-import { useState } from "react";
-import { FadeIn } from "@/components/ui/FadeIn";
+import { useState } from 'react';
+import { Header } from '@/components/ui5/Header';
+import { GlassPanel } from '@/components/ui5/GlassPanel';
+
+/* ------ Types ------ */
 
 interface MatchData {
   id: string;
@@ -18,143 +22,183 @@ interface MatchData {
   resonanceScore?: number;
 }
 
-// Demo data — kan erstattes med API-kall
+/* Demo data */
 const demoMatches: MatchData[] = [
-  { id: "1", name: "Emma", age: 28, location: "Oslo", resonanceScore: 92 },
-  { id: "2", name: "Sofia", age: 26, location: "Bergen", resonanceScore: 87 },
-  { id: "3", name: "Astrid", age: 30, location: "Trondheim", resonanceScore: 84 },
-  { id: "4", name: "Ingrid", age: 27, location: "Stavanger", resonanceScore: 79 },
-  { id: "5", name: "Freya", age: 29, location: "Tromsø", resonanceScore: 75 },
-  { id: "6", name: "Line", age: 25, location: "Oslo", resonanceScore: 71 },
+  { id: '1', name: 'Emma', age: 28, location: 'Oslo', resonanceScore: 92 },
+  { id: '2', name: 'Sofia', age: 26, location: 'Bergen', resonanceScore: 87 },
+  { id: '3', name: 'Astrid', age: 30, location: 'Trondheim', resonanceScore: 84 },
 ];
 
-/* Resonans bar component */
+/* Resonans bar */
 function ResonansBar({ score }: { score: number }) {
   return (
-    <div className="w-full h-1.5 rounded-full bg-ts-bg-surface/60 overflow-hidden">
+    <div
+      className="h-1.5 rounded-full overflow-hidden"
+      style={{ background: 'rgba(255, 255, 255, 0.05)' }}
+    >
       <div
-        className="h-full rounded-full bg-gradient-to-r from-ts-gold to-ts-gold-light transition-all duration-1000"
-        style={{ width: `${score}%` }}
+        className="h-full rounded-full transition-all duration-1000"
+        style={{
+          width: `${score}%`,
+          background: 'linear-gradient(90deg, #D4AF37, #E8C766)',
+        }}
       />
     </div>
   );
 }
 
+/* ------ Main component ------ */
+
 export default function MatchPage() {
   const [matches] = useState<MatchData[]>(demoMatches);
 
   return (
-    <div className="min-h-screen bg-ts-bg-primary text-ts-primary relative overflow-hidden">
-      {/* UI 4.2: calm-gradient-rose subtle bg */}
-      <div className="absolute inset-0 calm-gradient-rose opacity-40 pointer-events-none" />
-      <div className="absolute inset-0 bg-ts-bg-primary/60 pointer-events-none" />
+    <div className="min-h-screen" style={{ background: '#0B0E11' }}>
+      <Header currentPath="/match" />
 
-      <div className="max-w-4xl mx-auto px-section py-section relative z-10">
-        {/* SectionHero — UI 4.2: display-xl + gold-glow-text */}
-        <div className="text-center space-y-lg mb-4xl">
-          <FadeIn>
-            <span className="text-ts-gold uppercase tracking-[0.25em] text-xs font-semibold">
-              Matcher
-            </span>
-          </FadeIn>
-          <FadeIn>
-            <h1 className="ts-display-xl text-gold-glow-text">
-              Dine potensielle forbindelser
-            </h1>
-          </FadeIn>
-          <FadeIn>
-            <p className="text-text-muted max-w-xl mx-auto">
-              Basert på resonans, verdier og preferanser
-            </p>
-          </FadeIn>
+      <main className="mx-auto max-w-[720px] px-8 py-12">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <span
+            className="text-xs uppercase tracking-[0.25em] font-semibold mb-4 block"
+            style={{ color: '#D4AF37' }}
+          >
+            Matcher
+          </span>
+          <h1
+            className="text-[32px] lg:text-[40px] font-semibold mb-3"
+            style={{
+              color: '#FFFFFF',
+              letterSpacing: '-0.02em',
+              lineHeight: '1.2',
+            }}
+          >
+            Din match
+          </h1>
+          <p
+            className="text-base"
+            style={{ color: 'rgba(255, 255, 255, 0.5)' }}
+          >
+            Ein match basert på resonans, verdiar og preferanse
+          </p>
         </div>
 
-        {/* Match Grid — UI 4.2: focus-mode · 2 cols · ts-glass-strong cards */}
+        {/* No match */}
         {matches.length === 0 ? (
-          <FadeIn>
-            <div className="ts-glass-strong rounded-[var(--ts-radius-3xl)] p-2xl flex flex-col items-center justify-center text-center space-xl relative overflow-hidden">
-              <div className="absolute inset-0 bg-ts-gold-soft opacity-20 pointer-events-none" />
-              <div className="relative z-10 space-lg text-center">
-                <svg className="w-16 h-16 mx-auto opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                </svg>
-                <p className="text-text-subtle text-sm mt-4">Ingen matcher ennå</p>
-                <p className="text-text-subtle/70 text-xs mt-2">Fullfør profilen din for å oppdage nye mennesker</p>
-                <button
-                  className="mt-6 inline-flex items-center justify-center rounded-[var(--ts-radius-md)] bg-ts-gold text-ts-bg-primary font-medium px-lg py-md hover:bg-ts-gold-light transition-all duration-[var(--ts-transition-fast)]"
-                >
-                  Fullfør profilen
-                </button>
-              </div>
-            </div>
-          </FadeIn>
+          <GlassPanel className="py-12 text-center">
+            <svg
+              width="48"
+              height="48"
+              viewBox="0 0 48 48"
+              fill="none"
+              className="mx-auto mb-4"
+              style={{ color: 'rgba(212, 175, 55, 0.2)' }}
+            >
+              <path
+                d="M14 24C14 18 18 14 24 14C30 14 34 18 34 24C34 30 30 34 24 34"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              />
+            </svg>
+            <p
+              className="text-base mb-4"
+              style={{ color: 'rgba(255, 255, 255, 0.45)' }}
+            >
+              Ingen matcher enno
+            </p>
+            <p
+              className="text-sm mb-6"
+              style={{ color: 'rgba(255, 255, 255, 0.3)' }}
+            >
+              Fullfør profilen din for å oppdage nye menneske
+            </p>
+            <a
+              href="/onboarding"
+              className="inline-block px-8 py-3 rounded-xl text-sm font-medium transition-all duration-200 ease-out"
+              style={{ background: '#D4AF37', color: '#0B0E11' }}
+            >
+              Fullfør profilen
+            </a>
+          </GlassPanel>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2xl">
-            {matches.map((match, i) => (
-              <FadeIn key={match.id} duration={300} delay={i * 80}>
-                {/* Match card — UI 4.2: calm-gradient-rose + gold name + resonance */}
-                <div
-                  className="ts-glass-strong rounded-[var(--ts-radius-xl)] p-xl shadow-soft space-lg transition-all duration-[var(--ts-transition-normal)] hover:border-ts-gold/20 hover:gold-glow-sm cursor-pointer group relative overflow-hidden"
-                  onClick={() => console.log("Accept match:", match.id)}
-                >
-                  {/* Subtle rose gradient bg */}
-                  <div className="absolute inset-0 calm-gradient-rose opacity-10 pointer-events-none group-hover:opacity-20 transition-opacity duration-[var(--ts-transition-normal)]" />
+          <div className="space-y-6">
+            {matches.map((match) => (
+              <GlassPanel
+                key={match.id}
+                goldBorder
+                className="cursor-pointer"
+                onClick={() => console.log('Accept match:', match.id)}
+              >
+                <div className="flex items-center gap-5">
+                  {/* Avatar */}
+                  <div
+                    className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 text-xl font-medium"
+                    style={{
+                      background: 'rgba(212, 175, 55, 0.1)',
+                      border: '2px solid rgba(212, 175, 55, 0.25)',
+                      color: '#D4AF37',
+                    }}
+                  >
+                    {match.name.charAt(0).toUpperCase()}
+                  </div>
 
-                  <div className="relative z-10 space-lg">
-                    {/* Avatar + Name */}
-                    <div className="flex items-center gap-lg">
-                      <div className="w-20 h-20 rounded-full overflow-hidden bg-ts-bg-surface ring-2 ring-ts-gold/20 relative flex-shrink-0">
-                        <div className="absolute inset-0 gold-gold-sm rounded-full" />
-                        {match.avatar ? (
-                          <img src={match.avatar} alt={match.name} className="w-full h-full object-cover relative z-10" />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-ts-gold text-2xl font-light relative z-10">
-                            {match.name.charAt(0).toUpperCase()}
-                          </div>
-                        )}
-                      </div>
-                      <div className="space-xs">
-                        <h3 className="ts-font-heading-m text-text-primary group-hover:text-ts-gold transition-colors duration-[var(--ts-transition-fast)]">
-                          {match.name}
-                        </h3>
-                        <p className="text-text-muted text-sm">{match.age} år</p>
-                      </div>
-                    </div>
-
-                    {/* Location */}
-                    {match.location && (
-                      <p className="text-text-muted text-sm flex items-center gap-xs">
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        </svg>
-                        {match.location}
-                      </p>
-                    )}
-
-                    {/* Resonans-indikator */}
+                  {/* Info */}
+                  <div className="flex-1">
+                    <h3
+                      className="text-lg font-semibold mb-1"
+                      style={{ color: '#FFFFFF' }}
+                    >
+                      {match.name}
+                    </h3>
+                    <p
+                      className="text-sm"
+                      style={{ color: 'rgba(255, 255, 255, 0.5)' }}
+                    >
+                      {match.age} år · {match.location}
+                    </p>
                     {match.resonanceScore && (
-                      <div className="space-xs">
-                        <div className="flex items-center justify-between text-xs">
-                          <span className="text-text-subtle">Resonans</span>
-                          <span className="text-ts-gold font-medium">{match.resonanceScore}%</span>
+                      <div className="mt-2">
+                        <div className="flex items-center justify-between mb-1">
+                          <span
+                            className="text-xs"
+                            style={{ color: 'rgba(255, 255, 255, 0.4)' }}
+                          >
+                            Resonans
+                          </span>
+                          <span
+                            className="text-xs font-medium"
+                            style={{ color: '#D4AF37' }}
+                          >
+                            {match.resonanceScore}%
+                          </span>
                         </div>
                         <ResonansBar score={match.resonanceScore} />
                       </div>
                     )}
-
-                    {/* CTA */}
-                    <div className="pt-sm">
-                      <span className="text-ts-gold/60 group-hover:text-ts-gold text-sm font-medium transition-colors duration-[var(--ts-transition-fast)]">
-                        Start reisen →
-                      </span>
-                    </div>
                   </div>
+
+                  {/* Arrow */}
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    style={{ color: '#D4AF37' }}
+                  >
+                    <path
+                      d="M7 4L13 10L7 16"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
                 </div>
-              </FadeIn>
+              </GlassPanel>
             ))}
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
 }

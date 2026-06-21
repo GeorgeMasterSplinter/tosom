@@ -31,20 +31,28 @@ interface WeightsType {
   future: number;
 }
 
+/**
+ * intimacyScore — BERRE basert på emosjonell djupde og sårbarhet i samtal.
+ * Ingen foto-basert scoring — strid mot core-definition.
+ */
 function intimacyScore(a: Record<string, unknown>, b: Record<string, unknown>): number {
-  let score = 0;
+  let score = 50; // baseline
+  
+  // Berre bruks bio-lengde som indikator på sårbarhet/djupde
   const bioA = (a.bio as string)?.length ?? 0;
   const bioB = (b.bio as string)?.length ?? 0;
+  
+  // Lenge bio = meir sårbarhet/djupde (maks 15 poeng kvar)
   score += Math.min(bioA / 20, 15);
   score += Math.min(bioB / 20, 15);
+  
+  // Felles interesser = felles djupde (maks 10 poeng kvar)
   const interestsA = Array.isArray(a.interests) ? a.interests.length : 0;
   const interestsB = Array.isArray(b.interests) ? b.interests.length : 0;
   score += Math.min(interestsA / 3, 10);
   score += Math.min(interestsB / 3, 10);
-  const photosA = Array.isArray(a.photos) ? a.photos.length : 0;
-  const photosB = Array.isArray(b.photos) ? b.photos.length : 0;
-  score += Math.min(photosA / 2, 10);
-  score += Math.min(photosB / 2, 10);
+  
+  // INGEN photo-scoring!
   return Math.min(score, 100);
 }
 

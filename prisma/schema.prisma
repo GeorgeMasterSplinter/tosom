@@ -19,6 +19,32 @@ enum JourneyPhase {
   CHECKIN
 }
 
+enum DeepProfileStep {
+  IDENTITY
+  LIFE_SITUATION
+  LIFESTYLE
+  PERSONALITY
+  RELATIONSHIP_STYLE
+  COMMUNICATION
+  INTIMACY
+  FUTURE_VISION
+  BOUNDARIES
+  SUMMARY
+}
+
+enum JourneyState {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum ResonanceLevel {
+  GENTLE
+  MODERATE
+  STRONG
+  DEEP
+}
+
 enum MatchStatus {
   pending
   active
@@ -124,12 +150,17 @@ model User {
   password         String?
   onboardingStep   Int              @default(1)
   onboardingComplete Boolean        @default(false)
+  deepProfileComplete Boolean        @default(false)
   role             Role              @default(USER)
   verified         Boolean           @default(false)
   bannedAt         DateTime?
   deletedAt        DateTime?
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
+
+  // Match-kontroll (core-definition: éin match per 24t, låst i 30d)
+  lastMatchAt      DateTime?
+  lockedUntil      DateTime?
 
   profile          Profile?                       @relation("UserProfile")
   conversationsA   Conversation[]                 @relation("ConversationToUserA")
@@ -147,22 +178,49 @@ model User {
 
   @@index([role])
   @@index([email])
+  @@index([lastMatchAt])
+  @@index([lockedUntil])
 }
 
 model Profile {
   id          String   @id @default(cuid())
   userId      String   @unique
+
+  // --- Basis (lett data) ---
   firstName   String?
   lastName    String?
   age         Int?
-  gender      String?
+
+  // --- Djup profil (10+ dimensjonar — core-definition) ---
+  identityName     String?         // kva brukaren vil kallast
+  lifeSituation    Json?           // jobb, bustad, økonomi, kvardag
+  lifestyle        Json?           // aktivitetsnivå, sosiale preferansar, helgevanar
+  personality      Json?           // styrkar, trekk, natur
+  relationshipStyle String?        // korleie brukaren søker relasjon
+  communication    Json?           // kommunikasjonspreferanse (modent)
+  intimacy         Json?           // intimitet & nærheit (modent)
+  futureVision     Json?           // framtidsønsker, dramar, mål
+  boundaries       Json?           // grenser, behov, limitasjonar
+  emotionalNeeds   Json?           // emosjonelle behov
+  lifeRhythm       String?        // livsrytme: "morning" | "evening" | "fast" | "slow"
+  maturityLevel    Int?           // modenheit/trygghet: 1-10
+  securityLevel    String?        // "unsicher" | "ambivalent" | "secure"
+
+  // --- Lettdata (alltid valfrie, aldri brukt i matching) ---
+  photoUrl    String?            // berre éi foto-url (valfritt)
   bio         String?
   interests   String[]
-  photos      String[]
+
+  deepProfileStep DeepProfileStep @default(IDENTITY)
+  deepProfileData Json?
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   user        User     @relation("UserProfile", fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([deepProfileStep])
 }
 
 model Match {
@@ -170,8 +228,11 @@ model Match {
   userAId   String
   userBId   String
   status    MatchStatus @default(active)
-  score     Float?
+  resonanceLevel ResonanceLevel @default(GENTLE)
   reviewed  Boolean     @default(false)
+  acceptedByA DateTime?
+  acceptedByB DateTime?
+  lockedAt  DateTime?
   expiresAt DateTime?
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
@@ -242,15 +303,21 @@ model Conversation {
   updatedAt      DateTime      @updatedAt
   journeyStep    JourneyStep?  @relation("ConvToStep")
 
+  // Core-definition: 14 dagar utan bilder
+  imageShareAllowedAt DateTime?
+  imageShared       Boolean           @default(false)
+
   userA          User          @relation("ConversationToUserA", fields: [userAId], references: [id])
   userB          User          @relation("ConversationToUserB", fields: [userBId], references: [id])
   messages       Message[]
+  resonanceSessions ResonanceSession[]
 
   @@index([userAId, userBId])
   @@index([matchId])
   @@index([endedAt])
   @@index([frozenAt])
   @@index([lastMessageAt])
+  @@index([imageShareAllowedAt])
 }
 
 model Message {
@@ -278,6 +345,10 @@ model JourneyProgress {
   userId       String       @unique
   phase        JourneyPhase @default(EARLY)
   day          Int          @default(1)
+  completedDays Int          @default(0)
+  nextDayAt    DateTime?    // 24t-lås per dag
+  startedAt    DateTime     @default(now())
+  endedAt      DateTime?
   pausedAt     DateTime?
   resumedAt    DateTime?
   completedAt  DateTime?
@@ -319,6 +390,40 @@ model JourneyStep {
   systemMessage  String?
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
+}
+
+model ResonanceSession {
+  id              String       @id @default(cuid())
+  conversationId  String
+  day             Int
+  emotionalTone   String       // "positive" | "neutral" | "mixed" | "deep"
+  depthLevel      Int          // 1-10
+  responseQuality String       // "engaged" | "passive" | "neutral" | "resistant"
+  mutualSharing   Boolean
+  vulnerability   Boolean
+  summary         String?
+  createdAt       DateTime     @default(now())
+
+  conversation    Conversation @relation(fields: [conversationId], references: [id])
+
+  @@index([conversationId, day])
+  @@index([conversationId])
+}
+
+model JourneyDayContent {
+  id              String   @id @default(cuid())
+  day             Int      // 1-30
+  theme           String
+  phase           JourneyPhase
+  reflectionQuestion String
+  conversationPrompt String
+  task            String?
+  resonanceGoal   String
+  systemMessage   String?
+  createdAt       DateTime @default(now())
+
+  @@unique([day])
+  @@index([day])
 }
 
 model SystemMessage {

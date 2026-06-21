@@ -7,7 +7,7 @@ interface MatchInfo {
   name: string;
   age?: number | null;
   bio?: string | null;
-  score: number | null;
+  resonanceLevel?: string | null;
 }
 
 interface ConvoInfo {
@@ -92,7 +92,7 @@ export async function GET(request: Request) {
           [partnerProfile?.firstName, partnerProfile?.lastName].filter(Boolean).join(" ") || "Ukjent",
         age: partnerProfile?.age,
         bio: partnerProfile?.bio,
-        score: match.score ?? null,
+        resonanceLevel: match.resonanceLevel ?? null,
       };
     }
 

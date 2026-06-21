@@ -14,45 +14,7 @@ export default async function UserProfilePage({ params }: Props) {
   const user = await prisma.user.findUnique({
     where: { id },
     include: {
-      profile: {
-        select: {
-          age: true,
-          bio: true,
-          gender: true,
-          location: true,
-          firstName: true,
-          lastName: true,
-          jobStatus: true,
-          livingSituation: true,
-          children: true,
-          lifeRhythm: true,
-          activityLevel: true,
-          socialLevel: true,
-          financialStyle: true,
-          weekendStyle: true,
-          travelStyle: true,
-          structureStyle: true,
-          energyStyle: true,
-          communicationStyle: true,
-          planningStyle: true,
-          loveLanguage: true,
-          giveStyle: true,
-          needStyle: true,
-          relationshipExpectation: true,
-          dealbreaker: true,
-          physicalComfort: true,
-          emotionalPace: true,
-          physicalImportance: true,
-          boundaryStyle: true,
-          intimacyStyle: true,
-          futureWish: true,
-          ambitionLevel: true,
-          lifePace: true,
-          longTermExpectation: true,
-          lifeDirection: true,
-          photos: true,
-        }
-      }
+      profile: true,
     }
   });
 
@@ -87,107 +49,46 @@ export default async function UserProfilePage({ params }: Props) {
         </div>
       </div>
 
-      {/* Journey Info Section */}
+      {/* Profile Info Section */}
       <div className="bg-gray-800 rounded-lg p-6 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Journey Info</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {user.profile?.jobStatus && (
-            <div>
-              <p className="text-gray-400">Job Status</p>
-              <p>{user.profile.jobStatus}</p>
-            </div>
-          )}
-          {user.profile?.livingSituation && (
-            <div>
-              <p className="text-gray-400">Living Situation</p>
-              <p>{user.profile.livingSituation}</p>
-            </div>
-          )}
-          {user.profile?.children && (
-            <div>
-              <p className="text-gray-400">Children</p>
-              <p>{user.profile.children}</p>
-            </div>
-          )}
-          {user.profile?.lifeRhythm && (
-            <div>
-              <p className="text-gray-400">Life Rhythm</p>
-              <p>{user.profile.lifeRhythm}</p>
-            </div>
-          )}
-          {user.profile?.activityLevel && (
-            <div>
-              <p className="text-gray-400">Activity Level</p>
-              <p>{user.profile.activityLevel}</p>
-            </div>
-          )}
-          {user.profile?.socialLevel && (
-            <div>
-              <p className="text-gray-400">Social Level</p>
-              <p>{user.profile.socialLevel}</p>
-            </div>
-          )}
-          {user.profile?.financialStyle && (
-            <div>
-              <p className="text-gray-400">Financial Style</p>
-              <p>{user.profile.financialStyle}</p>
-            </div>
-          )}
-          {user.profile?.weekendStyle && (
-            <div>
-              <p className="text-gray-400">Weekend Style</p>
-              <p>{user.profile.weekendStyle}</p>
-            </div>
-          )}
-          {user.profile?.travelStyle && (
-            <div>
-              <p className="text-gray-400">Travel Style</p>
-              <p>{user.profile.travelStyle}</p>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Account Info Section */}
-      <div className="bg-gray-800 rounded-lg p-6 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Account Info</h2>
+        <h2 className="text-xl font-semibold mb-4">Profil</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <p className="text-gray-400">Age</p>
-            <p>{user.profile?.age || "N/A"}</p>
+            <p className="text-gray-400">Fornavn</p>
+            <p>{user.profile?.firstName || "N/A"}</p>
           </div>
           <div>
-            <p className="text-gray-400">Gender</p>
-            <p>{user.profile?.gender || "N/A"}</p>
+            <p className="text-gray-400">Etternamn</p>
+            <p>{user.profile?.lastName || "N/A"}</p>
           </div>
           <div>
-            <p className="text-gray-400">Location</p>
-            <p>{user.profile?.location || "N/A"}</p>
+            <p className="text-gray-400">Alder</p>
+            <p>{user.profile?.age?.toString() || "N/A"}</p>
           </div>
           <div>
             <p className="text-gray-400">Bio</p>
             <p>{user.profile?.bio || "N/A"}</p>
           </div>
+          <div>
+            <p className="text-gray-400">Interess</p>
+            <p>{user.profile?.interests?.join(", ") || "N/A"}</p>
+          </div>
         </div>
       </div>
 
-      {/* Photos Section */}
-      {user.profile?.photos && user.profile.photos.length > 0 && (
+      {/* Photo Section */}
+      {user.profile?.photoUrl && (
         <div className="bg-gray-800 rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-4">Photos</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {user.profile.photos.map((photo, index) => (
-              <div key={index} className="aspect-square bg-gray-700 rounded-lg flex items-center justify-center">
-                <img 
-                  src={photo} 
-                  alt={`Profile photo ${index + 1}`} 
-                  className="w-full h-full object-cover rounded-lg"
-                  onError={(e) => {
-                    e.currentTarget.src = '/placeholder-image.jpg';
-                  }}
-                />
-              </div>
-            ))}
+          <h2 className="text-xl font-semibold mb-4">Foto</h2>
+          <div className="w-full h-64 bg-gray-700 rounded-lg flex items-center justify-center overflow-hidden">
+            <img 
+              src={user.profile.photoUrl} 
+              alt="Profile photo" 
+              className="w-full h-full object-cover rounded-lg"
+              onError={(e) => {
+                e.currentTarget.src = '/placeholder-image.jpg';
+              }}
+            />
           </div>
         </div>
       )}

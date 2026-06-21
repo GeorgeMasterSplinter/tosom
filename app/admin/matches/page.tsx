@@ -22,7 +22,7 @@ export default async function MatchesPage() {
             <th className="px-4 py-3">Match-ID</th>
             <th className="px-4 py-3">Brukar A</th>
             <th className="px-4 py-3">Brukar B</th>
-            <th className="px-4 py-3">Poeng</th>
+            <th className="px-4 py-3">Resonansnivå</th>
             <th className="px-4 py-3">Status</th>
             <th className="px-4 py-3">Oppretta</th>
             <th className="px-4 py-3">Handlinger</th>
@@ -52,7 +52,7 @@ export default async function MatchesPage() {
                 ({match.userBId})
               </td>
 
-              <td className="px-4 py-3">{match.score}</td>
+              <td className="px-4 py-3">{match.resonanceLevel || "—"}</td>
               <td className="px-4 py-3">{match.status}</td>
               <td className="px-4 py-3">
                 {new Date(match.createdAt).toLocaleString("no-NO")}

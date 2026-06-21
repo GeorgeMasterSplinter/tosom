@@ -1,292 +1,425 @@
-/* ═══════════════════════════════════════════
-   ToSom Premium — Dashboard Page (Redesigned)
-   SectionHero + DashboardHeader + StreakDisplay + QuickActionGrid + NotificationFeed
-   ═══════════════════════════════════════════ */
+/**
+ * ToSom UI 5.0 — Dashboard
+ * 
+ * Rom med:
+ * - Aktiv match (resonans, dag, fase)
+ * - Reise-status (dag 1-30)
+ * - Neste match-tid
+ * - Hurtigtilgang: Chat, Reise, Profil
+ */
 
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { SectionHeader } from "@/components/ui/Section";
-import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
-import { StreakDisplay } from "@/components/dashboard/StreakDisplay";
-import { QuickActionGrid } from "@/components/dashboard/QuickActionGrid";
-import { NotificationFeed, NotificationItem } from "@/components/dashboard/NotificationFeed";
-import { Card } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { ResonanceMeter } from "@/components/ui/ResonanceMeter";
-import { JourneyMap, JourneyStep } from "@/components/journey/JourneyMap";
-import { JourneyCard } from "@/components/journey/JourneyCard";
-import { FadeIn } from "@/components/ui/FadeIn";
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Header } from '@/components/ui5/Header';
+import { GlassPanel } from '@/components/ui5/GlassPanel';
 
-/* ------ Data types ------ */
+/* ------ Types ------ */
 
-interface MatchProfile {
-  id: string;
-  name: string;
-  age?: number | null;
-  bio?: string | null;
-  imageUrl?: string | null;
-  interests?: string[];
-  location?: string;
-  resonanceScore?: number;
+interface DashboardOverview {
+  matchStatus: 'no_match' | 'pending' | 'matched';
+  partner: { id: string; profile: { identityName: string | null } } | null;
+  conversationId: string | null;
+  resonance: number | null;
+  imageShareStatus: { allowed: boolean; daysRemaining: number } | null;
+  journey: {
+    day: number;
+    phase: string;
+    completedDays: number;
+    nextDayAt: string | null;
+    startedAt: string | null;
+    endedAt: string | null;
+  } | null;
+  nextMatchTimer: {
+    locked: boolean;
+    readyAt: string | null;
+    hoursRemaining: number;
+  };
 }
 
-interface ConvoInfo {
-  partnerName: string;
-  lastMessage: string;
-  time: string;
+/* ------ Helpers ------ */
+
+function formatTimer(hours: number): string {
+  if (hours <= 0) return 'Klar';
+  if (hours < 24) return `${hours} timar att`;
+  const d = Math.floor(hours / 24);
+  const h = hours % 24;
+  return `${d}d ${h}t att`;
 }
 
-interface JourneyInfo {
-  day: number;
-  totalDays: number;
-  phase: string;
-  tittel: string;
-  beskrivelse: string;
+function phaseLabel(phase: string): string {
+  const map: Record<string, string> = {
+    EARLY: 'Introduksjon',
+    BUILDING_TRUST: 'Tryggleik',
+    DEEPER: 'Djupare samtalar',
+    CHECKIN: 'Felles reise',
+  };
+  return map[phase] || phase;
 }
-
-type MatchStatus = "no_match" | "pending" | "matched";
 
 /* ------ Main Page ------ */
 
 export default function DashboardPage() {
   const router = useRouter();
 
-  /* State */
   const [loading, setLoading] = useState(true);
-  const [matchStatus, setMatchStatus] = useState<MatchStatus>("no_match");
-  const [matchProfile, setMatchProfile] = useState<MatchProfile | null>(null);
-  const [conversation, setConversation] = useState<ConvoInfo | null>(null);
-  const [journeyInfo, setJourneyInfo] = useState<JourneyInfo | null>(null);
-  const [streak, setStreak] = useState(0);
-  const [userName] = useState("Bruker");
+  const [overview, setOverview] = useState<DashboardOverview | null>(null);
 
-  /* Demo notifications */
-  const [notifications] = useState<NotificationItem[]>([
-    { id: "1", title: "Ny match!", description: "Du og Emma har funnet resonans", time: "2 min siden", important: true, type: "match" },
-    { id: "2", title: "Ny melding", description: "Emma: Hei! Hvordan har du det?", time: "5 min siden", type: "message" },
-    { id: "3", title: "Dagens refleksjon", description: "Dag 3: Hva er noe du sjeldent deler?", time: "1 time siden", type: "info" },
-  ]);
-
-  /* Demo journey steps */
-  const [journeySteps] = useState<JourneyStep[]>([
-    { id: "1", title: "Introduksjon", description: "Oppdag om hverandre", status: "done", icon: "🤝" },
-    { id: "2", title: "Trygghet", description: "Bygg grunnlag for tillit", status: "done", icon: "🛡" },
-    { id: "3", title: "Åpne deg", description: "Del tanker og følelser", status: "active", icon: "🔓" },
-    { id: "4", title: "Djupare samtalar", description: "Utforsk felles verdier", status: "locked" },
-    { id: "5", title: "Sårbarheit", description: "Være autentisk sammen", status: "locked" },
-  ]);
-
-  /* Fetch data */
   useEffect(() => {
     let cancelled = false;
     async function fetchDashboard() {
       try {
-        const res = await fetch("/api/dashboard");
+        const res = await fetch('/api/dashboard/overview');
         if (!res.ok) return;
-        const json = await res.json();
-        if (!cancelled) {
-          if (json.match) setMatchProfile(json.match);
-          if (json.conversation) setConversation(json.conversation);
-          if (json.journey) setJourneyInfo(json.journey);
-        }
+        const ov = await res.json();
+        if (!cancelled) setOverview(ov);
       } catch {
-        /* Silently fail */
+        // Silently fail
       } finally {
         if (!cancelled) setLoading(false);
       }
     }
     fetchDashboard();
-
-    /* Fetch match status */
-    fetch("/api/matching")
-      .then((r) => r.json())
-      .then((json) => {
-        if (!cancelled && json.status) setMatchStatus(json.status);
-      })
-      .catch(() => {});
-
-    /* Fetch streak */
-    fetch("/api/dashboard")
-      .then((r) => r.json())
-      .then((json) => {
-        if (!cancelled && json.journey) {
-          setStreak(json.journey.day || 0);
-        }
-      })
-      .catch(() => {});
-
     return () => { cancelled = true; };
   }, []);
 
   /* Loading */
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[var(--ts-bg-primary)] to-[#111827] text-white flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#0B0E11' }}>
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 rounded-full border-2 border-[var(--ts-gold)]/30 border-t-[var(--ts-gold)] animate-spin" />
-          <p className="text-white/30 text-sm">Laster dashboard...</p>
+          <div
+            className="w-12 h-12 rounded-full flex items-center justify-center"
+            style={{
+              border: '2px solid rgba(255, 255, 255, 0.2)',
+              borderTopColor: '#D4AF37',
+              animation: 'spin 1s linear infinite',
+            }}
+          />
+          <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
+           Lastar dashboard...
+          </p>
         </div>
       </div>
     );
   }
 
-  /* Demo match data */
-  const demoMatch = matchProfile || {
-    id: "demo",
-    name: "Emma",
-    age: 28,
-    bio: "Elsker natur og dype samtaler.",
-    imageUrl: undefined,
-    resonanceScore: 92,
-    location: "Oslo",
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[var(--ts-bg-primary)] to-[#111827] text-white">
-      <div className="max-w-5xl mx-auto px-4 py-12">
-        {/* SectionHeader */}
-        <FadeIn duration={500}>
-          <SectionHeader
-            badge="Dashboard"
-            title="Ditt rom"
-            subtitle="Alt du trenger for reisen deres"
-          />
-        </FadeIn>
+    <div className="min-h-screen" style={{ background: '#0B0E11' }}>
+      <Header currentPath="/dashboard" />
 
-        {/* DashboardHeader */}
-        <FadeIn delay={100} duration={500}>
-          <div className="flex justify-center mb-10">
-            <DashboardHeader name={userName} />
-          </div>
-        </FadeIn>
-
-        {/* StreakDisplay */}
-        <FadeIn delay={200} duration={500}>
-          <div className="flex justify-center mb-8">
-            <StreakDisplay days={streak || 3} />
-          </div>
-        </FadeIn>
-
-        {/* Match Section */}
-        {matchStatus === "matched" && demoMatch && (
-          <FadeIn delay={300} duration={500}>
-            <div className="mb-8">
-              <Card variant="glass" className="p-6">
-                <div className="flex flex-col items-center gap-4">
-                  {/* Avatar */}
-                  <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-[var(--ts-gold)]/40 shadow-[0_0_30px_rgba(212,175,55,0.15)]">
-                    {demoMatch.imageUrl ? (
-                      <img src={demoMatch.imageUrl} alt={demoMatch.name} className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-[var(--ts-gold)]/10 text-[var(--ts-gold)] text-2xl font-light">
-                        {demoMatch.name.charAt(0).toUpperCase()}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Name */}
-                  <div className="text-center">
-                    <h3 className="text-lg font-semibold text-white">
-                      {demoMatch.name}
-                      {demoMatch.age && <span className="ml-2 text-base text-white/60">{demoMatch.age}</span>}
-                    </h3>
-                    {demoMatch.location && (
-                      <p className="text-xs text-white/30 mt-0.5">{demoMatch.location}</p>
-                    )}
-                  </div>
-
-                  {/* ResonanceMeter */}
-                  {demoMatch.resonanceScore !== undefined && (
-                    <ResonanceMeter score={demoMatch.resonanceScore} label="Resonans" size="sm" />
-                  )}
-
-                  {/* Bio */}
-                  {demoMatch.bio && (
-                    <p className="text-sm text-white/40 text-center max-w-sm">{demoMatch.bio}</p>
-                  )}
-
-                  {/* Button */}
-                  <Button variant="primary" onClick={() => router.push(`/profile/${demoMatch.id}`)} className="mt-2">
-                    Se profil
-                  </Button>
-                </div>
-              </Card>
-            </div>
-          </FadeIn>
-        )}
-
-        {/* QuickActionGrid */}
-        <FadeIn delay={400} duration={500}>
-          <div className="mb-8">
-            <QuickActionGrid />
-          </div>
-        </FadeIn>
-
-        {/* Conversation */}
-        {conversation && (
-          <FadeIn delay={500} duration={500}>
-            <div className="mb-8">
-              <Card variant="glass" className="p-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-[var(--ts-gold)]/10 border border-[var(--ts-gold)]/20 flex items-center justify-center text-[var(--ts-gold)] text-sm font-medium">
-                    {conversation.partnerName.charAt(0)}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-white">{conversation.partnerName}</p>
-                    <p className="text-xs text-white/30 truncate">{conversation.lastMessage}</p>
-                  </div>
-                </div>
-                <div className="mt-4">
-                  <Button variant="primary" onClick={() => router.push(`/chat`)} className="w-full">
-                    Fortsett samtale
-                  </Button>
-                </div>
-              </Card>
-            </div>
-          </FadeIn>
-        )}
-
-        {/* Journey + Notifications Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* Journey */}
-          <FadeIn delay={300} duration={500}>
-            <Card variant="glass" className="p-6">
-              <h3 className="text-sm font-medium text-white/60 mb-4">Din reise</h3>
-              <JourneyMap
-                steps={journeySteps}
-                onSelectStep={() => router.push("/journey")}
-              />
-              <div className="mt-4">
-                <Button variant="secondary" onClick={() => router.push("/journey")} className="w-full">
-                  Fortsett reisen
-                </Button>
-              </div>
-            </Card>
-          </FadeIn>
-
-          {/* Notifications */}
-          <FadeIn delay={400} duration={500}>
-            <NotificationFeed notifications={notifications} />
-          </FadeIn>
+      <main className="mx-auto max-w-[1200px] px-8 py-12">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1
+            className="text-[32px] font-semibold mb-2"
+            style={{
+              color: '#FFFFFF',
+              letterSpacing: '-0.02em',
+              lineHeight: '1.2',
+            }}
+          >
+            Ditt rom
+          </h1>
+          <p
+            className="text-base"
+            style={{
+              color: 'rgba(255, 255, 255, 0.5)',
+              lineHeight: '1.5',
+            }}
+          >
+            Alt du treng for reisen deres
+          </p>
         </div>
 
-        {/* No match yet */}
-        {matchStatus === "no_match" && (
-          <FadeIn delay={500} duration={500}>
-            <Card variant="glass" className="p-6 text-center">
-              <svg className="w-12 h-12 mx-auto text-white/10 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-              </svg>
-              <p className="text-white/30 text-sm mb-4">Ingen match ennå</p>
-              <Button variant="primary" onClick={() => router.push("/match")}>
-                Finn match
-              </Button>
-            </Card>
-          </FadeIn>
+        {/* Match Section */}
+        {overview?.matchStatus === 'matched' && overview?.partner && (
+          <GlassPanel goldBorder className="mb-8">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+              {/* Partner info */}
+              <div className="flex items-center gap-4">
+                <div
+                  className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 text-xl font-medium"
+                  style={{
+                    background: 'rgba(212, 175, 55, 0.1)',
+                    border: '2px solid rgba(212, 175, 55, 0.25)',
+                    color: '#D4AF37',
+                  }}
+                >
+                  {overview.partner.profile?.identityName?.charAt(0)?.toUpperCase() || '?'}
+                </div>
+                <div>
+                  <p
+                    className="font-semibold text-lg"
+                    style={{ color: '#FFFFFF' }}
+                  >
+                    {overview.partner.profile?.identityName || 'Ingen partner'}
+                  </p>
+                  <p
+                    className="text-sm"
+                    style={{ color: 'rgba(255, 255, 255, 0.5)' }}
+                  >
+                    {overview.journey
+                      ? `Dag ${overview.journey.day} · ${phaseLabel(overview.journey.phase)}`
+                      : 'Aktiv match'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Resonance + Actions */}
+              <div className="flex items-center gap-6">
+                {overview.resonance !== null && (
+                  <div className="text-center">
+                    <p
+                      className="text-xs mb-1"
+                      style={{ color: 'rgba(255, 255, 255, 0.45)' }}
+                    >
+                      Resonans
+                    </p>
+                    <p
+                      className="text-2xl font-semibold"
+                      style={{ color: '#D4AF37' }}
+                    >
+                      {overview.resonance}/10
+                    </p>
+                  </div>
+                )}
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => router.push('/chat')}
+                    className="px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ease-out"
+                    style={{
+                      background: '#D4AF37',
+                      color: '#0B0E11',
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.target as HTMLElement).style.background = '#E8C766';
+                      (e.target as HTMLElement).style.transform = 'translateY(-1px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.target as HTMLElement).style.background = '#D4AF37';
+                      (e.target as HTMLElement).style.transform = 'translateY(0)';
+                    }}
+                  >
+                    Chat
+                  </button>
+                  <button
+                    onClick={() => router.push('/journey')}
+                    className="px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ease-out"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.04)',
+                      color: 'rgba(255, 255, 255, 0.65)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.target as HTMLElement).style.background = 'rgba(255, 255, 255, 0.07)';
+                      (e.target as HTMLElement).style.borderColor = 'rgba(255, 255, 255, 0.14)';
+                      (e.target as HTMLElement).style.transform = 'translateY(-1px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.target as HTMLElement).style.background = 'rgba(255, 255, 255, 0.04)';
+                      (e.target as HTMLElement).style.borderColor = 'rgba(255, 255, 255, 0.08)';
+                      (e.target as HTMLElement).style.transform = 'translateY(0)';
+                    }}
+                  >
+                    Reise
+                  </button>
+                </div>
+              </div>
+            </div>
+          </GlassPanel>
         )}
-      </div>
+
+        {/* Next Match Timer */}
+        {overview?.nextMatchTimer.locked && (
+          <GlassPanel className="mb-8 text-center">
+            <p
+              className="text-base"
+              style={{ color: 'rgba(255, 255, 255, 0.5)' }}
+            >
+              Neste match om{' '}
+              <span style={{ color: '#D4AF37', fontWeight: 500 }}>
+                {formatTimer(overview.nextMatchTimer.hoursRemaining)}
+              </span>
+            </p>
+          </GlassPanel>
+        )}
+
+        {/* Image Share Status */}
+        {overview?.imageShareStatus && !overview.imageShareStatus.allowed && (
+          <GlassPanel className="mb-8 text-center">
+            <p
+              className="text-base"
+              style={{ color: 'rgba(255, 255, 255, 0.5)' }}
+            >
+              Bilder er tilgjengeleg om{' '}
+              <span style={{ color: '#D4AF37', fontWeight: 500 }}>
+                {overview.imageShareStatus.daysRemaining} dagar
+              </span>
+            </p>
+          </GlassPanel>
+        )}
+
+        {/* Journey Progress */}
+        {overview?.journey && (
+          <GlassPanel goldBorder className="mb-8">
+            <h3
+              className="text-sm font-medium mb-4"
+              style={{ color: 'rgba(255, 255, 255, 0.5)' }}
+            >
+              Reise-status
+            </h3>
+            <div className="space-y-3">
+              {[
+                { label: 'Dag', value: `${overview.journey.day} / 30` },
+                { label: 'Fase', value: phaseLabel(overview.journey.phase) },
+                { label: 'Fullført', value: `${overview.journey.completedDays} dagar` },
+              ].map((item) => (
+                <div key={item.label} className="flex justify-between items-center">
+                  <span style={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: '14px' }}>{item.label}</span>
+                  <span style={{ color: '#FFFFFF', fontWeight: 500 }}>{item.value}</span>
+                </div>
+              ))}
+              {/* Progress bar */}
+              <div
+                className="h-2 rounded-full overflow-hidden"
+                style={{ background: 'rgba(255, 255, 255, 0.05)' }}
+              >
+                <div
+                  className="h-full rounded-full transition-all duration-500"
+                  style={{
+                    width: `${Math.round((overview.journey.completedDays / 30) * 100)}%`,
+                    background: 'linear-gradient(90deg, #D4AF37, #E8C766)',
+                  }}
+                />
+              </div>
+            </div>
+            <div className="mt-6">
+              <button
+                onClick={() => router.push('/journey')}
+                className="w-full px-5 py-3 rounded-xl text-sm font-medium transition-all duration-200 ease-out"
+                style={{
+                  background: 'rgba(212, 175, 55, 0.1)',
+                  color: '#D4AF37',
+                  border: '1px solid rgba(212, 175, 55, 0.2)',
+                }}
+                onMouseEnter={(e) => {
+                  (e.target as HTMLElement).style.background = 'rgba(212, 175, 55, 0.15)';
+                  (e.target as HTMLElement).style.transform = 'translateY(-1px)';
+                }}
+                onMouseLeave={(e) => {
+                  (e.target as HTMLElement).style.background = 'rgba(212, 175, 55, 0.1)';
+                  (e.target as HTMLElement).style.transform = 'translateY(0)';
+                }}
+              >
+                Fortsett reisen
+              </button>
+            </div>
+          </GlassPanel>
+        )}
+
+        {/* No match yet */}
+        {overview?.matchStatus === 'no_match' && (
+          <GlassPanel className="mb-8 text-center py-12">
+            <svg
+              width="48"
+              height="48"
+              viewBox="0 0 48 48"
+              fill="none"
+              className="mx-auto mb-4"
+              style={{ color: 'rgba(212, 175, 55, 0.2)' }}
+            >
+              <circle cx="20" cy="24" r="14" stroke="currentColor" strokeWidth="1.5" />
+              <circle cx="28" cy="24" r="14" stroke="currentColor" strokeWidth="1.5" />
+            </svg>
+            <p
+              className="text-base mb-6"
+              style={{ color: 'rgba(255, 255, 255, 0.45)' }}
+            >
+              Ingen match ennå
+            </p>
+            <button
+              onClick={() => router.push('/onboarding')}
+              className="px-8 py-3 rounded-xl text-sm font-medium transition-all duration-200 ease-out"
+              style={{
+                background: '#D4AF37',
+                color: '#0B0E11',
+              }}
+              onMouseEnter={(e) => {
+                (e.target as HTMLElement).style.background = '#E8C766';
+                (e.target as HTMLElement).style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={(e) => {
+                (e.target as HTMLElement).style.background = '#D4AF37';
+                (e.target as HTMLElement).style.transform = 'translateY(0)';
+              }}
+            >
+              Fullfør profilen
+            </button>
+          </GlassPanel>
+        )}
+
+        {/* Quick Actions */}
+        <div className="grid grid-cols-3 gap-4">
+          {[
+            {
+              label: 'Chat',
+              href: '/chat',
+              icon: (
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M3 10C3 6 6 3 10 3C14 3 17 6 17 10C17 14 14 17 10 17L6 19L7 17C6 16 5 15 5 10Z" stroke="#D4AF37" strokeWidth="1.5" />
+                </svg>
+              ),
+            },
+            {
+              label: 'Reise',
+              href: '/journey',
+              icon: (
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M4 10C4 6.5 6.5 4 10 4C13.5 4 16 6.5 16 10C16 13.5 13.5 16 10 16" stroke="#D4AF37" strokeWidth="1.5" strokeLinecap="round" />
+                  <path d="M10 7V10L12 12" stroke="#D4AF37" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              ),
+            },
+            {
+              label: 'Profil',
+              href: '/profile',
+              icon: (
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <circle cx="10" cy="7" r="3.5" stroke="#D4AF37" strokeWidth="1.5" />
+                  <path d="M3 17C3 13.5 5.5 11 10 11C14.5 11 17 13.5 17 17" stroke="#D4AF37" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+              ),
+            },
+          ].map((action) => (
+            <button
+              key={action.label}
+              onClick={() => router.push(action.href)}
+              className="flex flex-col items-center gap-3 p-6 rounded-2xl transition-all duration-200 ease-out"
+              style={{
+                background: 'rgba(255, 255, 255, 0.02)',
+                border: '1px solid rgba(255, 255, 255, 0.04)',
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.background = 'rgba(255, 255, 255, 0.04)';
+                (e.currentTarget as HTMLElement).style.borderColor = 'rgba(212, 175, 55, 0.15)';
+                (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.background = 'rgba(255, 255, 255, 0.02)';
+                (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255, 255, 255, 0.04)';
+                (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+              }}
+            >
+              {action.icon}
+              <span className="text-sm font-medium" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                {action.label}
+              </span>
+            </button>
+          ))}
+        </div>
+      </main>
     </div>
   );
 }

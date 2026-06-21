@@ -105,8 +105,8 @@ export default async function MatchDetailPage({ params }: { params: Promise<{ id
             <p>{m.status}</p>
           </div>
           <div>
-            <p className="text-gray-400">Match Score</p>
-            <p>{m.score}</p>
+            <p className="text-gray-400">Resonansnivå</p>
+            <p>{m.resonanceLevel || "—"}</p>
           </div>
           <div>
             <p className="text-gray-400">Created At</p>

@@ -575,82 +575,72 @@ body.landing-page {
 :root {
   /* ══ Layout ══ */
   --ts-navbar-height: 64px;
+  --ts-navbar-height-sticky: 56px;
   --ts-sidebar-width: 256px;
-  --ts-container-max: 80rem;
+  --ts-container-max: 1600px;
+  --ts-container-narrow: 720px;
+  --ts-container-wide: 1200px;
 
-  /* ══ Nordic Calm Background ══ */
-  --ts-bg-primary: #080C18;
-  --ts-bg-secondary: #0C1122;
-  --ts-bg-surface: #111827;
-  --ts-bg-surface-elevated: #1A2332;
-  --ts-bg-calm-deep: #060A14;
-  --ts-bg-calm-warm: #12101A;
+  /* ══ UI 5.0 Background Palette ══ */
+  --ts-bg-primary: #0B0E11;
+  --ts-bg-secondary: #11151A;
+  --ts-bg-surface: #1A1F26;
+  --ts-bg-surface-elevated: #222830;
 
-  /* ══ Gold Noir Text ══ */
-  --ts-text-primary: #F0ECE4;
-  --ts-text-secondary: #C9C4B8;
-  --ts-text-muted: rgba(201, 196, 184, 0.6);
-  --ts-text-subtle: rgba(201, 196, 184, 0.35);
+  /* ══ UI 5.0 Text Palette ══ */
+  --ts-text-primary: #FFFFFF;
+  --ts-text-secondary: rgba(255, 255, 255, 0.65);
+  --ts-text-muted: rgba(255, 255, 255, 0.45);
+  --ts-text-subtle: rgba(255, 255, 255, 0.30);
   --ts-text-gold-accent: #D4AF37;
 
-  /* ══ Gold Noir Accents ══ */
+  /* ══ UI 5.0 Gold Accents ══ */
   --ts-gold: #D4AF37;
   --ts-gold-light: #E8C766;
   --ts-gold-dark: #B8942E;
-  --ts-gold-glow: rgba(212, 175, 55, 0.3);
-  --ts-gold-soft: rgba(212, 175, 55, 0.08);
-  --ts-gold-noir: #C19A2F;
-  --ts-gold-glow-strong: rgba(212, 175, 55, 0.5);
+  --ts-gold-soft: rgba(212, 175, 55, 0.10);
+  --ts-gold-glow: rgba(212, 175, 55, 0.25);
+  --ts-gold-glow-strong: rgba(212, 175, 55, 0.40);
 
-  /* ══ Nordic Calm Accents ══ */
-  --ts-calm-blue: #4A7B9F;
-  --ts-calm-blue-soft: rgba(74, 123, 159, 0.15);
-  --ts-calm-green: #6BAF8B;
-  --ts-calm-green-soft: rgba(107, 175, 139, 0.15);
-  --ts-calm-rose: #C47DA0;
-  --ts-calm-rose-soft: rgba(196, 125, 160, 0.15);
-  --ts-calm-violet: #8B7BC4;
-  --ts-calm-violet-soft: rgba(139, 123, 196, 0.15);
-
-  /* ══ Enhanced Glassmorphism ══ */
-  --ts-glass-bg: rgba(255, 255, 255, 0.025);
-  --ts-glass-bg-hover: rgba(255, 255, 255, 0.055);
-  --ts-glass-bg-strong: rgba(255, 255, 255, 0.07);
-  --ts-glass-border: rgba(255, 255, 255, 0.06);
-  --ts-glass-border-hover: rgba(255, 255, 255, 0.12);
-  --ts-glass-border-gold: rgba(212, 175, 55, 0.2);
-  --ts-glass-blur: 16px;
+  /* ══ UI 5.0 Glassmorphism ══ */
+  --ts-glass-bg: rgba(255, 255, 255, 0.04);
+  --ts-glass-bg-hover: rgba(255, 255, 255, 0.07);
+  --ts-glass-bg-strong: rgba(255, 255, 255, 0.08);
+  --ts-glass-border: rgba(255, 255, 255, 0.08);
+  --ts-glass-border-hover: rgba(255, 255, 255, 0.14);
+  --ts-glass-border-gold: rgba(212, 175, 55, 0.25);
+  --ts-glass-blur: 14px;
   --ts-glass-blur-strong: 24px;
   --ts-glass-blur-ultra: 40px;
 
-  /* ══ Enhanced Border ══ */
-  --ts-border: rgba(255, 255, 255, 0.06);
+  /* ══ UI 5.0 Border ══ */
+  --ts-border: rgba(255, 255, 255, 0.08);
   --ts-border-light: rgba(255, 255, 255, 0.04);
   --ts-border-subtle: rgba(255, 255, 255, 0.03);
 
-  /* ══ Status ══ */
+  /* ══ UI 5.0 Status ══ */
   --ts-success: #4DFF88;
-  --ts-error: #FF5C5C;
+  --ts-error: #FF4D4D;
   --ts-warning: #FBBF24;
   --ts-info: #5B9FC4;
 
-  /* ══ Soft Shadows ══ */
-  --ts-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35);
-  --ts-shadow-md: 0 4px 20px rgba(0, 0, 0, 0.3);
-  --ts-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.35);
-  --ts-shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.4);
+  /* ══ UI 5.0 Depth Shadows ══ */
+  --ts-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --ts-shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --ts-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.45);
+  --ts-shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.5);
   --ts-shadow-gold: 0 0 24px rgba(212, 175, 55, 0.12);
   --ts-shadow-gold-hover: 0 0 32px rgba(212, 175, 55, 0.25);
   --ts-shadow-gold-soft: 0 0 16px rgba(212, 175, 55, 0.08);
   --ts-shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.2);
 
-  /* ══ Gold Glow Accents (UI 4.3 — softer, refined) ══ */
+  /* ══ Gold Glow Accents (UI 5.0 — refined) ══ */
   --ts-glow-sm: 0 0 8px rgba(212, 175, 55, 0.10);
   --ts-glow-md: 0 0 16px rgba(212, 175, 55, 0.14);
   --ts-glow-lg: 0 0 32px rgba(212, 175, 55, 0.18);
   --ts-glow-xl: 0 0 64px rgba(212, 175, 55, 0.22);
 
-  /* ══ Spacing (expanded) ══ */
+  /* ══ UI 5.0 Spacing — larger vertical rhythm ══ */
   --ts-spacing-xs: 4px;
   --ts-spacing-sm: 8px;
   --ts-spacing-md: 16px;
@@ -661,9 +651,9 @@ body.landing-page {
   --ts-spacing-4xl: 80px;
   --ts-spacing-5xl: 96px;
   --ts-spacing-6xl: 120px;
-  --ts-spacing-7xl: 144px;
+  --ts-spacing-7xl: 160px;
 
-  /* ══ Radius ══ */
+  /* ══ UI 5.0 Border Radius ══ */
   --ts-radius-sm: 8px;
   --ts-radius-md: 12px;
   --ts-radius-lg: 16px;
@@ -679,10 +669,10 @@ body.landing-page {
   --ts-transition-spring: 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
   --ts-transition-page: 400ms cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* ══ Motion Tokens ══ */
+  /* ══ Micro-motion (UI 5.0) ══ */
   --ts-motion-duration-instant: 80ms;
   --ts-motion-duration-faster: 120ms;
-  --ts-motion-duration-fast: 150ms;
+  --ts-motion-duration-fast: 200ms;
   --ts-motion-duration-normal: 250ms;
   --ts-motion-duration-slow: 350ms;
   --ts-motion-duration-slower: 500ms;
@@ -702,18 +692,20 @@ body.landing-page {
   --ts-motion-stagger-normal: 80ms;
   --ts-motion-stagger-slow: 120ms;
 
-  /* ══ Enhanced Typography ══ */
+  /* ══ UI 5.0 Typography ══ */
+  --ts-font-display-xl: 64px;
+  --ts-font-display-l: 56px;
+  --ts-font-display-m: 48px;
   --ts-font-heading-2xl: 48px;
-  --ts-font-heading-xl: 36px;
+  --ts-font-heading-xl: 32px;
   --ts-font-heading-l: 28px;
-  --ts-font-heading-m: 22px;
-  --ts-font-heading-s: 18px;
+  --ts-font-heading-m: 24px;
+  --ts-font-heading-s: 20px;
   --ts-font-body: 16px;
   --ts-font-small: 14px;
   --ts-font-xs: 12px;
-  --ts-font-display-xl: 56px;
-  --ts-font-display-l: 44px;
-  --ts-font-display-m: 36px;
+  --ts-letter-spacing: -0.01em;
+  --ts-letter-spacing-tight: -0.02em;
 
   /* ══ Section Spacing ══ */
   --ts-section-padding-y: var(--ts-spacing-6xl);

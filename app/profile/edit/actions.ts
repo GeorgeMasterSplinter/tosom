@@ -8,18 +8,20 @@ import { revalidatePath } from "next/cache";
 export interface ProfileFormData {
   firstName: string;
   lastName: string;
-  gender: string | null;
   age: number | null;
   bio: string | null;
   interests: string;
-  photos: string;
+  photoUrl: string;
+  identityName: string | null;
+  lifeRhythm: string | null;
+  maturityLevel: number | null;
 }
 
 export async function getProfile() {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
-    return { profile: null, error: "Du må være logget inn" };
+    return { profile: null, error: "Du må vere logga inn" };
   }
 
   try {
@@ -31,16 +33,18 @@ export async function getProfile() {
     const formatted: ProfileFormData = {
       firstName: profile.firstName ?? "",
       lastName: profile.lastName ?? "",
-      gender: profile.gender,
       age: profile.age,
       bio: profile.bio,
       interests: (profile.interests ?? []).join(", "),
-      photos: (profile.photos ?? []).join(", "),
+      photoUrl: profile.photoUrl ?? "",
+      identityName: profile.identityName ?? null,
+      lifeRhythm: profile.lifeRhythm ?? null,
+      maturityLevel: profile.maturityLevel ?? null,
     };
 
     return { profile: formatted };
   } catch {
-    return { profile: null, error: "Kunne ikke hente profilen" };
+    return { profile: null, error: "Kunne ikkje hente profilen" };
   }
 }
 
@@ -48,7 +52,7 @@ export async function updateProfile(formData: ProfileFormData): Promise<{ succes
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
-    return { error: "Du må være logget inn" };
+    return { error: "Du må vere logga inn" };
   }
 
   try {
@@ -60,27 +64,27 @@ export async function updateProfile(formData: ProfileFormData): Promise<{ succes
         userId: session.user.id,
         firstName: formData.firstName || undefined,
         lastName: formData.lastName || undefined,
-        gender: formData.gender || undefined,
         age: parsedAge,
         bio: formData.bio || undefined,
+        photoUrl: formData.photoUrl || undefined,
+        identityName: formData.identityName || undefined,
+        lifeRhythm: formData.lifeRhythm || undefined,
+        maturityLevel: formData.maturityLevel || parsedAge,
         interests: formData.interests
           ? formData.interests.split(",").map((s) => s.trim()).filter(Boolean)
-          : [],
-        photos: formData.photos
-          ? formData.photos.split(",").map((s) => s.trim()).filter(Boolean)
           : [],
       },
       update: {
         firstName: formData.firstName || undefined,
         lastName: formData.lastName || undefined,
-        gender: formData.gender || undefined,
         age: parsedAge,
         bio: formData.bio || undefined,
+        photoUrl: formData.photoUrl || undefined,
+        identityName: formData.identityName || undefined,
+        lifeRhythm: formData.lifeRhythm || undefined,
+        maturityLevel: formData.maturityLevel || parsedAge,
         interests: formData.interests
           ? formData.interests.split(",").map((s) => s.trim()).filter(Boolean)
-          : [],
-        photos: formData.photos
-          ? formData.photos.split(",").map((s) => s.trim()).filter(Boolean)
           : [],
       },
     });
@@ -89,6 +93,6 @@ export async function updateProfile(formData: ProfileFormData): Promise<{ succes
     return { success: true };
   } catch (error) {
     console.error("Failed to update profile:", error);
-    return { error: "Kunne ikke oppdatere profilen" };
+    return { error: "Kunne ikkje oppdatere profilen" };
   }
 }

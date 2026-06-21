@@ -19,11 +19,13 @@ export default function ProfileEditForm({
       setForm({
         firstName: initialProfile.firstName,
         lastName: initialProfile.lastName,
-        gender: initialProfile.gender,
         age: initialProfile.age,
         bio: initialProfile.bio,
         interests: initialProfile.interests,
-        photos: initialProfile.photos,
+        photoUrl: initialProfile.photoUrl ?? "",
+        identityName: initialProfile.identityName,
+        lifeRhythm: initialProfile.lifeRhythm,
+        maturityLevel: initialProfile.maturityLevel,
       });
     }
   }, [initialProfile]);
@@ -125,10 +127,6 @@ export default function ProfileEditForm({
     ? form.interests.split(",").map((s: string) => s.trim()).filter(Boolean)
     : [];
 
-  const bilder = form.photos
-    ? form.photos.split(",").map((s: string) => s.trim()).filter(Boolean)
-    : [];
-
   return (
     <form onSubmit={handleSubmit} className="space-y-10">
       {/* Feilmelding */}
@@ -140,12 +138,12 @@ export default function ProfileEditForm({
 
       {/* Seksjon: Personlig */}
       <section>
-        <h2 className="text-lg font-medium text-white">Personlig</h2>
+        <h2 className="text-lg font-medium text-white">Personleg</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
-          <F label="Fornavn" field="firstName" nullable />
-          <F label="Etternavn" field="lastName" nullable />
-          <F label="Kjønn" field="gender" nullable />
+          <F label="Fornamn" field="firstName" nullable />
+          <F label="Etternamn" field="lastName" nullable />
           <F label="Alder" field="age" type="number" nullable />
+          <F label="Identitetsnamn" field="identityName" nullable />
         </div>
       </section>
 
@@ -159,7 +157,7 @@ export default function ProfileEditForm({
 
       {/* Seksjon: Interesser */}
       <section>
-        <h2 className="text-lg font-medium text-white">Interesser</h2>
+        <h2 className="text-lg font-medium text-white">Interessar</h2>
         <div className="mt-4 space-y-4">
           {alleInteresser.length > 0 && (
             <div className="flex flex-wrap gap-2">
@@ -180,40 +178,48 @@ export default function ProfileEditForm({
         </div>
       </section>
 
-      {/* Seksjon: Bilder */}
+      {/* Seksjon: Livsrytme */}
       <section>
-        <h2 className="text-lg font-medium text-white">Bilder</h2>
-        <div className="mt-4 space-y-4">
-          {bilder.length > 0 && (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {bilder.map((url: string, i: number) => (
-                <div
-                  key={`${url}-${i}`}
-                  className="rounded-xl shadow-md shadow-black/20 overflow-hidden aspect-[4/5]"
-                >
-                  <img
-                    src={url}
-                    alt="Profilbilde"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              ))}
-            </div>
-          )}
-          <div className="rounded-xl bg-white/10 border border-white/10 px-4 py-3 text-gray-200 hover:bg-white/20 transition cursor-pointer text-sm">
-            Legg til bilde-URL
-          </div>
+        <h2 className="text-lg font-medium text-white">Livsrytme</h2>
+        <div className="mt-4">
+          <F label="Livsrytme" field="lifeRhythm" nullable />
         </div>
       </section>
 
-      {/* Knapper */}
+      {/* Seksjon: Foto */}
+      <section>
+        <h2 className="text-lg font-medium text-white">Foto</h2>
+        <div className="mt-4 space-y-4">
+          {form.photoUrl && (
+            <div className="rounded-xl shadow-md shadow-black/20 overflow-hidden aspect-square max-w-sm">
+              <img
+                src={form.photoUrl}
+                alt="Profilbilde"
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                }}
+              />
+            </div>
+          )}
+          <input
+            type="text"
+            value={form.photoUrl ?? ""}
+            onChange={(e) => handleField("photoUrl", e.target.value)}
+            className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/20"
+            placeholder="Bilde-URL (valfritt)"
+          />
+        </div>
+      </section>
+
+      {/* Knappar */}
       <div className="space-y-3 pt-4">
         <button
           type="submit"
           disabled={saving}
           className="w-full rounded-xl bg-white text-gray-900 font-medium py-3 hover:bg-gray-200 transition disabled:opacity-50"
         >
-          {saving ? "Lagrer …" : "Lagre profil"}
+          {saving ? "Lagrar …" : "Lagre profil"}
         </button>
         <button
           type="button"

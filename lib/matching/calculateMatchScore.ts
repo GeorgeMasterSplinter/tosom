@@ -52,13 +52,7 @@ export function calculateMatchScore(
   // 1. GRUNNLEGGJANDE KOMPATIBILITET (maks 40 poeng)
   // ============
 
-  // 1a. Kjønn-match (maks 25 poeng)
-  // Placeholder for framtidig orienteringsmatch.
-  if (a.gender && b.gender && a.gender === b.gender) {
-    blocks.basic += 25;
-  }
-
-  // 1b. Alderskompatibilitet (maks 15 poeng)
+  // 1a. Alderskompatibilitet (maks 15 poeng)
   // Jo nærmare aldrane er, jo høgare score.
   const ageA = a.age || 0;
   const ageB = b.age || 0;

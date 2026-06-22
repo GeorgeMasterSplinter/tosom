@@ -24,12 +24,12 @@ export const CtaButton: FC<CtaButtonProps> = ({
   const goldStyles = hovered
     ? {
         background: '#E8C766',
-        boxShadow: '0 0 60px rgba(212,175,55,0.75), 0 0 2px rgba(212,175,55,0.8), 0 6px 20px rgba(0,0,0,0.25)',
-        transform: 'translateY(-2px)',
+        boxShadow: '0 0 80px rgba(212,175,55,0.85), 0 0 3px rgba(212,175,55,0.9), 0 8px 24px rgba(0,0,0,0.3)',
+        transform: 'translateY(-3px)',
       }
     : {
         background: '#D4AF37',
-        boxShadow: '0 0 40px rgba(212,175,55,0.45), 0 0 1px rgba(212,175,55,0.6), 0 4px 16px rgba(0,0,0,0.2)',
+        boxShadow: '0 0 60px rgba(212,175,55,0.60), 0 0 2px rgba(212,175,55,0.7), 0 6px 20px rgba(0,0,0,0.25)',
         transform: 'translateY(0)',
       };
 
@@ -57,11 +57,11 @@ export const CtaButton: FC<CtaButtonProps> = ({
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '12px 20px',
-    borderRadius: '12px',
-    fontSize: '16px',
-    fontWeight: '500',
-    width: '100%',
+     padding: '18px 36px',
+     borderRadius: '14px',
+     fontSize: '18px',
+     fontWeight: '600',
+     width: '100%',
   };
 
   return (

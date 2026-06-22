@@ -17,9 +17,9 @@ interface HeaderProps {
 }
 
 const navItems = [
-  { label: 'Hvorfor ToSom', href: '/#why' },
-  { label: 'Slik fungerer det', href: '/#how' },
-  { label: 'Reisen', href: '/#journey' },
+  { label: 'Kvifor ToSom', href: '/kvifor' },
+  { label: 'Slik fungerer det', href: '/slik' },
+  { label: 'Reisen', href: '/reisen' },
 ];
 
 export const Header: FC<HeaderProps> = ({ currentPath = '/' }) => {

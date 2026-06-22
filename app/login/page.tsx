@@ -175,6 +175,7 @@ export default function LoginPage() {
         {/* Secondary */}
         <div className="text-center">
           <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
+            {/* TODO: Koble til betalingssteg før full tilgang. */}
             Har du ingen konto?{' '}
             <a
               href="/onboarding"

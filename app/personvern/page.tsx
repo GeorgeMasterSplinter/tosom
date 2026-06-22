@@ -2,7 +2,7 @@
 
 import { FC } from 'react';
 
-interface PageProps {}
+type PageProps = {}
 
 export const PersonvernPage: FC<PageProps> = () => {
   return (

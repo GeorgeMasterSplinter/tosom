@@ -52,7 +52,7 @@ export const TrustSection: FC<TrustSectionProps> = ({
 }) => {
   return (
     <section
-      className="py-32 md:py-48 mb-28 md:mb-36 relative overflow-hidden"
+      className="py-20 md:py-32 mb-28 md:mb-36 relative overflow-hidden"
       style={{ background: 'linear-gradient(180deg, #0B0F14 0%, #090C10 50%, #0B0F14 100%)' }}
     >
       {/* Subtil vignette */}
@@ -63,7 +63,7 @@ export const TrustSection: FC<TrustSectionProps> = ({
         }}
       />
       
-      <div className="mx-auto max-w-6xl px-6 lg:px-8 relative z-10">
+      <div className="max-w-screen-md mx-auto px-6 relative z-10">
         {/* Seksjonstittel */}
         <div className="text-center mt-8">
           <h2

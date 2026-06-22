@@ -109,7 +109,7 @@ export const Hero: FC<HeroProps> = ({
 
           {/* H1 — 68px på desktop, spotlight-effekt */}
           <h1
-            className="text-4xl md:text-[68px] font-semibold tracking-[-0.02em] leading-[1.1] mb-12 relative"
+            className="text-4xl md:text-[80px] font-semibold tracking-[-0.03em] leading-[1.1] mb-12 relative"
             style={{
               color: '#FFFFFF',
               textShadow: '0 0 40px rgba(255,255,255,0.08)',
@@ -120,7 +120,7 @@ export const Hero: FC<HeroProps> = ({
 
            {/* Undertekst — meir spacing ned til CTA */}
           <p
-            className="text-lg md:text-xl text-white font-medium max-w-lg mx-auto mb-16 leading-[1.6]"
+            className="text-2xl md:text-[32px] text-white font-medium max-w-lg mx-auto mb-16 leading-[1.6]"
           >
             {subtitle}
           </p>
@@ -159,7 +159,7 @@ export const Hero: FC<HeroProps> = ({
                     <path d="M5 8L7 10L11 6" stroke="#D4AF37" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" opacity="0.4" />
                   </svg>
                 </div>
-                <span className="text-sm md:text-base text-white leading-[1.7] max-w-md">
+                <span className="text-xl md:text-[32px] text-white leading-[1.7] max-w-md">
                   {point.label}
                 </span>
               </div>

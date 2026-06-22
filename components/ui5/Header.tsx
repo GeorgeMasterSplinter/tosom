@@ -1,7 +1,7 @@
 /**
  * ToSom UI 5.0 — Sticky Header (Dark Blue-Gray Edition)
  * 
- * Logo venstre • Meny midt • Logg inn + CTA høgre
+ * Logo venstre • Meny midt
  * Glassmorphism, sticky, premium hover-states
  * Mørk blågrå bakgrunn, gull-aksentar
  */
@@ -20,6 +20,7 @@ const navItems = [
   { label: 'Kvifor ToSom', href: '/kvifor' },
   { label: 'Slik fungerer det', href: '/slik' },
   { label: 'Reisen', href: '/reisen' },
+  { label: 'Prisar', href: '/priser' },
 ];
 
 export const Header: FC<HeaderProps> = ({ currentPath = '/' }) => {
@@ -111,48 +112,6 @@ export const Header: FC<HeaderProps> = ({ currentPath = '/' }) => {
           </svg>
         </button>
 
-        {/* Actions */}
-        <div className="hidden lg:flex items-center gap-4">
-          <Link
-            href="/login"
-            className="text-[15px] font-medium transition-colors duration-300 ease-out"
-            style={{
-              color: 'rgba(255, 255, 255, 0.6)',
-              padding: '8px 16px',
-              letterSpacing: '-0.01em',
-            }}
-            onMouseEnter={(e) => {
-              (e.target as HTMLElement).style.color = '#FFFFFF';
-            }}
-            onMouseLeave={(e) => {
-              (e.target as HTMLElement).style.color = 'rgba(255, 255, 255, 0.6)';
-            }}
-          >
-            Logg inn
-          </Link>
-          <Link
-            href="/onboarding"
-            className="inline-flex items-center px-6 py-3 rounded-xl text-[14px] font-medium transition-all duration-300 ease-out"
-            style={{
-              background: '#D4AF37',
-              color: '#0B0E11',
-              boxShadow: '0 0 12px rgba(212, 175, 55, 0.35), 0 2px 8px rgba(0,0,0,0.2)',
-              letterSpacing: '-0.01em',
-            }}
-            onMouseEnter={(e) => {
-              (e.target as HTMLElement).style.background = '#E8C766';
-              (e.target as HTMLElement).style.boxShadow = '0 0 20px rgba(212, 175, 55, 0.5), 0 4px 12px rgba(0,0,0,0.25)';
-              (e.target as HTMLElement).style.transform = 'translateY(-1px)';
-            }}
-            onMouseLeave={(e) => {
-              (e.target as HTMLElement).style.background = '#D4AF37';
-              (e.target as HTMLElement).style.boxShadow = '0 0 12px rgba(212, 175, 55, 0.35), 0 2px 8px rgba(0,0,0,0.2)';
-              (e.target as HTMLElement).style.transform = 'translateY(0)';
-            }}
-          >
-            Opprett konto
-          </Link>
-        </div>
       </div>
 
       {/* Mobil meny */}
@@ -178,30 +137,6 @@ export const Header: FC<HeaderProps> = ({ currentPath = '/' }) => {
               {item.label}
             </a>
           ))}
-          <div className="pt-3 flex flex-col gap-2">
-            <Link
-              href="/login"
-              className="text-center py-2 text-[15px] transition-colors duration-200 ease-out"
-              style={{
-                color: 'rgba(255, 255, 255, 0.6)',
-                borderTop: '1px solid rgba(255,255,255,0.1)',
-              }}
-              onClick={() => setMenuOpen(false)}
-            >
-              Logg inn
-            </Link>
-            <Link
-              href="/onboarding"
-              className="text-center py-3 rounded-xl text-[14px] font-medium transition-all duration-300 ease-out"
-              style={{
-                background: '#D4AF37',
-                color: '#0B0E11',
-              }}
-              onClick={() => setMenuOpen(false)}
-            >
-              Opprett konto
-            </Link>
-          </div>
         </nav>
       </div>
     </header>

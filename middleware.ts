@@ -46,6 +46,7 @@ const PUBLIC_PATHS = [
   '/priser',
   '/betaling',
   '/questions',
+  '/onboarding',
 ];
 
 /* Nivå 1: Krev innlogging — påmeldte sider */

@@ -472,6 +472,19 @@ model PasswordResetToken {
   @@index([tokenHash])
 }
 
+model MagicLinkToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([token])
+  @@index([expiresAt])
+}
+
 model TwoFactorSecret {
   id        String   @id @default(cuid())
   userId    String   @unique

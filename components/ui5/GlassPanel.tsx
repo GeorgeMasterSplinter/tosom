@@ -10,6 +10,8 @@
  * Bokmål
  */
 
+'use client';
+
 import { FC, ReactNode } from 'react';
 
 interface GlassPanelProps {

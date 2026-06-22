@@ -120,7 +120,7 @@ export const Hero: FC<HeroProps> = ({
 
            {/* Undertekst — meir spacing ned til CTA */}
           <p
-            className="text-2xl md:text-[32px] text-white font-medium max-w-lg mx-auto mb-16 leading-[1.6]"
+            className="text-[32px] text-white font-medium max-w-lg mx-auto mb-16 leading-[1.6]"
           >
             {subtitle}
           </p>
@@ -159,7 +159,7 @@ export const Hero: FC<HeroProps> = ({
                     <path d="M5 8L7 10L11 6" stroke="#D4AF37" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" opacity="0.4" />
                   </svg>
                 </div>
-                <span className="text-xl md:text-[32px] text-white leading-[1.7] max-w-md">
+                <span className="text-[32px] text-white leading-[1.7] max-w-md">
                   {point.label}
                 </span>
               </div>

@@ -63,7 +63,7 @@ export const Footer: FC<FooterProps> = ({
             </span>
             <p
               className="text-sm leading-[1.7]"
-              style={{ color: 'rgba(255, 255, 255, 0.45)' }}
+              style={{ color: 'rgba(255, 255, 255, 0.35)' }}
             >
               Ein rolig, privat plattform for ekte relasjonar.
             </p>
@@ -84,7 +84,7 @@ export const Footer: FC<FooterProps> = ({
 
           {/* Kolonne 2: Produkt */}
           <div>
-            <h4 className="text-xs uppercase tracking-[0.15em] font-semibold mb-3" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            <h4 className="text-xs uppercase tracking-[0.15em] font-semibold mb-3" style={{ color: '#FFFFFF' }}>
               Produkt
             </h4>
             <ul className="space-y-2.5">
@@ -92,7 +92,7 @@ export const Footer: FC<FooterProps> = ({
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-[rgba(255,255,255,0.5)] text-sm hover:text-[#D4AF37] transition-colors duration-200 leading-[1.6] inline-block"
+                    className="text-[#FFFFFF] text-sm hover:text-[#D4AF37] transition-colors duration-200 leading-[1.6] inline-block"
                   >
                     {link.label}
                   </Link>
@@ -103,7 +103,7 @@ export const Footer: FC<FooterProps> = ({
 
           {/* Kolonne 3: Selskap */}
           <div>
-            <h4 className="text-xs uppercase tracking-[0.15em] font-semibold mb-3" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            <h4 className="text-xs uppercase tracking-[0.15em] font-semibold mb-3" style={{ color: '#FFFFFF' }}>
               Selskap
             </h4>
             <ul className="space-y-2.5">
@@ -111,7 +111,7 @@ export const Footer: FC<FooterProps> = ({
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-[rgba(255,255,255,0.5)] text-sm hover:text-[#D4AF37] transition-colors duration-200 leading-[1.6] inline-block"
+                    className="text-[#FFFFFF] text-sm hover:text-[#D4AF37] transition-colors duration-200 leading-[1.6] inline-block"
                   >
                     {link.label}
                   </Link>

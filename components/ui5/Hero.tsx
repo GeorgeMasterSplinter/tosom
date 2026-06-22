@@ -40,9 +40,32 @@ export const Hero: FC<HeroProps> = ({
 
   return (
     <section
-      className="relative pt-28 py-32 md:py-48 mb-24 md:mb-32 overflow-hidden"
-      style={{ background: '#0B0F14' }}
+      className="relative pt-16 py-28 md:py-40 mb-24 md:mb-32 overflow-hidden"
+      style={{ 
+        background: '#0B0F14',
+        backgroundImage: `
+          linear-gradient(180deg, #1A1F26 0%, #0E1218 100%),
+          radial-gradient(ellipse at center, rgba(80,120,255,0.10) 0%, transparent 70%),
+          radial-gradient(circle at center, transparent 60%, rgba(0,0,0,0.35) 100%)
+        `
+      }}
     >
+      {/* Ambient blå glød (topp-høgre) */}
+      <div
+        className="absolute top-0 right-0 w-[800px] h-[600px] pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse at 70% 20%, rgba(80,120,255,0.12) 0%, transparent 70%)',
+        }}
+      />
+
+      {/* Gull-aksent glød (midt-venstre) */}
+      <div
+        className="absolute top-[30%] left-0 w-[600px] h-[500px] pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse at 30% 50%, rgba(212,175,55,0.06) 0%, transparent 70%)',
+        }}
+      />
+
       {/* Spotlight bak H1 */}
       <div
         className="absolute top-[20%] left-[40%] -translate-x-1/2 -translate-y-1/2 pointer-events-none"
@@ -76,8 +99,8 @@ export const Hero: FC<HeroProps> = ({
       <div className="mx-auto max-w-6xl px-6 lg:px-8">
         <div className="max-w-3xl mx-auto text-center">
           {/* Logo */}
-          <div className="flex justify-center mb-16">
-            <svg width="56" height="56" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <div className="flex justify-center mb-12">
+            <svg width="44" height="44" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="15" cy="20" r="12" fill="none" stroke="#D4AF37" strokeWidth="1.5" />
               <circle cx="25" cy="20" r="12" fill="none" stroke="#D4AF37" strokeWidth="1.5" />
               <circle cx="20" cy="20" r="6" fill="none" stroke="#D4AF37" strokeWidth="1" />
@@ -95,9 +118,9 @@ export const Hero: FC<HeroProps> = ({
             {title}
           </h1>
 
-          {/* Undertekst — meir spacing ned til CTA */}
+           {/* Undertekst — meir spacing ned til CTA */}
           <p
-            className="text-lg md:text-xl text-gray-300 font-medium max-w-lg mx-auto mb-16 leading-[1.6]"
+            className="text-lg md:text-xl text-white font-medium max-w-lg mx-auto mb-16 leading-[1.6]"
           >
             {subtitle}
           </p>
@@ -136,7 +159,7 @@ export const Hero: FC<HeroProps> = ({
                     <path d="M5 8L7 10L11 6" stroke="#D4AF37" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" opacity="0.4" />
                   </svg>
                 </div>
-                <span className="text-sm md:text-base text-gray-300 leading-[1.7] max-w-md">
+                <span className="text-sm md:text-base text-white leading-[1.7] max-w-md">
                   {point.label}
                 </span>
               </div>

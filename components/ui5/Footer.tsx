@@ -67,6 +67,19 @@ export const Footer: FC<FooterProps> = ({
             >
               Ein rolig, privat plattform for ekte relasjonar.
             </p>
+            <p
+              className="text-xs mt-2 leading-[1.6]"
+              style={{ color: 'rgba(255, 255, 255, 0.30)' }}
+            >
+              ToSom er bygd for to menneske — ikkje for milliardar.
+            </p>
+            <Link
+              href="/kvifor"
+              className="text-xs inline-block mt-1 hover:text-[#D4AF37] transition-colors duration-200"
+              style={{ color: 'rgba(255, 255, 255, 0.35)' }}
+            >
+              Les vår filosofi →
+            </Link>
           </div>
 
           {/* Kolonne 2: Produkt */}

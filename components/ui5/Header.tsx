@@ -59,7 +59,7 @@ export const Header: FC<HeaderProps> = ({ currentPath = '/' }) => {
       >
         {/* Logo */}
         <Link href="/" className="flex-shrink-0">
-          <Logo size="lg" />
+          <Logo />
         </Link>
 
         {/* Navigasjon — desktop */}

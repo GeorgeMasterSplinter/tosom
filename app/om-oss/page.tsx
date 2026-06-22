@@ -4,19 +4,19 @@ import { FC } from 'react';
 
 interface PageProps {}
 
-export const ReisenPage: FC<PageProps> = () => {
+export const OmOssPage: FC<PageProps> = () => {
   return (
     <main className="relative min-h-screen overflow-hidden" style={{ background: '#0B0F14' }}>
       {/* Hero */}
       <section className="pt-32 pb-20 text-center">
         <h1 className="text-4xl md:text-6xl font-semibold text-white tracking-[-0.02em] mb-8">
-          30-dagers reise
+          Om ToSom
         </h1>
         <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto px-6 leading-[1.7] mb-6">
-          Når to menneske matcher, startar ein guidet 30-dagers reise saman. Den første delen er utan bilder — for å bygge ekte forbindelse først.
+          ToSom blei laga av eit team som har erfaring med datingbransjen frå innsida — og som så korleis den har blitt for menneske.
         </p>
         <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto px-6 leading-[1.7]">
-          Kvifag får dere oppgåver, refleksjonar og samtaletema som hjelper dere å bli kjent på ei djup og meiningfull måte.
+          Vi trur at ekte forbindelse kjem frå ro, trygghet og dype samtalar — ikkje fra swiping og overflatisk evaluering.
         </p>
       </section>
 
@@ -32,4 +32,4 @@ export const ReisenPage: FC<PageProps> = () => {
   );
 };
 
-export default ReisenPage;
+export default OmOssPage;

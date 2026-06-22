@@ -1,10 +1,6 @@
 'use client';
 
-import { FC } from 'react';
-
-type PageProps = {}
-
-export const KontaktPage: FC<PageProps> = () => {
+export default function KontaktPage() {
   return (
     <main className="relative min-h-screen overflow-hidden" style={{ background: '#0B0F14' }}>
       {/* Hero */}
@@ -16,7 +12,7 @@ export const KontaktPage: FC<PageProps> = () => {
           Har du spørsmål om ToSom? Send oss ei melding, så svarar vi så snart som mogleg.
         </p>
         <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto px-6 leading-[1.7]">
-          Vi les alle hendingar og streber etter å svare innan 48 timar.
+          Vi les alle hendingar og strebar etter å svare innan 48 timar.
         </p>
       </section>
 
@@ -30,6 +26,4 @@ export const KontaktPage: FC<PageProps> = () => {
       </section>
     </main>
   );
-};
-
-export default KontaktPage;
+}

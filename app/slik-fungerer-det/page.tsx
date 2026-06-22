@@ -1,10 +1,6 @@
 'use client';
 
-import { FC } from 'react';
-
-type PageProps = {}
-
-export const SlikPage: FC<PageProps> = () => {
+export default function SlikPage() {
   return (
     <main className="relative min-h-screen overflow-hidden" style={{ background: '#0B0F14' }}>
       {/* Hero */}
@@ -16,7 +12,7 @@ export const SlikPage: FC<PageProps> = () => {
           ToSom fungerer annleises enn andre datingplattformar. Det startar med ein dyp profilsøkjar — ikkje eit bilde.
         </p>
         <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto px-6 leading-[1.7]">
-          Du får éin match per 24. time. Når du aksepterer matchen, startar ein guidet 30-dagers reis for to.
+          Du får éin match per 24. time. Når du aksepterer matchen, startar ein guidet 30-dagers reise for to.
         </p>
       </section>
 
@@ -30,6 +26,4 @@ export const SlikPage: FC<PageProps> = () => {
       </section>
     </main>
   );
-};
-
-export default SlikPage;
+}

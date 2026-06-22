@@ -1,10 +1,6 @@
 'use client';
 
-import { FC } from 'react';
-
-type PageProps = {}
-
-export const KviforPage: FC<PageProps> = () => {
+export default function KviforPage() {
   return (
     <main className="relative min-h-screen overflow-hidden" style={{ background: '#0B0F14' }}>
       {/* Hero */}
@@ -30,6 +26,4 @@ export const KviforPage: FC<PageProps> = () => {
       </section>
     </main>
   );
-};
-
-export default KviforPage;
+}

@@ -1,10 +1,6 @@
 'use client';
 
-import { FC } from 'react';
-
-type PageProps = {}
-
-export const ReisenPage: FC<PageProps> = () => {
+export default function ReisenPage() {
   return (
     <main className="relative min-h-screen overflow-hidden" style={{ background: '#0B0F14' }}>
       {/* Hero */}
@@ -16,7 +12,7 @@ export const ReisenPage: FC<PageProps> = () => {
           Når to menneske matcher, startar ein guidet 30-dagers reise saman. Den første delen er utan bilder — for å bygge ekte forbindelse først.
         </p>
         <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto px-6 leading-[1.7]">
-          Kvifag får dere oppgåver, refleksjonar og samtaletema som hjelper dere å bli kjent på ei djup og meiningfull måte.
+          Kvar dag får dere oppgåver, refleksjonar og samtaletema som hjelper dere å bli kjent på ei djup og meiningfull måte.
         </p>
       </section>
 
@@ -30,6 +26,4 @@ export const ReisenPage: FC<PageProps> = () => {
       </section>
     </main>
   );
-};
-
-export default ReisenPage;
+}

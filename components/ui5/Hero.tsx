@@ -40,7 +40,7 @@ export const Hero: FC<HeroProps> = ({
 
   return (
     <section
-      className="relative py-32 md:py-48 mb-24 md:mb-32 overflow-hidden"
+      className="relative pt-28 py-32 md:py-48 mb-24 md:mb-32 overflow-hidden"
       style={{ background: '#0B0F14' }}
     >
       {/* Spotlight bak H1 */}

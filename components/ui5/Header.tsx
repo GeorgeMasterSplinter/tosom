@@ -42,9 +42,9 @@ export const Header: FC<HeaderProps> = ({ currentPath = '/' }) => {
       style={{
         height: '72px',
         background: scrolled
-          ? 'rgba(26, 31, 38, 0.92)'
-          : 'rgba(26, 31, 38, 0.6)',
-        backdropFilter: 'blur(12px)',
+          ? 'rgba(14, 26, 43, 0.95)'
+          : 'rgba(14, 26, 43, 0.8)',
+        backdropFilter: 'blur(8px)',
         borderTop: '1px solid rgba(212, 175, 55, 0.08)',
         borderBottom: scrolled
           ? '1px solid rgba(255, 255, 255, 0.06)'

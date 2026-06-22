@@ -53,8 +53,8 @@ const ChatBubbleV2: React.FC<ChatBubbleV2Props> = ({
           text-sm
           leading-relaxed
           ${isUser
-            ? 'bg-ts-gold/15 border-ts-gold/25 text-ts-gold rounded-[18px_18px_4px_18px]'
-            : 'bg-white/[0.06] border-white/8 text-ts-primary rounded-[18px_18px_18px_4px]'
+            ? 'bg-ts-gold/15 border-ts-gold/25 text-ts-gold rounded-tl-[16px] rounded-tr-[8px] rounded-bl-[16px] rounded-br-[8px]'
+            : 'bg-white/[0.06] border-white/8 text-ts-primary rounded-tl-[8px] rounded-tr-[16px] rounded-bl-[8px] rounded-br-[16px]'
           }
           border
           backdrop-blur-sm

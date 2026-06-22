@@ -113,7 +113,7 @@ export default function MatchPage() {
               Fullfør profilen din for å oppdage nye menneske
             </p>
             <a
-              href="/onboarding"
+              href="/onboarding/start"
               className="inline-block px-8 py-3 rounded-xl text-sm font-medium transition-all duration-200 ease-out"
               style={{ background: '#D4AF37', color: '#0B0E11' }}
             >

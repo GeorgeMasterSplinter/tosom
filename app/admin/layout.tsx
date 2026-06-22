@@ -5,9 +5,11 @@ import Link from "next/link"
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const navItems = [
     { label: "Oversikt", href: "/admin" },
-    { label: "Brukere", href: "/admin/users" },
+    { label: "Brukarar", href: "/admin/users" },
+    { label: "Profiler", href: "/admin/profiles" },
     { label: "Matcher", href: "/admin/matches" },
-    { label: "Konversasjoner", href: "/admin/conversations" },
+    { label: "Samtaler", href: "/admin/conversations" },
+    { label: "Innsikt", href: "/admin/insights" },
     { label: "Reise", href: "/admin/journey" },
     { label: "Innstillinger", href: "/admin/settings" },
   ]

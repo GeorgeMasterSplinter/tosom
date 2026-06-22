@@ -1,46 +1,130 @@
 /**
- * ToSom UI 5.0 — Logo (ren tekst)
- *
- * Rein tekstlogo — ingen ikon eller symbol.
- * Farge: varm beige (#F5E6C8)
- * Størrelse: text-[22px] md:text-[24px]
- * Ikke skalérande på mobil.
+ * ToSom UI5 — Logo Component
+ * 
+ * Ren tekstlogo ("ToSom") i gull (#D4AF37).
+ * Støtter size-variants: xs, sm, md, lg, xl
+ * Ingen ikoner eller symboler.
  */
 
-import { FC } from 'react';
+'use client';
 
-interface LogoProps {
+import { FC, HTMLAttributes } from 'react';
+import Link from 'next/link';
+import { color, typographyToStyle } from '@/config/design-tokens';
+
+/* ========================
+   PROPS INTERFACE
+   ======================== */
+
+export interface LogoProps extends Omit<HTMLAttributes<HTMLElement>, 'color'> {
+  /** Hvilken størrelse? */
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  /** Fargevariant */
+  colorVariant?: 'gold' | 'white' | 'muted';
+  /** Vis tekst? */
   showText?: boolean;
+  /** Ekstra class names */
   className?: string;
+  /** Lenke-mål */
   href?: string;
+  /** ARIA-label */
+  ariaLabel?: string;
 }
 
+/* ========================
+   SIZE MAPPING
+   ======================== */
+
+const sizeMap: Record<string, { fontSize: string; letterSpacing: string }> = {
+  xs:  { fontSize: '16px', letterSpacing: '-0.03em' },
+  sm:  { fontSize: '20px', letterSpacing: '-0.025em' },
+  md:  { fontSize: '24px', letterSpacing: '-0.02em' },
+  lg:  { fontSize: '30px', letterSpacing: '-0.02em' },
+  xl:  { fontSize: '42px', letterSpacing: '-0.02em' },
+};
+
+const colorMap: Record<string, string> = {
+  gold:   color.brand.gold,
+  white:  color.text.primary,
+  muted:  color.text.secondary,
+};
+
+/* ========================
+   COMPONENT
+   ======================== */
+
 export const Logo: FC<LogoProps> = ({
+  size = 'md',
+  colorVariant = 'gold',
   showText = true,
   className = '',
   href,
+  ariaLabel = 'ToSom — rolig, privat relasjonsplattform',
+  style,
+  ...rest
 }) => {
-  const logo = (
+  const fontSize = sizeMap[size].fontSize;
+  const letterSpacing = sizeMap[size].letterSpacing;
+  const textColor = colorMap[colorVariant];
+
+  const logoContent = (
     <span
-      className={`font-semibold tracking-tight text-[22px] md:text-[24px] text-[#F5E6C8] ${className}`}
+      className={`font-semibold tracking-tight ${className}`}
+      style={{
+        fontSize,
+        letterSpacing,
+        color: textColor,
+        ...typographyToStyle('heading-sm'),
+        ...style,
+      }}
     >
-      {showText && 'ToSom'}
+      {showText ? 'ToSom' : 'T'}
     </span>
   );
 
+  /* Render as link if href provided */
   if (href) {
     return (
-      <a
+      <Link
         href={href}
         className="inline-flex items-center"
-        aria-label="ToSom heimside"
+        aria-label={ariaLabel}
+        {...rest}
       >
-        {logo}
-      </a>
+        {logoContent}
+      </Link>
     );
   }
 
-  return logo;
+  return logoContent;
 };
+
+/* ========================
+   CONVENIENCE EXPORTS
+   ======================== */
+
+/** Small logo (navbar) */
+export const LogoSmall: FC<Omit<LogoProps, 'size'>> = (props) => (
+  <Logo {...props} size="sm" />
+);
+
+/** Medium logo (default) */
+export const LogoMedium: FC<Omit<LogoProps, 'size'>> = (props) => (
+  <Logo {...props} size="md" />
+);
+
+/** Large logo (hero) */
+export const LogoLarge: FC<Omit<LogoProps, 'size'>> = (props) => (
+  <Logo {...props} size="lg" />
+);
+
+/** XL logo (hero expanded) */
+export const LogoXL: FC<Omit<LogoProps, 'size'>> = (props) => (
+  <Logo {...props} size="xl" />
+);
+
+/* ========================
+   DEFAULT EXPORT
+   ======================== */
 
 export default Logo;

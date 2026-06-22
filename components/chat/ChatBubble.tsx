@@ -28,10 +28,10 @@ export const ChatBubble = ({
         className={`flex ${isMe ? "justify-end" : "justify-start"} mb-3`}
       >
         <div
-          className={`max-w-[75%] rounded-2xl px-4 py-3 ${
+          className={`max-w-[75%] px-4 py-3 ${
             isMe
-              ? "bg-[var(--ts-gold)]/15 text-white border border-[var(--ts-gold)]/25 rounded-br-sm"
-              : "bg-white/[0.06] text-white/80 border border-white/8 rounded-bl-sm"
+              ? "bg-[var(--ts-gold)]/15 text-white border border-[var(--ts-gold)]/25 rounded-tl-[16px] rounded-tr-[8px] rounded-bl-[16px] rounded-br-[8px]"
+              : "bg-white/[0.06] text-white/80 border border-white/8 rounded-tl-[8px] rounded-tr-[16px] rounded-bl-[8px] rounded-br-[16px]"
           } transition-all duration-200`}
         >
           <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">

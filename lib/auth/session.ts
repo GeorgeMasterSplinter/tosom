@@ -1,43 +1,65 @@
 /**
- * Session cookie utilities
- * Simple cookie-based session management.
+ * ToSom — Session helper for API routes
+ * 
+ * Bruk denne i server-side API-ruter for a hente session.
  */
 
-import { serialize } from "cookie";
-import { randomUUID } from "crypto";
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth/nextauth'
+import { prisma } from '@/lib/prisma'
+import { DeepProfileStep } from '@prisma/client'
 
-const SESSION_COOKIE = "tosom_session";
-
-export function createSession(res: any, userId: string): string {
-  const sessionId = randomUUID();
-  const cookie = serialize(SESSION_COOKIE, userId, {
-    httpOnly: true,
-    path: "/",
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 60 * 60 * 24 * 30,
-  });
-  res.setHeader("Set-Cookie", cookie);
-  return sessionId;
+/**
+ * Hent session i ein API route (Node)
+ */
+export async function getSession() {
+  return await getServerSession(authOptions)
 }
 
-export function destroySession(res: any): void {
-  const cookie = serialize(SESSION_COOKIE, "", {
-    httpOnly: true,
-    path: "/",
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 0,
-  });
-  res.setHeader("Set-Cookie", cookie);
+/**
+ * Hent session og verifier at brukaren er innlogga.
+ * Kasta feil dersom ikkje.
+ */
+export async function requireSession() {
+  const session = await getSession()
+  if (!session?.user?.id) {
+    throw new Error('UNAUTHORIZED')
+  }
+  return session
 }
 
-export function getSession(req: any): string | null {
-  const cookie = req.cookies?.[SESSION_COOKIE];
-  if (!cookie) return null;
-  return cookie;
+/**
+ * Sjekk om brukaren er innlogga
+ */
+export async function isAuthenticated() {
+  const session = await getSession()
+  return !!session?.user?.id
 }
 
-// Alias for backward compatibility — imported as requireAuth in some routes.
-// This module provides session cookie helpers; requireAuth is in lib/admin/requireAuth.
-export { requireAuth } from '@/lib/admin/requireAuth';
+/**
+ * Opprett ein ny User med Profile dersom han ikkje eksisterer.
+ * Bruk denne når ein magic link-brukar loggar inn første gong.
+ */
+export async function ensureUserExists(email: string, name?: string | null) {
+  let user = await prisma.user.findUnique({
+    where: { email },
+    include: { profile: true },
+  })
+
+  if (!user) {
+    user = await prisma.user.create({
+      data: {
+        email,
+        name: name || email.split('@')[0],
+        profile: {
+          create: {
+            deepProfileStep: DeepProfileStep.IDENTITY,
+          },
+        },
+      },
+      include: { profile: true },
+    })
+  }
+
+  return user
+}

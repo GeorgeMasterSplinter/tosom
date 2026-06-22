@@ -14,6 +14,12 @@
 
 import { FC } from 'react';
 import Link from 'next/link';
+import { LogoAnimated } from '@/components/branding/LogoVariants';
+import { color, spacing } from '@/config/design-tokens';
+
+/* ========================
+   INTERFACES
+   ======================== */
 
 interface HeroProps {
   title?: string;
@@ -24,142 +30,168 @@ interface HeroProps {
   secondaryHref?: string;
 }
 
+/* ========================
+   COMPONENT
+   ======================== */
+
 export const Hero: FC<HeroProps> = ({
-  title = 'En rolig, moderne relasjonsplattform for voksne',
-  subtitle = 'Få én match innan 24 timer — basert på verdier, livssituasjon og relasjonsstil.',
-  ctaText = 'Opprett konto',
+  title = 'Ro. Tryggleik. Dybde.',
+  subtitle = 'Ein match innan 24 timer',
+  ctaText = 'Kom i gang',
   ctaHref = '/onboarding',
   secondaryText = 'Logg inn',
   secondaryHref = '/login',
 }) => {
   const keyPoints = [
-    { label: 'Veiledet, forskningsbasert profil' },
-    { label: 'Match innen 24 timer' },
-    { label: 'Guidet 30-dagers reise' },
+    { 
+      title: 'Djup profil', 
+      label: 'Forskning basert',
+      icon: (
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <path d="M12 12C14.2091 12 16 10.2091 16 8C16 5.79086 14.2091 4 12 4C9.79086 4 8 5.79086 8 8C8 10.2091 9.79086 12 12 12Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M20.5 21C20.5 18.7909 18.7091 17 16.5 17H7.5C5.29086 17 3.5 18.7909 3.5 21" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      ),
+    },
+    { 
+      title: 'Éin match', 
+      label: 'Kvalitet over kvantitet',
+      icon: (
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L15 8L21 9L16.5 14L18 21L12 17.5L6 21L7.5 14L3 9L9 8L12 2Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      ),
+    },
+    { 
+      title: 'Guidet reise', 
+      label: '30 dager sammen',
+      icon: (
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L18 5V12C18 16.5 14.5 20.5 12 22C9.5 20.5 6 16.5 6 12V5L12 2Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M9 12L11 14L15 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      ),
+    },
   ];
 
   return (
     <section
-      className="relative pt-16 py-28 md:py-40 mb-24 md:mb-32 overflow-hidden"
-      style={{ 
-        background: '#0B0F14',
-        backgroundImage: `
-          linear-gradient(180deg, #1A1F26 0%, #0E1218 100%),
-          radial-gradient(ellipse at center, rgba(80,120,255,0.10) 0%, transparent 70%),
-          radial-gradient(circle at center, transparent 60%, rgba(0,0,0,0.35) 100%)
-        `
+      className="relative overflow-hidden"
+      style={{
+        paddingTop: `${spacing['4xl']}px`,
+        paddingBottom: `${spacing['4xl']}px`,
+        background: 'linear-gradient(180deg, #162032 0%, #0F1923 50%, #0B1520 100%)',
       }}
     >
-      {/* Ambient blå glød (topp-høgre) */}
+      {/* Ambient blå glød — redusert styrke */}
       <div
         className="absolute top-0 right-0 w-[800px] h-[600px] pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse at 70% 20%, rgba(80,120,255,0.12) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse at 70% 20%, rgba(80,120,255,0.04), transparent 70%)',
         }}
       />
 
-      {/* Gull-aksent glød (midt-venstre) */}
+      {/* Gull-aksent glød — subtil */}
       <div
         className="absolute top-[30%] left-0 w-[600px] h-[500px] pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse at 30% 50%, rgba(212,175,55,0.06) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse at 30% 50%, rgba(212,175,55,0.02), transparent 70%)',
         }}
       />
-
-      {/* Spotlight bak H1 */}
-      <div
-        className="absolute top-[20%] left-[40%] -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-        style={{
-          width: '600px',
-          height: '600px',
-          background: 'radial-gradient(circle at center, rgba(255,255,255,0.06) 0%, transparent 70%)',
-        }}
-      />
-
-      {/* Subtil vignette */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse at 50% 30%, transparent 50%, rgba(0,0,0,0.15) 100%)',
-        }}
-      />
-
-      {/* Subtil bakgrunnsform */}
-      <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-        style={{ opacity: 0.06 }}
-      >
-        <svg width="600" height="600" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="15" cy="20" r="12" fill="#D4AF37" />
-          <circle cx="25" cy="20" r="12" fill="#D4AF37" />
-          <circle cx="20" cy="20" r="6" fill="#D4AF37" />
-        </svg>
-      </div>
 
       <div className="mx-auto max-w-6xl px-6 lg:px-8">
         <div className="max-w-3xl mx-auto text-center">
-          {/* Logo */}
-          <div className="flex justify-center mb-12">
-            <svg width="44" height="44" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="15" cy="20" r="12" fill="none" stroke="#D4AF37" strokeWidth="1.5" />
-              <circle cx="25" cy="20" r="12" fill="none" stroke="#D4AF37" strokeWidth="1.5" />
-              <circle cx="20" cy="20" r="6" fill="none" stroke="#D4AF37" strokeWidth="1" />
-            </svg>
+          
+          {/* Animert tekst-logo */}
+          <div className="flex justify-center mb-10">
+            <LogoAnimated />
           </div>
 
-          {/* H1 — 68px på desktop, spotlight-effekt */}
+          {/* H1 — kort, roleg */}
           <h1
-            className="text-4xl md:text-[80px] font-semibold tracking-[-0.03em] leading-[1.1] mb-12 relative"
-            style={{
-              color: '#FFFFFF',
-              textShadow: '0 0 40px rgba(255,255,255,0.08)',
-            }}
+            className="text-3xl md:text-[48px] font-semibold tracking-[-0.02em] leading-[1.15] mb-4"
+            style={{ color: color.text.primary }}
           >
             {title}
           </h1>
 
-           {/* Undertekst — meir spacing ned til CTA */}
+          {/* Undertekst — kort */}
           <p
-            className="text-[32px] text-white font-medium max-w-lg mx-auto mb-16 leading-[1.6]"
+            className="text-base mb-8"
+            style={{ 
+              color: color.text.secondary,
+              lineHeight: '1.6',
+            }}
           >
             {subtitle}
           </p>
 
-          {/* CTA-container — gap-6, 1px gull-stroke */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-20">
-            {/* Primær CTA — med 1px gull-stroke og sterkare glow */}
+          {/* CTA-knappar — kompakt */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-16">
             <Link
               href={ctaHref}
-              className="inline-block px-12 py-5 rounded-xl font-medium bg-[#D4AF37] text-black shadow-sm transition-all duration-300 border border-[rgba(212,175,55,0.3)] hover:border-[rgba(212,175,55,0.5)] hover:shadow-[0_0_50px_rgba(212,175,55,0.5)]"
+              className="inline-flex items-center justify-center px-10 py-3.5 rounded-[12px] font-medium transition-all duration-300 text-sm"
               style={{
-                boxShadow: '0 0 40px rgba(212,175,55,0.35), 0 4px 16px rgba(0,0,0,0.2)',
+                background: color.brand.gold,
+                color: '#0B1520',
+                boxShadow: `0 0 30px ${color.ambient.gold.medium}, 0 4px 12px rgba(0,0,0,0.2)`,
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.background = color.brand['gold-hover'];
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.background = color.brand.gold;
               }}
             >
               {ctaText}
             </Link>
 
-            {/* Sekundær CTA */}
             {secondaryText && (
               <Link
                 href={secondaryHref}
-                className="text-gray-300 hover:text-gray-100 transition-colors text-sm underline-offset-4 mt-4"
+                className="text-sm transition-colors"
+                style={{ 
+                  color: color.text.muted,
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.color = color.text.secondary;
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.color = color.text.muted;
+                }}
               >
                 {secondaryText}
               </Link>
             )}
           </div>
 
-          {/* Tre nøkkelpunkter — meir luft */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-y-28 md:gap-y-28 gap-x-16 md:gap-x-20 mt-20 text-left max-w-3xl mx-auto">
-            {keyPoints.map((point) => (
-              <div key={point.label} className="flex items-start gap-2">
-                <div className="flex-shrink-0 mt-2.5">
-                  <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
-                    <circle cx="8" cy="8" r="7" stroke="#D4AF37" strokeWidth="1" opacity="0.4" />
-                    <path d="M5 8L7 10L11 6" stroke="#D4AF37" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" opacity="0.4" />
-                  </svg>
+          {/* Tre nøkkelpunkter — med undertittel */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-10 md:gap-x-14 gap-y-10 text-center max-w-3xl mx-auto">
+            {keyPoints.map((point, idx) => (
+              <div key={idx} className="flex flex-col items-center gap-3">
+                <div 
+                  className="w-10 h-10 rounded-xl flex items-center justify-center"
+                  style={{
+                    background: 'rgba(212,175,55,0.08)',
+                    border: '1px solid rgba(212,175,55,0.15)',
+                    color: color.brand.gold,
+                  }}
+                >
+                  {point.icon}
                 </div>
-                <span className="text-[32px] text-white leading-[1.7] max-w-md">
+                <h3 
+                  className="text-sm font-semibold"
+                  style={{ color: color.text.primary }}
+                >
+                  {point.title}
+                </h3>
+                <span 
+                  className="text-xs"
+                  style={{ 
+                    color: color.text.muted,
+                    lineHeight: '1.55',
+                  }}
+                >
                   {point.label}
                 </span>
               </div>

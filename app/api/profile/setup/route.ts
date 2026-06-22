@@ -5,6 +5,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth/nextauth';
 
 export async function POST(req: NextRequest) {
   try {
@@ -30,18 +32,20 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Valider session
-    const cookie = req.cookies.get('session')?.value;
-    if (!cookie) {
+    // Valider session via NextAuth
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
       return NextResponse.json(
-        { error: 'Ikke autentisert' },
+        { error: 'Ikke autentisert. Logg inn først.' },
         { status: 401 }
       );
     }
 
+    const userId = session.user.id;
+
     // Mapper til Profile-modellen
     await prisma.profile.upsert({
-      where: { userId: cookie },
+      where: { userId },
       update: {
         identityName: basic.identityName,
         age: basic.age ? parseInt(basic.age) : undefined,
@@ -121,7 +125,7 @@ export async function POST(req: NextRequest) {
         },
       },
       create: {
-        userId: cookie,
+        userId: userId,
         identityName: basic.identityName,
         age: basic.age ? parseInt(basic.age) : undefined,
         lifeSituation: {
@@ -203,7 +207,7 @@ export async function POST(req: NextRequest) {
 
     // Marker onboarding som fullført
     await prisma.user.update({
-      where: { id: cookie },
+      where: { id: userId },
       data: {
         onboardingComplete: true,
         deepProfileComplete: true,
@@ -213,6 +217,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
+      userId,
       message: 'Profil fullført!',
     });
   } catch (error) {

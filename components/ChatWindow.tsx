@@ -87,8 +87,8 @@ export default function ChatWindow({
                 <GlassCard
                   className={`max-w-[75%] px-4 py-3 ${
                     isOwn
-                      ? "bg-[var(--color-gold)]/15 border-[var(--color-gold)]/30"
-                      : "bg-[var(--color-card)] border-[var(--color-card-border)]"
+                      ? "bg-[var(--color-gold)]/15 border-[var(--color-gold)]/30 rounded-tl-[16px] rounded-tr-[8px] rounded-bl-[16px] rounded-br-[8px]"
+                      : "bg-[var(--color-card)] border-[var(--color-card-border)] rounded-tl-[8px] rounded-tr-[16px] rounded-bl-[8px] rounded-br-[16px]"
                   }`}
                 >
                   {msg.text && (
@@ -100,7 +100,7 @@ export default function ChatWindow({
                     <img
                       src={msg.imageUrl}
                       alt="Sendt bilde"
-                      className="w-full h-40 object-cover my-2 rounded-xl border border-white/10"
+                      className="w-full h-40 object-cover my-2 rounded-[16px] border border-white/10"
                     />
                   )}
                   <span className={`text-xs ${isOwn ? "text-[var(--color-gold)]/70" : "text-[var(--color-muted)]/70"} block mt-2`}>

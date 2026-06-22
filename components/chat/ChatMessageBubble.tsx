@@ -39,7 +39,7 @@ export default function ChatMessageBubble({ message }: { message: ChatMessageTyp
   return (
     <div className={`flex ${config.align} gap-2 max-w-[80%]`}>
       <div
-        className={`${config.bg} rounded-xl p-3 text-sm leading-relaxed text-[#4A4A4A] shadow-[0_1px_2px_rgba(0,0,0,0.04)] hover:opacity-95 transition-opacity`}
+        className={`${config.bg} ${message.sender === 'me' ? 'rounded-tl-[16px] rounded-tr-[8px] rounded-bl-[16px] rounded-br-[8px]' : 'rounded-tl-[8px] rounded-tr-[16px] rounded-bl-[8px] rounded-br-[16px]'} p-3 text-sm leading-relaxed text-[#4A4A4A] shadow-[0_1px_2px_rgba(0,0,0,0.04)] hover:opacity-95 transition-opacity`}
       >
         {/* Systemikon for systemmeldinger */}
         {message.sender === "system" && (

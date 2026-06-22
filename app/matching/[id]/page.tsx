@@ -16,9 +16,11 @@
 
 import { useState, useEffect, use } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { GlassPanel } from '../components/GlassPanel';
 import { ProfileSummary } from '../components/ProfileSummary';
 import { getMatchTypeLabel } from '../MatchType';
+import { MatchInsight } from './_components/MatchInsight';
 
 interface MatchDetail {
   id: string;
@@ -65,10 +67,12 @@ interface MatchDetail {
 export default function MatchDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const resolved = use(params);
   const id = resolved.id;
+  const router = useRouter();
 
   const [match, setMatch] = useState<MatchDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [creating, setCreating] = useState(false);
 
   // Hent userId frå localStorage (sett av login-systemet)
   useEffect(() => {
@@ -350,32 +354,54 @@ export default function MatchDetailPage({ params }: { params: Promise<{ id: stri
           </div>
         </GlassPanel>
 
+        {/* AI INNSIKT */}
+        <MatchInsight matchId={match.id} />
+
         {/* CTA-KNAPPER */}
         <div className="space-y-4 mt-12">
           {/* Start samtale */}
-          <Link
-            href={otherUser ? `/chat?with=${otherUser.id}` : '/chat'}
+          <button
+            onClick={async () => {
+              if (!match || creating) return;
+              setCreating(true);
+              try {
+                // Finn den andre brukaren sin ID
+                const otherId = match.userA.id === meId ? match.userB.id : match.userA.id;
+                const res = await fetch('/api/chat/conversations', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ otherUserId: otherId }),
+                });
+                if (!res.ok) throw new Error('Kunne ikke oppta samtale');
+                const convo = await res.json();
+                router.push(`/chat/${convo.id}`);
+              } catch (err) {
+                console.error('Feil ved oppretting av samtale:', err);
+                setCreating(false);
+              }
+            }}
             className="
               block w-full text-center py-5 rounded-xl text-base font-semibold
               transition-all duration-300 relative overflow-hidden
             "
+            disabled={creating}
             style={{
-              background: 'linear-gradient(135deg, #D4AF37 0%, #E8C766 100%)',
-              color: '#0B0E11',
-              boxShadow: '0 0 40px rgba(212,175,55,0.4), 0 4px 16px rgba(0,0,0,0.2)',
+              background: creating
+                ? 'rgba(212,175,55,0.3)'
+                : 'linear-gradient(135deg, #D4AF37 0%, #E8C766 100%)',
+              color: creating ? 'rgba(255,255,255,0.5)' : '#0B0E11',
+              boxShadow: creating
+                ? 'none'
+                : '0 0 40px rgba(212,175,55,0.4), 0 4px 16px rgba(0,0,0,0.2)',
               border: '1px solid rgba(212,175,55,0.5)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.boxShadow = '0 0 60px rgba(212,175,55,0.6), 0 6px 20px rgba(0,0,0,0.3)';
-              e.currentTarget.style.transform = 'scale(1.02)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.boxShadow = '0 0 40px rgba(212,175,55,0.4), 0 4px 16px rgba(0,0,0,0.2)';
-              e.currentTarget.style.transform = 'scale(1)';
+              cursor: creating ? 'not-allowed' : 'pointer',
+              opacity: creating ? 0.7 : 1,
             }}
           >
-            <span className="relative z-10">💬 Start samtale</span>
-          </Link>
+            <span className="relative z-10">
+              {creating ? 'Opentar samtale...' : '💬 Start samtale'}
+            </span>
+          </button>
 
           {/* Gi oss et spørsmål basert på matchen */}
           <button

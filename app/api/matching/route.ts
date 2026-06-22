@@ -11,27 +11,38 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth/nextauth';
 import { calculateMatchScore } from '@/app/matching/MatchScore';
 import { getMatchType, getMatchTypeColor, getMatchTypeLabel } from '@/app/matching/MatchType';
 import { getMatchExplanation, getDefaultExplanation } from '@/app/matching/MatchExplanation';
+
+/* ------ Hjælp: Session-validering ------ */
+
+async function validateSession(request: NextRequest) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    return { userId: null, error: 'Ikke autentisert. Logg inn først.' };
+  }
+  return { userId: session.user.id, error: null };
+}
 
 /* ------ GET: Hent eksisterande matcher ------ */
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const userId = searchParams.get('userId');
-
-    if (!userId) {
-      return NextResponse.json({ error: 'userId er påkreva' }, { status: 400 });
+    // Bruk session — ikkje query param
+    const { userId, error } = await validateSession(request);
+    if (error) {
+      return NextResponse.json({ error }, { status: 401 });
     }
 
     // Hent eksisterande matcher for brukaren
     const existingMatches = await prisma.match.findMany({
       where: {
         OR: [
-          { userAId: userId },
-          { userBId: userId },
+          { userAId: userId as string },
+          { userBId: userId as string },
         ],
       },
       include: {
@@ -57,9 +68,13 @@ export async function GET(request: NextRequest) {
 
     // Formater matcher for UI
     const formattedMatches = existingMatches.map((match) => {
-      // Finn den andre brukaren
-      const otherUser = match.userAId === userId ? match.userB : match.userA;
+      // Finn den andre brukaren (include gir oss relaterte brukarar)
+      const otherUser = match.userAId === userId
+        ? (existingMatches.find(m => m.id === match.id)?.userB)
+        : (existingMatches.find(m => m.id === match.id)?.userA);
       const otherUserId = match.userAId === userId ? match.userBId : match.userAId;
+
+      if (!otherUser) return null;
 
       return {
         id: match.id,
@@ -70,7 +85,7 @@ export async function GET(request: NextRequest) {
         otherUserEmail: otherUser.email,
         otherUserProfileComplete: otherUser.deepProfileComplete,
       };
-    });
+    }).filter((m): m is NonNullable<typeof m> => m !== null);
 
     return NextResponse.json({ matches: formattedMatches });
   } catch (error) {
@@ -83,40 +98,39 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const userId = body.userId as string;
-
-    if (!userId) {
-      return NextResponse.json({ error: 'userId er påkreva' }, { status: 400 });
+    // Bruk session — ikkje body.userId
+    const { userId, error } = await validateSession(request);
+    if (error) {
+      return NextResponse.json({ error }, { status: 401 });
     }
 
-    // Sjekk at brukaren eksisterer
+    // Valider at brukaren har ein profil
     const requestingUser = await prisma.user.findUnique({
-      where: { id: userId },
+      where: { id: userId as string },
       include: { profile: true },
-    });
+    }) as any;
 
-    if (!requestingUser || !requestingUser.profile) {
-      return NextResponse.json({ error: 'Brukar eller profil ikkje funnen' }, { status: 404 });
+    if (!requestingUser) {
+      return NextResponse.json({ error: 'Brukar ikkje funnen' }, { status: 404 });
     }
 
-    // Hent alle andre brukarar med profil
+    // Hent alle andre brukarar med full profil (eksklusive den innlogga)
     const otherUsers = await prisma.user.findMany({
       where: {
-        id: { not: userId },
+        id: { not: userId as string },
         onboardingComplete: true,
         deepProfileComplete: true,
         bannedAt: null,
         deletedAt: null,
       },
       include: { profile: true },
-    });
+    }) as any;
 
     if (otherUsers.length === 0) {
       return NextResponse.json({ matches: [], message: 'Ingen andre brukarar til match no' });
     }
 
-    const requestProfile = requestingUser.profile as Record<string, unknown>;
+    const requestProfile = requestingUser?.profile as Record<string, unknown>;
 
     // Køyrs matching for kvar bruker
     const potentialMatches: Array<{
@@ -130,7 +144,7 @@ export async function POST(request: NextRequest) {
     }> = [];
 
     for (const otherUser of otherUsers) {
-      const otherProfile = otherUser.profile;
+      const otherProfile = (otherUser as any).profile;
       if (!otherProfile) continue;
 
       // Konverter til ProfileData format
@@ -225,11 +239,11 @@ export async function POST(request: NextRequest) {
       const targetUser = otherUsers.find((u) => u.id === topMatch.otherUserId);
       const targetProfile = targetUser?.profile;
 
-      // Lagre match i databasen
+      // Lagre match i databasen — userA er alltid den som køyrde matching
       bestMatch = await prisma.match.create({
         data: {
-          userAId: userId,
-          userBId: topMatch.otherUserId,
+          userAId: userId as string,
+          userBId: topMatch.otherUserId as string,
           score: topMatch.score,
           type: topMatch.type,
           explanation: JSON.parse(JSON.stringify(topMatch.explanation ?? {})),

@@ -12,9 +12,8 @@
 
 'use client';
 
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { useParams } from 'next/navigation';
-import { Header } from '@/components/ui5/Header';
 import { useChatRealtime, useTypingIndicator } from '@/hooks/useChatRealtime';
 import { useChatMessages, ChatMessage } from '@/hooks/useChatMessages';
 
@@ -44,9 +43,12 @@ export default function ChatDetailPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Typing-indikator
-  const typingUsers = useTypingIndicator(conversationId, session?.id ?? null);
-  const [showTyping, setShowTyping] = useState(false);
+   // Typing-indikator
+   const typingUsers = useTypingIndicator(conversationId, session?.id ?? null);
+   const [showTyping, setShowTyping] = useState(false);
+
+   // Track om brukar er i ferd med å skrive
+   const [isUserTyping, setIsUserTyping] = useState(false);
 
   // AI-chatstarter
   const [starterOpen, setStarterOpen] = useState(false);
@@ -105,52 +107,53 @@ export default function ChatDetailPage() {
     }
   }, [conversationId, session?.id, initRealtime]);
 
-  // Scroll til botnen når nye meldingar kjem
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, showTyping]);
+   // Scroll til botnen når nye meldingar kjem
+   useEffect(() => {
+     if (!messagesEndRef.current) return;
+     messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+   }, [messages, showTyping]);
 
-  // Send melding
-  async function sendMessage() {
-    if (!content.trim() || !conversationId || sending) return;
+   // Send melding
+   async function sendMessage() {
+     if (!content.trim() || !conversationId || sending) return;
 
-    setSending(true);
-    const tempMsg: ChatMessage = {
-      id: `temp-${Date.now()}`,
-      content: content.trim(),
-      createdAt: new Date().toISOString(),
-      senderId: session?.id ?? '',
-      sender: {
-        id: session?.id ?? '',
-        profile: { identityName: 'Deg' },
-      },
-    };
+     setSending(true);
+     const tempMsg: ChatMessage = {
+       id: `temp-${Date.now()}`,
+       content: content.trim(),
+       createdAt: new Date().toISOString(),
+       senderId: session?.id ?? '',
+       sender: {
+         id: session?.id ?? '',
+         profile: { identityName: 'Deg' },
+       },
+     };
 
-    // Optmistically add message
-    setMessages((prev) => [...prev, tempMsg]);
-    setContent('');
+     // Optmistically add message
+     setMessages((prev) => [...prev, tempMsg]);
+     setContent('');
 
-    try {
-      const res = await fetch('/api/chat/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ conversationId, content: content.trim() }),
-      });
+     try {
+       const res = await fetch('/api/chat/messages', {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify({ conversationId, content: content.trim() }),
+       });
 
-      if (!res.ok) {
-        setMessages((prev) => prev.filter((m) => m.id !== tempMsg.id));
-        return;
-      }
+       if (!res.ok) {
+         setMessages((prev) => prev.filter((m) => m.id !== tempMsg.id));
+         return;
+       }
 
-      const msg = await res.json();
-      setMessages((prev) => prev.map((m) => m.id === tempMsg.id ? msg : m));
-    } catch {
-      setMessages((prev) => prev.filter((m) => m.id !== tempMsg.id));
-    } finally {
-      setSending(false);
-      inputRef.current?.focus();
-    }
-  }
+       const msg = await res.json();
+       setMessages((prev) => prev.map((m) => m.id === tempMsg.id ? msg : m));
+     } catch {
+       setMessages((prev) => prev.filter((m) => m.id !== tempMsg.id));
+     } finally {
+       setSending(false);
+       inputRef.current?.focus();
+     }
+   }
 
   // AI-chatstarter
   async function fetchStarters() {
@@ -214,37 +217,35 @@ export default function ChatDetailPage() {
     );
   }
 
-  const otherName = 'Din match';
+   const otherName = 'Din match';
 
-  return (
-    <div className="h-screen flex flex-col" style={{ background: '#0B0E11' }}>
-      {/* Header */}
-      <Header currentPath={`/chat/${conversationId}`} />
-
-      {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto px-4 py-6">
-        <div className="max-w-[720px] mx-auto space-y-3">
-          {/* Empty state */}
-          {messages.length === 0 && !msgError && (
-            <div className="text-center py-16 animate-[fadeIn_0.5s_ease-out]">
-              <div
-                className="w-20 h-20 mx-auto mb-5 rounded-full flex items-center justify-center"
-                style={{
-                  background: 'rgba(212, 175, 55, 0.08)',
-                  border: '1px solid rgba(212, 175, 55, 0.15)',
-                  animation: 'pulseGlow 2s infinite ease-in-out',
-                }}
-              >
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                  <path d="M21 11.5C21 16.194 16.974 20.5 12 20.5C9.374 20.5 6.974 19.5 5 17.5C5 17.5 5 17.5 5 17.5C3.5 16 2.5 14 2.5 11.5C2.5 7.358 6.581 4 12 4C17.419 4 21.5 7.358 21.5 11.5" stroke="#D4AF37" strokeWidth="1.5" opacity="0.4" />
-                </svg>
-              </div>
-              <p className="text-lg mb-2" style={{ color: 'rgba(255, 255, 255, 0.55)' }}>
-                Start samtalen
-              </p>
-              <p className="text-sm mb-6" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>
-                Skriv ei melding for å komma i gang, eller bruk ein AI-startmelding.
-              </p>
+   return (
+     <div className="h-screen flex flex-col" style={{ background: '#0B0E11' }}>
+       {/* Messages Area */}
+       <div className="flex-1 overflow-y-auto px-4 md:px-6 py-6" style={{ scrollBehavior: 'smooth' }}>
+         <div className="max-w-[720px] mx-auto space-y-[6px]">
+           {/* Empty state */}
+           {messages.length === 0 && !msgError && (
+             <div className="text-center py-20 fade-in" style={{ animation: 'fadeInUp 0.4s ease-out both' }}>
+               <div
+                 className="w-20 h-20 mx-auto mb-5 rounded-full flex items-center justify-center"
+                 style={{
+                   background: 'rgba(212, 175, 55, 0.08)',
+                   border: '1px solid rgba(212, 175, 55, 0.18)',
+                   boxShadow: '0 0 24px rgba(212,175,55,0.2), 0 0 48px rgba(212,175,55,0.1)',
+                   animation: 'pulseGlow 2.5s infinite ease-in-out',
+                 }}
+               >
+                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                   <path d="M21 11.5C21 16.194 16.974 20.5 12 20.5C9.374 20.5 6.974 19.5 5 17.5C5 17.5 5 17.5 5 17.5C3.5 16 2.5 14 2.5 11.5C2.5 7.358 6.581 4 12 4C17.419 4 21.5 7.358 21.5 11.5" stroke="#D4AF37" strokeWidth="1.5" opacity="0.5" />
+                 </svg>
+               </div>
+               <p className="text-lg font-medium mb-2" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                 Det er tomt her — men det blir ikkje det.
+               </p>
+               <p className="text-sm mb-6" style={{ color: 'rgba(255, 255, 255, 0.5)' }}>
+                 Det første steget er alltid det viktigste. Bare sei hei.
+               </p>
 
               {/* AI Starter Button */}
               <button
@@ -280,140 +281,173 @@ export default function ChatDetailPage() {
             </div>
           )}
 
-          {/* Messages */}
-          {messages.map((msg, i) => {
-            const isMine = msg.senderId === session?.id;
-            return (
-              <div
-                key={msg.id}
-                className={`flex ${isMine ? 'justify-end' : 'justify-start'} animate-[fadeIn_0.3s_ease-out]`}
-                style={{ animationDelay: `${i * 0.02}s` }}
-              >
-                <div
-                  className="max-w-[70%] px-4 py-2.5 transition-all duration-200"
-                  style={{
-                    background: isMine
-                      ? 'linear-gradient(135deg, rgba(212,175,55,0.18), rgba(212,175,55,0.12))'
-                      : 'rgba(255, 255, 255, 0.06)',
-                    border: isMine
-                      ? '1px solid rgba(212, 175, 55, 0.3)'
-                      : '1px solid rgba(255, 255, 255, 0.08)',
-                    borderRadius: isMine ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
-                    color: isMine ? '#D4AF37' : 'rgba(255, 255, 255, 0.8)',
-                    boxShadow: isMine ? '0 2px 12px rgba(212,175,55,0.1)' : 'none',
-                  }}
-                >
-                  <p className="text-sm whitespace-pre-wrap break-words leading-relaxed">
-                    {msg.content}
-                  </p>
-                  <p
-                    className="text-[10px] mt-1.5 text-right"
-                    style={{ color: isMine ? 'rgba(212, 175, 55, 0.5)' : 'rgba(255, 255, 255, 0.25)' }}
-                  >
-                    {new Date(msg.createdAt).toLocaleTimeString('no-NO', {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
+           {/* Messages */}
+           {messages.map((msg, i) => {
+             const isMine = msg.senderId === session?.id;
+             const bubbleRadius = isMine
+               ? '18px 18px 4px 18px'
+               : '18px 18px 18px 4px';
 
-          {/* Typing indicator */}
-          {showTyping && (
-            <div className="flex justify-start animate-[fadeIn_0.3s_ease-out]">
-              <div
-                className="px-4 py-3 rounded-2xl rounded-bl-4xl"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.04)',
-                  border: '1px solid rgba(255, 255, 255, 0.06)',
-                }}
-              >
-                <div className="flex gap-1">
-                  <div className="w-2 h-2 rounded-full" style={{ background: 'rgba(212, 175, 55, 0.6)', animation: 'bounce 1.4s infinite ease-in-out -0.5s' }} />
-                  <div className="w-2 h-2 rounded-full" style={{ background: 'rgba(212, 175, 55, 0.4)', animation: 'bounce 1.4s infinite ease-in-out -0.3s' }} />
-                  <div className="w-2 h-2 rounded-full" style={{ background: 'rgba(212, 175, 55, 0.6)', animation: 'bounce 1.4s infinite ease-in-out -0.1s' }} />
-                </div>
-              </div>
-            </div>
-          )}
+             return (
+               <div
+                 key={msg.id}
+                 className={`flex ${isMine ? 'justify-end' : 'justify-start'} fade-in`}
+                 style={{ animation: `fadeInUp 0.3s ease-out both`, animationDelay: `${i * 0.04}s` }}
+               >
+                 <div
+                   className="max-w-[75%] md:max-w-[65%] px-4 py-3 transition-all duration-200 ease-out"
+                   style={{
+                     background: isMine
+                       ? 'rgba(212, 175, 55, 0.12)'
+                       : 'rgba(255, 255, 255, 0.06)',
+                     backdropFilter: isMine ? 'blur(16px)' : 'blur(12px)',
+                     border: isMine
+                       ? '1px solid rgba(212, 175, 55, 0.25)'
+                       : '1px solid rgba(255, 255, 255, 0.1)',
+                     borderRadius: bubbleRadius,
+                     color: isMine ? '#D4AF37' : 'rgba(255, 255, 255, 0.85)',
+                     boxShadow: isMine
+                       ? '0 2px 16px rgba(212,175,55,0.12), 0 0 8px rgba(212,175,55,0.08)'
+                       : '0 2px 12px rgba(0,0,0,0.08)',
+                   }}
+                 >
+                   <p className="text-sm whitespace-pre-wrap break-words leading-relaxed">
+                     {msg.content}
+                   </p>
+                   <p
+                     className="text-[10px] mt-1.5 text-right"
+                     style={{ color: isMine ? 'rgba(212, 175, 55, 0.5)' : 'rgba(255, 255, 255, 0.3)' }}
+                   >
+                     {new Date(msg.createdAt).toLocaleTimeString('no-NO', {
+                       hour: '2-digit',
+                       minute: '2-digit',
+                     })}
+                   </p>
+                 </div>
+               </div>
+             );
+           })}
+
+           {/* Typing indicator */}
+           {showTyping && (
+             <div className="flex justify-start fade-in" style={{ animation: 'fadeInUp 0.3s ease-out both' }}>
+               <div
+                 className="px-4 py-3 rounded-2xl rounded-bl-4xl"
+                 style={{
+                   background: 'rgba(212, 175, 55, 0.06)',
+                   border: '1px solid rgba(212, 175, 55, 0.12)',
+                   boxShadow: '0 0 12px rgba(212,175,55,0.15)',
+                   backdropFilter: 'blur(16px)',
+                 }}
+               >
+                 <div className="flex gap-1.5 items-center">
+                   <div
+                     className="w-2 h-2 rounded-full"
+                     style={{
+                       background: 'rgba(212, 175, 55, 0.7)',
+                       animation: 'typingDot 1.2s infinite ease-in-out',
+                     }}
+                   />
+                   <div
+                     className="w-2 h-2 rounded-full"
+                     style={{
+                       background: 'rgba(212, 175, 55, 0.5)',
+                       animation: 'typingDot 1.2s infinite ease-in-out 0.15s',
+                     }}
+                   />
+                   <div
+                     className="w-2 h-2 rounded-full"
+                     style={{
+                       background: 'rgba(212, 175, 55, 0.7)',
+                       animation: 'typingDot 1.2s infinite ease-in-out 0.3s',
+                     }}
+                   />
+                 </div>
+               </div>
+             </div>
+           )}
 
           <div ref={messagesEndRef} />
         </div>
       </div>
 
-      {/* Input Area */}
-      <div
-        className="px-4 py-4 border-t"
-        style={{
-          background: 'rgba(11, 14, 17, 0.95)',
-          backdropFilter: 'blur(16px)',
-          borderColor: 'rgba(255, 255, 255, 0.06)',
-        }}
-      >
-        <div className="max-w-[720px] mx-auto flex gap-3 items-center">
-          <input
-            ref={inputRef}
-            type="text"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Skriv ein melding..."
-            className="flex-1 px-4 py-3 rounded-xl outline-none transition-all duration-200 text-sm"
-            style={{
-              background: 'rgba(255, 255, 255, 0.04)',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              color: '#FFFFFF',
-            }}
-            onFocus={(e) => {
-              e.target.style.borderColor = 'rgba(212, 175, 55, 0.5)';
-              e.target.style.boxShadow = '0 0 0 3px rgba(212, 175, 55, 0.12)';
-            }}
-            onBlur={(e) => {
-              e.target.style.borderColor = 'rgba(255, 255, 255, 0.08)';
-              e.target.style.boxShadow = 'none';
-            }}
-          />
-          <button
-            onClick={sendMessage}
-            disabled={!content.trim() || sending}
-            className="px-5 py-3 rounded-xl font-medium transition-all duration-300 flex-shrink-0 flex items-center gap-2"
-            style={{
-              background: content.trim()
-                ? 'linear-gradient(135deg, #D4AF37, #E8C766)'
-                : 'rgba(255, 255, 255, 0.06)',
-              color: content.trim() ? '#0B0E11' : 'rgba(255, 255, 255, 0.2)',
-              opacity: content.trim() ? 1 : 0.6,
-              boxShadow: content.trim() ? '0 2px 12px rgba(212,175,55,0.25)' : 'none',
-              cursor: content.trim() ? 'pointer' : 'not-allowed',
-            }}
-            onMouseEnter={(e) => {
-              if (content.trim() && !sending) {
-                (e.target as HTMLElement).style.boxShadow = '0 4px 20px rgba(212,175,55,0.4)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (content.trim()) {
-                (e.target as HTMLElement).style.boxShadow = '0 2px 12px rgba(212,175,55,0.25)';
-              }
-            }}
-          >
-            {sending ? (
-              <div className="w-4 h-4" style={{
-                border: '2px solid rgba(11,14,17,0.2)',
-                borderTopColor: '#0B0E11',
-                animation: 'spin 0.8s linear infinite',
-              }} />
-            ) : (
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <path d="M22 2L11 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            )}
-          </button>
-        </div>
-      </div>
+       {/* Input Area - sticky på mobil */}
+       <div
+         className="px-4 py-4 border-t"
+         style={{
+           background: 'rgba(11, 14, 17, 0.95)',
+           backdropFilter: 'blur(20px)',
+           borderColor: 'rgba(255, 255, 255, 0.06)',
+           position: 'sticky',
+           bottom: 0,
+           paddingBottom: 'env(safe-area-inset-bottom, 8px)',
+         }}
+       >
+         <div className="max-w-[720px] mx-auto flex gap-3 items-center">
+           <input
+             ref={inputRef}
+             type="text"
+             value={content}
+             onChange={(e) => setContent(e.target.value)}
+             onKeyDown={handleKeyDown}
+             placeholder="Skriv ei melding…"
+             className="flex-1 px-4 py-3 rounded-xl outline-none transition-all duration-200 text-sm"
+             style={{
+               background: 'rgba(255, 255, 255, 0.04)',
+               border: '1px solid rgba(255, 255, 255, 0.12)',
+               color: '#FFFFFF',
+             }}
+             onFocus={(e) => {
+               e.target.style.borderColor = 'rgba(212, 175, 55, 0.5)';
+               e.target.style.boxShadow = '0 0 0 3px rgba(212, 175, 55, 0.15), 0 0 12px rgba(212,175,55,0.15)';
+             }}
+             onBlur={(e) => {
+               e.target.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+               e.target.style.boxShadow = 'none';
+             }}
+           />
+           <button
+             onClick={sendMessage}
+             disabled={!content.trim() || sending}
+             className="px-5 py-3 rounded-xl font-medium transition-all duration-200 flex-shrink-0 flex items-center gap-2 hover:scale-[1.04] active:scale-[0.98]"
+             style={{
+               background: content.trim()
+                 ? 'linear-gradient(135deg, #D4AF37, #E8C766)'
+                 : 'rgba(255, 255, 255, 0.06)',
+               color: content.trim() ? '#0B0E11' : 'rgba(255, 255, 255, 0.2)',
+               opacity: content.trim() ? 1 : 0.6,
+               boxShadow: content.trim() ? '0 2px 16px rgba(212,175,55,0.25)' : 'none',
+               cursor: content.trim() ? 'pointer' : 'not-allowed',
+               transition: 'all 0.2s ease-out',
+             }}
+             onMouseEnter={(e) => {
+               if (content.trim() && !sending) {
+                 (e.target as HTMLElement).style.boxShadow = '0 4px 24px rgba(212,175,55,0.45)';
+                 (e.target as HTMLElement).style.transform = 'scale(1.04)';
+               }
+             }}
+             onMouseLeave={(e) => {
+               if (content.trim()) {
+                 (e.target as HTMLElement).style.boxShadow = '0 2px 16px rgba(212,175,55,0.25)';
+                 (e.target as HTMLElement).style.transform = 'scale(1)';
+               }
+             }}
+           >
+             {sending ? (
+               <div className="w-4 h-4" style={{
+                 border: '2px solid rgba(11,14,17,0.2)',
+                 borderTopColor: '#0B0E11',
+                 animation: 'spin 0.8s linear infinite',
+               }} />
+             ) : (
+               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                 <path d="M22 2L11 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                 <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+               </svg>
+             )}
+           </button>
+         </div>
+       </div>
 
       {/* AI Starter Modal */}
       {starterOpen && (
@@ -479,13 +513,26 @@ export default function ChatDetailPage() {
         </div>
       )}
 
-      <style>{`
-        @keyframes bounce {
-          0%, 80%, 100% { transform: scale(0.8); opacity: 0.4; }
-          40% { transform: scale(1); opacity: 1; }
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-      `}</style>
+       <style>{`
+         @keyframes bounce {
+           0%, 80%, 100% { transform: scale(0.8); opacity: 0.4; }
+           40% { transform: scale(1); opacity: 1; }
+         }
+         @keyframes spin { to { transform: rotate(360deg); } }
+         @keyframes fadeInUp {
+           from { opacity: 0; transform: translateY(12px); }
+           to { opacity: 1; transform: translateY(0); }
+         }
+         @keyframes pulseGlow {
+           0%, 100% { box-shadow: 0 0 12px rgba(212,175,55,0.15); }
+           50% { box-shadow: 0 0 28px rgba(212,175,55,0.35); }
+         }
+         @keyframes typingDot {
+           0%, 60%, 100% { transform: scale(0.85); opacity: 0.4; }
+           30% { transform: scale(1.05); opacity: 0.85; }
+         }
+         .fade-in { animation: fadeInUp 0.3s ease-out both; }
+       `}</style>
     </div>
   );
 }

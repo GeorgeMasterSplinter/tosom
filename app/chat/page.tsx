@@ -12,7 +12,6 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Header } from '@/components/ui5/Header';
 import { useChatRealtime } from '@/hooks/useChatRealtime';
 
 interface Conversation {
@@ -95,30 +94,30 @@ export default function ChatListPage() {
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: '#0B0E11' }}>
-        <div className="flex flex-col items-center gap-4">
-          <div
-            className="w-12 h-12 rounded-full flex items-center justify-center"
-            style={{
-              border: '2px solid rgba(255, 255, 255, 0.2)',
-              borderTopColor: '#D4AF37',
-              animation: 'spin 1s linear infinite',
-            }}
-          />
-          <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
-            Lastar samtalar...
-          </p>
+      <>
+        <div className="min-h-screen flex items-center justify-center" style={{ background: '#0B0E11' }}>
+          <div className="flex flex-col items-center gap-4">
+            <div
+              className="w-12 h-12 rounded-full flex items-center justify-center"
+              style={{
+                border: '2px solid rgba(255, 255, 255, 0.2)',
+                borderTopColor: '#D4AF37',
+                animation: 'spin 1s linear infinite',
+              }}
+            />
+            <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
+              Lastar samtalar...
+            </p>
+          </div>
+          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
         </div>
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-      </div>
+      </>
     );
   }
 
   return (
-    <div className="min-h-screen" style={{ background: '#0B0E11' }}>
-      <Header currentPath="/chat" />
-
-      <main className="mx-auto max-w-[720px] px-8 py-10">
+    <>
+    <main className="mx-auto max-w-[720px] px-8 py-10">
         {/* Header */}
         <div className="mb-8 animate-[fadeIn_0.4s_ease-out]">
           <h1
@@ -272,12 +271,6 @@ export default function ChatListPage() {
           })}
         </div>
       </main>
-
-      <style>{`
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes spin { to { transform: rotate(360deg); } }
-      `}</style>
-    </div>
+    </>
   );
 }

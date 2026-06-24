@@ -13,9 +13,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/nextauth';
-import { calculateMatchScore } from '@/app/matching/MatchScore';
-import { getMatchType, getMatchTypeColor, getMatchTypeLabel } from '@/app/matching/MatchType';
-import { getMatchExplanation, getDefaultExplanation } from '@/app/matching/MatchExplanation';
+import { matchingEngine, ProfileData, MatchTier } from '@/lib/matching';
 
 /* ------ Hjælp: Session-validering ------ */
 
@@ -147,72 +145,73 @@ export async function POST(request: NextRequest) {
       const otherProfile = (otherUser as any).profile;
       if (!otherProfile) continue;
 
-      // Konverter til ProfileData format
-      const profileA = {
-        identityName: requestProfile.identityName as string | null,
-        age: requestProfile.age as number | null,
-        lifeSituation: requestProfile.lifeSituation as Record<string, unknown> | null,
-        lifestyle: requestProfile.lifestyle as Record<string, unknown> | null,
-        personality: requestProfile.personality as Record<string, unknown> | null,
-        relationshipStyle: requestProfile.relationshipStyle as string | null,
-        communication: requestProfile.communication as Record<string, unknown> | null,
-        intimacy: requestProfile.intimacy as Record<string, unknown> | null,
-        futureVision: requestProfile.futureVision as Record<string, unknown> | null,
-        boundaries: requestProfile.boundaries as Record<string, unknown> | null,
-        emotionalNeeds: requestProfile.emotionalNeeds as Record<string, unknown> | null,
-        lifeRhythm: requestProfile.lifeRhythm as string | null,
-        maturityLevel: requestProfile.maturityLevel as number | null,
-        securityLevel: requestProfile.securityLevel as string | null,
-        photoUrl: requestProfile.photoUrl as string | null,
-        bio: requestProfile.bio as string | null,
-        interests: requestProfile.interests as string[] | undefined,
+      // Konverter til ProfileData format for den nye matchingEngine
+      const profileA: ProfileData = {
+        userId: userId as string,
+        firstName: (requestProfile.firstName as string | null),
+        lastName: (requestProfile.lastName as string | null),
+        age: (requestProfile.age as number | null),
+        bio: (requestProfile.bio as string | null),
+        interests: (requestProfile.interests as string[]) || [],
+        lifeSituation: (requestProfile.lifeSituation as Record<string, unknown>) || null,
+        lifestyle: (requestProfile.lifestyle as Record<string, unknown>) || null,
+        personality: (requestProfile.personality as Record<string, unknown>) || null,
+        relationshipStyle: (requestProfile.relationshipStyle as string | null),
+        communication: (requestProfile.communication as Record<string, unknown>) || null,
+        intimacy: (requestProfile.intimacy as Record<string, unknown>) || null,
+        futureVision: (requestProfile.futureVision as Record<string, unknown>) || null,
+        boundaries: (requestProfile.boundaries as Record<string, unknown>) || null,
+        emotionalNeeds: (requestProfile.emotionalNeeds as Record<string, unknown>) || null,
+        lifeRhythm: (requestProfile.lifeRhythm as string | null),
+        maturityLevel: (requestProfile.maturityLevel as number | null),
+        securityLevel: (requestProfile.securityLevel as string | null),
+        preferences: (requestProfile.preferences as Record<string, unknown>) || null,
+        matchTags: (requestProfile.matchTags as string[]) || [],
       };
 
-      const profileB = {
-        identityName: (otherProfile.identityName as string | null),
+      const profileB: ProfileData = {
+        userId: otherUser.id,
+        firstName: (otherProfile.firstName as string | null),
+        lastName: (otherProfile.lastName as string | null),
         age: (otherProfile.age as number | null),
-        lifeSituation: (otherProfile.lifeSituation as Record<string, unknown> | null),
-        lifestyle: (otherProfile.lifestyle as Record<string, unknown> | null),
-        personality: (otherProfile.personality as Record<string, unknown> | null),
+        bio: (otherProfile.bio as string | null),
+        interests: (otherProfile.interests as string[]) || [],
+        lifeSituation: (otherProfile.lifeSituation as Record<string, unknown>) || null,
+        lifestyle: (otherProfile.lifestyle as Record<string, unknown>) || null,
+        personality: (otherProfile.personality as Record<string, unknown>) || null,
         relationshipStyle: (otherProfile.relationshipStyle as string | null),
-        communication: (otherProfile.communication as Record<string, unknown> | null),
-        intimacy: (otherProfile.intimacy as Record<string, unknown> | null),
-        futureVision: (otherProfile.futureVision as Record<string, unknown> | null),
-        boundaries: (otherProfile.boundaries as Record<string, unknown> | null),
-        emotionalNeeds: (otherProfile.emotionalNeeds as Record<string, unknown> | null),
+        communication: (otherProfile.communication as Record<string, unknown>) || null,
+        intimacy: (otherProfile.intimacy as Record<string, unknown>) || null,
+        futureVision: (otherProfile.futureVision as Record<string, unknown>) || null,
+        boundaries: (otherProfile.boundaries as Record<string, unknown>) || null,
+        emotionalNeeds: (otherProfile.emotionalNeeds as Record<string, unknown>) || null,
         lifeRhythm: (otherProfile.lifeRhythm as string | null),
         maturityLevel: (otherProfile.maturityLevel as number | null),
         securityLevel: (otherProfile.securityLevel as string | null),
-        photoUrl: (otherProfile.photoUrl as string | null),
-        bio: (otherProfile.bio as string | null),
-        interests: (otherProfile.interests as string[] | undefined),
+        preferences: (otherProfile.preferences as Record<string, unknown>) || null,
+        matchTags: (otherProfile.matchTags as string[]) || [],
       };
 
-      // Berekn score
-      const { score, scores } = calculateMatchScore(profileA, profileB);
+      // Bruk den nye matchingEngine
+      const result = matchingEngine(profileA, profileB);
 
-      // Hent match-type
-      const matchType = getMatchType(score);
-
-      // Generer forklaring
-      let explanation: Record<string, unknown> | null = null;
-      try {
-        const expl = getMatchExplanation(profileA, profileB, scores) as unknown as Record<string, unknown>;
-        // Legg til _scores for detaljside
-        explanation = { ...expl, _scores: scores };
-      } catch {
-        const def = getDefaultExplanation() as unknown as Record<string, unknown>;
-        explanation = { ...def, _scores: scores };
-      }
+      // Map MatchTier til matchType
+      const matchTypeMap: Record<MatchTier, string> = {
+        deepResonance: 'deep',
+        strongResonance: 'strong',
+        moderateResonance: 'moderate',
+        gentleResonance: 'gentle',
+        weakResonance: 'low',
+      };
 
       potentialMatches.push({
         otherUserId: otherUser.id,
         otherUserName: (otherProfile.identityName as string | null),
         otherUserAge: (otherProfile.age as number | null),
         otherUserPhotoUrl: (otherProfile.photoUrl as string | null),
-        score,
-        type: matchType.key,
-        explanation,
+        score: Math.round(result.score * 100), // 0-100 for lagring
+        type: matchTypeMap[result.tier],
+        explanation: { breakdown: result.breakdown, tier: result.tier, rejected: result.rejected, rejectionReason: result.rejectionReason },
       });
     }
 
@@ -244,8 +243,9 @@ export async function POST(request: NextRequest) {
         data: {
           userAId: userId as string,
           userBId: topMatch.otherUserId as string,
-          score: topMatch.score,
-          type: topMatch.type,
+        score: topMatch.score,
+        normalizedScore: topMatch.score / 100,
+        type: topMatch.type,
           explanation: JSON.parse(JSON.stringify(topMatch.explanation ?? {})),
         },
       });

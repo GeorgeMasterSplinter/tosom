@@ -1,19 +1,18 @@
 /**
- * ToSom UI 5.0 — Hero 2.0 (Round 3 Premium Visual Polish)
+ * ToSom UI 5.0 — Hero Ultra-Premium (Nordic Calm + Bølgeform)
  * 
- * Forbedringar:
- * - Større H1: 68px på desktop
- * - Spotlight bak H1
- * - Meir spacing: H1→subtitle 48px, subtitle→CTA 48px
- * - Visuell djupne med layered gradients
- * - CTA med 1px gull-stroke og sterkare glow
- * Bokmål
+ * Tittel: "Ro. Trygghet. Mening."
+ * Undertekst på moderne norsk bokmål
+ * CTA-knapper fjernet fra hero (kun nederst på siden)
+ * Horisontale bølgeformer (A+B), forsterket atmosfære, premium glassmorphism
+ * Premium spacing: py-[200px], py-[180px]
+ * Mobiloptimalisert < 640px
+ * Alle tekst er på moderne norsk bokmål.
  */
 
 'use client';
 
 import { FC } from 'react';
-import Link from 'next/link';
 import { LogoAnimated } from '@/components/branding/LogoVariants';
 import { color, spacing } from '@/config/design-tokens';
 
@@ -24,10 +23,6 @@ import { color, spacing } from '@/config/design-tokens';
 interface HeroProps {
   title?: string;
   subtitle?: string;
-  ctaText?: string;
-  ctaHref?: string;
-  secondaryText?: string;
-  secondaryHref?: string;
 }
 
 /* ========================
@@ -35,17 +30,13 @@ interface HeroProps {
    ======================== */
 
 export const Hero: FC<HeroProps> = ({
-  title = 'Ro. Tryggleik. Dybde.',
-  subtitle = 'Ein match innan 24 timer',
-  ctaText = 'Kom i gang',
-  ctaHref = '/onboarding',
-  secondaryText = 'Logg inn',
-  secondaryHref = '/login',
+  title = 'Ro. Trygghet. Mening.',
+  subtitle = 'ToSom er for mennesker som vil noe ekte.\nHer møtes to personer i et rolig og trygt rom – uten støy, uten sveiping, uten jag.\nÉn match. Én reise. En mulighet til å bygge noe som faktisk betyr noe.',
 }) => {
   const keyPoints = [
     { 
-      title: 'Djup profil', 
-      label: 'Forskning basert',
+      title: 'Veiledet profil', 
+      description: 'Forskningbasert og guidet profil som hjelper deg å forstå hvem du er.',
       icon: (
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
           <path d="M12 12C14.2091 12 16 10.2091 16 8C16 5.79086 14.2091 4 12 4C9.79086 4 8 5.79086 8 8C8 10.2091 9.79086 12 12 12Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -54,8 +45,8 @@ export const Hero: FC<HeroProps> = ({
       ),
     },
     { 
-      title: 'Éin match', 
-      label: 'Kvalitet over kvantitet',
+      title: 'Match innen 24 timer', 
+      label: 'Én match. Kvalitet framfor kvantitet.',
       icon: (
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
           <path d="M12 2L15 8L21 9L16.5 14L18 21L12 17.5L6 21L7.5 14L3 9L9 8L12 2Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -63,8 +54,8 @@ export const Hero: FC<HeroProps> = ({
       ),
     },
     { 
-      title: 'Guidet reise', 
-      label: '30 dager sammen',
+      title: 'Trygghet og personvern', 
+      label: 'Ingen offentlige profiler. Ingen swipe.',
       icon: (
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
           <path d="M12 2L18 5V12C18 16.5 14.5 20.5 12 22C9.5 20.5 6 16.5 6 12V5L12 2Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -74,131 +65,192 @@ export const Hero: FC<HeroProps> = ({
     },
   ];
 
+  /* Premium spacing constants */
+  const heroSpacing = {
+    paddingTop: 200,
+    paddingBottom: 180,
+  };
+
+  /* Bølge 1: primær, organisk */
+  const wave1Path =
+    'M0,256 C200,180 400,300 600,256 C800,212 1000,280 1200,256 C1400,232 1600,260 1800,256 L1800,512 L0,512 Z';
+
+  /* Bølge 2: sekundær, gulltonet */
+  const wave2Path =
+    'M0,256 C220,210 440,310 660,260 C880,210 1100,290 1320,260 C1540,230 1760,270 1980,256 L1980,512 L0,512 Z';
+
   return (
     <section
       className="relative overflow-hidden"
       style={{
-        paddingTop: `${spacing['4xl']}px`,
-        paddingBottom: `${spacing['4xl']}px`,
-        background: 'linear-gradient(180deg, #162032 0%, #0F1923 50%, #0B1520 100%)',
+        paddingTop: `${heroSpacing.paddingTop}px`,
+        paddingBottom: `${heroSpacing.paddingBottom}px`,
+        background: 'linear-gradient(180deg, #0A0F1A 0%, #0F1923 50%, #0A0F1A 100%)',
       }}
     >
-      {/* Ambient blå glød — redusert styrke */}
+      {/* ── Z-0: Atmosfæren ── */}
+
+      {/* Vignette — forsterka +10% */}
       <div
-        className="absolute top-0 right-0 w-[800px] h-[600px] pointer-events-none"
+        className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse at 70% 20%, rgba(80,120,255,0.04), transparent 70%)',
+          background: 'radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.06) 100%)',
         }}
       />
 
-      {/* Gull-aksent glød — subtil */}
+      {/* Spotlight — flytta ned + radius +20% */}
       <div
-        className="absolute top-[30%] left-0 w-[600px] h-[500px] pointer-events-none"
+        className="absolute top-[40%] left-1/2 -translate-x-1/2 w-[1080px] h-[720px] pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse at 30% 50%, rgba(212,175,55,0.02), transparent 70%)',
+          background: 'radial-gradient(circle at center, rgba(255,255,255,0.048), transparent 70%)',
         }}
       />
 
-      <div className="mx-auto max-w-6xl px-6 lg:px-8">
+      {/* Blå ambient glow — radius +15% */}
+      <div
+        className="absolute top-0 right-0 w-[920px] h-[690px] pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse at 70% 20%, rgba(80,120,255,0.022), transparent 70%)',
+        }}
+      />
+
+      {/* Gull ambient glow — radius +20% */}
+      <div
+        className="absolute top-[20%] left-1/2 -translate-x-1/2 w-[600px] h-[480px] pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle at center, rgba(212,175,55,0.044), transparent 60%)',
+        }}
+      />
+
+      {/* ── Z-1: Bølgeformer (bak glassblokk) ── */}
+      <div className="absolute bottom-[-40px] left-0 w-[140%] opacity-[0.05] pointer-events-none z-[1]">
+        <svg
+          viewBox="0 0 1800 256"
+          preserveAspectRatio="none"
+          className="w-full h-full"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <linearGradient id="wave1Grad" x1="0" y1="0" x2="1800" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#1A2A3A" />
+              <stop offset="100%" stopColor="#0A0F1A" />
+            </linearGradient>
+          </defs>
+          <path d={wave1Path} fill="url(#wave1Grad)" />
+        </svg>
+      </div>
+
+      <div
+        className="absolute bottom-[-20px] left-0 w-[150%] opacity-[0.03] pointer-events-none z-[1]"
+        style={{ maxWidth: '1980px' }}
+      >
+        <svg
+          viewBox="0 0 1980 256"
+          preserveAspectRatio="none"
+          className="w-full h-full"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <linearGradient id="wave2Grad" x1="0" y1="0" x2="1980" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#D4AF37" />
+              <stop offset="100%" stopColor="transparent" />
+            </linearGradient>
+          </defs>
+          <path d={wave2Path} fill="url(#wave2Grad)" />
+        </svg>
+      </div>
+
+      {/* ── Z-2: Innhold ── */}
+      <div className="mx-auto max-w-6xl px-6 lg:px-8 relative z-20">
         <div className="max-w-3xl mx-auto text-center">
-          
+
           {/* Animert tekst-logo */}
-          <div className="flex justify-center mb-10">
+          <div className="flex justify-center -mt-7 mb-4">
             <LogoAnimated />
           </div>
 
-          {/* H1 — kort, roleg */}
-          <h1
-            className="text-3xl md:text-[48px] font-semibold tracking-[-0.02em] leading-[1.15] mb-4"
-            style={{ color: color.text.primary }}
-          >
-            {title}
-          </h1>
-
-          {/* Undertekst — kort */}
-          <p
-            className="text-base mb-8"
-            style={{ 
-              color: color.text.secondary,
-              lineHeight: '1.6',
+          {/* Premium glassmorphism-blokk — blur 12px */}
+          <div
+            className="mx-auto max-w-[720px] rounded-3xl p-8 md:p-10"
+            style={{
+              background: 'rgba(255,255,255,0.045)',
+              backdropFilter: 'blur(12px)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.18), 0 0 18px rgba(212,175,55,0.04)',
             }}
           >
-            {subtitle}
-          </p>
-
-          {/* CTA-knappar — kompakt */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-16">
-            <Link
-              href={ctaHref}
-              className="inline-flex items-center justify-center px-10 py-3.5 rounded-[12px] font-medium transition-all duration-300 text-sm"
+            {/* H1 — premium, roleg — white/92 */}
+            <h1
+              className="text-5xl md:text-[76px] font-semibold tracking-[-0.03em] leading-[1.12] mb-[28px] animate-fadeInUp-delay-80"
               style={{
-                background: color.brand.gold,
-                color: '#0B1520',
-                boxShadow: `0 0 30px ${color.ambient.gold.medium}, 0 4px 12px rgba(0,0,0,0.2)`,
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.background = color.brand['gold-hover'];
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.background = color.brand.gold;
+                color: 'rgba(255,255,255,0.92)',
+                letterSpacing: '-0.03em',
+                lineHeight: '1.12',
+                textShadow: '0 0 32px rgba(255,255,255,0.04)',
               }}
             >
-              {ctaText}
-            </Link>
+              {title}
+            </h1>
 
-            {secondaryText && (
-              <Link
-                href={secondaryHref}
-                className="text-sm transition-colors"
-                style={{ 
-                  color: color.text.muted,
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.color = color.text.secondary;
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.color = color.text.muted;
-                }}
-              >
-                {secondaryText}
-              </Link>
-            )}
+            {/* Undertekst — white/90 */}
+            <p
+              className="text-lg md:text-xl mb-0 animate-fadeInUp-delay-140"
+              style={{
+                color: 'rgba(255,255,255,0.90)',
+                lineHeight: '1.65',
+                letterSpacing: '0.22px',
+                maxWidth: '660px',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+              }}
+            >
+              {subtitle}
+            </p>
           </div>
 
-          {/* Tre nøkkelpunkter — med undertittel */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-10 md:gap-x-14 gap-y-10 text-center max-w-3xl mx-auto">
-            {keyPoints.map((point, idx) => (
-              <div key={idx} className="flex flex-col items-center gap-3">
-                <div 
-                  className="w-10 h-10 rounded-xl flex items-center justify-center"
-                  style={{
-                    background: 'rgba(212,175,55,0.08)',
-                    border: '1px solid rgba(212,175,55,0.15)',
-                    color: color.brand.gold,
-                  }}
-                >
-                  {point.icon}
-                </div>
-                <h3 
-                  className="text-sm font-semibold"
-                  style={{ color: color.text.primary }}
-                >
-                  {point.title}
-                </h3>
-                <span 
-                  className="text-xs"
-                  style={{ 
-                    color: color.text.muted,
-                    lineHeight: '1.55',
-                  }}
-                >
-                  {point.label}
-                </span>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
+
+      {/* ── Mobiloptimalisering < 640px ── */}
+      <style>{`
+        @media (max-width: 640px) {
+          .hero-wave-primary {
+            width: 180% !important;
+            opacity: 0.035 !important;
+          }
+          .hero-wave-secondary {
+            width: 200% !important;
+            opacity: 0.02 !important;
+          }
+          .hero-waves-container {
+            max-width: 1200px !important;
+          }
+          .hero-spotlight {
+            width: 810px !important;
+            height: 540px !important;
+          }
+          .hero-blue-glow {
+            width: 748px !important;
+            height: 564px !important;
+          }
+          .hero-gold-glow {
+            width: 480px !important;
+            height: 384px !important;
+          }
+          .hero-glass-blur {
+            backdrop-filter: blur(9px) !important;
+            -webkit-backdrop-filter: blur(9px) !important;
+          }
+          .hero-title {
+            font-size: 42px !important;
+          }
+          .hero-subtitle {
+            font-size: 17px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 };

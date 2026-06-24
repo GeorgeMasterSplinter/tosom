@@ -20,6 +20,10 @@ interface OnboardingLayoutProps {
   nextLabel?: string;
   disabledNext?: boolean;
   exampleText?: string;
+  /** Guiding text explaining why this step matters */
+  guidingText?: string;
+  /** Trust text below form fields */
+  trustText?: string;
 }
 
 export const OnboardingLayout: FC<OnboardingLayoutProps> = ({
@@ -27,6 +31,8 @@ export const OnboardingLayout: FC<OnboardingLayoutProps> = ({
   totalSteps,
   title,
   subtitle,
+  guidingText,
+  trustText,
   children,
   onNext,
   onBack,
@@ -78,9 +84,17 @@ export const OnboardingLayout: FC<OnboardingLayoutProps> = ({
           >
             {title}
           </h1>
+          {guidingText && (
+            <p
+              className="text-base mt-2 leading-relaxed"
+              style={{ color: 'rgba(255, 255, 255, 0.55)' }}
+            >
+              {guidingText}
+            </p>
+          )}
           <p
-            className="text-base mt-2 leading-relaxed"
-            style={{ color: 'rgba(255, 255, 255, 0.55)' }}
+            className="text-sm mt-2 leading-relaxed italic"
+            style={{ color: 'rgba(212, 175, 55, 0.55)' }}
           >
             {subtitle}
           </p>
@@ -96,6 +110,18 @@ export const OnboardingLayout: FC<OnboardingLayoutProps> = ({
 
         {/* Children */}
         <div className="px-8 pb-6">{children}</div>
+
+        {/* Trust text */}
+        {trustText && (
+          <div className="px-8 pb-4">
+            <p
+              className="text-xs text-center"
+              style={{ color: 'rgba(255, 255, 255, 0.35)' }}
+            >
+              {trustText}
+            </p>
+          </div>
+        )}
 
         {/* Navigation */}
         {showNext && (
@@ -129,29 +155,30 @@ export const OnboardingLayout: FC<OnboardingLayoutProps> = ({
               onClick={onNext}
               disabled={disabledNext}
               className="
-                flex-1 px-6 py-3 rounded-xl text-sm font-semibold
+                flex-1 px-6 py-3.5 rounded-xl text-sm font-semibold
                 transition-all duration-200 ease-out
               "
               style={{
                 background: disabledNext
                   ? 'rgba(212, 175, 55, 0.2)'
-                  : '#D4AF37',
+                  : 'linear-gradient(135deg, rgba(212,175,55,0.92) 0%, rgba(232,194,122,0.92) 100%)',
                 color: disabledNext ? 'rgba(255, 255, 255, 0.3)' : '#0B0E11',
                 cursor: disabledNext ? 'not-allowed' : 'pointer',
+                boxShadow: disabledNext ? 'none' : '0 4px 12px rgba(212,175,55,0.20)',
               }}
               onMouseEnter={(e) => {
                 if (!disabledNext) {
-                  (e.target as HTMLElement).style.background = '#E8C766';
-                  (e.target as HTMLElement).style.transform = 'translateY(-1px)';
-                  (e.target as HTMLElement).style.boxShadow = '0 0 30px rgba(212, 175, 55, 0.35)';
+                  (e.target as HTMLElement).style.background = 'linear-gradient(135deg, #D4AF37 0%, #E8C766 100%)';
+                  (e.target as HTMLElement).style.transform = 'translateY(-1px) scale(1.005)';
+                  (e.target as HTMLElement).style.boxShadow = '0 6px 16px rgba(212,175,55,0.25)';
                 }
               }}
               onMouseLeave={(e) => {
                 (e.target as HTMLElement).style.background = disabledNext
                   ? 'rgba(212, 175, 55, 0.2)'
-                  : '#D4AF37';
-                (e.target as HTMLElement).style.transform = 'translateY(0)';
-                (e.target as HTMLElement).style.boxShadow = 'none';
+                  : 'linear-gradient(135deg, rgba(212,175,55,0.92) 0%, rgba(232,194,122,0.92) 100%)';
+                (e.target as HTMLElement).style.transform = 'translateY(0) scale(1)';
+                (e.target as HTMLElement).style.boxShadow = disabledNext ? 'none' : '0 4px 12px rgba(212,175,55,0.20)';
               }}
             >
               {nextLabel}

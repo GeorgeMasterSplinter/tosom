@@ -1,9 +1,10 @@
 /**
- * ToSom UI5 — Footer (Redesigned)
+ * ToSom UI5 — Footer (Premium Dark + Glassmorphism)
  * 
  * Premium footer med design-tokens, strukturert layout.
- * 4 kolonner: Logo + beskrivelse, Produkt, Selskap, juridisk.
- * Mørk blå bakgrunn, gull-aksentar, glassmorphism.
+ * 3 kolonner: Produkt, Regler, Personvern.
+ * Mørk navy bakgrunn, gull-aksenter, glassmorphism.
+ * Moderne norsk bokmål.
  */
 
 'use client';
@@ -27,27 +28,27 @@ export interface FooterProps {
    ======================== */
 
 const produktLinks = [
-  { label: 'Kvifor ToSom', href: '/kvifor' },
-  { label: 'Slik fungerer det', href: '/slik' },
+  { label: 'Hvorfor ToSom', href: '/hvorfor' },
+  { label: 'Slik fungerer det', href: '/slik-fungerer-det' },
   { label: 'Reisen', href: '/reisen' },
-  { label: 'Prisar', href: '/priser' },
+  { label: 'Priser', href: '/priser' },
 ];
 
-const selskapLinks = [
+const reglerLinks = [
+  { label: 'Personvern', href: '/personvern' },
+  { label: 'Vilkår', href: '/vilkar' },
+  { label: 'Cookies', href: '/cookies' },
+];
+
+const omLinks = [
   { label: 'Om oss', href: '/om-oss' },
   { label: 'Kontakt', href: '/kontakt' },
   { label: 'Blogg', href: '/blogg' },
 ];
 
-const juridiskLinks = [
-  { label: 'Personvern', href: '/personvern' },
-  { label: 'Vilkår', href: '/vilkår' },
-  { label: 'Cookies', href: '/cookies' },
-];
-
 /* ========================
-   COMPONENT
-   ======================== */
+    COMPONENT
+    ======================== */
 
 export const Footer: FC<FooterProps> = ({
   companyName = 'ToSom',
@@ -57,65 +58,62 @@ export const Footer: FC<FooterProps> = ({
     <footer
       className="relative overflow-hidden"
       style={{
-        background: `linear-gradient(180deg, #0B1520 0%, ${color.bg.primary} 100%)`,
-        borderTop: `1px solid ${color.border.dark}`,
+        background: `linear-gradient(180deg, #0A0F1A 0%, rgba(15,25,35,0.65) 50%, ${color.bg.primary} 100%)`,
+        borderTop: '1px solid rgba(255,255,255,0.06)',
       }}
     >
-      {/* Glassmorphism-overlay */}
+      {/* Glassmorphism-overlay — ytterlegare redusert 10% */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'rgba(255,255,255,0.01)',
-          backdropFilter: 'blur(8px)',
+          background: 'rgba(255,255,255,0.014)',
+          backdropFilter: 'blur(5px)',
         }}
       />
 
       <div className="mx-auto max-w-6xl px-6 lg:px-8 relative z-10">
-        {/* Hovud-innhold */}
+        {/* Hovud-innhald — 3 kolonner på desktop, vertikal på mobil */}
+        {/* Top-divider */}
         <div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10"
+          className="mx-auto"
           style={{
-            paddingTop: `${spacing['3xl']}px`,
-            paddingBottom: `${spacing['3xl']}px`,
+            height: '1px',
+            background: 'rgba(255,255,255,0.05)',
+            maxWidth: '1200px',
+          }}
+        />
+
+        {/* Hovud-innhald — 3 kolonner på desktop, vertikal på mobil */}
+        <div
+          className="grid grid-cols-1 md:grid-cols-3 gap-[48px]"
+          style={{
+            paddingTop: '80px',
+            paddingBottom: '64px',
           }}
         >
-          {/* Kolonne 1: Logo + beskrivelse */}
-          <div className="md:col-span-2 lg:col-span-1">
-            <LogoWordmark />
-            <p
-              className="mt-3"
-              style={{ 
-                color: color.text.muted,
-                lineHeight: '1.65',
-                fontSize: '13px',
-              }}
-            >
-              Ein roleg, privat plattform for ekte relasjonar.
-              <br />
-              Éin match · 24 timer · Guidet reise
-            </p>
-          </div>
-
-          {/* Kolonne 2: Produkt */}
+          {/* Kolonne 1: Produkt */}
           <div>
             <h4
-              className="text-[10px] uppercase tracking-[0.2em] font-semibold mb-4"
-              style={{ color: color.text.secondary }}
+              className="text-[10px] uppercase tracking-[0.2em] font-semibold mb-5"
+              style={{ color: 'rgba(212,175,55,0.55)' }}
             >
               Produkt
             </h4>
-            <ul className="space-y-2.5">
+            <ul className="space-y-[7px]">
               {produktLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm transition-colors duration-200"
-                    style={{ color: color.text.muted }}
+                    className="text-sm transition-all duration-300 ease-out"
+                    style={{ color: 'rgba(255,255,255,0.85)', lineHeight: '1.75' }}
                     onMouseEnter={(e) => {
-                      (e.target as HTMLElement).style.color = color.brand.gold;
+                      (e.target as HTMLElement).style.color = '#D4AF37';
+                      (e.target as HTMLElement).style.textDecoration = 'underline';
+                      (e.target as HTMLElement).style.textDecorationColor = 'rgba(212,175,55,0.5)';
                     }}
                     onMouseLeave={(e) => {
-                      (e.target as HTMLElement).style.color = color.text.muted;
+                      (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.85)';
+                      (e.target as HTMLElement).style.textDecoration = 'none';
                     }}
                   >
                     {link.label}
@@ -125,26 +123,29 @@ export const Footer: FC<FooterProps> = ({
             </ul>
           </div>
 
-          {/* Kolonne 3: Selskap */}
+          {/* Kolonne 2: Regler */}
           <div>
             <h4
-              className="text-[10px] uppercase tracking-[0.2em] font-semibold mb-4"
-              style={{ color: color.text.secondary }}
+              className="text-[10px] uppercase tracking-[0.2em] font-semibold mb-5"
+              style={{ color: 'rgba(212,175,55,0.55)' }}
             >
-              Selskap
+              Regler
             </h4>
-            <ul className="space-y-2.5">
-              {selskapLinks.map((link) => (
+            <ul className="space-y-[7px]">
+              {reglerLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm transition-colors duration-200"
-                    style={{ color: color.text.muted }}
+                    className="text-sm transition-all duration-300 ease-out"
+                    style={{ color: 'rgba(255,255,255,0.85)', lineHeight: '1.75' }}
                     onMouseEnter={(e) => {
-                      (e.target as HTMLElement).style.color = color.brand.gold;
+                      (e.target as HTMLElement).style.color = '#D4AF37';
+                      (e.target as HTMLElement).style.textDecoration = 'underline';
+                      (e.target as HTMLElement).style.textDecorationColor = 'rgba(212,175,55,0.5)';
                     }}
                     onMouseLeave={(e) => {
-                      (e.target as HTMLElement).style.color = color.text.muted;
+                      (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.85)';
+                      (e.target as HTMLElement).style.textDecoration = 'none';
                     }}
                   >
                     {link.label}
@@ -154,26 +155,29 @@ export const Footer: FC<FooterProps> = ({
             </ul>
           </div>
 
-          {/* Kolonne 4: Juridisk */}
+          {/* Kolonne 3: Om ToSom */}
           <div>
             <h4
-              className="text-[10px] uppercase tracking-[0.2em] font-semibold mb-4"
-              style={{ color: color.text.secondary }}
+              className="text-[10px] uppercase tracking-[0.2em] font-semibold mb-5"
+              style={{ color: 'rgba(212,175,55,0.55)' }}
             >
-              Juridisk
+              Om ToSom
             </h4>
-            <ul className="space-y-2.5">
-              {juridiskLinks.map((link) => (
+            <ul className="space-y-[7px]">
+              {omLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm transition-colors duration-200"
-                    style={{ color: color.text.muted }}
+                    className="text-sm transition-all duration-300 ease-out"
+                    style={{ color: 'rgba(255,255,255,0.85)', lineHeight: '1.75' }}
                     onMouseEnter={(e) => {
-                      (e.target as HTMLElement).style.color = color.brand.gold;
+                      (e.target as HTMLElement).style.color = '#D4AF37';
+                      (e.target as HTMLElement).style.textDecoration = 'underline';
+                      (e.target as HTMLElement).style.textDecorationColor = 'rgba(212,175,55,0.5)';
                     }}
                     onMouseLeave={(e) => {
-                      (e.target as HTMLElement).style.color = color.text.muted;
+                      (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.85)';
+                      (e.target as HTMLElement).style.textDecoration = 'none';
                     }}
                   >
                     {link.label}
@@ -184,24 +188,41 @@ export const Footer: FC<FooterProps> = ({
           </div>
         </div>
 
+        {/* Botntekst */}
+        <div className="text-center pt-8 pb-6">
+          <p
+            className="text-sm"
+            style={{ 
+              color: 'rgba(255,255,255,0.85)',
+              lineHeight: '1.7',
+              maxWidth: '520px',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+              marginBottom: '24px',
+            }}
+          >
+            ToSom — en rolig, moden måte å møtes på. To mennesker. Én reise. Ekte kontakt.
+          </p>
+        </div>
+
         {/* Botnlinje */}
         <div
           className="flex flex-col sm:flex-row items-center justify-between pt-6"
           style={{
-            borderTop: `1px solid rgba(255,255,255,0.06)`,
+            borderTop: '1px solid rgba(255,255,255,0.06)',
           }}
         >
           <p
             className="text-xs"
-            style={{ color: 'rgba(255,255,255,0.35)' }}
+            style={{ color: 'rgba(255,255,255,0.50)', lineHeight: '1.75' }}
           >
-            © {year} {companyName}. Alle rettar reservert.
+            &copy; {year} {companyName}. Alle retter reservert.
           </p>
           <p
             className="text-xs mt-2 sm:mt-0"
-            style={{ color: 'rgba(255,255,255,0.25)' }}
+            style={{ color: 'rgba(255,255,255,0.45)', lineHeight: '1.75' }}
           >
-            Ro · Trygghet · Dybde
+            Ro &middot; Trygghet &middot; Dybde
           </p>
         </div>
       </div>

@@ -1,110 +1,90 @@
-// explainer.ts — genererer breakdown + naturleg-språk forklaring + match-tier
-
-import { ScoreResult } from "./scorer";
-
-/**
- * Kart per vekt til kort, menneskeleg lesbare forklaringar.
- */
-function explainBase(score: number): string {
-  if (score > 80) return "Sterk grunnleggjande kompatibilitet — felles interesser og nær alder.";
-  if (score > 60) return "Bra grunnlag for kompatibilitet med fleire felles trekk.";
-  if (score > 40) return "Nokre felles interesser og liknande alder.";
-  return "Få felles trekk på grunnlaget. Kan vere utfordrande.";
-}
-
-function explainResonance(score: number): string {
-  if (score > 80) return "Djup emosjonell resonans — deler verdiane og språket.";
-  if (score > 60) return "God emosjonell resonans med felles perspektiv.";
-  if (score > 40) return "Modest resonans — nokre felles emosjonelle signal.";
-  return "Liten emosjonell resonans. Kan krevje meir arbeid.";
-}
-
-function explainSemantic(score: number): string {
-  if (score > 80) return "Sterk semantisk overlap — deler tema, interesser og ordbruk.";
-  if (score > 60) return "Tydeleg semantisk overlap i profil og interesser.";
-  if (score > 40) return "Nokre semantiske likskapar, men ulik ordbruk.";
-  return "Liten semantisk overlap. Ul like fokusområde.";
-}
-
-function explainIntimacy(score: number): string {
-  if (score > 80) return "Mykje profil-djupde og åpenheit — indikerer evne til nære band.";
-  if (score > 60) return "God profil-djupde med interessante detaljar.";
-  if (score > 40) return "Moderat profil-djupde — nokre innsikter.";
-  return "Begrensa profil-djupde. Kan trengje meir tid til å kjenne kvarandre.";
-}
-
-function explainFuture(score: number): string {
-  if (score > 80) return "Sterk framtids-orientert kompatibilitet — liknande livsfase og mål.";
-  if (score > 60) return "God framtids-sjans med overlap i livsmål.";
-  if (score > 40) return "Nokre framtids-signalar, men ulik livsfase.";
-  return "Liten framtids-orientert overlap. Kan vere ulik livsfase.";
-}
-
-const explainers = {
-  base: explainBase,
-  resonance: explainResonance,
-  semantic: explainSemantic,
-  intimacy: explainIntimacy,
-  future: explainFuture,
-};
+// lib/matching/explainer.ts — Genererer lesbare forklaringer fra MatchResult
+import { MatchResult, MatchTier } from "./types";
 
 /**
- * Gå ein ScoreResult og returner eit forklaring-objekt.
+ * tierLabel gjev eit kort, menneskelesleg namn på ein MatchTier.
  */
-export function generateExplanation(result: ScoreResult): {
-  tier: ScoreResult["matchQuality"];
-  tierLabel: string;
-  breakdown: Array<{
-    key: keyof typeof result.breakdown;
-    score: number;
-    label: string;
-    explanation: string;
-  }>;
-  summary: string;
-} {
-  const tierLabels: Record<string, string> = {
-    excellent: "Utmerka match",
-    strong: "Sterk match",
-    moderate: "Moderat match",
-    weak: "Svak match",
+function tierLabel(tier: MatchTier): string {
+  const labels: Record<MatchTier, string> = {
+    deepResonance: "Dyp resonans",
+    strongResonance: "Sterk resonans",
+    moderateResonance: "Moderat resonans",
+    gentleResonance: "Mild resonans",
+    weakResonance: "Svake tegn",
   };
+  return labels[tier];
+}
 
-  const breakdown = (Object.keys(result.breakdown) as Array<keyof typeof result.breakdown>).map(
-    (key) => ({
-      key,
-      score: result.breakdown[key],
-      label:
-        key === "base"
-          ? "Grunnleggjande"
-          : key === "resonance"
-          ? "Emosjonell resonans"
-          : key === "semantic"
-          ? "Semantisk"
-          : key === "intimacy"
-          ? "Intimitet"
-          : "Framtid",
-      explanation: explainers[key](result.breakdown[key]),
-    }),
-  );
-
-  // Høgst scorande modul
-  let topKey: keyof typeof result.breakdown = "base";
-  let topScore = 0;
-  for (const [k, v] of Object.entries(result.breakdown)) {
-    if (v > topScore) {
-      topScore = v;
-      topKey = k as keyof typeof result.breakdown;
-    }
+/**
+ * breakdownDescription gir en kort, lesbar beskriving av breakdown.
+ */
+function breakdownDescription(breakdown: MatchResult["breakdown"]): string {
+  const parts: string[] = [];
+  
+  // Base
+  if (breakdown.base > 0.7) parts.push("sterk grunnleggende kompatibilitet");
+  else if (breakdown.base > 0.4) parts.push("god grunnleggende kompatibilitet");
+  
+  // Resonance
+  if (breakdown.resonance > 0.7) parts.push("dyp emosjonell resonans");
+  else if (breakdown.resonance > 0.4) parts.push("naturlig resonans");
+  
+  // Semantic
+  if (breakdown.semantic > 0.7) parts.push("mye semantisk overlap");
+  else if (breakdown.semantic > 0.4) parts.push("noen felles tema");
+  
+  // Intimacy
+  if (breakdown.intimacy > 0.7) parts.push("sterk intimitetskompatibilitet");
+  
+  // Future
+  if (breakdown.future > 0.7) parts.push("god framtidskompatibilitet");
+  
+  if (parts.length === 0) {
+    return "færre felles trekk synlige nå";
   }
+  
+  return parts.join(", ");
+}
 
-  const summary =
-    `${tierLabels[result.matchQuality]} (${result.totalScore}/100). ` +
-    `Sterkaste området: ${breakdown.find((d) => d.key === topKey)?.label ?? "ukjent"} (${Math.round(topScore)}).`;
+/**
+ * generateExplanation gir en komplett forklaring for en match.
+ * Bruker breakdown, tier, og score for å lage en kort, varm og personlig tekst.
+ */
+export function generateExplanation(result: MatchResult): string {
+  // Hvis avslått pga dealbreaker
+  if (result.rejected && result.rejectionReason) {
+    return `Dessverre passer ikke denne matchen — ${result.rejectionReason.toLowerCase()}.`;
+  }
+  
+  const tier = tierLabel(result.tier);
+  const percentage = Math.round(result.score * 100);
+  const desc = breakdownDescription(result.breakdown);
+  
+  // Generer en kort, varm forklaring basert på hvor høy scoren er
+  if (result.tier === "deepResonance") {
+    return `Dykk resonans er ekstraordinær — ${desc}. Dette er en av de mest kompatible matchene vi kan finne.`;
+  }
+  
+  if (result.tier === "strongResonance") {
+    return `Sterk resonans på mange nivå — ${desc}. Her er det et virkelig potensial.`;
+  }
+  
+  if (result.tier === "moderateResonance") {
+    return `God resonans med rom for dypde — ${desc}. Verdifullt å utforske.`;
+  }
+  
+  return `${tier} — ${desc}. En start som kan vokse seg dypere med tid.`;
+}
 
-  return {
-    tier: result.matchQuality,
-    tierLabel: tierLabels[result.matchQuality],
-    breakdown,
-    summary,
-  };
+/**
+ * generateShortExplanation gjev ei kort forklaring (under 50 teikn).
+ */
+export function generateShortExplanation(result: MatchResult): string {
+  if (result.rejected && result.rejectionReason) {
+    return `Avslått: ${result.rejectionReason}`;
+  }
+  
+  const tier = tierLabel(result.tier);
+  const percentage = Math.round(result.score * 100);
+  return `${tier} — ${percentage}%`;
 }

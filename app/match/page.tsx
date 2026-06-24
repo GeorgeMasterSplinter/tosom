@@ -8,7 +8,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Header } from '@/components/ui5/Header';
 import { GlassPanel } from '@/components/ui5/GlassPanel';
 
 /* ------ Types ------ */
@@ -54,8 +53,6 @@ export default function MatchPage() {
 
   return (
     <div className="min-h-screen" style={{ background: '#0B0E11' }}>
-      <Header currentPath="/match" />
-
       <main className="mx-auto max-w-[720px] px-8 py-12">
         {/* Header */}
         <div className="text-center mb-12">

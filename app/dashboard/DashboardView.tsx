@@ -205,12 +205,12 @@ export default function DashboardView() {
         const res = await fetch("/api/dashboard");
         if (!res.ok) {
           if (res.status === 401) throw new Error("Du er ikke logget inn");
-          throw new Error("Kunne ikke hente data");
+          throw new Error("Vi gir oss ikke – vi leter videre.");
         }
         const json = await res.json();
         if (!cancelled) setData(json);
       } catch (err: unknown) {
-        if (!cancelled) setError(err instanceof Error ? err.message : "Ukjent feil");
+        if (!cancelled) setError(err instanceof Error ? err.message : "Kan du prøve igjen?");
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -260,11 +260,11 @@ export default function DashboardView() {
     async function fetchMatchProfile() {
       try {
         const res = await fetch(`/api/profile/${matchId}`);
-        if (!res.ok) throw new Error("Kunne ikke hente match-profil");
+        if (!res.ok) throw new Error("Vi gir oss ikke – vi leter videre.");
         const json: MatchProfile = await res.json();
         if (!cancelled) setMatchProfile(json);
       } catch (err: unknown) {
-        if (!cancelled) setMatchProfileError(err instanceof Error ? err.message : "Ukjent feil");
+        if (!cancelled) setMatchProfileError(err instanceof Error ? err.message : "Kan du prøve igjen?");
       } finally {
         if (!cancelled) setMatchProfileLoading(false);
       }
@@ -290,11 +290,11 @@ export default function DashboardView() {
           return;
         }
         const res = await fetch(`/api/journey/${conversationId}`);
-        if (!res.ok) throw new Error("Kunne ikke hente journey");
+        if (!res.ok) throw new Error("Vi gir oss ikke – vi leter videre.");
         const json: JourneyData = await res.json();
         if (!cancelled) setJourney(json);
       } catch (err: unknown) {
-        if (!cancelled) setJourneyError(err instanceof Error ? err.message : "Ukjent feil");
+        if (!cancelled) setJourneyError(err instanceof Error ? err.message : "Kan du prøve igjen?");
       } finally {
         if (!cancelled) setJourneyLoading(false);
       }
@@ -314,7 +314,7 @@ export default function DashboardView() {
         fetch(`/api/journey/${conversationId}`)
           .then((res) => res.json())
           .then((json: JourneyData) => setJourney(json))
-          .catch(() => setJourneyError("Kunne ikke oppdatere journey"));
+          .catch(() => setJourneyError("Kan du prøve igjen?"));
       }
     });
 
@@ -331,7 +331,7 @@ export default function DashboardView() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({}),
       });
-      if (!res.ok) throw new Error("Kunne ikke starte matching");
+      if (!res.ok) throw new Error("Vi gir oss ikke – vi leter videre.");
       const json = await res.json();
       setMatchStatus(json.status || "pending");
     } catch {

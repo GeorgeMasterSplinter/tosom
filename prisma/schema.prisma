@@ -220,6 +220,10 @@ model Profile {
   deepProfileStep DeepProfileStep @default(IDENTITY)
   deepProfileData Json?
 
+  // Matching-felt (ny i FASE 9)
+  preferences Json?           // { dealbreakers: string[], preferences: Record<string, string> }
+  matchTags String[]          // for rask filtrering i matching
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -227,6 +231,7 @@ model Profile {
 
   @@index([userId])
   @@index([deepProfileStep])
+  @@index([matchTags])
 }
 
 model Match {
@@ -235,14 +240,22 @@ model Match {
   userBId       String
   status        MatchStatus @default(active)
   score         Int      @default(0)
+  normalizedScore Float        // 0.0–1.0 (ny i FASE 9)
   type          String   @default("pending")
   explanation   Json?
+  scoringBreakdown Json?      // { base, resonance, semantic, intimacy, future }
   resonanceLevel ResonanceLevel @default(GENTLE)
   reviewed      Boolean  @default(false)
   acceptedByA   DateTime?
   acceptedByB   DateTime?
   lockedAt      DateTime?
   expiresAt     DateTime?
+  
+  // Dealbreaker-tracking (ny i FASE 9)
+  rejectedByA   DateTime?
+  rejectedByB   DateTime?
+  rejectionReason String?
+  
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -252,12 +265,13 @@ model Match {
    feedbacks     MatchFeedback[]
    insights      MatchInsight[]
 
-  @@index([status])
-  @@index([userAId])
-  @@index([userBId])
-  @@index([createdAt])
-  @@index([expiresAt])
-  @@index([score])
+   @@index([status])
+   @@index([userAId])
+   @@index([userBId])
+   @@index([createdAt])
+   @@index([expiresAt])
+   @@index([score])
+   @@index([normalizedScore])
 }
 
 model MatchHistory {

@@ -54,8 +54,7 @@ export async function POST(
           id: matchId,
           userAId: session.user.id,
           userBId: targetUserId,
-          matchScore: 0,
-          matchQuality: "new",
+          normalizedScore: 0.0,
         },
       });
     }

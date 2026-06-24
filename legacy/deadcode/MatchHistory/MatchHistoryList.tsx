@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import MatchHistoryItem from "@/components/MatchHistory/MatchHistoryItem";
-import MatchHistorySkeleton from "@/components/MatchHistory/MatchHistorySkeleton";
-import MatchHistoryEmpty from "@/components/MatchHistory/MatchHistoryEmpty";
+import MatchHistoryItem from "./MatchHistoryItem";
+import MatchHistorySkeleton from "./MatchHistorySkeleton";
+import MatchHistoryEmpty from "./MatchHistoryEmpty";
 
 export default function MatchHistoryList({ userId, className = "" }) {
   const [history, setHistory] = useState<any>(null);

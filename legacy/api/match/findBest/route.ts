@@ -88,6 +88,7 @@ export async function POST(req: NextRequest) {
         userBId: bestMatch.candidateId,
         status: "pending",
         resonanceLevel: bestMatch.match.resonanceLevel,
+        normalizedScore: 0.0,
         expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       },
       include: {

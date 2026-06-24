@@ -219,11 +219,22 @@
    ═══════════════════════════════════════════ */
 
 /* ═══════════════════════════════════════════
-   Premium animations
+   Premium animations — UI 6.0 Micro-Interactions
    ═══════════════════════════════════════════ */
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(6px); }
+  from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes subtleFloat {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+  100% { transform: translateY(0); }
 }
 
 @keyframes scaleIn {
@@ -275,7 +286,22 @@
   50% { opacity: 0.6; transform: scale(1.3); }
 }
 
-.animate-fadeInUp { animation: fadeInUp 0.25s ease-out; }
+.animate-fadeInUp { animation: fadeInUp 0.4s ease-out; }
+.animate-fadeInUp-delay-40 { animation: fadeInUp 0.4s ease-out 40ms both; }
+.animate-fadeInUp-delay-80 { animation: fadeInUp 0.4s ease-out 80ms both; }
+.animate-fadeInUp-delay-120 { animation: fadeInUp 0.4s ease-out 120ms both; }
+.animate-fadeInUp-delay-140 { animation: fadeInUp 0.4s ease-out 140ms both; }
+.animate-fadeInUp-delay-160 { animation: fadeInUp 0.4s ease-out 160ms both; }
+.animate-fadeInUp-delay-200 { animation: fadeInUp 0.4s ease-out 200ms both; }
+.animate-fadeInUp-delay-240 { animation: fadeInUp 0.4s ease-out 240ms both; }
+.animate-fadeInUp-delay-300 { animation: fadeInUp 0.4s ease-out 300ms both; }
+
+.animate-fadeIn { animation: fadeIn 0.35s ease-out; }
+.animate-fadeIn-delay-200 { animation: fadeIn 0.35s ease-out 200ms both; }
+.animate-fadeIn-delay-300 { animation: fadeIn 0.35s ease-out 300ms both; }
+
+.animate-subtleFloat { animation: subtleFloat 4s ease-in-out infinite; }
+
 .animate-scaleIn { animation: scaleIn 0.2s ease-out; }
 .animate-goldGlow { animation: goldGlow 1.5s ease-out; }
 .animate-dotPulse { animation: dotPulse 1.5s ease-in-out infinite; }
@@ -340,6 +366,109 @@
 .ring-gold\/20 { --tw-ring-color: rgba(212, 168, 83, 0.2); }
 .ring-gold\/30 { --tw-ring-color: rgba(212, 168, 83, 0.3); }
 .focus\:border-gold\/50:focus { border-color: rgba(212, 168, 83, 0.5); }
+
+/* ── Seksjons-wrapper global ── */
+.section-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+@media (min-width: 768px) {
+  .section-wrapper {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* ── Liste-typografi global ── */
+ul, ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+ul li, ol li {
+  line-height: 1.7;
+  color: var(--ts-text-gray);
+  font-size: var(--ts-font-body);
+}
+@media (min-width: 768px) {
+  ul li, ol li {
+    font-size: 17px;
+    line-height: 1.75;
+  }
+}
+
+/* ── Seksjonsrytme — py-24 mobil, py-32 desktop ── */
+.section-rhythm {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
+@media (min-width: 768px) {
+  .section-rhythm {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+  }
+}
+
+/* ── CTA seksjonstypografi ── */
+.cta-title {
+  font-size: 2.25rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  max-width: 900px;
+}
+@media (min-width: 768px) {
+  .cta-title {
+    font-size: 3rem;
+    letter-spacing: -0.03em;
+  }
+}
+
+.cta-subtitle {
+  font-size: 1.125rem;
+  color: var(--ts-text-gray);
+  line-height: 1.7;
+  max-width: 640px;
+}
+@media (min-width: 768px) {
+  .cta-subtitle {
+    font-size: 1.25rem;
+  }
+}
+
+/* ── Seksjonstittel ── */
+.section-title {
+  font-size: var(--ts-font-heading-xl);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  max-width: 820px;
+  text-wrap: balance;
+  margin-bottom: 1.5rem;
+}
+@media (min-width: 768px) {
+  .section-title {
+    font-size: var(--ts-font-display-m);
+    margin-bottom: 2.5rem;
+  }
+}
+
+.section-subtitle {
+  font-size: 1.125rem;
+  color: var(--ts-text-gray);
+  line-height: 1.7;
+  max-width: 680px;
+  text-wrap: balance;
+}
+@media (min-width: 768px) {
+  .section-subtitle {
+    font-size: 1.25rem;
+  }
+}
 
 /* ═══════════════════════════════════════════
    Premium helper classes
@@ -605,6 +734,31 @@ body.landing-page {
   --ts-container-narrow: 720px;
   --ts-container-wide: 1200px;
 
+  /* ══ UI 6.0 — Premium Dark Base ══ */
+  --ts-bg-premium: #0B0C10;
+  --ts-bg-premium-deep: #08090D;
+  --ts-text-white: #F5F5F5;
+  --ts-text-gray: #A7A7A7;
+  --ts-gold-accent: #C6A667;
+  --ts-glass-border-deep: rgba(255,255,255,0.08);
+  --ts-blur-glass: 24px;
+
+  /* ══ UI 6.0 — Glow Shadows ══ */
+  --ts-shadow-glow: 0 0 40px rgba(198,166,103,0.15);
+  --ts-shadow-card: 0 8px 30px rgba(0,0,0,0.25);
+
+  /* ══ UI 6.0 — Border Radius ══ */
+  --ts-radius-6xl: 26px;
+
+  /* ══ UI 6.0 — Transition ══ */
+  --ts-transition-ui6-ease: 200ms ease-out;
+  --ts-transition-ui6-hover: 250ms ease;
+
+  /* ══ UI 6.0 — Spacing Scale ══ */
+  --ts-spacing-72: 18rem;
+  --ts-spacing-84: 21rem;
+  --ts-spacing-96: 24rem;
+
   /* ══ UI 5.0 Background Palette ══ */
   --ts-bg-primary: #0B0E11;
   --ts-bg-secondary: #11151A;
@@ -802,30 +956,13 @@ button:focus-visible,
   }
 }
 
-/* ── Global base styles ── */
-body {
-  background-color: var(--ts-bg-primary);
-  color: var(--ts-text-primary);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: var(--ts-font-body);
-  line-height: 1.65;
-  -webkit-font-smoothing: antialiased;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  color: var(--ts-text-primary);
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  margin: 0;
-}
-h1 { font-size: var(--ts-font-heading-xl); }
-h2 { font-size: var(--ts-font-heading-l); }
-h3 { font-size: var(--ts-font-heading-m); }
-
-p {
-  color: var(--ts-text-secondary);
-  line-height: 1.65;
-  margin: 0;
+/* ── UI 6.0 — Glass base class ── */
+.glass-base {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(24px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+  border-radius: 18px;
 }
 
 .text-subtle { color: var(--ts-text-subtle); }

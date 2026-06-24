@@ -1,17 +1,34 @@
-// lib/matching.ts — re-exporter alle nye moduler for bakoverkompatibilitet
-// og beheld gammel calculateMatchScore for eksisterande kode som brukar det.
+// lib/matching.ts — Re-eksporter alle matching-komponentar for bakoverkompatibilitet
+// Denne filen gir enkel import av alle matching-funksjonar
 
-// Gammel scoring (berre for bakoverkompatibilitet)
-export { calculateMatchScore } from "./matching/calculateMatchScore";
+// Kjerne-funksjonar
+export { matchingEngine } from "./matching/engine";
+export { findBestMatchFor } from "./matching/findBestMatchFor";
 
-// Nye moduler
-export { calculateScore } from "./matching/scorer";
-export type { ScoreResult, ScoreInput } from "./matching/scorer";
+// Scoring
+export {
+  calculateBaseCompatibility,
+  calculateEmotionalResonance,
+  calculateSemanticOverlap,
+  calculateIntimacyScore,
+  calculateFutureVisionScore,
+  calculateTotalScore,
+} from "./matching/scorer";
+
+// Dealbreaker
+export { sjekkAlleDealbreakers } from "./matching/dealbreaker";
+
+// Vekter
+export { getWeights, validateWeights } from "./matching/weightConfig";
+
+// Forklaring
 export { generateExplanation } from "./matching/explainer";
-export { rankMatches, deduplicateMatches } from "./matching/ranking";
-export type { RankedMatch } from "./matching/ranking";
-export { recordMatchFeedback, getFeedbackProfile } from "./matching/feedback";
-export { getWeights, getWeightsWithOverride, validateWeights } from "./matching/weightConfig";
 
-// Caching-stubs
-export { getCachedScore, setCachedScore } from "./matching/scorer";
+// Typar
+export {
+  type SubScoreBreakdown,
+  type MatchTier,
+  type MatchResult,
+  type WeightConfig,
+  type ProfileData,
+} from "./matching/types";

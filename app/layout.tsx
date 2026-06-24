@@ -1,5 +1,7 @@
 import "@/styles/globals.css";
 import { AnalyticsProvider } from "@/components/analytics/AnalyticsProvider";
+import { Suspense } from 'react';
+import GlobalHeaderWrapper from '@/components/layout/GlobalHeaderWrapper';
 
 export const metadata = {
   title: "ToSom — En rolig plass for ekte møter",
@@ -58,7 +60,9 @@ export default function RootLayout({
       </head>
       <body className="bg-[var(--ts-bg-primary)] text-[var(--ts-text-primary)] antialiased">
         <AnalyticsProvider />
-        {children}
+        <Suspense fallback={children}>
+          <GlobalHeaderWrapper>{children}</GlobalHeaderWrapper>
+        </Suspense>
       </body>
     </html>
   );

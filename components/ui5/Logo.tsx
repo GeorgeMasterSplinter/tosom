@@ -18,7 +18,7 @@ import { color, typographyToStyle } from '@/config/design-tokens';
 
 export interface LogoProps extends Omit<HTMLAttributes<HTMLElement>, 'color'> {
   /** Hvilken størrelse? */
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   /** Fargevariant */
   colorVariant?: 'gold' | 'white' | 'muted';
   /** Vis tekst? */
@@ -41,6 +41,7 @@ const sizeMap: Record<string, { fontSize: string; letterSpacing: string }> = {
   md:  { fontSize: '24px', letterSpacing: '-0.02em' },
   lg:  { fontSize: '30px', letterSpacing: '-0.02em' },
   xl:  { fontSize: '42px', letterSpacing: '-0.02em' },
+  '2xl': { fontSize: '56px', letterSpacing: '-0.03em' },
 };
 
 const colorMap: Record<string, string> = {
@@ -121,6 +122,11 @@ export const LogoLarge: FC<Omit<LogoProps, 'size'>> = (props) => (
 /** XL logo (hero expanded) */
 export const LogoXL: FC<Omit<LogoProps, 'size'>> = (props) => (
   <Logo {...props} size="xl" />
+);
+
+/** 2XL logo (hero enlarged) */
+export const Logo2XL: FC<Omit<LogoProps, 'size'>> = (props) => (
+  <Logo {...props} size="2xl" />
 );
 
 /* ========================

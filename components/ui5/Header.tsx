@@ -1,10 +1,10 @@
 /**
- * ToSom UI5 — Sticky Header (Redesigned)
+ * ToSom UI5 — Sticky Header (Premium Dark + Glassmorphism)
  * 
- * Logo venstre • Meny midt • CTA høgre
- * Redusert height (64px), meir luft vertically
+ * Logo midt · Meny venstre · Høyre side tom for premium uttrykk
  * Glassmorphism, sticky, premium hover-states
- * Mørk blå bakgrunn, gull-aksentar
+ * Mørk navy bakgrunn, gull-aksenter, soft glow
+ * Alle tekst er på moderne norsk bokmål.
  */
 
 'use client';
@@ -23,10 +23,10 @@ interface HeaderProps {
 }
 
 const navItems = [
-  { label: 'Kvifor ToSom', href: '/kvifor' },
+  { label: 'Hvorfor ToSom', href: '/hvorfor' },
   { label: 'Slik fungerer det', href: '/slik' },
-  { label: 'Reisen', href: '/reisen' },
-  { label: 'Prisar', href: '/priser' },
+  { label: 'Reiser', href: '/reisen' },
+  { label: 'Priser', href: '/priser' },
 ];
 
 /* ========================
@@ -52,43 +52,43 @@ export const Header: FC<HeaderProps> = ({ currentPath = '/' }) => {
       style={{
         height: '64px',
         background: scrolled
-          ? `rgba(11,21,32,0.95)`
-          : `rgba(11,21,32,0.75)`,
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
+          ? 'rgba(10,15,26,0.85)'
+          : 'rgba(10,15,26,0.60)',
+        backdropFilter: 'blur(16px) saturate(150%)',
+        WebkitBackdropFilter: 'blur(16px) saturate(150%)',
         borderBottom: scrolled
-          ? `1px solid ${color.border.dark}`
+          ? '1px solid rgba(255,255,255,0.06)'
           : '1px solid transparent',
-        transition: 'all 0.4s ease-out',
+        boxShadow: scrolled
+          ? '0 4px 30px rgba(0,0,0,0.3), 0 0 20px rgba(212,175,55,0.04)'
+          : 'none',
+        transition: 'all 0.5s ease-out',
       }}
     >
       <div
-        className="mx-auto max-w-7xl px-6 h-full flex items-center justify-between"
+        className="mx-auto max-w-7xl px-6 lg:px-8 h-full flex items-center justify-between"
       >
-        {/* Logo */}
-        <Link href="/" className="flex-shrink-0">
-          <Logo size="sm" colorVariant="gold" />
-        </Link>
-
-        {/* Navigasjon — desktop */}
-        <nav className="hidden lg:flex items-center gap-8">
+        {/* Meny til venstre — gull-hover med glow */}
+        <nav className="hidden lg:flex items-center gap-10">
           {navItems.map((item) => (
             <a
               key={item.href}
               href={item.href}
-              className="relative text-sm font-medium transition-colors duration-200"
+              className="relative text-base font-medium transition-all duration-300"
               style={{
-                color: isActive(item.href) ? color.brand.gold : color.text.secondary,
+                color: isActive(item.href) ? color.brand.gold : 'rgba(255,255,255,0.60)',
                 paddingBottom: `${spacing['sm']}px`,
               }}
               onMouseEnter={(e) => {
                 if (!isActive(item.href)) {
-                  (e.target as HTMLElement).style.color = color.brand.gold;
+                  (e.target as HTMLElement).style.color = '#D4AF37';
+                  (e.target as HTMLElement).style.textShadow = '0 0 12px rgba(212,175,55,0.3)';
                 }
               }}
               onMouseLeave={(e) => {
                 if (!isActive(item.href)) {
-                  (e.target as HTMLElement).style.color = color.text.secondary;
+                  (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.60)';
+                  (e.target as HTMLElement).style.textShadow = 'none';
                 }
               }}
             >
@@ -98,92 +98,78 @@ export const Header: FC<HeaderProps> = ({ currentPath = '/' }) => {
                 className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] rounded-full transition-all duration-300"
                 style={{
                   width: isActive(item.href) ? '100%' : '0px',
-                  background: color.brand.gold,
+                  background: `linear-gradient(90deg, transparent, ${color.brand.gold}, transparent)`,
+                  boxShadow: isActive(item.href) ? `0 0 8px ${color.brand.gold}` : 'none',
                 }}
               />
             </a>
           ))}
         </nav>
 
-        {/* CTA + mobil-meny */}
-        <div className="flex items-center gap-4">
-          {/* CTA-knapp */}
-          <Link
-            href="/onboarding"
-            className="hidden lg:inline-flex items-center px-5 py-2.5 rounded-[12px] text-xs font-medium transition-all duration-300"
-            style={{
-              background: color.brand.gold,
-              color: '#0B1520',
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.background = color.brand['gold-hover'];
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.background = color.brand.gold;
-            }}
-          >
-            Kom i gang
-          </Link>
+        {/* Logo i midten — 40% større, flytt opp */}
+        <Link href="/" className="flex-shrink-0 mt-2">
+          <Logo size="2xl" colorVariant="gold" />
+        </Link>
 
-          {/* Mobil meny-knapp */}
-          <button
-            className="lg:hidden w-11 h-11 flex items-center justify-center rounded-lg"
-            style={{
-              color: color.brand.gold,
-              background: menuOpen ? 'rgba(212,175,55,0.10)' : 'transparent',
-            }}
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label={menuOpen ? 'Lukk meny' : 'Opne meny'}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-              {menuOpen ? (
-                <path d="M6 6L18 18M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-              ) : (
-                <path d="M4 8H20M4 16H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-              )}
-            </svg>
-          </button>
-        </div>
-      </div>
+        {/* Høyre side — tom for premium uttrykk */}
+        <div className="hidden lg:block w-40" />
 
-      {/* Mobil meny */}
-      <div
-        className="lg:hidden transition-all duration-300 ease-out overflow-hidden"
-        style={{
-          maxHeight: menuOpen ? `${spacing['4xl']}px` : '0px',
-          background: `rgba(11,21,32,0.98)`,
-          backdropFilter: 'blur(16px)',
-          borderBottom: `1px solid ${color.border.dark}`,
-        }}
-      >
-        <nav className="px-6 py-4 space-y-2">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="block py-3 px-3 rounded-lg text-sm transition-colors duration-200"
-              style={{
-                color: isActive(item.href) ? color.brand.gold : color.text.secondary,
-                background: isActive(item.href) ? 'rgba(212,175,55,0.08)' : 'transparent',
-              }}
-              onClick={() => setMenuOpen(false)}
-            >
-              {item.label}
-            </Link>
-          ))}
-          <Link
-            href="/onboarding"
-            className="block py-3 px-3 rounded-lg text-sm font-medium mt-2"
+        {/* Mobil meny-knapp — 3 tykke strekar med gull-farge */}
+        <button
+          className="lg:hidden w-12 h-12 flex items-center justify-center rounded-xl transition-colors duration-300"
+          style={{
+            color: '#E8C27A',
+            background: menuOpen ? 'rgba(212,175,55,0.12)' : 'rgba(255,255,255,0.03)',
+            backdropFilter: 'blur(8px)',
+          }}
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label={menuOpen ? 'Lukk meny' : 'Åpne meny'}
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            {menuOpen ? (
+              <path d="M6 6L18 18M18 6L6 18" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+            ) : (
+              <>
+                <path d="M4 7H20" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                <path d="M4 12H20" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                <path d="M4 17H20" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+              </>
+            )}
+          </svg>
+        </button>
+
+        {/* Mobil meny — glassmorphism */}
+        {menuOpen && (
+          <div
+            className="lg:hidden transition-all duration-300 ease-out overflow-hidden mt-3"
             style={{
-              background: color.brand.gold,
-              color: '#0B1520',
-              textAlign: 'center',
+              background: 'rgba(10,15,26,0.95)',
+              backdropFilter: 'blur(20px) saturate(150%)',
+              borderBottom: '1px solid rgba(255,255,255,0.06)',
+              borderRadius: '16px',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+              padding: '12px',
             }}
-            onClick={() => setMenuOpen(false)}
           >
-            Kom i gang
-          </Link>
-        </nav>
+            <nav className="space-y-2">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="block py-3 px-4 rounded-xl text-base transition-all duration-300"
+                  style={{
+                    color: isActive(item.href) ? '#D4AF37' : 'rgba(255,255,255,0.60)',
+                    background: isActive(item.href) ? 'rgba(212,175,55,0.10)' : 'transparent',
+                    boxShadow: isActive(item.href) ? '0 0 12px rgba(212,175,55,0.08)' : 'none',
+                  }}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+        )}
       </div>
     </header>
   );

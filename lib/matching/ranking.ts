@@ -1,6 +1,12 @@
 // ranking.ts — sortering og deduplisering av matches
 
-import { ScoreResult } from "./scorer";
+import { SubScoreBreakdown } from "./types";
+
+interface ScoreResult {
+  breakdown: SubScoreBreakdown;
+  totalScore: number;
+  matchQuality: string;
+}
 
 /**
  * Representasjon av eit match-resultat klar for rangering.

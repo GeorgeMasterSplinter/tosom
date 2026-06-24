@@ -40,7 +40,7 @@ const PUBLIC_PATHS = [
   '/api/health',
   '/docs',
   '/brand',
-  '/kvifor',
+  '/hvorfor',
   '/slik',
   '/reisen',
   '/priser',

@@ -117,8 +117,8 @@ export default function StegIdentitet({ data, onChange }: Props) {
         </label>
         <input
           type="number"
-          min={18}
-          max={120}
+          min={23}
+          max={99}
           value={form.age}
           onChange={(e) => update("age", e.target.value)}
           placeholder="Kor gammal er du?"

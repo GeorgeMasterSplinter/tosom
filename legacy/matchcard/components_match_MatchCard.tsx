@@ -1,6 +1,6 @@
 "use client";
 
-import MatchBreakdown from "./MatchBreakdown";
+// MatchBreakdown er fjernet — inline versjon brukt under
 
 export default function MatchCard({
   name,
@@ -39,7 +39,14 @@ export default function MatchCard({
         {explanation}
       </p>
 
-      <MatchBreakdown blocks={blocks} />
+      {/* MatchBreakdown inline */}
+      <div className="mt-3 grid grid-cols-2 gap-2">
+        {Object.entries(blocks).map(([key, val]) => (
+          <div key={key} className="text-xs text-gray-600">
+            <span className="capitalize">{key}</span>: {val}/100
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

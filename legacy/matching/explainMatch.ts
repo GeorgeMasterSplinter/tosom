@@ -4,7 +4,23 @@
  * Tar inn ScoreResult og returnerer en tekstlig forklaring
  * av hvorfor disse to brukerne matcher bra (eller ikke).
  */
-import { ScoreResult } from "./scorer";
+interface ScoreResult {
+  breakdown: {
+    base: number;
+    resonance: number;
+    semantic: number;
+    intimacy: number;
+    future: number;
+    basic: number;
+    lifestyle: number;
+    interests: number;
+    location: number;
+    needs: number;
+    boundaries: number;
+    intentions: number;
+  };
+  totalScore: number;
+}
 
 export function explainMatch(result: ScoreResult): {
   tierLabel: string;

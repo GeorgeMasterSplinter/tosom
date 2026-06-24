@@ -9,7 +9,6 @@
 
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';
-import { Header } from '@/components/ui5/Header';
 import { GlassPanel } from '@/components/ui5/GlassPanel';
 
 export default function LoginPage() {
@@ -43,8 +42,6 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-8" style={{ background: '#0B0E11' }}>
-      <Header currentPath="/login" />
-
       <div className="w-full max-w-[440px] py-12">
         {/* Header */}
         <div className="text-center mb-8">

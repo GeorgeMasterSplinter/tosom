@@ -60,13 +60,9 @@ export { AIRewriteMobile } from './aiMobile';
 export { AIIcebreakersMobile } from './aiMobile';
 export { AIJourneyGuideMobile } from './aiMobile';
 
-// ── Templates 3.0 ──
-export { DashboardTemplate3, type PageHeader } from './templates3';
-export { ChatTemplate3 } from './templates3';
-export { ProfileTemplate3 } from './templates3';
-export { CoupleTemplate3 } from './templates3';
-export { JourneyTemplate3 } from './templates3';
-export { MatchTemplate3 } from './templates3';
+// ── Templates 3.0 ── (deprecated — use ui/templates/)
+// Templates3 eksportert fra legacy/templates/templates3.tsx
+// DashboardTemplate3, ChatTemplate3, ProfileTemplate3, CoupleTemplate3, JourneyTemplate3, MatchTemplate3
 
 // ── Desktop 3.0 ──
 export { DesktopSidebarResizable } from './desktop3';
@@ -152,7 +148,9 @@ export { JournalCompanion, type JournalCompanionProps } from './journalCompanion
 
 export { EmotionalExercise, type EmotionalExerciseProps, type ExercisePlayerProps } from './emotionalExercise';
 
-export { ChatTemplate5, CoupleTemplate5, JourneyTemplate5, type ChatTemplate5Props, type CoupleTemplate5Props, type JourneyTemplate5Props } from './emotionTemplates';
+// ── Emotion Templates 5.0 ──
+export { ChatTemplate5, CoupleTemplate5, JourneyTemplate5 } from './emotionTemplates';
+export type { ChatTemplate5Props, CoupleTemplate5Props, JourneyTemplate5Props } from './emotionTemplates';
 
 // ── Default Export ──
 export default {

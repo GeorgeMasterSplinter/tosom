@@ -166,12 +166,55 @@ export default function OnboardingFlow() {
   const isLastStep = step === 9;
   const isFirstStep = step === 0;
 
+  // Steg-spesifikke tekstar
+  const guidingTexts: Record<number, string> = {
+    0: "Vi starter med det grunnleggende, slik at vi kan bli litt kjent med deg.",
+    1: "Personligheten din er det som gjør deg til deg. Vi vil gjerne kjenne den virkelige deg.",
+    2: "Tilknytningsmønsteret ditt sier mye om hvordan du møter andre mennesker.",
+    3: "Hvordan du kommuniserer, er viktig for å finne noen som passer deg.",
+    4: "Kjærlighetsspråket ditt viser hva som gjør deg truly glad.",
+    5: "Livsstilssvarene dine hjelper oss å finne noen som trives i hverdagen sammen med deg.",
+    6: "Fremtidsønsker viser veien for hva dere kan bygge sammen.",
+    7: "De små detaljene – som humor – forteller hvem du er.",
+    8: "Modne svar viser deg som person. Del det du er komfortabel med.",
+    9: "Nå har vi det vi trenger for å gi deg en gjennomtenkt start.",
+  };
+
+  const trustTexts: Record<number, string> = {
+    0: "Svarene dine brukes kun til å bygge profilen din og finne en god match.",
+    1: "Det finnes ingen rette svar – bare det som føles riktig for deg.",
+    2: "Du kan endre tilknytnings-svarene dine senere hvis noe føles annerledes.",
+    3: "Kommunikasjonssvarene deles aldri med andre – kun brukt for å finne en god match.",
+    4: "Del bare det du ønsker – ingen dømmer for det du drømmer om.",
+    5: "Du kan alltid justere livsstilssvarene dine seinare.",
+    6: "Fremtidsønsker er private – bare synlige for din match.",
+    7: "Små detaljer er private og deles aldri med andre.",
+    8: "Modne svar er det mest viktige for matchingen – del det du kan.",
+    9: "Du kan alltid komme tilbake og justere svarene dine seinare.",
+  };
+
+  const ctaTexts: Record<number, string> = {
+    0: "Fortsett til neste steg",
+    1: "Gå videre",
+    2: "Fortsett til neste steg",
+    3: "Gå videre",
+    4: "Fortsett til neste steg",
+    5: "Gå videre",
+    6: "Fortsett til neste steg",
+    7: "Gå videre",
+    8: "Fortsett til neste steg",
+    9: "Start reisen",
+  };
+
   return (
     <OnboardingLayout
       currentStep={step} totalSteps={10} title={currentStepData.title}
-      subtitle={currentStepData.subtitle} onNext={handleNext} onBack={handleBack}
+      subtitle={currentStepData.subtitle}
+      guidingText={guidingTexts[step]}
+      trustText={trustTexts[step]}
+      onNext={handleNext} onBack={handleBack}
       showBack={!isFirstStep} showNext
-      nextLabel={isLastStep ? 'Fullfør profil' : 'Neste'}
+      nextLabel={isLastStep ? ctaTexts[9] : ctaTexts[step]}
       disabledNext={saving} exampleText={currentStepData.example}
     >
       {renderContent()}

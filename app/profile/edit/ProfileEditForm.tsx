@@ -32,8 +32,8 @@ export default function ProfileEditForm({
 
   const validate = (): Record<string, string> => {
     const e: Record<string, string> = {};
-    if (form?.age && (isNaN(Number(form.age)) || Number(form.age) < 18 || Number(form.age) > 99)) {
-      e.age = "Alder må være mellom 18 og 99.";
+    if (form?.age && (isNaN(Number(form.age)) || Number(form.age) < 23 || Number(form.age) > 99)) {
+      e.age = "Alder må være mellom 23 og 99.";
     }
     if (form?.bio && form.bio.length > 500) {
       e.bio = "Bio kan maks være 500 tegn.";
@@ -60,10 +60,10 @@ export default function ProfileEditForm({
       if (result.success) {
         onSaved?.();
       } else {
-        setErrors({ submit: result.error || "Lagring feila." });
+        setErrors({ submit: "Hmm… dette gikk ikke helt som planlagt." });
       }
     } catch {
-      setErrors({ submit: "Kunne ikke koble til tjeneren." });
+      setErrors({ submit: "Kan du prøve igjen?" });
     } finally {
       setSaving(false);
     }

@@ -215,7 +215,7 @@ export const LogoAnimated: FC<LogoAnimatedProps> = ({ className = '' }) => {
         }
       `}</style>
       <Logo
-        size="xl"
+        size="2xl"
         colorVariant="gold"
         className="logo-animated"
       />

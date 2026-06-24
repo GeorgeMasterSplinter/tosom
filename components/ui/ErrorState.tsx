@@ -53,8 +53,8 @@ const variantStyles = {
 };
 
 export const ErrorState: React.FC<ErrorStateProps> = ({
-  title = "Noe gikk galt",
-  message = "Det oppstod et problem med å laste innholdet. Sjekk tilkoblingen din og prøv igjen.",
+  title = "Hmm… dette gikk ikke helt som planlagt.",
+  message = "Kan du prøve igjen?",
   actionLabel = "Prøv igjen",
   actionHref,
   variant = "error",
@@ -103,7 +103,7 @@ interface EmptyStateProps {
 }
 
 export const EmptyState: React.FC<EmptyStateProps> = ({
-  title = "Ingenting å vise her ennå",
+  title = "Det er tomt her — men det blir ikkje det.",
   subtitle = "Når du får innhold her, vil det dukke opp automatisk.",
   actionLabel,
   actionHref,
@@ -132,8 +132,8 @@ interface WarningStateProps {
 }
 
 export const WarningState: React.FC<WarningStateProps> = ({
-  title = "Advarsel",
-  message = "Dette krever oppmerksomhet før du kan fortsette.",
+  title = "Merk denne",
+  message = "Dette trenger litt oppmerksomhet før du kan fortsette.",
   actionLabel = "Se over",
   actionHref,
   className = "",

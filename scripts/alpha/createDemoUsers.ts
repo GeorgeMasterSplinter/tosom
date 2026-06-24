@@ -82,7 +82,7 @@ async function main(input: Input) {
       data: {
         userId: user.id,
         firstName: name,
-        age: 25 + Math.floor(Math.random() * 25),
+        age: 23 + Math.floor(Math.random() * 27),
         lifeSituation: lifeSitu,
         lifestyle: lifestyle,
         personality: personality,

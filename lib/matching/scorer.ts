@@ -1,123 +1,249 @@
-// scorer.ts — hovudmotoren som berekner total match-score med 5 vekter
+// lib/matching/scorer.ts — Hovudscorer-funksjonar for matching-motoren
+// Alle funksjonar returnerer verdiar i [0, 1]
 
-import { baseCompatibilityScore } from "@/lib/baseScore";
-import { emotionalResonance } from "@/lib/resonance";
-import { deepSemanticScore } from "@/lib/semantic";
-import { getWeights } from "./weightConfig";
-import { explainMatch } from "./explainMatch";
+import { ProfileData, SubScoreBreakdown } from "./types";
+import { normalize, clamp01, weightedSum } from "./normalizer";
+import { getWeights, WeightConfig } from "./weightConfig";
 
-export interface ScoreInput {
-  a: Record<string, unknown>;
-  b: Record<string, unknown>;
-}
-
-export interface ScoreResult {
-  totalScore: number;
-  breakdown: {
-    base: number;
-    resonance: number;
-    semantic: number;
-    intimacy: number;
-    future: number;
-  };
-  matchQuality: "excellent" | "strong" | "moderate" | "weak";
-}
-
-interface WeightsType {
-  base: number;
-  resonance: number;
-  semantic: number;
-  intimacy: number;
-  future: number;
+/**
+ * calculateBaseCompatibility — Grunnleggjande kompatibilitet (0–1)
+ * Måler kompatibilitet basert på:
+ *   - Verdi-kompatibilitet (40%): Felles verdier frå lifeSituation og personality
+ *   - Livssituasjon (30%): Samanliknar lifestyle, bustad, økonomi
+ *   - Personlegdom (30%): Styrkar, trekk, natur
+ */
+export function calculateBaseCompatibility(a: ProfileData, b: ProfileData): number {
+  let rawScore = 0;
+  const maxScore = 100;
+  
+  // 1. Verdi-kompatibilitet (maks 40)
+  if (a.lifeSituation && b.lifeSituation) {
+    const aValues = (a.lifeSituation as { values?: string[] }).values || [];
+    const bValues = (b.lifeSituation as { values?: string[] }).values || [];
+    const shared = aValues.filter((v) => bValues.includes(v));
+    rawScore += Math.min(shared.length * 8, 40);
+  }
+  
+  // 2. Livssituasjon overlap (maks 30)
+  if (a.lifestyle && b.lifestyle) {
+    const aActivities = (a.lifestyle as { activities?: string[] }).activities || [];
+    const bActivities = (b.lifestyle as { activities?: string[] }).activities || [];
+    const shared = aActivities.filter((a) => bActivities.includes(a));
+    rawScore += Math.min(shared.length * 6, 30);
+  }
+  
+  // 3. Personlegdom (maks 30)
+  if (a.personality && b.personality) {
+    const aTraits = (a.personality as { traits?: string[] }).traits || [];
+    const bTraits = (b.personality as { traits?: string[] }).traits || [];
+    const shared = aTraits.filter((t) => bTraits.includes(t));
+    rawScore += Math.min(shared.length * 5, 30);
+  }
+  
+  // 4. Aldersnærleik (maks 20)
+  if (a.age && b.age) {
+    const diff = Math.abs(Number(a.age) - Number(b.age));
+    if (diff <= 3) rawScore += 20;
+    else if (diff <= 7) rawScore += 15;
+    else if (diff <= 12) rawScore += 10;
+    else if (diff <= 20) rawScore += 5;
+  }
+  
+  return normalize(rawScore, 0, maxScore);
 }
 
 /**
- * intimacyScore — BERRE basert på emosjonell djupde og sårbarhet i samtal.
- * Ingen foto-basert scoring — strid mot core-definition.
+ * calculateEmotionalResonance — Emosjonell resonans (0–1)
+ * Måler kor godt to menneske resonerer med kvarandre:
+ *   - Kommunikasjon (50%): Samanliknar kommunikasjonspreferanser
+ *   - Relasjonsstil (50%): Samanliknar relasjonsstil
  */
-function intimacyScore(a: Record<string, unknown>, b: Record<string, unknown>): number {
-  let score = 50; // baseline
+export function calculateEmotionalResonance(a: ProfileData, b: ProfileData): number {
+  let rawScore = 0;
+  const maxScore = 100;
   
-  // Berre bruks bio-lengde som indikator på sårbarhet/djupde
-  const bioA = (a.bio as string)?.length ?? 0;
-  const bioB = (b.bio as string)?.length ?? 0;
-  
-  // Lenge bio = meir sårbarhet/djupde (maks 15 poeng kvar)
-  score += Math.min(bioA / 20, 15);
-  score += Math.min(bioB / 20, 15);
-  
-  // Felles interesser = felles djupde (maks 10 poeng kvar)
-  const interestsA = Array.isArray(a.interests) ? a.interests.length : 0;
-  const interestsB = Array.isArray(b.interests) ? b.interests.length : 0;
-  score += Math.min(interestsA / 3, 10);
-  score += Math.min(interestsB / 3, 10);
-  
-  // INGEN photo-scoring!
-  return Math.min(score, 100);
-}
-
-function futureScore(a: Record<string, unknown>, b: Record<string, unknown>): number {
-  let score = 0;
-  if (a.age && b.age) {
-    const diff = Math.abs(Number(a.age) - Number(b.age));
-    if (diff <= 3) score += 40;
-    else if (diff <= 7) score += 30;
-    else if (diff <= 12) score += 20;
-    else if (diff <= 20) score += 10;
+  // 1. Kommunikasjon-preferanser (maks 50)
+  if (a.communication && b.communication) {
+    const aComm = (a.communication as { style?: string; preferredDepth?: string }).style || "";
+    const bComm = (b.communication as { style?: string; preferredDepth?: string }).style || "";
+    if (aComm && bComm && aComm === bComm) rawScore += 25;
+    
+    const aDepth = (a.communication as { preferredDepth?: string }).preferredDepth || "";
+    const bDepth = (b.communication as { preferredDepth?: string }).preferredDepth || "";
+    if (aDepth && bDepth && aDepth === bDepth) rawScore += 25;
   }
-  const lifeKeywords = ["karriere", "familie", "barn", "studiar", "reiser", "busette", "utvikle", "framtid", "mål", "vaks"];
-  const bioA = (a.bio as string)?.toLowerCase() ?? "";
-  const bioB = (b.bio as string)?.toLowerCase() ?? "";
-  const aHas = lifeKeywords.filter((k) => bioA.includes(k));
-  const bHas = lifeKeywords.filter((k) => bioB.includes(k));
-  if (aHas.length > 0 && bHas.length > 0) {
-    const overlap = aHas.filter((k) => bHas.includes(k));
-    score += (overlap.length / Math.max(aHas.length, bHas.length)) * 30;
+  
+  // 2. Relasjonsstil (maks 50)
+  if (a.relationshipStyle && b.relationshipStyle) {
+    if (a.relationshipStyle === b.relationshipStyle) {
+      rawScore += 50;
+    } else {
+      // Delvis match basert på nøkkelord-overlapp
+      const aStyleWords = a.relationshipStyle.toLowerCase().split(/\s+/);
+      const bStyleWords = b.relationshipStyle.toLowerCase().split(/\s+/);
+      const shared = aStyleWords.filter((w) => bStyleWords.includes(w));
+      if (shared.length > 0) {
+        rawScore += shared.length * 10;
+      }
+    }
   }
-  if (Array.isArray(a.interests) && Array.isArray(b.interests)) {
-    const futureKeywords = ["karriere", "forretnin", "invest", "utvikle", "prosjekt", "bygg", "skap", "grünn"];
-    const interestsA = a.interests as string[];
-    const interestsB = b.interests as string[];
-    const sharedFuture = interestsA.filter((i) => interestsB.includes(i) && futureKeywords.some((k) => i.toLowerCase().includes(k)));
-    score += Math.min(sharedFuture.length * 10, 20);
+  
+  return normalize(rawScore, 0, maxScore);
+}
+
+/**
+ * calculateSemanticOverlap — Semantisk overlap (0–1)
+ * Måler kor mykje profil-data overlappar semantisk:
+ *   - Fremtidsønsker (60%): Samanliknar futureVision
+ *   - Livsstil (40%): Samanliknar lifestyle
+ */
+export function calculateSemanticOverlap(a: ProfileData, b: ProfileData): number {
+  let rawScore = 0;
+  const maxScore = 100;
+  
+  // 1. Fremtidsønsker overlap (maks 60)
+  if (a.futureVision && b.futureVision) {
+    const aGoals = (a.futureVision as { goals?: string[] }).goals || [];
+    const bGoals = (b.futureVision as { goals?: string[] }).goals || [];
+    const sharedGoals = aGoals.filter((g) => bGoals.includes(g));
+    
+    // Jaccard-similaritet
+    const union = new Set([...aGoals, ...bGoals]).size;
+    const jaccard = union > 0 ? sharedGoals.length / union : 0;
+    rawScore += jaccard * 60;
   }
-  return Math.min(score, 100);
+  
+  // 2. Livsstil overlap (maks 40)
+  if (a.lifestyle && b.lifestyle) {
+    const aHabits = (a.lifestyle as { habits?: string[] }).habits || [];
+    const bHabits = (b.lifestyle as { habits?: string[] }).habits || [];
+    const sharedHabits = aHabits.filter((h) => bHabits.includes(h));
+    
+    const union = new Set([...aHabits, ...bHabits]).size;
+    const jaccard = union > 0 ? sharedHabits.length / union : 0;
+    rawScore += jaccard * 40;
+  }
+  
+  // 3. Bio overlap (supplementary, maks 20)
+  if (a.bio && b.bio) {
+    const wordsA = new Set(a.bio.toLowerCase().split(/\s+/).filter((w) => w.length > 3));
+    const wordsB = new Set(b.bio.toLowerCase().split(/\s+/).filter((w) => w.length > 3));
+    const common = [...wordsA].filter((w) => wordsB.has(w));
+    const bioOverlap = common.length / Math.max(wordsA.size, wordsB.size, 1);
+    rawScore += Math.min(bioOverlap * 40, 20);
+  }
+  
+  return normalize(rawScore, 0, maxScore);
 }
 
-export function calculateScore(a: Record<string, unknown>, b: Record<string, unknown>): ScoreResult {
-  const w: WeightsType = getWeights() as unknown as WeightsType;
-  const base = baseCompatibilityScore(a, b);
-  const resonance = emotionalResonance(a, b);
-  const semantic = deepSemanticScore(a, b);
-  const intimacy = intimacyScore(a, b);
-  const future = futureScore(a, b);
-  const total = base * w.base + resonance * w.resonance + semantic * w.semantic + intimacy * w.intimacy + future * w.future;
-  const totalScore = Math.round(total);
-  let matchQuality: "excellent" | "strong" | "moderate" | "weak";
-  if (totalScore > 85) matchQuality = "excellent";
-  else if (totalScore > 70) matchQuality = "strong";
-  else if (totalScore > 55) matchQuality = "moderate";
-  else matchQuality = "weak";
-  return { totalScore, breakdown: { base, resonance, semantic, intimacy, future }, matchQuality };
+/**
+ * calculateIntimacyScore — Intimitet og sårbarhet (0–1)
+ * Måler kompatibilitet på intimitetsnivå:
+ *   - Intimitet (40%): Samanliknar intimacy-data
+ *   - Grenser (30%): Samanliknar boundaries
+ *   - Emosjonelle behov (30%): Samanliknar emotionalNeeds
+ */
+export function calculateIntimacyScore(a: ProfileData, b: ProfileData): number {
+  let rawScore = 0;
+  const maxScore = 100;
+  
+  // 1. Intimitet (maks 40)
+  if (a.intimacy && b.intimacy) {
+    const aApproach = (a.intimacy as { approach?: string }).approach || "";
+    const bApproach = (b.intimacy as { approach?: string }).approach || "";
+    if (aApproach && bApproach && aApproach === bApproach) {
+      rawScore += 40;
+    } else if (aApproach && bApproach) {
+      const wordsA = aApproach.toLowerCase().split(/\s+/);
+      const wordsB = bApproach.toLowerCase().split(/\s+/);
+      const shared = wordsA.filter((w) => wordsB.includes(w));
+      rawScore += Math.min(shared.length * 8, 20);
+    }
+  }
+  
+  // 2. Grenser (maks 30)
+  if (a.boundaries && b.boundaries) {
+    const aBoundaries = (a.boundaries as { preferredDistance?: string }).preferredDistance || "";
+    const bBoundaries = (b.boundaries as { preferredDistance?: string }).preferredDistance || "";
+    if (aBoundaries && bBoundaries && aBoundaries === bBoundaries) {
+      rawScore += 30;
+    }
+  }
+  
+  // 3. Emosjonelle behov (maks 30)
+  if (a.emotionalNeeds && b.emotionalNeeds) {
+    const aNeeds = (a.emotionalNeeds as { needs?: string[] }).needs || [];
+    const bNeeds = (b.emotionalNeeds as { needs?: string[] }).needs || [];
+    const shared = aNeeds.filter((n) => bNeeds.includes(n));
+    rawScore += Math.min(shared.length * 7.5, 30);
+  }
+  
+  return normalize(rawScore, 0, maxScore);
 }
 
-let _cache: Map<string, ScoreResult> = new Map();
-
-function getCacheKey(a: Record<string, unknown>, b: Record<string, unknown>): string {
-  const idA = String(a.userId ?? a.id ?? "");
-  const idB = String(b.userId ?? b.id ?? "");
-  return [idA, idB].sort().join(":");
+/**
+ * calculateFutureVisionScore — Fremtidskompatibilitet (0–1)
+ * Måler kor godt to profilar passar saman for framtida:
+ *   - Livsrytme (50%): lifeRhythm-nærleik
+ *   - Modenheit (50%): maturityLevel-nærleik
+ */
+export function calculateFutureVisionScore(a: ProfileData, b: ProfileData): number {
+  let rawScore = 0;
+  const maxScore = 100;
+  
+  // 1. Livsrytme-nærleik (maks 50)
+  if (a.lifeRhythm && b.lifeRhythm) {
+    if (a.lifeRhythm === b.lifeRhythm) {
+      rawScore += 50;
+    } else {
+      // Same retning (morning/evening er motsetningar, men fast/slow kan vere komplementære)
+      rawScore += 25; // Delvis match
+    }
+  }
+  
+  // 2. Modenheits-nærleik (maks 50)
+  if (a.maturityLevel && b.maturityLevel) {
+    const gap = Math.abs(a.maturityLevel - b.maturityLevel);
+    if (gap <= 1) rawScore += 50;
+    else if (gap <= 2) rawScore += 40;
+    else if (gap <= 3) rawScore += 30;
+    else if (gap <= 4) rawScore += 20;
+    else rawScore += 10;
+  }
+  
+  return normalize(rawScore, 0, maxScore);
 }
 
-export function getCachedScore(a: Record<string, unknown>, b: Record<string, unknown>): ScoreResult | null {
-  const key = getCacheKey(a, b);
-  return _cache.get(key) ?? null;
+/**
+ * calculateTotalScore — Bereknar total match-score frå to profiler.
+ * Bruker vekter frå weightConfig.ts.
+ */
+export function calculateTotalScore(
+  queryProfile: ProfileData,
+  candidateProfile: ProfileData
+): {
+  breakdown: SubScoreBreakdown;
+  totalScore: number;
+  weights: WeightConfig;
+} {
+  const weights = getWeights();
+  
+  // Berekn alle sub-scorer
+  const base = calculateBaseCompatibility(queryProfile, candidateProfile);
+  const resonance = calculateEmotionalResonance(queryProfile, candidateProfile);
+  const semantic = calculateSemanticOverlap(queryProfile, candidateProfile);
+  const intimacy = calculateIntimacyScore(queryProfile, candidateProfile);
+  const future = calculateFutureVisionScore(queryProfile, candidateProfile);
+  
+  // Vekt sum
+  const totalScore = weightedSum(
+    [base, resonance, semantic, intimacy, future],
+    [weights.base, weights.resonance, weights.semantic, weights.intimacy, weights.future]
+  );
+  
+  return {
+    breakdown: { base, resonance, semantic, intimacy, future },
+    totalScore,
+    weights,
+  };
 }
-
-export function setCachedScore(a: Record<string, unknown>, b: Record<string, unknown>, result: ScoreResult): void {
-  const key = getCacheKey(a, b);
-  _cache.set(key, result);
-}
-
-// Alias for backward compatibility — imported as generateExplanation in some routes.
-export const generateExplanation = explainMatch;

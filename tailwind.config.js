@@ -18,11 +18,19 @@ module.exports = {
         'ts-bg-surface': 'var(--ts-bg-surface)',
         'ts-bg-elevated': 'var(--ts-bg-surface-elevated)',
 
+        /* UI 6.0 — Premium Dark Base */
+        'ts-bg-premium': 'var(--ts-bg-premium)',
+        'ts-bg-premium-deep': 'var(--ts-bg-premium-deep)',
+
         /* Text */
         'ts-text': 'var(--ts-text-primary)',
         'ts-text-secondary': 'var(--ts-text-secondary)',
         'ts-text-muted': 'var(--ts-text-muted)',
         'ts-text-subtle': 'var(--ts-text-subtle)',
+
+        /* UI 6.0 — Premium Text */
+        'ts-text-white': 'var(--ts-text-white)',
+        'ts-text-gray': 'var(--ts-text-gray)',
 
         /* Gold */
         'ts-gold': 'var(--ts-gold)',
@@ -31,11 +39,17 @@ module.exports = {
         'ts-gold-soft': 'var(--ts-gold-soft)',
         'ts-gold-glow': 'var(--ts-gold-glow)',
 
+        /* UI 6.0 — Gold Accent */
+        'ts-gold-accent': 'var(--ts-gold-accent)',
+
         /* Glass */
         'ts-glass': 'var(--ts-glass-bg)',
         'ts-glass-hover': 'var(--ts-glass-bg-hover)',
         'ts-glass-border': 'var(--ts-glass-border)',
         'ts-glass-border-hover': 'var(--ts-glass-border-hover)',
+
+        /* UI 6.0 — Deep Glass Border */
+        'ts-glass-border-deep': 'var(--ts-glass-border-deep)',
 
         /* Border */
         'ts-border': 'var(--ts-border)',
@@ -58,6 +72,11 @@ module.exports = {
         '2xl': 'var(--ts-spacing-2xl)',
         '3xl': 'var(--ts-spacing-3xl)',
         '4xl': 'var(--ts-spacing-4xl)',
+
+        /* UI 6.0 — Extended spacing */
+        '72': 'var(--ts-spacing-72)',
+        '84': 'var(--ts-spacing-84)',
+        '96': 'var(--ts-spacing-96)',
       },
 
       /* ── Border Radius ── */
@@ -68,7 +87,12 @@ module.exports = {
         'ts-xl': 'var(--ts-radius-xl)',
         'ts-2xl': 'var(--ts-radius-2xl)',
         'ts-3xl': 'var(--ts-radius-3xl)',
+        'ts-6xl': 'var(--ts-radius-6xl)',
         'ts-full': 'var(--ts-radius-full)',
+
+        /* UI 6.0 — Premium radius */
+        'glass': '18px',
+        'cta': '14px',
       },
 
       /* ── Shadows ── */
@@ -79,6 +103,10 @@ module.exports = {
         'ts-xl': 'var(--ts-shadow-xl)',
         'ts-gold': 'var(--ts-shadow-gold)',
         'ts-gold-hover': 'var(--ts-shadow-gold-hover)',
+
+        /* UI 6.0 — Glow & Card shadows */
+        'glow': 'var(--ts-shadow-glow)',
+        'card': 'var(--ts-shadow-card)',
       },
 
       /* ── Typography ── */
@@ -295,6 +323,10 @@ module.exports = {
       /* ── Backdrop Blur ── */
       backdropBlur: {
         'ts': 'var(--ts-glass-blur)',
+
+        /* UI 6.0 — Glass blur */
+        'glass': 'var(--ts-blur-glass)',
+        'xl': '24px',
       },
 
       /* ── Z-Index ── */

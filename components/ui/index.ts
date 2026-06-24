@@ -18,7 +18,6 @@ export { default as Divider } from './Divider';
 export { default as FadeIn } from './FadeIn';
 export { default as Footer } from './Footer';
 export { default as GlassPanel } from './GlassPanel';
-export { default as MatchCard } from './MatchCard';
 export { default as Modal } from './Modal';
 export { default as ModalV2 } from './ModalV2';
 export { default as Navbar } from './Navbar';
@@ -106,13 +105,7 @@ export { default as MilestoneCardV2 } from './relationship/MilestoneCardV2';
 export { default as SocialGraphV2 } from './relationship/SocialGraphV2';
 export { default as WeeklyDigestV2 } from './relationship/WeeklyDigestV2';
 
-// === TEMPLATES ===
-export { default as DashboardTemplate } from './templates/DashboardTemplate';
-export { default as ProfileTemplate } from './templates/ProfileTemplate';
-export { default as MatchTemplate } from './templates/MatchTemplate';
-export { default as ChatTemplate } from './templates/ChatTemplate';
-export { default as JourneyTemplate } from './templates/JourneyTemplate';
-export { default as CoupleTemplate } from './templates/CoupleTemplate';
+// === TEMPLATES === (deprecated — moved to legacy/templates/)
 
 // === MISC ===
 export { default as illustrations, Illustration, type IllustrationType, type IllustrationProps } from './illustrations';

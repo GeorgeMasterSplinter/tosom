@@ -85,10 +85,10 @@ export const Footer: FC<FooterProps> = ({
 
         {/* Hovud-innhald — 3 kolonner på desktop, vertikal på mobil */}
         <div
-          className="grid grid-cols-1 md:grid-cols-3 gap-[48px]"
+          className="grid grid-cols-1 gap-8 ph:grid-cols-2 md:grid-cols-3 ph:gap-10 md:gap-12"
           style={{
-            paddingTop: '80px',
-            paddingBottom: '64px',
+            paddingTop: '64px',
+            paddingBottom: '48px',
           }}
         >
           {/* Kolonne 1: Produkt */}
@@ -189,37 +189,56 @@ export const Footer: FC<FooterProps> = ({
         </div>
 
         {/* Botntekst */}
-        <div className="text-center pt-8 pb-6">
+        <div className="text-center pt-20 ph:pt-24 md:pt-28">
           <p
-            className="text-sm"
+            className="text-sm md:text-base leading-relaxed"
             style={{ 
               color: 'rgba(255,255,255,0.85)',
               lineHeight: '1.7',
-              maxWidth: '520px',
+              maxWidth: '360px',
               marginLeft: 'auto',
               marginRight: 'auto',
-              marginBottom: '24px',
+              marginBottom: '28px',
             }}
           >
             ToSom — en rolig, moden måte å møtes på. To mennesker. Én reise. Ekte kontakt.
           </p>
+
+          {/* Made in Norway */}
+          <div
+            className="inline-flex items-center gap-3 px-6 py-3 rounded-xl"
+            style={{
+              background: 'rgba(212,175,55,0.08)',
+              border: '1px solid rgba(212,175,55,0.15)',
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2L15 8L21 9L16.5 14L18 21L12 17.5L6 21L7.5 14L3 9L9 8L12 2Z" stroke="#D4AF37" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <span
+              className="text-xs md:text-sm font-medium"
+              style={{ color: 'rgba(212,175,55,0.75)', letterSpacing: '0.15em' }}
+            >
+              ToSom er utviklet og driftet fra Norge
+            </span>
+          </div>
         </div>
 
         {/* Botnlinje */}
         <div
-          className="flex flex-col sm:flex-row items-center justify-between pt-6"
+          className="flex flex-col sm:flex-row items-center justify-between pt-10 ph:pt-12 md:pt-14"
           style={{
             borderTop: '1px solid rgba(255,255,255,0.06)',
           }}
         >
           <p
-            className="text-xs"
+            className="text-xs md:text-sm"
             style={{ color: 'rgba(255,255,255,0.50)', lineHeight: '1.75' }}
           >
             &copy; {year} {companyName}. Alle retter reservert.
           </p>
           <p
-            className="text-xs mt-2 sm:mt-0"
+            className="text-xs md:text-sm mt-2 sm:mt-0"
             style={{ color: 'rgba(255,255,255,0.45)', lineHeight: '1.75' }}
           >
             Ro &middot; Trygghet &middot; Dybde

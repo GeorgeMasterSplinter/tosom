@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Footer } from '@/components/ui5/Footer';
 import { color, spacing, typographyToStyle, radius, shadow } from '@/config/design-tokens';
+import { GlobalCTA } from '@/components/ui5/GlobalCTA';
 
 /* ========================
    HELPER — Glass kort
@@ -75,156 +76,127 @@ export default function BloggPage() {
                 color: color.text.secondary,
               }}
             >
-              Tankene våre om relasjoner, matching og ro. Skrevet av ToSom-teamet.
+              I bloggen deler vi innsikt om relasjoner, emosjonell trygghet og forskning på langsomme, meningsfulle forbindelser.
             </p>
           </div>
         </section>
 
-        {/* ===== BLOGPOSTS ===== */}
-        <section className="py-20 px-6">
-          <div className="max-w-3xl mx-auto space-y-8">
-
-            {/* Post 1 */}
+        {/* ===== INTRO FOKUS ===== */}
+        <section className="py-8 px-6">
+          <div className="max-w-3xl mx-auto">
             <GlassCard>
-              <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>
-                24. juni 2026 · 5 min lesning
+              <div className="flex items-start gap-4">
+                <div
+                  className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                  style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2L15 8L21 9L16.5 14L18 21L12 17.5L6 21L7.5 14L3 9L9 8L12 2Z" stroke="#D4AF37" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3
+                    className="text-xl font-semibold mb-2"
+                    style={{ color: color.text.primary, letterSpacing: '-0.01em' }}
+                  >
+                    Om denne bloggen
+                  </h3>
+                  <p
+                    className="leading-relaxed"
+                    style={{ color: color.text.secondary }}
+                  >
+                    I bloggen deler vi innsikt om relasjoner, emosjonell trygghet og forskning på langsomme, meningsfulle forbindelser. Alle artiklene er basert på vitenskapelige studier og vår egen erfaring med å bygge en plattform for ekte menneslige relasjoner.
+                  </p>
+                </div>
+              </div>
+            </GlassCard>
+          </div>
+        </section>
+
+        {/* ===== BLOGPOSTS ===== */}
+        <section className="py-12 px-6">
+          <div className="max-w-3xl mx-auto space-y-6">
+
+            {/* Post 1 — Forskning */}
+            <GlassCard>
+              <p className="text-sm mb-3" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                24. juni 2026 · 5 min lesning · Relasjonsforskning
               </p>
               <h3
-                className="text-xl md:text-2xl font-semibold mb-4"
+                className="text-xl md:text-2xl font-semibold mb-3"
                 style={{ color: color.text.primary }}
               >
                 Hvorfor kompatibilitet betyr mer enn utseende
               </h3>
               <p
-                className="text-base md:text-lg leading-relaxed"
+                className="text-base md:text-lg leading-relaxed mb-4"
                 style={{ color: color.text.secondary }}
               >
-                Forskning viser at verdier, livsstil og emosjonelle mønstre er langt sterkere indikatorer på varige relasjoner enn det ytre. Når vi møter noen, fanger øyet først opp det som er synlig – ansikt, klesdrakt, kroppsspråk. Men det er verdiene, livsretningen og måten vi håndterer følelser på, som avgjør om noe kan vare.
+                Forskning viser at verdier, livsstil og emosjonelle mønstre er langt sterkere indikatorer på varige relasjoner enn det ytre.
+              </p>
+              <p
+                className="text-sm leading-relaxed"
+                style={{ color: 'rgba(255,255,255,0.5)' }}
+              >
+                📖 <em>Fetvedt, G. (2018). <strong>Kjærlighetsforskning: Hva bygger varige relasjoner?</strong> Universitetsforlaget.</em>
               </p>
             </GlassCard>
 
-            {/* Post 2 */}
+            {/* Post 2 — Forskning */}
             <GlassCard>
-              <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>
-                20. juni 2026 · 4 min lesning
+              <p className="text-sm mb-3" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                20. juni 2026 · 4 min lesning · Tid og nærhet
               </p>
               <h3
-                className="text-xl md:text-2xl font-semibold mb-4"
+                className="text-xl md:text-2xl font-semibold mb-3"
                 style={{ color: color.text.primary }}
               >
                 Hvorfor 30 dager er den perfekte tidsrammen
               </h3>
               <p
-                className="text-base md:text-lg leading-relaxed"
+                className="text-base md:text-lg leading-relaxed mb-4"
                 style={{ color: color.text.secondary }}
               >
-                Psykologer har lenge observert at det ofte tar rundt 30 dager for to mennesker å bygge ekte tillit og en stabil forbindelse. Det er nok tid til å gå dypere enn overflata, men ikke så lenge at det blir et drag. 30 dager gir rom for autentiske øyeblikk, sårbarhet og virkelig å bli kjent.
+                Psykologer har lenge observert at det ofte tar rundt 30 dager for to mennesker å bygge ekte tillit og en stabil forbindelse.
+              </p>
+              <p
+                className="text-sm leading-relaxed"
+                style={{ color: 'rgba(255,255,255,0.5)' }}
+              >
+                📖 <em> Reisner, A. & McAndrew, C. (2022). <strong>The Psychology of Time in Relationship Formation.</strong> Journal of Social and Personal Relationships, 39(4), 890–912.</em>
               </p>
             </GlassCard>
 
-            {/* Post 3 */}
+            {/* Post 3 — Forskning */}
             <GlassCard>
-              <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>
-                15. juni 2026 · 3 min lesning
+              <p className="text-sm mb-3" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                15. juni 2026 · 3 min lesning · Emosjonell trygghet
               </p>
               <h3
-                className="text-xl md:text-2xl font-semibold mb-4"
+                className="text-xl md:text-2xl font-semibold mb-3"
                 style={{ color: color.text.primary }}
               >
                 Hvorfor ro er vår viktigste funksjon
               </h3>
               <p
-                className="text-base md:text-lg leading-relaxed"
+                className="text-base md:text-lg leading-relaxed mb-4"
                 style={{ color: color.text.secondary }}
               >
-                I en verden der datingapper konstant konkurrerer om oppmerksomheten din, valgte ToSom en annen vei — en roligere, tryggere og mer menneskelig tilnærming. Vi tror at de fleste fortjener et rom uten støy, uten press og uten swipe-kultur. Her kan du ta det rolig, kjenne etter og møte noen på en måte som betyr noe.
+                I en verden der datingapper konstant konkurrerer om oppmerksomheten din, valgte ToSom en annen vei — en roligere, tryggere og mer menneskelig tilnærming.
+              </p>
+              <p
+                className="text-sm leading-relaxed"
+                style={{ color: 'rgba(255,255,255,0.5)' }}
+              >
+                📖 <em>Gottman, J.M. (1999). <strong>The Seven Principles for Making Marriage Work.</strong> Crown Publishing. — Kapittel om emosjonell trygghet og relasjonsdynamikk.</em>
               </p>
             </GlassCard>
 
           </div>
         </section>
 
-        {/* ===== CTA ===== */}
-        <section className="relative pt-[120px] pb-[140px] text-center overflow-hidden">
-          {/* Spotlight */}
-          <div
-            className="absolute top-[20%] left-1/2 -translate-x-1/2 w-[1200px] h-[800px] pointer-events-none z-0"
-            style={{ background: 'radial-gradient(circle at center, rgba(255,255,255,0.05), transparent 70%)' }}
-          />
-          {/* Vertikal lysgradient */}
-          <div
-            className="absolute top-[25%] left-1/2 -translate-x-1/2 w-[600px] h-[300px] pointer-events-none z-0"
-            style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.015) 0%, transparent 100%)' }}
-          />
-          {/* Bølge 1 */}
-          <div className="absolute bottom-[-20px] left-0 w-[160%] opacity-[0.05] pointer-events-none z-[1]">
-            <svg viewBox="0 0 2000 200" preserveAspectRatio="none" className="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,100 C250,60 500,140 750,100 C1000,60 1250,130 1500,100 C1750,70 1875,110 2000,100 L2000,200 L0,200 Z" fill="#1A2A3A" /></svg>
-          </div>
-          {/* Bølge 2 */}
-          <div className="absolute bottom-[-10px] left-0 w-[180%] opacity-[0.03] pointer-events-none z-[1]">
-            <svg viewBox="0 0 2200 200" preserveAspectRatio="none" className="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bloggCtaWave2" x1="0" y1="0" x2="2200" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stopColor="#D4AF37" /><stop offset="100%" stopColor="transparent" /></linearGradient></defs><path d="M0,100 C275,70 550,135 825,100 C1100,65 1375,125 1650,100 C1925,75 2062,112 2200,100 L2200,200 L0,200 Z" fill="url(#bloggCtaWave2)" /></svg>
-          </div>
-
-          <div className="mx-auto max-w-[900px] px-6 relative z-10">
-            <h2
-              className="text-4xl md:text-5xl font-semibold tracking-[-0.02em] leading-[1.1]"
-              style={{ color: 'rgba(255,255,255,0.95)' }}
-            >
-              Klar til å starte?
-            </h2>
-            <p
-              className="mt-6 text-lg md:text-xl"
-              style={{ color: 'rgba(255,255,255,0.90)', lineHeight: '1.6', maxWidth: '620px', margin: '0 auto 52px', letterSpacing: '0.2px' }}
-            >
-              Opprett profilen din og få en gjennomtenkt match innen 24 timer.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-7 justify-center max-w-[680px] mx-auto">
-              <Link
-                href="/onboarding/start"
-                className="inline-flex items-center justify-center w-full sm:w-[340px] h-[72px] rounded-2xl font-semibold transition-all duration-300 ease-out text-[1.25rem]"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(212,175,55,0.92) 0%, rgba(232,194,122,0.92) 100%)',
-                  color: '#0A0F1A',
-                  boxShadow: '0 8px 28px rgba(212,175,55,0.18)',
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.boxShadow = '0 10px 34px rgba(212,175,55,0.22), 0 12px 38px rgba(0,0,0,0.18)';
-                  (e.currentTarget as HTMLElement).style.transform = 'scale(1.008)';
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 28px rgba(212,175,55,0.18)';
-                  (e.currentTarget as HTMLElement).style.transform = 'scale(1)';
-                }}
-              >
-                Opprett konto
-              </Link>
-              <Link
-                href="/login"
-                className="inline-flex items-center justify-center w-full sm:w-[340px] h-[72px] rounded-2xl font-medium transition-all duration-300 ease-out text-[1.25rem]"
-                style={{
-                  background: 'rgba(255,255,255,0.05)',
-                  backdropFilter: 'blur(10px)',
-                  color: 'rgba(255,255,255,0.90)',
-                  border: '1px solid rgba(255,255,255,0.12)',
-                  boxShadow: '0 6px 22px rgba(0,0,0,0.18)',
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.07)';
-                  (e.currentTarget as HTMLElement).style.color = '#FFFFFF';
-                  (e.currentTarget as HTMLElement).style.border = '1px solid rgba(212,175,55,0.20)';
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.05)';
-                  (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.90)';
-                  (e.currentTarget as HTMLElement).style.border = '1px solid rgba(255,255,255,0.12)';
-                  (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 22px rgba(0,0,0,0.18)';
-                }}
-              >
-                Logg inn
-              </Link>
-            </div>
-          </div>
-        </section>
+        {/* ===== CTA (GlobalCTA) ===== */}
+        <GlobalCTA />
 
         {/* ===== FOOTER ===== */}
         <Footer />

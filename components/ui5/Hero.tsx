@@ -65,10 +65,10 @@ export const Hero: FC<HeroProps> = ({
     },
   ];
 
-  /* Premium spacing constants */
+  /* Premium spacing constants — redusert for nærmere seksjonar */
   const heroSpacing = {
-    paddingTop: 200,
-    paddingBottom: 180,
+    paddingTop: 30,
+    paddingBottom: 100,
   };
 
   /* Bølge 1: primær, organisk */
@@ -166,8 +166,8 @@ export const Hero: FC<HeroProps> = ({
       <div className="mx-auto max-w-6xl px-6 lg:px-8 relative z-20">
         <div className="max-w-3xl mx-auto text-center">
 
-          {/* Animert tekst-logo */}
-          <div className="flex justify-center -mt-7 mb-4">
+          {/* Animert tekst-logo — flytt opp + Made in Norway */}
+          <div className="flex justify-center mb-8">
             <LogoAnimated />
           </div>
 
@@ -183,7 +183,7 @@ export const Hero: FC<HeroProps> = ({
           >
             {/* H1 — premium, roleg — white/92 */}
             <h1
-              className="text-5xl md:text-[76px] font-semibold tracking-[-0.03em] leading-[1.12] mb-[28px] animate-fadeInUp-delay-80"
+              className="text-5xl md:text-[88px] font-semibold tracking-[-0.03em] leading-[1.12] mb-[32px] animate-fadeInUp-delay-80"
               style={{
                 color: 'rgba(255,255,255,0.92)',
                 letterSpacing: '-0.03em',
@@ -194,9 +194,9 @@ export const Hero: FC<HeroProps> = ({
               {title}
             </h1>
 
-            {/* Undertekst — white/90 */}
+            {/* Undertekst — white/90 — +1 nivå større */}
             <p
-              className="text-lg md:text-xl mb-0 animate-fadeInUp-delay-140"
+              className="text-lg md:text-2xl mb-0 animate-fadeInUp-delay-140"
               style={{
                 color: 'rgba(255,255,255,0.90)',
                 lineHeight: '1.65',
@@ -244,10 +244,10 @@ export const Hero: FC<HeroProps> = ({
             -webkit-backdrop-filter: blur(9px) !important;
           }
           .hero-title {
-            font-size: 42px !important;
+            font-size: 48px !important;
           }
           .hero-subtitle {
-            font-size: 17px !important;
+            font-size: 19px !important;
           }
         }
       `}</style>

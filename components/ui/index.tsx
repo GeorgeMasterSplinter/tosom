@@ -153,7 +153,7 @@ export { ChatTemplate5, CoupleTemplate5, JourneyTemplate5 } from './emotionTempl
 export type { ChatTemplate5Props, CoupleTemplate5Props, JourneyTemplate5Props } from './emotionTemplates';
 
 // ── Default Export ──
-export default {
+const UiIndex = {
   tokens,
   platform,
   NavSystem3,
@@ -199,3 +199,5 @@ export default {
   Illustration,
   PersonalizationPanel,
 };
+
+export default UiIndex;

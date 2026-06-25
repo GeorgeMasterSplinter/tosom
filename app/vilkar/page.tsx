@@ -1,17 +1,16 @@
 'use client';
 
-import { AgeRequirement } from '@/components/AgeRequirement';
 import { Footer } from '@/components/ui5/Footer';
 import { color, spacing, typographyToStyle, radius, shadow } from '@/config/design-tokens';
 
 const sections = [
   {
     title: 'Aldersgrense',
-    content: 'ToSom er en relasjonsplattform for voksne. Du må være <AgeRequirement /> for å bruke tjenesten. Vi tar alderskrav svært alvorlig for å sikre et trygt miljø for alle.',
+    content: 'Du må være 23 for å bruke ToSom. Vi tar alderskravet svært alvorlig for å sikre et trygt miljø for voksne som søker ekte forbindelse.',
   },
   {
-    title: 'Oppretting av konto',
-    content: 'Du oppretter en konto med gyldig e-post. Du mottar en magisk innloggingslenke. Kontodagen er knyttet til din e-postadresse.',
+    title: 'Oppretting av konto og innlogging',
+    content: 'Du oppretter en konto med gyldig e-postadresse. Du mottar en magisk innloggingslenke. I tillegg kan du verifisere telefonnummeret ditt for økt sikkerhet. Kontoen er knyttet til din e-postadresse og eventuelle verifiserte kontaktopplysninger.',
   },
   {
     title: 'Profildynamikk',
@@ -92,26 +91,28 @@ export default function VilkarPage() {
           </div>
         </section>
 
-        <section className="relative pt-[120px] pb-[140px] text-center">
-          <h2 className="text-4xl md:text-5xl font-semibold tracking-[-0.02em] leading-[1.1] text-white/95">
-            Klar til å starte?
-          </h2>
-          <p className="mt-6 text-lg md:text-xl text-white/90 leading-[1.6] max-w-[620px] mx-auto">
-            Opprett profilen din og få en gjennomtenkt match innen 24 timer.
-          </p>
-          <div className="mt-12 flex flex-col md:flex-row items-center justify-center gap-6">
-            <a
-              href="/opprett"
-              className="w-[340px] h-[72px] flex items-center justify-center rounded-xl bg-[#D4AF37] text-black font-semibold text-lg shadow-[0_0_40px_rgba(212,175,55,0.35)] hover:shadow-[0_0_55px_rgba(212,175,55,0.55)] transition-all"
-            >
-              Opprett konto
-            </a>
-            <a
-              href="/logg-inn"
-              className="w-[340px] h-[72px] flex items-center justify-center rounded-xl backdrop-blur-xl bg-white/[0.04] border border-white/[0.08] text-white font-medium text-lg hover:bg-white/[0.07] transition-all"
-            >
-              Logg inn
-            </a>
+        <section className="relative pt-[120px] pb-[140px] text-center overflow-hidden">
+          <div className="mx-auto max-w-[900px] px-6 relative z-10">
+            <h2 className="text-4xl md:text-5xl font-semibold tracking-[-0.02em] leading-[1.1] text-white/95">
+              Klar til å starte?
+            </h2>
+            <p className="mt-6 text-lg md:text-xl text-white/90 leading-[1.6] max-w-[620px] mx-auto">
+              Opprett profilen din og få en gjennomtenkt match innen 24 timer.
+            </p>
+            <div className="mt-12 flex flex-col md:flex-row items-center justify-center gap-6">
+              <a
+                href="/onboarding/start"
+                className="inline-flex w-full sm:w-[340px] h-[72px] items-center justify-center rounded-xl bg-[#D4AF37] text-black font-semibold text-lg shadow-[0_0_40px_rgba(212,175,55,0.35)] hover:shadow-[0_0_55px_rgba(212,175,55,0.55)] transition-all"
+              >
+                Opprett konto
+              </a>
+              <a
+                href="/login"
+                className="inline-flex w-full sm:w-[340px] h-[72px] items-center justify-center rounded-xl backdrop-blur-xl bg-white/[0.04] border border-white/[0.08] text-white font-medium text-lg hover:bg-white/[0.07] transition-all"
+              >
+                Logg inn
+              </a>
+            </div>
           </div>
           <div className="absolute inset-0 -z-10">
             <div className="absolute inset-x-0 bottom-0 h-[300px] bg-gradient-to-t from-[#0A1A2F]/40 to-transparent blur-3xl"></div>

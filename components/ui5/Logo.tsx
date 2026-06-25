@@ -18,7 +18,7 @@ import { color, typographyToStyle } from '@/config/design-tokens';
 
 export interface LogoProps extends Omit<HTMLAttributes<HTMLElement>, 'color'> {
   /** Hvilken størrelse? */
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
   /** Fargevariant */
   colorVariant?: 'gold' | 'white' | 'muted';
   /** Vis tekst? */
@@ -42,6 +42,8 @@ const sizeMap: Record<string, { fontSize: string; letterSpacing: string }> = {
   lg:  { fontSize: '30px', letterSpacing: '-0.02em' },
   xl:  { fontSize: '42px', letterSpacing: '-0.02em' },
   '2xl': { fontSize: '56px', letterSpacing: '-0.03em' },
+  '3xl': { fontSize: '72px', letterSpacing: '-0.04em' },
+  '4xl': { fontSize: '84px', letterSpacing: '-0.045em' },
 };
 
 const colorMap: Record<string, string> = {
@@ -127,6 +129,16 @@ export const LogoXL: FC<Omit<LogoProps, 'size'>> = (props) => (
 /** 2XL logo (hero enlarged) */
 export const Logo2XL: FC<Omit<LogoProps, 'size'>> = (props) => (
   <Logo {...props} size="2xl" />
+);
+
+/** 3XL logo (hero premium) */
+export const Logo3XL: FC<Omit<LogoProps, 'size'>> = (props) => (
+  <Logo {...props} size="3xl" />
+);
+
+/** 4XL logo (hero ultra) */
+export const Logo4XL: FC<Omit<LogoProps, 'size'>> = (props) => (
+  <Logo {...props} size="4xl" />
 );
 
 /* ========================

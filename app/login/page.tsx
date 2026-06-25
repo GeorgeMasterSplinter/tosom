@@ -1,8 +1,8 @@
 /**
- * ToSom — Login med Magic Link
+ * ToSom — Login med Magic Link eller Telefonverifisering
  * 
  * Rolig, trygg innlogging utan passord.
- * Berre e-post + magisk lenke.
+ * E-post + magisk lenke ELLER verifisert telefonnummer.
  */
 
 'use client';
@@ -11,16 +11,30 @@ import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import { GlassPanel } from '@/components/ui5/GlassPanel';
 
+type LoginMethod = 'email' | 'phone';
+
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
+  const [method, setMethod] = useState<LoginMethod>('email');
+  const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [sent, setSent] = useState(false);
+  const [captchaDone, setCaptchaDone] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Invisible captcha placeholder — erstatt med实际 captcha-integrasjon (reCAPTCHA hCaptcha osv)
+  const initCaptcha = () => {
+    // TODO: Integre invisible captcha (Google reCAPTCHA v3 / hCaptcha invisible)
+    setCaptchaDone(true);
+  };
+
+  const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !email.includes('@')) {
+    if (!input || !input.includes('@')) {
       setError('Skriv inn en gyldig e-postadresse.');
+      return;
+    }
+    if (!captchaDone) {
+      setError('Vennligst fullfør sikkerhetsverifisering.');
       return;
     }
     setLoading(true);
@@ -28,13 +42,43 @@ export default function LoginPage() {
     setSent(false);
     try {
       await signIn('email', {
-        email,
+        email: input,
         callbackUrl: '/dashboard',
         redirect: false,
       });
       setSent(true);
     } catch {
       setError('Kunne ikke sende innloggingslenke. Prøv igjen.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePhoneSend = async () => {
+    if (!input) {
+      setError('Skriv inn et gyldig telefonnummer (+f47...).');
+      return;
+    }
+    if (!captchaDone) {
+      setError('Vennligst fullfør sikkerhetsverifisering.');
+      return;
+    }
+    setLoading(true);
+    setError('');
+    try {
+      const res = await fetch('/api/auth/phone/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: input }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        setSent(true);
+      } else {
+        setError(data.error || 'Kunne ikke sende verifiseringskode.');
+      }
+    } catch {
+      setError('Kunne ikke sende verifiseringskode. Prøv igjen.');
     } finally {
       setLoading(false);
     }
@@ -66,10 +110,50 @@ export default function LoginPage() {
             style={{ color: 'rgba(255, 255, 255, 0.5)' }}
           >
             {sent
-              ? 'Sjekk e-posten din — vi sender deg en sikker lenke.'
-              : 'Send en magisk lenke til e-posten din'}
+              ? method === 'email'
+                ? 'Sjekk e-posten din — vi sender deg en sikker lenke.'
+                : 'Sjekk telefonen din — vi sendte en verifiseringskode.'
+              : 'Velg innloggingsmetode nedenfor'}
           </p>
         </div>
+
+        {/* Login Method Toggle */}
+        {!sent && (
+          <div className="flex gap-2 mb-6">
+            <button
+              type="button"
+              onClick={() => setMethod('email')}
+              className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                method === 'email'
+                  ? 'bg-[#D4AF37] text-black'
+                  : 'bg-white/[0.03] text-white/50 hover:bg-white/[0.06]'
+              }`}
+              style={
+                method === 'email'
+                  ? { border: '1px solid rgba(212,175,55,0.3)' }
+                  : { border: '1px solid rgba(255,255,255,0.08)' }
+              }
+            >
+              E-post
+            </button>
+            <button
+              type="button"
+              onClick={() => setMethod('phone')}
+              className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                method === 'phone'
+                  ? 'bg-[#D4AF37] text-black'
+                  : 'bg-white/[0.03] text-white/50 hover:bg-white/[0.06]'
+              }`}
+              style={
+                method === 'phone'
+                  ? { border: '1px solid rgba(212,175,55,0.3)' }
+                  : { border: '1px solid rgba(255,255,255,0.08)' }
+              }
+            >
+              Telefon
+            </button>
+          </div>
+        )}
 
         {/* Success State */}
         {sent && (
@@ -85,17 +169,27 @@ export default function LoginPage() {
                 />
               </svg>
               <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
-                En innloggingslenke er sendt til <strong style={{ color: '#D4AF37' }}>{email}</strong>
+                {method === 'email' ? (
+                  <>
+                    En innloggingslenke er sendt til <strong style={{ color: '#D4AF37' }}>{input}</strong>
+                  </>
+                ) : (
+                  <>
+                    En verifiseringskode er sendt til <strong style={{ color: '#D4AF37' }}>{input}</strong>
+                  </>
+                )}
               </p>
               <p className="text-xs" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
-                Lenken gjelder i 60 minutter. Ingen passord er nødvendig.
+                {method === 'email'
+                  ? 'Lenken gjelder i 60 minutter. Ingen passord er nødvendig.'
+                  : 'Koden gjelder i 10 minutter. Ingen passord er nødvendig.'}
               </p>
               <button
                 onClick={() => setSent(false)}
                 className="text-sm underline hover:no-underline transition-colors duration-200"
                 style={{ color: 'rgba(255, 255, 255, 0.5)' }}
               >
-                Send til en annen e-post
+                Send til en annen {method === 'email' ? 'e-post' : 'telefon'}
               </button>
             </div>
           </GlassPanel>
@@ -104,23 +198,22 @@ export default function LoginPage() {
         {/* Form */}
         {!sent && (
           <GlassPanel goldBorder className="mb-6">
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-6">
+              {/* Input */}
               <div>
                 <label
-                  htmlFor="email"
                   className="text-xs uppercase tracking-widest font-semibold mb-2 block"
                   style={{ color: '#D4AF37' }}
                 >
-                  E-post
+                  {method === 'email' ? 'E-post' : 'Telefonnummer'}
                 </label>
                 <input
-                  id="email"
-                  type="email"
-                  autoComplete="email"
+                  type={method === 'email' ? 'email' : 'tel'}
+                  autoComplete={method === 'email' ? 'email' : 'tel'}
                   required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="du@eksempel.no"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder={method === 'email' ? 'du@eksempel.no' : '+47 XXX XX XXX'}
                   className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all duration-200 ease-out"
                   style={{
                     background: 'rgba(255, 255, 255, 0.03)',
@@ -136,6 +229,25 @@ export default function LoginPage() {
                     (e.target as HTMLElement).style.boxShadow = 'none';
                   }}
                 />
+                {method === 'phone' && (
+                  <p className="mt-2 text-xs" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
+                    Norsk nummer med +47_prefiks
+                  </p>
+                )}
+              </div>
+
+              {/* Invisible Captcha Placeholder */}
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={captchaDone}
+                  onChange={(e) => setCaptchaDone(e.target.checked)}
+                  className="w-4 h-4 rounded"
+                  style={{ accentColor: '#D4AF37' }}
+                />
+                <span className="text-xs" style={{ color: 'rgba(255, 255, 255, 0.5)' }}>
+                  Bekreft at du er et menneske (captcha)
+                </span>
               </div>
 
               {error && (
@@ -145,7 +257,8 @@ export default function LoginPage() {
               )}
 
               <button
-                type="submit"
+                type="button"
+                onClick={method === 'email' ? handleEmailSubmit : handlePhoneSend}
                 className="w-full px-5 py-3 rounded-xl text-sm font-medium transition-all duration-200 ease-out"
                 style={{
                   background: loading ? 'rgba(212, 175, 55, 0.3)' : '#D4AF37',
@@ -163,19 +276,20 @@ export default function LoginPage() {
                   (e.target as HTMLElement).style.transform = 'translateY(0)';
                 }}
               >
-                {loading ? 'Sender lenke…' : 'Send innloggingslenke'}
+                {loading
+                  ? (method === 'email' ? 'Sender lenke…' : 'Sender kode…')
+                  : (method === 'email' ? 'Send innloggingslenke' : 'Send verifiseringskode')}
               </button>
-            </form>
+            </div>
           </GlassPanel>
         )}
 
         {/* Secondary */}
         <div className="text-center">
           <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
-            {/* TODO: Koble til betalingssteg før full tilgang. */}
             Har du ingen konto?{' '}
             <a
-              href="/onboarding"
+              href="/onboarding/start"
               className="text-[#D4AF37] hover:text-[#E8C766] transition-colors duration-200 underline"
             >
               Opprett konto

@@ -3,7 +3,7 @@
  * 
  * Tittel: "Ro. Trygghet. Mening."
  * Undertekst på moderne norsk bokmål
- * Ultra-premium: harmonert spotlight 80px, vertikal rytme, typografi, radius.
+ * Migrated to ToSom Design System.
  * Mobiloptimalisert < 640px
  * Alle tekst er på moderne norsk bokmål.
  */
@@ -12,7 +12,7 @@
 
 import { FC } from 'react';
 import { LogoAnimated } from '@/components/branding/LogoVariants';
-import { color, spacing } from '@/config/design-tokens';
+import { ToSomSection } from './system';
 
 /* ========================
    INTERFACES
@@ -77,57 +77,47 @@ export const Hero: FC<HeroProps> = ({
   const wave2Path =
     'M0,256 C220,210 440,310 660,260 C880,210 1100,290 1320,260 C1540,230 1760,270 1980,256 L1980,512 L0,512 Z';
 
-  return (
-    <section
-      className="relative overflow-hidden"
-      style={{
-        paddingTop: `${heroSpacing.paddingTop}px`,
-        paddingBottom: `${heroSpacing.paddingBottom}px`,
-        background: 'linear-gradient(180deg, #0A0F1A 0%, #0F1923 50%, #0A0F1A 100%)',
-      }}
-    >
-      {/* ── Z-0: Atmosfæren ── */}
+   return (
+     <ToSomSection
+       spotlight="hero"
+       className="relative overflow-hidden"
+       style={{
+         background: 'linear-gradient(180deg, #0A0F1A 0%, #0F1923 50%, #0A0F1A 100%)',
+       }}
+     >
+       {/* ── Z-0: Atmosfæren (ikke-overlay spotlight) ── */}
 
-      {/* Vignette — forsterka +10% */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.06) 100%)',
-        }}
-      />
+       {/* Vignette */}
+       <div
+         className="absolute inset-0 pointer-events-none"
+         style={{
+           background: 'radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.06) 100%)',
+         }}
+       />
 
-      {/* Spotlight — flytta ned + radius +20% */}
-      <div
-        className="absolute top-[40%] left-1/2 -translate-x-1/2 w-[1080px] h-[720px] pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle at center, rgba(255,255,255,0.048), transparent 70%)',
-        }}
-      />
+       {/* Spotlight */}
+       <div
+         className="absolute top-[40%] left-1/2 -translate-x-1/2 w-[1080px] h-[720px] pointer-events-none"
+         style={{
+           background: 'radial-gradient(circle at center, rgba(255,255,255,0.048), transparent 70%)',
+         }}
+       />
 
-      {/* Blå ambient glow — radius +15% */}
-      <div
-        className="absolute top-0 right-0 w-[920px] h-[690px] pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse at 70% 20%, rgba(80,120,255,0.022), transparent 70%)',
-        }}
-      />
+       {/* Blå ambient glow */}
+       <div
+         className="absolute top-0 right-0 w-[920px] h-[690px] pointer-events-none"
+         style={{
+           background: 'radial-gradient(ellipse at 70% 20%, rgba(80,120,255,0.022), transparent 70%)',
+         }}
+       />
 
-      {/* Gull ambient glow — radius +20% */}
-      <div
-        className="absolute top-[20%] left-1/2 -translate-x-1/2 w-[600px] h-[480px] pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle at center, rgba(212,175,55,0.044), transparent 60%)',
-        }}
-      />
-
-      {/* ── Z-0.5: Subtil top-spotlight for premium dybde — harmonert 80px ── */}
-      <div
-        className="absolute inset-x-0 top-0 h-[200px] pointer-events-none"
-        style={{
-          background: 'linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%)',
-          filter: 'blur(80px)',
-        }}
-      />
+       {/* Gull ambient glow */}
+       <div
+         className="absolute top-[20%] left-1/2 -translate-x-1/2 w-[600px] h-[480px] pointer-events-none"
+         style={{
+           background: 'radial-gradient(circle at center, rgba(212,175,55,0.044), transparent 60%)',
+         }}
+       />
 
       {/* ── Z-1: Bølgeformer (bak glassblokk) ── */}
       <div className="absolute bottom-[-40px] left-0 w-[140%] opacity-[0.05] pointer-events-none z-[1]">
@@ -169,8 +159,8 @@ export const Hero: FC<HeroProps> = ({
         </svg>
       </div>
 
-      {/* ── Z-2: Innhold ── */}
-      <div className="mx-auto max-w-6xl px-6 lg:px-8 relative z-20">
+       {/* ── Z-2: Innhold ── */}
+       <div className="mx-auto max-w-6xl px-6 lg:px-8 relative z-20" style={{ paddingTop: `${heroSpacing.paddingTop}px`, paddingBottom: `${heroSpacing.paddingBottom}px` }}>
         <div className="max-w-3xl mx-auto text-center">
 
           {/* Animert tekst-logo — flytt opp + Made in Norway */}
@@ -258,7 +248,7 @@ export const Hero: FC<HeroProps> = ({
           }
         }
       `}</style>
-    </section>
+     </ToSomSection>
   );
 };
 

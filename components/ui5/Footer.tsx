@@ -2,7 +2,7 @@
  * ToSom UI5 — Footer (Premium Dark + Glassmorphism)
  * 
  * Premium footer med design-tokens, strukturert layout.
- * Ultra-premium: harmonert spotlight 80px, vertikal rytme, typografi, radius.
+ * Migrated to ToSom Design System.
  * Moderne norsk bokmål.
  */
 
@@ -11,7 +11,8 @@
 import { FC } from 'react';
 import Link from 'next/link';
 import { LogoWordmark } from '@/components/branding/LogoVariants';
-import { color, spacing } from '@/config/design-tokens';
+import { ToSomTagline } from './system';
+import { colors } from '@/design/tokens';
 
 /* ========================
    PROPS
@@ -57,7 +58,7 @@ export const Footer: FC<FooterProps> = ({
     <footer
       className="relative overflow-hidden animate-fadeIn"
       style={{
-        background: `linear-gradient(180deg, #0A0F1A 0%, rgba(15,25,35,0.65) 50%, ${color.bg.primary} 100%)`,
+        background: `linear-gradient(180deg, #0A0F1A 0%, rgba(15,25,35,0.65) 50%, ${colors.bgPrimary} 100%)`,
         borderTop: '1px solid rgba(255,255,255,0.06)',
       }}
     >
@@ -198,20 +199,9 @@ export const Footer: FC<FooterProps> = ({
 
         {/* Botntekst */}
         <div className="text-center pt-20 ph:pt-24 md:pt-28">
-          <p
-            className="text-base md:text-lg leading-relaxed animate-fadeUp delay-[120ms]"
-            style={{ 
-              color: 'rgba(255,255,255,0.85)',
-              lineHeight: '1.7',
-              maxWidth: '360px',
-              marginLeft: 'auto',
-              marginRight: 'auto',
-              marginBottom: '30px',
-              letterSpacing: '0.03em',
-            }}
-          >
+          <ToSomTagline>
             ToSom — en rolig, moden måte å møtes på. To mennesker. Én reise. Ekte kontakt.
-          </p>
+          </ToSomTagline>
 
           {/* Made in Norway */}
           <div

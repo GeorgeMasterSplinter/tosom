@@ -64,24 +64,24 @@ export default function LandingPage() {
             <Hero />
           </section>
 
-          {/* 5 punkter: Velvære, Privat profil, Match, Forskning, Dybde — matcha hero-stil */}
+          {/* 5 punkter: Velvære, Privat profil, Match, Forskning, Dybde — matcha hero-stil, justert avstand til hero */}
           <section 
-            className="relative overflow-hidden py-10 ph:py-14 md:py-[80px]"
+            className="relative overflow-hidden py-10 ph:py-14 md:py-[80px] mt-[-16px]"
           >
             <div className="section-wrapper relative z-10">
               <div className="mx-auto max-w-[320px] ph:max-w-[420px] md:max-w-[600px] text-center mb-12 ph:mb-16 px-6">
-                <h2 className="text-2xl ph:text-3xl md:text-5xl font-semibold tracking-[-0.02em] mb-4" style={{ color: 'rgba(255,255,255,0.92)' }}>
+                <h2 className="text-[42px] ph:text-3xl md:text-[54px] font-bold tracking-[-0.02em] mb-4 animate-riseIn" style={{ color: 'rgba(255,255,255,0.92)' }}>
                   Slik fungerer det
                 </h2>
                 <p className="text-base ph:text-lg md:text-xl leading-relaxed" style={{ color: 'rgba(255,255,255,0.90)' }}>
                   ToSom er bygget for kvalitet, ikke kvantitet. Her er hvordan det fungerer.
                 </p>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ph:gap-10 max-w-[900px] mx-auto px-6" style={{ rowGap: '24px' }}>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ph:gap-10 max-w-[900px] mx-auto px-6" style={{ rowGap: '24px', marginTop: '4px' }}>
                 {/* Punkt 1: Velvære først — premium glassmorphism */}
                 <div className="text-center group">
                   <div
-                    className="text-center rounded-3xl p-8 md:p-10 transition-all duration-300 ease-out h-full space-y-4"
+                    className="text-center rounded-2xl p-8 md:p-10 transition-all duration-300 ease-out h-full space-y-4 animate-fadeUp"
                     style={{
                       background: 'rgba(255,255,255,0.05)',
                       backdropFilter: 'blur(12px)',
@@ -89,18 +89,18 @@ export default function LandingPage() {
                       boxShadow: '0 0 40px rgba(0,0,0,0.30)',
                     }}
                     onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.05)';
+                      (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.07)';
                       (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 22px rgba(0,0,0,0.144)';
                       (e.currentTarget as HTMLElement).style.border = '1px solid rgba(212,175,55,0.12)';
                     }}
                     onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.03)';
+                      (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.05)';
                       (e.currentTarget as HTMLElement).style.boxShadow = '0 3px 16px rgba(0,0,0,0.108)';
-                      (e.currentTarget as HTMLElement).style.border = '1px solid rgba(255,255,255,0.06)';
+                      (e.currentTarget as HTMLElement).style.border = '1px solid rgba(255,255,255,0.10)';
                     }}
                   >
                     <div 
-                      className="flex justify-center mb-6 w-10 h-10 md:w-12 md:h-12 mx-auto rounded-2xl items-center justify-center transition-all duration-300 ease-out text-gold-300"
+                      className="flex justify-center mb-6 w-10 h-10 md:w-12 md:h-12 mx-auto rounded-xl items-center justify-center transition-all duration-300 ease-out text-gold-300"
                       style={{
                         background: 'rgba(212,175,55,0.10)',
                         border: '1px solid rgba(212,175,55,0.20)',
@@ -125,7 +125,7 @@ export default function LandingPage() {
                 {/* Punkt 2: Privat profil — premium glassmorphism */}
                 <div className="text-center group">
                   <div
-                    className="text-center rounded-3xl p-8 md:p-10 transition-all duration-300 ease-out h-full space-y-4"
+                    className="text-center rounded-2xl p-8 md:p-10 transition-all duration-300 ease-out h-full space-y-4 animate-fadeUp delay-[80ms]"
                     style={{
                       background: 'rgba(255,255,255,0.05)',
                       backdropFilter: 'blur(12px)',
@@ -144,7 +144,7 @@ export default function LandingPage() {
                     }}
                   >
                     <div 
-                      className="flex justify-center mb-6 w-10 h-10 md:w-12 md:h-12 mx-auto rounded-2xl items-center justify-center transition-all duration-300 ease-out text-gold-300"
+                      className="flex justify-center mb-6 w-10 h-10 md:w-12 md:h-12 mx-auto rounded-xl items-center justify-center transition-all duration-300 ease-out text-gold-300"
                       style={{
                         background: 'rgba(212,175,55,0.10)',
                         border: '1px solid rgba(212,175,55,0.20)',
@@ -169,7 +169,7 @@ export default function LandingPage() {
                 {/* Punkt 3: Få en match innen 24 timer — premium glassmorphism */}
                 <div className="text-center group">
                   <div
-                    className="text-center rounded-3xl p-8 md:p-10 transition-all duration-300 ease-out h-full space-y-4"
+                    className="text-center rounded-2xl p-8 md:p-10 transition-all duration-300 ease-out h-full space-y-4 animate-fadeUp delay-[160ms]"
                     style={{
                       background: 'rgba(255,255,255,0.05)',
                       backdropFilter: 'blur(12px)',
@@ -188,7 +188,7 @@ export default function LandingPage() {
                     }}
                   >
                     <div 
-                      className="flex justify-center mb-6 w-10 h-10 md:w-12 md:h-12 mx-auto rounded-2xl items-center justify-center transition-all duration-300 ease-out text-gold-300"
+                      className="flex justify-center mb-6 w-10 h-10 md:w-12 md:h-12 mx-auto rounded-xl items-center justify-center transition-all duration-300 ease-out text-gold-300"
                       style={{
                         background: 'rgba(212,175,55,0.10)',
                         border: '1px solid rgba(212,175,55,0.20)',
@@ -212,7 +212,7 @@ export default function LandingPage() {
                 {/* Punkt 4: Forskningsbasert matching — premium glassmorphism */}
                 <div className="text-center group">
                   <div
-                    className="text-center rounded-3xl p-8 md:p-10 transition-all duration-300 ease-out h-full space-y-4"
+                    className="text-center rounded-2xl p-8 md:p-10 transition-all duration-300 ease-out h-full space-y-4 animate-fadeUp delay-[240ms]"
                     style={{
                       background: 'rgba(255,255,255,0.05)',
                       backdropFilter: 'blur(12px)',
@@ -231,7 +231,7 @@ export default function LandingPage() {
                     }}
                   >
                     <div 
-                      className="flex justify-center mb-6 w-10 h-10 md:w-12 md:h-12 mx-auto rounded-2xl items-center justify-center transition-all duration-300 ease-out text-gold-300"
+                      className="flex justify-center mb-6 w-10 h-10 md:w-12 md:h-12 mx-auto rounded-xl items-center justify-center transition-all duration-300 ease-out text-gold-300"
                       style={{
                         background: 'rgba(212,175,55,0.10)',
                         border: '1px solid rgba(212,175,55,0.20)',
@@ -257,7 +257,7 @@ export default function LandingPage() {
                 {/* Punkt 5: Bygget for dybde — premium glassmorphism */}
                 <div className="text-center group">
                   <div
-                    className="text-center rounded-3xl p-8 md:p-10 transition-all duration-300 ease-out h-full space-y-4"
+                    className="text-center rounded-2xl p-8 md:p-10 transition-all duration-300 ease-out h-full space-y-4 animate-fadeUp delay-[320ms]"
                     style={{
                       background: 'rgba(255,255,255,0.05)',
                       backdropFilter: 'blur(12px)',
@@ -276,7 +276,7 @@ export default function LandingPage() {
                     }}
                   >
                     <div 
-                      className="flex justify-center mb-6 w-10 h-10 md:w-12 md:h-12 mx-auto rounded-2xl items-center justify-center transition-all duration-300 ease-out text-gold-300"
+                      className="flex justify-center mb-6 w-10 h-10 md:w-12 md:h-12 mx-auto rounded-xl items-center justify-center transition-all duration-300 ease-out text-gold-300"
                       style={{
                         background: 'rgba(212,175,55,0.10)',
                         border: '1px solid rgba(212,175,55,0.20)',
@@ -300,8 +300,10 @@ export default function LandingPage() {
             </div>
           </section>
 
-          {/* CTA (GlobalCTA) */}
-          <GlobalCTA />
+          {/* CTA (GlobalCTA) — redusert avstand frå "Slik fungerer det" */}
+          <section className="mt-[10px]">
+            <GlobalCTA />
+          </section>
         </main>
 
         <Footer />

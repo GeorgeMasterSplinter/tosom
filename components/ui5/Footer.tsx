@@ -2,8 +2,7 @@
  * ToSom UI5 — Footer (Premium Dark + Glassmorphism)
  * 
  * Premium footer med design-tokens, strukturert layout.
- * 3 kolonner: Produkt, Regler, Personvern.
- * Mørk navy bakgrunn, gull-aksenter, glassmorphism.
+ * Ultra-premium: harmonert spotlight 80px, vertikal rytme, typografi, radius.
  * Moderne norsk bokmål.
  */
 
@@ -56,12 +55,21 @@ export const Footer: FC<FooterProps> = ({
 }) => {
   return (
     <footer
-      className="relative overflow-hidden"
+      className="relative overflow-hidden animate-fadeIn"
       style={{
         background: `linear-gradient(180deg, #0A0F1A 0%, rgba(15,25,35,0.65) 50%, ${color.bg.primary} 100%)`,
         borderTop: '1px solid rgba(255,255,255,0.06)',
       }}
     >
+      {/* Subtil top-spotlight for premium dybde — harmonert 80px */}
+      <div
+        className="absolute inset-x-0 top-0 h-[200px] pointer-events-none"
+        style={{
+          background: 'linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%)',
+          filter: 'blur(80px)',
+        }}
+      />
+
       {/* Glassmorphism-overlay — ytterlegare redusert 10% */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -83,29 +91,29 @@ export const Footer: FC<FooterProps> = ({
           }}
         />
 
-        {/* Hovud-innhald — 3 kolonner på desktop, vertikal på mobil */}
+        {/* Hovud-innhald — 3 kolonner på desktop, vertikal på mobil, økt kolonne-avstand */}
         <div
-          className="grid grid-cols-1 gap-8 ph:grid-cols-2 md:grid-cols-3 ph:gap-10 md:gap-12"
+          className="grid grid-cols-1 gap-14 ph:grid-cols-2 ph:gap-10 md:grid-cols-3 md:gap-20"
           style={{
-            paddingTop: '64px',
-            paddingBottom: '48px',
+            paddingTop: '72px',
+            paddingBottom: '72px',
           }}
         >
           {/* Kolonne 1: Produkt */}
-          <div>
-            <h4
-              className="text-[10px] uppercase tracking-[0.2em] font-semibold mb-5"
-              style={{ color: 'rgba(212,175,55,0.55)' }}
-            >
-              Produkt
-            </h4>
-            <ul className="space-y-[7px]">
-              {produktLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm transition-all duration-300 ease-out"
-                    style={{ color: 'rgba(255,255,255,0.85)', lineHeight: '1.75' }}
+           <div>
+             <h4
+               className="text-[10px] uppercase tracking-[0.2em] font-semibold mb-5"
+               style={{ color: 'rgba(212,175,55,0.55)' }}
+             >
+               Produkt
+             </h4>
+             <ul className="space-y-[7px]">
+               {produktLinks.map((link) => (
+                 <li key={link.href}>
+                   <Link
+                     href={link.href}
+                     className="text-base transition-all duration-300 ease-out"
+                     style={{ color: 'rgba(255,255,255,0.85)', lineHeight: '1.75' }}
                     onMouseEnter={(e) => {
                       (e.target as HTMLElement).style.color = '#D4AF37';
                       (e.target as HTMLElement).style.textDecoration = 'underline';
@@ -123,21 +131,21 @@ export const Footer: FC<FooterProps> = ({
             </ul>
           </div>
 
-          {/* Kolonne 2: Regler */}
-          <div>
-            <h4
-              className="text-[10px] uppercase tracking-[0.2em] font-semibold mb-5"
-              style={{ color: 'rgba(212,175,55,0.55)' }}
-            >
-              Regler
-            </h4>
-            <ul className="space-y-[7px]">
-              {reglerLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm transition-all duration-300 ease-out"
-                    style={{ color: 'rgba(255,255,255,0.85)', lineHeight: '1.75' }}
+           {/* Kolonne 2: Regler */}
+           <div>
+             <h4
+               className="text-[10px] uppercase tracking-[0.2em] font-semibold mb-5"
+               style={{ color: 'rgba(212,175,55,0.55)' }}
+             >
+               Regler
+             </h4>
+             <ul className="space-y-[7px]">
+               {reglerLinks.map((link) => (
+                 <li key={link.href}>
+                   <Link
+                     href={link.href}
+                     className="text-base transition-all duration-300 ease-out"
+                     style={{ color: 'rgba(255,255,255,0.85)', lineHeight: '1.75' }}
                     onMouseEnter={(e) => {
                       (e.target as HTMLElement).style.color = '#D4AF37';
                       (e.target as HTMLElement).style.textDecoration = 'underline';
@@ -155,21 +163,21 @@ export const Footer: FC<FooterProps> = ({
             </ul>
           </div>
 
-          {/* Kolonne 3: Om ToSom */}
-          <div>
-            <h4
-              className="text-[10px] uppercase tracking-[0.2em] font-semibold mb-5"
-              style={{ color: 'rgba(212,175,55,0.55)' }}
-            >
-              Om ToSom
-            </h4>
-            <ul className="space-y-[7px]">
-              {omLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm transition-all duration-300 ease-out"
-                    style={{ color: 'rgba(255,255,255,0.85)', lineHeight: '1.75' }}
+           {/* Kolonne 3: Om ToSom */}
+           <div>
+             <h4
+               className="text-[10px] uppercase tracking-[0.2em] font-semibold mb-5"
+               style={{ color: 'rgba(212,175,55,0.55)' }}
+             >
+               Om ToSom
+             </h4>
+             <ul className="space-y-[7px]">
+               {omLinks.map((link) => (
+                 <li key={link.href}>
+                   <Link
+                     href={link.href}
+                     className="text-base transition-all duration-300 ease-out"
+                     style={{ color: 'rgba(255,255,255,0.85)', lineHeight: '1.75' }}
                     onMouseEnter={(e) => {
                       (e.target as HTMLElement).style.color = '#D4AF37';
                       (e.target as HTMLElement).style.textDecoration = 'underline';
@@ -191,14 +199,15 @@ export const Footer: FC<FooterProps> = ({
         {/* Botntekst */}
         <div className="text-center pt-20 ph:pt-24 md:pt-28">
           <p
-            className="text-sm md:text-base leading-relaxed"
+            className="text-base md:text-lg leading-relaxed animate-fadeUp delay-[120ms]"
             style={{ 
               color: 'rgba(255,255,255,0.85)',
               lineHeight: '1.7',
               maxWidth: '360px',
               marginLeft: 'auto',
               marginRight: 'auto',
-              marginBottom: '28px',
+              marginBottom: '30px',
+              letterSpacing: '0.03em',
             }}
           >
             ToSom — en rolig, moden måte å møtes på. To mennesker. Én reise. Ekte kontakt.
@@ -216,7 +225,7 @@ export const Footer: FC<FooterProps> = ({
               <path d="M12 2L15 8L21 9L16.5 14L18 21L12 17.5L6 21L7.5 14L3 9L9 8L12 2Z" stroke="#D4AF37" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             <span
-              className="text-xs md:text-sm font-medium"
+              className="text-sm md:text-base font-medium"
               style={{ color: 'rgba(212,175,55,0.75)', letterSpacing: '0.15em' }}
             >
               ToSom er utviklet og driftet fra Norge

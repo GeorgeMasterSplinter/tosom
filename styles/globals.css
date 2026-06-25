@@ -307,6 +307,23 @@
 .animate-dotPulse { animation: dotPulse 1.5s ease-in-out infinite; }
 
 /* ═══════════════════════════════════════════
+   Ultra-premium micro-motion utilities
+   ═══════════════════════════════════════════ */
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes microBounce {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.015); }
+  100% { transform: scale(1); }
+}
+
+.animate-riseIn { animation: riseIn 0.8s ease-out forwards; }
+.animate-microBounce { animation: microBounce 0.25s ease-out; }
+
+/* ═══════════════════════════════════════════
     Micro-motion – subtlePop (Dashboard polish)
     ═══════════════════════════════════════════ */
 @keyframes subtlePop {

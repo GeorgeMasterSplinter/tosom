@@ -58,7 +58,15 @@ export default function RootLayout({
         <meta name="theme-color" content="#0A0F1F" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body className="bg-[var(--ts-bg-primary)] text-[var(--ts-text-primary)] antialiased">
+      <body className="bg-[var(--ts-bg-primary)] text-[var(--ts-text-primary)] antialiased relative">
+        {/* Global ambient glow */}
+        <div
+          className="fixed inset-0 pointer-events-none z-[1]"
+          style={{
+            background: 'radial-gradient(circle_at_center,rgba(255,255,255,0.03),transparent_70%)',
+            filter: 'blur(120px)',
+          }}
+        />
         <AnalyticsProvider />
         <Suspense fallback={children}>
           <GlobalHeaderWrapper>{children}</GlobalHeaderWrapper>

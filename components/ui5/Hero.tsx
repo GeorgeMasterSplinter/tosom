@@ -3,9 +3,7 @@
  * 
  * Tittel: "Ro. Trygghet. Mening."
  * Undertekst på moderne norsk bokmål
- * CTA-knapper fjernet fra hero (kun nederst på siden)
- * Horisontale bølgeformer (A+B), forsterket atmosfære, premium glassmorphism
- * Premium spacing: py-[200px], py-[180px]
+ * Ultra-premium: harmonert spotlight 80px, vertikal rytme, typografi, radius.
  * Mobiloptimalisert < 640px
  * Alle tekst er på moderne norsk bokmål.
  */
@@ -65,10 +63,10 @@ export const Hero: FC<HeroProps> = ({
     },
   ];
 
-  /* Premium spacing constants — redusert for nærmere seksjonar */
+  /* Premium spacing constants — optimalisert for ro, dybde, optisk base og 8px-grid */
   const heroSpacing = {
-    paddingTop: 30,
-    paddingBottom: 100,
+    paddingTop: 24,
+    paddingBottom: 120,
   };
 
   /* Bølge 1: primær, organisk */
@@ -119,6 +117,15 @@ export const Hero: FC<HeroProps> = ({
         className="absolute top-[20%] left-1/2 -translate-x-1/2 w-[600px] h-[480px] pointer-events-none"
         style={{
           background: 'radial-gradient(circle at center, rgba(212,175,55,0.044), transparent 60%)',
+        }}
+      />
+
+      {/* ── Z-0.5: Subtil top-spotlight for premium dybde — harmonert 80px ── */}
+      <div
+        className="absolute inset-x-0 top-0 h-[200px] pointer-events-none"
+        style={{
+          background: 'linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%)',
+          filter: 'blur(80px)',
         }}
       />
 
@@ -181,24 +188,24 @@ export const Hero: FC<HeroProps> = ({
               boxShadow: '0 8px 32px rgba(0,0,0,0.18), 0 0 18px rgba(212,175,55,0.04)',
             }}
           >
-            {/* H1 — premium, roleg — white/92 */}
+            {/* H1 — premium, roleg — white/92, balansert leading, ekstra tyngde */}
             <h1
-              className="text-5xl md:text-[88px] font-semibold tracking-[-0.03em] leading-[1.12] mb-[32px] animate-fadeInUp-delay-80"
+              className="text-5xl md:text-[88px] font-extrabold tracking-[-0.03em] mb-[40px] animate-riseIn"
               style={{
                 color: 'rgba(255,255,255,0.92)',
                 letterSpacing: '-0.03em',
-                lineHeight: '1.12',
+                lineHeight: '1.2',
                 textShadow: '0 0 32px rgba(255,255,255,0.04)',
               }}
             >
               {title}
             </h1>
 
-            {/* Undertekst — white/90 — +1 nivå større */}
+            {/* Undertekst — white/90 — økt kontrast og luft */}
             <p
-              className="text-lg md:text-2xl mb-0 animate-fadeInUp-delay-140"
+              className="text-lg md:text-2xl mb-0 animate-fadeUp delay-[120ms]"
               style={{
-                color: 'rgba(255,255,255,0.90)',
+                color: 'rgba(255,255,255,0.88)',
                 lineHeight: '1.65',
                 letterSpacing: '0.22px',
                 maxWidth: '660px',

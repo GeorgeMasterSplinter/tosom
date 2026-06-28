@@ -6,7 +6,7 @@
 
 'use client';
 
-import AppHeader from '@/components/ui5/AppHeader';
+import AppHeader from '@/components/ui/layout/AppHeader';
 
 export default function GlobalHeaderWrapper({ children }: { children: React.ReactNode }) {
   return (

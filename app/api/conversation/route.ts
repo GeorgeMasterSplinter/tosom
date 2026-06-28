@@ -1,6 +1,6 @@
 
 import prisma from "@/lib/prisma";
-import { getServerSession } from "next-auth";
+import { getServerSession } from "@/lib/auth/session";
 
 export async function POST(
   request: Request

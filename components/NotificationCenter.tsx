@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import GlassPanel from "@/components/ui/GlassPanel";
-import GlassCard from "@/components/ui/GlassCard";
+import GlassPanel from "@/components/ui/panels/GlassPanel";
+import GlassCard from "@/components/ui/cards/GlassCard";
 import FadeIn from "@/components/ui/FadeIn";
 import PremiumButton from "@/components/ui/PremiumButton";
 

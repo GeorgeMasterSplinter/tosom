@@ -8,7 +8,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { GlassPanel } from '@/components/ui5/GlassPanel';
+import { GlassPanel } from '@/components/ui/panels/GlassPanel';
 import { JourneyProgress } from './components/JourneyProgress';
 import { EmptyJourneyState } from './components/EmptyJourneyState';
 

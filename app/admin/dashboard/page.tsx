@@ -1,6 +1,6 @@
 'use client';
 
-import GlassCard from '@/components/ui/GlassCard';
+import GlassCard from '@/components/ui/cards/GlassCard';
 
 /* ====== Mock data for now (replace with real API calls) ====== */
 

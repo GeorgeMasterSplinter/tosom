@@ -1,5 +1,4 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth/auth-options";
+import { getServerSession } from "@/lib/auth/session";
 import prisma from "@/lib/prisma";
 
 interface MatchInfo {
@@ -26,7 +25,7 @@ interface JourneyInfo {
 }
 
 export async function GET(request: Request) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession();
 
   if (!session?.user?.id) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {

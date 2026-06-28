@@ -6,10 +6,10 @@
 
 import { useState } from 'react';
 import { useOnboarding, validateStep } from '@/hooks/useOnboarding';
-import { ToSomOnboardingLayout } from '@/components/ui5/system';
-import { ToSomSelect } from '@/components/ui5/system';
-import { ToSomInput } from '@/components/ui5/system';
-import { ToSomForm } from '@/components/ui5/system';
+import { ToSomOnboardingLayout } from '@/components/ui/system';
+import { ToSomSelect } from '@/components/ui/system';
+import { ToSomInput } from '@/components/ui/system';
+import { ToSomForm } from '@/components/ui/system';
 
 const lookingForOptions = [
   { label: 'Kvinne', value: 'kvinne' },

@@ -1,6 +1,6 @@
 'use client';
 
-import GlassPanel from '@/components/ui/GlassPanel';
+import GlassPanel from '@/components/ui/panels/GlassPanel';
 import PremiumButton from '@/components/ui/PremiumButton';
 import FadeIn from '@/components/ui/FadeIn';
 

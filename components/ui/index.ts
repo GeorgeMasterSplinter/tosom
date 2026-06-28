@@ -8,7 +8,7 @@ export * from './tokens';
 
 // === CORE UI (only files that exist and compile) ===
 export { Button } from './Button';
-export { default as GlassCard } from './GlassCard';
+export { default as GlassCard } from './cards/GlassCard';
 export { default as Input } from './Input';
 export { default as Card } from './Card';
 export { default as Avatar } from './Avatar';
@@ -16,8 +16,8 @@ export { Chip } from './Chip';
 export { default as Dialog } from './Dialog';
 export { default as Divider } from './Divider';
 export { default as FadeIn } from './FadeIn';
-export { default as Footer } from './Footer';
-export { default as GlassPanel } from './GlassPanel';
+export { default as Footer } from './layout/Footer';
+export { default as GlassPanel } from './panels/GlassPanel';
 export { default as Modal } from './Modal';
 export { default as ModalV2 } from './ModalV2';
 export { default as Navbar } from './Navbar';

@@ -9,8 +9,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Footer } from '@/components/ui5/Footer';
-import { MatchCard } from '@/components/ui5/MatchCard';
+import { Footer } from '@/components/ui/layout/Footer';
+import { MatchCard } from '@/components/ui/cards/MatchCard';
 import { ProgressSteps } from './components/ProgressSteps';
 
 interface MatchData {

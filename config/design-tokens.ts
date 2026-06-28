@@ -184,8 +184,114 @@ export const blur = {
 } as const;
 
 /* ========================
-   HELPERS
-   ======================== */
+    TYPOGRAPHY SYSTEM
+    ======================== */
+
+export const typography = {
+  font: {
+    primary: 'Inter',
+    secondary: 'Playfair Display',
+    mono: 'JetBrains Mono',
+  } as const,
+  
+  fontSize: {
+    xs: 12,
+    sm: 14,
+    base: 16,
+    lg: 18,
+    xl: 20,
+    '2xl': 24,
+    '3xl': 30,
+    '4xl': 36,
+    '5xl': 42,
+    '6xl': 48,
+    hero: 60,
+  } as const,
+  
+  fontWeight: {
+    light: 300,
+    regular: 400,
+    medium: 500,
+    semibold: 600,
+    bold: 700,
+    extrabold: 800,
+  } as const,
+  
+  lineHeight: {
+    tight: 1.15,
+    snug: 1.3,
+    normal: 1.5,
+    relaxed: 1.7,
+    loose: 1.9,
+  } as const,
+  
+  letterSpacing: {
+    tight: '-0.03em',
+    normal: '0',
+    wide: '0.02em',
+    wider: '0.08em',
+    widest: '0.15em',
+  } as const,
+  
+  /** Legacy footer tagline style token */
+  footerTagline: {
+    fontWeight: 300,
+    tracking: '0.12em',
+    opacity: 0.85,
+    lineHeight: 1.7,
+  } as const,
+} as const;
+
+export type TypographyStyle =
+  | 'hero'
+  | 'heading-xl'
+  | 'heading-lg'
+  | 'heading-md'
+  | 'heading-sm'
+  | 'body-lg'
+  | 'body'
+  | 'body-sm'
+  | 'caption'
+  | 'overline'
+  | 'cta';
+
+export const typographyStyles: Record<TypographyStyle, { fontSize: number; fontWeight: number; lineHeight: number; letterSpacing?: string }> = {
+  hero: { fontSize: typography.fontSize.hero, fontWeight: typography.fontWeight.semibold, lineHeight: typography.lineHeight.tight, letterSpacing: typography.letterSpacing.tight },
+  'heading-xl': { fontSize: typography.fontSize['6xl'], fontWeight: typography.fontWeight.semibold, lineHeight: typography.lineHeight.tight, letterSpacing: typography.letterSpacing.tight },
+  'heading-lg': { fontSize: typography.fontSize['4xl'], fontWeight: typography.fontWeight.semibold, lineHeight: typography.lineHeight.tight, letterSpacing: '-0.02em' },
+  'heading-md': { fontSize: typography.fontSize['2xl'], fontWeight: typography.fontWeight.semibold, lineHeight: typography.lineHeight.snug, letterSpacing: '-0.01em' },
+  'heading-sm': { fontSize: typography.fontSize.xl, fontWeight: typography.fontWeight.semibold, lineHeight: typography.lineHeight.snug },
+  'body-lg': { fontSize: typography.fontSize.lg, fontWeight: typography.fontWeight.regular, lineHeight: typography.lineHeight.relaxed },
+  body: { fontSize: typography.fontSize.base, fontWeight: typography.fontWeight.regular, lineHeight: typography.lineHeight.normal },
+  'body-sm': { fontSize: typography.fontSize.sm, fontWeight: typography.fontWeight.regular, lineHeight: typography.lineHeight.normal },
+  caption: { fontSize: typography.fontSize.xs, fontWeight: typography.fontWeight.regular, lineHeight: typography.lineHeight.tight, letterSpacing: typography.letterSpacing.wider },
+  overline: { fontSize: typography.fontSize.sm, fontWeight: typography.fontWeight.medium, lineHeight: typography.lineHeight.normal, letterSpacing: typography.letterSpacing.widest },
+  cta: { fontSize: typography.fontSize.lg, fontWeight: typography.fontWeight.medium, lineHeight: typography.lineHeight.normal, letterSpacing: '-0.01em' },
+};
+
+export function typographyToStyle(style: TypographyStyle): React.CSSProperties {
+  const token = typographyStyles[style];
+  return {
+    fontSize: `${token.fontSize}px`,
+    fontWeight: token.fontWeight,
+    lineHeight: token.lineHeight,
+    ...(token.letterSpacing && { letterSpacing: token.letterSpacing }),
+  };
+}
+
+/**
+ * Legacy typography properties for backwards compatibility.
+ */
+export const footerTagline = {
+  fontWeight: 300,
+  tracking: '0.12em',
+  opacity: 0.85,
+  lineHeight: 1.7,
+} as const;
+
+/* ========================
+    HELPERS
+    ======================== */
 
 /**
  * Genererer en glassmorphism-variabel for bruk i inline styles.
@@ -240,12 +346,49 @@ export function glassVariant(
   } as React.CSSProperties;
 }
 
-/* Re-export typography for convenience */
-export { typographyToStyle } from './typography';
-
 /* ========================
    EXPORTS
    ======================== */
+
+/** Legacy color alias for components */
+export const colors = {
+  ...color,
+  gold: '#D4AF37',
+  softWhite: '#F5F5F5',
+  deepBlack: '#0A0A0A',
+  calmBlue: '#4A7BA7',
+  error: '#FF4D4D',
+  success: '#4DFF88',
+  warning: '#FFB84D',
+  info: '#4DA8FF',
+  textPrimary: '#FFFFFF',
+  textSecondary: 'rgba(255,255,255,0.65)',
+  textMuted: 'rgba(255,255,255,0.45)',
+  bgPrimary: '#0B1520',
+  bgSecondary: '#121E2E',
+  bgSurface: '#070D14',
+  borderDefault: 'rgba(255,255,255,0.08)',
+} as const;
+
+/** Shadow alias for backwards compatibility */
+export const shadows = shadow;
+
+/** Motion tokens for components */
+export const motion = {
+  durations: { fast: '150ms', normal: '300ms', slow: '500ms' },
+  easings: { easeOut: 'cubic-bezier(0.21, 1.02, 0.73, 1)', easeIn: 'cubic-bezier(0.55, 0.06, 0.68, 0.19)', easeInOut: 'cubic-bezier(0.48, 0, 0.52, 1)', fadeIn: 'cubic-bezier(0.21, 1.02, 0.73, 1)', smooth: 'cubic-bezier(0.25, 0.1, 0.25, 1)', spring: 'cubic-bezier(0.34, 1.56, 0.64, 1)' },
+};
+
+/** Theme object for backwards compatibility. */
+export const theme = {
+  color,
+  spacing,
+  radius,
+  shadow,
+  blur,
+  glassVariant,
+  footerTagline,
+};
 
 export default {
   color,
@@ -254,4 +397,5 @@ export default {
   shadow,
   blur,
   glassVariant,
+  footerTagline,
 };

@@ -5,8 +5,7 @@
  * Brukar getServerSession (NextAuth) sidan det ikkje eksisterer ein Session model i Prisma.
  */
 
-import { getServerSession } from 'next-auth/next'
-import { authOptions } from '@/lib/auth/auth-options'
+import { getServerSession } from '@/lib/auth/session'
 import { logWarn } from '@/lib/system/log'
 import { Role } from '@prisma/client'
 
@@ -16,13 +15,13 @@ import { Role } from '@prisma/client'
  */
 export async function verifySession(): Promise<{ userId: string; role: Role } | null> {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession()
 
     if (!session?.user?.id) {
       return null
     }
 
-    return { userId: session.user.id, role: ((session.user as any).role as Role) || Role.USER }
+    return { userId: (session.user as any).id, role: ((session.user as any).role as Role) || Role.USER }
   } catch {
     return null
   }

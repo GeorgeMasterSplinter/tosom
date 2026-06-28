@@ -1,12 +1,11 @@
 
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth/options";
+import { getServerSession } from "@/lib/auth/session";
 import prisma from "@/lib/prisma";
 import { checkRateLimit } from "@/lib/rateLimit";
 import { profileUpdateSchema } from "@/lib/validation/profile";
 
 export async function GET() {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession();
 
   if (!session?.user?.id) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
@@ -20,7 +19,7 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession();
 
   if (!session?.user?.id) {
     return Response.json({ error: "Du må være logget inn" }, { status: 401 });

@@ -9,10 +9,9 @@
  * - Profilstatus og reise
  */
 
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth/auth-options';
+import { auth } from '@/lib/auth/config';
 import { getUserProfile, getUserMatches, getUserConversations, getUserInsights } from '@/lib/dashboard/data';
-import { MatchCard } from './_components/MatchCard';
+import { MatchCard } from '@/components/ui/cards/MatchCard';
 import { ConversationCard } from './_components/ConversationCard';
 import { InsightSection } from './_components/InsightSection';
 import { ProfileStatusSection } from './_components/ProfileStatusSection';
@@ -48,7 +47,7 @@ function DashboardHeader({ name }: { name: string }) {
 
 export default async function DashboardPage() {
   // Auth
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   if (!session?.user?.id) {
     redirect('/login');
   }
@@ -93,7 +92,16 @@ export default async function DashboardPage() {
               {matches.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {matches.slice(0, 6).map((match) => (
-                    <MatchCard key={match.id} match={match} />
+                    <MatchCard
+                      key={match.id}
+                      score={match.score}
+                      otherUser={{
+                        name: match.otherUserName,
+                        photoUrl: match.otherUserPhotoUrl,
+                      }}
+                      type={match.matchType}
+                      explanation={match.explanation as Record<string, unknown> | null}
+                    />
                   ))}
                 </div>
               ) : (

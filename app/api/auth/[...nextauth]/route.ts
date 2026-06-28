@@ -1,13 +1,10 @@
 /**
- * ToSom — NextAuth (Auth.js) API Route Handler
- * 
- * Magic Link-auth med PrismaAdapter + EmailProvider.
+ * ToSom — NextAuth v5 API Route Handler
+ *
+ * Migrert til NextAuth v5 (beta).
+ * Bruker handlers fra lib/auth/config.ts.
  */
 
-import NextAuth from 'next-auth'
-import { authOptions } from '@/lib/auth/nextauth'
+import { handlers } from '@/lib/auth/config'
 
-// Route handlers — Next.js treng exportera GET/POST
-const handler = NextAuth(authOptions)
-
-export { handler as GET, handler as POST }
+export const { GET, POST } = handlers

@@ -1,15 +1,19 @@
 import { getNotification } from '@/lib/admin/notifications'
+import { auth } from '@/lib/auth/config'
 import { requireAdmin } from '@/lib/admin/requireAuth'
+import { castToAdminUser } from '@/lib/auth/admin-auth'
 
-export async function GET(
+export async function DELETE(
   request: Request,
-  context: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<Response> {
   try {
-    const { adminId } = await request.json()
-    await requireAdmin()
+    const { adminId: _adminId } = await request.json()
+    const session = await auth()
+    const user = castToAdminUser(session?.user)
+    await requireAdmin(user)
 
-    const { id } = await context.params
+    const { id } = await params
     const notification = await getNotification(id)
 
     if (!notification) {

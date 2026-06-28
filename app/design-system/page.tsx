@@ -15,13 +15,13 @@ import {
   motion,
   colors,
   shadows,
-} from '@/design/theme';
+} from '@/config/design-tokens';
 import {
   ToSomButton,
   ToSomSection,
   ToSomCard,
   ToSomTagline,
-} from '@/components/ui5/system';
+} from '@/components/ui/system';
 
 /* ========================
    HELPERS

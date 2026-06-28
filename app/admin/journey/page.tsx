@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import GlassCard from '@/components/ui/GlassCard';
+import GlassCard from '@/components/ui/cards/GlassCard';
 
 const mockJourneyStats = {
   activeJourneys: 67,

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import MatchBreakdownItem from "@/components/MatchBreakdownItem";
 import MatchBreakdownSkeleton from "@/components/MatchBreakdownSkeleton";
-import GlassCard from "@/components/ui/GlassCard";
+import GlassCard from "@/components/ui/cards/GlassCard";
 import FadeIn from "@/components/ui/FadeIn";
 
 interface MatchBreakdownResponse {

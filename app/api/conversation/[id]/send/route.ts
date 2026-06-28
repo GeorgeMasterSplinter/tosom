@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { getServerSession } from "next-auth";
+import { getServerSession } from "@/lib/auth/session";
 import { createSystemMessage } from "@/lib/createSystemMessage";
 import { runJourneyStep } from "@/lib/journey/runJourneyStep";
 import { getJourneyImpulse } from "@/lib/journey/getJourneyImpulse";

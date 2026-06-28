@@ -274,8 +274,11 @@ model Match {
    @@index([normalizedScore])
 }
 
+// ─── DEPRECATED MODELLER (Phase 4) ───
+// Desse modellene er markert som deprekkert og kan fjernast i Phase 5.
+
 model MatchHistory {
-  id        String   @id @default(cuid())
+   id        String   @id @default(cuid())
   matchId   String
   event     String
   createdAt DateTime @default(now())
@@ -283,8 +286,9 @@ model MatchHistory {
   match     Match    @relation(fields: [matchId], references: [id])
 }
 
+/// DEPRECATED – not used in codebase (Phase 4)
 model MatchQueue {
-  id        String        @id @default(cuid())
+   id        String        @id @default(cuid())
   userId    String
   status    QueueStatus   @default(PENDING)
   createdAt DateTime      @default(now())
@@ -296,8 +300,9 @@ model MatchQueue {
   @@index([createdAt])
 }
 
+/// DEPRECATED – not used in codebase (Phase 4)
 model MatchFeedback {
-  id        String   @id @default(cuid())
+   id        String   @id @default(cuid())
   matchId   String
   userId    String
   rating    Int
@@ -451,8 +456,9 @@ model JourneyDayContent {
   @@index([day])
 }
 
+/// DEPRECATED – not used in codebase (Phase 4)
 model SystemMessage {
-  id        String             @id @default(cuid())
+   id        String             @id @default(cuid())
   content   String
   type      SystemMessageType  @default(INFO)
   createdAt DateTime           @default(now())
@@ -554,8 +560,9 @@ model SystemLog {
   @@index([createdAt])
 }
 
+/// DEPRECATED – not used in codebase (Phase 4)
 model RateLimitLog {
-  id        String   @id @default(cuid())
+   id        String   @id @default(cuid())
   userId    String?
   route     String
   createdAt DateTime @default(now())
@@ -615,8 +622,9 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+/// DEPRECATED – not used in codebase (Phase 4)
 model RouteHit {
-  id      String     @id @default(cuid())
+   id      String     @id @default(cuid())
   route   String
   method  HttpMethod @default(GET)
   status  Int        @default(200)

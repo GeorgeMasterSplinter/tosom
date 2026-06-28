@@ -6,11 +6,11 @@
 
 import { useState } from 'react';
 import { useOnboarding, validateStep } from '@/hooks/useOnboarding';
-import { ToSomOnboardingLayout } from '@/components/ui5/system';
-import { ToSomSelect } from '@/components/ui5/system';
-import { ToSomTextArea } from '@/components/ui5/system';
-import { ToSomForm } from '@/components/ui5/system';
-import { ToSomBadge } from '@/components/ui5/system';
+import { ToSomOnboardingLayout } from '@/components/ui/system';
+import { ToSomSelect } from '@/components/ui/system';
+import { ToSomTextArea } from '@/components/ui/system';
+import { ToSomForm } from '@/components/ui/system';
+import { ToSomBadge } from '@/components/ui/system';
 
 const personalityTypes = [
   { label: 'MBTI – INTJ', value: 'mbti-intj' },

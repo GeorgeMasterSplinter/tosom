@@ -22,7 +22,7 @@
     "framer-motion": "^12.42.0",
     "jsonwebtoken": "^9.0.3",
     "next": "^15.1.7",
-    "next-auth": "^4.24.13",
+    "next-auth": "^5.0.0-beta.25",
     "nodemailer": "^7.0.13",
     "prisma": "^5.14.0",
     "pusher": "^5.3.4",
@@ -30,6 +30,7 @@
     "react": "^18.2.0",
     "react-chartjs-2": "^5.3.1",
     "react-dom": "^18.2.0",
+    "stripe": "^22.3.0",
     "uploadthing": "^6.13.3",
     "zod": "^4.4.3"
   },
@@ -43,6 +44,7 @@
     "autoprefixer": "^10.4.27",
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.2.5",
+    "maildev": "^2.2.1",
     "postcss": "^8.5.9",
     "tailwindcss": "^4.2.2",
     "vercel": "^54.13.0"

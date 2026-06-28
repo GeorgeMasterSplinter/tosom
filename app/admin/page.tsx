@@ -5,8 +5,8 @@
  */
 
 import { getAdminStats } from '@/lib/admin/data';
-import GlassPanel from '@/components/ui/GlassPanel';
-import GlassCard from '@/components/ui/GlassCard';
+import GlassPanel from '@/components/ui/panels/GlassPanel';
+import GlassCard from '@/components/ui/cards/GlassCard';
 import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';

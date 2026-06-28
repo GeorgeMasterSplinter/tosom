@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import GlassCard from '@/components/ui/GlassCard';
+import GlassCard from '@/components/ui/cards/GlassCard';
 
 const mockMatches = [
   { id: 'm1', user1: 'ola@tosom.no', user2: 'kari@tosom.no', score: 0.92, status: 'active', day: 12, explanation: 'Høg resonans på verdier og livssituasjon' },

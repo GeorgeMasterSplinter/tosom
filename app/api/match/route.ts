@@ -2,8 +2,7 @@
 // Bruker matchingEngine fra lib/matching for å finne beste match for brukeren
 
 import prisma from "@/lib/prisma";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth/auth-options";
+import { getServerSession } from "@/lib/auth/session";
 import { findBestMatchFor } from "@/lib/matching/findBestMatchFor";
 import { logInfo } from "@/lib/system/log";
 import { captureError } from "@/lib/system/errors";
@@ -43,7 +42,7 @@ export async function POST(request: Request): Promise<Response> {
     }
 
     // Auth-sjekk
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession();
     if (!session?.user?.id) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,

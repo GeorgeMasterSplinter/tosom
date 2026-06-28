@@ -6,8 +6,7 @@
  */
 
 import { NextResponse, NextRequest } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth/nextauth';
+import { getSession } from '@/lib/auth/session';
 import { getUserConversations, getOrCreateConversation } from '@/lib/chat/conversationService';
 import { triggerConversationUpdated } from '@/lib/pusher/server';
 
@@ -15,7 +14,7 @@ import { triggerConversationUpdated } from '@/lib/pusher/server';
 
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions);
+     const session = await getSession();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Ikke autentisert' }, { status: 401 });
     }
@@ -32,7 +31,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+     const session = await getSession();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Ikke autentisert' }, { status: 401 });
     }

@@ -8,8 +8,10 @@
 'use client';
 
 import { signIn } from 'next-auth/react';
-import { useState } from 'react';
-import { GlassPanel } from '@/components/ui5/GlassPanel';
+import { useEffect, useState } from 'react';
+import { GlassPanel } from '@/components/ui/panels/GlassPanel';
+import { AuthCTA } from '@/components/auth/AuthCTA';
+import { color, radius, shadow } from '@/config/design-tokens';
 
 type LoginMethod = 'email' | 'phone';
 
@@ -20,11 +22,28 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [sent, setSent] = useState(false);
   const [captchaDone, setCaptchaDone] = useState(false);
+  const [devLoading, setDevLoading] = useState(false);
 
-  // Invisible captcha placeholder — erstatt med实际 captcha-integrasjon (reCAPTCHA hCaptcha osv)
+  // Invisible captcha placeholder
   const initCaptcha = () => {
-    // TODO: Integre invisible captcha (Google reCAPTCHA v3 / hCaptcha invisible)
     setCaptchaDone(true);
+  };
+
+  const handleDevSetup = async () => {
+    setDevLoading(true);
+    setError('');
+    try {
+      await fetch('/api/dev/setup', { method: 'POST' });
+      await signIn('credentials', {
+        callbackUrl: '/dashboard',
+        redirect: true,
+      });
+    } catch (err) {
+      console.error('Dev setup fail:', err);
+      setError('Kunne ikke starte test‑økten. Prøv igjen.');
+    } finally {
+      setDevLoading(false);
+    }
   };
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
@@ -85,20 +104,20 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-8" style={{ background: '#0B0E11' }}>
+    <div className="min-h-screen flex items-center justify-center px-8" style={{ background: color.bg.primary }}>
       <div className="w-full max-w-[440px] py-12">
         {/* Header */}
         <div className="text-center mb-8">
           <span
             className="text-xs uppercase tracking-[0.25em] font-semibold mb-4 block"
-            style={{ color: '#D4AF37' }}
+            style={{ color: color.brand.gold }}
           >
             Velkommen tilbake
           </span>
           <h1
             className="text-[32px] lg:text-[40px] font-semibold mb-3"
             style={{
-              color: '#FFFFFF',
+              color: color.text.primary,
               letterSpacing: '-0.02em',
               lineHeight: '1.2',
             }}
@@ -107,7 +126,7 @@ export default function LoginPage() {
           </h1>
           <p
             className="text-base"
-            style={{ color: 'rgba(255, 255, 255, 0.5)' }}
+            style={{ color: color.text.muted }}
           >
             {sent
               ? method === 'email'
@@ -125,13 +144,13 @@ export default function LoginPage() {
               onClick={() => setMethod('email')}
               className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                 method === 'email'
-                  ? 'bg-[#D4AF37] text-black'
+                  ? `bg-[${color.brand.gold}] text-black`
                   : 'bg-white/[0.03] text-white/50 hover:bg-white/[0.06]'
               }`}
               style={
                 method === 'email'
-                  ? { border: '1px solid rgba(212,175,55,0.3)' }
-                  : { border: '1px solid rgba(255,255,255,0.08)' }
+                  ? { border: color.border.gold }
+                  : { border: color.border.default }
               }
             >
               E-post
@@ -141,13 +160,13 @@ export default function LoginPage() {
               onClick={() => setMethod('phone')}
               className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                 method === 'phone'
-                  ? 'bg-[#D4AF37] text-black'
+                  ? `bg-[${color.brand.gold}] text-black`
                   : 'bg-white/[0.03] text-white/50 hover:bg-white/[0.06]'
               }`}
               style={
                 method === 'phone'
-                  ? { border: '1px solid rgba(212,175,55,0.3)' }
-                  : { border: '1px solid rgba(255,255,255,0.08)' }
+                  ? { border: color.border.gold }
+                  : { border: color.border.default }
               }
             >
               Telefon
@@ -162,24 +181,24 @@ export default function LoginPage() {
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
                 <path
                   d="M3 8L10.5 15.5L21 6M5.5 19L9.5 15L13 18.5L21 10"
-                  stroke="#4DFF88"
+                  stroke={color.status.success}
                   strokeWidth="1.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
               </svg>
-              <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+              <p className="text-sm" style={{ color: color.text.secondary }}>
                 {method === 'email' ? (
                   <>
-                    En innloggingslenke er sendt til <strong style={{ color: '#D4AF37' }}>{input}</strong>
+                    En innloggingslenke er sendt til <strong style={{ color: color.brand.gold }}>{input}</strong>
                   </>
                 ) : (
                   <>
-                    En verifiseringskode er sendt til <strong style={{ color: '#D4AF37' }}>{input}</strong>
+                    En verifiseringskode er sendt til <strong style={{ color: color.brand.gold }}>{input}</strong>
                   </>
                 )}
               </p>
-              <p className="text-xs" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
+              <p className="text-xs" style={{ color: color.text.subtle }}>
                 {method === 'email'
                   ? 'Lenken gjelder i 60 minutter. Ingen passord er nødvendig.'
                   : 'Koden gjelder i 10 minutter. Ingen passord er nødvendig.'}
@@ -187,7 +206,7 @@ export default function LoginPage() {
               <button
                 onClick={() => setSent(false)}
                 className="text-sm underline hover:no-underline transition-colors duration-200"
-                style={{ color: 'rgba(255, 255, 255, 0.5)' }}
+                style={{ color: color.text.muted }}
               >
                 Send til en annen {method === 'email' ? 'e-post' : 'telefon'}
               </button>
@@ -203,7 +222,7 @@ export default function LoginPage() {
               <div>
                 <label
                   className="text-xs uppercase tracking-widest font-semibold mb-2 block"
-                  style={{ color: '#D4AF37' }}
+                  style={{ color: color.brand.gold }}
                 >
                   {method === 'email' ? 'E-post' : 'Telefonnummer'}
                 </label>
@@ -216,21 +235,22 @@ export default function LoginPage() {
                   placeholder={method === 'email' ? 'du@eksempel.no' : '+47 XXX XX XXX'}
                   className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all duration-200 ease-out"
                   style={{
-                    background: 'rgba(255, 255, 255, 0.03)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    color: '#FFFFFF',
+                    background: color.glass.bg,
+                    border: color.border.default,
+                    color: color.text.primary,
+                    borderRadius: `${radius.md}px`,
                   }}
                   onFocus={(e) => {
-                    (e.target as HTMLElement).style.borderColor = 'rgba(212, 175, 55, 0.5)';
-                    (e.target as HTMLElement).style.boxShadow = '0 0 0 3px rgba(212, 175, 55, 0.15)';
+                    (e.target as HTMLElement).style.borderColor = color.border.gold;
+                    (e.target as HTMLElement).style.boxShadow = `0 0 0 3px ${color.glass.goldBg}`;
                   }}
                   onBlur={(e) => {
-                    (e.target as HTMLElement).style.borderColor = 'rgba(255, 255, 255, 0.08)';
+                    (e.target as HTMLElement).style.borderColor = color.border.default;
                     (e.target as HTMLElement).style.boxShadow = 'none';
                   }}
                 />
                 {method === 'phone' && (
-                  <p className="mt-2 text-xs" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
+                  <p className="mt-2 text-xs" style={{ color: color.text.subtle }}>
                     Norsk nummer med +47_prefiks
                   </p>
                 )}
@@ -243,15 +263,15 @@ export default function LoginPage() {
                   checked={captchaDone}
                   onChange={(e) => setCaptchaDone(e.target.checked)}
                   className="w-4 h-4 rounded"
-                  style={{ accentColor: '#D4AF37' }}
+                  style={{ accentColor: color.brand.gold }}
                 />
-                <span className="text-xs" style={{ color: 'rgba(255, 255, 255, 0.5)' }}>
+                <span className="text-xs" style={{ color: color.text.muted }}>
                   Bekreft at du er et menneske (captcha)
                 </span>
               </div>
 
               {error && (
-                <p className="text-sm" style={{ color: '#FF4D4D' }}>
+                <p className="text-sm" style={{ color: color.status.error }}>
                   {error}
                 </p>
               )}
@@ -261,18 +281,19 @@ export default function LoginPage() {
                 onClick={method === 'email' ? handleEmailSubmit : handlePhoneSend}
                 className="w-full px-5 py-3 rounded-xl text-sm font-medium transition-all duration-200 ease-out"
                 style={{
-                  background: loading ? 'rgba(212, 175, 55, 0.3)' : '#D4AF37',
-                  color: loading ? 'rgba(212, 175, 55, 0.7)' : '#0B0E11',
+                  background: loading ? 'rgba(212, 175, 55, 0.3)' : color.brand.gold,
+                  color: loading ? 'rgba(212, 175, 55, 0.7)' : color.bg.primary,
+                  borderRadius: `${radius.md}px`,
                 }}
                 disabled={loading}
                 onMouseEnter={(e) => {
                   if (!loading) {
-                    (e.target as HTMLElement).style.background = '#E8C766';
+                    (e.target as HTMLElement).style.background = color.brand['gold-hover'];
                     (e.target as HTMLElement).style.transform = 'translateY(-1px)';
                   }
                 }}
                 onMouseLeave={(e) => {
-                  (e.target as HTMLElement).style.background = loading ? 'rgba(212, 175, 55, 0.3)' : '#D4AF37';
+                  (e.target as HTMLElement).style.background = loading ? 'rgba(212, 175, 55, 0.3)' : color.brand.gold;
                   (e.target as HTMLElement).style.transform = 'translateY(0)';
                 }}
               >
@@ -280,22 +301,45 @@ export default function LoginPage() {
                   ? (method === 'email' ? 'Sender lenke…' : 'Sender kode…')
                   : (method === 'email' ? 'Send innloggingslenke' : 'Send verifiseringskode')}
               </button>
+
+              {/* Dev-only testbruker-innlogging */}
+              {process.env.NEXT_PUBLIC_NODE_ENV !== "production" && (
+                <button
+                  type="button"
+                  onClick={handleDevSetup}
+                  disabled={devLoading}
+                  className="w-full px-5 py-3 mt-4 rounded-xl text-sm font-medium transition-all duration-200 ease-out"
+                  style={{
+                    background: devLoading
+                      ? 'rgba(212, 175, 55, 0.2)'
+                      : 'rgba(212, 175, 55, 0.08)',
+                    border: devLoading
+                      ? `1px solid ${color.border.gold}`
+                      : `1px solid ${color.border['gold-soft']}`,
+                    color: devLoading
+                      ? 'rgba(212, 175, 55, 0.6)'
+                      : color.brand.gold,
+                    borderRadius: `${radius.md}px`,
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!devLoading) {
+                      (e.target as HTMLElement).style.background = 'rgba(212, 175, 55, 0.15)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.target as HTMLElement).style.background = devLoading
+                      ? 'rgba(212, 175, 55, 0.2)'
+                      : 'rgba(212, 175, 55, 0.08)';
+                  }}
+                >
+                  {devLoading ? 'Oppretter økt…' : 'Logg inn som testbruker'}
+                </button>
+              )}
             </div>
           </GlassPanel>
         )}
 
-        {/* Secondary */}
-        <div className="text-center">
-          <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
-            Har du ingen konto?{' '}
-            <a
-              href="/onboarding/start"
-              className="text-[#D4AF37] hover:text-[#E8C766] transition-colors duration-200 underline"
-            >
-              Opprett konto
-            </a>
-          </p>
-        </div>
+        <AuthCTA />
       </div>
     </div>
   );

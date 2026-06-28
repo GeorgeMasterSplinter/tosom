@@ -1,6 +1,6 @@
 'use client';
 
-import { Logo } from '@/components/ui5/Logo';
+import { Logo } from '@/components/ui/branding/Logo';
 
 export default function OnboardingLayout({ children }: { children: React.ReactNode }) {
   return (

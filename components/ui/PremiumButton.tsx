@@ -1,4 +1,7 @@
+// ⚠️  EXPERIMENTAL — Premium feature not yet launched. Do not use in production.
+// TODO: Flytt til egen branch eller fjern. Eksperimentell kode — Fase 1 marking.
 import clsx from "clsx";
+// TODO: Flytte til egen branch eller fjerne. Eksperimentell kode — Fase 1 marking.
 
 export type ButtonVariant = "primary" | "secondary" | "ghost";
 
@@ -71,3 +74,4 @@ export default function PremiumButton({
     </button>
   );
 }
+// ⚠️  EXPERIMENTAL — Premium feature not yet launched. Do not use in production.

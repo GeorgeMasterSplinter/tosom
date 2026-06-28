@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import GlassPanel from "@/components/ui/GlassPanel";
+import GlassPanel from "@/components/ui/panels/GlassPanel";
 import FadeIn from "@/components/ui/FadeIn";
 import PremiumButton from "@/components/ui/PremiumButton";
 

@@ -5,9 +5,9 @@
 'use client';
 
 import { useOnboarding } from '@/hooks/useOnboarding';
-import { ToSomOnboardingLayout } from '@/components/ui5/system';
-import { ToSomProfileCard } from '@/components/ui5/system';
-import { ToSomButton } from '@/components/ui5/system';
+import { ToSomOnboardingLayout } from '@/components/ui/system';
+import { ToSomProfileCard } from '@/components/ui/system';
+import { ToSomButton } from '@/components/ui/system';
 
 const getLabel = (options: { value: string; label: string }[], val: string) => {
   const found = options.find(o => o.value === val);

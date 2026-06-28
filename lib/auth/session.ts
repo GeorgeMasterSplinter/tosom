@@ -1,65 +1,30 @@
 /**
- * ToSom — Session helper for API routes
- * 
- * Bruk denne i server-side API-ruter for a hente session.
+ * ToSom — Session helper (NextAuth v5 compatible)
+ *
+ * Gir compatiblitet for koden som brukar getServerSession.
+ * I v5 bruker vi auth() frå lib/auth/config istadenfor.
  */
 
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth/nextauth'
-import { prisma } from '@/lib/prisma'
-import { DeepProfileStep } from '@prisma/client'
+import { auth } from '@/lib/auth/config'
 
 /**
- * Hent session i ein API route (Node)
+ * Hent session på server-side (ersatt getServerSession).
+ * Returnerer null dersom ingen gyldig session.
  */
 export async function getSession() {
-  return await getServerSession(authOptions)
-}
-
-/**
- * Hent session og verifier at brukaren er innlogga.
- * Kasta feil dersom ikkje.
- */
-export async function requireSession() {
-  const session = await getSession()
-  if (!session?.user?.id) {
-    throw new Error('UNAUTHORIZED')
+  try {
+    const session = await auth()
+    return session
+  } catch {
+    return null
   }
-  return session
 }
 
 /**
- * Sjekk om brukaren er innlogga
+ * getServerSession — Compatiblitetsfunksjon for eksisterande kode.
+ * I v5 er dette berre ein wrapper rundt auth().
+ * Tek authOptions som argument for backward compatibility (ignored i v5).
  */
-export async function isAuthenticated() {
-  const session = await getSession()
-  return !!session?.user?.id
-}
-
-/**
- * Opprett ein ny User med Profile dersom han ikkje eksisterer.
- * Bruk denne når ein magic link-brukar loggar inn første gong.
- */
-export async function ensureUserExists(email: string, name?: string | null) {
-  let user = await prisma.user.findUnique({
-    where: { email },
-    include: { profile: true },
-  })
-
-  if (!user) {
-    user = await prisma.user.create({
-      data: {
-        email,
-        name: name || email.split('@')[0],
-        profile: {
-          create: {
-            deepProfileStep: DeepProfileStep.IDENTITY,
-          },
-        },
-      },
-      include: { profile: true },
-    })
-  }
-
-  return user
+export async function getServerSession(_authOptions?: any) {
+  return getSession()
 }

@@ -36,7 +36,7 @@ const defaultActions: QuickAction[] = [
   {
     id: "matches",
     label: "Matcher",
-    href: "/match",
+    href: "/matching",
     color: "from-emerald-400/20 to-emerald-400/5",
     icon: (
       <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

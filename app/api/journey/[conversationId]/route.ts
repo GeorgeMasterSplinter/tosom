@@ -1,12 +1,11 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth/auth-options";
+import { getServerSession } from "@/lib/auth/session";
 import { initJourney, getJourney, advanceJourney } from "@/lib/journeyStore";
 
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ conversationId: string }> }
 ) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession();
   const { conversationId } = await params;
 
   if (!session?.user?.id) {
@@ -46,7 +45,7 @@ export async function POST(
   _req: Request,
   { params }: { params: Promise<{ conversationId: string }> }
 ) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession();
   const { conversationId } = await params;
 
   if (!session?.user?.id) {

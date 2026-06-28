@@ -1,5 +1,4 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth/auth-options";
+import { getSession } from "@/lib/auth/session";
 import { getConversation, addMessage } from "@/lib/conversationStore";
 
 interface Message {
@@ -20,7 +19,7 @@ export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getServerSession(authOptions);
+  const session = await getSession();
   const { id } = await params;
 
   if (!session?.user?.id) {
@@ -69,7 +68,7 @@ export async function POST(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getServerSession(authOptions);
+  const session = await getSession();
   const { id } = await params;
 
   if (!session?.user?.id) {

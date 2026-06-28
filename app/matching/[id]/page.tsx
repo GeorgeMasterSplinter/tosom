@@ -17,7 +17,7 @@
 import { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { GlassPanel } from '../components/GlassPanel';
+import { GlassPanel } from '@/components/ui/panels/GlassPanel';
 import { ProfileSummary } from '../components/ProfileSummary';
 import { getMatchTypeLabel } from '../MatchType';
 import { MatchInsight } from './_components/MatchInsight';
@@ -251,10 +251,7 @@ export default function MatchDetailPage({ params }: { params: Promise<{ id: stri
 
         {/* HVORFOR DERE MATCHER */}
         <GlassPanel
-          title="Hvifor dere matcher"
-          subtitle="Dette fin vi igjen hos begge to"
           goldBorder={true}
-          glow={true}
         >
           <ul className="space-y-4">
             {(match.explanation.why || [
@@ -278,10 +275,7 @@ export default function MatchDetailPage({ params }: { params: Promise<{ id: stri
 
         {/* HVA DERE BØR SNAKKE OM */}
         <GlassPanel
-          title="Kva dere kan snakke om først"
-          subtitle="Meningsfulle samtalar som bygger nærheit"
           goldBorder={true}
-          glow={true}
         >
           <ul className="space-y-4">
             {(match.explanation.talkAbout || [
@@ -308,10 +302,7 @@ export default function MatchDetailPage({ params }: { params: Promise<{ id: stri
 
         {/* UTFORDRINGER — roleg formulert */}
         <GlassPanel
-          title="Potensielle utfordringar"
-          subtitle="Rolegt oppsummert — med respekt for skilnader"
           goldBorder={true}
-          glow={true}
         >
           <ul className="space-y-4">
             {(match.explanation.challenges || [
@@ -337,10 +328,7 @@ export default function MatchDetailPage({ params }: { params: Promise<{ id: stri
 
         {/* PROFIL-SAMMENDRAG */}
         <GlassPanel
-          title="Kort om dykkje"
-          subtitle="To menneske, éi reise"
           goldBorder={true}
-          glow={true}
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <ProfileSummary

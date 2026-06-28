@@ -1,27 +1,91 @@
 'use client';
 
 import Link from 'next/link';
-import { Footer } from '@/components/ui5/Footer';
+import { Footer } from '@/components/ui/layout/Footer';
+import { ToSomSection, ToSomButton, ToSomCard } from '@/components/ui/system';
 import { color, spacing, typographyToStyle, radius, shadow } from '@/config/design-tokens';
-import { GlobalCTA } from '@/components/ui5/GlobalCTA';
 
 /* ========================
-   HELPER — Glass kort
+   INLINE SVG-ikoner
    ======================== */
 
-function GlassCard({ children, style, className }: { children: React.ReactNode; style?: React.CSSProperties; className?: string }) {
+function IconBook() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+    </svg>
+  );
+}
+
+function IconResearch() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 3V21M9 17H15M9 3H15M9 3L7 6M9 3L11 6" />
+      <path d="M16 21V13" />
+    </svg>
+  );
+}
+
+function IconTime() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 6v6l4 2" />
+    </svg>
+  );
+}
+
+function IconHeart() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+    </svg>
+  );
+}
+
+/* ========================
+   HELPER — Ultra-Premium GlassCard
+   ======================== */
+
+function GlassCard({
+  children,
+  padding = 'lg',
+  className = '',
+  style,
+}: {
+  children: React.ReactNode;
+  padding?: 'sm' | 'md' | 'lg' | 'xl';
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  const paddingMap = { sm: spacing.sm, md: spacing.md, lg: spacing.lg, xl: spacing.xl };
+
   return (
     <div
       className={className}
       style={{
-        background: color.glass.bg,
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
-        border: `1px solid ${color.glass.border}`,
+        background: 'rgba(255,255,255,0.06)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        border: '1px solid rgba(212,175,55,0.15)',
         borderRadius: `${radius.xl}px`,
-        boxShadow: shadow.lg,
-        padding: `${spacing['2xl']}px`,
+        boxShadow: '0 8px 32px rgba(0,0,0,0.20)',
+        padding: `${paddingMap[padding]}px`,
+        transition: 'all 300ms ease-out',
         ...style,
+      }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.08)';
+        (e.currentTarget as HTMLElement).style.border = '1px solid rgba(212,175,55,0.25)';
+        (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 40px rgba(212,175,55,0.10)';
+        (e.currentTarget as HTMLElement).style.transform = 'translateY(-4px)';
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.06)';
+        (e.currentTarget as HTMLElement).style.border = '1px solid rgba(212,175,55,0.15)';
+        (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 32px rgba(0,0,0,0.20)';
+        (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
       }}
     >
       {children}
@@ -30,173 +94,226 @@ function GlassCard({ children, style, className }: { children: React.ReactNode; 
 }
 
 /* ========================
+   BLOGG-AKTIKKEL-DATA
+   ======================== */
+
+const articles = [
+  {
+    dato: '24. juni 2026',
+    lesetid: '5 min',
+    kategori: 'Relasjonsforskning',
+    tittel: 'Hvorfor kompatibilitet betyr mer enn utseende',
+    excerpt: 'Forskning viser at verdier, livsstil og emosjonelle mønstre er langt sterkere indikatorer på varige relasjoner enn det ytre.',
+    reference: 'Fetvedt, G. (2018). Kjærlighetsforskning: Hva bygger varige relasjoner? Universitetsforlaget.',
+    icon: <IconResearch />,
+  },
+  {
+    dato: '20. juni 2026',
+    lesetid: '4 min',
+    kategori: 'Tid og nærhet',
+    tittel: 'Hvorfor 30 dager er den perfekte tidsrammen',
+    excerpt: 'Psykologer har lenge observert at det ofte tar rundt 30 dager for to mennesker å bygge ekte tillit og en stabil forbindelse.',
+    reference: 'Reisner, A. & McAndrew, C. (2022). The Psychology of Time in Relationship Formation. Journal of Social and Personal Relationships, 39(4), 890–912.',
+    icon: <IconTime />,
+  },
+  {
+    dato: '15. juni 2026',
+    lesetid: '3 min',
+    kategori: 'Emosjonell trygghet',
+    tittel: 'Hvorfor ro er vår viktigste funksjon',
+    excerpt: 'I en verden der datingapper konstant konkurrerer om oppmerksomheten din, valgte ToSom en annen vei — en roligere, tryggere og mer menneskelig tilnærming.',
+    reference: 'Gottman, J.M. (1999). The Seven Principles for Making Marriage Work. Crown Publishing. — Kapittel om emosjonell trygghet og relasjonsdynamikk.',
+    icon: <IconHeart />,
+  },
+];
+
+/* ========================
    PAGE COMPONENT
    ======================== */
 
 export default function BloggPage() {
   return (
     <main className="relative min-h-screen overflow-hidden">
-      {/* Bakgrunn */}
+      {/* Bakgrunn — Deep Blue gradient */}
       <div
         className="fixed inset-0 pointer-events-none"
         style={{
-          background: 'linear-gradient(180deg, #162032 0%, #0F1923 50%, #0B1520 100%)',
+          background: 'linear-gradient(180deg, #0B1520 0%, #121E2E 50%, #0B1520 100%)',
         }}
       />
 
-      {/* Ambient glød */}
+      {/* Ambient glød — blue */}
       <div
-        className="absolute top-20 right-0 w-[600px] h-[400px] pointer-events-none opacity-40"
+        className="absolute top-20 right-0 w-[600px] h-[400px] pointer-events-none opacity-30"
         style={{
-          background: 'radial-gradient(ellipse at 70% 30%, rgba(212,175,55,0.03), transparent 70%)',
+          background: 'radial-gradient(ellipse at 70% 30%, rgba(80,120,255,0.04), transparent 70%)',
         }}
       />
 
       <div className="relative z-10">
 
         {/* ===== HERO ===== */}
-        <section
-          className="pt-32 pb-20 text-center"
-          style={{
-            background: 'linear-gradient(180deg, #162032 0%, #0F1923 50%, #0B1520 100%)',
-          }}
+        <ToSomSection
+          spotlight="blue"
+          className="px-6 text-center space-y-6"
         >
-          <div className="max-w-3xl mx-auto px-6">
-            <h1
-              className="text-4xl md:text-5xl mb-8"
-              style={typographyToStyle('heading-lg')}
-            >
-              Blogg
-            </h1>
+          <h1
+            style={{
+              ...typographyToStyle('hero'),
+              color: color.text.primary,
+            }}
+          >
+            Blogg
+          </h1>
 
-            <p
-              className="text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
-              style={{
-                ...typographyToStyle('body-lg'),
-                color: color.text.secondary,
-              }}
-            >
-              I bloggen deler vi innsikt om relasjoner, emosjonell trygghet og forskning på langsomme, meningsfulle forbindelser.
-            </p>
-          </div>
-        </section>
+          <p
+            className="max-w-2xl mx-auto"
+            style={{
+              ...typographyToStyle('body-lg'),
+              color: color.text.secondary,
+            }}
+          >
+            I bloggen deler vi innsikt om relasjoner, emosjonell trygghet og forskning på langsomme, meningsfulle forbindelser.
+          </p>
+        </ToSomSection>
 
-        {/* ===== INTRO FOKUS ===== */}
-        <section className="py-8 px-6">
-          <div className="max-w-3xl mx-auto">
-            <GlassCard>
+        {/* ===== OM BLOGGEN ===== */}
+        <ToSomSection
+          spotlight="soft"
+          className="px-6"
+        >
+          <div className="mx-auto max-w-3xl space-y-6">
+            <GlassCard padding="xl" className="space-y-4">
               <div className="flex items-start gap-4">
-                <div
-                  className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
-                  style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)' }}
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 2L15 8L21 9L16.5 14L18 21L12 17.5L6 21L7.5 14L3 9L9 8L12 2Z" stroke="#D4AF37" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
+                <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                  <IconBook />
                 </div>
-                <div>
-                  <h3
-                    className="text-xl font-semibold mb-2"
-                    style={{ color: color.text.primary, letterSpacing: '-0.01em' }}
+                <div className="space-y-3">
+                  <h2
+                    style={{
+                      ...typographyToStyle('heading-md'),
+                      color: color.text.primary,
+                    }}
                   >
                     Om denne bloggen
-                  </h3>
+                  </h2>
                   <p
-                    className="leading-relaxed"
-                    style={{ color: color.text.secondary }}
+                    style={{
+                      ...typographyToStyle('body-lg'),
+                      color: color.text.secondary,
+                      lineHeight: '1.8',
+                    }}
                   >
-                    I bloggen deler vi innsikt om relasjoner, emosjonell trygghet og forskning på langsomme, meningsfulle forbindelser. Alle artiklene er basert på vitenskapelige studier og vår egen erfaring med å bygge en plattform for ekte menneslige relasjoner.
+                    Alle artiklene er basert på vitenskapelige studier og vår egen erfaring med å bygge en plattform for ekte menneskelige relasjoner. Vi tror at kunnskap er grunnen til trygge relasjoner — og at ro og dypde alltid vil vinne over støy og overflate.
                   </p>
                 </div>
               </div>
             </GlassCard>
           </div>
-        </section>
+        </ToSomSection>
 
-        {/* ===== BLOGPOSTS ===== */}
-        <section className="py-12 px-6">
-          <div className="max-w-3xl mx-auto space-y-6">
+        {/* ===== ARTIKLER ===== */}
+        <ToSomSection
+          spotlight="blue"
+          className="px-6"
+        >
+          <div className="mx-auto max-w-5xl">
+            <h2
+              className="text-center mb-6"
+              style={{
+                ...typographyToStyle('heading-lg'),
+                color: color.text.primary,
+              }}
+            >
+              Siste artikler
+            </h2>
 
-            {/* Post 1 — Forskning */}
-            <GlassCard>
-              <p className="text-sm mb-3" style={{ color: 'rgba(255,255,255,0.45)' }}>
-                24. juni 2026 · 5 min lesning · Relasjonsforskning
-              </p>
-              <h3
-                className="text-xl md:text-2xl font-semibold mb-3"
-                style={{ color: color.text.primary }}
-              >
-                Hvorfor kompatibilitet betyr mer enn utseende
-              </h3>
-              <p
-                className="text-base md:text-lg leading-relaxed mb-4"
-                style={{ color: color.text.secondary }}
-              >
-                Forskning viser at verdier, livsstil og emosjonelle mønstre er langt sterkere indikatorer på varige relasjoner enn det ytre.
-              </p>
-              <p
-                className="text-sm leading-relaxed"
-                style={{ color: 'rgba(255,255,255,0.5)' }}
-              >
-                📖 <em>Fetvedt, G. (2018). <strong>Kjærlighetsforskning: Hva bygger varige relasjoner?</strong> Universitetsforlaget.</em>
-              </p>
-            </GlassCard>
+            <div className="space-y-6">
+              {articles.map((art, idx) => (
+                <GlassCard key={idx} padding="xl" className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                      {art.icon}
+                    </div>
+                    <div>
+                      <p
+                        style={{
+                          ...typographyToStyle('body-sm'),
+                          color: color.text.muted,
+                        }}
+                      >
+                        {art.dato} · {art.lesetid} · {art.kategori}
+                      </p>
+                    </div>
+                  </div>
 
-            {/* Post 2 — Forskning */}
-            <GlassCard>
-              <p className="text-sm mb-3" style={{ color: 'rgba(255,255,255,0.45)' }}>
-                20. juni 2026 · 4 min lesning · Tid og nærhet
-              </p>
-              <h3
-                className="text-xl md:text-2xl font-semibold mb-3"
-                style={{ color: color.text.primary }}
-              >
-                Hvorfor 30 dager er den perfekte tidsrammen
-              </h3>
-              <p
-                className="text-base md:text-lg leading-relaxed mb-4"
-                style={{ color: color.text.secondary }}
-              >
-                Psykologer har lenge observert at det ofte tar rundt 30 dager for to mennesker å bygge ekte tillit og en stabil forbindelse.
-              </p>
-              <p
-                className="text-sm leading-relaxed"
-                style={{ color: 'rgba(255,255,255,0.5)' }}
-              >
-                📖 <em> Reisner, A. & McAndrew, C. (2022). <strong>The Psychology of Time in Relationship Formation.</strong> Journal of Social and Personal Relationships, 39(4), 890–912.</em>
-              </p>
-            </GlassCard>
+                  <h3
+                    style={{
+                      ...typographyToStyle('heading-md'),
+                      color: color.text.primary,
+                    }}
+                  >
+                    {art.tittel}
+                  </h3>
 
-            {/* Post 3 — Forskning */}
-            <GlassCard>
-              <p className="text-sm mb-3" style={{ color: 'rgba(255,255,255,0.45)' }}>
-                15. juni 2026 · 3 min lesning · Emosjonell trygghet
-              </p>
-              <h3
-                className="text-xl md:text-2xl font-semibold mb-3"
-                style={{ color: color.text.primary }}
-              >
-                Hvorfor ro er vår viktigste funksjon
-              </h3>
-              <p
-                className="text-base md:text-lg leading-relaxed mb-4"
-                style={{ color: color.text.secondary }}
-              >
-                I en verden der datingapper konstant konkurrerer om oppmerksomheten din, valgte ToSom en annen vei — en roligere, tryggere og mer menneskelig tilnærming.
-              </p>
-              <p
-                className="text-sm leading-relaxed"
-                style={{ color: 'rgba(255,255,255,0.5)' }}
-              >
-                📖 <em>Gottman, J.M. (1999). <strong>The Seven Principles for Making Marriage Work.</strong> Crown Publishing. — Kapittel om emosjonell trygghet og relasjonsdynamikk.</em>
-              </p>
-            </GlassCard>
+                  <p
+                    style={{
+                      ...typographyToStyle('body-lg'),
+                      color: color.text.secondary,
+                      lineHeight: '1.8',
+                    }}
+                  >
+                    {art.excerpt}
+                  </p>
 
+                  <p
+                    style={{
+                      ...typographyToStyle('body-sm'),
+                      color: 'rgba(255,255,255,0.50)',
+                      fontStyle: 'italic',
+                    }}
+                  >
+                    📖 <em>{art.reference}</em>
+                  </p>
+                </GlassCard>
+              ))}
+            </div>
           </div>
-        </section>
+        </ToSomSection>
 
-        {/* ===== CTA (GlobalCTA) ===== */}
-        <GlobalCTA />
+        {/* ===== CTA ===== */}
+        <ToSomSection
+          spotlight="cta"
+          className="px-6 text-center space-y-6"
+        >
+          <h2
+            style={{
+              ...typographyToStyle('heading-lg'),
+              color: color.text.primary,
+            }}
+          >
+            Klar til å starte?
+          </h2>
+
+          <p
+            style={{
+              ...typographyToStyle('body-lg'),
+              color: color.text.secondary,
+            }}
+          >
+            Lag profilen din i ditt eget tempo og møt noen som faktisk passer deg — på ordentlig.
+          </p>
+
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4 pt-4">
+            <ToSomButton href="/register" variant="gold" size="xl">
+              Start reisen
+            </ToSomButton>
+
+            <ToSomButton href="/login" variant="dark" size="lg">
+              Logg inn
+            </ToSomButton>
+          </div>
+        </ToSomSection>
 
         {/* ===== FOOTER ===== */}
         <Footer />

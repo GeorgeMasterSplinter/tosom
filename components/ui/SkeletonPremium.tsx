@@ -1,4 +1,7 @@
+// ⚠️  EXPERIMENTAL — Premium feature not yet launched. Do not use in production.
+// TODO: Flytt til egen branch eller fjern. Eksperimentell kode — Fase 1 marking.
 /* ═══════════════════════════════════════════
+// TODO: Flytte til egen branch eller fjerne. Eksperimentell kode — Fase 1 marking.
    ToSom Premium — Skeleton Components
    GPU-composited shimmer (opacity only)
    Respects prefers-reduced-motion
@@ -227,4 +230,4 @@ export const SkeletonCard: React.FC<{ title?: string; children?: React.ReactNode
       </div>
     )}
   </div>
-);
+);// ⚠️  EXPERIMENTAL — Premium feature not yet launched. Do not use in production.

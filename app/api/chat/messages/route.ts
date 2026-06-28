@@ -6,8 +6,7 @@
  */
 
 import { NextResponse, NextRequest } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth/nextauth';
+import { getServerSession } from '@/lib/auth/session';
 import { sendMessage, getMessages } from '@/lib/chat/messageService';
 
 /* ------ GET: Hent meldingar ------ */
@@ -20,7 +19,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Manglar conversationId' }, { status: 400 });
     }
 
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Ikke autentisert' }, { status: 401 });
     }
@@ -40,7 +39,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Ikke autentisert' }, { status: 401 });
     }

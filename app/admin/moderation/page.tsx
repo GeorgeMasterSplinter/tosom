@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import GlassCard from '@/components/ui/GlassCard';
+import GlassCard from '@/components/ui/cards/GlassCard';
 
 const mockReports = [
   { id: 'r1', reportedBy: 'ola@tosom.no', against: 'erik@tosom.no', reason: 'Upassande innhald', status: 'pending', date: '2026-06-24', severity: 'high' },

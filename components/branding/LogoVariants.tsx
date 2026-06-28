@@ -8,7 +8,7 @@
 'use client';
 
 import { FC, CSSProperties } from 'react';
-import { Logo, LogoProps } from '@/components/ui5/Logo';
+import { Logo, LogoProps } from '@/components/ui/branding/Logo';
 import { color, shadow } from '@/config/design-tokens';
 import Link from 'next/link';
 
@@ -215,18 +215,18 @@ export const LogoAnimated: FC<LogoAnimatedProps> = ({ className = '' }) => {
           animation: logoFadeIn 1s ease-out 0.3s both;
         }
       `}</style>
-      <div className="logo-animated flex flex-col items-center">
-        <Logo
-          size="4xl"
-          colorVariant="gold"
-        />
-        <span
-          className="mt-3 text-[11px] font-medium tracking-[0.3em] uppercase"
-          style={{ color: 'rgba(212,175,55,0.55)' }}
-        >
-          Made in Norway
-        </span>
-      </div>
+       <div className="logo-animated flex flex-col items-center">
+         <Logo
+           size="5xl"
+           colorVariant="gold"
+         />
+         <span
+           className="mt-3 text-[11px] font-medium tracking-[0.3em] uppercase"
+           style={{ color: 'rgba(212,175,55,0.55)' }}
+         >
+           Made in Norway
+         </span>
+       </div>
     </div>
   );
 };

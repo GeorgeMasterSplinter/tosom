@@ -1,26 +1,143 @@
 'use client';
 
 import Link from 'next/link';
-import { Footer } from '@/components/ui5/Footer';
+import { Footer } from '@/components/ui/layout/Footer';
+import { ToSomSection, ToSomButton } from '@/components/ui/system';
 import { color, spacing, typographyToStyle, radius, shadow } from '@/config/design-tokens';
 
 /* ========================
-   HELPER — Glass kort
+   INLINE SVG-ikoner
    ======================== */
 
-function GlassCard({ children, style, className }: { children: React.ReactNode; style?: React.CSSProperties; className?: string }) {
+function IconProfile() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
+  );
+}
+
+function IconMatch() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+    </svg>
+  );
+}
+
+function IconJourney() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2L2 7l10 5 10-5-10-5z" />
+      <path d="M2 17l10 5 10-5" />
+      <path d="M2 12l10 5 10-5" />
+    </svg>
+  );
+}
+
+function IconRoom() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+      <polyline points="9,22 9,12 15,12 15,22" />
+    </svg>
+  );
+}
+
+/* ========================
+   STEG-DATA
+   ======================== */
+
+const steps = [
+  {
+    icon: <IconProfile />,
+    title: 'Veiledet profil',
+    intro: 'Du starter med en forskningsbasert og guidet profil som hjelper deg å forstå hvem du er, hva du trenger og hva som faktisk passer deg i en relasjon.',
+    points: [
+      'basert på relasjonspsykologi',
+      'hjelper deg å forstå dine behov',
+      'gir et helhetlig bilde av hvem du er',
+      'ingen stress, ingen tidspress',
+    ],
+  },
+  {
+    icon: <IconMatch />,
+    title: 'Én match innen 24 timer',
+    intro: 'Når profilen din er klar, får du én gjennomtenkt match. Ikke ti. Ikke hundre. Bare én person som faktisk passer deg basert på verdier, livsstil, kommunikasjon og fremtidsønsker.',
+    points: [
+      'én match om gangen',
+      'ingen sveiping',
+      'ingen konkurranse',
+      'fokus og ro',
+    ],
+  },
+  {
+    icon: <IconJourney />,
+    title: 'En guidet 30 dagers reise',
+    intro: 'Når dere matcher, får dere en rolig 30 dagers reise med små, trygge steg som hjelper dere å bli kjent på en naturlig måte. Ingen press. Ingen forventninger. Bare en struktur som gjør det lettere å åpne seg.',
+    points: [
+      'daglige små oppgaver',
+      'fokus på trygghet og kommunikasjon',
+      'bygger emosjonell tilstedeværelse',
+      'ingen hastverk',
+    ],
+  },
+  {
+    icon: <IconRoom />,
+    title: 'Trygg kommunikasjon',
+    intro: 'All kommunikasjon skjer i et privat rom mellom dere to. Ingen kan se profilen din. Ingen kan søke deg opp. Du bestemmer selv når du vil dele mer personlig informasjon.',
+    points: [
+      'privat rom',
+      'ingen offentlige profiler',
+      'ingen eksponering',
+      'du styrer tempoet',
+    ],
+  },
+];
+
+/* ========================
+   HELPER — Ultra-Premium GlassCard
+   ======================== */
+
+function GlassCard({
+  children,
+  padding = 'lg',
+  className = '',
+  style,
+}: {
+  children: React.ReactNode;
+  padding?: 'sm' | 'md' | 'lg' | 'xl';
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  const paddingMap = { sm: spacing.sm, md: spacing.md, lg: spacing.lg, xl: spacing.xl };
+
   return (
     <div
       className={className}
       style={{
-        background: color.glass.bg,
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
-        border: `1px solid ${color.glass.border}`,
+        background: 'rgba(255,255,255,0.06)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        border: '1px solid rgba(212,175,55,0.15)',
         borderRadius: `${radius.xl}px`,
-        boxShadow: shadow.lg,
-        padding: `${spacing.lg}px`,
+        boxShadow: '0 8px 32px rgba(0,0,0,0.20)',
+        padding: `${paddingMap[padding]}px`,
+        transition: 'all 300ms ease-out',
         ...style,
+      }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.08)';
+        (e.currentTarget as HTMLElement).style.border = '1px solid rgba(212,175,55,0.25)';
+        (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 40px rgba(212,175,55,0.10)';
+        (e.currentTarget as HTMLElement).style.transform = 'translateY(-4px)';
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.06)';
+        (e.currentTarget as HTMLElement).style.border = '1px solid rgba(212,175,55,0.15)';
+        (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 32px rgba(0,0,0,0.20)';
+        (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
       }}
     >
       {children}
@@ -35,269 +152,133 @@ function GlassCard({ children, style, className }: { children: React.ReactNode; 
 export default function SlikPage() {
   return (
     <main className="relative min-h-screen overflow-hidden">
-      {/* Bakgrunn */}
+      {/* Bakgrunn — Deep Blue gradient */}
       <div
         className="fixed inset-0 pointer-events-none"
         style={{
-          background: 'linear-gradient(180deg, #162032 0%, #0F1923 50%, #0B1520 100%)',
+          background: 'linear-gradient(180deg, #0B1520 0%, #121E2E 50%, #0B1520 100%)',
         }}
       />
 
-      {/* Ambient glød */}
+      {/* Ambient glød — blue */}
       <div
-        className="absolute top-20 right-0 w-[600px] h-[400px] pointer-events-none opacity-40"
+        className="absolute top-20 right-0 w-[600px] h-[400px] pointer-events-none opacity-30"
         style={{
-          background: 'radial-gradient(ellipse at 70% 30%, rgba(212,175,55,0.03), transparent 70%)',
+          background: 'radial-gradient(ellipse at 70% 30%, rgba(80,120,255,0.04), transparent 70%)',
         }}
       />
 
       <div className="relative z-10">
 
         {/* ===== HERO ===== */}
-        <section
-          className="pt-32 pb-20 text-center"
-          style={{
-            background: 'linear-gradient(180deg, #162032 0%, #0F1923 50%, #0B1520 100%)',
-          }}
+        <ToSomSection
+          spotlight="blue"
+          className="px-6 text-center space-y-6"
         >
-          <div className="max-w-3xl mx-auto px-6">
-            <h1
-              className="text-4xl md:text-5xl mb-8"
-              style={typographyToStyle('heading-lg')}
-            >
-              Slik fungerer ToSom
-            </h1>
+          <h1
+            style={{
+              ...typographyToStyle('hero'),
+              color: color.text.primary,
+            }}
+          >
+            Slik fungerer ToSom
+          </h1>
 
-            <p
-              className="text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
-              style={{
-                ...typographyToStyle('body-lg'),
-                color: color.text.secondary,
-              }}
-            >
-              En rolig og trygg prosess som hjelper deg å møte én person som faktisk passer deg. Ingen stress. Ingen swipe. Bare kvalitet.
-            </p>
-          </div>
-        </section>
+          <p
+            className="max-w-2xl mx-auto"
+            style={{
+              ...typographyToStyle('body-lg'),
+              color: color.text.secondary,
+              lineHeight: '1.8',
+            }}
+          >
+            En rolig og trygg prosess som hjelper deg å møte én person som faktisk passer deg. Ingen stress. Ingen sveiping. Bare kvalitet.
+          </p>
+        </ToSomSection>
 
-        {/* ===== STEG 1 ===== */}
-        <section className="py-20 px-6">
-          <div className="max-w-5xl mx-auto">
-            <h2
-              className="text-4xl md:text-5xl text-center mb-6"
-              style={{ color: color.text.primary }}
-            >
-              1. Veiledet profil
-            </h2>
-
-            <p
-              className="max-w-3xl mx-auto text-center text-base md:text-lg mb-12 leading-relaxed"
-              style={{ color: color.text.secondary }}
-            >
-              Du starter med en forskningsbasert og guidet profil som hjelper deg å forstå hvem du er, hva du trenger og hva som faktisk passer deg i en relasjon. Spørsmålene er enkle, rolige og bygget for å gi dybde.
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">
-              {[
-                'Basert på forskning og relasjonspsykologi',
-                'Hjelper deg å forstå dine behov',
-                'Gir et helhetlig bilde av hvem du er',
-                'Ingen stress, ingen tidspress',
-              ].map((punkt, idx) => (
-                <GlassCard key={idx}>
-                  <p
-                    className="text-base md:text-lg"
-                    style={{ color: color.text.primary }}
-                  >
-                    {punkt}
-                  </p>
-                </GlassCard>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ===== STEG 2 ===== */}
-        <section
-          className="py-20 px-6"
-          style={{
-            background: 'linear-gradient(180deg, #0B1520 0%, #121E2E 50%, #0B1520 100%)',
-          }}
+        {/* ===== 4 STEG ===== */}
+        <ToSomSection
+          spotlight="blue"
+          className="px-6"
         >
-          <div className="max-w-5xl mx-auto">
-            <h2
-              className="text-4xl md:text-5xl text-center mb-6"
-              style={{ color: color.text.primary }}
-            >
-              2. Én match innen 24 timer
-            </h2>
-
-            <p
-              className="max-w-3xl mx-auto text-center text-base md:text-lg mb-12 leading-relaxed"
-              style={{ color: color.text.secondary }}
-            >
-              Når profilen din er klar, får du én gjennomtenkt match. Ikke ti. Ikke hundre. Bare én person som faktisk passer deg basert på verdier, livsstil, kommunikasjon og fremtidsønsker.
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">
-              {[
-                'Én match om gangen',
-                'Ingen swipe',
-                'Ingen konkurranse',
-                'Fokus og ro',
-              ].map((punkt, idx) => (
-                <GlassCard key={idx}>
-                  <p
-                    className="text-base md:text-lg"
-                    style={{ color: color.text.primary }}
+          <div className="mx-auto max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-6">
+            {steps.map((step, idx) => (
+              <GlassCard key={idx} padding="xl" className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                    {step.icon}
+                  </div>
+                  <h3
+                    style={{
+                      ...typographyToStyle('heading-md'),
+                      color: color.brand.gold,
+                    }}
                   >
-                    {punkt}
-                  </p>
-                </GlassCard>
-              ))}
-            </div>
+                    {step.title}
+                  </h3>
+                </div>
+                <p
+                  style={{
+                    ...typographyToStyle('body-lg'),
+                    color: color.text.secondary,
+                    lineHeight: '1.8',
+                  }}
+                >
+                  {step.intro}
+                </p>
+                <div className="space-y-2">
+                  {step.points.map((point, pIdx) => (
+                    <p
+                      key={pIdx}
+                      style={{
+                        ...typographyToStyle('body'),
+                        color: color.text.secondary,
+                        lineHeight: '1.6',
+                      }}
+                    >
+                      <span className="text-[#D4AF37] mr-2">✦</span>
+                      {point}
+                    </p>
+                  ))}
+                </div>
+              </GlassCard>
+            ))}
           </div>
-        </section>
-
-        {/* ===== STEG 3 ===== */}
-        <section className="py-20 px-6">
-          <div className="max-w-5xl mx-auto">
-            <h2
-              className="text-4xl md:text-5xl text-center mb-6"
-              style={{ color: color.text.primary }}
-            >
-              3. En guidet 30 dagers reise
-            </h2>
-
-            <p
-              className="max-w-3xl mx-auto text-center text-base md:text-lg mb-12 leading-relaxed"
-              style={{ color: color.text.secondary }}
-            >
-              Når dere matches, får dere en rolig 30 dagers reise med små, trygge steg som hjelper dere å bli kjent på en naturlig måte. Ingen press. Ingen forventninger. Bare en struktur som gjør det lettere å åpne seg.
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">
-              {[
-                'Daglige små oppgaver',
-                'Fokus på trygghet og kommunikasjon',
-                'Bygger emosjonell tilstedeværelse',
-                'Ingen hastverk',
-              ].map((punkt, idx) => (
-                <GlassCard key={idx}>
-                  <p
-                    className="text-base md:text-lg"
-                    style={{ color: color.text.primary }}
-                  >
-                    {punkt}
-                  </p>
-                </GlassCard>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ===== STEG 4 ===== */}
-        <section
-          className="py-20 px-6"
-          style={{
-            background: 'linear-gradient(180deg, #0B1520 0%, #121E2E 50%, #0B1520 100%)',
-          }}
-        >
-          <div className="max-w-5xl mx-auto">
-            <h2
-              className="text-4xl md:text-5xl text-center mb-6"
-              style={{ color: color.text.primary }}
-            >
-              4. Trygg kommunikasjon
-            </h2>
-
-            <p
-              className="max-w-3xl mx-auto text-center text-base md:text-lg mb-12 leading-relaxed"
-              style={{ color: color.text.secondary }}
-            >
-              All kommunikasjon skjer i et privat rom mellom dere to. Ingen kan se profilen din. Ingen kan søke deg opp. Du bestemmer selv når du vil dele bilde eller mer personlig informasjon.
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">
-              {[
-                'Privat rom mellom dere to',
-                'Ingen offentlige profiler',
-                'Ingen eksponering',
-                'Du styrer tempoet',
-              ].map((punkt, idx) => (
-                <GlassCard key={idx}>
-                  <p
-                    className="text-base md:text-lg"
-                    style={{ color: color.text.primary }}
-                  >
-                    {punkt}
-                  </p>
-                </GlassCard>
-              ))}
-            </div>
-          </div>
-        </section>
+        </ToSomSection>
 
         {/* ===== CTA ===== */}
-        <section className="py-20 px-6 text-center">
-          <div className="max-w-2xl mx-auto">
-            <h2
-              className="text-4xl md:text-5xl mb-6"
-              style={{ color: color.text.primary }}
-            >
-              Klar til å starte?
-            </h2>
-            <p
-              className="text-lg mb-10 leading-relaxed"
-              style={{
-                ...typographyToStyle('body-lg'),
-                color: color.text.secondary,
-              }}
-            >
-              Opprett profilen din og få én gjennomtenkt match innen 24 timer.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/onboarding/start"
-                className="inline-flex items-center justify-center px-14 py-4 font-medium transition-all duration-300 text-base"
-                style={{
-                  ...typographyToStyle('cta'),
-                  background: color.brand.gold,
-                  color: '#0B1520',
-                  borderRadius: `${radius.md}px`,
-                  boxShadow: `0 0 30px ${color.ambient.gold.medium}, 0 4px 12px rgba(0,0,0,0.2)`,
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.background = color.brand['gold-hover'];
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.background = color.brand.gold;
-                }}
-              >
-                Opprett konto
-              </Link>
-              <Link
-                href="/login"
-                className="inline-flex items-center justify-center px-14 py-4 font-medium transition-all duration-300 text-base border"
-                style={{
-                  background: 'rgba(255,255,255,0.04)',
-                  color: color.text.secondary,
-                  border: `1px solid ${color.border.default}`,
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.08)';
-                  (e.currentTarget as HTMLElement).style.color = color.text.primary;
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.04)';
-                  (e.currentTarget as HTMLElement).style.color = color.text.secondary;
-                }}
-              >
-                Logg inn
-              </Link>
-            </div>
+        <ToSomSection
+          spotlight="cta"
+          className="px-6 text-center space-y-6"
+        >
+          <h2
+            style={{
+              ...typographyToStyle('heading-lg'),
+              color: color.text.primary,
+            }}
+          >
+            Klar til å starte?
+          </h2>
+
+          <p
+            style={{
+              ...typographyToStyle('body-lg'),
+              color: color.text.secondary,
+            }}
+          >
+            Lag profilen din i ditt eget tempo og møt noen som faktisk passer deg — på ordentlig.
+          </p>
+
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4 pt-4">
+            <ToSomButton href="/register" variant="gold" size="xl">
+              Start reisen
+            </ToSomButton>
+
+            <ToSomButton href="/login" variant="dark" size="lg">
+              Logg inn
+            </ToSomButton>
           </div>
-        </section>
+        </ToSomSection>
 
         {/* ===== FOOTER ===== */}
         <Footer />

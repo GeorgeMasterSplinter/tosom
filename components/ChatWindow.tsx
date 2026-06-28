@@ -1,9 +1,17 @@
+// ═════════════════════════════════════════════════════════════════
+// ⚠️  DEPRECATED — Use components/chat/ChatWindow.tsx instead
+//
+// This root ChatWindow is an older version. The canonical implementation
+// lives at components/chat/ChatWindow.tsx
+//
+// TODO: Remove after Fase 2 cleanup.
+// ══════════════════════════════════════════════════════════════════
 "use client";
 
 import { useEffect, useState } from "react";
 import ChatHeader from "./chat/ChatHeader";
-import GlassPanel from "@/components/ui/GlassPanel";
-import GlassCard from "@/components/ui/GlassCard";
+import GlassPanel from "@/components/ui/panels/GlassPanel";
+import GlassCard from "@/components/ui/cards/GlassCard";
 import FadeIn from "@/components/ui/FadeIn";
 
 type Message = {

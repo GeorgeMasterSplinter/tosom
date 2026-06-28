@@ -1,10 +1,14 @@
+import { auth } from '@/lib/auth/config'
 import { listNotifications } from '@/lib/admin/notifications'
 import { requireAdmin } from '@/lib/admin/requireAuth'
+import { castToAdminUser } from '@/lib/auth/admin-auth'
 
 export async function GET(request: Request) {
   try {
     const { adminId } = await request.json()
-    await requireAdmin()
+    const session = await auth()
+    const user = castToAdminUser(session?.user)
+    await requireAdmin(user)
 
     const url = new URL(request.url)
     const filter = {

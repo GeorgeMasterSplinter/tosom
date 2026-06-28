@@ -1,6 +1,6 @@
 'use client';
 
-import GlassCard from '@/components/ui/GlassCard';
+import GlassCard from '@/components/ui/cards/GlassCard';
 
 const mockSystem = {
   cronJobs: [

@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "./options";
+import { getServerSession } from "@/lib/auth/session";
 
 /**
  * adminAuthGuard — sjekker om brukaren er innlogga.
@@ -8,7 +7,7 @@ import { authOptions } from "./options";
  *       if (auth) return auth; // returnerar 401
  */
 export async function adminAuthGuard(): Promise<NextResponse | null> {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession();
 
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Authetisering påkrevd" }, { status: 401 });

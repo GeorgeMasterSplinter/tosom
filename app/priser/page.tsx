@@ -1,8 +1,97 @@
 'use client';
 
 import Link from 'next/link';
-import { Footer } from '@/components/ui5/Footer';
-import { GlobalCTA } from '@/components/ui5/GlobalCTA';
+import { Footer } from '@/components/ui/layout/Footer';
+import { ToSomSection, ToSomButton } from '@/components/ui/system';
+import { color, spacing, typographyToStyle, radius, shadow } from '@/config/design-tokens';
+
+/* ========================
+   INLINE SVG-ikoner
+   ======================== */
+
+function IconProfile() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 3V21M9 17H15M9 3H15M9 3L7 6M9 3L11 6" />
+      <path d="M16 21V13" />
+    </svg>
+  );
+}
+
+function IconMatch() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+    </svg>
+  );
+}
+
+function IconRoom() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+      <polyline points="9,22 9,12 15,12 15,22" />
+    </svg>
+  );
+}
+
+function IconJourney() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
+  );
+}
+
+/* ========================
+   HELPER — Ultra-Premium GlassCard
+   ======================== */
+
+function GlassCard({
+  children,
+  padding = 'lg',
+  className = '',
+  style,
+}: {
+  children: React.ReactNode;
+  padding?: 'sm' | 'md' | 'lg' | 'xl';
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  const paddingMap = { sm: spacing.sm, md: spacing.md, lg: spacing.lg, xl: spacing.xl };
+
+  return (
+    <div
+      className={className}
+      style={{
+        background: 'rgba(255,255,255,0.06)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        border: '1px solid rgba(212,175,55,0.15)',
+        borderRadius: `${radius.xl}px`,
+        boxShadow: '0 8px 32px rgba(0,0,0,0.20)',
+        padding: `${paddingMap[padding]}px`,
+        transition: 'all 300ms ease-out',
+        ...style,
+      }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.08)';
+        (e.currentTarget as HTMLElement).style.border = '1px solid rgba(212,175,55,0.25)';
+        (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 40px rgba(212,175,55,0.10)';
+        (e.currentTarget as HTMLElement).style.transform = 'translateY(-4px)';
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.06)';
+        (e.currentTarget as HTMLElement).style.border = '1px solid rgba(212,175,55,0.15)';
+        (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 32px rgba(0,0,0,0.20)';
+        (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+      }}
+    >
+      {children}
+    </div>
+  );
+}
 
 /* ========================
    PAGE COMPONENT
@@ -10,300 +99,340 @@ import { GlobalCTA } from '@/components/ui5/GlobalCTA';
 
 export default function PriserPage() {
   return (
-    <>
-      <style>{`
-        @media (max-width: 640px) {
-          .priser-wave-primary { width: 180% !important; opacity: 0.035 !important; }
-          .priser-wave-secondary { width: 200% !important; opacity: 0.02 !important; }
-          .priser-spotlight { width: 980px !important; height: 700px !important; }
-          .priser-title { font-size: 42px !important; }
-          .priser-body { font-size: 17px !important; }
-          .priser-card { width: 100% !important; }
-        }
-      `}</style>
+    <main className="relative min-h-screen overflow-hidden">
+      {/* Bakgrunn — Deep Blue gradient */}
+      <div
+        className="fixed inset-0 pointer-events-none"
+        style={{
+          background: 'linear-gradient(180deg, #0B1520 0%, #121E2E 50%, #0B1520 100%)',
+        }}
+      />
 
-      <main className="relative min-h-screen overflow-hidden" style={{ background: 'linear-gradient(180deg, #0A0F1A 0%, #0F1923 50%, #0A0F1A 100%)' }}>
-        {/* Ambient glød */}
-        <div
-          className="fixed inset-0 pointer-events-none z-0"
-          style={{
-            background: `
-              radial-gradient(ellipse 80% 60% at 50% 30%, rgba(80,120,255,0.04), transparent 70%),
-              linear-gradient(180deg, #0A0F1A 0%, #0F1923 50%, #0A0F1A 100%)
-            `,
-          }}
-        />
+      {/* Ambient glød — blue */}
+      <div
+        className="absolute top-20 right-0 w-[600px] h-[400px] pointer-events-none opacity-30"
+        style={{
+          background: 'radial-gradient(ellipse at 70% 30%, rgba(80,120,255,0.04), transparent 70%)',
+        }}
+      />
 
-        {/* ════════════════════════════════════
-            A) HERO
-            ════════════════════════════════════ */}
-        <section className="relative pt-[180px] pb-[160px] text-center overflow-hidden">
-          {/* Spotlight */}
-          <div
-            className="absolute top-[30%] left-1/2 -translate-x-1/2 w-[1400px] h-[900px] pointer-events-none z-0 priser-spotlight"
-            style={{ background: 'radial-gradient(circle at center, rgba(255,255,255,0.05), transparent 70%)' }}
-          />
-          {/* Vertikal lysgradient */}
-          <div
-            className="absolute top-[35%] left-1/2 -translate-x-1/2 w-[700px] h-[350px] pointer-events-none z-0"
-            style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.015) 0%, transparent 100%)' }}
-          />
-          {/* Bølge 1 */}
-          <div className="absolute bottom-[-30px] left-0 w-[150%] opacity-[0.05] pointer-events-none z-[1] priser-wave-primary">
-            <svg viewBox="0 0 2000 200" preserveAspectRatio="none" className="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <defs><linearGradient id="priserWave1" x1="0" y1="0" x2="2000" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stopColor="#1A2A3A" /><stop offset="100%" stopColor="#0A0F1A" /></linearGradient></defs>
-              <path d="M0,100 C250,65 500,135 750,100 C1000,65 1250,130 1500,100 C1750,70 1875,115 2000,100 L2000,200 L0,200 Z" fill="url(#priserWave1)" />
-            </svg>
-          </div>
-          {/* Bølge 2 */}
-          <div className="absolute bottom-[-15px] left-0 w-[170%] opacity-[0.03] pointer-events-none z-[1] priser-wave-secondary">
-            <svg viewBox="0 0 2200 200" preserveAspectRatio="none" className="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <defs><linearGradient id="priserWave2" x1="0" y1="0" x2="2200" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stopColor="#D4AF37" /><stop offset="100%" stopColor="transparent" /></linearGradient></defs>
-              <path d="M0,100 C275,72 550,128 825,100 C1100,72 1375,122 1650,100 C1925,78 2062,118 2200,100 L2200,200 L0,200 Z" fill="url(#priserWave2)" />
-            </svg>
-          </div>
+      <div className="relative z-10">
 
-          <div className="mx-auto max-w-[820px] px-6 relative z-10">
-            <h1
-              className="text-5xl md:text-6xl font-semibold tracking-[-0.02em] leading-[1.1] priser-title"
-              style={{ color: 'rgba(255,255,255,0.95)', textShadow: '0 0 36px rgba(255,255,255,0.04)' }}
-            >
-              Priser
-            </h1>
-            <p
-              className="mt-8 text-xl md:text-2xl priser-body"
-              style={{ color: 'rgba(255,255,255,0.90)', lineHeight: '1.65', maxWidth: '720px', margin: '0 auto', letterSpacing: '0.2px' }}
-            >
-              Én enkel pris. Ingen abonnement. Ingen skjulte kostnader. Bare ro, trygghet og en gjennomtenkt prosess.
-            </p>
-          </div>
-        </section>
+        {/* ===== HERO ===== */}
+        <ToSomSection
+          spotlight="blue-strong"
+          className="px-6 text-center space-y-6"
+        >
+          <h1
+            style={{
+              ...typographyToStyle('hero'),
+              color: color.text.primary,
+            }}
+          >
+            Priser
+          </h1>
 
-        {/* ════════════════════════════════════
-            B) STORY – "Hvorfor én pris?"
-            ════════════════════════════════════ */}
-        <section className="relative max-w-[900px] mx-auto px-6 py-[120px] overflow-hidden">
-          {/* Bølge 1 */}
-          <div className="absolute bottom-[-20px] left-0 w-[160%] opacity-[0.05] pointer-events-none z-0 priser-wave-primary">
-            <svg viewBox="0 0 2000 200" preserveAspectRatio="none" className="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,100 C250,60 500,140 750,100 C1000,60 1250,130 1500,100 C1750,70 1875,110 2000,100 L2000,200 L0,200 Z" fill="#1A2A3A" /></svg>
-          </div>
-          {/* Bølge 2 */}
-          <div className="absolute bottom-[-10px] left-0 w-[180%] opacity-[0.03] pointer-events-none z-0 priser-wave-secondary">
-            <svg viewBox="0 0 2200 200" preserveAspectRatio="none" className="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="priserStoryWave2" x1="0" y1="0" x2="2200" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stopColor="#D4AF37" /><stop offset="100%" stopColor="transparent" /></linearGradient></defs><path d="M0,100 C275,70 550,135 825,100 C1100,65 1375,125 1650,100 C1925,75 2062,112 2200,100 L2200,200 L0,200 Z" fill="url(#priserStoryWave2)" /></svg>
-          </div>
+          <p
+            className="max-w-2xl mx-auto"
+            style={{
+              ...typographyToStyle('body-lg'),
+              color: color.text.secondary,
+              lineHeight: '1.8',
+            }}
+          >
+            Én enkel pris. Ingen abonnement. Ingen skjulte kostnader. Bare ro, trygghet og en gjennomtenkt prosess.
+          </p>
+        </ToSomSection>
 
-          <div className="relative z-10">
-            <h2
-              className="text-3xl md:text-4xl font-semibold text-white/95 mb-10"
-              style={{ letterSpacing: '-0.02em' }}
-            >
-              Hvorfor én pris?
-            </h2>
-            <div
-              className="text-xl md:text-2xl text-center"
-              style={{ color: 'rgba(255,255,255,0.90)', lineHeight: '1.75', letterSpacing: '0.2px', maxWidth: '900px', margin: '0 auto' }}
-            >
-              <p className="mb-8">
+        {/* ===== HVORFOR ÉN PRIS ===== */}
+        <ToSomSection
+          spotlight="blue"
+          className="px-6"
+        >
+          <div className="mx-auto max-w-3xl space-y-6">
+            <GlassCard padding="xl" className="space-y-4">
+              <h2
+                style={{
+                  ...typographyToStyle('heading-lg'),
+                  color: color.text.primary,
+                  textAlign: 'center',
+                }}
+              >
+                Hvorfor én pris?
+              </h2>
+
+              <p
+                style={{
+                  ...typographyToStyle('body-lg'),
+                  color: color.text.secondary,
+                  lineHeight: '1.8',
+                }}
+              >
                 Vi tror at relasjoner trenger ro — ikke press, ikke stress, ikke løpende betalinger. Derfor har ToSom ingen abonnement, ingen nivåer og ingen skjulte funksjoner.
               </p>
-              <p className="mb-8">
-                Du får alt fra første dag. Du betaler kun når du er klar til å starte reisen. Ingen binding. Ingen overraskelser. Ingen "premium-pakker".
+
+              <p
+                style={{
+                  ...typographyToStyle('body-lg'),
+                  color: color.text.secondary,
+                  lineHeight: '1.8',
+                }}
+              >
+                Du får alt fra første dag. Du betaler kun når du er klar til å starte reisen. Ingen binding. Ingen overraskelser. Ingen &ldquo;premium-pakker&rdquo;.
               </p>
-              <p>
+
+              <p
+                style={{
+                  ...typographyToStyle('body-lg'),
+                  color: color.brand.gold,
+                  lineHeight: '1.8',
+                }}
+              >
                 Bare én pris, én reise, én mulighet til å møte noen som faktisk passer deg.
               </p>
-            </div>
+            </GlassCard>
           </div>
-        </section>
+        </ToSomSection>
 
-        {/* ════════════════════════════════════
-            C) HVA DU FÅR
-            ════════════════════════════════════ */}
-        <section className="relative max-w-[1100px] mx-auto px-6 py-[140px] overflow-hidden">
-          {/* Spotlight */}
-          <div
-            className="absolute top-[15%] left-1/2 -translate-x-1/2 w-[1400px] h-[900px] pointer-events-none z-0 priser-spotlight"
-            style={{ background: 'radial-gradient(circle at center, rgba(255,255,255,0.04), transparent 70%)' }}
-          />
-          {/* Bølge 1 */}
-          <div className="absolute bottom-[-25px] left-0 w-[155%] opacity-[0.05] pointer-events-none z-[1] priser-wave-primary">
-            <svg viewBox="0 0 2000 200" preserveAspectRatio="none" className="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,100 C250,60 500,140 750,100 C1000,60 1250,130 1500,100 C1750,70 1875,110 2000,100 L2000,200 L0,200 Z" fill="#1A2A3A" /></svg>
-          </div>
-          {/* Bølge 2 */}
-          <div className="absolute bottom-[-12px] left-0 w-[175%] opacity-[0.03] pointer-events-none z-[1] priser-wave-secondary">
-            <svg viewBox="0 0 2200 200" preserveAspectRatio="none" className="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="priserFasWave2" x1="0" y1="0" x2="2200" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stopColor="#D4AF37" /><stop offset="100%" stopColor="transparent" /></linearGradient></defs><path d="M0,100 C275,70 550,135 825,100 C1100,65 1375,125 1650,100 C1925,75 2062,112 2200,100 L2200,200 L0,200 Z" fill="url(#priserFasWave2)" /></svg>
-          </div>
-
-          <div className="relative z-10">
+        {/* ===== HVA DU FÅR ===== */}
+        <ToSomSection
+          spotlight="blue"
+          className="px-6"
+        >
+          <div className="mx-auto max-w-5xl">
             <h2
-              className="text-3xl md:text-4xl font-semibold text-white/95 text-center mb-16"
-              style={{ letterSpacing: '-0.02em' }}
+              className="text-center mb-6"
+              style={{
+                ...typographyToStyle('heading-lg'),
+                color: color.text.primary,
+              }}
             >
               Hva du får
             </h2>
+
             <p
-              className="text-xl md:text-2xl text-center mb-12"
-              style={{ color: 'rgba(255,255,255,0.90)', lineHeight: '1.7', maxWidth: '720px', margin: '0 auto 48px', letterSpacing: '0.2px' }}
+              className="max-w-3xl mx-auto text-center mb-12"
+              style={{
+                ...typographyToStyle('body-lg'),
+                color: color.text.secondary,
+              }}
             >
-              ToSom gir deg en komplett, trygg og forskningsbasert prosess for å møte én person — ikke mange — men én som faktisk passer deg.
+              ToSom gir deg en komplett, trygg og forskningsbasert prosess for å møte én person — ikke mange, men én som faktisk passer deg.
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16">
-              {/* Kort 1 */}
-              <div
-                className="rounded-3xl p-8 transition-all duration-300 ease-out hover:border-[rgba(212,175,55,0.15)] priser-card"
-                style={{ background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 8px 32px rgba(0,0,0,0.18)' }}
-              >
-                <h3 className="text-lg md:text-xl font-semibold text-white/95 mb-3" style={{ letterSpacing: '-0.01em' }}>
-                  Veiledet, forskningsbasert profil
-                </h3>
-                <p className="text-base md:text-lg text-white/85 leading-[1.7]" style={{ letterSpacing: '0.2px' }}>
-                  Du svarer på et gjennomtenket sett med spørsmål om livet ditt, verdiene dine, personligheten din og hva du søker i et forhold. Profilene din blir brukt av ToSoms match-motor for å finne den beste kompatibiliteten.
-                </p>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <GlassCard padding="xl" className="space-y-4">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                    <IconProfile />
+                  </div>
+                  <div className="space-y-3">
+                    <h3
+                      style={{
+                        ...typographyToStyle('heading-md'),
+                        color: color.text.primary,
+                      }}
+                    >
+                      Veiledet, forskningsbasert profil
+                    </h3>
+                    <p
+                      style={{
+                        ...typographyToStyle('body-lg'),
+                        color: color.text.secondary,
+                        lineHeight: '1.8',
+                      }}
+                    >
+                      Du svarer på et gjennomtenket sett med spørsmål om livet ditt, verdiene dine, personligheten din og hva du søker i et forhold. Profilene din blir brukt av ToSoms match-motor for å finne den beste kompatibiliteten.
+                    </p>
+                  </div>
+                </div>
+              </GlassCard>
 
-              {/* Kort 2 */}
-              <div
-                className="rounded-3xl p-8 transition-all duration-300 ease-out hover:border-[rgba(212,175,55,0.15)] priser-card"
-                style={{ background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 8px 32px rgba(0,0,0,0.18)' }}
-              >
-                <h3 className="text-lg md:text-xl font-semibold text-white/95 mb-3" style={{ letterSpacing: '-0.01em' }}>
-                  Match innen 24 timer
-                </h3>
-                <p className="text-base md:text-lg text-white/85 leading-[1.7]" style={{ letterSpacing: '0.2px' }}>
-                  ToSoms motor kjører én gang i døgnet og finner den personen som passer deg best — basert på kompatibilitet, ikke utseende. Du får kun én match om gangen.
-                </p>
-              </div>
+              <GlassCard padding="xl" className="space-y-4">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                    <IconMatch />
+                  </div>
+                  <div className="space-y-3">
+                    <h3
+                      style={{
+                        ...typographyToStyle('heading-md'),
+                        color: color.text.primary,
+                      }}
+                    >
+                      Match innen 24 timer
+                    </h3>
+                    <p
+                      style={{
+                        ...typographyToStyle('body-lg'),
+                        color: color.text.secondary,
+                        lineHeight: '1.8',
+                      }}
+                    >
+                      ToSoms motor kjører én gang i døgnet og finner den personen som passer deg best — basert på kompatibilitet, ikke utseende. Du får kun én match om gangen.
+                    </p>
+                  </div>
+                </div>
+              </GlassCard>
 
-              {/* Kort 3 */}
-              <div
-                className="rounded-3xl p-8 transition-all duration-300 ease-out hover:border-[rgba(212,175,55,0.15)] priser-card"
-                style={{ background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 8px 32px rgba(0,0,0,0.18)' }}
-              >
-                <h3 className="text-lg md:text-xl font-semibold text-white/95 mb-3" style={{ letterSpacing: '-0.01em' }}>
-                  Privat rom mellom dere to
-                </h3>
-                <p className="text-base md:text-lg text-white/85 leading-[1.7]" style={{ letterSpacing: '0.2px' }}>
-                  Når dere matcher, får dere et helt privat rom med guidede samtaler, refleksjoner, oppgaver og resonansmåling. Et rom designet for trygghet og dypde — uten distraksjoner.
-                </p>
-              </div>
+              <GlassCard padding="xl" className="space-y-4">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                    <IconRoom />
+                  </div>
+                  <div className="space-y-3">
+                    <h3
+                      style={{
+                        ...typographyToStyle('heading-md'),
+                        color: color.text.primary,
+                      }}
+                    >
+                      Privat rom mellom dere to
+                    </h3>
+                    <p
+                      style={{
+                        ...typographyToStyle('body-lg'),
+                        color: color.text.secondary,
+                        lineHeight: '1.8',
+                      }}
+                    >
+                      Når dere matcher, får dere et helt privat rom med guidede samtaler, refleksjoner, oppgaver og resonansmåling. Et rom designet for trygghet og dypde — uten distraksjoner.
+                    </p>
+                  </div>
+                </div>
+              </GlassCard>
 
-              {/* Kort 4 */}
-              <div
-                className="rounded-3xl p-8 transition-all duration-300 ease-out hover:border-[rgba(212,175,55,0.15)] priser-card"
-                style={{ background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 8px 32px rgba(0,0,0,0.18)' }}
-              >
-                <h3 className="text-lg md:text-xl font-semibold text-white/95 mb-3" style={{ letterSpacing: '-0.01em' }}>
-                  30 dagers guidet reise
-                </h3>
-                <p className="text-base md:text-lg text-white/85 leading-[1.7]" style={{ letterSpacing: '0.2px' }}>
-                  Dere går gjennom en strukturert 30-dagers reise med daglige refleksjonsspørsmål, samtaletema, små oppgaver og resonansmåling. Dette er kjernen i ToSom — en prosess som faktisk hjelper dere å bli kjent.
-                </p>
-              </div>
-
-              {/* Kort 5 */}
-              <div
-                className="rounded-3xl p-8 transition-all duration-300 ease-out hover:border-[rgba(212,175,55,0.15)] priser-card"
-                style={{ background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 8px 32px rgba(0,0,0,0.18)' }}
-              >
-                <h3 className="text-lg md:text-xl font-semibold text-white/95 mb-3" style={{ letterSpacing: '-0.01em' }}>
-                  Ingen offentlige profiler
-                </h3>
-                <p className="text-base md:text-lg text-white/85 leading-[1.7]" style={{ letterSpacing: '0.2px' }}>
-                  Din profil er aldri offentlig. Ingen andre brukere kan se den. Kun ToSoms match-motor og den personen du matcher med får tilgang.
-                </p>
-              </div>
-
-              {/* Kort 6 */}
-              <div
-                className="rounded-3xl p-8 transition-all duration-300 ease-out hover:border-[rgba(212,175,55,0.15)] priser-card"
-                style={{ background: 'rgba(255,255,255,0.03)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 8px 32px rgba(0,0,0,0.18)' }}
-              >
-                <h3 className="text-lg md:text-xl font-semibold text-white/95 mb-3" style={{ letterSpacing: '-0.01em' }}>
-                  Ingen sveiping, ingen støy
-                </h3>
-                <p className="text-base md:text-lg text-white/85 leading-[1.7]" style={{ letterSpacing: '0.2px' }}>
-                  Ingen feed. Ingen swiping. Ingen uendelige valg. Bare én match, én reise, og rommet dere trenger til å bli kjent på ordentlig.
-                </p>
-              </div>
+              <GlassCard padding="xl" className="space-y-4">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                    <IconJourney />
+                  </div>
+                  <div className="space-y-3">
+                    <h3
+                      style={{
+                        ...typographyToStyle('heading-md'),
+                        color: color.text.primary,
+                      }}
+                    >
+                      30 dagers guidet reise
+                    </h3>
+                    <p
+                      style={{
+                        ...typographyToStyle('body-lg'),
+                        color: color.text.secondary,
+                        lineHeight: '1.8',
+                      }}
+                    >
+                      Dere går gjennom en strukturert 30-dagers reise med daglige refleksjonsspørsmål, samtaletema, små oppgaver og resonansmåling. Dette er kjernen i ToSom — en prosess som faktisk hjelper dere å bli kjent.
+                    </p>
+                  </div>
+                </div>
+              </GlassCard>
             </div>
           </div>
-        </section>
+        </ToSomSection>
 
-        {/* ════════════════════════════════════
-            D) PRIS & BETALING
-            ════════════════════════════════════ */}
-        <section className="relative max-w-[700px] mx-auto px-6 py-[120px] text-center overflow-hidden">
-          {/* Bølge 1 */}
-          <div className="absolute bottom-[-20px] left-0 w-[160%] opacity-[0.05] pointer-events-none z-0 priser-wave-primary">
-            <svg viewBox="0 0 2000 200" preserveAspectRatio="none" className="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,100 C250,60 500,140 750,100 C1000,60 1250,130 1500,100 C1750,70 1875,110 2000,100 L2000,200 L0,200 Z" fill="#1A2A3A" /></svg>
-          </div>
-          {/* Bølge 2 */}
-          <div className="absolute bottom-[-10px] left-0 w-[180%] opacity-[0.03] pointer-events-none z-0 priser-wave-secondary">
-            <svg viewBox="0 0 2200 200" preserveAspectRatio="none" className="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="priserPrisWave2" x1="0" y1="0" x2="2200" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stopColor="#D4AF37" /><stop offset="100%" stopColor="transparent" /></linearGradient></defs><path d="M0,100 C275,70 550,135 825,100 C1100,65 1375,125 1650,100 C1925,75 2062,112 2200,100 L2200,200 L0,200 Z" fill="url(#priserPrisWave2)" /></svg>
-          </div>
-
-          <div className="relative z-10">
+        {/* ===== PRISBLOKK ===== */}
+        <ToSomSection
+          spotlight="blue"
+          className="px-6"
+        >
+          <div className="mx-auto max-w-xl space-y-8 text-center">
             <h2
-              className="text-3xl md:text-4xl font-semibold text-white/95 mb-8"
-              style={{ letterSpacing: '-0.02em' }}
+              style={{
+                ...typographyToStyle('heading-lg'),
+                color: color.text.primary,
+              }}
             >
               Én pris. Alt inkludert.
             </h2>
-            <p
-              className="text-xl md:text-2xl text-center mb-8"
-              style={{ color: 'rgba(255,255,255,0.90)', lineHeight: '1.7', maxWidth: '640px', margin: '0 auto 48px', letterSpacing: '0.2px' }}
-            >
-              Du betaler kun én gang når du er klar. Ingen abonnement. Ingen skjulte kostnader. Ingen ekstra funksjoner bak betaling.
-            </p>
 
-            {/* Placeholder for payment */}
-            <div
-              className="inline-flex flex-col items-center justify-center rounded-3xl px-12 py-10 max-w-[400px]"
+            <GlassCard
+              padding="xl"
+              className="space-y-6"
               style={{
-                background: 'rgba(255,255,255,0.04)',
-                backdropFilter: 'blur(12px)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                boxShadow: '0 10px 36px rgba(0,0,0,0.22)',
+                background: 'rgba(212,175,55,0.06)',
+                border: '1px solid rgba(212,175,55,0.25)',
+                boxShadow: '0 0 40px rgba(212,175,55,0.15)',
               }}
             >
               <div
-                className="text-4xl md:text-5xl font-semibold mb-2"
-                style={{ color: 'rgba(255,255,255,0.95)' }}
+                style={{
+                  ...typographyToStyle('heading-xl'),
+                  color: color.brand.gold,
+                }}
               >
                 349 kr
               </div>
+
               <p
-                className="text-lg md:text-xl mb-6"
-                style={{ color: 'rgba(255,255,255,0.85)' }}
-              >
-                ToSom — full tilgang
-              </p>
-              <div
-                className="w-full py-3 px-6 rounded-xl text-center text-sm font-medium"
                 style={{
-                  background: 'rgba(212,175,55,0.15)',
-                  border: '1px solid rgba(212,175,55,0.25)',
+                  ...typographyToStyle('body-lg'),
+                  color: color.text.secondary,
+                  lineHeight: '1.8',
+                }}
+              >
+                ToSom — full tilgang. Betales én gang og dekker hele reisen.
+              </p>
+
+              <div
+                style={{
+                  background: 'rgba(212,175,55,0.12)',
+                  border: '1px solid rgba(212,175,55,0.20)',
                   color: 'rgba(255,255,255,0.7)',
+                  borderRadius: `${radius.md}px`,
+                  padding: '14px 20px',
+                  fontSize: '14px',
+                  lineHeight: '1.6',
                 }}
               >
                 Betalingsløsning er under utvikling.
                 <br />
-                <span className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                <span style={{ fontSize: '12px', color: color.text.subtle }}>
                   ToSom er i begrenset testfase.
                 </span>
               </div>
-            </div>
+            </GlassCard>
           </div>
-        </section>
+        </ToSomSection>
 
-        {/* ════════════════════════════════════
-            E) CTA (GlobalCTA)
-            ════════════════════════════════════ */}
-        <GlobalCTA />
+        {/* ===== CTA ===== */}
+        <ToSomSection
+          spotlight="cta"
+          className="px-6 text-center space-y-6"
+        >
+          <h2
+            style={{
+              ...typographyToStyle('heading-lg'),
+              color: color.text.primary,
+            }}
+          >
+            Klar til å starte?
+          </h2>
 
+          <p
+            style={{
+              ...typographyToStyle('body-lg'),
+              color: color.text.secondary,
+            }}
+          >
+            Lag profilen din i ditt eget tempo og møt noen som faktisk passer deg — på ordentlig.
+          </p>
+
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4 pt-4">
+            <ToSomButton href="/register" variant="gold" size="xl">
+              Start reisen
+            </ToSomButton>
+
+            <ToSomButton href="/login" variant="dark" size="lg">
+              Logg inn
+            </ToSomButton>
+          </div>
+        </ToSomSection>
+
+        {/* ===== FOOTER ===== */}
         <Footer />
-      </main>
-    </>
+      </div>
+    </main>
   );
 }

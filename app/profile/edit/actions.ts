@@ -1,7 +1,6 @@
 "use server";
 
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth/options";
+import { getServerSession } from "@/lib/auth/session";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
@@ -18,7 +17,7 @@ export interface ProfileFormData {
 }
 
 export async function getProfile() {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession();
 
   if (!session?.user?.id) {
     return { profile: null, error: "Du må vere logga inn" };
@@ -49,7 +48,7 @@ export async function getProfile() {
 }
 
 export async function updateProfile(formData: ProfileFormData): Promise<{ success?: boolean; error?: string }> {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession();
 
   if (!session?.user?.id) {
     return { error: "Du må vere logga inn" };

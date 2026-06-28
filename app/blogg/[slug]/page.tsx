@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Footer } from '@/components/ui5/Footer';
+import { Footer } from '@/components/ui/layout/Footer';
 import { color, spacing, typographyToStyle, radius, shadow } from '@/config/design-tokens';
 import { useParams } from 'next/navigation';
 

@@ -1,13 +1,17 @@
 
+import { auth } from '@/lib/auth/config'
 import { getTraceDetails } from '@/lib/admin/observability'
 import { requireAdmin } from '@/lib/admin/requireAuth'
+import { castToAdminUser } from '@/lib/auth/admin-auth'
 
 export async function GET(
   request: Request
 ): Promise<Response> {
   try {
     const { adminId } = await request.json()
-    await requireAdmin()
+    const session = await auth()
+    const user = castToAdminUser(session?.user)
+    await requireAdmin(user)
 
     const url = new URL(request.url)
     const traceId = url.searchParams.get('traceId')

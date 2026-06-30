@@ -288,13 +288,12 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// ─── GET /api/dev-login/users — List available test users ───
+// ─── Hjelpsfunksjonar (ikkje Route-exports) ───
 
 /**
  * Hent tilgjengelige testbrukere
- * GET /api/dev-login/users
  */
-export async function GET_USERS(req: NextRequest) {
+async function getAvailableUsers() {
   if (!DEV_LOGIN_ENABLED) {
     return NextResponse.json(
       { error: 'Dev-login er ikke aktivert.' },
@@ -313,13 +312,10 @@ export async function GET_USERS(req: NextRequest) {
   return NextResponse.json({ users });
 }
 
-// ─── GET /api/dev-login/status ───
-
 /**
  * Sjekk om dev-login er tilgjengelig
- * GET /api/dev-login/status
  */
-export async function GET_STATUS(req: NextRequest) {
+async function getDevLoginStatus() {
   return NextResponse.json({
     enabled: DEV_LOGIN_ENABLED,
     availableUsers: Object.keys(TEST_USERS),

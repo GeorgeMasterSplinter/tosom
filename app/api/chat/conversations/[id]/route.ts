@@ -11,7 +11,7 @@ import { prisma } from '@/lib/prisma';
 
 export async function GET(
   request: Request,
-  context: { params: { id: string } }
+  context: any
 ) {
   try {
     const session = await auth();
@@ -20,7 +20,8 @@ export async function GET(
       return NextResponse.json({ error: 'Uautorisert' }, { status: 401 });
     }
 
-    const conversationId = context.params.id;
+    const id = context?.params?.id;
+    const conversationId = id;
 
     const conversation = await prisma.conversation.findUnique({
       where: { id: conversationId },

@@ -299,7 +299,7 @@ export const platformStyles = {
 } as const;
 
 /* ── Platform Registry (default export) ── */
-export default {
+const platformConfig = {
   platformCapabilities,
   componentRegistry,
   setPlatform,
@@ -309,3 +309,5 @@ export default {
   createPlatformComponent,
   platformStyles,
 };
+
+export default platformConfig;

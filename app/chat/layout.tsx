@@ -30,7 +30,7 @@ export interface WarmFlowContextType {
   transitionMood: (mood: MoodType) => void;
 }
 
-export const WarmFlowContext = createContext<WarmFlowContextType>({
+const WarmFlowContext = createContext<WarmFlowContextType>({
   currentMood: 'calm',
   colors: MOOD_COLORS.calm,
   background: MOOD_COLORS.calm.background,
@@ -39,7 +39,7 @@ export const WarmFlowContext = createContext<WarmFlowContextType>({
   transitionMood: () => {},
 });
 
-export const useWarmFlow = () => useContext(WarmFlowContext);
+const useWarmFlow = () => useContext(WarmFlowContext);
 
 // ─── PROVIDER ─────────────────────
 

@@ -333,4 +333,5 @@ export const JourneyTemplate5: React.FC<JourneyTemplate5Props> = ({
   );
 };
 
-export default { ChatTemplate5, CoupleTemplate5, JourneyTemplate5 };
+const EmotionTemplates = { ChatTemplate5, CoupleTemplate5, JourneyTemplate5 };
+export default EmotionTemplates;

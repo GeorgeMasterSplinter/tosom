@@ -11,8 +11,8 @@ interface SelectFieldProps {
   label: string;
   name: string;
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  options: Array<{ value: string; label: string }>;
+  onChange: (value: string) => void;
+  options: string[] | Array<{ value: string; label: string }>;
   placeholder?: string;
   required?: boolean;
 }
@@ -42,7 +42,7 @@ export const SelectField: FC<SelectFieldProps> = ({
         id={name}
         name={name}
         value={value}
-        onChange={onChange}
+        onChange={(e) => onChange(e.target.value)}
         required={required}
         className="
           w-full px-4 py-3 rounded-xl text-sm
@@ -72,11 +72,11 @@ export const SelectField: FC<SelectFieldProps> = ({
         {placeholder && (
           <option value="">{placeholder}</option>
         )}
-        {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
+        {options.map((opt, i) => {
+          const val = typeof opt === 'string' ? opt : opt.value;
+          const lbl = typeof opt === 'string' ? opt : opt.label;
+          return <option key={i} value={val}>{lbl}</option>;
+        })}
       </select>
     </div>
   );

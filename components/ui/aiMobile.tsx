@@ -139,4 +139,5 @@ export const AIJourneyGuideMobile: React.FC<{
   </div>
 );
 
-export default { AIInsightsMobile, AIRewriteMobile, AIIcebreakersMobile, AIJourneyGuideMobile };
+const AITools = { AIInsightsMobile, AIRewriteMobile, AIIcebreakersMobile, AIJourneyGuideMobile };
+export default AITools;

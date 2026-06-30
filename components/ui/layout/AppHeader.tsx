@@ -218,7 +218,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ hideOn = false }) => {
           <div className="hidden lg:flex items-center gap-4">
             {/* Logg inn (sekundær) */}
             <Link
-              href="/logg-inn"
+              href="/login"
               className="h-[40px] px-6 flex items-center justify-center rounded-[10px] text-sm font-medium transition-all duration-200 ease-out"
               style={{
                 background: 'rgba(255,255,255,0.04)',
@@ -333,7 +333,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ hideOn = false }) => {
                 ))}
                 <div className="flex flex-col gap-3 pt-6" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
                   <Link
-                    href="/logg-inn"
+                    href="/login"
                     className="h-[44px] px-6 flex items-center justify-center rounded-[10px] text-sm font-medium transition-all duration-200 ease-out"
                     style={{
                       background: 'rgba(255,255,255,0.04)',

@@ -221,4 +221,5 @@ export const DesktopWindow: React.FC<{
   </div>
 );
 
-export default { DesktopSidebarResizable, useKeyboardShortcuts, DesktopNotifications, DesktopCommandPalette, DesktopWindow };
+const DesktopComponents = { DesktopSidebarResizable, useKeyboardShortcuts, DesktopNotifications, DesktopCommandPalette, DesktopWindow };
+export default DesktopComponents;

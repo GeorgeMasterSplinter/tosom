@@ -23,40 +23,16 @@ import type { NextRequest } from 'next/server'
 
 // ─── Konfigurasjon ───
 
+/** Maintenance mode — sett MAINTENANCE_ENABLED=true for å aktivere */
+const MAINTENANCE_ENABLED = process.env.MAINTENANCE_ENABLED === 'true'
+
 /** Alltid tilgjengelege baner (nivå 0) */
 const PUBLIC_PATHS = [
-  '/',
-  '/login',
-  '/register',
-  '/api/auth',
-  '/favicon.ico',
+  '/maintenance',
+  '/dev-login',
+  '/api/dev-login',
   '/_next',
-  '/api/health',
-  '/docs',
-  '/brand',
-  '/hvorfor',
-  '/slik',
-  '/reisen',
-  '/priser',
-  '/betaling',
-  '/questions',
-  '/onboarding',
-  '/match',
-  '/matching',
-  '/vilkar',
-  '/vilkar',
-  '/dashboard',
-  '/journey',
-  '/profile',
-  '/chat',
-  '/admin',
-  '/design-system',
-  '/ui',
-  '/blogg',
-  '/cookies',
-  '/kontakt',
-  '/om-oss',
-  '/personvern',
+  '/favicon.ico',
 ]
 
 /** Beskytta API-ruter — krev innlogging */
@@ -65,6 +41,7 @@ const PROTECTED_API_PREFIXES = [
   '/api/matching',
   '/api/journey',
   '/api/conversation',
+  '/api/chat',
   '/api/system',
   '/api/ai',
   '/api/admin',
@@ -104,6 +81,14 @@ function getRoleFromSession(req: NextRequest): string | null {
 
 export function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname
+
+  // Maintenance mode — redirect alt til /maintenance
+  if (MAINTENANCE_ENABLED) {
+    if (path !== '/maintenance' && !path.startsWith('/maintenance/')) {
+      return NextResponse.redirect(new URL('/maintenance', req.url))
+    }
+    return NextResponse.next()
+  }
 
   // 1. Alltid tilgjengelege baner
   for (const publicPath of PUBLIC_PATHS) {

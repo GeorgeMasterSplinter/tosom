@@ -1,223 +1,381 @@
 /**
- * ToSom – OnboardingFlow
- * Hovud-komponent for onboarding-prosessen med 10 steg.
+ * ToSom — OnboardingFlow (rebuild 2026)
+ * 10-stegs flyt med nye step-komponenter.
+ * Fase 4: Autosave + fade-transition.
  */
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { OnboardingLayout } from './OnboardingLayout';
-import { InputField } from './components/InputField';
-import { SelectField } from './components/SelectField';
-import { SliderField } from './components/SliderField';
-import { TextAreaField } from './components/TextAreaField';
-import { allSteps, step0Data, step1Data, step2Data, step3Data, step4Data, step5Data, step6Data, step7Data, step8Data, step9Data } from './data/questions';
 
-interface ProfileData {
-  identityName: string; age: string; gender: string; seekingGender: string;
-  height: string; bodyType: string; lifestyle: string; smoking: string;
-  religion: string; children: string; wantChildren: string; city: string;
-  distancePref: number; agePrefMin: number; agePrefMax: number;
-  personlighet: Record<string, string>; tilknytning: Record<string, string>;
-  kommunikasjon: Record<string, string>; kjaerlighet: Record<string, string>;
-  livsstil: Record<string, string>; fremtid: Record<string, string>;
-  humor: Record<string, string>; moden: Record<string, string>;
-  politicsImportance: number; religionImportance: number;
-  dietPreference: string; sleepSchedule: string; pets: string;
-  travelFreq: string; alcoholFreq: string; ambitionLevel: string;
-  structureSpontaneity: string; introExtrovert: string; attachmentStyle: string;
+import Step1Profile from './steps/Step1Profile';
+import Step2Personlighet from './steps/Step2Personlighet';
+import Step3Tilknytning from './steps/Step3Tilknytning';
+import Step4Kjærlighetsspråk from './steps/Step4Kjærlighetsspråk';
+import Step5LivsstilVerdier from './steps/Step5LivsstilVerdier';
+import Step6FramtidVisjon from './steps/Step6FramtidVisjon';
+import Step7HumorPersonlighet from './steps/Step7HumorPersonlighet';
+import Step8ModenNysgjerrighet from './steps/Step8ModenNysgjerrighet';
+import Step9Oppsummering from './steps/Step9Oppsummering';
+import Step10StartReisen from './steps/Step10StartReisen';
+
+const STORAGE_KEY = 'tosom_onboarding_draft';
+
+interface ProfileData extends Record<string, unknown> {
+  identityName: string;
+  age: string;
+  gender: string;
+  seekingGender: string;
+  height: string;
+  bodyType: string;
+  lifestyle: string;
+  smoking: string;
+  religion: string;
+  children: string;
+  wantChildren: string;
+  city: string;
+  distancePref: number;
+  agePrefMin: number;
+  agePrefMax: number;
+  // Legacy support for Step1
+  firstName: string;
+  seeking: string;
+  maxDistance: number;
+  minAge: number;
+  maxAge: number;
+  location: string;
+  politicsImportance: number;
+  religionImportance: number;
+  dietPreference: string;
+  sleepSchedule: string;
+  pets: string;
+  travelFreq: string;
+  alcoholFreq: string;
+  ambitionLevel: string;
+  structureSpontaneity: string;
+  introExtrovert: string;
+  attachmentStyle: string;
+  // Step 2
+  selfDesc: string;
+  energyGiver: string;
+  energyDrainer: string;
+  pressureReact: string;
+  quirk: string;
+  // Step 2 (veiledet)
+  bestSelf: string;
+  energy: string;
+  drains: string;
+  pressure: string;
+  habits: string;
+  // Step 3
+  safetyNeed: string;
+  insecurityTrigger: string;
+  sadnessNeed: string;
+  stressNeed: string;
+  importantBoundary: string;
+  // Step 4
+  loveGive: string;
+  loveReceive: string;
+  closenessBuilder: string;
+  distanceCreator: string;
+  smallThing: string;
+  // Step 5
+  highPriority: string;
+  lowPriority: string;
+  goodEveryday: string;
+  desiredLifestyle: string;
+  undesiredLifestyle: string;
+  // Step 6
+  futureVision: string;
+  dreamGoal: string;
+  buildTogether: string;
+  experienceAlone: string;
+  experienceTogether: string;
+  // Step 7
+  laughterTrigger: string;
+  quirkyHabit: string;
+  guiltyPleasure: string;
+  totallyYou: string;
+  partnerWouldLaugh: string;
+  // Step 8
+  intimacySafety: string;
+  comfortableWith: string;
+  boundary: string;
+  nearerType: string;
+  needsTime: string;
+}
+
+const initialData: ProfileData = {
+  identityName: '', age: '', gender: '', seekingGender: '', height: '',
+  bodyType: '', lifestyle: '', smoking: '', religion: '', children: '',
+  wantChildren: '', city: '', distancePref: 50, agePrefMin: 23, agePrefMax: 40,
+  firstName: '', seeking: '', maxDistance: 50, minAge: 23, maxAge: 40, location: '',
+  politicsImportance: 5, religionImportance: 5, dietPreference: '',
+  sleepSchedule: '', pets: '', travelFreq: '', alcoholFreq: '',
+  ambitionLevel: '', structureSpontaneity: '', introExtrovert: '',
+  attachmentStyle: '',
+  selfDesc: '', energyGiver: '', energyDrainer: '', pressureReact: '', quirk: '',
+  bestSelf: '', energy: '', drains: '', pressure: '', habits: '',
+  safetyNeed: '', insecurityTrigger: '', sadnessNeed: '', stressNeed: '', importantBoundary: '',
+  loveGive: '', loveReceive: '', closenessBuilder: '', distanceCreator: '', smallThing: '',
+  highPriority: '', lowPriority: '', goodEveryday: '', desiredLifestyle: '', undesiredLifestyle: '',
+  futureVision: '', dreamGoal: '', buildTogether: '', experienceAlone: '', experienceTogether: '',
+  laughterTrigger: '', quirkyHabit: '', guiltyPleasure: '', totallyYou: '', partnerWouldLaugh: '',
+  intimacySafety: '', comfortableWith: '', boundary: '', nearerType: '', needsTime: '',
+};
+
+function loadDraft(): Partial<ProfileData> {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object') return parsed;
+    }
+  } catch { /* ignore */ }
+  return {};
+}
+
+function saveDraft(data: ProfileData) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch { /* ignore */ }
 }
 
 export default function OnboardingFlow() {
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
-  const [data, setData] = useState<ProfileData>({
-    identityName: '', age: '', gender: '', seekingGender: '', height: '',
-    bodyType: '', lifestyle: '', smoking: '', religion: '', children: '',
-    wantChildren: '', city: '', distancePref: 50, agePrefMin: 23, agePrefMax: 40,
-    personlighet: {}, tilknytning: {}, kommunikasjon: {}, kjaerlighet: {},
-    livsstil: {}, fremtid: {}, humor: {}, moden: {}, politicsImportance: 5,
-    religionImportance: 5, dietPreference: '', sleepSchedule: '', pets: '',
-    travelFreq: '', alcoholFreq: '', ambitionLevel: '', structureSpontaneity: '',
-    introExtrovert: '', attachmentStyle: '',
-  });
+  const [data, setData] = useState<ProfileData>(() => ({ ...initialData, ...loadDraft() }));
+  const [fadeKey, setFadeKey] = useState(0);
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const setText = (name: string, value: string) => setData(d => ({ ...d, [name]: value }));
-  const setSlider = (name: string, value: number) => setData(d => ({ ...d, [name]: value }));
+  // Autosave med debounce (400ms)
+  useEffect(() => {
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(() => saveDraft(data), 400);
+    return () => { if (saveTimerRef.current) clearTimeout(saveTimerRef.current); };
+  }, [data]);
 
-  const renderStep0 = () => (
-    <div className="space-y-5">
-      <InputField label={step0Data.fields.identityName.label} name="identityName" value={data.identityName} onChange={e => setText('identityName', e.target.value)} placeholder={step0Data.fields.identityName.placeholder} exampleText={step0Data.fields.identityName.example} required />
-      <InputField label={step0Data.fields.age.label} name="age" type="number" value={data.age} onChange={e => setText('age', e.target.value)} placeholder={step0Data.fields.age.placeholder} min={23} max={99} required />
-      <SelectField label={step0Data.fields.gender.label} name="gender" value={data.gender} onChange={e => setText('gender', e.target.value)} options={step0Data.fields.gender.options!} required />
-      <SelectField label={step0Data.fields.seekingGender.label} name="seekingGender" value={data.seekingGender} onChange={e => setText('seekingGender', e.target.value)} options={step0Data.fields.seekingGender.options!} required />
-      <InputField label={step0Data.fields.height.label} name="height" type="number" value={data.height} onChange={e => setText('height', e.target.value)} placeholder={step0Data.fields.height.placeholder} min={100} max={250} />
-      <SelectField label={step0Data.fields.bodyType.label} name="bodyType" value={data.bodyType} onChange={e => setText('bodyType', e.target.value)} options={step0Data.fields.bodyType.options!} />
-      <SelectField label={step0Data.fields.lifestyle.label} name="lifestyle" value={data.lifestyle} onChange={e => setText('lifestyle', e.target.value)} options={step0Data.fields.lifestyle.options!} />
-      <SelectField label={step0Data.fields.smoking.label} name="smoking" value={data.smoking} onChange={e => setText('smoking', e.target.value)} options={step0Data.fields.smoking.options!} />
-      <SelectField label={step0Data.fields.religion.label} name="religion" value={data.religion} onChange={e => setText('religion', e.target.value)} options={step0Data.fields.religion.options!} />
-      <SelectField label={step0Data.fields.children.label} name="children" value={data.children} onChange={e => setText('children', e.target.value)} options={step0Data.fields.children.options!} />
-      <SelectField label={step0Data.fields.wantChildren.label} name="wantChildren" value={data.wantChildren} onChange={e => setText('wantChildren', e.target.value)} options={step0Data.fields.wantChildren.options!} />
-      <InputField label={step0Data.fields.city.label} name="city" value={data.city} onChange={e => setText('city', e.target.value)} placeholder={step0Data.fields.city.placeholder} exampleText={step0Data.fields.city.example} />
-      <SliderField label={step0Data.fields.distancePref.label} name="distancePref" value={data.distancePref} onChange={v => setSlider('distancePref', v)} min={step0Data.fields.distancePref.min} max={step0Data.fields.distancePref.max} labelLeft={step0Data.fields.distancePref.labelLeft} labelRight={step0Data.fields.distancePref.labelRight} />
-      <SliderField label={step0Data.fields.agePrefMin.label} name="agePrefMin" value={data.agePrefMin} onChange={v => setSlider('agePrefMin', v)} min={step0Data.fields.agePrefMin.min} max={step0Data.fields.agePrefMin.max} labelLeft={step0Data.fields.agePrefMin.labelLeft} labelRight={step0Data.fields.agePrefMin.labelRight} />
-      <SliderField label={step0Data.fields.agePrefMax.label} name="agePrefMax" value={data.agePrefMax} onChange={v => setSlider('agePrefMax', v)} min={step0Data.fields.agePrefMax.min} max={step0Data.fields.agePrefMax.max} labelLeft={step0Data.fields.agePrefMax.labelLeft} labelRight={step0Data.fields.agePrefMax.labelRight} />
-    </div>
-  );
+  // Rydd draft når reisen starter
+  useEffect(() => {
+    if (step > 9) {
+      try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
+    }
+  }, [step]);
 
-  const renderQuestions = (questions: { name: string; label: string; placeholder: string; example?: string }[], category: keyof ProfileData) => (
-    <div className="space-y-5">
-      {questions.map(q => {
-        const catData = (data[category] as Record<string, string> | undefined) || {};
-        return (
-          <TextAreaField
-            key={q.name} label={q.label} name={q.name} value={catData[q.name] || ''}
-            placeholder={q.placeholder} exampleText={q.example}
-            onChange={e => setData(d => ({ ...d, [category]: { ...((d[category] as Record<string, string>) || {}), [q.name]: e.target.value } }))}
-          />
-        );
-      })}
-    </div>
-  );
-
-  const renderStep9 = () => {
-    const q = step9Data.questions;
-    return (
-      <div className="space-y-5">
-        <SliderField label={q[0].label} name="politicsImportance" value={data.politicsImportance} onChange={v => setSlider('politicsImportance', v)} min={0} max={10} labelLeft="Ikke viktig" labelRight="Veldig viktig" />
-        <SliderField label={q[1].label} name="religionImportance" value={data.religionImportance} onChange={v => setSlider('religionImportance', v)} min={0} max={10} labelLeft="Ikke viktig" labelRight="Veldig viktig" />
-        <SelectField label={q[2].label} name="dietPreference" value={data.dietPreference} onChange={e => setText('dietPreference', e.target.value)} options={q[2].options!} />
-        <SelectField label={q[3].label} name="sleepSchedule" value={data.sleepSchedule} onChange={e => setText('sleepSchedule', e.target.value)} options={q[3].options!} />
-        <SelectField label={q[4].label} name="pets" value={data.pets} onChange={e => setText('pets', e.target.value)} options={q[4].options!} />
-        <SelectField label={q[5].label} name="travelFreq" value={data.travelFreq} onChange={e => setText('travelFreq', e.target.value)} options={q[5].options!} />
-        <SelectField label={q[6].label} name="alcoholFreq" value={data.alcoholFreq} onChange={e => setText('alcoholFreq', e.target.value)} options={q[6].options!} />
-        <SelectField label={q[7].label} name="ambitionLevel" value={data.ambitionLevel} onChange={e => setText('ambitionLevel', e.target.value)} options={q[7].options!} />
-        <SelectField label={q[8].label} name="structureSpontaneity" value={data.structureSpontaneity} onChange={e => setText('structureSpontaneity', e.target.value)} options={q[8].options!} />
-        <SelectField label={q[9].label} name="introExtrovert" value={data.introExtrovert} onChange={e => setText('introExtrovert', e.target.value)} options={q[9].options!} />
-        <SelectField label={q[10].label} name="attachmentStyle" value={data.attachmentStyle} onChange={e => setText('attachmentStyle', e.target.value)} options={q[10].options!} />
-      </div>
-    );
+  const setField = (field: string, value: unknown) => {
+    setData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleNext = async () => {
-    if (step === 9) {
-      setSaving(true);
+  const goToStep = useCallback((s: number) => {
+    setStep(s);
+    setFadeKey((k) => k + 1);
+  }, []);
+
+  // === Save + Matching (for Step 10) ===
+  const handleStartReisen = async () => {
+    setSaving(true);
+    try {
+      const payload = {
+        basic: {
+          identityName: data.identityName, age: data.age, gender: data.gender,
+          seekingGender: data.seekingGender, height: data.height, bodyType: data.bodyType,
+          lifestyle: data.lifestyle, smoking: data.smoking, religion: data.religion,
+          children: data.children, wantChildren: data.wantChildren, city: data.city,
+          distancePref: data.distancePref, agePrefMin: data.agePrefMin, agePrefMax: data.agePrefMax,
+        },
+        personlighet: {
+          selfDesc: data.selfDesc, energyGiver: data.energyGiver, energyDrainer: data.energyDrainer,
+          pressureReact: data.pressureReact, quirk: data.quirk,
+        },
+        tilknytning: {
+          safetyNeed: data.safetyNeed, insecurityTrigger: data.insecurityTrigger,
+          sadnessNeed: data.sadnessNeed, stressNeed: data.stressNeed, importantBoundary: data.importantBoundary,
+        },
+        kommunikasjon: {
+          commStyle: data.structureSpontaneity, conflictStyle: data.introExtrovert,
+          calmingHelp: data.comfortableWith, trigger: data.insecurityTrigger, trustBuilder: data.safetyNeed,
+        },
+        kjaerlighet: {
+          loveGive: data.loveGive, loveReceive: data.loveReceive, closenessBuilder: data.closenessBuilder,
+          distanceCreator: data.distanceCreator, smallThing: data.smallThing,
+        },
+        livsstil: {
+          highPriority: data.highPriority, lowPriority: data.lowPriority, goodEveryday: data.goodEveryday,
+          desiredLifestyle: data.desiredLifestyle, undesiredLifestyle: data.undesiredLifestyle,
+        },
+        fremtid: {
+          futureVision: data.futureVision, dreamGoal: data.dreamGoal, buildTogether: data.buildTogether,
+          experienceAlone: data.experienceAlone, experienceTogether: data.experienceTogether,
+        },
+        humor: {
+          laughterTrigger: data.laughterTrigger, quirkyHabit: data.quirkyHabit, guiltyPleasure: data.guiltyPleasure,
+          totallyYou: data.totallyYou, partnerWouldLaugh: data.partnerWouldLaugh,
+        },
+        moden: {
+          intimacySafety: data.intimacySafety, comfortableWith: data.comfortableWith, boundary: data.boundary,
+          nearerType: data.nearerType, needsTime: data.needsTime,
+        },
+        preferanser: {
+          politicsImportance: data.politicsImportance, religionImportance: data.religionImportance,
+          dietPreference: data.dietPreference, sleepSchedule: data.sleepSchedule, pets: data.pets,
+          travelFreq: data.travelFreq, alcoholFreq: data.alcoholFreq, ambitionLevel: data.ambitionLevel,
+          structureSpontaneity: data.structureSpontaneity, introExtrovert: data.introExtrovert,
+          attachmentStyle: data.attachmentStyle,
+        },
+      };
+
+      console.log("PROFILE SETUP: Starting...", { basic: { identityName: data.identityName, age: data.age } });
+      const profileRes = await fetch('/api/profile/setup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!profileRes.ok) {
+        const errBody = await profileRes.text().catch(() => '');
+        console.error("PROFILE SETUP FAILED:", { status: profileRes.status, body: errBody });
+        throw new Error('Kunne ikke lagre profil');
+      }
+
+      const profileData = await profileRes.json();
+      console.log("PROFILE SETUP RESPONSE:", { status: profileRes.status, data: profileData });
+
+      const userId = profileData.userId || profileData.user?.id || '';
+      console.log("EXTRACTED userId:", { userId, profileDataKeys: Object.keys(profileData) });
+
+      if (!userId) {
+        console.log("REDIRECT: userId missing", { userId, profileData });
+        window.location.href = '/dashboard';
+        return;
+      }
+
       try {
-        const payload = {
-          basic: { identityName: data.identityName, age: data.age, gender: data.gender, seekingGender: data.seekingGender, height: data.height, bodyType: data.bodyType, lifestyle: data.lifestyle, smoking: data.smoking, religion: data.religion, children: data.children, wantChildren: data.wantChildren, city: data.city, distancePref: data.distancePref, agePrefMin: data.agePrefMin, agePrefMax: data.agePrefMax },
-          personlighet: data.personlighet, tilknytning: data.tilknytning, kommunikasjon: data.kommunikasjon, kjaerlighet: data.kjaerlighet, livsstil: data.livsstil, fremtid: data.fremtid, humor: data.humor, moden: data.moden,
-          preferanser: { politicsImportance: data.politicsImportance, religionImportance: data.religionImportance, dietPreference: data.dietPreference, sleepSchedule: data.sleepSchedule, pets: data.pets, travelFreq: data.travelFreq, alcoholFreq: data.alcoholFreq, ambitionLevel: data.ambitionLevel, structureSpontaneity: data.structureSpontaneity, introExtrovert: data.introExtrovert, attachmentStyle: data.attachmentStyle },
-        };
-
-        /* Steg 1: Lagre profil */
-        const profileRes = await fetch('/api/profile/setup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-
-        if (!profileRes.ok) throw new Error('Kunne ikke lagre profil');
-
-        const profileData = await profileRes.json();
-        const userId = profileData.userId || profileData.user?.id || '';
-
-        if (!userId) {
-          window.location.href = '/dashboard';
+        console.log("API REQUEST: /api/matching", { userId });
+        const matchRes = await fetch('/api/matching', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId }),
+        });
+        console.log("MATCHING RESPONSE STATUS:", matchRes.status);
+        if (matchRes.ok) {
+          const matchData = await matchRes.json().catch(() => ({}));
+          console.log("REDIRECT: matching success", { userId, matchResult: matchData });
+          window.location.href = `/matching?userId=${userId}`;
           return;
         }
-
-        /* Steg 2: Kjør matching */
-        try {
-          const matchRes = await fetch('/api/matching', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId }) });
-          if (matchRes.ok) {
-            window.location.href = `/matching?userId=${userId}`;
-            return;
-          }
-        } catch {
-          /* Feil paa matching er ikkje kritisk — går til dashboard */
-        }
-
-        window.location.href = '/dashboard';
+        const matchErrorText = await matchRes.text().catch(() => '');
+        console.log("REDIRECT: matching non-OK", { userId, matchStatus: matchRes.status, matchBody: matchErrorText });
       } catch (err) {
-        console.error('Error saving profile:', err);
-      } finally {
-        setSaving(false);
+        console.log("REDIRECT: matching exception", { userId, matchError: err instanceof Error ? err.message : String(err) });
       }
-      return;
+
+      console.log("REDIRECT: fallback to dashboard", { userId });
+      window.location.href = '/dashboard';
+    } catch (err) {
+      console.error('Error saving profile:', err);
+    } finally {
+      setSaving(false);
     }
-    setStep(s => s + 1);
   };
 
-  const handleBack = () => { if (step > 0) setStep(s => s - 1); };
+  const renderStep = () => {
+    const baseProps = { data, onChange: setField };
 
-  const renderContent = () => {
     switch (step) {
-      case 0: return renderStep0();
-      case 1: return renderQuestions(step1Data.questions, 'personlighet');
-      case 2: return renderQuestions(step2Data.questions, 'tilknytning');
-      case 3: return renderQuestions(step3Data.questions, 'kommunikasjon');
-      case 4: return renderQuestions(step4Data.questions, 'kjaerlighet');
-      case 5: return renderQuestions(step5Data.questions, 'livsstil');
-      case 6: return renderQuestions(step6Data.questions, 'fremtid');
-      case 7: return renderQuestions(step7Data.questions, 'humor');
-      case 8: return renderQuestions(step8Data.questions, 'moden');
-      case 9: return renderStep9();
-      default: return null;
+      case 0:
+        return <Step1Profile {...baseProps} onNext={() => goToStep(1)} />;
+      case 1:
+        return <Step2Personlighet {...baseProps} onBack={() => goToStep(0)} onNext={handleNext} />;
+      case 2:
+        return <Step3Tilknytning step={step} goToStep={goToStep} {...baseProps} onNext={handleNext} />;
+      case 3:
+        return <Step4Kjærlighetsspråk step={step} goToStep={goToStep} {...baseProps} onNext={handleNext} />;
+      case 4:
+        return <Step5LivsstilVerdier step={step} goToStep={goToStep} {...baseProps} onNext={handleNext} />;
+      case 5:
+        return <Step6FramtidVisjon step={step} goToStep={goToStep} {...baseProps} onNext={handleNext} />;
+      case 6:
+        return <Step7HumorPersonlighet step={step} goToStep={goToStep} {...baseProps} onNext={handleNext} />;
+      case 7:
+        return <Step8ModenNysgjerrighet step={step} goToStep={goToStep} {...baseProps} onNext={handleNext} />;
+      case 8:
+        return <Step9Oppsummering step={step} goToStep={goToStep} data={data} onNext={handleNext} onBack={() => goToStep(7)} />;
+      case 9:
+        return <Step10StartReisen step={step} goToStep={goToStep} loading={saving} />;
+      default:
+        return null;
     }
   };
 
-  const currentStepData = allSteps[step];
+  const handleNext = () => goToStep(step + 1);
+  const handleBack = () => { if (step > 0) goToStep(step - 1); };
+
+  // Steg-titler og introtekster
+  const stepsMeta = [
+    { title: 'Grunnprofil', subtitle: 'La oss starte rolig. Vi vil gjerne bli litt kjent med deg — på en måte som føles trygg og ekte.' },
+    { title: 'Personlighet & identitet', subtitle: 'Fortell litt om hvem du er — uten filter.' },
+    { title: 'Tilknytning & trygghet', subtitle: 'Dette hjelper oss å forstå hva du trenger for å føle deg trygg.' },
+    { title: 'Kjærlighetsspråk & nærhet', subtitle: 'Hvordan viser og mottar du kjærlighet?' },
+    { title: 'Livsstil & verdier', subtitle: 'Hva prioriterer du i hverdagen?' },
+    { title: 'Framtid & visjon', subtitle: 'Hva drømmer du om å bygge?' },
+    { title: 'Lek, humor & personlighet', subtitle: 'De små detaljene som gjør deg til deg.' },
+    { title: 'Moden nysgjerrighet', subtitle: 'Hva trenger du for å føle deg trygg i nærhet?' },
+    { title: 'Oppsummering', subtitle: 'Se over det du har delt. Du kan endre alt senere.' },
+    { title: 'Start reisen', subtitle: 'Du er klar. Vi matcher deg rolig og presist — basert på det du har delt.' },
+  ];
+
+  const guidingTexts = [
+    "Vi starter med det grunnleggende, slik at vi kan bli litt kjent med deg.",
+    "Personligheten din er det som gjør deg til deg.",
+    "Tilknytningsmønsteret ditt sier mye om hvordan du møter andre mennesker.",
+    "Hvordan du viser kjærlighet, er viktig for å finne noen som passer deg.",
+    "Livsstilssvarene dine hjelper oss å finne noen som trives i hverdagen sammen med deg.",
+    "Fremtidsønsker viser veien for hva dere kan bygge sammen.",
+    "De små detaljene — som humor — forteller hvem du er.",
+    "Modne svar viser deg som person. Del det du er komfortabel med.",
+    "Du har nesten kommet helt til ende. Se over det du har delt.",
+    "Nå er det bare å trykke på \"Start reisen\" så finner vi din match.",
+  ];
+
+  const currentStepData = stepsMeta[step];
   const isLastStep = step === 9;
   const isFirstStep = step === 0;
+  const progressPercent = Math.round(((step + 1) / 10) * 100);
 
-  // Steg-spesifikke tekstar
-  const guidingTexts: Record<number, string> = {
-    0: "Vi starter med det grunnleggende, slik at vi kan bli litt kjent med deg.",
-    1: "Personligheten din er det som gjør deg til deg. Vi vil gjerne kjenne den virkelige deg.",
-    2: "Tilknytningsmønsteret ditt sier mye om hvordan du møter andre mennesker.",
-    3: "Hvordan du kommuniserer, er viktig for å finne noen som passer deg.",
-    4: "Kjærlighetsspråket ditt viser hva som gjør deg truly glad.",
-    5: "Livsstilssvarene dine hjelper oss å finne noen som trives i hverdagen sammen med deg.",
-    6: "Fremtidsønsker viser veien for hva dere kan bygge sammen.",
-    7: "De små detaljene – som humor – forteller hvem du er.",
-    8: "Modne svar viser deg som person. Del det du er komfortabel med.",
-    9: "Nå har vi det vi trenger for å gi deg en gjennomtenkt start.",
-  };
+  // === SSR-safe animation injection ===
+  useEffect(() => {
+    const styleEl = document.createElement('style');
+    styleEl.textContent = `
+      @keyframes tosomFadeIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+    `;
+    styleEl.setAttribute('data-tosom-animations', 'true');
+    document.head.appendChild(styleEl);
 
-  const trustTexts: Record<number, string> = {
-    0: "Svarene dine brukes kun til å bygge profilen din og finne en god match.",
-    1: "Det finnes ingen rette svar – bare det som føles riktig for deg.",
-    2: "Du kan endre tilknytnings-svarene dine senere hvis noe føles annerledes.",
-    3: "Kommunikasjonssvarene deles aldri med andre – kun brukt for å finne en god match.",
-    4: "Del bare det du ønsker – ingen dømmer for det du drømmer om.",
-    5: "Du kan alltid justere livsstilssvarene dine seinare.",
-    6: "Fremtidsønsker er private – bare synlige for din match.",
-    7: "Små detaljer er private og deles aldri med andre.",
-    8: "Modne svar er det mest viktige for matchingen – del det du kan.",
-    9: "Du kan alltid komme tilbake og justere svarene dine seinare.",
-  };
-
-  const ctaTexts: Record<number, string> = {
-    0: "Fortsett til neste steg",
-    1: "Gå videre",
-    2: "Fortsett til neste steg",
-    3: "Gå videre",
-    4: "Fortsett til neste steg",
-    5: "Gå videre",
-    6: "Fortsett til neste steg",
-    7: "Gå videre",
-    8: "Fortsett til neste steg",
-    9: "Start reisen",
-  };
+    return () => {
+      document.head.removeChild(styleEl);
+    };
+  }, []);
 
   return (
     <OnboardingLayout
-      currentStep={step} totalSteps={10} title={currentStepData.title}
+      currentStep={step}
+      totalSteps={10}
+      title={currentStepData.title}
       subtitle={currentStepData.subtitle}
       guidingText={guidingTexts[step]}
-      trustText={trustTexts[step]}
-      onNext={handleNext} onBack={handleBack}
-      showBack={!isFirstStep} showNext
-      nextLabel={isLastStep ? ctaTexts[9] : ctaTexts[step]}
-      disabledNext={saving} exampleText={currentStepData.example}
+      progressPercent={progressPercent}
     >
-      {renderContent()}
+      <div
+        key={fadeKey}
+        className="transition-opacity duration-300 ease-out"
+        style={{ opacity: 0, animation: 'tosomFadeIn 0.3s ease-out forwards' }}
+      >
+        {renderStep()}
+      </div>
     </OnboardingLayout>
   );
 }

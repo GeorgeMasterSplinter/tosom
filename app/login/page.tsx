@@ -1,345 +1,179 @@
-/**
- * ToSom — Login med Magic Link eller Telefonverifisering
- * 
- * Rolig, trygg innlogging utan passord.
- * E-post + magisk lenke ELLER verifisert telefonnummer.
- */
+"use client";
 
-'use client';
-
-import { signIn } from 'next-auth/react';
-import { useEffect, useState } from 'react';
-import { GlassPanel } from '@/components/ui/panels/GlassPanel';
-import { AuthCTA } from '@/components/auth/AuthCTA';
-import { color, radius, shadow } from '@/config/design-tokens';
-
-type LoginMethod = 'email' | 'phone';
+import { useState } from "react";
+import { signIn } from "next-auth/react";
+import PremiumButton from "@/components/ui/PremiumButton";
 
 export default function LoginPage() {
-  const [method, setMethod] = useState<LoginMethod>('email');
-  const [input, setInput] = useState('');
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const [sent, setSent] = useState(false);
-  const [captchaDone, setCaptchaDone] = useState(false);
-  const [devLoading, setDevLoading] = useState(false);
-
-  // Invisible captcha placeholder
-  const initCaptcha = () => {
-    setCaptchaDone(true);
-  };
-
-  const handleDevSetup = async () => {
-    setDevLoading(true);
-    setError('');
-    try {
-      await fetch('/api/dev/setup', { method: 'POST' });
-      await signIn('credentials', {
-        callbackUrl: '/dashboard',
-        redirect: true,
-      });
-    } catch (err) {
-      console.error('Dev setup fail:', err);
-      setError('Kunne ikke starte test‑økten. Prøv igjen.');
-    } finally {
-      setDevLoading(false);
-    }
-  };
+  const [error, setError] = useState("");
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input || !input.includes('@')) {
-      setError('Skriv inn en gyldig e-postadresse.');
-      return;
-    }
-    if (!captchaDone) {
-      setError('Vennligst fullfør sikkerhetsverifisering.');
+    if (!email || !email.includes('@')) {
+      setError("Skriv inn en gyldig e-postadresse.");
       return;
     }
     setLoading(true);
-    setError('');
-    setSent(false);
+    setError("");
     try {
-      await signIn('email', {
-        email: input,
-        callbackUrl: '/dashboard',
-        redirect: false,
-      });
+      await signIn("email", { email, callbackUrl: "/dashboard", redirect: false });
       setSent(true);
     } catch {
-      setError('Kunne ikke sende innloggingslenke. Prøv igjen.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handlePhoneSend = async () => {
-    if (!input) {
-      setError('Skriv inn et gyldig telefonnummer (+f47...).');
-      return;
-    }
-    if (!captchaDone) {
-      setError('Vennligst fullfør sikkerhetsverifisering.');
-      return;
-    }
-    setLoading(true);
-    setError('');
-    try {
-      const res = await fetch('/api/auth/phone/send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: input }),
-      });
-      const data = await res.json();
-      if (data.ok) {
-        setSent(true);
-      } else {
-        setError(data.error || 'Kunne ikke sende verifiseringskode.');
-      }
-    } catch {
-      setError('Kunne ikke sende verifiseringskode. Prøv igjen.');
+      setError("Kunne ikke sende innloggingslenke. Prøv igjen.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-8" style={{ background: color.bg.primary }}>
-      <div className="w-full max-w-[440px] py-12">
+    <div className="
+      min-h-screen 
+      flex flex-col 
+      items-center 
+      justify-start 
+      pt-32 pb-24
+      bg-[radial-gradient(circle_at_top,#112032,#0B1520,#070D14)]
+      text-white
+    ">
+
+      {/* Logo / Header */}
+      <div className="absolute top-10 left-10">
+        <h1 className="
+          text-3xl
+          font-semibold
+          tracking-wider
+          text-[#D4AF37]
+          drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]
+        ">
+          ToSom
+        </h1>
+      </div>
+
+      {/* Premium Glass Panel */}
+      <div className="
+        w-full max-w-md mx-auto
+        bg-white/5
+        border border-white/15
+        backdrop-blur-2xl
+        rounded-2xl
+        p-12 mt-20
+        shadow-[0_0_80px_rgba(0,0,0,0.45)]
+        ring-1 ring-white/10
+        space-y-10
+      ">
+
         {/* Header */}
-        <div className="text-center mb-8">
-          <span
-            className="text-xs uppercase tracking-[0.25em] font-semibold mb-4 block"
-            style={{ color: color.brand.gold }}
-          >
-            Velkommen tilbake
-          </span>
-          <h1
-            className="text-[32px] lg:text-[40px] font-semibold mb-3"
-            style={{
-              color: color.text.primary,
-              letterSpacing: '-0.02em',
-              lineHeight: '1.2',
-            }}
-          >
-            Logg inn
-          </h1>
-          <p
-            className="text-base"
-            style={{ color: color.text.muted }}
-          >
-            {sent
-              ? method === 'email'
-                ? 'Sjekk e-posten din — vi sender deg en sikker lenke.'
-                : 'Sjekk telefonen din — vi sendte en verifiseringskode.'
-              : 'Velg innloggingsmetode nedenfor'}
+        <div className="text-center space-y-3">
+          <h2 className="text-4xl font-semibold tracking-wide text-white/90">
+            VELKOMMEN TILBAKE
+          </h2>
+          <p className="text-lg text-white/60 tracking-wider">
+            {sent ? "Sjekk e-posten din for innloggingslenke." : "Logg inn for å fortsette reisen"}
           </p>
         </div>
 
-        {/* Login Method Toggle */}
-        {!sent && (
-          <div className="flex gap-2 mb-6">
+        {/* Form */}
+        {!sent ? (
+          <form onSubmit={handleEmailSubmit} className="space-y-6">
+            {/* Input */}
+            <div className="space-y-3">
+              <label className="text-sm font-medium text-white/80 tracking-wide">
+                E-post eller telefonnummer
+              </label>
+
+              <div className="
+                flex items-center
+                bg-white/5
+                border border-white/15
+                rounded-xl
+                px-5 py-4
+                focus-within:border-[#D4AF37]
+                focus-within:ring-1
+                focus-within:ring-[#D4AF37]/40
+                transition
+              ">
+                <span className="text-white/40 pr-3">✉️</span>
+                <input
+                  type="text"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="du@eksempel.no eller +47 123 45 678"
+                  className="
+                    w-full
+                    bg-transparent
+                    text-white
+                    placeholder-white/50
+                    tracking-wide
+                    focus:outline-none
+                  "
+                />
+              </div>
+            </div>
+
+            {error && (
+              <p className="text-sm text-[#FF4D4D]">{error}</p>
+            )}
+
+            {/* Buttons */}
+            <div className="space-y-4 pt-2">
+              <PremiumButton
+                variant="primary"
+                className="
+                  w-full py-3 text-lg
+                  bg-[#D4AF37]
+                  hover:bg-[#c9a233]
+                  text-black
+                  font-semibold
+                  tracking-wide
+                  shadow-[0_0_20px_rgba(212,175,55,0.35)]
+                "
+              >
+                {loading ? "Sender lenke…" : "Send innloggingslenke"}
+              </PremiumButton>
+
+              <button
+                onClick={() => {
+                  window.location.href = "/api/dev-login?userId=test-user-1";
+                }}
+                className="
+                  w-full py-3 rounded-xl
+                  bg-white/5
+                  border border-white/15
+                  text-white
+                  hover:bg-white/10
+                  hover:border-white/25
+                  transition
+                  text-lg
+                  tracking-wide
+                "
+              >
+                Logg inn som testbruker
+              </button>
+            </div>
+          </form>
+        ) : (
+          /* Success state */
+          <div className="text-center space-y-4">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="mx-auto">
+              <path d="M3 8L10.5 15.5L21 6M5.5 19L9.5 15L13 18.5L21 10"
+                stroke="#D4AF37" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <p className="text-sm text-white/60">
+              En innloggingslenke er sendt til{" "}
+              <strong className="text-[#D4AF37]">{email}</strong>
+            </p>
             <button
-              type="button"
-              onClick={() => setMethod('email')}
-              className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
-                method === 'email'
-                  ? `bg-[${color.brand.gold}] text-black`
-                  : 'bg-white/[0.03] text-white/50 hover:bg-white/[0.06]'
-              }`}
-              style={
-                method === 'email'
-                  ? { border: color.border.gold }
-                  : { border: color.border.default }
-              }
+              onClick={() => setSent(false)}
+              className="text-sm underline hover:no-underline transition-colors text-white/50"
             >
-              E-post
-            </button>
-            <button
-              type="button"
-              onClick={() => setMethod('phone')}
-              className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
-                method === 'phone'
-                  ? `bg-[${color.brand.gold}] text-black`
-                  : 'bg-white/[0.03] text-white/50 hover:bg-white/[0.06]'
-              }`}
-              style={
-                method === 'phone'
-                  ? { border: color.border.gold }
-                  : { border: color.border.default }
-              }
-            >
-              Telefon
+              Send til en annen e-post
             </button>
           </div>
         )}
 
-        {/* Success State */}
-        {sent && (
-          <GlassPanel goldBorder className="mb-6 text-center">
-            <div className="flex flex-col items-center gap-4 py-4">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M3 8L10.5 15.5L21 6M5.5 19L9.5 15L13 18.5L21 10"
-                  stroke={color.status.success}
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <p className="text-sm" style={{ color: color.text.secondary }}>
-                {method === 'email' ? (
-                  <>
-                    En innloggingslenke er sendt til <strong style={{ color: color.brand.gold }}>{input}</strong>
-                  </>
-                ) : (
-                  <>
-                    En verifiseringskode er sendt til <strong style={{ color: color.brand.gold }}>{input}</strong>
-                  </>
-                )}
-              </p>
-              <p className="text-xs" style={{ color: color.text.subtle }}>
-                {method === 'email'
-                  ? 'Lenken gjelder i 60 minutter. Ingen passord er nødvendig.'
-                  : 'Koden gjelder i 10 minutter. Ingen passord er nødvendig.'}
-              </p>
-              <button
-                onClick={() => setSent(false)}
-                className="text-sm underline hover:no-underline transition-colors duration-200"
-                style={{ color: color.text.muted }}
-              >
-                Send til en annen {method === 'email' ? 'e-post' : 'telefon'}
-              </button>
-            </div>
-          </GlassPanel>
-        )}
-
-        {/* Form */}
-        {!sent && (
-          <GlassPanel goldBorder className="mb-6">
-            <div className="space-y-6">
-              {/* Input */}
-              <div>
-                <label
-                  className="text-xs uppercase tracking-widest font-semibold mb-2 block"
-                  style={{ color: color.brand.gold }}
-                >
-                  {method === 'email' ? 'E-post' : 'Telefonnummer'}
-                </label>
-                <input
-                  type={method === 'email' ? 'email' : 'tel'}
-                  autoComplete={method === 'email' ? 'email' : 'tel'}
-                  required
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  placeholder={method === 'email' ? 'du@eksempel.no' : '+47 XXX XX XXX'}
-                  className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all duration-200 ease-out"
-                  style={{
-                    background: color.glass.bg,
-                    border: color.border.default,
-                    color: color.text.primary,
-                    borderRadius: `${radius.md}px`,
-                  }}
-                  onFocus={(e) => {
-                    (e.target as HTMLElement).style.borderColor = color.border.gold;
-                    (e.target as HTMLElement).style.boxShadow = `0 0 0 3px ${color.glass.goldBg}`;
-                  }}
-                  onBlur={(e) => {
-                    (e.target as HTMLElement).style.borderColor = color.border.default;
-                    (e.target as HTMLElement).style.boxShadow = 'none';
-                  }}
-                />
-                {method === 'phone' && (
-                  <p className="mt-2 text-xs" style={{ color: color.text.subtle }}>
-                    Norsk nummer med +47_prefiks
-                  </p>
-                )}
-              </div>
-
-              {/* Invisible Captcha Placeholder */}
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={captchaDone}
-                  onChange={(e) => setCaptchaDone(e.target.checked)}
-                  className="w-4 h-4 rounded"
-                  style={{ accentColor: color.brand.gold }}
-                />
-                <span className="text-xs" style={{ color: color.text.muted }}>
-                  Bekreft at du er et menneske (captcha)
-                </span>
-              </div>
-
-              {error && (
-                <p className="text-sm" style={{ color: color.status.error }}>
-                  {error}
-                </p>
-              )}
-
-              <button
-                type="button"
-                onClick={method === 'email' ? handleEmailSubmit : handlePhoneSend}
-                className="w-full px-5 py-3 rounded-xl text-sm font-medium transition-all duration-200 ease-out"
-                style={{
-                  background: loading ? 'rgba(212, 175, 55, 0.3)' : color.brand.gold,
-                  color: loading ? 'rgba(212, 175, 55, 0.7)' : color.bg.primary,
-                  borderRadius: `${radius.md}px`,
-                }}
-                disabled={loading}
-                onMouseEnter={(e) => {
-                  if (!loading) {
-                    (e.target as HTMLElement).style.background = color.brand['gold-hover'];
-                    (e.target as HTMLElement).style.transform = 'translateY(-1px)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  (e.target as HTMLElement).style.background = loading ? 'rgba(212, 175, 55, 0.3)' : color.brand.gold;
-                  (e.target as HTMLElement).style.transform = 'translateY(0)';
-                }}
-              >
-                {loading
-                  ? (method === 'email' ? 'Sender lenke…' : 'Sender kode…')
-                  : (method === 'email' ? 'Send innloggingslenke' : 'Send verifiseringskode')}
-              </button>
-
-              {/* Dev-only testbruker-innlogging */}
-              {process.env.NEXT_PUBLIC_NODE_ENV !== "production" && (
-                <button
-                  type="button"
-                  onClick={handleDevSetup}
-                  disabled={devLoading}
-                  className="w-full px-5 py-3 mt-4 rounded-xl text-sm font-medium transition-all duration-200 ease-out"
-                  style={{
-                    background: devLoading
-                      ? 'rgba(212, 175, 55, 0.2)'
-                      : 'rgba(212, 175, 55, 0.08)',
-                    border: devLoading
-                      ? `1px solid ${color.border.gold}`
-                      : `1px solid ${color.border['gold-soft']}`,
-                    color: devLoading
-                      ? 'rgba(212, 175, 55, 0.6)'
-                      : color.brand.gold,
-                    borderRadius: `${radius.md}px`,
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!devLoading) {
-                      (e.target as HTMLElement).style.background = 'rgba(212, 175, 55, 0.15)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.target as HTMLElement).style.background = devLoading
-                      ? 'rgba(212, 175, 55, 0.2)'
-                      : 'rgba(212, 175, 55, 0.08)';
-                  }}
-                >
-                  {devLoading ? 'Oppretter økt…' : 'Logg inn som testbruker'}
-                </button>
-              )}
-            </div>
-          </GlassPanel>
-        )}
-
-        <AuthCTA />
       </div>
     </div>
   );

@@ -47,6 +47,6 @@
     "maildev": "^2.2.1",
     "postcss": "^8.5.9",
     "tailwindcss": "^4.2.2",
-    "vercel": "^54.13.0"
+    "vercel": "^54.18.2"
   }
 }

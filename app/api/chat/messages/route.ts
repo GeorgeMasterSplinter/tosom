@@ -1,15 +1,14 @@
 /**
- * ToSom — Chat Messages API (upgradert)
+ * ToSom — Chat Messages API
  * 
  * GET  /api/chat/messages?conversationId=xxx — hent alle meldingar i samtale
- * POST /api/chat/messages — send ny melding med Pusher-trigger
+ * POST /api/chat/messages — send ny melding
  */
 
 import { NextResponse, NextRequest } from 'next/server';
-import { getServerSession } from '@/lib/auth/session';
+import { auth } from '@/lib/auth/config';
 import { sendMessage, getMessages } from '@/lib/chat/messageService';
-
-/* ------ GET: Hent meldingar ------ */
+import { prisma } from '@/lib/prisma';
 
 export async function GET(req: NextRequest) {
   try {
@@ -19,9 +18,22 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Manglar conversationId' }, { status: 400 });
     }
 
-    const session = await getServerSession();
+    const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Ikke autentisert' }, { status: 401 });
+    }
+
+    const conversation = await prisma.conversation.findFirst({
+      where: { id: conversationId },
+      select: { userAId: true, userBId: true },
+    });
+
+    if (!conversation) {
+      return NextResponse.json({ error: 'Samtale ikkje funnen' }, { status: 404 });
+    }
+
+    if (session.user.id !== conversation.userAId && session.user.id !== conversation.userBId) {
+      return NextResponse.json({ error: 'Du har ikkje tilgang til denne samtalen' }, { status: 403 });
     }
 
     const messages = await getMessages(conversationId, session.user.id);
@@ -35,11 +47,9 @@ export async function GET(req: NextRequest) {
   }
 }
 
-/* ------ POST: Send melding ------ */
-
 export async function POST(req: NextRequest) {
   try {
-    const session = await getServerSession();
+    const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Ikke autentisert' }, { status: 401 });
     }
@@ -49,6 +59,19 @@ export async function POST(req: NextRequest) {
 
     if (!conversationId || !content) {
       return NextResponse.json({ error: 'Manglar conversationId eller content' }, { status: 400 });
+    }
+
+    const conversation = await prisma.conversation.findFirst({
+      where: { id: conversationId },
+      select: { userAId: true, userBId: true },
+    });
+
+    if (!conversation) {
+      return NextResponse.json({ error: 'Samtale ikkje funnen' }, { status: 404 });
+    }
+
+    if (session.user.id !== conversation.userAId && session.user.id !== conversation.userBId) {
+      return NextResponse.json({ error: 'Du har ikkje tilgang til denne samtalen' }, { status: 403 });
     }
 
     const message = await sendMessage({

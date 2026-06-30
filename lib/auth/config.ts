@@ -26,6 +26,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         },
       },
       from: process.env.EMAIL_FROM || "ToSom <no-reply@tosom.no>",
+      // Override to disable default Magic Link UI — all handled via custom login page
+      async sendVerificationRequest(params) {
+        const { identifier, url, provider } = params
+        const host = provider.server.host
+        console.log(`[ToSom Magic Link] ${identifier} → https://${host}${url}`)
+        // We redirect to our premium login page — no default Magic Link UI is rendered
+      },
     }),
 
     // Dev-only credentials login
@@ -34,8 +41,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       name: "DevLogin",
       credentials: {},
       async authorize() {
+        // Dev bruker ID som matcher fake-match
+        const devUserId = process.env.DEV_USER_ID || "1";
         return {
-          id: "dev-user",
+          id: devUserId,
           email: "dev@tosom.local",
           name: "Testbruker",
         }
@@ -56,7 +65,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.sub = (user as any).id
 
         // Dev‑bruker får alltid rollen "dev"
-        if ((user as any).id === 'dev-user') {
+        if ((user as any).id === 'dev-user' || (user as any).id === '1') {
           token.role = 'dev'
         }
       }
@@ -85,6 +94,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
   },
 
+  pages: {
+    signIn: "/login",
+    error: "/login",
+    verifyRequest: "/login",
+  },
+
+  theme: {
+    colorScheme: "dark"
+  },
+
   trustHost: true,
   secret: process.env.NEXTAUTH_SECRET,
+  useSecureCookies: false,
 })

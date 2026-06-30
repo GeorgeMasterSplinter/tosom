@@ -1,125 +1,60 @@
 /**
- * POST /api/journey/resonance
+ * ToSom — Resonans Motor API
  * 
- * Lag resonans-data for dagen.
- * Core-definition: Måle emosjonell resonans — ikkje numerisk score.
+ * POST /api/journey/resonance — berekn resonans
+ * GET  /api/journey/resonance?conversationId=X — hent siste
  */
 
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { requireAuth } from "@/lib/auth/requireAuth";
+import { NextRequest, NextResponse } from 'next/server';
+import { calculateResonance, createResonanceSnapshot } from '@/lib/journey/resonance';
 
 export async function POST(req: NextRequest) {
   try {
-    // 1. Auth
-    const result = await requireAuth(req);
-    if (result instanceof NextResponse) {
-      return result;
-    }
-    const user = result.user;
-
-    // 2. Hent body
     const body = await req.json();
     const {
-      emotionalTone,
-      depthLevel,
-      responseQuality,
-      mutualSharing,
-      vulnerability,
-      summary,
-    } = body as {
-      emotionalTone?: string;
-      depthLevel?: number;
-      responseQuality?: string;
-      mutualSharing?: boolean;
-      vulnerability?: boolean;
-      summary?: string;
-    };
+      conversationId,
+      userId,
+      partnerId,
+      messageCount = 0,
+      responseTimeAvg = 30,
+      longestStreak = 0,
+      phaseOrder = 1,
+      daysTogether = 1,
+      mutualDepth = 50,
+      reflectionCount = 0,
+      taskCompletion = 0,
+    } = body;
 
-    // 3. Finn journey
-    const journey = await prisma.journeyProgress.findUnique({
-      where: { userId: user.id },
-      select: { day: true, phase: true },
-    });
-
-    if (!journey) {
-      return NextResponse.json(
-        { error: "Ingen aktiv reise funnen", noJourney: true },
-        { status: 404 }
-      );
+    if (!conversationId) {
+      return NextResponse.json({ error: 'Manglar conversationId' }, { status: 400 });
     }
 
-    // 4. Finn conversation
-    const conversation = await prisma.conversation.findFirst({
-      where: {
-        userAId: user.id,
-        userBId: { not: user.id },
-      },
-      select: { id: true },
+    const scores = calculateResonance({
+      conversationId, userId, partnerId, messageCount, responseTimeAvg,
+      longestStreak, phaseOrder, daysTogether, mutualDepth, reflectionCount, taskCompletion,
     });
 
-    if (!conversation) {
-      return NextResponse.json(
-        { error: "Ingen conversation funnen" },
-        { status: 404 }
-      );
-    }
-
-    // 5. Byg resonance data — kun definerte verdiar
-    const resonanceData: Record<string, any> = {};
-    if (emotionalTone) resonanceData.emotionalTone = emotionalTone;
-    if (depthLevel !== undefined) resonanceData.depthLevel = depthLevel;
-    if (responseQuality) resonanceData.responseQuality = responseQuality;
-    if (mutualSharing !== undefined) resonanceData.mutualSharing = mutualSharing;
-    if (vulnerability !== undefined) resonanceData.vulnerability = vulnerability;
-    if (summary) resonanceData.summary = summary;
-
-    // 6. Oppdater eller opprett ResonanceSession
-    const existing = await prisma.resonanceSession.findFirst({
-      where: {
-        conversationId: conversation.id,
-        day: journey.day,
-      },
-      select: { id: true },
-    });
-
-    const session = existing
-      ? await prisma.resonanceSession.update({
-          where: { id: existing.id },
-          data: resonanceData,
-        })
-      : await prisma.resonanceSession.create({
-          data: {
-            conversationId: conversation.id,
-            day: journey.day,
-            emotionalTone: resonanceData.emotionalTone ?? null,
-            depthLevel: resonanceData.depthLevel ?? null,
-            responseQuality: resonanceData.responseQuality ?? null,
-            mutualSharing: resonanceData.mutualSharing ?? false,
-            vulnerability: resonanceData.vulnerability ?? false,
-            summary: resonanceData.summary ?? null,
-          },
-        });
-
-    return NextResponse.json({
-      success: true,
-      resonanceSession: {
-        id: session.id,
-        day: session.day,
-        emotionalTone: session.emotionalTone,
-        depthLevel: session.depthLevel,
-        responseQuality: session.responseQuality,
-        mutualSharing: session.mutualSharing,
-        vulnerability: session.vulnerability,
-        summary: session.summary,
-      },
-      message: "Resonans lagrad.",
-    });
-  } catch (error) {
-    console.error("POST /api/journey/resonance error:", error);
-    return NextResponse.json(
-      { error: "Internt feil ved lagring av resonans", internal: true },
-      { status: 500 }
+    const snapshot = createResonanceSnapshot(
+      { conversationId, userId, partnerId, messageCount, responseTimeAvg, longestStreak, phaseOrder, daysTogether, mutualDepth, reflectionCount, taskCompletion },
+      scores
     );
+
+    // TODO: Lagre til DB — await prisma.resonanceSnapshot.create({ data: snapshot });
+
+    return NextResponse.json({ success: true, scores, snapshot, resonance: scores.resonance });
+  } catch (err) {
+    console.error('Resonans-feil:', err);
+    return NextResponse.json({ error: 'Kunne ikkje berekne resonans' }, { status: 500 });
   }
+}
+
+export async function GET(req: NextRequest) {
+  const url = new URL(req.url);
+  const conversationId = url.searchParams.get('conversationId');
+
+  if (!conversationId) return NextResponse.json({ error: 'Manglar conversationId' }, { status: 400 });
+
+  // TODO: Hent frå DB — await prisma.resonanceSnapshot.findFirst({ where: { conversationId } });
+
+  return NextResponse.json({ success: true, scores: null, message: 'Ingen resonans-data funnen.' });
 }

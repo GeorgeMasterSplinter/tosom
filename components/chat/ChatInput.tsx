@@ -103,7 +103,6 @@ export default function ChatInput({
             value={value}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
-            onBlur={handleInputBlur}
             placeholder={placeholder}
             disabled={disabled || sending}
             className="w-full px-5 py-3.5 rounded-2xl outline-none transition-all duration-300 text-sm"
@@ -119,6 +118,7 @@ export default function ChatInput({
               e.target.style.boxShadow = '0 0 0 3px rgba(212, 175, 55, 0.15), 0 0 24px rgba(212, 175, 55, 0.12)';
             }}
             onBlur={(e) => {
+              handleInputBlur();
               e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)';
               e.target.style.boxShadow = 'none';
             }}

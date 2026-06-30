@@ -136,10 +136,7 @@ export async function GET(
   }
 }
 
-export async function POST(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function POST(request: Request, context: any) {
   try {
     const session = await auth();
     
@@ -147,7 +144,8 @@ export async function POST(
       return NextResponse.json({ error: 'Uautorisert' }, { status: 401 });
     }
 
-    const conversationId = params.id;
+    const id = context?.params?.id;
+    const conversationId = id;
     const body = await request.json();
     const { action, data } = body as { action?: string; data?: unknown };
 

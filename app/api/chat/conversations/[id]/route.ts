@@ -195,3 +195,42 @@ export async function POST(request: Request, context: any) {
     );
   }
 }
+
+export async function DELETE(request: Request, context: any) {
+  try {
+    const session = await auth();
+    
+    if (!session?.user) {
+      return NextResponse.json({ error: 'Uautorisert' }, { status: 401 });
+    }
+
+    const id = context?.params?.id;
+    const conversationId = id;
+
+    const conversation = await prisma.conversation.findUnique({
+      where: { id: conversationId },
+      select: { userAId: true, userBId: true },
+    });
+
+    if (!conversation) {
+      return NextResponse.json({ error: 'Samtalen finnes ikke' }, { status: 404 });
+    }
+
+    const userId = session.user.id;
+    if (userId !== conversation.userAId && userId !== conversation.userBId) {
+      return NextResponse.json({ error: 'Du har ikke tilgang' }, { status: 403 });
+    }
+
+    await prisma.conversation.delete({
+      where: { id: conversationId },
+    });
+
+    return NextResponse.json({ success: true, message: 'Samtalen er sletta' });
+  } catch (error) {
+    console.error('DELETE /api/chat/conversations/[id] feil:', error);
+    return NextResponse.json(
+      { error: 'Kunne ikke slette samtale' },
+      { status: 500 }
+    );
+  }
+}

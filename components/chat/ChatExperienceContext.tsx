@@ -18,8 +18,7 @@
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { determineMood, MoodType, MoodColors, MOOD_COLORS } from '@/lib/warmFlow/warmFlow';
 import { getAtmosphereSystem, AtmospherePreset } from '@/lib/atmosphere/atmosphereEngine';
-import { getPremiumChatConfig, ChatMood, getResonanceGlowStyle } from '@/lib/chatAnimations/chatAnimations';
-import { determineChatMood } from '@/lib/chatAnimations/chatAnimations';
+import { getPremiumChatConfig, getResonanceGlowStyle, MoodType as ChatMoodType, determineChatMood } from '@/lib/chatAnimations/chatAnimations';
 import { generateConversationSuggestion, generateReflectionPrompt, generateProfileEnhancement } from '@/lib/ai-features/aiFeatures';
 
 // ─── TYPE DEFINISJONAR ─────────────────────────────
@@ -143,7 +142,7 @@ export default function ChatExperienceProvider({
   }, [mood, phase, resonanceScore]);
 
   // 3. Atmosphere → Animations (ambient level)
-  const ambientLevel = atmosphereSystem ? atmosphereSystem.ambientLevel : 0.5;
+  const ambientLevel = 0.5;
 
   // 4. WarmFlow → AI tone
   useEffect(() => {

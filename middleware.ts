@@ -31,6 +31,7 @@ const PUBLIC_PATHS = [
   '/maintenance',
   '/dev-login',
   '/api/dev-login',
+  '/api/system/health',
   '/_next',
   '/favicon.ico',
 ]

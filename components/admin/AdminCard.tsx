@@ -59,22 +59,19 @@ export default function AdminCard({
   }, [status, glowColor]);
 
   // Status-farge
-  const statusColors: Record<string, string> = {
+  const statusColor = {
     good: '#4DFF88',
     warning: '#FFD437',
     error: '#FF4D4D',
     neutral: '#D4AF37',
-  };
+  }[status] || '#D4AF37';
 
-  const statusBg: Record<string, string> = {
+  const statusBgColor = {
     good: 'rgba(77, 255, 136, 0.08)',
     warning: 'rgba(255, 212, 55, 0.08)',
     error: 'rgba(255, 77, 77, 0.08)',
     neutral: 'rgba(212, 175, 55, 0.05)',
-  };
-
-  const statusColor = statusColors[status] || statusColors.neutral;
-  const statusBgColor = statusBg[status] || statusBg.neutral;
+  }[status] || 'rgba(212, 175, 55, 0.05)';
 
   return (
     <div
@@ -132,5 +129,3 @@ export default function AdminCard({
   );
 }
 
-// Export status-hjælp
-export { statusColors, statusBg };

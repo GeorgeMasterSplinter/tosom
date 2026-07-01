@@ -38,10 +38,10 @@ export default function ChatPanel({
       {/* Header */}
       <ChatHeader
         partnerName={partnerName}
+        partnerImage={null}
         phaseLabel={phaseLabel}
         currentDay={chatState.currentDay}
-        photosAllowed={chatState.photosAllowed}
-        onClose={onClose}
+        daysRemaining={30}
       />
 
       {/* CF49 — JourneyCompleted-banner */}

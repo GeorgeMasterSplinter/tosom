@@ -72,10 +72,11 @@ export default function ChatWindow({
     <GlassPanel className="flex flex-col gap-0 overflow-hidden">
       <ChatHeader
         partnerName={partner.name}
+        partnerAge={partner.age}
+        partnerImage={partner.image ?? null}
         phaseLabel={phaseLabel}
         currentDay={currentDay}
-        photosAllowed={photosAllowed}
-        onClose={onClose}
+        daysRemaining={30}
       />
 
       <div className="flex-1 overflow-y-auto p-[var(--space-md)]">

@@ -37,7 +37,7 @@ export function updateProfileFromResonance(profile: Partial<DynamicProfileData>,
 
 export function updateProfileFromWarm(profile: Partial<DynamicProfileData>, warmScore: number, warmLevel: string): Partial<DynamicProfileData> {
   const warmthLabels: Record<string, string> = { 'Kald': 'Enno kjølig', 'Lukten': 'Ein svak lukte', 'Varm': 'Varmen kjem', 'Glødande': 'Gløden aukar', 'Ekko': 'Varmen ekkoer' };
-  return { ...profile, warmthLevel, resonanceHighlight: warmthLabels[warmLevel] || 'Utviklar seg', lastUpdated: new Date().toISOString() };
+  return { ...profile, warmthLevel: warmLevel, resonanceHighlight: warmthLabels[warmLevel] || 'Utviklar seg', lastUpdated: new Date().toISOString() };
 }
 
 export function getDynamicProfileDisplay(profile: DynamicProfileData): { displayName: string; displayBio: string; displayTags: string[]; progressBadge: string; } {

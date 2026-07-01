@@ -1,19 +1,19 @@
 /**
  * ToSom — Warm Flow System
- * 
+ *
  * Termisk opplevelse — overgangen mellom skjer er varm og ikkje kal.
- * 
+ *
  * Funksjonar:
  *   - Side-transisjon animasjonar (framer-motion)
  *   - Warm loading states
  *   - Gentle page transitions
  *   - Mood-basert fargeendring
  *   - Ambient sound (valfritt)
- * 
+ *
  * Dokumentasjon: docs/FEATURE-WARM-FLOW.md
  */
 
-// ─── TYPE DEFINISJONAR ───────────────────────────────────────
+// ─── TYPE DEFINISJONAR ────────────────
 
 export type WarmTransitionType =
   | 'fade'           // Enkel fade
@@ -60,7 +60,16 @@ export interface MoodColors {
   glow: string
 }
 
-// ─── MOOD-FARGAR ─────────────────────────────────────────────
+export interface WarmFlowContextType {
+  currentMood: MoodType;
+  colors: MoodColors;
+  background: string;
+  glow: string;
+  accent: string;
+  transitionMood: (mood: MoodType) => void;
+}
+
+// ─── MOOD-FARGAR ─────────────────────
 
 export const MOOD_COLORS: Record<MoodType, MoodColors> = {
   calm: {
@@ -95,7 +104,7 @@ export const MOOD_COLORS: Record<MoodType, MoodColors> = {
   },
 }
 
-// ─── WARM FLOW-KONFIG ────────────────────────────────────────
+// ─── WARM FLOW-KONFIG ────────────────
 
 export const DEFAULT_WARM_FLOW: WarmFlowConfig = {
   transitionType: 'warm-breathe',
@@ -112,33 +121,24 @@ export const TRANSITION_TEMPLATES: Record<WarmTransitionType, WarmFlowConfig> = 
   'gentle-shift': { transitionType: 'gentle-shift', duration: 700, delay: 150, opacity: 0.6 },
 }
 
-// ─── MOOD-ENDRING ────────────────────────────────────────────
+// ─── MOOD-ENDRING ─────────────────────
 
 /**
  * Beregn ny mood basert på brukar-aktivitet
  */
 export function determineMood(activity: string, journeyPhase: string): MoodType {
-  // Feire-milestones
   if (activity === 'milestone' || activity === 'match-accepted') {
     return 'celebratory'
   }
-
-  // Dype refleksjonar
   if (activity === 'reflecting' || activity === 'deep-conversation') {
     return 'deep'
   }
-
-  // Onboarding
   if (activity === 'onboarding' || activity === 'profile-setup') {
     return 'gentle'
   }
-
-  // Match/melding
   if (activity === 'match' || activity === 'message') {
     return 'warm'
   }
-
-  // Standard
   return 'calm'
 }
 
@@ -157,20 +157,15 @@ export function interpolateMoodColors(
   to: MoodType,
   progress: number
 ): string {
-  // Enkel overgang — returnerer accent-farge frå target
   return MOOD_COLORS[to].accent
 }
 
-// ─── WARM LOADING STATE ──────────────────────────────────────
+// ─── WARM LOADING STATE ───────────────
 
 export interface WarmLoadingState {
-  /** Er det lastar no? */
   isLoading: boolean
-  /** Kva type loading? */
   type: 'minimal' | 'warm' | 'full'
-  /** Melding å vise */
   message: string
-  /** Puls-animasjon aktiv? */
   pulse: boolean
 }
 
@@ -199,14 +194,11 @@ export function getWarmLoadingState(
   }
 }
 
-// ─── AMBIENT SOUND ────────────────────────────────────────────
+// ─── AMBIENT SOUND ─────────────────────
 
 export interface AmbientSoundConfig {
-  /** Aktivert? */
   enabled: boolean
-  /** Volum (0-1) */
   volume: number
-  /** Lur type */
   type: 'rain' | 'forest' | 'waves' | 'silence'
 }
 
@@ -216,7 +208,7 @@ export const DEFAULT_AMBIENT: AmbientSoundConfig = {
   type: 'silence',
 }
 
-// ─── PAGE TRANSITION HELPER ───────────────────────────────────
+// ─── PAGE TRANSITION HELPER ────────────
 
 export function getTransitionForRoute(route: string): WarmTransitionType {
   const map: Record<string, WarmTransitionType> = {
@@ -231,7 +223,7 @@ export function getTransitionForRoute(route: string): WarmTransitionType {
   return map[route] || 'fade'
 }
 
-// ─── HJELPEFUNKSJONAR ─────────────────────────────────────────
+// ─── HJELPEFUNKSJONAR ──────────────────
 
 export function getWarmFlowCSS(config: WarmFlowConfig): string {
   const { transitionType, duration, delay, opacity } = config

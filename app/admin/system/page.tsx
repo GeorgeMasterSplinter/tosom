@@ -1,184 +1,298 @@
 'use client';
 
-import GlassCard from '@/components/ui/cards/GlassCard';
+import { useEffect, useState } from 'react';
 
-const mockSystem = {
-  cronJobs: [
-    { name: 'Matching run', schedule: '0 0 * * *', lastRun: '2026-06-25 00:00', status: 'ok', nextRun: '2026-06-26 00:00' },
-    { name: 'Journey progress', schedule: '*/6 * * * *', lastRun: '2026-06-25 09:00', status: 'ok', nextRun: '2026-06-25 10:00' },
-    { name: 'AI quota reset', schedule: '0 0 1 * *', lastRun: '2026-06-01 00:00', status: 'ok', nextRun: '2026-07-01 00:00' },
-    { name: 'DB backup', schedule: '0 2 * * *', lastRun: '2026-06-25 02:00', status: 'ok', nextRun: '2026-06-26 02:00' },
-    { name: 'Log rotation', schedule: '0 0 * * 0', lastRun: '2026-06-22 00:00', status: 'warning', nextRun: '2026-06-29 00:00' },
-    { name: 'Cache purge', schedule: '0 */4 * * *', lastRun: '2026-06-25 08:00', status: 'ok', nextRun: '2026-06-25 12:00' },
-    { name: 'Analytics sync', schedule: '0 */12 * * *', lastRun: '2026-06-25 06:00', status: 'ok', nextRun: '2026-06-25 18:00' },
-    { name: 'Health check', schedule: '*/5 * * * *', lastRun: '2026-06-25 09:40', status: 'ok', nextRun: '2026-06-25 09:45' },
-  ],
-  apiStats: {
-    totalRequests: 45678,
-    errors: 91,
-    errorRate: 0.002,
-    avgLatency: 142,
-    p95Latency: 380,
-    p99Latency: 890,
-  },
-  db: {
-    status: 'connected',
-    latency: 45,
-    connections: 12,
-    maxConnections: 100,
-    size: '2.4 GB',
-  },
-  deploy: {
-    version: 'v3.2.1',
-    status: 'deployed',
-    region: 'oslo',
-    deployedAt: '2026-06-24 14:30',
-    branch: 'main',
-    commit: 'a1b2c3d',
-  },
-  logs: [
-    { time: '09:42:15', level: 'INFO', message: 'Matching run completed — 3 new matches' },
-    { time: '09:30:00', level: 'INFO', message: 'Journey progress sync completed' },
-    { time: '09:15:42', level: 'WARNING', message: 'AI quota at 67% — monitoring' },
-    { time: '09:00:01', level: 'INFO', message: 'Cron job "journey-progress" executed' },
-    { time: '08:45:33', level: 'ERROR', message: 'Rate limit exceeded for /api/chat/send' },
-    { time: '08:30:00', level: 'INFO', message: 'DB backup completed successfully' },
-    { time: '08:00:12', level: 'INFO', message: 'Cache purge completed' },
-    { time: '07:15:44', level: 'WARNING', message: 'High latency on /api/match (890ms)' },
-  ],
-};
+// ─── Types ─────────────────────────────────────────────────
 
-export default function AdminSystemPage() {
+interface HealthData {
+  status: string;
+  timestamp: string;
+  system: {
+    uptime: string;
+    uptimeSeconds: number;
+    memory: {
+      usedMB: number;
+      totalMB: number;
+      usagePercent: number;
+    };
+    cpu: {
+      load1m: number;
+      load5m: number;
+      load15m: number;
+    };
+    nodeVersion: string;
+    nextVersion: string;
+  };
+  database: {
+    status: string;
+    latencyMs: number;
+    error: string | null;
+  };
+  app: {
+    name: string;
+    version: string;
+    environment: string;
+    port: string | number;
+  };
+}
+
+// ─── Status helpers ────────────────────────────────────────
+
+const dot = (ok: boolean) =>
+  `w-2.5 h-2.5 rounded-full ${ok ? 'bg-[#4ADE80]' : 'bg-[#F87171]'}`;
+
+const statusLabel = (ok: boolean, text: string) => (
+  <span className={`inline-flex items-center gap-2 text-sm font-medium ${ok ? 'text-[#4ADE80]' : 'text-[#F87171]'}`}>
+    <span className={dot(ok)} />
+    {text}
+  </span>
+);
+
+// ─── Sparkline for CPU load ───────────────────────────────
+
+function CpuLoadBar({ value, max }: { value: number; max: number }) {
+  const pct = Math.min((value / max) * 100, 100);
+  const color = pct < 50 ? '#4ADE80' : pct < 80 ? '#FBBF24' : '#F87171';
   return (
-    <div className="flex flex-col gap-6 p-8 max-w-[1400px] mx-auto">
-      <div>
-        <h1 className="text-2xl font-semibold text-white/90">System status</h1>
-        <p className="text-sm text-white/40 mt-1">Cron-jobbar, API-feil, DB-status og deploy-info</p>
-      </div>
-
-      {/* Deploy info */}
-      <GlassCard className="p-5">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-sm font-semibold text-white/70 mb-2">Deploy</h3>
-            <div className="flex items-center gap-4">
-              <div>
-                <div className="text-xs text-white/40">Versjon</div>
-                <div className="text-sm font-semibold" style={{ color: '#D4AF37' }}>{mockSystem.deploy.version}</div>
-              </div>
-              <div>
-                <div className="text-xs text-white/40">Status</div>
-                <div className="text-sm font-semibold flex items-center gap-1">
-                  <div className="w-2 h-2 rounded-full bg-green-400" />
-                  <span style={{ color: '#4DFF88' }}>{mockSystem.deploy.status}</span>
-                </div>
-              </div>
-              <div>
-                <div className="text-xs text-white/40">Region</div>
-                <div className="text-sm" style={{ color: '#60A5FA' }}>{mockSystem.deploy.region}</div>
-              </div>
-              <div>
-                <div className="text-xs text-white/40">Branch</div>
-                <div className="text-sm font-mono" style={{ color: '#FFD437' }}>{mockSystem.deploy.branch}@{mockSystem.deploy.commit}</div>
-              </div>
-              <div>
-                <div className="text-xs text-white/40">Deployed</div>
-                <div className="text-sm text-white/60">{mockSystem.deploy.deployedAt}</div>
-              </div>
-            </div>
-          </div>
-          <button className="px-4 py-2 rounded-lg text-xs font-medium" style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.2)', color: 'rgba(212,175,55,0.8)' }}>
-            Deploy ny versjon
-          </button>
-        </div>
-      </GlassCard>
-
-      {/* DB status */}
-      <GlassCard className="p-5">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-semibold text-white/70">Database status</h3>
-          <span className="flex items-center gap-1 text-xs font-medium" style={{ color: '#4DFF88' }}>
-            <div className="w-2 h-2 rounded-full bg-green-400" />
-            {mockSystem.db.status}
-          </span>
-        </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatRow label="Latens" value={`${mockSystem.db.latency}ms`} />
-          <StatRow label="Connectors" value={`${mockSystem.db.connections}/${mockSystem.db.maxConnections}`} />
-          <StatRow label="Storleik" value={mockSystem.db.size} />
-          <StatRow label="Type" value="PostgreSQL" />
-        </div>
-      </GlassCard>
-
-      {/* API stats */}
-      <GlassCard className="p-5">
-        <h3 className="text-sm font-semibold text-white/70 mb-4">API statistikk</h3>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatRow label="Total føpørsel" value={mockSystem.apiStats.totalRequests.toLocaleString()} />
-          <StatRow label="Feil-rate" value={`${(mockSystem.apiStats.errorRate * 100).toFixed(2)}%`} />
-          <StatRow label="Snitt latens" value={`${mockSystem.apiStats.avgLatency}ms`} />
-          <StatRow label="P99 latens" value={`${mockSystem.apiStats.p99Latency}ms`} />
-        </div>
-      </GlassCard>
-
-      {/* Cron jobs */}
-      <GlassCard className="p-5">
-        <h3 className="text-sm font-semibold text-white/70 mb-4">Cron-jobbar</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                {['Namn', 'Skjema', 'Sist kjørt', 'Status', 'Neste kjøring'].map((h) => (
-                  <th key={h} className="px-4 py-3 text-xs font-semibold text-white/40 text-left">{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {mockSystem.cronJobs.map((job) => (
-                <tr key={job.name} style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-                  <td className="px-4 py-3 text-sm font-medium text-white/80">{job.name}</td>
-                  <td className="px-4 py-3 text-sm font-mono text-white/40">{job.schedule}</td>
-                  <td className="px-4 py-3 text-sm text-white/50">{job.lastRun}</td>
-                  <td className="px-4 py-3">
-                    <span className={`px-2 py-0.5 rounded-md text-xs font-medium ${
-                      job.status === 'ok' ? 'bg-[rgba(77,255,136,0.1)] text-[#4DFF88]' : 'bg-[rgba(255,212,55,0.1)] text-[#FFD437]'
-                    }`}>{job.status}</span>
-                  </td>
-                  <td className="px-4 py-3 text-sm text-white/50">{job.nextRun}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </GlassCard>
-
-      {/* Log stream */}
-      <GlassCard className="p-5">
-        <h3 className="text-sm font-semibold text-white/70 mb-4">Logg-strøm</h3>
-        <div className="space-y-2">
-          {mockSystem.logs.map((log, i) => {
-            const levelColors: Record<string, string> = { INFO: '#60A5FA', WARNING: '#FFD437', ERROR: '#FF4D4D' };
-            return (
-              <div key={i} className="flex items-start gap-3 text-sm p-2 rounded-lg" style={{ background: 'rgba(255,255,255,0.01)' }}>
-                <span className="text-xs text-white/30 font-mono w-16 flex-shrink-0">{log.time}</span>
-                <span className="text-xs font-semibold px-1.5 py-0.5 rounded flex-shrink-0" style={{ color: levelColors[log.level] || '#60A5FA', background: `${levelColors[log.level] || '#60A5FA'}15` }}>
-                  {log.level}
-                </span>
-                <span className="text-sm text-white/60">{log.message}</span>
-              </div>
-            );
-          })}
-        </div>
-      </GlassCard>
+    <div className="w-full h-2 rounded-full bg-white/5">
+      <div
+        className="h-full rounded-full transition-all duration-500"
+        style={{ width: `${pct}%`, backgroundColor: color }}
+      />
     </div>
   );
 }
 
-function StatRow({ label, value }: { label: string; value: string }) {
+// ─── Card skeleton ─────────────────────────────────────────
+
+function AdminCard({ title, children, status }: { title: string; children: React.ReactNode; status?: 'ok' | 'warn' | 'error' }) {
+  const borderColor = status === 'ok' ? 'border-[#4ADE80]/20' : status === 'error' ? 'border-[#F87171]/20' : 'border-white/5';
   return (
-    <div className="p-3 rounded-lg" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)' }}>
-      <div className="text-xs text-white/40">{label}</div>
-      <div className="text-lg font-bold mt-1" style={{ color: '#D4AF37' }}>{value}</div>
+    <div className={`bg-[#11161C] rounded-xl p-6 border ${borderColor} shadow-[0_4px_20px_rgba(0,0,0,0.3)]`}>
+      <h3 className="text-xs uppercase tracking-widest text-[#9CA3AF] mb-4">{title}</h3>
+      {children}
     </div>
+  );
+}
+
+// ─── Main page ─────────────────────────────────────────────
+
+export default function SystemDashboard() {
+  const [data, setData] = useState<HealthData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch('/api/system/health', { cache: 'no-store' })
+      .then(res => res.json())
+      .then(setData)
+      .catch(err => setError(err.message))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-[#0B0F14] text-white flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div
+            className="w-10 h-10 rounded-full flex items-center justify-center"
+            style={{
+              border: '2px solid rgba(255, 255, 255, 0.2)',
+              borderTopColor: '#D4AF37',
+              animation: 'spin 1s linear infinite',
+            }}
+          />
+          <p className="text-sm text-white/40">Last inn systemstatus...</p>
+          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+        </div>
+      </main>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <main className="min-h-screen bg-[#0B0F14] text-white flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-[#F87171]">Kunne ikke laste systemdata.</p>
+          {error && <p className="text-sm text-white/40 mt-2">{error}</p>}
+        </div>
+      </main>
+    );
+  }
+
+  const s = data.status === 'ok' || data.database.status === 'connected';
+
+  return (
+    <main className="min-h-screen bg-[#0B0F14] text-white">
+      {/* ─── Top banner ───────────────────────────────────── */}
+      <div className="max-w-5xl mx-auto px-6 py-20">
+        <div className="flex items-center gap-4 mb-12">
+          <div className={`w-3 h-3 rounded-full ${s ? 'bg-[#4ADE80]' : 'bg-[#F87171]'}`} />
+          <h1 className="text-2xl font-semibold">System Dashboard</h1>
+          <span className="text-sm text-white/30 ml-auto">
+            Sist oppdatert: {new Date(data.timestamp).toLocaleTimeString('no-NO')}
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+          {/* ─── System Status ──────────────────────────── */}
+          <AdminCard title="System Status" status={s ? 'ok' : 'error'}>
+            <div className="space-y-4">
+              <div>
+                <div className="flex justify-between text-sm mb-1">
+                  <span className="text-white/60">Oppetid</span>
+                  <span className="font-mono text-white/80">{data.system.uptime}</span>
+                </div>
+                <div className="flex justify-between text-sm mb-1">
+                  <span className="text-white/60">Uptime (sek)</span>
+                  <span className="font-mono text-white/80">{data.system.uptimeSeconds}</span>
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between text-sm mb-1">
+                  <span className="text-white/60">CPU (1m)</span>
+                  <span className="font-mono text-white/80">{data.system.cpu.load1m}</span>
+                </div>
+                <CpuLoadBar value={data.system.cpu.load1m} max={4} />
+                <div className="flex gap-4 mt-2 text-xs text-white/40">
+                  <span>5m: {data.system.cpu.load5m}</span>
+                  <span>15m: {data.system.cpu.load15m}</span>
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between text-sm mb-1">
+                  <span className="text-white/60">Minne</span>
+                  <span className="font-mono text-white/80">{data.system.memory.usedMB} / {data.system.memory.totalMB} MB</span>
+                </div>
+                <CpuLoadBar value={data.system.memory.usagePercent} max={100} />
+              </div>
+            </div>
+          </AdminCard>
+
+          {/* ─── Database Status ────────────────────────── */}
+          <AdminCard
+            title="Database"
+            status={data.database.status === 'connected' ? 'ok' : data.database.status === 'error' ? 'error' : 'warn'}
+          >
+            <div className="space-y-4">
+              <div>
+                {statusLabel(
+                  data.database.status === 'connected',
+                  data.database.status === 'connected' ? 'Tilkoblet' : 'Frakoblet',
+                )}
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-white/60">Latens</span>
+                <span className="font-mono text-white/80">
+                  {data.database.latencyMs >= 0 ? `${data.database.latencyMs} ms` : '—'}
+                </span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-white/60">Feil</span>
+                <span className="font-mono text-white/80">
+                  {data.database.error ? (
+                    <span className="text-[#F87171]">{data.database.error}</span>
+                  ) : (
+                    <span className="text-[#4ADE80]">Ingen</span>
+                  )}
+                </span>
+              </div>
+            </div>
+          </AdminCard>
+
+          {/* ─── App Info ───────────────────────────────── */}
+          <AdminCard title="App Info" status="ok">
+            <div className="space-y-3">
+              <div className="flex justify-between text-sm">
+                <span className="text-white/60">Navn</span>
+                <span className="font-mono text-white/80">{data.app.name}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-white/60">Versjon</span>
+                <span className="font-mono text-white/80">{data.app.version}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-white/60">Miljø</span>
+                <span className="font-mono text-white/80">{data.app.environment}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-white/60">Port</span>
+                <span className="font-mono text-white/80">{data.app.port}</span>
+              </div>
+            </div>
+          </AdminCard>
+
+          {/* ─── AI Status (placeholder) ────────────────── */}
+          <AdminCard title="AI Engine" status="warn">
+            <div className="space-y-4">
+              <div>
+                {statusLabel(false, 'Ikke konfigurert')}
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-white/60">Provider</span>
+                <span className="text-white/40">—</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-white/60">Modell</span>
+                <span className="text-white/40">—</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-white/60">Status</span>
+                <span className="text-white/40">Avventer konfigurasjon</span>
+              </div>
+            </div>
+          </AdminCard>
+
+          {/* ─── Server Info (placeholder) ──────────────── */}
+          <AdminCard title="Server" status="warn">
+            <div className="space-y-4">
+              <div>
+                {statusLabel(false, 'Informasjon utilgjengelig')}
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-white/60">Node.js</span>
+                <span className="font-mono text-white/80">{data.system.nodeVersion}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-white/60">Next.js</span>
+                <span className="font-mono text-white/80">{data.system.nextVersion}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-white/60">Plattform</span>
+                <span className="text-white/40">—</span>
+              </div>
+            </div>
+          </AdminCard>
+
+          {/* ─── Resonans Matching (placeholder) ────────── */}
+          <AdminCard title="Resonans Matching" status="ok">
+            <div className="space-y-4">
+              <div>
+                {statusLabel(true, 'Operational')}
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-white/60">Engine</span>
+                <span className="text-white/80">Resonans v2</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-white/60">Match-rate</span>
+                <span className="text-white/40">—</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-white/60">Oppetid</span>
+                <span className="text-white/40">—</span>
+              </div>
+            </div>
+          </AdminCard>
+
+        </div>
+
+        {/* ─── Footer ───────────────────────────────────── */}
+        <div className="mt-12 text-center text-xs text-white/20">
+          ToSom Health Dashboard · Bygget med ⚡ og ❤️
+        </div>
+      </div>
+    </main>
   );
 }

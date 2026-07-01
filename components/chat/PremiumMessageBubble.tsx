@@ -11,7 +11,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { BUBBLE_ANIMATIONS, getBubbleCSS, ChatMood } from '@/lib/chatAnimations/chatAnimations';
+import { BUBBLE_ANIMATIONS, getBubbleCSS, MoodType as ChatMoodType } from '@/lib/chatAnimations/chatAnimations';
 
 interface PremiumMessageBubbleProps {
   /** Meldingstekst */
@@ -25,7 +25,7 @@ interface PremiumMessageBubbleProps {
   /** Animasjonstype */
   animationType?: keyof typeof BUBBLE_ANIMATIONS;
   /** Mood frå WarmFlow */
-  mood?: ChatMood;
+  mood?: ChatMoodType;
   /** Indeks for stagger */
   index?: number;
   /** Fade-in delay */
@@ -99,7 +99,7 @@ export default function PremiumMessageBubble({
   } : undefined;
 
   // Mood-basert farge
-  const moodColors: Record<ChatMood, { bg: string; border: string }> = {
+  const moodColors: Record<ChatMoodType, { bg: string; border: string }> = {
     calm: { bg: 'rgba(255, 255, 255, 0.04)', border: 'rgba(255, 255, 255, 0.08)' },
     warm: { bg: 'rgba(232, 199, 102, 0.08)', border: 'rgba(232, 199, 102, 0.2)' },
     deep: { bg: 'rgba(168, 216, 234, 0.06)', border: 'rgba(168, 216, 234, 0.15)' },

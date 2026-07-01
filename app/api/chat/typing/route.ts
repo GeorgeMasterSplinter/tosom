@@ -1,12 +1,11 @@
 /**
  * ToSom — Typing Indicator API
- * 
+ *
  * POST /api/chat/typing
  * Marker at ein brukar skriv ein melding.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 
 export async function POST(req: NextRequest) {
   try {

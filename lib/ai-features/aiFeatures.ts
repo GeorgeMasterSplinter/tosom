@@ -38,6 +38,7 @@ export type SuggestionType =
   | 'vulnerability'  // Sårbarheits-dypping
   | 'future-vision'  // Framtidsvisjon
   | 'values-exploration' // Verdiforsking
+  | 'growth'         // Personleg vekst
 
 export interface ReflectionPrompt {
   /** Spørsmål */
@@ -180,14 +181,14 @@ export function generateConversationSuggestion(
     DEEPER: [
       {
         suggestion: 'Kva er noko du fryktar å miste i ein relasjon?',
-        type: 'fear',
+        type: 'vulnerability',
         depth: 9,
         warmth: 7,
         reasoning: 'Djup sårbarheit i dypare fase',
       },
       {
         suggestion: 'Korleis har din oppvekst forma korleis du viser kjærlighet?',
-        type: 'connection',
+        type: 'open-ended',
         depth: 9,
         warmth: 7,
         reasoning: 'Kopplar fortid til noverande',
@@ -196,7 +197,7 @@ export function generateConversationSuggestion(
     CHECKIN: [
       {
         suggestion: 'Kva har denne reisa lært deg om kva du treng i ein relasjon?',
-        type: 'purpose',
+        type: 'reflection',
         depth: 8,
         warmth: 8,
         reasoning: 'Samantrekking og innsikt',

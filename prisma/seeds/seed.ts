@@ -207,9 +207,10 @@ async function seedMatch(users: any[]) {
   console.log(`  ✅ Match: ${u1.name} ↔ ${u2.name}`);
 
   await prisma.conversation.upsert({
-    where: { matchId: { matchId: match.id } },
+    where: { id: `conv-${match.id}` },
     update: {},
     create: {
+      id: `conv-${match.id}`,
       userAId: u1.id,
       userBId: u2.id,
       matchId: match.id,

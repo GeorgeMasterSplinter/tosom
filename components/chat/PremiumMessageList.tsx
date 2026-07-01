@@ -12,7 +12,7 @@
 import { useEffect, useRef, useCallback } from 'react';
 import PremiumMessageBubble from './PremiumMessageBubble';
 import PremiumTypingIndicator from './PremiumTypingIndicator';
-import type { ChatMood } from '@/lib/chatAnimations/chatAnimations';
+import type { MoodType as ChatMoodType } from '@/lib/chatAnimations/chatAnimations';
 
 interface Message {
   id: string;
@@ -25,7 +25,7 @@ interface Message {
 
 interface PremiumMessageListProps {
   messages: Message[];
-  mood?: ChatMood;
+  mood?: ChatMoodType;
   isTyping?: boolean;
   isTypingPartner?: boolean;
 }

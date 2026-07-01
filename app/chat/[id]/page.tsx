@@ -1,19 +1,21 @@
 /**
  * ToSom — Chat Detail Page (Produktnivå)
- * 
+ *
  * Hentar partner-info, conversation-info og presence-data.
  * Sender alt inn i <ChatRoom /> med PartnerPresenceBar og AtmosphereLayer.
+ *
+ * This page manages its own WarmFlow context since Next.js layouts
+ * only accept `params` and `searchParams` as props.
  */
 
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
+import { type MoodType, MOOD_COLORS } from '@/lib/warmFlow/warmFlow';
 import ChatRoom from '@/components/chat/ChatRoom';
 import PartnerPresenceBar from '@/components/presence/PartnerPresenceBar';
 import AtmosphereLayer from '@/components/atmosphere/AtmosphereLayer';
-import { useWarmFlow } from '@/app/chat/layout';
-import type { MoodType } from '@/lib/warmFlow/warmFlow';
 
 interface PartnerData {
   id: string;
@@ -63,13 +65,29 @@ function extractPhase(phaseLabel: string): string {
   return 'EARLY';
 }
 
-export default function ChatDetailPage() {
-  const params = useParams();
-  const conversationId = params?.id as string;
+function calculateChatMood(phase: string, resonanceScore: number): MoodType {
+  const hour = new Date().getHours();
+  const isNightTime = hour >= 20 || hour <= 2;
 
-  // Hooks before any conditional returns
-  const { currentMood } = useWarmFlow();
+  if (resonanceScore >= 85 && (phase === 'EARLY' || phase === 'BUILDING_TRUST')) {
+    return 'celebratory';
+  }
+  if (phase === 'DEEPER' && resonanceScore >= 60) {
+    return 'deep';
+  }
+  if (isNightTime && resonanceScore >= 50) {
+    return 'warm';
+  }
+  if (phase === 'EARLY') {
+    return resonanceScore >= 70 ? 'warm' : 'gentle';
+  }
+  if (phase === 'BUILDING_TRUST') {
+    return resonanceScore >= 65 ? 'warm' : 'calm';
+  }
+  return 'calm';
+}
 
+function ChatRoomWrapper({ conversationId }: { conversationId: string }) {
   const [state, setState] = useState<AppState>({
     partner: null,
     conversation: null,
@@ -81,12 +99,10 @@ export default function ChatDetailPage() {
   // Hente partner, conversation og presence-data
   const fetchData = useCallback(async () => {
     if (!conversationId) return;
-    
+
     try {
-      // 1. Hent conversation/partner-info
       const convRes = await fetch(`/api/chat/conversations/${conversationId}`);
-      
-      // 2. Hent presence-data (simulert)
+
       const presence: PresenceData = {
         isOnline: Math.random() > 0.5,
         lastSeenAt: new Date(Date.now() - Math.random() * 3600000),
@@ -97,7 +113,7 @@ export default function ChatDetailPage() {
 
       if (convRes.ok) {
         const data: ConversationData = await convRes.json();
-        
+
         setState(prev => ({
           ...prev,
           partner: {
@@ -125,7 +141,6 @@ export default function ChatDetailPage() {
           error: null,
         }));
       } else {
-        // Fallback til dummy-data
         setState(prev => ({
           ...prev,
           partner: {
@@ -193,23 +208,33 @@ export default function ChatDetailPage() {
     fetchData();
   }, [fetchData]);
 
-  // Loading state med premium UI
   if (state.loading) {
     return (
       <div className="w-full max-w-[480px] mx-auto h-[100dvh] flex flex-col bg-[#0B0E11]">
-        <div style={{
-          background: 'rgba(11, 14, 17, 0.95)',
-          backdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-        }}>
+        <div
+          style={{
+            background: 'rgba(11, 14, 17, 0.95)',
+            backdropFilter: 'blur(20px)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+          }}
+        >
           <div className="flex items-center gap-4 px-6 py-4">
-            <div className="w-10 h-10 rounded-full animate-pulse" style={{
-              background: 'rgba(212, 175, 55, 0.1)',
-              border: '1px solid rgba(212, 175, 55, 0.2)',
-            }} />
+            <div
+              className="w-10 h-10 rounded-full animate-pulse"
+              style={{
+                background: 'rgba(212, 175, 55, 0.1)',
+                border: '1px solid rgba(212, 175, 55, 0.2)',
+              }}
+            />
             <div className="flex-1">
-              <div className="h-4 w-24 rounded animate-pulse mb-2" style={{ background: 'rgba(255, 255, 255, 0.1)' }} />
-              <div className="h-3 w-32 rounded animate-pulse" style={{ background: 'rgba(255, 255, 255, 0.05)' }} />
+              <div
+                className="h-4 w-24 rounded animate-pulse mb-2"
+                style={{ background: 'rgba(255, 255, 255, 0.1)' }}
+              />
+              <div
+                className="h-3 w-32 rounded animate-pulse"
+                style={{ background: 'rgba(255, 255, 255, 0.05)' }}
+              />
             </div>
           </div>
         </div>
@@ -244,9 +269,11 @@ export default function ChatDetailPage() {
 
   const conv = state.conversation || {
     phaseLabel: 'Fase 1 — Introduksjon',
+    phaseOrder: 1,
     currentDay: 1,
     daysRemaining: 30,
     resonanceScore: 0,
+    isSafe: false,
     otherUserId: 'unknown',
     otherUserName: 'Din match',
     otherUserPhoto: null,
@@ -261,47 +288,64 @@ export default function ChatDetailPage() {
     sharedPositionMessage: 'Vent på at begge er i reisa...',
   };
 
-  // Kople til WarmFlow-mood
   const phase = extractPhase(conv.phaseLabel);
   const resonance = conv.resonanceScore;
+  const mood = calculateChatMood(phase, resonance);
+  const colors = MOOD_COLORS[mood];
+  const background = `radial-gradient(ellipse at 50% 0%, ${colors.glow} 0%, ${colors.background} 60%)`;
 
   return (
     <div className="w-full max-w-[480px] mx-auto h-[100dvh] flex flex-col bg-[#0B0E11] relative">
-      {/* AtmosphereLayer — bak ChatRoom, med mood/kobling */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <AtmosphereLayer
-          mood={currentMood as MoodType}
-          phase={phase}
-          resonanceLevel={resonance}
-          animationEnabled={true}
-        />
-      </div>
+        {/* AtmosphereLayer */}
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <AtmosphereLayer
+            mood={mood}
+            phase={phase}
+            resonanceLevel={resonance}
+            animationEnabled={true}
+          />
+        </div>
 
-      {/* ChatRoom-innhald */}
-      <div className="relative z-10 flex-1 flex flex-col">
-        <ChatRoom
-          conversationId={conversationId}
-          partner={partner}
-          phaseLabel={conv.phaseLabel}
-          phaseOrder={conv.phaseOrder}
-          currentDay={conv.currentDay}
-          daysRemaining={conv.daysRemaining}
-          resonanceScore={conv.resonanceScore}
-          isSafe={conv.isSafe}
-          showHeader
-        />
-        
-        {/* Partner Presence Bar — under chat */}
-        <PartnerPresenceBar
-          partnerId={partner.id}
-          partnerName={partner.name}
-          isOnline={presence.isOnline}
-          lastSeenAt={presence.lastSeenAt}
-          activity={presence.activity}
-          sharedPositionMessage={presence.sharedPositionMessage}
-          resonanceLevel={presence.resonanceLevel}
-        />
+        {/* ChatRoom */}
+        <div className="relative z-10 flex-1 flex flex-col">
+          <ChatRoom
+            conversationId={conversationId}
+            partner={partner}
+            phaseLabel={conv.phaseLabel}
+            phaseOrder={conv.phaseOrder}
+            currentDay={conv.currentDay}
+            daysRemaining={conv.daysRemaining}
+            resonanceScore={conv.resonanceScore}
+            isSafe={conv.isSafe}
+            showHeader
+          />
+
+          {/* Partner Presence Bar */}
+          <PartnerPresenceBar
+            partnerId={partner.id}
+            partnerName={partner.name}
+            isOnline={presence.isOnline}
+            lastSeenAt={presence.lastSeenAt}
+            activity={presence.activity}
+            sharedPositionMessage={presence.sharedPositionMessage}
+            resonanceLevel={presence.resonanceLevel}
+          />
+        </div>
       </div>
-    </div>
   );
+}
+
+export default function ChatDetailPage() {
+  const params = useParams();
+  const conversationId = params?.id as string;
+
+  if (!conversationId) {
+    return (
+      <div className="w-full max-w-[480px] mx-auto h-[100dvh] flex items-center justify-center bg-[#0B0E11]">
+        <p style={{ color: 'rgba(255, 255, 255, 0.5)' }}>Ugyldig samtale</p>
+      </div>
+    );
+  }
+
+  return <ChatRoomWrapper conversationId={conversationId} />;
 }

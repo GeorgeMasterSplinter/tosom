@@ -151,7 +151,6 @@ export const DEFAULT_CHAT_ANIMATIONS: ChatAnimationsConfig = {
     color: '#D4AF37',
   },
   progressiveReveal: true,
-  revealSpeed: 15,  // ms per teikn
   moodBasedEnvironment: true,
 }
 
@@ -164,6 +163,7 @@ export function determineChatMood(conversationContext: {
   journeyPhase: string
 }): MoodType {
   const hoursSinceLastMessage = (Date.now() - conversationContext.lastMessageTime.getTime()) / (1000 * 60 * 60)
+  const journeyPhase = conversationContext.journeyPhase
 
   // Glede: mange meldingar raskt etter kvarandre
   if (conversationContext.messageCount > 20 && hoursSinceLastMessage < 1) {

@@ -272,6 +272,7 @@ model Match {
    @@index([expiresAt])
    @@index([score])
    @@index([normalizedScore])
+@@unique([userAId, userBId])
 }
 
 // ─── DEPRECATED MODELLER (Phase 4) ───

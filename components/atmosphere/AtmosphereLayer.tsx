@@ -14,7 +14,8 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { getAtmosphereSystem, AtmospherePreset, MoodType } from '@/lib/atmosphere/atmosphereEngine';
+import { getAtmosphereSystem, AtmospherePreset } from '@/lib/atmosphere/atmosphereEngine';
+import { type MoodType } from '@/lib/warmFlow/warmFlow';
 
 interface AtmosphereLayerProps {
   /** WarmFlow-mood */

@@ -44,12 +44,7 @@ export default function ChatMessages({
   // Smooth scroll ved nye meldingar
   const scrollToBottom = useCallback(() => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'end',
-        // Stabilt scroll som unngjer jump
-        force: true,
-      });
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
   }, []);
 

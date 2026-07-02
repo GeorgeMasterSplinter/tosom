@@ -7,6 +7,7 @@
 'use client';
 
 import Link from 'next/link';
+import { AgeBadge } from '@/components/ui/age-badge/AgeBadge';
 import { color } from '@/config/design-tokens';
 
 export default function RegisterPage() {
@@ -61,18 +62,23 @@ export default function RegisterPage() {
           </div>
         </div>
 
-        {/* Panel 2 — Vipps forklaring */}
-        <div className="
-          bg-white/5 backdrop-blur-xl rounded-2xl
-          shadow-xl shadow-black/30
-          p-10 md:p-14
-          flex flex-col gap-10
-          max-w-3xl mx-auto
-          text-center items-center
-        ">
-          <h2 className="text-4xl md:text-5xl font-light text-[#D4AF37] tracking-wide">
-            Hvorfor Vipps Login og Vipps betaling?
-          </h2>
+         {/* Panel 2 — Vipps forklaring */}
+         <div className="
+           bg-white/5 backdrop-blur-xl rounded-2xl
+           shadow-xl shadow-black/30
+           p-10 md:p-14
+           flex flex-col gap-10
+           max-w-3xl mx-auto
+           text-center items-center
+         ">
+           <div className="flex items-center justify-center gap-3">
+             <h2 className="text-4xl md:text-5xl font-light text-[#D4AF37] tracking-wide">
+               Hvorfor Vipps Login og Vipps betaling?
+             </h2>
+             <div className="hidden sm:block">
+               <AgeBadge />
+             </div>
+           </div>
 
           <p className="text-white/80 font-light max-w-xl leading-relaxed">
             ToSom er bygget for voksne mennesker som ønsker en trygg, rolig og ekte prosess.

@@ -150,7 +150,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ hideOn = false }) => {
         <div
           className="mx-auto max-w-7xl px-6 lg:px-8 h-full flex items-center justify-between"
         >
-          {/* Venstre: Tilbake-pil + Logo */}
+          {/* Venstre: Tilbake-pil + Logo + AgeBadge */}
           <div className="flex items-center gap-3">
             {/* Tilbake-pil */}
             {showBack && (
@@ -171,10 +171,15 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ hideOn = false }) => {
               </button>
             )}
 
-            {/* Logo */}
-            <Link href="/" className="flex-shrink-0 mt-2 logo-link">
-              <Logo size="xl" colorVariant="gold" />
-            </Link>
+            {/* Logo + AgeBadge */}
+            <div className="flex items-center gap-2">
+              <Link href="/" className="flex-shrink-0 mt-2 logo-link">
+                <Logo size="xl" colorVariant="gold" />
+              </Link>
+              <div className="hidden md:block">
+                <AgeBadge />
+              </div>
+            </div>
           </div>
 
           {/* Midten: Meny (desktop) */}
@@ -217,8 +222,6 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ hideOn = false }) => {
 
           {/* Høyre: CTA-knappar */}
           <div className="hidden md:flex items-center gap-4">
-            {/* AgeBadge */}
-            <AgeBadge />
             {/* Logg inn (sekundær) */}
             <Link
               href="/login"

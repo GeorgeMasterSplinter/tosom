@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { Footer } from '@/components/ui/layout/Footer';
 import { ToSomSection, ToSomButton } from '@/components/ui/system';
-import { AgeBadge } from '@/components/ui/age-badge/AgeBadge';
 import { color, spacing, typographyToStyle, radius, shadow } from '@/config/design-tokens';
 
 /* ========================
@@ -178,11 +177,6 @@ export default function ReisenPage() {
       />
 
       <div className="relative z-10">
-
-        {/* AgeBadge — absolutt element i hero */}
-        <div className="absolute top-20 right-6 z-10 hidden md:block">
-          <AgeBadge />
-        </div>
 
         {/* ===== HERO ===== */}
         <ToSomSection

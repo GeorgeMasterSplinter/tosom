@@ -3,7 +3,6 @@
 import { Footer } from '@/components/ui/layout/Footer';
 import { Hero } from '@/components/ui/layout/Hero';
 import { ToSomSection, ToSomButton } from '@/components/ui/system';
-import { AgeBadge } from '@/components/ui/age-badge/AgeBadge';
 import { color, spacing, typographyToStyle, radius, shadow } from '@/config/design-tokens';
 
 /* ========================
@@ -156,11 +155,6 @@ export default function LandingPage() {
       />
 
       <main className="relative z-10">
-        {/* AgeBadge — absolutt element i hero */}
-        <div className="absolute top-20 right-6 z-10 hidden md:block">
-          <AgeBadge />
-        </div>
-
         {/* Hero — redusert top padding for heva logo høgare */}
         <section className="relative overflow-hidden py-10 ph:py-14 md:py-[60px]">
           <Hero />

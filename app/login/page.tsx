@@ -4,6 +4,9 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import PremiumButton from "@/components/ui/PremiumButton";
 
+// trigger rebuild
+console.log("login rebuild");
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);

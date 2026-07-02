@@ -149,6 +149,39 @@ export default function RegisterPage() {
             ))}
           </div>
 
+          {/* Vipps forklaring */}
+          <div className="
+            bg-white/5 backdrop-blur-xl rounded-2xl
+            shadow-xl shadow-black/30
+            p-8 md:p-10
+            flex flex-col gap-6
+            items-center text-center
+            text-white/80 font-light tracking-wide leading-relaxed
+            max-w-2xl mx-auto
+          ">
+            <h2 className="text-3xl md:text-4xl font-light text-[#D4AF37] tracking-wide">
+              Hvorfor Vipps Login og Vipps betaling?
+            </h2>
+
+            <p className="max-w-xl">
+              ToSom er bygget for voksne mennesker som ønsker en trygg, rolig og ekte prosess.
+              Derfor bruker vi Vipps både til innlogging og betaling.
+            </p>
+
+            <ul className="flex flex-col gap-3 text-left max-w-xl">
+              <li>✓ Verifisert identitet – ingen fake profiler</li>
+              <li>✓ Ekte fødselsdato – trygg alderskontroll</li>
+              <li>✓ Ingen duplikat‑brukere – én person, én profil</li>
+              <li>✓ Norsk sikkerhetsstandard – trygg betalingsflyt</li>
+              <li>✓ Ingen skjulte gebyrer – én pris, ingen stress</li>
+              <li>✓ Passer perfekt med ToSom sin rolige, modne plattform</li>
+            </ul>
+
+            <p className="max-w-xl text-white/70">
+              Vipps gjør ToSom til en trygg plattform for voksne mennesker som ønsker en ekte reise.
+            </p>
+          </div>
+
           {/* CTA */}
           <div className="flex flex-col gap-6 mt-10 max-w-sm mx-auto">
 

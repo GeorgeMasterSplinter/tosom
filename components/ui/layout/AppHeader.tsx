@@ -216,7 +216,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ hideOn = false }) => {
           </nav>
 
           {/* Høyre: CTA-knappar */}
-          <div className="hidden lg:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4">
             {/* AgeBadge */}
             <AgeBadge />
             {/* Logg inn (sekundær) */}
@@ -269,7 +269,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ hideOn = false }) => {
 
           {/* Mobil meny-knapp */}
           <button
-            className="lg:hidden w-12 h-12 flex items-center justify-center rounded-xl transition-all duration-200 ease-out"
+            className="md:hidden w-12 h-12 flex items-center justify-center rounded-xl transition-all duration-200 ease-out"
             style={{
               color: '#E8C27A',
               background: menuOpen ? 'rgba(212,175,55,0.12)' : 'rgba(255,255,255,0.03)',
@@ -295,7 +295,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ hideOn = false }) => {
           {/* Mobil meny (slide-in frå høgre) */}
           {menuOpen && (
             <div
-              className="lg:hidden fixed top-[64px] right-0 z-50 menu-slide-in"
+              className="md:hidden fixed top-[64px] right-0 z-50 menu-slide-in"
               style={{
                 width: '280px',
                 background: 'rgba(10,15,26,0.95)',

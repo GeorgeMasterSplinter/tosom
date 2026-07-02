@@ -14,6 +14,7 @@ import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Logo } from '@/components/ui/branding/Logo';
+import { AgeBadge } from '@/components/ui/age-badge/AgeBadge';
 import { color } from '@/config/design-tokens';
 
 interface AppHeaderProps {
@@ -216,6 +217,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ hideOn = false }) => {
 
           {/* Høyre: CTA-knappar */}
           <div className="hidden lg:flex items-center gap-4">
+            {/* AgeBadge */}
+            <AgeBadge />
             {/* Logg inn (sekundær) */}
             <Link
               href="/login"

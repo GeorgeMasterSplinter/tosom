@@ -245,6 +245,8 @@ module.exports = {
         'ts-typewriter': 'ts-typewriter 0.8s steps(30) both',
         /* Carousel */
         'ts-carousel-slide': 'ts-carouselSlide 0.5s var(--ts-motion-easing-smooth, cubic-bezier(0.25, 0.1, 0.25, 1)) both',
+        /* AgeBadge */
+        'fadeInScale': 'fadeInScale 0.6s ease-out both',
         /* None */
         'none': 'none',
       },
@@ -324,6 +326,11 @@ module.exports = {
         'ts-carouselSlide': {
           '0%': { opacity: '0', transform: 'translateX(30px)' },
           '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        /* AgeBadge */
+        'fadeInScale': {
+          '0%': { opacity: '0', transform: 'scale(0.8)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
         },
       },
 

@@ -9,13 +9,13 @@ module.exports = {
   ],
   darkMode: 'class',
   theme: {
-    screens: {
-      sm: '640px',
-      ph: '820px',   // Fold 7 open
-      md: '768px',
-      lg: '1024px',
-      xl: '1280px',
-    },
+     screens: {
+       sm: '480px',
+       ph: '820px',   // Fold 7 open
+       md: '768px',
+       lg: '1024px',
+       xl: '1280px',
+     },
     extend: {
       /* ── Colors (CSS Variable–driven) ── */
       colors: {

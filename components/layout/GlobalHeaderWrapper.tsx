@@ -11,7 +11,9 @@ import AppHeader from '@/components/ui/layout/AppHeader';
 export default function GlobalHeaderWrapper({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <AppHeader />
+      <header className="relative z-50 mb-10">
+        <AppHeader />
+      </header>
       <div className="pt-[80px]">
         {children}
       </div>

@@ -204,6 +204,70 @@ export default function ReisenPage() {
           </p>
         </ToSomSection>
 
+        {/* ===== PRISBLOKK ===== */}
+        <ToSomSection
+          spotlight="blue"
+          className="px-6"
+        >
+          <div className="mx-auto max-w-xl space-y-8 text-center">
+            <h2
+              style={{
+                ...typographyToStyle('heading-lg'),
+                color: color.text.primary,
+              }}
+            >
+              Én pris. Alt inkludert.
+            </h2>
+
+            <GlassCard
+              padding="xl"
+              className="space-y-6"
+              style={{
+                background: 'rgba(212,175,55,0.06)',
+                border: '1px solid rgba(212,175,55,0.25)',
+                boxShadow: '0 0 40px rgba(212,175,55,0.15)',
+              }}
+            >
+              <div
+                style={{
+                  ...typographyToStyle('heading-xl'),
+                  color: color.brand.gold,
+                }}
+              >
+                349 kr
+              </div>
+
+              <p
+                style={{
+                  ...typographyToStyle('body-lg'),
+                  color: color.text.secondary,
+                  lineHeight: '1.8',
+                }}
+              >
+                ToSom — full tilgang. Betales én gang og dekker hele reisen.
+              </p>
+
+              <div
+                style={{
+                  background: 'rgba(212,175,55,0.12)',
+                  border: '1px solid rgba(212,175,55,0.20)',
+                  color: 'rgba(255,255,255,0.7)',
+                  borderRadius: `${radius.md}px`,
+                  padding: '14px 20px',
+                  fontSize: '14px',
+                  lineHeight: '1.6',
+                }}
+              >
+                Betalingsløsning er under utvikling.
+                <br />
+                <span style={{ fontSize: '12px', color: color.text.subtle }}>
+                  ToSom er i begrenset testfase.
+                </span>
+              </div>
+            </GlassCard>
+          </div>
+        </ToSomSection>
+
         {/* ===== INTRO ===== */}
         <ToSomSection
           spotlight="soft"

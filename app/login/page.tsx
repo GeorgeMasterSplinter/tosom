@@ -20,18 +20,6 @@ export default function LoginPage() {
       text-white
     ">
 
-      {/* Logo / Header */}
-      <div className="absolute top-10 left-10 mb-10">
-        <h1 className="
-          text-3xl
-          font-semibold
-          tracking-wider
-          text-[#D4AF37]
-          drop-shadow-[0_0_10px_rgba(212,175,55,0.35)]
-        ">
-          ToSom
-        </h1>
-      </div>
 
       {/* Premium Glass Container */}
       <div className="

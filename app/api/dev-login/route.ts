@@ -175,7 +175,7 @@ export async function GET(req: NextRequest) {
     role: testUser.role,
   });
 
-   const response = NextResponse.redirect('/onboarding');
+   const response = NextResponse.redirect(new URL('/onboarding', req.url));
    setSessionCookie(response, sessionToken, req);
    return response;
  }

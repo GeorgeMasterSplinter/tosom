@@ -1,14 +1,12 @@
 /**
  * ToSom — Registreringsside
  * 
- * Rolig intro for nye brukarar.
- * CTA peiker til /onboarding/start for å starte den dypte profilen.
+ * Full ToSom-premium: ingen borders, midtstilt ikon-seksjoner, gull Vipps.
  */
 
 'use client';
 
 import Link from 'next/link';
-import { AuthCTA } from '@/components/auth/AuthCTA';
 import { color } from '@/config/design-tokens';
 
 /* ========================
@@ -23,8 +21,8 @@ const features = [
         <path d="M3 21C3 17.134 7.029 13.5 12 13.5C16.971 13.5 21 17.134 21 21" stroke={color.brand.gold} strokeWidth="1.5" strokeLinecap="round" />
       </svg>
     ),
-    title: 'Dypt, privat profil',
-    description: 'Svar på djupe spørsmål i ditt eget tempo. Ingen bilder før etter 14 dager.',
+    title: 'Dyp, privat profil',
+    description: 'Svar på dype spørsmål i ditt eget tempo. Ingen bilder før etter 14 dager.',
   },
   {
     icon: (
@@ -33,7 +31,7 @@ const features = [
       </svg>
     ),
     title: 'Én match per 24 timer',
-    description: 'Du får den beste kompatibilitets-matchen din. Ingen swiping, ingen valg-stress.',
+    description: 'Du får den beste kompatibilitetsmatchen din. Ingen sveiping, ingen valgstress.',
   },
   {
     icon: (
@@ -43,7 +41,7 @@ const features = [
       </svg>
     ),
     title: '30-dagers reise',
-    description: 'Guidede samtaler, refleksjonar og oppgåver som faktisk hjelper dere å bli kjent.',
+    description: 'Guidede samtaler, refleksjoner og oppgaver som faktisk hjelper dere å bli kjent.',
   },
 ];
 
@@ -65,79 +63,128 @@ export default function RegisterPage() {
         }}
       />
 
-      <main className="relative z-10 max-w-4xl mx-auto px-6 lg:px-8 py-20 md:py-32">
-        {/* Header */}
-        <div className="text-center mb-16 md:mb-24">
-          <span
-            className="text-xs uppercase tracking-[0.3em] font-semibold mb-4 block"
-            style={{ color: color.brand.gold }}
-          >
-            Kom i gang
-          </span>
-          <h1
-            className="text-[36px] md:text-[52px] font-semibold tracking-tight text-white leading-[1.1] mb-6"
-          >
-            Start din ToSom-reise
-          </h1>
-          <p
-            className="text-base md:text-lg text-white/70 leading-relaxed max-w-xl mx-auto px-4"
-          >
-            ToSom er en rolig, moden måte å møtes på. Lag profilen din, få din match, og gå inn i en guidet 30-dagers reise sammen.
-          </p>
-        </div>
+      <main className="relative z-10 py-20 md:py-32 px-6">
 
-        {/* Features */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mb-16 md:mb-24">
-          {features.map((feature) => (
-            <div
-              key={feature.title}
-              className="flex flex-col items-center text-center gap-6"
-            >
+        {/* Borderless glass container */}
+        <div className="
+          bg-white/5
+          backdrop-blur-xl
+          rounded-2xl
+          shadow-xl shadow-black/30
+          p-10 md:p-14
+          max-w-3xl mx-auto
+          flex flex-col gap-12
+          text-white/80
+          font-light tracking-wide leading-relaxed
+        ">
+
+          {/* Hovedtittel */}
+          <div className="text-center">
+            <h1 className="
+              text-5xl md:text-7xl
+              font-light
+              tracking-wide
+              text-[#D4AF37]
+              text-center
+            ">
+              Kom i gang
+            </h1>
+            <p className="
+              text-base md:text-lg
+              text-white/80
+              leading-relaxed
+              max-w-xl
+              mx-auto
+              mt-6
+            ">
+              ToSom er en rolig, moden måte å møtes på. Lag profilen din, få din match, og gå inn i en guidet 30-dagers reise sammen.
+            </p>
+          </div>
+
+          {/* Features (midtstilt, ingen borders) */}
+          <div className="flex flex-col gap-8">
+            {features.map((feature) => (
               <div
-                className="w-16 h-16 rounded-2xl flex items-center justify-center"
-                style={{
-              background: color.glass.goldBg,
-              border: `1px solid ${color.border.gold}`,
-                }}
+                key={feature.title}
+                className="
+                  bg-white/5
+                  backdrop-blur-md
+                  rounded-xl
+                  p-6
+                  flex flex-col items-center text-center gap-3
+                  shadow-lg shadow-black/20
+                "
               >
-                {feature.icon}
+                <div
+                  className="
+                    w-12 h-12
+                    rounded-xl
+                    flex items-center justify-center
+                  "
+                  style={{
+                    background: color.glass.goldBg,
+                  }}
+                >
+                  {feature.icon}
+                </div>
+                <h3 className="
+                  text-lg
+                  font-light
+                  tracking-wide
+                  leading-relaxed
+                  text-white/80
+                ">
+                  {feature.title}
+                </h3>
+                <p className="
+                  text-sm
+                  text-white/80
+                  leading-relaxed
+                  font-light
+                  tracking-wide
+                ">
+                  {feature.description}
+                </p>
               </div>
-              <h3
-                className="text-lg font-semibold text-white"
-              >
-                {feature.title}
-              </h3>
-              <p
-                className="text-sm text-white/60 leading-relaxed px-2"
-              >
-                {feature.description}
-              </p>
-            </div>
-          ))}
+            ))}
+          </div>
+
+          {/* CTA */}
+          <div className="flex flex-col gap-6 mt-10 max-w-sm mx-auto">
+
+            <Link
+              href="/register/vipps"
+              className="
+                w-full text-center
+                px-5 py-3
+                rounded-xl
+                bg-[#D4AF37]/90
+                hover:bg-[#D4AF37]
+                text-black
+                font-light tracking-wide
+                shadow-lg shadow-black/40
+                transition-all duration-300
+              "
+            >
+              Fortsett med Vipps
+            </Link>
+
+            <Link
+              href="/login"
+              className="
+                text-white/70 hover:text-white
+                font-light tracking-wide
+                text-center
+                transition-all duration-200
+              "
+            >
+              Logg inn
+            </Link>
+
+          </div>
+
         </div>
 
-        {/* CTA */}
-        <div className="text-center">
-          <Link
-            href="/onboarding/start"
-            className="
-              inline-block px-8 py-4 rounded-xl text-base font-semibold
-              bg-[#D4AF37] text-black
-              hover:bg-[#C49F2F]
-              shadow-[0_0_25px_rgba(212,175,55,0.3),0_4px_12px_rgba(0,0,0,0.2)]
-              border border-[rgba(212,175,55,0.5)]
-              transition-all duration-200 ease-out
-            "
-            style={{
-              background: color.brand.gold,
-            }}
-          >
-            Start registrering
-          </Link>
-        </div>
-
-        {/* AuthCTA for login */}
-        <AuthCTA />
       </main>
     </div>
   );

@@ -31,7 +31,7 @@ export const ToSomOnboardingLayout: FC<ToSomOnboardingLayoutProps> = ({
   stepOrientation = 'horizontal',
 }) => {
   return (
-    <ToSomPage spotlight="none">
+    <ToSomPage spotlight="hero">
       <div className="mx-auto max-w-xl" style={{ paddingTop: `${spacing['xl']}` }}>
         <ToSomStepper steps={steps} active={activeStep} orientation={stepOrientation} />
         <div style={{ marginTop: `${spacing['xl']}` }}>

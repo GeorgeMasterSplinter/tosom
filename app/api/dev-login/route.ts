@@ -160,46 +160,27 @@ export async function GET(req: NextRequest) {
 
   const testUser = TEST_USERS[userId as keyof typeof TEST_USERS];
 
-  try {
-    // Finn eller opprett bruker i databasen
-    let dbUser = await prisma.user.findFirst({
-      where: { email: testUser.email },
-      select: { id: true, onboardingComplete: true, deepProfileComplete: true },
-    });
+  // Fake testbruker — ingen database-kall
+  const dbUser = {
+    id: testUser.id,
+    onboardingComplete: false,
+    deepProfileComplete: false,
+  };
 
-    if (!dbUser) {
-      dbUser = await prisma.user.create({
-        data: {
-          email: testUser.email,
-          name: testUser.name,
-          role: testUser.role,
-          verified: true,
-        },
-        select: { id: true, onboardingComplete: true, deepProfileComplete: true },
-      });
-    }
+  // Lag session og redirect
+  const sessionToken = await createDevSessionToken({
+    id: dbUser.id,
+    email: testUser.email,
+    name: testUser.name,
+    role: testUser.role,
+  });
 
-    // Lag session og redirect
-    const sessionToken = await createDevSessionToken({
-      id: dbUser.id,
-      email: testUser.email,
-      name: testUser.name,
-      role: testUser.role,
-    });
+  const response = NextResponse.redirect(
+    `${new URL(req.url).origin}/onboarding`
+  );
+  setSessionCookie(response, sessionToken, req);
 
-    const response = NextResponse.redirect(
-      `${new URL(req.url).origin}/dashboard`
-    );
-    setSessionCookie(response, sessionToken, req);
-
-    return response;
-  } catch (error) {
-    console.error('[DevLogin] Feil under innlogging:', error);
-    return NextResponse.json(
-      { error: 'Kunne ikke logge inn. Sjekk databasekobling.' },
-      { status: 500 }
-    );
-  }
+  return response;
 }
 
 // ─── POST /api/dev-login ───
@@ -243,49 +224,30 @@ export async function POST(req: NextRequest) {
 
   const testUser = TEST_USERS[userId as keyof typeof TEST_USERS];
 
-  try {
-    // Finn eller opprett bruker i databasen
-    let dbUser = await prisma.user.findFirst({
-      where: { email: testUser.email },
-      select: { id: true, onboardingComplete: true, deepProfileComplete: true },
-    });
+  // Fake testbruker — ingen database-kall
+  const dbUser = {
+    id: testUser.id,
+    onboardingComplete: false,
+    deepProfileComplete: false,
+  };
 
-    if (!dbUser) {
-      dbUser = await prisma.user.create({
-        data: {
-          email: testUser.email,
-          name: testUser.name,
-          role: testUser.role,
-          verified: true,
-        },
-        select: { id: true, onboardingComplete: true, deepProfileComplete: true },
-      });
-    }
+  // Lag session og redirect
+  const sessionToken = await createDevSessionToken({
+    id: dbUser.id,
+    email: testUser.email,
+    name: testUser.name,
+    role: testUser.role,
+  });
 
-    // Lag session og redirect
-    const sessionToken = await createDevSessionToken({
-      id: dbUser.id,
-      email: testUser.email,
-      name: testUser.name,
-      role: testUser.role,
-    });
+  // Alltid til onboarding
+  let redirectUrl = customRedirect || `/onboarding`;
 
-    // Bestem redirect-mål
-    let redirectUrl = customRedirect || `/dashboard`;
+  const response = NextResponse.redirect(
+    `${new URL(req.url).origin}${redirectUrl}`
+  );
+  setSessionCookie(response, sessionToken, req);
 
-    const response = NextResponse.redirect(
-      `${new URL(req.url).origin}${redirectUrl}`
-    );
-    setSessionCookie(response, sessionToken, req);
-
-    return response;
-  } catch (error) {
-    console.error('[DevLogin] Feil under innlogging:', error);
-    return NextResponse.json(
-      { error: 'Kunne ikke logge inn. Sjekk databasekobling.' },
-      { status: 500 }
-    );
-  }
+  return response;
 }
 
 // ─── Hjelpsfunksjonar (ikkje Route-exports) ───

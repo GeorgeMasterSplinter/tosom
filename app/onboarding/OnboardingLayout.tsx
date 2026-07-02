@@ -32,13 +32,16 @@ export const OnboardingLayout: FC<OnboardingLayoutProps> = ({
   const progress = progressPercent ?? ((currentStep) / totalSteps) * 100;
 
   return (
-    <div className="min-h-screen flex items-start justify-center px-4 py-12" style={{ background: '#0B0E11' }}>
+    <div className="min-h-screen flex items-start justify-center px-4 py-12 relative bg-gradient-to-b from-[#0B1520] via-[#121E2E] to-[#0B1520]">
+      {/* Spotlight overlay — identisk med premium-profil */}
+      <div className="absolute inset-0 bg-white/5 blur-3xl opacity-[0.06] pointer-events-none" />
+
       <div
-        className="w-full max-w-2xl animate-subtlePop"
+        className="w-full max-w-2xl animate-subtlePop relative z-10"
         style={{
-          background: 'rgba(255, 255, 255, 0.03)',
+          background: 'rgba(255, 255, 255, 0.05)',
           backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
           borderRadius: '24px',
           boxShadow: '0 8px 40px rgba(0, 0, 0, 0.35), inset 0 0 20px rgba(255, 255, 255, 0.03)',
         }}
@@ -50,8 +53,8 @@ export const OnboardingLayout: FC<OnboardingLayoutProps> = ({
               className="h-full rounded-full transition-all duration-700 ease-out"
               style={{
                 width: `${progress}%`,
-                background: 'linear-gradient(90deg, rgba(212,175,55,0.6) 0%, rgba(232,194,122,0.8) 100%)',
-                boxShadow: '0 0 12px rgba(212, 175, 55, 0.25)',
+                background: 'linear-gradient(90deg, rgba(212,175,55,0.8) 0%, rgba(232,194,122,1) 100%)',
+                boxShadow: '0 0 16px rgba(212, 175, 55, 0.35)',
               }}
             />
           </div>
@@ -62,11 +65,11 @@ export const OnboardingLayout: FC<OnboardingLayoutProps> = ({
 
         {/* Header */}
         <div className="px-8 pt-4 pb-6">
-          <h1 className="text-2xl md:text-3xl font-semibold tracking-tight" style={{ color: '#FFFFFF' }}>
+          <h1 className="text-2xl md:text-3xl font-light tracking-tight" style={{ color: '#FFFFFF' }}>
             {title}
           </h1>
           {guidingText && (
-            <p className="text-base mt-2 leading-relaxed" style={{ color: 'rgba(255, 255, 255, 0.55)' }}>
+            <p className="text-base mt-2 leading-relaxed" style={{ color: 'rgba(255, 255, 255, 0.70)' }}>
               {guidingText}
             </p>
           )}

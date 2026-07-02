@@ -16,7 +16,7 @@ export default function LoginPage() {
       items-center 
       justify-start 
       pt-32 pb-24
-      bg-[radial-gradient(circle_at_top,#112032,#0B1520,#070D14)]
+      bg-gradient-to-b from-[#0B1520] via-[#121E2E] to-[#0B1520]
       text-white
     ">
 
@@ -27,7 +27,7 @@ export default function LoginPage() {
         backdrop-blur-xl
         rounded-2xl
         shadow-xl shadow-black/30
-        p-10 md:p-14
+        px-4 sm:px-8 md:px-10 lg:px-14
         max-w-3xl mx-auto
         flex flex-col gap-12
         text-white/80

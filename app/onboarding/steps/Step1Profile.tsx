@@ -69,15 +69,6 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
   return (
     <div className="max-w-3xl mx-auto px-8 py-10 space-y-10">
 
-      {/* Header */}
-      <div className="space-y-2">
-        <h1 className="text-2xl md:text-3xl font-semibold tracking-tight" style={{ color: '#FFFFFF' }}>
-          Grunnprofil
-        </h1>
-        <p className="text-base leading-relaxed" style={{ color: 'rgba(212, 175, 55, 0.55)' }}>
-          La oss starte rolig. Vi vil gjerne bli litt kjent med deg — på en måte som føles trygg og ekte.
-        </p>
-      </div>
 
       {/* Error summary */}
       {errors.length > 0 && (
@@ -231,15 +222,15 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             </div>
           </div>
 
-          {/* Min alder */}
+          {/* Min alder du søker */}
           <div className="space-y-3">
             <label className="text-base font-medium" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-              Minste alder du søker
+              Minimum alder
             </label>
             <div className="flex items-center gap-6">
               <input
                 type="range"
-                min={18}
+                min={23}
                 max={90}
                 value={num('minAge', 23)(data)}
                 onChange={(e) => onChange('minAge', Number(e.target.value))}
@@ -255,7 +246,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
           {/* Maks alder */}
           <div className="space-y-3">
             <label className="text-base font-medium" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-              Maks alder du søker
+              Maks alder
             </label>
             <div className="flex items-center gap-6">
               <input

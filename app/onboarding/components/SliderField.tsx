@@ -45,7 +45,7 @@ export const SliderField: FC<SliderFieldProps> = ({
           {label}
         </label>
         <span
-          className="text-sm font-semibold"
+          className="text-sm font-light"
           style={{ color: '#D4AF37' }}
         >
           {value}

@@ -15,9 +15,9 @@ export function BackButton({ onClick }: BackButtonProps) {
   return (
     <button
       onClick={onClick}
-      className="w-full py-3 rounded-xl font-medium bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-all duration-300"
+      className="w-full py-5 px-8 rounded-xl font-light tracking-wide bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 shadow-md shadow-black/10 transition-all duration-300"
     >
-      Tilbake
+      ← Tilbake
     </button>
   );
 }

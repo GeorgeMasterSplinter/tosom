@@ -12,61 +12,28 @@ import { AgeBadge } from '@/components/ui/age-badge/AgeBadge';
 
 export default function RegisterPage() {
   return (
-    <div className="relative min-h-screen bg-gradient-to-b from-[#0B1520] to-[#121E2E]">
+    <div className="relative min-h-screen bg-gradient-to-b from-[#0B1520] via-[#121E2E] to-[#0B1520]">
       {/* Spotlight overlay — identisk med landing */}
       <div
         className="absolute inset-0 bg-white/5 blur-3xl opacity-[0.06] pointer-events-none"
       />
 
-      <main className="relative z-10 px-6 md:px-12 lg:px-24 py-20 md:py-32 flex flex-col items-center gap-16">
+      <main className="relative z-10 px-4 sm:px-6 md:px-12 lg:px-24 py-12 sm:py-20 md:py-32 flex flex-col items-center gap-12 sm:gap-16">
 
-        {/* Panel 1 — Introduksjon + 3 punkter */}
+        {/* Panel — Hvorfor Vipps Login og Vipps betaling? */}
         <div className="
-          bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8 md:p-12
-          shadow-xl shadow-black/20
-          max-w-3xl mx-auto
-          flex flex-col gap-10
+          w-full max-w-3xl mx-auto
+          bg-white/5 backdrop-blur-md
+          rounded-2xl
+          px-4 sm:px-6 md:px-10 lg:px-12
+          space-y-6
           text-center items-center
-        ">
-          <h1 className="text-4xl md:text-5xl font-light text-[#D4AF37] tracking-wide">
-            Kom i gang
-          </h1>
-
-          <p className="text-white/70 leading-relaxed max-w-xl">
-            ToSom er en rolig, moden måte å møtes på. Lag profilen din, få din match,
-            og gå inn i en guidet 30-dagers reise sammen.
-          </p>
-
-          <div className="flex flex-col gap-6 text-white/80 font-light max-w-xl text-left">
-            <div>
-              <h3 className="text-xl font-light text-[#D4AF37]">Privat profil</h3>
-              <p>Svar på dype spørsmål i ditt eget tempo. Ingen bilder før etter 14 dager.</p>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-light text-[#D4AF37]">Én match per 24 timer</h3>
-              <p>Du får den beste kompatibilitetsmatchen din. Ingen sveiping, ingen valgstress.</p>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-light text-[#D4AF37]">30-dagers reise</h3>
-              <p>Guiede samtaler, refleksjoner og oppgaver som faktisk hjelper dere å bli kjent.</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Panel 2 — Vipps forklaring */}
-        <div className="
-          bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8 md:p-12
           shadow-xl shadow-black/20
-          max-w-3xl mx-auto
-          flex flex-col gap-10
-          text-center items-center
         ">
           <div className="flex items-center justify-center gap-3">
-            <h2 className="text-4xl md:text-5xl font-light text-[#D4AF37] tracking-wide">
-              Hvorfor Vipps Login og Vipps betaling?
-            </h2>
+              <h2 className="text-4xl md:text-5xl font-light text-[#D4AF37] tracking-wide">
+                Hvorfor Vipps Login og Vipps betaling?
+              </h2>
             <div className="hidden sm:block">
               <AgeBadge />
             </div>
@@ -77,13 +44,27 @@ export default function RegisterPage() {
             Derfor bruker vi Vipps både til innlogging og betaling.
           </p>
 
-          <ul className="flex flex-col gap-3 text-left max-w-xl text-white/80 font-light">
-            <li>✓ Verifisert identitet – ingen fake profiler</li>
-            <li>✓ Ekte fødselsdato – trygg alderskontroll</li>
-            <li>✓ Ingen duplikat-brukere – én person, én profil</li>
-            <li>✓ Norsk sikkerhetsstandard – trygg betalingsflyt</li>
-            <li>✓ Ingen skjulte gebyrer – én pris, ingen stress</li>
-            <li>✓ Passer perfekt med ToSom sin rolige, modne plattform</li>
+          <ul className="flex flex-col items-center gap-3 text-white/80 font-light">
+            <li className="flex items-center gap-3">
+              <span className="text-[#D4AF37]">✓</span>
+              <span className="text-white/80">Verifisert identitet – ingen fake profiler</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="text-[#D4AF37]">✓</span>
+              <span className="text-white/80">Ekte fødselsdato – trygg alderskontroll</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="text-[#D4AF37]">✓</span>
+              <span className="text-white/80">Ingen duplikat-brukere – én person, én profil</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="text-[#D4AF37]">✓</span>
+              <span className="text-white/80">Norsk sikkerhetsstandard – trygg betalingsflyt</span>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="text-[#D4AF37]">✓</span>
+              <span className="text-white/80">Ingen skjulte gebyrer – én pris, ingen stress</span>
+            </li>
           </ul>
 
           <p className="text-white/70 leading-relaxed max-w-xl">
@@ -91,13 +72,15 @@ export default function RegisterPage() {
           </p>
         </div>
 
-        {/* Panel 3 — Pris */}
+        {/* Panel 2 — Pris */}
         <div className="
-          bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8 md:p-12
-          shadow-xl shadow-black/20
-          max-w-xl mx-auto
-          flex flex-col gap-10
+          w-full max-w-3xl mx-auto
+          bg-white/5 backdrop-blur-md
+          rounded-2xl
+          px-4 sm:px-6 md:px-10 lg:px-12
+          space-y-6
           items-center text-center
+          shadow-xl shadow-black/20
         ">
           <h2 className="text-4xl md:text-5xl font-light text-[#D4AF37] tracking-wide">
             Én pris. Alt inkludert.
@@ -110,8 +93,6 @@ export default function RegisterPage() {
             p-8
             flex flex-col gap-4
             items-center text-center
-            border border-[rgba(212,175,55,0.25)]
-            shadow-lg shadow-[rgba(212,175,55,0.15)]
             max-w-md w-full
           ">
             <div className="text-4xl md:text-5xl font-light text-[#D4AF37] tracking-wide">
@@ -124,7 +105,6 @@ export default function RegisterPage() {
 
             <div className="
               bg-[rgba(212,175,55,0.12)]
-              border border-[rgba(212,175,55,0.20)]
               text-white/70
               rounded-lg
               px-5 py-4
@@ -138,6 +118,28 @@ export default function RegisterPage() {
                 ToSom er i begrenset testfase.
               </span>
             </div>
+          </div>
+
+          <div className="mt-10">
+            <Link
+              href="/login"
+              className="
+                block mx-auto text-center
+                bg-[#0B0E11]/80
+                hover:bg-[#0B0E11]/60
+                text-white/80
+                hover:text-white
+                font-light tracking-wide
+                py-4 px-8
+                rounded-xl
+                backdrop-blur-md
+                shadow-md shadow-black/20
+                transition-all duration-200
+                w-fit
+              "
+            >
+              Allerede registrert? Logg inn
+            </Link>
           </div>
         </div>
 

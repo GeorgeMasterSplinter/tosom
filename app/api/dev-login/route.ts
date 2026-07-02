@@ -175,15 +175,10 @@ export async function GET(req: NextRequest) {
     role: testUser.role,
   });
 
-  const response = NextResponse.redirect(
-    `${new URL(req.url).origin}/onboarding`
-  );
-  setSessionCookie(response, sessionToken, req);
+   return NextResponse.redirect('/onboarding');
+ }
 
-  return response;
-}
-
-// ─── POST /api/dev-login ───
+ // ─── POST /api/dev-login ───
 
 export async function POST(req: NextRequest) {
   // Sjekk om dev-login er aktivert

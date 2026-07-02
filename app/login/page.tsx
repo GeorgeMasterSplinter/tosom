@@ -21,7 +21,7 @@ export default function LoginPage() {
     ">
 
       {/* Logo / Header */}
-      <div className="absolute top-10 left-10">
+      <div className="absolute top-10 left-10 mb-10">
         <h1 className="
           text-3xl
           font-semibold
@@ -46,7 +46,7 @@ export default function LoginPage() {
         font-light tracking-wide leading-relaxed
         items-center text-center
         w-full
-        mt-10
+        mt-24
       ">
 
         {/* Header */}

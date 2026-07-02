@@ -55,64 +55,76 @@ export default function LoginPage() {
         </h1>
       </div>
 
-      {/* Premium Glass Panel */}
+      {/* Premium Glass Container */}
       <div className="
-        w-full max-w-md mx-auto
         bg-white/5
-        border border-white/15
-        backdrop-blur-2xl
+        backdrop-blur-xl
         rounded-2xl
-        p-12 mt-20
-        shadow-[0_0_80px_rgba(0,0,0,0.45)]
-        ring-1 ring-white/10
-        space-y-10
+        shadow-xl shadow-black/30
+        p-10 md:p-14
+        max-w-3xl mx-auto
+        flex flex-col gap-12
+        text-white/80
+        font-light tracking-wide leading-relaxed
+        items-center text-center
+        w-full
+        mt-20
       ">
 
         {/* Header */}
-        <div className="text-center space-y-3">
-          <h2 className="text-4xl font-semibold tracking-wide text-white/90">
+        <div className="flex flex-col gap-6 items-center text-center">
+          <h1 className="
+            text-5xl md:text-7xl
+            font-light
+            tracking-wide
+            text-[#D4AF37]
+            text-center
+          ">
             VELKOMMEN TILBAKE
-          </h2>
-          <p className="text-lg text-white/60 tracking-wider">
+          </h1>
+          <p className="
+            text-lg
+            text-white/60
+            tracking-wider
+          ">
             {sent ? "Sjekk e-posten din for innloggingslenke." : "Logg inn for å fortsette reisen"}
           </p>
         </div>
 
         {/* Form */}
         {!sent ? (
-          <form onSubmit={handleEmailSubmit} className="space-y-6">
+          <div className="flex flex-col gap-6 items-center w-full max-w-md">
             {/* Input */}
-            <div className="space-y-3">
+            <div className="w-full flex flex-col gap-3 items-center">
               <label className="text-sm font-medium text-white/80 tracking-wide">
                 E-post eller telefonnummer
               </label>
 
               <div className="
-                flex items-center
+                w-full
                 bg-white/5
-                border border-white/15
+                backdrop-blur-md
                 rounded-xl
-                px-5 py-4
-                focus-within:border-[#D4AF37]
-                focus-within:ring-1
-                focus-within:ring-[#D4AF37]/40
-                transition
+                px-6 py-4
+                shadow-lg shadow-black/20
               ">
-                <span className="text-white/40 pr-3">✉️</span>
-                <input
-                  type="text"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="du@eksempel.no eller +47 123 45 678"
-                  className="
-                    w-full
-                    bg-transparent
-                    text-white
-                    placeholder-white/50
-                    tracking-wide
-                    focus:outline-none
-                  "
-                />
+                <div className="flex items-center">
+                  <span className="text-white/40 pr-3">✉️</span>
+                  <input
+                    type="text"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="du@eksempel.no eller +47 123 45 678"
+                    className="
+                      w-full
+                      bg-transparent
+                      text-white
+                      placeholder-white/50
+                      tracking-wide
+                      focus:outline-none
+                    "
+                  />
+                </div>
               </div>
             </div>
 
@@ -121,21 +133,24 @@ export default function LoginPage() {
             )}
 
             {/* Buttons */}
-            <div className="space-y-4 pt-2">
-              <PremiumButton
-                variant="primary"
+            <div className="flex flex-col gap-4 w-full">
+              <button
+                onClick={handleEmailSubmit}
+                disabled={loading}
                 className="
-                  w-full py-3 text-lg
-                  bg-[#D4AF37]
-                  hover:bg-[#c9a233]
+                  w-full text-center
+                  px-5 py-3
+                  rounded-xl
+                  bg-[#D4AF37]/90
+                  hover:bg-[#D4AF37]
                   text-black
-                  font-semibold
-                  tracking-wide
-                  shadow-[0_0_20px_rgba(212,175,55,0.35)]
+                  font-light tracking-wide
+                  shadow-lg shadow-black/40
+                  transition-all duration-300
                 "
               >
                 {loading ? "Sender lenke…" : "Send innloggingslenke"}
-              </PremiumButton>
+              </button>
 
               <button
                 onClick={() => {
@@ -143,23 +158,27 @@ export default function LoginPage() {
                 }}
                 className="
                   w-full py-3 rounded-xl
-                  bg-white/5
-                  border border-white/15
-                  text-white
-                  hover:bg-white/10
-                  hover:border-white/25
-                  transition
-                  text-lg
-                  tracking-wide
+                  bg-white/10
+                  hover:bg-white/20
+                  text-white/80
+                  transition-all duration-200
                 "
               >
                 Logg inn som testbruker
               </button>
             </div>
-          </form>
+          </div>
         ) : (
           /* Success state */
-          <div className="text-center space-y-4">
+          <div className="
+            bg-white/5
+            backdrop-blur-md
+            rounded-xl
+            p-6
+            flex flex-col items-center text-center gap-3
+            shadow-lg shadow-black/20
+            max-w-md w-full
+          ">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="mx-auto">
               <path d="M3 8L10.5 15.5L21 6M5.5 19L9.5 15L13 18.5L21 10"
                 stroke="#D4AF37" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />

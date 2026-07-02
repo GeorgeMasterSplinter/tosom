@@ -91,38 +91,88 @@ export default function RegisterPage() {
           <p className="text-white/70 font-light max-w-xl">
             Vipps gjør ToSom til en trygg plattform for voksne mennesker som ønsker en ekte reise.
           </p>
-        </div>
 
-        {/* CTA */}
-        <div className="flex flex-col gap-6 max-w-sm">
-          <Link
-            href="/register/vipps"
-            className="
-              w-full text-center
-              px-5 py-3
+          {/* Pris */}
+          <div className="
+            bg-white/5 backdrop-blur-xl rounded-2xl
+            shadow-xl shadow-black/30
+            p-10 md:p-14
+            flex flex-col gap-10
+            items-center text-center
+            max-w-xl mx-auto
+            text-white/80 font-light leading-relaxed
+          ">
+            <h2 className="text-3xl md:text-4xl font-light text-[#D4AF37] tracking-wide">
+              Én pris. Alt inkludert.
+            </h2>
+
+            <div className="
+              bg-[rgba(212,175,55,0.08)]
+              backdrop-blur-md
               rounded-xl
-              bg-[#D4AF37]/90
-              hover:bg-[#D4AF37]
-              text-black
-              font-light tracking-wide
-              shadow-lg shadow-black/40
-              transition-all duration-300
-            "
-          >
-            Fortsett med Vipps
-          </Link>
+              p-8
+              flex flex-col gap-4
+              items-center text-center
+              border border-[rgba(212,175,55,0.25)]
+              shadow-lg shadow-[rgba(212,175,55,0.15)]
+            ">
+              <div className="text-5xl md:text-6xl font-light text-[#D4AF37] tracking-wide">
+                349 kr
+              </div>
 
-          <Link
-            href="/login"
-            className="
-              text-white/70 hover:text-white
-              font-light tracking-wide
-              text-center
-              transition-all duration-200
-            "
-          >
-            Logg inn
-          </Link>
+              <p className="text-white/80 font-light max-w-sm leading-relaxed">
+                ToSom — full tilgang. Betales én gang og dekker hele reisen.
+              </p>
+
+              <div className="
+                bg-[rgba(212,175,55,0.12)]
+                border border-[rgba(212,175,55,0.20)]
+                text-white/70
+                rounded-lg
+                px-5 py-4
+                text-sm
+                leading-relaxed
+              ">
+                Betalingsløsning er under utvikling.
+                <br />
+                <span className="text-xs text-white/50">
+                  ToSom er i begrenset testfase.
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* CTA */}
+          <div className="flex flex-col gap-6 max-w-sm">
+            <Link
+              href="/register/vipps"
+              className="
+                w-full text-center
+                px-5 py-3
+                rounded-xl
+                bg-[#D4AF37]/90
+                hover:bg-[#D4AF37]
+                text-black
+                font-light tracking-wide
+                shadow-lg shadow-black/40
+                transition-all duration-300
+              "
+            >
+              Fortsett med Vipps
+            </Link>
+
+            <Link
+              href="/login"
+              className="
+                text-white/70 hover:text-white
+                font-light tracking-wide
+                text-center
+                transition-all duration-200
+              "
+            >
+              Logg inn
+            </Link>
+          </div>
         </div>
 
       </main>

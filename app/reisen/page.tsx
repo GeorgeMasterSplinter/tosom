@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Footer } from '@/components/ui/layout/Footer';
 import { ToSomSection, ToSomButton } from '@/components/ui/system';
+import { AgeBadge } from '@/components/ui/age-badge/AgeBadge';
 import { color, spacing, typographyToStyle, radius, shadow } from '@/config/design-tokens';
 
 /* ========================
@@ -659,6 +660,13 @@ export default function ReisenPage() {
           </p>
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 pt-4">
+            <div className="flex items-center gap-3 hidden md:flex">
+              <ToSomButton href="/register" variant="gold" size="xl">
+                Start reisen
+              </ToSomButton>
+              <AgeBadge />
+            </div>
+
             <ToSomButton href="/register" variant="gold" size="xl">
               Start reisen
             </ToSomButton>

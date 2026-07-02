@@ -175,7 +175,9 @@ export async function GET(req: NextRequest) {
     role: testUser.role,
   });
 
-   return NextResponse.redirect('/onboarding');
+   const response = NextResponse.redirect('/onboarding');
+   setSessionCookie(response, sessionToken, req);
+   return response;
  }
 
  // ─── POST /api/dev-login ───

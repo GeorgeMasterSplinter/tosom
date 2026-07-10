@@ -1,5 +1,4 @@
 import { sendSystemMessage } from '@/lib/system/messages'
-import { SystemMessageType } from '@prisma/client'
 import { requireAdmin } from '@/lib/admin/requireAuth'
 import { castToAdminUser } from '@/lib/auth/admin-auth'
 
@@ -23,8 +22,8 @@ export async function POST(
     const user = castToAdminUser(session?.user)
     await requireAdmin(user)
 
-    const messageType = (type as SystemMessageType) || SystemMessageType.INFO
-    await sendSystemMessage(targetUserId, content, messageType)
+    // type is now a plain string ('INFO' | 'WARNING' | 'ALERT')
+    await sendSystemMessage(targetUserId, content, type as 'INFO' | 'WARNING' | 'ALERT')
 
     return new Response(JSON.stringify({ success: true }), { status: 200, headers: { 'Content-Type': 'application/json' } })
   } catch (error) {

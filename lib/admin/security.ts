@@ -53,24 +53,32 @@ export async function getRateLimitStats(sinceHours = 24): Promise<{
   byRoute: Record<string, number>
   byUser: Record<string, number>
 }> {
+   // RateLimitLog removed in stability-cleanup — now queries systemLog for rate-limit data
   const since = new Date(Date.now() - sinceHours * 60 * 60 * 1000)
 
-  const totalHits = await prisma.rateLimitLog.count({
-    where: { createdAt: { gte: since } },
+  const totalHits = await prisma.systemLog.count({
+    where: { module: 'rateLimit', createdAt: { gte: since } },
   })
 
-  const logs = await prisma.rateLimitLog.findMany({
-    where: { createdAt: { gte: since } },
-    select: { route: true, userId: true },
+  const logs = await prisma.systemLog.findMany({
+    where: { module: 'rateLimit', createdAt: { gte: since } },
+    select: { message: true, metadata: true },
   })
 
   const byRoute: Record<string, number> = {}
   const byUser: Record<string, number> = {}
 
   for (const log of logs) {
-    byRoute[log.route] = (byRoute[log.route] ?? 0) + 1
-    if (log.userId) {
-      byUser[log.userId] = (byUser[log.userId] ?? 0) + 1
+    // Parse [RATE_LIMIT] /api/foo user=xxx format
+    if (log.message && log.message.startsWith('[RATE_LIMIT]')) {
+      const parts = log.message.split(' ')
+      if (parts.length >= 2) {
+        byRoute[parts[1]] = (byRoute[parts[1]] ?? 0) + 1
+      }
+    }
+    const meta = log.metadata as Record<string, unknown> | null
+    if (meta && typeof meta === 'object' && 'userId' in meta) {
+      byUser[String(meta.userId)] = (byUser[String(meta.userId)] ?? 0) + 1
     }
   }
 

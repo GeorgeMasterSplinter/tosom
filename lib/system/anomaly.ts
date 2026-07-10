@@ -54,9 +54,10 @@ export async function detectLatencySpike(
 }
 
 export async function detectRateLimitSpike(lastMinutes: number = 15): Promise<boolean> {
+   // RateLimitLog removed in stability-cleanup — now queries systemLog for rate-limit data
   const since = new Date(Date.now() - lastMinutes * 60 * 1000)
-  const count = await prisma.rateLimitLog.count({
-    where: { createdAt: { gte: since } },
+  const count = await prisma.systemLog.count({
+    where: { module: 'rateLimit', createdAt: { gte: since } },
   })
   if (count > 100) {
     await logWarn(`Rate limit spike: ${count} hits in ${lastMinutes}min`, 'system/anomaly', {

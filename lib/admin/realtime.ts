@@ -37,8 +37,10 @@ export async function getRealtimeSystemStats(): Promise<{
     ? dbMetrics.reduce((a, b) => a + b.valueMs, 0) / dbMetrics.length
     : 0
 
-  // Requests per minute
-  const routeHits = await prisma.routeHit.count({ where: { createdAt: { gte: since } } })
+   // Requests per minute — RouteHit removed, now queries systemLog (module='heartbeat')
+  const routeHits = await prisma.systemLog.count({ 
+    where: { module: 'heartbeat', createdAt: { gte: since } }, 
+  })
   const requestsPerMinute = Math.round((routeHits / 5) * 10) / 10
 
   // Errors last 5 min
@@ -46,9 +48,9 @@ export async function getRealtimeSystemStats(): Promise<{
     where: { level: 'ERROR', createdAt: { gte: since } },
   })
 
-  // Rate limit hits
-  const rateLimitHits = await prisma.rateLimitLog.count({
-    where: { createdAt: { gte: since } },
+  // Rate limit hits — RateLimitLog removed, now query systemLog for rate-limit warnings
+  const rateLimitHits = await prisma.systemLog.count({ 
+    where: { module: 'rateLimit', createdAt: { gte: since } }, 
   })
 
   // Anomalies

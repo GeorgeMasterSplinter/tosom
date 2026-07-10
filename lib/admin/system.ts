@@ -70,10 +70,11 @@ export async function getErrorLogs(filter: FilterOptions = {}) {
 }
 
 export async function getRateLimitLogs(filter: FilterOptions = {}) {
-  const where: any = {}
+   // RateLimitLog model removed in stability-cleanup — now queries systemLog for rate-limit errors
+  const where: any = { level: 'WARN' }
 
   if (filter.userId) {
-    where.userId = filter.userId
+    where.metadata = { path: ['userId'], contains: filter.userId }
   }
 
   if (filter.sinceHours) {
@@ -81,10 +82,10 @@ export async function getRateLimitLogs(filter: FilterOptions = {}) {
   }
 
   if (filter.search) {
-    where.route = { contains: filter.search, mode: 'insensitive' }
+    where.message = { contains: filter.search, mode: 'insensitive' }
   }
 
-  const logs = await prisma.rateLimitLog.findMany({
+  const logs = await prisma.systemLog.findMany({
     where,
     orderBy: { createdAt: 'desc' as const },
     take: 100,
@@ -118,8 +119,9 @@ export async function getSystemOverview(): Promise<{
     where: { level: 'ERROR', createdAt: { gte: last24h } },
   })
 
-  const last24hRateLimitHits = await prisma.rateLimitLog.count({
-    where: { createdAt: { gte: last24h } },
+   // RateLimitLog removed — count rate-limit related warnings from systemLog instead
+  const last24hRateLimitHits = await prisma.systemLog.count({
+    where: { level: 'WARN', createdAt: { gte: last24h }, message: { contains: 'rate', mode: 'insensitive' } },
   })
 
   const dbStart = Date.now()

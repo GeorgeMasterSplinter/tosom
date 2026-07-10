@@ -111,11 +111,6 @@ enum NotificationType {
   ADMIN
 }
 
-enum SystemMessageType {
-  INFO
-  WARNING
-  ALERT
-}
 
 enum LogLevel {
   INFO
@@ -142,6 +137,19 @@ enum AIFeature {
   matchInsights
   messageSuggestions
   profileRewrite
+}
+
+enum ChatCategoryKey {
+  TRYGGHET
+  VERDIER
+  LIVSTIL
+  PERSONLIGHET
+  RELASJONSSTIL
+  KOMMUNIKASJON
+  FRAMTID
+  SARBARHET
+  NAERHEIT
+  FELLES_REISE
 }
 
 model User {
@@ -175,8 +183,8 @@ model User {
   resetTokens      PasswordResetToken[]
   twoFactor        TwoFactorSecret?
   auditLogs        AuditLog[]                     @relation("AdminAuditLogs")
-  matchQueues      MatchQueue[]
-  matchFeedbacks   MatchFeedback[]
+  // matchQueues      MatchQueue[] (fjerna i Fase A2)
+  // matchFeedbacks   MatchFeedback[] (fjerna i Fase A2)
 
   // NextAuth / PrismaAdapter
   accounts         Account[]
@@ -261,8 +269,8 @@ model Match {
 
    userA         User              @relation("UserAMatches", fields: [userAId], references: [id])
    userB         User              @relation("UserBMatches", fields: [userBId], references: [id])
-   history       MatchHistory[]
-   feedbacks     MatchFeedback[]
+   // history       MatchHistory[] (fjerna i Fase A2)
+   // feedbacks     MatchFeedback[] (fjerna i Fase A2)
    insights      MatchInsight[]
 
    @@index([status])
@@ -273,49 +281,6 @@ model Match {
    @@index([score])
    @@index([normalizedScore])
 @@unique([userAId, userBId])
-}
-
-// ─── DEPRECATED MODELLER (Phase 4) ───
-// Desse modellene er markert som deprekkert og kan fjernast i Phase 5.
-
-model MatchHistory {
-   id        String   @id @default(cuid())
-  matchId   String
-  event     String
-  createdAt DateTime @default(now())
-
-  match     Match    @relation(fields: [matchId], references: [id])
-}
-
-/// DEPRECATED – not used in codebase (Phase 4)
-model MatchQueue {
-   id        String        @id @default(cuid())
-  userId    String
-  status    QueueStatus   @default(PENDING)
-  createdAt DateTime      @default(now())
-
-  user      User          @relation(fields: [userId], references: [id])
-
-  @@index([userId])
-  @@index([status])
-  @@index([createdAt])
-}
-
-/// DEPRECATED – not used in codebase (Phase 4)
-model MatchFeedback {
-   id        String   @id @default(cuid())
-  matchId   String
-  userId    String
-  rating    Int
-  reason    String?
-  createdAt DateTime @default(now())
-
-  match     Match    @relation(fields: [matchId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
-
-  @@index([matchId])
-  @@index([userId])
-  @@index([rating])
 }
 
 model Conversation {
@@ -352,43 +317,78 @@ model Conversation {
 }
 
 model Message {
-  id             String          @id @default(cuid())
-  conversationId String
-  senderId       String
-  content        String
-  type           MessageCategory @default(user)
-  state          MessageState    @default(SENT)
-  deliveredAt    DateTime?
-  readAt         DateTime?
-  deletedAt      DateTime?
-  editedAt       DateTime?
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+  id                 String          @id @default(cuid())
+  conversationId     String
+  senderId           String
+  content            String
+  type               MessageCategory @default(user)
+  categoryQuestionId String?         // FK til ChatQuestion når brukar trykkjer eit ferdig spørsmål
+  state              MessageState    @default(SENT)
+  deliveredAt        DateTime?
+  readAt             DateTime?
+  deletedAt          DateTime?
+  editedAt           DateTime?
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
 
-  conversation   Conversation    @relation(fields: [conversationId], references: [id])
-  sender         User            @relation(fields: [senderId], references: [id])
+  conversation       Conversation    @relation(fields: [conversationId], references: [id])
+  sender             User            @relation(fields: [senderId], references: [id])
+  categoryQuestion   ChatQuestion?   @relation("MessageToQuestion", fields: [categoryQuestionId], references: [id])
 
   @@index([createdAt])
+  @@index([conversationId, createdAt])
+}
+
+model ChatCategory {
+  id        String           @id @default(cuid())
+  key       ChatCategoryKey  @unique
+  name      String           // "Trygghet", "Verdier", etc.
+  description String         // Kort beskrivelse
+  icon      String           // Icon-na (shield, heart, etc.)
+  sortOrder Int              @default(0)
+  isActive  Boolean          @default(true)
+  createdAt DateTime         @default(now())
+
+  questions ChatQuestion[]
+}
+
+model ChatQuestion {
+  id         String   @id @default(cuid())
+  categoryId String
+  category   ChatCategory @relation(fields: [categoryId], references: [id])
+  text       String   // Spørsmåls-tekst
+  hint       String?  // Kort hint/forklaring
+  sortOrder  Int      @default(0)
+  isActive   Boolean  @default(true)
+  usageCount Int      @default(0) // Kor mange gonger brukt
+  createdAt  DateTime @default(now())
+
+  messages Message[] @relation("MessageToQuestion")
+
+  @@unique([categoryId, text])
+  @@index([categoryId, sortOrder])
 }
 
 model JourneyProgress {
-  id           String       @id @default(cuid())
-  userId       String       @unique
-  phase        JourneyPhase @default(EARLY)
-  day          Int          @default(1)
-  completedDays Int          @default(0)
-  nextDayAt    DateTime?    // 24t-lås per dag
-  startedAt    DateTime     @default(now())
-  endedAt      DateTime?
-  pausedAt     DateTime?
-  resumedAt    DateTime?
-  completedAt  DateTime?
-  continueA    String?
-  continueB    String?
-  updatedAt    DateTime     @updatedAt
+  id              String       @id @default(cuid())
+  userId          String       @unique
+  phase           JourneyPhase @default(EARLY)
+  day             Int          @default(1)
+  completedDays   Int          @default(0)
+  nextDayAt       DateTime?    // 24t-lås per dag
+  startedAt       DateTime     @default(now())
+  endedAt         DateTime?
+  pausedAt        DateTime?
+  resumedAt       DateTime?
+  completedAt     DateTime?
+  continueA       String?      // brukar A sin continue-val ved CHECKIN
+  continueB       String?      // brukar B sin continue-val ved CHECKIN
+  photosShared    Boolean      @default(false) // true når minste ein deler bilete
+  continueDecisionMade Boolean  @default(false) // true når begge har gjort continue-val
+  updatedAt       DateTime     @updatedAt
 
-  user         User              @relation("UserJourney", fields: [userId], references: [id])
-  milestones   JourneyMilestone[]
+  user            User         @relation("UserJourney", fields: [userId], references: [id])
+  milestones      JourneyMilestone[]
 
   @@index([userId])
 }
@@ -455,14 +455,6 @@ model JourneyDayContent {
 
   @@unique([day])
   @@index([day])
-}
-
-/// DEPRECATED – not used in codebase (Phase 4)
-model SystemMessage {
-   id        String             @id @default(cuid())
-  content   String
-  type      SystemMessageType  @default(INFO)
-  createdAt DateTime           @default(now())
 }
 
 model Notification {
@@ -561,18 +553,6 @@ model SystemLog {
   @@index([createdAt])
 }
 
-/// DEPRECATED – not used in codebase (Phase 4)
-model RateLimitLog {
-   id        String   @id @default(cuid())
-  userId    String?
-  route     String
-  createdAt DateTime @default(now())
-
-  @@index([userId])
-  @@index([route])
-  @@index([createdAt])
-}
-
 model PerformanceMetric {
    id      String     @id @default(cuid())
    route   String
@@ -621,18 +601,6 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
-}
-
-/// DEPRECATED – not used in codebase (Phase 4)
-model RouteHit {
-   id      String     @id @default(cuid())
-  route   String
-  method  HttpMethod @default(GET)
-  status  Int        @default(200)
-  createdAt DateTime @default(now())
-
-  @@index([route])
-  @@index([createdAt])
 }
 
 model AIRequestLog {

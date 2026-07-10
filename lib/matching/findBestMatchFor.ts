@@ -1,5 +1,5 @@
 // lib/matching/findBestMatchFor.ts — Finn beste match for ein bruker
-// Bruker matchingEngine() frå engine.ts
+// Bruker matchingEngine() fra engine.ts
 
 import prisma from "@/lib/prisma";
 import { ProfileData, MatchResult } from "./types";
@@ -7,7 +7,7 @@ import { matchingEngine } from "./engine";
 import { getWeights } from "./weightConfig";
 
 /**
- * mapProfileToData konverterer ein Prisma Profile til ProfileData-formatet.
+ * mapProfileToData konverterer en Prisma Profile til ProfileData-formatet.
  */
 function mapProfileToData(profile: any): ProfileData {
   return {
@@ -35,7 +35,7 @@ function mapProfileToData(profile: any): ProfileData {
 }
 
 /**
- * findBestMatchFor finn den beste matchen for ein gitt bruker.
+ * findBestMatchFor finner den beste matchen for en gitt bruker.
  * 
  * Prosess:
  * 1. Hent query-user sin profil
@@ -109,7 +109,7 @@ export async function findBestMatchFor(userId: string): Promise<
     }
   }
   
-  // 4. Return null viss ingen match over 0 (alle er dealbreaker)
+  // 4. Returner null hvis ingen match over 0 (alle er dealbreaker)
   if (!bestResult || bestResult.score === 0) return null;
   
   // 5. Berekne nextEligibleAt (24t-regel — dersom lastMatchAt er satt)

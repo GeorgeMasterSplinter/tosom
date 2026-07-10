@@ -2,8 +2,8 @@
 // Alle sub-scorer normaliserast til [0, 1] før dei vektast
 
 /**
- * normalize tar ein raw-verdi med eit kjent [min, max]-intervall
- * og returnerer ein normalisert verdi i [0, 1].
+ * normalize tar en raw-verdi med et kjent [min, max]-intervall
+ * og returnerer en normalisert verdi i [0, 1].
  *
  * Eksempel: normalize(75, 0, 100) => 0.75
  */
@@ -14,14 +14,14 @@ export function normalize(raw: number, min: number, max: number): number {
 }
 
 /**
- * Clamp ein verdi til [0, 1].
+ * Clamp en verdi til [0, 1].
  */
 export function clamp01(value: number): number {
   return Math.max(0, Math.min(1, value));
 }
 
 /**
- * WeightedSum berekner ein vektet sum av fleire komponentar.
+ * WeightedSum beregner en vektet sum av flere komponenter.
  * Vektane skal summere til 1.0.
  */
 export function weightedSum(

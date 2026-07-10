@@ -1,5 +1,5 @@
-// lib/matching/scorer.ts — Hovudscorer-funksjonar for matching-motoren
-// Alle funksjonar returnerer verdiar i [0, 1]
+// lib/matching/scorer.ts — hovedscorer-funksjoner for matching-motoren
+// Alle funksjoner returnerer verdier i [0, 1]
 
 import { ProfileData, SubScoreBreakdown } from "./types";
 import { normalize, clamp01, weightedSum } from "./normalizer";
@@ -8,9 +8,9 @@ import { getWeights, WeightConfig } from "./weightConfig";
 /**
  * calculateBaseCompatibility — Grunnleggjande kompatibilitet (0–1)
  * Måler kompatibilitet basert på:
- *   - Verdi-kompatibilitet (40%): Felles verdier frå lifeSituation og personality
- *   - Livssituasjon (30%): Samanliknar lifestyle, bustad, økonomi
- *   - Personlegdom (30%): Styrkar, trekk, natur
+ *   - Verdi-kompatibilitet (40%): Felles verdier fra lifeSituation og personality
+ *   - Livssituasjon (30%): Sammenligner lifestyle, bosted, økonomi
+ *   - Personlighet (30%): Styrker, trekk, natur
  */
 export function calculateBaseCompatibility(a: ProfileData, b: ProfileData): number {
   let rawScore = 0;
@@ -24,7 +24,7 @@ export function calculateBaseCompatibility(a: ProfileData, b: ProfileData): numb
     rawScore += Math.min(shared.length * 8, 40);
   }
   
-  // 2. Livssituasjon overlap (maks 30)
+  // 2. Livssituasjon overlapping (maks 30)
   if (a.lifestyle && b.lifestyle) {
     const aActivities = (a.lifestyle as { activities?: string[] }).activities || [];
     const bActivities = (b.lifestyle as { activities?: string[] }).activities || [];
@@ -40,7 +40,7 @@ export function calculateBaseCompatibility(a: ProfileData, b: ProfileData): numb
     rawScore += Math.min(shared.length * 5, 30);
   }
   
-  // 4. Aldersnærleik (maks 20)
+  // 4. Aldersnærhet (maks 20)
   if (a.age && b.age) {
     const diff = Math.abs(Number(a.age) - Number(b.age));
     if (diff <= 3) rawScore += 20;
@@ -54,9 +54,9 @@ export function calculateBaseCompatibility(a: ProfileData, b: ProfileData): numb
 
 /**
  * calculateEmotionalResonance — Emosjonell resonans (0–1)
- * Måler kor godt to menneske resonerer med kvarandre:
- *   - Kommunikasjon (50%): Samanliknar kommunikasjonspreferanser
- *   - Relasjonsstil (50%): Samanliknar relasjonsstil
+ * Måler hvor godt to mennesker resonerer med hverandre:
+ *   - Kommunikasjon (50%): Sammenligner kommunikasjonspreferanser
+ *   - Forholdsstil (50%): Sammenligner forholdsstil
  */
 export function calculateEmotionalResonance(a: ProfileData, b: ProfileData): number {
   let rawScore = 0;
@@ -93,9 +93,9 @@ export function calculateEmotionalResonance(a: ProfileData, b: ProfileData): num
 
 /**
  * calculateSemanticOverlap — Semantisk overlap (0–1)
- * Måler kor mykje profil-data overlappar semantisk:
- *   - Fremtidsønsker (60%): Samanliknar futureVision
- *   - Livsstil (40%): Samanliknar lifestyle
+ * Måler hvor mye profil-data overlapping semantisk:
+ *   - Fremtidsønsker (60%): Sammenligner futureVision
+ *   - Livsstil (40%): Sammenligner lifestyle
  */
 export function calculateSemanticOverlap(a: ProfileData, b: ProfileData): number {
   let rawScore = 0;
@@ -139,9 +139,9 @@ export function calculateSemanticOverlap(a: ProfileData, b: ProfileData): number
 /**
  * calculateIntimacyScore — Intimitet og sårbarhet (0–1)
  * Måler kompatibilitet på intimitetsnivå:
- *   - Intimitet (40%): Samanliknar intimacy-data
- *   - Grenser (30%): Samanliknar boundaries
- *   - Emosjonelle behov (30%): Samanliknar emotionalNeeds
+ *   - Intimitet (40%): Sammenligner intimacy-data
+ *   - Grenser (30%): Sammenligner boundaries
+ *   - Emosjonelle behov (30%): Sammenligner emotionalNeeds
  */
 export function calculateIntimacyScore(a: ProfileData, b: ProfileData): number {
   let rawScore = 0;
@@ -183,9 +183,9 @@ export function calculateIntimacyScore(a: ProfileData, b: ProfileData): number {
 
 /**
  * calculateFutureVisionScore — Fremtidskompatibilitet (0–1)
- * Måler kor godt to profilar passar saman for framtida:
- *   - Livsrytme (50%): lifeRhythm-nærleik
- *   - Modenheit (50%): maturityLevel-nærleik
+ * Måler hvor godt to profiler passer sammen for framtiden:
+ *   - Livsrytme (50%): lifeRhythm-nærhet
+ *   - Modenhet (50%): maturityLevel-nærhet
  */
 export function calculateFutureVisionScore(a: ProfileData, b: ProfileData): number {
   let rawScore = 0;
@@ -196,7 +196,7 @@ export function calculateFutureVisionScore(a: ProfileData, b: ProfileData): numb
     if (a.lifeRhythm === b.lifeRhythm) {
       rawScore += 50;
     } else {
-      // Same retning (morning/evening er motsetningar, men fast/slow kan vere komplementære)
+      // Samme retning (morning/evening er motsetninger, men fast/slow kan være komplementære)
       rawScore += 25; // Delvis match
     }
   }
@@ -215,8 +215,8 @@ export function calculateFutureVisionScore(a: ProfileData, b: ProfileData): numb
 }
 
 /**
- * calculateTotalScore — Bereknar total match-score frå to profiler.
- * Bruker vekter frå weightConfig.ts.
+ * calculateTotalScore — Beregn total match-score fra to profiler.
+ * Bruker vekter fra weightConfig.ts.
  */
 export function calculateTotalScore(
   queryProfile: ProfileData,

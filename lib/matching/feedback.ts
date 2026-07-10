@@ -1,9 +1,9 @@
-// feedback.ts — stub for framtidig feedback-loop
-// (Fase A2: MatchFeedback-modell fjerna frå schema — ikkje i ToSom-konseptet)
+// feedback.ts — stub for fremtidig feedback-loop
+// (Fase A2: MatchFeedback-modell fjernet fra schema — ikke i ToSom-konseptet)
 
 /**
- * Lagre brukar-feedback på eit match.
- * Framtid: vil justere vekter basert på korleis brukaren svarar.
+ * Lagre bruker-feedback på et match.
+ * Fremtid: vil justere vekter basert på hvordan brukeren svarer.
  */
 export async function recordMatchFeedback(
   userId: string,
@@ -16,13 +16,13 @@ export async function recordMatchFeedback(
 }
 
 /**
- * Hent accumulated feedback for ein bruker.
+ * Hent accumulated feedback for en bruker.
  */
 export async function getFeedbackProfile(userId: string): Promise<{
   likeRate: number;
   topCategories: string[];
   avgScore: number;
 }> {
-  // TODO: hent frå DB
+  // TODO: hent fra DB
   return { likeRate: 0, topCategories: [], avgScore: 0 };
 }

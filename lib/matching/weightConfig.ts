@@ -23,7 +23,7 @@ const DEFAULT_WEIGHTS: WeightConfig = {
 };
 
 /**
- * getWeights returnerer den eine sanne kjelda for vekter.
+ * getWeights returnerer den ene sanne kilde for vekter.
  * Alle scoring-funksjonar skal bruke denne.
  */
 export function getWeights(): WeightConfig {
@@ -31,7 +31,7 @@ export function getWeights(): WeightConfig {
 }
 
 /**
- * getWeightsWithOverride returnerer ein ny weights-objekt med optional override.
+ * getWeightsWithOverride returnerer en ny weights-objekt med optional override.
  * Bruk for testing eller dynamisk justering.
  */
 export function getWeightsWithOverride(
@@ -44,7 +44,7 @@ export function getWeightsWithOverride(
   const sum = Object.values(merged).reduce((a, b) => a + b, 0);
   if (Math.abs(sum - 1.0) > 0.001) {
     console.warn(
-      `[weightConfig] Vekt-sum er ${sum} (ikkje 1.0). Brukar default-vektane.`
+      `[weightConfig] Vekt-sum er ${sum} (ikke 1.0). Bruker default-vektene.`
     );
     return getWeights();
   }

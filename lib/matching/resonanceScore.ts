@@ -1,7 +1,7 @@
 /**
  * resonanceScore.ts — Resonans-basert matching basert på djup profil
  * 
- * Core-definition: ToSom måler resonans — ikkje match score.
+ * Core-definition: ToSom måler resonans — ikke match score.
  * Resonans er samanfallande verdiar, emosjonell djupde, og personlegdom-kompatibilitet.
  * Ingen foto-basert scoring. Ingen offentlege profiler.
  */
@@ -40,11 +40,11 @@ export function calculateResonance(a: Record<string, unknown>, b: Record<string,
   const valuesScore = valueResonance(a, b);
   totalScore += valuesScore * 0.25;
   
-  // 2. Personlegdom (personality) — 20% vekt
+  // 2. Personlighet (personality) — 20% vekt
   const personalityScore = personalityResonance(a, b);
   totalScore += personalityScore * 0.20;
   
-  // 3. Relasjonsstil (relationship style) — 15% vekt
+  // 3. Forholdsstil (relationship style) — 15% vekt
   const relStyleScore = relationshipStyleResonance(a, b);
   totalScore += relStyleScore * 0.15;
   
@@ -52,7 +52,7 @@ export function calculateResonance(a: Record<string, unknown>, b: Record<string,
   const commScore = communicationResonance(a, b);
   totalScore += commScore * 0.15;
   
-  // 5. Framtidas visjon (future vision) — 10% vekt
+  // 5. Fremtidens visjon (future vision) — 10% vekt
   const futureScore = futureVisionResonance(a, b);
   totalScore += futureScore * 0.10;
   
@@ -96,7 +96,7 @@ export function calculateResonance(a: Record<string, unknown>, b: Record<string,
 }
 
 /**
- * Verdi-resonans: samanfall mellom kjernejverdier
+ * Verdi-resonans: sammenfall mellom kjerneverdier
  */
 function valueResonance(a: Record<string, unknown>, b: Record<string, unknown>): number {
   const valuesA = parseJsonArray(a.futureVision);
@@ -116,17 +116,17 @@ function valueResonance(a: Record<string, unknown>, b: Record<string, unknown>):
 }
 
 /**
- * Personlegdom-resonans: kompatibilitet mellom personlighetstrekk
+ * Personlighet-resonans: kompatibilitet mellom personlighetstrekk
  */
 function personalityResonance(a: Record<string, unknown>, b: Record<string, unknown>): number {
   const traitsA = parseJsonArray(a.personality);
   const traitsB = parseJsonArray(b.personality);
   if (!traitsA.length || !traitsB.length) return 50;
   
-  // Kompatibilitetsmønster: introvert ↔ extrovert kan fungere godt
+  // Kompatibilitetsmønster: introvert ↔ extrovert kan fungere bra godt
   const compatibilityMap: Record<string, number[]> = {
-    introvert: [1, 0.5],    // introvert passar bra med introvert (1.0) og moderat med extrovert (0.5)
-    extrovert: [0.5, 1],    // extrovert passar bra med extrovert
+    introvert: [1, 0.5],    // introvert passer bra med introvert (1.0) og moderat med extrovert (0.5)
+    extrovert: [0.5, 1],    // extrovert passer bra med extrovert
     empathetic: [0.8, 0.8], // empatisk passar generelt bra
     analytical: [0.7, 0.9], // analytisk passar betre med analytisk
     intuitive: [0.9, 0.7],  // intuitiv passar betre med intuitiv
@@ -166,21 +166,21 @@ function relationshipStyleResonance(a: Record<string, unknown>, b: Record<string
   // Komplementære stilar
   const complementaryPairs = [
     ["gradual", "direct"],
-    ["indirect", "direct"],
-    ["independent", "connecting"],
-  ];
-  
-  for (const [aStyle, bStyle] of complementaryPairs) {
-    if ((styleA === aStyle && styleB === bStyle) || (styleA === bStyle && styleB === aStyle)) {
-      return 70; // komplementært = bra, men ikkje perfekt
+      ["indirect", "direct"],
+      ["independent", "connecting"],
+    ];
+    
+    for (const [aStyle, bStyle] of complementaryPairs) {
+      if ((styleA === aStyle && styleB === bStyle) || (styleA === bStyle && styleB === aStyle)) {
+        return 70; // komplementært = bra, men ikke perfekt
+      }
     }
-  }
   
   return 40; // ulik = moderat resonans
 }
 
 /**
- * Kommunikasjons-resonans: samanfall i kommunikasjonsprefinsar
+ * Kommunikasjon-resonans: sammenfall i kommunikasjonspreferanser
  */
 function communicationResonance(a: Record<string, unknown>, b: Record<string, unknown>): number {
   const commA = parseJsonArray(a.communication);
@@ -200,7 +200,7 @@ function communicationResonance(a: Record<string, unknown>, b: Record<string, un
 }
 
 /**
- * Framtidsvisjon-resonans: samanfall i livsmål
+ * Fremtidsvisjon-resonans: sammenfall i livsmål
  */
 function futureVisionResonance(a: Record<string, unknown>, b: Record<string, unknown>): number {
   const futureA = parseJsonArray(a.futureVision);
@@ -220,20 +220,20 @@ function futureVisionResonance(a: Record<string, unknown>, b: Record<string, unk
 }
 
 /**
- * Grense-resonans: respekt for kvarandre sine grenser
+ * Grense-resonans: respekt for hverandres grenser
  */
 function boundaryResonance(a: Record<string, unknown>, b: Record<string, unknown>): number {
   const boundsA = parseJsonArray(a.boundaries);
   const boundsB = parseJsonArray(b.boundaries);
   if (!boundsA.length || !boundsB.length) return 50;
   
-  // Dersom begge har "slow-pace" som grense, det er ein sterk indikator på resonans
+  // Hvis begge har "slow-pace" som grense, det er en sterk indikator på resonans
   const slowPaceMatch = boundsA.some((b: string) => b.toLowerCase().includes("slow")) &&
                         boundsB.some((b: string) => b.toLowerCase().includes("slow"));
   
   if (slowPaceMatch) return 85;
   
-  // Ellers sjekk overlap
+  // Ellers sjekk overlapping
   const setA = new Set(boundsA.map((b: string) => b.toLowerCase()));
   const setB = new Set(boundsB.map((b: string) => b.toLowerCase()));
   
@@ -247,14 +247,14 @@ function boundaryResonance(a: Record<string, unknown>, b: Record<string, unknown
 }
 
 /**
- * Emosjonelle behov-resonans: støtte kvarandre sine behov
+ * Emosjonelle behov-resonans: støtte hverandres behov
  */
 function emotionalNeedsResonance(a: Record<string, unknown>, b: Record<string, unknown>): number {
   const needsA = parseJsonArray(a.emotionalNeeds);
   const needsB = parseJsonArray(b.emotionalNeeds);
   if (!needsA.length || !needsB.length) return 50;
   
-  // Dersom begge behov "depth" eller "understanding", det er ein sterk resonans-indikator
+  // Hvis begge trenger "depth" eller "understanding", det er en sterk resonans-indikator
   const depthMatch = needsA.some((n: string) => n.toLowerCase().includes("depth")) &&
                      needsB.some((n: string) => n.toLowerCase().includes("depth"));
   
@@ -273,7 +273,7 @@ function emotionalNeedsResonance(a: Record<string, unknown>, b: Record<string, u
 }
 
 /**
- * Livsrytme-resonans: samkjørde livsstilar
+ * Livsrytme-resonans: samkjørte livsstiler
  */
 function lifeRhythmResonance(a: Record<string, unknown>, b: Record<string, unknown>): number {
   const rhythmA = (a.lifeRhythm as string)?.toLowerCase();
@@ -282,7 +282,7 @@ function lifeRhythmResonance(a: Record<string, unknown>, b: Record<string, unkno
   
   if (rhythmA === rhythmB) return 100;
   
-  // Komplementære rytmar (morgenkveld)
+  // Komplementære rytmer (morren/kveld)
   const complementaryRhythms = [
     ["morning", "evening"],
     ["fast", "slow"],
@@ -298,7 +298,7 @@ function lifeRhythmResonance(a: Record<string, unknown>, b: Record<string, unkno
 }
 
 /**
- * Modenheit-resonans: kompatibilitet i modenheit/trygghet
+ * Modenhets-resonans: kompatibilitet i modenhetsnivå/trygghet
  */
 function maturityResonance(a: Record<string, unknown>, b: Record<string, unknown>): number {
   const matA = (a.maturityLevel as number);
@@ -307,7 +307,7 @@ function maturityResonance(a: Record<string, unknown>, b: Record<string, unknown
   
   const diff = Math.abs(matA - matB);
   
-  // Nære modenheitsnivå = høgare resonans
+  // Nære modenhetsnivå = høyere resonans
   if (diff <= 1) return 100;
   if (diff <= 2) return 80;
   if (diff <= 3) return 60;
@@ -326,7 +326,7 @@ function getResonanceLevel(score: number): "GENTLE" | "MODERATE" | "STRONG" | "D
 }
 
 /**
- * Hjelp funksjon for å parse JSON-felt trygt
+ * Hjelpefunksjon for å parse JSON-felt trygt
  */
 function parseJsonArray(value: unknown): string[] {
   if (Array.isArray(value)) return value.map(String);

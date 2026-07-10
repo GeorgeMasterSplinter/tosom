@@ -37,7 +37,7 @@ function applyCoreValueBonus(base: number): number {
   // TODO: Når verdier er i schema, sjekk for overlap her
   
   // Bonus for samkjør livsrytme
-  // (Denne blir behandlet i calculateFutureVisionScore isteden)
+  // (Denne behandles i calculateFutureVisionScore isteden)
   
   return Math.min(bonus, maxBonus);
 }

@@ -2,7 +2,7 @@
 import { MatchResult, MatchTier } from "./types";
 
 /**
- * tierLabel gjev eit kort, menneskelesleg namn på ein MatchTier.
+ * tierLabel gir et kort, menneskelig lesbar navn på en MatchTier.
  */
 function tierLabel(tier: MatchTier): string {
   const labels: Record<MatchTier, string> = {
@@ -77,7 +77,7 @@ export function generateExplanation(result: MatchResult): string {
 }
 
 /**
- * generateShortExplanation gjev ei kort forklaring (under 50 teikn).
+ * generateShortExplanation gir en kort forklaring (under 50 tegn).
  */
 export function generateShortExplanation(result: MatchResult): string {
   if (result.rejected && result.rejectionReason) {

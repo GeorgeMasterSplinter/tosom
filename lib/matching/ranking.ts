@@ -29,7 +29,7 @@ export interface RankedMatch {
 
 /**
  * Sorter match-resultat etter totalScore (høgast først).
- * Kan valfritt filtrere bort resultatar under ein terskel.
+ * Kan valgfritt filtrere bort resultater under en terskel.
  */
 export function rankMatches(
   matches: RankedMatch[],

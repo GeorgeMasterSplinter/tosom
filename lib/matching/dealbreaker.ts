@@ -12,8 +12,8 @@ export interface DealbreakerResult {
 }
 
 /**
- * sjekkMaturityGap — viss modenheits-gapet er for stort, er det ein dealbreaker.
- * Core-definition: modenheit og trygghet er kritisk for ein trygg relasjon.
+ * sjekkMaturityGap — hvis modenhets-gapet er for stort, er det en dealbreaker.
+ * Core-definition: modenhetsnivå og trygghet er kritisk for en trygg relasjon.
  */
 function checkMaturityGap(a: ProfileData, b: ProfileData): DealbreakerResult {
   if (!a.maturityLevel || !b.maturityLevel) return { hasDealbreaker: false };
@@ -29,8 +29,8 @@ function checkMaturityGap(a: ProfileData, b: ProfileData): DealbreakerResult {
 }
 
 /**
- * sjekkLifeRhythmConflict — livsrytme må vere kompatibilit.
- * Morning vs evening er ein svak dealbreaker.
+ * sjekkLifeRhythmConflict — livsrytme må være kompatibilitet.
+ * Morgen vs kveld er en svak dealbreaker.
  */
 function checkLifeRhythmConflict(a: ProfileData, b: ProfileData): DealbreakerResult {
   if (!a.lifeRhythm || !b.lifeRhythm) return { hasDealbreaker: false };
@@ -53,8 +53,8 @@ function checkLifeRhythmConflict(a: ProfileData, b: ProfileData): DealbreakerRes
 }
 
 /**
- * sjekkSecurityLevelIncompatibility — sikkerheitsnivå kan vere ein dealbreaker
- * viss det er ein stor uoverensstemming (secure vs unsicher med stort gap).
+ * sjekkSecurityLevelIncompatibility — sikkerhetsnivå kan være en dealbreaker
+ * hvis det er en stor uoverensstemmelse (secure vs usikker med stort gap).
  */
 function checkSecurityLevelGap(a: ProfileData, b: ProfileData): DealbreakerResult {
   if (!a.securityLevel || !b.securityLevel) return { hasDealbreaker: false };
@@ -68,9 +68,9 @@ function checkSecurityLevelGap(a: ProfileData, b: ProfileData): DealbreakerResul
   
   const gap = Math.abs(levels[a.securityLevel] - levels[b.securityLevel]);
   if (gap >= 2) {
-    // Ikje automatisk dealbreaker, men ein sterk indikator
+    // Ikke automatisk dealbreaker, men en sterk indikator
     return {
-      hasDealbreaker: false, // Merk: ikkje dealbreaker, men kan vektast lågare
+      hasDealbreaker: false, // Merk: ikke dealbreaker, men kan veiktas lavere
       reason: `Sikkerheitsnivå-gap (${a.securityLevel} vs ${b.securityLevel})`,
     };
   }
@@ -78,7 +78,7 @@ function checkSecurityLevelGap(a: ProfileData, b: ProfileData): DealbreakerResul
 }
 
 /**
- * sjekkPreferences — sjekk eksplisitte preferansar i Profile.preferences.
+ * sjekkPreferences — sjekk eksplisitte preferanser i Profile.preferences.
  * Format: { dealbreakers: string[] }
  */
 function checkExplicitPreferences(
@@ -89,7 +89,7 @@ function checkExplicitPreferences(
     return { hasDealbreaker: false };
   }
   
-  // Sjekk om kandidatens matchTags overlapping med brukar sine dealbreakers
+  // Sjekk om kandidatens matchTags overlapper med brukerens dealbreakers
   const userTags = new Set(b.matchTags);
   for (const db of a.preferences.dealbreakers) {
     if (userTags.has(db)) {
@@ -103,8 +103,8 @@ function checkExplicitPreferences(
 }
 
 /**
- * sjekkBoundaries — sjekkar om boundaries (grenser) frå brukaren
- * blir brotne av kandidat.
+ * sjekkBoundaries — sjekker om boundaries (grenser) fra brukeren
+ * blir brutt av kandidat.
  */
 function checkBoundaries(a: ProfileData, b: ProfileData): DealbreakerResult {
   if (!a.boundaries || !b.boundaries) return { hasDealbreaker: false };
@@ -129,7 +129,7 @@ function checkBoundaries(a: ProfileData, b: ProfileData): DealbreakerResult {
 }
 
 /**
- * sjekkAlleDealbreakers — hovudfunksjon som køyrer alle dealbreaker-testar.
+ * sjekkAlleDealbreakers — hovedfunksjon som kjører alle dealbreaker-testene.
  * Returnerer resultatet av den første dealbreaker som blir funnen.
  */
 export function sjekkAlleDealbreakers(
@@ -152,7 +152,7 @@ export function sjekkAlleDealbreakers(
   result = checkBoundaries(queryUser, candidate);
   if (result.hasDealbreaker) return result;
   
-  // 5. Security level (ikkje automatisk dealbreaker, men returnerer info)
+  // 5. Security level (ikke automatisk dealbreaker, men returnerer info)
   result = checkSecurityLevelGap(queryUser, candidate);
   if (result.hasDealbreaker) return result;
   

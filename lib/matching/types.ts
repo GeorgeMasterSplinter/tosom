@@ -1,9 +1,9 @@
-// lib/matching/types.ts — Type-definisjonar for matching-motoren
-// Alle typar er sentraliserte her for konsistens
+// lib/matching/types.ts — Type-definisjoner for matching-motoren
+// Alle typer er sentraliserte her for konsistens
 
 /**
- * SubScoreBreakdown definerer dei 5 dimensjonane i matching.
- * Alle verdiar er normalisert til [0, 1].
+ * SubScoreBreakdown definerer de 5 dimensjonene i matching.
+ * Alle verdier er normalisert til [0, 1].
  */
 export interface SubScoreBreakdown {
   base: number;           // Grunnleggjande kompatibilitet (verdier, livssituasjon, personlighet)
@@ -14,7 +14,7 @@ export interface SubScoreBreakdown {
 }
 
 /**
- * MatchTier klassifiserer kvaliteten på ein match.
+ * MatchTier klassifiserer kvaliteten på en match.
  */
 export type MatchTier =
   | "deepResonance"
@@ -24,13 +24,13 @@ export type MatchTier =
   | "weakResonance";
 
 /**
- * MatchResult er det endelege resultatet frå matchingEngine.
+ * MatchResult er det endelige resultatet fra matchingEngine.
  */
 export interface MatchResult {
   score: number;           // Total score normalisert til [0, 1]
   breakdown: SubScoreBreakdown;
   tier: MatchTier;
-  rejected: boolean;       // true dersom ein dealbreaker vart funnen
+  rejected: boolean;       // true hvis en dealbreaker ble funnet
   rejectionReason?: string; // Kort årsak dersom rejected
   explanation?: string;    // Lesbar forklaring for brukaren
 }
@@ -48,7 +48,7 @@ export interface WeightConfig {
 
 /**
  * ProfileData er den forma profil-data er tilgjengeleg i matching.
- * Mapped frå Prisma Profile-modellen.
+ * Mappt fra Prisma Profile-modellen.
  */
 export interface ProfileData {
   userId: string;

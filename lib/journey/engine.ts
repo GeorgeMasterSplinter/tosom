@@ -221,7 +221,7 @@ export const PHASE_CONFIGS: Array<{
 ];
 
 /** Theme-progresjon — 5 tema over 35 dagar (frå progression.ts) */
-const THEME_RANGES: Array<{ start: number; end: number; theme: Theme }> = [
+export const THEME_RANGES: Array<{ start: number; end: number; theme: Theme }> = [
   { start: 1, end: 5, theme: "intro" },
   { start: 6, end: 12, theme: "trygghet" },
   { start: 13, end: 20, theme: "fordypning" },
@@ -547,6 +547,11 @@ export function advanceOneDay(
   }
 
   progress.photosEnabled = progress.currentDay >= 15;
+
+  // Lagre tilbake til store så neste kall ser oppdateringa
+  if (progressStore) {
+    progressStore[key] = progress;
+  }
 
   return { progress, changed: true };
 }

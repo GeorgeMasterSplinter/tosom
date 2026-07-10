@@ -1,6 +1,6 @@
 /**
  * ToSom — OnboardingFlow (rebuild 2026)
- * 10-stegs flyt med nye step-komponenter.
+ * 13-stegs flyt med nye steg: Livssituasjon, Relasjonsstil, Grenser.
  * Fase 4: Autosave + fade-transition.
  */
 
@@ -11,11 +11,14 @@ import { OnboardingLayout } from './OnboardingLayout';
 
 import Step1Profile from './steps/Step1Profile';
 import Step2Personlighet from './steps/Step2Personlighet';
+import Step2Livssituasjon from './steps/Step2Livssituasjon';    // NY
 import Step3Tilknytning from './steps/Step3Tilknytning';
 import Step4Kjærlighetsspråk from './steps/Step4Kjærlighetsspråk';
 import Step5LivsstilVerdier from './steps/Step5LivsstilVerdier';
+import Step5Relasjonsstil from './steps/Step5Relasjonsstil';    // NY
 import Step6FramtidVisjon from './steps/Step6FramtidVisjon';
 import Step7HumorPersonlighet from './steps/Step7HumorPersonlighet';
+import Step8Grenser from './steps/Step8Grenser';                // NY
 import Step8ModenNysgjerrighet from './steps/Step8ModenNysgjerrighet';
 import Step9Oppsummering from './steps/Step9Oppsummering';
 import Step10StartReisen from './steps/Step10StartReisen';
@@ -56,18 +59,24 @@ interface ProfileData extends Record<string, unknown> {
   structureSpontaneity: string;
   introExtrovert: string;
   attachmentStyle: string;
-  // Step 2
+  // Step 2 (Personlighet)
   selfDesc: string;
   energyGiver: string;
   energyDrainer: string;
   pressureReact: string;
   quirk: string;
-  // Step 2 (veiledet)
   bestSelf: string;
   energy: string;
   drains: string;
   pressure: string;
   habits: string;
+  // Step 2b (Livssituasjon) — NY
+  workType: string;
+  housingType: string;
+  householdSize: string;
+  economicStability: string;
+  responsibilities: string;
+  dailyRoutine: string;
   // Step 3
   safetyNeed: string;
   insecurityTrigger: string;
@@ -80,12 +89,16 @@ interface ProfileData extends Record<string, unknown> {
   closenessBuilder: string;
   distanceCreator: string;
   smallThing: string;
-  // Step 5
+  // Step 5 (Livsstil)
   highPriority: string;
   lowPriority: string;
   goodEveryday: string;
   desiredLifestyle: string;
   undesiredLifestyle: string;
+  // Step 5b (Relasjonsstil) — NY
+  relationshipSeeking: string;
+  closenessNeed: string;
+  independenceBalance: string;
   // Step 6
   futureVision: string;
   dreamGoal: string;
@@ -98,7 +111,12 @@ interface ProfileData extends Record<string, unknown> {
   guiltyPleasure: string;
   totallyYou: string;
   partnerWouldLaugh: string;
-  // Step 8
+  // Step 8 (Grenser) — NY
+  neverCrossBoundary: string;
+  understandPartnersBoundaries: string;
+  limitations: string;
+  partnerMustUnderstand: string;
+  // Step 8b (ModenNysgjerrighet)
   intimacySafety: string;
   comfortableWith: string;
   boundary: string;
@@ -117,11 +135,17 @@ const initialData: ProfileData = {
   attachmentStyle: '',
   selfDesc: '', energyGiver: '', energyDrainer: '', pressureReact: '', quirk: '',
   bestSelf: '', energy: '', drains: '', pressure: '', habits: '',
+  // Livssituasjon — ny
+  workType: '', housingType: '', householdSize: '', economicStability: '', responsibilities: '', dailyRoutine: '',
   safetyNeed: '', insecurityTrigger: '', sadnessNeed: '', stressNeed: '', importantBoundary: '',
   loveGive: '', loveReceive: '', closenessBuilder: '', distanceCreator: '', smallThing: '',
   highPriority: '', lowPriority: '', goodEveryday: '', desiredLifestyle: '', undesiredLifestyle: '',
+  // Relasjonsstil — ny
+  relationshipSeeking: '', closenessNeed: '', independenceBalance: '',
   futureVision: '', dreamGoal: '', buildTogether: '', experienceAlone: '', experienceTogether: '',
   laughterTrigger: '', quirkyHabit: '', guiltyPleasure: '', totallyYou: '', partnerWouldLaugh: '',
+  // Grenser — ny
+  neverCrossBoundary: '', understandPartnersBoundaries: '', limitations: '', partnerMustUnderstand: '',
   intimacySafety: '', comfortableWith: '', boundary: '', nearerType: '', needsTime: '',
 };
 
@@ -158,7 +182,7 @@ export default function OnboardingFlow() {
 
   // Rydd draft når reisen starter
   useEffect(() => {
-    if (step > 9) {
+    if (step > 11) {
       try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
     }
   }, [step]);
@@ -172,7 +196,7 @@ export default function OnboardingFlow() {
     setFadeKey((k) => k + 1);
   }, []);
 
-  // === Save + Matching (for Step 10) ===
+  // === Save + Matching (for Step 13) ===
   const handleStartReisen = async () => {
     setSaving(true);
     try {
@@ -187,6 +211,11 @@ export default function OnboardingFlow() {
         personlighet: {
           selfDesc: data.selfDesc, energyGiver: data.energyGiver, energyDrainer: data.energyDrainer,
           pressureReact: data.pressureReact, quirk: data.quirk,
+        },
+        livssituasjon: {                                                    // NY
+          workType: data.workType, housingType: data.housingType,
+          householdSize: data.householdSize, economicStability: data.economicStability,
+          responsibilities: data.responsibilities, dailyRoutine: data.dailyRoutine,
         },
         tilknytning: {
           safetyNeed: data.safetyNeed, insecurityTrigger: data.insecurityTrigger,
@@ -204,6 +233,10 @@ export default function OnboardingFlow() {
           highPriority: data.highPriority, lowPriority: data.lowPriority, goodEveryday: data.goodEveryday,
           desiredLifestyle: data.desiredLifestyle, undesiredLifestyle: data.undesiredLifestyle,
         },
+        relasjonsStil: {                                                     // NY
+          relationshipSeeking: data.relationshipSeeking, closenessNeed: data.closenessNeed,
+          independenceBalance: data.independenceBalance,
+        },
         fremtid: {
           futureVision: data.futureVision, dreamGoal: data.dreamGoal, buildTogether: data.buildTogether,
           experienceAlone: data.experienceAlone, experienceTogether: data.experienceTogether,
@@ -211,6 +244,10 @@ export default function OnboardingFlow() {
         humor: {
           laughterTrigger: data.laughterTrigger, quirkyHabit: data.quirkyHabit, guiltyPleasure: data.guiltyPleasure,
           totallyYou: data.totallyYou, partnerWouldLaugh: data.partnerWouldLaugh,
+        },
+        grenser: {                                                           // NY
+          neverCrossBoundary: data.neverCrossBoundary, understandPartnersBoundaries: data.understandPartnersBoundaries,
+          limitations: data.limitations, partnerMustUnderstand: data.partnerMustUnderstand,
         },
         moden: {
           intimacySafety: data.intimacySafety, comfortableWith: data.comfortableWith, boundary: data.boundary,
@@ -251,8 +288,8 @@ export default function OnboardingFlow() {
       }
 
       try {
-        console.log("API REQUEST: /api/matching", { userId });
-        const matchRes = await fetch('/api/matching', {
+        console.log("API REQUEST: /api/match", { userId });
+        const matchRes = await fetch('/api/match', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ userId }),
@@ -288,20 +325,26 @@ export default function OnboardingFlow() {
       case 1:
         return <Step2Personlighet {...baseProps} onBack={() => goToStep(0)} onNext={handleNext} />;
       case 2:
-        return <Step3Tilknytning step={step} goToStep={goToStep} {...baseProps} onNext={handleNext} />;
+        return <Step2Livssituasjon {...baseProps} onBack={() => goToStep(1)} onNext={handleNext} />;  // NY
       case 3:
-        return <Step4Kjærlighetsspråk step={step} goToStep={goToStep} {...baseProps} onNext={handleNext} />;
+        return <Step3Tilknytning step={step} goToStep={goToStep} {...baseProps} onNext={handleNext} />;
       case 4:
-        return <Step5LivsstilVerdier step={step} goToStep={goToStep} {...baseProps} onNext={handleNext} />;
+        return <Step4Kjærlighetsspråk step={step} goToStep={goToStep} {...baseProps} onNext={handleNext} />;
       case 5:
-        return <Step6FramtidVisjon step={step} goToStep={goToStep} {...baseProps} onNext={handleNext} />;
+        return <Step5LivsstilVerdier step={step} goToStep={goToStep} {...baseProps} onNext={handleNext} />;
       case 6:
-        return <Step7HumorPersonlighet step={step} goToStep={goToStep} {...baseProps} onNext={handleNext} />;
+        return <Step5Relasjonsstil {...baseProps} onBack={() => goToStep(5)} onNext={handleNext} />;  // NY
       case 7:
-        return <Step8ModenNysgjerrighet step={step} goToStep={goToStep} {...baseProps} onNext={handleNext} />;
+        return <Step6FramtidVisjon step={step} goToStep={goToStep} {...baseProps} onNext={handleNext} />;
       case 8:
-        return <Step9Oppsummering step={step} goToStep={goToStep} data={data} onNext={handleNext} onBack={() => goToStep(7)} />;
+        return <Step7HumorPersonlighet step={step} goToStep={goToStep} {...baseProps} onNext={handleNext} />;
       case 9:
+        return <Step8Grenser {...baseProps} onBack={() => goToStep(8)} onNext={handleNext} />;  // NY
+      case 10:
+        return <Step8ModenNysgjerrighet step={step} goToStep={goToStep} {...baseProps} onNext={handleNext} />;
+      case 11:
+        return <Step9Oppsummering step={step} goToStep={goToStep} data={data} onNext={handleNext} onBack={() => goToStep(10)} />;
+      case 12:
         return <Step10StartReisen step={step} goToStep={goToStep} loading={saving} />;
       default:
         return null;
@@ -311,15 +354,18 @@ export default function OnboardingFlow() {
   const handleNext = () => goToStep(step + 1);
   const handleBack = () => { if (step > 0) goToStep(step - 1); };
 
-  // Steg-titler og introtekster
+  // Steg-titler og introtekster (13 steg)
   const stepsMeta = [
     { title: 'Grunnprofil', subtitle: 'La oss starte rolig. Vi vil gjerne bli litt kjent med deg — på en måte som føles trygg og ekte.' },
     { title: 'Personlighet & identitet', subtitle: 'Fortell litt om hvem du er — uten filter.' },
+    { title: 'Livssituasjon', subtitle: 'Kva jobbar du med, kva bur du i, og korleis ser kvardagen din ut?' },
     { title: 'Tilknytning & trygghet', subtitle: 'Dette hjelper oss å forstå hva du trenger for å føle deg trygg.' },
     { title: 'Kjærlighetsspråk & nærhet', subtitle: 'Hvordan viser og mottar du kjærlighet?' },
     { title: 'Livsstil & verdier', subtitle: 'Hva prioriterer du i hverdagen?' },
+    { title: 'Relasjonsstil', subtitle: 'Korleie søker du relasjon — og korleis balanserer du sjølvstende med fellesskap?' },
     { title: 'Framtid & visjon', subtitle: 'Hva drømmer du om å bygge?' },
     { title: 'Lek, humor & personlighet', subtitle: 'De små detaljene som gjør deg til deg.' },
+    { title: 'Grenser & behov', subtitle: 'Korleis ser du på grenser i ein relasjon — og kva treng du at partneren din forstår?' },
     { title: 'Moden nysgjerrighet', subtitle: 'Hva trenger du for å føle deg trygg i nærhet?' },
     { title: 'Oppsummering', subtitle: 'Se over det du har delt. Du kan endre alt senere.' },
     { title: 'Start reisen', subtitle: 'Du er klar. Vi matcher deg rolig og presist — basert på det du har delt.' },
@@ -328,20 +374,24 @@ export default function OnboardingFlow() {
   const guidingTexts = [
     "Vi starter med det grunnleggende, slik at vi kan bli litt kjent med deg.",
     "Personligheten din er det som gjør deg til deg.",
+    "Livssituasjonen din gir oss ein viktig oversikt over kvardagen din.",
     "Tilknytningsmønsteret ditt sier mye om hvordan du møter andre mennesker.",
     "Hvordan du viser kjærlighet, er viktig for å finne noen som passer deg.",
     "Livsstilssvarene dine hjelper oss å finne noen som trives i hverdagen sammen med deg.",
+    "Relasjonsstil forteller oss korleie du søker — og det er like viktig som verdier.",
     "Fremtidsønsker viser veien for hva dere kan bygge sammen.",
     "De små detaljene — som humor — forteller hvem du er.",
+    "Grenser beskytten deg sjølv — og den du elsker. Del berre det du føler deg trygg med.",
     "Modne svar viser deg som person. Del det du er komfortabel med.",
     "Du har nesten kommet helt til ende. Se over det du har delt.",
     "Nå er det bare å trykke på \"Start reisen\" så finner vi din match.",
   ];
 
   const currentStepData = stepsMeta[step];
-  const isLastStep = step === 9;
+  const isLastStep = step === 12;
   const isFirstStep = step === 0;
-  const progressPercent = Math.round(((step + 1) / 10) * 100);
+  const totalSteps = 13;
+  const progressPercent = Math.round(((step + 1) / totalSteps) * 100);
 
   // === SSR-safe animation injection ===
   useEffect(() => {
@@ -363,7 +413,7 @@ export default function OnboardingFlow() {
   return (
     <OnboardingLayout
       currentStep={step}
-      totalSteps={10}
+      totalSteps={totalSteps}
       title={currentStepData.title}
       subtitle={currentStepData.subtitle}
       guidingText={guidingTexts[step]}

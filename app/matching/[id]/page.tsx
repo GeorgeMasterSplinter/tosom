@@ -80,21 +80,10 @@ export default function MatchDetailPage({ params }: { params: Promise<{ id: stri
     if (stored) setCurrentUserId(stored);
   }, []);
 
+  // NOTE: /api/matching/detail eksisterer aldri. Denne sida er deaktivert — ingen frontend-kall fører hit.
   useEffect(() => {
-    async function load() {
-      try {
-        const res = await fetch(`/api/matching/detail?id=${id}`);
-        if (!res.ok) throw new Error('Kunne ikkje hente match');
-        const data = await res.json();
-        setMatch(data);
-      } catch (err) {
-        console.error('Feil ved henting av match:', err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    load();
-  }, [id]);
+    setLoading(false);
+  }, []);
 
   // Bø er "deg"?
   const meId = currentUserId;

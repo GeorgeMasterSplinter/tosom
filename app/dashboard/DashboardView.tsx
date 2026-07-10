@@ -229,7 +229,7 @@ export default function DashboardView() {
 
     async function fetchMatchingStatus() {
       try {
-        const res = await fetch("/api/matching");
+        const res = await fetch("/api/match");
         if (!res.ok) return;
         const json: MatchStatusResponse = await res.json();
         if (!cancelled) {
@@ -326,10 +326,10 @@ export default function DashboardView() {
     setMatchingLoading(true);
     setMatchStatus("pending");
     try {
-      const res = await fetch("/api/matching", {
+      const res = await fetch("/api/match", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({}),
+        body: JSON.stringify({ userId: "" }), // DashboardView har ingen userId — må hentast frå session
       });
       if (!res.ok) throw new Error("Vi gir oss ikke – vi leter videre.");
       const json = await res.json();

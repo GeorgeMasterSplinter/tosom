@@ -12,7 +12,7 @@
  *
  * Beskytt:
  *   /api/profile/*
- *   /api/matching/*
+ *   /api/match/*
  *   /api/journey/*
  *   /api/conversation/*
  *   /admin/* (krever admin-role)
@@ -40,7 +40,7 @@ const PUBLIC_PATHS = [
 /** Beskytta API-ruter — krev innlogging */
 const PROTECTED_API_PREFIXES = [
   '/api/profile',
-  '/api/matching',
+   '/api/match',
   '/api/journey',
   '/api/conversation',
   '/api/chat',

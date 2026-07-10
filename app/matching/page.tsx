@@ -49,7 +49,7 @@ export default function MatchingPage() {
     const fetchMatches = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/matching', {
+        const response = await fetch('/api/match', {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
         });
@@ -76,11 +76,11 @@ export default function MatchingPage() {
      setProcessing(match.id || 'accept');
 
      try {
-       const response = await fetch('/api/matching/accept', {
-         method: 'POST',
-         headers: { 'Content-Type': 'application/json' },
-         body: JSON.stringify({ matchId: match.id, action: 'accept' }),
-       });
+        const response = await fetch('/api/match/accept', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ matchId: match.id }),
+        });
 
        const data = await response.json();
 
@@ -110,11 +110,11 @@ export default function MatchingPage() {
      setProcessing(match.id || 'decline');
 
      try {
-       const response = await fetch('/api/matching/accept', {
-         method: 'POST',
-         headers: { 'Content-Type': 'application/json' },
-         body: JSON.stringify({ matchId: match.id, action: 'decline' }),
-       });
+        const response = await fetch('/api/match/accept', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ matchId: match.id }),
+        });
 
        const data = await response.json();
 
@@ -141,10 +141,10 @@ export default function MatchingPage() {
      try {
        setLoading(true);
        setError(null);
-       const response = await fetch('/api/matching', {
-         method: 'GET',
-         headers: { 'Content-Type': 'application/json' },
-       });
+        const response = await fetch('/api/match', {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        });
        const data = await response.json();
        setMatches(data.matches || []);
      } catch (err) {

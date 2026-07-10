@@ -11,7 +11,7 @@
 
 import { auth } from '@/lib/auth/config';
 import { getUserProfile, getUserMatches, getUserConversations, getUserInsights } from '@/lib/dashboard/data';
-import { MatchCard } from '@/components/ui/cards/MatchCard';
+import { MatchCard } from '@/components/MatchCard';
 import { ConversationCard } from './_components/ConversationCard';
 import { InsightSection } from './_components/InsightSection';
 import { ProfileStatusSection } from './_components/ProfileStatusSection';
@@ -93,15 +93,14 @@ export default async function DashboardPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {matches.slice(0, 6).map((match) => (
                     <MatchCard
-                      key={match.id}
-                      score={match.score}
-                      otherUser={{
-                        name: match.otherUserName,
-                        photoUrl: match.otherUserPhotoUrl,
-                      }}
-                      type={match.matchType}
-                      explanation={match.explanation as Record<string, unknown> | null}
-                    />
+                       key={match.id}
+                       score={match.score}
+                       otherUser={{
+                         name: match.otherUserName,
+                         photoUrl: match.otherUserPhotoUrl,
+                       }}
+                       type={match.matchType}
+                     />
                   ))}
                 </div>
               ) : (

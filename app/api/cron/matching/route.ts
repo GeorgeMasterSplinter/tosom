@@ -1,132 +1,119 @@
 /**
- * ToSom — Daily Matching Cron-Job
+ * ToSom — Daily Matching Cron-Job (Fase B3)
  * 
  * GET /api/cron/matching
- * - Køyrs matching for alle brukarar utan aktiv match
- * - Kan kallast av Vercel Cron eller server-cron
- * 
- * Cron-config (vercel.json):
- * {
- *   "crons": [
- *     {
- *       "path": "/api/cron/matching",
- *       "schedule": "0 0 * * *"
- *     }
- *   ]
- * }
+ * - Bruker findBestResonance (full resonans-matching)
+ * - Éin match per 24t-regel via User.lastMatchAt + lockedUntil
+ * - Oppdaterer lastMatchAt etter match
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { findBestMatchFor } from '@/lib/matching/findBestMatchFor';
+import { findBestResonance } from '@/lib/matching/findBestResonance';
 
 export async function GET(req: NextRequest) {
+  const startedAt = Date.now();
+  
+  // Valider cron-secret
+  const secret = req.nextUrl.searchParams.get('secret');
+  if (secret !== process.env.CRON_SECRET) {
+    return NextResponse.json({ error: 'Ugyldig secret' }, { status: 401 });
+  }
+
   try {
-    // Valider cron-secret (for å hindre uautorisert tilgang)
-    const secret = req.nextUrl.searchParams.get('secret');
-    if (secret !== process.env.CRON_SECRET) {
-      return NextResponse.json({ error: 'Ugyldig secret' }, { status: 401 });
-    }
-
-    const startedAt = Date.now();
-    let processed = 0;
-    let created = 0;
-
-    // Hent alle brukarar utan aktiv match
-    const usersWithoutMatch = await prisma.user.findMany({
+    // Hent alle brukarar som treng match:
+    // - onboardingComplete + deepProfileComplete ✅
+    // - ingen aktiv match (active/matched med expiresAt i framtida)
+    
+    const eligibleUsers = await prisma.user.findMany({
       where: {
         onboardingComplete: true,
         deepProfileComplete: true,
         bannedAt: null,
         deletedAt: null,
-        lockedUntil: null, // ingen aktiv lås
-      },
-      include: {
-        profile: true,
+        // Ingen aktiv match
         matches: {
-          where: {
-            status: { in: ['active', 'matched'] },
+          none: {
+            status: 'active',
             expiresAt: { gte: new Date() },
           },
         },
       },
+      select: { id: true },
     });
 
-    for (const user of usersWithoutMatch) {
-      // Hopp over hvis allereie har aktiv match
-      if ((user.matches as any).length > 0) continue;
+    let processed = 0;
+    let created = 0;
+    const errors: string[] = [];
 
-      // Hent andre brukarar med profil
-      const candidates = await prisma.user.findMany({
-        where: {
-          id: { not: user.id },
-          onboardingComplete: true,
-          deepProfileComplete: true,
-          bannedAt: null,
-          deletedAt: null,
-          lockedUntil: null,
-        },
-        include: { profile: true },
-      });
-
-      if (candidates.length === 0) continue;
-
-      // Bruk den nye matchingEngine via findBestMatchFor
-      // Merk: Cron-jobben lagar ein forenkla match utan full profil-mapping
-      // TODO: Refaktorér cron-jobben til å bruke matchingEngine direkte når profiler er tilgjengelege
-      let bestMatch: any = null;
-      let bestScore = 0;
-
-      for (const candidate of candidates) {
-        if (!user.profile || !candidate.profile) continue;
+    for (const user of eligibleUsers) {
+      // Bruk findBestResonance (har innebygd lastMatchAt + lockedUntil-logikk)
+      try {
+        const result = await findBestResonance({ userId: user.id });
         
-        // Forenkla score basert på felles felt (berre ein provisorisk løysing for cron)
-        const userP = user.profile as any;
-        const candP = candidate.profile as any;
-        
-        let score = 0;
-        
-        // Same lifeRhythm
-        if (userP.lifeRhythm && candP.lifeRhythm && userP.lifeRhythm === candP.lifeRhythm) score += 20;
-        
-        // Maturity gap <= 2
-        if (userP.maturityLevel && candP.maturityLevel && Math.abs(userP.maturityLevel - candP.maturityLevel) <= 2) score += 15;
-        
-        // Similar age range
-        if (userP.age && candP.age && Math.abs(Number(userP.age) - Number(candP.age)) <= 5) score += 10;
-        
-        // Shared interests
-        const userInterests = new Set(userP.interests || []);
-        const candInterests = new Set(candP.interests || []);
-        const shared = [...userInterests].filter(i => candInterests.has(i));
-        score += Math.min(shared.length * 5, 15);
-
-        if (score > bestScore) {
-          bestScore = score;
-          bestMatch = candidate;
+        if (!result) {
+          processed++;
+          continue; // Ingen match eller ikkje matchable
         }
-      }
 
-      // Lagre match hvis god nok score (> 40 for cron)
-      if (bestMatch && bestScore >= 40) {
+        // Opprett match med full resonans-score frå ResonanceResult
         await prisma.match.create({
           data: {
             userAId: user.id,
-            userBId: bestMatch.id,
-            score: bestScore,
-            normalizedScore: bestScore / 100,
-            type: bestScore >= 70 ? 'high' : bestScore >= 50 ? 'medium' : 'low',
-            explanation: { score: bestScore, _auto: true, _cron: true },
+            userBId: result.candidateId,
+            score: Math.round(result.match.resonanceScore),
+            normalizedScore: result.match.resonanceScore / 100,
+            type: result.match.resonanceScore >= 70 ? 'high' 
+              : result.match.resonanceScore >= 50 ? 'medium' 
+              : 'low',
+            explanation: {
+              score: Math.round(result.match.resonanceScore),
+              resonanceLevel: result.match.resonanceLevel,
+            },
+            scoringBreakdown: {
+              values: result.match.breakdown.values ?? 0,
+              personality: result.match.breakdown.personality ?? 0,
+              relationshipStyle: result.match.breakdown.relationshipStyle ?? 0,
+              communication: result.match.breakdown.communication ?? 0,
+              futureVision: result.match.breakdown.futureVision ?? 0,
+              boundaries: result.match.breakdown.boundaries ?? 0,
+              emotionalNeeds: result.match.breakdown.emotionalNeeds ?? 0,
+              lifeRhythm: result.match.breakdown.lifeRhythm ?? 0,
+              maturity: result.match.breakdown.maturity ?? 0,
+            },
+            resonanceLevel: result.match.resonanceLevel as any,
             status: 'active',
           },
         });
-        created++;
-      }
 
-      processed++;
+        // Oppdater lastMatchAt (for 24t-regel)
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { lastMatchAt: new Date() },
+        });
+
+        created++;
+        processed++;
+      } catch (engineError) {
+        console.error(`[cron] findBestResonance feil for user ${user.id}:`, engineError);
+        errors.push(`user ${user.id}: ${(engineError as Error).message}`);
+        processed++;
+      }
     }
 
     const duration = Date.now() - startedAt;
+    
+    // Logg til SystemLog
+    if (created > 0) {
+      await prisma.systemLog.create({
+        data: {
+          level: 'INFO',
+          message: `Cron matching: ${created} nye matcher for ${processed} brukarar`,
+          module: 'cron/matching',
+          metadata: { processed, created, duration, errors: errors.slice(0, 10) },
+        },
+      });
+    }
 
     return NextResponse.json({
       ok: true,
@@ -134,13 +121,27 @@ export async function GET(req: NextRequest) {
       created,
       duration: `${duration}ms`,
       message: `Prosessert ${processed} brukarar, oppretta ${created} nye matcher`,
+      errors: errors.length > 0 ? errors.slice(0, 5) : undefined,
     });
   } catch (err) {
-    console.error('Cron matching feil:', err);
-    return NextResponse.json({ error: 'Kunne ikkje køyre cron matching' }, { status: 500 });
+    console.error('[cron] Matching feil:', err);
+    
+    await prisma.systemLog.create({
+      data: {
+        level: 'ERROR',
+        message: `Cron matching feil: ${(err as Error).message}`,
+        module: 'cron/matching',
+        metadata: {},
+      },
+    });
+
+    return NextResponse.json(
+      { error: 'Kunne ikkje køyre cron matching', details: (err as Error).message },
+      { status: 500 }
+    );
   }
 }
 
-// Vercel Cron konfigurasjon
+// Ingen caching for cron-endepunkt
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;

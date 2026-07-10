@@ -73,6 +73,33 @@ export async function POST(req: NextRequest) {
     // Bruk Prisma's MessageCategory enum
     const messageCategory = type === "text" ? "user" : type;
 
+    // 5b. Hent categoryQuestionId om eksisterande (valfritt)
+    let categoryQuestionId: string | undefined = undefined;
+    if (body.categoryQuestionId) {
+      // Valider at spørsmålet høyrer til ein aktiv kategori i konversationens match
+      const convMatch = await prisma.conversation.findUnique({
+        where: { id: conversationId },
+        select: { matchId: true },
+      });
+      if (convMatch?.matchId) {
+        const question = await prisma.chatQuestion.findFirst({
+          where: {
+            id: body.categoryQuestionId,
+            isActive: true,
+          },
+          select: { id: true },
+        });
+        if (question) {
+          categoryQuestionId = question.id;
+          // Auk usageCount
+          await prisma.chatQuestion.update({
+            where: { id: question.id },
+            data: { usageCount: { increment: 1 } },
+          });
+        }
+      }
+    }
+
     // 6. Lag melding
     const message = await prisma.message.create({
       data: {
@@ -80,6 +107,12 @@ export async function POST(req: NextRequest) {
         senderId: user.id,
         content,
         type: messageCategory as any,
+        categoryQuestionId,
+      },
+      include: {
+        categoryQuestion: {
+          select: { text: true, category: { select: { name: true, key: true } } },
+        },
       },
     });
 
@@ -94,8 +127,16 @@ export async function POST(req: NextRequest) {
       senderId: message.senderId,
       content: message.content,
       type: message.type,
+      categoryQuestionId: message.categoryQuestionId,
       createdAt: message.createdAt.toISOString(),
       sender: null,
+      question: message.categoryQuestion
+        ? {
+            text: message.categoryQuestion.text,
+            categoryName: message.categoryQuestion.category.name,
+            categoryKey: message.categoryQuestion.category.key,
+          }
+        : null,
     });
   } catch (error) {
     console.error("POST /api/chat/send error:", error);

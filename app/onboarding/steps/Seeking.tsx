@@ -34,6 +34,9 @@ export default function Seeking({
           <option value="student" className="bg-gray-950">Student</option>
           <option value="turnus" className="bg-gray-950">Turnus</option>
           <option value="fri" className="bg-gray-950">Fri</option>
+          <option value="pensjonist" className="bg-gray-950">Pensjonist</option>
+          <option value="annat" className="bg-gray-950">Annet</option>
+          <option value="vilIkkeSi" className="bg-gray-950">Vil ikke si</option>
         </select>
       </div>
 
@@ -49,6 +52,9 @@ export default function Seeking({
           <option value="kaerlighet" className="bg-gray-950">Kjærlighet</option>
           <option value="dyp forbindelse" className="bg-gray-950">Dyp forbindelse</option>
           <option value="åpen" className="bg-gray-950">Åpen</option>
+          <option value="aapensForAlt" className="bg-gray-950">Åpen for alt</option>
+          <option value="annat" className="bg-gray-950">Annet</option>
+          <option value="vilIkkeSi" className="bg-gray-950">Vil ikke si</option>
         </select>
       </div>
 
@@ -63,6 +69,7 @@ export default function Seeking({
           <option value="ja" className="bg-gray-950">Ja</option>
           <option value="nei" className="bg-gray-950">Nei</option>
           <option value="usikker" className="bg-gray-950">Usikker</option>
+          <option value="annet" className="bg-gray-950">Annet</option>
         </select>
       </div>
 
@@ -78,6 +85,7 @@ export default function Seeking({
           <option value="viktig" className="bg-gray-950">Viktig</option>
           <option value="noe viktig" className="bg-gray-950">Noe viktig</option>
           <option value="ikke viktig" className="bg-gray-950">Ikke viktig</option>
+          <option value="vilIkkeSi" className="bg-gray-950">Vil ikke si</option>
         </select>
       </div>
 
@@ -93,6 +101,7 @@ export default function Seeking({
           <option value="viktig" className="bg-gray-950">Viktig</option>
           <option value="noe viktig" className="bg-gray-950">Noe viktig</option>
           <option value="ikke viktig" className="bg-gray-950">Ikke viktig</option>
+          <option value="vilIkkeSi" className="bg-gray-950">Vil ikke si</option>
         </select>
       </div>
     </div>

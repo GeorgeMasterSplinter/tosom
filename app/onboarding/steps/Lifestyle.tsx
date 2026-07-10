@@ -25,6 +25,7 @@ export default function Lifestyle({
           <option value="morgenmenneske" className="bg-gray-950">Morgenmenneske</option>
           <option value="kveldsmenneske" className="bg-gray-950">Kveldsmenneske</option>
           <option value="uavhengig" className="bg-gray-950">Uavhengig</option>
+          <option value="vilIkkeSi" className="bg-gray-950">Vil ikke si</option>
         </select>
       </div>
 
@@ -40,6 +41,7 @@ export default function Lifestyle({
           <option value="fleksibelt" className="bg-gray-950">Fleksibelt</option>
           <option value="skift" className="bg-gray-950">Skift</option>
           <option value="fri" className="bg-gray-950">Egen arbeidshverdag</option>
+          <option value="vilIkkeSi" className="bg-gray-950">Vil ikke si</option>
         </select>
       </div>
 
@@ -65,6 +67,7 @@ export default function Lifestyle({
           <option value="lett" className="bg-gray-950">Lett, av og til</option>
           <option value="regelbundet" className="bg-gray-950">Regelmessig</option>
           <option value="aktiv" className="bg-gray-950">Veldig aktiv</option>
+          <option value="vilIkkeSi" className="bg-gray-950">Vil ikke si</option>
         </select>
       </div>
 
@@ -80,6 +83,8 @@ export default function Lifestyle({
           <option value="vegetar" className="bg-gray-950">Vegetar</option>
           <option value="veganer" className="bg-gray-950">Veganer</option>
           <option value="sunt" className="bg-gray-950">Spiser sunt</option>
+          <option value="annet" className="bg-gray-950">Annet</option>
+          <option value="vilIkkeSi" className="bg-gray-950">Vil ikke si</option>
         </select>
       </div>
 
@@ -95,6 +100,7 @@ export default function Lifestyle({
           <option value="noe" className="bg-gray-950">Noe, av og til</option>
           <option value="ofte" className="bg-gray-950">Ofte</option>
           <option value="mye" className="bg-gray-950">Mye</option>
+          <option value="vilIkkeSi" className="bg-gray-950">Vil ikke si</option>
         </select>
       </div>
 
@@ -109,6 +115,7 @@ export default function Lifestyle({
           <option value="rolig" className="bg-gray-950">Rolig, få venner</option>
           <option value="normal" className="bg-gray-950">Normal</option>
           <option value="mye" className="bg-gray-950">Mye sosialt</option>
+          <option value="vilIkkeSi" className="bg-gray-950">Vil ikke si</option>
         </select>
       </div>
     </div>

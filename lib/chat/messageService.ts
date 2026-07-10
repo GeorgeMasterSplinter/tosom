@@ -43,6 +43,19 @@ export async function sendMessage(payload: MessagePayload) {
           profile: { select: { identityName: true } },
         },
       },
+      categoryQuestion: {
+        select: {
+          id: true,
+          text: true,
+          category: {
+            select: {
+              name: true,
+              key: true,
+              icon: true,
+            },
+          },
+        },
+      },
     },
   });
 
@@ -84,6 +97,19 @@ export async function getMessages(conversationId: string, userId: string) {
         select: {
           id: true,
           profile: { select: { identityName: true } },
+        },
+      },
+      categoryQuestion: {
+        select: {
+          id: true,
+          text: true,
+          category: {
+            select: {
+              name: true,
+              key: true,
+              icon: true,
+            },
+          },
         },
       },
     },

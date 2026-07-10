@@ -1,5 +1,5 @@
 // feedback.ts — stub for framtidig feedback-loop
-// (ingen logikk ennå)
+// (Fase A2: MatchFeedback-modell fjerna frå schema — ikkje i ToSom-konseptet)
 
 /**
  * Lagre brukar-feedback på eit match.

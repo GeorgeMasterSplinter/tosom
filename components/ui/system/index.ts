@@ -34,7 +34,7 @@ export { ToSomPage } from './ToSomPage';
 // Wave 4 — Product UI
 export { ToSomOnboardingLayout } from './ToSomOnboardingLayout';
 export { ToSomProfileCard } from './ToSomProfileCard';
-export { ToSomMatchCard } from './ToSomMatchCard';
+// ToSomMatchCard is removed — use components/MatchCard.tsx instead
 export { ToSomChatBubble } from './ToSomChatBubble';
 export { ToSomChatInput } from './ToSomChatInput';
 export { ToSomDashboardCard } from './ToSomDashboardCard';

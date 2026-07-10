@@ -1,7 +1,7 @@
 "use client";
 
 import { systemMessagesAPI } from "../../lib/system/systemMessages";
-import type { MatchState } from "../../lib/journey/journeyStateEngine";
+import type { MatchState } from "@/lib/journey/engine";
 
 interface MatchResultViewProps {
   matchState: MatchState;

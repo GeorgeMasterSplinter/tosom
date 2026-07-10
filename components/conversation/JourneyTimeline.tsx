@@ -1,7 +1,6 @@
 "use client";
 
-import { journeyPhasesAPI } from "../../lib/journey/journeyPhases";
-import { journeyAPI } from "../journey/journeyEngine";
+import { journeyAPI } from "@/lib/journey/engine";
 
 const phaseStyles: Record<string, { accent: string; text: string }> = {
   EARLY: {
@@ -30,7 +29,7 @@ const milestones = [
 ];
 
 export default function JourneyTimeline({ day }: { day: number }) {
-  const phaseConfig = journeyPhasesAPI.getPhaseForDay(day);
+  const phaseConfig = journeyAPI.getPhaseForDay(day);
   const phaseStyle = phaseStyles[phaseConfig.phase];
   const progress = Math.min((day / 35) * 100, 100);
 

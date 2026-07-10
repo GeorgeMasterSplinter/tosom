@@ -13,7 +13,7 @@
 import { useState } from "react";
 import ChatView from "./ChatView";
 import { chatFlowAPI, type ChatFlowInput } from "../../lib/chat/chatFlow";
-import { journeyStateAPI, dummyMatchContext } from "../../lib/journey/journeyStateEngine";
+import { buildJourneyState, dummyMatchContext } from "@/lib/journey/engine";
 
 /* -- CF32 — Dummy input for testing -- */
 
@@ -27,15 +27,14 @@ const dummyInput: ChatFlowInput = {
 export default function ChatViewDemo() {
   const [input, setInput] = useState<ChatFlowInput>(dummyInput);
 
-  /* CF33 — Koble ChatFlow til JourneyStateEngine */
-  const journeyState = journeyStateAPI.getJourneyState({
-    matchContext: dummyMatchContext,
-    currentDay: input.currentDay,
-  });
+  /* Bruk engine.ts (éin kilde) */
+  const journeyState = buildJourneyState(
+    input.currentDay,
+    { matchState: input.matchState as any }
+  );
 
-  /* CF34 — getChatState kober til systemMessagesAPI */
   const chatState = chatFlowAPI.getChatState({
-    matchState: journeyState.matchState,
+    matchState: input.matchState as any,
     currentDay: journeyState.currentDay,
     photosAllowed: journeyState.photosAllowed,
     journeyCompleted: journeyState.journeyCompleted,
@@ -81,10 +80,10 @@ export default function ChatViewDemo() {
           </select>
         </div>
 
-        <p className="text-xs text-[#4A4A4A]/60">
+         <p className="text-xs text-[#4A4A4A]/60">
           {journeyState.journeyCompleted
             ? "Reise ferdig"
-            : `Dag ${journeyState.currentDay} · ${journeyState.phase}`}
+            : `Dag ${input.currentDay} · ${journeyState.phase}`}
         </p>
       </div>
 

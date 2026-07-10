@@ -6,7 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { calculateResonance, createResonanceSnapshot } from '@/lib/journey/resonance';
+import { calculateResonance, createResonanceSnapshot } from '@/lib/journey/engine';
 
 export async function POST(req: NextRequest) {
   try {

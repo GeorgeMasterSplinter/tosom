@@ -1,8 +1,6 @@
 "use client";
 
-import { journeyAPI } from "./journeyEngine";
-import { journeyPhasesAPI } from "../../lib/journey/journeyPhases";
-import { journeyStateAPI, dummyMatchContext } from "../../lib/journey/journeyStateEngine";
+import { journeyAPI, buildJourneyState, dummyMatchContext } from "@/lib/journey/engine";
 import JourneyTimeline from "../conversation/JourneyTimeline";
 import SystemMessageBox from "../system/SystemMessageBox";
 import ReflectionBox from "../dashboard/ReflectionBox";
@@ -14,13 +12,13 @@ interface JourneyViewProps {
 }
 
 export default function JourneyView({ currentDay }: JourneyViewProps) {
-  const day = currentDay ?? journeyAPI.getCurrentDay();
-  const journeyState = journeyStateAPI.getJourneyState({
-    matchContext: dummyMatchContext,
-    currentDay: day,
-  });
+  const day = currentDay ?? 1;
+  const journeyState = buildJourneyState(
+    day,
+    { matchState: "in_journey" }
+  );
   const dayConfig = journeyAPI.getDayConfig(day);
-  const phaseConfig = journeyPhasesAPI.getPhaseForDay(day);
+  const phaseConfig = journeyAPI.getPhaseForDay(day);
 
   // Fallback-visning
   if (!dayConfig || dayConfig.dayNumber === 0) {

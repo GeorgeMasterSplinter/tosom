@@ -2,7 +2,7 @@
 
 import JourneySummaryMini from "../journey/JourneySummaryMini";
 import SystemMessageBox from "../system/SystemMessageBox";
-import { journeyStateAPI, dummyMatchContext } from "../../lib/journey/journeyStateEngine";
+import { buildJourneyState } from "@/lib/journey/engine";
 
 export default function DashboardTop({
   userName = "Hei",
@@ -20,11 +20,11 @@ export default function DashboardTop({
   journeyStatus?: string;
   matchState?: string;
 }) {
-  // JS23 — Bruk journeyStateAPI isteden for getMessagesForState
-  // TODO: matchState skal komme fra backend.
-  const journeyState = journeyStateAPI.getJourneyState({
-    matchContext: { ...dummyMatchContext, matchState: matchState as any },
-  });
+  // Bruk engine.ts (éin kilde for ALT journey)
+  const journeyState = buildJourneyState(
+    1,
+    { matchState: (matchState || "in_journey") as any }
+  );
 
   const statusMap: Record<string, { label: string; color: string }> = {
     not_started: { label: "Ikke startet", color: "bg-[#F7F1E3] text-[#4A4A4A]" },

@@ -4,7 +4,7 @@
 
 import { systemMessagesAPI } from "../system/systemMessages";
 import type { SystemMessage, SystemEvent } from "../system/systemMessages";
-import type { MatchState } from "../journey/journeyStateEngine";
+import type { MatchState } from "@/lib/journey/engine";
 
 /* --------------- */
 /*  CF2 — ChatMessage-type  */

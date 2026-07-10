@@ -1,7 +1,6 @@
 "use client";
 
-import { journeyAPI } from "./journeyEngine";
-import { journeyPhasesAPI } from "../../lib/journey/journeyPhases";
+import { journeyAPI } from "@/lib/journey/engine";
 
 const THEME_LABELS: Record<string, string> = {
   intro: "Utforsking",
@@ -26,7 +25,7 @@ export default function JourneySummaryMini({
 }) {
   const day = currentDay ?? journeyAPI.getCurrentDay();
   const dayConfig = journeyAPI.getDayConfig(day);
-  const phase = journeyPhasesAPI.getPhaseForDay(day);
+  const phase = journeyAPI.getPhaseForDay(day);
   const phaseLabel =
     phase.phase === "EARLY"
       ? "Fase 1 — Utforsking"
@@ -36,8 +35,10 @@ export default function JourneySummaryMini({
       ? "Fase 3 — Fordypning"
       : "Fase 4 — Oppsummering";
 
-  const phaseInfo = journeyPhasesAPI.isJourneyActive(day)
-    ? journeyPhasesAPI.isPhotosAllowed(day)
+  const isJourneyActive = day >= 1 && day <= 35;
+  const photosAllowed = day >= 15;
+  const phaseInfo = isJourneyActive
+    ? photosAllowed
       ? "Bilder er tilgjengelige"
       : "Ingen bilder ennå"
     : "Reisen er ikke startet";

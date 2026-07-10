@@ -13,7 +13,7 @@
 
 import { useState } from "react";
 import MatchResultView from "./MatchResultView";
-import type { MatchState } from "../../lib/journey/journeyStateEngine";
+import type { MatchState } from "@/lib/journey/engine";
 
 /* MR12 — Dummy matchState (starter som "matched") */
 type DemoState = "matched" | "in_journey" | null;

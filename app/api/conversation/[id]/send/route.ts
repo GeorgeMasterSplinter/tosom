@@ -1,10 +1,7 @@
 import prisma from "@/lib/prisma";
 import { getServerSession } from "@/lib/auth/session";
 import { createSystemMessage } from "@/lib/createSystemMessage";
-import { runJourneyStep } from "@/lib/journey/runJourneyStep";
-import { getJourneyImpulse } from "@/lib/journey/getJourneyImpulse";
-import { journeyStateAPI } from "@/lib/journey/journeyStateEngine";
-import { isJourneyCompleted } from "@/lib/journey/journeyPhases";
+import { journeyAPI, isJourneyCompleted, JOURNEY_TOTAL_DAYS } from "@/lib/journey/engine";
 import { checkRateLimit } from "@/lib/rateLimit";
 import { messageSendSchema, continueChoiceSchema } from "@/lib/validation/message";
 
@@ -161,20 +158,19 @@ export async function POST(
     );
   }
 
-  // Kjør journey-motor for dag-spur
-  await runJourneyStep(conversationId);
-
   // Hent journey-progresjon for å kjenne dag
   const journeyProgress = await prisma.journeyProgress.findUnique({
     where: { userId: conversation.userAId },
     select: { day: true },
   });
   const currentDay = journeyProgress?.day ?? 1;
-  const totalDays = 30;
+  const totalDays = JOURNEY_TOTAL_DAYS;
 
-  // Hent journey-tilstand frå journeyStateAPI
-  const journeyState = journeyStateAPI.getJourneyState({ matchContext: { matchState: 'in_journey' }, currentDay });
-  const { phase } = journeyState;
+  // Hent journey-tilstand frå engine.ts (éin kilde)
+  const journeyState = journeyAPI.buildJourneyState(
+    currentDay,
+    { matchState: "in_journey", conversationId }
+  );
 
   // Hvis reisen er ferdig → send avslutning og lukk
   if (currentDay >= totalDays || isJourneyCompleted(currentDay)) {
@@ -191,8 +187,8 @@ export async function POST(
     return new Response(JSON.stringify({ message, journeyEnded: true }), { status: 200, headers: { "Content-Type": "application/json" } });
   }
 
-  // Dag 1–35: send impulser
-  if (currentDay >= 1 && currentDay <= 35 && !conversation.endedAt) {
+  // Dag 1–35: send impulser frå engine.ts
+  if (currentDay >= 1 && currentDay <= totalDays && !conversation.endedAt) {
     const otherUser =
       session.user.id === conversation.userAId
         ? conversation.userB
@@ -200,7 +196,7 @@ export async function POST(
 
     const otherName = `${otherUser?.profile?.firstName ?? ""} ${otherUser?.profile?.lastName ?? ""}`.trim() || "Ukjent";
     if (otherName !== "Ukjent") {
-      const impulse = getJourneyImpulse({
+      const impulse = journeyAPI.getJourneyImpulse({
         day: currentDay,
         name: otherName,
       });

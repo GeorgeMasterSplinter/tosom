@@ -15,11 +15,11 @@ import {
   type ChatFlowInput,
 } from "../../lib/chat/chatFlow";
 import {
-  journeyStateAPI,
+  buildJourneyState,
   dummyMatchContext,
   type MatchContext,
   type MatchState,
-} from "../../lib/journey/journeyStateEngine";
+} from "@/lib/journey/engine";
 
 /* CF52 — Dummy matchContext */
 const dummyMatch: MatchContext = { ...dummyMatchContext, matchState: "in_journey" as const };
@@ -34,11 +34,11 @@ export default function ChatPanelDemo() {
   const [journeyCompleted, setJourneyCompleted] = useState(false);
   const [matchState, setMatchState] = useState<MatchState>("in_journey");
 
-  /* CF55 — Koble ChatFlow via getChatState */
-  const journeyState = journeyStateAPI.getJourneyState({
-    matchContext: dummyMatch,
-    currentDay: day,
-  });
+  /* Bruk engine.ts (éin kilde) */
+  const journeyState = buildJourneyState(
+    day,
+    { matchState: "in_journey", conversationId: "demo" }
+  );
 
   const chatFlowInput: ChatFlowInput = {
     matchState,
@@ -86,11 +86,11 @@ export default function ChatPanelDemo() {
           </button>
         </div>
 
-        <p className="text-xs text-[#4A4A4A]/50">
-          {journeyState.journeyCompleted
-            ? "Reise ferdig"
-            : `Dag ${journeyState.currentDay} · ${journeyState.phase} · ${photosAllowed ? "bilder åpne" : "bilder låst"}`}
-        </p>
+      <p className="text-xs text-[#4A4A4A]/50">
+        {journeyState.journeyCompleted
+          ? "Reise ferdig"
+          : `Dag ${day} · ${journeyState.phase} · ${photosAllowed ? "bilder åpne" : "bilder låst"}`}
+      </p>
       </div>
 
       {/* CF56 — ChatPanel med ekte ChatFlow-data */}

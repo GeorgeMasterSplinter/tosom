@@ -5,7 +5,7 @@ import JourneySummary from "./JourneySummary";
 import SystemNotice from "./SystemNotice";
 import MatchFlowPreview from "../match/MatchFlowPreview";
 import SystemMessageBox from "../system/SystemMessageBox";
-import { journeyStateAPI, dummyMatchContext } from "../../lib/journey/journeyStateEngine";
+import { buildJourneyState } from "@/lib/journey/engine";
 
 export default function DashboardMiddle({
   reflectionText,
@@ -24,11 +24,11 @@ export default function DashboardMiddle({
   noticeType?: string;
   matchState?: string;
 }) {
-  // JS22 + JS24 — Bruk journeyStateAPI isteden for getMessagesForState
-  // TODO: matchState skal komme fra backend.
-  const journeyState = journeyStateAPI.getJourneyState({
-    matchContext: { ...dummyMatchContext, matchState: matchState as any },
-  });
+  // Bruk engine.ts (éin kilde for ALT journey)
+  const journeyState = buildJourneyState(
+    1,
+    { matchState: (matchState || "in_journey") as any }
+  );
 
   return (
     <div className="space-y-6">

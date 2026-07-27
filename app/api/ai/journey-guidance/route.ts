@@ -4,6 +4,7 @@ import { requireAuth } from '@/lib/admin/requireAuth'
 import { captureError } from '@/lib/system/errors'
 import { logInfo } from '@/lib/system/log'
 import { validateAIRequest, enforceAIRateLimit } from '@/lib/ai/security'
+export const dynamic = 'force-dynamic';
 
 export async function POST(
   request: Request
@@ -51,3 +52,5 @@ export async function POST(
     return new Response(JSON.stringify({ error: 'AI service failed' }), { status: 500, headers: { 'Content-Type': 'application/json' } })
   }
 }
+
+

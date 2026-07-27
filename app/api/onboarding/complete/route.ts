@@ -8,6 +8,8 @@ import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "@/lib/auth/session"
 import prisma from "@/lib/prisma"
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest) {
   const session = await getServerSession()
 
@@ -73,7 +75,7 @@ export async function POST(req: NextRequest) {
       data: {
         deepProfileStep: "SUMMARY" as any,
       },
-    })
+     })
 
     return NextResponse.json({
       success: true,

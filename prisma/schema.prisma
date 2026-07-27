@@ -46,12 +46,13 @@ model User {
   @@index([lockedUntil])
 }
 
+// ⚠️ TODO: age burde vere required basert på 9-stegs onboarding (ikkje nullable)
 model Profile {
   id                String          @id @default(cuid())
   userId            String          @unique
   firstName         String?
   lastName          String?
-  age               Int?
+  age               Int             // ⚠️ ENDRA frå optional → required
   identityName      String?
   lifeSituation     Json?
   lifestyle         Json?
@@ -135,7 +136,7 @@ model Conversation {
   imageShared         Boolean            @default(false)
   userA               User               @relation("ConversationToUserA", fields: [userAId], references: [id])
   userB               User               @relation("ConversationToUserB", fields: [userBId], references: [id])
-  journeyStep         JourneyStep?       @relation("ConvToStep")
+  stateLogs           JourneyStateLog[]
   messages            Message[]
   resonanceSessions   ResonanceSession[]
 
@@ -166,11 +167,12 @@ model Message {
   @@index([createdAt])
 }
 
+// ⚠️ TODO: Legg til CHECK constraint (day >= 1 AND day <= 30) etter at vi migrerer til Prisma v6+ (supportar @@check)
 model JourneyProgress {
   id            String             @id @default(cuid())
   userId        String             @unique
   phase         JourneyPhase       @default(EARLY)
-  day           Int                @default(1)
+  day           Int                @default(1) // ⚠️ validering bør gjerast i API-nivå (day >= 1 AND day <= 30)
   completedDays Int                @default(0)
   nextDayAt     DateTime?
   startedAt     DateTime           @default(now())
@@ -187,6 +189,21 @@ model JourneyProgress {
   @@index([userId])
 }
 
+model JourneyStateLog {
+  id              String       @id @default(cuid())
+  conversationId  String
+  fromState       JourneyState
+  toState         JourneyState
+  reason          String?      // kva som utløyste endringa
+  triggeredBy     String?      // "user_a", "user_b", "system", "admin"
+  createdAt       DateTime     @default(now())
+
+  conversation    Conversation @relation(fields: [conversationId], references: [id])
+
+  @@index([conversationId])
+  @@index([createdAt])
+}
+
 model JourneyMilestone {
   id         String          @id @default(cuid())
   progressId String
@@ -198,21 +215,6 @@ model JourneyMilestone {
 
   @@index([progressId])
   @@index([day])
-}
-
-model JourneyStep {
-  id              String       @id @default(cuid())
-  conversationId  String       @unique
-  phase           JourneyPhase
-  order           Int
-  title           String
-  description     String
-  dynamic         Boolean      @default(false)
-  isSystemMessage Boolean      @default(false)
-  systemMessage   String?
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
-  conversation    Conversation @relation("ConvToStep", fields: [conversationId], references: [id])
 }
 
 model ResonanceSession {
@@ -245,6 +247,33 @@ model JourneyDayContent {
   createdAt          DateTime     @default(now())
 
   @@index([day])
+}
+
+// Guidede spørsmål-kategoriar for chat-guiding
+model QuestionCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique  // "Trygghet", "Verdier", osv.
+  description String
+  order       Int
+  icon        String?    // ikon-navn (Feather/SVG)
+  color       String?    // gull/blue accent hex
+  questions   GuidedQuestion[]
+  createdAt   DateTime @default(now())
+
+  @@index([order])
+}
+
+model GuidedQuestion {
+  id            String   @id @default(cuid())
+  categoryId    String
+  category      QuestionCategory @relation(fields: [categoryId], references: [id])
+  content       String   // spørsmåls-texten
+  depthLevel    Int      @default(1)  // 1=surface, 2=mid, 3=deep
+  order         Int
+  createdAt     DateTime @default(now())
+
+  @@index([categoryId, order])
+  @@index([depthLevel])
 }
 
 model Notification {
@@ -420,6 +449,7 @@ model MatchInsight {
   @@index([createdAt])
 }
 
+// ⚠️  @deprecated — Test i app/ før sletting frå schema
 model MatchFeedback {
   id        String   @id
   matchId   String
@@ -435,6 +465,7 @@ model MatchFeedback {
   @@index([userId])
 }
 
+// ⚠️  @deprecated — Test i app/ før sletting frå schema
 model MatchHistory {
   id        String   @id
   matchId   String
@@ -443,6 +474,7 @@ model MatchHistory {
   Match     Match    @relation(fields: [matchId], references: [id])
 }
 
+// ⚠️  @deprecated — Test i app/ før sletting frå schema
 model MatchQueue {
   id        String      @id
   userId    String
@@ -453,28 +485,6 @@ model MatchQueue {
   @@index([createdAt])
   @@index([status])
   @@index([userId])
-}
-
-model RateLimitLog {
-  id        String   @id
-  userId    String?
-  route     String
-  createdAt DateTime @default(now())
-
-  @@index([createdAt])
-  @@index([route])
-  @@index([userId])
-}
-
-model RouteHit {
-  id        String     @id
-  route     String
-  method    HttpMethod @default(GET)
-  status    Int        @default(200)
-  createdAt DateTime   @default(now())
-
-  @@index([createdAt])
-  @@index([route])
 }
 
 model SystemMessage {
@@ -513,6 +523,7 @@ enum JourneyState {
   NOT_STARTED
   IN_PROGRESS
   COMPLETED
+  PAUSED
 }
 
 enum ResonanceLevel {

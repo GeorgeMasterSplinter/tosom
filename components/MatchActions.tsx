@@ -20,7 +20,7 @@ export default function MatchActions({ targetUserId }) {
 
       <button
         onClick={() => send("yes")}
-        className="px-6 py-2 rounded-full bg-[#CBAA7A] text-black"
+        className="px-6 py-2 rounded-full bg-[#D4AF37] text-black shadow-lg shadow-[#D4AF37]/20 hover:bg-[#E8C766] transition-all"
       >
         Ja
       </button>

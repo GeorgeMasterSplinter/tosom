@@ -4,6 +4,8 @@
  * Viser profilstatus, onboarding-steg, og 30-dagers reise.
  */
 
+'use client';
+
 import Link from 'next/link';
 
 interface ProfileStatusSectionProps {

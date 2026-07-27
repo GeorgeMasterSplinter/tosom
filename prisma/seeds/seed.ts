@@ -182,12 +182,13 @@ async function seedMatch(users: any[]) {
   const u1 = users[0].user;
   const u2 = users[1].user;
 
-  const match = await prisma.match.upsert({
-    where: {
-      userAId_userBId: { userAId: u1.id, userBId: u2.id },
-    },
-    update: {},
-    create: {
+   // Seed-fiksa: bruk findFirst sidan @@unique([userAId, userBId]) ikkje finst i schema
+   const existingMatch = await prisma.match.findFirst({ where: { userAId: u1.id, userBId: u2.id } });
+   
+   if (existingMatch) return; // match allereie eksisterer
+   
+   const match = await prisma.match.create({
+     data: {
       userAId: u1.id,
       userBId: u2.id,
       status: MatchStatus.active,

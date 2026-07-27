@@ -60,18 +60,20 @@ export const InputField: FC<InputFieldProps> = ({
           focus:outline-none
         "
         style={{
-          background: 'rgba(255, 255, 255, 0.05)',
+          background: 'linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)',
           border: '1px solid rgba(255, 255, 255, 0.1)',
           color: '#FFFFFF',
           backdropFilter: 'blur(12px)',
+          boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.1)',
+          borderRadius: '20px',
         }}
         onFocus={(e) => {
-          e.target.style.borderColor = 'rgba(212, 175, 55, 0.5)';
-          e.target.style.boxShadow = '0 0 0 3px rgba(212, 175, 55, 0.15)';
+          e.target.style.borderColor = 'rgba(212, 175, 55, 0.6)';
+          e.target.style.boxShadow = 'inset 0 1px 3px rgba(0,0,0,0.15), 0 0 0 3px rgba(212, 175, 55, 0.2)';
         }}
         onBlur={(e) => {
           e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-          e.target.style.boxShadow = 'none';
+          e.target.style.boxShadow = 'inset 0 1px 3px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.1)';
         }}
       />
       {exampleText && (

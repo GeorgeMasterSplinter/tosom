@@ -1,256 +1,341 @@
 /**
- * ToSom — Chat List Page
- * 
- * Viser alle aktive samtalar for brukaren.
- * Ein roleg, oversiktleg liste med glassmorphism + gull UI.
+ * ToSom — Chat Root Page (Premium Nordic Gold 2026) ⭐
+ * Rot-side for /chat — viser aktive samtaler, match-status og "Start ny reise"-knapp
  */
 
-'use client';
+"use client";
 
-import { useEffect, useState, useCallback } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 
-interface Conversation {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-  lastMessage: {
-    id: string;
-    content: string;
-    createdAt: string;
-    senderId: string;
-    sender: {
-      id: string;
-      profile: { identityName: string | null };
-    };
-  } | null;
-  otherUser: {
-    id: string;
-    email: string;
-    identityName: string | null;
-    photoUrl: string | null;
-  };
+/* ═══════════════════════════════════════
+   THEME TOKENS
+   ═══════════════════════════════════════ */
+
+const G = {
+  gold: "#D4AF37",
+  goldLight: "#E8C766",
+  goldMuted: "rgba(212,175,55,0.2)",
+  tosomBlue: "#0B1520",
+  glassBg: "rgba(255,255,255,0.04)",
+  glassBorder: "rgba(255,255,255,0.1)",
+  textPrimary: "rgba(255,255,255,0.92)",
+  textSecondary: "rgba(255,255,255,0.55)",
+  textMuted: "rgba(255,255,255,0.35)",
+};
+
+/* ═══════════════════════════════════════
+   PREMIUM BUTTON (gull)
+   ═══════════════════════════════════════ */
+
+function GoldButton({ children, onClick }: { children: React.ReactNode; onClick?: (e: React.MouseEvent) => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="transition-all duration-300 hover:brightness-110 active:scale-[0.98] focus:outline-none"
+      style={{
+        background: `linear-gradient(135deg, ${G.gold}, ${G.goldLight})`,
+        color: G.tosomBlue,
+        borderRadius: "12px",
+        height: "48px",
+        padding: "0 24px",
+        fontSize: "16px",
+        fontWeight: 600,
+      }}
+    >
+      {children}
+    </button>
+  );
 }
 
-export default function ChatListPage() {
+/* ═══════════════════════════════════════
+   CONVERSATION CARD (glassmorphism)
+   ═══════════════════════════════════════ */
+
+function ConversationCard({ partner, conversationId, journeyDay }: {
+  partner: { name: string; age: number; imageUrl?: string };
+  conversationId: string;
+  journeyDay: number;
+}) {
   const router = useRouter();
-  const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [session, setSession] = useState<{ id: string } | null>(null);
-
-  // Hente samtaleliste
-  const refreshConversations = useCallback(async () => {
-    try {
-      const res = await fetch('/api/chat/conversations');
-      if (!res.ok) {
-        if (res.status === 401) {
-          router.push('/login');
-          return;
-        }
-        throw new Error('Kunne ikkje hente samtalar');
-      }
-      const data = await res.json();
-      setConversations(data);
-      setLoading(false);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Ukjent feil');
-      setLoading(false);
-    }
-  }, [router]);
-
-  useEffect(() => {
-    refreshConversations();
-  }, [refreshConversations]);
-
-  // Hente session
-  useEffect(() => {
-    async function fetchSession() {
-      try {
-        const res = await fetch('/api/auth/signin?json=true');
-        if (res.ok) {
-          const data = await res.json();
-          setSession(data?.session?.user ?? null);
-        }
-      } catch {
-        // Use fallback
-      }
-    }
-    fetchSession();
-  }, []);
-
-  // Loading state
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: '#0B0E11' }}>
-        <div className="flex flex-col items-center gap-4">
-          <div
-            className="w-12 h-12 rounded-full flex items-center justify-center"
-            style={{
-              border: '2px solid rgba(255, 255, 255, 0.2)',
-              borderTopColor: '#D4AF37',
-              animation: 'spin 1s linear infinite',
-            }}
-          />
-          <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
-            Lastar samtalar...
-          </p>
-          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <main className="mx-auto max-w-[720px] px-8 py-10">
-      {/* Header */}
-      <div className="mb-8" style={{ animation: 'fadeIn 0.4s ease-out' }}>
-        <h1 className="text-3xl font-semibold mb-2" style={{ color: '#FFFFFF' }}>
-          Samtaler
-        </h1>
-        <p style={{ color: 'rgba(255, 255, 255, 0.5)' }}>
-          Dine aktive samtalar og matcher
-        </p>
+    <div
+      className="rounded-2xl p-6 transition-all duration-300 hover:brightness-110 cursor-pointer"
+      style={{
+        background: G.glassBg,
+        border: `1px solid ${G.glassBorder}`,
+        backdropFilter: "blur(16px)",
+      }}
+      onClick={() => router.push(`/chat/${conversationId}`)}
+    >
+      <div className="flex items-center gap-4">
+        {/* Profilbilde */}
+        {partner.imageUrl ? (
+          <img
+            src={partner.imageUrl}
+            alt={partner.name}
+            className="w-16 h-16 rounded-full object-cover border-2"
+            style={{ border: `2px solid ${G.goldMuted}` }}
+          />
+        ) : (
+          <div
+            className="w-16 h-16 rounded-full flex items-center justify-center text-xl font-semibold border-2"
+            style={{
+              background: `linear-gradient(135deg, ${G.gold}20, ${G.goldMuted})`,
+              border: `2px solid ${G.goldMuted}`,
+              color: G.gold,
+            }}
+          >
+            {partner.name.charAt(0).toUpperCase()}
+          </div>
+        )}
+
+        {/* Info */}
+        <div className="flex-1">
+          <h3 className="text-lg font-semibold" style={{ color: G.textPrimary }}>
+            {partner.name}
+          </h3>
+          <p className="text-sm" style={{ color: G.textSecondary }}>
+            {partner.age} år
+          </p>
+        </div>
+
+        {/* Journey status */}
+        <div className="flex flex-col items-end gap-1">
+          <div className="flex items-center gap-2">
+            <div
+              className="w-2 h-2 rounded-full"
+              style={{ background: G.gold, boxShadow: `0 0 8px ${G.goldMuted}` }}
+            />
+            <span className="text-xs font-medium" style={{ color: G.textSecondary }}>
+              Matcha i dag
+            </span>
+          </div>
+          <p className="text-xs" style={{ color: G.gold }}>
+            Dag {journeyDay} av 30 ✨
+          </p>
+        </div>
       </div>
 
-      {/* Error */}
-      {error && (
+      {/* "Gå til samtalen"-knapp */}
+      <div className="mt-4">
+        <GoldButton onClick={(e) => { e.stopPropagation(); router.push(`/chat/${conversationId}`); }}>
+          Gå til samtalen
+        </GoldButton>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════
+   EMPTY STATE (ingen matcher)
+   ═══════════════════════════════════════ */
+
+function EmptyState() {
+  const router = useRouter();
+
+  return (
+    <div className="flex-1 flex items-center justify-center p-6">
+      <div className="text-center max-w-sm">
+        {/* Icon */}
         <div
-          className="p-4 rounded-xl mb-6 text-center"
+          className="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center"
           style={{
-            background: 'rgba(255, 77, 77, 0.1)',
-            border: '1px solid rgba(255, 77, 77, 0.2)',
-            color: '#FF4D4D',
+            background: `linear-gradient(135deg, ${G.gold}20, ${G.goldMuted})`,
+            border: `1px solid ${G.goldMuted}`,
           }}
         >
-          {error}
+          <span className="text-3xl">💬</span>
         </div>
-      )}
 
-      {/* Tom tilstand */}
-      {conversations.length === 0 && !error && (
-        <div className="text-center py-16" style={{ animation: 'fadeIn 0.5s ease-out' }}>
-          <svg
-            width="64"
-            height="64"
-            viewBox="0 0 48 48"
-            fill="none"
-            className="mx-auto mb-4"
-            style={{ color: 'rgba(212, 175, 55, 0.15)' }}
-          >
-            <path
-              d="M8 20C8 14 13 10 20 10C27 10 32 14 32 20C32 26 27 30 20 30L14 32L16 28C15 26 14 24 14 20C14 16 17 13 20 13C23 13 26 16 26 20C26 24 23 27 20 27"
-              stroke="currentColor"
-              strokeWidth="1.5"
-            />
-          </svg>
-          <p className="text-lg mb-2" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
-            Ingen samtalar ennå
-          </p>
-          <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.35)' }}>
-            Når du matcher med nokon, dukkar samtalen her opp.
-          </p>
-        </div>
-      )}
+        {/* Tittel */}
+        <h2 className="text-2xl font-semibold mb-3" style={{ color: G.textPrimary }}>
+          Ingen aktive samtaler
+        </h2>
 
-      {/* Samtaleliste */}
-      <div className="space-y-3">
-        {conversations.map((convo, i) => {
-          const otherName = convo.otherUser.identityName || 'Ukjent';
-          const lastContent = convo.lastMessage?.content ?? 'Ingen meldingar enno';
-          const lastTime = convo.lastMessage
-            ? new Date(convo.lastMessage.createdAt).toLocaleTimeString('no-NO', {
-                hour: '2-digit',
-                minute: '2-digit',
-              })
-            : '';
+        {/* Undertekst */}
+        <p className="text-base mb-4" style={{ color: G.textSecondary }}>
+          Start ein ny reise når du er klar.
+        </p>
 
-          return (
-            <Link
-              key={convo.id}
-              href={`/chat/${convo.id}`}
-              className="block mb-3 transition-all duration-300 ease-out group"
-              style={{ animationDelay: `${i * 0.05}s` }}
-            >
-              <div
-                className="p-4 rounded-2xl flex items-center gap-4"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  border: '1px solid rgba(255, 255, 255, 0.06)',
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.background = 'rgba(255, 255, 255, 0.06)';
-                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(212, 175, 55, 0.2)';
-                  (e.currentTarget as HTMLElement).style.transform = 'translateX(4px)';
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.background = 'rgba(255, 255, 255, 0.03)';
-                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255, 255, 255, 0.06)';
-                  (e.currentTarget as HTMLElement).style.transform = 'translateX(0)';
-                }}
-              >
-                {/* Avatar */}
-                <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-medium"
-                  style={{
-                    background: 'rgba(212, 175, 55, 0.1)',
-                    border: '1px solid rgba(212, 175, 55, 0.2)',
-                    color: '#D4AF37',
-                  }}
-                >
-                  {otherName.charAt(0).toUpperCase()}
-                </div>
+        {/* Microcopy */}
+        <p className="text-xs mb-8" style={{ color: G.textMuted }}>
+          Samtaler starter når ein match er klar.
+        </p>
 
-                {/* Content */}
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-base" style={{ color: '#FFFFFF' }}>
-                    {otherName}
-                  </p>
-                  <p className="text-sm truncate" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
-                    {lastContent}
-                  </p>
-                </div>
-
-                {/* Time */}
-                {lastTime && (
-                  <p className="text-xs flex-shrink-0" style={{ color: 'rgba(255, 255, 255, 0.25)' }}>
-                    {lastTime}
-                  </p>
-                )}
-
-                {/* Arrow */}
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  className="flex-shrink-0 transition-all duration-200"
-                  style={{
-                    color: 'rgba(212, 175, 55, 0.4)',
-                    transform: 'translateX(-4px)',
-                  }}
-                >
-                  <path
-                    d="M6 4L10 8L6 12"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </div>
-            </Link>
-          );
-        })}
+        {/* Knapp */}
+        <GoldButton onClick={() => router.push("/dashboard")}>
+          Start ny reise
+        </GoldButton>
       </div>
+    </div>
+  );
+}
 
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
-    </main>
+/* ═══════════════════════════════════════
+   SKELETON-LASTING
+   ═══════════════════════════════════════ */
+
+function SkeletonList() {
+  return (
+    <div className="flex-1 p-6 space-y-4">
+      {[1, 2].map((i) => (
+        <div
+          key={i}
+          className="rounded-2xl p-6 animate-pulse"
+          style={{ background: G.glassBg, border: `1px solid ${G.glassBorder}` }}
+        >
+          <div className="flex items-center gap-4">
+            <div
+              className="w-16 h-16 rounded-full"
+              style={{ background: "rgba(255,255,255,0.1)" }}
+            />
+            <div className="flex-1 space-y-2">
+              <div className="h-4 rounded w-1/3" style={{ background: "rgba(255,255,255,0.1)" }} />
+              <div className="h-3 rounded w-1/4" style={{ background: "rgba(255,255,255,0.08)" }} />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════
+   ERROR-STATE
+   ═══════════════════════════════════════ */
+
+function ErrorState({ message }: { message: string }) {
+  return (
+    <div className="flex-1 flex items-center justify-center p-6">
+      <div
+        className="text-center rounded-2xl p-8 max-w-sm"
+        style={{ background: G.glassBg, border: "1px solid rgba(255,77,77,0.2)" }}
+      >
+        <p className="text-lg font-medium mb-3" style={{ color: "#FF4D4D" }}>
+          Kunne ikke lasta samtalar
+        </p>
+        <p className="text-sm mb-4" style={{ color: G.textSecondary }}>
+          {message}
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          className="px-6 py-3 rounded-xl font-medium transition-all hover:brightness-110"
+          style={{
+            background: `linear-gradient(135deg, ${G.gold}, ${G.goldLight})`,
+            color: G.tosomBlue,
+            borderRadius: "12px",
+          }}
+        >
+          Prøv igjen
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════
+   HOVEDKOMPONENT — CHAT ROOT PAGE
+   ═══════════════════════════════════════ */
+
+export default function ChatRootPage() {
+  const router = useRouter();
+  const [conversations, setConversations] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Hent chat-data frå API
+  const fetchChats = useCallback(async () => {
+    try {
+      const res = await fetch("/api/dashboard/overview");
+      if (!res.ok) throw new Error(`Feil: ${res.status}`);
+      const data = await res.json();
+
+      // Finn aktive conversations
+      const convos = data?.conversation ? [data.conversation] : [];
+      setConversations(convos);
+    } catch (e) {
+      console.error("Feil ved lasting av chat:", e);
+      setError(e instanceof Error ? e.message : "Kunne ikke lasta samtalar");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchChats();
+  }, [fetchChats]);
+
+  // 🔄 AUTOMATISK REDIRECT dersom =1 aktiv conversation
+  useEffect(() => {
+    if (!loading && conversations.length === 1) {
+      const convId = conversations[0]?.conversationId;
+      if (convId) {
+        router.push(`/chat/${convId}`);
+      }
+    }
+  }, [conversations, loading, router]);
+
+  return (
+    <div className="w-full h-screen flex items-center justify-center" style={{ background: "#0B1520" }}>
+      {/* Max-width container */}
+      <div className="w-full max-w-[720px] mx-auto flex flex-col min-h-screen" style={{ paddingTop: "96px", paddingBottom: "96px" }}>
+
+        {/* Glassmorphism-main-panel */}
+        <div className="flex-1 flex flex-col rounded-3xl overflow-hidden" style={{
+          background: G.glassBg,
+          border: `1px solid ${G.glassBorder}`,
+          backdropFilter: "blur(20px)",
+          boxShadow: "0 8px 40px rgba(0,0,0,0.35), inset 0 0 24px rgba(255,255,255,0.02)",
+        }}>
+
+          {/* HEADER */}
+          <div className="flex-shrink-0 p-6">
+            {/* Gull-bokmerke */}
+            <div className="flex items-center gap-3 mb-4">
+              <div
+                className="w-3 h-3 rounded-full"
+                style={{
+                  background: `linear-gradient(135deg, ${G.gold}, ${G.goldLight})`,
+                  boxShadow: `0 0 12px ${G.goldMuted}`,
+                }}
+              />
+              <span className="text-xs uppercase tracking-widest" style={{ color: G.textSecondary }}>
+                DINE SAMTALES
+              </span>
+            </div>
+
+            {/* Overskrift */}
+            <h1 className="text-[36px] font-light leading-tight" style={{ color: G.textPrimary, letterSpacing: "-0.03em" }}>
+              Chat
+            </h1>
+          </div>
+
+          {/* MIDLDELINJE */}
+          <div style={{ borderTop: `1px solid ${G.glassBorder}` }} />
+
+          {/* CONTENT */}
+          {loading ? (
+            <SkeletonList />
+          ) : error ? (
+            <ErrorState message={error} />
+          ) : conversations.length === 0 ? (
+            <EmptyState />
+          ) : (
+            <div className="flex-1 overflow-y-auto p-6">
+              {conversations.map((conv, idx) => (
+                <ConversationCard
+                  key={conv.conversationId || idx}
+                  partner={conv.partner || { name: "Din match", age: 0 }}
+                  conversationId={conv.conversationId}
+                  journeyDay={conv.journeyDay || 1}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

@@ -343,15 +343,15 @@ export default function MatchDetailPage({ params }: { params: Promise<{ id: stri
               setCreating(true);
               try {
                 // Finn den andre brukaren sin ID
-                const otherId = match.userA.id === meId ? match.userB.id : match.userA.id;
-                const res = await fetch('/api/chat/conversations', {
+                // Bruk matchId frå URL for å opprette conversation
+                const res = await fetch('/api/conversation/create', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ otherUserId: otherId }),
+                  body: JSON.stringify({ matchId: id }),
                 });
                 if (!res.ok) throw new Error('Kunne ikke oppta samtale');
                 const convo = await res.json();
-                router.push(`/chat/${convo.id}`);
+                router.push(`/chat/${convo.conversationId}`);
               } catch (err) {
                 console.error('Feil ved oppretting av samtale:', err);
                 setCreating(false);

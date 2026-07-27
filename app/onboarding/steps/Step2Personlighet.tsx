@@ -1,12 +1,20 @@
 /**
- * ToSom — Steg 2: Personlighet & identitet
- * Knappar: PremiumButton + BackButton.
+ * ToSom — Steg 2a: Personlighet & identitet (Premium rebuild 2026 — Fase 4)
+ * 
+ * Oppdatert med:
+ * - OnboardingSlide for hel-steg layout
+ * - OnboardingTextField med mikroguiding + progresjon per felt
+ * - PremiumCTAButton + BackButton
+ * - Mikroguiding per felt
+ * - 48px spacing (desktop)
  */
 
 'use client';
 
-import { TextAreaField } from '../components/TextAreaField';
-import { PremiumButton } from '@/components/onboarding/PremiumButton';
+import { useState } from 'react';
+import { OnboardingSlide } from '@/app/onboarding/components/OnboardingSlide';
+import { OnboardingTextField } from '@/app/onboarding/components/OnboardingTextField';
+import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { BackButton } from '@/components/onboarding/BackButton';
 
 interface Props {
@@ -16,67 +24,187 @@ interface Props {
   onNext: () => void;
 }
 
+/* ====== Validering ====== */
+
+interface ValidationError {
+  field: string;
+  message: string;
+}
+
+const validate = (data: Record<string, unknown>): ValidationError[] => {
+  const errors: ValidationError[] = [];
+
+  const selfDesc = String(data['selfDesc'] ?? '').trim();
+  if (!selfDesc || selfDesc.length < 10) {
+    errors.push({ field: 'selfDesc', message: 'Skriv minst 10 tegn om hvem du er.' });
+  }
+
+  const energyGiver = String(data['energyGiver'] ?? '').trim();
+  if (!energyGiver || energyGiver.length < 10) {
+    errors.push({ field: 'energyGiver', message: 'Skriv minst 10 tegn om hva som gir deg energi.' });
+  }
+
+  const energyDrainer = String(data['energyDrainer'] ?? '').trim();
+  if (!energyDrainer || energyDrainer.length < 10) {
+    errors.push({ field: 'energyDrainer', message: 'Skriv minst 10 tegn om hva som taper deg for energi.' });
+  }
+
+  const pressureReact = String(data['pressureReact'] ?? '').trim();
+  if (!pressureReact || pressureReact.length < 10) {
+    errors.push({ field: 'pressureReact', message: 'Skriv minst 10 tegn om hvordan du reagerer under press.' });
+  }
+
+  const quirk = String(data['quirk'] ?? '').trim();
+  if (!quirk || quirk.length < 5) {
+    errors.push({ field: 'quirk', message: 'Skriv minst 5 tegn om en egenskap du ler av deg selv.' });
+  }
+
+  return errors;
+};
+
+/* ====== Hovedkomponent ====== */
+
 export default function Step2Personlighet({ data, onChange, onBack, onNext }: Props) {
+  const [errors, setErrors] = useState<ValidationError[]>([]);
+  const canProceed = validate(data).length === 0;
+
+  const handleNext = () => {
+    const validationErrors = validate(data);
+    if (validationErrors.length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+    setErrors([]);
+    onNext();
+  };
+
   const getValue = (field: string, fallback = '') => {
     const v = data[field];
     return v !== undefined && v !== null ? String(v) : fallback;
   };
 
   return (
-    <div className="space-y-8">
-      <TextAreaField
-        label="Hvordan vil du beskrive deg selv når du er på ditt beste?"
-        name="selfDesc"
+    <OnboardingSlide
+      title="Personlighet & identitet"
+      subtitle="Fortell litt om hvem du er — uten filter."
+      guidingText="Personligheten din er det som gjør deg til deg."
+      slideIndex={1}
+      totalSlides={13}
+    >
+      {/* Error summary */}
+      {errors.length > 0 && (
+        <div className="mb-8 rounded-xl p-4 border" style={{
+          background: 'rgba(255, 77, 77, 0.08)',
+          borderColor: 'rgba(255, 77, 77, 0.2)',
+        }}>
+          <p className="text-sm font-medium mb-2" style={{ color: '#FF4D4D' }}>
+            Vennligst fyll ut alle påkrevde felt:
+          </p>
+          <ul className="text-sm space-y-1" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+            {errors.map((err) => (
+              <li key={err.field}>• {err.message}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* ────────────────────────────────────── */}
+      {/* KJERNE — Personlighet */}
+      {/* ────────────────────────────────────── */}
+      {/* Ingen space-y — eg legg til separatorar manuelt */}
+
+      {/* selfDesc med mikroguiding */}
+      <OnboardingTextField
+        label="Hvem er du når ting flyter naturlig? *"
         value={getValue('selfDesc', '')}
-        onChange={(e) => onChange('selfDesc', e.target.value)}
-        placeholder="Fortell litt om hvem du er når ting flyter naturlig..."
-        exampleText="Jeg er den som alltid lytter først og tenker etter før jeg snakker."
+        onChange={(v) => onChange('selfDesc', v)}
+        placeholder="Fortell litt om hvem du er når ting flyter..."
+        mikroguiding="Skriv f.eks. Den som alltid lytter først og tenker etter før jeg snakker"
+        maxLength={500}
+        minChars={10}
+        rows={4}
+        multiline
       />
-      <TextAreaField
-        label="Hva gir deg energi?"
-        name="energyGiver"
-        value={getValue('energyGiver', '')}
-        onChange={(e) => onChange('energyGiver', e.target.value)}
-        placeholder="Hva får deg til å føle deg levende og til stede?"
-        exampleText="Gode samtaler, natur, kreativt arbeid."
-      />
-      <TextAreaField
-        label="Hva tapper deg for energi?"
-        name="energyDrainer"
-        value={getValue('energyDrainer', '')}
-        onChange={(e) => onChange('energyDrainer', e.target.value)}
-        placeholder="Hva gjør deg sliten eller drar deg ned?"
-        exampleText="Store folkemengder, konflikt, uvissighet."
-      />
-      <TextAreaField
-        label="Hvordan reagerer du når presset øker?"
-        name="pressureReact"
-        value={getValue('pressureReact', '')}
-        onChange={(e) => onChange('pressureReact', e.target.value)}
-        placeholder="Hva skjer med deg når ting blir krevjende?"
-        exampleText="Jeg trekker meg tilbake litt til jeg føler meg trygg igjen."
-      />
-      <TextAreaField
-        label="Hva er en egenskap eller uvane du ler av hos deg selv?"
-        name="quirk"
+
+      {/* Separator */}
+      <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
+
+      {/* energyGiver med mikroguiding */}
+      <OnboardingTextField
+          label="Hva gir deg energi? *"
+          value={getValue('energyGiver', '')}
+          onChange={(v) => onChange('energyGiver', v)}
+          placeholder="Hva får deg til å kjende deg levende og til stede?"
+          mikroguiding="Skriv f.eks. Gode samtaler, natur, kreativt arbeid"
+          maxLength={300}
+          minChars={10}
+          rows={3}
+          multiline
+        />
+
+        {/* Separator */}
+        <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
+
+        {/* energyDrainer med mikroguiding */}
+        <OnboardingTextField
+          label="Hva taper deg for energi? *"
+          value={getValue('energyDrainer', '')}
+          onChange={(v) => onChange('energyDrainer', v)}
+          placeholder="Hva gjør deg sliten eller drar deg ned?"
+          mikroguiding="Skriv f.eks. Store folkemengder, konflikt, uvissighet"
+          maxLength={300}
+          minChars={10}
+          rows={3}
+          multiline
+        />
+
+        {/* Separator */}
+        <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
+
+        {/* pressureReact med mikroguiding */}
+        <OnboardingTextField
+          label="Hvordan reagerer du når presset øker? *"
+          value={getValue('pressureReact', '')}
+          onChange={(v) => onChange('pressureReact', v)}
+          placeholder="Hva skjer med deg når ting blir krevende?"
+          mikroguiding="Skriv f.eks. Jeg trekker meg tilbake litt til jeg kjenner meg trygg igjen"
+          maxLength={300}
+          minChars={10}
+          rows={3}
+          multiline
+        />
+
+        {/* Separator */}
+        <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
+
+        {/* quirk med mikroguiding */}
+      <OnboardingTextField
+        label="Hva er en egenskap eller vane du ler av deg selv? *"
         value={getValue('quirk', '')}
-        onChange={(e) => onChange('quirk', e.target.value)}
+        onChange={(v) => onChange('quirk', v)}
         placeholder="Noe lite og spesielt med deg som du finner morsomt?"
-        exampleText="Jeg har alltid målt ha orden på ting før jeg kan slappe av."
+        mikroguiding="Skriv f.eks. Jeg har alltid målt ha orden på ting før jeg kan slappe av"
+        maxLength={200}
+        minChars={5}
+        rows={3}
+        multiline
       />
 
       {/* Trust text */}
-      <p className="text-center text-xs" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>
+      <p className="text-center text-xs mt-8" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>
         Det er ingen rette eller gale svar. Svarene dine hjelper oss å forstå deg bedre.
       </p>
 
-      {/* Knappar */}
-      <div className="space-y-4 mt-10">
+      {/* Knappar — Back + CTA */}
+      <div className="mt-8 space-y-4">
         <BackButton onClick={onBack} />
-        <PremiumButton onClick={onNext}>
-          Fortsett til neste steg
-        </PremiumButton>
+        <PremiumCTAButton
+          onClick={handleNext}
+          label={!canProceed ? 'Fyll ut alle påkrevde felt' : 'Fortsett til neste steg'}
+          disabled={!canProceed}
+          fullWidth
+        />
       </div>
-    </div>
+    </OnboardingSlide>
   );
 }

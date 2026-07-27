@@ -6,7 +6,7 @@
 "use client";
 
 import { Card } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
+import Button from "@/components/ui/Button";
 import { FadeIn } from "@/components/ui/FadeIn";
 
 interface JourneyCardProps {

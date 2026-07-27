@@ -1,16 +1,7 @@
-/**
- * ToSom — ChatInput (Produktnivå)
- * 
- * Input-felt for å sende meldingar med:
- * - auto-focus når chat lastar
- * - stor input med glassmorphism
- * - gull outline på fokus
- * - rein send-knapp med gradient
- */
-
 'use client';
 
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback, useState } from 'react';
+import { color, radius, motion, shadow } from '@/config/design-tokens';
 
 interface ChatInputProps {
   onSend: (content: string) => Promise<void>;
@@ -30,9 +21,11 @@ export default function ChatInput({
   sending = false,
 }: ChatInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [value, setValue] = React.useState('');
+  const [value, setValue] = useState('');
   const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasSentRef = useRef(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   // Auto-focus input når chat lastar
   useEffect(() => {
@@ -48,7 +41,7 @@ export default function ChatInput({
     setValue(newValue);
 
     if (!newValue.trim() || !onTypingStart) return;
-    
+
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
       typingTimeoutRef.current = null;
@@ -67,8 +60,6 @@ export default function ChatInput({
     onTypingEnd?.();
   }, [onTypingEnd]);
 
-  const [isHovered, setIsHovered] = React.useState(false);
-
   const handleSend = useCallback(async () => {
     if (!value.trim() || disabled || sending) return;
     await onSend(value.trim());
@@ -85,12 +76,12 @@ export default function ChatInput({
   }, [handleSend]);
 
   return (
-    <div
+    <footer
       className="sticky bottom-0 px-4 py-4 md:py-5"
       style={{
-        background: 'rgba(11, 14, 17, 0.95)',
+        background: `${color.bg.primary}F2`,
         backdropFilter: 'blur(20px)',
-        borderTop: '1px solid rgba(212, 175, 55, 0.06)',
+        borderTop: `1px solid ${color.border['gold-soft']}`,
         paddingBottom: 'calc(env(safe-area-inset-bottom, 8px) + 16px)',
       }}
     >
@@ -105,22 +96,20 @@ export default function ChatInput({
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
             disabled={disabled || sending}
-            className="w-full px-5 py-3.5 rounded-2xl outline-none transition-all duration-300 text-sm"
+            className="w-full px-5 py-3.5 outline-none transition-all duration-300 text-sm"
             style={{
-              background: 'rgba(255, 255, 255, 0.04)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              color: '#FFFFFF',
+              background: color.glass['bg'],
+              border: `1px solid ${isFocused ? color.border.gold : color.glass.border}`,
+              borderRadius: `${radius.xl}px`,
+              color: color.text.primary,
               cursor: disabled || sending ? 'not-allowed' : 'text',
-              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+              transition: `all ${motion.durations.normal} ${motion.easings.easeOut}`,
+              backdropFilter: 'blur(8px)',
             }}
-            onFocus={(e) => {
-              e.target.style.borderColor = 'rgba(212, 175, 55, 0.5)';
-              e.target.style.boxShadow = '0 0 0 3px rgba(212, 175, 55, 0.15), 0 0 24px rgba(212, 175, 55, 0.12)';
-            }}
-            onBlur={(e) => {
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => {
               handleInputBlur();
-              e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-              e.target.style.boxShadow = 'none';
+              setIsFocused(false);
             }}
           />
         </div>
@@ -129,44 +118,36 @@ export default function ChatInput({
         <button
           onClick={handleSend}
           disabled={!value.trim() || disabled || sending}
-          className="px-5 py-3.5 rounded-2xl font-medium flex-shrink-0 flex items-center justify-center relative"
+          className="flex-shrink-0 flex items-center justify-center relative transition-all duration-300"
           style={{
             width: '48px',
             height: '48px',
-            background: value.trim()
-              ? 'linear-gradient(135deg, #D4AF37, #E8C766)'
-              : 'rgba(255, 255, 255, 0.04)',
-            color: value.trim() ? '#0B0E11' : 'rgba(255, 255, 255, 0.15)',
+            borderRadius: `${radius.full}px`,
+            background: value.trim() ? color.gradient.gold : color.glass.bg,
+            color: value.trim() ? color.bg.primary : color.text.subtle,
             cursor: value.trim() && !disabled && !sending ? 'pointer' : 'not-allowed',
             opacity: value.trim() ? 1 : 0.5,
             transform: value.trim() ? 'scale(1)' : 'scale(0.95)',
-            transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-            border: 'none',
-            zIndex: 1,
+            transition: `all ${motion.durations.normal} ${motion.easings.easeOut}`,
+            border: value.trim() ? 'none' : `1px solid ${color.glass.border}`,
+            boxShadow: value.trim() && isHovered ? shadow['gold-lg'] : shadow.none,
           }}
-          onMouseEnter={(e) => {
+          onMouseEnter={() => {
             if (!value.trim() || disabled || sending) return;
             setIsHovered(true);
-            const el = e.currentTarget as HTMLElement;
-            el.style.boxShadow = '0 4px 28px rgba(212, 175, 55, 0.5), 0 0 40px rgba(212, 175, 55, 0.3)';
-            el.style.transform = 'scale(1.08)';
           }}
-          onMouseLeave={(e) => {
-            setIsHovered(false);
-            const el = e.currentTarget as HTMLElement;
-            el.style.boxShadow = value.trim()
-              ? '0 2px 20px rgba(212, 175, 55, 0.3)'
-              : 'none';
-            el.style.transform = 'scale(1)';
-          }}
+          onMouseLeave={() => setIsHovered(false)}
         >
           {sending ? (
-            <div className="w-4 h-4" style={{
-              border: '2px solid rgba(11, 14, 17, 0.2)',
-              borderTopColor: '#0B0E11',
-              animation: 'spin 0.8s linear infinite',
-              borderRadius: '50%',
-            }} />
+            <div
+              className="w-4 h-4"
+              style={{
+                border: '2px solid rgba(11, 14, 17, 0.2)',
+                borderTopColor: '#0B0E11',
+                animation: 'spin 0.8s linear infinite',
+                borderRadius: '50%',
+              }}
+            />
           ) : (
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
               <path d="M22 2L11 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -179,6 +160,6 @@ export default function ChatInput({
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
       `}</style>
-    </div>
+    </footer>
   );
 }

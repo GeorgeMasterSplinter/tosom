@@ -1,198 +1,252 @@
 /**
- * ToSom — Dashboard 2.0
+ * ToSom — Unified Premium Dashboard ("Rommet ditt")
  * 
- * Hovudside for innloggede brukarar.
- * - Velkomst
- * - Aktive matcher
- * - Aktive samtalar
- * - Innsikt og refleksjon
- * - Profilstatus og reise
+ * Helhetlig side med profil, partner, resonans, handlinger og reise.
+ * Design tokens konsekvent brukt. Bokmål tekstmodell.
  */
 
-import { auth } from '@/lib/auth/config';
-import { getUserProfile, getUserMatches, getUserConversations, getUserInsights } from '@/lib/dashboard/data';
-import { MatchCard } from '@/components/MatchCard';
-import { ConversationCard } from './_components/ConversationCard';
-import { InsightSection } from './_components/InsightSection';
-import { ProfileStatusSection } from './_components/ProfileStatusSection';
-import { redirect } from 'next/navigation';
+'use client';
 
-/* ====== DashboardHeader ====== */
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import ChatIcon from '@/components/icons/ChatIcon';
+import ProfileIcon from '@/components/icons/ProfileIcon';
+import SettingsIcon from '@/components/icons/SettingsIcon';
+import { ResonanceMeter } from '@/components/ui/ResonanceMeter';
+import { color, radius, shadow, typography, spacing, glassVariant } from '@/config/design-tokens';
+import PremiumButton from '@/components/ui/PremiumButton';
+import JourneySection from '@/components/journey/JourneySection';
 
-function DashboardHeader({ name }: { name: string }) {
-  const greeting = (() => {
-    const hour = new Date().getHours();
-    if (hour < 6) return 'God natt';
-    if (hour < 12) return 'God morgon';
-    if (hour < 18) return 'God dag';
-    return 'God kveld';
-  })();
+/* ====== Types ====== */
 
-  return (
-    <div className="mb-8">
-      <h1 className="text-2xl font-semibold mb-2" style={{ color: '#FFFFFF' }}>
-        {greeting}, {name ? `${name.split(' ')[0]}` : 'vi'}
-      </h1>
-      <p
-        className="text-sm leading-relaxed"
-        style={{ color: 'rgba(255, 255, 255, 0.4)' }}
-      >
-        Her får du ei roleg oversikt over relasjonane dine. Ta deg tid.
-      </p>
-    </div>
-  );
+interface DashboardData {
+  userName: string;
+  matched: boolean;
+  partnerName: string | null;
+  daysTogether: number;
+  resonance: number;
+  currentDay: number;
 }
 
-/* ====== Main Dashboard Page (Server Component) ====== */
+/* ====== ActionItems for handlinger-grid ====== */
 
-export default async function DashboardPage() {
-  // Auth
-  const session = await auth();
-  if (!session?.user?.id) {
-    redirect('/login');
+const actionItems = [
+  { label: 'Gå til samtalen', href: '/chat', icon: <ChatIcon className="w-6 h-6 flex-shrink-0" /> },
+  { label: 'Oppdater profil', href: '/onboarding', icon: <ProfileIcon className="w-6 h-6 flex-shrink-0" /> },
+  { label: 'Innstillinger', href: '/settings', icon: <SettingsIcon className="w-6 h-6 flex-shrink-0" /> },
+];
+
+/* ====== Hovedkomponent ====== */
+
+export default function Dashboard() {
+  const [data, setData] = useState<DashboardData | null>(null);
+  const [greeting, setGreeting] = useState('');
+
+  useEffect(() => {
+    const hour = new Date().getHours();
+    if (hour < 6) setGreeting('God natt');
+    else if (hour < 12) setGreeting('God morgen');
+    else if (hour < 18) setGreeting('God ettermiddag');
+    else setGreeting('God kveld');
+
+    // Mock-data
+    setData({
+      userName: 'Ane',
+      matched: true,
+      partnerName: 'Erik',
+      daysTogether: 7,
+      resonance: 72,
+      currentDay: 7,
+    });
+  }, []);
+
+  if (!data) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: color.bg.primary }}>
+        <div className="text-white/40 text-lg animate-pulse">Laster rommet ditt...</div>
+      </div>
+    );
   }
 
-  const userId = session.user.id;
-
-  // Data
-  const profile = await getUserProfile(userId);
-  const matches = await getUserMatches(userId);
-  const conversations = await getUserConversations(userId);
-  const profileComplete = !!profile && profile.deepProfileComplete;
-  const insights = await getUserInsights(
-    userId,
-    matches.length,
-    conversations.length,
-    profileComplete,
-  );
-
-  const displayName = profile?.identityName || 'vi';
-
   return (
-    <div
-      className="min-h-screen"
-      style={{ background: '#0B0E11' }}
-    >
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* Toppseksjon */}
-        <DashboardHeader name={displayName} />
-
-        {/* Grid: 2 kolonnar */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          {/* Venstre kolonne: Matcher + Samtaler */}
-          <div className="space-y-6">
-            {/* Dine matcher */}
-            <section>
-              <h2
-                className="text-xs font-medium uppercase tracking-wider mb-3"
-                style={{ color: 'rgba(212, 175, 55, 0.5)' }}
-              >
-                Dine matcher
-              </h2>
-              {matches.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {matches.slice(0, 6).map((match) => (
-                    <MatchCard
-                       key={match.id}
-                       score={match.score}
-                       otherUser={{
-                         name: match.otherUserName,
-                         photoUrl: match.otherUserPhotoUrl,
-                       }}
-                       type={match.matchType}
-                     />
-                  ))}
-                </div>
-              ) : (
-                <EmptyState text="Du har ingen aktive matcher enno. Det kjem éin god match om dagen." />
-              )}
-            </section>
-
-            {/* Dine samtalar */}
-            <section>
-              <h2
-                className="text-xs font-medium uppercase tracking-wider mb-3"
-                style={{ color: 'rgba(212, 175, 55, 0.5)' }}
-              >
-                Dine samtalar
-              </h2>
-              {conversations.length > 0 ? (
-                <div className="space-y-2">
-                  {conversations.slice(0, 6).map((convo) => (
-                    <ConversationCard key={convo.id} convo={convo} />
-                  ))}
-                </div>
-              ) : (
-                <EmptyState text="Når du startar ein samtale, dukkar han opp her." />
-              )}
-            </section>
-          </div>
-
-          {/* Høgre kolonne: Innsikt + Profil */}
-          <div className="space-y-6">
-            {/* Innsikt og refleksjon */}
-            <section>
-              <h2
-                className="text-xs font-medium uppercase tracking-wider mb-3"
-                style={{ color: 'rgba(212, 175, 55, 0.5)' }}
-              >
-                Innsikt og refleksjon
-              </h2>
-              <InsightSection insights={insights} />
-            </section>
-
-            {/* Profil og reise */}
-            <section>
-              <h2
-                className="text-xs font-medium uppercase tracking-wider mb-3"
-                style={{ color: 'rgba(212, 175, 55, 0.5)' }}
-              >
-                Profil og reise
-              </h2>
-              {profile ? (
-                <ProfileStatusSection profile={profile} />
-              ) : (
-                <div
-                  className="p-5 rounded-2xl"
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.02)',
-                    border: '1px solid rgba(255, 255, 255, 0.04)',
-                  }}
-                >
-                  <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>
-                    Last opp profilen din for å sjå status.
-                  </p>
-                </div>
-              )}
-            </section>
-          </div>
+    <div className="min-h-screen w-full py-8 md:py-12" style={{ background: color.bg.primary }}>
+      <div className="mx-auto max-w-[720px] space-y-10 px-4 md:px-0">
+        
+        {/* ====== Seksjon 1: Header ====== */}
+        <div
+          className="w-full rounded-2xl p-6 md:p-8 animate-fadeIn"
+          style={glassVariant('default', 'medium')}
+        >
+          <h1
+            className="mb-2"
+            style={{
+              fontSize: `${typography.fontSize['3xl']}px`,
+              fontWeight: typography.fontWeight.semibold,
+              color: color.text.primary,
+            }}
+          >
+            {greeting}, {data.userName.split(' ')[0]}
+          </h1>
+          <p
+            style={{
+              fontSize: `${typography.fontSize.lg}px`,
+              lineHeight: typography.lineHeight.normal,
+              color: color.text.secondary,
+            }}
+          >
+            Ta deg tid. Her møter du partneren din, steg for steg.
+          </p>
         </div>
+
+        {/* ====== Seksjon 2: Profil + Resonans + Partner ====== */}
+        {data.matched ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+            
+            {/* Profil-kort */}
+            <div
+              className="w-full rounded-xl p-6 animate-fadeIn"
+              style={glassVariant('default', 'medium')}
+            >
+              <p
+                className="mb-2"
+                style={{
+                  fontSize: `${typography.fontSize.sm}px`,
+                  fontWeight: typography.fontWeight.medium,
+                  color: 'rgba(212, 175, 55, 0.6)',
+                }}
+              >
+                Din profil
+              </p>
+              <h3
+                style={{
+                  fontSize: `${typography.fontSize.xl}px`,
+                  fontWeight: typography.fontWeight.bold,
+                  color: color.text.primary,
+                }}
+              >
+                {data.userName}
+              </h3>
+              <p
+                style={{
+                  fontSize: `${typography.fontSize.base}px`,
+                  color: color.text.secondary,
+                }}
+              >
+                Profil fullført ✓
+              </p>
+            </div>
+
+            {/* Resonans-sirkel (midten) */}
+            <div className="flex flex-col items-center justify-center animate-fadeIn">
+              <ResonanceMeter value={data.resonance} size="md" showLabel />
+            </div>
+
+            {/* Partner-kort */}
+            <div
+              className="w-full rounded-xl p-6 animate-fadeIn"
+              style={glassVariant('gold', 'medium')}
+            >
+              <p
+                className="mb-2"
+                style={{
+                  fontSize: `${typography.fontSize.sm}px`,
+                  fontWeight: typography.fontWeight.medium,
+                  color: 'rgba(212, 175, 55, 0.6)',
+                }}
+              >
+                Partner
+              </p>
+              <h3
+                style={{
+                  fontSize: `${typography.fontSize.xl}px`,
+                  fontWeight: typography.fontWeight.bold,
+                  color: color.text.primary,
+                }}
+              >
+                {data.partnerName || '—'}
+              </h3>
+              <p
+                style={{
+                  fontSize: `${typography.fontSize.base}px`,
+                  color: color.text.secondary,
+                }}
+              >
+                Dag {data.daysTogether} av 30
+              </p>
+            </div>
+
+          </div>
+        ) : (
+          /* Ingen match — ventende kort */
+          <div
+            className="w-full rounded-xl p-8 text-center animate-fadeIn"
+            style={glassVariant('default', 'medium')}
+          >
+            <p
+              style={{
+                fontSize: `${typography.fontSize.lg}px`,
+                color: color.text.secondary,
+              }}
+            >
+              Venter på din match
+            </p>
+            <Link href="/profile" className="block w-full mt-4">
+              <PremiumButton
+                variant="secondary"
+                size="lg"
+                className="min-h-[64px] rounded-xl justify-center px-6 py-4 text-base font-semibold w-full"
+              >
+                Oppdater profil
+              </PremiumButton>
+            </Link>
+          </div>
+        )}
+
+        {/* ====== Seksjon 3: Handlinger (3 knapper) ====== */}
+        {data.matched && (
+          <div
+            className="w-full rounded-xl p-6 animate-fadeIn"
+            style={glassVariant('default', 'medium')}
+          >
+            <p
+              className="mb-4"
+              style={{
+                fontSize: `${typography.fontSize.lg}px`,
+                fontWeight: typography.fontWeight.semibold,
+                color: 'rgba(212, 175, 55, 0.6)',
+              }}
+            >
+              Handlinger
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {actionItems.map((item) => (
+                <Link key={item.href} href={item.href} className="w-full">
+                  <PremiumButton
+                    variant="secondary"
+                    size="xl"
+                    className="min-h-[64px] rounded-xl justify-start px-6 py-4 text-base font-semibold w-full"
+                  >
+                    <span className="flex items-center gap-3 w-full">
+                      {item.icon}
+                      <span>{item.label}</span>
+                    </span>
+                  </PremiumButton>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ====== Seksjon 4: Reise (JourneySection) ====== */}
+        {data.matched && (
+          <JourneySection
+            currentDay={data.currentDay}
+            daysCompleted={data.daysTogether - 1}
+            phaseLabel={data.currentDay <= 14 ? 'Tillit' : 'Dybde'}
+          />
+        )}
+
       </div>
     </div>
   );
 }
-
-/* ====== EmptyState ====== */
-
-function EmptyState({ text }: { text: string }) {
-  return (
-    <div
-      className="p-5 rounded-2xl text-center"
-      style={{
-        background: 'rgba(255, 255, 255, 0.02)',
-        border: '1px solid rgba(255, 255, 255, 0.04)',
-      }}
-    >
-      <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>
-        {text}
-      </p>
-    </div>
-  );
-}
-
-/* ====== Metadata ====== */
-
-export const metadata = {
-  title: 'Min side — ToSom',
-  description: 'Din rolige oversikt over matcher, samtaler og reise.',
-};

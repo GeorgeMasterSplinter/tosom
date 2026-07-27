@@ -1,3 +1,5 @@
+// Force Next.js to treat this as dynamic (never prerender API routes)
+export const dynamic = "force-dynamic";
 
 import { requestResetSchema } from "@/lib/validation/auth";
 import { checkRateLimit } from "@/lib/rateLimit";

@@ -10,6 +10,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth/requireAuth";
 import { JourneyPhase } from "@prisma/client";
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
@@ -166,5 +167,4 @@ export async function POST(req: NextRequest) {
 }
 
 // Ingen caching for denne endepunktet
-export const dynamic = 'force-dynamic';
 export const revalidate = 0;

@@ -1,7 +1,15 @@
 /**
- * ToSom — MatchCard (entry point)
+ * ToSom — QuickMatchCard (dashboard-kort med ScoreRing)
  * 
- * This file is the single public MatchCard component for dashboard + matching.
+ * Brukes på /dashboard og /matching for å vise RASK match-forhåndsvisning
+ * med ScoreRing-resonans, grunnleggende info og kort action.
+ * 
+ * 🔑 Forskjell fra components/match/MatchCard.tsx:
+ * - Den i root er en KORT versjon (score-ring, navn, alder, evt bilde)
+ * - components/match/MatchCard.tsx er FULL-versjon (MatchBreakdown, PremiumButton, glass-panel)
+ * 
+ * Bruk denne filen i dashboard-oversikter.
+ * Bruk components/match/MatchCard.tsx på /match/[id] detaljsider.
  */
 
 'use client';

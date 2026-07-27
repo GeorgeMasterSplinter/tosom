@@ -161,6 +161,9 @@ function getPhaseTitle(phase: string): string {
   }
 }
 
+
+export const dynamic = 'force-dynamic';
+
 function getPhaseDescription(phase: string): string {
   switch (phase) {
     case "EARLY":

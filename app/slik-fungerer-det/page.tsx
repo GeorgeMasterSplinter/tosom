@@ -274,7 +274,7 @@ export default function SlikPage() {
               Start reisen
             </ToSomButton>
 
-            <ToSomButton href="/login" variant="dark" size="lg">
+            <ToSomButton href="/login" variant="secondary" size="lg">
               Logg inn
             </ToSomButton>
           </div>

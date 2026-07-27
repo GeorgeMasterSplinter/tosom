@@ -18,6 +18,14 @@ export type ProfileCreateInput = z.infer<typeof profileCreateSchema>;
 /**
  * Validering for profil-oppdatering.
  */
-export const profileUpdateSchema = profileCreateSchema.partial();
+export const profileUpdateSchema = z.object({
+  firstName: z.string().min(1).optional(),
+  lastName: z.string().min(1).optional(),
+  age: z.coerce.number().min(23).max(100).default(25),
+  gender: z.string().min(1).optional(),
+  bio: z.string().max(1000).optional(),
+  interests: z.array(z.string()).default([]),
+  photos: z.array(z.string()).default([]),
+});
 
 export type ProfileUpdateInput = z.infer<typeof profileUpdateSchema>;

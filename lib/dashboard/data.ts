@@ -293,19 +293,24 @@ export async function getUserInsights(
 
 /* ====== getJourneyStatus ====== */
 
-export async function getJourneyStatus(conversationId: string) {
-  const journeyStep = await prisma.journeyStep.findFirst({
-    where: { conversationId },
-    orderBy: { order: 'desc' },
+/**
+ * Hent journey-status for ein user (frå JourneyProgress).
+ * Denne funksjonen bruker NO lenger JourneyStep-modellen.
+ * All progresjon er lagret i JourneyProgress (user-basert).
+ */
+export async function getJourneyStatus(userId: string) {
+  const journey = await prisma.journeyProgress.findUnique({
+    where: { userId },
   });
 
-  if (!journeyStep) return null;
+  if (!journey) return null;
 
   return {
-    phase: journeyStep.phase,
-    order: journeyStep.order,
-    title: journeyStep.title,
-    description: journeyStep.description,
-    isSystemMessage: journeyStep.isSystemMessage,
+    phase: journey.phase,
+    day: journey.day,
+    completedDays: journey.completedDays,
+    startedAt: journey.startedAt,
+    endedAt: journey.endedAt,
+    nextDayAt: journey.nextDayAt,
   };
 }

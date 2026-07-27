@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import PremiumButton from "@/components/ui/PremiumButton";
+import { ToSomButton } from "@/components/ui/system";
 
 // trigger rebuild
 console.log("login rebuild");
@@ -84,25 +84,24 @@ export default function LoginPage() {
             />
           </div>
 
-          {/* Testbruker-knapp */}
-          <button
-            onClick={() => {
-              window.location.href = "/api/dev-login?userId=test-user-1";
-            }}
-            className="
-              w-full text-center
-              px-5 py-3
-              rounded-xl
-              bg-white/10
-              hover:bg-white/20
-              text-white/80
-              font-light tracking-wide
-              shadow-lg shadow-black/20
-              transition-all duration-300
-            "
+          {/* Testbruker-knapp — dark variant */}
+          <ToSomButton
+            href="/api/dev-login?userId=test-user-1"
+            variant="dark"
+            size="lg"
           >
             Logg inn som testbruker
-          </button>
+          </ToSomButton>
+
+          {/* Registrer deg-lenke — secondary variant */}
+          <ToSomButton
+            href="/register"
+            variant="secondary"
+            size="lg"
+          >
+            Ikke registrert? Registrer deg
+          </ToSomButton>
+
         </div>
 
         {/* Vipps-informasjon */}

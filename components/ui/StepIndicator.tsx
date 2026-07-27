@@ -1,89 +1,80 @@
 /* ═══════════════════════════════════════════
-   ToSom Premium — StepIndicator Component
-   Props: steps (number), currentStep (number), stepLabels? (string[])
-   Aktivt: gold ring | Fullført: bg-gold | Kommende: border-muted
+   ToSom StepIndicator — Design System 1.1
+   Viser progresjon i onboarding (steg 1-13).
+   Bruk med: <StepIndicator current={5} total={13} />
    ═══════════════════════════════════════════ */
 
-import { useEffect, useState } from "react";
+'use client';
 
 interface StepIndicatorProps {
-  steps: number;
-  currentStep: number;
-  stepLabels?: string[];
-  className?: string;
+  current: number;
+  total: number;
+  title?: string;
+  subtitle?: string;
 }
 
-export const StepIndicator = ({
-  steps,
-  currentStep,
-  stepLabels,
-  className = "",
-}: StepIndicatorProps) => {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    setVisible(true);
-  }, []);
+export const StepIndicator = ({ current, total, title, subtitle }: StepIndicatorProps) => {
+  const percent = Math.round(((current + 1) / total) * 100);
 
   return (
-    <div className={`flex items-center justify-center gap-2 ${className}`}>
-      {Array.from({ length: steps }, (_, i) => {
-        const isCompleted = i < currentStep;
-        const isActive = i === currentStep;
+    <div className="w-full max-w-2xl mx-auto px-4">
+      {/* Progresjonstittel */}
+      {title && subtitle && (
+        <div className="text-center mb-6 animate-fadeIn" style={{ animationDuration: '500ms' }}>
+          <h2
+            className="text-2xl md:text-3xl font-semibold tracking-tight mb-1"
+            style={{ color: '#FFFFFF' }}
+          >
+            {title}
+          </h2>
+          <p
+            className="text-sm md:text-base leading-relaxed"
+            style={{ color: 'rgba(255, 255, 255, 0.5)' }}
+          >
+            {subtitle}
+          </p>
+        </div>
+      )}
 
-        return (
-          <div key={i} className="flex items-center gap-2">
-            <div
-              className={`
-                flex items-center justify-center rounded-full transition-all duration-300 ease-out
-                h-10 w-10 text-sm font-medium
-                ${visible ? "opacity-100 scale-100" : "opacity-0 scale-90"}
-                ${
-                  isCompleted
-                    ? "bg-ts-gold text-ts-primary shadow-gold-md"
-                    : "border-2 border-ts-gold text-ts-gold shadow-gold-sm"
-                }
-              `}
-            >
-              {isCompleted ? (
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2.5}
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              ) : (
-                <span>{i + 1}</span>
-              )}
-            </div>
-            {stepLabels?.[i] && (
-              <span
-                className={`
-                  text-xs font-medium transition-colors duration-300
-                  ${isActive ? "text-ts-gold" : "text-ts-muted"}
-                `}
-              >
-                {stepLabels[i]}
-              </span>
-            )}
-            {i < steps - 1 && (
-              <div
-                className={`
-                  w-8 h-0.5 rounded-full transition-all duration-300 ease-out
-                  ${isCompleted ? "bg-ts-gold" : "bg-ts-border-subtle"}
-                `}
-              />
-            )}
-          </div>
-        );
-      })}
+      {/* Progresjonsbake */}
+      <div className="flex items-center gap-3 mb-2">
+        <span
+          className="text-xs font-medium whitespace-nowrap"
+          style={{ color: 'rgba(212, 175, 55, 0.6)' }}
+        >
+          Steg {current + 1} av {total}
+        </span>
+        <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255, 255, 255, 0.06)' }}>
+          <div
+            className="h-full rounded-full transition-all duration-500 ease-out"
+            style={{
+              width: `${percent}%`,
+              background: 'linear-gradient(90deg, #D4AF37, #E8C766)',
+            }}
+          />
+        </div>
+        <span
+          className="text-xs font-medium whitespace-nowrap"
+          style={{ color: 'rgba(255, 255, 255, 0.4)' }}
+        >
+          {percent}%
+        </span>
+      </div>
+
+      {/* Dots */}
+      <div className="flex justify-center gap-1 mt-4">
+        {Array.from({ length: total }).map((_, i) => (
+          <div
+            key={i}
+            className="rounded-full transition-all duration-300"
+            style={{
+              width: i === current ? 8 : 6,
+              height: i === current ? 8 : 6,
+              background: i <= current ? '#D4AF37' : 'rgba(255, 255, 255, 0.1)',
+            }}
+          />
+        ))}
+      </div>
     </div>
   );
 };

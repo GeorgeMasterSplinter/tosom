@@ -9,6 +9,8 @@ import { logInfo } from "@/lib/system/log";
 import { captureError } from "@/lib/system/errors";
 import { isProd } from "@/config/runtime";
 
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/match
  * 

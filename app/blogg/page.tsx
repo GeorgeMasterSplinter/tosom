@@ -1,9 +1,8 @@
 'use client';
 
-import Link from 'next/link';
 import { Footer } from '@/components/ui/layout/Footer';
-import { ToSomSection, ToSomButton, ToSomCard } from '@/components/ui/system';
-import { color, spacing, typographyToStyle, radius, shadow } from '@/config/design-tokens';
+import { ToSomSection, ToSomButton } from '@/components/ui/system';
+import { color, spacing, typographyToStyle, radius } from '@/config/design-tokens';
 
 /* ========================
    INLINE SVG-ikoner
@@ -45,19 +44,17 @@ function IconHeart() {
 }
 
 /* ========================
-   HELPER — Ultra-Premium GlassCard
+   HELPER — GlassCard
    ======================== */
 
 function GlassCard({
   children,
   padding = 'lg',
   className = '',
-  style,
 }: {
   children: React.ReactNode;
   padding?: 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
-  style?: React.CSSProperties;
 }) {
   const paddingMap = { sm: spacing.sm, md: spacing.md, lg: spacing.lg, xl: spacing.xl };
 
@@ -73,7 +70,6 @@ function GlassCard({
         boxShadow: '0 8px 32px rgba(0,0,0,0.20)',
         padding: `${paddingMap[padding]}px`,
         transition: 'all 300ms ease-out',
-        ...style,
       }}
       onMouseEnter={(e) => {
         (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.08)';
@@ -94,7 +90,7 @@ function GlassCard({
 }
 
 /* ========================
-   BLOGG-AKTIKKEL-DATA
+   BLOGG-ARTIKKEL-DATA
    ======================== */
 
 const articles = [
@@ -112,7 +108,7 @@ const articles = [
     lesetid: '4 min',
     kategori: 'Tid og nærhet',
     tittel: 'Hvorfor 30 dager er den perfekte tidsrammen',
-    excerpt: 'Psykologer har lenge observert at det ofte tar rundt 30 dager for to mennesker å bygge ekte tillit og en stabil forbindelse.',
+    excerpt: 'Psykologer har lenge observert at det ofte tar rundt 30 dager for to menneske å bygge ekte tillit og ein stabil forbindelse.',
     reference: 'Reisner, A. & McAndrew, C. (2022). The Psychology of Time in Relationship Formation. Journal of Social and Personal Relationships, 39(4), 890–912.',
     icon: <IconTime />,
   },
@@ -121,8 +117,8 @@ const articles = [
     lesetid: '3 min',
     kategori: 'Emosjonell trygghet',
     tittel: 'Hvorfor ro er vår viktigste funksjon',
-    excerpt: 'I en verden der datingapper konstant konkurrerer om oppmerksomheten din, valgte ToSom en annen vei — en roligere, tryggere og mer menneskelig tilnærming.',
-    reference: 'Gottman, J.M. (1999). The Seven Principles for Making Marriage Work. Crown Publishing. — Kapittel om emosjonell trygghet og relasjonsdynamikk.',
+    excerpt: 'I en verden der datingapper konstant konkurrerer om oppmerksomheten din, valgte ToSom en annan vei — en roligare, tryggere og meir mennesleg tilnærming.',
+    reference: 'Gottman, J.M. (1999). The Seven Principles for Making Marriage Work. Crown Publishing.',
     icon: <IconHeart />,
   },
 ];
@@ -134,7 +130,7 @@ const articles = [
 export default function BloggPage() {
   return (
     <main className="relative min-h-screen overflow-hidden">
-      {/* Bakgrunn — Deep Blue gradient */}
+      {/* Bakgrunn */}
       <div
         className="fixed inset-0 pointer-events-none"
         style={{
@@ -142,7 +138,7 @@ export default function BloggPage() {
         }}
       />
 
-      {/* Ambient glød — blue */}
+      {/* Ambient glød */}
       <div
         className="absolute top-20 right-0 w-[600px] h-[400px] pointer-events-none opacity-30"
         style={{
@@ -153,35 +149,20 @@ export default function BloggPage() {
       <div className="relative z-10">
 
         {/* ===== HERO ===== */}
-        <ToSomSection
-          spotlight="blue"
-          className="px-6 text-center space-y-6"
-        >
-          <h1
-            style={{
-              ...typographyToStyle('hero'),
-              color: color.text.primary,
-            }}
-          >
+        <ToSomSection spotlight="blue" className="px-6 text-center space-y-6">
+          <h1 style={{ ...typographyToStyle('hero'), color: color.text.primary }}>
             Blogg
           </h1>
-
           <p
             className="max-w-2xl mx-auto"
-            style={{
-              ...typographyToStyle('body-lg'),
-              color: color.text.secondary,
-            }}
+            style={{ ...typographyToStyle('body-lg'), color: color.text.secondary }}
           >
             I bloggen deler vi innsikt om relasjoner, emosjonell trygghet og forskning på langsomme, meningsfulle forbindelser.
           </p>
         </ToSomSection>
 
         {/* ===== OM BLOGGEN ===== */}
-        <ToSomSection
-          spotlight="soft"
-          className="px-6"
-        >
+        <ToSomSection spotlight="soft" className="px-6">
           <div className="mx-auto max-w-3xl space-y-6">
             <GlassCard padding="xl" className="space-y-4">
               <div className="flex items-start gap-4">
@@ -189,22 +170,11 @@ export default function BloggPage() {
                   <IconBook />
                 </div>
                 <div className="space-y-3">
-                  <h2
-                    style={{
-                      ...typographyToStyle('heading-md'),
-                      color: color.text.primary,
-                    }}
-                  >
+                  <h2 style={{ ...typographyToStyle('heading-md'), color: color.text.primary }}>
                     Om denne bloggen
                   </h2>
-                  <p
-                    style={{
-                      ...typographyToStyle('body-lg'),
-                      color: color.text.secondary,
-                      lineHeight: '1.8',
-                    }}
-                  >
-                    Alle artiklene er basert på vitenskapelige studier og vår egen erfaring med å bygge en plattform for ekte menneskelige relasjoner. Vi tror at kunnskap er grunnen til trygge relasjoner — og at ro og dypde alltid vil vinne over støy og overflate.
+                  <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
+                    Alle artiklene er basert på vitenskapelige studier og vår erfaring med å bygge en plattform for ekte menneskelige relasjoner. Vi trur at kunnskap er grunnen til trygge relasjoner — og at ro og dybde alltid vil vinne over støy og overflate.
                   </p>
                 </div>
               </div>
@@ -213,18 +183,9 @@ export default function BloggPage() {
         </ToSomSection>
 
         {/* ===== ARTIKLER ===== */}
-        <ToSomSection
-          spotlight="blue"
-          className="px-6"
-        >
+        <ToSomSection spotlight="blue" className="px-6">
           <div className="mx-auto max-w-5xl">
-            <h2
-              className="text-center mb-6"
-              style={{
-                ...typographyToStyle('heading-lg'),
-                color: color.text.primary,
-              }}
-            >
+            <h2 className="text-center mb-6" style={{ ...typographyToStyle('heading-lg'), color: color.text.primary }}>
               Siste artikler
             </h2>
 
@@ -236,43 +197,21 @@ export default function BloggPage() {
                       {art.icon}
                     </div>
                     <div>
-                      <p
-                        style={{
-                          ...typographyToStyle('body-sm'),
-                          color: color.text.muted,
-                        }}
-                      >
+                      <p style={{ ...typographyToStyle('body-sm'), color: color.text.muted }}>
                         {art.dato} · {art.lesetid} · {art.kategori}
                       </p>
                     </div>
                   </div>
 
-                  <h3
-                    style={{
-                      ...typographyToStyle('heading-md'),
-                      color: color.text.primary,
-                    }}
-                  >
+                  <h3 style={{ ...typographyToStyle('heading-md'), color: color.text.primary }}>
                     {art.tittel}
                   </h3>
 
-                  <p
-                    style={{
-                      ...typographyToStyle('body-lg'),
-                      color: color.text.secondary,
-                      lineHeight: '1.8',
-                    }}
-                  >
+                  <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
                     {art.excerpt}
                   </p>
 
-                  <p
-                    style={{
-                      ...typographyToStyle('body-sm'),
-                      color: 'rgba(255,255,255,0.50)',
-                      fontStyle: 'italic',
-                    }}
-                  >
+                  <p style={{ ...typographyToStyle('body-sm'), color: 'rgba(255,255,255,0.50)', fontStyle: 'italic' }}>
                     📖 <em>{art.reference}</em>
                   </p>
                 </GlassCard>
@@ -282,25 +221,11 @@ export default function BloggPage() {
         </ToSomSection>
 
         {/* ===== CTA ===== */}
-        <ToSomSection
-          spotlight="cta"
-          className="px-6 text-center space-y-6"
-        >
-          <h2
-            style={{
-              ...typographyToStyle('heading-lg'),
-              color: color.text.primary,
-            }}
-          >
+        <ToSomSection spotlight="cta" className="px-6 text-center space-y-6">
+          <h2 style={{ ...typographyToStyle('heading-lg'), color: color.text.primary }}>
             Klar til å starte?
           </h2>
-
-          <p
-            style={{
-              ...typographyToStyle('body-lg'),
-              color: color.text.secondary,
-            }}
-          >
+          <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary }}>
             Lag profilen din i ditt eget tempo og møt noen som faktisk passer deg — på ordentlig.
           </p>
 
@@ -309,7 +234,7 @@ export default function BloggPage() {
               Start reisen
             </ToSomButton>
 
-            <ToSomButton href="/login" variant="dark" size="lg">
+            <ToSomButton href="/login" variant="secondary" size="lg">
               Logg inn
             </ToSomButton>
           </div>

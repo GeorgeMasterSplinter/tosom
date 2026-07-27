@@ -5,7 +5,7 @@
    Bekreftelsesdialog basert på Modal
    ═══════════════════════════════════════════ */
 
-import { Button } from "./Button";
+import Button from "./Button";
 
 interface DialogProps {
   open: boolean;
@@ -29,6 +29,8 @@ export const Dialog = ({
   variant = "default",
 }: DialogProps) => {
   if (!open) return null;
+
+  const isDanger = variant === "danger";
 
   return (
     <div
@@ -78,14 +80,12 @@ export const Dialog = ({
             {cancelLabel}
           </Button>
           <Button
-            variant={variant === "danger" ? "primary" : "primary"}
+            variant={isDanger ? "red" : "primary"}
             onClick={() => {
               onConfirm();
               onClose();
             }}
-            style={{
-              background: variant === "danger" ? "var(--ts-error)" : "var(--ts-gold)",
-            }}
+            className={isDanger ? "" : "!bg-[var(--ts-gold)] !border-none"}
           >
             {confirmLabel}
           </Button>

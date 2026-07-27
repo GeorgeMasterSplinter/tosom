@@ -69,6 +69,7 @@ export const TextAreaField: FC<TextAreaFieldProps> = ({
           border: '1px solid rgba(255, 255, 255, 0.1)',
           color: '#FFFFFF',
           backdropFilter: 'blur(12px)',
+          borderRadius: '20px',
         }}
         onFocus={(e) => {
           e.target.style.borderColor = 'rgba(212, 175, 55, 0.5)';

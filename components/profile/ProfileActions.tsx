@@ -45,7 +45,7 @@ export default function ProfileActions({
 
       {/* Cancel */}
       {isEditing && onCancel && (
-        <PremiumButton variant="ghost" className="text-xs px-5 py-2.5" onClick={onCancel}>
+        <PremiumButton variant="secondary" className="text-xs px-5 py-2.5" onClick={onCancel}>
           ✕ Avbryt
         </PremiumButton>
       )}

@@ -6,6 +6,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { flags } from "@/utils/flags";
 
+export const dynamic = 'force-dynamic';
+
 /* ---------------------------------------------------------- */
 /*  Request / Response types                                    */
 /* ---------------------------------------------------------- */

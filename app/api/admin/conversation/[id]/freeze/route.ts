@@ -1,5 +1,6 @@
 import { requireAdmin } from '@/lib/admin/requireAuth'
 import { freezeConversation, unfreezeConversation, isFrozen } from '@/lib/chat/freeze'
+export const dynamic = 'force-dynamic';
 
 export async function POST(
   request: Request,
@@ -33,3 +34,5 @@ export async function POST(
     }
   )
 }
+
+

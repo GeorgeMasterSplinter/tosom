@@ -1,7 +1,6 @@
 import "@/styles/globals.css";
 import { AnalyticsProvider } from "@/components/analytics/AnalyticsProvider";
-import { Suspense } from 'react';
-import GlobalHeaderWrapper from '@/components/layout/GlobalHeaderWrapper';
+import { UniversalMenu } from '@/components/layout/UniversalMenu';
 
 export const metadata = {
   title: "ToSom — En rolig plass for ekte møter",
@@ -68,9 +67,10 @@ export default function RootLayout({
           }}
         />
         <AnalyticsProvider />
-        <Suspense fallback={children}>
-          <GlobalHeaderWrapper>{children}</GlobalHeaderWrapper>
-        </Suspense>
+        <UniversalMenu />
+        <div className="pt-[64px]">
+          {children}
+        </div>
       </body>
     </html>
   );

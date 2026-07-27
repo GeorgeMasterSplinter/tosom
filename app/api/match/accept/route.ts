@@ -16,6 +16,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: NextRequest) {
   try {
     // 1. Auth
@@ -129,6 +131,19 @@ export async function POST(req: NextRequest) {
         });
       }
 
+      // OPPRETT CONVERSATION — så chat kan opnast!
+      const conversation = await prisma.conversation.create({
+        data: {
+          userAId: match.userAId,
+          userBId: match.userBId,
+          status: 'active',
+        },
+        include: {
+          userA: { select: { id: true, profile: { select: { identityName: true } } } },
+          userB: { select: { id: true, profile: { select: { identityName: true } } } },
+        },
+      });
+
       return NextResponse.json({
         success: true,
         match: {
@@ -137,10 +152,13 @@ export async function POST(req: NextRequest) {
           lockedUntil,
           resonanceLevel: updatedMatch.resonanceLevel,
         },
+        conversation: {
+          id: conversation.id,
+          message: "Din reise med din match har begynte. Dei første 14 dagane er utan bilder.",
+        },
         journey: {
           phase: "EARLY",
           day: 1,
-          message: "Din reise med din match har begynt. Dei første 14 dagane er utan bilder.",
         },
       });
     }

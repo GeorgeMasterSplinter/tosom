@@ -1,0 +1,99 @@
+{
+  "version": "2026.1",
+  "description": "Fast memory for Qwen + Cline. Vedvarende state, mappinger og metadata som lastes ved hver oppstart.",
+  
+  "system": {
+    "project": "ToSom",
+    "philosophy": "Ro, varme, modenhet, trygghet, enkelhet, konsistens.",
+    "identity": "Én match, én reise, én relasjon."
+  },
+
+  "states": {
+    "journey_active": false,
+    "current_journey_day": null,
+    "match_status": "none",
+    "onboarding_completed": false
+  },
+
+  "paths": {
+    "onboarding": "/app/screens/onboarding",
+    "journey": "/app/screens/journey",
+    "chat": "/app/screens/chat",
+    "match_profile": "/app/screens/match",
+    "profile": "/app/screens/profile",
+    "settings": "/app/screens/settings"
+  },
+
+  "ui": {
+    "colors": {
+      "primary": "#0A1A2A",
+      "secondary": "#0F2233",
+      "gold": "#D4AF37",
+      "glass": "rgba(255,255,255,0.04)"
+    },
+    "typography": "Inter",
+    "design_system": "ToSom Blue + Nordic Gold"
+  },
+
+  "matching": {
+    "engine": "resonance_based",
+    "max_matches_per_day": 1,
+    "uses_images": false,
+    "uses_surface_features": false
+  },
+
+  "journey": {
+    "length_days": 30,
+    "phase1_no_images_days": 14,
+    "guided": true,
+    "ai_generated_content": false
+  },
+
+  "chat": {
+    "ai_chat_enabled": false,
+    "categories": [
+      "Trygghet",
+      "Verdier",
+      "Livsstil",
+      "Personlighet",
+      "Relasjonsstil",
+      "Kommunikasjon",
+      "Fremtid",
+      "Sårbarhet",
+      "Nærhet",
+      "Felles reise"
+    ]
+  },
+
+  "onboarding": {
+    "steps": 9,
+    "structure": [
+      "Identitet",
+      "Livssituasjon",
+      "Livsstil",
+      "Personlighet",
+      "Relasjonsstil",
+      "Kommunikasjon",
+      "Intimitet & nærhet",
+      "Fremtidsønsker",
+      "Oppsummering"
+    ]
+  },
+
+  "rules": {
+    "patch_required": true,
+    "plan_required": true,
+    "validate_required": true,
+    "backend_changes_require_approval": true,
+    "no_ai_chat": true,
+    "no_feed": true,
+    "no_swipe": true,
+    "no_gamification": true
+  },
+
+  "developer": {
+    "owner": "George",
+    "location": "Akershus, Norge",
+    "timezone": "Europe/Oslo"
+  }
+}

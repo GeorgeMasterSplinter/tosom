@@ -1,17 +1,23 @@
 /**
- * ToSom — Steg 2 (ny): Livssituasjon
+ * ToSom — Steg 2b: Livssituasjon (Premium rebuild 2026 — Fase 4)
  * 
- * Kartlegger arbeid, bosted, økonomi, ansvar og hverdagsrutin.
- * modne, rolige formuleringer uten press.
+ * Oppdatert med:
+ * - OnboardingSlide for hel-steg layout
+ * - OnboardingTextField + OnboardingSelectGrid med mikroguiding per felt
+ * - PremiumCTAButton + BackButton
+ * - Mikroguiding per felt
+ * - 48px spacing (desktop)
+ * - Bokmål (Nynorsk→Bokmål-konvertering)
  */
 
 'use client';
 
 import { useState } from 'react';
-import { InputField } from '../components/InputField';
-import { SelectField } from '../components/SelectField';
-import { TextAreaField } from '../components/TextAreaField';
-import { PremiumButton } from '@/components/onboarding/PremiumButton';
+import { OnboardingSlide } from '@/app/onboarding/components/OnboardingSlide';
+import { OnboardingTextField } from '@/app/onboarding/components/OnboardingTextField';
+import { OnboardingSelectGrid } from '@/app/onboarding/components/OnboardingSelectGrid';
+import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
+import { BackButton } from '@/components/onboarding/BackButton';
 
 interface Props {
   data: Record<string, unknown>;
@@ -19,6 +25,8 @@ interface Props {
   onBack: () => void;
   onNext: () => void;
 }
+
+/* ====== Validering ====== */
 
 interface ValidationError {
   field: string;
@@ -28,17 +36,29 @@ interface ValidationError {
 const validate = (data: Record<string, unknown>): ValidationError[] => {
   const errors: ValidationError[] = [];
   
-  // Ingen obligatoriske felt — på frivillig grunnlag
+  if (!String(data['workType'] ?? '').trim()) errors.push({ field: 'workType', message: 'Velg hva du jobber med.' });
+  if (!String(data['housingType'] ?? '').trim()) errors.push({ field: 'housingType', message: 'Velg hva du bor i.' });
+  if (!String(data['householdSize'] ?? '').trim()) errors.push({ field: 'householdSize', message: 'Velg hvor mange som bor i hjemmet.' });
+  if (!String(data['economicStability'] ?? '').trim()) errors.push({ field: 'economicStability', message: 'Velg økonomisk stabilitet.' });
+  
+  const responsibilities = String(data['responsibilities'] ?? '').trim();
+  if (!responsibilities || responsibilities.length < 10) {
+    errors.push({ field: 'responsibilities', message: 'Skriv minst 10 tegn om dine ansvar.' });
+  }
+  
+  const dailyRoutine = String(data['dailyRoutine'] ?? '').trim();
+  if (!dailyRoutine || dailyRoutine.length < 10) {
+    errors.push({ field: 'dailyRoutine', message: 'Skriv minst 10 tegn om din hverdagsrutine.' });
+  }
+  
   return errors;
 };
 
-const val = (field: string, fallback = '') => (data: Record<string, unknown>) => {
-  const v = data[field];
-  return v !== undefined && v !== null ? String(v) : fallback;
-};
+/* ====== Hovedkomponent ====== */
 
 export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: Props) {
   const [errors, setErrors] = useState<ValidationError[]>([]);
+  const canProceed = validate(data).length === 0;
 
   const handleNext = () => {
     const validationErrors = validate(data);
@@ -50,22 +70,27 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
     onNext();
   };
 
-  const getFieldError = (field: string) => {
-    const err = errors.find((e) => e.field === field);
-    return err ? err.message : null;
+  const getValue = (field: string, fallback = '') => {
+    const v = data[field];
+    return v !== undefined && v !== null ? String(v) : fallback;
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-8 py-10 space-y-10">
-
+    <OnboardingSlide
+      title="Livssituasjon"
+      subtitle="Hva jobber du med, hva bor du i, og hvordan ser hverdagen din ut?"
+      guidingText="Livssituasjonen din gir oss en viktig oversikt over hverdagen din."
+      slideIndex={2}
+      totalSlides={13}
+    >
       {/* Error summary */}
       {errors.length > 0 && (
-        <div className="rounded-xl p-4 border" style={{
+        <div className="mb-8 rounded-xl p-4 border" style={{
           background: 'rgba(255, 77, 77, 0.08)',
           borderColor: 'rgba(255, 77, 77, 0.2)',
         }}>
           <p className="text-sm font-medium mb-2" style={{ color: '#FF4D4D' }}>
-            Vennligst fyll ut de markerte feltene:
+            Vennligst fyll ut alle påkrevde felt:
           </p>
           <ul className="text-sm space-y-1" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
             {errors.map((err) => (
@@ -75,148 +100,133 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
         </div>
       )}
 
-      {/* Arbeid */}
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold" style={{ color: '#D4AF37' }}>
-          Hva jobber du med?
-        </h2>
-        <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.5)' }}>
-          Dette hjelper oss å forstå hva for en hverdag du lever i.
-        </p>
-        <SelectField
-          label="Arbeidstype"
-          name="workType"
-          value={val('workType', '')(data)}
-          onChange={(v) => onChange('workType', v)}
-          options={[
-            'Anstett på fulltid',
-            'Anstett på deltid',
-            'Egen næringsdrivende',
-            'Studier',
-            'Frivillig arbeid',
-            'Husmor / Husmann',
-            'Pensjonist',
-            'Permisjon',
-            'Ungdomskontakt / NAV',
-            'Annet',
-            'Vil ikke si',
-          ]}
-        />
-      </div>
+      {/* ────────────────────────────────────── */}
+      {/* ARBEID */}
+      {/* ────────────────────────────────────── */}
+      <OnboardingSelectGrid
+        label="Hva jobber du med? *"
+        mikroguiding="Velg det som passer best for deg nå"
+        options={[
+          { value: 'anstatt-fulltid', label: 'Ansett på fulltid', icon: '💼' },
+          { value: 'anstatt-deltid', label: 'Ansett på deltid', icon: '🕐' },
+          { value: 'egen-næring', label: 'Egen næringsdrivende', icon: '🏢' },
+          { value: 'studier', label: 'Studier', icon: '📚' },
+          { value: 'frivillig', label: 'Frivillig arbeid', icon: '🤝' },
+          { value: 'husmor-husmann', label: 'Husmor / Husmann', icon: '🏠' },
+          { value: 'pensjonist', label: 'Pensjonist', icon: '🎖️' },
+          { value: 'permisjon', label: 'Permisjon', icon: '🌿' },
+          { value: 'nav', label: 'Ungdomskontakt / NAV', icon: '📋' },
+          { value: 'annet', label: 'Annet', icon: '✨' },
+        ]}
+        selectedValue={getValue('workType', '')}
+        onChange={(v) => onChange('workType', v)}
+      />
 
-      {/* Bosted */}
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold" style={{ color: '#D4AF37' }}>
-          Hva bor du i?
-        </h2>
-        <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.5)' }}>
-          Hvor du bor sier noe om din hverdagsrytme og livssituasjon.
-        </p>
-        <SelectField
-          label="Boetype"
-          name="housingType"
-          value={val('housingType', '')(data)}
-          onChange={(v) => onChange('housingType', v)}
-          options={[
-            'Leilighet',
-            'Hus (eiendom)',
-            'Delt bo',
-            'Kollektiv',
-            'Studentbolig',
-            'Foreldres bo',
-            'Annet',
-            'Vil ikke si',
-          ]}
-        />
+      {/* Separator */}
+      <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
 
-        <SelectField
-          label="Hvor mange bor det i hjemmet?"
-          name="householdSize"
-          value={val('householdSize', '')(data)}
-          onChange={(v) => onChange('householdSize', v)}
-          options={['1 person (jeg alene)', '2 personer', '3-4 personer', '5+ personer']}
-        />
-      </div>
+      {/* ────────────────────────────────────── */}
+      {/* BOSETTING */}
+      {/* ────────────────────────────────────── */}
+      <OnboardingSelectGrid
+        label="Hva bor du i? *"
+        mikroguiding="Velg bostadtypen din"
+        options={[
+          { value: 'leilighet', label: 'Leilighet', icon: '🏢' },
+          { value: 'hus', label: 'Hus (eiendom)', icon: '🏡' },
+          { value: 'delt-bo', label: 'Delt bo', icon: '🤝' },
+          { value: 'kollektiv', label: 'Kollektiv', icon: '👥' },
+          { value: 'studentbolig', label: 'Studentbolig', icon: '🎓' },
+          { value: 'foreldres-bo', label: 'Foreldres bo', icon: '🏠' },
+          { value: 'annet', label: 'Annet', icon: '✨' },
+        ]}
+        selectedValue={getValue('housingType', '')}
+        onChange={(v) => onChange('housingType', v)}
+      />
 
-      {/* Økonomisk trygghet */}
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold" style={{ color: '#D4AF37' }}>
-          Hva er viktig for deg økonomisk?
-        </h2>
-        <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.5)' }}>
-          Ingen detaljer trengs — bare noe vi kan bruke til å forstå din livssituasjon bedre.
-        </p>
-        <SelectField
-          label="Økonomisk stabilitet"
-          name="economicStability"
-          value={val('economicStability', '')(data)}
-          onChange={(v) => onChange('economicStability', v)}
-          options={[
-            'Stabil økonomi',
-            'Nettoppen dekker utgifter',
-            'Varierer fra måned til måned',
-            'Prioriterer sparing aktivt',
-            'Fokus på stabilitet, ikke overskudd',
-            'Vil ikke si',
-          ]}
-        />
-      </div>
+      {/* Separator */}
+      <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
 
-      {/* Ansvar */}
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold" style={{ color: '#D4AF37' }}>
-          Hva ansvar har du?
-        </h2>
-        <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.5)' }}>
-          Ansvar gir retning for tid og energi — vi vil gjerne forstå hvordan din hverdag ser ut.
-        </p>
-        <TextAreaField
-          label="Fortell litt om ansvar i livet ditt"
-          name="responsibilities"
-          value={val('responsibilities', '')(data)}
-          onChange={(e) => onChange('responsibilities', e.target.value)}
-          placeholder="Eksempel: jeg har to barn som bor hos meg, jeg tar omsorg for en forelder, jeg studerer og har studiepoeng..."
-          rows={3}
-        />
-      </div>
+      <OnboardingSelectGrid
+        label="Hvor mange bor det i hjemmet? *"
+        mikroguiding="Inkluder deg selv i tellinga"
+        options={[
+          { value: '1', label: 'Jeg alene', icon: '🧍' },
+          { value: '2', label: '2 personer', icon: '👫' },
+          { value: '3-4', label: '3–4 personer', icon: '👨‍👩‍👧‍👦' },
+          { value: '5+', label: '5+ personer', icon: '🏘️' },
+        ]}
+        selectedValue={getValue('householdSize', '')}
+        onChange={(v) => onChange('householdSize', v)}
+      />
 
-      {/* Hverdagsrutine */}
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold" style={{ color: '#D4AF37' }}>
-          Hvordan starter en typisk dag for deg?
-        </h2>
-        <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.5)' }}>
-          Ingen rette svar — bare måten du lever på. Det hjelper oss å forstå hva for en rytme vi deler.
-        </p>
-        <TextAreaField
-          label="Din typiske hverdag"
-          name="dailyRoutine"
-          value={val('dailyRoutine', '')(data)}
-          onChange={(e) => onChange('dailyRoutine', e.target.value)}
-          placeholder="Eksempel: jeg vasker meg tidlig, lager frokost, kjører barnet til skolen og går på jobb..."
+      {/* Separator */}
+      <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
+
+      {/* ────────────────────────────────────── */}
+      {/* ØKONOMI */}
+      {/* ────────────────────────────────────── */}
+      <OnboardingSelectGrid
+        label="Økonomisk stabilitet? *"
+        mikroguiding="Ingen detaljar trengs — bare hva som passer best"
+        options={[
+          { value: 'stabil', label: 'Stabil økonomi', icon: '💰' },
+          { value: 'dekker', label: 'Nøye penninger dekker utgifter', icon: '📊' },
+          { value: 'varierer', label: 'Varierer fra måned til måned', icon: '📈' },
+          { value: 'sparning', label: 'Prioriterer sparing aktivt', icon: '🏦' },
+          { value: 'stabilitet', label: 'Fokus på stabilitet, ikke overskudd', icon: '⚖️' },
+        ]}
+        selectedValue={getValue('economicStability', '')}
+        onChange={(v) => onChange('economicStability', v)}
+      />
+
+      {/* Separator */}
+      <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
+
+      {/* ────────────────────────────────────── */}
+      {/* ANSVAR & HVERDAG */}
+      {/* ────────────────────────────────────── */}
+      <div className="space-y-6">
+        <OnboardingTextField
+          label="Hva ansvar har du i livet ditt? *"
+          value={getValue('responsibilities', '')}
+          onChange={(v) => onChange('responsibilities', v)}
+          placeholder="Skriv f.eks. Jeg har to barn som bor hos meg, jeg tar omsorg for en foreldre..."
+          mikroguiding="Skriv f.eks. Jeg har to barn som bor hos meg, jeg tar omsorg for en forelder"
+          maxLength={500}
+          minChars={10}
           rows={4}
+          multiline
         />
-      </div>
 
-      {/* Knappar */}
-      <div className="space-y-4 mt-10">
-        <button
-          onClick={onBack}
-          className="block text-sm hover:underline transition-colors"
-          style={{ color: 'rgba(255, 255, 255, 0.6)' }}
-        >
-          ← Tilbake
-        </button>
-        <PremiumButton onClick={handleNext}>
-          Fortsett til neste steg
-        </PremiumButton>
+        <OnboardingTextField
+          label="Hvordan starter en typisk dag for deg? *"
+          value={getValue('dailyRoutine', '')}
+          onChange={(v) => onChange('dailyRoutine', v)}
+          placeholder="Skriv f.eks. Jeg vasker meg tidlig, lager frokost, kjører barnet til skolen og går på jobb..."
+          mikroguiding="Skriv f.eks. Jeg vasker meg tidlig, lager frokost, kjører barnet til skulen"
+          maxLength={500}
+          minChars={10}
+          rows={4}
+          multiline
+        />
       </div>
 
       {/* Trust text */}
-      <p className="text-center text-xs" style={{ color: 'rgba(255, 255, 255, 0.35)' }}>
-        Svarene dine brukes kun til å bygge profilen din og finne en god match.
+      <p className="text-center text-xs mt-8" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>
+        Svarene dine hjelper oss å finne noen som passer din hverdagsrytme.
       </p>
 
-    </div>
+      {/* Knappar — Back + CTA */}
+      <div className="mt-8 space-y-4">
+        <BackButton onClick={onBack} />
+        <PremiumCTAButton
+          onClick={handleNext}
+          label={!canProceed ? 'Fyll ut alle påkrevde felt' : 'Fortsett til neste steg'}
+          disabled={!canProceed}
+          fullWidth
+        />
+      </div>
+    </OnboardingSlide>
   );
 }

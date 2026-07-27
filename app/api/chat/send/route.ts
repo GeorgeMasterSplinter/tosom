@@ -1,147 +1,74 @@
 /**
  * POST /api/chat/send
- * 
- * Send melding i ein aktiv conversation.
- * Core-definition: Guided chat — systemmeldingar frå reisa.
- * Meldingstypar: text, reflection, system, task
+ * Send ei ny melding til ei conversation.
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import { getServerSession } from "@/lib/auth/session";
 import { prisma } from "@/lib/prisma";
-import { requireAuth } from "@/lib/auth/requireAuth";
-import type { Prisma } from "@prisma/client";
 
-export async function POST(req: NextRequest) {
+export const dynamic = "force-dynamic";
+
+export async function POST(request: Request) {
+  const session = await getServerSession();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Ikke autentisert" }, { status: 401 });
+  }
+
   try {
-    // 1. Auth
-    const result = await requireAuth(req);
-    if (result instanceof NextResponse) {
-      return result;
-    }
-    const user = result.user;
+    const body = await request.json();
+    const { conversationId, content, type = "text" } = body;
 
-    // 2. Hent body
-    const body = await req.json();
-    const {
-      conversationId,
-      content,
-      type = "text",
-    } = body as {
-      conversationId: string;
-      content: string;
-      type?: "text" | "reflection" | "system" | "task";
-    };
-
-    if (!content || !conversationId) {
+    if (!conversationId || !content) {
       return NextResponse.json(
-        { error: "content og conversationId er påkrevd" },
+        { error: "Mangler conversationId og content" },
         { status: 400 }
       );
     }
 
-    // 3. Sjekk at conversation er aktiv
-    const conv = await prisma.conversation.findFirst({
+    // Verifiser at brukaren er del av denne conversationen
+    const conversation = await prisma.conversation.findFirst({
       where: {
         id: conversationId,
         OR: [
-          { userAId: user.id },
-          { userBId: user.id },
+          { userAId: session.user.id },
+          { userBId: session.user.id },
         ],
-        endedAt: null,
-      },
-      select: {
-        id: true,
-        userAId: true,
-        userBId: true,
-        imageShareAllowedAt: true,
       },
     });
 
-    if (!conv) {
+    if (!conversation) {
       return NextResponse.json(
-        { error: "Ingen aktiv conversation funnen" },
-        { status: 404 }
+        { error: "Ingen tilgang til denne samtalen" },
+        { status: 403 }
       );
     }
 
-    // 4. Sjekk bilde-tillatelse (dag 1-14) — ikkje mogleg pga. MessageCategory manglar image
-    // MessageCategory enum: user, system, continue_choice, image
-    // Men type er text/reflection/system/task — ikkje image
-    // Så vi treng ikkje sjekke bilett-tillatelse her
-
-    // 5. Map type string til MessageCategory
-    // Bruk Prisma's MessageCategory enum
-    const messageCategory = type === "text" ? "user" : type;
-
-    // 5b. Hent categoryQuestionId om eksisterande (valfritt)
-    let categoryQuestionId: string | undefined = undefined;
-    if (body.categoryQuestionId) {
-      // Valider at spørsmålet høyrer til ein aktiv kategori i konversationens match
-      const convMatch = await prisma.conversation.findUnique({
-        where: { id: conversationId },
-        select: { matchId: true },
-      });
-      if (convMatch?.matchId) {
-        const question = await prisma.chatQuestion.findFirst({
-          where: {
-            id: body.categoryQuestionId,
-            isActive: true,
-          },
-          select: { id: true },
-        });
-        if (question) {
-          categoryQuestionId = question.id;
-          // Auk usageCount
-          await prisma.chatQuestion.update({
-            where: { id: question.id },
-            data: { usageCount: { increment: 1 } },
-          });
-        }
-      }
-    }
-
-    // 6. Lag melding
+    // Opprett melding
     const message = await prisma.message.create({
       data: {
+        id: `msg-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
         conversationId,
-        senderId: user.id,
+        senderId: session.user.id,
         content,
-        type: messageCategory as any,
-        categoryQuestionId,
+        type,
       },
       include: {
-        categoryQuestion: {
-          select: { text: true, category: { select: { name: true, key: true } } },
+        sender: {
+          select: {
+            id: true,
+            name: true,
+            age: true,
+          },
         },
       },
     });
 
-    // 7. Oppdater lastMessageAt
-    await prisma.conversation.update({
-      where: { id: conversationId },
-      data: { lastMessageAt: new Date() },
-    });
-
-    return NextResponse.json({
-      id: message.id,
-      senderId: message.senderId,
-      content: message.content,
-      type: message.type,
-      categoryQuestionId: message.categoryQuestionId,
-      createdAt: message.createdAt.toISOString(),
-      sender: null,
-      question: message.categoryQuestion
-        ? {
-            text: message.categoryQuestion.text,
-            categoryName: message.categoryQuestion.category.name,
-            categoryKey: message.categoryQuestion.category.key,
-          }
-        : null,
-    });
+    return NextResponse.json({ message });
   } catch (error) {
     console.error("POST /api/chat/send error:", error);
     return NextResponse.json(
-      { error: "Internt feil ved sending av melding", internal: true },
+      { error: "Kunne ikke sende melding" },
       { status: 500 }
     );
   }

@@ -1,20 +1,10 @@
-/**
- * ToSom — ChatMessages (Produktnivå med Micro-interactions)
- * 
- * Viser alle meldingar i ein chat med:
- * - fade-in animasjon
- * - glassmorphism bobler
- * - avsender venstre/høgre
- * - auto-scroll til bunn
- * - rolig spacing
- * - gull-detaljar på partner-bobler
- * - typing-indikator
- * - smooth scroll ved nye meldingar
- * - puls-animasjon på nye bobler
- */
+'use client';
 
 import React, { useRef, useEffect, useCallback } from 'react';
 import { ChatMessage } from '@/hooks/useChatMessages';
+import { color, radius, shadow, spacing, typography } from '@/config/design-tokens';
+import ChatBubble from './ChatBubble';
+import ChatTypingIndicator from './ChatTypingIndicator';
 
 interface ChatMessagesProps {
   messages: ChatMessage[];
@@ -49,9 +39,7 @@ export default function ChatMessages({
   }, []);
 
   useEffect(() => {
-    // Berre scroll dersom meldingsmengd har endra seg
     if (messages.length !== prevMsgCountRef.current) {
-      // Tiny delay for animasjon
       const timer = setTimeout(scrollToBottom, 50);
       prevMsgCountRef.current = messages.length;
       return () => clearTimeout(timer);
@@ -74,13 +62,12 @@ export default function ChatMessages({
           <p style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: '14px' }}>
             Lastar meldingar...
           </p>
-          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
         </div>
       </div>
     );
   }
 
-  // Tom tilstand — vis IntroBubble i meldingslista i staden for heil side
+  // Tom tilstand — IntroBubble
   if (empty) {
     return (
       <div
@@ -89,15 +76,15 @@ export default function ChatMessages({
         style={{ scrollBehavior: 'smooth' }}
       >
         <div className="max-w-[720px] mx-auto flex flex-col items-center justify-center h-full">
-          {/* IntroBubble — vis som ein boble i samtalen */}
           <div
-            className="px-5 py-4 rounded-2xl mb-8 animate-[fadeInUp_0.6s_ease-out_both]"
+            className="px-5 py-4 rounded-2xl mb-8"
             style={{
               background: 'rgba(212, 175, 55, 0.06)',
               border: '1px solid rgba(212, 175, 55, 0.15)',
               boxShadow: '0 0 24px rgba(212, 175, 55, 0.08)',
               backdropFilter: 'blur(12px)',
               maxWidth: '320px',
+              animation: 'fadeInUp 0.6s ease-out both',
             }}
           >
             <p style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '14px', lineHeight: 1.6, margin: 0 }}>
@@ -126,14 +113,23 @@ export default function ChatMessages({
               </span>
             </div>
           )}
-        </div>
 
-        <style>{`
-          @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
-        `}</style>
+          {/* Start knappe */}
+          {onEmptyStateAction && (
+            <button
+              onClick={onEmptyStateAction}
+              className="px-6 py-3 rounded-xl font-medium transition-all duration-300"
+              style={{
+                background: 'rgba(212, 175, 55, 0.1)',
+                border: '1px solid rgba(212, 175, 55, 0.3)',
+                color: '#D4AF37',
+                borderRadius: `${radius.xl}px`,
+              }}
+            >
+              {emptyActionLabel}
+            </button>
+          )}
+        </div>
       </div>
     );
   }
@@ -159,23 +155,27 @@ export default function ChatMessages({
   }
   if (currentGroup) groups.push(currentGroup);
 
+  const getTimestampColor = (isMine: boolean): string => {
+    return isMine ? color.text['gold-soft'] : color.text.muted;
+  };
+
   return (
     <div
       ref={chatContainerRef}
       className="flex-1 overflow-y-auto px-4 md:px-6 py-6"
       style={{ scrollBehavior: 'smooth' }}
     >
-      <div className="max-w-[720px] mx-auto space-y-6">
+      <div className="max-w-[720px] mx-auto" style={{ gap: `${spacing.xl}px` }}>
         {groups.map((group, gi) => (
           <div key={group.date}>
             {/* Dato-divider */}
             {gi > 0 && (
               <div className="flex items-center gap-4 mb-6">
-                <div className="flex-1 h-px" style={{ background: 'rgba(255, 255, 255, 0.04)' }} />
-                <span style={{ color: 'rgba(255, 255, 255, 0.25)', fontSize: '11px', fontWeight: 500 }}>
+                <div className="flex-1 h-px" style={{ background: color.border.dark }} />
+                <span style={{ color: color.text.subtle, fontSize: `${spacing.xs}px`, fontWeight: 500 }}>
                   {group.date}
                 </span>
-                <div className="flex-1 h-px" style={{ background: 'rgba(255, 255, 255, 0.04)' }} />
+                <div className="flex-1 h-px" style={{ background: color.border.dark }} />
               </div>
             )}
 
@@ -188,103 +188,24 @@ export default function ChatMessages({
                 minute: '2-digit',
               });
               const isFirstInGroup = mi === 0 || group.messages[mi - 1].senderId !== msg.senderId;
+              const isLastInGroup = mi === group.messages.length - 1 || group.messages[mi + 1]?.senderId !== msg.senderId;
 
               return (
-                <div
+                <ChatBubble
                   key={msg.id}
-                  className={`flex ${isMine ? 'justify-end' : 'justify-start'} animate-[fadeInUp_0.3s_ease-out_both]`}
-                  style={{ animationDelay: `${gi * 0.1 + mi * 0.04}s` }}
-                >
-                  <div className="max-w-[75%] md:max-w-[65%]">
-                    {/* Namn for første melding i gruppe */}
-                    {!isMine && isFirstInGroup && (
-                      <p
-                        className="text-xs mb-1 px-1"
-                        style={{ color: 'rgba(255, 255, 255, 0.3)' }}
-                      >
-                        {senderName}
-                      </p>
-                    )}
-                    <div
-                      className="px-4 py-2.5 transition-all duration-300"
-                      style={{
-                        background: isMine
-                          ? 'rgba(212, 175, 55, 0.12)'
-                          : 'rgba(255, 255, 255, 0.06)',
-                        backdropFilter: isMine ? 'blur(16px)' : 'blur(12px)',
-                        border: isMine
-                          ? '1px solid rgba(212, 175, 55, 0.25)'
-                          : '1px solid rgba(255, 255, 255, 0.1)',
-                        borderRadius: isFirstInGroup
-                          ? isMine
-                            ? '18px 18px 4px 18px'
-                            : '18px 18px 18px 4px'
-                          : isMine
-                            ? '4px 18px 4px 18px'
-                            : '18px 4px 18px 18px',
-                        color: isMine ? '#D4AF37' : 'rgba(255, 255, 255, 0.85)',
-                        boxShadow: isMine
-                          ? '0 2px 16px rgba(212, 175, 55, 0.12), 0 0 8px rgba(212, 175, 55, 0.06)'
-                          : '0 2px 12px rgba(0, 0, 0, 0.06)',
-                        animation: 'bubbleAppear 0.4s ease-out both, bubblePulse 3s infinite ease-in-out',
-                        animationDelay: isMine ? '0s, 2s' : '0s, 3s',
-                      }}
-                    >
-                      <p className="text-sm whitespace-pre-wrap break-words leading-relaxed" style={{ animation: 'textFade 0.3s ease-out both' }}>
-                        {msg.content}
-                      </p>
-                      <p
-                        className="text-[10px] mt-1.5 text-right"
-                        style={{ color: isMine ? 'rgba(212, 175, 55, 0.45)' : 'rgba(255, 255, 255, 0.25)' }}
-                      >
-                        {time}
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                  message={msg.content}
+                  sender={isMine ? 'me' : 'them'}
+                  timestamp={time}
+                  isFirstInGroup={isFirstInGroup}
+                  isLastInGroup={isLastInGroup}
+                />
               );
             })}
           </div>
         ))}
 
         {/* Typing indicator */}
-        {isTyping && (
-          <div className="flex justify-start animate-[fadeInUp_0.3s_ease-out_both]">
-            <div
-              className="px-4 py-3 rounded-2xl rounded-bl-4xl"
-              style={{
-                background: 'rgba(212, 175, 55, 0.06)',
-                border: '1px solid rgba(212, 175, 55, 0.12)',
-                boxShadow: '0 0 16px rgba(212, 175, 55, 0.12)',
-                backdropFilter: 'blur(16px)',
-              }}
-            >
-              <div className="flex gap-1.5 items-center">
-                <div
-                  className="w-2 h-2 rounded-full"
-                  style={{
-                    background: 'rgba(212, 175, 55, 0.7)',
-                    animation: 'typingDot 1.2s infinite ease-in-out',
-                  }}
-                />
-                <div
-                  className="w-2 h-2 rounded-full"
-                  style={{
-                    background: 'rgba(212, 175, 55, 0.5)',
-                    animation: 'typingDot 1.2s infinite ease-in-out 0.15s',
-                  }}
-                />
-                <div
-                  className="w-2 h-2 rounded-full"
-                  style={{
-                    background: 'rgba(212, 175, 55, 0.7)',
-                    animation: 'typingDot 1.2s infinite ease-in-out 0.3s',
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        )}
+        {isTyping && <ChatTypingIndicator isActive={isTyping} />}
 
         <div ref={messagesEndRef} />
       </div>
@@ -293,38 +214,6 @@ export default function ChatMessages({
         @keyframes fadeInUp {
           from { opacity: 0; transform: translateY(12px); }
           to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes typingDot {
-          0%, 60%, 100% { transform: scale(0.85); opacity: 0.4; }
-          30% { transform: scale(1.05); opacity: 0.85; }
-        }
-        @keyframes pulseGlow {
-          0%, 100% { box-shadow: 0 0 24px rgba(212, 175, 55, 0.08); }
-          50% { box-shadow: 0 0 48px rgba(212, 175, 55, 0.15); }
-        }
-        @keyframes bubbleAppear {
-          from {
-            opacity: 0;
-            transform: translateY(8px) scale(0.97);
-            box-shadow: 0 0 0 rgba(212, 175, 55, 0);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            box-shadow: 0 2px 16px rgba(212, 175, 55, 0.12);
-          }
-        }
-        @keyframes bubblePulse {
-          0%, 100% {
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-          }
-          50% {
-            box-shadow: 0 2px 16px rgba(212, 175, 55, 0.08), 0 0 20px rgba(212, 175, 55, 0.04);
-          }
-        }
-        @keyframes textFade {
-          from { opacity: 0.7; }
-          to { opacity: 1; }
         }
       `}</style>
     </div>

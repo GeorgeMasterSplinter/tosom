@@ -4,6 +4,8 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import os from 'os';
 
+export const dynamic = 'error';
+
 export async function GET(request: NextRequest) {
   try {
     // System uptime

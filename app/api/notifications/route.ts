@@ -1,6 +1,7 @@
 
 import { prisma } from '@/lib/prisma'
 import { markAllRead } from '@/lib/notifications/dispatcher'
+export const dynamic = 'force-dynamic';
 
 // GET /api/notifications — returner siste 50 + unreadCount
 export async function GET(request: Request): Promise<Response> {
@@ -48,3 +49,5 @@ export async function POST(
     return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500, headers: { 'Content-Type': 'application/json' } })
   }
 }
+
+

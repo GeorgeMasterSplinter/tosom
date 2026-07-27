@@ -55,7 +55,12 @@ const ADMIN_PREFIX = '/admin'
 // ─── Session-verifisering (NextAuth v5 kompatibel) ───
 
 function getSessionToken(req: NextRequest): string | null {
-  return req.cookies.get('next-auth.session.token')?.value ?? null
+  // AuthJS v5 bruker "authjs.session-token", men støtt også gamalt "next-auth.session.token"
+  return (
+    req.cookies.get('authjs.session-token')?.value ??
+    req.cookies.get('next-auth.session.token')?.value ??
+    null
+  )
 }
 
 function hasValidSession(req: NextRequest): boolean {
@@ -81,8 +86,21 @@ function getRoleFromSession(req: NextRequest): string | null {
 
 // ─── Middleware ───
 
+/** Legacy-ruter som skal retast til nye stiar */
+const LEGACY_REDIRECTS: Record<string, string> = {
+  '/vilkar': '/vilkår',
+}
+
 export function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname
+
+  // Legacy redirects — /vilkar → /vilkår
+  const redirectTarget = LEGACY_REDIRECTS[path]
+  if (redirectTarget) {
+    return NextResponse.redirect(new URL(redirectTarget, req.url), {
+      status: 301, // permanent redirect
+    })
+  }
 
   // Maintenance mode — redirect alt til /maintenance
   if (MAINTENANCE_ENABLED) {

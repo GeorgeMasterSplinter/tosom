@@ -24,12 +24,18 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { signIn } from '@/lib/auth/config';
+export const dynamic = 'force-dynamic';
 
 // ─── Konfigurasjon ───
 
 const DEV_LOGIN_ENABLED = process.env.DEV_LOGIN_ENABLED === 'true';
 
-/** Aktive testbrukere – kan utvides */
+/** Aktive testbrukere – kan utvides 
+ * 
+ * IMPORTANT: User IDs MUST match existing database conversation participants.
+ * Active conversations have userAId="1" (test@tosom.no) and userBId="999" (test999@tosom.no).
+ */
 const TEST_USERS: Record<string, {
   id: string;
   email: string;
@@ -38,18 +44,18 @@ const TEST_USERS: Record<string, {
   description: string;
 }> = {
   'test-user-1': {
-    id: 'dev-test-user-1',
-    email: 'test1@tosom.no',
-    name: 'Testbruker 1',
+    id: '1',
+    email: 'test@tosom.no',
+    name: 'Test User',
     role: 'USER',
-    description: 'Standard testbruker – full onboarding',
+    description: 'Standard testbruker – full onboarding (matches conversation.userAId)',
   },
   'test-user-2': {
-    id: 'dev-test-user-2',
-    email: 'test2@tosom.no',
-    name: 'Testbruker 2',
+    id: '999',
+    email: 'test999@tosom.no',
+    name: 'Test User 2',
     role: 'USER',
-    description: 'Standard testbruker – ufullstendig profil',
+    description: 'Standard testbruker – partner (matches conversation.userBId)',
   },
   'test-user-3': {
     id: 'dev-test-user-3',
@@ -85,48 +91,37 @@ function getRedirectTarget(userId: string, existingProgress: boolean): DevRedire
   return 'onboarding';
 }
 
-// ─── Session-hjelp ───
+// ─── Session-hjelp — bruk AuthJS sin eigen signIn() ✓
 
-async function createDevSessionToken(user: {
+/**
+ * Opprett eller hent db-user for dev-testbrukar.
+ * Gjer brukaren eksisterande i databasen så AuthJS kan lage JWT.
+ */
+async function ensureDevUserInDb(testUser: {
   id: string;
   email: string;
   name: string;
   role: string;
-}): Promise<string> {
-  const secret = process.env.NEXTAUTH_SECRET || 'dev-secret-change-me';
-  const sessionPayload = {
-    sub: user.id,
-    email: user.email,
-    name: user.name,
-    role: user.role,
-    image: null,
-    iat: Math.floor(Date.now() / 1000),
-    exp: Math.floor(Date.now() / 1000) + 86400, // 1 dag
-  };
-  const base64Payload = Buffer.from(JSON.stringify(sessionPayload)).toString('base64');
-  const { createHmac } = await import('crypto');
-  const signature = createHmac('sha256', secret)
-    .update(`${base64Payload}.dev-session`)
-    .digest('hex');
-  return `${base64Payload}.${signature}.dev-session`;
-}
-
-function setSessionCookie(
-  response: NextResponse,
-  token: string,
-  req: NextRequest
-): void {
-  // Bruk oppringings-URL for korrekt redirect
-  const referer = req.headers.get('referer') || '';
-  const baseUrl = referer ? referer.replace(/\/$/, '') : 'http://localhost:3000';
-
-  response.cookies.set('next-auth.session.token', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    maxAge: 86400, // 1 dag
+}) {
+  let user = await prisma.user.findFirst({
+    where: { email: testUser.email },
+    select: { id: true },
   });
+
+  if (!user) {
+    user = await prisma.user.create({
+      data: {
+        id: testUser.id,
+        email: testUser.email,
+        name: testUser.name,
+        role: testUser.role as any,
+        image: null,
+      },
+      select: { id: true },
+    });
+  }
+
+  return user;
 }
 
 // ─── GET /api/dev-login?userId=xxx ───
@@ -161,24 +156,27 @@ export async function GET(req: NextRequest) {
   const testUser = TEST_USERS[userId as keyof typeof TEST_USERS];
 
   // Fake testbruker — ingen database-kall
+  // test-user-3 har "eksisterande progres" (med match og reise)
+  const existingProgress = userId === 'test-user-3';
   const dbUser = {
     id: testUser.id,
     onboardingComplete: false,
     deepProfileComplete: false,
   };
 
-  // Lag session og redirect
-  const sessionToken = await createDevSessionToken({
-    id: dbUser.id,
-    email: testUser.email,
-    name: testUser.name,
-    role: testUser.role,
-  });
+   // Opprett brukaren i DB først (AuthJS treng ein gyldig user)
+   await ensureDevUserInDb(testUser);
 
-   const response = NextResponse.redirect(new URL('/onboarding', req.url));
-   setSessionCookie(response, sessionToken, req);
-   return response;
- }
+   // Bruk AuthJS sin eigen signIn med credentials — det lagar JWT-cookie automatisk ✓
+   await signIn('credentials', {
+     email: testUser.email,
+     password: 'dev-login',
+     redirect: false,
+   });
+
+   const redirectTarget = getRedirectTarget(userId, existingProgress);
+   return NextResponse.redirect(new URL(`/${redirectTarget}`, req.url));
+  }
 
  // ─── POST /api/dev-login ───
 
@@ -228,24 +226,28 @@ export async function POST(req: NextRequest) {
     deepProfileComplete: false,
   };
 
-  // Lag session og redirect
-  const sessionToken = await createDevSessionToken({
-    id: dbUser.id,
-    email: testUser.email,
-    name: testUser.name,
-    role: testUser.role,
-  });
+   // Opprett brukaren i DB først (AuthJS treng ein gyldig user)
+   await ensureDevUserInDb(testUser);
 
-  // Alltid til onboarding
-  let redirectUrl = customRedirect || `/onboarding`;
+    // Bruk AuthJS sin eigen signIn med credentials — det lagar JWT-cookie automatisk ✓
+    await signIn('credentials', {
+      email: testUser.email,
+      password: 'dev-login',
+      redirect: false,
+    });
 
-  const response = NextResponse.redirect(
-    `${new URL(req.url).origin}${redirectUrl}`
-  );
-  setSessionCookie(response, sessionToken, req);
+    // Bruk custom redirect dersom spesifisert, elles standard mål
+   let redirectUrl = '/onboarding';
+   if (customRedirect && customRedirect.startsWith('/')) {
+     redirectUrl = customRedirect;
+   } else {
+     const existingProgress = userId === 'test-user-3' || userId === 'test-admin';
+     const redirectTarget = getRedirectTarget(userId, existingProgress);
+     redirectUrl = `/${redirectTarget}`;
+   }
 
-  return response;
-}
+   return NextResponse.redirect(new URL(redirectUrl, req.url));
+  }
 
 // ─── Hjelpsfunksjonar (ikkje Route-exports) ───
 
@@ -281,3 +283,5 @@ async function getDevLoginStatus() {
     usage: 'GET /api/dev-login?userId=xxx eller POST /api/dev-login { userId: "xxx" }',
   });
 }
+
+

@@ -9,6 +9,8 @@ import { getServerSession } from "@/lib/auth/session"
 import prisma from "@/lib/prisma"
 import { DeepProfileStep } from "@prisma/client"
 
+export const dynamic = 'force-dynamic'
+
 const DEEP_STEPS = [
   DeepProfileStep.IDENTITY,
   DeepProfileStep.LIFE_SITUATION,

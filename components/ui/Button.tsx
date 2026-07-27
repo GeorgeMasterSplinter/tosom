@@ -1,84 +1,62 @@
-/* ═══════════════════════════════════════════
-   ToSom UI 6.0 — Button Component
-   Primary · Secondary · Ghost
-   Større, rolegare, premium, betre hover
-   ═══════════════════════════════════════════ */
+"use client";
 
-import { ButtonHTMLAttributes, forwardRef } from "react";
+import { ReactNode } from 'react';
 
-export type ButtonVariant = "primary" | "secondary" | "ghost";
-
-export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: ButtonVariant;
-  size?: "sm" | "md" | "lg" | "xl";
+interface ButtonProps {
+  variant?: 'default' | 'gold' | 'red' | 'primary' | 'secondary' | 'ghost';
+  size?: 'sm' | 'md' | 'lg';
+  children: ReactNode;
+  onClick?: () => void;
   href?: string;
+  target?: string;
+  className?: string;
 }
 
-/* ========================
-   VARIANT KLASSAR
-   ======================== */
+export default function Button({ variant = 'default', size = 'md', children, onClick, href, target, className = '' }: ButtonProps) {
+  const sizeClasses = {
+    sm: "px-3 py-1.5",
+    md: "px-4 py-2",
+    lg: "px-6 py-3"
+  }[size];
 
-const variantClasses: Record<ButtonVariant, string> = {
-  primary:
-    "bg-[var(--ts-gold-accent)] text-[var(--ts-bg-premium)] shadow-[0_0_20px_rgba(212,175,55,0.15)] " +
-    "hover:bg-[#d8b878] hover:shadow-[var(--ts-shadow-glow)] " +
-    "active:scale-[0.99] active:opacity-90",
-  secondary:
-    "bg-[rgba(255,255,255,0.06)] text-[var(--ts-text-white)] " +
-    "border border-[rgba(255,255,255,0.12)] " +
-    "hover:bg-[rgba(255,255,255,0.10)] hover:border-[rgba(255,255,255,0.18)] " +
-    "active:scale-[0.99]",
-  ghost:
-    "bg-transparent text-[var(--ts-text-gray)] " +
-    "hover:text-[var(--ts-text-white)] hover:bg-[rgba(255,255,255,0.04)] " +
-    "active:scale-[0.99]",
-};
+  const baseClasses = `${sizeClasses} rounded-[12px] font-medium transition-all duration-300 focus:outline-none cursor-pointer`;
 
-/* ========================
-   STØRRELSE KLASSAR
-   ======================== */
+  let variantClasses = "";
+  switch (variant) {
+    case 'gold':
+    case 'primary':
+      variantClasses = "bg-[#D4AF37] text-black hover:bg-[#E8C766] shadow-[0_0_24px_rgba(212,175,55,0.3)] focus:ring-2 focus:ring-[#D4AF37]";
+      break;
+    case 'red':
+      variantClasses = "bg-[#E53935] text-white hover:bg-[#D32F2F] focus:ring-2 focus:ring-[#E53935]";
+      break;
+    case 'secondary':
+      variantClasses = "bg-transparent border border-white/10 text-white/90 hover:bg-white/5 focus:ring-2 focus:ring-white/20";
+      break;
+    case 'ghost':
+      variantClasses = "bg-transparent text-white/60 hover:text-white/90 hover:bg-white/[0.03] focus:ring-2 focus:ring-white/10";
+      break;
+    default:
+      variantClasses = "bg-white/[0.04] border border-white/10 hover:bg-white/[0.06] text-white focus:ring-2 focus:ring-[#D4AF37]/50 backdrop-blur-xl";
+  }
 
-const sizeClasses: Record<"sm" | "md" | "lg" | "xl", string> = {
-  sm: "px-6 py-3 text-base",
-  md: "px-6 py-3 text-base",
-  lg: "px-14 py-4 text-lg",
-  xl: "px-16 py-5 text-lg",
-};
+  const finalClasses = `${baseClasses} ${variantClasses} ${className}`;
 
-/* ========================
-   COMPONENT
-   ======================== */
-
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = "primary", size = "md", className = "", children, href, ...props }, ref) => {
-    const base =
-      "inline-flex items-center justify-center " +
-      "font-[500] tracking-[-0.01em] rounded-[var(--ts-radius-6xl)] " +
-      "border-none cursor-pointer " +
-      "transition-all duration-[var(--ts-transition-ui6-ease)] " +
-      "focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ts-gold-accent)] focus-visible:ring-offset-3 " +
-      sizeClasses[size] +
-      " " +
-      variantClasses[variant] +
-      " " +
-      className;
-
-    const mergedClasses = base.trim();
-
-    if (href) {
-      return (
-        <a href={href} className={mergedClasses} ref={ref as any}>
-          {children}
-        </a>
-      );
-    }
-
+  if (href) {
     return (
-      <button className={mergedClasses} ref={ref} {...props}>
+      <a
+        href={href}
+        target={target}
+        className={finalClasses}
+      >
         {children}
-      </button>
+      </a>
     );
   }
-);
 
-Button.displayName = "Button";
+  return (
+    <button onClick={onClick} className={finalClasses}>
+      {children}
+    </button>
+  );
+}

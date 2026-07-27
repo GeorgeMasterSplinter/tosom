@@ -74,7 +74,7 @@ export default function NotificationCenter() {
                 ))}
               </div>
 
-              <PremiumButton variant="ghost" className="w-full text-xs px-4 py-2" onClick={() => setOpen(false)}>
+              <PremiumButton variant="secondary" className="w-full text-xs px-4 py-2" onClick={() => setOpen(false)}>
                 Lukk
               </PremiumButton>
             </GlassPanel>

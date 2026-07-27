@@ -6,6 +6,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { flags, serverFlags } from "@/utils/flags";
 
+export const dynamic = 'force-dynamic';
+
 /* ---------------------------------------------------------- */
 /*  Analytics event types                                       */
 /* ---------------------------------------------------------- */

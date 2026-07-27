@@ -1,83 +1,48 @@
 /**
- * ToSom — Steg 4: Kjærlighetsspråk & nærhet
- * Knappar: PremiumButton + BackButton.
+ * ToSom — Steg 4: Kjærlighetsspråk & nærhet (Premium rebuild 2026 — Fase 4)
+ * - Bokmål (Nynorsk→Bokmål-konvertering)
  */
 
 'use client';
 
-import { TextAreaField } from '../components/TextAreaField';
-import { PremiumButton } from '@/components/onboarding/PremiumButton';
+import { useState } from 'react';
+import { OnboardingSlide } from '@/app/onboarding/components/OnboardingSlide';
+import { OnboardingTextField } from '@/app/onboarding/components/OnboardingTextField';
+import { OnboardingSelectGrid } from '@/app/onboarding/components/OnboardingSelectGrid';
+import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { BackButton } from '@/components/onboarding/BackButton';
 
-interface Props {
-  step: number;
-  goToStep: (s: number) => void;
-  data: Record<string, unknown>;
-  onChange: (field: string, value: unknown) => void;
-  onNext: () => void;
-}
+interface Props { data: Record<string, unknown>; onChange: (f: string, v: unknown) => void; onBack: () => void; step: number; goToStep: (s: number) => void; onNext: () => void; }
+interface ValidationError { field: string; message: string; }
 
-export default function Step4Kjærlighetsspråk({ step, goToStep, data, onChange, onNext }: Props) {
-  const getValue = (field: string, fallback = '') => {
-    const v = data[field];
-    return v !== undefined && v !== null ? String(v) : fallback;
-  };
+const validate = (d: Record<string, unknown>): ValidationError[] => {
+  const e: ValidationError[] = [];
+  if (!String(d['loveGive'] ?? '').trim()) e.push({ field: 'loveGive', message: 'Velg hvordan du viser kjærlighet.' });
+  if (!String(d['loveReceive'] ?? '').trim()) e.push({ field: 'loveReceive', message: 'Velg hvordan du ønsker kjærlighet.' });
+  ['closenessBuilder','distanceCreator','smallThing'].forEach(k => { const v = String(d[k] ?? '').trim(); if (!v || v.length < 10) e.push({ field: k, message: 'Skriv minst 10 tegn om feltet.' }); });
+  return e;
+};
+
+export default function Step4Kjærlighetsspråk({ data, onChange, onBack, onNext }: Props) {
+  const [errors, setErrors] = useState<ValidationError[]>([]);
+  const canProceed = validate(data).length === 0;
+  const handleNext = () => { const ve = validate(data); if (ve.length > 0) { setErrors(ve); return; } setErrors([]); onNext(); };
+  const getValue = (f: string, fb = '') => { const v = data[f]; return v !== undefined && v !== null ? String(v) : fb; };
 
   return (
-    <div className="space-y-8">
-      <TextAreaField
-        label="Hvordan viser du kjærlighet og omsorg?"
-        name="loveGive"
-        value={getValue('loveGive', '')}
-        onChange={(e) => onChange('loveGive', e.target.value)}
-        placeholder="Hvordan uttrykker du følelsene dine på en naturlig måte?"
-        exampleText="Jeg viser omsorg ved å lytte, gjøre små ting, og være til stede."
-      />
-      <TextAreaField
-        label="Hvordan liker du å motta kjærlighet?"
-        name="loveReceive"
-        value={getValue('loveReceive', '')}
-        onChange={(e) => onChange('loveReceive', e.target.value)}
-        placeholder="Hva får deg til å føle deg elsket og verdifull?"
-        exampleText="Å høre at noen setter pris på meg, eller å få en klem."
-      />
-      <TextAreaField
-        label="Hva skaper nærhet mellom dere?"
-        name="closenessBuilder"
-        value={getValue('closenessBuilder', '')}
-        onChange={(e) => onChange('closenessBuilder', e.target.value)}
-        placeholder="Hva gir deg følelsen av at du er nær noen?"
-        exampleText="Dype samtaler, felles opplevelser, stille stunder sammen."
-      />
-      <TextAreaField
-        label="Hva skaper avstand — selv om du ønsker nærhet?"
-        name="distanceCreator"
-        value={getValue('distanceCreator', '')}
-        onChange={(e) => onChange('distanceCreator', e.target.value)}
-        placeholder="Når trekker du deg tilbake, selv om du vil være nær?"
-        exampleText="Når jeg føler meg pressa, eller når jeg ikke blir hørt."
-      />
-      <TextAreaField
-        label="Hva er en liten ting som har stor betydning?"
-        name="smallThing"
-        value={getValue('smallThing', '')}
-        onChange={(e) => onChange('smallThing', e.target.value)}
-        placeholder="Noe lite som betyr mer enn mange store ting for deg?"
-        exampleText="Å få en melding bare for å se at noen tenker på meg."
-      />
-
-      {/* Trust text */}
-      <p className="text-center text-xs" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>
-        Kjærlighetsspråket ditt er viktig for å finne noen som kan møte deg på din måte.
-      </p>
-
-      {/* Knappar */}
-      <div className="space-y-4 mt-10">
-        <BackButton onClick={() => goToStep(step - 1)} />
-        <PremiumButton onClick={onNext}>
-          Fortsett til neste steg
-        </PremiumButton>
-      </div>
-    </div>
+    <OnboardingSlide title="Kjærlighetsspråk & nærhet" subtitle="Hvordan viser og mottar du kjærlighet?" guidingText="Hvordan du viser kjærlighet er viktig for å finne noen som passer deg." slideIndex={4} totalSlides={13}>
+      {errors.length > 0 && (<div className="mb-8 rounded-xl p-4 border" style={{ background: 'rgba(255,77,77,0.08)', borderColor: 'rgba(255,77,77,0.2)' }}><p className="text-sm font-medium mb-2" style={{ color: '#FF4D4D' }}>Vennligst fyll ut alle påkrevde felt:</p><ul className="text-sm space-y-1" style={{ color: 'rgba(255,255,255,0.7)' }}>{errors.map((x) => (<li key={x.field}>• {x.message}</li>))}</ul></div>)}
+      <OnboardingSelectGrid label="Hvordan viser du kjærlighet? *" mikroguiding="Velg det som passer best" options={[{ value: 'ord', label: 'Ord og ros', icon: '💬' }, { value: 'tjenester', label: 'Gjør ting for andre', icon: '🎁' }, { value: 'tid', label: 'Kvalitetstid sammen', icon: '⏰' }, { value: 'kjønnlig', label: 'Fysiske klemmer og berøring', icon: '🤗' }, { value: 'gaver', label: 'Å gi gaver', icon: '🎀' }]} selectedValue={getValue('loveGive', '')} onChange={(v) => onChange('loveGive', v)} />
+      <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
+      <OnboardingSelectGrid label="Hvordan ønsker du kjærlighet? *" mikroguiding="Velg det som får deg til å kjenne deg elsket" options={[{ value: 'ord', label: 'Ord og ros', icon: '💬' }, { value: 'tjenester', label: 'Gjør ting for meg', icon: '🎁' }, { value: 'tid', label: 'Kvalitetstid sammen', icon: '⏰' }, { value: 'kjønnlig', label: 'Fysiske klemmer og berøring', icon: '🤗' }, { value: 'gaver', label: 'Å få gaver', icon: '🎀' }]} selectedValue={getValue('loveReceive', '')} onChange={(v) => onChange('loveReceive', v)} />
+      <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
+      <OnboardingTextField label="Hva bygger nærhet mellom mennesker? *" value={getValue('closenessBuilder', '')} onChange={(v) => onChange('closenessBuilder', v)} placeholder="Skriv f.eks. Dype samtaler om noe som betyr mye" mikroguiding="Skriv f.eks. Dype samtaler om noe som betyr mye" maxLength={300} minChars={10} rows={3} multiline />
+      <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
+      <OnboardingTextField label="Hva skaper avstand mellom deg og andre? *" value={getValue('distanceCreator', '')} onChange={(v) => onChange('distanceCreator', v)} placeholder="Skriv f.eks. Når folk er ukjente med følelser mine" mikroguiding="Skriv f.eks. Når folk er ukjente med følelser mine" maxLength={300} minChars={10} rows={3} multiline />
+      <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
+      <OnboardingTextField label="Hva er de små tingene som betyr mest for deg? *" value={getValue('smallThing', '')} onChange={(v) => onChange('smallThing', v)} placeholder="Skriv f.eks. At noen husker at jeg vil ha kaffe på morgenen" mikroguiding="Skriv f.eks. At noen husker at jeg vil ha kaffe på morgenen" maxLength={300} minChars={10} rows={3} multiline />
+      <p className="text-center text-xs mt-8" style={{ color: 'rgba(255,255,255,0.3)' }}>Kjærlighetsspråket ditt er viktig for å finne noen som passer deg.</p>
+      <div className="mt-8 space-y-4"><BackButton onClick={onBack} /><PremiumCTAButton onClick={handleNext} label={!canProceed ? 'Fyll ut alle påkrevde felt' : 'Fortsett til neste steg'} disabled={!canProceed} fullWidth /></div>
+    </OnboardingSlide>
   );
 }

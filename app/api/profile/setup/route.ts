@@ -7,6 +7,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from '@/lib/auth/session';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -126,7 +128,7 @@ export async function POST(req: NextRequest) {
       create: {
         userId: userId,
         identityName: basic.identityName,
-        age: basic.age ? parseInt(basic.age) : undefined,
+        age: basic.age ? parseInt(basic.age) : 25,
         lifeSituation: {
           gender: basic.gender,
           seekingGender: basic.seekingGender,

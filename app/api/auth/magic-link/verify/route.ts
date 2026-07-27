@@ -12,6 +12,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 /* ========================
    GET — Verifiser magisk lenke
    ======================== */
@@ -33,16 +35,17 @@ export async function GET(req: NextRequest) {
     }
 
     // Sjekk utløp
-    if (magicToken.expiresAt < new Date()) {
+    if (new Date() > magicToken.expiresAt) {
       await prisma.magicLinkToken.delete({
         where: { id: magicToken.id },
       });
       return NextResponse.redirect(new URL('/login?error=token-expired', req.url));
     }
 
-    // Finn eller opprett bruker
-    let user = await prisma.user.findUnique({
+    // Finn eller lag bruker
+    let user: any = await prisma.user.findUnique({
       where: { email: magicToken.email },
+      include: { profile: true },
     });
 
     if (!user) {
@@ -50,21 +53,27 @@ export async function GET(req: NextRequest) {
         data: {
           email: magicToken.email,
           verified: true,
-          onboardingStep: 1,
+          onboardingStep: 0,
           onboardingComplete: false,
+          deepProfileComplete: false,
+          profile: {
+            create: {
+              identityName: magicToken.email.split('@')[0] ?? 'User',
+              age: 30,
+              deepProfileStep: 'IDENTITY',
+            },
+          },
         },
       });
     }
 
-    // Slett token (brukbar ein gong)
+    if (!user) {
+      return NextResponse.redirect(new URL('/login?error=server-error', req.url));
+    }
+
+    // Slett brukt token
     await prisma.magicLinkToken.delete({
       where: { id: magicToken.id },
-    });
-
-    // Merk at brukaren kom via magisk lenke
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { verified: true },
     });
 
     // Set cookie-session (next-auth style)

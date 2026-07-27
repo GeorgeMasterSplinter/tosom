@@ -6,6 +6,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { flags } from "@/utils/flags";
 
+export const dynamic = 'force-dynamic';
+
 interface TimelineEvent {
   id?: string;
   date: string;
@@ -111,7 +113,7 @@ export async function POST(request: NextRequest) {
     const event: TimelineEvent = {
       ...body,
       createdAt: new Date().toISOString(),
-    };
+     };
 
     return NextResponse.json({ event, status: "created" });
   } catch {

@@ -4,6 +4,7 @@ import { getRateLimitLogs } from '@/lib/admin/system'
 import { getGlobalRateLimitStats } from '@/lib/system/rateMonitor'
 import { requireAdmin } from '@/lib/admin/requireAuth'
 import { castToAdminUser } from '@/lib/auth/admin-auth'
+export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request): Promise<Response> {
   try {
@@ -28,3 +29,5 @@ export async function GET(request: Request): Promise<Response> {
     return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500, headers: { 'Content-Type': 'application/json' } })
   }
 }
+
+

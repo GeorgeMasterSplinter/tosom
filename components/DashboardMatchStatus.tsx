@@ -18,7 +18,7 @@ export default function DashboardMatchStatus() {
 
   if (loading) {
     return (
-      <div className="bg-[#1E2A38]/60 border border-[#CBAA7A]/20 rounded-xl p-6 animate-pulse">
+      <div className="bg-[#1E2A38]/60 border border-[#D4AF37]/20 rounded-xl p-6 animate-pulse">
         <p className="text-neutral-400 leading-relaxed">Laster status…</p>
       </div>
     );
@@ -26,14 +26,14 @@ export default function DashboardMatchStatus() {
 
   if (!status) {
     return (
-      <div className="bg-[#1E2A38]/60 border border-[#CBAA7A]/20 rounded-xl p-6">
+      <div className="bg-[#1E2A38]/60 border border-[#D4AF37]/20 rounded-xl p-6">
         <p className="text-neutral-400 leading-relaxed">Ingen status tilgjengelig.</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-[#1E2A38]/60 border border-[#CBAA7A]/20 rounded-xl p-6">
+    <div className="bg-[#1E2A38]/60 border border-[#D4AF37]/20 rounded-xl p-6">
       <h2 className="text-xl font-semibold leading-tight text-white mb-4 tracking-wide">
         Match‑status
       </h2>
@@ -52,7 +52,7 @@ export default function DashboardMatchStatus() {
         )}
 
         {status.state === "matched" && (
-          <p className="text-[#CBAA7A] leading-relaxed">
+          <p className="text-[#D4AF37] leading-relaxed">
             Du har en match! Gå til chat for å starte samtalen.
           </p>
         )}

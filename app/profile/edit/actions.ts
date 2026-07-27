@@ -55,7 +55,7 @@ export async function updateProfile(formData: ProfileFormData): Promise<{ succes
   }
 
   try {
-    const parsedAge = formData.age ? parseInt(String(formData.age), 10) : undefined;
+    const parsedAge = formData.age ? parseInt(String(formData.age), 10) : 25;
 
     await prisma.profile.upsert({
       where: { userId: session.user.id },

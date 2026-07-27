@@ -6,6 +6,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { flags } from "@/utils/flags";
 
+export const dynamic = 'force-dynamic';
+
 interface DigestResponse {
   period: string;
   messageCount: number;
@@ -72,7 +74,7 @@ export async function GET(request: NextRequest) {
       title: "Utforsk emosjonell nærhet",
       description: "Dere er klare for å gå dypere inn i samtaler om følelser og verdier.",
     },
-  };
+   };
 
   return NextResponse.json(digest);
 }

@@ -12,6 +12,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { Prisma } from '@prisma/client';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: NextRequest) {
   try {
     const userId = req.nextUrl.searchParams.get('userId');
@@ -41,7 +43,7 @@ export async function POST(req: NextRequest) {
     } = body;
 
     // Finn eller opprett profile
-    let profile = await prisma.profile.findFirst({
+    let profile: any = await prisma.profile.findFirst({
       where: { userId },
     });
 
@@ -49,22 +51,12 @@ export async function POST(req: NextRequest) {
       profile = await prisma.profile.create({
         data: {
           userId,
-          identityName,
-          lifeSituation: lifeSituation ? (JSON.stringify(lifeSituation) as Prisma.InputJsonValue) : Prisma.JsonNull,
-          lifestyle: lifestyle ? (JSON.stringify(lifestyle) as Prisma.InputJsonValue) : Prisma.JsonNull,
-          personality: personality ? (JSON.stringify(personality) as Prisma.InputJsonValue) : Prisma.JsonNull,
-          relationshipStyle,
-          communication: communication ? (JSON.stringify(communication) as Prisma.InputJsonValue) : Prisma.JsonNull,
-          intimacy: intimacy ? (JSON.stringify(intimacy) as Prisma.InputJsonValue) : Prisma.JsonNull,
-          futureVision: futureVision ? (JSON.stringify(futureVision) as Prisma.InputJsonValue) : Prisma.JsonNull,
-          boundaries: boundaries ? (JSON.stringify(boundaries) as Prisma.InputJsonValue) : Prisma.JsonNull,
-          emotionalNeeds: emotionalNeeds ? (JSON.stringify(emotionalNeeds) as Prisma.InputJsonValue) : Prisma.JsonNull,
-          lifeRhythm,
-          maturityLevel: maturityLevel ? parseInt(maturityLevel) : null,
-          securityLevel,
-          photoUrl,
-          bio,
-          interests: interests || [],
+          identityName: identityName ?? 'User',
+          age: 30,
+          gender: 'OTHER' as any,
+          lifeSituation: lifeSituation ?? Prisma.JsonNull,
+          lifestyle: lifestyle ?? Prisma.JsonNull,
+          personality: personality ?? Prisma.JsonNull,
           deepProfileStep: 'SUMMARY',
         },
       });

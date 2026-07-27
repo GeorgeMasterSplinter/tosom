@@ -1,55 +1,67 @@
-/* ═══════════════════════════════════════════
-   ToSom Premium — ChatBubble Component
-   Premium chat message bubble with gold/white variants
-   ═══════════════════════════════════════════ */
+'use client';
 
-"use client";
-
-import { FadeIn } from "@/components/ui/FadeIn";
+import { color, radius, shadow, typography } from '@/config/design-tokens';
 
 interface ChatBubbleProps {
   message: string;
-  sender: "me" | "them";
+  sender: 'me' | 'them';
   timestamp?: string;
-  index?: number;
+  isFirstInGroup?: boolean;
+  isLastInGroup?: boolean;
 }
 
-export const ChatBubble = ({
+export default function ChatBubble({
   message,
   sender,
   timestamp,
-  index = 0,
-}: ChatBubbleProps) => {
-  const isMe = sender === "me";
+  isFirstInGroup = false,
+  isLastInGroup = true,
+}: ChatBubbleProps) {
+  const isMe = sender === 'me';
+
+  const bubbleStyle: React.CSSProperties = isMe
+    ? {
+        background: 'rgba(80, 120, 255, 0.06)',
+        backdropFilter: 'blur(16px)',
+        border: `1px solid ${color.border.blue}`,
+        borderRadius: isLastInGroup
+          ? `${radius.xl}px ${radius.xl}px ${radius.sm}px ${radius.xl}px`
+          : `${radius.sm}px ${radius.xl}px ${radius.sm}px ${radius.xl}px`,
+        color: color.text.primary,
+        boxShadow: shadow.md,
+      }
+    : {
+        background: 'rgba(212, 175, 55, 0.06)',
+        backdropFilter: 'blur(16px)',
+        border: `1px solid ${color.border.gold}`,
+        borderRadius: isLastInGroup
+          ? `${radius.xl}px ${radius.xl}px ${radius.xl}px ${radius.sm}px`
+          : `${radius.xl}px ${radius.sm}px ${radius.xl}px ${radius.xl}px`,
+        color: color.text.primary,
+        boxShadow: shadow.md,
+      };
+
+  const timestampColor = isMe ? color.text['gold-soft'] : color.text.muted;
 
   return (
-    <FadeIn delay={index * 50} duration={300}>
-      <div
-        className={`flex ${isMe ? "justify-end" : "justify-start"} mb-3`}
-      >
-        <div
-          className={`max-w-[75%] px-4 py-3 ${
-            isMe
-              ? "bg-[var(--ts-gold)]/15 text-white border border-[var(--ts-gold)]/25 rounded-tl-[16px] rounded-tr-[8px] rounded-bl-[16px] rounded-br-[8px]"
-              : "bg-white/[0.06] text-white/80 border border-white/8 rounded-tl-[8px] rounded-tr-[16px] rounded-bl-[8px] rounded-br-[16px]"
-          } transition-all duration-200`}
-        >
-          <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
+    <div className={`flex ${isMe ? 'justify-end' : 'justify-start'} animate-[fadeInUp_0.3s_ease-out_both]`}>
+      <div className="max-w-[75%] md:max-w-[65%]">
+        {!isMe && isFirstInGroup && (
+          <p className="text-xs mb-1 px-1" style={{ color: color.text.subtle }}>
+            {message.charAt(0)}
+          </p>
+        )}
+        <div className="transition-all duration-300 hover:opacity-90" style={bubbleStyle}>
+          <p className="text-sm whitespace-pre-wrap break-words" style={{ lineHeight: typography.lineHeight.normal }}>
             {message}
           </p>
           {timestamp && (
-            <p
-              className={`mt-1.5 text-[11px] ${
-                isMe ? "text-white/40" : "text-white/30"
-              }`}
-            >
+            <p className="mt-1.5 text-right" style={{ color: timestampColor, fontSize: `${typography.fontSize.xs}px` }}>
               {timestamp}
             </p>
           )}
         </div>
       </div>
-    </FadeIn>
+    </div>
   );
-};
-
-export default ChatBubble;
+}

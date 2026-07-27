@@ -1,13 +1,18 @@
 import { prisma } from "@/lib/prisma";
-
+import { requireAdmin } from "@/lib/auth/security";
+export const dynamic = 'force-dynamic';
 
 export async function POST(
   request: Request,
   context: { params: Promise<{ id: string }> }
 ): Promise<Response> {
-  const { id } = await context.params;
-  try {
-    const user = await prisma.user.findUnique({
+   const { id } = await context.params;
+   
+   try {
+     // Admin auth check
+     await requireAdmin();
+     
+     const user = await prisma.user.findUnique({
       where: { id }
     });
 
@@ -28,3 +33,5 @@ export async function POST(
     return new Response(JSON.stringify({ error: "Internal server error" }), { status: 500, headers: { "Content-Type": "application/json" } });
   }
 }
+
+

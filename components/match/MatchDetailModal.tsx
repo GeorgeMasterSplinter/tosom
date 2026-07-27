@@ -7,7 +7,7 @@
 
 import { ModalV2 } from "@/components/ui/ModalV2";
 import { Avatar } from "@/components/ui/Avatar";
-import { Button } from "@/components/ui/Button";
+import Button from "@/components/ui/Button";
 import { ResonanceMeter } from "@/components/ui/ResonanceMeter";
 import { FadeIn } from "@/components/ui/FadeIn";
 
@@ -63,7 +63,7 @@ export const MatchDetailModal = ({
           </div>
 
           {/* ResonanceMeter */}
-          <ResonanceMeter score={match.resonanceScore} size="lg" />
+          <ResonanceMeter value={match.resonanceScore ?? 0} size="lg" />
 
           {/* Bio */}
           {match.bio && (

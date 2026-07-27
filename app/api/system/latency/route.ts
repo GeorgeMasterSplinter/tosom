@@ -1,5 +1,6 @@
 
 import { prisma } from '@/lib/prisma'
+export const dynamic = 'force-dynamic';
 
 export async function GET(
   request: Request
@@ -15,3 +16,5 @@ export async function GET(
     return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500, headers: { 'Content-Type': 'application/json' } })
   }
 }
+
+

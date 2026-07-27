@@ -94,10 +94,14 @@ export default function MatchingPage() {
          m.id === match.id ? { ...m, status: data.status } : m
        ));
 
-       if (data.status === 'matched') {
-         // Begge har akseptert → vis beroliging
-         alert(data.message || 'Dette kan bli noe fint. Dere er nå låste saman i 30 dager.');
-       }
+        if (data.status === 'matched') {
+          // Begge har akseptert → redirect til chat
+          if (data.conversationId) {
+            router.push(`/chat/${data.conversationId}`);
+          } else {
+            alert(data.message || 'Dere er nå låste saman i 30 dager.');
+          }
+        }
      } catch (err) {
        setError('Kan du prøve igjen?');
      } finally {
@@ -132,10 +136,10 @@ export default function MatchingPage() {
      }
    };
 
-  const handleSeeMatch = (match: MatchData) => {
-    // Redirect til chat eller profil-sidde
-    console.log('Se match:', match);
-  };
+    const handleSeeMatch = async (match: MatchData) => {
+      if (!match.id) return;
+      router.push(`/matching/${match.id}`);
+    };
 
    const handleRefresh = async () => {
      try {
@@ -367,17 +371,8 @@ export default function MatchingPage() {
                  <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.5)' }}>
                    Dette kan ta litt tid. I mellomtiden kan du oppdatere preferansene dine.
                  </p>
-                 <button
-                   onClick={() => router.push('/matching')}
-                   className="px-8 py-3 rounded-xl text-sm font-medium transition-all duration-300 hover:scale-[1.015]"
-                   style={{
-                     background: '#D4AF37',
-                     color: '#0B0E11',
-                     boxShadow: '0 0 25px rgba(212,175,55,0.3), 0 4px 12px rgba(0,0,0,0.2)',
-                   }}
-                 >
-                   Oppdater preferansene dine
-                 </button>
+                  {/* Self-loop fixed: no longer redirects to /matching. 
+                      Instead, guide the user to profile editing or waiting. */}
                </div>
              )}
         </main>

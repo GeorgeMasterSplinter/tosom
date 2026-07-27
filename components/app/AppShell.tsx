@@ -16,7 +16,7 @@ import {
   shouldForceOnboarding,
 } from "../../lib/app/navigationState";
 import ModalStack from "./ModalStack";
-import OnboardingFlow from "../onboarding/OnboardingFlow";
+import OnboardingFlow from "../../app/onboarding/OnboardingFlow";
 import type { UserProfile } from "../../lib/profile/userProfile";
 
 /* ── Dummy-view-komponentar (NS6) ── */

@@ -10,6 +10,7 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { DeepProfileStep, JourneyPhase, ResonanceLevel } from '@prisma/client'
+export const dynamic = 'force-dynamic';
 
 export async function POST() {
   try {
@@ -128,4 +129,6 @@ export async function POST() {
 export async function GET() {
   return POST()
 }
+
+
 

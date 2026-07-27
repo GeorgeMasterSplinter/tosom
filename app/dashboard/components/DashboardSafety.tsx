@@ -17,9 +17,30 @@ export const DashboardSafety: FC = () => {
     return <div className="w-full rounded-2xl bg-[var(--ts-bg-soft)] h-32 animate-pulse mb-10" />;
   }
 
-  // Error
+  // Error — premium glassmorphism design
   if (state.error) {
-    return <p className="text-red-400 mb-10">{state.error}</p>;
+    return (
+      <div className="mb-10 animate-fadeIn">
+        <div
+          className="rounded-2xl p-6 border"
+          style={{
+            background: 'rgba(201, 106, 106, 0.08)',
+            backdropFilter: 'blur(12px)',
+            border: '1px solid rgba(201, 106, 106, 0.2)',
+          }}
+        >
+          <div className="flex items-start gap-4">
+            <span className="text-3xl text-[#D4AF37] flex-shrink-0" aria-hidden="true">⚠️</span>
+            <div>
+              <h3 className="text-base font-medium text-[#C96A6A] mb-1">Systemmerknad</h3>
+              <p className="text-sm leading-relaxed" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                {state.error}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const safetyPoints = state.safetyPoints;

@@ -18,7 +18,7 @@ const navLinks = [
   { label: 'Innsikt', href: '/dashboard/insights' },
   { label: 'Varmekart', href: '/dashboard/heatmap' },
   { label: 'Trygghet', href: '/dashboard/safety' },
-  { label: 'Innstillinger', href: '/dashboard/settings' },
+  { label: 'Innstillinger', href: '/settings' },
   { label: 'Uke', href: '/dashboard/summary' },
   { label: 'Analyse', href: '/dashboard/analytics' },
   { label: 'Profil', href: '/dashboard/profile' },

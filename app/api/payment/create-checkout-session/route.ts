@@ -8,6 +8,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createApiHandler } from '@/lib/api/handler'
 import { createCheckoutSession, createOrUpdateCustomer } from '@/lib/payment/stripe'
 
+export const dynamic = 'force-dynamic'
+
 // Zod-skjema for checkout
 const CheckoutSchema = require('zod').z.object({
   plan: require('zod').z.enum(['premium']).optional(),

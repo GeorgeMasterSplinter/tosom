@@ -11,7 +11,7 @@ export default function Why() {
           uten overfladiskhet.
         </p>
 
-        <div className="flex flex-col md:flex-row justify-center gap-10 text-[#CBAA7A] text-lg tracking-wide">
+        <div className="flex flex-col md:flex-row justify-center gap-10 text-[#D4AF37] text-lg tracking-wide">
           <span>Mindre ghosting</span>
           <span>Mindre stress</span>
           <span>Mer modenhet</span>

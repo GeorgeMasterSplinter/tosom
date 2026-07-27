@@ -6,6 +6,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { flags } from "@/utils/flags";
 
+export const dynamic = 'force-dynamic';
+
 interface Milestone {
   id?: string;
   conversationId: string;
@@ -158,7 +160,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Unlock (placeholder — save to DB)
-    // Fremtidig: await prisma.milestone.create({ data: { ...milestone, conversationId, unlocked: true, unlockedAt: new Date().toISOString() } });
+     // Fremtidig: await prisma.milestone.create({ data: { ...milestone, conversationId, unlocked: true, unlockedAt: new Date().toISOString() } });
 
     return NextResponse.json({
       milestone: { ...milestone, conversationId: body.conversationId, unlocked: true, unlockedAt: new Date().toISOString() },

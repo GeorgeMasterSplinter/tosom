@@ -15,6 +15,8 @@ import { getServerSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/prisma';
 import { generateMatchInsight, type MatchInsightInput, type MatchInsightOutput } from '@/lib/ai/matchInsight';
 
+export const dynamic = 'force-dynamic';
+
 /* ====== GET: Hent eller generer innsikt ====== */
 
 export async function GET(request: NextRequest) {

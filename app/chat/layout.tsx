@@ -1,11 +1,18 @@
 /**
- * ToSom — Chat Layout
- *
- * This layout wraps chat pages. The chat page manages its own
- * WarmFlow context since Next.js layouts only accept `params` and
- * `searchParams` as props.
+ * ToSom — Chat Layout (Premium Nordic Gold 2026) ⭐
+ * Wrapper for chat-sider med max-width og sentrering.
  */
 
-export default function ChatLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+export const dynamic = "force-dynamic";
+
+export default function ChatLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="w-full h-screen overflow-hidden" style={{ background: "#0B1520" }}>
+      {children}
+    </div>
+  );
 }

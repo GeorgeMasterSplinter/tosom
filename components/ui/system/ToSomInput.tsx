@@ -15,6 +15,9 @@ import { radius, colors, shadows } from '@/config/design-tokens';
 interface ToSomInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   label?: string;
   error?: string;
+  success?: string;
+  warning?: string;
+  variant?: 'default' | 'gold' | 'glass';
 }
 
 /* ═══════════════════════════════════════════
@@ -32,15 +35,55 @@ const baseInputStyles: React.CSSProperties = {
   outline: 'none',
 };
 
-const focusStyles: React.CSSProperties = {
-  borderColor: colors.gold,
-  boxShadow: `0 0 20px rgba(212,175,55,0.35)`,
-  background: 'rgba(255,255,255,0.07)',
+const baseInputStylesByVariant: Record<string, React.CSSProperties> = {
+  default: {
+    background: 'rgba(255,255,255,0.05)',
+    border: '1px solid rgba(255,255,255,0.10)',
+  },
+  gold: {
+    background: 'rgba(212,175,55,0.04)',
+    border: '1px solid rgba(212,175,55,0.18)',
+  },
+  glass: {
+    background: 'rgba(255,255,255,0.03)',
+    border: '1px solid rgba(255,255,255,0.06)',
+  },
 };
 
-const errorStyles: React.CSSProperties = {
-  borderColor: colors.error,
-  boxShadow: `0 0 12px rgba(255,77,77,0.25)`,
+const focusStylesByVariant: Record<string, React.CSSProperties> = {
+  default: {
+    borderColor: colors.gold,
+    boxShadow: `0 0 24px rgba(212,175,55,0.30)`,
+    background: 'rgba(255,255,255,0.07)',
+  },
+  gold: {
+    borderColor: '#E8C766',
+    boxShadow: `0 0 32px rgba(212,175,55,0.40)`,
+    background: 'rgba(212,175,55,0.06)',
+  },
+  glass: {
+    borderColor: 'rgba(212,175,55,0.50)',
+    boxShadow: `0 0 20px rgba(212,175,55,0.25)`,
+    background: 'rgba(255,255,255,0.05)',
+  },
+};
+
+const validationStyles = {
+  error: {
+    borderColor: colors.error,
+    boxShadow: `0 0 16px rgba(255,77,77,0.25)`,
+    background: 'rgba(255,77,77,0.04)',
+  },
+  success: {
+    borderColor: colors.success,
+    boxShadow: `0 0 16px rgba(77,255,136,0.20)`,
+    background: 'rgba(77,255,136,0.03)',
+  },
+  warning: {
+    borderColor: colors.warning,
+    boxShadow: `0 0 16px rgba(255,184,77,0.20)`,
+    background: 'rgba(255,184,77,0.03)',
+  },
 };
 
 /* ═══════════════════════════════════════════
@@ -49,6 +92,9 @@ const errorStyles: React.CSSProperties = {
 export const ToSomInput = forwardRef<HTMLInputElement, ToSomInputProps>(({
   label,
   error,
+  success,
+  warning,
+  variant = 'default',
   className = '',
   style,
   onFocus,
@@ -57,8 +103,11 @@ export const ToSomInput = forwardRef<HTMLInputElement, ToSomInputProps>(({
 }, ref) => {
   const [focused, setFocused] = useState(false);
 
-  const isError = !!error;
+  const hasError = !!error;
+  const hasSuccess = !!success;
+  const hasWarning = !!warning;
   const isActive = focused || !!props.value;
+  const activeVariant = hasError ? 'error' : hasSuccess ? 'success' : hasWarning ? 'warning' : variant;
 
   return (
     <div className="w-full">
@@ -66,7 +115,11 @@ export const ToSomInput = forwardRef<HTMLInputElement, ToSomInputProps>(({
         <label
           className="block text-sm font-medium mb-2 transition-colors duration-200"
           style={{
-            color: isError ? colors.error : focused ? colors.gold : 'rgba(255,255,255,0.7)',
+            color: hasError ? colors.error 
+              : hasSuccess ? colors.success 
+              : hasWarning ? colors.warning 
+              : focused ? '#D4AF37' 
+              : 'rgba(255,255,255,0.7)',
           }}
         >
           {label}
@@ -74,11 +127,13 @@ export const ToSomInput = forwardRef<HTMLInputElement, ToSomInputProps>(({
       )}
       <input
         ref={ref}
-        className={`${className} ${isError ? 'cursor-not-allowed' : ''}`}
+        className={`${className} ${hasError ? 'cursor-not-allowed' : ''}`}
         style={{
-          ...baseInputStyles,
-          ...(focused ? focusStyles : {}),
-          ...(isError ? errorStyles : {}),
+          ...baseInputStylesByVariant[variant],
+          ...(focused ? focusStylesByVariant[activeVariant] : {}),
+          ...(hasError ? validationStyles.error : {}),
+          ...(hasSuccess ? validationStyles.success : {}),
+          ...(hasWarning ? validationStyles.warning : {}),
           ...style,
         }}
         onFocus={(e) => {
@@ -91,9 +146,19 @@ export const ToSomInput = forwardRef<HTMLInputElement, ToSomInputProps>(({
         }}
         {...props}
       />
-      {isError && (
+      {hasError && (
         <p className="text-xs mt-1.5" style={{ color: colors.error }}>
-          {error}
+          ⚠ {error}
+        </p>
+      )}
+      {hasSuccess && !hasError && (
+        <p className="text-xs mt-1.5" style={{ color: colors.success }}>
+          ✓ {success}
+        </p>
+      )}
+      {hasWarning && !hasError && !hasSuccess && (
+        <p className="text-xs mt-1.5" style={{ color: colors.warning }}>
+          ⚡ {warning}
         </p>
       )}
     </div>

@@ -23,14 +23,14 @@ export default function Hero() {
           <div className="flex flex-col md:flex-row gap-4 justify-center">
             <a
               href="/signup"
-              className="bg-[#CBAA7A] text-black px-10 py-4 rounded-xl text-lg font-medium shadow-lg shadow-black/20 hover:bg-[#d8b887] transition"
+              className="bg-[#D4AF37] text-black px-10 py-4 rounded-xl text-lg font-medium shadow-lg shadow-black/20 hover:bg-[#E8C766] transition"
             >
               Start reisen
             </a>
 
             <a
               href="/hvordan-det-fungerer"
-              className="text-[#CBAA7A] text-lg underline underline-offset-4 hover:text-[#e3c89a] transition"
+              className="text-[#D4AF37] text-lg underline underline-offset-4 hover:text-[#E8C766] transition"
             >
               Hvordan ToSom fungerer →
             </a>

@@ -192,6 +192,9 @@ Gi kun et JSON-svar med denne struktur:
 /*  Available journey steps (data)                                */
 /* ---------------------------------------------------------- */
 
+
+export const dynamic = 'force-dynamic';
+
 function getAvailableSteps(): Array<{
   id: string;
   title: string;

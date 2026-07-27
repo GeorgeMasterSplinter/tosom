@@ -2,6 +2,8 @@ import { sendSystemMessage } from '@/lib/system/messages'
 import { requireAdmin } from '@/lib/admin/requireAuth'
 import { castToAdminUser } from '@/lib/auth/admin-auth'
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(
   request: Request
 ): Promise<Response> {

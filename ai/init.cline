@@ -1,0 +1,49 @@
+{
+  "version": "2026.1",
+  "description": "Auto-loader for ToSom agent. Initialiserer system_prompt, fast memory og agent-modus ved oppstart.",
+
+  "load": {
+    "system_prompt": "./system_prompt.md",
+    "memory": "./memory.json"
+  },
+
+  "agent": {
+    "mode": "plan-act-validate",
+    "patch_format": true,
+    "rules": {
+      "use_global_rules": true,
+      "use_language_manual": true,
+      "use_ui_spec": true,
+      "use_onboarding_spec": true,
+      "use_journey_spec": true,
+      "use_matching_rules": true
+    }
+  },
+
+  "behavior": {
+    "tone": "rolig, varm, moden, trygg",
+    "philosophy": "Én match, én reise, én relasjon",
+    "identity": "ToSom Blue + Nordic Gold"
+  },
+
+  "restrictions": {
+    "no_ai_chat": true,
+    "no_ai_coach": true,
+    "no_ai_partner": true,
+    "no_feed": true,
+    "no_swipe": true,
+    "no_gamification": true,
+    "backend_changes_require_approval": true
+  },
+
+  "startup": {
+    "print": [
+      "ToSom Agent initialisert.",
+      "System Prompt lastet.",
+      "Fast Memory lastet.",
+      "Agent-modus aktiv.",
+      "Patch-format aktivert.",
+      "Global Rules aktivert."
+    ]
+  }
+}

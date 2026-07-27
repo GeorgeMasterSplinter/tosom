@@ -6,12 +6,15 @@
  * - Resonans-score
  * - Varme-nivå
  * - Match-score
+ * Stabilisering: Radius, padding, animasjon
  */
 
 'use client';
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { ResonanceMeter } from '@/components/ui/ResonanceMeter';
+import { ProfileSecurityCard } from '@/components/profile/ProfileSecurityCard';
 
 interface ProfileData {
   identityName: string;
@@ -72,11 +75,11 @@ export default function ProfilePage() {
   const phaseName = phaseNames[profile.phaseOrder] || 'Introduksjon';
 
   return (
-    <main className="mx-auto max-w-[720px] px-8 py-10">
-      {/* Header */}
-      <div className="text-center mb-10" style={{ animation: 'fadeIn 0.5s ease-out' }}>
+    <main className="mx-auto max-w-[720px] px-6 py-8">
+      {/* Header — Modul 3: Animasjon 500ms → 400ms */}
+      <div className="text-center mb-6 animate-fadeIn" style={{ animationDuration: '400ms' }}>
         <div
-          className="w-24 h-24 mx-auto mb-4 rounded-full flex items-center justify-center"
+          className="w-24 h-24 mx-auto mb-4 rounded-xl flex items-center justify-center"
           style={{
             background: profile.photoUrl ? `url(${profile.photoUrl}) center/cover` : 'rgba(212,175,55,0.1)',
             border: `2px solid ${phaseColor}`,
@@ -87,7 +90,7 @@ export default function ProfilePage() {
             {profile.identityName.charAt(0).toUpperCase()}
           </span>}
         </div>
-        <h1 className="text-3xl font-semibold mb-2" style={{ color: '#FFFFFF' }}>
+        <h1 className="text-xl font-light mb-2" style={{ color: '#FFFFFF' }}>
           {profile.identityName}
         </h1>
         <span className="px-3 py-1 rounded-full text-sm" style={{
@@ -99,21 +102,14 @@ export default function ProfilePage() {
         </span>
       </div>
 
-      {/* Resonans */}
-      <div className="mb-8 p-6 rounded-2xl" style={{
+      {/* Resonans — erstattet med ResonanceMeter */}
+      <div className="mb-6 p-4 rounded-xl" style={{
         background: 'rgba(255,255,255,0.03)',
         border: '1px solid rgba(255,255,255,0.06)',
       }}>
-        <h2 className="text-lg font-medium mb-3" style={{ color: '#FFFFFF' }}>Resonans</h2>
-        <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{
-            background: profile.resonanceScore >= 60 ? 'rgba(77,255,136,0.1)' : 'rgba(212,175,55,0.1)',
-            border: `1px solid ${profile.resonanceScore >= 60 ? 'rgba(77,255,136,0.2)' : 'rgba(212,175,55,0.2)'}`,
-          }}>
-            <span style={{ color: profile.resonanceScore >= 60 ? '#4DFF88' : '#D4AF37', fontSize: '20px', fontWeight: 600 }}>
-              {profile.resonanceScore}%
-            </span>
-          </div>
+        <h2 className="text-base font-medium mb-4" style={{ color: '#FFFFFF' }}>Resonans</h2>
+        <div className="flex flex-col items-center gap-4">
+          <ResonanceMeter value={profile.resonanceScore} size="md" showLabel={false} />
           <p style={{ color: 'rgba(255,255,255,0.5)' }}>
             {profile.resonanceScore >= 80 ? 'Djuk resonans' : profile.resonanceScore >= 60 ? 'Sterk resonans' : profile.resonanceScore >= 40 ? 'Moder resonans' : 'Utviklar seg'}
           </p>
@@ -121,13 +117,13 @@ export default function ProfilePage() {
       </div>
 
       {/* Varme */}
-      <div className="mb-8 p-6 rounded-2xl" style={{
+      <div className="mb-6 p-4 rounded-xl" style={{
         background: 'rgba(255,255,255,0.03)',
         border: '1px solid rgba(255,255,255,0.06)',
       }}>
-        <h2 className="text-lg font-medium mb-3" style={{ color: '#FFFFFF' }}>Varme</h2>
+        <h2 className="text-base font-medium mb-3" style={{ color: '#FFFFFF' }}>Varme</h2>
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{
+          <div className="w-16 h-16 rounded-xl flex items-center justify-center" style={{
             background: 'rgba(255,184,108,0.1)',
             border: '1px solid rgba(255,184,108,0.2)',
           }}>
@@ -143,11 +139,11 @@ export default function ProfilePage() {
 
       {/* Tags */}
       {profile.tags.length > 0 && (
-        <div className="mb-8 p-6 rounded-2xl" style={{
+        <div className="mb-6 p-4 rounded-xl" style={{
           background: 'rgba(255,255,255,0.03)',
           border: '1px solid rgba(255,255,255,0.06)',
         }}>
-          <h2 className="text-lg font-medium mb-3" style={{ color: '#FFFFFF' }}>Profilerings-tags</h2>
+          <h2 className="text-base font-medium mb-3" style={{ color: '#FFFFFF' }}>Profilerings-tags</h2>
           <div className="flex flex-wrap gap-2">
             {profile.tags.map((tag, i) => (
               <span key={i} className="px-3 py-1 rounded-full text-sm" style={{
@@ -162,16 +158,21 @@ export default function ProfilePage() {
         </div>
       )}
 
+      {/* Profil-sikkerheit — Modul 2: Tone alignment + Modul 3: +2px spacing */}
+      <div className="mb-8">
+        <ProfileSecurityCard showDetails={true} />
+      </div>
+
       {/* Navigasjon */}
       <div className="flex justify-center gap-4">
-        <Link href="/journey" className="px-6 py-3 rounded-xl text-sm font-medium" style={{
+        <Link href="/journey" className="px-6 py-3 rounded-lg text-sm font-medium" style={{
           background: 'rgba(212,175,55,0.1)',
           border: '1px solid rgba(212,175,55,0.25)',
           color: '#D4AF37',
         }}>
           Journey Dashboard
         </Link>
-        <Link href="/chat" className="px-6 py-3 rounded-xl text-sm font-medium" style={{
+        <Link href="/chat" className="px-6 py-3 rounded-lg text-sm font-medium" style={{
           background: 'rgba(255,255,255,0.04)',
           border: '1px solid rgba(255,255,255,0.1)',
           color: 'rgba(255,255,255,0.6)',
@@ -182,6 +183,7 @@ export default function ProfilePage() {
 
       <style>{`
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
       `}</style>
     </main>
   );

@@ -99,7 +99,7 @@ export default function DesignSystemPage() {
         <h3 className="text-xl font-semibold mb-4" style={{ color: 'rgba(212,175,55,0.9)' }}>ToSomButton</h3>
         <div className="flex flex-col md:flex-row gap-4 mb-12 max-w-[400px]">
           <ToSomButton variant="gold">Gold Button</ToSomButton>
-          <ToSomButton variant="dark">Dark Button</ToSomButton>
+          <ToSomButton variant="secondary">Dark Button</ToSomButton>
         </div>
 
         <h3 className="text-xl font-semibold mb-4" style={{ color: 'rgba(212,175,55,0.9)' }}>ToSomCard</h3>
@@ -123,7 +123,7 @@ export default function DesignSystemPage() {
         <h3 className="text-xl font-semibold mb-6" style={{ color: 'rgba(212,175,55,0.9)' }}>Knapper</h3>
         <div className="flex flex-wrap gap-4 mb-12">
           <ToSomButton variant="gold">Primary CTA</ToSomButton>
-          <ToSomButton variant="dark">Secondary CTA</ToSomButton>
+          <ToSomButton variant="secondary">Secondary CTA</ToSomButton>
         </div>
 
         <h3 className="text-xl font-semibold mb-6" style={{ color: 'rgba(212,175,55,0.9)' }}>Kort</h3>
@@ -149,7 +149,7 @@ export default function DesignSystemPage() {
         <SectionTitle>Kodeeksempler</SectionTitle>
 
         <h3 className="text-lg font-semibold mb-3" style={{ color: 'rgba(212,175,55,0.9)' }}>ToSomButton</h3>
-        <CodeBlock code={`<ToSomButton variant="gold">Klikk meg</ToSomButton>\n<ToSomButton variant="dark">Secondary</ToSomButton>`} />
+        <CodeBlock code={`<ToSomButton variant="gold">Klikk meg</ToSomButton>\n<ToSomButton variant="secondary">Secondary</ToSomButton>`} />
 
         <h3 className="text-lg font-semibold mb-3 mt-8" style={{ color: 'rgba(212,175,55,0.9)' }}>ToSomCard</h3>
         <CodeBlock code={`<ToSomCard icon="⭐" title="Min tittel">\n  Min tekst her\n</ToSomCard>`} />

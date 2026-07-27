@@ -1,5 +1,6 @@
 
 import { getConversationMetadata } from "@/lib/admin/conversation";
+export const dynamic = 'force-dynamic';
 
 export async function GET(
   request: Request,
@@ -39,3 +40,5 @@ export async function GET(
     );
   }
 }
+
+

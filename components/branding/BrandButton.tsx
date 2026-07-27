@@ -37,9 +37,9 @@ const variantStyles: Record<ButtonVariant, (c: typeof import('@/lib/branding/col
 };
 
 const sizeStyles: Record<string, string> = {
-  sm: 'px-3 py-1.5 text-xs font-medium rounded-lg',
-  md: 'px-5 py-2.5 text-sm font-medium rounded-xl',
-  lg: 'px-8 py-3.5 text-base font-medium rounded-xl',
+  sm: 'px-3 py-1.5 text-xs font-medium rounded-[8px]',
+  md: 'px-5 py-2.5 text-sm font-medium rounded-[12px]',
+  lg: 'px-8 py-3.5 text-base font-medium rounded-[12px]',
 };
 
 export function BrandButton({

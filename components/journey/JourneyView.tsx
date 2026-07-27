@@ -3,7 +3,7 @@
 import { journeyAPI, buildJourneyState, dummyMatchContext } from "@/lib/journey/engine";
 import JourneyTimeline from "../conversation/JourneyTimeline";
 import SystemMessageBox from "../system/SystemMessageBox";
-import ReflectionBox from "../dashboard/ReflectionBox";
+// ReflectionBox import removed — component archived per dashboard redesign
 
 /** JourneyView – dagvisning for Dag 1–35. */
 
@@ -111,10 +111,6 @@ export default function JourneyView({ currentDay }: JourneyViewProps) {
         <h3 className="font-semibold text-[var(--color-text)] tracking-tight text-lg">
           Refleksjon
         </h3>
-        <ReflectionBox
-          reflectionText={dayConfig.reflectionPrompt}
-          reflectionType="info"
-        />
       </section>
 
       {/* Dagens innsikt */}

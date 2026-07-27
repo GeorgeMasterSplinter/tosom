@@ -82,16 +82,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
 
   events: {
-    async createUser({ user }) {
-      if (user.email) {
-        await prisma.profile.create({
-          data: {
-            userId: user.id!,
-            deepProfileStep: "IDENTITY",
-          },
-        })
-      }
-    },
+     async createUser({ user }) {
+       if (user.email) {
+         await prisma.profile.create({
+           data: {
+             userId: user.id!,
+             age: 25,
+             deepProfileStep: "IDENTITY",
+           },
+         })
+       }
+     },
   },
 
   pages: {
@@ -105,6 +106,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
 
   trustHost: true,
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
   useSecureCookies: false,
 })

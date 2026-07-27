@@ -1,6 +1,6 @@
 /**
  * ToSom — Smart Header (Premium Final)
- * To modes: Normal (dashboard/matcher/profil) og Focus (onboarding/redigering/skriving).
+ * Two modes: Normal (dashboard/matcher/profil) and Focus (onboarding/redigering/skriving).
  * Adaptive Presence, Soft Shadow Fade, Dynamic Blur Strength.
  */
 
@@ -15,11 +15,12 @@ export default function Header() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  // Mode-detektering
+  // Mode-detektering (med null-safety)
   const isFocusMode =
-    pathname.startsWith('/onboarding') ||
-    pathname.startsWith('/profile/edit') ||
-    pathname.startsWith('/messages/write');
+    pathname &&
+    (pathname.startsWith('/onboarding') ||
+      pathname.startsWith('/profile/edit') ||
+      pathname.startsWith('/messages/write'));
 
   // Check login-status
   useEffect(() => {
@@ -56,7 +57,7 @@ export default function Header() {
   `.trim();
 
   const logoClass = `
-    transition-all duration-500 text-[#CBAA7A] hover:text-[#CBAA7A]
+    transition-all duration-500 text-[#D4AF37] hover:text-[#E8C766]
     ${isFocusMode ? 'text-lg' : 'text-2xl'} font-light tracking-wide
   `.trim();
 
@@ -74,35 +75,35 @@ export default function Header() {
 
         {/* Navigasjon */}
         <nav className="flex items-center gap-6 text-sm text-[#EDEDED]/80">
-          <a href="/hvordan-det-fungerer" className="hover:text-[#CBAA7A] transition-colors duration-300 ease-out">
+          <a href="/hvordan-det-fungerer" className="hover:text-[#D4AF37] transition-colors duration-300 ease-out">
             Hvordan det fungerer
           </a>
-          <a href="/om" className="hover:text-[#CBAA7A] transition-colors duration-300 ease-out">
+          <a href="/om" className="hover:text-[#D4AF37] transition-colors duration-300 ease-out">
             Om ToSom
           </a>
 
           {/* Hvis bruker er innlogget → vis NotificationCenter + Dashboard */}
           {loggedIn ? (
             <>
-              <a href="/dashboard" className="hover:text-[#CBAA7A] transition-colors duration-300 ease-out text-[#CBAA7A]">
+              <a href="/dashboard" className="hover:text-[#D4AF37] transition-colors duration-300 ease-out text-[#D4AF37]">
                 Dashboard
               </a>
               <NotificationCenter />
               <a
                 href="/logout"
-                className="bg-[#CBAA7A]/20 border border-[#CBAA7A]/30 px-4 py-2 rounded-lg hover:text-[#CBAA7A] transition-colors duration-300 ease-out"
+                className="bg-[#D4AF37]/20 border border-[#D4AF37]/30 px-4 py-2 rounded-lg hover:text-[#D4AF37] transition-colors duration-300 ease-out"
               >
                 Logg ut
               </a>
             </>
           ) : (
             <>
-              <a href="/login" className="hover:text-[#CBAA7A] transition-colors duration-300 ease-out">
+              <a href="/login" className="hover:text-[#D4AF37] transition-colors duration-300 ease-out">
                 Logg inn
               </a>
               <a
                 href="/signup"
-                className="bg-[#CBAA7A] text-black px-4 py-2 rounded-lg font-medium hover:bg-[#CBAA7A]/30 hover:text-[#CBAA7A] transition-colors duration-300 ease-out"
+                className="bg-[#D4AF37] text-black px-4 py-2 rounded-lg font-medium hover:bg-[#E8C766]/30 hover:text-[#D4AF37] transition-colors duration-300 ease-out"
               >
                 Start reisen
               </a>

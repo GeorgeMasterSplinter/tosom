@@ -35,7 +35,7 @@ export const DashboardHeader = ({ name, avatar, className = "" }: DashboardHeade
           <h2 className="text-title-l font-semibold text-white">
             {greeting}, {name.split(" ")[0]}
           </h2>
-          <p className="text-body text-white/40 mt-1">Fortsett reisen deres</p>
+          <p className="text-body text-white/40 mt-1">Din relasjon. Dine steg. Ditt fokus.</p>
           <div className="mt-3 w-12 h-0.5 mx-auto rounded-full bg-gradient-to-r from-transparent via-[var(--ts-gold)] to-transparent" />
         </div>
       </div>

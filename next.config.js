@@ -1,6 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Turbopack disabled (inferred)
+  // Prevent prerendering of API routes and dynamic pages
+  experimental: {
+    serverActions: {
+      allowedOrigins: ['*'],
+    },
+  },
+
+  // Global build ID (dynamic, no static cache)
+  generateBuildId: async () => {
+    return 'build-' + Date.now();
+  },
 
   // Security & CDN headers
   async headers() {

@@ -1,9 +1,8 @@
 /**
- * ToSom – Onboarding Page
- * Entry point for the 10-step research-based onboarding flow.
+ * ToSom — Onboarding Entry Point (Premium rebuild 2026 — Fase 5)
+ * 
+ * Renderar OnboardingFlow med alle 13 steg.
  */
-
-'use client';
 
 import OnboardingFlow from './OnboardingFlow';
 

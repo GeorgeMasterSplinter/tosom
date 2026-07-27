@@ -6,7 +6,7 @@
    ═══════════════════════════════════════════ */
 
 import { ReactNode } from "react";
-import { Button } from "@/components/ui/Button";
+import Button from "@/components/ui/Button";
 
 interface SectionHeroProps {
   badge?: string;

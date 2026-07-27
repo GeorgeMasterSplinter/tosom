@@ -17,6 +17,7 @@ interface ToSomCardProps {
   icon?: ReactNode;
   title: string;
   children: ReactNode;
+  variant?: 'default' | 'elevated';
   onClick?: () => void;
   className?: string;
   style?: CSSProperties;
@@ -26,27 +27,37 @@ interface ToSomCardProps {
 /* ═══════════════════════════════════════════
    BASE STYLES
    ═══════════════════════════════════════════ */
-const glassVariants: Record<string, CSSProperties> = {
+const cardVariants = {
   default: {
     background: 'rgba(255,255,255,0.05)',
     border: '1px solid rgba(255,255,255,0.10)',
+    hoverBg: 'rgba(255,255,255,0.07)',
+    hoverBorder: 'rgba(255,255,255,0.14)',
+    shadow: '0 0 40px rgba(0,0,0,0.30)',
+    glowShadow: null as string | null,
   },
-  deep: {
-    background: 'rgba(255,255,255,0.07)',
-    border: '1px solid rgba(212,175,55,0.15)',
+  elevated: {
+    background: 'rgba(212,175,55,0.04)',
+    border: '1px solid rgba(212,175,55,0.20)',
+    hoverBg: 'rgba(212,175,55,0.07)',
+    hoverBorder: 'rgba(212,175,55,0.35)',
+    shadow: '0 4px 30px rgba(212,175,55,0.15)',
+    glowShadow: '0 0 60px rgba(212,175,55,0.08)',
   },
 };
 
-const baseCardStyles: CSSProperties = {
+const baseCardStyles = (v: keyof typeof cardVariants): CSSProperties => ({
   borderRadius: radius['2xl'],
-  background: 'rgba(255,255,255,0.05)',
+  background: cardVariants[v].background,
   backdropFilter: 'blur(12px)',
-  border: '1px solid rgba(255,255,255,0.10)',
-  boxShadow: '0 0 40px rgba(0,0,0,0.30)',
+  WebkitBackdropFilter: 'blur(12px)',
+  border: `1px solid ${cardVariants[v].border}`,
+  boxShadow: cardVariants[v].shadow,
   padding: '32px',
   transition: `all ${motionTokens.durations.normal} ${motionTokens.easings.fadeIn}`,
   cursor: 'default',
-};
+  position: 'relative' as const,
+});
 
 const baseIconStyles: CSSProperties = {
   display: 'inline-flex',
@@ -69,29 +80,35 @@ export const ToSomCard: FC<ToSomCardProps> = ({
   icon,
   title,
   children,
+  variant = 'default',
   onClick,
   className = '',
   style,
   iconWrapperClassName = '',
 }) => {
+  const vStyles = baseCardStyles(variant);
+  const vColors = cardVariants[variant];
+
   return (
     <div
-      className={`tosom-card group ${className}`}
+      className={`tosom-card group tosoms-card__${variant} ${className}`}
       style={{
-        ...baseCardStyles,
+        ...vStyles,
         ...style,
       }}
       onMouseEnter={(e) => {
-        (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.07)';
-        (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 22px rgba(0,0,0,0.144)';
-        (e.currentTarget as HTMLElement).style.border = '1px solid rgba(212,175,55,0.15)';
+        (e.currentTarget as HTMLElement).style.background = vColors.hoverBg;
+        (e.currentTarget as HTMLElement).style.boxShadow = vColors.glowShadow 
+          ? `0 4px 22px rgba(0,0,0,0.144), ${vColors.glowShadow}` 
+          : '0 4px 22px rgba(0,0,0,0.144)';
+        (e.currentTarget as HTMLElement).style.border = `1px solid ${vColors.hoverBorder}`;
         (e.currentTarget as HTMLElement).style.transform = 'translateY(-4px)';
         onClick?.();
       }}
       onMouseLeave={(e) => {
-        (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.05)';
-        (e.currentTarget as HTMLElement).style.boxShadow = '0 0 40px rgba(0,0,0,0.30)';
-        (e.currentTarget as HTMLElement).style.border = '1px solid rgba(255,255,255,0.10)';
+        (e.currentTarget as HTMLElement).style.background = vColors.background;
+        (e.currentTarget as HTMLElement).style.boxShadow = vColors.shadow;
+        (e.currentTarget as HTMLElement).style.border = `1px solid ${vColors.border}`;
         (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
       }}
     >

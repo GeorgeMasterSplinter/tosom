@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -16,3 +17,5 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({ ok: false }, { status: 401 });
 }
+
+

@@ -10,6 +10,8 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST() {
   try {
     const ADMIN_EMAIL = 'admin@tosom.no';
@@ -36,6 +38,7 @@ export async function POST() {
         profile: {
           create: {
             identityName: 'Admin',
+            age: 30,
             deepProfileStep: 'SUMMARY',
           },
         },

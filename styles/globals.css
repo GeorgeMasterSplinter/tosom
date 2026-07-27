@@ -984,6 +984,36 @@ button:focus-visible,
 
 .text-subtle { color: var(--ts-text-subtle); }
 
+/* ═══════════════════════════════════════════
+   ToSomButton — hover styles (SSR-safe)
+   ═══════════════════════════════════════════ */
+.tosom-button.__gold:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 0 65px rgba(212,175,55,0.45) !important;
+  transform: scale(1.015);
+}
+
+.tosom-button.__secondary:hover {
+  background: rgba(212,175,55,0.12) !important;
+  border-color: rgba(212,175,55,0.4) !important;
+}
+
+.tosom-button.__ghost:hover {
+  background: rgba(255,255,255,0.06) !important;
+  color: rgba(255,255,255,0.9) !important;
+}
+
+.tosom-button.__destructive:hover {
+  background: rgba(255,77,77,0.2) !important;
+  border-color: rgba(255,77,77,0.5) !important;
+}
+
+.tosom-button.__disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 /* ── Gold accent utilities ── */
 .text-gold { color: var(--ts-gold); }
 .text-gold-light { color: var(--ts-gold-light); }
@@ -1250,4 +1280,16 @@ textarea.ts-input { resize: vertical; min-height: 100px; }
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ═══════════════════════════════════════════
+   Chat-bubble animasjon (ny)
+   ═══════════════════════════════════════════ */
+@keyframes bubblePop {
+  from { transform: scale(0.96); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.fade-in-up-global {
+  animation: fadeInUp 0.3s ease-out forwards;
 }

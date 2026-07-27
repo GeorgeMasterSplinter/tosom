@@ -1,0 +1,151 @@
+/**
+ * ToSom UI 3.0 — Platform-Aware Components
+ *
+ * Auto-selects the correct component implementation based on runtime platform.
+ * All wrappers use Tailwind classes only — no inline styles.
+ *
+ * Usage:
+ *   import { PlatformButton, PlatformCard, PlatformModal, PlatformInput } from '@/components/ui/platformComponents'
+ */
+
+import React from 'react';
+import { platform } from './tokens';
+
+/* ── Platform Button ── */
+export type PlatformButtonVariant = 'primary' | 'secondary' | 'ghost';
+export type PlatformButtonSize = 'sm' | 'md' | 'lg';
+
+export interface PlatformButtonProps {
+  children: React.ReactNode;
+  variant?: PlatformButtonVariant;
+  size?: PlatformButtonSize;
+  disabled?: boolean;
+  onPress?: () => void;
+  className?: string;
+}
+
+const PlatformButton: React.FC<PlatformButtonProps> = ({
+  children,
+  variant = 'primary',
+  size = 'md',
+  disabled = false,
+  onPress,
+  className = '',
+}) => {
+  const base = 'inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:ring-offset-2 focus:ring-offset-[#0B0E11]';
+  const variants = {
+    primary: 'bg-[#D4AF37] text-[#0B0E11] hover:bg-[#E8C766] disabled:opacity-40 disabled:cursor-not-allowed',
+    secondary: 'bg-white/[0.04] text-white border border-white/8 hover:bg-white/[0.08] disabled:opacity-40',
+    ghost: 'bg-transparent text-white/65 hover:text-white hover:bg-white/[0.04] disabled:opacity-40',
+  };
+  const sizes = { sm: 'px-4 py-2 text-sm', md: 'px-5 py-3 text-base', lg: 'px-6 py-4 text-lg' };
+
+  return (
+    <button className={`${base} ${variants[variant]} ${sizes[size]} ${className}`} disabled={disabled} onClick={onPress}>
+      {children}
+    </button>
+  );
+};
+
+/* ── Platform Card ── */
+export interface PlatformCardProps {
+  children: React.ReactNode;
+  padding?: 'none' | 'sm' | 'md' | 'lg';
+  interactive?: boolean;
+  onPress?: () => void;
+  glow?: boolean;
+  className?: string;
+}
+
+const PlatformCard: React.FC<PlatformCardProps> = ({
+  children,
+  padding = 'lg',
+  interactive = false,
+  onPress,
+  glow = false,
+  className = '',
+}) => {
+  const pad = { none: 'p-0', sm: 'p-2', md: 'p-4', lg: 'p-6' };
+  const card = 'bg-white/[0.04] border border-white/8 rounded-2xl backdrop-blur-xl shadow-lg';
+  const interactiveStyle = interactive
+    ? 'cursor-pointer hover:bg-white/[0.06] active:scale-[0.98] ' + (glow ? 'hover:shadow-gold/20' : 'shadow-md')
+    : '';
+
+  if (interactive && onPress) {
+    return (
+      <button className={`${card} ${interactiveStyle} ${pad[padding]} ${className}`} onClick={onPress} type="button">
+        {children}
+      </button>
+    );
+  }
+  return <div className={`${card} ${pad[padding]} ${className}`}>{children}</div>;
+};
+
+/* ── Platform Modal ── */
+export interface PlatformModalProps {
+  visible: boolean;
+  onClose: () => void;
+  children: React.ReactNode;
+  placement?: 'bottom' | 'center';
+  title?: string;
+  closeable?: boolean;
+  className?: string;
+}
+
+const PlatformModal: React.FC<PlatformModalProps> = ({ visible, onClose, children, placement = 'center', title, closeable = true, className = '' }) => {
+  if (!visible) return null;
+  return (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center" role="dialog">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className={`relative z-10 w-full max-w-lg mx-4 bg-white/[0.04] border border-white/8 rounded-2xl backdrop-blur-xl shadow-xl ${className}`}>
+        {title && (
+          <div className="px-6 py-4 border-b border-white/8">
+            <h2 className="text-xl font-semibold text-white">{title}</h2>
+          </div>
+        )}
+        <div className="p-6">{children}</div>
+        {closeable && title && (
+          <div className="px-6 pb-4 pt-2 flex justify-center">
+            <button onClick={onClose} className="text-sm text-white/65 hover:text-white transition-colors">Lukk</button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+/* ── Platform Input ── */
+export interface PlatformInputProps {
+  placeholder?: string;
+  value?: string;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  type?: string;
+  label?: string;
+  error?: string;
+  disabled?: boolean;
+  className?: string;
+}
+
+const PlatformInput: React.FC<PlatformInputProps> = ({ label, error, className = '', onChange, ...props }) => {
+  return (
+    <div className="mb-4">
+      {label && <label className="block text-sm font-medium text-white mb-2">{label}</label>}
+      <input
+        {...(onChange ? { onChange } : {})}
+        className={`w-full bg-white/[0.04] border border-white/8 rounded-xl px-4 py-3 text-base text-white outline-none transition-all duration-200 placeholder:text-white/45 focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/25 disabled:opacity-40 ${error ? 'border-[#FF4D4D]' : ''} ${className}`}
+        {...props}
+      />
+      {error && <span className="block text-xs text-[#FF4D4D] mt-1">{error}</span>}
+    </div>
+  );
+};
+
+/* ── Platform-Aware Export Map ── */
+export const platformComponents = {
+  Button: PlatformButton,
+  Card: PlatformCard,
+  Modal: PlatformModal,
+  Input: PlatformInput,
+} as const;
+
+export default platformComponents;

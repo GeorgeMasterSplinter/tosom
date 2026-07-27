@@ -55,19 +55,17 @@ function IconDepth() {
 }
 
 /* ========================
-   HELPER — Ultra-Premium GlassCard
+   HELPER — Premium GlassCard
    ======================== */
 
 function GlassCard({
   children,
   padding = 'lg',
   className = '',
-  style,
 }: {
   children: React.ReactNode;
   padding?: 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
-  style?: React.CSSProperties;
 }) {
   const paddingMap = { sm: spacing.sm, md: spacing.md, lg: spacing.lg, xl: spacing.xl };
 
@@ -83,7 +81,6 @@ function GlassCard({
         boxShadow: '0 8px 32px rgba(0,0,0,0.20)',
         padding: `${paddingMap[padding]}px`,
         transition: 'all 300ms ease-out',
-        ...style,
       }}
       onMouseEnter={(e) => {
         (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.08)';
@@ -116,22 +113,22 @@ const steps = [
   {
     icon: <IconPrivacy />,
     title: 'Privat profil',
-    content: 'Profilen din er helt privat og aldri offentlig. Du deler kun med den ene personen du matches med – og bare når du selv vil.',
+    content: 'Profilen din er helt privat og aldri offentlig. Du deler kun med den eine personen du matches med – og bare når du sjølv vil.',
   },
   {
     icon: <IconMatch />,
     title: 'Match innen 24 timer',
-    content: 'Du får én match om gangen – valgt med omtanke, ikke tilfeldighet. Ingen endeløs sveiping. Ingen overveldende valg.',
+    content: 'Du får éin match om gangen – valgt med omtanke, ikke tilfeldighet. Ingen endeløs sveiping. Ingen overveldende valg.',
   },
   {
     icon: <IconResearch />,
     title: 'Forskningsbasert matching',
-    content: 'Vi matcher på livssituasjon, verdier, relasjonsstil og emosjonell kompatibilitet. Ikke overflate. Ikke tilfeldigheter. Bare det som faktisk betyr noe i et forhold.',
+    content: 'Vi matcher på livssituasjon, verdier, relasjonsstil og emosjonell kompatibilitet. Ikke overflate. Ikke tilfeldigheter. Bare det som faktisk betyr noko i et forhold.',
   },
   {
     icon: <IconDepth />,
     title: 'Bygget for dybde',
-    content: 'Samtaler, spørsmål og små oppgaver som hjelper dere å komme nærmere. Mindre overflate. Mer mening.',
+    content: 'Samtaler, spørsmål og små oppgåver som hjelper dere å komme nærmere. Mindre overflate. Mer mening.',
   },
 ];
 
@@ -161,12 +158,12 @@ export default function LandingPage() {
           <AgeBadge />
         </div>
 
-        {/* Hero — redusert top padding for heva logo høgare */}
+        {/* Hero */}
         <section className="relative overflow-hidden py-10 ph:py-14 md:py-[60px]">
           <Hero />
         </section>
 
-        {/* ===== HVIDOR TOSOM ===== */}
+        {/* ===== HVORFOR TOSOM ===== */}
         <ToSomSection
           spotlight="soft"
           className="px-6 text-center space-y-6"
@@ -198,7 +195,7 @@ export default function LandingPage() {
                 lineHeight: '1.8',
               }}
             >
-              ToSom gir deg ro, tid og én gjennomtenkt match — slik at du faktisk kan bli kjent.
+              ToSom gir deg ro, tid og éin gjennomtenkt match — slik at du faktisk kan bli kjent.
             </p>
           </div>
         </ToSomSection>
@@ -281,7 +278,7 @@ export default function LandingPage() {
             Lag profilen din i ditt eget tempo og møt noen som faktisk passer deg — på ordentlig.
           </p>
 
-          <div className="flex flex-col md:flex-row items-center justify-center gap-4 pt-4">
+          <div className="flex flex-col items-center justify-center gap-4 pt-4">
             <ToSomButton href="/register" variant="gold" size="xl">
               Start reisen
             </ToSomButton>

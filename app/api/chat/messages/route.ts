@@ -1,91 +1,46 @@
 /**
- * ToSom — Chat Messages API
- * 
- * GET  /api/chat/messages?conversationId=xxx — hent alle meldingar i samtale
- * POST /api/chat/messages — send ny melding
+ * GET /api/chat/messages?conversationId=X
+ * Hent alle meldingar for ei conversation.
  */
 
-import { NextResponse, NextRequest } from 'next/server';
-import { auth } from '@/lib/auth/config';
-import { sendMessage, getMessages } from '@/lib/chat/messageService';
-import { prisma } from '@/lib/prisma';
+import { NextResponse } from "next/server";
+import { getServerSession } from "@/lib/auth/session";
+import { prisma } from "@/lib/prisma";
 
-export async function GET(req: NextRequest) {
-  try {
-    const conversationId = req.nextUrl.searchParams.get('conversationId');
+export const dynamic = "force-dynamic";
 
-    if (!conversationId) {
-      return NextResponse.json({ error: 'Manglar conversationId' }, { status: 400 });
-    }
-
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Ikke autentisert' }, { status: 401 });
-    }
-
-    const conversation = await prisma.conversation.findFirst({
-      where: { id: conversationId },
-      select: { userAId: true, userBId: true },
-    });
-
-    if (!conversation) {
-      return NextResponse.json({ error: 'Samtale ikkje funnen' }, { status: 404 });
-    }
-
-    if (session.user.id !== conversation.userAId && session.user.id !== conversation.userBId) {
-      return NextResponse.json({ error: 'Du har ikkje tilgang til denne samtalen' }, { status: 403 });
-    }
-
-    const messages = await getMessages(conversationId, session.user.id);
-    return NextResponse.json(messages);
-  } catch (error) {
-    if (error instanceof Error && error.message === 'UNAUTHORIZED') {
-      return NextResponse.json({ error: 'Du har ikkje tilgang til denne samtalen' }, { status: 403 });
-    }
-    console.error('GET /api/chat/messages feil:', error);
-    return NextResponse.json({ error: 'Kunne ikke hente meldingar' }, { status: 500 });
+export async function GET(request: Request) {
+  const session = await getServerSession();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Ikke autentisert" }, { status: 401 });
   }
-}
 
-export async function POST(req: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const conversationId = searchParams.get("conversationId");
+
+  if (!conversationId) {
+    return NextResponse.json({ error: "Manglar conversationId" }, { status: 400 });
+  }
+
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Ikke autentisert' }, { status: 401 });
-    }
-
-    const body = await req.json();
-    const { conversationId, content } = body;
-
-    if (!conversationId || !content) {
-      return NextResponse.json({ error: 'Manglar conversationId eller content' }, { status: 400 });
-    }
-
-    const conversation = await prisma.conversation.findFirst({
-      where: { id: conversationId },
-      select: { userAId: true, userBId: true },
+    const messages = await prisma.message.findMany({
+      where: {
+        conversationId,
+      },
+      orderBy: { createdAt: "asc" },
+      include: {
+        sender: {
+          select: { id: true, name: true, age: true },
+        },
+      },
     });
 
-    if (!conversation) {
-      return NextResponse.json({ error: 'Samtale ikkje funnen' }, { status: 404 });
-    }
-
-    if (session.user.id !== conversation.userAId && session.user.id !== conversation.userBId) {
-      return NextResponse.json({ error: 'Du har ikkje tilgang til denne samtalen' }, { status: 403 });
-    }
-
-    const message = await sendMessage({
-      conversationId,
-      senderId: session.user.id,
-      content: content.trim(),
-    });
-
-    return NextResponse.json(message);
+    return NextResponse.json({ messages });
   } catch (error) {
-    if (error instanceof Error && error.message === 'UNAUTHORIZED') {
-      return NextResponse.json({ error: 'Du har ikkje tilgang til denne samtalen' }, { status: 403 });
-    }
-    console.error('POST /api/chat/messages feil:', error);
-    return NextResponse.json({ error: 'Kunne ikke sende melding' }, { status: 500 });
+    console.error("GET /api/chat/messages error:", error);
+    return NextResponse.json(
+      { error: "Kunne ikke laste meldingar" },
+      { status: 500 }
+    );
   }
 }

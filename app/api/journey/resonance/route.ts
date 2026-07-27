@@ -7,9 +7,18 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { calculateResonance, createResonanceSnapshot } from '@/lib/journey/engine';
+import { requireAuth } from '@/lib/auth/requireAuth';
+
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
+    // Auth-sjekk
+    const auth = await requireAuth(req);
+    if (auth instanceof NextResponse) {
+      return auth;
+    }
+
     const body = await req.json();
     const {
       conversationId,
@@ -49,12 +58,23 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
-  const url = new URL(req.url);
-  const conversationId = url.searchParams.get('conversationId');
+  try {
+    // Auth-sjekk
+    const auth = await requireAuth(req);
+    if (auth instanceof NextResponse) {
+      return auth;
+    }
 
-  if (!conversationId) return NextResponse.json({ error: 'Manglar conversationId' }, { status: 400 });
+    const url = new URL(req.url);
+    const conversationId = url.searchParams.get('conversationId');
 
-  // TODO: Hent frå DB — await prisma.resonanceSnapshot.findFirst({ where: { conversationId } });
+    if (!conversationId) return NextResponse.json({ error: 'Manglar conversationId' }, { status: 400 });
 
-  return NextResponse.json({ success: true, scores: null, message: 'Ingen resonans-data funnen.' });
+    // TODO: Hent frå DB — await prisma.resonanceSnapshot.findFirst({ where: { conversationId } });
+
+    return NextResponse.json({ success: true, scores: null, message: 'Ingen resonans-data funnen.' });
+  } catch (err) {
+    console.error('Resonance GET-feil:', err);
+    return NextResponse.json({ error: 'Kunne ikkje hente resonans' }, { status: 500 });
+  }
 }

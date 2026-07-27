@@ -3,6 +3,7 @@ import { getServerSession } from "@/lib/auth/session";
 import prisma from "@/lib/prisma";
 import { checkRateLimit } from "@/lib/rateLimit";
 import { profileUpdateSchema } from "@/lib/validation/profile";
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   const session = await getServerSession();
@@ -53,7 +54,7 @@ export async function PUT(request: Request) {
         userId: session.user.id,
         firstName: firstName || undefined,
         lastName: lastName || undefined,
-        age: age || undefined,
+        age: (age as number) || 25,
         gender: gender || undefined,
         bio: bio || undefined,
         interests: interests || [],
@@ -62,7 +63,7 @@ export async function PUT(request: Request) {
       update: {
         firstName: firstName || undefined,
         lastName: lastName || undefined,
-        age: age || undefined,
+        age: (age as number) || 25,
         gender: gender || undefined,
         bio: bio || undefined,
         interests: interests || [],
@@ -76,3 +77,5 @@ export async function PUT(request: Request) {
     return Response.json({ error: "Kunne ikke oppdatere profilen" }, { status: 500 });
   }
 }
+
+

@@ -3,7 +3,7 @@
  * 
  * POST /api/auth/magic-link
  * - Validerer e-post
- * - Genererer token
+ * - Generer token
  * - Lagrer i DB
  * - Send e-post (placeholder)
  * - Returner { ok: true }
@@ -11,6 +11,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+
+export const dynamic = 'force-dynamic';
 
 /* ========================
    POST — Send magisk lenke

@@ -8,8 +8,7 @@
 'use client';
 
 import { FC, CSSProperties } from 'react';
-import { motion } from 'framer-motion';
-import { radius, motion as motionTokens, colors } from '@/config/design-tokens';
+import { radius } from '@/config/design-tokens';
 
 /* ═══════════════════════════════════════════
    PROPS
@@ -17,11 +16,12 @@ import { radius, motion as motionTokens, colors } from '@/config/design-tokens';
 interface ToSomButtonProps {
   children: React.ReactNode;
   href?: string;
-  variant?: 'gold' | 'dark';
+  variant?: 'gold' | 'secondary' | 'ghost' | 'destructive' | 'dark';
   size?: 'sm' | 'md' | 'lg' | 'xl';
   onClick?: () => void;
   className?: string;
   style?: CSSProperties;
+  disabled?: boolean;
 }
 
 /* ═══════════════════════════════════════════
@@ -45,20 +45,42 @@ const baseStyles: CSSProperties = {
   cursor: 'pointer',
   transition: 'all 250ms ease-out',
   textDecoration: 'none',
+  gap: '8px',
 };
 
 const variants = {
   gold: {
     ...baseStyles,
-    background: '#D4AF37',
-    color: '#0B0E11',
+    background: 'linear-gradient(90deg, #D4AF37, #E8C766)',
+    color: '#0B1520',
     boxShadow: '0 0 40px rgba(212,175,55,0.30)',
     letterSpacing: '0.02em',
   },
-  dark: {
+  secondary: {
     ...baseStyles,
-    background: 'rgba(0,0,0,0.70)',
-    color: '#FFFFFF',
+    background: 'rgba(212,175,55,0.06)',
+    border: '1px solid rgba(212,175,55,0.25)',
+    color: '#D4AF37',
+  },
+   ghost: {
+     ...baseStyles,
+     background: 'transparent',
+     color: 'rgba(255,255,255,0.7)',
+     border: '1px solid transparent',
+   },
+    dark: {
+      ...baseStyles,
+      background: 'rgba(5, 10, 15, 0.95)',
+      backdropFilter: 'blur(16px)',
+      WebkitBackdropFilter: 'blur(16px)',
+      border: '1px solid rgba(212,175,55,0.2)',
+      color: 'rgba(255,255,255,0.9)',
+    },
+  destructive: {
+    ...baseStyles,
+    background: 'rgba(255,77,77,0.12)',
+    color: '#FF4D4D',
+    border: '1px solid rgba(255,77,77,0.3)',
   },
 };
 
@@ -73,17 +95,15 @@ export const ToSomButton: FC<ToSomButtonProps> = ({
   onClick,
   className = '',
   style,
+  disabled = false,
 }) => {
   const sizeStyles = sizeMap[size];
   const variantStyles = { ...variants[variant], ...sizeStyles };
-  
+
   const baseClass = 'tosom-button';
-  const hoverClass = variant === 'gold' 
-    ? 'hover:bg-[#C49F2F] hover:shadow-[0_0_65px_rgba(212,175,55,0.45)] hover:scale-[1.015]' 
-    : 'hover:bg-black/80 hover:scale-[1.015]';
-  
-  const content = (
-    <span className={baseClass}>
+
+  const contentEl = (
+    <span className={`${baseClass}__content`}>
       {children}
     </span>
   );
@@ -91,18 +111,19 @@ export const ToSomButton: FC<ToSomButtonProps> = ({
   const wrapper = href ? (
     <a
       href={href}
-      className={`${baseClass} ${hoverClass} ${className}`}
+      className={`${baseClass} __${variant} ${disabled ? '__disabled' : ''} ${className}`}
       style={{ ...variantStyles, ...style }}
     >
-      {content}
+      {contentEl}
     </a>
   ) : (
     <button
-      className={`${baseClass} ${hoverClass} ${className}`}
+      className={`${baseClass} __${variant} ${disabled ? '__disabled' : ''} ${className}`}
       style={{ ...variantStyles, ...style }}
       onClick={onClick}
+      disabled={disabled || false}
     >
-      {content}
+      {contentEl}
     </button>
   );
 

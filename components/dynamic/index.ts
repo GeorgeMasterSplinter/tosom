@@ -78,8 +78,9 @@ function EmptyFallback() {
 /*  ChatWindow — dynamic import (ssr: false)                    */
 /* ---------------------------------------------------------- */
 
-export const DynamicChatWindow = dynamic(
-  () => import("@/components/ChatWindow").catch(() => ({ default: LoadingChat })),
+export const DynamicChatWindow: any = dynamic(
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  () => require("@/components/chat/ChatView"),
   { ssr: false, loading: () => LoadingChat() },
 );
 
@@ -106,7 +107,7 @@ export const DynamicJourneyMap = dynamic(
 /* ---------------------------------------------------------- */
 
 export const DynamicResonanceMeter = dynamic(
-  () => import("@/components/dashboard/JourneySummary").catch(() => ({ default: EmptyFallback })),
+  () => import("@/components/dashboard/PremiumResonanceMeter").then(m => ({ default: m.PremiumResonanceMeter })).catch(() => ({ default: EmptyFallback })),
   { ssr: false, loading: () => LoadingResonance() },
 );
 

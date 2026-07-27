@@ -1,6 +1,7 @@
 /**
  * ToSom Dashboard 1.0 — DashboardNavBar
  * Premium sticky top-navigasjon for Dashboardet.
+ * Redusert til 5 hovedlenker per redesign-spec.
  */
 
 'use client';
@@ -8,27 +9,19 @@
 import { FC } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useSettings } from '../context/SettingsContext';
 import MobileNavMenu from './MobileNavMenu';
+import { ToSomLogo } from '@/components/global/ToSomLogo';
 
 const navLinks = [
   { label: 'Hjem', href: '/dashboard' },
   { label: 'Reise', href: '/dashboard/journey' },
-  { label: 'Samtale', href: '/dashboard/conversation' },
-  { label: 'Spørsmål', href: '/questions' },
-  { label: 'Refleksjoner', href: '/dashboard/reflections' },
-  { label: 'Innsikt', href: '/dashboard/insights' },
-  { label: 'Varmekart', href: '/dashboard/heatmap' },
-  { label: 'Trygghet', href: '/dashboard/safety' },
-  { label: 'Innstillinger', href: '/dashboard/settings' },
-  { label: 'Uke', href: '/dashboard/summary' },
-  { label: 'Analyse', href: '/dashboard/analytics' },
-  { label: 'Profil', href: '/dashboard/profile' },
+  { label: 'Samtale', href: '/chat' },
+  { label: 'Refleksjon', href: '/dashboard/reflections' },
+  { label: 'Profil', href: '/profile' },
 ];
 
 export const DashboardNavBar: FC = () => {
   const pathname = usePathname();
-  const { openSettings } = useSettings();
 
   const isActive = (href: string) => pathname === href || pathname?.startsWith(href);
 
@@ -37,9 +30,7 @@ export const DashboardNavBar: FC = () => {
       {/* Desktop Navbar */}
       <nav className="w-full sticky top-0 z-40 bg-[var(--ts-bg)]/80 backdrop-blur-xl border-b-[var(--ts-border)] px-6 py-4 flex items-center justify-between ts-glass">
         {/* Logo / Tittel */}
-        <Link href="/dashboard" className="text-lg font-medium text-[var(--ts-text)] tracking-tight">
-          ToSom
-        </Link>
+        <ToSomLogo href="/dashboard" showTagline={false} />
 
         {/* Navigasjonslenker (desktop) */}
         <ul className="hidden sm:flex items-center gap-8">
@@ -50,9 +41,16 @@ export const DashboardNavBar: FC = () => {
                 <Link
                   href={link.href}
                   className={`
-                    text-[var(--ts-text-soft)] hover:text-[var(--ts-text)] transition
-                    ${active ? 'text-[var(--ts-gold)] border-b-2 border-[var(--ts-gold)]' : ''}
-                    tracking-tight
+                    text-[var(--ts-text-soft)] 
+                    hover:text-[var(--ts-gold)] 
+                    hover:bg-white/5
+                    border-b-2 
+                    ${active 
+                      ? 'text-[var(--ts-gold)] border-[var(--ts-gold)]' 
+                      : 'border-transparent'
+                    }
+                    tracking-tight px-2 py-1 rounded-md
+                    transition-all duration-300 ease-out
                   `}
                 >
                   {link.label}
@@ -64,14 +62,14 @@ export const DashboardNavBar: FC = () => {
 
         {/* Høyre side */}
         <div className="flex items-center gap-4">
-          {/* Settings-knapp */}
-          <button
-            onClick={openSettings}
-            className="text-[var(--ts-text-soft)] hover:text-[var(--ts-text)] text-xl transition-colors"
+          {/* Link til settings */}
+          <Link
+            href="/settings"
+            className="text-[var(--ts-text-soft)] hover:text-[var(--ts-gold)] text-xl transition-colors"
             aria-label="Innstillinger"
           >
             ⚙️
-          </button>
+          </Link>
 
           {/* Hamburger (mobil) */}
           <MobileNavMenu />

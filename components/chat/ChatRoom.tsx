@@ -1,10 +1,3 @@
-/**
- * ToSom — ChatRoom (Produktnivå med Micro-interactions + Journey-integrasjon)
- * 
- * Hoved-container for ein chat mellom to menneske.
- * Integrasjon med ToSom journey-system for fase-basert UI.
- */
-
 'use client';
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
@@ -14,6 +7,7 @@ import ChatInput from './ChatInput';
 import { useChatMessages } from '@/hooks/useChatMessages';
 import { useSendMessage } from '@/hooks/useSendMessage';
 import { useChatRealtime } from '@/hooks/useChatRealtime';
+import { color } from '@/config/design-tokens';
 
 interface ChatRoomProps {
   conversationId: string;
@@ -88,34 +82,6 @@ class ChatErrorBoundary extends React.Component<
   }
 }
 
-/**
- * "Stille øyeblikk" component — viser rolege, meningsfulle quotes
- * når det er stille i chat-en
- */
-function SilentMoment({ phaseOrder }: { phaseOrder: number }) {
-  const moments = [
-    'Ta deg tid. Det viktigaste kjem ikkje av seg sjølv.',
-    'Stille øyeblikk er der vi vokser mest.',
-    'I ro finn vi svarene.',
-    'Pust. Du er trygg her.',
-  ];
-  
-  return (
-    <div
-      className="text-center py-6 px-8 rounded-2xl"
-      style={{
-        background: 'rgba(212, 175, 55, 0.03)',
-        border: '1px solid rgba(212, 175, 55, 0.08)',
-        animation: 'silentFade 8s infinite ease-in-out',
-      }}
-    >
-      <p style={{ color: 'rgba(212, 175, 55, 0.4)', fontSize: '13px', fontStyle: 'italic' }}>
-        "{moments[phaseOrder % moments.length]}"
-      </p>
-    </div>
-  );
-}
-
 export default function ChatRoom({
   conversationId,
   partner,
@@ -136,7 +102,6 @@ export default function ChatRoom({
   });
   const [isSendingFirst, setIsSendingFirst] = useState(false);
   const lastActivityRef = useRef(Date.now());
-  const [showSilent, setShowSilent] = useState(false);
 
   const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -197,18 +162,6 @@ export default function ChatRoom({
     }
   }, [conversationId, state.userId, initRealtime, stopRealtime]);
 
-  // Stille øyeblikk — vis etter 30 sekund inaktivitet (fase 3+)
-  useEffect(() => {
-    const checkSilence = setInterval(() => {
-      const elapsed = Date.now() - lastActivityRef.current;
-      if (phaseOrder >= 3 && elapsed > 30000 && messages.length > 0) {
-        setShowSilent(true);
-        setTimeout(() => setShowSilent(false), 8000);
-      }
-    }, 10000);
-    return () => clearInterval(checkSilence);
-  }, [phaseOrder, messages.length]);
-
   // Send-handling
   const handleSend = useCallback(async (content: string) => {
     if (!content.trim() || sending) return;
@@ -250,15 +203,10 @@ export default function ChatRoom({
     setState(prev => ({ ...prev, isTyping: false }));
   }, []);
 
-  // Tom tilstand-knapp
-  const handleEmptyAction = useCallback(() => {
-    setIsSendingFirst(true);
-  }, []);
-
   // Loading state
   if (loading && messages.length === 0) {
     return (
-      <div className="w-full max-w-[480px] mx-auto h-[100dvh] flex flex-col bg-[#0B0E11]">
+      <div className="w-full max-w-[720px] mx-auto h-[100dvh] flex flex-col bg-[#0B0E11]">
         {showHeader && (
           <div style={{
             background: 'rgba(11, 14, 17, 0.95)',
@@ -287,29 +235,15 @@ export default function ChatRoom({
             <p style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: '14px' }}>
               Lastar samtale...
             </p>
-            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
           </div>
         </div>
       </div>
     );
   }
 
-  // Phase-basert warm-fargar for bobler (fase 3+)
-  const getBubbleWarmth = () => {
-    if (phaseOrder >= 4) return 'rgba(255, 130, 200, 0.08)'; // meir varm
-    if (phaseOrder >= 3) return 'rgba(180, 140, 255, 0.06)'; // varm
-    return 'rgba(255, 255, 255, 0.06)'; // roleg
-  };
-
-  // Phase-basert input-størrelse (fase 4+)
-  const getInputSize = () => {
-    if (phaseOrder >= 4) return 'px-6 py-4 text-base';
-    return 'px-5 py-3.5 text-sm';
-  };
-
   return (
     <ChatErrorBoundary>
-      <div className="w-full max-w-[480px] mx-auto h-[100dvh] flex flex-col bg-[#0B0E11]">
+      <div className="w-full max-w-[720px] mx-auto h-[100dvh] flex flex-col" style={{ background: color.bg.primary }}>
         {/* Header */}
         {showHeader && (
           <ChatHeader
@@ -326,7 +260,7 @@ export default function ChatRoom({
           />
         )}
 
-        {/* Messages — ingen knapp, berre intro-bubble */}
+        {/* Messages */}
         <ChatMessages
           messages={messages}
           userId={state.userId}
@@ -335,15 +269,6 @@ export default function ChatRoom({
           isTyping={state.partnerTyping}
           resonanceScore={resonanceScore}
         />
-
-        {/* Stille øyeblikk */}
-        {showSilent && phaseOrder >= 3 && (
-          <div className="px-4 py-4">
-            <div className="max-w-[720px] mx-auto">
-              <SilentMoment phaseOrder={phaseOrder} />
-            </div>
-          </div>
-        )}
 
         {/* Input */}
         <ChatInput

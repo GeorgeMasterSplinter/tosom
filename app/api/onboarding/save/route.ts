@@ -9,6 +9,8 @@ import { getServerSession } from "@/lib/auth/session"
 import prisma from "@/lib/prisma"
 import { DeepProfileStep } from "@prisma/client"
 
+export const dynamic = 'force-dynamic'
+
 // Deep profile-steg
 const DEEP_STEPS: string[] = [
   DeepProfileStep.IDENTITY,
@@ -99,7 +101,7 @@ export async function POST(req: NextRequest) {
           deepProfileComplete: true,
         },
       })
-    }
+     }
 
     return NextResponse.json({
       success: true,

@@ -84,14 +84,7 @@ export const DynamicChatWindow: any = dynamic(
   { ssr: false, loading: () => LoadingChat() },
 );
 
-/* ---------------------------------------------------------- */
-/*  MatchDetailModal — dynamic import                             */
-/* ---------------------------------------------------------- */
-
-export const DynamicMatchDetailModal = dynamic(
-  () => import("@/components/match/MatchDetailModal").catch(() => ({ default: EmptyFallback })),
-  { ssr: false, loading: () => LoadingDetail() },
-);
+// MatchDetailModal er flytta/fjerna — dynamisk import fjerna for å unngå build-feil
 
 /* ---------------------------------------------------------- */
 /*  JourneyMap — dynamic import                                   */

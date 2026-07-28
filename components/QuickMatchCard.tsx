@@ -3,13 +3,6 @@
  * 
  * Brukes på /dashboard og /matching for å vise RASK match-forhåndsvisning
  * med ScoreRing-resonans, grunnleggende info og kort action.
- * 
- * 🔑 Forskjell fra components/match/MatchCard.tsx:
- * - Den i root er en KORT versjon (score-ring, navn, alder, evt bilde)
- * - components/match/MatchCard.tsx er FULL-versjon (MatchBreakdown, PremiumButton, glass-panel)
- * 
- * Bruk denne filen i dashboard-oversikter.
- * Bruk components/match/MatchCard.tsx på /match/[id] detaljsider.
  */
 
 'use client';
@@ -63,7 +56,7 @@ function ScoreRing({ score }: { score: number }) {
 
 /* ------ Hovedkomponent ------ */
 
-export function MatchCard({ score, otherUser, type, highlight }: Props) {
+export function QuickMatchCard({ score, otherUser, type, highlight }: Props) {
   const name = otherUser?.name || 'Ukjent';
   const age = otherUser?.age;
   const photoUrl = otherUser?.photoUrl;
@@ -114,3 +107,6 @@ export function MatchCard({ score, otherUser, type, highlight }: Props) {
     </div>
   );
 }
+
+// Legacy export for backwards compatibility
+export const MatchCard = QuickMatchCard;

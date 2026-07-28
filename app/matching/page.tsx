@@ -10,7 +10,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Footer } from '@/components/ui/layout/Footer';
-import { MatchCard } from '@/components/MatchCard';
+import { QuickMatchCard as MatchCard } from '@/components/QuickMatchCard';
 import { ProgressSteps } from './components/ProgressSteps';
 
 interface MatchData {

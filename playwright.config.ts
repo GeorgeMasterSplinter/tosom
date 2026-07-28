@@ -1,9 +1,15 @@
 import { defineConfig, devices } from '@playwright/test';
+import path from 'path';
 
 /**
  * Playwright E2E-configurasjon for ToSom
  * Kjøring: npx playwright test
+ * 
+ * Auth-setup: Loggar inn som test-brukar via /dev-login og deler session på tvers av browser.
  */
+
+const storageStatePath = path.resolve(__dirname, 'e2e', '.auth', 'user.json');
+
 export default defineConfig({
   testDir: './e2e',
 
@@ -27,10 +33,16 @@ export default defineConfig({
   /* Reporter to use */
   reporter: process.env.CI ? 'github' : 'html',
 
-  /* Shared settings for all the projects below */
+  /* Global setup: run auth-login før alle test */
+  globalSetup: './e2e/auth-setup.ts',
+
+  /* Shared settings for all the projects */
   use: {
-    /* Base URL to use in actions like `await page.goto()` */
+    /* Base URL */
     baseURL: 'http://127.0.0.1:3000',
+
+    /* Use authenticated state from auth project */
+    storageState: storageStatePath,
 
     /* Collect trace when retrying */
     trace: 'on-first-retry',
@@ -40,12 +52,6 @@ export default defineConfig({
 
     /* Video on failure */
     video: 'retain-on-failure',
-
-    /* Capture network logs */
-    recordVideo: {
-      dir: './e2e/videos',
-      size: { width: 1280, height: 720 },
-    },
   },
 
   /* Configure projects */
@@ -80,5 +86,8 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
     stdout: 'pipe',
     stderr: 'pipe',
+    env: {
+      DEV_LOGIN_ENABLED: 'true',
+    },
   },
 });

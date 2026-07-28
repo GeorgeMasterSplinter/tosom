@@ -1,149 +1,341 @@
-/**
- * ToSom — Registreringsside
- * 
- * Premium ToSom-design: 3 glasspaneler, Nordic Deep Blue theme.
- * Designprofil identisk med landing-siden.
- */
-
 'use client';
 
 import Link from 'next/link';
-import { AgeBadge } from '@/components/ui/age-badge/AgeBadge';
+import { Footer } from '@/components/ui/layout/Footer';
+import { ToSomSection, ToSomButton } from '@/components/ui/system';
+import { color, spacing, typographyToStyle, radius, shadow } from '@/config/design-tokens';
+
+/* ========================
+   INLINE SVG-ikoner
+   ======================== */
+
+function IconCheck() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="20,6 9,17 4,12" />
+    </svg>
+  );
+}
+
+/* ========================
+   HELPER — Ultra-Premium GlassCard
+   ======================== */
+
+function GlassCard({
+  children,
+  padding = 'lg',
+  className = '',
+  style,
+}: {
+  children: React.ReactNode;
+  padding?: 'sm' | 'md' | 'lg' | 'xl';
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  const paddingMap = { sm: spacing.sm, md: spacing.md, lg: spacing.lg, xl: spacing.xl };
+
+  return (
+    <div
+      className={className}
+      style={{
+        background: 'rgba(255,255,255,0.06)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        border: '1px solid rgba(212,175,55,0.15)',
+        borderRadius: `${radius.xl}px`,
+        boxShadow: '0 8px 32px rgba(0,0,0,0.20)',
+        padding: `${paddingMap[padding]}px`,
+        transition: 'all 300ms ease-out',
+        ...style,
+      }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.08)';
+        (e.currentTarget as HTMLElement).style.border = '1px solid rgba(212,175,55,0.25)';
+        (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 40px rgba(212,175,55,0.10)';
+        (e.currentTarget as HTMLElement).style.transform = 'translateY(-4px)';
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.06)';
+        (e.currentTarget as HTMLElement).style.border = '1px solid rgba(212,175,55,0.15)';
+        (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 32px rgba(0,0,0,0.20)';
+        (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+/* ========================
+   PAGE COMPONENT
+   ======================== */
 
 export default function RegisterPage() {
   return (
-    <div className="relative min-h-screen bg-gradient-to-b from-[#0B1520] via-[#121E2E] to-[#0B1520]">
-      {/* Spotlight overlay — identisk med landing */}
+    <main className="relative min-h-screen overflow-hidden">
+      {/* Bakgrunn — Deep Blue gradient */}
       <div
-        className="absolute inset-0 bg-white/5 blur-3xl opacity-[0.06] pointer-events-none"
+        className="fixed inset-0 pointer-events-none"
+        style={{
+          background: 'linear-gradient(180deg, #0B1520 0%, #121E2E 50%, #0B1520 100%)',
+        }}
       />
 
-      <main className="relative z-10 px-4 sm:px-6 md:px-12 lg:px-24 py-12 sm:py-20 md:py-32 flex flex-col items-center gap-12 sm:gap-16">
+      {/* Ambient glød — blue */}
+      <div
+        className="absolute top-40 left-1/4 w-[500px] h-[300px] pointer-events-none opacity-20"
+        style={{
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(80,120,255,0.06), transparent 70%)',
+        }}
+      />
 
-        {/* Panel — Hvorfor Vipps Login og Vipps betaling? */}
-        <div className="
-          w-full max-w-3xl mx-auto
-          bg-white/5 backdrop-blur-md
-          rounded-2xl
-          px-4 sm:px-6 md:px-10 lg:px-12
-          space-y-6
-          text-center items-center
-          shadow-xl shadow-black/20
-        ">
-          <div className="flex items-center justify-center gap-3">
-              <h2 className="text-4xl md:text-5xl font-light text-[#D4AF37] tracking-wide">
+      <div className="relative z-10">
+
+        {/* ===== HERO ===== */}
+        <ToSomSection
+          spotlight="hero"
+          className="px-6 text-center space-y-6"
+          style={{
+            paddingTop: spacing['4xl'],
+            paddingBottom: spacing['4xl'],
+          }}
+        >
+          <h1
+            style={{
+              ...typographyToStyle('hero'),
+              color: color.text.primary,
+            }}
+          >
+            Registrer din profil
+          </h1>
+
+          <p
+            className="max-w-2xl mx-auto"
+            style={{
+              ...typographyToStyle('body-lg'),
+              color: color.text.secondary,
+              lineHeight: '1.8',
+            }}
+          >
+            ToSom er bygd for trygghet og modenhet. Vi bruker Vipps både til innlogging og betaling — så du vet at alle på plattformen er ekte.
+          </p>
+        </ToSomSection>
+
+        {/* ===== HVORFOR VIPPS ===== */}
+        <ToSomSection
+          spotlight="blue"
+          className="px-6"
+          style={{
+            paddingTop: spacing['3xl'],
+            paddingBottom: spacing['3xl'],
+          }}
+        >
+          <div className="mx-auto max-w-3xl space-y-6">
+            <GlassCard padding="xl" className="space-y-5">
+              <h2
+                style={{
+                  ...typographyToStyle('heading-lg'),
+                  color: color.text.primary,
+                  textAlign: 'center',
+                }}
+              >
                 Hvorfor Vipps Login og Vipps betaling?
               </h2>
-            <div className="hidden sm:block">
-              <AgeBadge />
-            </div>
+
+              <p
+                style={{
+                  ...typographyToStyle('body-lg'),
+                  color: color.text.secondary,
+                  lineHeight: '1.8',
+                  textAlign: 'center',
+                }}
+              >
+                ToSom er bygd for voksne mennesker som ønsker en trygg, rolig og ekte prosess. Derfor bruker vi Vipps både til innlogging og betaling.
+              </p>
+
+              <div className="space-y-3 pt-2">
+                {[
+                  'Verifisert identitet — ingen fake profiler',
+                  'Ekte fødselsdato — trygg alderskontroll',
+                  'Ingen duplikat-brukere — én person, én profil',
+                  'Norsk sikkerhetsstandard — trygg betalingsflyt',
+                  'Ingen skjulte gebyrer — én pris, ingen stress',
+                ].map((text, i) => (
+                  <div key={i} className="flex items-start gap-3">
+                    <div
+                      className="flex-shrink-0 w-8 h-8 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]"
+                      style={{ marginTop: '2px' }}
+                    >
+                      <IconCheck />
+                    </div>
+                    <span
+                      style={{
+                        ...typographyToStyle('body'),
+                        color: 'rgba(255,255,255,0.75)',
+                        lineHeight: '1.6',
+                      }}
+                    >
+                      {text}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <p
+                style={{
+                  ...typographyToStyle('body-lg'),
+                  color: color.text.secondary,
+                  lineHeight: '1.8',
+                  textAlign: 'center',
+                  marginTop: '8px',
+                }}
+              >
+                Vipps gjør ToSom til en trygg plattform for voksne mennesker som ønsker en ekte reise.
+              </p>
+            </GlassCard>
           </div>
+        </ToSomSection>
 
-          <p className="text-white/70 leading-relaxed max-w-xl">
-            ToSom er bygget for voksne mennesker som ønsker en trygg, rolig og ekte prosess.
-            Derfor bruker vi Vipps både til innlogging og betaling.
-          </p>
+        {/* ===== PRISBLOKK ===== */}
+        <ToSomSection
+          spotlight="blue"
+          className="px-6"
+          style={{
+            paddingTop: spacing['3xl'],
+            paddingBottom: spacing['3xl'],
+          }}
+        >
+          <div className="mx-auto max-w-xl space-y-8 text-center">
+            <h2
+              style={{
+                ...typographyToStyle('heading-lg'),
+                color: color.text.primary,
+              }}
+            >
+              Én pris. Alt inkludert.
+            </h2>
 
-          <ul className="flex flex-col items-center gap-3 text-white/80 font-light">
-            <li className="flex items-center gap-3">
-              <span className="text-[#D4AF37]">✓</span>
-              <span className="text-white/80">Verifisert identitet – ingen fake profiler</span>
-            </li>
-            <li className="flex items-center gap-3">
-              <span className="text-[#D4AF37]">✓</span>
-              <span className="text-white/80">Ekte fødselsdato – trygg alderskontroll</span>
-            </li>
-            <li className="flex items-center gap-3">
-              <span className="text-[#D4AF37]">✓</span>
-              <span className="text-white/80">Ingen duplikat-brukere – én person, én profil</span>
-            </li>
-            <li className="flex items-center gap-3">
-              <span className="text-[#D4AF37]">✓</span>
-              <span className="text-white/80">Norsk sikkerhetsstandard – trygg betalingsflyt</span>
-            </li>
-            <li className="flex items-center gap-3">
-              <span className="text-[#D4AF37]">✓</span>
-              <span className="text-white/80">Ingen skjulte gebyrer – én pris, ingen stress</span>
-            </li>
-          </ul>
+            <GlassCard
+              padding="xl"
+              className="space-y-6"
+              style={{
+                background: 'rgba(212,175,55,0.06)',
+                border: '1px solid rgba(212,175,55,0.25)',
+                boxShadow: '0 0 40px rgba(212,175,55,0.15)',
+              }}
+            >
+              <div
+                style={{
+                  ...typographyToStyle('heading-xl'),
+                  color: color.brand.gold,
+                }}
+              >
+                349 kr
+              </div>
 
-          <p className="text-white/70 leading-relaxed max-w-xl">
-            Vipps gjør ToSom til en trygg plattform for voksne mennesker som ønsker en ekte reise.
-          </p>
-        </div>
+              <p
+                style={{
+                  ...typographyToStyle('body-lg'),
+                  color: color.text.secondary,
+                  lineHeight: '1.8',
+                }}
+              >
+                ToSom — full tilgang. Betales én gang og dekker hele reisen.
+              </p>
 
-        {/* Panel 2 — Pris */}
-        <div className="
-          w-full max-w-3xl mx-auto
-          bg-white/5 backdrop-blur-md
-          rounded-2xl
-          px-4 sm:px-6 md:px-10 lg:px-12
-          space-y-6
-          items-center text-center
-          shadow-xl shadow-black/20
-        ">
-          <h2 className="text-4xl md:text-5xl font-light text-[#D4AF37] tracking-wide">
-            Én pris. Alt inkludert.
-          </h2>
+            </GlassCard>
+          </div>
+        </ToSomSection>
 
-          <div className="
-            bg-[rgba(212,175,55,0.08)]
-            backdrop-blur-md
-            rounded-xl
-            p-8
-            flex flex-col gap-4
-            items-center text-center
-            max-w-md w-full
-          ">
-            <div className="text-4xl md:text-5xl font-light text-[#D4AF37] tracking-wide">
-              349 kr
-            </div>
+        {/* ===== BETAL MED VIPPS ===== */}
+        <ToSomSection
+          spotlight="cta"
+          className="px-6 text-center space-y-8"
+          style={{
+            paddingTop: spacing['3xl'],
+            paddingBottom: spacing['4xl'],
+          }}
+        >
+          <div className="mx-auto max-w-md space-y-6">
+            <h2
+              style={{
+                ...typographyToStyle('heading-lg'),
+                color: color.text.primary,
+              }}
+            >
+              Klar til å starte reisen?
+            </h2>
 
-            <p className="text-white/70 leading-relaxed max-w-sm">
-              ToSom — full tilgang. Betales én gang og dekker hele reisen.
+            <p
+              style={{
+                ...typographyToStyle('body-lg'),
+                color: color.text.secondary,
+                lineHeight: '1.8',
+              }}
+            >
+              Betal med Vipps og få tilgang til hele ToSom — inkludert match, guidet reise og privat rom.
             </p>
 
-            <div className="
-              bg-[rgba(212,175,55,0.12)]
-              text-white/70
-              rounded-lg
-              px-5 py-4
-              text-sm
-              leading-relaxed
-              w-full text-center
-            ">
-              Betalingsløsning er under utvikling.
-              <br />
-              <span className="text-xs text-white/60">
-                ToSom er i begrenset testfase.
-              </span>
+            {/* Hoved-CTA: Betal med Vipps */}
+            <ToSomButton
+              href="/api/payment/vipps"
+              variant="gold"
+              size="xl"
+            >
+              Betal med Vipps — 349 kr
+            </ToSomButton>
+
+            {/* informasjon om betaling */}
+            <div
+              className="space-y-3 pt-2"
+              style={{
+                background: 'rgba(212,175,55,0.04)',
+                border: '1px solid rgba(212,175,55,0.12)',
+                borderRadius: `${radius.lg}px`,
+                padding: `${spacing.lg}px`,
+              }}
+            >
+              <p
+                style={{
+                  ...typographyToStyle('body-sm'),
+                  color: 'rgba(255,255,255,0.6)',
+                  lineHeight: '1.7',
+                }}
+              >
+                Betalingsløsning er under utvikling. ToSom er i begrenset testfase.
+              </p>
+              <p
+                style={{
+                  ...typographyToStyle('body-sm'),
+                  color: color.text.secondary,
+                  lineHeight: '1.7',
+                }}
+              >
+                Når betaling er godkjent, blir du sendt til første steg i onboarding for å lage profilen din.
+              </p>
             </div>
           </div>
 
-          <div className="mt-10">
-            <Link
-              href="/login"
-              className="
-                block mx-auto text-center
-                bg-[#0B0E11]/80
-                hover:bg-[#0B0E11]/60
-                text-white/80
-                hover:text-white
-                font-light tracking-wide
-                py-4 px-8
-                rounded-xl
-                backdrop-blur-md
-                shadow-md shadow-black/20
-                transition-all duration-200
-                w-fit
-              "
+          {/* Allerede registrert — sekundær */}
+          <div className="pt-4">
+            <p
+              style={{
+                ...typographyToStyle('body'),
+                color: color.text.secondary,
+                marginBottom: spacing.md,
+              }}
             >
-              Allerede registrert? Logg inn
-            </Link>
+              Allerede registrert?
+            </p>
+            <ToSomButton href="/login" variant="secondary" size="lg">
+              Logg inn
+            </ToSomButton>
           </div>
-        </div>
+        </ToSomSection>
 
-      </main>
-    </div>
+        {/* ===== FOOTER ===== */}
+        <Footer />
+      </div>
+    </main>
   );
 }

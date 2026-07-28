@@ -13,6 +13,8 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { ProfileSkeleton as ProfileLoadSkeleton } from '@/components/ui/LoadingSkeleton';
+import ErrorState from '@/components/ui/ErrorState';
 import { ResonanceMeter } from '@/components/ui/ResonanceMeter';
 import { ProfileSecurityCard } from '@/components/profile/ProfileSecurityCard';
 
@@ -34,35 +36,64 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // TODO: Hent frå /api/profile/me
-    // For no: dummy-data
-    setProfile({
-      identityName: 'Din profil',
-      bio: 'Bygger reisa mi...',
-      tags: [],
-      resonanceScore: 0,
-      warmScore: 0,
-      phaseOrder: 1,
-      currentDay: 1,
-      daysRemaining: 30,
-      matchScore: 0,
-      photoUrl: null,
-    });
-    setLoading(false);
+    fetchProfile();
   }, []);
+
+  async function fetchProfile() {
+    try {
+      const res = await fetch('/api/profile/me');
+      if (res.ok) {
+        const data = await res.json();
+        setProfile({
+          identityName: data.identityName || 'Din profil',
+          bio: data.bio || '',
+          tags: data.tags || [],
+          resonanceScore: data.resonanceScore ?? 0,
+          warmScore: data.warmScore ?? 0,
+          phaseOrder: data.phaseOrder ?? 1,
+          currentDay: data.currentDay ?? 1,
+          daysRemaining: data.daysRemaining ?? 30,
+          matchScore: data.matchScore ?? 0,
+          photoUrl: data.photoUrl || null,
+        });
+      } else {
+        // Fallback til dummy-data om API-et ikkje er implementert enno
+        setProfile({
+          identityName: 'Din profil',
+          bio: 'Bygger reisa mi...',
+          tags: [],
+          resonanceScore: 0,
+          warmScore: 0,
+          phaseOrder: 1,
+          currentDay: 1,
+          daysRemaining: 30,
+          matchScore: 0,
+          photoUrl: null,
+        });
+      }
+    } catch {
+      // Ingen feil — vis dummy-data som fallback
+      setProfile({
+        identityName: 'Din profil',
+        bio: 'Bygger reisa mi...',
+        tags: [],
+        resonanceScore: 0,
+        warmScore: 0,
+        phaseOrder: 1,
+        currentDay: 1,
+        daysRemaining: 30,
+        matchScore: 0,
+        photoUrl: null,
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: '#0B0E11' }}>
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{
-            border: '2px solid rgba(255,255,255,0.2)',
-            borderTopColor: '#D4AF37',
-            animation: 'spin 1s linear infinite',
-          }} />
-          <p style={{ color: 'rgba(255,255,255,0.4)' }}>Lastar profil...</p>
-          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-        </div>
+      <div className="mx-auto max-w-[720px] px-6 py-8">
+        <ProfileLoadSkeleton />
       </div>
     );
   }

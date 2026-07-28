@@ -1,5 +1,6 @@
 import { getProfileById } from "./getProfileById";
 import ProfileView from "./ProfileView";
+import NotFound from "@/components/ui/NotFound";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -11,11 +12,12 @@ export default async function ProfilePage({ params }: Props) {
   const profile = await getProfileById(id);
 
   if (!profile) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-950">
-        <p className="text-white text-lg font-light">Profilen ble ikke funnet.</p>
-      </div>
-    );
+    return <NotFound
+      title="Fant ikke profilen"
+      description="Denne profilen finst ikkje eller er utilgjengeleg."
+      backHref="/matching"
+      backLabel="Tilbake til matcher"
+    />;
   }
 
   return (

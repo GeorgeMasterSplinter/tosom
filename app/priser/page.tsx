@@ -375,23 +375,6 @@ export default function PriserPage() {
                 ToSom — full tilgang. Betales én gang og dekker hele reisen.
               </p>
 
-              <div
-                style={{
-                  background: 'rgba(212,175,55,0.12)',
-                  border: '1px solid rgba(212,175,55,0.20)',
-                  color: 'rgba(255,255,255,0.7)',
-                  borderRadius: `${radius.md}px`,
-                  padding: '14px 20px',
-                  fontSize: '14px',
-                  lineHeight: '1.6',
-                }}
-              >
-                Betalingsløsning er under utvikling.
-                <br />
-                <span style={{ fontSize: '12px', color: color.text.subtle }}>
-                  ToSom er i begrenset testfase.
-                </span>
-              </div>
             </GlassCard>
           </div>
         </ToSomSection>

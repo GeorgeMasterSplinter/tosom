@@ -98,7 +98,42 @@ export default function Dashboard() {
           </p>
         </div>
 
-        {/* ====== Seksjon 2: Profil + Resonans + Partner ====== */}
+        {/* ====== Seksjon 2: Handlinger (3 knapper i horisontal rad) ====== */}
+        {data.matched && (
+          <div
+            className="w-full rounded-xl p-6 animate-fadeIn"
+            style={glassVariant('default', 'medium')}
+          >
+            <p
+              className="mb-4"
+              style={{
+                fontSize: `${typography.fontSize.lg}px`,
+                fontWeight: typography.fontWeight.semibold,
+                color: 'rgba(212, 175, 55, 0.6)',
+              }}
+            >
+              Handlinger
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {actionItems.map((item) => (
+                <Link key={item.href} href={item.href} className="block w-full">
+                  <PremiumButton
+                    variant="secondary"
+                    size="md"
+                    className="w-full justify-center text-sm py-3 px-4 rounded-xl min-h-[52px]"
+                  >
+                    <span className="flex items-center justify-center gap-2">
+                      {item.icon}
+                      <span>{item.label}</span>
+                    </span>
+                  </PremiumButton>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ====== Seksjon 3: Profil + Resonans + Partner ====== */}
         {data.matched ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
             
@@ -199,41 +234,6 @@ export default function Dashboard() {
                 Oppdater profil
               </PremiumButton>
             </Link>
-          </div>
-        )}
-
-        {/* ====== Seksjon 3: Handlinger (3 knapper) ====== */}
-        {data.matched && (
-          <div
-            className="w-full rounded-xl p-6 animate-fadeIn"
-            style={glassVariant('default', 'medium')}
-          >
-            <p
-              className="mb-4"
-              style={{
-                fontSize: `${typography.fontSize.lg}px`,
-                fontWeight: typography.fontWeight.semibold,
-                color: 'rgba(212, 175, 55, 0.6)',
-              }}
-            >
-              Handlinger
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {actionItems.map((item) => (
-                <Link key={item.href} href={item.href} className="w-full">
-                  <PremiumButton
-                    variant="secondary"
-                    size="xl"
-                    className="min-h-[64px] rounded-xl justify-start px-6 py-4 text-base font-semibold w-full"
-                  >
-                    <span className="flex items-center gap-3 w-full">
-                      {item.icon}
-                      <span>{item.label}</span>
-                    </span>
-                  </PremiumButton>
-                </Link>
-              ))}
-            </div>
           </div>
         )}
 

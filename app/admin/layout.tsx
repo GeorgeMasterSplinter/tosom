@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useState } from 'react';
+import { AdminHeader } from './header';
 
 const navSections = [
   {
@@ -101,20 +103,65 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </nav>
 
         {/* Footer */}
-        <div className="p-3 border-t border-white/5">
+        <div className="p-3 border-t border-white/5 space-y-1">
           <Link
             href="/"
             className="block px-3 py-2 rounded-lg text-xs text-white/30 hover:text-white/60 hover:bg-white/[0.04] transition-all duration-200"
           >
             ← Tilbake til ToSom
           </Link>
+
+          {/* Logout-knapp */}
+          <AdminLogoutButton />
         </div>
       </aside>
 
-      {/* Main content */}
-      <main className="flex-1 overflow-y-auto">
-        {children}
-      </main>
+      {/* Main content area with sticky header */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <AdminHeader />
+        <main className="flex-1 overflow-y-auto">
+          {children}
+        </main>
+      </div>
     </div>
+  );
+}
+
+/* ─── AdminLogoutButton ─── */
+function AdminLogoutButton() {
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  async function handleLogout() {
+    if (loggingOut) return;
+    setLoggingOut(true);
+    try {
+      await fetch('/api/admin/logout', { method: 'DELETE' });
+      window.location.href = '/admin/login';
+    } catch {
+      window.location.href = '/admin/login';
+    } finally {
+      setLoggingOut(false);
+    }
+  }
+
+  return (
+    <button
+      onClick={handleLogout}
+      disabled={loggingOut}
+      className="w-full px-3 py-2 rounded-lg text-xs transition-all duration-200 flex items-center justify-center gap-1.5"
+      style={{
+        background: loggingOut ? 'rgba(255,77,77,0.1)' : 'transparent',
+        color: loggingOut ? 'rgba(255,77,77,0.6)' : 'rgba(255,77,77,0.4)',
+        border: `1px solid ${loggingOut ? 'rgba(255,77,77,0.2)' : 'rgba(255,77,77,0.1)'}`,
+        cursor: loggingOut ? 'not-allowed' : 'pointer',
+        opacity: loggingOut ? 0.6 : 1,
+      }}
+    >
+      {loggingOut ? 'Loggar ut...' : (
+        <>
+          <span>→</span> Logg ut
+        </>
+      )}
+    </button>
   );
 }

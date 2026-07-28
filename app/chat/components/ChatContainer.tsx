@@ -1,13 +1,15 @@
 /**
- * ToSom — ChatContainer V2 (Premium Nordic Gold 2026) ⭐🟡
+ * ToSom — ChatContainer (Premium Nordic Gold 2026) ⭐🟡
  * Heilt ny versjon: roleg, lett og premium.
- * Fjern tungt design → erstatt med luftig og subtilt.
+ * Premium bubble-animasjonar + resonance-glow + mood-engine.
  */
 
 "use client";
 
 import { useChat } from "@/app/chat/context/ChatContext";
-import { MessageBubble } from "@/app/chat/components/MessageBubble";
+import { MessageBubble, MessageBubbleStyles } from "@/app/chat/components/MessageBubble";
+import { useConversationMood, type ConversationMood } from "@/components/chat/useConversationMood";
+import { useChatScroll } from "@/components/chat/useChatScroll";
 import { useState, useRef, useEffect, useCallback } from "react";
 
 /* ═══════════════════════════════════════
@@ -18,6 +20,26 @@ export const DEV_CONVERSATION_ID = "dev-conversation";
 
 const DEV_USER = { id: "dev-user", name: "George (dev)", age: 30, imageUrl: undefined };
 const DEV_PARTNER = { id: "dev-partner", name: "Emma", age: 28, imageUrl: undefined };
+
+/* ═══════════════════════════════════════
+   MESSAGE-FORMATERING — konverter til ny format
+   ═══════════════════════════════════════ */
+
+function formatMessage(msg: any) {
+  return {
+    id: msg.id || `msg-${Date.now()}`,
+    sender: msg.sender || "partner",
+    type: msg.type || "text",
+    content: msg.content || "",
+    metadata: {
+      imageUrl: msg.metadata?.imageUrl,
+      taskTitle: msg.metadata?.taskTitle,
+      choices: msg.metadata?.choices,
+      timestamp: msg.metadata?.timestamp || new Date().toISOString(),
+      senderInfo: msg.metadata?.senderInfo,
+    },
+  };
+}
 
 /* ═══════════════════════════════════════
    THEME TOKENS — LYSARE OG LETT
@@ -150,26 +172,43 @@ function ChatHeader({ partner, journeyDay }: {
 }
 
 /* ═══════════════════════════════════════
-   MESSAGE LIST — LUGT OG LUFTIG
+   MESSAGE LIST — PREMIUM MED ANIMASJONAR
    ═══════════════════════════════════════ */
 
-function MessageList({ partner, devMessages }: { partner?: { name: string; imageUrl?: string }; devMessages?: any[] }) {
+function MessageList({ partner, devMessages, journeyDay }: {
+  partner?: { name: string; imageUrl?: string };
+  devMessages?: any[];
+  journeyDay?: number;
+}) {
   const { messages: ctxMessages, loading, error } = useChat();
-  const listRef = useRef<HTMLDivElement>(null);
-
+  
   // Bruk devMessages dersom tilgjengeleg, elles kontekst
-  const allMessages = devMessages ?? ctxMessages;
+  const rawMessages = devMessages ?? ctxMessages;
 
-  useEffect(() => {
-    if (listRef.current) listRef.current.scrollTop = listRef.current.scrollHeight;
-  }, [allMessages]);
+  // Konverter til ny format
+  const allMessages = rawMessages.map(formatMessage);
+
+  // Mood-engine
+  const moodConfig = useConversationMood(allMessages, { journeyDay });
+
+  // Scroll-manager
+  const scrollResult = useChatScroll(allMessages.length);
+  const scrollRef = scrollResult.scrollRef;
 
   // SKELETON-LASTING
   if (loading && allMessages.length === 0) {
     return (
-      <div className="flex-1 overflow-y-auto p-6 space-y-4">
+      <div className="flex-1 overflow-y-auto p-6 space-y-4" ref={scrollRef} style={{ 
+        scrollbarWidth: 'thin', 
+        scrollbarColor: `${G.goldMuted} transparent`,
+      }}>
         {[1, 2, 3].map((i) => (
-          <div key={i} className="rounded-xl px-5 py-3 animate-pulse" style={{ background: G.glassBg, border: `1px solid ${G.glassBorder}`, width: i % 2 === 0 ? "75%" : "60%", marginLeft: i % 2 === 0 ? "auto" : undefined }} />
+          <div key={i} className="rounded-[20px] px-5 py-4 animate-pulse" style={{ 
+            background: G.glassBg, 
+            border: `1px solid ${G.glassBorder}`, 
+            width: i % 2 === 0 ? "75%" : "60%", 
+            marginLeft: i % 2 === 0 ? "auto" : undefined 
+          }} />
         ))}
       </div>
     );
@@ -178,7 +217,7 @@ function MessageList({ partner, devMessages }: { partner?: { name: string; image
   // EMPTY-STATE
   if (allMessages.length === 0 && !error) {
     return (
-      <div className="flex-1 overflow-y-auto p-6 flex items-center justify-center">
+      <div className="flex-1 overflow-y-auto p-6 flex items-center justify-center" ref={scrollRef}>
         <div className="text-center max-w-sm">
           <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${G.goldSoft}, ${G.goldMuted})`, border: `1px solid ${G.goldMuted}` }}>
             <span className="text-2xl">💬</span>
@@ -193,8 +232,8 @@ function MessageList({ partner, devMessages }: { partner?: { name: string; image
   // ERROR-STATE
   if (error && allMessages.length === 0) {
     return (
-      <div className="flex-1 overflow-y-auto p-6 flex items-center justify-center">
-        <div className="text-center rounded-xl p-8 max-w-sm" style={{ background: G.glassBg, border: "1px solid rgba(255,77,77,0.15)" }}>
+      <div className="flex-1 overflow-y-auto p-6 flex items-center justify-center" ref={scrollRef}>
+        <div className="text-center rounded-[20px] p-8 max-w-sm" style={{ background: G.glassBg, border: "1px solid rgba(255,77,77,0.15)" }}>
           <p className="text-lg font-medium mb-3" style={{ color: G.dangerRed }}>Kunne ikke laste samtalen</p>
           <p className="text-sm mb-4" style={{ color: G.textSecondary }}>{error}</p>
           <button onClick={() => window.location.reload()} className="px-6 py-3 rounded-xl font-medium transition-all hover:brightness-110" style={{ background: `linear-gradient(135deg, ${G.gold}, ${G.goldLight})`, color: G.bgPrimary, borderRadius: "12px" }}>Prøv igjen</button>
@@ -203,16 +242,20 @@ function MessageList({ partner, devMessages }: { partner?: { name: string; image
     );
   }
 
-  // MELDINGAR — luftige med fade-in
+  // MELDINGAR — premium med warm-glow animasjon + mood-bakgrunn
   return (
-    <div ref={listRef} className="space-y-4">
-      {allMessages.map((msg, idx) => (
-        <div key={msg.id} style={{ 
-          animation: 'fadeInUp 0.3s ease-out forwards',
-          opacity: 0,
-        }}>
-          <MessageBubble message={{ ...msg, metadata: { ...msg.metadata, timestamp: msg.metadata?.timestamp || new Date().toISOString(), senderInfo: msg.metadata?.senderInfo || partner } }} />
-        </div>
+    <div 
+      ref={scrollRef}
+      className="px-6"
+      style={{ 
+        scrollbarWidth: 'thin', 
+        scrollbarColor: `${G.goldMuted} transparent`,
+        backgroundImage: moodConfig.backgroundGradient,
+        backgroundSize: 'cover',
+      }}
+    >
+      {allMessages.map((msg) => (
+        <MessageBubble key={msg.id} message={msg} />
       ))}
     </div>
   );
@@ -303,8 +346,8 @@ function ChatInput({ imageShareAllowed, isDev, onReset, onSendMessage }: {
 }
 
 /* ═══════════════════════════════════════
-   HOVEDKOMPONENT — CHATCONTAINER V2
-   Med lett og roleg design
+   HOVEDKOMPONENT — CHATCONTAINER (Premium)
+   Med mood-engine + animasjonar + resonance-glow
    ═══════════════════════════════════════ */
 
 export function ChatContainer({ conversationId, partner, journeyDay = 1, imageShareAllowed = false }: {
@@ -340,39 +383,44 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
   const partnerForList = isDevMode ? DEV_PARTNER : partner;
 
   return (
-    <div className="w-full h-screen flex items-center justify-center" style={{ background: G.bgPrimary }}>
-      {/* Subtil spotlight i bakgrunnen */}
-      <div className="fixed inset-0 pointer-events-none" style={{ 
-        background: 'radial-gradient(circle at 50% 30%, rgba(212,175,55,0.04) 0%, transparent 60%)',
-      }} />
+    <>
+      {/* Premium CSS-animasjonar (warm-glow, soft-land) */}
+      <MessageBubbleStyles />
 
-      {/* Chat-container — sentralisert med max-width */}
-      <div className="w-full max-w-[720px] mx-auto flex flex-col h-screen" style={{ paddingTop: "96px", paddingBottom: "96px" }}>
-        <div className="flex-1 flex flex-col rounded-3xl overflow-hidden relative" style={{
-          background: G.bgChat,
-          border: `1px solid ${G.glassBorder}`,
-          boxShadow: '0 8px 40px rgba(0,0,0,0.2)',
-        }}>
+      <div className="w-full h-screen flex items-center justify-center" style={{ background: G.bgPrimary }}>
+        {/* Subtil spotlight i bakgrunnen */}
+        <div className="fixed inset-0 pointer-events-none" style={{ 
+          background: 'radial-gradient(circle at 50% 30%, rgba(212,175,55,0.04) 0%, transparent 60%)',
+        }} />
 
-          {/* Dev-banner */}
-          {isDevMode && devBannerVisible && <DevBanner onClose={() => setDevBannerVisible(false)} />}
-
-          {/* HEADER — minimalisert */}
-          <ChatHeader partner={isDevMode ? DEV_PARTNER : partner} journeyDay={journeyDay} />
-
-          {/* MESSAGE LIST — luftig */}
-          <div className="flex-1 overflow-y-auto p-6" style={{ 
-            scrollbarWidth: 'thin', 
-            scrollbarColor: `${G.goldMuted} transparent`,
+        {/* Chat-container — sentralisert med max-width */}
+        <div className="w-full max-w-[720px] mx-auto flex flex-col h-screen" style={{ paddingTop: "96px", paddingBottom: "96px" }}>
+          <div className="flex-1 flex flex-col rounded-3xl overflow-hidden relative" style={{
+            background: G.bgChat,
+            border: `1px solid ${G.glassBorder}`,
+            boxShadow: '0 8px 40px rgba(0,0,0,0.2)',
           }}>
-            <MessageList partner={partnerForList} devMessages={messagesForList} />
-          </div>
 
-          {/* CHAT INPUT — transparent */}
-          <ChatInput imageShareAllowed={imageShareAllowed} isDev={isDevMode} onReset={handleDevReset} onSendMessage={handleDevSend} />
+            {/* Dev-banner */}
+            {isDevMode && devBannerVisible && <DevBanner onClose={() => setDevBannerVisible(false)} />}
+
+            {/* HEADER — minimalisert */}
+            <ChatHeader partner={isDevMode ? DEV_PARTNER : partner} journeyDay={journeyDay} />
+
+            {/* MESSAGE LIST — premium med animasjonar */}
+            <div className="flex-1 overflow-y-auto" style={{ 
+              scrollbarWidth: 'thin', 
+              scrollbarColor: `${G.goldMuted} transparent`,
+            }}>
+              <MessageList partner={partnerForList} devMessages={messagesForList} journeyDay={journeyDay} />
+            </div>
+
+            {/* CHAT INPUT — transparent */}
+            <ChatInput imageShareAllowed={imageShareAllowed} isDev={isDevMode} onReset={handleDevReset} onSendMessage={handleDevSend} />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

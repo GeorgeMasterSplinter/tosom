@@ -16,6 +16,7 @@
 
 import { useState, useEffect, use } from 'react';
 import Link from 'next/link';
+import NotFound from '@/components/ui/NotFound';
 import { useRouter } from 'next/navigation';
 import { GlassPanel } from '@/components/ui/panels/GlassPanel';
 import { ProfileSummary } from '../components/ProfileSummary';
@@ -136,34 +137,12 @@ export default function MatchDetailPage({ params }: { params: Promise<{ id: stri
   }
 
   if (!match) {
-    return (
-      <div className="min-h-screen flex items-center justify-center relative" style={{ background: 'linear-gradient(180deg, #0E1218 0%, #1A1F26 100%)' }}>
-        <div className="text-center space-y-6">
-          <div
-            className="w-20 h-20 rounded-2xl mx-auto flex items-center justify-center"
-            style={{
-              background: 'rgba(255,255,255,0.03)',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              color: 'rgba(255, 255, 255, 0.3)',
-            }}
-          >
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-              <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </div>
-          <p className="text-gray-400 text-sm">Fant ikke denne matchen.</p>
-          <Link
-            href="/matching"
-            className="inline-block text-sm font-medium"
-            style={{ color: '#D4AF37', transition: 'opacity 0.2s' }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.7')}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
-          >
-            ← Tilbake til matcher
-          </Link>
-        </div>
-      </div>
-    );
+    return <NotFound
+      title="Fant ikke matchen"
+      description="Denne matchen finst ikkje eller er blitt fjerna."
+      backHref="/matching"
+      backLabel="Tilbake til matcher"
+    />;
   }
 
   const scoreColor = getScoreColor(match.score);

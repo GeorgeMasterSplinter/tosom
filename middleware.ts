@@ -35,6 +35,7 @@ const PUBLIC_PATHS = [
   '/preview',
   '/_next',
   '/favicon.ico',
+  '/admin/login', // Admin login-page må vere offentleg tilgjengeleg
 ]
 
 /** Beskytta API-ruter — krev innlogging */
@@ -63,6 +64,11 @@ function getSessionToken(req: NextRequest): string | null {
   )
 }
 
+/** Sjekk om admin_token-cookie er sett */
+function hasAdminToken(req: NextRequest): boolean {
+  return req.cookies.get('admin_token')?.value === 'valid'
+}
+
 function hasValidSession(req: NextRequest): boolean {
   const token = getSessionToken(req)
   if (token) return true
@@ -88,13 +94,14 @@ function getRoleFromSession(req: NextRequest): string | null {
 
 /** Legacy-ruter som skal retast til nye stiar */
 const LEGACY_REDIRECTS: Record<string, string> = {
-  '/vilkar': '/vilkår',
+  '/vilkår': '/vilkar',       // spesialteikn → ASCII-variant
+  '/vilk%C3%A5r': '/vilkar',  // URL-encoded variant
 }
 
 export function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname
 
-  // Legacy redirects — /vilkar → /vilkår
+  // Legacy redirects — /vilkår → /vilkar (ASCII-variant fungerer betre)
   const redirectTarget = LEGACY_REDIRECTS[path]
   if (redirectTarget) {
     return NextResponse.redirect(new URL(redirectTarget, req.url), {
@@ -117,18 +124,26 @@ export function middleware(req: NextRequest) {
     }
   }
 
-  // 2. Admin-vern — krev admin-role
+  // 2. Admin-vern — krev anten admin-role (via session) ELLER admin_token-cookie
   if (path.startsWith(ADMIN_PREFIX)) {
-    if (!hasValidSession(req)) {
-      return NextResponse.redirect(new URL('/dashboard', req.url))
+    const hasSession = hasValidSession(req)
+    const hasAdminCookie = hasAdminToken(req)
+
+    if (!hasSession && !hasAdminCookie) {
+      return NextResponse.redirect(new URL('/admin/login', req.url))
     }
-    const role = getRoleFromSession(req)
-    if (role !== 'admin') {
-      return NextResponse.json(
-        { error: 'Forbidden: Admin access required' },
-        { status: 403 }
-      )
+
+    // Dersom det finst ein valid session, sjekk admin-role
+    if (hasSession) {
+      const role = getRoleFromSession(req)
+      if (role !== 'admin') {
+        return NextResponse.json(
+          { error: 'Forbidden: Admin access required' },
+          { status: 403 }
+        )
+      }
     }
+
     return NextResponse.next()
   }
 

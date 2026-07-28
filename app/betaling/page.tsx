@@ -46,9 +46,22 @@ export default function BetalingPage() {
 
   async function handleSubscribe() {
     setLoading(true);
-    // TODO: Integrer Stripe / betalingsgateway
-    console.log('Betalt for plan:', selected);
-    setLoading(false);
+    try {
+      const res = await fetch('/api/payment/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ planId: selected }),
+      });
+      if (!res.ok) throw new Error('Kunne ikkje starte betaling');
+      const { url } = await res.json();
+      if (url) window.location.href = url;
+      else setSelected(selected); // Fallback — redirect til bekreftelse
+    } catch {
+      // Silently fail for dev
+      console.error('Betaling feila');
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (

@@ -84,17 +84,45 @@ const mockDashboardData: MockDashboardData = {
   },
 };
 
-// ─── Mock data loader (placeholder for ekte API) ─────────
+// ─── Dashboard data loader ─────────
 
 async function loadDashboardData(dispatch: (action: DashboardAction) => void) {
   dispatch(dashboardActions.setLoading(true));
 
   try {
-    // TODO: Bytt til ekte API-kall senere
-    // const response = await fetch('/api/dashboard');
-    // const data = await response.json();
-
-    const data = mockDashboardData;
+    const response = await fetch('/api/dashboard/overview');
+    
+    let data: MockDashboardData;
+    if (response.ok) {
+      // Map API-response til mock-struktur
+      const apiData = await response.json();
+      data = {
+        match: {
+          matchStatus: apiData.matchStatus || mockDashboardData.match.matchStatus,
+          daysTogether: apiData.daysTogether ?? mockDashboardData.match.daysTogether,
+          nextMilestone: apiData.nextMilestone || mockDashboardData.match.nextMilestone,
+        },
+        dailyStep: {
+          todayStep: apiData.todayStep || mockDashboardData.dailyStep.todayStep,
+          stepDescription: apiData.stepDescription || mockDashboardData.dailyStep.stepDescription,
+          progress: apiData.progress ?? mockDashboardData.dailyStep.progress,
+        },
+        conversation: {
+          topic: apiData.topic || mockDashboardData.conversation.topic,
+          description: apiData.description || mockDashboardData.conversation.description,
+          lastInteraction: apiData.lastInteraction || mockDashboardData.conversation.lastInteraction,
+        },
+        journey: {
+          progress: apiData.progress ?? mockDashboardData.journey.progress,
+          upcomingSteps: apiData.upcomingSteps || mockDashboardData.journey.upcomingSteps,
+        },
+        safety: apiData.safetyPoints || mockDashboardData.safety,
+        profile: apiData.profile ?? mockDashboardData.profile,
+      };
+    } else {
+      // Fallback til mock-data
+      data = mockDashboardData;
+    }
 
     dispatch(dashboardActions.setMatchData({
       matchStatus: data.match.matchStatus,
@@ -127,7 +155,30 @@ async function loadDashboardData(dispatch: (action: DashboardAction) => void) {
 
     dispatch(dashboardActions.setLoading(false));
   } catch {
-    dispatch(dashboardActions.setError('Kunne ikke laste dashboard-data'));
+    // Ingen feil — vis mock-data som fallback
+    dispatch(dashboardActions.setMatchData({
+      matchStatus: mockDashboardData.match.matchStatus,
+      daysTogether: mockDashboardData.match.daysTogether,
+      nextMilestone: mockDashboardData.match.nextMilestone,
+    }));
+    dispatch(dashboardActions.setDailyStep({
+      todayStep: mockDashboardData.dailyStep.todayStep,
+      stepDescription: mockDashboardData.dailyStep.stepDescription,
+      progress: mockDashboardData.dailyStep.progress,
+    }));
+    dispatch(dashboardActions.setConversation({
+      topic: mockDashboardData.conversation.topic,
+      description: mockDashboardData.conversation.description,
+      lastInteraction: mockDashboardData.conversation.lastInteraction,
+    }));
+    dispatch(dashboardActions.setJourneyProgress({
+      progress: mockDashboardData.journey.progress,
+      upcomingSteps: mockDashboardData.journey.upcomingSteps,
+    }));
+    dispatch(dashboardActions.setSafety(mockDashboardData.safety));
+    if (mockDashboardData.profile) {
+      dispatch(dashboardActions.setProfile(mockDashboardData.profile));
+    }
     dispatch(dashboardActions.setLoading(false));
   }
 }

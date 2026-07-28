@@ -10,6 +10,7 @@
  *   />
  */
 
+import Image from 'next/image';
 import React from 'react';
 
 export interface JournalEntry {
@@ -96,8 +97,8 @@ const SharedJournal: React.FC<SharedJournalProps> = ({
 
           {/* Photo thumbnail */}
           {entry.photo && (
-            <div className="mt-3">
-              <img src={entry.photo} alt="" className="w-20 h-20 rounded-xl object-cover border border-white/8" />
+            <div className="mt-3 relative w-20 h-20">
+              <Image src={entry.photo} alt="" fill className="rounded-xl object-cover border border-white/8" />
             </div>
           )}
         </div>

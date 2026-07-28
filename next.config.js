@@ -70,6 +70,20 @@ const nextConfig = {
     deviceSizes: [640, 768, 1024, 1280, 1536],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     formats: ["image/webp", "image/avif"],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.uploadthing.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.s3.amazonaws.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'tosom-storage.up.railway.app',
+      },
+    ],
   },
 
   // Compress responses

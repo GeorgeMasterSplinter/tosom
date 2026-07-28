@@ -10,6 +10,7 @@
  *   />
  */
 
+import Image from 'next/image';
 import React from 'react';
 
 export interface SharedHomeProps {
@@ -65,7 +66,9 @@ const SharedHome: React.FC<SharedHomeProps> = ({
       <div className="px-6 py-5 border-b border-white/5">
         <div className="flex items-center gap-3">
           {partnerAvatar ? (
-            <img src={partnerAvatar} alt={partnerName} className="w-12 h-12 rounded-full object-cover border-2 border-ts-gold/20" />
+            <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-ts-gold/20">
+              <Image src={partnerAvatar} alt={partnerName} fill className="object-cover" />
+            </div>
           ) : (
             <div className="w-12 h-12 rounded-full bg-ts-gold/20 flex items-center justify-center border-2 border-ts-gold/20">
               <span className="text-sm font-semibold text-ts-gold">{partnerName?.charAt(0).toUpperCase()}</span>

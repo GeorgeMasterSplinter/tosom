@@ -10,6 +10,7 @@
    />
  */
 
+import Image from 'next/image';
 import React from 'react';
 
 export interface MemoryCardProps {
@@ -66,7 +67,9 @@ const MemoryCard: React.FC<MemoryCardProps> = ({
       {/* Photo */}
       <div className="relative h-48">
         {photo ? (
-          <img src={photo} alt={title || 'Memory'} className="w-full h-full object-cover" />
+          <div className="relative w-full h-48">
+            <Image src={photo} alt={title || 'Memory'} fill className="object-cover" />
+          </div>
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-ts-gold/15 via-ts-purple/10 to-transparent flex items-center justify-center">
             <svg className="w-12 h-12 text-ts-text-subtle/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">

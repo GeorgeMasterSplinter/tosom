@@ -9,6 +9,7 @@
  *   />
  */
 
+import Image from 'next/image';
 import React, { useRef, useEffect } from 'react';
 
 export interface ChatWindowV2Props {
@@ -82,7 +83,9 @@ const ChatWindowV2: React.FC<ChatWindowV2Props> = ({
       {participantName && (
         <div className="flex items-center gap-3 px-6 py-4 border-b border-white/5 bg-ts-glass/50 backdrop-blur-xl">
           {participantAvatar ? (
-            <img src={participantAvatar} alt={participantName} className="w-10 h-10 rounded-full object-cover" />
+            <div className="w-10 h-10 rounded-full overflow-hidden">
+              <Image src={participantAvatar} alt={participantName} fill className="object-cover" />
+            </div>
           ) : (
             <div className="w-10 h-10 rounded-full bg-ts-gold/20 flex items-center justify-center">
               <span className="text-sm font-semibold text-ts-gold">

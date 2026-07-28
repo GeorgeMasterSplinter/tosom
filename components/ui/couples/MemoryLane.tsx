@@ -9,6 +9,7 @@
  *   />
  */
 
+import Image from 'next/image';
 import React from 'react';
 
 export interface Memory {
@@ -55,7 +56,9 @@ const MemoryLane: React.FC<MemoryLaneProps> = ({ memories, onAdd, onView, classN
         >
           {/* Photo */}
           {memory.photo ? (
-            <img src={memory.photo} alt={memory.title} className="w-full h-40 object-cover" />
+            <div className="relative w-full h-40">
+              <Image src={memory.photo} alt={memory.title} fill className="object-cover" />
+            </div>
           ) : (
             <div className="w-full h-40 bg-gradient-to-br from-ts-gold/15 via-ts-purple/10 to-transparent flex items-center justify-center">
               <span className="text-4xl">📸</span>

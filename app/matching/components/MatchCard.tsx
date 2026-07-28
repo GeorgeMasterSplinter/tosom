@@ -5,6 +5,7 @@
 
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 
 /* ------ Type-definisjonar ------ */
@@ -112,10 +113,10 @@ export function MatchCard({ match, onSelect }: Props) {
         {/* Beskrivelse */}
         <p className="text-sm text-white/70 leading-relaxed">{matchType.description}</p>
 
-        {/* Kjønn-boble (valgfritt) */}
+        {/* Profilbilete (valfritt) */}
         {otherUser.photoUrl && (
           <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-white/10 shadow-lg">
-            <img src={otherUser.photoUrl} alt={otherUser.identityName || ''} className="w-full h-full object-cover" />
+            <Image src={otherUser.photoUrl} alt={otherUser.identityName || ''} fill className="object-cover" />
           </div>
         )}
 

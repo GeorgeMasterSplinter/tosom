@@ -6,6 +6,7 @@
 
 "use client";
 
+import Image from 'next/image';
 import { useChat } from "@/app/chat/context/ChatContext";
 import { MessageBubble, MessageBubbleStyles } from "@/app/chat/components/MessageBubble";
 import { useConversationMood, type ConversationMood } from "@/components/chat/useConversationMood";
@@ -146,7 +147,9 @@ function ChatHeader({ partner, journeyDay }: {
       <div className="flex items-center gap-3">
         {/* Profilbilde — redusert til 48px */}
         {partner?.imageUrl ? (
-          <img src={partner.imageUrl} alt={partner.name} className="w-12 h-12 rounded-full object-cover border" style={{ border: `1.5px solid ${G.goldMuted}` }} />
+          <div className="relative w-12 h-12 rounded-full overflow-hidden" style={{ borderColor: G.goldMuted, borderWidth: '1.5px', borderStyle: 'solid' }}>
+            <Image src={partner.imageUrl} alt={partner.name} fill className="object-cover" />
+          </div>
         ) : (
           <div className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-semibold border" style={{ background: `linear-gradient(135deg, ${G.goldSoft}, ${G.goldMuted})`, border: `1.5px solid ${G.goldMuted}`, color: G.gold }}>
             {partner?.name?.charAt(0)?.toUpperCase() || "T"}

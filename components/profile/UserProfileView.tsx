@@ -1,5 +1,7 @@
 "use client";
 
+import Image from 'next/image';
+
 /** UserProfileView — visning og redigering av brukerens egen profil
  *  UP4–UP10 — props, layout, header, redigerbar bio, verdier, interesser, bilder
  *  UP11–UP20 — matchklar-logikk, validering, lagre/lukk
@@ -101,11 +103,9 @@ export default function UserProfileView({
         <div className="flex items-center justify-between px-6 py-4 border-b border-black/5">
           <div className="flex items-center gap-3">
             {avatarUrl ? (
-              <img
-                src={avatarUrl}
-                alt={p.name}
-                className="w-12 h-12 rounded-full object-cover"
-              />
+              <div className="w-12 h-12 rounded-full overflow-hidden">
+                <Image src={avatarUrl} alt={p.name} fill className="object-cover" />
+              </div>
             ) : (
               <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-200/60 to-emerald-200/60 flex items-center justify-center text-lg font-medium text-[#4A4A4A]/80">
                 {avatarFallback}
@@ -217,7 +217,9 @@ export default function UserProfileView({
                   className="relative w-full aspect-square rounded-lg overflow-hidden border border-[#e2e8f0] hover:border-[#cbd5e1] transition-colors"
                 >
                   {url ? (
-                    <img src={url} alt={`Bilde ${idx + 1}`} className="w-full h-full object-cover" />
+                    <div className="relative w-full h-full">
+                      <Image src={url} alt={`Bilde ${idx + 1}`} fill className="object-cover" />
+                    </div>
                   ) : (
                     <div className="w-full h-full bg-[#f1f5f9] flex items-center justify-center">
                       <span className="text-xs text-[#94a3b8]">Tom</span>

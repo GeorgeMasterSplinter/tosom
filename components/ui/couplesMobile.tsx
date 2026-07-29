@@ -179,4 +179,6 @@ export const MemoryLaneMobile: React.FC<{
   );
 };
 
-export default { SharedHomeMobile, SharedCalendarMobile, SharedJournalMobile, MemoryLaneMobile };
+const CouplesMobileComponents = { SharedHomeMobile, SharedCalendarMobile, SharedJournalMobile, MemoryLaneMobile };
+
+export default CouplesMobileComponents;

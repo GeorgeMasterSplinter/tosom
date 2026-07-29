@@ -16,6 +16,7 @@ interface ChatRoomProps {
     name: string;
     age?: number;
     image: string | null;
+    distance?: string;
     online?: boolean;
     matchTags?: string[];
   };
@@ -249,14 +250,10 @@ export default function ChatRoom({
           <ChatHeader
             partnerName={partner.name}
             partnerAge={partner.age}
-            partnerImage={partner.image}
-            phaseLabel={phaseLabel}
-            phaseOrder={phaseOrder}
+            distance={partner.distance || '45 km unna'}
             currentDay={currentDay}
             daysRemaining={daysRemaining}
-            online={partner.online}
             resonanceScore={resonanceScore}
-            isSafe={isSafe}
           />
         )}
 

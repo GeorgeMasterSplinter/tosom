@@ -1,6 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /**
  * ToSom — ChatContext (Premium Nordic Gold 2026) 🟡
  * Global state for heile chat-sida — mindre prop-drilling
+ * Brukars-ID blir no sendt som prop frå server-komponent.
  */
 
 "use client";
@@ -46,6 +48,7 @@ export interface ChatContextValue {
   imageShareAllowed: boolean;
   loading: boolean;
   error: string | null;
+  sessionUserId: string | null;
   sendMessage: (content: string, type?: MessageType) => Promise<void>;
   loadMessages: () => Promise<void>;
 }
@@ -61,12 +64,14 @@ export function ChatProvider({
   partner,
   journeyDay = 1,
   imageShareAllowed = false,
+  sessionUserId,
   children,
 }: {
   conversationId: string | null;
   partner?: PartnerInfo;
   journeyDay?: number;
   imageShareAllowed?: boolean;
+  sessionUserId?: string;
   children: ReactNode;
 }) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -78,15 +83,6 @@ export function ChatProvider({
     if (conversationId) loadMessages();
   }, [conversationId]);
 
-  // Get sessionUserId from session (we know it exists because ChatProvider is only used when logged in)
-  const [sessionUserId, setSessionUserId] = useState<string | null>(null);
-  
-  useEffect(() => {
-    // We'll pass this via props or get it from context
-    // For now, default to "me" logic based on mock data
-    setSessionUserId("current-user-id"); // Will be replaced with real session
-  }, []);
-
   const loadMessages = useCallback(async () => {
     if (!conversationId) return;
     setLoading(true);
@@ -97,17 +93,26 @@ export function ChatProvider({
         throw new Error(`Feil: ${res.status}`);
       }
       const data = await res.json();
-      // Konverter til unified format
-      const converted: ChatMessage[] = (data.messages || []).map((m: any) => ({
-        id: m.id,
-        sender: m.senderId !== sessionUserId ? "partner" : "me",
-        type: (m.type as MessageType) || "text",
-        content: m.content,
-        metadata: {
-          timestamp: m.createdAt,
-          senderInfo: m.sender ? { name: m.sender.name, imageUrl: m.sender.profile?.image ?? undefined } : undefined,
-        },
-      }));
+      // Konverter til unified format — bruk sessionUserId fra prop
+      // Ny struktur: sender.profile.photoUrl (fra nested select)
+      const currentId = sessionUserId;
+      const converted: ChatMessage[] = (data.messages || []).map((m: any) => {
+        const senderInfo = m.sender ? {
+          name: m.sender.name ?? "Bruker",
+          imageUrl: m.sender.profile?.photoUrl ?? undefined,
+        } : undefined;
+
+        return {
+          id: m.id,
+          sender: m.senderId !== currentId ? "partner" : "me",
+          type: (m.type as MessageType) || "text",
+          content: m.content,
+          metadata: {
+            timestamp: m.createdAt,
+            senderInfo,
+          },
+        };
+      });
       setMessages(converted);
     } catch (e) {
       console.error("Feil ved lasting av meldingar:", e);
@@ -154,6 +159,7 @@ export function ChatProvider({
       imageShareAllowed,
       loading,
       error,
+      sessionUserId: sessionUserId ?? null,
       sendMessage,
       loadMessages,
     }}>

@@ -44,7 +44,7 @@ function IconMatch() {
   );
 }
 
-function Image() {
+function ImageIcon() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
@@ -145,7 +145,7 @@ const sections = [
     content: 'Når du matcher med noen, går dere inn i en styrt 30-dagers reise. Dette forløpet inkluderer daglige refleksjoner, samtaletema og oppgaver som hjelper dere å bli kjent.',
   },
   {
-    icon: <Image />,
+    icon: <ImageIcon />,
     title: 'Bildefdeling',
     content: 'Bilder kan deles etter 14 dager i reise-forløpet. Før den tid bygger dere en tilknytning basert på dybde og resonans, ikke utseende.',
   },

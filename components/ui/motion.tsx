@@ -275,10 +275,12 @@ export const webKeyframesCSS = `
 `;
 
 /* ── Export all ── */
-export default {
+const MotionExports = {
   web: webMotion,
   mobile: mobileMotion,
   desktop: desktopMotion,
   getMotion,
   webKeyframesCSS,
 };
+
+export default MotionExports;

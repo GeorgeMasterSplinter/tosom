@@ -30,7 +30,13 @@ export async function GET(request: Request) {
       orderBy: { createdAt: "asc" },
       include: {
         sender: {
-          select: { id: true, name: true, age: true },
+          select: {
+            id: true,
+            name: true,
+            profile: {
+              select: { photoUrl: true, age: true },
+            },
+          },
         },
       },
     });

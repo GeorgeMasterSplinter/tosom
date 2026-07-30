@@ -162,7 +162,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             minChars={2}
           />
 
-           {/* gender med OnboardingSelectGrid */}
+           {/* gender med OnboardingSelectGrid — 4 val */}
            <OnboardingSelectGrid
              label="Ditt kjønn *"
              mikroguiding="Velg det som passer best for deg"
@@ -171,25 +171,24 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
                { value: 'Kvinne', label: 'Kvinne', icon: '👩' },
                { value: 'Ikke-binær', label: 'Ikke-binær', icon: '🏳️‍🌈' },
                { value: 'Genderfluid', label: 'Genderfluid', icon: '🌊' },
-               { value: 'Vil-ikke-seie', label: 'Jeg vil ikke si', icon: '🤐' },
              ]}
-            selectedValue={val('gender', '')(data)}
-            onChange={(v) => onChange('gender', v)}
-          />
+             selectedValue={val('gender', '')(data)}
+             onChange={(v) => onChange('gender', v)}
+           />
 
            {/* seekingGender med OnboardingSelectGrid */}
            <OnboardingSelectGrid
              label="Hvem søker du? *"
              mikroguiding="Velg hvem du ønsker å møte"
-            options={[
-              { value: 'Mann', label: 'Mann', icon: '👨' },
-              { value: 'Kvinne', label: 'Kvinne', icon: '👩' },
-              { value: 'Alle-kjon', label: 'Alle kjønn', icon: '💫' },
-              { value: 'Kjemisk-tiltrekning', label: 'Kjemisk tiltrekning', icon: '💜' },
-            ]}
-            selectedValue={val('seekingGender', '')(data)}
-            onChange={(v) => onChange('seekingGender', v)}
-          />
+             options={[
+               { value: 'Mann', label: 'Mann', icon: '👨' },
+               { value: 'Kvinne', label: 'Kvinne', icon: '👩' },
+               { value: 'Alle-kjon', label: 'Alle kjønn', icon: '💫' },
+               { value: 'Kjemisk-tiltrekning', label: 'Kjemisk tiltrekning', icon: '💜' },
+             ]}
+             selectedValue={val('seekingGender', '')(data)}
+             onChange={(v) => onChange('seekingGender', v)}
+           />
         </div>
       </div>
 

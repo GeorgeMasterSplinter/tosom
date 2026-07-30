@@ -252,7 +252,6 @@ export default function ChatRoom({
             partnerAge={partner.age}
             distance={partner.distance || '45 km unna'}
             currentDay={currentDay}
-            daysRemaining={daysRemaining}
             resonanceScore={resonanceScore}
           />
         )}

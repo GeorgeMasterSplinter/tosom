@@ -111,11 +111,6 @@ const steps = [
     content: 'Vi senker tempoet, ikke kvaliteten. Trygghet og emosjonell komfort kommer før alt annet.',
   },
   {
-    icon: <IconPrivacy />,
-    title: 'Privat profil',
-    content: 'Profilen din er helt privat og aldri offentlig. Du deler kun med den eine personen du matches med – og bare når du sjølv vil.',
-  },
-  {
     icon: <IconMatch />,
     title: 'Match innen 24 timer',
     content: 'Du får éin match om gangen – valgt med omtanke, ikke tilfeldighet. Ingen endeløs sveiping. Ingen overveldende valg.',

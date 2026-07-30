@@ -15,8 +15,8 @@ interface JourneyTimelineProps {
 const defaultPhases = [
   { name: 'Introduksjon', start: 1, end: 5 },
   { name: 'Trygghet', start: 6, end: 10 },
-  { name: 'Opne deg', start: 11, end: 15 },
-  { name: 'Dypare samtalar', start: 16, end: 20 },
+  { name: 'Åpne deg', start: 11, end: 15 },
+  { name: 'Dypere samtaler', start: 16, end: 20 },
   { name: 'Sårbarhet', start: 21, end: 25 },
   { name: 'Felles reise', start: 26, end: 30 },
 ];
@@ -99,7 +99,7 @@ export const JourneyTimeline = ({ currentDay, completedDays, phases = defaultPha
                 className="text-sm mt-1"
                 style={{ color: 'rgba(255, 255, 255, 0.4)' }}
               >
-                Dag {phase.start}–{phase.end} · {phase.name.toLowerCase()}
+                Dag {phase.start}–{phase.end} · {phase.name}
               </p>
             </div>
           );

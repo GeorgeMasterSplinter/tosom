@@ -6,7 +6,7 @@
 
 import { ButtonHTMLAttributes, forwardRef } from 'react';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'danger';
+export type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'danger';
 
 export interface PremiumButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
@@ -39,6 +39,11 @@ const variantClasses: Record<ButtonVariant, string> = {
     'bg-[rgba(255,255,255,0.06)] ' +
     'text-white border border-[rgba(255,255,255,0.12)] ' +
     'hover:bg-[rgba(255,255,255,0.10)] hover:border-[rgba(255,255,255,0.18)] ' +
+    'active:opacity-80',
+  tertiary:
+    'bg-[rgba(212,175,55,0.12)] ' +
+    'text-[#D4AF37] border border-[rgba(212,175,55,0.35)] ' +
+    'hover:bg-[rgba(212,175,55,0.20)] hover:border-[rgba(212,175,55,0.50)] ' +
     'active:opacity-80',
   danger:
     'bg-gradient-to-r from-[#FF4D4D] to-[#FF6B6B] ' +

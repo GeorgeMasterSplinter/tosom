@@ -61,6 +61,8 @@ export interface MessageData {
   content: string;
   resonanceLevel?: number; // 0–100, for resonance-glow
   isMilestone?: boolean; // milestone-melding
+  isBliKjent?: boolean; // Bli kjent-spørsmål
+  bliKjentCategory?: string; // kategori-ID (personlighet, verdiar, osv.)
   metadata?: {
     imageUrl?: string;
     taskTitle?: string;
@@ -424,7 +426,7 @@ function Avatar({ senderInfo }: { senderInfo?: { name: string; imageUrl?: string
    ═══════════════════════════════════════ */
 
 export function MessageBubble({ message }: MessageBubbleProps) {
-  const { id, sender, type, content, metadata, resonanceLevel, isMilestone } = message;
+  const { id, sender, type, content, metadata, resonanceLevel, isMilestone, isBliKjent } = message;
   const isMe = sender === "me";
   const isSystem = sender === "system";
 
@@ -557,6 +559,22 @@ export function MessageBubble({ message }: MessageBubbleProps) {
                 background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
               }}
             />
+          )}
+
+          {/* Bli kjent-badge */}
+          {isBliKjent && (
+            <div className="flex items-center gap-1.5 mb-2">
+              <div
+                className="px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase"
+                style={{
+                  background: 'rgba(212, 175, 55, 0.15)',
+                  border: '1px solid rgba(212, 175, 55, 0.3)',
+                  color: '#D4AF37',
+                }}
+              >
+                💎 Bli kjent
+              </div>
+            </div>
           )}
 
           {/* Tekst — premium typografi */}

@@ -25,9 +25,26 @@ const navItems = [
 
 const isActive = (href: string, pathname: string | null) => pathname?.startsWith(href) ?? false;
 
+// Routes der UniversalMenu ikkje skal visast
+const HIDDEN_ROUTES = [
+  '/dashboard',
+  '/chat',
+  '/settings',
+  '/onboarding',
+  '/dev-login',
+];
+
+const isHiddenRoute = (pathname: string | null): boolean => {
+  if (!pathname) return false;
+  return HIDDEN_ROUTES.some(route => pathname.startsWith(route));
+};
+
 export const UniversalMenu = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+
+  // Skjul menyen på app-sider
+  if (isHiddenRoute(pathname)) return null;
 
   return (
     <>

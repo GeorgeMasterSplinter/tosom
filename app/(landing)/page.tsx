@@ -101,7 +101,7 @@ function GlassCard({
 }
 
 /* ========================
-   STEG-DATA
+   STEG-DATA — 5 KORT
    ======================== */
 
 const steps = [
@@ -111,19 +111,24 @@ const steps = [
     content: 'Vi senker tempoet, ikke kvaliteten. Trygghet og emosjonell komfort kommer før alt annet.',
   },
   {
+    icon: <IconPrivacy />,
+    title: 'Privat profil',
+    content: 'Profilen din er helt privat og aldri offentlig. Du deler kun med én person du matcher med – og bare når du selv vil.',
+  },
+  {
     icon: <IconMatch />,
     title: 'Match innen 24 timer',
-    content: 'Du får éin match om gangen – valgt med omtanke, ikke tilfeldighet. Ingen endeløs sveiping. Ingen overveldende valg.',
+    content: 'Du får én match om gangen – valgt med omtanke, ikke tilfeldighet. Ingen endeløs sveiping. Ingen overveldende valg.',
   },
   {
     icon: <IconResearch />,
     title: 'Forskningsbasert matching',
-    content: 'Vi matcher på livssituasjon, verdier, relasjonsstil og emosjonell kompatibilitet. Ikke overflate. Ikke tilfeldigheter. Bare det som faktisk betyr noko i et forhold.',
+    content: 'Vi matcher på livssituasjon, verdier, relasjonsstil og emosjonell kompatibilitet. Ikke overflate. Ikke tilfeldigheter. Bare det som faktisk betyr noe i et forhold.',
   },
   {
     icon: <IconDepth />,
     title: 'Bygget for dybde',
-    content: 'Samtaler, spørsmål og små oppgåver som hjelper dere å komme nærmere. Mindre overflate. Mer mening.',
+    content: 'Samtaler, spørsmål og små oppgaver som hjelper dere å komme nærmere. Mindre overflate. Mer mening.',
   },
 ];
 
@@ -190,7 +195,7 @@ export default function LandingPage() {
                 lineHeight: '1.8',
               }}
             >
-              ToSom gir deg ro, tid og éin gjennomtenkt match — slik at du faktisk kan bli kjent.
+              ToSom gir deg ro, tid og én gjennomtenkt match — slik at du faktisk kan bli kjent.
             </p>
           </div>
         </ToSomSection>

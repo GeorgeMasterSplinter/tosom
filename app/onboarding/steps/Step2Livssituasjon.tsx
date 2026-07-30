@@ -130,7 +130,6 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
       {/* ────────────────────────────────────── */}
       <OnboardingSelectGrid
         label="Hva bor du i? *"
-        mikroguiding="Velg bostadtypen din"
         options={[
           { value: 'leilighet', label: 'Leilighet', icon: '🏢' },
           { value: 'hus', label: 'Hus (eiendom)', icon: '🏡' },
@@ -149,7 +148,7 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
 
       <OnboardingSelectGrid
         label="Hvor mange bor det i hjemmet? *"
-        mikroguiding="Inkluder deg selv i tellinga"
+        mikroguiding="Inkluder deg selv i tellingen"
         options={[
           { value: '1', label: 'Jeg alene', icon: '🧍' },
           { value: '2', label: '2 personer', icon: '👫' },
@@ -203,8 +202,6 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
           label="Hvordan starter en typisk dag for deg? *"
           value={getValue('dailyRoutine', '')}
           onChange={(v) => onChange('dailyRoutine', v)}
-          placeholder="Skriv f.eks. Jeg vasker meg tidlig, lager frokost, kjører barnet til skolen og går på jobb..."
-          mikroguiding="Skriv f.eks. Jeg vasker meg tidlig, lager frokost, kjører barnet til skulen"
           maxLength={500}
           minChars={10}
           rows={4}

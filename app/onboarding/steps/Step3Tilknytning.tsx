@@ -53,7 +53,13 @@ export default function Step3Tilknytning({ data, onChange, onBack, onNext }: Pro
   };
 
   return (
-    <OnboardingSlide title="Tilknytning & trygghet" subtitle="Dette hjelper oss å forstå hva du trenger for å kjenne deg trygg." guidingText="Tilknytningsmønsteret ditt sier mye om hvordan du møter andre mennesker." slideIndex={3} totalSlides={13}>
+    <OnboardingSlide 
+      title="Tilknytning & trygghet" 
+      subtitle="Dette hjelper oss å forstå hva du trenger for å kjenne deg trygg." 
+      guidingText="Tilknytningsmønsteret ditt sier mye om hvordan du møter andre mennesker." 
+      slideIndex={3} 
+      totalSlides={13}
+    >
       {errors.length > 0 && (
         <div className="mb-8 rounded-xl p-4 border" style={{ background: 'rgba(255, 77, 77, 0.08)', borderColor: 'rgba(255, 77, 77, 0.2)' }}>
           <p className="text-sm font-medium mb-2" style={{ color: '#FF4D4D' }}>Vennligst fyll ut alle påkrevde felt:</p>

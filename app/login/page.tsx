@@ -198,7 +198,7 @@ function TestUserLoginModal({
           className="text-xl font-bold mb-2 text-center"
           style={{ color: "rgba(255,255,255,0.95)" }}
         >
-          {selectedUser ? "Skriv passordet" : "Velg testbrukar"}
+          {selectedUser ? "Skriv passordet" : "Velg testbruker"}
         </h3>
 
         {!selectedUser && (
@@ -213,7 +213,7 @@ function TestUserLoginModal({
                 fontWeight: 600,
               }}
             >
-              <div className="font-bold">Test Brukar 1</div>
+              <div className="font-bold">Test Bruker 1</div>
               <div className="text-sm mt-1" style={{ color: "rgba(255,255,255,0.5)" }}>
                 Astrid — 28 år
               </div>
@@ -229,7 +229,7 @@ function TestUserLoginModal({
                 fontWeight: 600,
               }}
             >
-              <div className="font-bold">Test Brukar 2</div>
+              <div className="font-bold">Test Bruker 2</div>
               <div className="text-sm mt-1" style={{ color: "rgba(255,255,255,0.5)" }}>
                 Magnus — 31 år
               </div>
@@ -280,7 +280,7 @@ function TestUserLoginModal({
                 boxShadow: "0 6px 24px rgba(212, 175, 55, 0.35)",
               }}
             >
-              {loading ? "Loggar inn..." : "Logg inn"}
+              {loading ? "Logger inn..." : "Logg inn"}
             </button>
           </div>
         )}
@@ -340,37 +340,36 @@ export default function LoginPage() {
               margin: 0,
             }}
           >
-            Logg inn med Vipps for å fortsetje reisa di
+            Logg inn med Vipps for å fortsette reisen din
           </p>
         </div>
 
         {/* Primær CTA — gullknapp */}
-        <div className="w-full mb-8">
+        <div className="w-full mb-10">
           <UnifiedButton href="/api/auth/vipps" variant="gold">
-            <IconVipps />
             Logg inn med Vipps
           </UnifiedButton>
         </div>
 
         {/* Divider */}
-        <div className="flex items-center gap-5 w-full mb-8">
+        <div className="flex items-center gap-5 w-full mb-10">
           <div className="h-px bg-white/10 flex-1" />
           <span style={{ fontSize: "15px", color: "rgba(255,255,255,0.3)" }}>eller</span>
           <div className="h-px bg-white/10 flex-1" />
         </div>
 
         {/* Testbrukar-knapp */}
-        <div className="w-full mb-8">
+        <div className="w-full mb-10">
           <UnifiedButton onClick={() => setShowTestModal(true)} variant="test">
             <IconLock />
-            Testplattform — Astrid eller Magnus
+            Testplattform — Logg inn som Astrid eller Magnus
           </UnifiedButton>
         </div>
 
         {/* Registrer deg */}
-        <div className="w-full mb-12">
+        <div className="w-full mb-14">
           <UnifiedButton href="/register" variant="secondary">
-            Ikkje registrert? Registrer deg no
+            Ikke registrert? Registrer deg nå
           </UnifiedButton>
         </div>
 
@@ -390,7 +389,7 @@ export default function LoginPage() {
             </span>
           </div>
           <p style={{ fontSize: "15px", color: 'rgba(255,255,255,0.4)', lineHeight: '1.7', margin: 0 }}>
-            Vi bruker Vipps både til innlogging og betaling for å sikre at alle på plattformen er ekte. Så snart betalingsløysing er klar, kan du logge inn og starte reisa di.
+            Vi bruker Vipps både til innlogging og betaling for å sikre at alle på plattformen er ekte. Så snart betalingsløsning er klar, kan du logge inn og starte reisen din.
           </p>
         </div>
 

@@ -34,6 +34,7 @@ export default function AdminLoginPage() {
       if (data.ok) {
         router.push('/admin');
         router.refresh();
+        return; // Exit after redirect
       } else {
         setError(data.error || 'Ugyldig brukernamn eller passord.');
       }

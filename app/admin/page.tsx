@@ -5,10 +5,12 @@
  * 
  * Stat-kort med glass-panel, system health-check, og siste aktivitet.
  * Design: ToSom Blue + Nordic Gold + Glassmorphism.
+ * Auth: Sjekkar /api/admin/session ved lasting. Ikkje innlogga? → redirect til /admin/login
  */
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 /* ─── StatCard — glass-panel kort ─── */
 
@@ -170,15 +172,30 @@ function SystemStatus() {
 /* ─── Hovud-komponent ─── */
 
 export default function AdminDashboard() {
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
-    // Simulere data-last (her kan vi hente ekte data frå API seinare)
-    const timer = setTimeout(() => setLoading(false), 500);
-    return () => clearTimeout(timer);
-  }, []);
+    async function checkSession() {
+      try {
+        const res = await fetch('/api/admin/session');
+        const data = await res.json();
+        if (!data.authenticated) {
+          router.push('/admin/login');
+          return;
+        }
+        setAuthenticated(true);
+      } catch {
+        router.push('/admin/login');
+      } finally {
+        setLoading(false);
+      }
+    }
+    checkSession();
+  }, [router]);
 
-  if (loading) {
+  if (loading || !authenticated) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="w-8 h-8 border-2 border-[rgba(212,175,55,0.3)] border-t-[#D4AF37] rounded-full animate-spin" />
@@ -304,13 +321,13 @@ export default function AdminDashboard() {
             <ActivityItem
               icon="💬"
               text="Første melding sendt mellom Ane & Magnus"
-              time="1 timе sidan"
+              time="1 time sidan"
             />
           </div>
         </div>
       </div>
 
-      {/* Rask-navigasjon */}
+      {/* Snarvnavigasjon */}
       <div
         className="rounded-2xl p-5"
         style={{
@@ -322,7 +339,7 @@ export default function AdminDashboard() {
           className="text-sm font-semibold mb-4 tracking-wide"
           style={{ color: 'rgba(255,255,255,0.6)' }}
         >
-          SNÖGGNAVGIGASJON
+          SNARVNAVGIGASJON
         </h3>
         <div className="flex flex-wrap gap-3">
           {[

@@ -1,13 +1,73 @@
 'use client';
 
 /**
- * ToSom — Admin Dashboard (Kommandopanel) 🟡⭐
+ * ToSom — Admin Dashboard 🟡⭐
  * 
- * Stat-kort med glass-panel, system health-check, og siste aktivitet.
+ * Oversikt over ToSom-plattforma på 5 sekund.
  * Design: ToSom Blue + Nordic Gold + Glassmorphism.
+ * Bokmål. Premium. Ro. Moden.
  */
 
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
+
+/* ─── Journey Phase Bar — visualiser reise-faser ─── */
+
+function JourneyPhaseMonitor() {
+  const phases = [
+    { label: 'Dag 1–5', count: 68, pct: 68, color: '#4ADE80' },
+    { label: 'Dag 6–15', count: 22, pct: 22, color: '#D4AF37' },
+    { label: 'Dag 16–30', count: 7, pct: 7, color: '#FBBF24' },
+    { label: 'Ferdig (30d)', count: 3, pct: 3, color: '#8B5CF6' },
+  ];
+
+  const total = phases.reduce((s, p) => s + p.count, 0);
+
+  return (
+    <div
+      className="rounded-2xl p-5"
+      style={{
+        background: 'rgba(255,255,255,0.03)',
+        border: '1px solid rgba(255,255,255,0.06)',
+      }}
+    >
+      <h3
+        className="text-sm font-semibold mb-4 tracking-wide"
+        style={{ color: 'rgba(255,255,255,0.6)' }}
+      >
+        REISEFASEMONITOR
+      </h3>
+
+      {/* Progress bar */}
+      <div className="flex rounded-full overflow-hidden h-3 mb-4" style={{ background: 'rgba(255,255,255,0.05)' }}>
+        {phases.map((phase, i) => (
+          <div
+            key={phase.label}
+            className="h-full transition-all duration-700"
+            style={{ width: `${phase.pct}%`, background: phase.color }}
+          />
+        ))}
+      </div>
+
+      {/* Legend */}
+      <div className="space-y-2">
+        {phases.map((phase) => (
+          <div key={phase.label} className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-2.5 h-2.5 rounded-full" style={{ background: phase.color }} />
+              <span className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                {phase.label}
+              </span>
+            </div>
+            <span className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.7)' }}>
+              {phase.count} ({Math.round((phase.count / total) * 100)}%)
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 /* ─── StatCard — glass-panel kort ─── */
 
@@ -17,12 +77,14 @@ function StatCard({
   change,
   icon,
   color = 'gold',
+  href,
 }: {
   title: string;
   value: string | number;
   change?: string;
   icon: React.ReactNode;
   color?: 'gold' | 'blue' | 'green' | 'red';
+  href?: string;
 }) {
   const colorMap = {
     gold: { bg: 'rgba(212,175,55,0.1)', border: 'rgba(212,175,55,0.2)', iconBg: 'rgba(212,175,55,0.15)' },
@@ -34,9 +96,12 @@ function StatCard({
   const colors = colorMap[color];
 
   return (
-    <Link href="#" className="block">
+    <div className="relative">
+      {href && (
+        <Link href={href} style={{ position: 'absolute', inset: 0, zIndex: 1 }} />
+      )}
       <div
-        className="rounded-2xl p-5 transition-all duration-300 group"
+        className={`rounded-2xl p-5 transition-all duration-300 group relative z-10 ${href ? 'cursor-pointer' : ''}`}
         style={{
           background: 'rgba(255,255,255,0.03)',
           border: '1px solid rgba(255,255,255,0.06)',
@@ -55,7 +120,7 @@ function StatCard({
       >
         <div className="flex items-start justify-between mb-4">
           <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center"
+            className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
             style={{ background: colors.iconBg }}
           >
             {icon}
@@ -79,7 +144,7 @@ function StatCard({
           {title}
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
 
@@ -97,7 +162,7 @@ function ActivityItem({ icon, text, time }: { icon: string; text: string; time: 
       >
         <span className="text-sm">{icon}</span>
       </div>
-      <p className="text-sm flex-1" style={{ color: 'rgba(255,255,255,0.7)' }}>
+      <p className="text-sm flex-1 truncate" style={{ color: 'rgba(255,255,255,0.7)' }}>
         {text}
       </p>
       <span className="text-xs flex-shrink-0" style={{ color: 'rgba(255,255,255,0.3)' }}>
@@ -107,16 +172,18 @@ function ActivityItem({ icon, text, time }: { icon: string; text: string; time: 
   );
 }
 
-/* ─── SystemStatus — system health ─── */
+/* ─── SystemStatus — system health heat map ─── */
 
-function SystemStatus() {
-  const services = [
-    { name: 'Database', status: 'ok' as const },
-    { name: 'Matching-cron', status: 'ok' as const },
-    { name: 'Auth', status: 'ok' as const },
-    { name: 'Chat', status: 'warning' as const },
-    { name: 'Bilete-opplasting', status: 'ok' as const },
-  ];
+function SystemStatus({ alerts }: { alerts?: string[] }) {
+  const [services] = useState([
+    { name: 'Database', status: 'ok' as const, latency: '—' },
+    { name: 'Cron-jour', status: 'ok' as const, latency: '—' },
+    { name: 'Matching', status: 'ok' as const, latency: '—' },
+    { name: 'Journey', status: 'ok' as const, latency: '—' },
+    { name: 'Auth', status: 'ok' as const, latency: '8ms' },
+    { name: 'Chat', status: 'warning' as const, latency: '120ms' },
+    { name: 'Bilete-opplasting', status: 'ok' as const, latency: '45ms' },
+  ]);
 
   const statusConfig = {
     ok: { color: '#4ADE80', label: 'OK', dotShadow: '0 0 6px rgba(74,222,128,0.4)' },
@@ -132,12 +199,22 @@ function SystemStatus() {
         border: '1px solid rgba(255,255,255,0.06)',
       }}
     >
-      <h3
-        className="text-sm font-semibold mb-4 tracking-wide"
-        style={{ color: 'rgba(255,255,255,0.6)' }}
-      >
-        SYSTEMSTATUS
-      </h3>
+      <div className="flex items-center justify-between mb-4">
+        <h3
+          className="text-sm font-semibold tracking-wide"
+          style={{ color: 'rgba(255,255,255,0.6)' }}
+        >
+          SYSTEMSTATUS
+        </h3>
+        {alerts && alerts.length > 0 && (
+          <span
+            className="text-xs px-2 py-0.5 rounded-full font-medium"
+            style={{ background: 'rgba(251,191,36,0.1)', color: '#FBBF24' }}
+          >
+            {alerts.length}⚠
+          </span>
+        )}
+      </div>
       <div className="space-y-3">
         {services.map((service) => {
           const config = statusConfig[service.status];
@@ -146,33 +223,115 @@ function SystemStatus() {
               <span className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
                 {service.name}
               </span>
-              <div className="flex items-center gap-2">
-                <div
-                  className="w-2 h-2 rounded-full"
-                  style={{ background: config.color, boxShadow: config.dotShadow }}
-                />
-                <span
-                  className="text-xs font-medium"
-                  style={{ color: config.color }}
-                >
-                  {config.label}
+              <div className="flex items-center gap-3">
+                <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                  {service.latency}
                 </span>
+                <div className="flex items-center gap-2">
+                  <div
+                    className="w-2 h-2 rounded-full"
+                    style={{ background: config.color, boxShadow: config.dotShadow }}
+                  />
+                  <span
+                    className="text-xs font-medium"
+                    style={{ color: config.color }}
+                  >
+                    {config.label}
+                  </span>
+                </div>
               </div>
             </div>
           );
         })}
       </div>
+      {/* API-latens + Feil */}
+      <div className="mt-4 pt-3 flex items-center gap-4" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+        <span className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>
+          API-latens: <strong style={{ color: 'rgba(255,255,255,0.6)' }}>42ms</strong>
+        </span>
+        <span className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>
+          Feil 24t: <strong style={{ color: '#FBBF24' }}>3</strong>
+        </span>
+      </div>
     </div>
   );
 }
 
-/* ─── Hovud-komponent — Dashboard Page ─── */
+/* ─── GlobalSearch — header søkeboks ✨ */
+
+function GlobalSearch() {
+  const [query, setQuery] = useState('');
+  const [focused, setFocused] = useState(false);
+
+  return (
+    <div className="relative">
+      {/* Search icon */}
+      <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <path d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" stroke="rgba(255,255,255,0.3)" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      </div>
+      <input
+        type="text"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        placeholder="Søk etter brukar, match, reise..."
+        className="w-64 pl-9 pr-4 py-2 rounded-xl text-sm outline-none transition-all duration-300"
+        style={{
+          background: focused ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.04)',
+          border: focused ? '1px solid rgba(212,175,55,0.3)' : '1px solid rgba(255,255,255,0.08)',
+          color: 'white',
+        }}
+      />
+      {/* Result dropdown (placeholder) */}
+      {query.length > 0 && (
+        <div
+          className="absolute top-full left-0 right-0 mt-2 rounded-xl overflow-hidden z-50"
+          style={{
+            background: 'rgba(15,25,45,0.98)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            backdropFilter: 'blur(12px)',
+          }}
+        >
+          <div className="py-2">
+            <div className="px-3 py-1.5 text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
+              👤 Brukarar
+            </div>
+            <button className="w-full text-left px-3 py-2 text-sm transition-colors" style={{ color: 'rgba(255,255,255,0.7)' }}>
+              Resultat...
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── AlertBadge — admin-varsel indikator ✨ */
+
+function AlertBadge({ name, count }: { name: string; count: number }) {
+  if (count === 0) return null;
+  return (
+    <span
+      className="inline-flex items-center justify-center min-w-[18px] h-4 px-1 rounded-full text-[10px] font-bold ml-1"
+      style={{ background: '#FF4D4D', color: 'white' }}
+    >
+      {count}
+    </span>
+  );
+}
+
+/* ─── Hovud-komponent — Dashboard Page ⭐ */
 
 export default function AdminDashboardPage() {
+  const [alerts] = useState({ chat: 1, cron: 0, matching: 0, journey: 0 });
+
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+      {/* Header med søk og varsel */}
+      <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h1
             className="text-2xl font-bold mb-1"
@@ -184,23 +343,32 @@ export default function AdminDashboardPage() {
             Oversikt over ToSom-plattforma
           </p>
         </div>
-        <span
-          className="text-xs px-3 py-1.5 rounded-full font-medium"
-          style={{
-            background: 'rgba(74,222,128,0.1)',
-            color: '#4ADE80',
-            border: '1px solid rgba(74,222,128,0.2)',
-          }}
-        >
-          ● System aktiv
-        </span>
+        <div className="flex items-center gap-3">
+          {/* System status indikator */}
+          {(alerts.chat > 0 || alerts.cron > 0 || alerts.matching > 0 || alerts.journey > 0) && (
+            <div className="flex items-center gap-2">
+              {alerts.chat > 0 && <AlertBadge name="Chat" count={alerts.chat} />}
+              {alerts.cron > 0 && <AlertBadge name="Cron" count={alerts.cron} />}
+            </div>
+          )}
+          <span
+            className="text-xs px-3 py-1.5 rounded-full font-medium"
+            style={{
+              background: 'rgba(74,222,128,0.1)',
+              color: '#4ADE80',
+              border: '1px solid rgba(74,222,128,0.2)',
+            }}
+          >
+            ● System aktiv
+          </span>
+        </div>
       </div>
 
       {/* Stat-kort */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
-          title="Totalt brukarar"
-          value="1,247"
+          title="Totale brukarar"
+          value="12,847"
           change="+12%"
           icon={
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
@@ -208,10 +376,11 @@ export default function AdminDashboardPage() {
             </svg>
           }
           color="gold"
+          href="/admin/users"
         />
         <StatCard
           title="Aktive matcher"
-          value="89"
+          value="540"
           change="+5%"
           icon={
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
@@ -219,10 +388,11 @@ export default function AdminDashboardPage() {
             </svg>
           }
           color="gold"
+          href="/admin/matches"
         />
         <StatCard
           title="Pågåande reiser"
-          value="156"
+          value="310"
           change="+8%"
           icon={
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
@@ -230,10 +400,11 @@ export default function AdminDashboardPage() {
             </svg>
           }
           color="blue"
+          href="/admin/journeys"
         />
         <StatCard
-          title="Daglege signup"
-          value="23"
+          title="Dagens signup"
+          value="87"
           change="+18%"
           icon={
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
@@ -244,52 +415,32 @@ export default function AdminDashboardPage() {
         />
       </div>
 
-      {/* Nedre seksjon */}
+      {/* Midten: SystemStatus + Journey Phase */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* System health */}
-        <SystemStatus />
+        <SystemStatus alerts={Object.entries(alerts).filter(([_, v]) => v > 0).map(([k]) => k)} />
+        <JourneyPhaseMonitor />
+      </div>
 
-        {/* Siste aktivitet */}
-        <div
-          className="rounded-2xl p-5"
-          style={{
-            background: 'rgba(255,255,255,0.03)',
-            border: '1px solid rgba(255,255,255,0.06)',
-          }}
+      {/* Siste aktivitet */}
+      <div
+        className="rounded-2xl p-5"
+        style={{
+          background: 'rgba(255,255,255,0.03)',
+          border: '1px solid rgba(255,255,255,0.06)',
+        }}
+      >
+        <h3
+          className="text-sm font-semibold mb-4 tracking-wide"
+          style={{ color: 'rgba(255,255,255,0.6)' }}
         >
-          <h3
-            className="text-sm font-semibold mb-4 tracking-wide"
-            style={{ color: 'rgba(255,255,255,0.6)' }}
-          >
-            SISTE AKTIVITET
-          </h3>
-          <div>
-            <ActivityItem
-              icon="✨"
-              text="Brukar #1247 fullførte onboarding"
-              time="2 min sidan"
-            />
-            <ActivityItem
-              icon="💛"
-              text="Ny match: Ane ↔ Magnus"
-              time="15 min sidan"
-            />
-            <ActivityItem
-              icon="📝"
-              text="Brukar #1246 oppdaterte profil"
-              time="32 min sidan"
-            />
-            <ActivityItem
-              icon="🚀"
-              text="Reise starta for Ane & Magnus (dag 1/30)"
-              time="45 min sidan"
-            />
-            <ActivityItem
-              icon="💬"
-              text="Første melding sendt mellom Ane & Magnus"
-              time="1 time sidan"
-            />
-          </div>
+          SISTE AKTIVITET
+        </h3>
+        <div>
+          <ActivityItem icon="✨" text="Brukar #12470 fullførte onboarding" time="2 min sidan" />
+          <ActivityItem icon="💛" text="Ny match: Sara ↔ Emil" time="15 min sidan" />
+          <ActivityItem icon="🚀" text="Reise starta for Ane & Magnus — dag 1/30" time="32 min sidan" />
+          <ActivityItem icon="💬" text="Første melding sendt — Ane & Magnus" time="1 time sidan" />
+          <ActivityItem icon="📝" text="Profil oppdatert — #1192" time="2 timar sidan" />
         </div>
       </div>
 
@@ -309,11 +460,14 @@ export default function AdminDashboardPage() {
         </h3>
         <div className="flex flex-wrap gap-3">
           {[
-            { label: 'Alle brukarar', href: '/admin/users' },
-            { label: 'Aktive matcher', href: '/admin/matching' },
-            { label: 'Match-historikk', href: '/admin/matches' },
-            { label: 'Profiler', href: '/admin/profiles' },
-            { label: 'System status', href: '/admin/system' },
+            { label: '👤 Alle brukarar', href: '/admin/users' },
+            { label: '💞 Aktive matcher', href: '/admin/matches' },
+            { label: '🕓 Pågående reiser', href: '/admin/journeys' },
+            { label: '💬 Chat (metadata)', href: '/admin/chat' },
+            { label: '🛡️ Moderasjon', href: '/admin/moderation' },
+            { label: '📊 Analytics', href: '/admin/analytics' },
+            { label: '🚦 Systemstatus', href: '/admin/system' },
+            { label: '🔧 Verktøy', href: '/admin/tools' },
           ].map((item) => (
             <Link
               key={item.href}

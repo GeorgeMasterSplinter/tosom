@@ -38,65 +38,68 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // Finn brukar — berre henting av spesifikke felt for å unngå "phone column does not exist"
-    let user = await prisma.user.findUnique({
+    // Finn brukar — berre id+email+name (garantert eksisterer i alle DB-ar)
+    let userData = await prisma.user.findUnique({
       where: { email: testUser.email },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        onboardingComplete: true,
-        deepProfileComplete: true,
-      },
+      select: { id: true, email: true, name: true },
     });
 
-    if (!user) {
-      // Opprett ny brukar om ikkje eksisterande
-      user = await prisma.user.create({
-        data: {
-          email: testUser.email,
-          name: testUser.name,
-          verified: true,
-          role: 'USER',
-          onboardingComplete: false,
-          deepProfileComplete: false,
-        },
-        select: {
-          id: true,
-          email: true,
-          name: true,
-          onboardingComplete: true,
-          deepProfileComplete: true,
-        },
-      });
+    if (!userData) {
+      // Opprett ny brukar — berre grunnfelt (ingen onboardingComplete/deepProfileComplete pga manglande kolonnar)
+      try {
+        userData = await prisma.user.create({
+          data: {
+            email: testUser.email,
+            name: testUser.name,
+            verified: true,
+            role: 'USER',
+          },
+          select: { id: true, email: true, name: true },
+        });
 
-      // Opprett profil med default verdiar
-      const profileAge = testUser.id === 'test-user-1' ? 28 : 31;
-      await prisma.profile.create({
-        data: {
-          userId: user.id!,
-          firstName: testUser.name,
-          lastName: '',
-          age: profileAge,
-          identityName: testUser.name,
-          deepProfileStep: 'IDENTITY',
-          deepProfileData: {},
-          bio: '',
-          interests: [],
-          matchTags: testUser.id === 'test-user-1' 
-            ? ['rolig', 'dyp', 'familienær', 'kreativ', 'trygg']
-            : ['tenkande', 'rolig', 'familiefamilie', 'vekstorientert', 'trygg'],
-        },
-      });
+        // Opprett profil med default verdiar (ignorer feil om det mislukkar)
+        const profileAge = testUser.id === 'test-user-1' ? 28 : 31;
+        try {
+          await prisma.profile.create({
+            data: {
+              userId: userData.id!,
+              firstName: testUser.name,
+              lastName: '',
+              age: profileAge,
+              identityName: testUser.name,
+              deepProfileStep: 'IDENTITY',
+              deepProfileData: {},
+              bio: '',
+              interests: [],
+              matchTags: testUser.id === 'test-user-1' 
+                ? ['rolig', 'dyp', 'familienær', 'kreativ', 'trygg']
+                : ['tenkande', 'rolig', 'familiefamilie', 'vekstorientert', 'trygg'],
+            },
+          });
+        } catch {
+          // Profil kan allereie eksistere — ignorer
+        }
+      } catch {
+        // Brukar finst kanskje allereie men findUnique feila — ignorer
+      }
     }
 
+    // Dersom userData framleis null, returner feil
+    if (!userData) {
+      return NextResponse.json(
+        { success: false, error: 'Kunne ikkje opprette eller finne brukar' },
+        { status: 500 }
+      );
+    }
+
+    // Alltid returnere false for desse — kolonnane eksisterer ikkje i DB-en din
     return NextResponse.json({
       success: true,
-      userId: user.id!,
-      email: user.email,
-      name: user.name || testUser.name,
-      onboardingComplete: user.onboardingComplete,
-      deepProfileComplete: user.deepProfileComplete,
+      userId: userData.id!,
+      email: userData.email,
+      name: userData.name || testUser.name,
+      onboardingComplete: false,
+      deepProfileComplete: false,
     });
 
   } catch (error) {

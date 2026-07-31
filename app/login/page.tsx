@@ -106,7 +106,7 @@ function TestUserLoginModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.7)" }}>
       <div
-        className="w-full max-w-sm rounded-2xl p-6 relative"
+        className="w-full max-w-sm rounded-2xl p-6 relative mx-auto"
         style={{
           background: "rgba(11, 21, 32, 0.95)",
           backdropFilter: "blur(20px)",
@@ -228,7 +228,7 @@ export default function LoginPage() {
   const [showTestModal, setShowTestModal] = useState(false);
 
   return (
-    <main className="relative min-h-screen overflow-hidden">
+    <main className="relative min-h-screen overflow-hidden flex items-center justify-center">
       {/* Bakgrunn — Deep Blue gradient */}
       <div
         className="fixed inset-0 pointer-events-none"
@@ -245,113 +245,110 @@ export default function LoginPage() {
         }}
       />
 
-      {/* Content */}
-      <div className="relative z-10 pt-32 pb-24 px-6 flex items-center justify-center min-h-screen">
-        <div className="w-full max-w-md space-y-8">
+      {/* Content — sentrert vertikalt og horisontalt */}
+      <div className="relative z-10 w-full max-w-md px-6 py-12 flex flex-col items-center space-y-8">
 
-          {/* Header */}
-          <div className="text-center space-y-4">
-            <h1
-              style={{
-                ...typographyToStyle('heading-lg'),
-                color: color.brand.gold,
-                fontWeight: 300,
-              }}
-            >
-              Velkommen tilbake
-            </h1>
-
-            <p
-              style={{
-                ...typographyToStyle('body'),
-                color: color.text.secondary,
-              }}
-            >
-              Logg inn med Vipps for å fortsette reisen din
-            </p>
-          </div>
-
-          {/* ===== Primær CTA: Logg inn med Vipps ===== */}
-          <div>
-            <ToSomButton
-              href="/api/auth/vipps"
-              variant="gold"
-              size="xl"
-              className="w-full"
-            >
-              Logg inn med Vipps
-            </ToSomButton>
-          </div>
-
-          {/* Divider */}
-          <div className="flex items-center gap-4 w-full mb-8">
-            <div className="h-px bg-white/10 flex-1" />
-            <span style={{ ...typographyToStyle('body-sm'), color: color.text.subtle }}>eller</span>
-            <div className="h-px bg-white/10 flex-1" />
-          </div>
-
-          {/* ===== TEST-BRUKAR KNAPPAR ===== */}
-          <div className="mb-8 space-y-3">
-            <button
-              onClick={() => setShowTestModal(true)}
-              className="w-full py-3 px-4 rounded-xl font-semibold transition-all hover:brightness-125 active:scale-[0.98]"
-              style={{
-                background: "rgba(212, 175, 55, 0.06)",
-                border: "1px solid rgba(212, 175, 55, 0.2)",
-                color: "#D4AF37",
-              }}
-            >
-              <span className="flex items-center justify-center gap-2">
-                <IconLock />
-                Testplattform — Logg inn som Astrid eller Magnus
-              </span>
-            </button>
-          </div>
-
-          {/* Registrer deg */}
-          <div className="mb-8">
-            <ToSomButton
-              href="/register"
-              variant="secondary"
-              size="lg"
-            >
-              Ikke registrert? Registrer deg nå
-            </ToSomButton>
-          </div>
-
-          {/* Vipps-informasjon */}
-          <div
-            className="text-center space-y-3 w-full"
+        {/* Header — sentrert */}
+        <div className="text-center space-y-4 w-full">
+          <h1
             style={{
-              background: 'rgba(212,175,55,0.04)',
-              border: '1px solid rgba(212,175,55,0.12)',
-              borderRadius: `${radius.lg}px`,
-              padding: `${spacing.lg}px`,
+              ...typographyToStyle('heading-lg'),
+              color: color.brand.gold,
+              fontWeight: 300,
             }}
           >
-            <div className="flex items-center gap-2 justify-center">
-              <IconInfo />
-              <span
-                style={{
-                  ...typographyToStyle('body-sm'),
-                  color: 'rgba(255,255,255,0.6)',
-                }}
-              >
-                Vipps gir trygg innlogging og betaling
-              </span>
-            </div>
-            <p
+            Velkommen tilbake
+          </h1>
+
+          <p
+            style={{
+              ...typographyToStyle('body'),
+              color: color.text.secondary,
+            }}
+          >
+            Logg inn med Vipps for å fortsette reisen din
+          </p>
+        </div>
+
+        {/* ===== Primær CTA: Logg inn med Vipps ===== */}
+        <div className="w-full">
+          <ToSomButton
+            href="/api/auth/vipps"
+            variant="gold"
+            size="xl"
+          >
+            Logg inn med Vipps
+          </ToSomButton>
+        </div>
+
+        {/* Divider */}
+        <div className="flex items-center gap-4 w-full">
+          <div className="h-px bg-white/10 flex-1" />
+          <span style={{ ...typographyToStyle('body-sm'), color: color.text.subtle }}>eller</span>
+          <div className="h-px bg-white/10 flex-1" />
+        </div>
+
+        {/* ===== TEST-BRUKAR KNAPPAR ===== */}
+        <div className="w-full">
+          <button
+            onClick={() => setShowTestModal(true)}
+            className="w-full py-3 px-4 rounded-xl font-semibold transition-all hover:brightness-125 active:scale-[0.98]"
+            style={{
+              background: "rgba(212, 175, 55, 0.06)",
+              border: "1px solid rgba(212, 175, 55, 0.2)",
+              color: "#D4AF37",
+            }}
+          >
+            <span className="flex items-center justify-center gap-2">
+              <IconLock />
+              Testplattform — Logg inn som Astrid eller Magnus
+            </span>
+          </button>
+        </div>
+
+        {/* Registrer deg */}
+        <div className="w-full">
+          <ToSomButton
+            href="/register"
+            variant="secondary"
+            size="lg"
+          >
+            Ikke registrert? Registrer deg nå
+          </ToSomButton>
+        </div>
+
+        {/* Vipps-informasjon — sentrert */}
+        <div
+          className="text-center space-y-3 w-full"
+          style={{
+            background: 'rgba(212,175,55,0.04)',
+            border: '1px solid rgba(212,175,55,0.12)',
+            borderRadius: `${radius.lg}px`,
+            padding: `${spacing.lg}px`,
+          }}
+        >
+          <div className="flex items-center justify-center gap-2">
+            <IconInfo />
+            <span
               style={{
                 ...typographyToStyle('body-sm'),
-                color: color.text.secondary,
-                lineHeight: '1.7',
+                color: 'rgba(255,255,255,0.6)',
               }}
             >
-              Vi bruker Vipps både til innlogging og betaling for å sikre at alle på plattformen er ekte. Så snart betalingsløsning er klar, kan du logge inn og starte reisen din.
-            </p>
+              Vipps gir trygg innlogging og betaling
+            </span>
           </div>
-
+          <p
+            style={{
+              ...typographyToStyle('body-sm'),
+              color: color.text.secondary,
+              lineHeight: '1.7',
+            }}
+          >
+            Vi bruker Vipps både til innlogging og betaling for å sikre at alle på plattformen er ekte. Så snart betalingsløsning er klar, kan du logge inn og starte reisen din.
+          </p>
         </div>
+
       </div>
 
       {/* Testbrukar Login Modal */}

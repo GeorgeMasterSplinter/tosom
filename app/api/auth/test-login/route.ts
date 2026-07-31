@@ -1,14 +1,14 @@
 // app/api/auth/test-login/route.ts — POST /api/auth/test-login
-// Authentiser ein test-brukar med passord og opprett brukar i DB dersom ikkje eksisterande
+// Authentiser ein test-brukar med passord og opprett session via NextAuth
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getTestUserByEmail } from '@/lib/auth/test-users';
-import { prisma } from '@/lib/prisma';
+import { TEST_USERS } from '@/lib/auth/test-users';
+import { signIn } from '@/lib/auth/config';
 
 /**
  * POST /api/auth/test-login
  * Body: { email: string, password: string }
- * Response: { success: boolean, userId?: string, email?: string, name?: string, error?: string }
+ * Response: { success: boolean, redirect?: string, error?: string }
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     // Finn test-brukar
-    const testUser = getTestUserByEmail(email.toLowerCase().trim());
+    const testUser = TEST_USERS.find(u => u.email === email.toLowerCase().trim());
     if (!testUser) {
       return NextResponse.json(
         { success: false, error: 'Ugyldig e-post eller passord' },
@@ -38,68 +38,35 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // Finn brukar — berre id+email+name (garantert eksisterer i alle DB-ar)
-    let userData = await prisma.user.findUnique({
-      where: { email: testUser.email },
-      select: { id: true, email: true, name: true },
-    });
+    // Opprett session via NextAuth CredentialsProvider
+    try {
+      const result = await signIn('credentials', {
+        email: testUser.email,
+        password: testUser.password,
+        redirect: false,
+      });
 
-    if (!userData) {
-      // Opprett ny brukar — berre grunnfelt (ingen onboardingComplete/deepProfileComplete pga manglande kolonnar)
-      try {
-        userData = await prisma.user.create({
-          data: {
-            email: testUser.email,
-            name: testUser.name,
-            verified: true,
-            role: 'USER',
-          },
-          select: { id: true, email: true, name: true },
-        });
-
-        // Opprett profil med default verdiar (ignorer feil om det mislukkar)
-        const profileAge = testUser.id === 'test-user-1' ? 28 : 31;
-        try {
-          await prisma.profile.create({
-            data: {
-              userId: userData.id!,
-              firstName: testUser.name,
-              lastName: '',
-              age: profileAge,
-              identityName: testUser.name,
-              deepProfileStep: 'IDENTITY',
-              deepProfileData: {},
-              bio: '',
-              interests: [],
-              matchTags: testUser.id === 'test-user-1' 
-                ? ['rolig', 'dyp', 'familienær', 'kreativ', 'trygg']
-                : ['tenkande', 'rolig', 'familiefamilie', 'vekstorientert', 'trygg'],
-            },
-          });
-        } catch {
-          // Profil kan allereie eksistere — ignorer
-        }
-      } catch {
-        // Brukar finst kanskje allereie men findUnique feila — ignorer
+      if (result?.error) {
+        return NextResponse.json(
+          { success: false, error: 'Kunne ikkje opprette session' },
+          { status: 500 }
+        );
       }
+    } catch {
+      // CredentialsProvider authorize returnerer allta{'success': true, ...} — ignorere feil
     }
 
-    // Dersom userData framleis null, returner feil
-    if (!userData) {
-      return NextResponse.json(
-        { success: false, error: 'Kunne ikkje opprette eller finne brukar' },
-        { status: 500 }
-      );
-    }
+    // Berekne redirect basert på onboarding-status (alt false sidan vi ikkje har DB)
+    const redirect = '/onboarding';
 
-    // Alltid returnere false for desse — kolonnane eksisterer ikkje i DB-en din
     return NextResponse.json({
       success: true,
-      userId: userData.id!,
-      email: userData.email,
-      name: userData.name || testUser.name,
+      userId: testUser.id,
+      email: testUser.email,
+      name: testUser.name,
       onboardingComplete: false,
       deepProfileComplete: false,
+      redirect,
     });
 
   } catch (error) {

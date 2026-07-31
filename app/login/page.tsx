@@ -83,13 +83,18 @@ function TestUserLoginModal({
       localStorage.setItem("testUserOnboardingComplete", String(data.onboardingComplete));
       localStorage.setItem("testUserDeepProfileComplete", String(data.deepProfileComplete));
 
-      // Redirect avhengig av onboarding-status
-      if (data.deepProfileComplete) {
-        router.push("/dashboard");
-      } else if (data.onboardingComplete) {
-        router.push("/matching");
+      // Bruk API redirect dersom tilgjengeleg, elles standard logikk
+      if (data.redirect) {
+        router.push(data.redirect);
       } else {
-        router.push("/onboarding");
+        // Redirect avhengig av onboarding-status
+        if (data.deepProfileComplete) {
+          router.push("/dashboard");
+        } else if (data.onboardingComplete) {
+          router.push("/matching");
+        } else {
+          router.push("/onboarding");
+        }
       }
 
     } catch {

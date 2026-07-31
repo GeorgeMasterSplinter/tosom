@@ -124,24 +124,27 @@ export function middleware(req: NextRequest) {
     }
   }
 
-  // 2. Admin-vern — krev anten admin-role (via session) ELLER admin_token-cookie
+  // 2. Admin-vern — godtak anten admin_token-cookie ELLER NextAuth med admin-role
   if (path.startsWith(ADMIN_PREFIX)) {
-    const hasSession = hasValidSession(req)
     const hasAdminCookie = hasAdminToken(req)
 
-    if (!hasSession && !hasAdminCookie) {
+    // Har admin_token cookie → all tilgjengeleg ✅
+    if (hasAdminCookie) {
+      return NextResponse.next()
+    }
+
+    // Ingen cookie? Sjekk NextAuth session med admin-role
+    const hasSession = hasValidSession(req)
+    if (!hasSession) {
       return NextResponse.redirect(new URL('/admin/login', req.url))
     }
 
-    // Dersom det finst ein valid session, sjekk admin-role
-    if (hasSession) {
-      const role = getRoleFromSession(req)
-      if (role !== 'admin') {
-        return NextResponse.json(
-          { error: 'Forbidden: Admin access required' },
-          { status: 403 }
-        )
-      }
+    const role = getRoleFromSession(req)
+    if (role !== 'admin') {
+      return NextResponse.json(
+        { error: 'Forbidden: Admin access required' },
+        { status: 403 }
+      )
     }
 
     return NextResponse.next()

@@ -34,6 +34,18 @@ export async function PUT(request: Request) {
     );
   }
 
+  // Sjekk om brukaren har ein aktiv journey — blokker profil-endring
+  const journey = await prisma.journeyProgress.findUnique({
+    where: { userId: session.user.id },
+  });
+
+  if (journey && journey.phase !== null) {
+    return Response.json(
+      { error: "Profilen er låst under reise. Du kan ikkje endre profilen medan du er i en aktiv 30-dagers reise." },
+      { status: 409 }
+    );
+  }
+
   try {
     const body = await request.json();
 

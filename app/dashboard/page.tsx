@@ -26,6 +26,7 @@ import { JourneyTimeline } from '@/components/journey/JourneyTimeline';
 import { ImageShareLockBanner } from '@/components/journey/ImageShareLockBanner';
 import { GradientOverlay } from '@/components/atmosphere/GradientOverlay';
 import { WaitingForMatch } from '@/components/dashboard/WaitingForMatch';
+import { ProfileLockBanner, JourneyLockOverlay } from '@/components/profile/ProfileLockBanner';
 
 /* ====== Types ====== */
 
@@ -292,6 +293,15 @@ export default function Dashboard() {
               </PremiumButton>
             </Link>
           </div>
+        )}
+
+        {/* ====== Profil-lås-banner (berre når matched og journey aktivt) ====== */}
+        {data.matched && data.currentDay > 0 && data.currentDay < 30 && (
+          <ProfileLockBanner
+            partnerName={data.partnerName || 'partneren din'}
+            currentDay={data.currentDay}
+            totalDays={30}
+          />
         )}
 
         {/* ====== Seksjon 4: HEILE JOURNEY-SIDE (importert frå /journey) ====== */}

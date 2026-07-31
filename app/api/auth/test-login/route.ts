@@ -38,9 +38,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // Opprett eller hent brukar i DB
+    // Finn brukar — berre henting av spesifikke felt for å unngå "phone column does not exist"
     let user = await prisma.user.findUnique({
       where: { email: testUser.email },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        onboardingComplete: true,
+        deepProfileComplete: true,
+      },
     });
 
     if (!user) {
@@ -49,11 +56,17 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         data: {
           email: testUser.email,
           name: testUser.name,
-          phoneVerified: true,
           verified: true,
           role: 'USER',
           onboardingComplete: false,
           deepProfileComplete: false,
+        },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          onboardingComplete: true,
+          deepProfileComplete: true,
         },
       });
 

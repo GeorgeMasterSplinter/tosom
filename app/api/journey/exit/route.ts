@@ -55,8 +55,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // Hent den tilknytte matchen og conversationen
-    const matches = await prisma.match.findMany({
+    // Hent den tilknytte matchen (ingen conversation-relasjon på Match, må query separat)
+    const activeMatch = await prisma.match.findFirst({
       where: {
         OR: [
           { userAId: user.id, status: 'matched' },
@@ -64,12 +64,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         ],
         lockedAt: { not: null }, // Berre aktive matcher
       },
-      include: {
-        conversations: true,
-      },
     });
-
-    const activeMatch = matches.find(m => m.lockedAt !== null);
 
     if (!activeMatch) {
       return NextResponse.json(
@@ -77,6 +72,18 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         { status: 404 }
       );
     }
+
+    // Hent conversationen separat (via matchId eller user-relasjon)
+    const activeConversation = await prisma.conversation.findFirst({
+      where: {
+        OR: [
+          { matchId: activeMatch.id },
+          { userAId: user.id, status: 'active' },
+          { userBId: user.id, status: 'active' },
+        ],
+        status: 'active',
+      },
+    });
 
     // 4. Avslutt journey (lagre oppsummering)
     const exitDate = new Date();
@@ -91,13 +98,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     });
 
     // 5. Avslutt conversation (dersom ein finst)
-    const conversation = activeMatch.conversations.find(c => 
-      c.status === 'active'
-    );
-
-    if (conversation) {
+    if (activeConversation) {
       await prisma.conversation.update({
-        where: { id: conversation.id },
+        where: { id: activeConversation.id },
         data: {
           endedAt: exitDate,
           status: 'ended',

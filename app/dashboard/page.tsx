@@ -48,12 +48,127 @@ const actionItems = [
   { label: 'Innstillinger', href: '/settings', icon: <SettingsIcon className="w-6 h-6 flex-shrink-0" /> },
 ];
 
+/* ====== Confirm Exit Modal — Premium glass ====== */
+
+function ConfirmExitModal({ 
+  isOpen, 
+  onClose, 
+  onConfirm 
+}: { 
+  isOpen: boolean; 
+  onClose: () => void; 
+  onConfirm: () => void;
+}) {
+  const [exiting, setExiting] = useState(false);
+
+  if (!isOpen) return null;
+
+  const handleExit = async () => {
+    setExiting(true);
+    try {
+      const res = await fetch('/api/journey/exit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reason: 'User-initiated exit' }),
+      });
+
+      if (res.ok) {
+        onConfirm();
+      } else {
+        const err = await res.json();
+        alert(err.error || 'Kunne ikkje avslutte reisen');
+      }
+    } catch {
+      alert('Netverksfeil. Ver venleg og prøv på nytt.');
+    } finally {
+      setExiting(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
+      <div
+        className="w-full max-w-md rounded-3xl p-8 relative mx-auto"
+        style={{
+          background: 'rgba(11, 21, 32, 0.95)',
+          backdropFilter: 'blur(24px)',
+          border: '1px solid rgba(212, 175, 55, 0.25)',
+          boxShadow: '0 12px 60px rgba(0,0,0,0.5)',
+        }}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center transition-all hover:brightness-125 text-xl"
+          style={{ color: 'rgba(255,255,255,0.5)', background: 'rgba(255,255,255,0.05)' }}
+        >
+          ✕
+        </button>
+
+        <div className="text-center">
+          <div
+            className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center"
+            style={{
+              background: 'rgba(255, 77, 77, 0.1)',
+              border: '2px solid rgba(255, 77, 77, 0.3)',
+            }}
+          >
+            <span className="text-2xl">🚪</span>
+          </div>
+
+          <h3
+            className="text-xl font-bold mb-2"
+            style={{ color: 'rgba(255,255,255,0.95)' }}
+          >
+            Avslutt reisen?
+          </h3>
+
+          <p
+            className="text-sm mb-6 leading-relaxed"
+            style={{ color: 'rgba(255,255,255,0.5)' }}
+          >
+            Du er no på dag {data?.currentDay} av 30. Reisen din vil bli avslutta, og du vil kunne starte ein ny reise når som helst.
+          </p>
+
+          <div className="flex gap-3">
+            <button
+              onClick={onClose}
+              disabled={exiting}
+              className="flex-1 py-4 rounded-2xl font-bold transition-all hover:brightness-110 text-base"
+              style={{
+                background: 'rgba(255,255,255,0.06)',
+                color: 'rgba(255,255,255,0.7)',
+                border: '1px solid rgba(255,255,255,0.15)',
+              }}
+            >
+              Fortsetje
+            </button>
+
+            <button
+              onClick={handleExit}
+              disabled={exiting}
+              className="flex-1 py-4 rounded-2xl font-bold transition-all hover:brightness-110 active:scale-[0.98] text-base disabled:opacity-50"
+              style={{
+                background: 'linear-gradient(135deg, #FF4D4D, #FF6B6B)',
+                color: '#fff',
+                boxShadow: '0 6px 24px rgba(255, 77, 77, 0.3)',
+              }}
+            >
+              {exiting ? 'Avsluttar...' : 'Avslutt reise'}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ====== Hovedkomponent ====== */
 
 export default function Dashboard() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [greeting, setGreeting] = useState('');
   const [selectedDay, setSelectedDay] = useState<number>(7); // Starter på dag 7 (mock)
+  const [showExitModal, setShowExitModal] = useState(false);
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -295,13 +410,30 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* ====== Profil-lås-banner (berre når matched og journey aktivt) ====== */}
+         {/* ====== Profil-lås-banner (berre når matched og journey aktivt) ====== */}
         {data.matched && data.currentDay > 0 && data.currentDay < 30 && (
           <ProfileLockBanner
             partnerName={data.partnerName || 'partneren din'}
             currentDay={data.currentDay}
             totalDays={30}
           />
+        )}
+
+        {/* ====== Avslutt reise-knapp (berre når matched og journey aktivt) ====== */}
+        {data.matched && data.currentDay > 0 && data.currentDay < 30 && (
+          <div className="text-center mt-4">
+            <button
+              onClick={() => setShowExitModal(true)}
+              className="px-6 py-3 rounded-xl text-sm font-medium transition-all hover:brightness-110 active:scale-[0.98]"
+              style={{
+                background: 'rgba(255, 77, 77, 0.08)',
+                color: 'rgba(255, 77, 77, 0.8)',
+                border: '1px solid rgba(255, 77, 77, 0.2)',
+              }}
+            >
+              Avslutt reisen
+            </button>
+          </div>
         )}
 
         {/* ====== Seksjon 4: HEILE JOURNEY-SIDE (importert frå /journey) ====== */}
@@ -429,6 +561,17 @@ export default function Dashboard() {
 
       </div>
     </div>
+
+    {/* ====== Confirm Exit Modal ====== */}
+    <ConfirmExitModal
+      isOpen={showExitModal}
+      onClose={() => setShowExitModal(false)}
+      onConfirm={() => {
+        setShowExitModal(false);
+        // Oppdater state — fjern matched-status
+        setData(prev => prev ? { ...prev, matched: false, currentDay: 0 } : null);
+      }}
+    />
     </>
   );
 }

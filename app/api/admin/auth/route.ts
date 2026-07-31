@@ -27,12 +27,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Set session-cookie (httpOnly, secure-ish, sameSite=strict, 24h)
+    // Set session-cookie (httpOnly, secure i prod, lax for redirect)
     const response = NextResponse.json({ success: true });
     response.cookies.set('admin_token', 'valid', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: 'lax',
       maxAge: 60 * 60 * 24, // 24 timer
       path: '/',
     });

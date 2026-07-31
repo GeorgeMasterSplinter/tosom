@@ -69,7 +69,7 @@ export default function AdminLoginPage() {
       }
 
       // Suksess — redirect til dashboard
-      router.push('/admin');
+      router.push('/admin/dashboard');
     } catch {
       setError('Tilkoplingsfeil. Prøv på nytt.');
     } finally {

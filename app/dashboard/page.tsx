@@ -25,6 +25,7 @@ import { PremiumJourneyProgressTracker } from '@/components/journey/PremiumJourn
 import { JourneyTimeline } from '@/components/journey/JourneyTimeline';
 import { ImageShareLockBanner } from '@/components/journey/ImageShareLockBanner';
 import { GradientOverlay } from '@/components/atmosphere/GradientOverlay';
+import { WaitingForMatch } from '@/components/dashboard/WaitingForMatch';
 
 /* ====== Types ====== */
 
@@ -60,15 +61,18 @@ export default function Dashboard() {
     else if (hour < 18) setGreeting('God ettermiddag');
     else setGreeting('God kveld');
 
-    // Mock-data
+    // Bruk localStorage for testbrukar — elles mock
+    const storedUser = localStorage.getItem('testUserId') || 'Brukar';
+    const name = storedUser === 'test-user-1' ? 'Astrid' : storedUser === 'test-user-2' ? 'Magnus' : 'Ane';
+    
     setData({
-      userName: 'Ane',
-      matched: true,
-      partnerName: 'Erik',
-      daysTogether: 7,
-      daysCompleted: 6,
-      resonance: 72,
-      currentDay: 7,
+      userName: name,
+      matched: false, // FALSE → viser "Venter på match"
+      partnerName: null,
+      daysTogether: 0,
+      daysCompleted: 0,
+      resonance: 0,
+      currentDay: 0,
     });
   }, []);
 
@@ -166,7 +170,12 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* ====== Seksjon 3: Profil + Resonans + Partner (horisontal flex-row) ====== */}
+        {/* ====== Seksjon 3: Ventefase (ingen match enno) ====== */}
+        {!data.matched && (
+          <WaitingForMatch userName={data.userName} />
+        )}
+
+        {/* ====== Seksjon 3: Profil + Resonans + Partner (horisontal flex-row) — berre ved match ====== */}
         {data.matched ? (
           <div className="flex justify-between items-center gap-6 animate-fadeIn">
             

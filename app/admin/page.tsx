@@ -169,12 +169,11 @@ function SystemStatus() {
   );
 }
 
-/* ─── Hovud-komponent ─── */
+/* ─── Hovud-komponent — Dashboard med auth-sjekk ─── */
 
 export default function AdminDashboard() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
     async function checkSession() {
@@ -185,7 +184,6 @@ export default function AdminDashboard() {
           router.push('/admin/login');
           return;
         }
-        setAuthenticated(true);
       } catch {
         router.push('/admin/login');
       } finally {
@@ -195,7 +193,7 @@ export default function AdminDashboard() {
     checkSession();
   }, [router]);
 
-  if (loading || !authenticated) {
+  if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="w-8 h-8 border-2 border-[rgba(212,175,55,0.3)] border-t-[#D4AF37] rounded-full animate-spin" />

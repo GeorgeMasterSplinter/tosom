@@ -1,9 +1,6 @@
 /**
- * ToSom — Admin Login Layout
- * 
- * Enkel layout utan sidebar for login-sida.
+ * ToSom — Admin Login Layout (no sidebar)
  */
-
 export default function AdminLoginLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }

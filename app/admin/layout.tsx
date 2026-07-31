@@ -1,257 +1,165 @@
 'use client';
 
 /**
- * ToSom — Admin Layout (Premium Nordic Gold 2026) 🟡⭐
+ * ToSom — Admin Layout (innlogga sider)
  * 
- * Forenkla admin-layout med sidebar og header.
- * Seksjonar: Oversikt, Brukar, Matching, System.
- * Design: ToSom Blue + Nordic Gold + Glassmorphism.
+ * Sidebar med navigasjon + header med system-status og logout.
  */
 
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-/* ─── Navigasjon — forenkla til MVP ─── */
+/* ─── Sidebar-nav-element ─── */
 
-const navSections = [
-  {
-    title: 'OVERSIKT',
-    items: [
-      { label: 'Dashboard', href: '/admin' },
-    ],
-  },
-  {
-    title: 'BRUKARAR',
-    items: [
-      { label: 'Alle brukarar', href: '/admin/users' },
-      { label: 'Profiler', href: '/admin/profiles' },
-    ],
-  },
-  {
-    title: 'MATCHING',
-    items: [
-      { label: 'Aktive matcher', href: '/admin/matching' },
-      { label: 'Match-historikk', href: '/admin/matches' },
-    ],
-  },
-  {
-    title: 'SYSTEM',
-    items: [
-      { label: 'System status', href: '/admin/system' },
-      { label: 'Innstillinger', href: '/admin/settings' },
-    ],
-  },
-];
+function NavItem({ href, icon, label, active }: {
+  href: string;
+  icon: React.ReactNode;
+  label: string;
+  active?: boolean;
+}) {
+  return (
+    <Link
+      href={href}
+      className={`flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all duration-200 ${
+        active
+          ? 'text-[#D4AF37]'
+          : 'text-white/50 hover:text-white/80'
+      }`}
+      style={active
+        ? { background: 'rgba(212,175,55,0.1)' }
+        : {}
+      }
+    >
+      <span className="flex-shrink-0">{icon}</span>
+      <span className="truncate">{label}</span>
+    </Link>
+  );
+}
 
-/* ─── AdminHeader — øvste bånd ─── */
+/* ─── Admin Header ─── */
 
 function AdminHeader() {
+  const router = useRouter();
+
   return (
     <header
-      className="h-14 border-b flex items-center px-6 flex-shrink-0"
-      style={{
-        background: 'rgba(255,255,255,0.02)',
-        borderColor: 'rgba(212,175,55,0.1)',
-      }}
+      className="flex items-center justify-between px-6 py-4 border-b"
+      style={{ borderColor: 'rgba(255,255,255,0.06)' }}
     >
-      <div className="flex items-center gap-2 ml-auto">
+      <div className="flex items-center gap-3">
         <div
-          className="w-2 h-2 rounded-full"
-          style={{ background: '#4ADE80', boxShadow: '0 0 8px rgba(74,222,128,0.4)' }}
-        />
-        <span className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.5)' }}>
-          System aktiv
+          className="w-8 h-8 rounded-lg flex items-center justify-center"
+          style={{ background: 'linear-gradient(135deg, #D4AF37 0%, #B8962E 100%)' }}
+        >
+          <span className="text-[14px] font-bold text-[#0A1A2A]">T</span>
+        </div>
+        <span className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.8)' }}>
+          Admin
         </span>
       </div>
+      <button
+        onClick={() => {
+          document.cookie = 'admin_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+          router.push('/admin/login');
+        }}
+        className="text-xs px-3 py-1.5 rounded-lg transition-all duration-200"
+        style={{
+          color: 'rgba(255,255,255,0.5)',
+          border: '1px solid rgba(255,255,255,0.08)',
+        }}
+      >
+        Logg ut
+      </button>
     </header>
   );
 }
 
-/* ─── AdminLogoutButton ─── */
+/* ─── Ambient Background (felles) ─── */
 
-function AdminLogoutButton() {
-  const [loggingOut, setLoggingOut] = useState(false);
-
-  async function handleLogout() {
-    if (loggingOut) return;
-    setLoggingOut(true);
-    try {
-      await fetch('/api/admin/auth', { method: 'DELETE' });
-      window.location.href = '/admin/login';
-    } catch {
-      window.location.href = '/admin/login';
-    } finally {
-      setLoggingOut(false);
-    }
-  }
-
+function AmbientBackground() {
   return (
-    <button
-      onClick={handleLogout}
-      disabled={loggingOut}
-      className="w-full px-3 py-2.5 rounded-xl text-xs transition-all duration-200 flex items-center justify-center gap-1.5"
-      style={{
-        background: loggingOut ? 'rgba(255,77,77,0.08)' : 'transparent',
-        color: loggingOut ? 'rgba(255,77,77,0.6)' : 'rgba(255,77,77,0.35)',
-        border: `1px solid ${loggingOut ? 'rgba(255,77,77,0.15)' : 'rgba(255,255,255,0.06)'}`,
-        cursor: loggingOut ? 'not-allowed' : 'pointer',
-      }}
-    >
-      <span>→</span> {loggingOut ? 'Loggar ut...' : 'Logg ut'}
-    </button>
+    <div className="fixed inset-0 pointer-events-none overflow-hidden">
+      {/* Øvre venstre glow */}
+      <div
+        className="absolute -top-32 -left-32"
+        style={{
+          width: '560px',
+          height: '560px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(212,175,55,0.08) 0%, transparent 70%)',
+        }}
+      />
+      {/* Nedre høgre glow */}
+      <div
+        className="absolute -bottom-32 -right-32"
+        style={{
+          width: '480px',
+          height: '480px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(10,26,42,0.1) 0%, transparent 70%)',
+        }}
+      />
+    </div>
   );
 }
 
-/* ─── Hovud-layout ─── */
+/* ─── Main Layout ─── */
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-
   return (
     <div
-      className="flex h-screen overflow-hidden"
-      style={{ background: 'linear-gradient(180deg, #0B1520, #121E2E, #0B1520)' }}
+      className="min-h-screen relative flex"
+      style={{ background: '#0A1A2A' }}
     >
-      {/* Ambient glow — heile sida */}
-      <div
-        className="fixed inset-0 pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse_80%_60%_at_50%_30%, rgba(80,120,255,0.03), transparent 70%)',
-        }}
-      />
+      <AmbientBackground />
 
       {/* Sidebar */}
       <aside
-        className="w-64 flex flex-col flex-shrink-0 relative z-10"
+        className="w-64 border-r flex flex-col flex-shrink-0 relative z-10"
         style={{
-          background: 'rgba(10,15,24,0.95)',
-          borderRight: '1px solid rgba(212,175,55,0.08)',
-          backdropFilter: 'blur(12px)',
+          borderColor: 'rgba(255,255,255,0.06)',
+          background: 'rgba(0,0,0,0.3)',
         }}
       >
         {/* Logo */}
-        <div className="p-5 border-b" style={{ borderColor: 'rgba(255,255,255,0.05)' }}>
-          <Link href="/admin" className="flex items-center gap-3">
-            <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center"
-              style={{
-                background: 'linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.08))',
-                border: '1px solid rgba(212,175,55,0.25)',
-                boxShadow: '0 0 24px rgba(212,175,55,0.1)',
-              }}
-            >
-              <span className="text-sm font-bold" style={{ color: '#D4AF37' }}>T</span>
-            </div>
-            <div>
-              <div className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.9)' }}>ToSom</div>
-              <div className="text-[9px] tracking-widest uppercase" style={{ color: 'rgba(212,175,55,0.5)' }}>
-                Admin
-              </div>
-            </div>
-          </Link>
+        <div className="px-6 pt-8 pb-4">
+          <h1
+            className="text-xl font-bold tracking-tight"
+            style={{ color: '#D4AF37' }}
+          >
+            ToSom
+          </h1>
+          <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.3)' }}>
+            Admin Panel
+          </p>
         </div>
 
         {/* Navigasjon */}
-        <nav className="flex-1 overflow-y-auto p-4 space-y-6">
-          {navSections.map((section) => (
-            <div key={section.title}>
-              <div
-                className="text-[9px] font-semibold tracking-[0.2em] uppercase px-3 mb-2"
-                style={{ color: 'rgba(255,255,255,0.2)' }}
-              >
-                {section.title}
-              </div>
-              <div className="space-y-0.5">
-                {section.items.map((item) => {
-                  const isActive = pathname === item.href;
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={`block px-3 py-2.5 rounded-xl text-xs transition-all duration-200 ${
-                        isActive
-                          ? 'gold-highlight'
-                          : ''
-                      }`}
-                      style={{
-                        background: isActive
-                          ? 'linear-gradient(135deg, rgba(212,175,55,0.12), rgba(212,175,55,0.04))'
-                          : 'transparent',
-                        color: isActive ? '#D4AF37' : 'rgba(255,255,255,0.5)',
-                        border: isActive
-                          ? '1px solid rgba(212,175,55,0.2)'
-                          : '1px solid transparent',
-                        boxShadow: isActive
-                          ? '0 0 16px rgba(212,175,55,0.06)'
-                          : 'none',
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isActive) {
-                          e.currentTarget.style.background = 'rgba(255,255,255,0.03)';
-                          e.currentTarget.style.color = 'rgba(255,255,255,0.75)';
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isActive) {
-                          e.currentTarget.style.background = 'transparent';
-                          e.currentTarget.style.color = 'rgba(255,255,255,0.5)';
-                        }
-                      }}
-                    >
-                      {item.label}
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
+        <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
+          <NavItem href="/admin" icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="#D4AF37"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>} label="Dashboard" active />
+          <NavItem href="/admin/users" icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="#9CA3AF"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>} label="Brukarar" />
+          <NavItem href="/admin/matching" icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="#9CA3AF"><path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3z"/></svg>} label="Matching" />
+          <NavItem href="/admin/chat" icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="#9CA3AF"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>} label="Chat" />
+          <NavItem href="/admin/journey" icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="#9CA3AF"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>} label="Reiser" />
+          <NavItem href="/admin/moderation" icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="#9CA3AF"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>} label="Moderasjon" />
         </nav>
 
         {/* Footer */}
-        <div className="p-4 space-y-3" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-          <Link
-            href="/"
-            className="block px-3 py-2.5 rounded-xl text-xs transition-all duration-200 text-center"
-            style={{
-              color: 'rgba(255,255,255,0.3)',
-              background: 'transparent',
-              border: '1px solid rgba(255,255,255,0.06)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(255,255,255,0.03)';
-              e.currentTarget.style.color = 'rgba(255,255,255,0.5)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'transparent';
-              e.currentTarget.style.color = 'rgba(255,255,255,0.3)';
-            }}
-          >
-            ← Tilbake til ToSom
-          </Link>
-
-          <AdminLogoutButton />
+        <div className="px-6 py-4 border-t" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
+          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>
+            ToSom Admin v1.0
+          </p>
         </div>
       </aside>
 
-      {/* Main content */}
-      <div className="flex-1 flex flex-col overflow-hidden relative z-0">
+      {/* Hovud-innhald */}
+      <div className="flex-1 flex flex-col relative z-10">
         <AdminHeader />
-        <main className="flex-1 overflow-y-auto p-6 md:p-8">
+        <main className="flex-1 p-6 overflow-y-auto" style={{ background: 'rgba(255,255,255,0.02)' }}>
           {children}
         </main>
       </div>
-
-      {/* CSS for active navigation highlight */}
-      <style>{`
-        .gold-highlight {
-          animation: goldGlow 0.3s ease-out;
-        }
-        @keyframes goldGlow {
-          0% { box-shadow: 0 0 0px rgba(212,175,55,0); }
-          100% { box-shadow: 0 0 16px rgba(212,175,55,0.06); }
-        }
-      `}</style>
     </div>
   );
 }

@@ -246,11 +246,11 @@ export default function LoginPage() {
       />
 
       {/* Content */}
-      <div className="relative z-10 pt-32 pb-24 px-6">
-        <div className="mx-auto max-w-md">
+      <div className="relative z-10 pt-32 pb-24 px-6 flex items-center justify-center min-h-screen">
+        <div className="w-full max-w-md space-y-8">
 
           {/* Header */}
-          <div className="text-center space-y-4 mb-8">
+          <div className="text-center space-y-4">
             <h1
               style={{
                 ...typographyToStyle('heading-lg'),
@@ -272,11 +272,12 @@ export default function LoginPage() {
           </div>
 
           {/* ===== Primær CTA: Logg inn med Vipps ===== */}
-          <div className="mb-8">
+          <div>
             <ToSomButton
               href="/api/auth/vipps"
               variant="gold"
               size="xl"
+              className="w-full"
             >
               Logg inn med Vipps
             </ToSomButton>
@@ -320,7 +321,7 @@ export default function LoginPage() {
 
           {/* Vipps-informasjon */}
           <div
-            className="space-y-3 w-full"
+            className="text-center space-y-3 w-full"
             style={{
               background: 'rgba(212,175,55,0.04)',
               border: '1px solid rgba(212,175,55,0.12)',

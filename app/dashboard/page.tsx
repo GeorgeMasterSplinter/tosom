@@ -53,11 +53,13 @@ const actionItems = [
 function ConfirmExitModal({ 
   isOpen, 
   onClose, 
-  onConfirm 
+  onConfirm,
+  currentDay,
 }: { 
   isOpen: boolean; 
   onClose: () => void; 
   onConfirm: () => void;
+  currentDay?: number;
 }) {
   const [exiting, setExiting] = useState(false);
 
@@ -126,7 +128,7 @@ function ConfirmExitModal({
             className="text-sm mb-6 leading-relaxed"
             style={{ color: 'rgba(255,255,255,0.5)' }}
           >
-            Du er no på dag {data?.currentDay} av 30. Reisen din vil bli avslutta, og du vil kunne starte ein ny reise når som helst.
+            Du er no på dag {currentDay ?? 0} av 30. Reisen din vil bli avslutta, og du vil kunne starte ein ny reise når som helst.
           </p>
 
           <div className="flex gap-3">
@@ -566,6 +568,7 @@ export default function Dashboard() {
     <ConfirmExitModal
       isOpen={showExitModal}
       onClose={() => setShowExitModal(false)}
+      currentDay={data?.currentDay}
       onConfirm={() => {
         setShowExitModal(false);
         // Oppdater state — fjern matched-status

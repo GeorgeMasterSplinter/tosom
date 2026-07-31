@@ -92,7 +92,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       where: { userId: user.id },
       data: {
         endedAt: exitDate,
-        phase: 'ENDED',
         day: Math.min(journey.day, 30),
       },
     });

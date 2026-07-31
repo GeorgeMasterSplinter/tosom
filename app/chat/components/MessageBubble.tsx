@@ -57,7 +57,7 @@ const G = {
 export interface MessageData {
   id: string;
   sender: "me" | "partner" | "system";
-  type: "text" | "image" | "task" | "choice" | "system";
+  type: "text" | "task" | "choice" | "system" | "image";
   content: string;
   resonanceLevel?: number; // 0–100, for resonance-glow
   isMilestone?: boolean; // milestone-melding
@@ -448,7 +448,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
   }
 
   // ═══ IMAGE BUBBLE — bilede frå chat ═══
-  if (type === "image") {
+  if (message.type === "image") {
     const imageUrl = metadata?.imageUrl || content;
     return (
       <div
@@ -534,10 +534,6 @@ export function MessageBubble({ message }: MessageBubbleProps) {
             </div>
           )}
 
-          {/* Image content */}
-          {type === "image" && metadata?.imageUrl && (
-            <ImageContent imageUrl={metadata.imageUrl} />
-          )}
         </SystemCard>
       </div>
     );
@@ -628,11 +624,6 @@ export function MessageBubble({ message }: MessageBubbleProps) {
 
           {/* Timestamp */}
           {metadata?.timestamp && <Timestamp value={String(metadata.timestamp)} />}
-
-          {/* Image content */}
-          {type === "image" && metadata?.imageUrl && (
-            <ImageContent imageUrl={metadata.imageUrl} />
-          )}
         </div>
 
         {/* Resonance-indikator for "me" med høg resonance */}

@@ -131,12 +131,16 @@ export async function POST(req: NextRequest) {
         });
       }
 
+      // Bildedelings-lås opp etter 14 dagar
+      const imageShareAllowedAt = new Date(acceptDate.getTime() + 14 * 24 * 60 * 60 * 1000);
+
       // OPPRETT CONVERSATION — så chat kan opnast!
       const conversation = await prisma.conversation.create({
         data: {
           userAId: match.userAId,
           userBId: match.userBId,
           status: 'active',
+          imageShareAllowedAt,
         },
         include: {
           userA: { select: { id: true, profile: { select: { identityName: true } } } },
@@ -154,7 +158,7 @@ export async function POST(req: NextRequest) {
         },
         conversation: {
           id: conversation.id,
-          message: "Din reise med din match har begynte. Dei første 14 dagane er utan bilder.",
+          message: `Din reise med din match har begynte. Bildedelings er låst opp ${imageShareAllowedAt.toLocaleDateString('no-NO')}.`,
         },
         journey: {
           phase: "EARLY",

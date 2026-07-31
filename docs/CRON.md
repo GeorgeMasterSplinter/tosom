@@ -1,16 +1,15 @@
 # Cron-jobbar — Dokumentasjon
 
-**Oppdatert:** 30. juni 2026
-**Versjon:** 1.0
+**Oppdatert:** 31. juli 2026
+**Versjon:** 1.1
 
 ---
 
 ## OVERSIKT
 
 ToSom har cron-jobbar for:
-- **Dagleg matching** (éin match per 24 timer)
-- **Journey-updates** (daglege oppdateringar)
-- **Resonance-tracking** (dagleg resonansmåling)
+- **Dagleg matching** (éin match per 24 timer, kl. 05:00 CET)
+- **Journey-updates** (daglege oppdateringar, kl. 07:00 CET)
 
 ---
 
@@ -18,63 +17,57 @@ ToSom har cron-jobbar for:
 
 ```
 app/api/cron/
-└── matching/route.ts    # Cron-endepunkt for dagleg matching
+├── matching/route.ts    # Cron-endepunkt for dagleg matching
+└── journey/             # (kommande) Journey-updates
 ```
 
 ---
 
 ## DAGLEG MATCHING
 
-Køyr: `GET /api/cron/matching`
+**Køyr:** `GET /api/cron/matching?secret=<CRON_SECRET>`
 
-Funksjonar:
+**Funksjonar:**
 1. Finn brukarar utan aktiv match
-2. Kjør matching-engine for kvar brukar
+2. Kjør matching-engine (`findBestResonance`) for kvar brukar
 3. Opprett match med score og explanation
-4. Send notifikasjon til brukar
-5. Oppdater lastMatchAt
+4. Oppdater lastMatchAt (24t-regel)
+
+**Tidspunkt:** Vercel cron kjører kvar dag kl. 05:00 CET
 
 ---
 
 ## JOURNEY-UPDATES
 
-Køyr: `GET /api/journey/today`
+**Køyr:** `GET /api/cron/journey` (kommande)
 
-Funksjonar:
+**Funksjonar:**
 1. Hent aktive journeys
 2. Oppdater phase (EARLY → BUILDING_TRUST → DEEPER → CHECKIN)
 3. Generer dagleg innhald (refleksjon, prompt, oppgåve)
 4. Update resonance
 
+**Tidspunkt:** Vercel cron kjører kvar dag kl. 07:00 CET
+
 ---
 
-## SETTING OPP I PRODUKSJON
+## KONFIGURASJON
 
-### Vercel Cron
+Cron-jobbar er konfigurert i `vercel.json`:
+
 ```json
-// vercel.json
 {
   "crons": [
     {
       "path": "/api/cron/matching",
-      "schedule": "0 9 * * *"
+      "schedule": "0 5 * * *"
+    },
+    {
+      "path": "/api/cron/journey",
+      "schedule": "0 7 * * *"
     }
   ]
 }
-```
-
-### Alternativ: GitHub Actions
-```yaml
-# .github/workflows/cron-matching.yml
-on:
-  schedule:
-    - cron: '0 9 * * *'  # 09:00 CET
-jobs:
-  matching:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Run matching cron
-        run: curl https://tosom.no/api/cron/matching
 ```
 
 ---
@@ -82,9 +75,11 @@ jobs:
 ## TEST
 
 ```bash
-# Test cron manually
-curl https://tosom.no/api/cron/matching
-curl https://tosom.no/api/journey/today
+# Test cron matching lokalt (krever CRON_SECRET i .env.local)
+curl 'http://localhost:3000/api/cron/matching?secret=din-cron-secret'
+
+# Test cron journey
+curl 'http://localhost:3000/api/cron/journey?secret=din-cron-secret'
 ```
 
 ---
@@ -92,12 +87,18 @@ curl https://tosom.no/api/journey/today
 ## FEILFINDING
 
 ### "Cron failed"
-Sjekk logs i Vercel/Console
+- Sjekk logs i Vercel Dashboard → Functions → Cron Jobs
+- Sørg for at `CRON_SECRET` er sett i Vercel environment variables
+
+### "Ugyldig secret"
+- Bruk korrekt `?secret=` parameter ved manuell testing
+- I produksjon kjører Vercel cron automatisk utan manual kall
 
 ---
 
 ## HUSK
 
-- Cron må vere autentisert (API-key header)
+- Cron må vere autentisert (CRON_SECRET)
 - Ingen user-facing feilmeldingar
 - Rate limit på cron-kallar
+- Matching berre éin gong per 24t per brukar

@@ -447,6 +447,41 @@ export function MessageBubble({ message }: MessageBubbleProps) {
     );
   }
 
+  // ═══ IMAGE BUBBLE — bilede frå chat ═══
+  if (type === "image") {
+    const imageUrl = metadata?.imageUrl || content;
+    return (
+      <div
+        className={`flex ${sender === "me" ? "justify-end" : "justify-start"} py-3 px-6 animate-warmGlowIn`}
+      >
+        <div
+          className="rounded-2xl overflow-hidden relative max-w-[280px]"
+          style={{ borderRadius: '16px' }}
+        >
+          <img
+            src={imageUrl}
+            alt="Bilete"
+            className="w-full h-auto block"
+            style={{ borderRadius: '16px' }}
+            loading="lazy"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+            }}
+          />
+          {/* Overlay-glow */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              borderRadius: '16px',
+              boxShadow: `inset 0 0 20px ${sender === "me" ? G.goldSoft : 'transparent'}`,
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+
   // ═══ TASK BUBBLE — guidet oppgåve ═══
   if (type === "task") {
     return (

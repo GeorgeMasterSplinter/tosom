@@ -50,3 +50,6 @@ next-env.d.ts
 .DS_Store
 Thumbs.db
 .env*
+
+# Uploaded files (bilete-opplasting i chat)
+/public/uploads/

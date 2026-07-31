@@ -271,14 +271,22 @@ function MessageList({ partner, journeyDay }: {
    Glassmorphism design med gull-aksentar
    ═══════════════════════════════════════ */
 
-function ChatInput({ imageShareAllowed }: {
+function ChatInput({ 
+  imageShareAllowed, 
+  conversationId,
+  senderId,
+}: {
   imageShareAllowed: boolean;
+  conversationId?: string | null;
+  senderId?: string;
 }) {
   const { sendMessage } = useChat();
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (inputRef.current) {
@@ -308,6 +316,42 @@ function ChatInput({ imageShareAllowed }: {
     }
   };
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !conversationId || !senderId) return;
+
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('conversationId', conversationId);
+      formData.append('senderId', senderId);
+
+      const res = await fetch('/api/chat/image', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        console.error('Bilete-opplasting feila:', err);
+        return;
+      }
+
+      const data = await res.json();
+      // Send bilede-URL som melding med type "image"
+      await sendMessage(data.imageUrl, "image");
+    } catch (error) {
+      console.error('Bilete-opplasting feil:', error);
+    } finally {
+      setUploading(false);
+      // Reset file input for same file again
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
   return (
     <div 
       className="px-4 py-3.5 sm:px-6"
@@ -331,17 +375,32 @@ function ChatInput({ imageShareAllowed }: {
       >
         {/* Kamera-ikon — Premium glass-knapp */}
         {imageShareAllowed && (
-          <button 
-            className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 hover:brightness-125 active:scale-90" 
-            style={{ 
-              color: G.gold,
-              background: G.glassBg,
-              border: `1px solid ${G.glassBorder}`,
-            }} 
-            title="Send bilde"
-          >
-            📷
-          </button>
+          <>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              onChange={handleImageUpload}
+              className="hidden"
+            />
+            <button 
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading}
+              className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 hover:brightness-125 active:scale-90 disabled:opacity-40" 
+              style={{ 
+                color: G.gold,
+                background: G.glassBg,
+                border: `1px solid ${G.glassBorder}`,
+              }} 
+              title={uploading ? "Lagar bilete..." : "Send bilde"}
+            >
+              {uploading ? (
+                <span className="text-xs" style={{ animation: 'spin 1s linear infinite' }}>⏳</span>
+              ) : (
+                '📷'
+              )}
+            </button>
+          </>
         )}
 
         {/* Input — Glass-stil med gull-focus */}
@@ -496,8 +555,12 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
                <MessageList partner={partner} journeyDay={journeyDay} />
              </div>
 
-            {/* CHAT INPUT — Premium glass */}
-            <ChatInput imageShareAllowed={imageShareAllowed} />
+             {/* CHAT INPUT — Premium glass */}
+            <ChatInput 
+              imageShareAllowed={imageShareAllowed} 
+              conversationId={conversationId}
+              senderId={undefined} // TODO: Hent frå session/context
+            />
           </div>
         </div>
       </div>

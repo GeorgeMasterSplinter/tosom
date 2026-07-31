@@ -1,5 +1,6 @@
 "use client";
 
+import Image from 'next/image';
 import { useState, useEffect } from "react";
 import { updateProfile, ProfileFormData } from "./actions";
 
@@ -191,14 +192,13 @@ export default function ProfileEditForm({
         <h2 className="text-lg font-medium text-white">Foto</h2>
         <div className="mt-4 space-y-4">
           {form.photoUrl && (
-            <div className="rounded-xl shadow-md shadow-black/20 overflow-hidden aspect-square max-w-sm">
-              <img
+            <div className="rounded-xl shadow-md shadow-black/20 overflow-hidden aspect-square max-w-sm relative">
+              <Image
                 src={form.photoUrl}
                 alt="Profilbilde"
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.currentTarget.style.display = "none";
-                }}
+                fill
+                className="object-cover"
+                onError={() => {}}
               />
             </div>
           )}

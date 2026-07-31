@@ -3,6 +3,7 @@
 import GlassPanel from '@/components/ui/panels/GlassPanel';
 import PremiumButton from '@/components/ui/PremiumButton';
 import FadeIn from '@/components/ui/FadeIn';
+import Image from 'next/image';
 import type { UserProfile } from '@/lib/profile/userProfile';
 
 interface ProfileViewProps {
@@ -24,15 +25,16 @@ export default function ProfileView({
 
         {/* Header */}
         <GlassPanel className="flex flex-col gap-[var(--space-md)] items-center text-center">
-          <div className="relative">
-            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-[var(--color-gold)]/30 to-[var(--color-gold)]/10 border-2 border-[var(--color-gold)]/30 flex items-center justify-center overflow-hidden">
-              {profile.photos[0] ? (
-                <img
-                  src={profile.photos[0]}
-                  alt={profile.name}
-                  className="w-full h-full object-cover rounded-full"
-                />
-              ) : (
+            <div className="relative">
+              <div className="w-32 h-32 rounded-full bg-gradient-to-br from-[var(--color-gold)]/30 to-[var(--color-gold)]/10 border-2 border-[var(--color-gold)]/30 flex items-center justify-center overflow-hidden relative">
+                {profile.photos[0] ? (
+                  <Image
+                    src={profile.photos[0]}
+                    alt={profile.name}
+                    fill
+                    className="object-cover rounded-full"
+                  />
+                ) : (
                 <span className="text-4xl font-semibold text-[var(--color-gold)]">
                   {profile.name.charAt(0)}
                 </span>
@@ -107,12 +109,13 @@ export default function ProfileView({
               {profile.photos.map((photo, idx) => (
                 <div
                   key={idx}
-                  className="w-24 h-32 flex-shrink-0 rounded-lg overflow-hidden border border-white/10 bg-white/[0.03]"
+                  className="w-24 h-32 flex-shrink-0 rounded-lg overflow-hidden border border-white/10 bg-white/[0.03] relative"
                 >
-                  <img
+                  <Image
                     src={photo}
                     alt={`Bilde ${idx + 1}`}
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
                   />
                 </div>
               ))}

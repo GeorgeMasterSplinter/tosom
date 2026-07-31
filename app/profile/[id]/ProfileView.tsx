@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Section from "@/components/ui/Section";
@@ -135,10 +136,11 @@ export default function ProfileView({ profile }: { profile: ProfileData }) {
               <div className="w-32 h-32 mx-auto rounded-full overflow-hidden bg-ts-bg-surface ring-2 ring-ts-gold/30 relative">
                 <div className="absolute inset-0 gold-glow-md rounded-full" />
                 {profile.imageUrl ? (
-                  <img
+                  <Image
                     src={profile.imageUrl}
                     alt={profile.name ?? "Profil"}
-                    className="w-full h-full object-cover relative z-10"
+                    fill
+                    className="object-cover relative z-10"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-ts-gold text-4xl font-light relative z-10">
@@ -207,10 +209,11 @@ export default function ProfileView({ profile }: { profile: ProfileData }) {
                       key={img.id}
                       className="rounded-xl shadow-md shadow-black/20 overflow-hidden aspect-[4/5] ring-1 ring-ts-gold/20 transition-all duration-300 hover:scale-[1.02] hover:gold-glow-sm"
                     >
-                      <img
+                      <Image
                         src={img.url}
                         alt="Profilbilde"
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
                       />
                     </div>
                   ))}

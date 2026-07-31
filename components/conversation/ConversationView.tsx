@@ -48,7 +48,8 @@ export default function ConversationView({ conversationId }: { conversationId: s
   useEffect(() => {
     refreshMessages();
     setLoading(false);
-  }, [conversationId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function sendMessage() {
     if (!input.trim()) return;

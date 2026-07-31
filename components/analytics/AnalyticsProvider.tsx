@@ -156,7 +156,7 @@ export function AnalyticsProvider() {
     return () => {
       document.head.removeChild(script);
     };
-  }, [PLAUSIBLE_DOMAIN]);
+  }, []);
 
   // Inject Umami script
   useEffect(() => {
@@ -171,7 +171,7 @@ export function AnalyticsProvider() {
     return () => {
       document.head.removeChild(script);
     };
-  }, [UMAAMI_SCRIPT_ID]);
+  }, []);
 
   return null;
 }

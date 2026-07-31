@@ -34,7 +34,8 @@ export function Memories({ conversationId, variant = "grid" }: MemoriesProps) {
   useEffect(() => {
     if (!hasAccess) return;
     fetchMemories();
-  }, [hasAccess, conversationId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function fetchMemories() {
     try {

@@ -42,7 +42,8 @@ export function WeeklyDigest({
   useEffect(() => {
     if (!hasAccess) return;
     fetchDigest();
-  }, [hasAccess, conversationId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function fetchDigest() {
     try {

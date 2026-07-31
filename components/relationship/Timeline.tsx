@@ -5,6 +5,7 @@
 
 "use client";
 
+import Image from 'next/image';
 import { useState, useEffect } from "react";
 import { isFlagEnabled } from "@/utils/flags";
 
@@ -50,7 +51,8 @@ export function Timeline({ conversationId, variant = "full" }: TimelineProps) {
   useEffect(() => {
     if (!hasAccess) return;
     fetchTimeline();
-  }, [hasAccess, conversationId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function fetchTimeline() {
     try {
@@ -189,12 +191,14 @@ function TimelineEventItem({
             <p className="text-sm text-white/60">{event.description}</p>
           )}
           {event.imageUrl && (
-            <img
-              src={event.imageUrl}
-              alt={event.title}
-              className="mt-3 rounded-lg w-full h-32 object-cover"
-              loading="lazy"
-            />
+            <div className="mt-3 rounded-lg w-full h-32 relative overflow-hidden">
+              <Image
+                src={event.imageUrl}
+                alt={event.title}
+                fill
+                className="object-cover rounded-lg"
+              />
+            </div>
           )}
         </div>
         <p className="text-xs text-white/40 mt-1 ml-1">{formattedDate}</p>

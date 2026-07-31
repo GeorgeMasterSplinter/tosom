@@ -173,7 +173,7 @@ export default function AppShell({
     if (shouldForceOnboarding() && state.currentRoute !== "onboarding") {
       setState((prev) => ({ ...prev, currentRoute: "onboarding" }));
     }
-  }, []);
+  }, [state.currentRoute]);
 
   const handleGoTo = useCallback(
     (route: NavigationRoute, params?: Record<string, any>) => {

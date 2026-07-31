@@ -9,6 +9,7 @@
  *   />
  */
 
+import Image from 'next/image';
 import React from 'react';
 
 export interface SocialConnection {
@@ -76,12 +77,14 @@ const SocialGraphV2: React.FC<SocialGraphV2Props> = ({ connections, showMutual =
             {conn.avatars && conn.avatars.length > 0 && (
               <div className="flex -space-x-2">
                 {conn.avatars.slice(0, 4).map((avatar, j) => (
-                  <img
-                    key={j}
-                    src={avatar}
-                    alt=""
-                    className="w-8 h-8 rounded-full border-2 border-ts-bg object-cover"
-                  />
+                  <div key={j} className="w-8 h-8 relative">
+                    <Image
+                      src={avatar}
+                      alt=""
+                      fill
+                      className="rounded-full border-2 border-ts-bg object-cover"
+                    />
+                  </div>
                 ))}
                 {conn.avatars.length > 4 && (
                   <div className="w-8 h-8 rounded-full border-2 border-ts-bg bg-ts-glass flex items-center justify-center">

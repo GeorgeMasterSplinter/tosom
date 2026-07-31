@@ -9,6 +9,7 @@
  *  PP27 — placeholder-bilder med "Låst" */
 
 import type { PartnerProfile } from "../../lib/profile/partnerProfile";
+import Image from 'next/image';
 
 /* PP4 — Props */
 interface PartnerProfileViewProps {
@@ -40,9 +41,11 @@ export default function PartnerProfileView({
         <div className="flex items-center justify-between px-6 py-4 border-b border-black/5">
           <div className="flex items-center gap-3">
             {avatarUrl ? (
-              <img
+              <Image
                 src={avatarUrl}
                 alt={profile.name}
+                width={48}
+                height={48}
                 className="w-12 h-12 rounded-full object-cover"
               />
             ) : (
@@ -126,12 +129,14 @@ export default function PartnerProfileView({
             <div className="grid grid-cols-3 gap-3">
               {photosAllowed && profile.photos.length > 0 ? (
                 profile.photos.map((url, idx) => (
-                  <img
-                    key={idx}
-                    src={url}
-                    alt={`Bilde ${idx + 1}`}
-                    className="w-full aspect-square rounded-lg object-cover shadow-sm"
-                  />
+                  <div key={idx} className="relative w-full aspect-square">
+                    <Image
+                      src={url}
+                      alt={`Bilde ${idx + 1}`}
+                      fill
+                      className="rounded-lg object-cover shadow-sm"
+                    />
+                  </div>
                 ))
               ) : (
                 <>

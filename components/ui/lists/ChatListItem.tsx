@@ -12,6 +12,7 @@
    />
  */
 
+import Image from 'next/image';
 import React from 'react';
 
 export interface ChatListItemProps {
@@ -65,10 +66,12 @@ const ChatListItem: React.FC<ChatListItemProps> = ({
       {/* Avatar */}
       <div className="relative flex-shrink-0">
         {avatar ? (
-          <img
+          <Image
             src={avatar}
             alt={name}
-            className="w-12 h-12 rounded-full object-cover"
+            width={48}
+            height={48}
+            className="rounded-full object-cover"
           />
         ) : (
           <div className="w-12 h-12 rounded-full bg-ts-gold/20 flex items-center justify-center">

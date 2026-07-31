@@ -7,6 +7,7 @@
 'use client';
 
 import { FC } from 'react';
+import Image from 'next/image';
 import { radius, spacing, colors } from '@/config/design-tokens';
 import { ToSomGlassPanel } from './ToSomGlassPanel';
 import { ToSomBadge } from './ToSomBadge';
@@ -46,10 +47,12 @@ export const ToSomProfileCard: FC<ToSomProfileCardProps> = ({
             boxShadow: `0 0 24px rgba(212,175,55,0.2)`,
           }}
         >
-          <img
+          <Image
             src={avatarUrl}
             alt={name}
-            className="w-full h-full object-cover"
+            width={80}
+            height={80}
+            className="object-cover"
             style={{ borderRadius: '9999px' }}
           />
         </div>

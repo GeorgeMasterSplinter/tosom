@@ -11,6 +11,7 @@
  *   />
  */
 
+import Image from 'next/image';
 import React from 'react';
 
 export interface ProfileCardProps {
@@ -63,10 +64,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
       {/* Avatar section */}
       <div className="relative h-48">
         {avatar ? (
-          <img
+          <Image
             src={avatar}
             alt={name}
-            className="w-full h-full object-cover"
+            fill
+            className="object-cover"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-ts-gold/20 via-ts-gold/10 to-transparent">

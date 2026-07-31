@@ -3,6 +3,7 @@
 import GlassPanel from '@/components/ui/panels/GlassPanel';
 import GlassCard from '@/components/ui/cards/GlassCard';
 import FadeIn from '@/components/ui/FadeIn';
+import Image from 'next/image';
 import type { UserProfile } from '@/lib/profile/userProfile';
 
 interface ProfileDetailsProps {
@@ -78,13 +79,13 @@ export default function ProfileDetails({ profile }: ProfileDetailsProps) {
               {profile.photos.map((photo, idx) => (
                 <div
                   key={idx}
-                  className="w-32 h-40 flex-shrink-0 rounded-xl overflow-hidden border border-white/10 bg-[var(--color-card)]"
+                  className="w-32 h-40 flex-shrink-0 rounded-xl overflow-hidden border border-white/10 bg-[var(--color-card)] relative"
                 >
-                  <img
+                  <Image
                     src={photo}
                     alt={`Bilde ${idx + 1}`}
-                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                    loading="lazy"
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 </div>
               ))}

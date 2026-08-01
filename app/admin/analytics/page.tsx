@@ -128,7 +128,7 @@ export default function AdminAnalyticsPage() {
             className="text-2xl font-bold mb-1"
             style={{ color: 'rgba(255,255,255,0.95)' }}
           >
-            📊 Analytics
+             📊 Statistikk
           </h1>
           <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
             Nøkkeltal og trendar for ToSom-plattforma
@@ -139,7 +139,7 @@ export default function AdminAnalyticsPage() {
 
       {/* Grafer — 3 kolonnar */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <ChartBar data={mockData.dailySignups} label="📈 Daglege signup" />
+        <ChartBar data={mockData.dailySignups} label="📈 Daglege registreringar" />
         <ChartBar data={mockData.completedOnboarding} label="✅ Fullførte onboarding" />
         <ChartBar data={mockData.dailyMatches} label="💞 Matcher per dag" />
         <ChartBar data={mockData.dailyJourneys} label="🚀 Reiser starta" />
@@ -155,7 +155,7 @@ export default function AdminAnalyticsPage() {
           SAMANLÅTTE NØKKELTAL
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-          <SummaryStat label="Gj.snitt score" value={84} unit="%" color="#D4AF37" />
+          <SummaryStat label="Gj.snitt poengsum" value={84} unit="%" color="#D4AF37" />
           <SummaryStat label="Fullføringsrate" value={67} unit="%" color="#4ADE80" />
           <SummaryStat label="Bilete-rate" value={52} unit="%" color="#8B5CF6" />
           <SummaryStat label="Tid til match" value={4.2} unit="t" color="#FBBF24" />

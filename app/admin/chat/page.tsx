@@ -35,7 +35,7 @@ function StatusBadge({ status, color }: { status: string; color: string }) {
 function ChatRow({ chat }: { chat: typeof mockChats[number] }) {
   const statusColors: Record<string, string> = {
     'Aktiv': '#4ADE80',
-    'Frozen': '#FF4D4D',
+    'Frosen': '#FF4D4D',
     'Ferdig': '#8B5CF6',
   };
 
@@ -143,7 +143,7 @@ function ChatRow({ chat }: { chat: typeof mockChats[number] }) {
               border: `1px solid ${chat.frozen ? 'rgba(74,222,128,0.2)' : 'rgba(251,191,36,0.2)'}`,
             }}
           >
-            {chat.frozen ? 'Unfreeze' : 'Freeze'}
+            {chat.frozen ? 'Tøy fri' : 'Frys'}
           </button>
           <Link
             href={`/admin/users`}
@@ -299,7 +299,7 @@ export default function AdminChatPage() {
         >
           <option value="alle" style={{ background: '#0A1A2A' }}>Alle statusar</option>
           <option value="aktiv" style={{ background: '#0A1A2A' }}>☐ Aktiv</option>
-          <option value="frozen" style={{ background: '#0A1A2A' }}>❄️ Frozen</option>
+          <option value="frozen" style={{ background: '#0A1A2A' }}>❄️ Frosen</option>
         </select>
 
         {/* Flagget-filter */}

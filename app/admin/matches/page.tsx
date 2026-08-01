@@ -118,16 +118,6 @@ function MatchRow({ match }: { match: typeof mockMatches[number] }) {
       </td>
       <td className="py-3 px-4">
         <div className="flex items-center gap-1.5">
-          <button
-            className="px-2.5 py-1 rounded-md text-[10px] font-medium transition-all duration-200"
-            style={{
-              background: 'rgba(251,191,36,0.08)',
-              color: '#FBBF24',
-              border: '1px solid rgba(251,191,36,0.2)',
-            }}
-          >
-            Reset
-          </button>
           <Link
             href={`/admin/users`}
             className="px-2.5 py-1 rounded-md text-[10px] font-medium transition-all duration-200"
@@ -137,7 +127,7 @@ function MatchRow({ match }: { match: typeof mockMatches[number] }) {
               border: '1px solid rgba(212,175,55,0.2)',
             }}
           >
-            Logg
+            Profilar
           </Link>
         </div>
       </td>
@@ -225,7 +215,7 @@ export default function AdminMatchesPage() {
           style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
         >
           <div className="text-2xl font-bold" style={{ color: '#8B5CF6' }}>{avgScore}%</div>
-          <div className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>Gj.snitt score</div>
+          <div className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>Gj.snitt poengsum</div>
         </div>
       </div>
 

@@ -226,7 +226,7 @@ function SystemStatus({ alerts }: { alerts?: string[] }) {
 
   const statusConfig = {
     ok: { color: '#4ADE80', label: 'OK', dotShadow: '0 0 6px rgba(74,222,128,0.4)' },
-    warning: { color: '#FBBF24', label: 'Warning', dotShadow: '0 0 6px rgba(251,191,36,0.4)' },
+    warning: { color: '#FBBF24', label: 'Årning', dotShadow: '0 0 6px rgba(251,191,36,0.4)' },
     error: { color: '#FF4D4D', label: 'Feil', dotShadow: '0 0 6px rgba(255,77,77,0.4)' },
   };
 
@@ -433,7 +433,7 @@ export default function AdminDashboardPage() {
           href="/admin/journeys"
         />
         <StatCard
-          title="Dagens signup"
+          title="Dagens registreringar"
           value="87"
           change="+18%"
           icon={

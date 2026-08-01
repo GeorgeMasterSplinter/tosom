@@ -147,7 +147,7 @@ function JourneyRow({ journey }: { journey: typeof mockJourneys[number] }) {
               border: '1px solid rgba(251,191,36,0.2)',
             }}
           >
-            Reset
+            Nullstill
           </button>
           <Link
             href={`/admin/chat`}

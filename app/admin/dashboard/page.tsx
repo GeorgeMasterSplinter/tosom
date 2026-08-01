@@ -9,7 +9,46 @@
  */
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
+
+/* ─── Admin Header — toppen av dashboardet ✨ */
+
+function AdminHeader() {
+  const router = useRouter();
+
+  return (
+    <header
+      className="flex items-center justify-between px-6 py-4 mb-6 border-b"
+      style={{ borderColor: 'rgba(255,255,255,0.06)' }}
+    >
+      <div className="flex items-center gap-3">
+        <div
+          className="w-8 h-8 rounded-lg flex items-center justify-center"
+          style={{ background: 'linear-gradient(135deg, #D4AF37 0%, #B8962E 100%)' }}
+        >
+          <span className="text-[14px] font-bold text-[#0A1A2A]">T</span>
+        </div>
+        <span className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.8)' }}>
+          Admin
+        </span>
+      </div>
+      <button
+        onClick={() => {
+          document.cookie = 'admin_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+          router.push('/admin/login');
+        }}
+        className="text-xs px-3 py-1.5 rounded-lg transition-all duration-200"
+        style={{
+          color: 'rgba(255,255,255,0.5)',
+          border: '1px solid rgba(255,255,255,0.08)',
+        }}
+      >
+        Logg ut
+      </button>
+    </header>
+  );
+}
 
 /* ─── Journey Phase Bar — visualiser reise-faser ─── */
 
@@ -290,9 +329,11 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="space-y-8">
-      {/* ─── Header med tittel + navigasjonsknappar + varsel ─── */}
+      {/* ─── Admin Header ─── */}
+      <AdminHeader />
+
+      {/* ─── Tittel-rad ─── */}
       <div>
-        {/* Tittel-rad */}
         <div className="flex items-start justify-between gap-4 mb-5">
           <div>
             <h1

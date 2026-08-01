@@ -52,7 +52,7 @@ export default function Step5Relasjonsstil({ data, onChange, onBack, onNext }: P
          ]}
          selectedValue={getValue('closenessNeed', '')}
          onChange={(v) => onChange('closenessNeed', v)}
-         columns={3}
+         columns={1}
        />
 
        {/* Sjølvstende vs. fellesskap — fritt tekstfelt */}

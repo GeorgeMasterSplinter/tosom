@@ -22,7 +22,7 @@ interface OnboardingSelectGridProps {
   options: SelectOption[];
   selectedValue: string;
   onChange: (value: string) => void;
-  columns?: 2 | 3 | 4;
+   columns?: 1 | 2 | 3 | 4;
   maxSelected?: number; // For multi-select (default: 1)
 }
 
@@ -49,7 +49,9 @@ export function OnboardingSelectGrid({
     ? 'grid-cols-2 md:grid-cols-4'
     : columns === 3
       ? 'grid-cols-2 md:grid-cols-3'
-      : 'grid-cols-1 md:grid-cols-2';
+      : columns === 1
+        ? 'grid-cols-1'
+        : 'grid-cols-1 md:grid-cols-2';
 
   return (
     <div className="space-y-4">

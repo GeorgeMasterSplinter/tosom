@@ -257,58 +257,6 @@ function SystemStatus({ alerts }: { alerts?: string[] }) {
   );
 }
 
-/* ─── GlobalSearch — header søkeboks ✨ */
-
-function GlobalSearch() {
-  const [query, setQuery] = useState('');
-  const [focused, setFocused] = useState(false);
-
-  return (
-    <div className="relative">
-      {/* Search icon */}
-      <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-          <path d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" stroke="rgba(255,255,255,0.3)" strokeWidth="2" strokeLinecap="round" />
-        </svg>
-      </div>
-      <input
-        type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-        placeholder="Søk etter brukar, match, reise..."
-        className="w-64 pl-9 pr-4 py-2 rounded-xl text-sm outline-none transition-all duration-300"
-        style={{
-          background: focused ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.04)',
-          border: focused ? '1px solid rgba(212,175,55,0.3)' : '1px solid rgba(255,255,255,0.08)',
-          color: 'white',
-        }}
-      />
-      {/* Result dropdown (placeholder) */}
-      {query.length > 0 && (
-        <div
-          className="absolute top-full left-0 right-0 mt-2 rounded-xl overflow-hidden z-50"
-          style={{
-            background: 'rgba(15,25,45,0.98)',
-            border: '1px solid rgba(255,255,255,0.1)',
-            backdropFilter: 'blur(12px)',
-          }}
-        >
-          <div className="py-2">
-            <div className="px-3 py-1.5 text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
-              👤 Brukarar
-            </div>
-            <button className="w-full text-left px-3 py-2 text-sm transition-colors" style={{ color: 'rgba(255,255,255,0.7)' }}>
-              Resultat...
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
 /* ─── AlertBadge — admin-varsel indikator ✨ */
 
 function AlertBadge({ name, count }: { name: string; count: number }) {
@@ -323,48 +271,89 @@ function AlertBadge({ name, count }: { name: string; count: number }) {
   );
 }
 
-/* ─── Hovud-komponent — Dashboard Page ⭐ */
+/* ─── Hovudkomponent — Dashboard Page ⭐ */
 
 export default function AdminDashboardPage() {
   const [alerts] = useState({ chat: 1, cron: 0, matching: 0, journey: 0 });
 
+  /* Navigasjonsknappar — 2 rader × 4 kolonnar */
+  const navButtons = [
+    { label: '👤 Alle brukarar', href: '/admin/users' },
+    { label: '💞 Aktive matcher', href: '/admin/matches' },
+    { label: '🕓 Pågåande reiser', href: '/admin/journeys' },
+    { label: '💬 Chat (metadata)', href: '/admin/chat' },
+    { label: '🛡️ Moderasjon', href: '/admin/moderation' },
+    { label: '📊 Analytics', href: '/admin/analytics' },
+    { label: '🚦 Systemstatus', href: '/admin/system' },
+    { label: '🔧 Verktøy', href: '/admin/tools' },
+  ];
+
   return (
     <div className="space-y-8">
-      {/* Header med søk og varsel */}
-      <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <h1
-            className="text-2xl font-bold mb-1"
-            style={{ color: 'rgba(255,255,255,0.95)' }}
-          >
-            Kommandopanel
-          </h1>
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
-            Oversikt over ToSom-plattforma
-          </p>
+      {/* ─── Header med tittel + navigasjonsknappar + varsel ─── */}
+      <div>
+        {/* Tittel-rad */}
+        <div className="flex items-start justify-between gap-4 mb-5">
+          <div>
+            <h1
+              className="text-2xl font-bold mb-1"
+              style={{ color: 'rgba(255,255,255,0.95)' }}
+            >
+              Kommandopanel
+            </h1>
+            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              Oversikt over ToSom-plattforma
+            </p>
+          </div>
+          <div className="flex items-center gap-3 pt-1">
+            {/* System status indikator */}
+            {(alerts.chat > 0 || alerts.cron > 0 || alerts.matching > 0 || alerts.journey > 0) && (
+              <div className="flex items-center gap-2">
+                {alerts.chat > 0 && <AlertBadge name="Chat" count={alerts.chat} />}
+                {alerts.cron > 0 && <AlertBadge name="Cron" count={alerts.cron} />}
+              </div>
+            )}
+            <span
+              className="text-xs px-3 py-1.5 rounded-full font-medium"
+              style={{
+                background: 'rgba(74,222,128,0.1)',
+                color: '#4ADE80',
+                border: '1px solid rgba(74,222,128,0.2)',
+              }}
+            >
+              ● System aktiv
+            </span>
+          </div>
         </div>
-        <div className="flex items-center gap-3">
-          {/* System status indikator */}
-          {(alerts.chat > 0 || alerts.cron > 0 || alerts.matching > 0 || alerts.journey > 0) && (
-            <div className="flex items-center gap-2">
-              {alerts.chat > 0 && <AlertBadge name="Chat" count={alerts.chat} />}
-              {alerts.cron > 0 && <AlertBadge name="Cron" count={alerts.cron} />}
-            </div>
-          )}
-          <span
-            className="text-xs px-3 py-1.5 rounded-full font-medium"
-            style={{
-              background: 'rgba(74,222,128,0.1)',
-              color: '#4ADE80',
-              border: '1px solid rgba(74,222,128,0.2)',
-            }}
-          >
-            ● System aktiv
-          </span>
+
+        {/* Navigasjonsknappar — 2 rader × 4 kolonnar */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          {navButtons.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 text-center"
+              style={{
+                background: 'rgba(212,175,55,0.08)',
+                color: '#D4AF37',
+                border: '1px solid rgba(212,175,55,0.2)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(212,175,55,0.15)';
+                e.currentTarget.style.boxShadow = '0 0 16px rgba(212,175,55,0.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(212,175,55,0.08)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              {item.label}
+            </Link>
+          ))}
         </div>
       </div>
 
-      {/* Stat-kort */}
+      {/* ─── Stat-kort — 2×2 grid ─── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Totale brukarar"
@@ -415,13 +404,13 @@ export default function AdminDashboardPage() {
         />
       </div>
 
-      {/* Midten: SystemStatus + Journey Phase */}
+      {/* ─── SystemStatus + JourneyPhase — side-om-side (2 kolonnar) ─── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <SystemStatus alerts={Object.entries(alerts).filter(([_, v]) => v > 0).map(([k]) => k)} />
         <JourneyPhaseMonitor />
       </div>
 
-      {/* Siste aktivitet */}
+      {/* ─── Siste Aktivitet — full breidd ─── */}
       <div
         className="rounded-2xl p-5"
         style={{
@@ -441,55 +430,6 @@ export default function AdminDashboardPage() {
           <ActivityItem icon="🚀" text="Reise starta for Ane & Magnus — dag 1/30" time="32 min sidan" />
           <ActivityItem icon="💬" text="Første melding sendt — Ane & Magnus" time="1 time sidan" />
           <ActivityItem icon="📝" text="Profil oppdatert — #1192" time="2 timar sidan" />
-        </div>
-      </div>
-
-      {/* Snarvnavigasjon */}
-      <div
-        className="rounded-2xl p-5"
-        style={{
-          background: 'rgba(255,255,255,0.03)',
-          border: '1px solid rgba(255,255,255,0.06)',
-        }}
-      >
-        <h3
-          className="text-sm font-semibold mb-4 tracking-wide"
-          style={{ color: 'rgba(255,255,255,0.6)' }}
-        >
-          SNARVNAVGIGASJON
-        </h3>
-        <div className="flex flex-wrap gap-3">
-          {[
-            { label: '👤 Alle brukarar', href: '/admin/users' },
-            { label: '💞 Aktive matcher', href: '/admin/matches' },
-            { label: '🕓 Pågående reiser', href: '/admin/journeys' },
-            { label: '💬 Chat (metadata)', href: '/admin/chat' },
-            { label: '🛡️ Moderasjon', href: '/admin/moderation' },
-            { label: '📊 Analytics', href: '/admin/analytics' },
-            { label: '🚦 Systemstatus', href: '/admin/system' },
-            { label: '🔧 Verktøy', href: '/admin/tools' },
-          ].map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="px-4 py-2.5 rounded-xl text-xs font-medium transition-all duration-300"
-              style={{
-                background: 'rgba(212,175,55,0.08)',
-                color: '#D4AF37',
-                border: '1px solid rgba(212,175,55,0.2)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(212,175,55,0.15)';
-                e.currentTarget.style.boxShadow = '0 0 16px rgba(212,175,55,0.1)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(212,175,55,0.08)';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
-            >
-              {item.label}
-            </Link>
-          ))}
         </div>
       </div>
     </div>

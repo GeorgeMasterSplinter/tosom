@@ -60,6 +60,7 @@ export default function AdminLogsPage() {
     }
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchLogs(1); }, [filterModule, filterLevel]);
 
   function clearFilters() {

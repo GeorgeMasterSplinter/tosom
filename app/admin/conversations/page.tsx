@@ -64,6 +64,7 @@ export default function AdminConversationsPage() {
     }
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchConversations(1); }, [frozenOnly]);
 
   async function toggleFreeze(conv: ConversationItem) {

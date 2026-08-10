@@ -92,6 +92,7 @@ export default function AdminJourneysPage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchJourneys(); }, [statusFilter, phaseFilter, page]);
 
   const fetchJourneys = async () => {

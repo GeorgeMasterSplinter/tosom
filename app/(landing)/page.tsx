@@ -3,7 +3,6 @@
 import { Footer } from '@/components/ui/layout/Footer';
 import { Hero } from '@/components/ui/layout/Hero';
 import { ToSomSection, ToSomButton } from '@/components/ui/system';
-import { AgeBadge } from '@/components/ui/age-badge/AgeBadge';
 import { color, spacing, typographyToStyle, radius, shadow } from '@/config/design-tokens';
 
 /* ========================
@@ -62,10 +61,12 @@ function GlassCard({
   children,
   padding = 'lg',
   className = '',
+  style,
 }: {
   children: React.ReactNode;
   padding?: 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
+  style?: React.CSSProperties;
 }) {
   const paddingMap = { sm: spacing.sm, md: spacing.md, lg: spacing.lg, xl: spacing.xl };
 
@@ -81,6 +82,7 @@ function GlassCard({
         boxShadow: '0 8px 32px rgba(0,0,0,0.20)',
         padding: `${paddingMap[padding]}px`,
         transition: 'all 300ms ease-out',
+        ...style,
       }}
       onMouseEnter={(e) => {
         (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.08)';
@@ -153,11 +155,6 @@ export default function LandingPage() {
       />
 
       <main className="relative z-10">
-        {/* AgeBadge — øverst til høyre, over header */}
-        <div className="absolute top-4 right-6 z-[60] hidden md:block">
-          <AgeBadge />
-        </div>
-
         {/* Hero */}
         <section className="relative overflow-hidden py-10 ph:py-14 md:py-[60px]">
           <Hero />
@@ -269,34 +266,119 @@ export default function LandingPage() {
           </div>
         </ToSomSection>
 
+        {/* ===== PRISBLOKK ===== */}
+        <ToSomSection
+          spotlight="blue"
+          className="px-6"
+        >
+          <div className="mx-auto max-w-xl space-y-8 text-center">
+            <h2
+              style={{
+                ...typographyToStyle('heading-lg'),
+                color: color.text.primary,
+              }}
+            >
+              Én pris. Alt inkludert.
+            </h2>
+
+            <GlassCard
+              padding="xl"
+              className="space-y-6"
+              style={{
+                background: 'rgba(212,175,55,0.06)',
+                border: '1px solid rgba(212,175,55,0.25)',
+                boxShadow: '0 0 40px rgba(212,175,55,0.15)',
+              }}
+            >
+              <div
+                style={{
+                  ...typographyToStyle('heading-xl'),
+                  color: color.brand.gold,
+                }}
+              >
+                349 kr
+              </div>
+
+              <p
+                style={{
+                  ...typographyToStyle('body-lg'),
+                  color: color.text.secondary,
+                  lineHeight: '1.8',
+                }}
+              >
+                ToSom — full tilgang. Betales én gang og dekker hele reisen.
+              </p>
+            </GlassCard>
+          </div>
+        </ToSomSection>
+
         {/* ===== CTA ===== */}
         <ToSomSection
           spotlight="cta"
-          className="px-6 text-center space-y-6"
+          className="px-6 text-center space-y-8"
         >
-          <h2
-            style={{
-              ...typographyToStyle('heading-lg'),
-              color: color.text.primary,
-            }}
-          >
-            Klar til å starte?
-          </h2>
+          <div className="mx-auto max-w-md space-y-6">
+            <h2
+              style={{
+                ...typographyToStyle('heading-lg'),
+                color: color.text.primary,
+              }}
+            >
+              Klar til å starte reisen?
+            </h2>
 
-          <p
-            style={{
-              ...typographyToStyle('body-lg'),
-              color: color.text.secondary,
-            }}
-          >
-            Lag profilen din i ditt eget tempo og møt noen som faktisk passer deg — på ordentlig.
-          </p>
+            <p
+              style={{
+                ...typographyToStyle('body-lg'),
+                color: color.text.secondary,
+                lineHeight: '1.8',
+              }}
+            >
+              Betal med Vipps og få tilgang til hele ToSom — inkludert match, guidet reise og privat rom.
+            </p>
 
-          <div className="flex flex-col items-center justify-center gap-4 pt-4">
-            <ToSomButton href="/register" variant="gold" size="xl">
-              Start reisen
+            {/* Hoved-CTA: Betal med Vipps */}
+            <ToSomButton
+              href="/api/payment/vipps"
+              variant="gold"
+              size="xl"
+            >
+              Betal med Vipps — 349 kr
             </ToSomButton>
 
+            {/* Informasjon om betaling */}
+            <div
+              className="space-y-3 pt-2"
+              style={{
+                background: 'rgba(212,175,55,0.04)',
+                border: '1px solid rgba(212,175,55,0.12)',
+                borderRadius: `${radius.lg}px`,
+                padding: `${spacing.lg}px`,
+              }}
+            >
+              <p
+                style={{
+                  ...typographyToStyle('body-sm'),
+                  color: 'rgba(255,255,255,0.6)',
+                  lineHeight: '1.7',
+                }}
+              >
+                Betalingsløsning er under utvikling. ToSom er i begrenset testfase.
+              </p>
+              <p
+                style={{
+                  ...typographyToStyle('body-sm'),
+                  color: color.text.secondary,
+                  lineHeight: '1.7',
+                }}
+              >
+                Når betaling er godkjent, blir du sendt til første steg i onboarding for å lage profilen din.
+              </p>
+            </div>
+          </div>
+
+          {/* Lær mer — sekundær */}
+          <div className="flex flex-col items-center pt-4">
             <ToSomButton href="/slik-fungerer-det" variant="dark" size="lg">
               Lær mer
             </ToSomButton>

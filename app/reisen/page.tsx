@@ -180,7 +180,7 @@ export default function ReisenPage() {
       <div className="relative z-10">
 
         {/* ===== HERO ===== */}
-        <section className="px-6 mt-32 mb-64 md:mt-48 md:mb-80 text-center">
+        <section className="px-6 mt-32 mb-96 md:mt-48 md:mb-[12rem] text-center">
           <div className="mx-auto max-w-[780px] space-y-6">
             <h1
               style={{
@@ -206,7 +206,7 @@ export default function ReisenPage() {
         </section>
 
         {/* ===== INTRO ===== */}
-        <section className="px-6 mt-64 mb-32 md:mt-80 md:mb-48">
+        <section className="px-6 mt-96 mb-32 md:mt-[12rem] md:mb-48">
           <div
             className="mx-auto max-w-[780px] rounded-[28px] p-10 md:p-14 space-y-6"
             style={{

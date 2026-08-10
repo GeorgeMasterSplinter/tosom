@@ -70,6 +70,7 @@ function ConversationRow({ conv, onClick }: { conv: ConversationData; onClick: (
         }}
       >
         {conv.partnerImageUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
           <img src={conv.partnerImageUrl} alt={conv.partnerName} className="w-full h-full object-cover rounded-full" />
         ) : (
           conv.partnerName.charAt(0).toUpperCase()

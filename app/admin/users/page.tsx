@@ -68,6 +68,7 @@ export default function AdminUsersPage() {
     }
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchUsers(1); }, [filterRole, flaggedOnly]);
 
   async function performAction(action: string, userId: string) {

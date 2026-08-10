@@ -76,6 +76,7 @@ export default function Dashboard() {
   const [selectedDay, setSelectedDay] = useState<number>(7);
   const [showExitModal, setShowExitModal] = useState(false);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const hour = new Date().getHours();
     if (hour < 6) setGreeting('God natt');

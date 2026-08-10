@@ -79,6 +79,7 @@ export default function AdminMatchesPage() {
     }
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchMatches(1); }, [filterStatus]);
 
   async function showInspector(match: MatchItem) {

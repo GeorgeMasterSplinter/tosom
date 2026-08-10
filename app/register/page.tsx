@@ -196,57 +196,6 @@ export default function RegisterPage() {
           </div>
         </ToSomSection>
 
-        {/* ===== PRISBLOKK ===== */}
-        <ToSomSection
-          spotlight="blue"
-          className="px-6"
-          style={{
-            paddingTop: spacing['3xl'],
-            paddingBottom: spacing['3xl'],
-          }}
-        >
-          <div className="mx-auto max-w-xl space-y-8 text-center">
-            <h2
-              style={{
-                ...typographyToStyle('heading-lg'),
-                color: color.text.primary,
-              }}
-            >
-              Én pris. Alt inkludert.
-            </h2>
-
-            <GlassCard
-              padding="xl"
-              className="space-y-6"
-              style={{
-                background: 'rgba(212,175,55,0.06)',
-                border: '1px solid rgba(212,175,55,0.25)',
-                boxShadow: '0 0 40px rgba(212,175,55,0.15)',
-              }}
-            >
-              <div
-                style={{
-                  ...typographyToStyle('heading-xl'),
-                  color: color.brand.gold,
-                }}
-              >
-                349 kr
-              </div>
-
-              <p
-                style={{
-                  ...typographyToStyle('body-lg'),
-                  color: color.text.secondary,
-                  lineHeight: '1.8',
-                }}
-              >
-                ToSom — full tilgang. Betales én gang og dekker hele reisen.
-              </p>
-
-            </GlassCard>
-          </div>
-        </ToSomSection>
-
         {/* ===== BETAL MED VIPPS ===== */}
         <ToSomSection
           spotlight="cta"

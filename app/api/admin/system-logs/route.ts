@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
     if (search) where.OR = [{ message: { contains: search, mode: 'insensitive' } }, { metadata: { contains: search, mode: 'insensitive' } }]
 
     const [logs, total] = await Promise.all([
-      prisma.systemLog.findMany({ where, skip, take: limit, orderBy: { createdAt: 'desc' }, select: { id: true, level: true, message: true, module: true, metadata: true, userId: true, createdAt: true } }),
+      prisma.systemLog.findMany({ where, skip, take: limit, orderBy: { createdAt: 'desc' }, select: { id: true, level: true, message: true, module: true, metadata: true, createdAt: true } }),
       prisma.systemLog.count({ where }),
     ])
 

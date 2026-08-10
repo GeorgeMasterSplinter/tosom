@@ -115,7 +115,6 @@ async function ensureDevUserInDb(testUser: {
         email: testUser.email,
         name: testUser.name,
         role: testUser.role as any,
-        image: null,
       },
       select: { id: true },
     });

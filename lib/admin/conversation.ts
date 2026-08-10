@@ -87,7 +87,7 @@ export async function getConversationMetadata(conversationId: string) {
           email: true,
           verified: true,
           bannedAt: true,
-          profile: { select: { firstName: true, lastName: true, photos: true } },
+          profile: { select: { firstName: true, lastName: true, photoUrl: true } },
         },
       },
       userB: {
@@ -96,7 +96,7 @@ export async function getConversationMetadata(conversationId: string) {
           email: true,
           verified: true,
           bannedAt: true,
-          profile: { select: { firstName: true, lastName: true, photos: true } },
+          profile: { select: { firstName: true, lastName: true, photoUrl: true } },
         },
       },
       _count: { select: { messages: true } },

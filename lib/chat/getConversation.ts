@@ -8,21 +8,15 @@ export async function getConversation(conversationId: string) {
         userA: {
           select: {
             id: true,
-            firstName: true,
-            lastName: true,
+            name: true,
+            email: true,
           },
         },
         userB: {
           select: {
             id: true,
-            firstName: true,
-            lastName: true,
-          },
-        },
-        match: {
-          select: {
-            id: true,
-            score: true,
+            name: true,
+            email: true,
           },
         },
       },

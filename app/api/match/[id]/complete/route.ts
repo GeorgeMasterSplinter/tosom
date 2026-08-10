@@ -79,7 +79,7 @@ export async function PUT(
         userAId: true,
         userBId: true,
         status: true,
-        lockedUntil: true,
+        lockedAt: true,
         score: true,
       },
     });
@@ -143,7 +143,7 @@ export async function PUT(
       select: {
         id: true,
         status: true,
-        lockedUntil: true,
+        lockedAt: true,
       },
     });
 

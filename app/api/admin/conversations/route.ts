@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
     const result = await requireAuth(req)
     if (result instanceof NextResponse) return result
     const adminUser = castToAdminUser(result.user)
-    if (adminUser.role !== 'ADMIN') return errorResponse("Berre admin kan få tilgang til conversations", 403)
+    if (adminUser.role !== 'ADMIN') return errorResponse("Berre admin kan f\u00e5 tilgang til conversations", 403)
 
     const url = new URL(req.url)
     const queryResult = validateQuery(adminConversationsQuerySchema, Object.fromEntries(url.searchParams.entries()))
@@ -31,7 +31,27 @@ export async function GET(req: NextRequest) {
     const where: Record<string, unknown> = frozenOnly ? { frozenAt: { not: null } } : {}
 
     const [conversations, total] = await Promise.all([
-      prisma.conversation.findMany({ where, skip, take: limit, orderBy: { createdAt: 'desc' }, select: { id: true, userAId: true, userBId: true, matchId: true, frozenAt: true, frozenBy: true, endedAt: true, lastMessageAt: true, createdAt: true, imageShared: true, imageShareAllowedAt: true, userA: { select: { id: true, email: true, name: true, role: true } }, userB: { select: { id: true, email: true, name: true, role: true } }, match: { select: { score: true, status: true } } } }),
+      prisma.conversation.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          userAId: true,
+          userBId: true,
+          matchId: true,
+          frozenAt: true,
+          frozenBy: true,
+          endedAt: true,
+          lastMessageAt: true,
+          createdAt: true,
+          imageShared: true,
+          imageShareAllowedAt: true,
+          userA: { select: { id: true, email: true, name: true, role: true } },
+          userB: { select: { id: true, email: true, name: true, role: true } }
+        }
+      }),
       prisma.conversation.count({ where }),
     ])
 

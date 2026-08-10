@@ -14,23 +14,14 @@ export async function getUserConversations(userId: string) {
           select: {
             id: true,
             name: true,
-            image: true,
+            email: true,
           },
         },
         userB: {
           select: {
             id: true,
             name: true,
-            image: true,
-          },
-        },
-        match: {
-          select: {
-            id: true,
-            matchScore: true,
-            matchQuality: true,
-            status: true,
-            endedAt: true,
+            email: true,
           },
         },
       },

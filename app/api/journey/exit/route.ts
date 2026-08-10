@@ -78,10 +78,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       where: {
         OR: [
           { matchId: activeMatch.id },
-          { userAId: user.id, status: 'active' },
-          { userBId: user.id, status: 'active' },
+          { userAId: user.id },
+          { userBId: user.id },
         ],
-        status: 'active',
+        endedAt: null,
       },
     });
 
@@ -102,7 +102,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         where: { id: activeConversation.id },
         data: {
           endedAt: exitDate,
-          status: 'ended',
         },
       });
     }

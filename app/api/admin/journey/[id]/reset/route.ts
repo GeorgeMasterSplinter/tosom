@@ -31,14 +31,12 @@ export async function POST(
         userId: id,
         phase: "EARLY",
         day: 1,
-        completedSteps: 0,
-        totalSteps: 36,
+        completedDays: 0,
       },
       update: {
         phase: "EARLY",
         day: 1,
-        completedSteps: 0,
-        totalSteps: 36,
+        completedDays: 0,
       },
     });
 

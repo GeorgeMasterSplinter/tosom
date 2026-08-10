@@ -12,8 +12,8 @@ export interface MessageWithStatus {
   updatedAt: Date;
   sender: {
     id: string;
-    firstName: string | null;
-    lastName: string | null;
+    email: string | null;
+    name: string | null;
   };
   isRead: boolean;
   isDeleted: boolean;
@@ -36,8 +36,8 @@ export async function getMessages(
         sender: {
           select: {
             id: true,
-            firstName: true,
-            lastName: true,
+            email: true,
+            name: true,
           },
         },
       },

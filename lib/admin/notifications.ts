@@ -65,7 +65,7 @@ export async function getNotification(id: string) {
           email: true,
           verified: true,
           bannedAt: true,
-          profile: { select: { firstName: true, lastName: true, photos: true } },
+          profile: { select: { firstName: true, lastName: true, photoUrl: true } },
         },
       },
     },

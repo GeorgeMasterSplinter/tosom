@@ -33,7 +33,6 @@ export async function POST() {
               bio: 'Dev-partner for testing matcher og reise',
               interests: ['Musikk', 'Friluftsliv'],
               deepProfileStep: DeepProfileStep.SUMMARY,
-              deepProfileComplete: true,
             },
           },
         },
@@ -60,7 +59,6 @@ export async function POST() {
               interests: ['Utvikling', 'AI', 'ToSom'],
               deepProfileData: { identity: { name: 'Testbruker', age: 30 } } as any,
               deepProfileStep: DeepProfileStep.SUMMARY,
-              deepProfileComplete: true,
             },
           },
 
@@ -77,12 +75,10 @@ export async function POST() {
           conversationsA: {
             create: {
               id: 'dev-conversation',
-              userAId: DEV_USER_ID,
               userBId: 'dev-match-target',
               messages: {
                 create: [
                   {
-                    conversationId: 'dev-conversation',
                     senderId: DEV_USER_ID,
                     content: 'Hei! Dette er første dev-melding.',
                     type: 'user',
@@ -95,7 +91,6 @@ export async function POST() {
           // Match (korrekte felt: status=active, type=String, ingen "rejected" felt)
           matchesA: {
             create: {
-              userAId: DEV_USER_ID,
               userBId: 'dev-match-target',
               status: 'active',
               score: 85,

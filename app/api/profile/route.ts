@@ -67,19 +67,17 @@ export async function PUT(request: Request) {
         firstName: firstName || undefined,
         lastName: lastName || undefined,
         age: (age as number) || 25,
-        gender: gender || undefined,
         bio: bio || undefined,
         interests: interests || [],
-        photos: photos || [],
+        photoUrl: photos && photos.length > 0 ? photos[0] : undefined,
       },
       update: {
         firstName: firstName || undefined,
         lastName: lastName || undefined,
         age: (age as number) || 25,
-        gender: gender || undefined,
         bio: bio || undefined,
         interests: interests || [],
-        photos: photos || [],
+        photoUrl: photos && photos.length > 0 ? photos[0] : undefined,
       },
     });
 

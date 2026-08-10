@@ -33,7 +33,7 @@ export async function deleteMessage(
     data: { deletedAt: new Date() },
     include: {
       sender: {
-        select: { id: true, name: true, image: true },
+        select: { id: true, name: true, email: true },
       },
     },
   });

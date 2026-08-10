@@ -31,8 +31,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
         resonanceLevel: true, type: true, explanation: true, scoringBreakdown: true, reviewed: true,
         acceptedByA: true, acceptedByB: true, lockedAt: true, expiresAt: true, rejectedByA: true,
         rejectedByB: true, rejectionReason: true, createdAt: true, updatedAt: true,
-        userA: { select: { id: true, email: true, name: true, role: true, age: true, verified: true, bannedAt: true, onboardingComplete: true, deepProfileComplete: true, createdAt: true, lastMatchAt: true } },
-        userB: { select: { id: true, email: true, name: true, role: true, age: true, verified: true, bannedAt: true, onboardingComplete: true, deepProfileComplete: true, createdAt: true, lastMatchAt: true } },
+        userA: { select: { id: true, email: true, name: true, role: true, verified: true, bannedAt: true, onboardingComplete: true, deepProfileComplete: true, createdAt: true, lastMatchAt: true } },
+        userB: { select: { id: true, email: true, name: true, role: true, verified: true, bannedAt: true, onboardingComplete: true, deepProfileComplete: true, createdAt: true, lastMatchAt: true } },
         insights: { select: { id: true, summary: true, strengths: true, clarity: true, starter: true, model: true, tokensOut: true, createdAt: true } },
       },
     })

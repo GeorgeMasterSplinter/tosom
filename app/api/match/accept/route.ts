@@ -139,7 +139,6 @@ export async function POST(req: NextRequest) {
         data: {
           userAId: match.userAId,
           userBId: match.userBId,
-          status: 'active',
           imageShareAllowedAt,
         },
         include: {

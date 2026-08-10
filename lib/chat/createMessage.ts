@@ -16,8 +16,8 @@ export async function createMessage(
         sender: {
           select: {
             id: true,
-            firstName: true,
-            lastName: true,
+            email: true,
+            name: true,
           },
         },
       },

@@ -12,21 +12,15 @@ export async function createConversation(userAId: string, userBId: string, match
         userA: {
           select: {
             id: true,
-            firstName: true,
-            lastName: true,
+            email: true,
+            name: true,
           },
         },
         userB: {
           select: {
             id: true,
-            firstName: true,
-            lastName: true,
-          },
-        },
-        match: {
-          select: {
-            id: true,
-            score: true,
+            email: true,
+            name: true,
           },
         },
       },

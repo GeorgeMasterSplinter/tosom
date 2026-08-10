@@ -60,7 +60,7 @@ export async function GET(req: NextRequest) {
           select: {
             userAId: true,
             userBId: true,
-            match: { select: { id: true, score: true } },
+            matchId: true,
           },
         },
       },

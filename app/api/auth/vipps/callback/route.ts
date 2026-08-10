@@ -127,7 +127,6 @@ export async function GET(request: Request) {
       await prisma.user.update({
         where: { id: user.id },
         data: {
-          lastLoginAt: new Date(),
           profile: {
             update: {
               data: profileUpdateData,

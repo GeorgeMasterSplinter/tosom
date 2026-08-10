@@ -16,8 +16,7 @@ export async function recordRateLimitHit(
       level: LogLevel.WARN,
       message: `[RATE_LIMIT] ${route}`,
       module: 'rateLimit',
-      userId: userId ?? undefined,
-      metadata: JSON.parse(JSON.stringify({ route })),
+      metadata: JSON.parse(JSON.stringify({ route, userId })),
     },
   })
 }
@@ -30,11 +29,25 @@ export async function getRateLimitStats(
   const since = new Date(Date.now() - lastHours * 60 * 60 * 1000)
 
   const total = await prisma.systemLog.count({
-    where: { module: 'rateLimit', userId, createdAt: { gte: since } },
+    where: {
+      module: 'rateLimit',
+      createdAt: { gte: since },
+      metadata: {
+        path: ['userId'],
+        equals: userId,
+      },
+    },
   })
 
   const logs = await prisma.systemLog.findMany({
-    where: { module: 'rateLimit', userId, createdAt: { gte: since } },
+    where: {
+      module: 'rateLimit',
+      createdAt: { gte: since },
+      metadata: {
+        path: ['userId'],
+        equals: userId,
+      },
+    },
     select: { message: true, metadata: true },
   })
 

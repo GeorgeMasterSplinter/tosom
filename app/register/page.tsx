@@ -317,7 +317,7 @@ export default function RegisterPage() {
           </div>
 
           {/* Allerede registrert — sekundær */}
-          <div className="pt-4">
+          <div className="flex flex-col items-center pt-4">
             <p
               style={{
                 ...typographyToStyle('body'),

@@ -1,0 +1,13 @@
+{
+  "providers": {
+    "ollama": {
+      "baseUrl": "http://localhost:11434",
+      "models": [
+        "qwen3.6:35b-a3b-bf16",
+        "qwen3.6:35b-a3b-q8_0",
+        "qwen3.6:35b-a3b-mtp-q8_0"
+      ]
+    }
+  },
+  "defaultModel": "ollama/qwen3.6:35b-a3b-bf16"
+}

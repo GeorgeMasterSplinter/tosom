@@ -1,11 +1,11 @@
 /**
  * ToSom — Profil Side (Produktnivå)
  * 
- * Visar din eigen profil med dynamiske oppdateringar frå:
+ * Viser din egen profil med dynamiske oppdateringer fra:
  * - Journey-fase
- * - Resonans-score
  * - Varme-nivå
  * - Match-score
+ * Resonans fjernet per platform-endring.
  * Stabilisering: Radius, padding, animasjon
  */
 
@@ -15,14 +15,12 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ProfileSkeleton as ProfileLoadSkeleton } from '@/components/ui/LoadingSkeleton';
 import ErrorState from '@/components/ui/ErrorState';
-import { ResonanceMeter } from '@/components/ui/ResonanceMeter';
 import { ProfileSecurityCard } from '@/components/profile/ProfileSecurityCard';
 
 interface ProfileData {
   identityName: string;
   bio: string;
   tags: string[];
-  resonanceScore: number;
   warmScore: number;
   phaseOrder: number;
   currentDay: number;
@@ -48,7 +46,6 @@ export default function ProfilePage() {
           identityName: data.identityName || 'Din profil',
           bio: data.bio || '',
           tags: data.tags || [],
-          resonanceScore: data.resonanceScore ?? 0,
           warmScore: data.warmScore ?? 0,
           phaseOrder: data.phaseOrder ?? 1,
           currentDay: data.currentDay ?? 1,
@@ -60,9 +57,8 @@ export default function ProfilePage() {
         // Fallback til dummy-data om API-et ikkje er implementert enno
         setProfile({
           identityName: 'Din profil',
-          bio: 'Bygger reisa mi...',
+          bio: 'Bygger reisen min...',
           tags: [],
-          resonanceScore: 0,
           warmScore: 0,
           phaseOrder: 1,
           currentDay: 1,
@@ -75,9 +71,8 @@ export default function ProfilePage() {
       // Ingen feil — vis dummy-data som fallback
       setProfile({
         identityName: 'Din profil',
-        bio: 'Bygger reisa mi...',
+        bio: 'Bygger reisen min...',
         tags: [],
-        resonanceScore: 0,
         warmScore: 0,
         phaseOrder: 1,
         currentDay: 1,
@@ -131,20 +126,6 @@ export default function ProfilePage() {
         }}>
           {phaseName} · Dag {profile.currentDay}/30
         </span>
-      </div>
-
-      {/* Resonans — erstattet med ResonanceMeter */}
-      <div className="mb-6 p-4 rounded-xl" style={{
-        background: 'rgba(255,255,255,0.03)',
-        border: '1px solid rgba(255,255,255,0.06)',
-      }}>
-        <h2 className="text-base font-medium mb-4" style={{ color: '#FFFFFF' }}>Resonans</h2>
-        <div className="flex flex-col items-center gap-4">
-          <ResonanceMeter value={profile.resonanceScore} size="md" showLabel={false} />
-          <p style={{ color: 'rgba(255,255,255,0.5)' }}>
-            {profile.resonanceScore >= 80 ? 'Djuk resonans' : profile.resonanceScore >= 60 ? 'Sterk resonans' : profile.resonanceScore >= 40 ? 'Moder resonans' : 'Utviklar seg'}
-          </p>
-        </div>
       </div>
 
       {/* Varme */}

@@ -4,7 +4,7 @@
  * ToSom — Admin Verktøy 🔧
  * 
  * Trygge admin-verktøy for drift og testing.
- * Alle handlingar blir logga.
+ * Alle handlinger blir logga.
  * Design: ToSom Blue + Nordic Gold + Glassmorphism.
  * Bokmål. Premium. Ro. Moden.
  */
@@ -62,7 +62,7 @@ function ToolButton({
   );
 }
 
-/* ─── LogEntry — éi loggmelding 📝 */
+/* ─── LogEntry — ei loggmelding 📝 */
 
 function LogEntry({ action, result, time }: { action: string; result: string; time: string }) {
   const resultColor = result === 'OK' ? '#4ADE80' : result === 'Feil' ? '#FF4D4D' : '#FBBF24';
@@ -92,14 +92,14 @@ function LogEntry({ action, result, time }: { action: string; result: string; ti
 /* ─── Mock Data ✨ */
 
 const mockLogs = [
-  { action: 'Kjør cron — journey-oppdatering', result: 'OK', time: '5 min sidan' },
-  { action: 'Opprett testbrukar — "Test Brukar"', result: 'OK', time: '1 time sidan' },
-  { action: 'Reset match — #4231 (Ingrid ↔ Henrik)', result: 'OK', time: '3 timar sidan' },
+  { action: 'Kjør cron — journey-oppdatering', result: 'OK', time: '5 min siden' },
+  { action: 'Opprett testbruker — "Test Bruker"', result: 'OK', time: '1 time siden' },
+  { action: 'Reset match — #4231 (Ingrid ↔ Henrik)', result: 'OK', time: '3 timer siden' },
   { action: 'Generer testdata — 10 matcher', result: 'Feil', time: 'I går' },
   { action: 'Kjør cron — match-generering', result: 'OK', time: 'I går' },
 ];
 
-/* ─── Hovudkomponent — Verktøy Page 🔧 */
+/* ─── Hovedkomponent — Verktøy Page 🔧 */
 
 export default function AdminToolsPage() {
   const [logs, setLogs] = useState(mockLogs);
@@ -122,7 +122,7 @@ export default function AdminToolsPage() {
           🔧 Verktøy
         </h1>
         <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
-          Admin-verktøy — alle handlingar blir logga
+          Admin-verktøy — alle handlinger blir logga
         </p>
       </div>
 
@@ -133,7 +133,7 @@ export default function AdminToolsPage() {
       >
         <span className="text-sm">⚠️</span>
         <p className="text-xs flex-1" style={{ color: 'rgba(255,255,255,0.6)' }}>
-          Alle handlingar blir logga med kven, kvad og når. Bruk forsiktig.
+          Alle handlinger blir logga med hvem, hva og når. Bruk forsiktig.
         </p>
       </div>
 
@@ -141,22 +141,22 @@ export default function AdminToolsPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <ToolButton
           icon="✨"
-          title="Opprett testbrukar"
-          description="Lag ny brukar med random data for testing"
+          title="Opprett testbruker"
+          description="Lag ny bruker med random data for testing"
           color="blue"
-          onClick={() => setShowConfirm('Opprett testbrukar')}
+          onClick={() => setShowConfirm('Opprett testbruker')}
         />
         <ToolButton
           icon="🔄"
           title="Reset match"
-          description="Nullstill ei eksisterande match — berre aktive matcher"
+          description="Nullstill ei eksisterende match — bare aktive matcher"
           color="gold"
           onClick={() => setShowConfirm('Reset match')}
         />
         <ToolButton
           icon="🚀"
           title="Reset journey"
-          description="Start reise på nytt (dag 1/30) — berre pågående reiser"
+          description="Start reise på nytt (dag 1/30) — bare pågående reiser"
           color="green"
           onClick={() => setShowConfirm('Reset journey')}
         />
@@ -177,7 +177,7 @@ export default function AdminToolsPage() {
         <ToolButton
           icon="🔍"
           title="Debug-panel"
-          description="Vis interne systemvariar — kun dev/staging"
+          description="Vis interne systemvariator — kun dev/staging"
           color="red"
           onClick={() => setShowConfirm('Debug-panel')}
         />
@@ -198,7 +198,7 @@ export default function AdminToolsPage() {
               Bekreft handling
             </h3>
             <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.6)' }}>
-              Er du sikker på at du vil kjøra <strong>{showConfirm}</strong>?
+              Er du sikker på at du vil kjøre <strong>{showConfirm}</strong>?
             </p>
             <div className="flex items-center gap-3 justify-end">
               <button
@@ -228,17 +228,17 @@ export default function AdminToolsPage() {
         </div>
       )}
 
-      {/* Handling-logg */}
+      {/* Handlingslogg */}
       <div
         className="rounded-2xl p-5"
         style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
       >
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.6)' }}>
-            HANDLINGSGLOGG — SISTE 10
+            HANDLINGSLOGG — SISTE 10
           </h3>
           <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: 'rgba(74,222,128,0.1)', color: '#4ADE80' }}>
-            {logs.length} hendingar
+            {logs.length} hendelser
           </span>
         </div>
         <div>

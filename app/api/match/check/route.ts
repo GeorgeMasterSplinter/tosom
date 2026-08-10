@@ -46,7 +46,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     // Hent brukar info
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { lockedUntil: true, onboardingCompleted: true },
+      select: { lockedUntil: true, onboardingComplete: true },
     });
 
     if (!user) {
@@ -57,7 +57,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     }
 
     // Sjekk om brukar har fullført onboarding
-    if (!user.onboardingCompleted) {
+    if (!user.onboardingComplete) {
       return NextResponse.json(
         { success: true, data: { hasActiveMatch: false, matchId: null, status: "no_match" as const, conversationId: null, lockedUntil: null, nextEligibleAt: null, daysRemaining: null } },
         { status: 200, headers: { "Content-Type": "application/json" } }

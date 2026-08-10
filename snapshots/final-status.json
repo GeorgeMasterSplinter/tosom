@@ -1,0 +1,80 @@
+{
+  "exportedAt": "2026-08-03T20:37:35.315Z",
+  "platformStatus": "CLEAN ✓",
+  "e2eStatus": "E2E READY ✓",
+  "users": [
+    {
+      "email": "bulk@tosom.com",
+      "role": "USER",
+      "verified": false
+    },
+    {
+      "email": "testA@tosom.dev",
+      "role": "USER",
+      "verified": true
+    },
+    {
+      "email": "testB@tosom.dev",
+      "role": "USER",
+      "verified": true
+    },
+    {
+      "email": "admin@tosom.dev",
+      "role": "ADMIN",
+      "verified": true
+    }
+  ],
+  "database": {
+    "totalUsers": 4,
+    "activeUsers": 4,
+    "deletedUsers": 0,
+    "totalProfiles": 3,
+    "totalJourneys": 2,
+    "totalMatches": 3,
+    "activeMatches": 3,
+    "totalConversations": 1,
+    "totalMessages": 0,
+    "totalNotifications": 0,
+    "totalResonanceSessions": 0,
+    "totalJourneyStateLogs": 0
+  },
+  "matches": [
+    {
+      "userA": "testB@tosom.dev",
+      "userB": "admin@tosom.dev",
+      "score": 50,
+      "status": "active"
+    },
+    {
+      "userA": "admin@tosom.dev",
+      "userB": "testA@tosom.dev",
+      "score": 50,
+      "status": "active"
+    },
+    {
+      "userA": "testA@tosom.dev",
+      "userB": "testB@tosom.dev",
+      "score": 50,
+      "status": "active"
+    }
+  ],
+  "journeys": [
+    {
+      "email": "testA@tosom.dev",
+      "day": 1,
+      "phase": "EARLY"
+    },
+    {
+      "email": "testB@tosom.dev",
+      "day": 1,
+      "phase": "EARLY"
+    }
+  ],
+  "conversations": [
+    {
+      "userA": "testA@tosom.dev",
+      "userB": "testB@tosom.dev",
+      "imageShared": false
+    }
+  ]
+}

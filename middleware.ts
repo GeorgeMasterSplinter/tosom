@@ -20,28 +20,25 @@
 
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { verifyAdminCookie } from '@/lib/auth/admin-jwt'
 
-// ─── Konfigurasjon ───
-
-/** Maintenance mode — sett MAINTENANCE_ENABLED=true for å aktivere */
 const MAINTENANCE_ENABLED = process.env.MAINTENANCE_ENABLED === 'true'
+const DEV_LOGIN_DISABLED = process.env.DEV_LOGIN_ENABLED !== 'true'
 
 /** Alltid tilgjengelege baner (nivå 0) */
 const PUBLIC_PATHS = [
   '/maintenance',
-  '/dev-login',
-  '/api/dev-login',
   '/api/system/health',
   '/preview',
   '/_next',
   '/favicon.ico',
-  '/admin/login', // Admin login-page må vere offentleg tilgjengeleg
+  '/admin/login',
+  '/api/admin/auth',
 ]
 
-/** Beskytta API-ruter — krev innlogging */
 const PROTECTED_API_PREFIXES = [
   '/api/profile',
-   '/api/match',
+  '/api/match',
   '/api/journey',
   '/api/conversation',
   '/api/chat',
@@ -50,13 +47,9 @@ const PROTECTED_API_PREFIXES = [
   '/api/admin',
 ]
 
-/** Admin-ruter — krev admin-role */
 const ADMIN_PREFIX = '/admin'
 
-// ─── Session-verifisering (NextAuth v5 kompatibel) ───
-
 function getSessionToken(req: NextRequest): string | null {
-  // AuthJS v5 bruker "authjs.session-token", men støtt også gamalt "next-auth.session.token"
   return (
     req.cookies.get('authjs.session-token')?.value ??
     req.cookies.get('next-auth.session.token')?.value ??
@@ -64,21 +57,12 @@ function getSessionToken(req: NextRequest): string | null {
   )
 }
 
-/** Sjekk om admin_token-cookie er sett */
-function hasAdminToken(req: NextRequest): boolean {
-  return req.cookies.get('admin_token')?.value === 'valid'
-}
-
 function hasValidSession(req: NextRequest): boolean {
   const token = getSessionToken(req)
   if (token) return true
-  // ⚠️  Sikkerheit: akseptert ikkje arbitrary cookies som gyldig session
   return false
 }
 
-// ─── RBAC-hjelp ───
-
-/** Hent role frå session-token (JWT-dekodning) */
 function getRoleFromSession(req: NextRequest): string | null {
   const token = getSessionToken(req)
   if (!token) return null
@@ -90,8 +74,6 @@ function getRoleFromSession(req: NextRequest): string | null {
   }
 }
 
-// ─── Middleware ───
-
 /** Legacy-ruter som skal retast til nye stiar */
 const LEGACY_REDIRECTS: Record<string, string> = {
   '/vilkår': '/vilkar',       // spesialteikn → ASCII-variant
@@ -100,6 +82,10 @@ const LEGACY_REDIRECTS: Record<string, string> = {
 
 export function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname
+
+  // Forward URL to server components via header (for admin layout pathname check)
+  const response = NextResponse.next()
+  response.headers.set('x-url', req.url)
 
   // Legacy redirects — /vilkår → /vilkar (ASCII-variant fungerer betre)
   const redirectTarget = LEGACY_REDIRECTS[path]
@@ -117,37 +103,40 @@ export function middleware(req: NextRequest) {
     return NextResponse.next()
   }
 
+  // Dev-login — blokkert når DEV_LOGIN_ENABLED !== 'true'
+  if (DEV_LOGIN_DISABLED && (path === '/dev-login' || path.startsWith('/api/dev-login'))) {
+    return NextResponse.redirect(new URL('/', req.url))
+  }
+
   // 1. Alltid tilgjengelege baner
   for (const publicPath of PUBLIC_PATHS) {
     if (path === publicPath || path.startsWith(publicPath + '/')) {
-      return NextResponse.next()
+      return response
     }
   }
 
-  // 2. Admin-vern — godtak anten admin_token-cookie ELLER NextAuth med admin-role
+  // 2. Admin-vern — krever signert admin_token JWT ELLER authjs.session-token med admin role
   if (path.startsWith(ADMIN_PREFIX)) {
-    const hasAdminCookie = hasAdminToken(req)
+    const adminJwtPayload = verifyAdminCookie(req)
+    const hasAuthSession = hasValidSession(req)
 
-    // Har admin_token cookie → all tilgjengeleg ✅
-    if (hasAdminCookie) {
-      return NextResponse.next()
+    // Hvis gyldig signert admin_token JWT (HS256 med issuer 'tosom-admin'), aksepter det umiddelbart
+    if (adminJwtPayload) {
+      return response
     }
 
-    // Ingen cookie? Sjekk NextAuth session med admin-role
-    const hasSession = hasValidSession(req)
-    if (!hasSession) {
+    // Ingen session i det hele tatt → redirect til login
+    if (!hasAuthSession) {
       return NextResponse.redirect(new URL('/admin/login', req.url))
     }
 
+    // authjs session finnes, men mangler admin-role → redirect til admin-login
     const role = getRoleFromSession(req)
     if (role !== 'admin') {
-      return NextResponse.json(
-        { error: 'Forbidden: Admin access required' },
-        { status: 403 }
-      )
+      return NextResponse.redirect(new URL('/admin/login', req.url))
     }
 
-    return NextResponse.next()
+    return response
   }
 
   // 3. API-vern
@@ -159,7 +148,7 @@ export function middleware(req: NextRequest) {
           { status: 401 }
         )
       }
-      return NextResponse.next()
+      return response
     }
   }
 

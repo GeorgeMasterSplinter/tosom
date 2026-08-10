@@ -1,3 +1,4 @@
+/** @deprecated (V2) Refleksjonar er valfrie — ikkje pliktige lenger. */
 /**
  * POST /api/journey/reflect
  * 

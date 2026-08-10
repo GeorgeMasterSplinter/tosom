@@ -3,25 +3,17 @@
  * ToSom — MessageBubble (Premium Nordic Gold 2026) 🟡⭐
  * Premium komponent for alle meldingstyper: TEXT, IMAGE, TASK, CHOICE, SYSTEM
  * 
- * Design (oppdatert v2026):
- * - Glassmorphism bubble med backdrop-filter
- * - Gull-gradient for "me" bubbles
- * - Djupne-indikatorar med fargede glow-prikkar
- * - Milestone-feiring med gull-animasjon
- * - Warm-glow animasjon (600ms ease-out)
- * - Resonance-glow støtta (0-100 skala)
- * 
- * Bubble-design:
- * - "Me" (høgre): Gull-gradient bakgrunn, 20px radius, gull-border
- * - "Partner" (venstre): Glass-panel, 20px radius, subtil border
- * - System: Midst, gull-prikk ikon, glass-midtone
- * - Task: Premium kort med stjerne-ikon og gull-knappar
- * - Reflection: Mørk glass med blåleg tone
+ * Pakke 6.5 — Warm Flow Animations (Steg 4): FadeIn animasjon på chat-bobler
+ * - "Me" → fadeInUp med fade-in animasjon
+ * - Partner → slideUp med softLand
+ * - System → fadeIn rask
+ * - BliKjent-badge → animate-glowPulse hover
  */
 
 "use client";
 
 import { useEffect, useRef } from "react";
+import { FadeIn } from "@/components/animations/FadeIn";
 
 /* ═══════════════════════════════════════
    THEME TOKENS — PREMIUM GLASS V2
@@ -76,6 +68,7 @@ export interface MessageData {
 
 interface MessageBubbleProps {
   message: MessageData;
+  index?: number; // for stagger-delay
 }
 
 /* ═══════════════════════════════════════
@@ -101,7 +94,7 @@ function GoldButton({ children, onClick }: { children: React.ReactNode; onClick?
     <button
       type="button"
       onClick={onClick}
-      className="transition-all duration-300 hover:brightness-110 active:scale-[0.98] focus:outline-none"
+      className="transition-all duration-300 hover:brightness-110 active:scale-[0.98] focus:outline-none animate-glowPulse"
       style={{
         background: `linear-gradient(135deg, ${G.gold}, ${G.goldLight})`,
         color: G.blueDeep,
@@ -129,7 +122,7 @@ function MilestoneBubble({ message }: { message: MessageData }) {
   return (
     <div className="flex justify-center py-4">
       <div
-        className="w-full max-w-[90%] relative overflow-hidden rounded-2xl p-6 text-center"
+        className="w-full max-w-[90%] relative overflow-hidden rounded-2xl p-6 text-center animate-scaleIn"
         style={{
           background: `linear-gradient(135deg, rgba(212,175,55,0.08), rgba(212,175,55,0.03))`,
           border: `1px solid ${G.goldMuted}`,
@@ -187,141 +180,12 @@ function MilestoneBubble({ message }: { message: MessageData }) {
 }
 
 /* ═══════════════════════════════════════
-   TASK BUBBLE — Premium oppgåve-kort v2
-   ═══════════════════════════════════════ */
-
-function TaskBubble({ message }: { message: MessageData }) {
-  return (
-    <div className="flex justify-center py-3">
-      <div
-        className="w-full max-w-[90%] relative overflow-hidden rounded-2xl transition-all duration-300 hover:scale-[1.005]"
-        style={{
-          background: `linear-gradient(135deg, ${G.systemBg}, rgba(212,175,55,0.02))`,
-          border: `1px solid ${G.goldMuted}`,
-          boxShadow: `0 4px 24px rgba(212,175,55,0.06), 0 2px 8px rgba(0,0,0,0.15)`,
-        }}
-      >
-        {/* Subtil gull-stripe øvst */}
-        <div 
-          className="absolute top-0 left-0 right-0 h-1"
-          style={{
-            background: `linear-gradient(90deg, transparent, ${G.gold}, transparent)`,
-            opacity: 0.5,
-          }}
-        />
-
-        <div className="p-5">
-          {/* Task header — Gull-stjerne + tittel */}
-          <div className="flex items-start gap-3.5 mb-3.5">
-            <div
-              className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center"
-              style={{
-                background: `linear-gradient(135deg, ${G.gold}, ${G.goldLight})`,
-                boxShadow: `0 0 16px ${G.goldMuted}`,
-              }}
-            >
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-                <path d="M8 1L9.5 5.5L14 6L10.5 9.5L11.5 14L8 11.5L4.5 14L5.5 9.5L2 6L6.5 5.5L8 1Z" fill="#0B1520" />
-              </svg>
-            </div>
-            <div className="flex-1">
-              {message.metadata?.taskTitle && (
-                <p
-                  className="text-sm font-bold mb-0.5 tracking-wide"
-                  style={{ color: G.gold, letterSpacing: "0.03em" }}
-                >
-                  ✨ {message.metadata.taskTitle}
-                </p>
-              )}
-              <p
-                className="text-[15px] leading-relaxed"
-                style={{ color: 'rgba(255,255,255,0.7)' }}
-              >
-                {message.content}
-              </p>
-            </div>
-          </div>
-
-          {/* Choices — Premium gull-knappar */}
-          {message.metadata?.choices && message.metadata.choices.length > 0 && (
-            <div className="flex gap-3 mt-5 flex-wrap">
-              {message.metadata.choices.map((choice) => (
-                <GoldButton key={choice.value}>{choice.label}</GoldButton>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════
-   REFLECTION BUBBLE — Dype spørsmål v2
-   ═══════════════════════════════════════ */
-
-function ReflectionBubble({ message }: { message: MessageData }) {
-  return (
-    <div className="flex justify-center py-3">
-      <div
-        className="w-full max-w-[88%] relative overflow-hidden rounded-2xl"
-        style={{
-          background: 'linear-gradient(135deg, rgba(10,26,42,0.5), rgba(74,123,167,0.06))',
-          border: `1px solid rgba(100,140,200,0.12)`,
-          boxShadow: '0 4px 24px rgba(0,0,0,0.25), inset 0 0 32px rgba(10,26,42,0.15)',
-        }}
-      >
-        {/* Subtil blå accent-stripe */}
-        <div 
-          className="absolute top-0 left-0 right-0 h-1"
-          style={{
-            background: 'linear-gradient(90deg, transparent, rgba(74,123,167,0.4), transparent)',
-          }}
-        />
-
-        <div className="p-5">
-          <div className="flex items-start gap-3.5">
-            {/* Gull stjerne-ikon */}
-            <div
-              className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center mt-0.5"
-              style={{ 
-                background: 'rgba(212,175,55,0.1)',
-                border: '1px solid rgba(212,175,55,0.2)',
-              }}
-            >
-              <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
-                <path d="M8 1L9.5 5.5L14 6L10.5 9.5L11.5 14L8 11.5L4.5 14L5.5 9.5L2 6L6.5 5.5L8 1Z" fill={G.gold} />
-              </svg>
-            </div>
-            <div className="flex-1 text-center">
-              <p
-                className="text-[16px] leading-relaxed font-light tracking-wide"
-                style={{ color: G.textPrimary, fontWeight: 300 }}
-              >
-                {message.content}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════
    SYSTEM CARD — Premium systemmelding v2
    ═══════════════════════════════════════ */
 
 function SystemCard({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      className="rounded-2xl px-5 py-4 relative overflow-hidden"
-      style={{
-        background: `linear-gradient(135deg, ${G.systemBg}, rgba(212,175,55,0.02))`,
-        border: `1px solid ${G.goldMuted}`,
-        boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
-      }}
-    >
+    <div className="rounded-2xl px-5 py-4 relative overflow-hidden">
       {/* Tynn gull-stripe øvst */}
       <div 
         className="absolute top-0 left-4 right-4 h-px"
@@ -331,34 +195,6 @@ function SystemCard({ children }: { children: React.ReactNode }) {
         }}
       />
       <div className="relative z-10">{children}</div>
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════
-   IMAGE CONTENT — Bilde-melding v2
-   ═══════════════════════════════════════ */
-
-// eslint-disable-next-line no-unused-vars
-function ImageContent({ imageUrl }: { imageUrl: string }) {
-  return (
-    <div className="relative mt-3 rounded-xl overflow-hidden group">
-      <img
-        src={imageUrl}
-        alt="Melding"
-        className="max-w-full rounded-xl transition-transform duration-500 group-hover:scale-[1.01]"
-        style={{ 
-          borderRadius: "16px", 
-          boxShadow: "0 4px 24px rgba(0,0,0,0.3)",
-        }}
-      />
-      {/* Glass-overlegg */}
-      <div 
-        className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-        style={{
-          background: 'linear-gradient(135deg, rgba(255,255,255,0.05), transparent)',
-        }}
-      />
     </div>
   );
 }
@@ -422,27 +258,34 @@ function Avatar({ senderInfo }: { senderInfo?: { name: string; imageUrl?: string
 
 /* ═══════════════════════════════════════
    HOVEDKOMPONENT — MESSAGEBUBBLE v2
-   Premium redesigned med fleire nye effektar
+   Premium redesigned med fleire nye effektar + FadeIn animasjon
    ═══════════════════════════════════════ */
 
-export function MessageBubble({ message }: MessageBubbleProps) {
+export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
   const { id, sender, type, content, metadata, resonanceLevel, isMilestone, isBliKjent } = message;
   const isMe = sender === "me";
   const isSystem = sender === "system";
+  
+  // Stagger-delay basert på indeks
+  const delay = index * 50;
 
-  // Ref for animasjon
+  // Ref for animasjon (warmGlow fallback for direkte CSS)
   const bubbleRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (bubbleRef.current) {
-      bubbleRef.current.style.animation = "warmGlow 0.6s ease-out forwards";
+    if (bubbleRef.current && !isSystem) {
+      bubbleRef.current.style.animation = isMe ? "fadeInUp 0.5s ease-out forwards" : "slideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards";
+    } else if (bubbleRef.current && isSystem) {
+      bubbleRef.current.style.animation = "fadeIn 0.3s ease-out forwards";
     }
-  }, [id]);
+  }, [id, isMe, isSystem]);
 
   // ═══ MILESTONE BUBBLE — milestone-feiring ═══
   if (isMilestone || (type === "system" && content.includes("Dag") && content.includes("av 30"))) {
     return (
-      <div style={{ marginBottom: "24px" }}>
-        <MilestoneBubble message={message} />
+      <div style={{ marginBottom: "24px", opacity: 0 }}>
+        <FadeIn variant="scaleIn" delay={delay}>
+          <MilestoneBubble message={message} />
+        </FadeIn>
       </div>
     );
   }
@@ -452,7 +295,8 @@ export function MessageBubble({ message }: MessageBubbleProps) {
     const imageUrl = metadata?.imageUrl || content;
     return (
       <div
-        className={`flex ${sender === "me" ? "justify-end" : "justify-start"} py-3 px-6 animate-warmGlowIn`}
+        className={`flex ${sender === "me" ? "justify-end" : "justify-start"} py-3 px-6 animate-warmGlow`}
+        style={{ opacity: 0 }}
       >
         <div
           className="rounded-2xl overflow-hidden relative max-w-[280px]"
@@ -482,75 +326,62 @@ export function MessageBubble({ message }: MessageBubbleProps) {
     );
   }
 
-  // ═══ TASK BUBBLE — guidet oppgåve ═══
-  if (type === "task") {
-    return (
-      <div style={{ marginBottom: "20px" }}>
-        <TaskBubble message={message} />
-      </div>
-    );
-  }
-
-  // ═══ SYSTEM-MELDING — premium kort-layout ═══
+  // ═══ SYSTEM-MELDING — premium kort-layout (rask fade) ═══
   if (isSystem) {
     return (
-      <div style={{ marginBottom: "20px" }}>
-        <SystemCard>
-          <div className="flex items-start gap-3">
-            {/* Gull prikke-ikon med glow */}
-            <div
-              className="w-4 h-4 rounded-full flex-shrink-0 mt-0.5"
-              style={{
-                background: `linear-gradient(135deg, ${G.gold}, ${G.goldLight})`,
-                boxShadow: `0 0 10px ${G.goldMuted}`,
-              }}
-            />
-            <div className="flex-1">
-              {metadata?.taskTitle && (
+      <div style={{ marginBottom: "20px", opacity: 0 }}>
+        <FadeIn variant="fadeIn" delay={delay * 0.5}>
+          <SystemCard>
+            <div className="flex items-start gap-3">
+              {/* Gull prikke-ikon med glow */}
+              <div
+                className="w-4 h-4 rounded-full flex-shrink-0 mt-0.5"
+                style={{
+                  background: `linear-gradient(135deg, ${G.gold}, ${G.goldLight})`,
+                  boxShadow: `0 0 10px ${G.goldMuted}`,
+                }}
+              />
+              <div className="flex-1">
+                {metadata?.taskTitle && (
+                  <p
+                    className="text-sm font-bold mb-1.5 tracking-wide"
+                    style={{ color: G.gold, letterSpacing: "0.03em" }}
+                  >
+                    ✨ {metadata.taskTitle}
+                  </p>
+                )}
                 <p
-                  className="text-sm font-bold mb-1.5 tracking-wide"
-                  style={{ color: G.gold, letterSpacing: "0.03em" }}
+                  className="text-[14px] leading-relaxed"
+                  style={{ color: 'rgba(255,255,255,0.65)' }}
                 >
-                  ✨ {metadata.taskTitle}
+                  {content}
                 </p>
-              )}
-              <p
-                className="text-[14px] leading-relaxed"
-                style={{ color: 'rgba(255,255,255,0.65)' }}
-              >
-                {content}
-              </p>
+              </div>
             </div>
-          </div>
 
-          {/* Choices (knappar under system-melding) */}
-          {metadata?.choices && metadata.choices.length > 0 && (
-            <div className="flex gap-3 mt-5 flex-wrap">
-              {metadata.choices.map((choice) => (
-                <GoldButton key={choice.value}>
-                  {choice.label}
-                </GoldButton>
-              ))}
-            </div>
-          )}
+            {/* Choices (knappar under system-melding) */}
+            {metadata?.choices && metadata.choices.length > 0 && (
+              <div className="flex gap-3 mt-5 flex-wrap">
+                {metadata.choices.map((choice) => (
+                  <GoldButton key={choice.value}>
+                    {choice.label}
+                  </GoldButton>
+                ))}
+              </div>
+            )}
 
-        </SystemCard>
+          </SystemCard>
+        </FadeIn>
       </div>
     );
   }
 
-  // ═══ REFLECTION BUBBLE — for dype partner-meldingar ═══
-  if (type === "text" && content.trim().length > 60 && sender === "partner") {
-    return (
-      <div style={{ marginBottom: "20px" }}>
-        <ReflectionBubble message={message} />
-      </div>
-    );
-  }
-
-  // ═══ BRUKAR-MELDING — Premium bubble v2 ═══
+  // ═══ BRUKAR-MELDING — Premium bubble v2 med FadeIn ═══
   const isLeft = sender === "partner";
   const resonanceGlow = getResonanceGlow(resonanceLevel || (isMe ? 30 : 10));
+  
+  // Vel variant basert på sender
+  const fadeInVariant: 'fadeInUp' | 'slideUp' | 'fadeIn' = isLeft ? 'slideUp' : 'fadeInUp';
 
   return (
     <div
@@ -560,114 +391,116 @@ export function MessageBubble({ message }: MessageBubbleProps) {
       }}
       className="flex"
     >
-      {/* Avatar for partner */}
-      {isLeft && !isMe && metadata?.senderInfo && <Avatar senderInfo={metadata.senderInfo} />}
+      <FadeIn variant={fadeInVariant} delay={delay} scrollTrigger>
+        {/* Avatar for partner */}
+        {isLeft && !isMe && metadata?.senderInfo && <Avatar senderInfo={metadata.senderInfo} />}
 
-      {/* Bubble-container */}
-      <div ref={bubbleRef} style={{ maxWidth: "85%" }}>
-        <div
-          className="px-5 py-[16px] relative overflow-hidden"
-          style={{
-            background: isMe
-              ? `linear-gradient(135deg, ${G.bubbleMeBgStart}, ${G.bubbleMeBgEnd})`
-              : `linear-gradient(135deg, ${G.glassBg}, rgba(255,255,255,0.02))`,
-            border: isMe
-              ? `1px solid ${G.goldMuted}`
-              : `1px solid ${G.glassBorder}`,
-            borderRadius: isMe
-              ? "20px 20px 6px 20px"
-              : "20px 20px 20px 6px",
-            boxShadow: isMe
-              ? resonanceGlow.boxShadow
-              : '0 4px 16px rgba(0,0,0,0.2)',
-          }}
-        >
-          {/* Subtilt glass-overlegg for "me" */}
-          {isMe && (
-            <div 
-              className="absolute top-0 left-0 right-0 h-px opacity-40"
-              style={{
-                background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
-              }}
-            />
-          )}
-
-          {/* Bli kjent-badge */}
-          {isBliKjent && (
-            <div className="flex items-center gap-1.5 mb-2">
-              <div
-                className="px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase"
+        {/* Bubble-container */}
+        <div ref={bubbleRef} style={{ maxWidth: "85%" }}>
+          <div
+            className="px-5 py-[16px] relative overflow-hidden"
+            style={{
+              background: isMe
+                ? `linear-gradient(135deg, ${G.bubbleMeBgStart}, ${G.bubbleMeBgEnd})`
+                : `linear-gradient(135deg, ${G.glassBg}, rgba(255,255,255,0.02))`,
+              border: isMe
+                ? `1px solid ${G.goldMuted}`
+                : `1px solid ${G.glassBorder}`,
+              borderRadius: isMe
+                ? "20px 20px 6px 20px"
+                : "20px 20px 20px 6px",
+              boxShadow: isMe
+                ? resonanceGlow.boxShadow
+                : '0 4px 16px rgba(0,0,0,0.2)',
+            }}
+          >
+            {/* Subtilt glass-overlegg for "me" */}
+            {isMe && (
+              <div 
+                className="absolute top-0 left-0 right-0 h-px opacity-40"
                 style={{
-                  background: 'rgba(212, 175, 55, 0.15)',
-                  border: '1px solid rgba(212, 175, 55, 0.3)',
-                  color: '#D4AF37',
+                  background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
                 }}
-              >
-                💎 Bli kjent
+              />
+            )}
+
+            {/* Bli kjent-badge med glowPulse hover */}
+            {isBliKjent && (
+              <div className="flex items-center gap-1.5 mb-2">
+                <div
+                  className="px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase transition-all duration-300 hover:animate-glowPulse"
+                  style={{
+                    background: 'rgba(212, 175, 55, 0.15)',
+                    border: '1px solid rgba(212, 175, 55, 0.3)',
+                    color: '#D4AF37',
+                  }}
+                >
+                  💎 Bli kjent
+                </div>
               </div>
+            )}
+
+            {/* Tekst — premium typografi */}
+            <p
+              className="leading-relaxed relative z-10"
+              style={{
+                color: isMe ? G.textPrimary : 'rgba(255,255,255,0.8)',
+                whiteSpace: "pre-wrap",
+                wordBreak: "break-word",
+                fontSize: "15px",
+                lineHeight: "1.6",
+              }}
+            >
+              {content}
+            </p>
+
+            {/* Timestamp */}
+            {metadata?.timestamp && <Timestamp value={String(metadata.timestamp)} />}
+          </div>
+
+          {/* Resonance-indikator for "me" med høg resonance */}
+          {isMe && resonanceLevel && resonanceLevel > 50 && (
+            <div 
+              className="mt-1 flex items-center justify-end gap-1"
+            >
+              <div 
+                className="w-1.5 h-1.5 rounded-full"
+                style={{ 
+                  background: G.gold,
+                  boxShadow: `0 0 4px ${G.goldMuted}`,
+                }}
+              />
+              <span 
+                className="text-[9px] font-medium tracking-wider uppercase"
+                style={{ color: G.textMuted }}
+              >
+                Resonans
+              </span>
             </div>
           )}
 
-          {/* Tekst — premium typografi */}
-          <p
-            className="leading-relaxed relative z-10"
-            style={{
-              color: isMe ? G.textPrimary : 'rgba(255,255,255,0.8)',
-              whiteSpace: "pre-wrap",
-              wordBreak: "break-word",
-              fontSize: "15px",
-              lineHeight: "1.6",
-            }}
-          >
-            {content}
-          </p>
-
-          {/* Timestamp */}
-          {metadata?.timestamp && <Timestamp value={String(metadata.timestamp)} />}
-        </div>
-
-        {/* Resonance-indikator for "me" med høg resonance */}
-        {isMe && resonanceLevel && resonanceLevel > 50 && (
-          <div 
-            className="mt-1 flex items-center justify-end gap-1"
-          >
-            <div 
-              className="w-1.5 h-1.5 rounded-full"
-              style={{ 
-                background: G.gold,
-                boxShadow: `0 0 4px ${G.goldMuted}`,
-              }}
-            />
-            <span 
-              className="text-[9px] font-medium tracking-wider uppercase"
+          {/* Partner-navn (venstre side) */}
+          {!isMe && metadata?.senderInfo && sender === "partner" && (
+            <p
+              className="mt-1.5 ml-2 text-[11px] font-medium tracking-wide"
               style={{ color: G.textMuted }}
             >
-              Resonans
-            </span>
-          </div>
-        )}
+              {metadata.senderInfo.name}
+            </p>
+          )}
+        </div>
 
-        {/* Partner-navn (venstre side) */}
-        {!isMe && metadata?.senderInfo && sender === "partner" && (
-          <p
-            className="mt-1.5 ml-2 text-[11px] font-medium tracking-wide"
-            style={{ color: G.textMuted }}
-          >
-            {metadata.senderInfo.name}
-          </p>
+        {/* Tomt rom for symmetri */}
+        {isMe && (
+          <div className="w-8.5 flex-shrink-0 mr-2.5" />
         )}
-      </div>
-
-      {/* Tomt rom for symmetri */}
-      {isMe && (
-        <div className="w-8.5 flex-shrink-0 mr-2.5" />
-      )}
+      </FadeIn>
     </div>
   );
 }
 
 /* ═══════════════════════════════════════
-   CSS ANIMASJONAR — inline
+   CSS ANIMASJONAR — inline (complement til animated.css)
    ═══════════════════════════════════════ */
 
 export function MessageBubbleStyles() {

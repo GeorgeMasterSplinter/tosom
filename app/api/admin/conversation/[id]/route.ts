@@ -1,4 +1,4 @@
-
+import { adminAuthGuard } from "@/lib/auth/adminAuthGuard";
 import { getConversationMetadata } from "@/lib/admin/conversation";
 export const dynamic = 'force-dynamic';
 
@@ -6,6 +6,10 @@ export async function GET(
   request: Request,
   context: { params: Promise<{ id: string }> }
 ): Promise<Response> {
+  // STREG 1 Fix 3: Legg til server-side admin auth
+  const auth = await adminAuthGuard();
+  if (auth) return auth;
+
   try {
     const { id } = await context.params;
 
@@ -40,5 +44,3 @@ export async function GET(
     );
   }
 }
-
-

@@ -4,7 +4,19 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import os from 'os';
 
-export const dynamic = 'error';
+/**
+ * GET /api/system/health — Detaljert health check med service-kjekk
+ * 
+ * Utvidet 2026-08-02 (Pakke 3, Steg 3a):
+ * - DB-ping (allereie eksisterande)
+ * - Pusher-status (miljøvariabel-validering)
+ * - Uploadthing-status (miljøvariabel-validering)
+ * - Stripe-status (miljøvariabel-validering)
+ * - OpenAI-status (miljøvariabel-validering)
+ * - Cron-siste kjøring (via Prisma AIRequestLog eller SystemLog)
+ */
+
+export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
   try {
@@ -27,7 +39,7 @@ export async function GET(request: NextRequest) {
     const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
     const nextVersion = packageJson?.dependencies?.['next'] ?? 'unknown';
 
-    // Database ping
+    // ─── Database ping ───
     let dbLatency = -1;
     let dbStatus = 'unknown';
     let dbError: string | null = null;
@@ -41,9 +53,57 @@ export async function GET(request: NextRequest) {
       dbError = error instanceof Error ? error.message : 'Unknown error';
     }
 
+    // ─── Service checks (miljøvariabel-validering + der mogleg faktiske sjekkar) ───
+    const services = {
+      database: {
+        status: dbStatus,
+        latencyMs: dbLatency,
+        error: dbError,
+      },
+      pusher: {
+        status: process.env.PUSHER_APP_ID ? 'configured' : 'missing',
+        details: process.env.PUSHER_APP_ID ? 'Environment variabel satt' : 'Manglande miljøvariabel',
+      },
+      uploadthing: {
+        status: process.env.UPLOADTHING_TOKEN || process.env.NEXT_PUBLIC_UPLOADTHING_TOKEN ? 'configured' : 'missing',
+        details: 'Token variabel satt',
+      },
+// @
+      openai: {
+        status: process.env.OPENAI_API_KEY ? 'configured' : 'missing',
+        details: 'OpenAI API-key sett',
+      },
+      vipps: {
+        status: (process.env.VIPPS_CLIENT_ID && process.env.VIPPS_CLIENT_SECRET) ? 'configured' : 'missing',
+        details: 'Vipps OAuth variabler sett',
+      },
+    };
+
+    // Cron-siste kjøring — prøv å hente siste SystemLog createdAt som proxy (AIRequestLog fjernet 2026-08-02)
+    let cronLastRun: string | null = null;
+    try {
+      const lastLog = await prisma.systemLog.findFirst({
+        orderBy: { createdAt: 'desc' },
+        select: { createdAt: true },
+      });
+      cronLastRun = lastLog?.createdAt?.toISOString() ?? null;
+    } catch {
+      // SystemLog finst kanskje ikkje enno
+      cronLastRun = 'ukjent';
+    }
+
+    // Overall status
+    const criticalServicesOk = dbStatus === 'connected';
+    const allConfigured = Object.values(services).every(
+      (s) => s.status === 'configured' || s.status === 'connected'
+    );
+
+    const overallStatus = !criticalServicesOk ? 'error' : allConfigured ? 'ok' : 'degraded';
+
     const response = {
-      status: dbStatus === 'connected' ? 'ok' : 'degraded',
+      status: overallStatus,
       timestamp: new Date().toISOString(),
+      version: packageJson.version ?? '0.0.0',
       system: {
         uptime: uptimeFormatted,
         uptimeSeconds: Math.round(uptimeSeconds),
@@ -60,21 +120,19 @@ export async function GET(request: NextRequest) {
         nodeVersion,
         nextVersion,
       },
-      database: {
-        status: dbStatus,
-        latencyMs: dbLatency,
-        error: dbError,
+      services,
+      cron: {
+        lastRun: cronLastRun,
       },
       app: {
         name: packageJson.name ?? 'tosom',
-        version: packageJson.version ?? '0.0.0',
         environment: process.env.NODE_ENV ?? 'development',
-        port: process.env.PORT ?? 3000,
+        port: Number(process.env.PORT) ?? 3000,
       },
     };
 
     return NextResponse.json(response, {
-      status: dbStatus === 'connected' ? 200 : 503,
+      status: overallStatus === 'ok' ? 200 : overallStatus === 'degraded' ? 503 : 503,
     });
   } catch (error) {
     return NextResponse.json(

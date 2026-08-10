@@ -7,6 +7,7 @@ import ProfileEditForm from "./ProfileEditForm";
 export default function ProfileEditPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [profile, setProfile] = useState<any | null>(null);
+  const [locked, setLocked] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showSaved, setShowSaved] = useState(false);
 
@@ -19,6 +20,7 @@ export default function ProfileEditPage() {
         setProfile(null);
       } else {
         setProfile(result.profile);
+        setLocked(!!result.locked);
       }
       setIsLoading(false);
     });
@@ -47,6 +49,25 @@ export default function ProfileEditPage() {
           </p>
         </div>
 
+        {/* Profil-låst banner (dag 1-29) */}
+        {locked && !error && (
+          <div className="text-amber-200 text-sm bg-amber-950/30 border border-amber-700/30 rounded-xl px-5 py-4">
+            <div className="flex items-start gap-3">
+              <span className="text-xl flex-shrink-0">🔒</span>
+              <div>
+                <p className="font-medium mb-1">Profilen er låst</p>
+                <p className="text-amber-300/70 text-xs leading-relaxed">
+                  Du har ein aktiv reise pågåande. Profilen kan ikkje redigerast medan du er i dag 1–29.
+                  Etter at reisen er fullført (dag 30) opnar låsen seg automatisk.
+                </p>
+              </div>
+            </div>
+            <a href="/profile" className="mt-3 inline-block text-xs font-medium text-amber-300 hover:text-amber-200 transition-colors">
+              ← Tilbake til profil
+            </a>
+          </div>
+        )}
+
         {/* Feilmelding */}
         {error && (
           <div className="text-red-400 text-sm bg-red-950/50 border border-red-900/30 rounded-xl px-4 py-3">
@@ -64,11 +85,13 @@ export default function ProfileEditPage() {
           </div>
         )}
 
-        {/* Skjema */}
-        <ProfileEditForm
-          initialProfile={profile}
-          onSaved={() => setShowSaved(true)}
-        />
+        {/* Skjema — skjult når låst */}
+        {!locked && (
+          <ProfileEditForm
+            initialProfile={profile}
+            onSaved={() => setShowSaved(true)}
+          />
+        )}
       </div>
     </div>
   );

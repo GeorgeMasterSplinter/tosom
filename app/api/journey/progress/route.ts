@@ -1,7 +1,11 @@
 /**
  * GET /api/journey/progress
  * 
- * Hent progresjon for reisa — alle dagar, milestones, resonans.
+ * @deprecated (V2) Resonance-sessions er fjerna — beholdes for bakover-kompatibilitet.
+ * V2-prinsipp: Oppgåver er valfrie. Ingen måling av resonans under reisen.
+ * Se docs/tosom-concept-v2-skisse.md for detaljer.
+ * 
+ * Hent progresjon for reisa — alle dagar, milestones.
  * Core-definition: Viser reise utan gamification.
  */
 
@@ -47,7 +51,8 @@ export async function GET(req: NextRequest) {
       orderBy: { day: "asc" },
     });
 
-    // 4. Finn resonance-sessions
+    /** @deprecated (V2) ResonanceSession er fjerna — beholdes for bakover-kompatibilitet */
+    //
     const conversation = await prisma.conversation.findFirst({
       where: {
         userAId: user.id,

@@ -5,15 +5,21 @@
 export { matchingEngine } from "./engine";
 export { findBestMatchFor } from "./findBestMatchFor";
 
-// Scoring-funksjonar
-export {
-  calculateBaseCompatibility,
-  calculateEmotionalResonance,
-  calculateSemanticOverlap,
-  calculateIntimacyScore,
-  calculateFutureVisionScore,
-  calculateTotalScore,
-} from "./scorer";
+// Scoring-funksjoner — EINTILT SCORING (Punkt 4)
+export { unifiedScore, calculateTotalScore } from "./unifiedScorer"; // Primær scoring (9 dimensjoner, skala [0-100])
+
+/** @deprecated Bruk unifiedScore() fra unifiedScorer.ts i stedet */
+export { calculateBaseCompatibility } from "./scorer";
+/** @deprecated Bruk unifiedScore() fra unifiedScorer.ts i stedet */
+export { calculateEmotionalResonance } from "./scorer";
+/** @deprecated Bruk unifiedScore() fra unifiedScorer.ts i stedet */
+export { calculateSemanticOverlap } from "./scorer";
+/** @deprecated Bruk unifiedScore() fra unifiedScorer.ts i stedet */
+export { calculateIntimacyScore } from "./scorer";
+/** @deprecated Bruk unifiedScore() fra unifiedScorer.ts i stedet */
+export { calculateFutureVisionScore } from "./scorer";
+
+/** @deprecated Bruk unifiedScore() fra unifiedScorer.ts i stedet. calculateTotalScore er nå re-eksportert fra unifiedScorer med backward compat wrapper. */
 
 // Dealbreaker-funksjonar
 export { sjekkAlleDealbreakers } from "./dealbreaker";

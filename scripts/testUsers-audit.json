@@ -1,0 +1,49 @@
+{
+  "total": 3,
+  "testCount": 2,
+  "realCount": 1,
+  "testUsers": [
+    {
+      "email": "testA@tosom.dev",
+      "id": "cmsg50z320000gdnocftjlzzd",
+      "onboardingComplete": true,
+      "deepProfileComplete": true,
+      "hasProfile": true,
+      "hasJourney": false,
+      "matchCount": 0,
+      "conversationCount": 0,
+      "role": "USER",
+      "verified": true,
+      "createdAt": "2026-08-05T13:43:37.886Z"
+    },
+    {
+      "email": "testB@tosom.dev",
+      "id": "cmsg50z360003gdnoixzkrnl8",
+      "onboardingComplete": true,
+      "deepProfileComplete": true,
+      "hasProfile": true,
+      "hasJourney": false,
+      "matchCount": 0,
+      "conversationCount": 0,
+      "role": "USER",
+      "verified": true,
+      "createdAt": "2026-08-05T13:43:37.891Z"
+    }
+  ],
+  "realUsers": [
+    {
+      "email": "admin@tosom.dev",
+      "id": "cmsg50z390006gdnozvkep1z0",
+      "onboardingComplete": true,
+      "deepProfileComplete": true,
+      "hasProfile": true,
+      "hasJourney": false,
+      "matchCount": 0,
+      "conversationCount": 0,
+      "role": "ADMIN",
+      "verified": true,
+      "createdAt": "2026-08-05T13:43:37.894Z"
+    }
+  ],
+  "auditedAt": "2026-08-08T21:24:03.053Z"
+}

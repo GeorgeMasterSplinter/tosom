@@ -1,0 +1,278 @@
+/**
+ * ToSom — Global Animated Styles (Warm Flow Animations v2026) 🟡⭐
+ * 
+ * Pakke 6.5 — Warm Flow Animations (Steg 2)
+ * 
+ * Innhald:
+ * - fadeIn, fadeInUp, slideUp, scaleIn, fadeRight, fadeLeft animasjonar
+ * - microFloat — subtil hover-animasjon for knappar
+ * - glowPulse — gull-aksent puls-effekt
+ * - smoothScroll — roleg scroll-bete
+ * - buttonHover — standardiserte overgangar på alle knappar
+ * - glassHover — premium glassmorphism-hover-effekt
+ * 
+ * Alle animasjonar errolige og nordiske — ingen raske eller aggressive bevegelser.
+ */
+
+/* ═══════════════════════════════════════
+   BASE ANIMATIONS — Fade/Slide/Scale
+   ═══════════════════════════════════════ */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(30px) scale(0.98); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0) scale(1); 
+  }
+}
+
+@keyframes slideDown {
+  from { 
+    opacity: 0; 
+    transform: translateY(-20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeRight {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeLeft {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes bounceIn {
+  0% { 
+    opacity: 0; 
+    transform: scale(0.9); 
+  }
+  50% { 
+    transform: scale(1.02); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: scale(1); 
+  }
+}
+
+/* ═══════════════════════════════════════
+   MICRO INTERACTIONS — Hover & Glow
+   ═══════════════════════════════════════ */
+
+@keyframes microFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+@keyframes glowPulse {
+  0%, 100% { 
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.15), 0 0 16px rgba(212, 175, 55, 0.05);
+  }
+  50% { 
+    box-shadow: 0 0 16px rgba(212, 175, 55, 0.3), 0 0 32px rgba(212, 175, 55, 0.1);
+  }
+}
+
+@keyframes goldShimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ═══════════════════════════════════════
+   TYPING INDICATOR — Chat
+   ═══════════════════════════════════════ */
+
+@keyframes typingBounce {
+  0%, 60%, 100% { 
+    transform: translateY(0); 
+    opacity: 0.4; 
+  }
+  30% { 
+    transform: translateY(-8px); 
+    opacity: 1; 
+  }
+}
+
+/* ═══════════════════════════════════════
+   CHAT BUBBLE ENTRANCE
+   ═══════════════════════════════════════ */
+
+@keyframes warmGlow {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+    filter: brightness(0.85);
+  }
+  40% {
+    filter: brightness(1.08);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: brightness(1);
+  }
+}
+
+@keyframes softLand {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ═══════════════════════════════════════
+   PANEL OPENING — Slide/Expand
+   ═══════════════════════════════════════ */
+
+@keyframes panelSlideDown {
+  from { 
+    max-height: 0; 
+    opacity: 0; 
+  }
+  to { 
+    max-height: 500px; 
+    opacity: 1; 
+  }
+}
+
+@keyframes backdropFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ═══════════════════════════════════════
+   LOADING SPINNER — Premium Gold
+   ═══════════════════════════════════════ */
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ═══════════════════════════════════════
+   GLOBAL BEHAVIOR — Smooth Scroll & Transitions
+   ═══════════════════════════════════════ */
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Alle interaktive element har rolige overgangar */
+button, 
+a, 
+input, 
+textarea, 
+select {
+  transition: all 0.2s ease-out;
+}
+
+/* Buttons — hover + active */
+button:hover, 
+a:hover {
+  transform: scale(1.02);
+}
+
+button:active, 
+a:active {
+  transform: scale(0.98);
+}
+
+/* Glassmorphism-kort hover */
+.glass-hover {
+  transition: all 0.3s ease-out;
+}
+
+.glass-hover:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(212, 175, 55, 0.25) !important;
+  box-shadow: 0 12px 40px rgba(212, 175, 55, 0.10) !important;
+  transform: translateY(-4px);
+}
+
+/* FadeIn utility class (for bruk utan framer-motion) */
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.3s ease-out forwards;
+}
+
+.animate-warmGlow {
+  animation: warmGlow 0.6s ease-out forwards;
+}
+
+.animate-softLand {
+  animation: softLand 0.45s ease-out forwards;
+}
+
+/* Prefer-reduced-motion — respekterer systeminnstillingar */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ═══════════════════════════════════════
+   UTILITY — Tailwind-kompatibel
+   ═══════════════════════════════════════ */
+
+/* Delay-classer for stagger-animasjonar */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+
+/* Opacity for stagger (startar usynleg) */
+.animate-stagger > * {
+  opacity: 0;
+}
+
+.animate-stagger-animated > *:nth-child(1) { animation: fadeInUp 0.5s ease-out 0.1s forwards; }
+.animate-stagger-animated > *:nth-child(2) { animation: fadeInUp 0.5s ease-out 0.2s forwards; }
+.animate-stagger-animated > *:nth-child(3) { animation: fadeInUp 0.5s ease-out 0.3s forwards; }
+.animate-stagger-animated > *:nth-child(4) { animation: fadeInUp 0.5s ease-out 0.4s forwards; }
+.animate-stagger-animated > *:nth-child(5) { animation: fadeInUp 0.5s ease-out 0.5s forwards; }
+.animate-stagger-animated > *:nth-child(n+6) { animation: fadeInUp 0.5s ease-out 0.6s forwards; }

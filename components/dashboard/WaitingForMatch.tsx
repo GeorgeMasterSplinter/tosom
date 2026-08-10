@@ -3,8 +3,8 @@
 /**
  * ToSom — Ventefase-dashbord ("Din match er på vei")
  * 
- * Visast når brukaren har fullført onboarding men ingen match enno.
- * Har glass-panel med animasjon og roleg "match leiter..."-følelse.
+ * Vises når brukeren har fullført onboarding men ingen match ennå.
+ * Har glass-panel med animasjon og rolig "match leter..."-følelse.
  */
 
 import { useState, useEffect } from 'react';
@@ -146,8 +146,8 @@ export function WaitingForMatch({ userName }: { userName: string }) {
             lineHeight: typography.lineHeight.relaxed,
           }}
         >
-          Resonans-motoren leitar etter din perfekte match. 
-          Du vil motta ei match innan 24 timar — vi ser til at det passar.
+          Resonans-motoren leter etter din perfekte match. 
+          Du vil motta en match innen 24 timer — vi ser til at det passer.
         </p>
 
         <p
@@ -157,7 +157,7 @@ export function WaitingForMatch({ userName }: { userName: string }) {
             fontStyle: 'italic',
           }}
         >
-          Hvert sekund nærmar du deg nokon spesiell.
+          Hvert sekund nærmer du deg noen spesiell.
         </p>
 
         {/* Countdown (mock) */}
@@ -174,7 +174,7 @@ export function WaitingForMatch({ userName }: { userName: string }) {
               borderRadius: `${radius.lg}px`,
             }}
           >
-            Oppdater profil for betre match
+            Oppdater profil for bedre match
           </button>
         </a>
       </div>

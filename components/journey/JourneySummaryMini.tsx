@@ -35,7 +35,7 @@ export default function JourneySummaryMini({
       ? "Fase 3 — Fordypning"
       : "Fase 4 — Oppsummering";
 
-  const isJourneyActive = day >= 1 && day <= 35;
+  const isJourneyActive = day >= 1 && day <= 30;
   const photosAllowed = day >= 15;
   const phaseInfo = isJourneyActive
     ? photosAllowed
@@ -49,7 +49,7 @@ export default function JourneySummaryMini({
   return (
     <div className="text-sm text-stone-600 leading-relaxed">
       <span className="font-medium">{icon}</span>{" "}
-      Dag {dayConfig.dayNumber} av 35 — {themeLabel}. {phaseLabel}. {phaseInfo}.{" "}
+      Dag {dayConfig.dayNumber} av 30 — {themeLabel}. {phaseLabel}. {phaseInfo}.{" "}
       <span className="italic">{dayConfig.microInsight}</span>
     </div>
   );

@@ -11,9 +11,21 @@ import { requireAdmin as requireAdminRole } from '@/lib/auth/rbac'
 
 /**
  * Hent session-token frå cookie og returner decoded data.
+ * Aksepterer både next-auth.session.token OG admin_token cookie.
  */
 export function getSessionData(req: Request): { userId: string; role: string } | null {
   const cookieHeader = req.headers.get('cookie') || ''
+
+  // Først: sjekk om admin_token-cookie er satt (fra /api/admin/auth)
+  const adminTokenMatch = cookieHeader.match(/admin_token=([^;]+)/)
+  if (adminTokenMatch && adminTokenMatch[1] === 'valid') {
+    return {
+      userId: 'admin',
+      role: 'admin',
+    }
+  }
+
+  // Deretter: sjekk next-auth.session.token
   const match = cookieHeader.match(/next-auth\.session\.token=([^;]+)/)
   if (!match) return null
   try {

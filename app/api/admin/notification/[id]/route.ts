@@ -1,7 +1,7 @@
 import { getNotification } from '@/lib/admin/notifications'
 import { auth } from '@/lib/auth/config'
 import { requireAdmin } from '@/lib/admin/requireAuth'
-import { castToAdminUser } from '@/lib/auth/admin-auth'
+import { castToAdminUser, AuthenticatedUser } from '@/lib/auth/admin-auth'
 export const dynamic = 'force-dynamic';
 
 export async function DELETE(
@@ -9,9 +9,18 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ): Promise<Response> {
   try {
-    const { adminId: _adminId } = await request.json()
     const session = await auth()
-    const user = castToAdminUser(session?.user)
+    const rawUser = session?.user
+    if (!rawUser) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } })
+    }
+    const user: AuthenticatedUser = {
+      id: String(rawUser.id ?? 'unknown'),
+      name: rawUser.name ?? '',
+      email: rawUser.email ?? '',
+      image: rawUser.image ?? '',
+      role: 'USER' as const,
+    }
     await requireAdmin(user)
 
     const { id } = await params
@@ -27,5 +36,3 @@ export async function DELETE(
     return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500, headers: { 'Content-Type': 'application/json' } })
   }
 }
-
-

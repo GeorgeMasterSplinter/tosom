@@ -1,3 +1,4 @@
+/** @deprecated (V2) AI-svar-forslag er fjerna — behalda for bakover-kompatibilitet. */
 /* ═══════════════════════════════════════════
    ToSom — AI Chat Suggestions
    Viser forslag til neste melding basert på samtalekontekst

@@ -32,8 +32,6 @@ model User {
   journey             JourneyProgress?     @relation("UserJourney")
   matchesA            Match[]              @relation("UserAMatches")
   matchesB            Match[]              @relation("UserBMatches")
-  MatchFeedback       MatchFeedback[]
-  MatchQueue          MatchQueue[]
   messages            Message[]
   notifications       Notification[]
   resetTokens         PasswordResetToken[]
@@ -106,8 +104,6 @@ model Match {
   updatedAt        DateTime        @updatedAt
   userA            User            @relation("UserAMatches", fields: [userAId], references: [id])
   userB            User            @relation("UserBMatches", fields: [userBId], references: [id])
-  MatchFeedback    MatchFeedback[]
-  MatchHistory     MatchHistory[]
   insights         MatchInsight?
 
   @@index([status])
@@ -416,22 +412,6 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model AIRequestLog {
-  id        String    @id @default(cuid())
-  userId    String
-  feature   AIFeature
-  model     String
-  tokensIn  Int
-  tokensOut Int
-  latencyMs Int
-  success   Boolean
-  traceId   String?
-  createdAt DateTime  @default(now())
-
-  @@index([userId])
-  @@index([feature])
-  @@index([createdAt])
-}
 
 model MatchInsight {
   id        String   @id @default(cuid())
@@ -450,43 +430,6 @@ model MatchInsight {
   @@index([createdAt])
 }
 
-// ⚠️  @deprecated — Test i app/ før sletting frå schema
-model MatchFeedback {
-  id        String   @id
-  matchId   String
-  userId    String
-  rating    Int
-  reason    String?
-  createdAt DateTime @default(now())
-  Match     Match    @relation(fields: [matchId], references: [id])
-  User      User     @relation(fields: [userId], references: [id])
-
-  @@index([matchId])
-  @@index([rating])
-  @@index([userId])
-}
-
-// ⚠️  @deprecated — Test i app/ før sletting frå schema
-model MatchHistory {
-  id        String   @id
-  matchId   String
-  event     String
-  createdAt DateTime @default(now())
-  Match     Match    @relation(fields: [matchId], references: [id])
-}
-
-// ⚠️  @deprecated — Test i app/ før sletting frå schema
-model MatchQueue {
-  id        String      @id
-  userId    String
-  status    QueueStatus @default(PENDING)
-  createdAt DateTime    @default(now())
-  User      User        @relation(fields: [userId], references: [id])
-
-  @@index([createdAt])
-  @@index([status])
-  @@index([userId])
-}
 
 model SystemMessage {
   id        String            @id
@@ -498,6 +441,7 @@ model SystemMessage {
 enum Role {
   USER
   ADMIN
+  SUPPORT
 }
 
 enum JourneyPhase {
@@ -543,11 +487,6 @@ enum MatchStatus {
   unmatched
 }
 
-enum QueueStatus {
-  PENDING
-  MATCHED
-  EXPIRED
-}
 
 enum MessageCategory {
   user
@@ -620,12 +559,6 @@ enum HttpMethod {
   DELETE
 }
 
-enum AIFeature {
-  journeyGuidance
-  matchInsights
-  messageSuggestions
-  profileRewrite
-}
 
 enum SystemMessageType {
   INFO

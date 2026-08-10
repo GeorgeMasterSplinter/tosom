@@ -180,51 +180,59 @@ export default function ReisenPage() {
       <div className="relative z-10">
 
         {/* ===== HERO ===== */}
-        <ToSomSection
-          spotlight="blue"
-          className="px-6 text-center space-y-6"
-        >
-          <h1
-            style={{
-              ...typographyToStyle('hero'),
-              color: color.text.primary,
-            }}
-          >
-            30 dager som kan endre alt
-          </h1>
+        <section className="px-6 mt-32 mb-64 md:mt-48 md:mb-80 text-center">
+          <div className="mx-auto max-w-[780px] space-y-6">
+            <h1
+              style={{
+                ...typographyToStyle('hero'),
+                color: 'rgba(255,255,255,0.92)',
+              }}
+            >
+              30 dager som kan endre alt
+            </h1>
 
-          <p
-            className="max-w-2xl mx-auto"
-            style={{
-              ...typographyToStyle('body-lg'),
-              color: color.text.secondary,
-              lineHeight: '1.8',
-            }}
-          >
-            Når dere matcher, starter en guidet reise — skapt for å bygge ekte forbindelse mellom to mennesker. Ingen sveiping. Ingen distraksjoner. Bare dere to, i et rom som gir trygghet, tid og struktur.
-          </p>
-        </ToSomSection>
+            <p
+              className="max-w-2xl mx-auto"
+              style={{
+                ...typographyToStyle('body-lg'),
+                color: 'rgba(255,255,255,0.88)',
+                lineHeight: '1.7',
+                letterSpacing: '0.25px',
+              }}
+            >
+              Når dere matcher, starter en guidet reise — skapt for å bygge ekte forbindelse mellom to mennesker. Ingen sveiping. Ingen distraksjoner. Bare dere to, i et rom som gir trygghet, tid og struktur.
+            </p>
+          </div>
+        </section>
 
         {/* ===== INTRO ===== */}
-        <ToSomSection
-          spotlight="soft"
-          className="px-6"
-        >
-          <div className="mx-auto max-w-3xl space-y-6">
+        <section className="px-6 mt-64 mb-32 md:mt-80 md:mb-48">
+          <div
+            className="mx-auto max-w-[780px] rounded-[28px] p-10 md:p-14 space-y-6"
+            style={{
+              background: 'rgba(255,255,255,0.045)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              boxShadow: '0 12px 40px rgba(0,0,0,0.20), 0 0 24px rgba(212,175,55,0.05)',
+            }}
+          >
             <p
               style={{
                 ...typographyToStyle('body-lg'),
-                color: color.text.secondary,
-                lineHeight: '1.8',
+                color: 'rgba(255,255,255,0.88)',
+                lineHeight: '1.7',
+                letterSpacing: '0.25px',
               }}
             >
               De fleste relasjoner stopper før de får sjansen til å bli noe ekte. Tempoet er for høyt. Distraksjonene er for mange. Folk hopper videre før de rekker å forstå hverandre.
             </p>
 
             <p
+              className="text-center my-8"
               style={{
-                ...typographyToStyle('heading-md'),
-                color: color.brand.gold,
+                ...typographyToStyle('heading-lg'),
+                color: 'rgba(212,175,55,0.9)',
               }}
             >
               ToSom gjør det motsatte.
@@ -233,8 +241,9 @@ export default function ReisenPage() {
             <p
               style={{
                 ...typographyToStyle('body-lg'),
-                color: color.text.secondary,
-                lineHeight: '1.8',
+                color: 'rgba(255,255,255,0.88)',
+                lineHeight: '1.7',
+                letterSpacing: '0.25px',
               }}
             >
               Vi gir dere: tid, fokus, trygghet, struktur — og en reise som bygger nærhet steg for steg.
@@ -243,14 +252,15 @@ export default function ReisenPage() {
             <p
               style={{
                 ...typographyToStyle('body-lg'),
-                color: color.text.secondary,
-                lineHeight: '1.8',
+                color: 'rgba(255,255,255,0.88)',
+                lineHeight: '1.7',
+                letterSpacing: '0.25px',
               }}
             >
               Dette er ikke en test. Det er en opplevelse — designet for å hjelpe to mennesker å møtes på en måte som føles naturlig, varm og ekte.
             </p>
           </div>
-        </ToSomSection>
+        </section>
 
         {/* ===== TRE FASER ===== */}
         <ToSomSection
@@ -409,7 +419,7 @@ export default function ReisenPage() {
           </div>
         </ToSomSection>
 
-        {/* ===== HVA SKJER HVER DAG? ===== */}
+        {/* ===== DAGLIG GUIDE ===== */}
         <ToSomSection
           spotlight="blue"
           className="px-6"
@@ -422,11 +432,11 @@ export default function ReisenPage() {
                 color: color.text.primary,
               }}
             >
-              Hva skjer hver dag?
+              Daglig guide
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Refleksjonsspørsmål */}
+              {/* Guidede samtaler */}
               <GlassCard padding="xl" className="space-y-4">
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
@@ -439,7 +449,7 @@ export default function ReisenPage() {
                         color: color.text.primary,
                       }}
                     >
-                      Refleksjonsspørsmål
+                      Guidede samtaler
                     </h3>
                     <p
                       style={{
@@ -448,41 +458,13 @@ export default function ReisenPage() {
                         lineHeight: '1.8',
                       }}
                     >
-                      Hver dag får dere et spørsmål som hjelper dere å forstå hverandre dypere.
+                      Hver dag får dere nye spørsmål som hjelper dere å bli kjent dypere. Vil dere grave dypere? Samlingen med over 160 spørsmål dekker alt fra hverdag til verdier, drømmer og fortid — slik at dere aldri går tom for stoff.
                     </p>
                   </div>
                 </div>
               </GlassCard>
 
-              {/* Samtaletema */}
-              <GlassCard padding="xl" className="space-y-4">
-                <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
-                    <IconTalk />
-                  </div>
-                  <div className="space-y-3">
-                    <h3
-                      style={{
-                        ...typographyToStyle('heading-md'),
-                        color: color.text.primary,
-                      }}
-                    >
-                      Samtaletema
-                    </h3>
-                    <p
-                      style={{
-                        ...typographyToStyle('body-lg'),
-                        color: color.text.secondary,
-                        lineHeight: '1.8',
-                      }}
-                    >
-                      Et daglig tema guider samtalen — fra barndommens minner til fremtidens drømmer.
-                    </p>
-                  </div>
-                </div>
-              </GlassCard>
-
-              {/* Små oppgaver */}
+              {/* Små oppgaver sammen */}
               <GlassCard padding="xl" className="space-y-4">
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
@@ -495,7 +477,7 @@ export default function ReisenPage() {
                         color: color.text.primary,
                       }}
                     >
-                      Små oppgaver
+                      Små oppgaver sammen
                     </h3>
                     <p
                       style={{
@@ -504,35 +486,7 @@ export default function ReisenPage() {
                         lineHeight: '1.8',
                       }}
                     >
-                      Meningsfulle oppgaver skaper felles erfaringer, minner og øyeblikk av ekte nærhet.
-                    </p>
-                  </div>
-                </div>
-              </GlassCard>
-
-              {/* Resonansmåling */}
-              <GlassCard padding="xl" className="space-y-4">
-                <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
-                    <IconResonance />
-                  </div>
-                  <div className="space-y-3">
-                    <h3
-                      style={{
-                        ...typographyToStyle('heading-md'),
-                        color: color.text.primary,
-                      }}
-                    >
-                      Resonansmåling
-                    </h3>
-                    <p
-                      style={{
-                        ...typographyToStyle('body-lg'),
-                        color: color.text.secondary,
-                        lineHeight: '1.8',
-                      }}
-                    >
-                      Systemet måler hvordan dere føles sammen — ikke bare hva dere sier. Resonansen viser hvor dyp forbindelse dere bygger.
+                      Enkelte ting er best opplevd sammen. Små oppgaver skaper minner dere begge tar med dere videre.
                     </p>
                   </div>
                 </div>

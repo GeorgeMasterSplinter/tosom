@@ -1,7 +1,8 @@
 {
-  "version": "2026.1",
+  "version": "2026.2",
   "description": "Fast memory for Qwen + Cline. Vedvarende state, mappinger og metadata som lastes ved hver oppstart.",
-  
+  "last_updated": "2026-08-04",
+
   "system": {
     "project": "ToSom",
     "philosophy": "Ro, varme, modenhet, trygghet, enkelhet, konsistens.",
@@ -12,16 +13,24 @@
     "journey_active": false,
     "current_journey_day": null,
     "match_status": "none",
-    "onboarding_completed": false
+    "onboarding_completed": false,
+    "payments_enabled": false,
+    "matching_enabled": true,
+    "journey_enabled": true,
+    "chat_enabled": true
   },
 
   "paths": {
-    "onboarding": "/app/screens/onboarding",
-    "journey": "/app/screens/journey",
-    "chat": "/app/screens/chat",
-    "match_profile": "/app/screens/match",
-    "profile": "/app/screens/profile",
-    "settings": "/app/screens/settings"
+    "onboarding": "/app/onboarding",
+    "journey": "/app/reisen",
+    "chat": "/app/chat",
+    "match_profile": "/app/matching",
+    "profile": "/app/profile",
+    "settings": "/app/settings",
+    "dashboard": "/app/dashboard",
+    "admin": "/app/admin",
+    "auth": "/app/(auth)",
+    "landing": "/app/(landing)"
   },
 
   "ui": {
@@ -38,13 +47,24 @@
   "matching": {
     "engine": "resonance_based",
     "max_matches_per_day": 1,
+    "match_delay_hours": 24,
     "uses_images": false,
-    "uses_surface_features": false
+    "uses_surface_features": false,
+    "weights": {
+      "base": 0.35,
+      "resonance": 0.25,
+      "semantic": 0.20,
+      "intimacy": 0.10,
+      "future": 0.10
+    }
   },
 
   "journey": {
     "length_days": 30,
+    "chat_phase_days": 30,
+    "decision_phase_days": 30,
     "phase1_no_images_days": 14,
+    "phases_enum": ["EARLY", "BUILDING_TRUST", "DEEPER", "CHECKIN"],
     "guided": true,
     "ai_generated_content": false
   },
@@ -66,7 +86,21 @@
   },
 
   "onboarding": {
-    "steps": 9,
+    "ui_steps": 9,
+    "enum_steps_count": 10,
+    "note_steps": "10 DeepProfileStep enum-values mapped to 9 UI-steps (BOUNDARIES er en del av INTIMACY-steg)",
+    "enum_steps": [
+      "IDENTITY",
+      "LIFE_SITUATION",
+      "LIFESTYLE",
+      "PERSONALITY",
+      "RELATIONSHIP_STYLE",
+      "COMMUNICATION",
+      "INTIMACY",
+      "FUTURE_VISION",
+      "BOUNDARIES",
+      "SUMMARY"
+    ],
     "structure": [
       "Identitet",
       "Livssituasjon",
@@ -77,7 +111,8 @@
       "Intimitet & nærhet",
       "Fremtidsønsker",
       "Oppsummering"
-    ]
+    ],
+    "note": "BOUNDARIES og FREMTIDSØNSKER kan være kombinert i de 9 hovedstegene"
   },
 
   "rules": {
@@ -89,6 +124,12 @@
     "no_feed": true,
     "no_swipe": true,
     "no_gamification": true
+  },
+
+  "ai_features": {
+    "enabled_for_users": false,
+    "enum_values": ["journeyGuidance", "matchInsights", "messageSuggestions", "profileRewrite"],
+    "note": "AI-features er kun til admin/analytics/logging — ikke brukerrettet. Forbudt mot sluttbrukere per system_prompt.md 3.7"
   },
 
   "developer": {

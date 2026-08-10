@@ -1,0 +1,25 @@
+{
+  "timestamp": "2026-08-01T16:42:48.209424",
+  "total_users_created": 4008,
+  "total_matches": 5,
+  "total_journeys": 1,
+  "total_messages": 37,
+  "matches_created_by_cron": 0,
+  "pairs_accepted": 0,
+  "chat_messages_sent": 0,
+  "exits_tested": 0,
+  "ended_journeys": 0,
+  "admin_endpoints_ok": 4,
+  "checks": {
+    "server_health": "ok",
+    "matching_cron": "warn",
+    "journey_cron_3_cycles": "fail",
+    "chat_messages_created": "0",
+    "image_lock_column_exists": true,
+    "image_share_day14_tested": true,
+    "orphan_matches": "clean",
+    "admin_api": "4/4 ok",
+    "system_errors_24h": "clean"
+  },
+  "errors": []
+}

@@ -4,7 +4,7 @@
  * Provides utility functions to check roles from sessions, tokens, and raw data.
  */
 
-import { Role, hasAnyRole, hasAtLeastRole, defaultRole } from '@/lib/auth/roles'
+import { Role, hasAnyRole, hasAtLeastRole, defaultRole, isAdminRole } from '@/lib/auth/roles'
 
 /** Session user shape extended with role */
 export interface AuthenticatedUser {
@@ -25,7 +25,7 @@ export interface AuthSession {
  * Check if the user has the exact required role.
  */
 export function isAdmin(user: AuthenticatedUser | undefined | null): boolean {
-  return user?.role === 'admin'
+  return isAdminRole(user?.role)
 }
 
 /**
@@ -33,7 +33,7 @@ export function isAdmin(user: AuthenticatedUser | undefined | null): boolean {
  */
 export function isSupportOrAbove(user: AuthenticatedUser | undefined | null): boolean {
   if (!user) return false
-  return user.role === 'support' || user.role === 'admin'
+  return user.role === 'SUPPORT' || user.role === 'ADMIN'
 }
 
 /**
@@ -62,7 +62,7 @@ export function hasMinimumRole(
  * Check if a token (from JWT) has admin role.
  */
 export function isAdminToken(token: Record<string, unknown> | null | undefined): boolean {
-  return token?.role === 'admin'
+  return isAdminRole(token?.role as string | undefined)
 }
 
 /**
@@ -93,7 +93,7 @@ export function ensureRole(user: Record<string, unknown>): AuthenticatedUser {
  * Assert admin access — throws Error (for use in API handlers).
  */
 export function requireAdmin(user: AuthenticatedUser | undefined | null): void {
-  if (!user || user.role !== 'admin') {
+  if (!user || !isAdminRole(user.role)) {
     throw new Error('Forbidden: Admin access required')
   }
 }

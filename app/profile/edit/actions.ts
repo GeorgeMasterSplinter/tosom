@@ -16,11 +16,36 @@ export interface ProfileFormData {
   maturityLevel: number | null;
 }
 
+// Sjekk om brukeren har aktiv match/journey (dag 1-29)
+async function hasActiveMatch(userId: string): Promise<boolean> {
+  try {
+    const activeMatch = await prisma.match.findFirst({
+      where: {
+        OR: [
+          { userAId: userId, status: 'active' },
+          { userBId: userId, status: 'active' },
+        ],
+      },
+    });
+    if (activeMatch) return true;
+
+    const activeJourney = await prisma.journeyProgress.findFirst({
+      where: {
+        userId,
+        completedAt: null,
+      },
+    });
+    return !!activeJourney;
+  } catch {
+    return false;
+  }
+}
+
 export async function getProfile() {
   const session = await getServerSession();
 
   if (!session?.user?.id) {
-    return { profile: null, error: "Du må vere logga inn" };
+    return { profile: null, error: "Du må være logget inn" };
   }
 
   try {
@@ -28,6 +53,8 @@ export async function getProfile() {
       where: { userId: session.user.id },
     });
     if (!profile) return { profile: null };
+
+    const locked = await hasActiveMatch(session.user.id);
 
     const formatted: ProfileFormData = {
       firstName: profile.firstName ?? "",
@@ -41,9 +68,9 @@ export async function getProfile() {
       maturityLevel: profile.maturityLevel ?? null,
     };
 
-    return { profile: formatted };
+    return { profile: formatted, locked };
   } catch {
-    return { profile: null, error: "Kunne ikkje hente profilen" };
+    return { profile: null, error: "Kunne ikke hente profilen" };
   }
 }
 
@@ -51,7 +78,12 @@ export async function updateProfile(formData: ProfileFormData): Promise<{ succes
   const session = await getServerSession();
 
   if (!session?.user?.id) {
-    return { error: "Du må vere logga inn" };
+    return { error: "Du må være logget inn" };
+  }
+
+  const locked = await hasActiveMatch(session.user.id);
+  if (locked) {
+    return { error: "Profilen er låst mens du har aktiv reise. Du kan redigere etter dag 30." };
   }
 
   try {
@@ -92,6 +124,6 @@ export async function updateProfile(formData: ProfileFormData): Promise<{ succes
     return { success: true };
   } catch (error) {
     console.error("Failed to update profile:", error);
-    return { error: "Kunne ikkje oppdatere profilen" };
+    return { error: "Kunne ikke oppdatere profilen" };
   }
 }

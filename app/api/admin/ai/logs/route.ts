@@ -1,16 +1,25 @@
 import { auth } from '@/lib/auth/config'
 import { getSystemLogs } from '@/lib/admin/system'
 import { requireAdmin } from '@/lib/admin/requireAuth'
-import { castToAdminUser } from '@/lib/auth/admin-auth'
+import { castToAdminUser, AuthenticatedUser } from '@/lib/auth/admin-auth'
 export const dynamic = 'force-dynamic';
 
 export async function GET(
   request: Request
 ): Promise<Response> {
   try {
-    const { adminId: _adminId } = await request.json()
     const session = await auth()
-    const user = castToAdminUser(session?.user)
+    const rawUser = session?.user
+    if (!rawUser) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } })
+    }
+    const user: AuthenticatedUser = {
+      id: String(rawUser.id ?? 'unknown'),
+      name: rawUser.name ?? '',
+      email: rawUser.email ?? '',
+      image: rawUser.image ?? '',
+      role: 'USER' as const,
+    }
     await requireAdmin(user)
 
     const url = new URL(request.url)
@@ -28,5 +37,3 @@ export async function GET(
     return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500, headers: { 'Content-Type': 'application/json' } })
   }
 }
-
-

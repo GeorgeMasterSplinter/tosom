@@ -1,0 +1,17 @@
+{
+  "setupAt": "2026-08-03T20:37:18.897Z",
+  "conversationId": "cmsdox9r00001c4hffey7ckq9",
+  "matchId": "cmsdoo279000112fkkhi8q21p",
+  "journeys": [
+    {
+      "email": "testA@tosom.dev",
+      "day": 1,
+      "phase": "EARLY"
+    },
+    {
+      "email": "testB@tosom.dev",
+      "day": 1,
+      "phase": "EARLY"
+    }
+  ]
+}

@@ -3,8 +3,8 @@
 /**
  * ToSom — Admin Login Page 🔐
  * 
- * Premium login med glassmorphism, gull-aksentar, og bokmål.
- * Flytt oppover på sida med minimering av unødvendig luft nedst.
+ * Premium login med glassmorphism, gull-aksenter, og bokmål.
+ * Flytt oppover på sida med minimering av unødvendig luft nederst.
  */
 
 import { useState } from 'react';
@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation';
 function AmbientBackground() {
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden">
-      {/* Blå glød øvst i høgre hjørne */}
+      {/* Blå glød øverst i høyre hjørne */}
       <div
         className="absolute -top-48 -right-48"
         style={{
@@ -25,7 +25,7 @@ function AmbientBackground() {
           background: 'radial-gradient(circle, rgba(212,175,55,0.06) 0%, transparent 65%)',
         }}
       />
-      {/* Blå glød nedst i venstre hjørne */}
+      {/* Blå glød nederst i venstre hjørne */}
       <div
         className="absolute -bottom-32 -left-32"
         style={{
@@ -39,7 +39,7 @@ function AmbientBackground() {
   );
 }
 
-/* ─── Hovudkomponent — Premium Admin Login ✨ */
+/* ─── Hovedkomponent — Premium Admin Login ✨ */
 
 export default function AdminLoginPage() {
   const router = useRouter();

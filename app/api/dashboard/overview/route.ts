@@ -6,6 +6,7 @@
 
 import { getServerSession } from "@/lib/auth/session";
 import prisma from "@/lib/prisma";
+import { JOURNEY_TOTAL_DAYS } from "@/lib/journey/engine";
 
 export const dynamic = 'force-dynamic';
 
@@ -92,7 +93,7 @@ export async function GET(_request: Request) {
     // Formatter reise-info
     let journeyInfo: any = null;
     if (journey) {
-      const totalDays = 35;
+      const totalDays = JOURNEY_TOTAL_DAYS; // 30
       journeyInfo = {
         day: journey.day,
         totalDays,

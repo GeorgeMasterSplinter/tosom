@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import "@/styles/animated.css";
 import { AnalyticsProvider } from "@/components/analytics/AnalyticsProvider";
 import { UniversalMenu } from '@/components/layout/UniversalMenu';
 

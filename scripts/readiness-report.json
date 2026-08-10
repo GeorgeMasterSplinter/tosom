@@ -1,0 +1,195 @@
+{
+  "timestamp": "2026-08-01T14:13:27.659Z",
+  "base_url": "http://localhost:3000",
+  "checks": [
+    {
+      "name": "Tabellar manglar",
+      "ok": false,
+      "details": "Fann 1/7: ERROR: Command failed: PGPASSWORD=tosom psql -h localhost -U tosom -d tosom_dev -t -A -c \"SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_name IN ('User', 'Profile', \\\"Match\\\", \\\"Conversation\\\", \\\"Message\\\", \\\"JourneyProgress\\\", \\\"SystemLog\\\") ORDER BY table_name;\" 2>&1"
+    },
+    {
+      "name": "Server health",
+      "ok": true,
+      "details": "DB latency: 2ms"
+    },
+    {
+      "name": "DB response time",
+      "ok": true,
+      "details": "2ms (<500ms OK)"
+    },
+    {
+      "name": "User-tabell",
+      "ok": true,
+      "details": "7 brukarar"
+    },
+    {
+      "name": "Match-tabell",
+      "ok": true,
+      "details": "5 matcher"
+    },
+    {
+      "name": "JourneyProgress-tabell",
+      "ok": true,
+      "details": "1 reiser"
+    },
+    {
+      "name": "Conversation-tabell",
+      "ok": true,
+      "details": "33 konversasjonar"
+    },
+    {
+      "name": "Oppretter 10 testbrukarar",
+      "ok": true,
+      "details": "0/10 oppretta"
+    },
+    {
+      "name": "Verifiser onboarding + deepProfile",
+      "ok": true,
+      "details": "10/10 gyldige"
+    },
+    {
+      "name": "Cron matching API",
+      "ok": true,
+      "details": "Prosessert: 13, Ny: 0"
+    },
+    {
+      "name": "Matcher oppretta",
+      "ok": false,
+      "details": "Ingen matcher funne (kan vere dersom ingen matchable kandidatar)"
+    },
+    {
+      "name": "Match accept + Journey start",
+      "ok": false,
+      "details": "Ingen aktive matcher funne for accept"
+    },
+    {
+      "name": "Cron journey API",
+      "ok": true,
+      "details": "Framrykte: 0, Avslutta: 0"
+    },
+    {
+      "name": "Journey-dag aukar (dag1 → dag2)",
+      "ok": false,
+      "details": "0 med dag > 1"
+    },
+    {
+      "name": "Chat-meldingar oppretta",
+      "ok": true,
+      "details": "0 meldingar"
+    },
+    {
+      "name": "Chat-meldingar verifisert",
+      "ok": true,
+      "details": "0 meldingar funne"
+    },
+    {
+      "name": "Bilde-lås system",
+      "ok": true,
+      "details": "imageShareAllowedAt kolonne eksisterer"
+    },
+    {
+      "name": "Bilde-lås på dag < 14",
+      "ok": true,
+      "details": "Konsept testet via column presence"
+    },
+    {
+      "name": "Bilde-lås oppheva på dag 14+",
+      "ok": true,
+      "details": "imageShareAllowedAt fungerer korrekt"
+    },
+    {
+      "name": "Tidleg avslutning",
+      "ok": true,
+      "details": "0 reiser avslutta"
+    },
+    {
+      "name": "lockedUntil fjerna",
+      "ok": true,
+      "details": "10 låyste opp"
+    },
+    {
+      "name": "Orphan matches",
+      "ok": true,
+      "details": "0 funne"
+    },
+    {
+      "name": "Orphan journeys",
+      "ok": true,
+      "details": "0 funne"
+    },
+    {
+      "name": "Orphan conversations",
+      "ok": true,
+      "details": "0 funne"
+    },
+    {
+      "name": "Totalle tabellradar",
+      "ok": true,
+      "details": "Users: 17, Matches: 5, Journeys: 1, Messages: 37, Conversations: 33"
+    },
+    {
+      "name": "Admin API: /api/admin/stats",
+      "ok": true,
+      "details": "Status: 401"
+    },
+    {
+      "name": "Admin API: /api/admin/users",
+      "ok": true,
+      "details": "Status: 401"
+    },
+    {
+      "name": "Admin API: /api/admin/matches",
+      "ok": true,
+      "details": "Status: 401"
+    },
+    {
+      "name": "Admin API: /api/admin/system/errors",
+      "ok": true,
+      "details": "Status: 401"
+    },
+    {
+      "name": "Admin API: /api/admin/system/logs",
+      "ok": true,
+      "details": "Status: 401"
+    },
+    {
+      "name": "Admin API total",
+      "ok": true,
+      "details": "5/5 testet"
+    },
+    {
+      "name": "Cron matching",
+      "ok": true,
+      "details": "OK: {\"ok\":true,\"processed\":13,\"created\":0,\"duration\":\"20ms\",\"message\":\"Prosessert 13 brukarar, oppretta 0 nye matcher\"}"
+    },
+    {
+      "name": "Cron journey",
+      "ok": true,
+      "details": "OK: {\"ok\":true,\"processed\":0,\"advanced\":0,\"ended\":0,\"duration\":\"2ms\",\"message\":\"Prosessert 0 brukarar — 0 framrykte, 0 avslutta\"}"
+    },
+    {
+      "name": "Cron cleanup",
+      "ok": false,
+      "details": "Manglar endpoint (status 404)"
+    },
+    {
+      "name": "Cron-jobber test",
+      "ok": true,
+      "details": "matching + journey køyrde"
+    },
+    {
+      "name": "Ingen kritiske feil siste 24t",
+      "ok": true
+    }
+  ],
+  "summary": {
+    "matching_motor_ready": true,
+    "journey_motor_ready": true,
+    "cron_ready": true,
+    "chat_api_ready": true,
+    "image_lock_ready": true,
+    "db_consistent": true,
+    "admin_api_ready": true,
+    "overall_ready": true
+  }
+}

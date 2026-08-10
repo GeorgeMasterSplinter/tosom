@@ -3,7 +3,7 @@ import { requireAdmin } from '@/lib/admin/requireAuth'
 import type { AuthenticatedUser } from '@/lib/auth/rbac'
 
 export async function freezeConversation(conversationId: string, adminId: string): Promise<void> {
-  await requireAdmin({ id: adminId, role: 'admin' } as AuthenticatedUser)
+  await requireAdmin({ id: adminId, role: 'ADMIN' as const } as AuthenticatedUser)
   
   await prisma.conversation.update({
     where: { id: conversationId },
@@ -15,7 +15,7 @@ export async function freezeConversation(conversationId: string, adminId: string
 }
 
 export async function unfreezeConversation(conversationId: string, adminId: string): Promise<void> {
-  await requireAdmin({ id: adminId, role: 'admin' } as AuthenticatedUser)
+  await requireAdmin({ id: adminId, role: 'ADMIN' as const } as AuthenticatedUser)
   
   await prisma.conversation.update({
     where: { id: conversationId },

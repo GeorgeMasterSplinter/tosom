@@ -1,14 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-/**
- * ToSom — Admin Session API
- * 
- * GET /api/admin/session
- * Sjekkar om admin_token-cookie er gyldig.
- */
+import { verifyAdminCookie } from '@/lib/auth/admin-jwt';
 
 export async function GET(req: NextRequest) {
-  const hasToken = req.cookies.get('admin_token')?.value === 'valid';
+  const payload = verifyAdminCookie(req);
 
-  return NextResponse.json({ authenticated: hasToken });
+  return NextResponse.json({ authenticated: !!payload });
 }

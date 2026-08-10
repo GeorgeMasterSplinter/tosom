@@ -3,8 +3,8 @@
 /**
  * ToSom — Admin Chat (metadata) 💬
  * 
- * Oversikt over alle samtal — metadata berre.
- * Ingen innsyn i meldingsinnhald eller bilder.
+ * Oversikt over alle samtaler — metadata kun.
+ * Ingen innsyn i meldingsinnhold eller bilder.
  * Design: ToSom Blue + Nordic Gold + Glassmorphism.
  * Bokmål. Premium. Ro. Moden.
  */
@@ -30,12 +30,12 @@ function StatusBadge({ status, color }: { status: string; color: string }) {
   );
 }
 
-/* ─── ChatRow — éin rad i tabellen 📋 */
+/* ─── ChatRow — én rad i tabellen 📋 */
 
 function ChatRow({ chat }: { chat: typeof mockChats[number] }) {
   const statusColors: Record<string, string> = {
     'Aktiv': '#4ADE80',
-    'Frosen': '#FF4D4D',
+    'Frosset': '#FF4D4D',
     'Ferdig': '#8B5CF6',
   };
 
@@ -81,14 +81,14 @@ function ChatRow({ chat }: { chat: typeof mockChats[number] }) {
         </div>
       </td>
 
-      {/* Meldingar */}
+      {/* Meldinger */}
       <td className="py-3 px-4">
         <span className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>
           {chat.messages.toLocaleString()}
         </span>
       </td>
 
-      {/* Bilete */}
+      {/* Bilder */}
       <td className="py-3 px-4 text-center">
         <span className="text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>
           {chat.images}
@@ -121,11 +121,11 @@ function ChatRow({ chat }: { chat: typeof mockChats[number] }) {
         {chat.frozen ? (
           <span className="text-sm" title="Samtale frosset">❄️</span>
         ) : (
-          <span className="text-sm" title="Samtal aktiv">☐</span>
+          <span className="text-sm" title="Samtale aktiv">☐</span>
         )}
       </td>
 
-      {/* Starta */}
+      {/* Startet */}
       <td className="py-3 px-4">
         <span className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
           {chat.startDate}
@@ -154,7 +154,7 @@ function ChatRow({ chat }: { chat: typeof mockChats[number] }) {
               border: '1px solid rgba(212,175,55,0.2)',
             }}
           >
-            Profilar
+            Profiler
           </Link>
         </div>
       </td>
@@ -162,7 +162,7 @@ function ChatRow({ chat }: { chat: typeof mockChats[number] }) {
   );
 }
 
-/* ─── Mock Data (skal koplast til API) — berre for demo/utvikling ✨ */
+/* ─── Mock Data (skal kobles til API) — kun for demo/utvikling ✨ */
 
 const mockChats = [
   { id: 1, userA: 'Ane Bjørnstad', userB: 'Magnus Solheim', messages: 142, images: 3, lastMessage: '19:42 i dag', flagged: 0, frozen: false, startDate: '19. jul' },
@@ -177,7 +177,7 @@ const mockChats = [
   { id: 10, userA: 'Julie Nilsen', userB: 'Magnus Berg', messages: 178, images: 4, lastMessage: 'I dag', flagged: 0, frozen: false, startDate: '13. jul' },
 ];
 
-/* ─── Hovudkomponent — Chat Page 💬 */
+/* ─── Hovedkomponent — Chat Page 💬 */
 
 export default function AdminChatPage() {
   const [search, setSearch] = useState('');
@@ -186,7 +186,7 @@ export default function AdminChatPage() {
   const [page, setPage] = useState(1);
   const limit = 50;
 
-  // Filtrer samtal
+  // Filtrer samtaler
   const filtered = mockChats.filter((c) => {
     if (search && !c.userA.toLowerCase().includes(search.toLowerCase()) && !c.userB.toLowerCase().includes(search.toLowerCase())) {
       return false;
@@ -201,7 +201,7 @@ export default function AdminChatPage() {
   const totalPages = Math.ceil(filtered.length / limit);
   const paginated = filtered.slice((page - 1) * limit, page * limit);
 
-  // Statistikkar
+  // Statistikk
   const totalChats = mockChats.length;
   const activeChats = mockChats.filter(c => !c.frozen).length;
   const flaggedChats = mockChats.filter(c => c.flagged > 0).length;
@@ -217,43 +217,43 @@ export default function AdminChatPage() {
           💬 Chat (metadata)
         </h1>
         <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
-          Oversikt over alle samtal — metadata berre. Ingen innsyn i innhald eller bilder.
+          Oversikt over alle samtaler — metadata kun. Ingen innsyn i innhold eller bilder.
         </p>
       </div>
 
-      {/* Tryggleik-banner */}
+      {/* Trygghetsbanner */}
       <div
         className="rounded-xl px-4 py-3 flex items-center gap-3"
         style={{ background: 'rgba(139,92,246,0.08)', border: '1px solid rgba(139,92,246,0.2)' }}
       >
         <span className="text-sm">🛡️</span>
         <p className="text-xs flex-1" style={{ color: 'rgba(255,255,255,0.6)' }}>
-          Admin ser berre metadata — aldri meldingar eller bilder. Privatlivet til brukarane er trygt.
+          Admin ser bare metadata — aldri meldinger eller bilder. Privatlivet til brukerne er trygt.
         </p>
       </div>
 
-      {/* Statistikkar */}
+      {/* Statistikk */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div
           className="rounded-xl p-4"
           style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
         >
           <div className="text-2xl font-bold" style={{ color: '#D4AF37' }}>{totalChats}</div>
-          <div className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>Totale samtal</div>
+          <div className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>Totale samtaler</div>
         </div>
         <div
           className="rounded-xl p-4"
           style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
         >
           <div className="text-2xl font-bold" style={{ color: '#4ADE80' }}>{activeChats}</div>
-          <div className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>Aktive samtal</div>
+          <div className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>Aktive samtaler</div>
         </div>
         <div
           className="rounded-xl p-4"
           style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
         >
           <div className="text-2xl font-bold" style={{ color: '#FF4D4D' }}>{flaggedChats}</div>
-          <div className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>Flagga samtal</div>
+          <div className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>Flagga samtaler</div>
         </div>
       </div>
 
@@ -297,9 +297,9 @@ export default function AdminChatPage() {
             color: 'white',
           }}
         >
-          <option value="alle" style={{ background: '#0A1A2A' }}>Alle statusar</option>
+          <option value="alle" style={{ background: '#0A1A2A' }}>Alle statuser</option>
           <option value="aktiv" style={{ background: '#0A1A2A' }}>☐ Aktiv</option>
-          <option value="frozen" style={{ background: '#0A1A2A' }}>❄️ Frosen</option>
+          <option value="frozen" style={{ background: '#0A1A2A' }}>❄️ Frosset</option>
         </select>
 
         {/* Flagget-filter */}
@@ -315,10 +315,10 @@ export default function AdminChatPage() {
         >
           <option value="alle" style={{ background: '#0A1A2A' }}>Alle flagga</option>
           <option value="yes" style={{ background: '#0A1A2A' }}>🚩 Flagget</option>
-          <option value="no" style={{ background: '#0A1A2A' }}>✅ Ikkje flagget</option>
+          <option value="no" style={{ background: '#0A1A2A' }}>✅ Ikke flagget</option>
         </select>
 
-        {/* Resultat-telj */}
+        {/* Resultat-teller */}
         <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
           {filtered.length} resultat
         </span>
@@ -337,12 +337,12 @@ export default function AdminChatPage() {
             <thead>
               <tr style={{ background: 'rgba(255,255,255,0.02)' }}>
                 <th className="py-3 px-4 text-left text-xs font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>Par</th>
-                <th className="py-3 px-4 text-left text-xs font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>Meldingar</th>
-                <th className="py-3 px-4 text-left text-xs font-medium w-12 text-center" style={{ color: 'rgba(255,255,255,0.35)' }}>Bilete</th>
+                <th className="py-3 px-4 text-left text-xs font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>Meldinger</th>
+                <th className="py-3 px-4 text-left text-xs font-medium w-12 text-center" style={{ color: 'rgba(255,255,255,0.35)' }}>Bilde</th>
                 <th className="py-3 px-4 text-left text-xs font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>Siste tid</th>
                 <th className="py-3 px-4 text-left text-xs font-medium w-12 text-center" style={{ color: 'rgba(255,255,255,0.35)' }}>🚩</th>
                 <th className="py-3 px-4 text-left text-xs font-medium w-12 text-center" style={{ color: 'rgba(255,255,255,0.35)' }}>❄️</th>
-                <th className="py-3 px-4 text-left text-xs font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>Starta</th>
+                <th className="py-3 px-4 text-left text-xs font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>Startet</th>
                 <th className="py-3 px-4 text-left text-xs font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>Handling</th>
               </tr>
             </thead>
@@ -358,7 +358,7 @@ export default function AdminChatPage() {
         {filtered.length === 0 && (
           <div className="py-12 text-center">
             <p className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>
-              Ingen samtal funne med valde filter
+              Ingen samtaler funnet med valgte filter
             </p>
           </div>
         )}

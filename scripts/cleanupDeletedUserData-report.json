@@ -1,0 +1,27 @@
+{
+  "cleanedAt": "2026-08-03T20:10:58.242Z",
+  "deletedUsers": [
+    "testuser-a@tosom.no",
+    "testuser-b@tosom.no",
+    "test2@tosom.no",
+    "test3@tosom.no",
+    "test999@tosom.no",
+    "test@tosom.no",
+    "test1@tosom.no",
+    "test-a@tosom.com",
+    "test-b@tosom.com"
+  ],
+  "conversationIdsCleaned": 33,
+  "matchIdsCleaned": 0,
+  "finalTotals": {
+    "totalUsers": 11,
+    "deletedUsers": 9,
+    "activeUsers": 2,
+    "profiles": 0,
+    "journeys": 0,
+    "matches": 0,
+    "conversations": 0,
+    "messages": 0,
+    "notifications": 0
+  }
+}

@@ -14,8 +14,9 @@ import { findBestResonance } from '@/lib/matching/findBestResonance';
 export async function GET(req: NextRequest) {
   const startedAt = Date.now();
   
-  // Valider cron-secret
-  const secret = req.nextUrl.searchParams.get('secret');
+  // Valider cron-secret (query param eller Authorization header)
+  const secret = req.nextUrl.searchParams.get('secret') 
+    || req.headers.get('authorization')?.replace('Bearer ', '');
   if (secret !== process.env.CRON_SECRET) {
     return NextResponse.json({ error: 'Ugyldig secret' }, { status: 401 });
   }
@@ -31,13 +32,25 @@ export async function GET(req: NextRequest) {
         deepProfileComplete: true,
         bannedAt: null,
         deletedAt: null,
-        // Ingen aktiv match
-        matches: {
-          none: {
-            status: 'active',
-            expiresAt: { gte: new Date() },
+        // Ingen aktiv match — bruk begge relasjonane
+        OR: [
+          {
+            matchesA: {
+              none: {
+                status: 'active',
+                expiresAt: { gte: new Date() },
+              },
+            },
           },
-        },
+          {
+            matchesB: {
+              none: {
+                status: 'active',
+                expiresAt: { gte: new Date() },
+              },
+            },
+          },
+        ],
       },
       select: { id: true },
     });
@@ -57,7 +70,7 @@ export async function GET(req: NextRequest) {
         }
 
         // Opprett match med full resonans-score frå ResonanceResult
-        await prisma.match.create({
+        const newMatch = await prisma.match.create({
           data: {
             userAId: user.id,
             userBId: result.candidateId,
@@ -85,6 +98,32 @@ export async function GET(req: NextRequest) {
             status: 'active',
           },
         });
+
+        // Opprett conversation for matchen
+        await prisma.conversation.create({
+          data: {
+            userAId: user.id,
+            userBId: result.candidateId,
+            matchId: newMatch.id,
+          },
+        }).catch((err) => {
+          console.warn(`[cron] Kunne ikke opprette conversation for match ${newMatch.id}:`, err);
+        });
+
+        // Opprett journeyProgress for begge brukere (hvis den ikke finnes)
+        for (const userId of [user.id, result.candidateId]) {
+          await prisma.journeyProgress.upsert({
+            where: { userId },
+            create: {
+              userId,
+              phase: 'EARLY',
+              day: 1,
+            },
+            update: {}, // Oppdater ikke hvis den allerede finnes
+          }).catch((err) => {
+            console.warn(`[cron] Kunne ikke opprette journeyProgress for ${userId}:`, err);
+          });
+        }
 
         // Oppdater lastMatchAt (for 24t-regel)
         await prisma.user.update({

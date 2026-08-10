@@ -6,8 +6,14 @@
  */
 
 import { prisma } from "@/lib/prisma";
-import { calculateResonance, ResonanceResult } from "./resonanceScore";
-import { ResonanceLevel } from "@prisma/client";
+import { unifiedScore, UnifiedResult, MatchLevel } from "./unifiedScorer"; // EINTILT SCORING (Punkt 4)
+
+/** ResonanceResult-type for backwards-kompatibilitet */
+interface ResonanceResult {
+  resonanceScore: number;
+  breakdown: UnifiedResult['breakdown'];
+  resonanceLevel: MatchLevel;
+}
 
 export interface FindBestResonanceOptions {
   userId: string;
@@ -15,7 +21,7 @@ export interface FindBestResonanceOptions {
 }
 
 export interface BestResonanceMatch {
-  match: ResonanceResult;
+  match: ResonanceResult; // Bruker lokal interface (se over) for backwards-kompatibilitet
   candidate: {
     id: string;
     email: string;
@@ -210,12 +216,16 @@ export async function findBestResonance(
     const profileA = buildProfileObject(user.profile);
     const profileB = buildProfileObject(candidate.profile);
 
-    const resonance = calculateResonance(profileA, profileB);
+    const score = unifiedScore(profileA, profileB);
 
-    if (resonance.resonanceScore >= minResonance) {
+    if (score.score >= minResonance) {
       candidateResonance.push({
         candidateId: candidate.id,
-        resonance,
+        resonance: {
+          resonanceScore: score.score,
+          breakdown: score.breakdown,
+          resonanceLevel: score.level,
+        },
       });
     }
   }

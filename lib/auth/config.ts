@@ -3,11 +3,13 @@
  *
  * Magic Link auth with Prisma adapter + Email provider.
  * Full v5 syntax. No deprecated fields.
+ *
+ * SIKKERHET: CredentialsProvider er FJERNET fra hovedkonfig.
+ * Dev-login håndteres via /api/dev-login/ med IP-whitelist og miljø-sikring.
  */
 
 import NextAuth from "next-auth"
 import EmailProvider from "next-auth/providers/email"
-import CredentialsProvider from "next-auth/providers/credentials"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { prisma } from "@/lib/prisma"
 import { defaultRole } from "@/lib/auth/roles"
@@ -32,22 +34,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const host = provider.server.host
         console.log(`[ToSom Magic Link] ${identifier} → https://${host}${url}`)
         // We redirect to our premium login page — no default Magic Link UI is rendered
-      },
-    }),
-
-    // Dev-only credentials login
-    CredentialsProvider({
-      id: "credentials",
-      name: "DevLogin",
-      credentials: {},
-      async authorize() {
-        // Dev bruker ID som matcher fake-match
-        const devUserId = process.env.DEV_USER_ID || "1";
-        return {
-          id: devUserId,
-          email: "dev@tosom.local",
-          name: "Testbruker",
-        }
       },
     }),
   ],

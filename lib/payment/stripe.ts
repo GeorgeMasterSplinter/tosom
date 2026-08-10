@@ -1,12 +1,12 @@
 /**
- * ToSom — Stripe Payment Integration
+ * @deprecated (V2) Stripe er fjernet — bruker kun Vipps for betalinger.
  *
- * Gir betalingssystem med Stripe for premium-abonnement.
- * Målt for: éin match per 24t → premium gir fleire matchar + ekstra funksjonar.
+ * Denne filen beholdes midlertidig for bakover-kompatibilitet.
+ * Ny betaling: Vipps direkte (349 NOK per periode).
+ * Se docs/tosom-concept-v2-skisse.md for detaljer.
  */
 
 import 'server-only'
-
 import Stripe from 'stripe'
 
 // ─── Konfigurasjon ───

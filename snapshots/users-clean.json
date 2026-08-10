@@ -1,0 +1,50 @@
+{
+  "exportedAt": "2026-08-03T20:25:08.290Z",
+  "totalUsers": 4,
+  "description": "Kun tillatte aktive brukere",
+  "allowedUsers": [
+    "testA@tosom.dev",
+    "testB@tosom.dev",
+    "admin@tosom.dev",
+    "bulk@tosom.com"
+  ],
+  "userList": [
+    {
+      "email": "bulk@tosom.com",
+      "id": "test-bulk-001",
+      "name": "Bulk Test",
+      "role": "USER",
+      "verified": false,
+      "onboardingComplete": true,
+      "deepProfileComplete": true
+    },
+    {
+      "email": "testA@tosom.dev",
+      "id": "cmsdnzwux0000gjw5ksam56hu",
+      "name": "Test Bruker A",
+      "role": "USER",
+      "verified": true,
+      "onboardingComplete": true,
+      "deepProfileComplete": true
+    },
+    {
+      "email": "testB@tosom.dev",
+      "id": "cmsdo0aeg0003in10e2jxz1ho",
+      "name": "Test Bruker B",
+      "role": "USER",
+      "verified": true,
+      "onboardingComplete": true,
+      "deepProfileComplete": true
+    },
+    {
+      "email": "admin@tosom.dev",
+      "id": "cmsdo0aek0006in10bgm3wo0d",
+      "name": "Admin Bruker",
+      "role": "ADMIN",
+      "verified": true,
+      "onboardingComplete": true,
+      "deepProfileComplete": true
+    }
+  ],
+  "status": "CLEAN ✓"
+}

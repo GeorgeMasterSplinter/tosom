@@ -147,30 +147,39 @@ export default function HvorforPage() {
       <div className="relative z-10">
 
         {/* ===== HERO ===== */}
-        <ToSomSection
-          spotlight="blue"
-          className="px-6 text-center space-y-6"
-        >
-          <h1
+        <section className="px-6 py-16 md:py-24 text-center">
+          <div
+            className="mx-auto max-w-[780px] rounded-[28px] p-10 md:p-14 space-y-6"
             style={{
-              ...typographyToStyle('hero'),
-              color: color.text.primary,
+              background: 'rgba(255,255,255,0.045)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              boxShadow: '0 12px 40px rgba(0,0,0,0.20), 0 0 24px rgba(212,175,55,0.05)',
             }}
           >
-            Hvorfor ToSom?
-          </h1>
+            <h1
+              style={{
+                ...typographyToStyle('hero'),
+                color: 'rgba(255,255,255,0.92)',
+              }}
+            >
+              Hvorfor ToSom?
+            </h1>
 
-          <p
-            className="max-w-2xl mx-auto"
-            style={{
-              ...typographyToStyle('body-lg'),
-              color: color.text.secondary,
-              lineHeight: '1.8',
-            }}
-          >
-            Fordi mennesker er ikke skapt for å gå gjennom livet alene. Ikke nødvendigvis for å være i et forhold hele tiden — men for å ha muligheten til å møte noen som ser dem, forstår dem og vil dem vel.
-          </p>
-        </ToSomSection>
+            <p
+              className="max-w-2xl mx-auto"
+              style={{
+                ...typographyToStyle('body-lg'),
+                color: 'rgba(255,255,255,0.88)',
+                lineHeight: '1.7',
+                letterSpacing: '0.25px',
+              }}
+            >
+              Fordi mennesker er ikke skapt for å gå gjennom livet alene. Ikke nødvendigvis for å være i et forhold hele tiden — men for å ha muligheten til å møte noen som ser dem, forstår dem og vil dem vel.
+            </p>
+          </div>
+        </section>
 
         {/* ===== KJERNEVERDIER ===== */}
         <ToSomSection
@@ -223,17 +232,22 @@ export default function HvorforPage() {
           </div>
         </ToSomSection>
 
-        {/* ===== KVADOSOMHET BETYR ===== */}
-        <ToSomSection
-          spotlight="soft"
-          className="px-6"
-        >
-          <div className="mx-auto max-w-3xl space-y-8">
+        {/* ===== TOSOMHET BETYR ===== */}
+        <section className="px-6 py-16 md:py-24 text-center">
+          <div
+            className="mx-auto max-w-[780px] rounded-[28px] p-10 md:p-14 space-y-6"
+            style={{
+              background: 'rgba(255,255,255,0.045)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              boxShadow: '0 12px 40px rgba(0,0,0,0.20), 0 0 24px rgba(212,175,55,0.05)',
+            }}
+          >
             <h2
               style={{
                 ...typographyToStyle('heading-lg'),
-                color: color.text.primary,
-                textAlign: 'center',
+                color: 'rgba(255,255,255,0.92)',
               }}
             >
               Hva tosomhet betyr
@@ -242,8 +256,9 @@ export default function HvorforPage() {
             <p
               style={{
                 ...typographyToStyle('body-lg'),
-                color: color.text.secondary,
-                lineHeight: '1.8',
+                color: 'rgba(255,255,255,0.88)',
+                lineHeight: '1.7',
+                letterSpacing: '0.25px',
               }}
             >
               Tosomhet handler ikke bare om romantikk. Det handler om modenhet, utvikling, trygghet og tilstedeværelse.
@@ -252,8 +267,9 @@ export default function HvorforPage() {
             <p
               style={{
                 ...typographyToStyle('body-lg'),
-                color: color.text.secondary,
-                lineHeight: '1.8',
+                color: 'rgba(255,255,255,0.88)',
+                lineHeight: '1.7',
+                letterSpacing: '0.25px',
               }}
             >
               Det handler om å dele hverdagen med noen, å vokse sammen, å ha en person som lytter, og å slippe å bære alt alene.
@@ -262,8 +278,8 @@ export default function HvorforPage() {
             <p
               style={{
                 ...typographyToStyle('body-lg'),
-                color: color.brand.gold,
-                lineHeight: '1.8',
+                color: 'rgba(212,175,55,0.9)',
+                lineHeight: '1.7',
                 fontStyle: 'italic',
               }}
             >
@@ -273,14 +289,15 @@ export default function HvorforPage() {
             <p
               style={{
                 ...typographyToStyle('body-lg'),
-                color: color.text.secondary,
-                lineHeight: '1.8',
+                color: 'rgba(255,255,255,0.88)',
+                lineHeight: '1.7',
+                letterSpacing: '0.25px',
               }}
             >
               Det er ikke perfekt. Det er ikke alltid lett. Men det er ekte. Og det er verdt det.
             </p>
           </div>
-        </ToSomSection>
+        </section>
 
         {/* ===== HVORFOR TO SOM FINNES ===== */}
         <ToSomSection
@@ -472,15 +489,21 @@ export default function HvorforPage() {
         </ToSomSection>
 
         {/* ===== NOE MER ===== */}
-        <ToSomSection
-          spotlight="soft"
-          className="px-6"
-        >
-          <div className="mx-auto max-w-3xl space-y-8 text-center">
+        <section className="px-6 py-16 md:py-24 text-center">
+          <div
+            className="mx-auto max-w-[780px] rounded-[28px] p-10 md:p-14 space-y-6"
+            style={{
+              background: 'rgba(255,255,255,0.045)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              boxShadow: '0 12px 40px rgba(0,0,0,0.20), 0 0 24px rgba(212,175,55,0.05)',
+            }}
+          >
             <h2
               style={{
                 ...typographyToStyle('heading-lg'),
-                color: color.text.primary,
+                color: 'rgba(255,255,255,0.92)',
               }}
             >
               For deg som vil noe mer
@@ -489,8 +512,9 @@ export default function HvorforPage() {
             <p
               style={{
                 ...typographyToStyle('body-lg'),
-                color: color.text.secondary,
-                lineHeight: '1.8',
+                color: 'rgba(255,255,255,0.88)',
+                lineHeight: '1.7',
+                letterSpacing: '0.25px',
               }}
             >
               Noe rolig.
@@ -498,8 +522,9 @@ export default function HvorforPage() {
             <p
               style={{
                 ...typographyToStyle('body-lg'),
-                color: color.text.secondary,
-                lineHeight: '1.8',
+                color: 'rgba(255,255,255,0.88)',
+                lineHeight: '1.7',
+                letterSpacing: '0.25px',
               }}
             >
               Noe ekte.
@@ -507,8 +532,9 @@ export default function HvorforPage() {
             <p
               style={{
                 ...typographyToStyle('body-lg'),
-                color: color.text.secondary,
-                lineHeight: '1.8',
+                color: 'rgba(255,255,255,0.88)',
+                lineHeight: '1.7',
+                letterSpacing: '0.25px',
               }}
             >
               Noe som kan vokse.
@@ -516,8 +542,9 @@ export default function HvorforPage() {
             <p
               style={{
                 ...typographyToStyle('body-lg'),
-                color: color.text.secondary,
-                lineHeight: '1.8',
+                color: 'rgba(255,255,255,0.88)',
+                lineHeight: '1.7',
+                letterSpacing: '0.25px',
               }}
             >
               Noe som kan bli til noe.
@@ -526,7 +553,7 @@ export default function HvorforPage() {
             <p
               style={{
                 ...typographyToStyle('body-lg'),
-                color: color.brand.gold,
+                color: 'rgba(212,175,55,0.9)',
                 fontWeight: 600,
                 fontStyle: 'italic',
               }}
@@ -534,7 +561,7 @@ export default function HvorforPage() {
               ToSom er ikke en app. Det er en prosess. En reise. Et rom hvor to mennesker kan møtes på ordentlig.
             </p>
           </div>
-        </ToSomSection>
+        </section>
 
         {/* ===== CTA ===== */}
         <ToSomSection

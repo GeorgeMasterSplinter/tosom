@@ -3,23 +3,14 @@
  * ToSom — BliKjentPanel (Premium Nordic Gold 2026) 🟡⭐
  * Premium panel for guidede spørsmål med glassmorphism-design.
  * 
- * Design:
- * - Fullskjerm glass-panel med backdrop-blur-xl
- * - Animer slide-down (300ms ease-out)
- * - Kategori-knappar med glow-effekt
- * - Spørsmåls-kort med djupne-indikatorar
- * - Premium "Send til partner"-knapp
- * 
- * Struktur:
- * 1. Kategori-visning (dersom ingen kategori er vald)
- * 2. Spørsmålsliste (dersom ein kategori er vald)
- * 3. "Send til partner"-flow (dersom eit spørsmål er vald)
+ * Pakke 6.5 — Warm Flow Animations (Steg 5): FadeIn wrapper
  */
 
 "use client";
 
 import { useState, useEffect } from 'react';
 import { useChat } from '@/app/chat/context/ChatContext';
+import { FadeIn } from '@/components/animations/FadeIn';
 
 /* ═══════════════════════════════════════
    THEME TOKENS — PREMIUM GLASS
@@ -142,7 +133,6 @@ export function BliKjentPanel({ onClose }: BliKjentPanelProps) {
     setSending(true);
     try {
       await sendMessage(selectedQuestion.content, 'text');
-      // Reset og lukk med forsinkelse for animasjon
       setTimeout(() => onClose(), 200);
     } catch (err) {
       console.error('Feil ved sending av spørsmål:', err);
@@ -159,330 +149,189 @@ export function BliKjentPanel({ onClose }: BliKjentPanelProps) {
 
   const handleClose = () => {
     setPanelOpen(false);
-    setTimeout(onClose, 300); // Vent på animasjon
+    setTimeout(onClose, 300);
   };
 
   return (
-    <div
-      className="overflow-hidden transition-all duration-300 ease-out"
-      style={{
-        maxHeight: panelOpen ? '480px' : '0px',
-        opacity: panelOpen ? 1 : 0,
-        background: `linear-gradient(180deg, ${G.glassBgDark} 0%, rgba(7,13,20,0.95) 100%)`,
-        borderTop: `1px solid ${G.glassBorderGold}`,
-        borderBottom: `1px solid ${G.glassBorderGold}`,
-        boxShadow: `0 8px 32px rgba(0,0,0,0.3), 0 0 16px ${G.goldSoft}`,
-      }}
-    >
-      {/* ═══ HEADER — Med backdrop-blur ═══ */}
-      <div 
-        className="flex items-center justify-between px-5 py-3.5 sticky top-0 z-10"
-        style={{ 
-          borderBottom: `1px solid ${G.glassBorder}`,
-          background: 'rgba(11,21,32,0.7)',
-          backdropFilter: 'blur(16px)',
+    <FadeIn variant="scaleIn" scrollTrigger>
+      <div
+        className="overflow-hidden transition-all duration-300 ease-out"
+        style={{
+          maxHeight: panelOpen ? '480px' : '0px',
+          opacity: panelOpen ? 1 : 0,
+          background: `linear-gradient(180deg, ${G.glassBgDark} 0%, rgba(7,13,20,0.95) 100%)`,
+          borderTop: `1px solid ${G.glassBorderGold}`,
+          borderBottom: `1px solid ${G.glassBorderGold}`,
+          boxShadow: `0 8px 32px rgba(0,0,0,0.3), 0 0 16px ${G.goldSoft}`,
         }}
       >
-        <div className="flex items-center gap-2">
-          {selectedCategory && (
-            <button
-              onClick={handleBack}
-              className="text-sm font-medium transition-all duration-200 hover:brightness-125 active:scale-95"
-              style={{ color: G.gold }}
-            >
-              ← Tilbake
-            </button>
-          )}
-          <div className="h-4 w-px" style={{ background: G.glassBorder }} />
-          <h3 
-            className="text-sm font-semibold tracking-wide"
-            style={{ color: G.textPrimary }}
-          >
-            {selectedCategory ? (
-              <span>
-                <span style={{ color: selectedCategory.color }}>{selectedCategory.icon}</span>
-                {' '}— {selectedCategory.name}
-              </span>
-            ) : 'Bli kjent med partneren'}
-          </h3>
-        </div>
-        <button 
-          onClick={handleClose}
-          className="w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 hover:brightness-125 active:scale-90"
-          style={{ color: G.textMuted, background: G.glassBg }}
+        {/* ═══ HEADER === */}
+        <div 
+          className="flex items-center justify-between px-5 py-3.5 sticky top-0 z-10"
+          style={{ 
+            borderBottom: `1px solid ${G.glassBorder}`,
+            background: 'rgba(11,21,32,0.7)',
+            backdropFilter: 'blur(16px)',
+          }}
         >
-          ✕
-        </button>
-      </div>
-
-      {/* ═══ BODY — Scrollbart ═══ */}
-      <div className="overflow-y-auto max-h-[400px] p-5">
-        
-        {/* ═══ KATEGORIAR — Grid-layout ═══ */}
-        {!selectedCategory && (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {categories.map((cat, index) => (
+          <div className="flex items-center gap-2">
+            {selectedCategory && (
               <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat)}
-                className="group flex flex-col items-center gap-3 p-5 rounded-2xl transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
-                style={{
-                  background: `linear-gradient(135deg, ${cat.color}08, ${cat.color}15)`,
-                  border: `1px solid ${cat.color}25`,
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                }}
+                onClick={handleBack}
+                className="text-sm font-medium transition-all duration-200 hover:brightness-125 active:scale-95"
+                style={{ color: G.gold }}
               >
-                {/* Kategori-ikon med glow */}
-                <div 
-                  className="text-3xl transition-all duration-300 group-hover:scale-110"
-                  style={{ 
-                    color: cat.color,
-                    filter: `drop-shadow(0 0 8px ${cat.color}40)`,
-                  }}
-                >
-                  {cat.icon}
-                </div>
-                
-                {/* Kategori-namn */}
-                <div className="text-center">
-                  <p 
-                    className="text-xs font-semibold tracking-wide"
-                    style={{ color: G.textPrimary }}
-                  >
-                    {cat.name}
-                  </p>
-                  <p 
-                    className="text-[10px] mt-0.5 font-medium"
-                    style={{ color: G.textSecondary }}
-                  >
-                    {cat.count} spørsmål
-                  </p>
-                </div>
-                
-                {/* Hover-glow overlay */}
-                <div 
-                  className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                  style={{
-                    background: `radial-gradient(circle at 50% 0%, ${cat.color}15, transparent 70%)`,
-                  }}
-                />
+                ← Tilbake
               </button>
-            ))}
-          </div>
-        )}
-
-        {/* ═══ SPØRSMÅL — Liste med kort ═══ */}
-        {selectedCategory && (
-          <>
-            {loading ? (
-              <div className="flex flex-col items-center justify-center py-12 gap-3">
-                <div 
-                  className="w-8 h-8 rounded-full animate-spin"
-                  style={{ 
-                    border: `2px solid ${G.glassBorder}`,
-                    borderTopColor: G.gold,
-                  }}
-                />
-                <p className="text-xs font-medium" style={{ color: G.textSecondary }}>
-                  Lastar spørsmål...
-                </p>
-              </div>
-            ) : questions.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-sm font-medium" style={{ color: G.textSecondary }}>
-                  Ingen spørsmål funnen for denne kategorien.
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-2.5">
-                {questions.map((q, index) => {
-                  const depth = DEPTH[q.depthLevel] || DEPTH[1];
-                  return (
-                    <button
-                      key={q.id}
-                      onClick={() => setSelectedQuestion(q)}
-                      className={`w-full text-left p-4 rounded-xl transition-all duration-200 group ${
-                        selectedQuestion?.id === q.id ? 'scale-[1.01]' : 'hover:scale-[1.005]'
-                      }`}
-                      style={{
-                        background: selectedQuestion?.id === q.id
-                          ? `${depth.color}15`
-                          : `linear-gradient(135deg, ${G.glassBg}, ${G.glassBgHover})`,
-                        border: `1px solid ${selectedQuestion?.id === q.id ? depth.color + '40' : G.glassBorder}`,
-                        boxShadow: selectedQuestion?.id === q.id 
-                          ? `0 0 16px ${depth.color}20`
-                          : '0 2px 4px rgba(0,0,0,0.05)',
-                      }}
-                    >
-                      <div className="flex items-start gap-3">
-                        {/* Djupne-indikator — Animer prikk */}
-                        <div 
-                          className="w-2.5 h-2.5 rounded-full flex-shrink-0 mt-0.5 transition-all duration-300"
-                          style={{ 
-                            background: depth.color,
-                            boxShadow: `0 0 8px ${depth.glow}`,
-                          }}
-                        />
-                        
-                        <div className="flex-1 min-w-0">
-                          {/* Spørsmålstekst */}
-                          <p 
-                            className="text-sm leading-relaxed transition-colors duration-200"
-                            style={{ 
-                              color: selectedQuestion?.id === q.id 
-                                ? G.textPrimary 
-                                : 'rgba(255,255,255,0.75)',
-                            }}
-                          >
-                            {q.content}
-                          </p>
-                          
-                          {/* Djupne-etikett */}
-                          <span
-                            className="mt-2 inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full transition-all duration-200"
-                            style={{
-                              background: depth.bg,
-                              color: depth.color,
-                              border: `1px solid ${depth.color}20`,
-                            }}
-                          >
-                            <span 
-                              className="w-1.5 h-1.5 rounded-full"
-                              style={{ background: depth.color }}
-                            />
-                            {depth.label} · Djupne {q.depthLevel}/3
-                          </span>
-                        </div>
-
-                        {/* Peik-ikon ved hover */}
-                        <span 
-                          className="text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                          style={{ color: G.textMuted }}
-                        >
-                          →
-                        </span>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
             )}
-          </>
-        )}
-
-        {/* ═══ SPØRSMÅL VALGT — Send-bekreftelse ═══ */}
-        {selectedQuestion && !loading && (
-          <div 
-            className="mt-5 p-5 rounded-2xl transition-all duration-300"
-            style={{ 
-              background: `linear-gradient(135deg, ${G.goldSoft}, rgba(212,175,55,0.12))`,
-              border: `1px solid ${G.goldMuted}`,
-              boxShadow: `0 4px 20px rgba(212,175,55,0.1), inset 0 0 24px rgba(212,175,55,0.03)`,
-            }}
-          >
-            {/* Overskrift */}
-            <div className="flex items-center gap-2 mb-3">
-              <div 
-                className="w-2 h-2 rounded-full"
-                style={{ 
-                  background: G.gold,
-                  boxShadow: `0 0 8px ${G.goldMuted}`,
-                }}
-              />
-              <p 
-                className="text-xs font-semibold tracking-wide uppercase"
-                style={{ color: G.goldLight }}
-              >
-                Send til partner?
-              </p>
-            </div>
-            
-            {/* Spørsmålstekst */}
-            <p 
-              className="text-base leading-relaxed mb-4 font-medium italic"
+            <div className="h-4 w-px" style={{ background: G.glassBorder }} />
+            <h3 
+              className="text-sm font-semibold tracking-wide"
               style={{ color: G.textPrimary }}
             >
-              "{selectedQuestion.content}"
-            </p>
-            
-            {/* Djupne-indikator */}
-            <div className="flex items-center gap-2 mb-4">
-              {(DEPTH[selectedQuestion.depthLevel]) && (
-                <span 
-                  className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
-                  style={{
-                    background: (DEPTH[selectedQuestion.depthLevel]).bg,
-                    color: (DEPTH[selectedQuestion.depthLevel]).color,
-                  }}
-                >
-                  {(DEPTH[selectedQuestion.depthLevel]).label} · Djupne {selectedQuestion.depthLevel}/3
+              {selectedCategory ? (
+                <span>
+                  <span style={{ color: selectedCategory.color }}>{selectedCategory.icon}</span>
+                  {' '}— {selectedCategory.name}
                 </span>
-              )}
-            </div>
-            
-            {/* Knappar */}
-            <div className="flex gap-2.5">
-              <button
-                onClick={handleSendQuestion}
-                disabled={sending}
-                className="flex-1 px-4 py-3 rounded-xl text-xs font-bold transition-all duration-300 hover:brightness-110 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
-                style={{
-                  background: `linear-gradient(135deg, ${G.gold}, ${G.goldLight})`,
-                  color: '#0B1520',
-                  boxShadow: `0 4px 16px ${G.goldMuted}`,
-                }}
-              >
-                {sending ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <span 
-                      className="w-3.5 h-3.5 rounded-full animate-spin inline-block"
-                      style={{ 
-                        border: `2px solid rgba(11,21,32,0.3)`,
-                        borderTopColor: '#0B1520',
-                      }}
-                    />
-                    Sender...
-                  </span>
-                ) : (
-                  <span className="flex items-center justify-center gap-1.5">
-                    ✨ Send spørsmål
-                  </span>
-                )}
-              </button>
-              <button
-                onClick={() => setSelectedQuestion(null)}
-                className="px-4 py-3 rounded-xl text-xs font-medium transition-all duration-200 hover:brightness-125 active:scale-[0.98]"
-                style={{
-                  background: G.glassBg,
-                  border: `1px solid ${G.glassBorder}`,
-                  color: G.textSecondary,
-                }}
-              >
-                Avbryt
-              </button>
-            </div>
+              ) : 'Bli kjent med partneren'}
+            </h3>
           </div>
-        )}
-      </div>
+          <button 
+            onClick={handleClose}
+            className="w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 hover:brightness-125 active:scale-90"
+            style={{ color: G.textMuted, background: G.glassBg }}
+          >
+            ✕
+          </button>
+        </div>
 
-      {/* ═══ PREMIUM CSS-ANIMASJONAR ═══ */}
-      <style jsx>{`
-        /* Scrollbar-styling */
-        ::-webkit-scrollbar {
-          width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-          background: rgba(212,175,55,0.2);
-          border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-          background: rgba(212,175,55,0.35);
-        }
-      `}</style>
-    </div>
+        {/* ═══ BODY — Scrollbart === */}
+        <div className="overflow-y-auto max-h-[400px] p-5">
+          
+          {/* ═══ KATEGORIAR === */}
+          {!selectedCategory && (
+            <FadeIn variant="fadeInUp" staggerChildren={0.05}>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                {categories.map((cat) => (
+                  <button
+                    key={cat.id}
+                    onClick={() => setSelectedCategory(cat)}
+                    className="group flex flex-col items-center gap-3 p-5 rounded-2xl transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
+                    style={{
+                      background: `linear-gradient(135deg, ${cat.color}08, ${cat.color}15)`,
+                      border: `1px solid ${cat.color}25`,
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                    }}
+                  >
+                    <div 
+                      className="text-3xl transition-all duration-300 group-hover:scale-110"
+                      style={{ 
+                        color: cat.color,
+                        filter: `drop-shadow(0 0 8px ${cat.color}40)`,
+                      }}
+                    >
+                      {cat.icon}
+                    </div>
+                    <div className="text-center">
+                      <p className="text-xs font-semibold tracking-wide" style={{ color: G.textPrimary }}>{cat.name}</p>
+                      <p className="text-[10px] mt-0.5 font-medium" style={{ color: G.textSecondary }}>{cat.count} spørsmål</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </FadeIn>
+          )}
+
+          {/* ═══ SPØRSMÅL === */}
+          {selectedCategory && (
+            <>
+              {loading ? (
+                <div className="flex flex-col items-center justify-center py-12 gap-3">
+                  <div 
+                    className="w-8 h-8 rounded-full animate-spin"
+                    style={{ border: `2px solid ${G.glassBorder}`, borderTopColor: G.gold }}
+                  />
+                  <p className="text-xs font-medium" style={{ color: G.textSecondary }}>Lastar spørsmål...</p>
+                </div>
+              ) : questions.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-sm font-medium" style={{ color: G.textSecondary }}>Ingen spørsmål funnen.</p>
+                </div>
+              ) : (
+                <div className="space-y-2.5">
+                  {questions.map((q) => {
+                    const depth = DEPTH[q.depthLevel] || DEPTH[1];
+                    return (
+                      <button
+                        key={q.id}
+                        onClick={() => setSelectedQuestion(q)}
+                        className={`w-full text-left p-4 rounded-xl transition-all duration-200 group ${selectedQuestion?.id === q.id ? 'scale-[1.01]' : 'hover:scale-[1.005]'}`}
+                        style={{
+                          background: selectedQuestion?.id === q.id ? `${depth.color}15` : `linear-gradient(135deg, ${G.glassBg}, ${G.glassBgHover})`,
+                          border: `1px solid ${selectedQuestion?.id === q.id ? depth.color + '40' : G.glassBorder}`,
+                        }}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className="w-2.5 h-2.5 rounded-full flex-shrink-0 mt-0.5" style={{ background: depth.color, boxShadow: `0 0 8px ${depth.glow}` }} />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm leading-relaxed" style={{ color: selectedQuestion?.id === q.id ? G.textPrimary : 'rgba(255,255,255,0.75)' }}>{q.content}</p>
+                            <span className="mt-2 inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ background: depth.bg, color: depth.color }}>{depth.label} · Djupne {q.depthLevel}/3</span>
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </>
+          )}
+
+          {/* ═══ SPØRSMÅL VALGT === */}
+          {selectedQuestion && !loading && (
+            <FadeIn variant="fadeInUp" delay={0.1}>
+              <div 
+                className="mt-5 p-5 rounded-2xl"
+                style={{ 
+                  background: `linear-gradient(135deg, ${G.goldSoft}, rgba(212,175,55,0.12))`,
+                  border: `1px solid ${G.goldMuted}`,
+                  boxShadow: `0 4px 20px rgba(212,175,55,0.1)`,
+                }}
+              >
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-2 h-2 rounded-full" style={{ background: G.gold, boxShadow: `0 0 8px ${G.goldMuted}` }} />
+                  <p className="text-xs font-semibold tracking-wide uppercase" style={{ color: G.goldLight }}>Send til partner?</p>
+                </div>
+                <p className="text-base leading-relaxed mb-4 font-medium italic" style={{ color: G.textPrimary }}>"{selectedQuestion.content}"</p>
+                <div className="flex gap-2.5">
+                  <button
+                    onClick={handleSendQuestion}
+                    disabled={sending}
+                    className="flex-1 px-4 py-3 rounded-xl text-xs font-bold transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-50"
+                    style={{ background: `linear-gradient(135deg, ${G.gold}, ${G.goldLight})`, color: '#0B1520' }}
+                  >
+                    {sending ? 'Sender...' : '✨ Send spørsmål'}
+                  </button>
+                  <button
+                    onClick={() => setSelectedQuestion(null)}
+                    className="px-4 py-3 rounded-xl text-xs font-medium transition-all hover:brightness-125 active:scale-[0.98]"
+                    style={{ background: G.glassBg, border: `1px solid ${G.glassBorder}`, color: G.textSecondary }}
+                  >
+                    Avbryt
+                  </button>
+                </div>
+              </div>
+            </FadeIn>
+          )}
+        </div>
+
+        <style jsx>{`
+          ::-webkit-scrollbar { width: 6px; }
+          ::-webkit-scrollbar-track { background: transparent; }
+          ::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.2); border-radius: 3px; }
+        `}</style>
+      </div>
+    </FadeIn>
   );
 }
 

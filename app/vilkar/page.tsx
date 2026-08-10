@@ -125,34 +125,39 @@ function GlassCard({
 
 const sections = [
   {
+    icon: <IconAge />,
+    title: 'Alder — 23+',
+    content: 'ToSom er en plattform for voksne. Du må være minst 23 år for å opprette en konto. Vi tror at livserfaring og modenhet hjelper oss å møte hverandre med bedre åpne og ærlige.',
+  },
+  {
     icon: <IconLogin />,
-    title: 'Oppretting av konto og innlogging',
-    content: 'Du oppretter en konto med gyldig e-postadresse. Du mottar en magisk innloggingslenke. I tillegg kan du verifisere telefonnummeret ditt for økt sikkerhet. Kontoen er knyttet til din e-postadresse og eventuelle verifiserte kontaktopplysninger.',
+    title: 'Oppretting av konto',
+    content: 'Du logger inn med Vipps. Ingen passord å huske, ingen e-post å fylle ut. Trygt, raskt og norsk.',
   },
   {
     icon: <IconProfile />,
-    title: 'Profildynamikk',
-    content: 'Profilen din er privat og synlig bare for din match. Du kan redigere profilen din når som helst fra dashbordet.',
+    title: 'Profilen din',
+    content: 'Profilen din er helt privat. Den er kun synlig for den du matcher med — aldri for andre. Du kan alltid endre profilen din fra dashbordet.',
   },
   {
     icon: <IconMatch />,
-    title: 'Matching og reiseforløp',
-    content: 'Når du matcher med noen, går dere inn i en styrt 30-dagers reise. Dette forløpet inkluderer daglige refleksjoner, samtaletema og oppgaver som hjelper dere å bli kjent.',
+    title: 'Matching og reise',
+    content: 'Når dere matcher, starter en guidet 30-dagers reise sammen. Dere får daglige refleksjoner, samtaletema og oppgaver som hjelper dere å bli kjent på en trygg og meningsfull måte.',
   },
   {
     icon: <ImageIcon />,
-    title: 'Bildefdeling',
-    content: 'Bilder kan deles etter 14 dager i reise-forløpet. Før den tid bygger dere en tilknytning basert på dybde og resonans, ikke utseende.',
+    title: 'Bilder',
+    content: 'Bilder kan deles etter 14 dager i reisen. Før den tiden bygger dere en forbindelse basert på ord, tanker og sårbarhet — ikke utseende.',
   },
   {
     icon: <IconEnd />,
-    title: 'Avslutning og oppsigelse',
-    content: 'Du kan avslutte reisen tidlig eller be om sletting av konto og alle data. Kontakt oss på privat@tosom.no.',
+    title: 'Avslutning',
+    content: 'Du kan avslutte reisen når som helst, eller be om full sletting av konto og data. Ta gjerne kontakt på privat@tosom.no.',
   },
   {
     icon: <IconCopyright />,
-    title: 'Ansvar og opphavsrett',
-    content: 'Innholdet på plattformen er beskyttet av opphavsrett. Du har lov å bruke det personlig, men ikke å dele eller publisere videre.',
+    title: 'Opphavsrett',
+    content: 'Allt innhold på plattformen er skapt med tanke på trygghet og kvalitet. Det tilhører ToSom — du kan bruke det til ditt eget bruk, men ikke dele eller publisere videre uten tillatelse.',
   },
 ];
 

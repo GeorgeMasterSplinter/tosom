@@ -1,4 +1,9 @@
-// lib/matching/scorer.ts — hovedscorer-funksjoner for matching-motoren
+// lib/matching/scorer.ts — DEPRECATED (Punkt 4: Duplicate scoring konsolidering)
+// @deprecated Bruk unifiedScorer.ts i stedet. Denne fila beholdes kun for backwards-kompatibilitet.
+// Alle scoring-forespørsler skal gå via unifiedScore() i lib/matching/unifiedScorer.ts.
+//
+// ETTILT SCORING-SYSTEM: Både engine.ts (API) og findBestResonance.ts (cron) bruker nå
+// unifiedScorer.ts for konsistente resultater. Ingen duplisering, ingen inkonsistens.
 // Alle funksjoner returnerer verdier i [0, 1]
 
 import { ProfileData, SubScoreBreakdown } from "./types";

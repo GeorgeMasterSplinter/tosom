@@ -1,0 +1,32 @@
+{
+  "exportedAt": "2026-08-03T20:25:08.303Z",
+  "description": "E2E testbrukere klar for testing",
+  "users": [
+    {
+      "email": "testA@tosom.dev",
+      "id": "cmsdnzwux0000gjw5ksam56hu",
+      "role": "USER",
+      "verified": true,
+      "onboardingComplete": true,
+      "deepProfileComplete": true
+    },
+    {
+      "email": "testB@tosom.dev",
+      "id": "cmsdo0aeg0003in10e2jxz1ho",
+      "role": "USER",
+      "verified": true,
+      "onboardingComplete": true,
+      "deepProfileComplete": true
+    },
+    {
+      "email": "admin@tosom.dev",
+      "id": "cmsdo0aek0006in10bgm3wo0d",
+      "role": "ADMIN",
+      "verified": true,
+      "onboardingComplete": true,
+      "deepProfileComplete": true
+    }
+  ],
+  "profilesCreated": 3,
+  "status": "E2E READY ✓"
+}

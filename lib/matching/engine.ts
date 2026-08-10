@@ -4,7 +4,7 @@
 import { ProfileData } from "./types";
 import { MatchResult, MatchTier } from "./types";
 import { sjekkAlleDealbreakers } from "./dealbreaker";
-import { calculateTotalScore } from "./scorer";
+import { calculateTotalScore } from "./unifiedScorer"; // EINTILT SCORING (Punkt 4) — deprecated scorer.ts
 import { generateExplanation } from "./explainer";
 
 /**

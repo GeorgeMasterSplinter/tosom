@@ -1,4 +1,10 @@
 
+/**
+ * @deprecated (V2) AI-svar-forslag er fjerna — beholdes for bakover-kompatibilitet.
+ *
+ * V2-prinsipp: ToSom skal føles ekte, ikkje AI-støtta. Ingen AI-svar-forslag i chat.
+ * Se docs/tosom-concept-v2-skisse.md for detaljer.
+ */
 import { suggestOpeners, suggestReplies } from '@/lib/ai/features/messageSuggestions'
 import { requireAuth } from '@/lib/admin/requireAuth'
 import { captureError } from '@/lib/system/errors'

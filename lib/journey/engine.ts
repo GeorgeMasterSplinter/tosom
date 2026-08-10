@@ -185,9 +185,9 @@ export interface DayConfig {
 // ═══════════════════════════════════════════
 
 /** Totalt antal dagar i journey — ENKELT svar */
-export const JOURNEY_TOTAL_DAYS = 35;
+export const JOURNEY_TOTAL_DAYS = 30;
 
-/** Fase-konfigurasjon — 4 faser over 35 dagar (frå journeyPhases) */
+/** Fase-konfigurasjon — 3 faser over 30 dagar (frå journeyPhases) */
 export const PHASE_CONFIGS: Array<{
   phase: JourneyPhase;
   startDay: number;
@@ -212,21 +212,15 @@ export const PHASE_CONFIGS: Array<{
     endDay: 30,
     description: "Dypere samtaler. Kjenne etter retning og forventninger.",
   },
-  {
-    phase: JourneyPhase.CHECKIN,
-    startDay: 31,
-    endDay: 35,
-    description: "Avslutning og valg. Dere bestemmer veien videre.",
-  },
 ];
 
-/** Theme-progresjon — 5 tema over 35 dagar (frå progression.ts) */
+/** Theme-progresjon — 5 tema over 30 dagar (frå progression.ts) */
 export const THEME_RANGES: Array<{ start: number; end: number; theme: Theme }> = [
   { start: 1, end: 5, theme: "intro" },
   { start: 6, end: 12, theme: "trygghet" },
   { start: 13, end: 20, theme: "fordypning" },
-  { start: 21, end: 28, theme: "modning" },
-  { start: 29, end: 35, theme: "integrasjon" },
+  { start: 21, end: 26, theme: "modning" },
+  { start: 27, end: 30, theme: "integrasjon" },
 ];
 
 /** Phase labels for UI */
@@ -360,14 +354,8 @@ const MILESTONE_MESSAGES: Milestone[] = [
   },
   {
     day: 30,
-    title: "Dag 30 – evaluering",
-    body: "Kva har denne reisa gjort med deg? Kva vil du ta med deg vidare?",
-    level: "info",
-  },
-  {
-    day: 35,
-    title: "Dag 35 – avslutning",
-    body: "Reisen er no over. Takk for at du gav deg sjølv 35 dagar med innsikt og vekst.",
+    title: "Dag 30 – avslutning",
+    body: "Reisen er no over. Takk for at du gav deg sjølv 30 dagar med innsikt og vekst.",
     level: "warning",
   },
 ];
@@ -424,12 +412,12 @@ function buildMessages(matchState: MatchState, day: number): SystemMessage[] {
     });
   }
 
-  /* Dag 35 avslutning */
-  if (day === 35) {
+  /* Dag 30 avslutning */
+  if (day >= 30) {
     raw.push({
       event: "journey_completed" as const,
       title: "Reisen er ferdig.",
-      body: "Takk for at dere ga hverandre 35 dager.",
+      body: "Takk for at dere ga hverandre 30 dager.",
       level: "warning",
     });
   }
@@ -587,6 +575,13 @@ export function getCompletedDaysOverview(
 }
 
 // ═══════════════════════════════════════════
+/**
+ * @deprecated (V2) Resonansmåling fjerna — beholdes for bakover-kompatibilitet.
+ *
+ * V2-prinsipp: Matching er nok. Resten er kommunikasjon mellom to folk.
+ * Ingen måling av resonans under reisen. La folk finne ut av det selv.
+ * Se docs/tosom-concept-v2-skisse.md for detaljer.
+ */
 // RESONANCE MOTOR (frå resonance.ts)
 // ═══════════════════════════════════════════
 
@@ -701,6 +696,7 @@ export function getResonanceVisual(score: number): {
 }
 
 // ═══════════════════════════════════════════
+/** @deprecated (V2) Warmth-score er ein del av resonans-systemet. Fjerna. Beholdes for bakover-kompatibilitet. */
 // WARMTH MOTOR (frå warmIndicator.ts)
 // ═══════════════════════════════════════════
 
@@ -790,6 +786,7 @@ export const SILENT_MOMENT_CONFIG: SilentMomentConfig = {
   inactivityThreshold: 30000,
   displayDuration: 8000,
   minMessages: 3,
+/** @deprecated (V2) Silent moments er ein del av resonans-systemet. Fjerna. Beholdes for bakover-kompatibilitet. */
   minPhaseOrder: 3,
   cooldownMs: 300000,
 };
@@ -849,7 +846,7 @@ export function shouldTriggerSilentMoment(
 }
 
 // ═══════════════════════════════════════════
-// DAY TEXTS — 35 dagar med tema og prompts
+// DAY TEXTS — 30 dagar med tema og prompts
 // (frå components/journey/journeyEngine.ts)
 // ═══════════════════════════════════════════
 
@@ -888,13 +885,8 @@ const dayData: Record<number, {
   26: { title: "Gjeving", focus: "Hva du kan gi og hva du kan ta imot.", reflectionPrompt: "Hva er viktigst for deg i å gi og ta imot?", microInsight: "Å kunne ta imot er like viktig som å gi.", progressionHint: "Vi ser på balansen mellom gi og ta." },
   27: { title: "Balansen", focus: "Finn balansen i deg selv.", reflectionPrompt: "Hva handler balansen om for deg?", microInsight: "Balansen er ikke stillstand – det er bevegelse.", progressionHint: "I morgen nærmer vi oss slutten av modningen." },
   28: { title: "Oppsummering modning", focus: "Hva du har vært gjennom.", reflectionPrompt: "Hva har modningsdelen lært deg om deg selv?", microInsight: "Du har kommet lenger enn du tror.", progressionHint: "Nå går vi inn i integrasjonen." },
-  29: { title: "Integrasjon", focus: "Samle alt du har lært.", reflectionPrompt: "Hva tar du med deg videre fra hele reisen?", microInsight: "Integrasjon er ikke slutten – det er en overgang.", progressionHint: "I morgen ser vi tilbake." },
-  30: { title: "Tilbakeblikk", focus: "Se tilbake på reisen.", reflectionPrompt: "Hva likte du best med reisen så langt?", microInsight: "Tilbakeblikk gir klarhet – og takknemlighet.", progressionHint: "Vi ser på hva som kommer nå." },
-  31: { title: "Klart blikk", focus: "Et klart blikk på hva du trenger.", reflectionPrompt: "Hva trenger du for å kjenne deg klar til å møte noen?", microInsight: "Klarhet kommer av å være ærlig mot seg selv.", progressionHint: "I morgen handler det om å velge." },
-  32: { title: "Valg", focus: "Hvilke valg står foran deg?", reflectionPrompt: "Hvilke valg står du overfor nå?", microInsight: "Et valg er aldri endepunktet – det er en dør.", progressionHint: "Vi nærmer oss slutten." },
-  33: { title: "Mot til å møte", focus: "Møtet er rett rundt hjørnet.", reflectionPrompt: "Hvilke kjensler får du av tanken på å møte en match?", microInsight: "Å kjenne usikkerhet er et tegn på at det betyr noe.", progressionHint: "Et siste steg igjen." },
-  34: { title: "Avslutning nærmer seg", focus: "Se på hele reisen som en helhet.", reflectionPrompt: "Hva har denne reisa gitt deg?", microInsight: "Reisen var aldri utenfor deg – den var inne i deg.", progressionHint: "Siste dag igjen." },
-  35: { title: "Framover", focus: "Ta med reisen videre.", reflectionPrompt: "Hva vil du si til deg selv som starta denne reisen?", microInsight: "Du er ikke den samme som da du starta – og det er nettopp poenget.", progressionHint: "Reisen din fortsetter – nå med mer kunnskap." },
+  29: { title: "Integrasjon", focus: "Samle alt du har lært.", reflectionPrompt: "Hva tar du med deg videre fra hele reisen?", microInsight: "Integrasjon er ikke slutten – det er en overgang.", progressionHint: "I morgen er siste dag." },
+  30: { title: "Framover", focus: "Ta med reisen videre.", reflectionPrompt: "Hva vil du si til deg selv som starta denne reisen?", microInsight: "Du er ikke den samme som da du starta – og det er nettopp poenget.", progressionHint: "Reisen din fortsetter – nå med mer kunnskap." },
 };
 
 const FALLBACK_DAY: DayConfig = {
@@ -980,12 +972,7 @@ export function getJourneyImpulse({ day, name }: { day: number; name: string }):
     27: `Hvis du vil, kan du dele noe du setter pris på ved mennesker du føler deg trygg med.`,
     28: `Det er helt fint å være litt mer åpen hvis du føler deg komfortabel. Små refleksjoner bygger ekte kontakt.`,
     29: `Noen ganger kan det være fint å dele noe som gir deg stabilitet i livet. Det åpner for rolige, gode samtaler.`,
-    30: `${name} kan sette pris på å høre om hva som gjør at du føler deg trygg i en relasjon.`,
-    31: `Hvis du føler deg komfortabel, kan du dele en liten refleksjon om hva du håper en god relasjon kan gi.`,
-    32: `Samtaler blir ofte dypere når man deler noe som betyr noe for en – uten at det blir for tungt.`,
-    33: `Du kan spørre ${name} om hva som gir dem ro eller trygghet. Det skaper en fin emosjonell resonans.`,
-    34: `Hvis du vil, kan du dele noe du setter pris på ved måten samtalen deres har utviklet seg.`,
-    35: `Det er helt fint å være litt mer åpen hvis du føler deg trygg. Små refleksjoner bygger ekte kontakt.`,
+    30: `Reisen nærmer seg slutten. Del gjerne noe du setter pris på ved måten samtalen deres har utviklet seg.`,
   };
 
   return impulses[day] ?? null;

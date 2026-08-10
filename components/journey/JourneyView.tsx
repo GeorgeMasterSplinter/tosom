@@ -1,7 +1,7 @@
 "use client";
 
 import { journeyAPI, buildJourneyState, dummyMatchContext } from "@/lib/journey/engine";
-import JourneyTimeline from "../conversation/JourneyTimeline";
+import { JourneyTimeline } from "./JourneyTimeline";
 import SystemMessageBox from "../system/SystemMessageBox";
 // ReflectionBox import removed — component archived per dashboard redesign
 
@@ -46,13 +46,13 @@ export default function JourneyView({ currentDay }: JourneyViewProps) {
   const phaseBg = phaseColorMap[phaseConfig.phase] ?? phaseColorMap.EARLY;
 
   const faseTekst = journeyState.journeyCompleted
-    ? "Denne matchen er ferdig. Reisen varer i 35 dager."
+    ? "Denne matchen er ferdig. Reisen varer i 30 dager."
     : !journeyState.journeyActive
     ? "Reisen din er ikke startet enno."
     : `Fase ${phaseConfig.phase === "EARLY" ? "1" : "2"}`;
 
   const faseUnderTekst = journeyState.journeyCompleted
-    ? "Takk for at dere gav hverandre 35 dager."
+    ? "Takk for at dere gav hverandre 30 dager."
     : !journeyState.journeyActive
     ? "Du kan starte reisen når du er klar."
     : journeyState.photosAllowed
@@ -73,7 +73,7 @@ export default function JourneyView({ currentDay }: JourneyViewProps) {
       </header>
 
       {/* Progresjon */}
-      <JourneyTimeline day={day} />
+      <JourneyTimeline currentDay={day} completedDays={[]} />
 
       {/* Tittel + dagnummer */}
       <section className="fade-in flex flex-col gap-[var(--space-sm)]">
@@ -145,7 +145,7 @@ export default function JourneyView({ currentDay }: JourneyViewProps) {
         </button>
 
         <button
-          disabled={day >= 35}
+          disabled={day >= 30}
           className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Neste dag →

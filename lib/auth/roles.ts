@@ -4,14 +4,14 @@
  * Role-based access control for ToSom platform.
  */
 
-export type Role = 'user' | 'admin' | 'support'
+export type Role = 'USER' | 'ADMIN' | 'SUPPORT'
 
-export const ROLES: Readonly<Role[]> = ['user', 'admin', 'support'] as const
+export const ROLES: Readonly<Role[]> = ['USER', 'ADMIN', 'SUPPORT'] as const
 
 export const ROLE_HIERARCHY: Record<Role, number> = {
-  user: 1,
-  support: 2,
-  admin: 3,
+  USER: 1,
+  SUPPORT: 2,
+  ADMIN: 3,
 }
 
 /** Check if role A has at least the permissions of role B */
@@ -32,5 +32,12 @@ export function hasAnyRole(role: Role | string | undefined, allowed: Role[]): bo
 
 /** Default role when none is specified */
 export function defaultRole(role: Role | string | null | undefined): Role {
-  return (role as Role) || 'user'
+  return (role as Role) || ('USER' as Role)
+}
+
+/** Check if a raw role string maps to ADMIN */
+export function isAdminRole(role: string | Role | undefined): boolean {
+  if (!role) return false
+  const upper = String(role).toUpperCase()
+  return upper === 'ADMIN'
 }

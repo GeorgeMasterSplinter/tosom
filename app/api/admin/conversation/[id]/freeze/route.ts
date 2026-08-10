@@ -1,38 +1,49 @@
-import { requireAdmin } from '@/lib/admin/requireAuth'
-import { freezeConversation, unfreezeConversation, isFrozen } from '@/lib/chat/freeze'
-export const dynamic = 'force-dynamic';
+/**
+ * POST /api/admin/conversation/[id]/freeze
+ * 
+ * Fryse ei conversation (admin).
+ * Pakke 4.4.2 — Conversation Unlock/Freeze
+ * Pakke 5.1 — Zod-validering
+ */
 
-export async function POST(
-  request: Request,
-  context: { params: Promise<{ id: string }> }
-) {
-  const { id: conversationId } = await context.params
+import { NextRequest, NextResponse } from 'next/server'
+import prisma from '@/lib/prisma'
+import { requireAuth } from '@/lib/auth/requireAuth'
+import { castToAdminUser } from '@/lib/auth/admin-auth'
+import { errorResponse, successResponse, isValidObjectId } from '@/lib/api-validator'
 
-  const body = await request.json()
-  const { adminId } = body
+export const dynamic = 'force-dynamic'
 
-  if (!adminId) {
-    return new Response(JSON.stringify({ error: 'adminId is required' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' }
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const result = await requireAuth(req)
+    if (result instanceof NextResponse) return result
+    const adminUser = castToAdminUser(result.user)
+    if (adminUser.role !== 'ADMIN') return errorResponse("Berre admin kan fryse conversations", 403)
+
+    const conversationId = (await params).id
+    if (!isValidObjectId(conversationId)) return errorResponse('Ugyldig conversation ID.', 400)
+
+    const conversation = await prisma.conversation.findUnique({
+      where: { id: conversationId },
+      select: { id: true, userAId: true, userBId: true, frozenAt: true, frozenBy: true, createdAt: true, imageShared: true, imageShareAllowedAt: true },
     })
-  }
-
-  const frozen = await isFrozen(conversationId)
-
-  if (frozen) {
-    await unfreezeConversation(conversationId, adminId)
-  } else {
-    await freezeConversation(conversationId, adminId)
-  }
-
-  return new Response(
-    JSON.stringify({ success: true, frozen: !frozen }),
-    {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
+    if (!conversation) return errorResponse('Conversation ikkje funnen', 404)
+    if (conversation.frozenAt) {
+      return errorResponse(`Conversation er allereie fryst siden ${new Date(conversation.frozenAt).toLocaleString('nb-NO')}`)
     }
-  )
+
+    const updated = await prisma.conversation.update({
+      where: { id: conversationId },
+      data: { frozenAt: new Date(), frozenBy: adminUser.id },
+      select: { id: true, userAId: true, userBId: true, frozenAt: true, frozenBy: true, createdAt: true, imageShared: true, imageShareAllowedAt: true },
+    })
+
+    try { await prisma.systemLog.create({ data: { level: 'INFO', message: `Conversation ${conversationId} fryst av admin ${adminUser.id}`, module: 'admin/conversation-freeze', metadata: JSON.stringify({ conversationId, userIdA: conversation.userAId, userIdB: conversation.userBId, frozenAt: updated.frozenAt, adminId: adminUser.id }) } }) } catch { /* ignore */ }
+
+    return successResponse({ data: { id: updated.id, userAId: updated.userAId, userBId: updated.userBId, frozenAt: updated.frozenAt?.toISOString(), frozenBy: updated.frozenBy, status: 'frozen' }, message: `Conversation ${conversationId} er no fryst.` })
+  } catch (error) {
+    console.error('[POST /api/admin/conversation/[id]/freeze] Error:', error)
+    return NextResponse.json({ error: 'Internt feil' }, { status: 500 })
+  }
 }
-
-

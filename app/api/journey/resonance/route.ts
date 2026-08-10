@@ -1,80 +1,66 @@
 /**
- * ToSom — Resonans Motor API
+ * GET /api/journey/resonance
  * 
- * POST /api/journey/resonance — berekn resonans
- * GET  /api/journey/resonance?conversationId=X — hent siste
+ * Hent ResonanceSession for den autentifiserte brukaren.
+ * Pakke 6.3 — Resonance Graf (Steg 2)
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { calculateResonance, createResonanceSnapshot } from '@/lib/journey/engine';
+import prisma from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth/requireAuth';
 
 export const dynamic = 'force-dynamic';
 
-export async function POST(req: NextRequest) {
-  try {
-    // Auth-sjekk
-    const auth = await requireAuth(req);
-    if (auth instanceof NextResponse) {
-      return auth;
-    }
-
-    const body = await req.json();
-    const {
-      conversationId,
-      userId,
-      partnerId,
-      messageCount = 0,
-      responseTimeAvg = 30,
-      longestStreak = 0,
-      phaseOrder = 1,
-      daysTogether = 1,
-      mutualDepth = 50,
-      reflectionCount = 0,
-      taskCompletion = 0,
-    } = body;
-
-    if (!conversationId) {
-      return NextResponse.json({ error: 'Manglar conversationId' }, { status: 400 });
-    }
-
-    const scores = calculateResonance({
-      conversationId, userId, partnerId, messageCount, responseTimeAvg,
-      longestStreak, phaseOrder, daysTogether, mutualDepth, reflectionCount, taskCompletion,
-    });
-
-    const snapshot = createResonanceSnapshot(
-      { conversationId, userId, partnerId, messageCount, responseTimeAvg, longestStreak, phaseOrder, daysTogether, mutualDepth, reflectionCount, taskCompletion },
-      scores
-    );
-
-    // TODO: Lagre til DB — await prisma.resonanceSnapshot.create({ data: snapshot });
-
-    return NextResponse.json({ success: true, scores, snapshot, resonance: scores.resonance });
-  } catch (err) {
-    console.error('Resonans-feil:', err);
-    return NextResponse.json({ error: 'Kunne ikkje berekne resonans' }, { status: 500 });
-  }
-}
-
 export async function GET(req: NextRequest) {
   try {
-    // Auth-sjekk
-    const auth = await requireAuth(req);
-    if (auth instanceof NextResponse) {
-      return auth;
+    // Auth — brukaren må vere logga inn
+    const result = await requireAuth(req);
+    if (result instanceof NextResponse) return result;
+    const userId = result.user.id;
+
+    // Hent ResonanceSession for brukaren sin conversation
+    const sessions = await prisma.resonanceSession.findMany({
+      where: {
+        conversation: {
+          OR: [
+            { userAId: userId },
+            { userBId: userId },
+          ],
+        },
+      },
+      orderBy: { createdAt: 'asc' },
+    });
+
+    // Grupper per dag (hvis fleire sessionar same dag, ta nyaste)
+    const dayMap = new Map<number, typeof sessions[0]>();
+    for (const s of sessions) {
+      if (!dayMap.has(s.day) || s.createdAt > dayMap.get(s.day)!.createdAt) {
+        dayMap.set(s.day, s);
+      }
     }
 
-    const url = new URL(req.url);
-    const conversationId = url.searchParams.get('conversationId');
+    const uniqueDays = Array.from(dayMap.values()).sort((a, b) => a.day - b.day);
 
-    if (!conversationId) return NextResponse.json({ error: 'Manglar conversationId' }, { status: 400 });
-
-    // TODO: Hent frå DB — await prisma.resonanceSnapshot.findFirst({ where: { conversationId } });
-
-    return NextResponse.json({ success: true, scores: null, message: 'Ingen resonans-data funnen.' });
-  } catch (err) {
-    console.error('Resonance GET-feil:', err);
-    return NextResponse.json({ error: 'Kunne ikkje hente resonans' }, { status: 500 });
+    return NextResponse.json({
+      success: true,
+      data: {
+        userId,
+        totalSessions: sessions.length,
+        uniqueDays: uniqueDays.length,
+        sessions: uniqueDays.map((s) => ({
+          day: s.day,
+          emotionalTone: s.emotionalTone,
+          depthLevel: s.depthLevel,
+          summary: s.summary?.substring(0, 200) || '',
+          createdAt: s.createdAt.toISOString(),
+        })),
+      },
+    });
+  } catch (error) {
+    console.error('[GET /api/journey/resonance] Error:', error);
+    return NextResponse.json(
+      { error: 'Internt feil' },
+      { status: 500 }
+    );
   }
 }

@@ -64,7 +64,7 @@ const messagesMap: Record<SystemEvent, SystemMessage> = {
   journey_completed: {
     event: "journey_completed",
     title: "Reisen er ferdig.",
-    body: "Takk for at dere ga hverandre 35 dager. Når du er klar, kan du starte på nytt.",
+    body: "Takk for at dere ga hverandre 30 dager. Når du er klar, kan du starte på nytt.",
     level: "warning",
   },
   milestone_reached: {
@@ -128,15 +128,15 @@ export function getMessagesForState(
         }
       }
 
-      if (day >= 15 && day <= 35) {
+      if (day >= 15 && day < 30) {
         messages.push(getMessageForEvent("phase2_active"));
       }
 
-      if (day === 35) {
+      if (day >= 30) {
         messages.push({
           event: "journey_completed",
           title: "Reisen er ferdig.",
-          body: "Takk for at dere ga hverandre 35 dager.",
+          body: "Takk for at dere ga hverandre 30 dager.",
           level: "warning",
         });
       }

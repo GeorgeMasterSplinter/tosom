@@ -6,6 +6,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { writeFile, mkdir } from 'fs/promises';
 import { randomUUID } from 'crypto';
 import path from 'path';
+import { getServerSession } from '@/lib/auth/session';
+import { prisma } from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
 
@@ -34,11 +36,21 @@ const EXT_MAP: Record<string, string> = {
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
+    // STREG 1 — Fix 2: Krever session og conversation-tilhørighet
+    const session = await getServerSession();
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: 'Uautorisert — logg inn først' },
+        { status: 401 }
+      );
+    }
+
     // Hent FormData
     const formData = await request.formData();
     const file = formData.get('file') as File;
     const conversationId = formData.get('conversationId') as string;
-    const senderId = formData.get('senderId') as string;
+    // senderId kommer fra session, IKKE fra klienten
+    const senderId = session.user.id;
 
     // Valider fil
     if (!file) {
@@ -64,11 +76,31 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // Valider conversationId og senderId
-    if (!conversationId || !senderId) {
+    // Valider conversationId
+    if (!conversationId) {
       return NextResponse.json(
-        { error: 'Manglande conversationId eller senderId' },
+        { error: 'Manglande conversationId' },
         { status: 400 }
+      );
+    }
+
+    // STREG 1 — Fix 2: Sjekk at brukeren er deltaker i konversasjonen
+    const conversation = await prisma.conversation.findUnique({
+      where: { id: conversationId },
+      select: { userAId: true, userBId: true },
+    });
+
+    if (!conversation) {
+      return NextResponse.json(
+        { error: 'Konversasjonen finnes ikke' },
+        { status: 404 }
+      );
+    }
+
+    if (conversation.userAId !== senderId && conversation.userBId !== senderId) {
+      return NextResponse.json(
+        { error: 'Uautorisert — du er ikke deltaker i denne konversasjonen' },
+        { status: 403 }
       );
     }
 

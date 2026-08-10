@@ -1,5 +1,6 @@
 import { getServerSession } from "@/lib/auth/session";
 import prisma from "@/lib/prisma";
+import { JOURNEY_TOTAL_DAYS } from "@/lib/journey/engine";
 
 interface MatchInfo {
   id: string;
@@ -120,7 +121,7 @@ export async function GET(request: Request) {
     // Formatter reise-info
     let journeyInfo: JourneyInfo | null = null;
     if (journey) {
-      const totalDays = 35;
+      const totalDays = JOURNEY_TOTAL_DAYS; // 30
       journeyInfo = {
         day: journey.day,
         totalDays,

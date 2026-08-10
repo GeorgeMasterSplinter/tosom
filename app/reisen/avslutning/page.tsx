@@ -1,12 +1,11 @@
 'use client';
 
 /**
- * ToSom — Avslutnings-side (ny reise / tosomhet)
+ * ToSom — Avslutnings-side (2 valg)
  * 
- * Visast etter 30-dagers reise. Brukaren får 3 valg:
- * 1. "Ja til tosomheit" — fullfør relasjon, vis minne-album
- * 2. "Ikkje funnet det enda" — pause reise, prøv igjen seinare
- * 3. "Start ny reise" — reset journey, trigge ny match
+ * Vises etter 30-dagers reise. Brukeren får 2 valg:
+ * 1. "Ja til tosommhet" — Chat slettes, rolige avskjed, SLUTT
+ * 2. "Start ny reise" — Chat slettes, onboarding låses opp, LOOP ↺
  */
 
 import { useState } from 'react';
@@ -19,15 +18,6 @@ function IconHeart() {
   return (
     <svg width="40" height="40" viewBox="0 0 24 24" fill="#D4AF37">
       <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-    </svg>
-  );
-}
-
-function IconClock() {
-  return (
-    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="10" />
-      <polyline points="12 6 12 12 16 14" />
     </svg>
   );
 }
@@ -195,23 +185,51 @@ function ConfirmModal({
 export default function AvslutningSide() {
   const router = useRouter();
   const [selected, setSelected] = useState<number | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  // Confirmations for each choice
-  const handleChoice1 = () => setSelected(1);
-  const handleChoice2 = () => setSelected(2);
-  const handleChoice3 = () => setSelected(3);
-
-  const confirmChoice = () => {
-    if (selected === 1) {
-      router.push('/dashboard'); // Vis minne / fullført relasjon
-    } else if (selected === 2) {
-      router.push('/dashboard'); // Pause — tilbake til dashboard
-    } else if (selected === 3) {
-      // Clear test user, go to onboarding for new journey
-      localStorage.removeItem('testUserId');
-      router.push('/onboarding/start');
+  // Sjekk om dag 30 er nådd ved side-lasting
+  const checkJourneyComplete = async () => {
+    try {
+      const res = await fetch('/api/journey/status');
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && json.data && json.data.day < 30) {
+          // Ikke fullført enda - gå tilbake til dashboard
+          router.push('/dashboard');
+          return;
+        }
+      }
+    } catch {
+      console.log('Kan ikke sjekke journey-status');
     }
+  };
+
+  const handleChoice1 = () => setSelected(1); // Ja til tosommhet
+  const handleChoice2 = () => setSelected(2); // Start ny reise
+
+  const confirmChoice = async () => {
+    if (!selected) return;
+    setLoading(true);
+
+    try {
+      const choice = selected === 1 ? 'complete' : 'loop_back';
+      const res = await fetch('/api/journey/reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ choice }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        localStorage.removeItem('testUserId');
+        router.push(data.redirect);
+      }
+    } catch (err) {
+      console.log('Feil ved journey-reset:', err);
+    }
+
     setSelected(null);
+    setLoading(false);
   };
 
   return (
@@ -247,7 +265,7 @@ export default function AvslutningSide() {
               margin: 0,
             }}
           >
-            Reisa di er fullført 🎉
+            Reisen din er fullført 🎉
           </h1>
 
           <p
@@ -258,17 +276,17 @@ export default function AvslutningSide() {
               margin: 0,
             }}
           >
-            Tolvten dagane med [Partner] har gått. Kva vil du gjere no?
+            30 dagene har gått. Hva vil du gjøre nå?
           </p>
         </div>
 
-        {/* Choice Cards */}
+        {/* Choice Cards - 2 valg */}
         <div className="w-full space-y-5">
 
-          {/* Choice 1: Ja til tosomheit */}
+          {/* Valg 1: Ja til tosommhet */}
           <ChoiceCard
-            title="Ja til tosomheit 💛"
-            description="Fullfør relasjonen med [Partner]. Vis minnealbumet og del dere med verda."
+            title="Ja til tosommhet 💛"
+            description="Dere fant hverandre. Møtes utenom ToSom, og lykke til! 🤍"
             icon={<IconHeart />}
             gradientFrom="#D4AF37"
             gradientTo="#E8C766"
@@ -276,26 +294,15 @@ export default function AvslutningSide() {
             onClick={handleChoice1}
           />
 
-          {/* Choice 2: Ikkje funnet det enda */}
+          {/* Valg 2: Start ny reise */}
           <ChoiceCard
-            title="Ikkje funnet det enda ⏳"
-            description="Ta ein pause. Du kan prøve igjen seinare med ein ny match når du er klar."
-            icon={<IconClock />}
-            gradientFrom="#6EC6CF"
-            gradientTo="#8ED4DB"
-            borderColor="rgba(110, 198, 207, 0.3)"
-            onClick={handleChoice2}
-          />
-
-          {/* Choice 3: Start ny reise */}
-          <ChoiceCard
-            title="Start ei ny reise 🔄"
-            description="Start ein ny reise frå toppen. Betal på nytt og vent på ny match."
+            title="Start ny reise 🔄"
+            description="Ble ikke match. Prøv igjen med ny partner."
             icon={<IconRefresh />}
             gradientFrom="#A78BFA"
             gradientTo="#C4B5FD"
             borderColor="rgba(167, 139, 250, 0.3)"
-            onClick={handleChoice3}
+            onClick={handleChoice2}
           />
 
         </div>
@@ -306,7 +313,7 @@ export default function AvslutningSide() {
           className="mt-10 text-sm transition-all hover:opacity-80"
           style={{ color: 'rgba(255, 255, 255, 0.3)' }}
         >
-          ← Tilbake til dashboard
+          ← Tilbake til oversikt
         </button>
 
       </div>
@@ -314,9 +321,9 @@ export default function AvslutningSide() {
       {/* Confirm Modal */}
       {selected === 1 && (
         <ConfirmModal
-          title="Ja til tosomheit?"
-          message="Du vil fullføre relasjonen og sjå minnealbumet. Kan du angre seinare."
-          confirmText="Fullfør"
+          title="Ja til tosommhet?"
+          message="Chat blir slettet. Dere møtes utenom ToSom. Lykke til!"
+          confirmText={loading ? "Behandler..." : "Ja, det var noe 💛"}
           onCancel={() => setSelected(null)}
           onConfirm={confirmChoice}
         />
@@ -324,19 +331,9 @@ export default function AvslutningSide() {
 
       {selected === 2 && (
         <ConfirmModal
-          title="Ta ein pause?"
-          message="Du pauser reisa og kan prøve igjen seinare. Dashboardet viser 'match er på vei'."
-          confirmText="Ta pause"
-          onCancel={() => setSelected(null)}
-          onConfirm={confirmChoice}
-        />
-      )}
-
-      {selected === 3 && (
-        <ConfirmModal
           title="Start ny reise?"
-          message="Reisa di blir tilbakestilt. Du må betale på nytt og vente på ny match."
-          confirmText="Start ny reise"
+          message="Chat blir slettet. Onboarding låses opp. Du kan endre profil før ny match."
+          confirmText={loading ? "Behandler..." : "Start ny reise 🔄"}
           onCancel={() => setSelected(null)}
           onConfirm={confirmChoice}
         />

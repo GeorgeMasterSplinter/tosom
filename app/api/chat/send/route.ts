@@ -12,6 +12,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth/session";
 import { prisma } from "@/lib/prisma";
+import { chatSendMessageSchema, errorResponse, successResponse } from "@/lib/api-validator";
 
 export const dynamic = "force-dynamic";
 
@@ -37,15 +38,16 @@ export async function POST(request: Request) {
   }
 
   try {
-    const body = await request.json();
-    const { conversationId, content, type } = body;
-
-    if (!conversationId || !content) {
-      return NextResponse.json(
-        { error: "Mangler conversationId og content" },
-        { status: 400 }
+    // STEG 3: Zod-validering av body
+    const validation = await chatSendMessageSchema.safeParseAsync(await request.json());
+    if (!validation.success) {
+      return errorResponse(
+        `Valideringsfeil: ${validation.error.issues.map(e => `${e.path.join('.')}: ${e.message}`).join('; ')}`,
+        400
       );
     }
+
+    const { conversationId, content, type } = validation.data;
 
     // Map frontend type → Prisma MessageCategory
     const mappedType = mapMessageType(type ?? "text");

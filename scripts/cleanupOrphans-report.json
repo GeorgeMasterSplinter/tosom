@@ -1,0 +1,15 @@
+{
+  "cleanupAt": "2026-08-03T20:04:58.034Z",
+  "deleted": {
+    "system_messages": 0
+  },
+  "totals": {
+    "messages": 0,
+    "conversations": 33,
+    "matches": 0,
+    "profiles": 0,
+    "journeyProgress": 0,
+    "notifications": 0,
+    "users": 11
+  }
+}

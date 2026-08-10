@@ -148,7 +148,18 @@ export default function OmOssPage() {
           spotlight="blue"
           className="px-6"
         >
-          <div className="mx-auto max-w-3xl space-y-6 text-center">
+          <div
+            className="mx-auto max-w-3xl space-y-6 text-center"
+            style={{
+              background: 'rgba(255,255,255,0.045)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              borderRadius: '28px',
+              padding: `${spacing.lg}px`,
+              boxShadow: '0 12px 40px rgba(0,0,0,0.20), 0 0 24px rgba(212,175,55,0.05)',
+            }}
+          >
             <p
               style={{
                 ...typographyToStyle('body-lg'),
@@ -195,12 +206,23 @@ export default function OmOssPage() {
           spotlight="blue"
           className="px-6"
         >
-          <div className="mx-auto max-w-4xl space-y-8">
+          <div
+            className="mx-auto max-w-4xl space-y-8"
+            style={{
+              background: 'rgba(255,255,255,0.045)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              borderRadius: '28px',
+              padding: `${spacing.lg}px`,
+              boxShadow: '0 12px 40px rgba(0,0,0,0.20), 0 0 24px rgba(212,175,55,0.05)',
+            }}
+          >
             <h2
+              className="text-center mb-6"
               style={{
                 ...typographyToStyle('heading-lg'),
                 color: color.text.primary,
-                textAlign: 'center',
               }}
             >
               Hva tosomhet betyr
@@ -291,12 +313,23 @@ export default function OmOssPage() {
           spotlight="blue"
           className="px-6"
         >
-          <div className="mx-auto max-w-3xl space-y-8">
+          <div
+            className="mx-auto max-w-3xl space-y-8"
+            style={{
+              background: 'rgba(255,255,255,0.045)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              borderRadius: '28px',
+              padding: `${spacing.lg}px`,
+              boxShadow: '0 12px 40px rgba(0,0,0,0.20), 0 0 24px rgba(212,175,55,0.05)',
+            }}
+          >
             <h2
+              className="text-center mb-6"
               style={{
                 ...typographyToStyle('heading-lg'),
                 color: color.text.primary,
-                textAlign: 'center',
               }}
             >
               Hvorfor vi finnes

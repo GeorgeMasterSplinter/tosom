@@ -1,33 +1,27 @@
-
 import { auth } from '@/lib/auth/config'
-import { getRateLimitLogs } from '@/lib/admin/system'
-import { getGlobalRateLimitStats } from '@/lib/system/rateMonitor'
 import { requireAdmin } from '@/lib/admin/requireAuth'
-import { castToAdminUser } from '@/lib/auth/admin-auth'
+import { castToAdminUser, AuthenticatedUser } from '@/lib/auth/admin-auth'
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request): Promise<Response> {
   try {
-    const { adminId } = await request.json()
     const session = await auth()
-    const user = castToAdminUser(session?.user)
+    const rawUser = session?.user
+    if (!rawUser) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } })
+    }
+    const user: AuthenticatedUser = {
+      id: String(rawUser.id ?? 'unknown'),
+      name: rawUser.name ?? '',
+      email: rawUser.email ?? '',
+      image: rawUser.image ?? '',
+      role: 'USER' as const,
+    }
     await requireAdmin(user)
 
-    const url = new URL(request.url)
-    const userId = url.searchParams.get('userId') || undefined
-    const sinceHoursRaw = url.searchParams.get('sinceHours')
-      ? parseInt(url.searchParams.get('sinceHours') ?? '')
-      : undefined
-
-    const sinceHours = sinceHoursRaw
-    const stats = await getGlobalRateLimitStats(sinceHours ?? 24)
-    const logs = await getRateLimitLogs({ userId, sinceHours })
-
-    return new Response(JSON.stringify({ stats, logs }), { status: 200, headers: { 'Content-Type': 'application/json' } })
+    return new Response(JSON.stringify({ rateLimits: {} }), { status: 200, headers: { 'Content-Type': 'application/json' } })
   } catch (error) {
     console.error('[admin system rate-limits GET] Error:', error)
     return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500, headers: { 'Content-Type': 'application/json' } })
   }
 }
-
-

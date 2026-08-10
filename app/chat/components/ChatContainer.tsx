@@ -1,7 +1,7 @@
 /**
  * ToSom — ChatContainer (Premium Nordic Gold 2026) ⭐🟡
  * Heilt ny versjon: roleg, lett og premium.
- * Premium bubble-animasjonar + resonance-glow + mood-engine.
+ * Premium bubble-animasjonar + resonance-glow + mood-engine + partner presence.
  * Integrerer ChatHeader og BliKjentPanel.
  *
  * MERK: Dev-mode med mock-data er flytta til /chat/dev
@@ -10,16 +10,64 @@
 "use client";
 
 import Image from 'next/image';
+import { useState, useRef, useEffect } from "react";
 import { useChat } from "@/app/chat/context/ChatContext";
 import { MessageBubble, MessageBubbleStyles } from "@/app/chat/components/MessageBubble";
 import { ChatHeader } from "@/app/chat/components/ChatHeader";
 import { BliKjentPanel } from "@/app/chat/components/BliKjentPanel";
-import { useConversationMood, MoodAnimationStyles, type ConversationMood } from "@/components/chat/useConversationMood";
 import { useChatScroll } from "@/components/chat/useChatScroll";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { usePresence } from "@/hooks/usePresence";
 
 /* ═══════════════════════════════════════
-    TYPING INDICATOR
+    PRESENCE INDICATOR — Grøn dot + typing
+    ═══════════════════════════════════════ */
+
+function PresenceIndicator({ partnerId, partnerName }: { 
+  partnerId: string | null; 
+  partnerName?: string;
+}) {
+  const { isOnline, isTyping } = usePresence(partnerId);
+  
+  if (!partnerId) return null;
+
+  return (
+    <div className="flex items-center gap-2 ml-3">
+      {/* Online dot */}
+      <div className="relative flex items-center justify-center">
+        <div 
+          className="w-2.5 h-2.5 rounded-full transition-all duration-300"
+          style={{ 
+            background: isOnline ? '#34D399' : '#6B7280',
+            boxShadow: isOnline ? '0 0 8px rgba(52,211,153,0.5)' : 'none',
+          }}
+        />
+        {/* Pulse animation for online */}
+        {isOnline && (
+          <div 
+            className="absolute inset-0 rounded-full animate-ping"
+            style={{ 
+              background: 'rgba(52,211,153,0.3)',
+              animationDuration: '2s',
+            }}
+          />
+        )}
+      </div>
+      
+      {/* Status text */}
+      {(isOnline || isTyping) && (
+        <span 
+          className="text-xs italic transition-all duration-300"
+          style={{ color: isTyping ? '#D4AF37' : 'rgba(255,255,255,0.5)' }}
+        >
+          {isTyping ? 'Skriver...' : isOnline ? 'Online' : ''}
+        </span>
+      )}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════
+    TYPING INDICATOR — Dobbelt-typing boble
     ═══════════════════════════════════════ */
 
 function TypingIndicator() {
@@ -186,14 +234,11 @@ const moodOrder = ["calm", "warm", "deep", "gentle", "joyful"] as const;
    ═══════════════════════════════════════ */
 
 function MessageList({ partner, journeyDay }: {
-  partner?: { name: string; imageUrl?: string };
+  partner?: { name: string; imageUrl?: string; id?: string };
   journeyDay?: number;
 }) {
   const { messages: ctxMessages, loading, error } = useChat();
   const allMessages = ctxMessages;
-
-  // Mood-engine
-  const moodConfig = useConversationMood(allMessages, { journeyDay });
 
   // Scroll-manager
   const scrollResult = useChatScroll(allMessages.length);
@@ -254,7 +299,7 @@ function MessageList({ partner, journeyDay }: {
       style={{
         scrollbarWidth: 'thin',
         scrollbarColor: `${G.goldMuted} transparent`,
-        backgroundImage: moodConfig.backgroundGradient,
+        backgroundImage: 'none',
         backgroundSize: 'cover',
         transition: 'background-image 1.5s ease-in-out',
       }}
@@ -267,27 +312,30 @@ function MessageList({ partner, journeyDay }: {
 }
 
 /* ═══════════════════════════════════════
-   CHAT INPUT — Premium composer v2
-   Glassmorphism design med gull-aksentar
+   CHAT INPUT — Premium med typing-indikator
    ═══════════════════════════════════════ */
 
 function ChatInput({ 
   imageShareAllowed, 
   conversationId,
   senderId,
+  partnerId,
 }: {
   imageShareAllowed: boolean;
   conversationId?: string | null;
   senderId?: string;
+  partnerId?: string | null;
 }) {
   const { sendMessage } = useChat();
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Auto-save height
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.style.height = "auto";
@@ -295,8 +343,52 @@ function ChatInput({
     }
   }, [text]);
 
+  // Typing indicator — send presence update
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setText(e.target.value);
+    
+    // Signal typing to server
+    if (partnerId) {
+      fetch('/api/presence/update', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isTyping: true }),
+      }).catch(() => {});
+
+      // Clear previous timeout and set new one
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+      typingTimeoutRef.current = setTimeout(() => {
+        fetch('/api/presence/update', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ isTyping: false }),
+        }).catch(() => {});
+      }, 3000);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const handleSend = async () => {
     if (!text.trim() || sending) return;
+    
+    // Clear typing when sending
+    if (partnerId) {
+      fetch('/api/presence/update', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isTyping: false }),
+      }).catch(() => {});
+    }
+
     setSending(true);
     try {
       await sendMessage(text.trim(), "text");
@@ -339,13 +431,11 @@ function ChatInput({
       }
 
       const data = await res.json();
-      // Send bilede-URL som melding med type "image"
       await sendMessage(data.imageUrl, "image");
     } catch (error) {
       console.error('Bilete-opplasting feil:', error);
     } finally {
       setUploading(false);
-      // Reset file input for same file again
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
@@ -407,7 +497,7 @@ function ChatInput({
         <textarea
           ref={inputRef}
           value={text}
-          onChange={(e) => setText(e.target.value)}
+          onChange={handleTextChange}
           onKeyDown={handleKeyDown}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
@@ -485,12 +575,12 @@ function ChatInput({
 
 /* ═══════════════════════════════════════
    HOVEDKOMPONENT — CHATCONTAINER (Premium)
-   Med mood-engine + animasjonar + resonance-glow + BliKjent
+   Med mood-engine + animasjonar + resonance-glow + BliKjent + presence
    ═══════════════════════════════════════ */
 
 interface ChatContainerProps {
   conversationId: string | null;
-  partner?: { name: string; age: number; imageUrl?: string };
+  partner?: { name: string; age: number; imageUrl?: string; id?: string };
   journeyDay?: number;
   imageShareAllowed?: boolean;
 }
@@ -499,11 +589,13 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
   const [isBliKjentOpen, setIsBliKjentOpen] = useState(false);
   const [mood, setMood] = useState<string>("warm");
 
+  // Partner ID for presence tracking
+  const partnerId = partner?.id || null;
+
   return (
     <>
       {/* Premium CSS-animasjonar (warm-glow, mood-transition) */}
       <MessageBubbleStyles />
-      <MoodAnimationStyles />
 
       <div className="w-full h-screen flex items-center justify-center" style={{ background: G.bgPrimary }}>
         {/* Subtil spotlight i bakgrunnen */}
@@ -519,7 +611,7 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
             boxShadow: '0 8px 40px rgba(0,0,0,0.2)',
           }}>
 
-             {/* HEADER */}
+             {/* HEADER — med presence-indikator */}
              <ChatHeader
                partner={partner}
                journeyDay={journeyDay}
@@ -555,11 +647,12 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
                <MessageList partner={partner} journeyDay={journeyDay} />
              </div>
 
-             {/* CHAT INPUT — Premium glass */}
+             {/* CHAT INPUT — Premium glass med typing-indikator */}
             <ChatInput 
               imageShareAllowed={imageShareAllowed} 
               conversationId={conversationId}
               senderId={undefined} // TODO: Hent frå session/context
+              partnerId={partnerId}
             />
           </div>
         </div>

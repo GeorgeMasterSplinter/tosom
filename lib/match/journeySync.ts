@@ -4,7 +4,7 @@
 import prisma from "@/lib/prisma";
 import type { JourneyPhase } from "@prisma/client";
 
-const TOTAL_DAYS = 35;
+const TOTAL_DAYS = 30; // Oppdatert frå 35 — samsvarar med JOURNEY_TOTAL_DAYS i engine.ts (2026-08-02)
 
 function phaseForDay(day: number): JourneyPhase {
   if (day <= 14) return "EARLY";

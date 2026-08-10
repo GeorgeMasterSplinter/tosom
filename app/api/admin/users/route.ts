@@ -1,125 +1,45 @@
 /**
- * ToSom Admin Users API
+ * GET /api/admin/users
  * 
- * Hentar brukarliste frå databasen med paginering, filter og sortering.
- * Berre tilgjengeleg for admin (krevar admin_token-cookie).
+ * Hent alle brukarar med pagination, rolle-filter og flag-status (admin).
+ * Pakke 4.4.3 — User Flags & Moderation Tools
+ * Pakke 5.1 — Zod-validering
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { NextRequest, NextResponse } from 'next/server'
+import prisma from '@/lib/prisma'
+import { requireAuth } from '@/lib/auth/requireAuth'
+import { castToAdminUser } from '@/lib/auth/admin-auth'
+import { errorResponse, successResponse, validateQuery } from '@/lib/api-validator'
+import { adminUsersQuerySchema } from '@/lib/api-validator'
 
-export const dynamic = 'force-dynamic';
-
-const prisma = new PrismaClient();
-
-/** Sjekk om admin er autentisert */
-function isAdmin(req: NextRequest): boolean {
-  const adminToken = req.cookies.get('admin_token')?.value;
-  return !!adminToken;
-}
+export const dynamic = 'force-dynamic'
 
 export async function GET(req: NextRequest) {
-  if (!isAdmin(req)) {
-    return NextResponse.json({ error: 'Uautorisert' }, { status: 401 });
-  }
-
   try {
-    // Parsar query-parameterar
-    const url = new URL(req.url);
-    const page = parseInt(url.searchParams.get('page') || '1');
-    const limit = Math.min(parseInt(url.searchParams.get('limit') || '20'), 100);
-    const search = url.searchParams.get('search')?.trim() || '';
-    const role = url.searchParams.get('role') as 'USER' | 'ADMIN' | null;
-    const verified = url.searchParams.get('verified');
-    const banned = url.searchParams.get('banned');
-    const sortBy = url.searchParams.get('sortBy') || 'createdAt';
-    const sortOrder = url.searchParams.get('sortOrder') === 'asc' ? 'asc' : 'desc';
+    const result = await requireAuth(req)
+    if (result instanceof NextResponse) return result
+    const adminUser = castToAdminUser(result.user)
+    if (adminUser.role !== 'ADMIN') return errorResponse("Berre admin kan få tilgang til brukarar", 403)
 
-    // Beregn offset for paginering
-    const offset = (page - 1) * limit;
+    const url = new URL(req.url)
+    const queryResult = validateQuery(adminUsersQuerySchema, Object.fromEntries(url.searchParams.entries()))
+    if (queryResult instanceof NextResponse) return queryResult
+    const { page, limit, role: roleFilter, flaggedOnly } = queryResult.data
 
-    // Bygg WHERE-clause dynamisk
-    const where: any = {};
-    
-    if (role) where.role = role;
-    if (verified === 'true') where.verified = true;
-    if (verified === 'false') where.verified = false;
-    if (banned === 'true') where.bannedAt = { not: null };
-    if (banned === 'false') where.bannedAt = null;
+    const skip = (page - 1) * limit
+    const where: Record<string, unknown> = {}
+    if (roleFilter) where.role = roleFilter
+    if (flaggedOnly) where.bannedAt = { not: null }
 
-    // Søking i email og name
-    if (search) {
-      where.OR = [
-        { email: { contains: search, mode: 'insensitive' } },
-        { profile: { firstName: { contains: search, mode: 'insensitive' } } },
-        { profile: { lastName: { contains: search, mode: 'insensitive' } } },
-      ];
-    }
+    const [users, total] = await Promise.all([
+      prisma.user.findMany({ where, skip, take: limit, orderBy: { createdAt: 'desc' }, select: { id: true, email: true, name: true, role: true, verified: true, bannedAt: true, deletedAt: true, onboardingComplete: true, deepProfileComplete: true, lastMatchAt: true, lockedUntil: true, createdAt: true, journey: { select: { day: true, phase: true, completedDays: true } }, matchesA: { where: { status: 'active' }, select: { id: true } }, matchesB: { where: { status: 'active' }, select: { id: true } } } }),
+      prisma.user.count({ where }),
+    ])
 
-    // Validér sort-kolonnar
-    const allowedSortColumns = ['createdAt', 'email', 'role', 'verified', 'onboardingComplete'];
-    const validSortColumn = allowedSortColumns.includes(sortBy) ? sortBy : 'createdAt';
-
-    // Hentar brukarar med relasjonar
-    const users = await prisma.user.findMany({
-      where,
-      take: limit,
-      skip: offset,
-      orderBy: { [validSortColumn]: sortOrder },
-      select: {
-        id: true,
-        email: true,
-        phone: true,
-        role: true,
-        verified: true,
-        bannedAt: true,
-        deletedAt: true,
-        onboardingStep: true,
-        onboardingComplete: true,
-        deepProfileComplete: true,
-        createdAt: true,
-        updatedAt: true,
-        lastMatchAt: true,
-        lockedUntil: true,
-        profile: {
-          select: {
-            firstName: true,
-            lastName: true,
-            age: true,
-            photoUrl: true,
-          },
-        },
-        _count: {
-          select: {
-            matchesA: true,
-            matchesB: true,
-            conversationsA: true,
-          },
-        },
-      },
-    });
-
-    // Hentar totalt antal for paginering
-    const total = await prisma.user.count({ where });
-
-    return NextResponse.json({
-      users,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-        hasNext: offset + users.length < total,
-        hasPrev: page > 1,
-      },
-      filters: { search, role, verified, banned },
-    });
-
+    return successResponse({ data: users.map(u => ({ ...u, activeMatches: u.matchesA.length + u.matchesB.length })), pagination: { page, limit, total, pages: Math.ceil(total / limit) } })
   } catch (error) {
-    console.error('[AdminUsers] Feil ved henting av brukarliste:', error);
-    return NextResponse.json(
-      { error: 'Kunne ikkje hente brukarliste' },
-      { status: 500 }
-    );
+    console.error('[GET /api/admin/users] Error:', error)
+    return NextResponse.json({ error: 'Internt feil' }, { status: 500 })
   }
 }

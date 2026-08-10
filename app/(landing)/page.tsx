@@ -164,15 +164,21 @@ export default function LandingPage() {
         </section>
 
         {/* ===== HVORFOR TOSOM ===== */}
-        <ToSomSection
-          spotlight="soft"
-          className="px-6 text-center space-y-6"
-        >
-          <div className="mx-auto max-w-3xl space-y-6">
+        <section className="px-6 py-16 md:py-24 text-center">
+          <div
+            className="mx-auto max-w-[780px] rounded-[28px] p-10 md:p-14 space-y-6"
+            style={{
+              background: 'rgba(255,255,255,0.045)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              boxShadow: '0 12px 40px rgba(0,0,0,0.20), 0 0 24px rgba(212,175,55,0.05)',
+            }}
+          >
             <h2
               style={{
                 ...typographyToStyle('heading-md'),
-                color: color.text.primary,
+                color: 'rgba(255,255,255,0.92)',
               }}
             >
               Hvorfor ToSom?
@@ -181,8 +187,12 @@ export default function LandingPage() {
             <p
               style={{
                 ...typographyToStyle('body-lg'),
-                color: color.text.secondary,
-                lineHeight: '1.8',
+                color: 'rgba(255,255,255,0.88)',
+                lineHeight: '1.7',
+                letterSpacing: '0.25px',
+                maxWidth: '740px',
+                marginLeft: 'auto',
+                marginRight: 'auto',
               }}
             >
               Fordi mennesker ikke er skapt for å gå gjennom livet alene. Tosomhet handler om trygghet, utvikling, hverdagsmagi og å dele livet i to.
@@ -191,14 +201,18 @@ export default function LandingPage() {
             <p
               style={{
                 ...typographyToStyle('body-lg'),
-                color: color.text.secondary,
-                lineHeight: '1.8',
+                color: 'rgba(255,255,255,0.88)',
+                lineHeight: '1.7',
+                letterSpacing: '0.25px',
+                maxWidth: '740px',
+                marginLeft: 'auto',
+                marginRight: 'auto',
               }}
             >
               ToSom gir deg ro, tid og én gjennomtenkt match — slik at du faktisk kan bli kjent.
             </p>
           </div>
-        </ToSomSection>
+        </section>
 
         {/* ===== Slik fungerer det ===== */}
         <ToSomSection

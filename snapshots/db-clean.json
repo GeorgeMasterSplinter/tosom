@@ -1,0 +1,34 @@
+{
+  "exportedAt": "2026-08-03T20:25:08.291Z",
+  "totalUsers": 4,
+  "activeUsers": [
+    {
+      "email": "bulk@tosom.com",
+      "role": "USER"
+    },
+    {
+      "email": "testA@tosom.dev",
+      "role": "USER"
+    },
+    {
+      "email": "testB@tosom.dev",
+      "role": "USER"
+    },
+    {
+      "email": "admin@tosom.dev",
+      "role": "ADMIN"
+    }
+  ],
+  "deletedUsers": 0,
+  "totalProfiles": 3,
+  "totalJourneys": 0,
+  "totalMatches": 0,
+  "activeMatches": 0,
+  "totalConversations": 0,
+  "endedConversations": 0,
+  "totalMessages": 0,
+  "totalNotifications": 0,
+  "totalResonanceSessions": 0,
+  "totalJourneyStateLogs": 0,
+  "status": "CLEAN ✓"
+}

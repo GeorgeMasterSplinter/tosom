@@ -1,3 +1,4 @@
+/** @deprecated (V2) Oppgåver er valfrie — ikkje pliktige lenger. */
 /**
  * POST /api/journey/progress/advance
  * 

@@ -11,7 +11,6 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Footer } from '@/components/ui/layout/Footer';
 import { QuickMatchCard as MatchCard } from '@/components/QuickMatchCard';
-import { ProgressSteps } from './components/ProgressSteps';
 
 interface MatchData {
   id?: string;
@@ -190,16 +189,6 @@ export default function MatchingPage() {
         />
 
         <main className="relative z-10 max-w-6xl mx-auto px-6 lg:px-8 py-20">
-          {/* Progresjon */}
-          <ProgressSteps
-            steps={[
-              { id: 1, label: 'Profil', status: 'complete' },
-              { id: 2, label: 'Preferanser', status: loading ? 'active' : 'complete' },
-              { id: 3, label: 'Verdier', status: matches.length > 0 ? 'complete' : loading ? 'active' : 'upcoming' },
-              { id: 4, label: 'Match', status: matches.length > 0 ? 'active' : 'upcoming' },
-            ]}
-          />
-
           {/* Guiding-text */}
           <div className="text-center mb-6">
             <p

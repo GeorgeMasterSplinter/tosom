@@ -1,0 +1,450 @@
+]633;E;IFS= read -r hash;329051a2-de60-473f-8c1d-73a2bb3e3acd]633;C0884068d69aff60cbcdc6854c5b7f7c65a9658017b5bd3fd3efba923ad4ac036  ./.opencode/node_modules/pure-rand/lib/esm/utils/skipN.d.ts
+0884068d69aff60cbcdc6854c5b7f7c65a9658017b5bd3fd3efba923ad4ac036  ./.opencode/node_modules/pure-rand/lib/utils/skipN.d.ts
+---
+0aba44be7276e413c31e4a29c1fcc59180abb1490fd8390fdbb1d7a7a8908f6c  ./.opencode/node_modules/msgpackr/unpack.d.ts
+0aba44be7276e413c31e4a29c1fcc59180abb1490fd8390fdbb1d7a7a8908f6c  ./.opencode/node_modules/msgpackr/unpack.d.cts
+---
+0b98ccbe349eb9774d8c96fa381335cef127140996f91a4eea47b7742b55f51d  ./.opencode/node_modules/zod/src/locales/index.ts
+0b98ccbe349eb9774d8c96fa381335cef127140996f91a4eea47b7742b55f51d  ./.opencode/node_modules/zod/locales/index.d.ts
+0b98ccbe349eb9774d8c96fa381335cef127140996f91a4eea47b7742b55f51d  ./.opencode/node_modules/zod/locales/index.js
+---
+133af6e45e6541018e1cdff6a59d610421c97e3215ffcb1447b682a74a278d6b  ./.opencode/node_modules/@opencode-ai/sdk/dist/v2/gen/core/bodySerializer.gen.js
+133af6e45e6541018e1cdff6a59d610421c97e3215ffcb1447b682a74a278d6b  ./.opencode/node_modules/@opencode-ai/sdk/dist/gen/core/bodySerializer.gen.js
+---
+1765e61249cb44bf5064d42bfa06956455bbc74dc05f074d5727e8962592c920  ./.opencode/node_modules/zod/v4/core/regexes.d.ts
+1765e61249cb44bf5064d42bfa06956455bbc74dc05f074d5727e8962592c920  ./.opencode/node_modules/zod/v4/core/regexes.d.cts
+---
+17ebe2baaa8d2f0c94afaaaae74a46e43e2b163a0f4ffd69adb39ad57c318e78  ./.opencode/node_modules/@opencode-ai/sdk/dist/v2/gen/types.gen.js
+17ebe2baaa8d2f0c94afaaaae74a46e43e2b163a0f4ffd69adb39ad57c318e78  ./.opencode/node_modules/@opencode-ai/sdk/dist/v2/gen/core/types.gen.js
+17ebe2baaa8d2f0c94afaaaae74a46e43e2b163a0f4ffd69adb39ad57c318e78  ./.opencode/node_modules/@opencode-ai/sdk/dist/v2/gen/client/types.gen.js
+17ebe2baaa8d2f0c94afaaaae74a46e43e2b163a0f4ffd69adb39ad57c318e78  ./.opencode/node_modules/@opencode-ai/sdk/dist/gen/types.gen.js
+17ebe2baaa8d2f0c94afaaaae74a46e43e2b163a0f4ffd69adb39ad57c318e78  ./.opencode/node_modules/@opencode-ai/sdk/dist/gen/core/types.gen.js
+17ebe2baaa8d2f0c94afaaaae74a46e43e2b163a0f4ffd69adb39ad57c318e78  ./.opencode/node_modules/@opencode-ai/sdk/dist/gen/client/types.gen.js
+---
+1ff91526fcdd634148c655ef86e912a273ce6a0239e2505701561f086678262b  ./.opencode/node_modules/zod/v4/core/versions.d.cts
+1ff91526fcdd634148c655ef86e912a273ce6a0239e2505701561f086678262b  ./.opencode/node_modules/zod/v4/core/versions.d.ts
+---
+25b3f581e12ede11e5739f57a86e8668fbc0124f6649506def306cad2c59d262  ./.opencode/node_modules/zod/v3/standard-schema.d.ts
+25b3f581e12ede11e5739f57a86e8668fbc0124f6649506def306cad2c59d262  ./.opencode/node_modules/zod/v3/standard-schema.d.cts
+---
+26384fb401f582cae1234213c3dc75fdc80e3d728a0a1c55b405be8a0c6dddbe  ./.opencode/node_modules/zod/v4/locales/ka.d.cts
+26384fb401f582cae1234213c3dc75fdc80e3d728a0a1c55b405be8a0c6dddbe  ./.opencode/node_modules/zod/v4/locales/bg.d.cts
+26384fb401f582cae1234213c3dc75fdc80e3d728a0a1c55b405be8a0c6dddbe  ./.opencode/node_modules/zod/v4/locales/tr.d.cts
+26384fb401f582cae1234213c3dc75fdc80e3d728a0a1c55b405be8a0c6dddbe  ./.opencode/node_modules/zod/v4/locales/is.d.cts
+26384fb401f582cae1234213c3dc75fdc80e3d728a0a1c55b405be8a0c6dddbe  ./.opencode/node_modules/zod/v4/locales/lt.d.cts
+26384fb401f582cae1234213c3dc75fdc80e3d728a0a1c55b405be8a0c6dddbe  ./.opencode/node_modules/zod/v4/locales/en.d.cts
+26384fb401f582cae1234213c3dc75fdc80e3d728a0a1c55b405be8a0c6dddbe  ./.opencode/node_modules/zod/v4/locales/eo.d.cts
+---
+26965e789e579cd10968fb6ca81caa2ae50c16608185b16dbe84eb00a652b0cf  ./.opencode/node_modules/zod/v4/locales/index.d.ts
+26965e789e579cd10968fb6ca81caa2ae50c16608185b16dbe84eb00a652b0cf  ./.opencode/node_modules/zod/v4/locales/index.js
+26965e789e579cd10968fb6ca81caa2ae50c16608185b16dbe84eb00a652b0cf  ./.opencode/node_modules/zod/src/v4/locales/index.ts
+---
+293eadad9dead44c6fd1db6de552663c33f215c55a1bfa2802a1bceed88ff0ec  ./.opencode/node_modules/zod/v3/helpers/util.d.ts
+293eadad9dead44c6fd1db6de552663c33f215c55a1bfa2802a1bceed88ff0ec  ./.opencode/node_modules/zod/v3/helpers/util.d.cts
+---
+29ac3721c3e26235e2fdb106b5a6909fdc3cbb273c869129ed6df7542e733014  ./.opencode/node_modules/fast-check/lib/fast-check.d.ts
+29ac3721c3e26235e2fdb106b5a6909fdc3cbb273c869129ed6df7542e733014  ./.opencode/node_modules/fast-check/lib/cjs/fast-check.d.ts
+---
+309ebd217636d68cf8784cbc3272c16fb94fb8e969e18b6fe88c35200340aef1  ./.opencode/node_modules/zod/v4/core/standard-schema.d.ts
+309ebd217636d68cf8784cbc3272c16fb94fb8e969e18b6fe88c35200340aef1  ./.opencode/node_modules/zod/v4/core/standard-schema.d.cts
+---
+32c069ba55d606f7b0ab14381c81594d925c71b32a188c983f21330106d3b15a  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/promise/index.js
+32c069ba55d606f7b0ab14381c81594d925c71b32a188c983f21330106d3b15a  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/effect/index.js
+---
+32f4c875353e043cb8d790f2d63d46e7b23d592fa3d5d09ace6afcff1dd44e03  ./.opencode/node_modules/uuid/dist/v6.js
+32f4c875353e043cb8d790f2d63d46e7b23d592fa3d5d09ace6afcff1dd44e03  ./.opencode/node_modules/uuid/dist-node/v6.js
+---
+358599da1d31542e1d3ebf35a4a98665395ea8eaf0063826b8838974f7e826e5  ./.opencode/node_modules/@opencode-ai/sdk/dist/v2/gen/client/client.gen.d.ts
+358599da1d31542e1d3ebf35a4a98665395ea8eaf0063826b8838974f7e826e5  ./.opencode/node_modules/@opencode-ai/sdk/dist/gen/client/client.gen.d.ts
+---
+38208cc85d447b13d7fc9e75377d4f82e17ad982334786396623c57c1406a257  ./.opencode/node_modules/uuid/dist/v7.js
+38208cc85d447b13d7fc9e75377d4f82e17ad982334786396623c57c1406a257  ./.opencode/node_modules/uuid/dist-node/v7.js
+---
+3b25e966fd93475d8ca2834194ea78321d741a21ca9d1f606b25ec99c1bbc29a  ./.opencode/node_modules/zod/v4/locales/eo.d.ts
+3b25e966fd93475d8ca2834194ea78321d741a21ca9d1f606b25ec99c1bbc29a  ./.opencode/node_modules/zod/v4/locales/en.d.ts
+3b25e966fd93475d8ca2834194ea78321d741a21ca9d1f606b25ec99c1bbc29a  ./.opencode/node_modules/zod/v4/locales/tr.d.ts
+3b25e966fd93475d8ca2834194ea78321d741a21ca9d1f606b25ec99c1bbc29a  ./.opencode/node_modules/zod/v4/locales/lt.d.ts
+3b25e966fd93475d8ca2834194ea78321d741a21ca9d1f606b25ec99c1bbc29a  ./.opencode/node_modules/zod/v4/locales/bg.d.ts
+3b25e966fd93475d8ca2834194ea78321d741a21ca9d1f606b25ec99c1bbc29a  ./.opencode/node_modules/zod/v4/locales/is.d.ts
+3b25e966fd93475d8ca2834194ea78321d741a21ca9d1f606b25ec99c1bbc29a  ./.opencode/node_modules/zod/v4/locales/ka.d.ts
+---
+3b65ad31501886af057e13aeec03afedc54f1f85cc8d332b0eb89800b11fbce4  ./.opencode/node_modules/uuid/dist/v3.js
+3b65ad31501886af057e13aeec03afedc54f1f85cc8d332b0eb89800b11fbce4  ./.opencode/node_modules/uuid/dist-node/v3.js
+---
+3ca9d4afd21425087cf31893b8f9f63c81b0b8408db5e343ca76e5f8aa26ab9a  ./.opencode/node_modules/pure-rand/lib/esm/package.json
+3ca9d4afd21425087cf31893b8f9f63c81b0b8408db5e343ca76e5f8aa26ab9a  ./.opencode/node_modules/yaml/browser/package.json
+---
+3db2efd285e7328d8014b54a7fce3f4861ebcdc655df40517092ed0050983617  ./.opencode/node_modules/zod/src/v3/index.ts
+3db2efd285e7328d8014b54a7fce3f4861ebcdc655df40517092ed0050983617  ./.opencode/node_modules/zod/v3/index.d.ts
+3db2efd285e7328d8014b54a7fce3f4861ebcdc655df40517092ed0050983617  ./.opencode/node_modules/zod/v3/index.js
+---
+3fbf0aa59f99b6e4d640cd2b062cff9537530af3f5bfed4f862a7f18a9caa839  ./.opencode/node_modules/zod/v4/mini/checks.js
+3fbf0aa59f99b6e4d640cd2b062cff9537530af3f5bfed4f862a7f18a9caa839  ./.opencode/node_modules/zod/v4/mini/checks.d.ts
+---
+3fef4900edf209a80ea962107b415b7edf3bc56438a0210e07d3d93974f5ad2e  ./.opencode/node_modules/pure-rand/lib/esm/distribution/uniformInt.d.ts
+3fef4900edf209a80ea962107b415b7edf3bc56438a0210e07d3d93974f5ad2e  ./.opencode/node_modules/pure-rand/lib/distribution/uniformInt.d.ts
+---
+40ab2c3c4a7fe2932875b5e073d2d1a19b6d205363b3baef81f95e9fae0174bf  ./.opencode/node_modules/uuid/dist/uuid-bin.js
+40ab2c3c4a7fe2932875b5e073d2d1a19b6d205363b3baef81f95e9fae0174bf  ./.opencode/node_modules/uuid/dist-node/uuid-bin.js
+---
+43ba2d3579be1e5331a93be3b9d91238ae3fcc27e9717284f57ac252d462fbf4  ./.opencode/node_modules/pure-rand/lib/esm/utils/purify.d.ts
+43ba2d3579be1e5331a93be3b9d91238ae3fcc27e9717284f57ac252d462fbf4  ./.opencode/node_modules/pure-rand/lib/utils/purify.d.ts
+---
+455d93e660b61feec18cd4c31e2f394627546ae8ab31f9bacdab6318112ac31c  ./.opencode/node_modules/zod/v4/mini/index.d.ts
+455d93e660b61feec18cd4c31e2f394627546ae8ab31f9bacdab6318112ac31c  ./.opencode/node_modules/zod/v4/mini/index.js
+455d93e660b61feec18cd4c31e2f394627546ae8ab31f9bacdab6318112ac31c  ./.opencode/node_modules/zod/src/v4/mini/index.ts
+---
+4763b3c6a3bfc9864e5712ca1d4a5ac2817e9d05aef44a0a1556bb449bb2bd06  ./.opencode/node_modules/yaml/dist/schema/core/schema.d.ts
+4763b3c6a3bfc9864e5712ca1d4a5ac2817e9d05aef44a0a1556bb449bb2bd06  ./.opencode/node_modules/yaml/dist/schema/yaml-1.1/schema.d.ts
+---
+48da2f39e100d4085767e94966b43f4fa95ff6a0698fba57ed460914e35f94a0  ./.opencode/node_modules/shebang-regex/license
+48da2f39e100d4085767e94966b43f4fa95ff6a0698fba57ed460914e35f94a0  ./.opencode/node_modules/path-key/license
+---
+49215f2681483ab2e4af560010d8b87ab678c2c022a90a9baa33ee0356c58408  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/promise/context.d.ts
+49215f2681483ab2e4af560010d8b87ab678c2c022a90a9baa33ee0356c58408  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/effect/context.d.ts
+---
+494aaa47240956231f7de5184f7f0828eaa15ba5c5f59fbda42da7b1348258ce  ./.opencode/node_modules/zod/v4/core/index.d.ts
+494aaa47240956231f7de5184f7f0828eaa15ba5c5f59fbda42da7b1348258ce  ./.opencode/node_modules/zod/v4/core/index.js
+494aaa47240956231f7de5184f7f0828eaa15ba5c5f59fbda42da7b1348258ce  ./.opencode/node_modules/zod/src/v4/core/index.ts
+---
+4ec3d4c66cd87f5c8d8ad911b10f99bf27cb00cdfcff82621956e379186b016b  ./.opencode/node_modules/which/LICENSE
+4ec3d4c66cd87f5c8d8ad911b10f99bf27cb00cdfcff82621956e379186b016b  ./.opencode/node_modules/isexe/LICENSE
+4ec3d4c66cd87f5c8d8ad911b10f99bf27cb00cdfcff82621956e379186b016b  ./.opencode/node_modules/ini/LICENSE
+---
+4f07ab182cd515ddb60d805dd9852a134d3dda4953618cf19f53085fff145b7c  ./.opencode/node_modules/pure-rand/lib/esm/distribution/uniformBigInt.d.ts
+4f07ab182cd515ddb60d805dd9852a134d3dda4953618cf19f53085fff145b7c  ./.opencode/node_modules/pure-rand/lib/distribution/uniformBigInt.d.ts
+---
+5039098ed9177045c381726f9b3281f85989ebd8732912f92acae7d0bc7be313  ./.opencode/node_modules/pure-rand/lib/esm/distribution/uniformFloat32.d.ts
+5039098ed9177045c381726f9b3281f85989ebd8732912f92acae7d0bc7be313  ./.opencode/node_modules/pure-rand/lib/distribution/uniformFloat32.d.ts
+---
+552ba13ce1b9caa418a2df94b7410806b56e54b8ed92b95bd4655cbf27612da1  ./.opencode/node_modules/pure-rand/lib/esm/generator/mersenne.d.ts
+552ba13ce1b9caa418a2df94b7410806b56e54b8ed92b95bd4655cbf27612da1  ./.opencode/node_modules/pure-rand/lib/generator/mersenne.d.ts
+---
+55791f5056b5679cbcb7664f42b08673071dc1f844e55063b299a983e5bb3fe7  ./.opencode/node_modules/pure-rand/lib/esm/types/JumpableRandomGenerator.d.ts
+55791f5056b5679cbcb7664f42b08673071dc1f844e55063b299a983e5bb3fe7  ./.opencode/node_modules/pure-rand/lib/types/JumpableRandomGenerator.d.ts
+---
+579f61b51c0e5dc0119ab49fc536130749280c7a23e489e753fcce08c229ce2c  ./.opencode/node_modules/@opencode-ai/sdk/dist/server.d.ts
+579f61b51c0e5dc0119ab49fc536130749280c7a23e489e753fcce08c229ce2c  ./.opencode/node_modules/@opencode-ai/sdk/dist/v2/server.d.ts
+---
+5a43d6eb8496806fd5e152f92edda603dbb1f77108045edcf034f22c9e320ce8  ./.opencode/node_modules/uuid/dist/version.js
+5a43d6eb8496806fd5e152f92edda603dbb1f77108045edcf034f22c9e320ce8  ./.opencode/node_modules/uuid/dist-node/version.js
+---
+5a9acae3250f1259b79ccd0c42f366fe863c19fea43fabb9eebc1108c349d61b  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/promise/plugin.js
+5a9acae3250f1259b79ccd0c42f366fe863c19fea43fabb9eebc1108c349d61b  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/effect/plugin.js
+---
+5cb4c7dad36258f0c5b26d914adfebd66105dddc4af3c12d2b3173e7e5674191  ./.opencode/node_modules/zod/v4/package.json
+5cb4c7dad36258f0c5b26d914adfebd66105dddc4af3c12d2b3173e7e5674191  ./.opencode/node_modules/zod/v4/classic/package.json
+5cb4c7dad36258f0c5b26d914adfebd66105dddc4af3c12d2b3173e7e5674191  ./.opencode/node_modules/zod/v4/core/package.json
+5cb4c7dad36258f0c5b26d914adfebd66105dddc4af3c12d2b3173e7e5674191  ./.opencode/node_modules/zod/v4/mini/package.json
+5cb4c7dad36258f0c5b26d914adfebd66105dddc4af3c12d2b3173e7e5674191  ./.opencode/node_modules/zod/v4/locales/package.json
+5cb4c7dad36258f0c5b26d914adfebd66105dddc4af3c12d2b3173e7e5674191  ./.opencode/node_modules/zod/v4-mini/package.json
+5cb4c7dad36258f0c5b26d914adfebd66105dddc4af3c12d2b3173e7e5674191  ./.opencode/node_modules/zod/mini/package.json
+5cb4c7dad36258f0c5b26d914adfebd66105dddc4af3c12d2b3173e7e5674191  ./.opencode/node_modules/zod/locales/package.json
+5cb4c7dad36258f0c5b26d914adfebd66105dddc4af3c12d2b3173e7e5674191  ./.opencode/node_modules/zod/v3/package.json
+---
+5d26d2e47e2352def36f89a3e8bf8581da22b7f857e07ef3114cd52cf4813445  ./.opencode/node_modules/zod/src/v3/external.ts
+5d26d2e47e2352def36f89a3e8bf8581da22b7f857e07ef3114cd52cf4813445  ./.opencode/node_modules/zod/v3/external.js
+5d26d2e47e2352def36f89a3e8bf8581da22b7f857e07ef3114cd52cf4813445  ./.opencode/node_modules/zod/v3/external.d.ts
+---
+5daa30e9a92a9fb4c8df37212c6bf421e6102dcb6070b32a7cdb978ecc27c230  ./.opencode/node_modules/@opencode-ai/sdk/dist/v2/gen/core/auth.gen.js
+5daa30e9a92a9fb4c8df37212c6bf421e6102dcb6070b32a7cdb978ecc27c230  ./.opencode/node_modules/@opencode-ai/sdk/dist/gen/core/auth.gen.js
+---
+60d1baa9e7b198ea9221564bc5000c97fd9fb9a9d74974cb08f0176192612b2b  ./.opencode/node_modules/@opencode-ai/sdk/dist/v2/gen/core/queryKeySerializer.gen.d.ts
+60d1baa9e7b198ea9221564bc5000c97fd9fb9a9d74974cb08f0176192612b2b  ./.opencode/node_modules/@opencode-ai/sdk/dist/gen/core/queryKeySerializer.gen.d.ts
+---
+65e9fae8f22278e6c9ac5b016dbe1ead01b8014f66ce08a807741885d4bf01f1  ./.opencode/node_modules/uuid/dist/index.js
+65e9fae8f22278e6c9ac5b016dbe1ead01b8014f66ce08a807741885d4bf01f1  ./.opencode/node_modules/uuid/dist-node/index.js
+---
+68970c8ded28e4ccde5578fe2b6e99f622adcb20a629d5fd56746525c8ee994c  ./.opencode/node_modules/@ai-sdk/provider/src/language-model/index.ts
+68970c8ded28e4ccde5578fe2b6e99f622adcb20a629d5fd56746525c8ee994c  ./.opencode/node_modules/@ai-sdk/provider/src/image-model/index.ts
+68970c8ded28e4ccde5578fe2b6e99f622adcb20a629d5fd56746525c8ee994c  ./.opencode/node_modules/@ai-sdk/provider/src/language-model-middleware/index.ts
+68970c8ded28e4ccde5578fe2b6e99f622adcb20a629d5fd56746525c8ee994c  ./.opencode/node_modules/@ai-sdk/provider/src/shared/index.ts
+68970c8ded28e4ccde5578fe2b6e99f622adcb20a629d5fd56746525c8ee994c  ./.opencode/node_modules/@ai-sdk/provider/src/embedding-model/index.ts
+68970c8ded28e4ccde5578fe2b6e99f622adcb20a629d5fd56746525c8ee994c  ./.opencode/node_modules/@ai-sdk/provider/src/provider/index.ts
+---
+68f5e28618d07e0cd09f3c016fc2b5c597d41730cf7a5bc165bb137ee5d239c5  ./.opencode/node_modules/yaml/dist/schema/core/float.d.ts
+68f5e28618d07e0cd09f3c016fc2b5c597d41730cf7a5bc165bb137ee5d239c5  ./.opencode/node_modules/yaml/dist/schema/yaml-1.1/float.d.ts
+---
+69d169609cd3f16d85b120b1d88e247216a59c7c5a27b321290c0604627db5c3  ./.opencode/node_modules/uuid/dist/rng.js
+69d169609cd3f16d85b120b1d88e247216a59c7c5a27b321290c0604627db5c3  ./.opencode/node_modules/uuid/dist-node/rng.js
+---
+6a4ebe25cd23d08ba11822228337f6d513cfcdbb569dfcaf98c44d38b9ba7479  ./.opencode/node_modules/msgpackr/pack.d.ts
+6a4ebe25cd23d08ba11822228337f6d513cfcdbb569dfcaf98c44d38b9ba7479  ./.opencode/node_modules/msgpackr/pack.d.cts
+---
+6bd4ff061556b19402df8b3cb1d9e789af05dfc0674b933b663e2b10fe029ed6  ./lib/match/status.ts
+6bd4ff061556b19402df8b3cb1d9e789af05dfc0674b933b663e2b10fe029ed6  ./lib/profile/dynamicProfile.ts
+---
+6ff4c27ce1c30040730481cab949bf344938252c250111642ae5e12c51de8324  ./.opencode/node_modules/@ai-sdk/provider/dist/index.d.ts
+6ff4c27ce1c30040730481cab949bf344938252c250111642ae5e12c51de8324  ./.opencode/node_modules/@ai-sdk/provider/dist/index.d.mts
+---
+72a49ddf3468f94699ab9d3bfbc86edae7948d853d6ad920d9ed35d1ce00e639  ./.opencode/node_modules/pure-rand/lib/esm/generator/xoroshiro128plus.d.ts
+72a49ddf3468f94699ab9d3bfbc86edae7948d853d6ad920d9ed35d1ce00e639  ./.opencode/node_modules/pure-rand/lib/generator/xoroshiro128plus.d.ts
+---
+75146c1aafe3680fb32f9ef24e1231a97785f78cf3993a16ae69a6395ea05438  ./.opencode/node_modules/pure-rand/lib/esm/distribution/uniformFloat64.d.ts
+75146c1aafe3680fb32f9ef24e1231a97785f78cf3993a16ae69a6395ea05438  ./.opencode/node_modules/pure-rand/lib/distribution/uniformFloat64.d.ts
+---
+774bc4bc767a58458dfdd252430d96b71b3d380ac241b50df6cb757aaa1b4783  ./.opencode/node_modules/uuid/dist/regex.js
+774bc4bc767a58458dfdd252430d96b71b3d380ac241b50df6cb757aaa1b4783  ./.opencode/node_modules/uuid/dist-node/regex.js
+---
+78475a282beaea6e8c45e5f2586134929be2e21728f159fb8559df06d7288475  ./.opencode/node_modules/uuid/dist/v6ToV1.js
+78475a282beaea6e8c45e5f2586134929be2e21728f159fb8559df06d7288475  ./.opencode/node_modules/uuid/dist-node/v6ToV1.js
+---
+78ba6a91a3c2d219e3a6980d7704c0998e8152cabcaece0f5a04989025d0e60c  ./.opencode/node_modules/uuid/dist/validate.js
+78ba6a91a3c2d219e3a6980d7704c0998e8152cabcaece0f5a04989025d0e60c  ./.opencode/node_modules/uuid/dist-node/validate.js
+---
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/be.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/hu.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/sv.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/fa.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/ta.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/yo.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/it.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/ps.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/zh-TW.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/fr.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/az.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/ur.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/fi.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/da.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/ja.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/ru.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/vi.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/ms.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/cs.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/nl.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/ko.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/sl.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/zh-CN.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/pl.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/ar.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/ca.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/no.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/ota.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/id.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/he.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/uk.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/de.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/km.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/th.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/pt.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/fr-CA.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/es.d.ts
+7ceb8bc679a90951354f89379bc37228e7cf87b753069cd7b62310d5cbbe1f11  ./.opencode/node_modules/zod/v4/locales/mk.d.ts
+---
+80f829c59dfb2ac33d6b02467d78bc88790963fc168ac5e3003880f6a414414b  ./.opencode/node_modules/pure-rand/lib/esm/RandomGenerator-DcXj09Ch.d.ts
+80f829c59dfb2ac33d6b02467d78bc88790963fc168ac5e3003880f6a414414b  ./.opencode/node_modules/pure-rand/lib/RandomGenerator-DcXj09Ch.d.ts
+---
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/uuid/dist/types.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/uuid/dist/uuid-bin.d.ts
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/uuid/dist-node/types.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/zod/v4/core/standard-schema.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/zod/v4/core/json-schema.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/zod/v3/standard-schema.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/zod/v3/helpers/typeAliases.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/zod/v3/helpers/partialUtil.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/zod/v3/helpers/enumUtil.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/promise/agent.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/promise/aisdk.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/promise/reference.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/promise/registration.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/promise/integration.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/promise/context.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/promise/skill.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/promise/command.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/promise/catalog.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/options.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/effect/npm.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/effect/agent.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/effect/event.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/effect/aisdk.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/effect/reference.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/effect/registration.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/effect/integration.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/effect/context.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/effect/location.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/effect/skill.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/effect/path.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/effect/filesystem.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/effect/command.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/effect/catalog.js
+8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881  ./.opencode/node_modules/@opencode-ai/plugin/dist/shell.js
+---
+8f81a7b2a5f8704ea1b4e8f83d36659856fdf3d122b2bd16fe1b5c47c97b6ffa  ./.opencode/node_modules/uuid/dist/max.js
+8f81a7b2a5f8704ea1b4e8f83d36659856fdf3d122b2bd16fe1b5c47c97b6ffa  ./.opencode/node_modules/uuid/dist-node/max.js
+---
+905563f3521e747a2c2d5d4f35609181a2c1f56ac485b01860fd1879bca20d91  ./.opencode/node_modules/@ai-sdk/provider/src/speech-model/index.ts
+905563f3521e747a2c2d5d4f35609181a2c1f56ac485b01860fd1879bca20d91  ./.opencode/node_modules/@ai-sdk/provider/src/transcription-model/index.ts
+---
+95aab110252375bfe04126768068b5b016de380bf646d05c13d73f04fd21dbbf  ./.opencode/node_modules/pure-rand/lib/esm/utils/generateN.d.ts
+95aab110252375bfe04126768068b5b016de380bf646d05c13d73f04fd21dbbf  ./.opencode/node_modules/pure-rand/lib/utils/generateN.d.ts
+---
+96135fbf1dab9f857c9df88a191fdc435517f7a5b021d09cad0c290a1dcec436  ./.opencode/node_modules/@opencode-ai/sdk/dist/v2/gen/core/auth.gen.d.ts
+96135fbf1dab9f857c9df88a191fdc435517f7a5b021d09cad0c290a1dcec436  ./.opencode/node_modules/@opencode-ai/sdk/dist/gen/core/auth.gen.d.ts
+---
+9b5412f526686a59b852a7d1b7aa8d95330fe613cb35f08a2072e08423b2bcc3  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/promise/aisdk.d.ts
+9b5412f526686a59b852a7d1b7aa8d95330fe613cb35f08a2072e08423b2bcc3  ./.opencode/node_modules/@opencode-ai/plugin/dist/v2/effect/aisdk.d.ts
+---
+a18a366ba605b91d04cd5ea8d13acb5ea19ca5308209ffab29e0744a6ddbf039  ./.opencode/node_modules/pure-rand/lib/esm/types/RandomGenerator.d.ts
+a18a366ba605b91d04cd5ea8d13acb5ea19ca5308209ffab29e0744a6ddbf039  ./.opencode/node_modules/pure-rand/lib/types/RandomGenerator.d.ts
+---
+a383f50a691c05533a40bbb4a87f718daa050abbc96debc9715efdc74d8538b4  ./.opencode/node_modules/uuid/dist/parse.js
+a383f50a691c05533a40bbb4a87f718daa050abbc96debc9715efdc74d8538b4  ./.opencode/node_modules/uuid/dist-node/parse.js
+---
+a3cd1c783a64f6e010af00593ac8e7e28c127a5e63266da4809b5687f1a081aa  ./.opencode/node_modules/uuid/dist/v1.js
+a3cd1c783a64f6e010af00593ac8e7e28c127a5e63266da4809b5687f1a081aa  ./.opencode/node_modules/uuid/dist-node/v1.js
+---
+a4b634bb8c97cc700dbf165f3bb0095ec669042da72eaf28a7c5e2ddd98169ce  ./.opencode/node_modules/zod/v4/index.d.ts
+a4b634bb8c97cc700dbf165f3bb0095ec669042da72eaf28a7c5e2ddd98169ce  ./.opencode/node_modules/zod/v4/index.js
+---
+a6f8ac293df0b75af2946e5190d8f00336b826bb1340b96d669a09beb8885ff8  ./.opencode/node_modules/uuid/dist/nil.js
+a6f8ac293df0b75af2946e5190d8f00336b826bb1340b96d669a09beb8885ff8  ./.opencode/node_modules/uuid/dist-node/nil.js
+---
+add0ce7b77ba5b308492fa68f77f24d1ed1d9148534bdf05ac17c30763fc1a79  ./.opencode/node_modules/zod/v4/core/doc.d.ts
+add0ce7b77ba5b308492fa68f77f24d1ed1d9148534bdf05ac17c30763fc1a79  ./.opencode/node_modules/zod/v4/core/doc.d.cts
+---
+af80584f66d422baa23aafe39589ee742e866a303ea54aa2b479a8024a7684a0  ./.opencode/node_modules/msgpackr/index.d.cts
+af80584f66d422baa23aafe39589ee742e866a303ea54aa2b479a8024a7684a0  ./.opencode/node_modules/msgpackr/index.d.ts
+---
+b08584c5a763aed505f52db1c2b6ffe98e58d2173a302d8de5d894a2daa059a7  ./docs/repo-structure.md
+b08584c5a763aed505f52db1c2b6ffe98e58d2173a302d8de5d894a2daa059a7  ./repo-structure.md
+---
+bb592b599f2b00be6ca9fb2ac2fb7350abf3a6e6e274201cf6865c8c15e52b6a  ./.opencode/node_modules/uuid/dist/stringify.js
+bb592b599f2b00be6ca9fb2ac2fb7350abf3a6e6e274201cf6865c8c15e52b6a  ./.opencode/node_modules/uuid/dist-node/stringify.js
+---
+bdd14f07b4eca0b4b5203b85b8dbc4d084c749fa590bee5ea613e1641dcd3b29  ./.opencode/node_modules/@standard-schema/spec/dist/index.d.cts
+bdd14f07b4eca0b4b5203b85b8dbc4d084c749fa590bee5ea613e1641dcd3b29  ./.opencode/node_modules/@standard-schema/spec/dist/index.d.ts
+---
+c1a2e05eb6d7ca8d7e4a7f4c93ccf0c2857e842a64c98eaee4d85841ee9855e6  ./.opencode/node_modules/zod/v4/core/json-schema.d.ts
+c1a2e05eb6d7ca8d7e4a7f4c93ccf0c2857e842a64c98eaee4d85841ee9855e6  ./.opencode/node_modules/zod/v4/core/json-schema.d.cts
+---
+c36ce4ffa39eae9d8d5f3262bbff170f55b375156bc4eeadadfeede2820aa4c2  ./.opencode/node_modules/@opencode-ai/sdk/dist/v2/gen/core/pathSerializer.gen.d.ts
+c36ce4ffa39eae9d8d5f3262bbff170f55b375156bc4eeadadfeede2820aa4c2  ./.opencode/node_modules/@opencode-ai/sdk/dist/gen/core/pathSerializer.gen.d.ts
+---
+c3ef916ed5e1bb397f04352f010f97961e98f610c13ecc05c25a384ef0e5a5a2  ./.opencode/node_modules/zod/v4-mini/index.cjs
+c3ef916ed5e1bb397f04352f010f97961e98f610c13ecc05c25a384ef0e5a5a2  ./.opencode/node_modules/zod/mini/index.cjs
+---
+c733a1897d6b4b30dad6998597f6896b265b094a65534359ada34b08ecf8932c  ./.opencode/node_modules/zod/src/index.ts
+c733a1897d6b4b30dad6998597f6896b265b094a65534359ada34b08ecf8932c  ./.opencode/node_modules/zod/index.d.ts
+c733a1897d6b4b30dad6998597f6896b265b094a65534359ada34b08ecf8932c  ./.opencode/node_modules/zod/index.js
+---
+cc69f01bfc81230f20a2355c6785d8f83e37d79119d55d5c1f44f099ff4740ff  ./.opencode/node_modules/@opencode-ai/sdk/dist/v2/gen/core/queryKeySerializer.gen.js
+cc69f01bfc81230f20a2355c6785d8f83e37d79119d55d5c1f44f099ff4740ff  ./.opencode/node_modules/@opencode-ai/sdk/dist/gen/core/queryKeySerializer.gen.js
+---
+ce090c2ea41db958cff64383cdcd09de21b577d33a57fa281cad1dde2c87b02d  ./.opencode/node_modules/uuid/dist/v35.js
+ce090c2ea41db958cff64383cdcd09de21b577d33a57fa281cad1dde2c87b02d  ./.opencode/node_modules/uuid/dist-node/v35.js
+---
+cf94ca2939d655e17fdfd1d0a3aceb4cbeb040d8946e9c9c1eaa5cc734dc69c8  ./.opencode/node_modules/zod/v4-mini/index.d.ts
+cf94ca2939d655e17fdfd1d0a3aceb4cbeb040d8946e9c9c1eaa5cc734dc69c8  ./.opencode/node_modules/zod/v4-mini/index.js
+cf94ca2939d655e17fdfd1d0a3aceb4cbeb040d8946e9c9c1eaa5cc734dc69c8  ./.opencode/node_modules/zod/mini/index.d.ts
+cf94ca2939d655e17fdfd1d0a3aceb4cbeb040d8946e9c9c1eaa5cc734dc69c8  ./.opencode/node_modules/zod/mini/index.js
+cf94ca2939d655e17fdfd1d0a3aceb4cbeb040d8946e9c9c1eaa5cc734dc69c8  ./.opencode/node_modules/zod/src/v4-mini/index.ts
+cf94ca2939d655e17fdfd1d0a3aceb4cbeb040d8946e9c9c1eaa5cc734dc69c8  ./.opencode/node_modules/zod/src/mini/index.ts
+---
+d00470775464c789c7ac04cfba3bf1b79ef149790eb72556d1c51d8f50c8e7f3  ./.opencode/node_modules/msgpackr-extract/LICENSE
+d00470775464c789c7ac04cfba3bf1b79ef149790eb72556d1c51d8f50c8e7f3  ./.opencode/node_modules/msgpackr/LICENSE
+---
+d34c4532b0004150342d04ab1a6f61d19751c4fc7c465c72ec582b180b0904c0  ./.opencode/node_modules/zod/v4-mini/index.d.cts
+d34c4532b0004150342d04ab1a6f61d19751c4fc7c465c72ec582b180b0904c0  ./.opencode/node_modules/zod/mini/index.d.cts
+---
+d3cfde44f8089768ebb08098c96d01ca260b88bccf238d55eee93f1c620ff5a5  ./.opencode/node_modules/zod/src/v3/helpers/typeAliases.ts
+d3cfde44f8089768ebb08098c96d01ca260b88bccf238d55eee93f1c620ff5a5  ./.opencode/node_modules/zod/v3/helpers/typeAliases.d.ts
+d3cfde44f8089768ebb08098c96d01ca260b88bccf238d55eee93f1c620ff5a5  ./.opencode/node_modules/zod/v3/helpers/typeAliases.d.cts
+---
+d43aa81f5bc89faa359e0f97c814ba25155591ff078fbb9bfd40f8c7c9683230  ./.opencode/node_modules/zod/v4/core/standard-schema.cjs
+d43aa81f5bc89faa359e0f97c814ba25155591ff078fbb9bfd40f8c7c9683230  ./.opencode/node_modules/zod/v4/core/json-schema.cjs
+d43aa81f5bc89faa359e0f97c814ba25155591ff078fbb9bfd40f8c7c9683230  ./.opencode/node_modules/zod/v3/standard-schema.cjs
+d43aa81f5bc89faa359e0f97c814ba25155591ff078fbb9bfd40f8c7c9683230  ./.opencode/node_modules/zod/v3/helpers/typeAliases.cjs
+d43aa81f5bc89faa359e0f97c814ba25155591ff078fbb9bfd40f8c7c9683230  ./.opencode/node_modules/zod/v3/helpers/enumUtil.cjs
+d43aa81f5bc89faa359e0f97c814ba25155591ff078fbb9bfd40f8c7c9683230  ./.opencode/node_modules/zod/v3/helpers/partialUtil.cjs
+---
+d49030b9a324bab9bcf9f663a70298391b0f5a25328409174d86617512bf3037  ./.opencode/node_modules/zod/v4/classic/index.d.ts
+d49030b9a324bab9bcf9f663a70298391b0f5a25328409174d86617512bf3037  ./.opencode/node_modules/zod/v4/classic/index.js
+---
+d58a1fea61e0f0bccdb2f4fd3b7b098adcfddb44f036302c4d2c4e173540a292  ./.opencode/node_modules/zod/v4/classic/index.cjs
+d58a1fea61e0f0bccdb2f4fd3b7b098adcfddb44f036302c4d2c4e173540a292  ./.opencode/node_modules/zod/v3/index.cjs
+---
+daaf09616ea3b145ccd6a1dfea190b65d546267a9916c5741e026d4290c61ae9  ./.opencode/node_modules/uuid/dist/v5.js
+daaf09616ea3b145ccd6a1dfea190b65d546267a9916c5741e026d4290c61ae9  ./.opencode/node_modules/uuid/dist-node/v5.js
+---
+db605a698f917c4006462596e6526fe6a9c6eff9b8409e8472fe545d4b70027c  ./.opencode/node_modules/zod/v4/mini/parse.js
+db605a698f917c4006462596e6526fe6a9c6eff9b8409e8472fe545d4b70027c  ./.opencode/node_modules/zod/v4/mini/parse.d.ts
+---
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/az.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/he.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/ps.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/fa.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/ru.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/fr.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/pl.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/de.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/zh-CN.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/nl.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/th.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/da.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/ja.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/ota.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/zh-TW.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/it.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/cs.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/no.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/sv.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/hu.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/yo.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/ko.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/kh.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/es.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/be.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/mk.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/ta.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/fr-CA.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/uk.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/ar.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/km.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/fi.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/ur.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/ua.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/ms.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/pt.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/sl.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/ca.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/vi.d.cts
+e0bfe601a9fdf6defe94ed62dc60ac71597566001a1f86e705c95e431a9c816d  ./.opencode/node_modules/zod/v4/locales/id.d.cts
+---
+e141dae0a2c1aa0eb31bf132464ef9bd5b6410f8905e8d6a5172893b87344b63  ./.opencode/node_modules/fast-check/lib/types57/fast-check.d.ts
+e141dae0a2c1aa0eb31bf132464ef9bd5b6410f8905e8d6a5172893b87344b63  ./.opencode/node_modules/fast-check/lib/cjs/types57/fast-check.d.ts
+---
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./.opencode/node_modules/pure-rand/lib/esm/types/JumpableRandomGenerator.js
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./.opencode/node_modules/pure-rand/lib/esm/types/RandomGenerator.js
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./.opencode/node_modules/pure-rand/lib/types/JumpableRandomGenerator.js
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./.opencode/node_modules/pure-rand/lib/types/RandomGenerator.js
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./.opencode/node_modules/@standard-schema/spec/dist/index.js
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./.opencode/node_modules/@msgpackr-extract/msgpackr-extract-linux-x64/index.js
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./tosom@0.1.0
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ./Build
+---
+e4b03ddcf8563b1c0aee782a185286ed85a255ce8a30df8453aade2188bbc904  ./.opencode/node_modules/zod/v3/helpers/errorUtil.d.ts
+e4b03ddcf8563b1c0aee782a185286ed85a255ce8a30df8453aade2188bbc904  ./.opencode/node_modules/zod/v3/helpers/errorUtil.d.cts
+---
+e5439f36875ff0cf4850030db7c13c67365fddf8f80a04efaf6912c3f92bf9b0  ./.opencode/node_modules/@ai-sdk/provider/src/embedding-model-middleware/index.ts
+e5439f36875ff0cf4850030db7c13c67365fddf8f80a04efaf6912c3f92bf9b0  ./.opencode/node_modules/@ai-sdk/provider/src/video-model/index.ts
+e5439f36875ff0cf4850030db7c13c67365fddf8f80a04efaf6912c3f92bf9b0  ./.opencode/node_modules/@ai-sdk/provider/src/reranking-model/index.ts
+e5439f36875ff0cf4850030db7c13c67365fddf8f80a04efaf6912c3f92bf9b0  ./.opencode/node_modules/@ai-sdk/provider/src/image-model-middleware/index.ts
+---
+eb4b917bb2bfcb3e723fedf3c5d0256b83578a9285e85ebf4c60caa953aa3d39  ./.opencode/node_modules/uuid/dist/v4.js
+eb4b917bb2bfcb3e723fedf3c5d0256b83578a9285e85ebf4c60caa953aa3d39  ./.opencode/node_modules/uuid/dist-node/v4.js
+---
+f078c3d892d24d9bcd6fcc449cb23f8a0d2a5469509de175b671d6a84971e078  ./.opencode/node_modules/pure-rand/lib/esm/generator/xorshift128plus.d.ts
+f078c3d892d24d9bcd6fcc449cb23f8a0d2a5469509de175b671d6a84971e078  ./.opencode/node_modules/pure-rand/lib/generator/xorshift128plus.d.ts
+---
+f0a2d19ee0d4398607808fcfc3eebeb1ea7af08a0c17d71d42fc612f97241a3f  ./.opencode/node_modules/uuid/dist/v1ToV6.js
+f0a2d19ee0d4398607808fcfc3eebeb1ea7af08a0c17d71d42fc612f97241a3f  ./.opencode/node_modules/uuid/dist-node/v1ToV6.js
+---
+f672c876c1a04a223cf2023b3d91e8a52bb1544c576b81bf64a8fec82be9969c  ./.opencode/node_modules/zod/v3/helpers/enumUtil.d.ts
+f672c876c1a04a223cf2023b3d91e8a52bb1544c576b81bf64a8fec82be9969c  ./.opencode/node_modules/zod/v3/helpers/enumUtil.d.cts
+---
+f92d4e9209d6d6bcfc3b8bf0152f85f9004aa9a3163d1113d132651c2c022581  ./.opencode/node_modules/@opencode-ai/sdk/dist/v2/gen/core/pathSerializer.gen.js
+f92d4e9209d6d6bcfc3b8bf0152f85f9004aa9a3163d1113d132651c2c022581  ./.opencode/node_modules/@opencode-ai/sdk/dist/gen/core/pathSerializer.gen.js
+---
+f9663a988388ef0752b32658e585377bf0364fb36ca4c7b433b24ba4531987a6  ./.opencode/node_modules/pure-rand/lib/esm/generator/congruential32.d.ts
+f9663a988388ef0752b32658e585377bf0364fb36ca4c7b433b24ba4531987a6  ./.opencode/node_modules/pure-rand/lib/generator/congruential32.d.ts
+---

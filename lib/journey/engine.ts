@@ -198,13 +198,13 @@ export const PHASE_CONFIGS: Array<{
     phase: JourneyPhase.EARLY,
     startDay: 1,
     endDay: 14,
-    description: "Denne delen av reisen er utan bilder.",
+    description: "Denne delen av reisen er uten bilder.",
   },
   {
     phase: JourneyPhase.BUILDING_TRUST,
     startDay: 15,
     endDay: 21,
-    description: "Nå kan dere se kvarandres bilder. Ta det rolig.",
+    description: "Nå kan dere se hverandres bilder. Ta det rolig.",
   },
   {
     phase: JourneyPhase.DEEPER,
@@ -233,9 +233,9 @@ const PHASE_LABELS: Record<JourneyPhase, string> = {
 
 const PHASE_DESCRIPTIONS: Record<JourneyPhase, string> = {
   [JourneyPhase.EARLY]: "Dere er i startfasen. Fokus på lette spørsmål og å lære hverandre å kjenne.",
-  [JourneyPhase.BUILDING_TRUST]: "Tillit bygges. Spørsmålene blir meir personlege.",
-  [JourneyPhase.DEEPER]: "No går vi djupare. Refleksjon om verdier, livssyn og relasjon.",
-  [JourneyPhase.CHECKIN]: "Tid for å sjå tilbake og vurdere reisen so langt.",
+  [JourneyPhase.BUILDING_TRUST]: "Tillit bygges. Spørsmålene blir mer personlige.",
+  [JourneyPhase.DEEPER]: "Nå går vi dypere. Refleksjon om verdier, livssyn og relasjon.",
+  [JourneyPhase.CHECKIN]: "Tid for å se tilbake og vurdere reisen så langt.",
 };
 
 // ═══════════════════════════════════════════
@@ -279,7 +279,7 @@ export function getPhaseForDay(day: number): {
     phase: JourneyPhase.CHECKIN,
     startDay: 1,
     endDay: JOURNEY_TOTAL_DAYS,
-    description: "Ukjent fase – reisa er kanskje ferdig.",
+    description: "Ukjent fase – reisen er kanskje ferdig.",
   };
 }
 
@@ -319,43 +319,43 @@ const MILESTONE_MESSAGES: Milestone[] = [
   {
     day: 3,
     title: "Dag 3 – refleksjon",
-    body: "Du har kome tre dagar inn i reisa. Kva har overraska deg så langt?",
+    body: "Du har kommet tre dager inn i reisen. Hva har overrasket deg så langt?",
     level: "info",
   },
   {
     day: 7,
     title: "Dag 7 – innsikt",
-    body: "Ein veke med sjølvoppdaging. Kva har du forstått betre om deg sjølv?",
+    body: "En uke med selvoppdagelse. Hva har du forstått bedre om deg selv?",
     level: "success",
   },
   {
     day: 10,
     title: "Dag 10 – vendepunkt",
-    body: "No har du kome eit stykke. Det er vanleg å kjenne usikkerheit no – og det er heilt greit.",
+    body: "Nå har du kommet et stykke. Det er vanlig å kjenne usikkerhet nå – og det er helt greit.",
     level: "info",
   },
   {
     day: 14,
     title: "Dag 14 – fordypning",
-    body: "Du er no djupt inne i reisa. La deg ikkje skremje av kjensler som kjem – dei er ein del av veksten.",
+    body: "Du er nå djupt inne i reisen. La deg ikke skremme av følelser som kommer – de er en del av veksten.",
     level: "success",
   },
   {
     day: 21,
     title: "Dag 21 – sammenheng",
-    body: "Tre veker med reise. Kva trådar ser du no som ikkje var tydelege tidlegare?",
+    body: "Tre uker med reise. Hva tråder ser du nå som ikke var tydelige tidligere?",
     level: "success",
   },
   {
     day: 28,
     title: "Dag 28 – modning",
-    body: "Seks veker. Du har lært noko om deg sjølv som du ikkje visste før. Ta det med deg.",
+    body: "Seks uker. Du har lært noe om deg selv som du ikke visste før. Ta det med deg.",
     level: "success",
   },
   {
     day: 30,
     title: "Dag 30 – avslutning",
-    body: "Reisen er no over. Takk for at du gav deg sjølv 30 dagar med innsikt og vekst.",
+    body: "Reisen er nå over. Takk for at du gav deg selv 30 dager med innsikt og vekst.",
     level: "warning",
   },
 ];

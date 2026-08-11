@@ -1,6 +1,6 @@
 // app/api/match/[id]/complete/route.ts — PUT /api/match/:id/complete
-// Oppdaterer status på ein match: acceptere, avslå eller fullfør.
-// Brukast av dashboardet når brukaren aksepterer eller avvistar ein match.
+// Oppdaterer status på en match: acceptere, avslå eller fullfør.
+// Brukes av dashboardet når brukeren aksepterer eller avviste en match.
 
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
@@ -66,7 +66,7 @@ export async function PUT(
 
     if (!["accept", "reject", "complete"].includes(action)) {
       return NextResponse.json(
-        { success: false, error: "Ugyldig action — må vere 'accept', 'reject' eller 'complete'" },
+        { success: false, error: "Ugyldig action — må være 'accept', 'reject' eller 'complete'" },
         { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
@@ -86,28 +86,28 @@ export async function PUT(
 
     if (!match) {
       return NextResponse.json(
-        { success: false, error: "Match ikkje funnen" },
+        { success: false, error: "Match ikke funnet" },
         { status: 404, headers: { "Content-Type": "application/json" } }
       );
     }
 
-    // Sjekk at brukaren er involvert i denne matchen
+    // Sjekk at brukeren er involvert i denne matchen
     if (match.userAId !== userId && match.userBId !== userId) {
       return NextResponse.json(
-        { success: false, error: "Unauthorized — du er ikkje del av denne matchen" },
+        { success: false, error: "Unauthorized — du er ikke del av denne matchen" },
         { status: 403, headers: { "Content-Type": "application/json" } }
       );
     }
 
     const previousStatus = match.status;
 
-    // Definer tillatne status-overgangar
+    // Definer tillatte status-overganger
     const transitions: Record<string, Array<string>> = {
       "pending": ["active", "rejected"],
       "active": ["completed", "ended"],
       "rejected": ["reactivated"],
-      "completed": [], // endeleg status
-      "ended": [], // endeleg status
+      "completed": [], // endelig status
+      "ended": [], // endelig status
       "expired": ["pending"],
     };
 
@@ -126,7 +126,7 @@ export async function PUT(
       return NextResponse.json(
         {
           success: false,
-          error: `Kan ikkje endre status frå '${previousStatus}' til '${newStatus}'`,
+          error: `Kan ikke endre status fra '${previousStatus}' til '${newStatus}'`,
           allowedTransitions,
         },
         { status: 409, headers: { "Content-Type": "application/json" } }
@@ -152,7 +152,7 @@ export async function PUT(
     let lockedUntil: string | null = null;
 
     if (action === "accept") {
-      // Opprett conversation knytt til denne matchen
+      // Opprett conversation knyttet til denne matchen
       const convo = await prisma.conversation.create({
         data: {
           userAId: match.userAId,
@@ -194,7 +194,7 @@ export async function PUT(
         }
       }
 
-      // Lås brukar i 30 dagar frå no av
+      // Lås bruker i 30 dager fra nå av
       const lockedUntilDate = new Date();
       lockedUntilDate.setDate(lockedUntilDate.getDate() + 30);
       lockedUntil = lockedUntilDate.toISOString();
@@ -205,7 +205,7 @@ export async function PUT(
       });
     }
 
-    // Hvis action er "reject" — logg hendinga
+    // Hvis action er "reject" — logg hendelsen
     if (action === "reject") {
       await logInfo("Match rejected", "match_reject", {
         matchId,
@@ -216,7 +216,7 @@ export async function PUT(
     }
 
     if (action === "complete") {
-      // Merk journey som avslutta (CHECKIN er siste gyldige phase før "COMPLETED", men bruk CHECKIN her)
+      // Merk journey som avsluttet (CHECKIN er siste gyldige phase før "COMPLETED", men bruk CHECKIN her)
       await prisma.journeyProgress.updateMany({
         where: { userId, endedAt: null, pausedAt: null },
         data: {
@@ -245,7 +245,7 @@ export async function PUT(
           lockedUntil,
           message:
             action === "accept"
-              ? "Match akseptert — reisa kan starte."
+              ? "Match akseptert — reisen kan starte."
               : action === "reject"
               ? "Match avvist."
               : "Match fullført.",
@@ -266,7 +266,7 @@ export async function PUT(
 }
 
 /**
- * GET /api/match/:id — hent match detaljar (valfritt for dashboard)
+ * GET /api/match/:id — hent match detaljer (valgfritt for dashboard)
  */
 export async function GET(
   request: Request,
@@ -303,15 +303,15 @@ export async function GET(
 
     if (!match) {
       return NextResponse.json(
-        { success: false, error: "Match ikkje funnen" },
+        { success: false, error: "Match ikke funnet" },
         { status: 404, headers: { "Content-Type": "application/json" } }
       );
     }
 
-    // Sjekk at brukaren er involvert i denne matchen
+    // Sjekk at brukeren er involvert i denne matchen
     if (match.userAId !== session.user.id && match.userBId !== session.user.id) {
       return NextResponse.json(
-        { success: false, error: "Unauthorized — du er ikkje del av denne matchen" },
+        { success: false, error: "Unauthorized — du er ikke del av denne matchen" },
         { status: 403, headers: { "Content-Type": "application/json" } }
       );
     }

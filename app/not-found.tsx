@@ -1,5 +1,5 @@
 // app/not-found.tsx — Global 404-side for ToSom
-// Visar roleg, elegant melding når ein side ikkje finst.
+// Viser rolig, elegant melding når en side ikke finnes.
 
 import Link from "next/link";
 
@@ -62,7 +62,7 @@ export default function NotFoundPage() {
           className="text-2xl font-semibold tracking-tight mb-3"
           style={{ color: "#FFFFFF" }}
         >
-          Sidan finst ikkje
+          Siden finnes ikke
         </h1>
 
         {/* Description */}
@@ -70,8 +70,8 @@ export default function NotFoundPage() {
           className="text-sm leading-relaxed mb-8"
           style={{ color: "rgba(255,255,255,0.45)" }}
         >
-          Det er noko som ikkje stemmer. Sidan du leitar etter finst
-          ikkje — eller så har den vorte fjerna.
+          Noe stemmer ikke. Siden du leter etter finnes
+          ikke — eller så har den blitt fjernet.
         </p>
 
         {/* Action Buttons */}
@@ -85,7 +85,7 @@ export default function NotFoundPage() {
               border: "none",
             }}
           >
-            Til baka til forsida
+            Tilbake til forsiden
           </Link>
 
           <Link

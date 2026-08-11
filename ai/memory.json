@@ -1,7 +1,7 @@
 {
   "version": "2026.2",
   "description": "Fast memory for Qwen + Cline. Vedvarende state, mappinger og metadata som lastes ved hver oppstart.",
-  "last_updated": "2026-08-04",
+  "last_updated": "2026-08-12",
 
   "system": {
     "project": "ToSom",

@@ -44,6 +44,7 @@ export const ToSomTabs: FC<ToSomTabsProps> = ({ tabs, value, onChange }) => {
           return (
             <button
               key={tab.value}
+              data-tab-value={tab.value}
               onClick={() => handleTabClick(tab.value)}
               className="relative pb-3 px-2 text-sm font-medium transition-colors duration-200 whitespace-nowrap"
               style={{
@@ -65,7 +66,7 @@ export const ToSomTabs: FC<ToSomTabsProps> = ({ tabs, value, onChange }) => {
           if (!el || !indicatorRef) return;
           const tabsContainer = indicatorRef.querySelector('div') as HTMLElement;
           if (!tabsContainer) return;
-          const activeBtn = tabsContainer.querySelector(`[onclick*="${value}"]`) as HTMLElement;
+          const activeBtn = tabsContainer.querySelector(`[data-tab-value="${value}"]`) as HTMLElement;
           if (activeBtn) {
             el.style.width = `${activeBtn.offsetWidth}px`;
             el.style.left = `${activeBtn.offsetLeft}px`;

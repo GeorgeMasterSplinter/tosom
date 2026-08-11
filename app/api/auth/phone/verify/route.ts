@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
 
     if (!user) {
       return NextResponse.json(
-        { error: 'Brukar ikkje funnen' },
+        { error: 'Brukar ikke funnen' },
         { status: 404 }
       );
     }
@@ -125,7 +125,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error('Phone verify feil:', err);
     return NextResponse.json(
-      { error: 'Kunne ikkje verifisere telefon' },
+      { error: 'Kunne ikke verifisere telefon' },
       { status: 500 }
     );
   }

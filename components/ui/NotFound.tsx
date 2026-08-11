@@ -2,7 +2,7 @@
  * ToSom — Not Found (404)
  * 
  * Universal 404-komponent med glassmorphism-panel og gull-knapp.
- * Bruk på alle [id]-sider der ressursen ikkje finst.
+ * Bruk på alle [id]-sider der ressursen ikke finst.
  */
 
 import Link from "next/link";
@@ -16,7 +16,7 @@ interface NotFoundProps {
 
 export default function NotFound({
   title = "Fant ikke ressursen",
-  description = "Det ser ut som denne ressursen ikkje finnes eller er blitt flytta.",
+  description = "Det ser ut som denne ressursen ikke finnes eller er blitt flytta.",
   backHref = "/dashboard",
   backLabel = "Tilbake til dashboard",
 }: NotFoundProps) {

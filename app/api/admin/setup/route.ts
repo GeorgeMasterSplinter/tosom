@@ -2,7 +2,7 @@
  * ToSom — Admin brukar-oppsett
  * 
  * POST /api/admin/setup
- * Lagar admin-brukar dersom han ikkje eksisterer.
+ * Lagar admin-brukar dersom han ikke eksisterer.
  * 
  * Bruk: Kall ein gong etter deploy eller reset.
  */
@@ -54,7 +54,7 @@ export async function POST() {
   } catch (error) {
     console.error('Admin oppsett feila:', error);
     return NextResponse.json(
-      { error: 'Kunne ikkje opprette admin-brukar' },
+      { error: 'Kunne ikke opprette admin-brukar' },
       { status: 500 }
     );
   }

@@ -147,7 +147,7 @@ export default function AdminResonancePage() {
 
       {!data && !error && !loading && (
         <div style={{ textAlign: "center", padding: "48px 0", color: "rgba(255,255,255,0.3)" }}>
-          Skriv inn ein brukar-ID for å sjå resonansdata
+          Skriv inn ein brukar-ID for å se resonansdata
         </div>
       )}
 

@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
 
     if (!user?.profile) {
       return NextResponse.json(
-        { error: "Profil finst ikkje" },
+        { error: "Profil finst ikke" },
         { status: 404 }
       )
     }
@@ -84,7 +84,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Onboarding complete error:", error)
     return NextResponse.json(
-      { error: "Kunne ikkje fullføra onboarding" },
+      { error: "Kunne ikke fullføra onboarding" },
       { status: 500 }
     )
   }

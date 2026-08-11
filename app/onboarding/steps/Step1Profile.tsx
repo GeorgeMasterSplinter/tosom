@@ -388,7 +388,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             options={[
               { value: 'Har-barn', label: 'Har barn', icon: '👶' },
               { value: 'Har-vaksen-barn', label: 'Har voksne barn', icon: '🧑' },
-              { value: 'Har-ikkje-barn', label: 'Har ikke barn', icon: '🌱' },
+              { value: 'Har-ikke-barn', label: 'Har ikke barn', icon: '🌱' },
             ]}
             selectedValue={val('children', '')(data)}
             onChange={(v) => onChange('children', v)}

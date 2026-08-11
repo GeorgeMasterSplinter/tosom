@@ -477,7 +477,7 @@ function PersonvernSection() {
       <SectionTitle>PERSONVERN</SectionTitle>
 
       <p style={{ color: THEME.whitePrimary, fontSize: "16px", lineHeight: "1.7", marginBottom: "24px" }}>
-        ToSom lagrar berre data som er nødvendig for å gi deg ei trygg og roleg relasjonsoppleving. 
+        ToSom lagrar bare data som er nødvendig for å gi deg ei trygg og roleg relasjonsoppleving. 
         Du kan til enhver tid be om uttrekk eller sletting av dine persondata.
       </p>
 

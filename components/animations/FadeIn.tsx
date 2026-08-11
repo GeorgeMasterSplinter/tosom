@@ -6,7 +6,7 @@
  * 
  * Variantar:
  * - fadeInUp — standard (0.5s ease-out)
- * - fadeIn — berre opacity (0.3s)
+ * - fadeIn — bare opacity (0.3s)
  * - slideUp — glir opp med cubic-bezier (0.4s)
  * - scaleIn — zoome inn (0.3s)
  * - fadeRight / fadeLeft — side-scroll (0.4s)
@@ -118,9 +118,9 @@ export interface FadeInProps extends Omit<MotionProps, "animate" | "initial" | "
   delay?: number;
   /** Delay for children (stagger) — brukt når children er ein array */
   staggerChildren?: number;
-  /** Om elementet skal animere berre når det er synleg i viewport */
+  /** Om elementet skal animere bare når det er synleg i viewport */
   scrollTrigger?: boolean;
-  /** Once-triggert: animér berre ein gong */
+  /** Once-triggert: animér bare ein gong */
   once?: boolean;
   /** Animasjonstid i sekund (overskriver variant-standard) */
   duration?: number;

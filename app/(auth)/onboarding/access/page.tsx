@@ -13,7 +13,7 @@ import { useRouter } from 'next/navigation';
 
 const CHECKS = [
   { icon: '🌱', title: 'Du er 23 år eller eldre', desc: 'ToSom er laga for vaksne som meiningsfull kontakt.' },
-  { icon: '💛', title: 'Du søker seriøst forhold', desc: 'Plattforma er for dei som vil verkeleg dybde, ikkje overfladisk kontakt.' },
+  { icon: '💛', title: 'Du søker seriøst forhold', desc: 'Plattforma er for dei som vil verkeleg dybde, ikke overfladisk kontakt.' },
   { icon: '🛡️', title: 'Du respektar andrar grenser', desc: 'Tryggleik og samtykke er grunnlaget for alt vi gjer.' },
 ];
 
@@ -41,7 +41,7 @@ export default function AccessPage() {
             Trygghet først
           </h1>
           <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
-            ToSom er bygd for voksne som ønskjer ein dypare måte å møte nokon på. 
+            ToSom er bygd for voksne som ønskjer ein dypare måte å møte noen på. 
             Desse kriteria gjeld for alle brukarar.
           </p>
         </div>

@@ -44,7 +44,7 @@ export const Hero: FC<HeroProps> = ({
     },
     { 
       title: 'Match innen 24 timer', 
-      label: 'Én match. Kvalitet framfor kvantitet.',
+      label: 'Én match. Kvalitet framfor hvantitet.',
       icon: (
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
           <path d="M12 2L15 8L21 9L16.5 14L18 21L12 17.5L6 21L7.5 14L3 9L9 8L12 2Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>

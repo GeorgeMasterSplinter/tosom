@@ -22,7 +22,7 @@ export async function createImageMessage(
     return { success: true, messageId: message.id };
   } catch (error) {
     console.error("[media] Feil ved oppretting av bilde-melding:", error);
-    return { success: false, error: "Kunne ikkje sende bilde" };
+    return { success: false, error: "Kunne ikke sende bilde" };
   }
 }
 

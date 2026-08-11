@@ -47,7 +47,7 @@ export async function trackError(
   // Console-logging (allereie i logger.error)
   logger.error(message, moduleName, { route, userId, ...metadata }, error as Error | undefined)
 
-  // Database-logging (asynkron — feil her skal ikkje krasje forespørselen)
+  // Database-logging (asynkron — feil her skal ikke krasje forespørselen)
   try {
     await prisma.systemLog.create({
       data: {
@@ -58,12 +58,12 @@ export async function trackError(
       },
     })
   } catch {
-    // SystemLog kan ikkje lagrast — inga problem, console-logging er allereie gjort
+    // SystemLog kan ikke lagrast — inga problem, console-logging er allereie gjort
   }
 }
 
 /**
- * Logg ein varsel (ikkje feil).
+ * Logg ein varsel (ikke feil).
  */
 export async function trackWarn(
   message: string,

@@ -28,7 +28,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       where: { id: conversationId },
       select: { id: true, userAId: true, userBId: true, frozenAt: true, frozenBy: true, createdAt: true, imageShared: true, imageShareAllowedAt: true },
     })
-    if (!conversation) return errorResponse('Conversation ikkje funnen', 404)
+    if (!conversation) return errorResponse('Conversation ikke funnen', 404)
     if (conversation.frozenAt) {
       return errorResponse(`Conversation er allereie fryst siden ${new Date(conversation.frozenAt).toLocaleString('nb-NO')}`)
     }

@@ -1,7 +1,7 @@
 /**
  * ToSom — useChatMessages (Produktnivå)
  * 
- * Hentar og synkroniserer meldingar for ei samtale.
+ * Henter og synkroniserer meldinger for ei samtale.
  * - Last meldinger
  * - setLoading(false)
  * - Handter 401
@@ -49,7 +49,7 @@ export function useChatMessages(
       }
 
       if (!res.ok) {
-        throw new Error('Kunne ikkje hente meldingar');
+        throw new Error('Kunne ikke hente meldinger');
       }
 
       const data: ChatMessage[] = await res.json();
@@ -58,16 +58,16 @@ export function useChatMessages(
       const lastMsg = data[data.length - 1];
       const newLastId = lastMsg?.id ?? null;
       
-      // Berre oppdater dersom data har endra seg
+      // Bare oppdater dersom data har endret seg
       if (JSON.stringify(data) !== JSON.stringify(messages) || messages.length === 0) {
         setMessages(data);
         setLoading(false);
         
-        // Lagre siste ID for å unngje double-render
+        // Lagre siste ID for å unngå double-render
         lastIdRef.current = newLastId;
       }
     } catch (err) {
-      if (!error || error !== 'Kunne ikkje hente meldingar') {
+      if (!error || error !== 'Kunne ikke hente meldinger') {
         setError(err instanceof Error ? err.message : 'Ukjent feil');
       }
       setLoading(false);
@@ -80,10 +80,10 @@ export function useChatMessages(
       return;
     }
 
-    // Last inn meldingar
+    // Last inn meldinger
     refresh();
 
-    // Poll kvart 3. sekund for nye meldingar
+    // Poll hvert 3. sekund for nye meldinger
     const interval = setInterval(refresh, 3000);
     return () => clearInterval(interval);
   }, [conversationId, refresh]);

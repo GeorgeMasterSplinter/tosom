@@ -2,7 +2,7 @@
  * ToSom — Dev Login Status API
  * 
  * GET /api/dev-login/status
- * Returnerer om dev-login er aktivert og kva testbrukarar som er tilgjengelege.
+ * Returnerer om dev-login er aktivert og hva testbrukarar som er tilgjengelege.
  */
 
 import { NextResponse } from 'next/server';

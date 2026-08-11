@@ -126,7 +126,7 @@ export default function AdminConversationsPage() {
             fontSize: "13px",
           }}
         >
-          {frozenOnly ? "🔴 Vis berre fryste" : "⚪ Vis alle"}
+          {frozenOnly ? "🔴 Vis bare fryste" : "⚪ Vis alle"}
         </button>
         <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)" }}>
           {pagination.total} totalt · Side {pagination.page}/{pagination.pages}
@@ -248,7 +248,7 @@ export default function AdminConversationsPage() {
 
       {/* Footer */}
       <div style={{ marginTop: "32px", padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", fontSize: "13px", color: "rgba(255,255,255,0.4)" }}>
-        💡 Klikk på ein conversation for å sjå detaljar. Fryst/ås opp-logg vert lagret i SystemLog under modulen <code>admin/conversation-freeze</code> og <code>admin/conversation-unlock</code>.
+        💡 Klikk på ein conversation for å se detaljar. Fryst/ås opp-logg vert lagret i SystemLog under modulen <code>admin/conversation-freeze</code> og <code>admin/conversation-unlock</code>.
       </div>
     </div>
   );

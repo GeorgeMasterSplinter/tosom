@@ -98,14 +98,14 @@ export function unauthorizedResponse(traceId?: string): NextResponse<ApiError> {
 }
 
 /**
- * Opprett eit ikkje autorisert svar
+ * Opprett eit ikke autorisert svar
  */
 export function forbiddenResponse(traceId?: string): NextResponse<ApiError> {
   return errorResponse('Forbidden', { statusCode: 403, code: 'FORBIDDEN', traceId })
 }
 
 /**
- * Opprett eit ikkje funnen svar
+ * Opprett eit ikke funnen svar
  */
 export function notFoundResponse(traceId?: string): NextResponse<ApiError> {
   return errorResponse('Not found', { statusCode: 404, code: 'NOT_FOUND', traceId })

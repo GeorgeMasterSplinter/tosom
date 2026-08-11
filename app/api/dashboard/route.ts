@@ -174,7 +174,7 @@ function getPhaseDescription(phase: string): string {
     case "DEEPER":
       return "Del ein verdi eller overtydning du har gjennom livet. Det avslører kven du er.";
     case "CHECKIN":
-      return "Reflekter over korleis reisen deres har påverka kvarandre. Det skaper dypare binding.";
+      return "Reflekter over hvordan reisen deres har påvirket hverandre. Det skaper dypare binding.";
     default:
       return "";
   }

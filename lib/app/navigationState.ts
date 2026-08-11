@@ -1,6 +1,6 @@
 /** navigationState.ts — rute-, modal- og params-håndtering
  *  NS1/2/3/4/8/9/10/15/16/19
- *  Ingen backend, berre UI + state */
+ *  Ingen backend, bare UI + state */
 
 /* ── NS2: NavigationRoute ── */
 export type NavigationRoute =
@@ -109,4 +109,4 @@ export function shouldForceOnboarding(): boolean {
 }
 
 /* ── NS10: Ingen backend ── */
-// Denne fila inneheld berre UI-tilstand. Ingen API-kall eller DB-operasjonar.
+// Denne fila inneheld bare UI-tilstand. Ingen API-kall eller DB-operasjonar.

@@ -66,7 +66,7 @@ export async function GET(req: NextRequest) {
         
         if (!result) {
           processed++;
-          continue; // Ingen match eller ikkje matchable
+          continue; // Ingen match eller ikke matchable
         }
 
         // Opprett match med full resonans-score frå ResonanceResult
@@ -175,7 +175,7 @@ export async function GET(req: NextRequest) {
     });
 
     return NextResponse.json(
-      { error: 'Kunne ikkje køyre cron matching', details: (err as Error).message },
+      { error: 'Kunne ikke køyre cron matching', details: (err as Error).message },
       { status: 500 }
     );
   }

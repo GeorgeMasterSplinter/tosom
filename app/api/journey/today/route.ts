@@ -29,7 +29,7 @@ function getFallbackTask(day: number, phase: string, conversationId: string | nu
   const FALLBACKS: Record<string, Array<{ title: string; description: string; prompt: string }>> = {
     EARLY: [
       { title: "Bryt isen", description: "Del en personlig erfaring som har formet deg.", prompt: "Hva er et minne eller en opplevelse som har gjort at du er den du er i dag?" },
-      { title: "Daglige vaner", description: "Fortell om kvardagsrutinene dine.", prompt: "Hvordan ser en typisk dag for seg hos deg? Del noe av hverdagen din." },
+      { title: "Daglige vaner", description: "Fortell om hvardagsrutinene dine.", prompt: "Hvordan ser en typisk dag for seg hos deg? Del noe av hverdagen din." },
       { title: "Sted som betyr mye", description: "Vel et sted som gjør deg rolig og trygg.", prompt: "Finnes det et sted der du alltid føler deg hjemme? Fortell om det." },
       { title: "Favoritt ting", description: "Del noe du er glad i.", prompt: "Hva er noe du alltid returnerer til? En bok, film, sang eller plass?" },
       { title: "Lærdom fra fjortisåra", description: "Fortell om noe viktig du lærte tidlig.", prompt: "Hva er en ting du ønsket at du visste da du var 20? Hva har lært deg det?" },

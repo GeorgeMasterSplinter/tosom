@@ -16,7 +16,7 @@ export async function deleteMessage(
   });
 
   if (!message) {
-    return { success: false, error: "Melding ikkje funnen" };
+    return { success: false, error: "Melding ikke funnen" };
   }
 
   if (message.deletedAt) {
@@ -25,7 +25,7 @@ export async function deleteMessage(
 
   // Berre avsendar kan slette
   if (message.senderId !== userId) {
-    return { success: false, error: "Du kan berre slette eigne meldingar" };
+    return { success: false, error: "Du kan bare slette eigne meldingar" };
   }
 
   const updated = await prisma.message.update({

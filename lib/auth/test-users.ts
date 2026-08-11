@@ -5,7 +5,7 @@ export interface TestUser {
   id: string;
   email: string;
   name: string;
-  password: string; // I plaintext for dev/test — ikkje i produksjon!
+  password: string; // I plaintext for dev/test — ikke i produksjon!
 }
 
 export const TEST_USERS: TestUser[] = [
@@ -98,7 +98,7 @@ export const TEST_PROFILE_OVERRIDES = {
     maturityLevel: 8,
     securityLevel: 'high',
     // Bio
-    bio: 'Eg er ein tenkande og reflektert mann som verdier ærlighet og vekst. Familiefamilie og natur betyr mykje for meg.',
+    bio: 'Eg er ein tenkande og reflektert mann som verdier ærlighet og vekst. Familiefamilie og natur betyr mye for meg.',
     // Interesser
     interests: ['natur', 'filosofi', 'reising', 'bøker', 'refleksjon'],
     // Match-tags

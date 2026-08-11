@@ -792,12 +792,12 @@ export const SILENT_MOMENT_CONFIG: SilentMomentConfig = {
 };
 
 const SILENT_MOMENTS_BY_PHASE: Record<number, string[]> = {
-  3: ['Ta deg tid. Det viktigaste kjem ikkje av seg sjølv.', 'Stille øyeblikk er der vi vokser mest.', 'I ro finn vi svarene.'],
-  4: ['Fremtid blir bygd i stille augneblink.', 'Når vi er stille saman, høyrer vi kvarandre best.'],
+  3: ['Ta deg tid. Det viktigaste kjem ikke av seg sjølv.', 'Stille øyeblikk er der vi vokser mest.', 'I ro finn vi svarene.'],
+  4: ['Fremtid blir bygd i stille augneblink.', 'Når vi er stille saman, høyrer vi hvarandre best.'],
   5: ['Maksimal resonans finst i stillheten.', 'Her er du tryg. Her er du deg sjølv.'],
 };
 
-const DEFAULT_MOMENTS = ['Ta deg tid. Det viktigaste kjem ikkje av seg sjølv.', 'I ro finn vi svarene.'];
+const DEFAULT_MOMENTS = ['Ta deg tid. Det viktigaste kjem ikke av seg sjølv.', 'I ro finn vi svarene.'];
 
 export function getRandomSilentMoment(phaseOrder: number): string {
   const moments = SILENT_MOMENTS_BY_PHASE[phaseOrder] || DEFAULT_MOMENTS;

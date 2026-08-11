@@ -27,6 +27,6 @@ export async function summarizeConversationStub(
     return { success: true, summary };
   } catch (error) {
     console.error("[autoSummary] Feil:", error);
-    return { success: false, error: "Kunne ikkje oppsummere samtalen" };
+    return { success: false, error: "Kunne ikke oppsummere samtalen" };
   }
 }

@@ -19,7 +19,7 @@ export const dummyProfile: PartnerProfile = {
   id: "demo-partner",
   name: "Person A",
   age: 29,
-  bio: "Eg trivst best i naturen og med gode samtal. Trur på at det kjemke skjer når to menneske er ærlege mot kvarandre.",
+  bio: "Eg trivst best i naturen og med gode samtal. Trur på at det kjemke skjer når to menneske er ærlege mot hvarandre.",
   values: ["Ærlegheit", "Nyskaping", "Trygghet", "Vekst", "Djupde"],
   interests: ["Friluftsliv", "Musikk", "Lesing", "Fotografi", "Matlaging"],
   photos: [

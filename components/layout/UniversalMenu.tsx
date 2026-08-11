@@ -25,7 +25,7 @@ const navItems = [
 
 const isActive = (href: string, pathname: string | null) => pathname?.startsWith(href) ?? false;
 
-// Routes der UniversalMenu ikkje skal visast
+// Routes der UniversalMenu ikke skal visast
 const HIDDEN_ROUTES = [
   '/dashboard',
   '/chat',

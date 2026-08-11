@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
       });
       cronLastRun = lastLog?.createdAt?.toISOString() ?? null;
     } catch {
-      // SystemLog finst kanskje ikkje enno
+      // SystemLog finst kanskje ikke enno
       cronLastRun = 'ukjent';
     }
 

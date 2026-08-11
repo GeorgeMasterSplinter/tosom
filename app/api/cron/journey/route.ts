@@ -25,8 +25,8 @@ export async function GET(req: NextRequest) {
     // Hent alle brukarar med aktiv reise som har passert nextDayAt
     const eligibleJourneys = await prisma.journeyProgress.findMany({
       where: {
-        endedAt: null, // ikkje fullført
-        pausedAt: null, // ikkje pauset
+        endedAt: null, // ikke fullført
+        pausedAt: null, // ikke pauset
         nextDayAt: {
           lte: new Date(), // har passert låsetidspunktet
         },
@@ -62,7 +62,7 @@ export async function GET(req: NextRequest) {
         });
 
         if (!activeMatch) {
-          // Ingen aktiv match — reisa kan avsluttast
+          // Ingen aktiv match — reisa kan avsluttetst
           await prisma.journeyProgress.update({
             where: { id: journey.id },
             data: {
@@ -155,7 +155,7 @@ export async function GET(req: NextRequest) {
     await prisma.systemLog.create({
       data: {
         level: 'INFO',
-        message: `Cron journey: ${advanced} framrykte, ${ended} avslutta for ${processed} brukarar`,
+        message: `Cron journey: ${advanced} framrykte, ${ended} avsluttet for ${processed} brukarar`,
         module: 'cron/journey',
         metadata: { processed, advanced, ended, duration, errors: errors.slice(0, 10) },
       },
@@ -167,7 +167,7 @@ export async function GET(req: NextRequest) {
       advanced,
       ended,
       duration: `${duration}ms`,
-      message: `Prosessert ${processed} brukarar — ${advanced} framrykte, ${ended} avslutta`,
+      message: `Prosessert ${processed} brukarar — ${advanced} framrykte, ${ended} avsluttet`,
       errors: errors.length > 0 ? errors.slice(0, 5) : undefined,
     });
   } catch (err) {
@@ -183,7 +183,7 @@ export async function GET(req: NextRequest) {
     });
 
     return NextResponse.json(
-      { error: 'Kunne ikkje køyre cron journey', details: (err as Error).message },
+      { error: 'Kunne ikke køyre cron journey', details: (err as Error).message },
       { status: 500 }
     );
   }

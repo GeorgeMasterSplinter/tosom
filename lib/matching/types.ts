@@ -14,7 +14,7 @@ export interface SubScoreBreakdown {
 }
 
 /**
- * MatchTier klassifiserer kvaliteten på en match.
+ * MatchTier klassifiserer hvaliteten på en match.
  */
 export type MatchTier =
   | "deepResonance"

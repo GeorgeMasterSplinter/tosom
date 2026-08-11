@@ -2,7 +2,7 @@
  * ToSom — OnboardingTextField (Premium Text Input)
  * 
  * Tekstfelt med:
- * - Mikroguiding (kva er forventet svar?)
+ * - Mikroguiding (hva er forventet svar?)
  * - Progresjons-indikasjon (teknteljar under feltet)
  * - 130% zoom spacing og stor typografi
  */
@@ -26,7 +26,7 @@ interface OnboardingTextFieldProps {
 /**
  * Premium tekstfelt med mikroguiding og progresjon:
  * - Label med gull-aksent
- * - Mikroguiding under label (kva er forventet svar?)
+ * - Mikroguiding under label (hva er forventet svar?)
  * - Tekst-input med gull-focus ring
  * - Progresjons-indikasjon under ("3/50 teikn")
  */

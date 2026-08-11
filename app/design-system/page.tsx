@@ -269,7 +269,7 @@ export default function DesignSystemPage() {
           </div>
         </div>
 
-        <SubsectionTitle description="Bruk av fargar i UI">Hva kva farge vert brukt til</SubsectionTitle>
+        <SubsectionTitle description="Bruk av fargar i UI">Hva hva farge vert brukt til</SubsectionTitle>
         <TokenGrid>
           <div className="p-4 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
             <div className="w-full h-4 rounded mb-2" style={{ background: colors.gold[500] }} />

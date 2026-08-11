@@ -54,14 +54,14 @@ export default function MatchingPage() {
         });
 
         if (!response.ok) {
-          throw new Error('Kunne ikkje hente matcher');
+          throw new Error('Kunne ikke hente matcher');
         }
 
         const data = await response.json();
         setMatches(data.matches || []);
       } catch (err) {
         console.error('Feil ved henting av matcher:', err);
-        setError('Kunne ikkje hente matcher. Prøv igjen seinare.');
+        setError('Kunne ikke hente matcher. Prøv igjen seinare.');
       } finally {
         setLoading(false);
       }

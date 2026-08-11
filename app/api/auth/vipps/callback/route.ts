@@ -84,7 +84,7 @@ export async function GET(request: Request) {
     const vippsClientSecret = process.env.VIPPS_CLIENT_SECRET;
 
     if (!vippsClientId || !vippsClientSecret) {
-      const loginUrl = `${process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || 'https://app.tosom.no'}/login?error=${encodeURIComponent('Vipps er ikkje konfigurert')}`;
+      const loginUrl = `${process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || 'https://app.tosom.no'}/login?error=${encodeURIComponent('Vipps er ikke konfigurert')}`;
       return NextResponse.redirect(loginUrl);
     }
 
@@ -108,7 +108,7 @@ export async function GET(request: Request) {
     if (!tokenResponse.ok) {
       const errorText = await tokenResponse.text();
       console.error('Vipps token exchange failed:', errorText);
-      const loginUrl = `${process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || 'https://app.tosom.no'}/login?error=${encodeURIComponent('Kunne ikkje autentisere med Vipps')}`;
+      const loginUrl = `${process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || 'https://app.tosom.no'}/login?error=${encodeURIComponent('Kunne ikke autentisere med Vipps')}`;
       return NextResponse.redirect(loginUrl);
     }
 
@@ -126,7 +126,7 @@ export async function GET(request: Request) {
     if (!userInfoResponse.ok) {
       console.error('Vipps userinfo feil:', await userInfoResponse.text());
       return NextResponse.redirect(
-        `${process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || 'https://app.tosom.no'}/login?error=${encodeURIComponent('Kunne ikkje hente brukerinformasjon')}`
+        `${process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || 'https://app.tosom.no'}/login?error=${encodeURIComponent('Kunne ikke hente brukerinformasjon')}`
       );
     }
 
@@ -197,7 +197,7 @@ export async function GET(request: Request) {
       });
     }
 
-    // Session lagd via cookie — sjå under
+    // Session lagd via cookie — se under
     
     // Lagre sesjon i cookies (bruk eksisterande auth-module sin logikk)
     const dashboardUrl = `${process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || 'https://app.tosom.no'}/dashboard`;

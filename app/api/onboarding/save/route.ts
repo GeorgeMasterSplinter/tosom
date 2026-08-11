@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
 
     if (!profile) {
       return NextResponse.json(
-        { error: "Profil finst ikkje" },
+        { error: "Profil finst ikke" },
         { status: 404 }
       )
     }

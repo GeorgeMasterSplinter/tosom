@@ -11,13 +11,13 @@ const blogPosts = {
     date: '15. januar 2026',
     readTime: '5 min lesing',
     content: `
-      <p>I eit samfunn der vi konstant blir eksponert for bilder og overflatefokus, er det lett å glemtje kva som faktisk betyr noko i ein relasjon.</p>
+      <p>I eit samfunn der vi konstant blir eksponert for bilder og overflatefokus, er det lett å glemtje hva som faktisk betyr noko i ein relasjon.</p>
       
       <p>Forskning viser at kompatibilitet basert på verdier, livssituasjon og emosjonelle mønstre er langt sterkare prediktorar for varige relasjonar enn utseende.</p>
       
-      <p>ToSom vel å fokusere på det som faktisk skaper varig forbindelse. Når to menneske møter kvarandre på eit djupare plan, blir overflateikkje det første — det blir det siste.</p>
+      <p>ToSom vel å fokusere på det som faktisk skaper varig forbindelse. Når to menneske møter hverandre på eit djupare plan, blir overflateikke det første — det blir det siste.</p>
       
-      <p>Vår match-motor måler kompatibilitet gjennom resonans — hvordan to menneske faktisk føles saman, ikkje hvordan dei ser ut.</p>
+      <p>Vår match-motor måler kompatibilitet gjennom resonans — hvordan to menneske faktisk føles saman, ikke hvordan dei ser ut.</p>
     `,
   },
   'reisetemaer': {
@@ -27,9 +27,9 @@ const blogPosts = {
     content: `
       <p>Psykologar har observert at det tek omtrent 30 dagar for to menneske å bygge verktrueleg tillit og forbindelse.</p>
       
-      <p>Den fyrsteuka handlar om å identifisere kvarandre. Den andreuka handlar om sårbarheit. Den tredje uka handlar om djupe samtalar. Og den fjerde uka handlar om felles framtid.</p>
+      <p>Den fyrsteuka handlar om å identifisere hverandre. Den andreuka handlar om sårbarheit. Den tredje uka handlar om djupe samtalar. Og den fjerde uka handlar om felles framtid.</p>
       
-      <p>30 dagar er ikkje for lang tid — det er nøyaktig den tida som trengst for to menneske å bli kjende på eit nivå som faktisk betyr noko.</p>
+      <p>30 dagar er ikke for lang tid — det er nøyaktig den tida som trengst for to menneske å bli kjende på eit nivå som faktisk betyr noko.</p>
       
       <p>ToSoms guiderte reise er designa for å støtte denne prosessen med daglege refleksjonar, samtaletema og oppgåver.</p>
     `,
@@ -45,7 +45,7 @@ const blogPosts = {
       
       <p>Når du fjernar alt støyen, kjem det ekte tilbake. Folk blir seg sjølve. Samtalar blir djupare. Forbinder blir verktruelege.</p>
       
-      <p>Ro er ikkje bare ein estetisk valg — det er ein grunnleggjande designprinsipp.</p>
+      <p>Ro er ikke bare ein estetisk valg — det er ein grunnleggjande designprinsipp.</p>
     `,
   },
 };
@@ -59,7 +59,7 @@ export default function BlogPostPage() {
     return (
       <main className="min-h-screen flex items-center justify-center" style={{ background: '#0B1520' }}>
         <div className="text-center">
-          <h1 className="mb-4" style={{ ...typographyToStyle('heading-lg'), color: color.text.primary }}>Artikkelen blei ikkje funnen</h1>
+          <h1 className="mb-4" style={{ ...typographyToStyle('heading-lg'), color: color.text.primary }}>Artikkelen blei ikke funnen</h1>
           <Link href="/blogg" style={{ ...typographyToStyle('body'), color: color.brand.gold }}>
             Tilbake til bloggen
           </Link>

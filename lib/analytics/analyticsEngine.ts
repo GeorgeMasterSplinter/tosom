@@ -1,13 +1,13 @@
 /**
  * ToSom — Analytics og Innsikt
  * 
- * Innsyn i reise-progresjon, resonans-mønster, match-kvalitet,
+ * Innsyn i reise-progresjon, resonans-mønster, match-hvalitet,
  * og brukar-adferd — alt designa roleg og utan stress.
  * 
  * Funksjonar:
  *   - Journey analytics (progresjon, dagleg aktivitet)
  *   - Resonans-analyse (mønster, trend, samanhengar)
- *   - Match-kvalitet (score-fordeling, resonans-nivå)
+ *   - Match-hvalitet (score-fordeling, resonans-nivå)
  *   - Brukar-innsikt (vanar, preferansar, tempo)
  *   - Samanlikning med snitt
  * 
@@ -215,10 +215,10 @@ function calculatePhaseDistribution(): PhaseDistribution {
 function generateMilestones(currentDay: number): Milestone[] {
   const milestones = [
     { day: 1, title: 'Reise starta!', summary: 'Velkommen til din første dag' },
-    { day: 3, title: 'Første steg', summary: 'Dei første dagene handlar om å kjenne kvarandre' },
+    { day: 3, title: 'Første steg', summary: 'Dei første dagene handlar om å kjenne hvarandre' },
     { day: 7, title: 'Ein veke', summary: 'Tilbakeblikk på første veke' },
     { day: 14, title: 'Halvvegs bilder', summary: 'No kan dere dele bilder' },
-    { day: 21, title: 'Tre kvartvegar', summary: 'Dyjare samtaler byrjar no' },
+    { day: 21, title: 'Tre hvartvegar', summary: 'Dyjare samtaler byrjar no' },
     { day: 30, title: 'Reise fullført!', summary: 'Tilbakeblikk og veien vidare' },
   ]
 
@@ -336,7 +336,7 @@ export function calculateMatchQualityAnalytics(
     comparison: {
       vsAverage: averageScore - 70,
       percentile: Math.round((averageScore / 100) * 100),
-      description: averageScore >= 80 ? 'Over snittet!' : averageScore >= 65 ? 'God kvalitet' : 'Under snittet',
+      description: averageScore >= 80 ? 'Over snittet!' : averageScore >= 65 ? 'God hvalitet' : 'Under snittet',
     },
   }
 }

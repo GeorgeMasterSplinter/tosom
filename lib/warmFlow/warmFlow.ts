@@ -1,7 +1,7 @@
 /**
  * ToSom — Warm Flow System
  *
- * Termisk opplevelse — overgangen mellom skjer er varm og ikkje kal.
+ * Termisk opplevelse — overgangen mellom skjer er varm og ikke kal.
  *
  * Funksjonar:
  *   - Side-transisjon animasjonar (framer-motion)

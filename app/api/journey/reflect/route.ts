@@ -1,4 +1,4 @@
-/** @deprecated (V2) Refleksjonar er valfrie — ikkje pliktige lenger. */
+/** @deprecated (V2) Refleksjonar er valfrie — ikke pliktige lenger. */
 /**
  * POST /api/journey/reflect
  * 
@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
           },
         });
 
-    // 7. Oppdater completedDays og nextDayAt — berre første gong
+    // 7. Oppdater completedDays og nextDayAt — bare første gong
     if (!hasReflection) {
       await prisma.journeyProgress.update({
         where: { userId: user.id },

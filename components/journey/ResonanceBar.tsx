@@ -3,7 +3,7 @@
  * Visualiserer resonansutvikling over dag 1–30 med fase-fargar.
  * 
  * Design:
- * - 30 små bokser for kvar dag
+ * - 30 små bokser for hvar dag
  * - Fase-fargar: grønn (dag 1-10), gull (dag 11-20), lila (dag 21-30)
  * - Hover → tooltip med reflection, emotionalTone, depthLevel
  * - Animert fade-in ved lasting

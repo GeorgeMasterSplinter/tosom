@@ -69,7 +69,7 @@ export async function GET(req: NextRequest) {
         },
       }),
 
-      // 6. Aktive samtalar (ikkje ended)
+      // 6. Aktive samtalar (ikke ended)
       prisma.conversation.count({
         where: {
           endedAt: null,
@@ -133,7 +133,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     console.error('[AdminStats] Feil ved henting av statistikk:', error);
     return NextResponse.json(
-      { error: 'Kunne ikkje hente statistikk' },
+      { error: 'Kunne ikke hente statistikk' },
       { status: 500 }
     );
   }

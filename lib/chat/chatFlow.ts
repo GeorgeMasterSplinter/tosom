@@ -54,7 +54,7 @@ function getChatSystemMessages(input: ChatFlowInput): SystemMessage[] {
     msgs.push({
       event: "journey_started",
       title: "Reisen deres har startet.",
-      body: "Ta det roleg og bruk tid på kvarandre.",
+      body: "Ta det roleg og bruk tid på hvarandre.",
       level: "info",
     });
   }
@@ -84,7 +84,7 @@ function getChatSystemMessages(input: ChatFlowInput): SystemMessage[] {
     msgs.push({
       event: "journey_completed",
       title: "Reisen er ferdig. Chatten låsast.",
-      body: "Takk for at de ga kvarandre 30 dagar.",
+      body: "Takk for at de ga hvarandre 30 dagar.",
       level: "warning",
     });
   }
@@ -104,7 +104,7 @@ function getChatSystemMessages(input: ChatFlowInput): SystemMessage[] {
     msgs.push({
       event: "search_started",
       title: "Vi leitar etter ein match til deg.",
-      body: "Det kan ta opptil 48 timar, men vi skal finne nokon riktig.",
+      body: "Det kan ta opptil 48 timar, men vi skal finne noen riktig.",
       level: "info",
     });
   }
@@ -113,7 +113,7 @@ function getChatSystemMessages(input: ChatFlowInput): SystemMessage[] {
   if (input.matchState === "completed") {
     msgs.push({
       event: "journey_completed",
-      title: "Reisen er avslutta.",
+      title: "Reisen er avsluttet.",
       body: "Du kan starte ein ny match når du vil.",
       level: "info",
     });

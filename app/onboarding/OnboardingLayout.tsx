@@ -1,7 +1,7 @@
 /**
  * ToSom — OnboardingLayout (simplified — no duplicate headers)
  * Kun container: progressbar + children.
- * Header (steg-indikator, tittel, undertittel, guidingText) vert rendera av kvart steg-komponent.
+ * Header (steg-indikator, tittel, undertittel, guidingText) vert rendera av hvart steg-komponent.
  */
 
 'use client';

@@ -156,7 +156,7 @@ export function JourneyLockOverlay() {
             margin: 0,
           }}
         >
-          Du kan ikkje oppdatere profilen medan du er i reise. 
+          Du kan ikke oppdatere profilen medan du er i reise. 
           Ta deg tid til å kjenne og forstå partneren din først.
         </p>
 

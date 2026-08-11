@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error('Phone send feil:', err);
     return NextResponse.json(
-      { error: 'Kunne ikkje sende kode' },
+      { error: 'Kunne ikke sende kode' },
       { status: 500 }
     );
   }

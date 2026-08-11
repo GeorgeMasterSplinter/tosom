@@ -89,7 +89,7 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    // Finn den andre brukaren (ikkje sjølv)
+    // Finn den andre brukaren (ikke sjølv)
     const otherUser = match.userAId === user.id ? match.userB : match.userA;
     const isUserA = match.userAId === user.id;
     const myAccept = isUserA ? match.acceptedByA : match.acceptedByB;

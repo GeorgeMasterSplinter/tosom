@@ -192,7 +192,7 @@ export default function SlikPage() {
               lineHeight: '1.8',
             }}
           >
-            En rolig og trygg prosess som hjelper deg å møte én person som faktisk passer deg. Ingen stress. Ingen sveiping. Bare kvalitet.
+            En rolig og trygg prosess som hjelper deg å møte én person som faktisk passer deg. Ingen stress. Ingen sveiping. Bare hvalitet.
           </p>
         </ToSomSection>
 

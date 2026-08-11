@@ -27,7 +27,7 @@ const num = (f: string, fb = 0) => (d: Record<string, unknown>) => {
 };
 
 export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
-  // Helper-funksjon for å gjere felt synlege berre dersom dei har verdi
+  // Helper-funksjon for å gjere felt synlege bare dersom dei har verdi
   const Field = ({ label, value, showIf }: { label: string; value: string; showIf?: boolean }) => {
     if (showIf && !value) return null;
     return (

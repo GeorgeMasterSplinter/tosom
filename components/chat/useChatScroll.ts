@@ -52,7 +52,7 @@ export function useChatScroll(dependency?: unknown): ChatScrollResult {
     scrollToBottom({ behavior: "smooth" });
   }, [scrollToBottom]);
 
-  // Auto-scroll når ny melding kjem — berre om brukaren allereie er ved botnen
+  // Auto-scroll når ny melding kjem — bare om brukaren allereie er ved botnen
   useEffect(() => {
     if (dependency === undefined) return;
     

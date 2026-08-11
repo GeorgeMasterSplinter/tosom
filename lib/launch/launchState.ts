@@ -1,6 +1,6 @@
 /** launchState.ts — steg- og tilstandshandsaming for LaunchFlow
  *  LF1/2/3/4/12
- *  Ingen backend, berre UI-tilstand */
+ *  Ingen backend, bare UI-tilstand */
 
 /* ── LF2: LaunchStep ── */
 export type LaunchStep =
@@ -56,4 +56,4 @@ export function setProgress(state: LaunchState, value: number): LaunchState {
 }
 
 /* ── LF10: Ingen backend ── */
-// Denne fila inneheld berre UI-tilstand. Ingen API-kall eller DB-operasjonar.
+// Denne fila inneheld bare UI-tilstand. Ingen API-kall eller DB-operasjonar.

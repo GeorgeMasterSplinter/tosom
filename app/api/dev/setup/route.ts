@@ -62,7 +62,7 @@ export async function POST() {
             },
           },
 
-          // JourneyProgress (korrekt JourneyPhase-verdi: EARLY, ikkje START)
+          // JourneyProgress (korrekt JourneyPhase-verdi: EARLY, ikke START)
           journey: {
             create: {
               phase: JourneyPhase.EARLY,

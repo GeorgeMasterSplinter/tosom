@@ -18,12 +18,12 @@ export async function editMessage(
   });
 
   if (!message) {
-    return { success: false, error: "Melding ikkje funnen" };
+    return { success: false, error: "Melding ikke funnen" };
   }
 
   // Berre avsendar kan redigere
   if (message.senderId !== userId) {
-    return { success: false, error: "Du kan berre redigere eigne meldingar" };
+    return { success: false, error: "Du kan bare redigere eigne meldingar" };
   }
 
   // Oppdater med editorstempling

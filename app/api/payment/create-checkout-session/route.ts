@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
       } catch (error) {
         console.error('[Payment] Checkout error:', error)
         return NextResponse.json(
-          { error: 'Kunne ikkje opprette betalingssesjon' },
+          { error: 'Kunne ikke opprette betalingssesjon' },
           { status: 500 }
         )
       }

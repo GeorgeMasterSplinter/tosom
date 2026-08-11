@@ -1,5 +1,5 @@
 /** ToSom Preload Registry
- *  RM5 — Sporar kva som er preloada
+ *  RM5 — Sporar hva som er preloada
  *
  *  Preload:
  *    - OnboardingFlow

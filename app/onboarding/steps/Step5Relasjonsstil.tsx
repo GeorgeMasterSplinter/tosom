@@ -26,7 +26,7 @@ export default function Step5Relasjonsstil({ data, onChange, onBack, onNext }: P
     <OnboardingSlide title="Relasjonsstil" subtitle="Hvordan søker du relasjon — og hvordan balanserer du selvstende med fellesskap?" guidingText="Relasjonsstil forteller oss hvordan du søker — og det er like viktig som verdier." slideIndex={6} totalSlides={13}>
        {errors.length > 0 && (<div className="mb-8 rounded-xl p-4 border" style={{ background: 'rgba(255,77,77,0.08)', borderColor: 'rgba(255,77,77,0.2)' }}><p className="text-sm font-medium mb-2" style={{ color: '#FF4D4D' }}>Vennligst fyll ut alle påkrevde felt:</p><ul className="text-sm space-y-1" style={{ color: 'rgba(255,255,255,0.7)' }}>{errors.map((x) => (<li key={x.field}>• {x.message}</li>))}</ul></div>)}
 
-       {/* Relasjonsstilar — vel kva type relasjon du søker */}
+       {/* Relasjonsstilar — vel hva type relasjon du søker */}
        <OnboardingSelectGrid
          label="Hva type relasjon søker du? *"
          mikroguiding="Velg den relasjonstypen som passer deg best. Du kan få flere samtidig."
@@ -41,7 +41,7 @@ export default function Step5Relasjonsstil({ data, onChange, onBack, onNext }: P
          columns={2}
        />
 
-       {/* Næringsbehov — kor mykje nærheit du treng */}
+       {/* Næringsbehov — kor mye nærheit du treng */}
        <OnboardingSelectGrid
          label="Hvor mye nærhet trenger du i en relasjon? *"
          mikroguiding="Tenk på din naturlige rytme — ingen riktig eller feil svar her."

@@ -241,13 +241,13 @@ export async function getUserInsights(
   if (matchCount === 0) {
     insights.push({
       title: 'Gi deg tid',
-      text: 'Du har ingen aktive matcher akkurat no. Det er helt normalt. ToSom matcher deg med éin god match om dagen — ikkje mange dårlige.',
+      text: 'Du har ingen aktive matcher akkurat no. Det er helt normalt. ToSom matcher deg med éin god match om dagen — ikke mange dårlige.',
       suggestion: 'Fokuser på å fylle ut profilen din. Jo meir du deler, jo betre blir matcha.',
     });
   } else if (matchCount === 1) {
     insights.push({
       title: 'Ta deg tid til éin',
-      text: `Du har éin aktiv match. Det viktigste er ikkje talet, men at du tek deg tid til å vere nysgjerrig på den eine.`,
+      text: `Du har éin aktiv match. Det viktigste er ikke talet, men at du tek deg tid til å vere nysgjerrig på den eine.`,
       suggestion: 'Prøv å starte med noko lite og varmt — ein enkel hilsen eller eit spørsmål om kven dei er.',
     });
   } else {
@@ -269,13 +269,13 @@ export async function getUserInsights(
     insights.push({
       title: 'Ein samtale i gang',
       text: 'Du har éin aktiv samtale. Ta det roleg — dei beste sambanda bygges sakte.',
-      suggestion: 'Ver nysgjerrig. Spør om kva som faktisk betyr noko for dei.',
+      suggestion: 'Ver nysgjerrig. Spør om hva som faktisk betyr noko for dei.',
     });
   } else {
     insights.push({
       title: 'Fleire samtalar',
       text: `Du har ${convoCount} aktive samtalar. Hver har si eiga rytme. La dei gå i sitt eige tempo.`,
-      suggestion: 'Du behøver ikkje svare alle samtidig. Prioriter den som kjem først.',
+      suggestion: 'Du behøver ikke svare alle samtidig. Prioriter den som kjem først.',
     });
   }
 
@@ -283,7 +283,7 @@ export async function getUserInsights(
   if (!profileComplete) {
     insights.push({
       title: 'Profilstatus',
-      text: 'Profilen din er ikkje heilt ferdig ennå. Jo meir du deler, jo djupare blir matcha.',
+      text: 'Profilen din er ikke heilt ferdig ennå. Jo meir du deler, jo djupare blir matcha.',
       suggestion: 'Gå til "Oppdater profil" og svar på nokre av spørsmåla. Kvar svar gjer matcha betre.',
     });
   }

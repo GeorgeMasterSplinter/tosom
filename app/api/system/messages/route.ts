@@ -14,7 +14,7 @@ export const dynamic = 'force-dynamic';
  * GET /api/system/messages
  * 
  * Query params:
- *   unreadOnly: boolean (optional) — berre returner ulesse meldingar
+ *   unreadOnly: boolean (optional) — bare returner ulesse meldingar
  * 
  * Response:
  * {
@@ -140,7 +140,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 
       if (!notification) {
         return NextResponse.json(
-          { success: false, error: "Notifikasjon ikkje funnen" },
+          { success: false, error: "Notifikasjon ikke funnen" },
           { status: 404, headers: { "Content-Type": "application/json" } }
         );
       }

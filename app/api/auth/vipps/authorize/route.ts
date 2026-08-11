@@ -50,7 +50,7 @@ export async function GET() {
   } catch (error) {
     console.error('Vipps authorize feil:', error);
     return NextResponse.json(
-      { error: 'Kunne ikkje starte Vipps-autorisasjon' },
+      { error: 'Kunne ikke starte Vipps-autorisasjon' },
       { status: 500 }
     );
   }

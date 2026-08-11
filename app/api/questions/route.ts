@@ -24,7 +24,7 @@ export async function GET(request: Request) {
         orderBy: { order: 'asc' },
       });
 
-      // Hent count for kvar kategori
+      // Hent count for hvar kategori
       const categoriesWithCount = await Promise.all(
         categories.map(async (c) => {
           const count = await prisma.guidedQuestion.count({

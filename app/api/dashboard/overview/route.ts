@@ -134,7 +134,7 @@ function getPhaseDescription(phase: string): string {
     case "EARLY": return "Del med matchen din en personleg erfaring som har formet deg.";
     case "BUILDING_TRUST": return "Fortel om ein tid du overvinner ei utfordring.";
     case "DEEPER": return "Del ein verdi eller overtydning du har gjennom livet.";
-    case "CHECKIN": return "Reflekter over korleis reisen deres har påverka kvarandre.";
+    case "CHECKIN": return "Reflekter over hvordan reisen deres har påvirket hverandre.";
     default: return "";
   }
 }

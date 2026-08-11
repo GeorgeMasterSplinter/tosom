@@ -79,7 +79,7 @@ export async function GET(request: Request): Promise<Response> {
         }
       }
     } catch {
-      // PerformanceMetric finst kanskje ikkje enno
+      // PerformanceMetric finst kanskje ikke enno
     }
 
     const response = {

@@ -2,7 +2,7 @@
  * ToSom — Enkel rate limiting (in-memory)
  *
  * Bruk på auth, chat, matching og admin-endepunkt.
- * Merk: Virkar berre på éin instans (ikkje for fleire instansar).
+ * Merk: Virkar bare på éin instans (ikke for fleire instansar).
  */
 
 interface RateLimitEntry {
@@ -62,7 +62,7 @@ export function cleanupRateLimit(): void {
   }
 }
 
-// Kjør cleanup kvar 5. minutt
+// Kjør cleanup hvar 5. minutt
 setInterval(cleanupRateLimit, 5 * 60 * 1000)
 
 /**

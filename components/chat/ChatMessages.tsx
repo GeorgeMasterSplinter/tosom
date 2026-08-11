@@ -88,7 +88,7 @@ export default function ChatMessages({
             }}
           >
             <p style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '14px', lineHeight: 1.6, margin: 0 }}>
-              Det er tomt her — men det blir ikkje det.
+              Det er tomt her — men det blir ikke det.
               <br />
               <span style={{ color: 'rgba(212, 175, 55, 0.6)', fontSize: '13px' }}>
                 Det første steget er alltid det viktigaste. Bare sei hei.

@@ -109,7 +109,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const uuid = randomUUID();
     const fileName = `${uuid}${ext}`;
 
-    // Sikker mappesti — berre i public/uploads/images/{conversationId}/
+    // Sikker mappesti — bare i public/uploads/images/{conversationId}/
     const uploadDir = path.resolve(process.cwd(), 'public', 'uploads', 'images', conversationId);
     
     // Sikkerheit: forsikre oss om at uploadDir startar med forventa prefix
@@ -120,7 +120,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // Opprett mappe dersom han ikkje eksisterer
+    // Opprett mappe dersom han ikke eksisterer
     await mkdir(uploadDir, { recursive: true });
 
     const filePath = path.join(uploadDir, fileName);
@@ -145,7 +145,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   } catch (error) {
     console.error('[chat/image] Feil ved opplastning:', error);
     return NextResponse.json(
-      { error: 'Kunne ikkje lagre bilete', details: (error as Error).message },
+      { error: 'Kunne ikke lagre bilete', details: (error as Error).message },
       { status: 500 }
     );
   }

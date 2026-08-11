@@ -4,7 +4,7 @@
  * Ambient bakgrunnslag for ChatRoom med:
  *   - Mood-basert gradient (reagerer på WarmFlow-mood)
  *   - Vignette for djupde
- *   - Ambient partiklar (berre i celebratory/deep)
+ *   - Ambient partiklar (bare i celebratory/deep)
  *   - Sesong-basert farge
  * 
  * Bruk:
@@ -91,7 +91,7 @@ export default function AtmosphereLayer({
         }}
       />
 
-      {/* Partiklar (berre i celebratory/deep) */}
+      {/* Partiklar (bare i celebratory/deep) */}
       {animationEnabled && (mood === 'celebratory' || mood === 'deep') && Particles}
     </div>
   );

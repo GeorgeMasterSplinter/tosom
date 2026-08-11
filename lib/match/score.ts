@@ -43,7 +43,7 @@ export function calculateMatchScores(input: MatchScoreInput): MatchScores {
   } = input;
 
   // --- matchScore (heile match) ---
-  // Vektar som viser kva som er viktigast
+  // Vektar som viser hva som er viktigast
   const matchScore = Math.round(
     mutualDepth * 0.25 +
     resonanceScore * 0.25 +

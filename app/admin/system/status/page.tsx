@@ -49,7 +49,7 @@ export default function SystemStatusPage() {
         ]);
 
         if (!healthRes.ok || !latencyRes.ok) {
-          setError('Kunne ikkje hente systemdata');
+          setError('Kunne ikke hente systemdata');
           return;
         }
 
@@ -66,7 +66,7 @@ export default function SystemStatusPage() {
     }
 
     loadData();
-    // Oppdater kvar 30. sekund
+    // Oppdater hvar 30. sekund
     const interval = setInterval(loadData, 30000);
     return () => clearInterval(interval);
   }, []);
@@ -110,7 +110,7 @@ export default function SystemStatusPage() {
             ● {health?.status?.toUpperCase() ?? 'UNKNOWN'}
           </span>
           <span style={{ fontSize: '13px', color: 'rgba(255,255,255,0.4)' }}>
-            Oppdaterer kvar 30s · {new Date().toLocaleTimeString('nb-NO')}
+            Oppdaterer hvar 30s · {new Date().toLocaleTimeString('nb-NO')}
           </span>
         </div>
       </div>

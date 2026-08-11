@@ -55,7 +55,7 @@ const PLANS: Plan[] = [
     price: '99',
     period: '/mnd',
     features: [
-      'Alt i kvartal',
+      'Alt i hvartal',
       '12 månader — sparer 33%',
       'VIP-brukarprofil',
       'Eksklusive arrangement-tilgang',
@@ -78,7 +78,7 @@ export default function PaymentPage() {
         body: JSON.stringify({ planId: selectedPlan }),
       });
 
-      if (!res.ok) throw new Error('Kunne ikkje starte betaling');
+      if (!res.ok) throw new Error('Kunne ikke starte betaling');
 
       const { url } = await res.json();
       if (url) window.location.href = url;

@@ -54,10 +54,10 @@ export async function verifyCsrfToken(req: NextRequest): Promise<{ ok: true; _ne
   // Hent token frå cookie (sett av klienten tidlegare)
   const cookieToken = req.cookies.get('csrf_token')?.value;
   
-  // Dersom det ikkje finst ein cookie-token, godta kva som helst gyldig token
+  // Dersom det ikke finst ein cookie-token, godta hva som helst gyldig token
   // Dette dekkjer scenar der clienten genererer tokenet sjølv (t.d. SPA)
   if (!cookieToken) {
-    // Token er gyldig så lenge det ikkje er tomt og ser ut som eit gyldig token
+    // Token er gyldig så lenge det ikke er tomt og ser ut som eit gyldig token
     if (token.length < 10 || token.length > 256) {
       return NextResponse.json(
         { error: 'CSRF-token har ugyldig lengd', code: 'CSRF_INVALID' },

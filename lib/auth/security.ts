@@ -2,7 +2,7 @@
  * ToSom Auth Security
  * 
  * Sikkerheitslag for autentisering og autorisasjon.
- * Brukar getServerSession (NextAuth) sidan det ikkje eksisterer ein Session model i Prisma.
+ * Brukar getServerSession (NextAuth) sidan det ikke eksisterer ein Session model i Prisma.
  */
 
 import { getServerSession } from '@/lib/auth/session'
@@ -11,7 +11,7 @@ import { Role } from '@prisma/client'
 
 /**
  * Verifiser at ein brukar er authentisert via NextAuth session.
- * Returnerar null dersom ikkje innlogga.
+ * Returnerar null dersom ikke innlogga.
  */
 export async function verifySession(): Promise<{ userId: string; role: Role } | null> {
   try {
@@ -61,7 +61,7 @@ export async function detectSessionAnomaly(
   _currentIp: string,
   _userAgent: string,
 ): Promise<boolean> {
-  // IP-basert anomali-deteksjon krev IP-logging som ikkje er implementert.
+  // IP-basert anomali-deteksjon krev IP-logging som ikke er implementert.
   // Returnerer false som standard for å unngå falske positive.
   return false
 }

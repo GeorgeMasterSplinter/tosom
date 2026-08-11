@@ -22,7 +22,7 @@ function cleanup(): void {
   }
 }
 
-// Rydd kvart 60. sekund
+// Rydd hvart 60. sekund
 setInterval(cleanup, 60 * 1000)
 
 export function getCache<T>(key: string): T | undefined {

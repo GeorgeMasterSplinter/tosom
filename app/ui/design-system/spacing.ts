@@ -2,7 +2,7 @@
  * ToSom Design System — Spacing
  * 
  * Konsistent mellomrom: XS → XL
- * Core-definition: Ro, luftig, ikkje-overfylt
+ * Core-definition: Ro, luftig, ikke-overfylt
  */
 
 export const SPACING = {

@@ -1,7 +1,7 @@
 /**
  * ToSom Design System — Shadows
  * 
- * Mjuka, ikkje-aggressive skyggar
+ * Mjuka, ikke-aggressive skyggar
  * Core-definition: Ro, varm, trygg
  */
 

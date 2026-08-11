@@ -5,7 +5,7 @@ import { journeyAPI } from "@/lib/journey/engine";
 /**
  * GET /api/journey/[conversationId] — Hent journey state per conversation
  * 
- * Denne ruten er berre for GET. For å advance journeY, bruk:
+ * Denne ruten er bare for GET. For å advance journeY, bruk:
  *   POST /api/journey/progress
  * 
  * @deprecated POST-metoden vart fjerna 2026-08-02 (overlap med /api/journey/progress/advance)

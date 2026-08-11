@@ -251,7 +251,7 @@ export default function AdminLogsPage() {
 
       {/* Footer */}
       <div style={{ marginTop: "32px", padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", fontSize: "13px", color: "rgba(255,255,255,0.4)" }}>
-        💡 Klikk på ein logg for å sjå detaljar og metadata. Filter kan brukast for å finne spesifikke hendingar som API-aktivitet, admin-handlingar, onboarding, matching, journey, chat eller betaling.
+        💡 Klikk på ein logg for å se detaljar og metadata. Filter kan brukast for å finne spesifikke hendingar som API-aktivitet, admin-handlingar, onboarding, matching, journey, chat eller betaling.
       </div>
     </div>
   );

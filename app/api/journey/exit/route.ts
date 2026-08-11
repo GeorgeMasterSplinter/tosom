@@ -47,10 +47,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // Sjekk om journey er allereie avslutta
+    // Sjekk om journey er allereie avsluttet
     if (journey.endedAt || journey.completedAt) {
       return NextResponse.json(
-        { error: "Reisen er allereie avslutta" },
+        { error: "Reisen er allereie avsluttet" },
         { status: 409 }
       );
     }
@@ -113,7 +113,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     });
 
     // 7. Logg avslutning
-    console.log(`[journey/exit] Brukar ${user.id} avslutta reise dag ${journey.day}/30`, {
+    console.log(`[journey/exit] Brukar ${user.id} avsluttet reise dag ${journey.day}/30`, {
       day: journey.day,
       totalDays: journey.milestones.length,
       reason,
@@ -121,14 +121,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({
       success: true,
-      message: `Reisen din vart avslutta. Du har nådd dag ${journey.day} av 30.`,
+      message: `Reisen din vart avsluttet. Du har nådd dag ${journey.day} av 30.`,
       nextStep: 'Du kan starte ein ny reise når du vil.',
     });
 
   } catch (error) {
     console.error('POST /api/journey/exit feil:', error);
     return NextResponse.json(
-      { error: 'Kunne ikkje avslutte reisen', internal: true },
+      { error: 'Kunne ikke avslutte reisen', internal: true },
       { status: 500 }
     );
   }

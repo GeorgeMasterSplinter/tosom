@@ -1,7 +1,7 @@
 /**
  * ToSom — Partner Presence Engine
  * 
- * Kjenne kvar part er i reisa, og vise det på ein varm og roleg måte.
+ * Kjenne hvar part er i reisa, og vise det på ein varm og roleg måte.
  * 
  * Funksjonar:
  *   - Presence tracking (online/offline/in-journey)
@@ -20,7 +20,7 @@ import 'server-only'
 export interface PresenceState {
   /** Er brukaren online no? */
   isOnline: boolean
-  /** Sidan kva tid var brukaren sist aktiv? */
+  /** Sidan hva tid var brukaren sist aktiv? */
   lastSeenAt: Date | null
   /** Kva gjer brukaren no? */
   activity: ActivityType
@@ -147,7 +147,7 @@ export function calculateSharedPosition(
     message = 'De er i same fase, men litt ulike dagar'
   } else {
     color = 'blue'
-    message = 'De utforsker ulike delar av reisa — kvar med sin tempo 🌊'
+    message = 'De utforsker ulike delar av reisa — hvar med sin tempo 🌊'
   }
 
   return { sameDay, samePhase, alignmentColor: color, message }

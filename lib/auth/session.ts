@@ -22,7 +22,7 @@ export async function getSession() {
 
 /**
  * getServerSession — Compatiblitetsfunksjon for eksisterande kode.
- * I v5 er dette berre ein wrapper rundt auth().
+ * I v5 er dette bare ein wrapper rundt auth().
  * Tek authOptions som argument for backward compatibility (ignored i v5).
  */
 export async function getServerSession(_authOptions?: any) {

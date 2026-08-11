@@ -6,7 +6,7 @@ import { z } from "zod";
 export const messageSendSchema = z.object({
   content: z
     .string()
-    .min(1, "Melding kan ikkje vere tom")
+    .min(1, "Melding kan ikke vere tom")
     .max(2000, "Melding kan maksimalt vere 2000 teikn"),
   type: z.enum(["user", "system", "system_message", "continue_choice"]).optional().default("user"),
 });

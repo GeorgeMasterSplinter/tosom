@@ -93,7 +93,7 @@ export default function AdminMatchesPage() {
         setInspectorData(json.data);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Kunne ikkje hente inspeksjon");
+      setError(err instanceof Error ? err.message : "Kunne ikke hente inspeksjon");
     } finally {
       setLoadingInspector(false);
     }
@@ -242,7 +242,7 @@ export default function AdminMatchesPage() {
 
       {/* Footer */}
       <div style={{ marginTop: "32px", padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", fontSize: "13px", color: "rgba(255,255,255,0.4)" }}>
-        💡 Klikk på ein match for å sjå full inspeksjon med score, resonans, journey, conversation og insight-data.
+        💡 Klikk på ein match for å se full inspeksjon med score, resonans, journey, conversation og insight-data.
       </div>
     </div>
   );

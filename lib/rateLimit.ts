@@ -37,7 +37,7 @@ export function checkRateLimit(
 }
 
 /**
- * Rotér gamle oppføringar kvar 5. minutt for å halde minnet låg.
+ * Rotér gamle oppføringar hvar 5. minutt for å halde minnet låg.
  */
 setInterval(() => {
   const now = Date.now();

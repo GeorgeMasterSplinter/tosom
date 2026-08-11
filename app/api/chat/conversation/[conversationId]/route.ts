@@ -30,7 +30,7 @@ export async function GET(
     });
 
     if (!conversation) {
-      return NextResponse.json({ error: "Samtalen finst ikkje" }, { status: 404 });
+      return NextResponse.json({ error: "Samtalen finst ikke" }, { status: 404 });
     }
 
     // Verifiser at brukaren er del av conversationen

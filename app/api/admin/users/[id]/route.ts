@@ -23,7 +23,7 @@ async function logSystemLog(message: string, module: string, adminId: string, me
     await prisma.systemLog.create({
       data: { level: 'INFO', message, module, metadata: JSON.stringify({ ...metadata, adminId }) },
     })
-  } catch { /* SystemLog feil skal ikkje krasje operasjonen */ }
+  } catch { /* SystemLog feil skal ikke krasje operasjonen */ }
 }
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -49,8 +49,8 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       where: { id: targetUserId },
       select: { id: true, email: true, name: true, role: true, bannedAt: true, onboardingComplete: true, createdAt: true },
     })
-    if (!targetUser) return errorResponse('Brukar ikkje funnen', 404)
-    if (targetUserId === adminUser.id) return errorResponse('Du kan ikkje handle på eigne konto', 400)
+    if (!targetUser) return errorResponse('Brukar ikke funnen', 404)
+    if (targetUserId === adminUser.id) return errorResponse('Du kan ikke handle på eigne konto', 400)
 
     let updatedUser: any
 
@@ -62,7 +62,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
         return successResponse({ data: updatedUser, message: `Brukar ${targetUser.email} er no flagga/banna.` })
 
       case 'unflag':
-        if (!targetUser.bannedAt) return errorResponse('Brukar er ikkje flagga', 400)
+        if (!targetUser.bannedAt) return errorResponse('Brukar er ikke flagga', 400)
         updatedUser = await prisma.user.update({ where: { id: targetUserId }, data: { bannedAt: null }, select: { id: true, email: true, name: true, bannedAt: true } })
         await logSystemLog(`Brukar ${targetUser.email} fekk flagga fjerna av admin ${adminUser.id}`, 'admin/user-unflag', adminUser.id, { targetUserId })
         return successResponse({ data: updatedUser, message: `Brukar ${targetUser.email} har no flagga fjerna.` })
@@ -88,7 +88,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
           for (const conv of conversations) await tx.conversation.update({ where: { id: conv.id }, data: { endedAt: new Date() } })
         })
         await logSystemLog(`Brukar ${targetUser.email} force match end blei utført av admin ${adminUser.id}`, 'admin/user-force-match-end', adminUser.id, { targetUserId })
-        return successResponse({ data: { userId: targetUserId, email: targetUser.email }, message: `Aktive matcher og conversations for ${targetUser.email} blei avslutta.` })
+        return successResponse({ data: { userId: targetUserId, email: targetUser.email }, message: `Aktive matcher og conversations for ${targetUser.email} blei avsluttet.` })
 
       default:
         return errorResponse(`Ugyldig action`, 400)

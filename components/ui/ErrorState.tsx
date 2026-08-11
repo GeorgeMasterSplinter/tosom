@@ -16,7 +16,7 @@ interface ErrorStateProps {
 
 export default function ErrorState({
   title = "Noe gikk galt",
-  description = "Vi klarte ikkje å hente data. Kontroller tilkoplinga di og prøv igjen.",
+  description = "Vi klarte ikke å hente data. Kontroller tilkoplinga di og prøv igjen.",
   retryLabel = "Prøv igjen",
   onRetry,
 }: ErrorStateProps) {

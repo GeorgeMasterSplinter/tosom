@@ -1,7 +1,7 @@
 /**
  * ToSom — useSendMessage (Produktnivå)
  * 
- * Sender meldingar til ei samtale via API.
+ * Sender meldinger til ei samtale via API.
  * - Optimistisk oppdatering
  * - Reset input
  * - Trigger pusher-event via refresh
@@ -49,13 +49,13 @@ export function useSendMessage(options?: UseSendMessageOptions): UseSendMessageR
 
       if (!res.ok) {
         if (res.status === 401) {
-          const errorMsg = 'Du er ikkje logga inn';
+          const errorMsg = 'Du er ikke logget inn';
           setError(errorMsg);
           options?.onError?.(errorMsg);
           return null;
         }
         const data = await res.json().catch(() => ({}));
-        const errorMsg = data.error || 'Kunne ikkje sende melding';
+        const errorMsg = data.error || 'Kunne ikke sende melding';
         setError(errorMsg);
         options?.onError?.(errorMsg);
         return null;

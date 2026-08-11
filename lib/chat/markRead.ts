@@ -20,7 +20,7 @@ export async function markMessagesAsRead(
   ]);
 
   // Lag "lastReadBy" i ein dedikert tabell-felt via notification — enklare med Conversation:
-  // Sidan schema ikkje har lastReadBy direkte, lagrar vi det som ein Notification av typen "read".
+  // Sidan schema ikke har lastReadBy direkte, lagrar vi det som ein Notification av typen "read".
   await prisma.notification.create({
     data: {
       userId,

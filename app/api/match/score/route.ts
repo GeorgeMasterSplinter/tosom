@@ -48,6 +48,6 @@ export async function POST(req: NextRequest) {
     }, { status: 200 });
   } catch (err) {
     console.error('Match score-feil:', err);
-    return NextResponse.json({ error: 'Kunne ikkje berekne match score', code: 'INTERNAL_ERROR' }, { status: 500 });
+    return NextResponse.json({ error: 'Kunne ikke berekne match score', code: 'INTERNAL_ERROR' }, { status: 500 });
   }
 }

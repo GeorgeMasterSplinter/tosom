@@ -64,7 +64,7 @@ export async function POST(request: Request): Promise<NextResponse> {
       );
     }
 
-    // Hent neste match for brukaren (berre nyaste)
+    // Hent neste match for brukaren (bare nyaste)
     const latestMatch = await prisma.match.findFirst({
       where: {
         OR: [{ userAId: userId }, { userBId: userId }],
@@ -139,7 +139,7 @@ export async function POST(request: Request): Promise<NextResponse> {
         result.hasActiveMatch = false;
       }
 
-      // lockedUntil på Match er ikkje alltid reliable — bruk User.lockedUntil i staden
+      // lockedUntil på Match er ikke alltid reliable — bruk User.lockedUntil i staden
       const userWithLock = await prisma.user.findUnique({
         where: { id: userId },
         select: { lockedUntil: true },

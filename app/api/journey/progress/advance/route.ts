@@ -1,4 +1,4 @@
-/** @deprecated (V2) Oppgåver er valfrie — ikkje pliktige lenger. */
+/** @deprecated (V2) Oppgåver er valfrie — ikke pliktige lenger. */
 /**
  * POST /api/journey/progress/advance
  * 
@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
       return JourneyPhase.CHECKIN;
     }
 
-    // 8. Auk til neste dag (dersom ikkje allereie ferdig)
+    // 8. Auk til neste dag (dersom ikke allereie ferdig)
     let newDay = journey.day;
     let phaseChangeNotification = false;
     let newPhase: JourneyPhase | undefined;

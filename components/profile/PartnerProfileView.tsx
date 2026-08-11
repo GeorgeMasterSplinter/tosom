@@ -59,7 +59,7 @@ export default function PartnerProfileView({
               </p>
               {profile.compatibilityScore != null && (
                 <p className="text-xs text-[#4A4A4A]/50">
-                  Matchkvalitet: {profile.compatibilityScore}%
+                  Matchhvalitet: {profile.compatibilityScore}%
                 </p>
               )}
             </div>

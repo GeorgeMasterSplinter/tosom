@@ -35,8 +35,8 @@ async function fetchPartnerInfo(conversationId: string): Promise<PartnerInfo | n
   }
 }
 
-// Journey-day blir henta via session — ikkje treng conversationId
-// Denne funksjonen er berre for fallback, sjølve journeyDay kjem frå ChatProvider
+// Journey-day blir henta via session — ikke treng conversationId
+// Denne funksjonen er bare for fallback, sjølve journeyDay kjem frå ChatProvider
 async function fetchJourneyDayFallback(): Promise<number> {
   try {
     const res = await fetch(`/api/journey/progress`);

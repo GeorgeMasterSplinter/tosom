@@ -2,7 +2,7 @@
  * ToSom — API Valideringshjelpemiddel
  * 
  * Felles Zod-schemas og helper-funksjonar for API-validering.
- * Pakke 5.1 — Kodekvalitet
+ * Pakke 5.1 — Kodehvalitet
  */
 
 import { z } from 'zod'
@@ -53,10 +53,10 @@ export const adminUserActionSchema = z.object({
 
 /** JourneyDayContent update body */
 export const journeyDayUpdateSchema = z.object({
-  theme: z.string().min(1, 'Tema kan ikkje vere tomt'),
+  theme: z.string().min(1, 'Tema kan ikke vere tomt'),
   phase: z.enum(['EARLY', 'BUILDING_TRUST', 'DEEPER', 'CHECKIN']).optional(),
-  reflectionQuestion: z.string().min(1, 'Refleksjonspørsmål kan ikkje vere tomt'),
-  conversationPrompt: z.string().min(1, 'Samtaleprompt kan ikkje vere tomt'),
+  reflectionQuestion: z.string().min(1, 'Refleksjonspørsmål kan ikke vere tomt'),
+  conversationPrompt: z.string().min(1, 'Samtaleprompt kan ikke vere tomt'),
   task: z.string().optional(),
   resonanceGoal: z.string().optional(),
 })
@@ -68,7 +68,7 @@ export const journeyDayUpdateSchema = z.object({
 /** Chat send message body */
 export const chatSendMessageSchema = z.object({
   conversationId: z.string().min(1, 'Manglande conversationId'),
-  content: z.string().min(1, 'Melding kan ikkje vere tom').max(5000, 'Meldinga er for lang'),
+  content: z.string().min(1, 'Melding kan ikke vere tom').max(5000, 'Meldinga er for lang'),
   type: z.enum(['user', 'continue_choice']).default('user'),
 })
 
@@ -86,7 +86,7 @@ export const chatMessagesQuerySchema = paginationSchema.extend({
 /** Journey reflect body */
 export const journeyReflectSchema = z.object({
   conversationId: z.string().min(1, 'Manglande conversationId'),
-  reflection: z.string().min(1, 'Refleksjon kan ikkje vere tom').max(5000, 'Refleksjonen er for lang'),
+  reflection: z.string().min(1, 'Refleksjon kan ikke vere tom').max(5000, 'Refleksjonen er for lang'),
 })
 
 /** Journey progress update body */

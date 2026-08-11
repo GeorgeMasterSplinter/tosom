@@ -91,7 +91,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     console.error("Onboarding progress error:", error)
     return NextResponse.json(
-      { error: "Kunne ikkje henta progresjon" },
+      { error: "Kunne ikke henta progresjon" },
       { status: 500 }
     )
   }

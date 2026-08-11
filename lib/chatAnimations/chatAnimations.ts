@@ -165,7 +165,7 @@ export function determineChatMood(conversationContext: {
   const hoursSinceLastMessage = (Date.now() - conversationContext.lastMessageTime.getTime()) / (1000 * 60 * 60)
   const journeyPhase = conversationContext.journeyPhase
 
-  // Glede: mange meldingar raskt etter kvarandre
+  // Glede: mange meldingar raskt etter hvarandre
   if (conversationContext.messageCount > 20 && hoursSinceLastMessage < 1) {
     return 'joyful'
   }

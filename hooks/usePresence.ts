@@ -3,7 +3,7 @@
  * 
  * Pakke 6.6 — Partner Presence (Steg 3)
  * 
- * Pollar /api/presence/get/[id] kvar 3. sek og returnerer:
+ * Poller /api/presence/get/[id] hvert 3. sek og returnerer:
  * - isOnline: boolean
  * - isTyping: boolean
  * - lastSeen: number | null

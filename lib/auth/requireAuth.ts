@@ -81,7 +81,7 @@ export async function requireAdmin(
 
   if (!isAdminRole(result.user.role)) {
     return NextResponse.json(
-      { error: "Aðgang nei — admin berre" },
+      { error: "Aðgang nei — admin bare" },
       { status: 403 }
     );
   }

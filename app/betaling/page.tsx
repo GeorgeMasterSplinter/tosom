@@ -52,7 +52,7 @@ export default function BetalingPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ planId: selected }),
       });
-      if (!res.ok) throw new Error('Kunne ikkje starte betaling');
+      if (!res.ok) throw new Error('Kunne ikke starte betaling');
       const { url } = await res.json();
       if (url) window.location.href = url;
       else setSelected(selected); // Fallback — redirect til bekreftelse

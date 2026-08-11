@@ -78,7 +78,7 @@ export async function consumeResetToken(userId: string): Promise<boolean> {
 }
 
 /**
- * Sjekk om ein user har ein gyldig (ikkje-brukt) token.
+ * Sjekk om ein user har ein gyldig (ikke-brukt) token.
  */
 export async function hasValidResetToken(userId: string): Promise<boolean> {
   const count = await prisma.passwordResetToken.count({

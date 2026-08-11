@@ -145,7 +145,7 @@ const JourneySection = ({ currentDay, daysCompleted, phaseLabel }: JourneySectio
         {getCurrentPhase(currentDay) === 'Ferdig' && 'Reisen er fullført. Ta deg tid til å reflektere over veien.'}
       </p>
 
-      {/* ═══ Progress-bar (enkelt, ikkje 30 bokser) ═══ */}
+      {/* ═══ Progress-bar (enkelt, ikke 30 bokser) ═══ */}
       <div className="mb-8">
         <div
           className="relative h-3 rounded-full overflow-hidden"

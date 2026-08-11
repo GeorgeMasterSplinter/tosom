@@ -1,4 +1,4 @@
-// components/journey/ImageShareLockBanner.tsx — Visar "Du kan dele bilder om X dagar" countdown
+// components/journey/ImageShareLockBanner.tsx — Viser "Du kan dele bilder om X dager" countdown
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -16,7 +16,7 @@ export function ImageShareLockBanner({ imageShareAllowedAt }: ImageShareLockBann
     const now = Date.now();
     const allowed = new Date(imageShareAllowedAt).getTime();
     
-    // Dersom låsen er løyst, vis ikkje banneret (oppdaterast med setStates)
+    // Dersom låsen er løst, vis ikke banneret (oppdateres med setStates)
     if (now >= allowed) {
       setDaysLeft(0);
       return;
@@ -26,18 +26,18 @@ export function ImageShareLockBanner({ imageShareAllowedAt }: ImageShareLockBann
     const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
     setDaysLeft(days);
     
-    // Oppdater kvar time for accurate countdown
+    // Oppdater hver time for accurate countdown
     const interval = setInterval(() => {
       const remaining = Math.ceil((allowed - Date.now()) / (1000 * 60 * 60 * 24));
       if (remaining <= 0 || remaining !== days) {
         setDaysLeft(remaining > 0 ? remaining : 0);
       }
-    }, 3600000); // kvar time
+    }, 3600000); // hver time
     
     return () => clearInterval(interval);
   }, [imageShareAllowedAt]);
 
-  // Dersom ingen countdown eller låsen er løyst, vis ingenting
+  // Dersom ingen countdown eller låsen er løst, vis ingenting
   if (daysLeft === null || daysLeft <= 0) return null;
 
   return (
@@ -52,14 +52,14 @@ export function ImageShareLockBanner({ imageShareAllowedAt }: ImageShareLockBann
       animation: 'fadeIn 500ms ease-out',
     }}>
       <div style={{ fontSize: '16px', color: '#D4AF37', fontWeight: '500' }}>
-        Du kan dele bilder om {daysLeft} dag{daysLeft !== 1 ? 'ar' : ''}
+        Du kan dele bilder om {daysLeft} dag{daysLeft !== 1 ? 'er' : ''}
       </div>
       <div style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.4)', marginTop: '4px' }}>
-        La ord og tanker vere veien mellom dere — i alle fall for no.
+        La ord og tanker være veien mellom dere — i alle fall for nå.
       </div>
     </div>
   );
 }
 
-// Eksporter også som ImageLockBanner (kortare namn)
+// Eksporter også som ImageLockBanner (kortere navn)
 export const ImageLockBanner = ImageShareLockBanner;

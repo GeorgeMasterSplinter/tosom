@@ -22,7 +22,7 @@ const STRIPE_PRICE_ID = process.env.STRIPE_PRICE_ID ?? ''
  */
 function getStripeClient(): Stripe {
   if (!STRIPE_SECRET_KEY) {
-    throw new Error('STRIPE_SECRET_KEY er ikkje sett i miljøvariablar')
+    throw new Error('STRIPE_SECRET_KEY er ikke sett i miljøvariablar')
   }
   return new Stripe(STRIPE_SECRET_KEY, {
     apiVersion: '2024-12-18.acacia' as any,
@@ -120,7 +120,7 @@ export async function hasActiveSubscription(userId: string): Promise<boolean> {
 }
 
 /**
- * Opprett customer i Stripe dersom han ikkje finst.
+ * Opprett customer i Stripe dersom han ikke finst.
  */
 export async function createOrUpdateCustomer(
   userId: string,

@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
 
     if (!match) {
       return NextResponse.json(
-        { error: "Match ikkje funnen" },
+        { error: "Match ikke funnen" },
         { status: 404 }
       );
     }
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
     // 4. Sjekk om brukaren er involvert i matchen
     if (match.userAId !== user.id && match.userBId !== user.id) {
       return NextResponse.json(
-        { error: "Du er ikkje involvert i denne matchen" },
+        { error: "Du er ikke involvert i denne matchen" },
         { status: 403 }
       );
     }

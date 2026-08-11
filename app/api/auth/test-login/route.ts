@@ -42,7 +42,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // Valider passord (plaintext for test — ikkje i produksjon!)
+    // Valider passord (plaintext for test — ikke i produksjon!)
     if (password !== testUser.password) {
       return NextResponse.json(
         { success: false, error: 'Ugyldig e-post eller passord' },
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
       if (result?.error) {
         return NextResponse.json(
-          { success: false, error: 'Kunne ikkje opprette session' },
+          { success: false, error: 'Kunne ikke opprette session' },
           { status: 500 }
         );
       }
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       // CredentialsProvider authorize returnerer allta{'success': true, ...} — ignorere feil
     }
 
-    // Berekne redirect basert på onboarding-status (alt false sidan vi ikkje har DB)
+    // Berekne redirect basert på onboarding-status (alt false sidan vi ikke har DB)
     const redirect = '/onboarding';
 
     return NextResponse.json({

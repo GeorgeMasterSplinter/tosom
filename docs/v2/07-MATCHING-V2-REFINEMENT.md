@@ -33,11 +33,14 @@
 
 **Totalt:** 1.00 (summerer til 100%)
 
+> **MERKNAD (v2.1):** Vektene over er orienteringsverdier fra v2.0. Aktuell implementering i `unifiedScorer.ts` bruker 9 dimensjoner med følgende faktiske vekter: values=0.25, personality=0.20, relationshipStyle=0.15, communication=0.15, futureVision=0.10, boundaries=0.05, emotionalNeeds=0.05, lifeRhythm=0.03, maturity=0.02 (sum=1.00). `weightConfig.ts` eksporterer 5-kategoriers struktur (base/resonance/semantic/intimacy/future) som brukes i backwards-compatibility wrapper. Ingen vekstavvik mellom filene — BUG-003 allløst via refactor. `lib/baseScore.ts` er fjernet (død kode, ingen importer).
+
 ### Dealbreakers (harde filtre)
 - Alder: Minimum 23 år
 - Avstand: Konfigurert via `config/radius.ts` (default 50km, kan varieres)
-- Kjønn: Basert på preferanser i profil
 - Ban-status: Banned brukere filtreres bort
+
+> **MERKNAD (v2.1):** Dealbreaker i `lib/matching/dealbreaker.ts` implementerer kun `orientationIncompatible` basert på sexualitet + preferredSexuality. Det finnes INGEN `genderIncompatible` dealbreaker — kjønnskompatibilitet er ikke implementert som hard filter.
 
 ### Hva fungerer bra
 - **9-dimensjon-modellen** er god og dekker riktige områder

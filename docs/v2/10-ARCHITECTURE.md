@@ -169,7 +169,9 @@ Se `prisma/schema.prisma` for full definisjon (568 linjer).
 | **JourneyProgress** | 30-dagers reise | userId, currentDay (1-30), phase (EARLY/BUILDING_TRUST/DEEPER), completedAt |
 | **Conversation** | Chat-konversasjon | id, matchId, createdAt |
 | **Message** | Enkelmelding i chat | id, conversationId, senderId, content, type (text/image), createdAt |
-| **Notification** | Push/in-app varsler | id, userId, type, read, createdAt |
+| **Notification** | Push/in-app varsler | id, userId, type, `read` (ikke isRead), createdAt |
+
+> **MERKNAD (v2.1):** User-modellen har `verificationToken` (String?), `verificationExpires` (DateTime?), `twoFactorEnabled` (Boolean), `twoFactorSecret` (String?) — ingen `isVerified`-felt. Match-modellen har `endedAt` (DateTime?) og `unmatchedBy` (String?).
 | **AuditLog** | Admin-audit | id, adminUserId, action, target, details(JSON), createdAt |
 
 ### Relasjonskart
@@ -219,9 +221,12 @@ Conversation 1──N Message
 | Se dokument 02 for full liste over nye v2-admin API-ruter |
 
 ### System-API (intern)
-| Rute | Metode | Formål |
-|------|--------|--------|
-| `/api/system/health` | GET | System-helse (memory, uptime, disk) |
+| Rute | Metode | Formål | Status |
+|------|--------|--------|--------|
+| `/api/system/health` | GET | System-helse | STUB — returnerer `{ status: "ok" }`, ingen DB-eksterne sjekker |
+| `/api/system/metrics` | GET | Performance-metrikker | STUB — hardcoded JSON, ingen lib-funksjon eller Prisma-kall |
+
+> **MERKNAD (v2.1):** Observability-ruter er stubs uten tilknyttede lib-funksjoner. Admin API-ruter (`/api/admin/*`) kaller reelle `lib/admin/*.ts` funksjoner med Prisma-hendtering og demo-mode fallback. Middleware bruker `verifyAdminCookie()` fra `lib/auth/admin-jwt.ts` for JWT-basert auth (ikke hardcoded passord). Ingen rate limiting på admin API-endepunkter.
 
 ---
 

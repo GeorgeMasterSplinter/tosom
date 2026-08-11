@@ -1,4 +1,4 @@
-// lib/matching/findBestMatchFor.ts — Finn beste match for ein bruker
+// lib/matching/findBestMatchFor.ts — Finn beste match for en bruker
 // Bruker matchingEngine() fra engine.ts
 
 import prisma from "@/lib/prisma";
@@ -36,17 +36,17 @@ function mapProfileToData(profile: any): ProfileData {
 
 /**
  * findBestMatchFor finner den beste matchen for en gitt bruker.
- * 
+ *
  * Prosess:
  * 1. Hent query-user sin profil
- * 2. Finn alle aktive kandidatar (ekskluderer dei med open conversation)
- * 3. Kjør matchingEngine for kvar kandidat
+ * 2. Finn alle aktive kandidater (ekskluderer de med open conversation)
+ * 3. Kjør matchingEngine for hver kandidat
  * 4. Sorter etter score
  * 5. Returner beste match
- * 
- * Core-definition-reglar:
- *   - Berre éin match per 24t (sjekka eksternt i /api/match)
- *   - Berre éin aktiv reise om gongen (sjekka eksternt)
+ *
+ * Core-definition-regler:
+ *   - Bare én match per 24t (sjekket eksternt i /api/match)
+ *   - Bare én aktive reise om gangen (sjekket eksternt)
  *   - Ingen swiping/feed
  */
 export async function findBestMatchFor(userId: string): Promise<
@@ -63,12 +63,12 @@ export async function findBestMatchFor(userId: string): Promise<
     where: { id: userId },
     include: { profile: true },
   });
-  
+
   if (!queryUser || !queryUser.profile) return null;
-  
+
   const queryProfile = mapProfileToData(queryUser.profile);
-  
-  // 2. Hent aktive kandidatar (ekskluder brukar med open conversation)
+
+  // 2. Hent aktive kandidater (ekskluder bruker med open conversation)
   const activeConvoUserIds = new Set(
     (
       await prisma.conversation.findMany({
@@ -77,47 +77,47 @@ export async function findBestMatchFor(userId: string): Promise<
       })
     ).flatMap((c) => [c.userAId, c.userBId])
   );
-  
+
   const candidates = await prisma.user.findMany({
     where: {
       id: { not: userId, notIn: Array.from(activeConvoUserIds) },
       profile: { isNot: null },
-      bannedAt: null, // Ekskluder banna brukarar
-      deletedAt: null, // Ekskluder sletta brukarar
+      bannedAt: null, // Ekskluder bannede brukere
+      deletedAt: null, // Ekskluder slettede brukere
     },
     include: { profile: true },
-    take: 100, // Maks 100 kandidatar for performances
+    take: 100, // Maks 100 kandidater for ytelse
   });
-  
+
   if (candidates.length === 0) return null;
-  
-  // 3. Kjør matchingEngine for kvar kandidat
+
+  // 3. Kjør matchingEngine for hver kandidat
   let bestResult: MatchResult | null = null;
   let bestCandidateId: string | null = null;
   let bestCandidateProfile: ProfileData | null = null;
-  
+
   for (const candidate of candidates) {
     if (!candidate.profile) continue;
-    
+
     const candidateProfile = mapProfileToData(candidate.profile);
     const result = matchingEngine(queryProfile, candidateProfile);
-    
+
     if (!bestResult || result.score > bestResult.score) {
       bestResult = result;
       bestCandidateId = candidate.id;
       bestCandidateProfile = candidateProfile;
     }
   }
-  
+
   // 4. Returner null hvis ingen match over 0 (alle er dealbreaker)
   if (!bestResult || bestResult.score === 0) return null;
-  
-  // 5. Berekne nextEligibleAt (24t-regel — dersom lastMatchAt er satt)
+
+  // 5. Beregn nextEligibleAt (24t-regel — dersom lastMatchAt er satt)
   let nextEligibleAt: Date | null = null;
   if (queryUser.lastMatchAt && queryUser.lockedUntil) {
     nextEligibleAt = new Date(queryUser.lockedUntil.getTime() + 24 * 60 * 60 * 1000);
   }
-  
+
   return {
     match: bestResult,
     candidateId: bestCandidateId!,

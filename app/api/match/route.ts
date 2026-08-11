@@ -202,36 +202,43 @@ export async function POST(request: Request): Promise<Response> {
     const scoreForDB = Math.round(match.score * 100);
     const normalizedScoreForDB = match.score;
 
-    // Opprett match-post
-    const newMatch = await prisma.match.create({
-      data: {
-        userAId: userId,
-        userBId: candidateId,
-        score: scoreForDB,
-        normalizedScore: normalizedScoreForDB,
-        scoringBreakdown: match.breakdown as any,
-        status: "active",
-        resonanceLevel: match.tier === "deepResonance" ? "DEEP" : match.tier === "strongResonance" ? "STRONG" : match.tier === "moderateResonance" ? "MODERATE" : match.tier === "gentleResonance" ? "GENTLE" : "GENTLE",
-      },
+    // FASE 2.3 FIX: Alle tre opprettelser i en transaksjon for å unngå partial state
+    const result_tx = await prisma.$transaction(async (tx) => {
+      // Opprett match-post
+      const newMatch = await tx.match.create({
+        data: {
+          userAId: userId,
+          userBId: candidateId,
+          score: scoreForDB,
+          normalizedScore: normalizedScoreForDB,
+          scoringBreakdown: match.breakdown as any,
+          status: "active",
+          resonanceLevel: match.tier === "deepResonance" ? "DEEP" : match.tier === "strongResonance" ? "STRONG" : match.tier === "moderateResonance" ? "MODERATE" : match.tier === "gentleResonance" ? "GENTLE" : "GENTLE",
+        },
+      });
+
+      // Opprett conversation
+      const conversation = await tx.conversation.create({
+        data: {
+          userAId: userId,
+          userBId: candidateId,
+          matchId: newMatch.id,
+        },
+      });
+
+      // Opprett journeyProgress for brukeren
+      await tx.journeyProgress.create({
+        data: {
+          userId: userId,
+          phase: "EARLY",
+          day: 1,
+        },
+      });
+
+      return { newMatch, conversation };
     });
 
-    // Opprett conversation
-    const conversation = await prisma.conversation.create({
-      data: {
-        userAId: userId,
-        userBId: candidateId,
-        matchId: newMatch.id,
-      },
-    });
-
-    // Opprett journeyProgress for brukeren
-    await prisma.journeyProgress.create({
-      data: {
-        userId: userId,
-        phase: "EARLY",
-        day: 1,
-      },
-    });
+    const { newMatch, conversation } = result_tx;
 
     // Hent navn fra kandidat sin profil
     const name = `${candidateProfile.firstName || ""} ${candidateProfile.lastName || ""}`.trim() || "Ukjent";

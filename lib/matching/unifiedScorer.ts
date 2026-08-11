@@ -35,15 +35,15 @@ export type MatchLevel = "GENTLE" | "MODERATE" | "STRONG" | "DEEP";
 /* ---------- WEIGHTS (summer til 1.0) ---------- */
 
 const W: Record<keyof UnifiedBreakdown, number> = {
-  values:            0.25, // Verdiar — høgast vekt
-  personality:       0.20, // Personlegdom
+  values:            0.25, // Verdier — høyest vekt
+  personality:       0.20, // Personlighet
   relationshipStyle: 0.15, // Relasjonsstil
   communication:     0.15, // Kommunikasjon
   futureVision:      0.10, // Fremtidsvisjon
   boundaries:        0.05, // Grenser
   emotionalNeeds:    0.05, // Emosjonelle behov
   lifeRhythm:        0.03, // Livsrytme
-  maturity:          0.02, // Modenheit
+  maturity:          0.02, // Modenhet
 };
 
 /* ---------- HOVEDFUNKSJON ---------- */

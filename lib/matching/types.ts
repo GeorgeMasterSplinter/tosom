@@ -6,11 +6,11 @@
  * Alle verdier er normalisert til [0, 1].
  */
 export interface SubScoreBreakdown {
-  base: number;           // Grunnleggjande kompatibilitet (verdier, livssituasjon, personlighet)
+  base: number;           // Grunnleggende kompatibilitet (verdier, livssituasjon, personlighet)
   resonance: number;      // Emosjonell resonans (kommunikasjon, relasjonsstil)
   semantic: number;       // Semantisk overlap (fremtidsønsker, livsstil)
   intimacy: number;       // Intimitet & sårbarhet (intimacy, boundaries, emotionalNeeds)
-  future: number;         // Fremtidskompatibilitet (livsrytme, modenheit)
+  future: number;         // Fremtidskompatibilitet (livsrytme, modenhet)
 }
 
 /**
@@ -32,11 +32,11 @@ export interface MatchResult {
   tier: MatchTier;
   rejected: boolean;       // true hvis en dealbreaker ble funnet
   rejectionReason?: string; // Kort årsak dersom rejected
-  explanation?: string;    // Lesbar forklaring for brukaren
+  explanation?: string;    // Lesbar forklaring for brukeren
 }
 
 /**
- * WeightConfig definerer vektinga av kvar kategori.
+ * WeightConfig definerer vektingen av hver kategori.
  */
 export interface WeightConfig {
   base: number;
@@ -47,8 +47,8 @@ export interface WeightConfig {
 }
 
 /**
- * ProfileData er den forma profil-data er tilgjengeleg i matching.
- * Mappt fra Prisma Profile-modellen.
+ * ProfileData er den forma profil-data er tilgjengelig i matching.
+ * Mappet fra Prisma Profile-modellen.
  */
 export interface ProfileData {
   userId: string;
@@ -57,7 +57,7 @@ export interface ProfileData {
   age: number | null;
   bio: string | null;
   interests: string[];
-  
+
   // Djup profil (core-definition)
   lifeSituation: Record<string, unknown> | null;
   lifestyle: Record<string, unknown> | null;
@@ -71,13 +71,13 @@ export interface ProfileData {
   lifeRhythm: string | null;        // "morning" | "evening" | "fast" | "slow"
   maturityLevel: number | null;      // 1-10
   securityLevel: string | null;      // "unsicher" | "ambivalent" | "secure"
-  
+
   // Preferanser og tags
   preferences: Record<string, unknown> | null;
   matchTags: string[];
 }
 
 /**
- * MatchEvent er for tracking av match-hendingar (valfritt).
+ * MatchEvent er for tracking av match-hendinger (valgfritt).
  */
 export type MatchEventType = "MATCHED" | "REJECTED" | "EXPIRED" | "LOCKED";

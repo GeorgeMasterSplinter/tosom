@@ -76,8 +76,7 @@ function getRoleFromSession(req: NextRequest): string | null {
 
 /** Legacy-ruter som skal retast til nye stiar */
 const LEGACY_REDIRECTS: Record<string, string> = {
-  '/vilkår': '/vilkar',       // spesialteikn → ASCII-variant
-  '/vilk%C3%A5r': '/vilkar',  // URL-encoded variant
+  '/vilk%C3%A5r': '/vilkår',  // URL-encoded variant → korrekt norsk stavemål
 }
 
 export function middleware(req: NextRequest) {
@@ -87,7 +86,7 @@ export function middleware(req: NextRequest) {
   const response = NextResponse.next()
   response.headers.set('x-url', req.url)
 
-  // Legacy redirects — /vilkår → /vilkar (ASCII-variant fungerer betre)
+  // Legacy redirects — URL-encoded /vilkår → /vilkår (korrekt norsk stavemål)
   const redirectTarget = LEGACY_REDIRECTS[path]
   if (redirectTarget) {
     return NextResponse.redirect(new URL(redirectTarget, req.url), {

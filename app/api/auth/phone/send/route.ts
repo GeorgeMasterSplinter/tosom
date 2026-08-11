@@ -11,11 +11,17 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { checkSendRateLimit } from '@/lib/security/phoneRateLimit';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
+    // Hent IP-adresse for rate limiting
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() 
+      || req.headers.get('x-real-ip') 
+      || undefined;
+
     const body = await req.json();
     const phone = (body.phone as string)?.trim();
 
@@ -24,6 +30,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         { error: 'Ugyldig telefonnummer' },
         { status: 400 }
+      );
+    }
+
+    // Rate limiting
+    const rateLimit = checkSendRateLimit(phone, ip);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: `For mange forsøk. Prøv igjen om ${rateLimit.retryAfter} sekunder.` },
+        { status: 429 }
       );
     }
 

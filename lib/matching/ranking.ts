@@ -9,7 +9,7 @@ interface ScoreResult {
 }
 
 /**
- * Representasjon av eit match-resultat klar for rangering.
+ * Representasjon av et match-resultat klar for rangering.
  */
 export interface RankedMatch {
   targetUserId: string;
@@ -28,7 +28,7 @@ export interface RankedMatch {
 }
 
 /**
- * Sorter match-resultat etter totalScore (høgast først).
+ * Sorter match-resultater etter totalScore (høyest først).
  * Kan valgfritt filtrere bort resultater under en terskel.
  */
 export function rankMatches(
@@ -46,8 +46,8 @@ export function rankMatches(
 }
 
 /**
- * Fjern dublett-matching av same brukar.
- * Dersom to profiler peikar på same targetUserId, hald berre den med høgast score.
+ * Fjern dobbelt-matching av samme bruker.
+ * Dersom to profiler peker på samme targetUserId, hold bare den med høyest score.
  */
 export function deduplicateMatches(matches: RankedMatch[]): RankedMatch[] {
   const seen = new Map<string, RankedMatch>();

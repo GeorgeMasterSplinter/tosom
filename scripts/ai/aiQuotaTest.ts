@@ -5,7 +5,7 @@
  * - Normal respons
  * - Rate-limit funksjon
  * - Feilhandtering (manglande API-key, ugyldig payload, ugyldig token)
- * - AIRequestLog blir fylt
+ * - MatchingAIRequestLog blir fylt
  * - Observability viser AI-kall
  *
  * Køyrs med: npx tsx scripts/ai/aiQuotaTest.ts
@@ -241,9 +241,9 @@ async function main() {
   )
 
   // =====================
-  // 4. VERIFY AIRequestLog
+  // 4. VERIFY MatchingAIRequestLog
   // =====================
-  console.log('\n[4] Verifiser AIRequestLog:')
+  console.log('\n[4] Verifiser MatchingAIRequestLog:')
 
   const adminUrl = `${baseUrl}/api/admin/ai/logs`
   await test(

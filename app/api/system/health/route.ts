@@ -13,7 +13,7 @@ import os from 'os';
  * - Uploadthing-status (miljøvariabel-validering)
  * - Stripe-status (miljøvariabel-validering)
  * - OpenAI-status (miljøvariabel-validering)
- * - Cron-siste kjøring (via Prisma AIRequestLog eller SystemLog)
+ * - Cron-siste kjøring (via Prisma MatchingAIRequestLog eller SystemLog)
  */
 
 export const dynamic = 'force-dynamic';
@@ -79,7 +79,7 @@ export async function GET(request: NextRequest) {
       },
     };
 
-    // Cron-siste kjøring — prøv å hente siste SystemLog createdAt som proxy (AIRequestLog fjernet 2026-08-02)
+    // Cron-siste kjøring — prøv å hente siste SystemLog createdAt som proxy (MatchingAIRequestLog fjernet 2026-08-02)
     let cronLastRun: string | null = null;
     try {
       const lastLog = await prisma.systemLog.findFirst({

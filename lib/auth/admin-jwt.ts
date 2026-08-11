@@ -80,15 +80,32 @@ export async function signAdminToken(email: string): Promise<string> {
   return `${input}.${signatureB64}`;
 }
 
+/**
+ * verifyAdminCookie — RASK pre-check for Edge-middleware.
+ *
+ * Dekoder payload og sjekker issuer/role/exp for å filtrere tydelig ugyldige tokens.
+ * ⚠️ SIGNATUR ER IKKE VERIFISERT HER (Edge-middleware er sync, kan ikke bruke crypto.subtle).
+ * Kaller route MUST kalles verifyAdminTokenAsync() for signaturverifisering!
+ *
+ * Returnerer null hvis token er tydelig ugyldig.
+ * Returnerer payload hvis token SEEMED gyldig (krever fortsatt async verifisering i route).
+ */
 export function verifyAdminCookie(req: NextRequest): AdminTokenPayload | null {
   const token = req?.cookies?.get('admin_token')?.value;
   if (!token) return null;
 
+  // Reject obvious fake tokens (must be JWT format with 3 parts)
   try {
     const parts = token.split('.');
     if (parts.length !== 3) return null;
 
-    const [, payloadB64] = parts;
+    const [headerB64, payloadB64] = parts;
+
+    // Verify header claims HS256
+    const headerStr = base64urlDecode(headerB64);
+    const header = JSON.parse(headerStr) as { alg: string };
+    if (header.alg !== 'HS256') return null;
+
     const payloadStr = base64urlDecode(payloadB64);
     const payload = JSON.parse(payloadStr) as AdminTokenPayload;
 
@@ -100,6 +117,16 @@ export function verifyAdminCookie(req: NextRequest): AdminTokenPayload | null {
   } catch {
     return null;
   }
+}
+
+/**
+ * verifyAdminTokenFromRequest — Ekstraher token fra Request og kall async verifisering.
+ * Hjelperfunksjon for API-ruter som har async-kontekst.
+ */
+export async function verifyAdminTokenFromRequest(req: NextRequest): Promise<AdminTokenPayload | null> {
+  const token = req?.cookies?.get('admin_token')?.value;
+  if (!token) return null;
+  return verifyAdminTokenAsync(token);
 }
 
 export async function verifyAdminTokenAsync(token: string): Promise<AdminTokenPayload | null> {

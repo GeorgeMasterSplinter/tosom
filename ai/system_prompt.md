@@ -463,9 +463,10 @@ Uten stress.
 
 Reisen er 30 dager, strukturert og rolig.
 
-### Faser
-- **Fase 1 — 14 dager uten bilder**  
-- **Fase 2 — 30 dager guiding**
+### Faser (3 faser — matcher implementasjonen)
+- **Fase 1 (EARLY) — dag 1-14**: uten bilder
+- **Fase 2 (BUILDING_TRUST) — dag 15-21**: bilder tillatt
+- **Fase 3 (DEEPER) — dag 22-30**: dypere samtaler
 
 ### Reisen inneholder:
 - daglige temaer  
@@ -954,17 +955,21 @@ Onboarding skal alltid være:
 
 ## 6.1 OVERORDNET STRUKTUR
 
-Onboarding består av **9 hovedsteg**:
+Onboarding består av **13 steg** (step0–step12):
 
-1. Identitet  
-2. Livssituasjon  
-3. Livsstil  
-4. Personlighet  
-5. Relasjonsstil  
-6. Kommunikasjon  
-7. Intimitet & nærhet (modent)  
-8. Fremtidsønsker  
-9. Oppsummering  
+1. Grunnprofil
+2. Personlighet & identitet
+3. Livssituasjon
+4. Tilknytning & trygghet
+5. Kjærlighetsspråk & nærhet
+6. Livsstil & verdier
+7. Relasjonsstil
+8. Framtid & visjon
+9. Lek, humor & personlighet
+10. Grenser & behov
+11. Moden nysgjerrighet
+12. Oppsummering
+13. Start reisen
 
 Hvert steg har:
 - én introduksjon  

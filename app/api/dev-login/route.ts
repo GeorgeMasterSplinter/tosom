@@ -1,41 +1,37 @@
 /**
- * ToSom — Dev Login API (v2)
- * 
+ * ToSom — Dev Login API (v4 — SIKKERHETSFIX)
+ *
  * FULLVERDIG DEV-LOGIN MED GET OG POST
- * 
+ *
  * Bruk:
  *   GET /api/dev-login?userId=test-user-1
  *   POST /api/dev-login med body: { userId: "test-user-1" }
- * 
+ *
  * Sikkerhet:
  *   - BARE aktivert når DEV_LOGIN_ENABLED=true
  *   - Ingen produksjonsbruk
- *   - Setter session-cookie med korrekt format
- *   - Oppretter automatisk brukere som ikke finnes
- * 
+ *   - Oppretter brukere automatisk i DB
+ *   - Bruker NextAuth EmailProvider (Magic Link) for session-opprettelse
+ *
+ * S4 FIX: signIn('credentials') ERSTAT med Magic Link flow.
+ * Vi oppretter VerificationToken manuelt og kaller callback-endepunktet internt.
+ *
  * TESTBRUKERE:
- *   - test-user-1: Testbruker 1 (test1@tosom.no)
- *   - test-user-2: Testbruker 2 (test2@tosom.no)
- *   - test-user-3: Testbruker 3 (test3@tosom.no)
+ *   - test-user-1: Testbruker 1 (test@tosom.no)
+ *   - test-user-2: Testbruker 2 (test999@tosom.no)
+ *   - test-user-3: Standard testbruker 3 (test3@tosom.no)
  *   - test-admin: Admin-testbruker (admin@tosom.no)
- * 
- * Dokumentasjon: docs/DEV-LOGIN.md
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { signIn } from '@/lib/auth/config';
 export const dynamic = 'force-dynamic';
 
 // ─── Konfigurasjon ───
 
 const DEV_LOGIN_ENABLED = process.env.DEV_LOGIN_ENABLED === 'true';
 
-/** Aktive testbrukere – kan utvides 
- * 
- * IMPORTANT: User IDs MUST match existing database conversation participants.
- * Active conversations have userAId="1" (test@tosom.no) and userBId="999" (test999@tosom.no).
- */
+/** Aktive testbrukere – kan utvides */
 const TEST_USERS: Record<string, {
   id: string;
   email: string;
@@ -73,36 +69,18 @@ const TEST_USERS: Record<string, {
   },
 };
 
-/**
- * Hvilken side vi redirecter til basert på bruker-status
- */
 type DevRedirectTarget = 'onboarding' | 'dashboard' | 'journey' | 'chat';
 
 function getRedirectTarget(userId: string, existingProgress: boolean): DevRedirectTarget {
-  if (existingProgress) {
-    return 'journey';
-  }
-  if (userId === 'test-user-3') {
-    return 'journey';
-  }
-  if (userId === 'test-admin') {
-    return 'dashboard';
-  }
+  if (existingProgress) return 'journey';
+  if (userId === 'test-user-3') return 'journey';
+  if (userId === 'test-admin') return 'dashboard';
   return 'onboarding';
 }
 
-// ─── Session-hjelp — bruk AuthJS sin eigen signIn() ✓
+// ─── Hjelpere ───
 
-/**
- * Opprett eller hent db-user for dev-testbrukar.
- * Gjer brukaren eksisterande i databasen så AuthJS kan lage JWT.
- */
-async function ensureDevUserInDb(testUser: {
-  id: string;
-  email: string;
-  name: string;
-  role: string;
-}) {
+async function ensureDevUserInDb(testUser: { id: string; email: string; name: string; role: string }) {
   let user = await prisma.user.findFirst({
     where: { email: testUser.email },
     select: { id: true },
@@ -123,13 +101,43 @@ async function ensureDevUserInDb(testUser: {
   return user;
 }
 
+/**
+ * S4 FIX: Opprett VerificationToken for Magic Link flow.
+ *
+ * I stedet for å kalle signIn('credentials') (som ikke finnes lenger),
+ * oppretter vi et VerificationToken i DB og returnerer callback-URLen.
+ * Klienten redirectes til callback-URLen som setter session-cookie automatisk.
+ */
+async function createDevVerificationToken(testUser: { email: string }): Promise<string> {
+  // Opprett unikt token (64-char hex = 32 bytes)
+  const token = crypto.getRandomValues(new Uint8Array(32)).reduce(
+    (acc, b) => acc + b.toString(16).padStart(2, '0'), ''
+  );
+  const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 timer
+
+  // Fjern gamle tokens for denne emailen
+  await prisma.verificationToken.deleteMany({
+    where: { identifier: testUser.email },
+  });
+
+  // Opprett nytt token
+  await prisma.verificationToken.create({
+    data: {
+      identifier: testUser.email,
+      token,
+      expires,
+    },
+  });
+
+  return token;
+}
+
 // ─── GET /api/dev-login?userId=xxx ───
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get('userId');
 
-  // Sjekk om dev-login er aktivert
   if (!DEV_LOGIN_ENABLED) {
     return NextResponse.json(
       { error: 'Dev-login er ikke aktivert. Set DEV_LOGIN_ENABLED=true.' },
@@ -137,7 +145,6 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  // Valider userId
   if (!userId || !(userId in TEST_USERS)) {
     const availableUsers = Object.entries(TEST_USERS).map(
       ([key, u]) => `  - ${key}: ${u.name} (${u.email}) — ${u.description}`
@@ -153,34 +160,33 @@ export async function GET(req: NextRequest) {
   }
 
   const testUser = TEST_USERS[userId as keyof typeof TEST_USERS];
-
-  // Fake testbruker — ingen database-kall
-  // test-user-3 har "eksisterande progres" (med match og reise)
   const existingProgress = userId === 'test-user-3';
-  const dbUser = {
-    id: testUser.id,
-    onboardingComplete: false,
-    deepProfileComplete: false,
-  };
 
-   // Opprett brukaren i DB først (AuthJS treng ein gyldig user)
-   await ensureDevUserInDb(testUser);
+  // Opprett brukeren i DB først
+  await ensureDevUserInDb(testUser);
 
-   // Bruk AuthJS sin eigen signIn med credentials — det lagar JWT-cookie automatisk ✓
-   await signIn('credentials', {
-     email: testUser.email,
-     password: 'dev-login',
-     redirect: false,
-   });
+  // S4 FIX: Opprett verification token og redirect til NextAuth callback
+  // Callback-en vil sette session-cookie og redirecte videre
+  try {
+    const token = await createDevVerificationToken(testUser);
 
-   const redirectTarget = getRedirectTarget(userId, existingProgress);
-   return NextResponse.redirect(new URL(`/${redirectTarget}`, req.url));
+    const callbackUrl = new URL('/api/auth/callback/email', req.url);
+    callbackUrl.searchParams.set('token', token);
+    callbackUrl.searchParams.set('callbackUrl', `/${getRedirectTarget(userId, existingProgress)}`);
+
+    // Redirect klienten til callback — NextAuth vil verifisere token + sette session-cookie
+    return NextResponse.redirect(callbackUrl);
+  } catch (err) {
+    console.error('[Dev Login] Token creation failed:', err);
+    const loginUrl = new URL('/login', req.url);
+    loginUrl.searchParams.set('email', testUser.email);
+    return NextResponse.redirect(loginUrl);
   }
+}
 
- // ─── POST /api/dev-login ───
+// ─── POST /api/dev-login ───
 
 export async function POST(req: NextRequest) {
-  // Sjekk om dev-login er aktivert
   if (!DEV_LOGIN_ENABLED) {
     return NextResponse.json(
       { error: 'Dev-login er ikke aktivert. Set DEV_LOGIN_ENABLED=true.' },
@@ -201,7 +207,6 @@ export async function POST(req: NextRequest) {
   const userId = body?.userId;
   const customRedirect = body?.redirect;
 
-  // Valider userId
   if (!userId || !(userId in TEST_USERS)) {
     const availableUsers = Object.entries(TEST_USERS).map(
       ([key, u]) => `  - ${key}: ${u.name} (${u.email}) — ${u.description}`
@@ -218,69 +223,32 @@ export async function POST(req: NextRequest) {
 
   const testUser = TEST_USERS[userId as keyof typeof TEST_USERS];
 
-  // Fake testbruker — ingen database-kall
-  const dbUser = {
-    id: testUser.id,
-    onboardingComplete: false,
-    deepProfileComplete: false,
-  };
+  await ensureDevUserInDb(testUser);
 
-   // Opprett brukaren i DB først (AuthJS treng ein gyldig user)
-   await ensureDevUserInDb(testUser);
+  try {
+    const token = await createDevVerificationToken(testUser);
 
-    // Bruk AuthJS sin eigen signIn med credentials — det lagar JWT-cookie automatisk ✓
-    await signIn('credentials', {
-      email: testUser.email,
-      password: 'dev-login',
-      redirect: false,
-    });
+    // For POST, vi kan ikke redirecte til callback med cookies (det er en intern fetch).
+    // I stedet: returner JSON-instruksjoner til klienten om å navigere til callback.
+    // Eller: redirect all the same for enkelhet.
+    let redirectUrl = '/onboarding';
+    if (customRedirect && customRedirect.startsWith('/')) {
+      redirectUrl = customRedirect;
+    } else {
+      const existingProgress = userId === 'test-user-3' || userId === 'test-admin';
+      redirectUrl = `/${getRedirectTarget(userId, existingProgress)}`;
+    }
 
-    // Bruk custom redirect dersom spesifisert, elles standard mål
-   let redirectUrl = '/onboarding';
-   if (customRedirect && customRedirect.startsWith('/')) {
-     redirectUrl = customRedirect;
-   } else {
-     const existingProgress = userId === 'test-user-3' || userId === 'test-admin';
-     const redirectTarget = getRedirectTarget(userId, existingProgress);
-     redirectUrl = `/${redirectTarget}`;
-   }
+    const callbackUrl = new URL('/api/auth/callback/email', req.url);
+    callbackUrl.searchParams.set('token', token);
+    callbackUrl.searchParams.set('callbackUrl', redirectUrl);
 
-   return NextResponse.redirect(new URL(redirectUrl, req.url));
-  }
-
-// ─── Hjelpsfunksjonar (ikkje Route-exports) ───
-
-/**
- * Hent tilgjengelige testbrukere
- */
-async function getAvailableUsers() {
-  if (!DEV_LOGIN_ENABLED) {
+    return NextResponse.redirect(callbackUrl);
+  } catch (err) {
+    console.error('[Dev Login] Token creation failed:', err);
     return NextResponse.json(
-      { error: 'Dev-login er ikke aktivert.' },
-      { status: 503 }
+      { error: 'Kunne ikke opprette session. Prøv vanlig login.', details: String(err) },
+      { status: 500 }
     );
   }
-
-  const users = Object.entries(TEST_USERS).map(([key, u]) => ({
-    id: key,
-    name: u.name,
-    email: u.email,
-    role: u.role,
-    description: u.description,
-  }));
-
-  return NextResponse.json({ users });
 }
-
-/**
- * Sjekk om dev-login er tilgjengelig
- */
-async function getDevLoginStatus() {
-  return NextResponse.json({
-    enabled: DEV_LOGIN_ENABLED,
-    availableUsers: Object.keys(TEST_USERS),
-    usage: 'GET /api/dev-login?userId=xxx eller POST /api/dev-login { userId: "xxx" }',
-  });
-}
-
-

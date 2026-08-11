@@ -99,8 +99,8 @@ p('  @@index([createdAt])');
 p('}');
 p('');
 
-// AIRequestLog Model
-p('model AIRequestLog {');
+// MatchingAIRequestLog Model
+p('model MatchingAIRequestLog {');
 p('  id                 String   @id @default(cuid())');
 p('  userId             String');
 p('  feature            String');

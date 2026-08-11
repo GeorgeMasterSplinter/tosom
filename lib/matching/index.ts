@@ -1,27 +1,15 @@
-// lib/matching/index.ts — Hovud-export for matching-motoren
-// Alle komponentar blir re-eksporterte her for enkel import
+// lib/matching/index.ts — Hoved-export for matching-motoren
+// Alle komponenter blir re-eksportert her for enkel import
+// Scoring: kun unifiedScorer (9 dimensjoner, skala [0-100]) — deprecated scorer.ts fjernet
 
-// Kjerne-funksjonar
+// Kjerne-funksjoner
 export { matchingEngine } from "./engine";
 export { findBestMatchFor } from "./findBestMatchFor";
 
-// Scoring-funksjoner — EINTILT SCORING (Punkt 4)
+// Scoring-funksjoner — EINTILT SCORING
 export { unifiedScore, calculateTotalScore } from "./unifiedScorer"; // Primær scoring (9 dimensjoner, skala [0-100])
 
-/** @deprecated Bruk unifiedScore() fra unifiedScorer.ts i stedet */
-export { calculateBaseCompatibility } from "./scorer";
-/** @deprecated Bruk unifiedScore() fra unifiedScorer.ts i stedet */
-export { calculateEmotionalResonance } from "./scorer";
-/** @deprecated Bruk unifiedScore() fra unifiedScorer.ts i stedet */
-export { calculateSemanticOverlap } from "./scorer";
-/** @deprecated Bruk unifiedScore() fra unifiedScorer.ts i stedet */
-export { calculateIntimacyScore } from "./scorer";
-/** @deprecated Bruk unifiedScore() fra unifiedScorer.ts i stedet */
-export { calculateFutureVisionScore } from "./scorer";
-
-/** @deprecated Bruk unifiedScore() fra unifiedScorer.ts i stedet. calculateTotalScore er nå re-eksportert fra unifiedScorer med backward compat wrapper. */
-
-// Dealbreaker-funksjonar
+// Dealbreaker-funksjoner
 export { sjekkAlleDealbreakers } from "./dealbreaker";
 export type { DealbreakerResult } from "./dealbreaker";
 

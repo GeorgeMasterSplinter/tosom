@@ -10,7 +10,19 @@ import { signIn } from '@/lib/auth/config';
  * Body: { email: string, password: string }
  * Response: { success: boolean, redirect?: string, error?: string }
  */
+/**
+ * ⚠️ DEVELOPMENT ONLY — Never expose in production.
+ * This route is blocked when NODE_ENV === 'production'.
+ */
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  // Hard gate: block in production
+  if (process.env.NODE_ENV === 'production') {
+    return NextResponse.json(
+      { success: false, error: 'Not available in production' },
+      { status: 403 }
+    );
+  }
+
   try {
     const { email, password } = await request.json();
 

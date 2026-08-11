@@ -5,7 +5,7 @@ import { JourneyTimeline } from "./JourneyTimeline";
 import SystemMessageBox from "../system/SystemMessageBox";
 // ReflectionBox import removed — component archived per dashboard redesign
 
-/** JourneyView – dagvisning for Dag 1–35. */
+/** JourneyView – dagvisning for Dag 1–30. */
 
 interface JourneyViewProps {
   currentDay?: number;

@@ -1,10 +1,10 @@
-// lib/matching/dealbreaker.ts — Harde filter for matching
-// Dealbreakers er essensielle mismatch som automatisk avviser ein kandidat
+// lib/matching/dealbreaker.ts — Harde filtre for matching
+// Dealbreakere er essensielle mismatch som automatisk avvise en kandidat
 
 import { ProfileData } from "./types";
 
 /**
- * DealbreakerResult beskriver kva som vart funnen som dealbreaker.
+ * DealbreakerResult beskriver hva som ble funnet som dealbreaker.
  */
 export interface DealbreakerResult {
   hasDealbreaker: boolean;
@@ -22,7 +22,7 @@ function checkMaturityGap(a: ProfileData, b: ProfileData): DealbreakerResult {
   if (gap > 4) {
     return {
       hasDealbreaker: true,
-      reason: `Modenheits-gap for stort (${a.maturityLevel} vs ${b.maturityLevel})`,
+      reason: `Modenhets-gap for stort (${a.maturityLevel} vs ${b.maturityLevel})`,
     };
   }
   return { hasDealbreaker: false };
@@ -53,13 +53,17 @@ function checkLifeRhythmConflict(a: ProfileData, b: ProfileData): DealbreakerRes
 }
 
 /**
- * sjekkSecurityLevelIncompatibility — sikkerhetsnivå kan være en dealbreaker
- * hvis det er en stor uoverensstemmelse (secure vs usikker med stort gap).
+ * sjekkSecurityLevelIncompatibility — sikkerhetsnivå er en AKTIV dealbreaker
+ * hvis det er en stor uoverensstemmelse (gap >= 2).
+ *
+ * ToSom-filosofi: et stort sikkerhetsnivå-gap betyr at to personer har helt
+ * ulik trygghetsprofil. Det skaper risiko for misforståelser, utrygghet og
+ * dårlig match. Matching-motoren skal beskytte brukerne, ikke gamble.
  */
 function checkSecurityLevelGap(a: ProfileData, b: ProfileData): DealbreakerResult {
   if (!a.securityLevel || !b.securityLevel) return { hasDealbreaker: false };
   
-  // Secure er kompatible med alt, unsicher+ambivalent kan ha problem
+  // Tilknytningsnivåer: unsicher (1) → ambivalent (2) → secure (3)
   const levels: Record<string, number> = {
     unsicher: 1,
     ambivalent: 2,
@@ -68,10 +72,10 @@ function checkSecurityLevelGap(a: ProfileData, b: ProfileData): DealbreakerResul
   
   const gap = Math.abs(levels[a.securityLevel] - levels[b.securityLevel]);
   if (gap >= 2) {
-    // Ikke automatisk dealbreaker, men en sterk indikator
+    // AKTIV dealbreaker: automatisk avvis ved stort trygghetsgap
     return {
-      hasDealbreaker: false, // Merk: ikke dealbreaker, men kan veiktas lavere
-      reason: `Sikkerheitsnivå-gap (${a.securityLevel} vs ${b.securityLevel})`,
+      hasDealbreaker: true,
+      reason: `Sikkerhetsnivå-gap for stort (${a.securityLevel} vs ${b.securityLevel})`,
     };
   }
   return { hasDealbreaker: false };
@@ -109,7 +113,7 @@ function checkExplicitPreferences(
 function checkBoundaries(a: ProfileData, b: ProfileData): DealbreakerResult {
   if (!a.boundaries || !b.boundaries) return { hasDealbreaker: false };
   
-  // Sjekk om kandidat har nokon av bruker sine eksplisitte grenser
+  // Sjekk om kandidaten har noen av brukerens eksplisitte grenser
   const aBoundaries = a.boundaries as { excludes?: string[] };
   const bProfile = b.boundaries as { includes?: string[] };
   
@@ -119,7 +123,7 @@ function checkBoundaries(a: ProfileData, b: ProfileData): DealbreakerResult {
       if (bIncludes.includes(excluded)) {
         return {
           hasDealbreaker: true,
-          reason: `Grense broten: ${excluded}`,
+          reason: `Grense brutt: ${excluded}`,
         };
       }
     }
@@ -130,13 +134,13 @@ function checkBoundaries(a: ProfileData, b: ProfileData): DealbreakerResult {
 
 /**
  * sjekkAlleDealbreakers — hovedfunksjon som kjører alle dealbreaker-testene.
- * Returnerer resultatet av den første dealbreaker som blir funnen.
+ * Returnerer resultatet av den første dealbreaker som blir funnet.
  */
 export function sjekkAlleDealbreakers(
   queryUser: ProfileData,
   candidate: ProfileData
 ): DealbreakerResult {
-  // 1. Modenheits-gap
+  // 1. Modenhets-gap
   let result = checkMaturityGap(queryUser, candidate);
   if (result.hasDealbreaker) return result;
   
@@ -144,7 +148,7 @@ export function sjekkAlleDealbreakers(
   result = checkLifeRhythmConflict(queryUser, candidate);
   if (result.hasDealbreaker) return result;
   
-  // 3. Eksplisitte preferansar
+  // 3. Eksplisitte preferanser
   result = checkExplicitPreferences(queryUser, candidate);
   if (result.hasDealbreaker) return result;
   
@@ -152,7 +156,7 @@ export function sjekkAlleDealbreakers(
   result = checkBoundaries(queryUser, candidate);
   if (result.hasDealbreaker) return result;
   
-  // 5. Security level (ikke automatisk dealbreaker, men returnerer info)
+  // 5. Security level — AKTIV dealbreaker ved gap >= 2
   result = checkSecurityLevelGap(queryUser, candidate);
   if (result.hasDealbreaker) return result;
   

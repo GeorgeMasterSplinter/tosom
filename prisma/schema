@@ -32,12 +32,6 @@ enum MatchStatus {
   unmatched
 }
 
-enum QueueStatus {
-  PENDING
-  MATCHED
-  EXPIRED
-}
-
 // CHANGE 1: Removed system_message from MessageCategory
 enum MessageCategory {
   user
@@ -155,8 +149,6 @@ model User {
   resetTokens      PasswordResetToken[]
   twoFactor        TwoFactorSecret?
   auditLogs        AuditLog[]                     @relation("AdminAuditLogs")
-  matchQueues      MatchQueue[]
-  matchFeedbacks   MatchFeedback[]
   frozenByUser     Conversation[]   @relation("FrozenByUser")
 
   @@index([role])
@@ -192,52 +184,11 @@ model Match {
 
   userA     User              @relation("UserAMatches", fields: [userAId], references: [id])
   userB     User              @relation("UserBMatches", fields: [userBId], references: [id])
-  history   MatchHistory[]
-  feedbacks MatchFeedback[]
-
   @@index([status])
   @@index([userAId])
   @@index([userBId])
   @@index([createdAt])
   @@index([expiresAt])
-}
-
-model MatchHistory {
-  id        String   @id @default(cuid())
-  matchId   String
-  event     String
-  createdAt DateTime @default(now())
-
-  match     Match    @relation(fields: [matchId], references: [id])
-}
-
-model MatchQueue {
-  id        String        @id @default(cuid())
-  userId    String
-  status    QueueStatus   @default(PENDING)
-  createdAt DateTime      @default(now())
-
-  user      User          @relation(fields: [userId], references: [id])
-
-  @@index([userId])
-  @@index([status])
-  @@index([createdAt])
-}
-
-model MatchFeedback {
-  id        String   @id @default(cuid())
-  matchId   String
-  userId    String
-  rating    Int
-  reason    String?
-  createdAt DateTime @default(now())
-
-  match     Match    @relation(fields: [matchId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
-
-  @@index([matchId])
-  @@index([userId])
-  @@index([rating])
 }
 
 model Conversation {
@@ -454,8 +405,8 @@ model RouteHit {
   @@index([createdAt])
 }
 
-// CHANGE 10: AIRequestLog.feature -> AIFeature enum
-model AIRequestLog {
+// CHANGE 10: MatchingAIRequestLog.feature -> AIFeature enum
+model MatchingAIRequestLog {
   id        String   @id @default(cuid())
   userId    String
   feature   AIFeature

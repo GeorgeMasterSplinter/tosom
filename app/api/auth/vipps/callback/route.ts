@@ -4,9 +4,42 @@
  */
 
 import { NextResponse } from 'next/server';
+import crypto from 'crypto';
 import prisma from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
+
+/**
+ * Verifier Vipps state mot cookie for å beskytte mot CSRF.
+ * State lagres som "rawValue.hash" i cookie, og vi sjekker at:
+ * 1. State fra URL matcher raw-value i cookie
+ * 2. HMAC-hash er gyldig (ikke manipulert)
+ */
+function verifyVippsState(stateFromUrl: string | null, cookies: Map<string, string>): boolean {
+  if (!stateFromUrl) return false;
+  
+  const cookieValue = cookies.get('vipps_state');
+  if (!cookieValue) return false;
+
+  const [rawState, storedHash] = cookieValue.split('.');
+  if (!rawState || !storedHash) return false;
+
+  // Verifiser at state ikke er manipulert
+  const secret = process.env.NEXTAUTH_SECRET || '';
+  const expectedHash = crypto.createHmac('sha256', secret).update(rawState).digest('hex');
+  
+  // Konstant-tid sammenligning for å unngå timing attacks
+  if (storedHash.length !== expectedHash.length) return false;
+  
+  let match = true;
+  for (let i = 0; i < storedHash.length; i++) {
+    if (storedHash[i] !== expectedHash[i]) match = false;
+  }
+  if (!match) return false;
+
+  // Verifiser at state fra URL matcher den lagrede state-verdien
+  return rawState === stateFromUrl;
+}
 
 export async function GET(request: Request) {
   try {
@@ -15,7 +48,27 @@ export async function GET(request: Request) {
     const state = url.searchParams.get('state');
     const error = url.searchParams.get('error');
 
-    // Sjekk om Vipps returnerte ein feil
+    // Hent cookies fra request som Map for enkel oppslag
+    const cookieHeader = request.headers.get('cookie') || '';
+    const cookies = new Map<string, string>(
+      cookieHeader.split(';')
+        .map(c => c.trim())
+        .filter(c => c.length > 0)
+        .map(c => c.split('=').map(s => s.trim()))
+        .filter((p): p is [string, string] => p.length === 2)
+    );
+
+    // CSRF-beskyttelse: Verifiser state mot cookie før videre processing
+    if (!verifyVippsState(state, cookies)) {
+      console.warn('[vipps/callback] State-verifikasjon feilet - mulig CSRF-angrep');
+      const loginUrl = `${process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || 'https://app.tosom.no'}/login?error=${encodeURIComponent('Ugyldig sikkerhetstoken. Prøv på nytt.')}`;
+      const response = NextResponse.redirect(loginUrl);
+      // Slett eventuell ugyldig state-cookie
+      response.cookies.set('vipps_state', '', { maxAge: 0 });
+      return response;
+    }
+
+    // Sjekk om Vipps returnerte en feil
     if (error) {
       const errorDesc = url.searchParams.get('error_description') || 'Ukjent feil';
       const loginUrl = `${process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || 'https://app.tosom.no'}/login?error=${encodeURIComponent(errorDesc)}`;
@@ -149,12 +202,20 @@ export async function GET(request: Request) {
     // Lagre sesjon i cookies (bruk eksisterande auth-module sin logikk)
     const dashboardUrl = `${process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || 'https://app.tosom.no'}/dashboard`;
     const response = NextResponse.redirect(dashboardUrl);
-    response.cookies.set('tosom_session', String(user.id), {
+    
+    // Signer session-cookie med HMAC i stedet for plaintext user.id
+    const secret = process.env.NEXTAUTH_SECRET || '';
+    const sessionToken = crypto.createHmac('sha256', secret).update(user.id + '-vipps').digest('hex');
+    
+    response.cookies.set('tosom_session', sessionToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 30, // 30 dagar
-     });
+      maxAge: 60 * 60 * 24 * 30, // 30 dager
+    });
+    
+    // Slett state-cookie etter bruk
+    response.cookies.set('vipps_state', '', { maxAge: 0 });
 
     return response;
   } catch (error) {

@@ -1,11 +1,15 @@
 /**
  * ToSom – API: Profile Setup
  * Mottar og lagrar all onboarding-data og mappar til Prisma Profile-modellen.
+ *
+ * O1 FIX: Input-validering med Zod-schema (onboardingSetupSchema).
+ * Alle ~90 felt valideres før database-innsetting.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from '@/lib/auth/session';
+import { validateOnboarding } from '@/lib/validation/onboarding-setup';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,6 +17,16 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
+    // O1 FIX: Valider med Zod-skjemaet FØR du skriver til databasen
+    const validation = validateOnboarding(body);
+    if (!validation.success) {
+      return NextResponse.json(
+        { error: 'Ugyldig input', details: validation.errors },
+        { status: 400 }
+      );
+    }
+
+    const { data } = validation;
     const {
       basic,
       personlighet,
@@ -24,14 +38,7 @@ export async function POST(req: NextRequest) {
       humor,
       moden,
       preferanser,
-    } = body;
-
-    if (!basic?.identityName) {
-      return NextResponse.json(
-        { error: 'identityName er påkrevd' },
-        { status: 400 }
-      );
-    }
+    } = data;
 
     // Valider session via NextAuth
     const session = await getServerSession();
@@ -44,19 +51,19 @@ export async function POST(req: NextRequest) {
 
     const userId = session.user.id;
 
-    // Mapper til Profile-modellen
+    // Mapper til Profile-modellen (validering allerede gjort — data er trygt)
     await prisma.profile.upsert({
       where: { userId },
       update: {
         identityName: basic.identityName,
-        age: basic.age ? parseInt(basic.age) : undefined,
+        age: basic.age ?? undefined, // Zod coerces to number already
         lifeSituation: {
           gender: basic.gender,
           seekingGender: basic.seekingGender,
           city: basic.city,
         },
         lifestyle: {
-          height: basic.height ? parseInt(basic.height) : undefined,
+          height: basic.height ?? undefined, // Zod coerces to number already
           bodyType: basic.bodyType,
           lifestyleType: basic.lifestyle,
           smoking: basic.smoking,
@@ -71,11 +78,11 @@ export async function POST(req: NextRequest) {
           quirk: personlighet?.quirk,
         },
         communication: {
-          commStyle: kommunikasjon?.commStyle,
-          conflictStyle: kommunikasjon?.conflictStyle,
-          calmingHelp: kommunikasjon?.calmingHelp,
-          trigger: kommunikasjon?.trigger,
-          trustBuilder: kommunikasjon?.trustBuilder,
+          commStyle: (kommunikasjon as any)?.commStyle,
+          conflictStyle: (kommunikasjon as any)?.conflictStyle,
+          calmingHelp: (kommunikasjon as any)?.calmingHelp,
+          trigger: (kommunikasjon as any)?.trigger,
+          trustBuilder: (kommunikasjon as any)?.trustBuilder,
         },
         intimacy: {
           loveGive: kjaerlighet?.loveGive,
@@ -128,14 +135,14 @@ export async function POST(req: NextRequest) {
       create: {
         userId: userId,
         identityName: basic.identityName,
-        age: basic.age ? parseInt(basic.age) : 25,
+        age: basic.age ?? 25, // Zod coerces to number already
         lifeSituation: {
           gender: basic.gender,
           seekingGender: basic.seekingGender,
           city: basic.city,
         },
         lifestyle: {
-          height: basic.height ? parseInt(basic.height) : undefined,
+          height: basic.height ?? undefined, // Zod coerces to number already
           bodyType: basic.bodyType,
           lifestyleType: basic.lifestyle,
           smoking: basic.smoking,
@@ -150,11 +157,11 @@ export async function POST(req: NextRequest) {
           quirk: personlighet?.quirk,
         },
         communication: {
-          commStyle: kommunikasjon?.commStyle,
-          conflictStyle: kommunikasjon?.conflictStyle,
-          calmingHelp: kommunikasjon?.calmingHelp,
-          trigger: kommunikasjon?.trigger,
-          trustBuilder: kommunikasjon?.trustBuilder,
+          commStyle: (kommunikasjon as any)?.commStyle,
+          conflictStyle: (kommunikasjon as any)?.conflictStyle,
+          calmingHelp: (kommunikasjon as any)?.calmingHelp,
+          trigger: (kommunikasjon as any)?.trigger,
+          trustBuilder: (kommunikasjon as any)?.trustBuilder,
         },
         intimacy: {
           loveGive: kjaerlighet?.loveGive,

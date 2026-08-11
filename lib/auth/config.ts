@@ -91,7 +91,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     colorScheme: "dark"
   },
 
-  trustHost: true,
+  // S2 FIX: I produksjon bruker vi BARE kjente hosts. Lokalt er trustHost:true OK.
+  trustHost: process.env.NODE_ENV === 'production'
+    ? Boolean(process.env.VERCEL_URL || process.env.NEXTAUTH_URL)
+    : true,
+
   secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
-  useSecureCookies: false,
+
+  // S1 FIX: Secure cookies i produksjon (kreker HTTPS). false lokalt for HTTP-dev.
+  useSecureCookies: process.env.NODE_ENV === 'production',
 })

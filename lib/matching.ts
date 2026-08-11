@@ -1,26 +1,18 @@
-// lib/matching.ts — Re-eksporter alle matching-komponentar for bakoverkompatibilitet
-// Denne filen gir enkel import av alle matching-funksjonar
+// lib/matching.ts — ToSom Matching Library
+// EINTILT SCORING: Bruk unifiedScorer som primær scoring (9 dimensjoner, skala [0-100]).
+// Den gamle scorer.ts er fjernet; alle deprecated funksjonar er borte.
 
 /**
- * ToSom Matching Library — Standard API
- * 
- * HOVD FUNKSJON: findBestMatchFor()
- * Bruk denne for ALLE match-operasjonar (cron + user-initiated).
+ * HOVEDFUNKSJON: findBestMatchFor()
+ * Bruk denne for ALLE match-operasjoner (cron + user-initiated).
  */
 
-// Kjerne-funksjonar
+// Kjerne-funksjoner
 export { matchingEngine } from "./matching/engine";
 export { findBestMatchFor } from "./matching/findBestMatchFor";
 
-// Scoring
-export {
-  calculateBaseCompatibility,
-  calculateEmotionalResonance,
-  calculateSemanticOverlap,
-  calculateIntimacyScore,
-  calculateFutureVisionScore,
-  calculateTotalScore,
-} from "./matching/scorer";
+// Scoring — ENHETLIG (9-dimensjonal, skala [0-100])
+export { unifiedScore, calculateTotalScore } from "./matching/unifiedScorer";
 
 // Dealbreaker
 export { sjekkAlleDealbreakers } from "./matching/dealbreaker";

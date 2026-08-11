@@ -9,7 +9,7 @@ import { generateExplanation } from "./explainer";
 
 /**
  * scoreToTier mapper en total-score til en MatchTier.
- * 
+ *
  * Tier-inndeling:
  *   0.85–1.0 → deepResonance     (Dyp resonans)
  *   0.70–0.84 → strongResonance  (Sterk resonans)
@@ -32,21 +32,21 @@ function scoreToTier(score: number): MatchTier {
 function applyCoreValueBonus(base: number): number {
   let bonus = 0;
   const maxBonus = 0.08; // Total maksimal bonus er 8%
-  
-  // Bonus for felles verdier (kan utvides med verkelege verdifelt)
+
+  // Bonus for felles verdier (kan utvides med virkelige verdifelt)
   // TODO: Når verdier er i schema, sjekk for overlap her
-  
-  // Bonus for samkjør livsrytme
+
+  // Bonus for samkjørt livsrytme
   // (Denne behandles i calculateFutureVisionScore isteden)
-  
+
   return Math.min(bonus, maxBonus);
 }
 
 /**
  * matchingEngine — HOVEDFUNKSJON for matching-motoren.
- * 
+ *
  * Kjerne-logikk:
- * 1. Sjekk dealbreakers (harde filter)
+ * 1. Sjekk dealbreakers (harde filtre)
  *    - Hvis dealbreaker → returner MatchResult med score 0, rejected = true
  * 2. Beregn alle sub-scorer (0–1) via scorer.ts
  * 3. Vekt dem med vektene fra weightConfig.ts
@@ -54,15 +54,15 @@ function applyCoreValueBonus(base: number): number {
  * 5. Bestem tier basert på total score
  * 6. Generer explanation via explainer.ts
  * 7. Returner MatchResult
- * 
+ *
  * Vekter (fra weightConfig.ts):
  *   base:       0.35  (Grunnleggende kompatibilitet)
  *   resonance:  0.25  (Emosjonell resonans)
  *   semantic:   0.20  (Semantisk overlap)
  *   intimacy:   0.10  (Intimitet & sårbarhet)
  *   future:     0.10  (Fremtidskompatibilitet)
- * 
- * Dealbreakers (harde filter):
+ *
+ * Dealbreakers (harde filtre):
  *   - Modenhets-gap > 4
  *   - Inkompatibel livsrytme (morning vs evening, fast vs slow)
  *   - Eksplisitte dealbreaker-tags i preferences
@@ -90,19 +90,19 @@ export function matchingEngine(
       explanation: "", // Kan bli generert av ekstern kode
     };
   }
-  
+
   // STEG 2–4: Beregn score
   const { breakdown, totalScore, weights } = calculateTotalScore(
     queryUser,
     candidate
   );
-  
+
   // STEG 4b: Legg til core-value-bonus (hvis alle dealbreaker-pass)
   const finalScore = Math.min(1, totalScore + applyCoreValueBonus(totalScore));
-  
+
   // STEG 5: Bestem tier
   const tier = scoreToTier(finalScore);
-  
+
   // STEG 6: Generer explanation
   const explanation = generateExplanation({
     score: finalScore,
@@ -110,7 +110,7 @@ export function matchingEngine(
     tier,
     rejected: false,
   });
-  
+
   // STEG 7: Returner MatchResult
   return {
     score: finalScore,

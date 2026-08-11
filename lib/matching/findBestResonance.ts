@@ -1,8 +1,8 @@
 /**
  * findBestResonance.ts — Finn den beste matchen basert på resonans
- * 
- * Core-definition: Éin match per 24 time. Berre brukarar som ikkje er låste.
- * Ingen foto-basert matching. Ingen offentlege profiler.
+ *
+ * Core-definition: Én match per 24 timer. Bare brukere som ikke er låst.
+ * Ingen foto-basert matching. Ingen offentlige profiler.
  */
 
 import { prisma } from "@/lib/prisma";
@@ -43,14 +43,14 @@ export interface BestResonanceMatch {
     } | null;
   };
   candidateId: string;
-  nextAvailableAt: Date; // når neste match er tilgjengeleg
+  nextAvailableAt: Date; // når neste match er tilgjengelig
 }
 
 /**
- * Sjekkar om ein brukar er klar for å bli matcha:
- * - Onboarding må vere fullført
+ * Sjekker om en bruker er klar for å bli matchet:
+ * - Onboarding må være fullført
  * - Ingen aktiv 30d-lås
- * - 24t har passert sidan siste match
+ * - 24t har passert siden siste match
  */
 async function isUserMatchable(userId: string): Promise<{
   matchable: boolean;
@@ -95,7 +95,7 @@ async function isUserMatchable(userId: string): Promise<{
         nextAvailableAt: user.lockedUntil,
       };
     }
-    // Låsen har utgått — sjekk om dei har ende matchen
+    // Låsen har utløpt — sjekk om de har avsluttet matchen
     const activeMatch = await prisma.match.findFirst({
       where: {
         OR: [
@@ -104,7 +104,7 @@ async function isUserMatchable(userId: string): Promise<{
         ],
       },
     });
-    
+
     if (!activeMatch) {
       // Ingen aktiv match etter lås — lås opp
       await prisma.user.update({
@@ -131,21 +131,21 @@ async function isUserMatchable(userId: string): Promise<{
 }
 
 /**
- * Finn den beste matchen for ein brukar basert på resonans.
- * Returnerer éin match — den med høgast resonans.
+ * Finn den beste matchen for en bruker basert på resonans.
+ * Returnerer én match — den med høyest resonans.
  */
 export async function findBestResonance(
   options: FindBestResonanceOptions
 ): Promise<BestResonanceMatch | null> {
   const { userId, minResonance = 0 } = options;
 
-  // 1. Sjekk om brukar er matchable
+  // 1. Sjekk om bruker er matchbar
   const matchable = await isUserMatchable(userId);
   if (!matchable.matchable) {
     return null;
   }
 
-  // 2. Hent brukaren si djup profil
+  // 2. Hent brukerens dype profil
   const user = await prisma.user.findUnique({
     where: { id: userId },
     include: {
@@ -157,8 +157,8 @@ export async function findBestResonance(
     return null;
   }
 
-  // 3. Finn potentielle match-kandidatar
-  // Ekskluder: sjølv, allereie i aktiv match, ikkje-matchable
+  // 3. Finn potensielle match-kandidater
+  // Ekskluder: selv, allerede i aktiv match, ikke-matchbare
   const excludedMatches = await prisma.match.findMany({
     where: {
       OR: [
@@ -176,9 +176,9 @@ export async function findBestResonance(
   });
 
   const excludedIds = new Set(excludedMatches.flatMap(m => [m.userAId, m.userBId]));
-  excludedIds.add(userId); // ekskluder sjølv
+  excludedIds.add(userId); // ekskluder selv
 
-  // Finn kandidat som ikkje er låste og ikkje allereie matcha
+  // Finn kandidater som ikke er låste og ikke allerede matchet
   const candidates = await prisma.user.findMany({
     where: {
       id: {
@@ -188,7 +188,7 @@ export async function findBestResonance(
       deepProfileComplete: true,
       bannedAt: null,
       deletedAt: null,
-      lockedUntil: null, // ingen låste brukarar
+      lockedUntil: null, // ingen låste brukere
       profile: {
         isNot: null,
       },
@@ -196,14 +196,14 @@ export async function findBestResonance(
     include: {
       profile: true,
     },
-    take: 50, // maksimum kandidatar for performance
+    take: 50, // maksimum kandidater for performance
   });
 
   if (candidates.length === 0) {
     return null;
   }
 
-  // 4. Beregn resonans for kvar kandidat
+  // 4. Beregn resonans for hver kandidat
   const candidateResonance: Array<{
     candidateId: string;
     resonance: ResonanceResult;
@@ -212,7 +212,7 @@ export async function findBestResonance(
   for (const candidate of candidates) {
     if (!candidate.profile) continue;
 
-    // Bygg profil-object for resonans-berekning
+    // Bygg profil-objekt for resonans-beregning
     const profileA = buildProfileObject(user.profile);
     const profileB = buildProfileObject(candidate.profile);
 
@@ -252,7 +252,7 @@ export async function findBestResonance(
 }
 
 /**
- * Bygg profil-object frå Prisma Profile for resonans-berekning
+ * Bygg profil-objekt fra Prisma Profile for resonans-beregning
  */
 function buildProfileObject(profile: {
   id: string;
@@ -289,6 +289,6 @@ function buildProfileObject(profile: {
     securityLevel: profile.securityLevel,
     bio: profile.bio,
     interests: profile.interests,
-    // Ingen photos i resonansberekninga!
+    // Ingen fotos i resonansberegningen!
   };
 }

@@ -9,12 +9,12 @@
 //   - lib/journey/journeyEngine.ts      (DB-funksjonar, advanceJourney) ⚠️ SLEPP
 //   - lib/journey/journeyStateEngine.ts (MatchFlow + systemMessages) ⚠️ SLEPP
 //   - lib/journey/getJourneyState.ts    (getOrCreateJourney) ⚠️ SLEPP
-//   - components/journey/journeyEngine.ts (dagetekstar 1-35, theme-ranges) ⚠️ SLEPP
+//   - components/journey/journeyEngine.ts (dagetekster 1-30, theme-ranges) ⚠️ SLETTES
 //   - lib/resonance.ts                  (resonans-berekning)
 //   - lib/warmIndicator.ts              (warmth-score)
 //   - lib/silentMoments.ts              (silent moments detection)
 //   - lib/generateFirstMessage.ts       (match-melding)
-//   - lib/getJourneyImpulse.ts          (daglege prompts 1-35)
+//   - lib/getJourneyImpulse.ts          (daglige prompts 1-30)
 
 // ═══════════════════════════════════════════
 // TYPE DEFINISJONAR

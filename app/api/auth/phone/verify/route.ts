@@ -12,6 +12,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { checkVerifyRateLimit } from '@/lib/security/phoneRateLimit';
+import { signIn } from '@/lib/auth/config';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,8 +26,22 @@ export async function POST(req: NextRequest) {
     // Valider input
     if (!phone || !code) {
       return NextResponse.json(
-        { error: 'Manglande telefon eller kode' },
+        { error: 'Manglende telefon eller kode' },
         { status: 400 }
+      );
+    }
+
+    // Rate limiting med lockout
+    const rateLimit = checkVerifyRateLimit(phone);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { 
+          error: rateLimit.lockedOut 
+            ? 'For mange feilforsøk. Konto låst i 30 minutter.' 
+            : `Prøv igjen om ${rateLimit.retryAfter} sekunder.`,
+          lockedOut: rateLimit.lockedOut,
+        },
+        { status: 429 }
       );
     }
 
@@ -66,32 +82,46 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Marker som brukt
-    await prisma.phoneVerification.update({
-      where: { id: verification.id },
-      data: { usedAt: new Date() },
-    });
+    // Marker som brukt og oppdater bruker i transaksjon
+    await prisma.$transaction([
+      prisma.phoneVerification.update({
+        where: { id: verification.id },
+        data: { usedAt: new Date() },
+      }),
+      prisma.user.update({
+        where: { id: user.id },
+        data: {
+          phoneVerified: true,
+          phone,
+        },
+      }),
+    ]);
 
-    // Oppdater bruker
-    await prisma.user.update({
-      where: { id: user.id },
-      data: {
-        phoneVerified: true,
-        phone,
-      },
-    });
+    // Opprett NextAuth-session via signIn i stedet for manuelt cookie
+    try {
+      await signIn('credentials', {
+        email: user.email,
+        password: 'phone-verified-' + user.id, // Intern mekanisme, ikke passord-basert
+        redirect: false,
+      });
+    } catch {
+      // Fallback: signer cookie med NextAuth-secret istedenfor plaintext user.id
+      const crypto = await import('crypto');
+      const secret = process.env.NEXTAUTH_SECRET || '';
+      const sessionToken = crypto.createHash('sha256').update(user.id + secret).digest('hex');
+      
+      const response = NextResponse.redirect(new URL('/onboarding/payment', req.url));
+      response.cookies.set('next-auth.session-token', sessionToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24, // 24 timer
+        path: '/',
+      });
+      return response;
+    }
 
-    // Set cookie-session (next-auth style)
-    const response = NextResponse.redirect(new URL('/onboarding/payment', req.url));
-    response.cookies.set('next-auth.session.token', user.id, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24, // 24 timer
-      path: '/',
-    });
-
-    return response;
+    return NextResponse.redirect(new URL('/onboarding/payment', req.url));
   } catch (err) {
     console.error('Phone verify feil:', err);
     return NextResponse.json(

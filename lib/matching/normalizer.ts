@@ -1,5 +1,5 @@
-// lib/matching/normalizer.ts — Normaliseringsfunksjonar for matching
-// Alle sub-scorer normaliserast til [0, 1] før dei vektast
+// lib/matching/normalizer.ts — Normaliseringsfunksjoner for matching
+// Alle sub-scorer normaliseres til [0, 1] før de vektset
 
 /**
  * normalize tar en raw-verdi med et kjent [min, max]-intervall
@@ -22,7 +22,7 @@ export function clamp01(value: number): number {
 
 /**
  * WeightedSum beregner en vektet sum av flere komponenter.
- * Vektane skal summere til 1.0.
+ * Vektene skal summere til 1.0.
  */
 export function weightedSum(
   scores: number[],
@@ -30,10 +30,10 @@ export function weightedSum(
 ): number {
   if (scores.length !== weights.length) {
     throw new Error(
-      `scores og weights må ha same lengd. Fikk ${scores.length} og ${weights.length}`
+      `scores og weights må ha samme lengde. Fikk ${scores.length} og ${weights.length}`
     );
   }
-  
+
   const sum = scores.reduce((acc, score, i) => acc + score * weights[i], 0);
   return clamp01(sum);
 }

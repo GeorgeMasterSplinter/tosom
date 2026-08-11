@@ -19,10 +19,14 @@
 .DS_Store
 *.pem
 
-# Private keys (should never be committed)
+# Keys (should NEVER be committed — public or private)
 client_private.key
 server_private.key
+client_public.key
+server_public.key
+*.key
 *.private.key
+*.public.key
 
 # debug logs
 npm-debug.log*
@@ -53,3 +57,4 @@ Thumbs.db
 
 # Uploaded files (bilete-opplasting i chat)
 /public/uploads/
+backups/

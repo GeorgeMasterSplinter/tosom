@@ -131,10 +131,32 @@ jobs:
           fi
           echo "PASS: No AI references found."
 
+  # ─── LANGUAGE GUARD (bokmål-only) ───
+  lang-guard:
+    name: Language Guard
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check no nynorsk words remain
+        run: |
+          echo "Checking for nynorsk words (should be bokmal)..."
+          # Common nynorsk patterns that should not appear in codebase
+          FOUND=$(grep -rn 'ikkje\|berre\b\|kva\b\|kvarandre\|avslutta\|sjå\b\|nokon\|korleis\|påverka\|mykje' \
+            app lib components hooks providers 2>/dev/null \
+            | grep -v node_modules || true)
+          if [ -n "$FOUND" ]; then
+            echo "FAIL: Nynorsk words detected (use bokmal):"
+            echo "$FOUND"
+            exit 1
+          fi
+          echo "PASS: No nynorsk references found."
+
   # ─── COMBINED STATUS ───
   status:
     name: CI Status
-    needs: [lint, typecheck, build, prisma, ai-guard]
+    needs: [lint, typecheck, build, prisma, ai-guard, lang-guard]
     runs-on: ubuntu-latest
     if: always()
     steps:
@@ -144,7 +166,8 @@ jobs:
               [ "${{ needs.typecheck.result }}" != "success" ] || \
               [ "${{ needs.build.result }}" != "success" ] || \
               [ "${{ needs.prisma.result }}" != "success" ] || \
-              [ "${{ needs.ai-guard.result }}" != "success" ]; then
+              [ "${{ needs.ai-guard.result }}" != "success" ] || \
+              [ "${{ needs.lang-guard.result }}" != "success" ]; then
             echo "CI pipeline failed!"
             exit 1
           fi

@@ -1,0 +1,14 @@
+{
+  "currentWave": 0,
+  "currentStep": "0.1",
+  "completedSteps": ["0.1"],
+  "nextStep": "0.2",
+  "status": {
+    "tsc": "pass",
+    "grep": "pass",
+    "build": "not-run"
+  },
+  "deviations": [],
+  "lastCommit": "",
+  "updatedAt": "2026-08-12T22:53:00Z"
+}

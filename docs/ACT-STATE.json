@@ -1,16 +1,17 @@
 {
   "currentWave": 0,
-  "currentStep": "0.2",
-  "completedSteps": ["0.1", "0.2"],
-  "nextStep": "0.3",
+  "currentStep": "0.3",
+  "completedSteps": ["0.1", "0.2", "0.3"],
+  "nextStep": "0.4",
   "status": {
     "tsc": "pass",
     "grep": "pass",
     "build": "not-run"
   },
   "deviations": [
-    "BASELINE tsc: 0 feil (clean TypeScript-tilstand ved start)"
+    "BASELINE tsc: 0 feil (clean TypeScript-tilstand ved start)",
+    "Notat: WaitingForMatch.tsx har href='/onboarding' uten trailing slash (instruksen oppgir '/onboarding/')"
   ],
-  "lastCommit": "f4c7d2c",
-  "updatedAt": "2026-08-12T22:53:00Z"
+  "lastCommit": "f69db34",
+  "updatedAt": "2026-08-12T22:56:00Z"
 }

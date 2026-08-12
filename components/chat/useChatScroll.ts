@@ -16,7 +16,7 @@ import { useRef, useEffect, useCallback } from "react";
    ═══════════════════════════════════════ */
 
 export interface ChatScrollResult {
-  scrollRef: React.RefObject<HTMLDivElement | null>;
+  scrollRef: React.RefObject<HTMLDivElement>;
   scrollToBottom: (options?: { behavior?: ScrollBehavior }) => void;
   smoothScrollToBottom: () => void;
   isAtBottom: () => boolean;

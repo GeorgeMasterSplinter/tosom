@@ -14,7 +14,7 @@ import { errorResponse, successResponse, validateQuery } from '@/lib/api-validat
 
 export const dynamic = 'force-dynamic'
 
-const validStatuses = ['pending', 'active', 'matched', 'expired', 'ended', 'unmarked'] as const
+const validStatuses = ['pending', 'active', 'matched', 'expired', 'ended', 'unmatched'] as const
 type ValidStatus = typeof validStatuses[number]
 
 export async function GET(req: NextRequest) {

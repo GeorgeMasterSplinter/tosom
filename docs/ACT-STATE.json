@@ -1,14 +1,16 @@
 {
   "currentWave": 0,
-  "currentStep": "0.1",
-  "completedSteps": ["0.1"],
-  "nextStep": "0.2",
+  "currentStep": "0.2",
+  "completedSteps": ["0.1", "0.2"],
+  "nextStep": "0.3",
   "status": {
     "tsc": "pass",
     "grep": "pass",
     "build": "not-run"
   },
-  "deviations": [],
-  "lastCommit": "",
+  "deviations": [
+    "BASELINE tsc: 0 feil (clean TypeScript-tilstand ved start)"
+  ],
+  "lastCommit": "f4c7d2c",
   "updatedAt": "2026-08-12T22:53:00Z"
 }

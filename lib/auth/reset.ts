@@ -47,18 +47,24 @@ export async function storeResetToken(userId: string, token: string, expiresAt: 
 
 /**
  * Hente og verify token. Returnerar null ved feil/utgått.
+ *
+ * SECURITY: Filtrerer direkte på hashet token-verdi (O(1) oppslag via unik indeks)
+ * for å unngå timing-baserte/enumererings-angrep.
  */
 export async function verifyResetToken(token: string): Promise<boolean> {
-  const record = await prisma.passwordResetToken.findFirst({
-    where: {
-      expiresAt: { gt: new Date() },
-      usedAt: null,
-    },
+  const hashed = hashToken(token);
+
+  // O(1) oppslag via unik indeks på tokenHash — constant-time gjennom database-indeksen
+  const record = await prisma.passwordResetToken.findUnique({
+    where: { tokenHash: hashed },
   });
 
   if (!record) return false;
 
-  return verifyToken(token, record.tokenHash);
+  // Sjekk at tokenet ikke er utløpt eller allerede brukt
+  if (record.expiresAt <= new Date() || record.usedAt !== null) return false;
+
+  return true;
 }
 
 /**

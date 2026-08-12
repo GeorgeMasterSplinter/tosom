@@ -1,55 +1,55 @@
 # ToSom — Dokumentasjon
 
-Denne mappen inneholder all dokumentasjon for ToSom-prosjektet.
+Dette er dokumentasjonsindeksen for ToSom-plattformen. Alle referanser peker på filer som finnes i repoet per 2026-08-12.
 
 ---
 
-## MAPPESTRUKTUR
+## Hoveddokumenter
 
-```
-/docs/
-├── README.md                    ← Denne filen
-├── core/                        ← Offisiell master-dokumentasjon (alltid oppdatert)
-│   ├── TOSOM_MASTER_OVERVIEW.md
-│   ├── TOSOM_ARCHITECTURE_MAP.md
-│   ├── TOSOM_ROADMAP.md
-│   ├── TOSOM_DEVELOPMENT_PROTOCOL.md
-│   ├── TOSOM_SUBSYSTEMS_OVERVIEW.md
-│   ├── TOSOM_API_OVERVIEW.md
-│   ├── TOSOM_JOURNEY_OVERVIEW.md
-│   ├── TOSOM_MATCHING_OVERVIEW.md
-│   └── TOSOM_SECURITY_OVERVIEW.md
-├── archive/                     ← Historiske og utdaterte dokumenter (~145 filer)
-└── system/                      ← Auto-genererte system-rapporter
-```
+| Dokument | Stikkord |
+|----------|----------|
+| [repo-structure.md](repo-structure.md) | Komplett filstruktur med beskrivelser |
+| [SECURITY-STABILITY-PLAN-v1.md](SECURITY-STABILITY-PLAN-v1.md) | Sikkerhets- og stabilitetsplan (v1.0, 2026-08-05) |
+| [match-status-lifecycle.md](match-status-lifecycle.md) | MatchStatus-livssyklus + CHECKIN-fase |
+| [design-token-migration-guide.md](design-token-migration-guide.md) | Design-token-system og migreringsveiledning |
+| [journey-engine-refactor-plan.md](journey-engine-refactor-plan.md) | Journey Engine refaktorering |
+| [tosom-concept-v2-skisse.md](tosom-concept-v2-skisse.md) | Platform-konsept og Vipps-betaling |
+| [tosom-masterplan-v4.md](tosom-masterplan-v4.md) | Masterplan v4 (arkitektur) |
+| [tosom-platform-map.html](tosom-platform-map.html) | Visuell plattformkartlegging |
 
 ---
 
-## HVORDAN BRUKE DOKUMENTASJONEN
+## Undermapper
 
-### Før du starter en ny oppgave:
-1. Les `core/TOSOM_MASTER_OVERVIEW.md` for helhetsforståelse
-2. Les `core/TOSOM_DEVELOPMENT_PROTOCOL.md` for regler og arbeidsmetode
-3. Les relevant subsystem-dokumentasjon for detaljer
-
-### For utviklere:
-- `core/TOSOM_ARCHITECTURE_MAP.md` — Komplett arkitekturkartlegging
-- `core/TOSOM_API_OVERVIEW.md` — Alle API-endepunkter med eksempel-respons
-- `core/TOSOM_DEVELOPMENT_PROTOCOL.md` — Kodekrav, naming, import-struktur
-
-### For prosjektledelse:
-- `core/TOSOM_ROADMAP.md` — Prioriteringer og status for alle pakker
-- `core/TOSOM_SUBSYSTEMS_OVERVIEW.md` — Status per subsystem
+| Mappe | Innhold |
+|-------|---------|
+| [`archive/`](archive/) | Arkiverte og utdaterte dokumenter |
+| [`core/`](core/) | Kernedokumentasjon (master overview, architecture) |
+| [`system/`](system/) | Systemrapporter og auto-genererte filer |
+| [`v2/`](v2/) | Versjon 2 planer |
 
 ---
 
-## DOKUMENTASJONSREGLER
+## Arkiv
 
-1. **Alltid oppdatere** når en subsystem endres vesentlig
-2. **Aldri slette** fra `/docs/core/` uten godkjenning
-3. **Arkivere** utdaterte dokumenter til `/docs/archive/`
-4. **Skrive i bokmål** — aldri nynorsk eller svorsk
+Utdaterte rapporter som er flyttet hit:
+
+| Fil | Original dato | Årsak |
+|-----|---------------|-------|
+| [MOTION_21_REPORT.md](archive/MOTION_21_REPORT.md) | 2026-06-20 | Pre-launch analyse |
+| [TOSOM_DUPLICATE_ANALYSIS_REPORT.md](archive/TOSOM_DUPLICATE_ANALYSIS_REPORT.md) | 2026-06-24 | Superseded av ny analyse |
+| [TOSOM_READINESS_REPORT.md](archive/TOSOM_READINESS_REPORT.md) | august 2026 | Utdatert etter roadmap-arbeid |
+| [security-stability-plan-v1.md](archive/security-stability-plan-v1.md) | 2026-08-05 | Case-kollisjon løst (kortere versjon) |
 
 ---
 
-*Versjon: 1.0 — Opprettet 2026-08-02*
+## Dokumentasjonsregler
+
+1. **Alltid oppdater** når en subsystem endres vesentlig
+2. **Aldri slett** uten godkjenning — flytt til `archive/` i stedet
+3. **Skriv i bokmål** — aldri nynorsk eller svensk
+4. **Én kilde for sannhet** — ingen duplikater av samme dokument
+
+---
+
+*Sist oppdatert: 2026-08-12*

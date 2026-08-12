@@ -89,7 +89,7 @@ export async function getCustomerByUserId(userId: string): Promise<Stripe.Custom
 /**
  * Valider webhook event frå Stripe.
  */
-export function validateWebhook(event: Stripe.Event, payload: Buffer, signature: string): Stripe.Event {
+export function validateWebhook(payload: Buffer, signature: string): Stripe.Event {
   const stripe = getStripeClient()
 
   return stripe.webhooks.constructEvent(

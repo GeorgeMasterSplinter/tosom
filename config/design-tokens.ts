@@ -1,11 +1,10 @@
 /**
- * @deprecated (Punkt 6: Design-token-synkronisering — Shim)
+
  *
- * Denne fila er et midlertidig shim for bakover-kompatibilitet.
- * Ny kode skal importere direkte fra '@/components/ui/tokens'.
+ * Design-tokens for hele ToSom-plattformen.
+ * Hovedkilde for alle design-tokens i ToSom.
  *
  * config/design-tokens.ts    → Hardkodete HEX-verdier (inline styles)
- * components/ui/tokens.ts    → CSS custom properties (var(--ts-*))
  *
  * Begge systemene nå refererer til samme fargeverdier.
  * Se: docs/design-token-migration-guide.md for migreringsplan.

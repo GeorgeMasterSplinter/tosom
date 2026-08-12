@@ -100,7 +100,7 @@ export async function GET(req: NextRequest) {
         function getPhaseForDay(day: number): JourneyPhase {
           if (day <= 14) return JourneyPhase.EARLY;
           if (day <= 21) return JourneyPhase.BUILDING_TRUST;
-          if (day <= 30) return JourneyPhase.DEEPER;
+          if (day <= 25) return JourneyPhase.DEEPER;
           return JourneyPhase.CHECKIN;
         }
 

@@ -9,16 +9,32 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { timingSafeEqual } from 'crypto';
 import { findBestResonance } from '@/lib/matching/findBestResonance';
+
+/** Constant-time string comparison */
+function safeCompare(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  return timingSafeEqual(Buffer.from(a), Buffer.from(b));
+}
 
 export async function GET(req: NextRequest) {
   const startedAt = Date.now();
-  
-  // Valider cron-secret (query param eller Authorization header)
-  const secret = req.nextUrl.searchParams.get('secret') 
-    || req.headers.get('authorization')?.replace('Bearer ', '');
-  if (secret !== process.env.CRON_SECRET) {
-    return NextResponse.json({ error: 'Ugyldig secret' }, { status: 401 });
+
+  // Valider cron-secret via Authorization-header (ikke query-param) med timing-safe sammenligning
+  const expectedSecret = process.env.CRON_SECRET;
+  if (!expectedSecret) {
+    return NextResponse.json({ error: 'Cron miskonfigurt' }, { status: 500 });
+  }
+
+  const authHeader = req.headers.get('authorization');
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const providedSecret = authHeader.slice(7);
+  if (!safeCompare(providedSecret, expectedSecret)) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
   try {

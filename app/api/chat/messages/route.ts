@@ -23,6 +23,27 @@ export async function GET(request: Request) {
   }
 
   try {
+    // IDOR-vern: verifiser at brukaren er del av samtalen før meldingar returneres
+    const conversation = await prisma.conversation.findUnique({
+      where: { id: conversationId },
+      select: { userAId: true, userBId: true },
+    });
+
+    if (!conversation) {
+      return NextResponse.json(
+        { error: "Samtalen finst ikkje" },
+        { status: 404 }
+      );
+    }
+
+    const isMember = conversation.userAId === session.user.id || conversation.userBId === session.user.id;
+    if (!isMember) {
+      return NextResponse.json(
+        { error: "Ingen tilgang" },
+        { status: 403 }
+      );
+    }
+
     const messages = await prisma.message.findMany({
       where: {
         conversationId,

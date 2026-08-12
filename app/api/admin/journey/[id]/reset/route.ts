@@ -1,10 +1,23 @@
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from "@/lib/prisma";
+import { requireAuth } from '@/lib/auth/requireAuth';
 export const dynamic = 'force-dynamic';
 
 export async function POST(
-  request: Request,
+  request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ): Promise<Response> {
+  // Admin-autorisasjon (same mønster som app/api/admin/users/[id]/route.ts)
+  const result = await requireAuth(request);
+  if (result instanceof NextResponse) return result;
+
+  if (result.user.role !== 'ADMIN') {
+    return NextResponse.json(
+      { error: 'Forbidden — kun admin kan utføre denne handlingen' },
+      { status: 403 }
+    );
+  }
+
   const { id } = await context.params;
   try {
     const user = await prisma.user.findUnique({

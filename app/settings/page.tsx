@@ -6,6 +6,7 @@
 "use client";
 
 import { useState } from "react";
+import { signOut } from "next-auth/react";
 
 /* ═══════════════════════════════════════
    DESIGN SYSTEM (kodeklar blueprint)
@@ -589,7 +590,7 @@ function SlettKontoSection() {
 function AvsluttSection() {
   return (
     <div style={{ marginTop: "16px" }}>
-      <GoldButton fullWidth>Logg ut</GoldButton>
+      <GoldButton fullWidth onClick={() => signOut({ callbackUrl: "/" })}>Logg ut</GoldButton>
     </div>
   );
 }

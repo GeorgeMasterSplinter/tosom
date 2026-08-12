@@ -19,7 +19,7 @@ const CheckoutSchema = z.object({
 })
 
 export async function POST(req: NextRequest) {
-  return createApiHandler({
+  return createApiHandler(req, {
     auth: true,
     rateLimit: { windowMs: 60_000, maxRequests: 5, strict: true },
     handler: async ({ user }) => {

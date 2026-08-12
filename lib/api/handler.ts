@@ -10,11 +10,11 @@
  *
  * Bruk i API-ruter:
  *   export async function POST(req: NextRequest) {
- *     return createApiHandler({
+ *     return createApiHandler(req, {
  *       auth: true,
  *       role: 'admin',  // optional: which role required
  *       schema: MySchema,
- *       rateLimit: { windowMs: 60_000, max: 60 },
+ *       rateLimit: { windowMs: 60_000, maxRequests: 60 },
  *       handler: async ({ user, body }) => {
  *         // din logikk
  *         return NextResponse.json({ ok: true })
@@ -26,11 +26,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { auth } from '@/lib/auth/config'
-import { getSessionData } from '@/lib/admin/requireAuth'
-import { isAdmin, hasAnyAllowedRole } from '@/lib/auth/rbac'
+import { hasAnyAllowedRole } from '@/lib/auth/rbac'
 import type { Role } from '@/lib/auth/roles'
-import { hasAnyRole } from '@/lib/auth/roles'
-import { validateBody, validateQuery } from '@/lib/api/validation'
+import { validateBody } from '@/lib/api/validation'
 import { checkRateLimit, getRateLimitHeaders, checkStrictRateLimit } from '@/lib/api/rateLimit'
 
 /**
@@ -40,7 +38,7 @@ interface ApiHandlerOptions {
   /** Krevar innlogging? */
   auth?: boolean
 
-  /** Krev spesifikk rol? 'user' | 'admin' | 'support' | ['admin', 'support'] */
+  /** Krev spesifikk rolle? 'user' | 'admin' | 'support' | ['admin', 'support'] */
   role?: string | string[]
 
   /** Zod-skjema for body-validering */
@@ -98,8 +96,10 @@ async function getSession(): Promise<{
 
 /**
  * Opprett ein standardisert API-handler.
+ *
+ * Tar req som første argument for å unngå globalThis-mutering.
  */
-export async function createApiHandler(opts: ApiHandlerOptions): Promise<NextResponse> {
+export async function createApiHandler(req: NextRequest, opts: ApiHandlerOptions): Promise<NextResponse> {
   const {
     auth = false,
     role,
@@ -110,7 +110,7 @@ export async function createApiHandler(opts: ApiHandlerOptions): Promise<NextRes
     onError,
   } = opts
 
-  const ip = getClientIp(globalThis.request || ({} as NextRequest))
+  const ip = getClientIp(req)
 
   // --- Rate limiting (før auth viss rateLimitFirst=true) ---
   if (rateLimit && !rateLimitFirst) {
@@ -150,11 +150,10 @@ export async function createApiHandler(opts: ApiHandlerOptions): Promise<NextRes
   // --- Zod-validering ---
   let body: unknown = undefined
   if (schema) {
-    // For GET-ruter: ingen body
-    const method = globalThis.request ? (globalThis.request as NextRequest).method : 'GET'
+    const method = req.method
     if (method === 'POST' || method === 'PUT' || method === 'PATCH') {
       try {
-        const data = await (globalThis.request as NextRequest).json()
+        const data = await req.json()
         const result = validateBody(schema, data)
         if (!result.success) {
           return NextResponse.json(
@@ -174,11 +173,8 @@ export async function createApiHandler(opts: ApiHandlerOptions): Promise<NextRes
 
   // --- Hent query ---
   const query: Record<string, string> = {}
-  if (globalThis.request) {
-    const req = globalThis.request as NextRequest
-    for (const [key, value] of req.nextUrl.searchParams.entries()) {
-      query[key] = value
-    }
+  for (const [key, value] of req.nextUrl.searchParams.entries()) {
+    query[key] = value
   }
 
   // --- Kjør handler ---

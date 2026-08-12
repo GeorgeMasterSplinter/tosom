@@ -7,10 +7,15 @@
 
 import type { NextRequest } from 'next/server';
 
-const ADMIN_JWT_SECRET: string = process.env.ADMIN_JWT_SECRET || process.env.NEXTAUTH_SECRET || '';
-if (!ADMIN_JWT_SECRET) {
-  throw new Error('[TOSOM] Manglende miljøvariabel: ADMIN_JWT_SECRET (eller NEXTAUTH_SECRET som fallback). Set dette i .env!');
+// Boot-time sjekk: kræsjer om secret mangler (fail-closed, ingen fallback)
+const ADMIN_JWT_SECRET_RAW = process.env.ADMIN_JWT_SECRET;
+if (!ADMIN_JWT_SECRET_RAW) {
+  throw new Error(
+    '[TOSOM] Manglende kritisk miljøvariabel: ADMIN_JWT_SECRET. ' +
+    'Set dette i .env! Ingen fallback er tillatt (sikkerheitskritisk).'
+  );
 }
+const ADMIN_JWT_SECRET: string = ADMIN_JWT_SECRET_RAW;
 
 const ADMIN_JWT_EXPIRY = process.env.ADMIN_JWT_EXPIRY || '8h';
 

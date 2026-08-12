@@ -40,6 +40,14 @@ const TEST_USERS: Record<string, {
 };
 
 export async function GET() {
+  // Fail-closed i produksjon
+  if (process.env.NODE_ENV === 'production') {
+    return NextResponse.json(
+      { error: 'Not found' },
+      { status: 404 }
+    );
+  }
+
   return NextResponse.json({
     enabled: DEV_LOGIN_ENABLED,
     availableUsers: Object.keys(TEST_USERS),

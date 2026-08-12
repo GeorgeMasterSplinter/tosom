@@ -15,11 +15,11 @@ import { signIn } from '@/lib/auth/config';
  * This route is blocked when NODE_ENV === 'production'.
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  // Hard gate: block in production
+  // Hard gate: fail-closed i produksjon — avslør IKKE at endepunktet eksisterer
   if (process.env.NODE_ENV === 'production') {
     return NextResponse.json(
-      { success: false, error: 'Not available in production' },
-      { status: 403 }
+      { error: 'Not found' },
+      { status: 404 }
     );
   }
 

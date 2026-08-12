@@ -1,8 +1,8 @@
 {
   "currentWave": 1,
-  "currentStep": "1.6",
-  "completedSteps": ["0.1", "0.2", "0.3", "0.4", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6"],
-  "nextStep": "1.7",
+  "currentStep": "1.9",
+  "completedSteps": ["0.1", "0.2", "0.3", "0.4", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9"],
+  "nextStep": "1.10",
   "status": {
     "tsc": "pass",
     "grep": "pass",
@@ -13,8 +13,9 @@
     "Notat: WaitingForMatch.tsx har href='/onboarding' uten trailing slash (instruksen oppgir '/onboarding/')",
     "BASELINE build: rødt pga. 2 kjente ESLint-feil (WaitingForMatch.tsx:167, Header.tsx:72), fikses i Bølge 4",
     "AVVIK: STEG 1.2+1.3 kjørt som batch med delt build-sjekk (bruker avkall på REGEL 8, godkjent av bruker)",
-    "STEG 1.5 valgte alternativ B (fjern rute) i stedet for alternativ A (legg til medlemskapssjekk) — endepunktet var @deprecated med null kallere"
+    "STEG 1.5 valgte alternativ B (fjern rute) i stedet for alternativ A (legg til medlemskapssjekk) — endepunktet var @deprecated med null kallere",
+    "AVVIK: STEG 1.7+1.8 kjørt som batch (identisk mønster, felles build-sjekk)"
   ],
-  "lastCommit": "e50bd65",
-  "updatedAt": "2026-08-12T23:16:00Z"
+  "lastCommit": "7748843",
+  "updatedAt": "2026-08-12T23:28:00Z"
 }

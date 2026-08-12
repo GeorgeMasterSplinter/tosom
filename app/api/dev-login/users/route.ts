@@ -40,6 +40,14 @@ const TEST_USERS: Record<string, {
 };
 
 export async function GET() {
+  // Fail-closed i produksjon (uavhengig av DEV_LOGIN_ENABLED-flagget)
+  if (process.env.NODE_ENV === 'production') {
+    return NextResponse.json(
+      { error: 'Not found' },
+      { status: 404 }
+    );
+  }
+
   if (!DEV_LOGIN_ENABLED) {
     return NextResponse.json(
       { error: 'Dev-login er ikke aktivert.' },

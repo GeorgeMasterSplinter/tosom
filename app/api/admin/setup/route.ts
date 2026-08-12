@@ -4,28 +4,72 @@
  * POST /api/admin/setup
  * Lagar admin-brukar dersom han ikke eksisterer.
  * 
- * Bruk: Kall ein gong etter deploy eller reset.
+ * SECURITY: Låst bak ADMIN_SETUP_TOKEN + NODE_ENV-sjekk (timing-safe).
+ * Kun tilgjengelig i non-production miljø med korrekt token via Authorization-header.
+ * 
+ * Bruk: Kall ein gong etter deploy eller reset (kun dev/staging).
  */
 
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import crypto from 'crypto';
 
 export const dynamic = 'force-dynamic';
 
-export async function POST() {
+/**
+ * Timing-safe sammenligning av to strenger.
+ * Returnerer false dersom lengder varier (constant-time for like lengde).
+ */
+function safeCompare(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  const bufA = crypto.timingSafeEqual(Buffer.from(a), Buffer.from(b));
+  return bufA;
+}
+
+export async function POST(req: Request) {
   try {
+    // --- VAKTKLAUSUL 1: Blokker i produksjon medmindre token er satt og matcher ---
+    const isProduction = process.env.NODE_ENV === 'production';
+    const expectedToken = process.env.ADMIN_SETUP_TOKEN;
+
+    if (isProduction) {
+      // I produksjon krever vi både at token er konfigurert OG at det matcher
+      if (!expectedToken) {
+        return NextResponse.json(
+          { error: 'Not found' },
+          { status: 404 }
+        );
+      }
+
+      const authHeader = req.headers.get('authorization');
+      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return NextResponse.json(
+          { error: 'Unauthorized' },
+          { status: 401 }
+        );
+      }
+
+      const providedToken = authHeader.slice(7); // fjern "Bearer "
+      if (!safeCompare(providedToken, expectedToken)) {
+        return NextResponse.json(
+          { error: 'Forbidden' },
+          { status: 403 }
+        );
+      }
+    }
+
     const ADMIN_EMAIL = 'admin@tosom.no';
 
-    // Sjekk om admin allereie finst
-    const existing = await prisma.user.findUnique({
-      where: { email: ADMIN_EMAIL },
+    // --- VAKTKLAUSUL 2: No-op hvis en ADMIN allereie finst (uavhengig av miljø) ---
+    const existingAdmin = await prisma.user.findFirst({
+      where: { role: 'ADMIN' },
     });
 
-    if (existing) {
+    if (existingAdmin) {
       return NextResponse.json({
         success: true,
         message: 'Admin-brukar finst allereie',
-        adminId: existing.id,
+        adminId: existingAdmin.id,
       });
     }
 

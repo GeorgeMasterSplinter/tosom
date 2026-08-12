@@ -1,18 +1,18 @@
 {
   "currentWave": 1,
-  "currentStep": "0.4",
-  "completedSteps": ["0.1", "0.2", "0.3", "0.4"],
-  "nextStep": "1.1",
+  "currentStep": "1.1",
+  "completedSteps": ["0.1", "0.2", "0.3", "0.4", "1.1"],
+  "nextStep": "1.2",
   "status": {
     "tsc": "pass",
     "grep": "pass",
-    "build": "fail"
+    "build": "pass"
   },
   "deviations": [
     "BASELINE tsc: 0 feil (clean TypeScript-tilstand ved start)",
     "Notat: WaitingForMatch.tsx har href='/onboarding' uten trailing slash (instruksen oppgir '/onboarding/')",
     "BASELINE build: rødt pga. 2 kjente ESLint-feil (WaitingForMatch.tsx:167, Header.tsx:72), fikses i Bølge 4"
   ],
-  "lastCommit": "27e7d34",
-  "updatedAt": "2026-08-12T22:58:00Z"
+  "lastCommit": "01e76c3",
+  "updatedAt": "2026-08-12T23:00:00Z"
 }

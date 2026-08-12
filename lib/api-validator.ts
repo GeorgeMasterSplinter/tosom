@@ -68,8 +68,8 @@ export const journeyDayUpdateSchema = z.object({
 /** Chat send message body */
 export const chatSendMessageSchema = z.object({
   conversationId: z.string().min(1, 'Manglande conversationId'),
-  content: z.string().min(1, 'Melding kan ikke vere tom').max(5000, 'Meldinga er for lang'),
-  type: z.enum(['user', 'continue_choice']).default('user'),
+  content: z.string().trim().min(1, 'Melding kan ikke vere tom').max(5000, 'Meldinga er for lang'),
+  type: z.enum(['text', 'image', 'user', 'continue_choice']).default('text'),
 })
 
 /** Chat messages query params */

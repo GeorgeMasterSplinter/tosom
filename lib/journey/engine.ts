@@ -187,7 +187,7 @@ export interface DayConfig {
 /** Totalt antal dagar i journey — ENKELT svar */
 export const JOURNEY_TOTAL_DAYS = 30;
 
-/** Fase-konfigurasjon — 3 faser over 30 dagar (frå journeyPhases) */
+/** Fase-konfigurasjon — 4 faser over 30 dager (frå journeyPhases) */
 export const PHASE_CONFIGS: Array<{
   phase: JourneyPhase;
   startDay: number;
@@ -209,8 +209,14 @@ export const PHASE_CONFIGS: Array<{
   {
     phase: JourneyPhase.DEEPER,
     startDay: 22,
-    endDay: 30,
+    endDay: 25,
     description: "Dypere samtaler. Kjenne etter retning og forventninger.",
+  },
+  {
+    phase: JourneyPhase.CHECKIN,
+    startDay: 26,
+    endDay: 30,
+    description: "Tid for refleksjon og oppsummering av reisen så langt.",
   },
 ];
 

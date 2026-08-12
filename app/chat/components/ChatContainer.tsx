@@ -589,6 +589,10 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
   const [isBliKjentOpen, setIsBliKjentOpen] = useState(false);
   const [mood, setMood] = useState<string>("warm");
 
+  // Hent sessionUserId frå ChatContext for bildeopplasting
+  const ctx = useChat();
+  const sessionUserId = ctx.sessionUserId;
+
   // Partner ID for presence tracking
   const partnerId = partner?.id || null;
 
@@ -647,13 +651,13 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
                <MessageList partner={partner} journeyDay={journeyDay} />
              </div>
 
-             {/* CHAT INPUT — Premium glass med typing-indikator */}
-            <ChatInput 
-              imageShareAllowed={imageShareAllowed} 
-              conversationId={conversationId}
-              senderId={undefined} // TODO: Hent frå session/context
-              partnerId={partnerId}
-            />
+              {/* CHAT INPUT — Premium glass med typing-indikator */}
+             <ChatInput 
+               imageShareAllowed={imageShareAllowed} 
+               conversationId={conversationId}
+               senderId={sessionUserId ?? undefined}
+               partnerId={partnerId}
+             />
           </div>
         </div>
       </div>

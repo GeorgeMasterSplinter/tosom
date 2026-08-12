@@ -462,6 +462,7 @@ enum DeepProfileStep {
   INTIMACY
   FUTURE_VISION
   BOUNDARIES
+  // @deprecated — beholdes som terminal-markør for fullført onboarding (15+ referanser)
   SUMMARY
 }
 

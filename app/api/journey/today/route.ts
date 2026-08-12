@@ -71,8 +71,8 @@ function getFallbackTask(day: number, phase: string, conversationId: string | nu
   if (!tasks) return null;
 
   const idx = phase === "EARLY" ? (day - 1) :
-              phase === "BUILDING_TRUST" ? (day - 11) :
-              phase === "DEEPER" ? (day - 21) :
+              phase === "BUILDING_TRUST" ? (day - 15) :
+              phase === "DEEPER" ? (day - 22) :
               phase === "CHECKIN" ? (day - 26) : 0;
 
   const t = tasks[idx % tasks.length];

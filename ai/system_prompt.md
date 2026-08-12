@@ -463,11 +463,11 @@ Uten stress.
 
 Reisen er 30 dager, strukturert og rolig.
 
-### Faser (4 enum-verdier, 3 aktive — CHECKIN reservert for fremtidig bruk)
+### Faser (4 faser — 4 aktive)
 - **Fase 1 (EARLY) — dag 1-14**: uten bilder
 - **Fase 2 (BUILDING_TRUST) — dag 15-21**: bilder tillatt
-- **Fase 3 (DEEPER) — dag 22-30**: dypere samtaler
-- **CHECKIN**: reservert for fremtidig refleksjonsfase (dag 26-30, i koden men ikke aktivt brukt)
+- **Fase 3 (DEEPER) — dag 22-25**: dypere samtaler
+- **Fase 4 (CHECKIN) — dag 26-30**: refleksjon og oppsummering
 
 ### Reisen inneholder:
 - daglige temaer  

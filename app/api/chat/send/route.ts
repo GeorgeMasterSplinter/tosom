@@ -70,10 +70,10 @@ export async function POST(request: Request) {
       );
     }
 
-    // Opprett melding med mappa type
+    // Opprett melding med mappa type (bruk crypto.randomUUID i stedenfor Date.now()+Math.random)
     const message = await prisma.message.create({
       data: {
-        id: `msg-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        id: crypto.randomUUID(),
         conversationId,
         senderId: session.user.id,
         content,

@@ -4,7 +4,45 @@
    ═══════════════════════════════════════════ */
 
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "@/lib/auth/session";
+import { prisma } from "@/lib/prisma";
 import { flags } from "@/utils/flags";
+
+export const dynamic = 'force-dynamic';
+
+/** Sjekk at brukeren er autentisert og medlem av samtalen */
+async function requireConversationMember(
+  request: NextRequest
+): Promise<{ userId: string; conversationId: string } | NextResponse> {
+  const session = await getServerSession();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { searchParams } = new URL(request.url);
+  const body = await request.clone().json().catch(() => ({}));
+  const conversationId = searchParams.get("conversationId") || body?.conversationId;
+
+  if (!conversationId) {
+    return NextResponse.json({ error: "conversationId required" }, { status: 400 });
+  }
+
+  const conversation = await prisma.conversation.findUnique({
+    where: { id: conversationId },
+    select: { userAId: true, userBId: true },
+  });
+
+  if (!conversation) {
+    return NextResponse.json({ error: "Conversation not found" }, { status: 404 });
+  }
+
+  const isMember = conversation.userAId === session.user.id || conversation.userBId === session.user.id;
+  if (!isMember) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  return { userId: session.user.id, conversationId };
+}
 
 interface Memory {
   id?: string;
@@ -28,15 +66,10 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const { searchParams } = new URL(request.url);
-  const conversationId = searchParams.get("conversationId");
+  const memberCheck = await requireConversationMember(request);
+  if (memberCheck instanceof NextResponse) return memberCheck;
 
-  if (!conversationId) {
-    return NextResponse.json(
-      { error: "conversationId required" },
-      { status: 400 },
-    );
-  }
+  const { conversationId } = memberCheck;
 
   // Demo memories
   const demoMemories: Memory[] = [
@@ -80,8 +113,11 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  const memberCheck = await requireConversationMember(request);
+  if (memberCheck instanceof NextResponse) return memberCheck;
+
   try {
-    const body: Omit<Memory, "id" | "createdAt"> = await request.json();
+    const body: Omit<Memory, "id" | "createdAt"> = await request.clone().json();
 
     if (!body.conversationId || !body.date) {
       return NextResponse.json(

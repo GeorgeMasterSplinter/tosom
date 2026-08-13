@@ -1,8 +1,8 @@
 {
   "currentWave": 6,
-  "currentStep": "5.4",
-  "completedSteps": ["0.1", "0.2", "0.3", "0.4", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11", "1.12", "1.13", "2.1", "2.2", "2.3", "2.4", "3.1", "3.2", "3.3", "3.4", "4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "5.1", "5.2", "5.3", "5.4"],
-  "nextStep": "6.1",
+  "currentStep": "6.2",
+  "completedSteps": ["0.1", "0.2", "0.3", "0.4", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11", "1.12", "1.13", "2.1", "2.2", "2.3", "2.4", "3.1", "3.2", "3.3", "3.4", "4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "5.1", "5.2", "5.3", "5.4", "6.1", "6.2"],
+  "nextStep": "6.3",
   "status": {
     "tsc": "pass",
     "grep": "pass",
@@ -27,8 +27,9 @@
     "STEG 5.1: match/accept fikset med betinget updateMany + $transaction (commit 3172019)",
     "STEG 5.2: match/[id]/complete fikset med updateMany + fjernet complete-bypass (commit d504f46)",
     "STEG 5.3: @unique lagt til på Conversation.matchId (commit ac4dc10)",
-    "STEG 5.4: @@unique([progressId, day]) lagt til på JourneyMilestone (commit a8d29eb) — BØLGE 5 FULLFØRT"
+    "STEG 5.4: @@unique([progressId, day]) lagt til på JourneyMilestone (commit a8d29eb) — BØLGE 5 FULLFØRT",
+    "AVVIK: STEG 6.1+6.2 kjørt som batch (samme fil, felles build-sjekk) (commit c9d7efc)"
   ],
-  "lastCommit": "a8d29eb",
-  "updatedAt": "2026-08-13T00:00:00Z"
+  "lastCommit": "c9d7efc",
+  "updatedAt": "2026-08-13T00:09:00Z"
 }

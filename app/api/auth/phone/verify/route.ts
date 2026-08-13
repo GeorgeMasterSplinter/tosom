@@ -6,14 +6,14 @@
  * - Sjekk utløp
  * - Marker usedAt
  * - Oppdater bruker: phoneVerified = true
- * - Set cookie-session
+ * - Set cookie-session (HMAC-signert, identisk med Vipps-callback)
  * - Redirect til /onboarding/payment
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import crypto from 'crypto';
 import { prisma } from '@/lib/prisma';
 import { checkVerifyRateLimit } from '@/lib/security/phoneRateLimit';
-import { signIn } from '@/lib/auth/config';
 
 export const dynamic = 'force-dynamic';
 
@@ -97,31 +97,22 @@ export async function POST(req: NextRequest) {
       }),
     ]);
 
-    // Opprett NextAuth-session via signIn i stedet for manuelt cookie
-    try {
-      await signIn('credentials', {
-        email: user.email,
-        password: 'phone-verified-' + user.id, // Intern mekanisme, ikke passord-basert
-        redirect: false,
-      });
-    } catch {
-      // Fallback: signer cookie med NextAuth-secret istedenfor plaintext user.id
-      const crypto = await import('crypto');
-      const secret = process.env.NEXTAUTH_SECRET || '';
-      const sessionToken = crypto.createHash('sha256').update(user.id + secret).digest('hex');
-      
-      const response = NextResponse.redirect(new URL('/onboarding/payment', req.url));
-      response.cookies.set('next-auth.session-token', sessionToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: 60 * 60 * 24, // 24 timer
-        path: '/',
-      });
-      return response;
-    }
+    // Opprett HMAC-signert session-token (samme mønster som Vipps-callback)
+    const secret = process.env.NEXTAUTH_SECRET || '';
+    const sessionToken = crypto.createHmac('sha256', secret).update(user.id + '-phone-verify').digest('hex');
 
-    return NextResponse.redirect(new URL('/onboarding/payment', req.url));
+    const response = NextResponse.redirect(new URL('/onboarding/payment', req.url));
+    
+    // Sett cookie (bruk samme navn som Vipps: tosom_session)
+    response.cookies.set('tosom_session', sessionToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24, // 24 timer
+      path: '/',
+    });
+
+    return response;
   } catch (err) {
     console.error('Phone verify feil:', err);
     return NextResponse.json(

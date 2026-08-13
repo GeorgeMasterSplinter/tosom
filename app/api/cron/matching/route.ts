@@ -8,9 +8,13 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { timingSafeEqual } from 'crypto';
 import { findBestResonance } from '@/lib/matching/findBestResonance';
+
+// STEG 6.4: Fast advisory lock ID for matching-cron (forskjellig fra journey-cron)
+const MATCHING_CRON_LOCK_ID = 123456789;
 
 /** Constant-time string comparison */
 function safeCompare(a: string, b: string): boolean {
@@ -37,145 +41,172 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
+  let lockAcquired = false;
+
   try {
-    // STEG 6.1 FIX: Byttet OR→AND i eligibility-filteret.
-    // Med OR kunne en bruker bli matchet hvis EITHER matchesA eller matchesB var fri,
-    // selv om den andre siden hadde aktiv match. Med AND må brukeren være fri på BEGGE sider.
-    // STEG 6.2: Legg til take-grense for å begrense sekvensiell loop.
-    const eligibleUsers = await prisma.user.findMany({
-      where: {
-        onboardingComplete: true,
-        deepProfileComplete: true,
-        bannedAt: null,
-        deletedAt: null,
-        // Ikke låst (lockedUntil er null eller har utløpt)
-        OR: [
-          { lockedUntil: null },
-          { lockedUntil: { lte: new Date() } },
-          // Eller ikke matchet de siste 24 timene
-          { lastMatchAt: null },
-          { lastMatchAt: { lt: new Date(Date.now() - 24 * 60 * 60 * 1000) } },
-        ],
-        // Ingen aktiv match — må være fri på BEGGE sider (AND-logikk via to separate none-klausuler)
-        AND: [
-          {
-            matchesA: {
-              none: {
-                status: { in: ['active', 'matched'] },
-                expiresAt: { gte: new Date() },
-              },
-            },
-          },
-          {
-            matchesB: {
-              none: {
-                status: { in: ['active', 'matched'] },
-                expiresAt: { gte: new Date() },
-              },
-            },
-          },
-        ],
-      },
-      select: { id: true },
-      take: 50, // STEG 6.2: Begrens antall kandidater per cron-kjøring
-    });
+    // STEG 6.4: Ta advisory lock for å hindre overlappende cron-kjøringer
+    const lockResult = await prisma.$queryRaw(
+      Prisma.sql`SELECT pg_try_advisory_lock(${MATCHING_CRON_LOCK_ID}) AS locked`
+    );
 
-    let processed = 0;
-    let created = 0;
-    const errors: string[] = [];
-
-    for (const user of eligibleUsers) {
-      // Bruk findBestResonance (har innebygd lastMatchAt + lockedUntil-logikk)
-      try {
-        const result = await findBestResonance({ userId: user.id });
-        
-        if (!result) {
-          processed++;
-          continue; // Ingen match eller ikke matchable
-        }
-
-        // STEG 6.6: try/catch per kandidat, created++ kun ved bekreftet suksess
-        const newMatch = await prisma.match.create({
-          data: {
-            userAId: user.id,
-            userBId: result.candidateId,
-            score: Math.round(result.match.resonanceScore),
-            normalizedScore: result.match.resonanceScore / 100,
-            type: result.match.resonanceScore >= 70 ? 'high' 
-              : result.match.resonanceScore >= 50 ? 'medium' 
-              : 'low',
-            explanation: {
-              score: Math.round(result.match.resonanceScore),
-              resonanceLevel: result.match.resonanceLevel,
-            },
-            scoringBreakdown: {
-              values: result.match.breakdown.values ?? 0,
-              personality: result.match.breakdown.personality ?? 0,
-              relationshipStyle: result.match.breakdown.relationshipStyle ?? 0,
-              communication: result.match.breakdown.communication ?? 0,
-              futureVision: result.match.breakdown.futureVision ?? 0,
-              boundaries: result.match.breakdown.boundaries ?? 0,
-              emotionalNeeds: result.match.breakdown.emotionalNeeds ?? 0,
-              lifeRhythm: result.match.breakdown.lifeRhythm ?? 0,
-              maturity: result.match.breakdown.maturity ?? 0,
-            },
-            resonanceLevel: result.match.resonanceLevel as any,
-            status: 'pending',
-          },
-        });
-
-        // Opprett conversation for matchen
-        await prisma.conversation.create({
-          data: {
-            userAId: user.id,
-            userBId: result.candidateId,
-            matchId: newMatch.id,
-          },
-        }).catch((err) => {
-          console.warn(`[cron] Kunne ikke opprette conversation for match ${newMatch.id}:`, err);
-        });
-
-        // Oppdater lastMatchAt (for 24t-regel)
-        await prisma.user.update({
-          where: { id: user.id },
-          data: { lastMatchAt: new Date() },
-        });
-
-        created++;
-        processed++;
-      } catch (engineError) {
-        // STEG 6.6: Logg feilen Uten å telle den som opprettet
-        console.error(`[cron] findBestResonance feil for user ${user.id}:`, engineError);
-        errors.push(`user ${user.id}: ${(engineError as Error).message}`);
-        processed++;
-      }
-    }
-
-    const duration = Date.now() - startedAt;
-    
-    // Logg til SystemLog
-    if (created > 0) {
-      await prisma.systemLog.create({
-        data: {
-          level: 'INFO',
-          message: `Cron matching: ${created} nye matcher for ${processed} brukarar`,
-          module: 'cron/matching',
-          metadata: { processed, created, duration, errors: errors.slice(0, 10) },
-        },
+    const result = Array.isArray(lockResult) ? (lockResult as any)[0] : (lockResult as any);
+    if (result && result.locked) {
+      lockAcquired = true;
+    } else {
+      return NextResponse.json({
+        ok: true,
+        skipped: true,
+        message: 'Matching-cron er allerede i kjøring (advisory lock tatt)',
       });
     }
 
-    return NextResponse.json({
-      ok: true,
-      processed,
-      created,
-      duration: `${duration}ms`,
-      message: `Prosessert ${processed} brukarar, oppretta ${created} nye matcher`,
-      errors: errors.length > 0 ? errors.slice(0, 5) : undefined,
-    });
+    try {
+      // STEG 6.1 FIX: Byttet OR→AND i eligibility-filteret.
+      // Med OR kunne en bruker bli matchet hvis EITHER matchesA eller matchesB var fri,
+      // selv om den andre siden hadde aktiv match. Med AND må brukeren være fri på BEGGE sider.
+      // STEG 6.2: Legg til take-grense for å begrense sekvensiell loop.
+      const eligibleUsers = await prisma.user.findMany({
+        where: {
+          onboardingComplete: true,
+          deepProfileComplete: true,
+          bannedAt: null,
+          deletedAt: null,
+          // Ikke låst (lockedUntil er null eller har utløpt)
+          OR: [
+            { lockedUntil: null },
+            { lockedUntil: { lte: new Date() } },
+            // Eller ikke matchet de siste 24 timene
+            { lastMatchAt: null },
+            { lastMatchAt: { lt: new Date(Date.now() - 24 * 60 * 60 * 1000) } },
+          ],
+          // Ingen aktiv match — må være fri på BEGGE sider (AND-logikk via to separate none-klausuler)
+          AND: [
+            {
+              matchesA: {
+                none: {
+                  status: { in: ['active', 'matched'] },
+                  expiresAt: { gte: new Date() },
+                },
+              },
+            },
+            {
+              matchesB: {
+                none: {
+                  status: { in: ['active', 'matched'] },
+                  expiresAt: { gte: new Date() },
+                },
+              },
+            },
+          ],
+        },
+        select: { id: true },
+        take: 50, // STEG 6.2: Begrens antall kandidater per cron-kjøring
+      });
+
+      let processed = 0;
+      let created = 0;
+      const errors: string[] = [];
+
+      for (const user of eligibleUsers) {
+        // Bruk findBestResonance (har innebygd lastMatchAt + lockedUntil-logikk)
+        try {
+          const result = await findBestResonance({ userId: user.id });
+
+          if (!result) {
+            processed++;
+            continue; // Ingen match eller ikke matchable
+          }
+
+          // STEG 6.6: try/catch per kandidat, created++ kun ved bekreftet suksess
+          const newMatch = await prisma.match.create({
+            data: {
+              userAId: user.id,
+              userBId: result.candidateId,
+              score: Math.round(result.match.resonanceScore),
+              normalizedScore: result.match.resonanceScore / 100,
+              type: result.match.resonanceScore >= 70 ? 'high'
+                : result.match.resonanceScore >= 50 ? 'medium'
+                : 'low',
+              explanation: {
+                score: Math.round(result.match.resonanceScore),
+                resonanceLevel: result.match.resonanceLevel,
+              },
+              scoringBreakdown: {
+                values: result.match.breakdown.values ?? 0,
+                personality: result.match.breakdown.personality ?? 0,
+                relationshipStyle: result.match.breakdown.relationshipStyle ?? 0,
+                communication: result.match.breakdown.communication ?? 0,
+                futureVision: result.match.breakdown.futureVision ?? 0,
+                boundaries: result.match.breakdown.boundaries ?? 0,
+                emotionalNeeds: result.match.breakdown.emotionalNeeds ?? 0,
+                lifeRhythm: result.match.breakdown.lifeRhythm ?? 0,
+                maturity: result.match.breakdown.maturity ?? 0,
+              },
+              resonanceLevel: result.match.resonanceLevel as any,
+              status: 'pending',
+            },
+          });
+
+          // Opprett conversation for matchen
+          await prisma.conversation.create({
+            data: {
+              userAId: user.id,
+              userBId: result.candidateId,
+              matchId: newMatch.id,
+            },
+          }).catch((err) => {
+            console.warn(`[cron] Kunne ikke opprette conversation for match ${newMatch.id}:`, err);
+          });
+
+          // Oppdater lastMatchAt (for 24t-regel)
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { lastMatchAt: new Date() },
+          });
+
+          created++;
+          processed++;
+        } catch (engineError) {
+          // STEG 6.6: Logg feilen Uten å telle den som opprettet
+          console.error(`[cron] findBestResonance feil for user ${user.id}:`, engineError);
+          errors.push(`user ${user.id}: ${(engineError as Error).message}`);
+          processed++;
+        }
+      }
+
+      const duration = Date.now() - startedAt;
+
+      // Logg til SystemLog
+      if (created > 0) {
+        await prisma.systemLog.create({
+          data: {
+            level: 'INFO',
+            message: `Cron matching: ${created} nye matcher for ${processed} brukarar`,
+            module: 'cron/matching',
+            metadata: { processed, created, duration, errors: errors.slice(0, 10) },
+          },
+        });
+      }
+
+      return NextResponse.json({
+        ok: true,
+        processed,
+        created,
+        duration: `${duration}ms`,
+        message: `Prosessert ${processed} brukarar, oppretta ${created} nye matcher`,
+        errors: errors.length > 0 ? errors.slice(0, 5) : undefined,
+      });
+    } finally {
+      // Rydd opp advisory lock når vi er ferdig
+      if (lockAcquired) {
+        await prisma.$queryRaw(
+          Prisma.sql`SELECT pg_advisory_unlock(${MATCHING_CRON_LOCK_ID})`
+        );
+      }
+    }
   } catch (err) {
     console.error('[cron] Matching feil:', err);
-    
+
     await prisma.systemLog.create({
       data: {
         level: 'ERROR',
@@ -186,7 +217,7 @@ export async function GET(req: NextRequest) {
     });
 
     return NextResponse.json(
-      { error: 'Kunne ikke køyre cron matching', details: (err as Error).message },
+      { error: 'Kunne ikke kjøre cron matching', details: (err as Error).message },
       { status: 500 }
     );
   }

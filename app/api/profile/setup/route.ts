@@ -77,9 +77,9 @@ export async function POST(req: NextRequest) {
           pressureReact: personlighet?.pressureReact,
           quirk: personlighet?.quirk,
         },
+        // STEG 7.2 FIX: Fjernet commStyle/conflictStyle (var duplisert med structureSpontaneity/introExtrovert).
+        // Kanoniske verdier lagres kun under deepProfileData.preferanser.
         communication: {
-          commStyle: (kommunikasjon as any)?.commStyle,
-          conflictStyle: (kommunikasjon as any)?.conflictStyle,
           calmingHelp: (kommunikasjon as any)?.calmingHelp,
           trigger: (kommunikasjon as any)?.trigger,
           trustBuilder: (kommunikasjon as any)?.trustBuilder,
@@ -156,9 +156,9 @@ export async function POST(req: NextRequest) {
           pressureReact: personlighet?.pressureReact,
           quirk: personlighet?.quirk,
         },
+        // STEG 7.2 FIX: Fjernet commStyle/conflictStyle (var duplisert med structureSpontaneity/introExtrovert).
+        // Kanoniske verdier lagres kun under deepProfileData.preferanser.
         communication: {
-          commStyle: (kommunikasjon as any)?.commStyle,
-          conflictStyle: (kommunikasjon as any)?.conflictStyle,
           calmingHelp: (kommunikasjon as any)?.calmingHelp,
           trigger: (kommunikasjon as any)?.trigger,
           trustBuilder: (kommunikasjon as any)?.trustBuilder,

@@ -318,8 +318,9 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
           safetyNeed: data.safetyNeed, insecurityTrigger: data.insecurityTrigger,
           sadnessNeed: data.sadnessNeed, stressNeed: data.stressNeed, importantBoundary: data.importantBoundary,
         },
+        // STEG 7.2 FIX: Fjernet commStyle/conflictStyle (duplisert med structureSpontaneity/introExtrovert i preferanser).
+        // Bruker nå kanoniske feltnavn fra preferanserSchema.
         kommunikasjon: {
-          commStyle: data.structureSpontaneity, conflictStyle: data.introExtrovert,
           calmingHelp: data.comfortableWith, trigger: data.insecurityTrigger, trustBuilder: data.safetyNeed,
         },
         kjaerlighet: {

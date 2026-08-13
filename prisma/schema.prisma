@@ -85,7 +85,7 @@ model Match {
   id               String         @id @default(cuid())
   userAId          String
   userBId          String
-  status           MatchStatus    @default(active)
+  status           MatchStatus    @default(pending)
   score            Int            @default(0)
   normalizedScore  Float
   type             String         @default("pending")

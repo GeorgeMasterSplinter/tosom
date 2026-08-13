@@ -20,7 +20,7 @@ export const paginationSchema = z.object({
 
 /** Pagination med optional status-filter */
 export const statusFilterSchema = paginationSchema.extend({
-  status: z.enum(['pending', 'active', 'matched', 'expired', 'ended', 'unmarked']).optional(),
+  status: z.enum(['pending', 'active', 'matched', 'expired', 'ended', 'unmatched']).optional(),
 })
 
 /** Pagination med optional role-filter (admin users) */

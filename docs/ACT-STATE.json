@@ -1,8 +1,9 @@
 {
-  "currentWave": 9,
-  "currentStep": "9.3",
-  "completedSteps": ["0.1", "0.2", "0.3", "0.4", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11", "1.12", "1.13", "2.1", "2.2", "2.3", "2.4", "3.1", "3.2", "3.3", "3.4", "4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "5.1", "5.2", "5.3", "5.4", "6.1", "6.2", "6.3", "6.4", "6.5", "6.6", "7.1", "7.2", "7.3", "8.1", "8.2", "8.3", "8.4", "8.5", "8.6", "9.1", "9.2", "9.3"],
-  "nextStep": "10.1",
+  "currentWave": 11,
+  "currentStep": "10.3",
+  "completedSteps": ["0.1", "0.2", "0.3", "0.4", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11", "1.12", "1.13", "2.1", "2.2", "2.3", "2.4", "3.1", "3.2", "3.3", "3.4", "4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "5.1", "5.2", "5.3", "5.4", "6.1", "6.2", "6.3", "6.4", "6.5", "6.6", "7.1", "7.2", "7.3", "8.1", "8.2", "8.3", "8.4", "8.5", "8.6", "9.1", "9.2", "9.3", "10.1", "10.3"],
+  "failedSteps": ["10.2", "11.1"],
+  "nextStep": "11.2",
   "status": { "tsc": "pass", "grep": "pass", "build": "pass" },
   "deviations": [
     "BASELINE tsc: 0 feil (clean TypeScript-tilstand ved start)",
@@ -19,10 +20,12 @@
     "STEG 5.1-5.4 fullført i forrige session",
     "AVVIK: STEG 6.1+6.2 kjørt som batch (samme fil, felles build-sjekk)",
     "STEG 7.1: Håndhevet alle 12 profilseksjoner server-side ved å fjerne .optional()",
-    "STEG 7.3: Ingen kodeendring nødvendig — feilhåndtering var allerede på plass — BØLGE 7 FULLFØRT",
+    "STEG 7.3: Ingen kodeendring nødvendig — feilhåndtering var allerede på plass",
     "STEG 8.5: Brukte Profile.preferences JSON + as any-cast pga streng Prisma-typing",
-    "STEG 9.3: Refaktorerte lib/admin/data.ts (fjernet ubrukte imports, komprimerte formatet)"
+    "STEG 9.3: Refaktorerte lib/admin/data.ts (fjernet ubrukte imports, komprimerte formatet)",
+    "FAILED: STEG 10.2 — WebhookEvent model mangler i prisma/schema.prisma, krever database-migrasjon",
+    "FAILED: STEG 11.1 — components/ui/* inneholder levende imports! (Footer, ToSomSection, ToSomButton, CardSkeleton, ErrorState brukt av mange app/pages). Kan IKKE slettes uten først å migrere importene."
   ],
-  "lastCommit": "475b869",
-  "updatedAt": "2026-08-13T02:39:00Z"
+  "lastCommit": "ae60cf8",
+  "updatedAt": "2026-08-13T04:53:00Z"
 }

@@ -1,6 +1,6 @@
 /**
  * GET /api/chat/messages?conversationId=X
- * Hent alle meldingar for ei conversation.
+ * Hent alle meldinger for en conversation.
  */
 
 import { NextResponse } from "next/server";
@@ -19,11 +19,11 @@ export async function GET(request: Request) {
   const conversationId = searchParams.get("conversationId");
 
   if (!conversationId) {
-    return NextResponse.json({ error: "Manglar conversationId" }, { status: 400 });
+    return NextResponse.json({ error: "Mangler conversationId" }, { status: 400 });
   }
 
   try {
-    // IDOR-vern: verifiser at brukaren er del av samtalen før meldingar returneres
+    // IDOR-vern: verifiser at brukeren er del av samtalen før meldinger returneres
     const conversation = await prisma.conversation.findUnique({
       where: { id: conversationId },
       select: { userAId: true, userBId: true },
@@ -31,7 +31,7 @@ export async function GET(request: Request) {
 
     if (!conversation) {
       return NextResponse.json(
-        { error: "Samtalen finst ikkje" },
+        { error: "Samtalen finnes ikke" },
         { status: 404 }
       );
     }
@@ -66,7 +66,7 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error("GET /api/chat/messages error:", error);
     return NextResponse.json(
-      { error: "Kunne ikke laste meldingar" },
+      { error: "Kunne ikke laste meldinger" },
       { status: 500 }
     );
   }

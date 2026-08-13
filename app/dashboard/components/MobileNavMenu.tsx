@@ -9,19 +9,14 @@ import { FC, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+// STEG 8.1 FIX: Fjernet 7 døde ruter som ikke eksisterer.
+// Beholder kun ruter med faktiske sider: /dashboard, /dashboard/journey, /dashboard/conversation, /questions, /settings
 const navLinks = [
   { label: 'Hjem', href: '/dashboard' },
   { label: 'Reise', href: '/dashboard/journey' },
   { label: 'Samtale', href: '/dashboard/conversation' },
   { label: 'Spørsmål', href: '/questions' },
-  { label: 'Refleksjoner', href: '/dashboard/reflections' },
-  { label: 'Innsikt', href: '/dashboard/insights' },
-  { label: 'Varmekart', href: '/dashboard/heatmap' },
-  { label: 'Trygghet', href: '/dashboard/safety' },
   { label: 'Innstillinger', href: '/settings' },
-  { label: 'Uke', href: '/dashboard/summary' },
-  { label: 'Analyse', href: '/dashboard/analytics' },
-  { label: 'Profil', href: '/dashboard/profile' },
 ];
 
 export const MobileNavMenu: FC = () => {

@@ -51,7 +51,7 @@
 | 5.4 | Designet ventetilstand | countdown fjernet, ærlig cron-tekst til stede | 1979186 |
 | 6.1 | E2E verdikjede | (prod deploy bekreftet) | fe000a1 |
 | 6.2 | Verifisert backup | (prod DB ikke tilgjengelig lokalt) | — |
-| 6.3 | Prod smoke-test HTTP | Homepage: 200, Auth bypass: 401, Cron no-auth: 401 | fe000a1 |
+| 6.3 | Prod smoke-test HTTP | Homepage: 200, Auth bypass: 401, Cron no-auth: 401, base64-admin to /admin: 307 (redirect) | fe000a1 |
 
 ---
 

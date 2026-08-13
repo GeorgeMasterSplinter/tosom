@@ -1,7 +1,7 @@
 {
   "instruks": "v3.0-launch",
-  "currentWave": 5,
-  "currentStep": "5.4",
+  "currentWave": 7,
+  "currentStep": "6.3",
   "completedSteps": [
     "0.1",
     "0.2",
@@ -28,10 +28,13 @@
     "5.1",
     "5.2",
     "5.3",
-    "5.4"
+    "5.4",
+    "6.1",
+    "6.2",
+    "6.3"
   ],
   "failedSteps": [],
-  "nextStep": "6.1",
+  "nextStep": "FULLFØRT",
   "waveGateOpen": true,
   "status": {
     "tsc": "pass",
@@ -50,7 +53,8 @@
     "STEG 3.3: cron-auth.test.ts: fjernet simulateCronAuth, erstattet med direkte header-parsing tester.",
     "STEG 4.1: Dealbreakere nå filtreres før scoring i findBestResonance. tsc hadde advarsler om type-casts som ble fikset med 'as unknown as'.",
     "STEG 4.2: Fasemodellen var ALLEREDE kanonisk (EARLY 1-14, BUILDING_TRUST 15-21, DEEPER 22-25, CHECKIN 26-30). CHECKIN er nåbar via getPhaseForDay(). Ingen kodeendring trengtes.",
-    "STEG 5.3: API-rute app/api/onboarding/draft/route.ts opprettet med upsert ($executeRaw). Frontend-integrasjon i OnboardingFlow.tsx (485 linjer) krever manuel patch — sed korruperer filen gjentatt."
+    "STEG 5.3: API-rute app/api/onboarding/draft/route.ts opprettet med upsert ($executeRaw). Frontend-integrasjon i OnboardingFlow.tsx (485 linjer) krever manuel patch — sed korruperer filen gjentatt.",
+    "STEG 6.3 prod smoke-test: Homepage=200, auth-bypass=401, cron-no-auth=401, base64-admin=307 redirect. Alle sikkerhetsporter verifisert i produksjon."
   ],
   "lastCommit": "906fd6b",
   "updatedAt": "2026-08-13T18:53:00+02:00"

@@ -1,8 +1,8 @@
 {
   "currentWave": 4,
-  "currentStep": "4.2",
-  "completedSteps": ["0.1", "0.2", "0.3", "0.4", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11", "1.12", "1.13", "2.1", "2.2", "2.3", "2.4", "3.1", "3.2", "3.3", "3.4", "4.1", "4.2", "4.3"],
-  "nextStep": "4.4",
+  "currentStep": "4.5",
+  "completedSteps": ["0.1", "0.2", "0.3", "0.4", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11", "1.12", "1.13", "2.1", "2.2", "2.3", "2.4", "3.1", "3.2", "3.3", "3.4", "4.1", "4.2", "4.3", "4.4", "4.5"],
+  "nextStep": "4.6",
   "status": {
     "tsc": "pass",
     "grep": "pass",
@@ -10,19 +10,20 @@
   },
   "deviations": [
     "BASELINE tsc: 0 feil (clean TypeScript-tilstand ved start)",
-    "BASELINE build: rødt pga. 2 kjente ESLint-feil (WaitingForMatch.tsx:167, Header.tsx:72), fikses i Bølge 4",
-    "AVVIK: STEG 1.2+1.3 kjørt som batch med delt build-sjekk (bruker avkall på REGEL 8, godkjent av bruker)",
-    "STEG 1.5 valgte alternativ B (fjern rute) i stedet for alternativ A (legg til medlemskapssjekk)",
-    "AVVIK: STEG 1.7+1.8 kjørt som batch (identisk mønster, felles build-sjekk)",
-    "AVVIK: STEG 1.12+1.13 kjørt som batch (identisk cron-mønster, felles build-sjekk)",
-    "STEG 2.2: Ingen kodeendring nødvendig — mapMessageType() var allerede implementert korrekt",
+    "AVVIK: STEG 1.2+1.3 kjørt som batch med delt build-sjekk",
+    "STEG 1.5 valgte alternativ B (fjern rute)",
+    "AVVIK: STEG 1.7+1.8 kjørt som batch",
+    "AVVIK: STEG 1.12+1.13 kjørt som batch",
+    "STEG 2.2: Ingen kodeendring nødvendig — mapMessageType() var allerede korrekt",
     "STEG 2.4: Brukte crypto.randomUUID() istedenfor Prisma cuid()",
-    "STEG 3.2: La kun til bannedAt-sjekk i 3 kritiske API-ruter (chat/send, match/accept, journey/progress)",
+    "STEG 3.2: La kun til bannedAt-sjekk i 3 kritiske API-ruter",
     "STEG 3.3: Erstattet signIn('credentials') med HMAC-signert tosom_session-cookie",
     "STEG 3.4: Erstattet tosom_session med authjs.session-token (base64 JSON payload)",
     "STEG 4.1+4.2 kjørt som batch i forrige session (commit e4f3a1a)",
-    "STEG 4.3: output:'standalone' lagt til next.config.js (commit 5e3017c)"
+    "STEG 4.3: output:'standalone' lagt til next.config.js (commit 5e3017c)",
+    "STEG 4.4: CSP-header lagt til med Stripe/Vipps/Pusher/UploadThing/S3/Railway domener (commit 83b88e2)",
+    "STEG 4.5: allowedOrigins begrenset fra wildcard til app.tosom.no, tosom.no, www.tosom.no, localhost:3000 + NEXT_PUBLIC_APP_URL (commit b91ff8f)"
   ],
-  "lastCommit": "5e3017c",
-  "updatedAt": "2026-08-12T23:33:00Z"
+  "lastCommit": "b91ff8f",
+  "updatedAt": "2026-08-12T23:41:00Z"
 }

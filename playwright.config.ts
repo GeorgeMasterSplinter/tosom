@@ -18,8 +18,8 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: process.env.CI ? 'github' : 'html',
 
-  /* Global setup: loggar inn dashboard-brukar før test */
-  globalSetup: './e2e/auth-dashboard-setup',
+  /* STEG 12.3: Global setup kjører BOTH dashboard + onboarding auth */
+  globalSetup: './e2e/global-setup',
 
   use: {
     baseURL: 'http://127.0.0.1:3000',

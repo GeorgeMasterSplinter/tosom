@@ -120,7 +120,7 @@ model Conversation {
   id                  String             @id @default(cuid())
   userAId             String
   userBId             String
-  matchId             String?
+  matchId             String?            @unique
   endedAt             DateTime?
   lastMessageAt       DateTime?
   lastMessagePreview  String?

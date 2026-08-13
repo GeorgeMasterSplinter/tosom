@@ -1,8 +1,8 @@
 {
   "currentWave": 7,
-  "currentStep": "7.1",
-  "completedSteps": ["0.1", "0.2", "0.3", "0.4", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11", "1.12", "1.13", "2.1", "2.2", "2.3", "2.4", "3.1", "3.2", "3.3", "3.4", "4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "5.1", "5.2", "5.3", "5.4", "6.1", "6.2", "6.3", "6.4", "6.5", "6.6", "7.1"],
-  "nextStep": "7.2",
+  "currentStep": "7.3",
+  "completedSteps": ["0.1", "0.2", "0.3", "0.4", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11", "1.12", "1.13", "2.1", "2.2", "2.3", "2.4", "3.1", "3.2", "3.3", "3.4", "4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "5.1", "5.2", "5.3", "5.4", "6.1", "6.2", "6.3", "6.4", "6.5", "6.6", "7.1", "7.2", "7.3"],
+  "nextStep": "8.1",
   "status": {
     "tsc": "pass",
     "grep": "pass",
@@ -33,8 +33,10 @@
     "STEG 6.4: advisory lock for matching-cron (commit eab8578)",
     "STEG 6.5: Ekskluderte unmatched/ended/expired fra re-matching-pool (commit 7c56170)",
     "STEG 6.6: Transaksjonswrap på cron match-opprettelse med $transaction (commit 9bd5795) — BØLGE 6 FULLFØRT",
-    "STEG 7.1: Håndhevet alle 12 profilseksjoner server-side ved å fjerne .optional() (commit fe42962)"
+    "STEG 7.1: Håndhevet alle 12 profilseksjoner server-side ved å fjerne .optional() (commit fe42962)",
+    "STEG 7.2: Fjernet duplisert commStyle/conflictStyle, beholdt kun preferanser.structureSpontaneity/introExtrovert (commit ef35d15)",
+    "STEG 7.3: Ingen kodeendring nødvendig — catch-blokken linje 423-425 vises allerede feilmelding via setError() og avbryter redirect ved å kalle setSaving(false) i stedet for window.location.href, fullfør Bølge 7"
   ],
-  "lastCommit": "fe42962",
-  "updatedAt": "2026-08-13T00:47:00Z"
+  "lastCommit": "ef35d15",
+  "updatedAt": "2026-08-13T00:51:00Z"
 }

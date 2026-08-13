@@ -186,7 +186,6 @@ jobs:
       - name: Check no AI routes, components or lib remain
         run: |
           echo "Checking for re-introduction of deleted AI code..."
-          # Grep for AI patterns; ignore node_modules and .next
           FOUND=$(grep -rn "api/ai/\|'lib/ai\|components/ai" \
             app components lib hooks providers 2>/dev/null \
             | grep -v node_modules || true)
@@ -208,7 +207,6 @@ jobs:
       - name: Check no nynorsk words remain
         run: |
           echo "Checking for nynorsk words (should be bokmal)..."
-          # Common nynorsk patterns that should not appear in codebase
           FOUND=$(grep -rn 'ikkje\|berre\b\|kva\b\|kvarandre\|avslutta\|sjå\b\|nokon\|korleis\|påverka\|mykje' \
             app lib components hooks providers 2>/dev/null \
             | grep -v node_modules || true)
@@ -219,10 +217,45 @@ jobs:
           fi
           echo "PASS: No nynorsk references found."
 
+  # ─── CRON CONFIGURATION GUARD (STEG 1.4) ───
+  cron-guard:
+    name: Cron Configuration Guard
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Ensure vercel.json cron paths use header-based auth (no query-param secret)
+        run: |
+          echo "Checking vercel.json for query-param secrets..."
+          if grep -q 'secret=' vercel.json; then
+            echo "FAIL: vercel.json contains 'secret=' — must use header-based Authorization."
+            grep -n 'secret=' vercel.json
+            exit 1
+          fi
+          echo "PASS: No query-param secrets in vercel.json."
+
+      - name: Ensure cron paths have corresponding route files
+        run: |
+          echo "Verifying cron paths map to existing route files..."
+          FAIL=0
+          # Extract paths from vercel.json and check for corresponding route.ts files
+          while IFS= read -r path; do
+            # Convert /api/cron/matching -> app/api/cron/matching/route.ts
+            expected_file="app${path}/route.ts"
+            if [ ! -f "$expected_file" ]; then
+              echo "FAIL: Cron path '$path' has no corresponding file at $expected_file"
+              FAIL=1
+            else
+              echo "OK: $path -> $expected_file exists"
+            fi
+          done < <(grep '"path"' vercel.json | sed 's/.*"path": *"\([^"]*\)".*/\1/')
+          exit $FAIL
+
   # ─── COMBINED STATUS ───
   status:
     name: CI Status
-    needs: [lint, typecheck, build, test, e2e, prisma, ai-guard, lang-guard]
+    needs: [lint, typecheck, build, test, e2e, prisma, ai-guard, lang-guard, cron-guard]
     runs-on: ubuntu-latest
     if: always()
     steps:
@@ -235,7 +268,8 @@ jobs:
               [ "${{ needs.e2e.result }}" != "success" ] || \
               [ "${{ needs.prisma.result }}" != "success" ] || \
               [ "${{ needs.ai-guard.result }}" != "success" ] || \
-              [ "${{ needs.lang-guard.result }}" != "success" ]; then
+              [ "${{ needs.lang-guard.result }}" != "success" ] || \
+              [ "${{ needs.cron-guard.result }}" != "success" ]; then
             echo "CI pipeline failed!"
             exit 1
           fi

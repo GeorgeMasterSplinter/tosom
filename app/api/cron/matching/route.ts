@@ -117,55 +117,62 @@ export async function GET(req: NextRequest) {
             continue; // Ingen match eller ikke matchable
           }
 
-          // STEG 6.6: try/catch per kandidat, created++ kun ved bekreftet suksess
-          const newMatch = await prisma.match.create({
-            data: {
-              userAId: user.id,
-              userBId: result.candidateId,
-              score: Math.round(result.match.resonanceScore),
-              normalizedScore: result.match.resonanceScore / 100,
-              type: result.match.resonanceScore >= 70 ? 'high'
-                : result.match.resonanceScore >= 50 ? 'medium'
-                : 'low',
-              explanation: {
-                score: Math.round(result.match.resonanceScore),
-                resonanceLevel: result.match.resonanceLevel,
-              },
-              scoringBreakdown: {
-                values: result.match.breakdown.values ?? 0,
-                personality: result.match.breakdown.personality ?? 0,
-                relationshipStyle: result.match.breakdown.relationshipStyle ?? 0,
-                communication: result.match.breakdown.communication ?? 0,
-                futureVision: result.match.breakdown.futureVision ?? 0,
-                boundaries: result.match.breakdown.boundaries ?? 0,
-                emotionalNeeds: result.match.breakdown.emotionalNeeds ?? 0,
-                lifeRhythm: result.match.breakdown.lifeRhythm ?? 0,
-                maturity: result.match.breakdown.maturity ?? 0,
-              },
-              resonanceLevel: result.match.resonanceLevel as any,
-              status: 'pending',
-            },
-          });
+          // STEG 6.6: Pakk match+conversation+lastMatchAt inn i transaksjon
+          try {
+            await prisma.$transaction(async (tx) => {
+              const newMatch = await tx.match.create({
+                data: {
+                  userAId: user.id,
+                  userBId: result.candidateId,
+                  score: Math.round(result.match.resonanceScore),
+                  normalizedScore: result.match.resonanceScore / 100,
+                  type: result.match.resonanceScore >= 70 ? 'high'
+                    : result.match.resonanceScore >= 50 ? 'medium'
+                    : 'low',
+                  explanation: {
+                    score: Math.round(result.match.resonanceScore),
+                    resonanceLevel: result.match.resonanceLevel,
+                  },
+                  scoringBreakdown: {
+                    values: result.match.breakdown.values ?? 0,
+                    personality: result.match.breakdown.personality ?? 0,
+                    relationshipStyle: result.match.breakdown.relationshipStyle ?? 0,
+                    communication: result.match.breakdown.communication ?? 0,
+                    futureVision: result.match.breakdown.futureVision ?? 0,
+                    boundaries: result.match.breakdown.boundaries ?? 0,
+                    emotionalNeeds: result.match.breakdown.emotionalNeeds ?? 0,
+                    lifeRhythm: result.match.breakdown.lifeRhythm ?? 0,
+                    maturity: result.match.breakdown.maturity ?? 0,
+                  },
+                  resonanceLevel: result.match.resonanceLevel as any,
+                  status: 'pending',
+                },
+              });
 
-          // Opprett conversation for matchen
-          await prisma.conversation.create({
-            data: {
-              userAId: user.id,
-              userBId: result.candidateId,
-              matchId: newMatch.id,
-            },
-          }).catch((err) => {
-            console.warn(`[cron] Kunne ikke opprette conversation for match ${newMatch.id}:`, err);
-          });
+              // Opprett conversation for matchen (innenfor samme transaksjon)
+              await tx.conversation.create({
+                data: {
+                  userAId: user.id,
+                  userBId: result.candidateId,
+                  matchId: newMatch.id,
+                },
+              });
 
-          // Oppdater lastMatchAt (for 24t-regel)
-          await prisma.user.update({
-            where: { id: user.id },
-            data: { lastMatchAt: new Date() },
-          });
+              // Oppdater lastMatchAt (for 24t-regel)
+              await tx.user.update({
+                where: { id: user.id },
+                data: { lastMatchAt: new Date() },
+              });
+            });
 
-          created++;
-          processed++;
+            created++;
+            processed++;
+          } catch (txError) {
+            // Transaksjonen feilet — rollback automatisk, ikke tell som opprettet
+            console.error(`[cron] Transaksjon feilet for user ${user.id}:`, txError);
+            errors.push(`user ${user.id}: ${(txError as Error).message}`);
+            processed++;
+          }
         } catch (engineError) {
           // STEG 6.6: Logg feilen Uten å telle den som opprettet
           console.error(`[cron] findBestResonance feil for user ${user.id}:`, engineError);

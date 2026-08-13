@@ -10,10 +10,17 @@ const nextConfig = {
   // Standalone output for Docker deployment (STEG 4.3)
   output: 'standalone',
 
-  // Prevent prerendering of API routes and dynamic pages
+  // Server Actions — restricted origins (STEG 4.5)
+  // Replaced wildcard '*' with actual production/staging domains
   experimental: {
     serverActions: {
-      allowedOrigins: ['*'],
+      allowedOrigins: [
+        'app.tosom.no',
+        'tosom.no',
+        'www.tosom.no',
+        'localhost:3000',
+        ...(process.env.NEXT_PUBLIC_APP_URL ? [new URL(process.env.NEXT_PUBLIC_APP_URL).hostname] : []),
+      ].filter(Boolean),
     },
   },
 

@@ -11,7 +11,8 @@ describe('Cron Authentication Tests', () => {
   describe('Authorization header parsing', () => {
     it('skal avise kall uten Authorization header', () => {
       // Simulerer rute-logikk: ingen header = unauthorized
-      const authHeader = undefined;
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+      const authHeader = undefined as string | undefined;
       const token = authHeader?.replace('Bearer ', '');
 
       expect(token).toBeUndefined();

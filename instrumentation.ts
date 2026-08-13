@@ -1,6 +1,16 @@
 // STEG A2 — Serverside Sentry instrumentation for Next.js App Router
 // Captures server-side errors (API routes, Server Components, Route Handlers)
+// STEG A6 — Fail-fast env validation on startup
 import * as Sentry from "@sentry/nextjs";
+import { validateEnv } from "./config/env";
+
+// Run env validation at startup (before anything else initializes)
+try {
+  validateEnv();
+} catch (err) {
+  console.error('[startup] Environment validation failed:', (err as Error).message);
+  process.exit(1);
+}
 
 export async function register() {
   if (process.env.NEXT_RUNTIME === 'nodejs') {

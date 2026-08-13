@@ -1,10 +1,10 @@
 {
   "instruks": "v3.0-launch",
   "currentWave": 2,
-  "currentStep": "2.1",
-  "completedSteps": ["0.1", "0.2", "1.1", "1.2", "1.3", "1.4", "2.1"],
+  "currentStep": "2.2",
+  "completedSteps": ["0.1", "0.2", "1.1", "1.2", "1.3", "1.4", "2.1", "2.2"],
   "failedSteps": [],
-  "nextStep": "2.2",
+  "nextStep": "2.3",
   "waveGateOpen": true,
   "status": {
     "tsc": "pass",
@@ -14,8 +14,9 @@
   },
   "deviations": [
     "BASELINE: tsc=0 feil, jest=6 failed/72 passed, prisma-format=exit 1 (unformatted), build=pass",
-    "STEG 2.1: Kan ikke verifisere Sjekk 4 lokalt — krev Vipps OAuth-credentials. Kode er korrekt: fjernet manuell base64-cookies().set, erstattet med signIn()."
+    "STEG 2.1: Kan ikke verifisere Sjekk 4 lokalt — krev Vipps OAuth-credentials. Kode er korrekt: fjernet manuell base64-cookies().set, erstattet med signIn().",
+    "STEG 2.2: Middleware nå bruker getToken() fra next-auth/jwt for reell sesjonsverifisering. Falsk cookie -> 401 bekreftet."
   ],
   "lastCommit": "",
-  "updatedAt": "2026-08-13T17:03:05+02:00"
+  "updatedAt": "2026-08-13T17:17:18+02:00"
 }

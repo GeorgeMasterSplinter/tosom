@@ -2,13 +2,15 @@
  * ToSom — Middleware for protected routes
  *
  * Oppdatert for NextAuth v5 med auth() og RBAC.
+ * STEG 2.2: Verifiser sesjonssignatur via getToken() — ikke base64-dekodning.
+ * STEG 2.3: Admin-autorisasjon kun via verifisert token + isAdminRole().
  *
  * Beskytt kun API-ruter. Side-ruter har egen session-check i server-komponenter og API-ruter.
  *
  * Tillat:
  *   /, /login, /register, /onboarding/* (page), /dashboard (page)
  *   /api/auth/* (NextAuth)
- *   Statisk innhald
+ *   Statisk innhold
  *
  * Beskytt:
  *   /api/profile/*
@@ -20,12 +22,14 @@
 
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { getToken } from 'next-auth/jwt'
 import { verifyAdminCookie } from '@/lib/auth/admin-jwt'
+import { isAdminRole } from '@/lib/auth/roles'
 
 const MAINTENANCE_ENABLED = process.env.MAINTENANCE_ENABLED === 'true'
 const DEV_LOGIN_DISABLED = process.env.DEV_LOGIN_ENABLED !== 'true'
 
-/** Alltid tilgjengelege baner (nivå 0) */
+/** Alltid tilgjengelige baner (nivå 0) */
 const PUBLIC_PATHS = [
   '/maintenance',
   '/api/system/health',
@@ -50,37 +54,12 @@ const PROTECTED_API_PREFIXES = [
 
 const ADMIN_PREFIX = '/admin'
 
-function getSessionToken(req: NextRequest): string | null {
-  return (
-    req.cookies.get('authjs.session-token')?.value ??
-    req.cookies.get('next-auth.session.token')?.value ??
-    null
-  )
-}
-
-function hasValidSession(req: NextRequest): boolean {
-  const token = getSessionToken(req)
-  if (token) return true
-  return false
-}
-
-function getRoleFromSession(req: NextRequest): string | null {
-  const token = getSessionToken(req)
-  if (!token) return null
-  try {
-    const payload = JSON.parse(Buffer.from(token, 'base64').toString())
-    return payload?.role ?? null
-  } catch {
-    return null
-  }
-}
-
-/** Legacy-ruter som skal retast til nye stiar */
+/** Legacy-ruter som skal rettes til nye stier */
 const LEGACY_REDIRECTS: Record<string, string> = {
   '/vilk%C3%A5r': '/vilkår',  // URL-encoded variant → korrekt norsk stavemål
 }
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname
 
   // Forward URL to server components via header (for admin layout pathname check)
@@ -108,31 +87,34 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL('/', req.url))
   }
 
-  // 1. Alltid tilgjengelege baner
+  // 1. Alltid tilgjengelige baner
   for (const publicPath of PUBLIC_PATHS) {
     if (path === publicPath || path.startsWith(publicPath + '/')) {
       return response
     }
   }
 
-  // 2. Admin-vern — krever signert admin_token JWT ELLER authjs.session-token med admin role
+  // STEG 2.2: Hent og verifiser signert JWT-token via NextAuth getToken()
+  // Dette fungerer i Edge-runtime og krever NEXTAUTH_SECRET for dekryptering
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
+
+  // 2. Admin-vern — krever signert admin_token JWT ELLER verifisert session med ADMIN-role
   if (path.startsWith(ADMIN_PREFIX)) {
     const adminJwtPayload = verifyAdminCookie(req)
-    const hasAuthSession = hasValidSession(req)
 
     // Hvis gyldig signert admin_token JWT (HS256 med issuer 'tosom-admin'), aksepter det umiddelbart
     if (adminJwtPayload) {
       return response
     }
 
-    // Ingen session i det hele tatt → redirect til login
-    if (!hasAuthSession) {
+    // Ingen verifisert session → redirect til login
+    if (!token) {
       return NextResponse.redirect(new URL('/admin/login', req.url))
     }
 
-    // authjs session finnes, men mangler admin-role → redirect til admin-login
-    const role = getRoleFromSession(req)
-    if (role !== 'admin') {
+    // STEG 2.3: Sjekk rolle fra verifisert token via isAdminRole() — ikke base64-dekodning
+    const role = (token?.role as string) ?? ''
+    if (!isAdminRole(role)) {
       return NextResponse.redirect(new URL('/admin/login', req.url))
     }
 
@@ -142,7 +124,8 @@ export function middleware(req: NextRequest) {
   // 3. API-vern
   for (const prefix of PROTECTED_API_PREFIXES) {
     if (path.startsWith(prefix)) {
-      if (!hasValidSession(req)) {
+      // STEG 2.2: Krev verifisert token — ikke bare tilstedeværelse av cookie
+      if (!token) {
         return NextResponse.json(
           { error: 'Uten innlogging. Logg inn først.' },
           { status: 401 }

@@ -383,10 +383,6 @@ function KontoSection() {
     <GlassCard>
       <SectionTitle>KONTO</SectionTitle>
 
-      <div style={{ marginBottom: "24px" }}>
-        <FieldLabel>E-post</FieldLabel>
-        <FieldValue>innlogga@eksempel.no</FieldValue>
-      </div>
 
       <Divider />
 

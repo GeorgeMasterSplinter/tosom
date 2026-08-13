@@ -3,10 +3,12 @@
  *
  * Core-definition: Én match per 24 timer. Bare brukere som ikke er låst.
  * Ingen foto-basert matching. Ingen offentlige profiler.
+ * STEG 4.1: Dealbreakere filtreres før scoring i cron-veien.
  */
 
 import { prisma } from "@/lib/prisma";
 import { unifiedScore, UnifiedResult, MatchLevel } from "./unifiedScorer"; // EINTILT SCORING (Punkt 4)
+import { sjekkAlleDealbreakers } from "./dealbreaker"; // STEG 4.1: Dealbreakere i cron-veien
 
 /** ResonanceResult-type for backwards-kompatibilitet */
 interface ResonanceResult {
@@ -133,6 +135,7 @@ async function isUserMatchable(userId: string): Promise<{
 /**
  * Finn den beste matchen for en bruker basert på resonans.
  * Returnerer én match — den med høyest resonans.
+ * STEG 4.1: Dealbreakere filtreres før scoring.
  */
 export async function findBestResonance(
   options: FindBestResonanceOptions
@@ -197,7 +200,7 @@ export async function findBestResonance(
     include: {
       profile: true,
     },
-    take: 50, // maksimum kandidater for performance
+    take: 50, // maksimum kandidater for performance (STEG 4.3 fjerner dette)
   });
 
   if (candidates.length === 0) {
@@ -210,12 +213,24 @@ export async function findBestResonance(
     resonance: ResonanceResult;
   }> = [];
 
+  // STEG 4.1: Tell filtrerte kandidater (dealbreakere)
+  let dealbreakerFiltered = 0;
+  const profileA = buildProfileObject(user.profile);
+
   for (const candidate of candidates) {
     if (!candidate.profile) continue;
 
-    // Bygg profil-objekt for resonans-beregning
-    const profileA = buildProfileObject(user.profile);
+    // STEG 4.1: Dealbreaker-sjekk FØR scoring — kandidater med dealbreaker filtreres bort
     const profileB = buildProfileObject(candidate.profile);
+    const dealbreakerResult = sjekkAlleDealbreakers(
+      profileA as unknown as Parameters<typeof sjekkAlleDealbreakers>[0],
+      profileB as unknown as Parameters<typeof sjekkAlleDealbreakers>[1]
+    );
+
+    if (dealbreakerResult.hasDealbreaker) {
+      dealbreakerFiltered++;
+      continue; // Filtrer bort kandidat med dealbreaker
+    }
 
     const score = unifiedScore(profileA, profileB);
 
@@ -229,6 +244,11 @@ export async function findBestResonance(
         },
       });
     }
+  }
+
+  // STEG 4.1: Logg dealbreaker-filtering i cron-metadata
+  if (dealbreakerFiltered > 0) {
+    console.log(`[matching] Dealbreakers filtrert for ${userId}: ${dealbreakerFiltered} kandidater`);
   }
 
   if (candidateResonance.length === 0) {

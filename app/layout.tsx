@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 import "@/styles/animated.css";
 import { AnalyticsProvider } from "@/components/analytics/AnalyticsProvider";
 import { UniversalMenu } from '@/components/layout/UniversalMenu';
+import { SentryErrorBoundary } from "@/components/system/SentryErrorBoundary";
 
 export const metadata = {
   title: "ToSom — En rolig plass for ekte møter",
@@ -62,11 +63,13 @@ export default function RootLayout({
             filter: 'blur(120px)',
           }}
         />
-        <AnalyticsProvider />
-        <UniversalMenu />
-        <div className="pt-[64px]">
-          {children}
-        </div>
+        <SentryErrorBoundary>
+          <AnalyticsProvider />
+          <UniversalMenu />
+          <div className="pt-[64px]">
+            {children}
+          </div>
+        </SentryErrorBoundary>
       </body>
     </html>
   );

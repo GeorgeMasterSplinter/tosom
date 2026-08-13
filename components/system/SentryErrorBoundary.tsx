@@ -1,12 +1,7 @@
-/* ═══════════════════════════════════════════
-   ToSom — Sentry Error Boundary Wrapper
-   Fanger React errors og viser fallback UI
-   Merk: Krever @sentry/nextjs og react-error-boundary for full funksjon
-   ═══════════════════════════════════════════ */
-
 "use client";
 
 import React, { Component, ErrorInfo, ReactNode } from "react";
+import * as Sentry from "@sentry/nextjs";
 
 interface Props {
   children: ReactNode;
@@ -28,11 +23,13 @@ class SentryErrorBoundaryState extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    // Capture error with Sentry in production
+    if (process.env.NODE_ENV === "production" && process.env.NEXT_PUBLIC_SENTRY_DSN) {
+      Sentry.captureException(error, {
+        extra: { componentStack: errorInfo.componentStack },
+      });
+    }
     console.error("[SentryErrorBoundary]", error, errorInfo);
-    // If Sentry is installed, log to Sentry:
-    // if (typeof window !== "undefined" && (window as any).__SENTRY__) {
-    //   (window as any).__SENTRY__.captureException(error);
-    // }
   }
 
   render() {

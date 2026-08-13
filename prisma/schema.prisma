@@ -18,6 +18,8 @@ model User {
   onboardingComplete  Boolean              @default(false)
   deepProfileComplete Boolean              @default(false)
   role                Role                 @default(USER)
+  journeyState        JourneyUserState     @default(IDLE)
+  matchQueuedAt       DateTime?
   verified            Boolean              @default(false)
   bannedAt            DateTime?
   deletedAt           DateTime?
@@ -25,6 +27,9 @@ model User {
   updatedAt           DateTime             @updatedAt
   lastMatchAt         DateTime?
   lockedUntil         DateTime?
+
+  @@index([journeyState])
+  @@index([matchQueuedAt])
   accounts            Account[]
   auditLogs           AuditLog[]           @relation("AdminAuditLogs")
   conversationsA      Conversation[]       @relation("ConversationToUserA")
@@ -567,4 +572,13 @@ enum SystemMessageType {
   INFO
   WARNING
   ALERT
+}
+
+/// User journey state machine (B1 additive migration)
+enum JourneyUserState {
+  IDLE         /// Not in queue, not matched
+  QUEUED       /// In matching queue (via "Start reisen")
+  MATCHED      /// Matched but not yet both seen
+  ON_JOURNEY   /// Both saw each other, journey running
+  COMPLETED    /// Journey finished (30 days or manual exit)
 }

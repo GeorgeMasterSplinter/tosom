@@ -29,6 +29,7 @@ const DEV_LOGIN_DISABLED = process.env.DEV_LOGIN_ENABLED !== 'true'
 const PUBLIC_PATHS = [
   '/maintenance',
   '/api/system/health',
+  '/api/system/cron-health',  // STEG 1.3: cron-health må være tilgjengelig for Vercel cron
   '/preview',
   '/_next',
   '/favicon.ico',

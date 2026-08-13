@@ -42,6 +42,10 @@ export async function GET(req: NextRequest) {
   }
 
   let lockAcquired = false;
+  // STEG 1.3: Hoist metrics for outer finally-heartbeat
+  let processed = 0;
+  let created = 0;
+  const errors: string[] = [];
 
   try {
     // STEG 6.4: Ta advisory lock for å hindre overlappende cron-kjøringer
@@ -102,10 +106,6 @@ export async function GET(req: NextRequest) {
         select: { id: true },
         take: 50, // STEG 6.2: Begrens antall kandidater per cron-kjøring
       });
-
-      let processed = 0;
-      let created = 0;
-      const errors: string[] = [];
 
       for (const user of eligibleUsers) {
         // Bruk findBestResonance (har innebygd lastMatchAt + lockedUntil-logikk)
@@ -181,25 +181,13 @@ export async function GET(req: NextRequest) {
         }
       }
 
-      const duration = Date.now() - startedAt;
-
-      // Logg til SystemLog
-      if (created > 0) {
-        await prisma.systemLog.create({
-          data: {
-            level: 'INFO',
-            message: `Cron matching: ${created} nye matcher for ${processed} brukarar`,
-            module: 'cron/matching',
-            metadata: { processed, created, duration, errors: errors.slice(0, 10) },
-          },
-        });
-      }
+      const durationMs = Date.now() - startedAt;
 
       return NextResponse.json({
         ok: true,
         processed,
         created,
-        duration: `${duration}ms`,
+        duration: `${durationMs}ms`,
         message: `Prosessert ${processed} brukarar, oppretta ${created} nye matcher`,
         errors: errors.length > 0 ? errors.slice(0, 5) : undefined,
       });
@@ -214,19 +202,25 @@ export async function GET(req: NextRequest) {
   } catch (err) {
     console.error('[cron] Matching feil:', err);
 
-    await prisma.systemLog.create({
-      data: {
-        level: 'ERROR',
-        message: `Cron matching feil: ${(err as Error).message}`,
-        module: 'cron/matching',
-        metadata: {},
-      },
-    });
-
     return NextResponse.json(
       { error: 'Kunne ikke kjøre cron matching', details: (err as Error).message },
       { status: 500 }
     );
+  } finally {
+    // STEG 1.3: Heartbeat — logg ALLTID til SystemLog (også ved feil)
+    const durationMs = Date.now() - startedAt;
+    try {
+      await prisma.systemLog.create({
+        data: {
+          level: 'INFO',
+          message: `Cron matching heartbeat: ${processed} behandlet, ${created} opprettet`,
+          module: 'cron:matching',
+          metadata: { processed, created, durationMs, errors: errors.slice(0, 10) },
+        },
+      });
+    } catch (logErr) {
+      console.error('[cron] Kunne ikke skrive heartbeat:', logErr);
+    }
   }
 }
 

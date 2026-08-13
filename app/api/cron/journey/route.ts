@@ -43,7 +43,12 @@ export async function GET(req: NextRequest) {
   }
 
   let lockAcquired = false;
-  
+  // STEG 1.3: Hoist metrics for outer finally-heartbeat
+  let processed = 0;
+  let advanced = 0;
+  let ended = 0;
+  const errors: string[] = [];
+
   try {
     // STEG 6.3: Ta advisory lock for å hindre overlappende cron-kjøringer
     const lockResult = await prisma.$queryRaw(
@@ -83,11 +88,6 @@ export async function GET(req: NextRequest) {
         },
         take: 100, // maksimum per run for performance
       });
-
-      let processed = 0;
-      let advanced = 0;
-      let ended = 0;
-      const errors: string[] = [];
 
       for (const journey of eligibleJourneys) {
         try {
@@ -196,16 +196,6 @@ export async function GET(req: NextRequest) {
       }
 
       const duration = Date.now() - startedAt;
-      
-      // Logg til SystemLog
-      await prisma.systemLog.create({
-        data: {
-          level: 'INFO',
-          message: `Cron journey: ${advanced} framrykte, ${ended} avsluttet for ${processed} brukarar`,
-          module: 'cron/journey',
-          metadata: { processed, advanced, ended, duration, errors: errors.slice(0, 10) },
-        },
-      });
 
       return NextResponse.json({
         ok: true,
@@ -227,19 +217,25 @@ export async function GET(req: NextRequest) {
   } catch (err) {
     console.error('[cron] Journey feil:', err);
     
-    await prisma.systemLog.create({
-      data: {
-        level: 'ERROR',
-        message: `Cron journey feil: ${(err as Error).message}`,
-        module: 'cron/journey',
-        metadata: {},
-      },
-    });
-
     return NextResponse.json(
       { error: 'Kunne ikke kjøre cron journey', details: (err as Error).message },
       { status: 500 }
     );
+  } finally {
+    // STEG 1.3: Heartbeat — logg ALLTID til SystemLog (også ved feil)
+    const durationMs = Date.now() - startedAt;
+    try {
+      await prisma.systemLog.create({
+        data: {
+          level: 'INFO',
+          message: `Cron journey heartbeat: ${advanced} framrykte, ${ended} avsluttet for ${processed} brukarar`,
+          module: 'cron:journey',
+          metadata: { processed, advanced, ended, durationMs, errors: errors.slice(0, 10) },
+        },
+      });
+    } catch (logErr) {
+      console.error('[cron/journey] Kunne ikke skrive heartbeat:', logErr);
+    }
   }
 }
 

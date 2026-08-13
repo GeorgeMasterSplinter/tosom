@@ -7,6 +7,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import NotificationCenter from "@/components/NotificationCenter";
 
@@ -68,45 +69,45 @@ export default function Header() {
         transition-all duration-500
         ${isFocusMode ? 'py-2' : 'py-5'}
       `}>
-        {/* Logo */}
-        <a href="/" className={logoClass}>
+        {/* Logo — erstattet rå <a href> med next/link (STEG 4.2) */}
+        <Link href="/" className={logoClass}>
           ToSom
-        </a>
+        </Link>
 
         {/* Navigasjon */}
         <nav className="flex items-center gap-6 text-sm text-[#EDEDED]/80">
-          <a href="/hvordan-det-fungerer" className="hover:text-[#D4AF37] transition-colors duration-300 ease-out">
+          <Link href="/hvordan-det-fungerer" className="hover:text-[#D4AF37] transition-colors duration-300 ease-out">
             Hvordan det fungerer
-          </a>
-          <a href="/om" className="hover:text-[#D4AF37] transition-colors duration-300 ease-out">
+          </Link>
+          <Link href="/om" className="hover:text-[#D4AF37] transition-colors duration-300 ease-out">
             Om ToSom
-          </a>
+          </Link>
 
           {/* Hvis bruker er innlogget → vis NotificationCenter + Dashboard */}
           {loggedIn ? (
             <>
-              <a href="/dashboard" className="hover:text-[#D4AF37] transition-colors duration-300 ease-out text-[#D4AF37]">
+              <Link href="/dashboard" className="hover:text-[#D4AF37] transition-colors duration-300 ease-out text-[#D4AF37]">
                 Dashboard
-              </a>
+              </Link>
               <NotificationCenter />
-              <a
+              <Link
                 href="/logout"
                 className="bg-[#D4AF37]/20 border border-[#D4AF37]/30 px-4 py-2 rounded-lg hover:text-[#D4AF37] transition-colors duration-300 ease-out"
               >
                 Logg ut
-              </a>
+              </Link>
             </>
           ) : (
             <>
-              <a href="/login" className="hover:text-[#D4AF37] transition-colors duration-300 ease-out">
+              <Link href="/login" className="hover:text-[#D4AF37] transition-colors duration-300 ease-out">
                 Logg inn
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/signup"
                 className="bg-[#D4AF37] text-black px-4 py-2 rounded-lg font-medium hover:bg-[#E8C766]/30 hover:text-[#D4AF37] transition-colors duration-300 ease-out"
               >
                 Start reisen
-              </a>
+              </Link>
             </>
           )}
         </nav>

@@ -8,6 +8,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { radius, color, typography } from '@/config/design-tokens';
 
 /* ====== Glass Animasjon ====== */
@@ -163,9 +164,10 @@ export function WaitingForMatch({ userName }: { userName: string }) {
         {/* Countdown (mock) */}
         <CountdownTimer />
 
-        {/* Opdater profil-knapp */}
-        <a href="/onboarding" className="block w-full mt-8">
+        {/* Opdater profil-knapp — erstattet rå <a href> med next/link (STEG 4.1) */}
+        <Link href="/onboarding" className="block w-full mt-8">
           <button
+            type="button"
             className="w-full min-h-[52px] py-3.5 px-6 rounded-xl font-medium flex items-center justify-center transition-all duration-300 hover:brightness-110 active:scale-[0.98]"
             style={{
               background: 'rgba(212, 175, 55, 0.08)',
@@ -176,7 +178,7 @@ export function WaitingForMatch({ userName }: { userName: string }) {
           >
             Oppdater profil for bedre match
           </button>
-        </a>
+        </Link>
       </div>
     </div>
   );

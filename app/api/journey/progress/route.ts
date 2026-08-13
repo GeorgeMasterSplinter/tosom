@@ -12,6 +12,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth/requireAuth";
+import { requireNotBanned } from "@/lib/auth/session";
 
 export const dynamic = 'force-dynamic';
 
@@ -23,6 +24,10 @@ export async function GET(req: NextRequest) {
       return result;
     }
     const user = result.user;
+
+    // 1b. Sjekk om brukaren er utestengt (STEG 3.2 — sesjons-revokering)
+    const bannedCheck = await requireNotBanned(user.id);
+    if (bannedCheck) return bannedCheck;
 
     // 2. Finn journey
     const journey = await prisma.journeyProgress.findUnique({

@@ -10,7 +10,7 @@
  */
 
 import { NextResponse } from "next/server";
-import { getServerSession } from "@/lib/auth/session";
+import { getServerSession, requireNotBanned } from "@/lib/auth/session";
 import { prisma } from "@/lib/prisma";
 import { chatSendMessageSchema, errorResponse, successResponse } from "@/lib/api-validator";
 
@@ -36,6 +36,10 @@ export async function POST(request: Request) {
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Ikke autentisert" }, { status: 401 });
   }
+
+  // Sjekk om brukaren er utestengt (STEG 3.2 — sesjons-revokering)
+  const bannedCheck = await requireNotBanned(session.user.id);
+  if (bannedCheck) return bannedCheck;
 
   try {
     // STEG 3: Zod-validering av body

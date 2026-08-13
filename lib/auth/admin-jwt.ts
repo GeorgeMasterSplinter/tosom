@@ -3,19 +3,23 @@
  *
  * Bruker Web Crypto API i stedet for Node.js crypto
  * fordi Next.js middleware kjører i Edge runtime.
+ *
+ * STEG 2.4: ADMIN_JWT_SECRET leses lazy ved bruk, ikke ved import.
  */
 
 import type { NextRequest } from 'next/server';
 
-// Boot-time sjekk: kræsjer om secret mangler (fail-closed, ingen fallback)
-const ADMIN_JWT_SECRET_RAW = process.env.ADMIN_JWT_SECRET;
-if (!ADMIN_JWT_SECRET_RAW) {
-  throw new Error(
-    '[TOSOM] Manglende kritisk miljøvariabel: ADMIN_JWT_SECRET. ' +
-    'Set dette i .env! Ingen fallback er tillatt (sikkerheitskritisk).'
-  );
+// STEG 2.4: Lazy lesing av ADMIN_JWT_SECRET — ikke kast ved import, kun ved faktisk bruk.
+function getAdminJwtSecret(): string {
+  const secret = process.env.ADMIN_JWT_SECRET;
+  if (!secret) {
+    throw new Error(
+      '[TOSOM] Manglende kritisk miljøvariabel: ADMIN_JWT_SECRET. ' +
+      'Set dette i .env! Ingen fallback er tillatt (sikkerheitskritisk).'
+    );
+  }
+  return secret;
 }
-const ADMIN_JWT_SECRET: string = ADMIN_JWT_SECRET_RAW;
 
 const ADMIN_JWT_EXPIRY = process.env.ADMIN_JWT_EXPIRY || '8h';
 
@@ -56,6 +60,7 @@ function base64urlEncode(str: string): string {
 }
 
 export async function signAdminToken(email: string): Promise<string> {
+  const ADMIN_JWT_SECRET = getAdminJwtSecret(); // STEG 2.4: lazy
   const now = Math.floor(Date.now() / 1000);
   const header = { alg: 'HS256', typ: 'JWT' };
   const payload: AdminTokenPayload = {
@@ -138,6 +143,8 @@ export async function verifyAdminTokenAsync(token: string): Promise<AdminTokenPa
   if (!token) return null;
 
   try {
+    const ADMIN_JWT_SECRET = getAdminJwtSecret(); // STEG 2.4: lazy
+
     const parts = token.split('.');
     if (parts.length !== 3) return null;
 

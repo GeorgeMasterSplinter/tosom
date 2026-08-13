@@ -15,6 +15,8 @@ const REQUIRED_VARS: EnvVar[] = [
   { value: process.env.DATABASE_URL, required: true, description: 'PostgreSQL connection string' },
   { value: process.env.NEXTAUTH_SECRET, required: true, description: 'NextAuth secret key' },
   { value: process.env.NEXTAUTH_URL, required: true, description: 'NextAuth URL' },
+  // STEG 2.4: Legg til ADMIN_JWT_SECRET som påkrevd i produksjon
+  { value: process.env.ADMIN_JWT_SECRET, required: true, description: 'Admin JWT secret key (sikkerheitskritisk)' },
 ]
 
 const OPTIONAL_VARS: EnvVar[] = [

@@ -11,9 +11,10 @@ import { createCheckoutSession, createOrUpdateCustomer } from '@/lib/payment/str
 
 export const dynamic = 'force-dynamic'
 
-// Zod-skjema for checkout
+// STEG 10.1 FIX: Aksepter BÅDE planId (frå frontend) og plan (backend) for unngå mismatch
 const CheckoutSchema = z.object({
   plan: z.enum(['premium']).optional(),
+  planId: z.enum(['premium']).optional(),
   successUrl: z.string().url().optional(),
   cancelUrl: z.string().url().optional(),
 })

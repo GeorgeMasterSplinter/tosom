@@ -574,6 +574,22 @@ enum SystemMessageType {
   ALERT
 }
 
+model MatchHistory {
+  id        String   @id @default(cuid())
+  userAId   String
+  userBId   String
+  matchId   String?  // Original match ID
+  endedAt   DateTime @default(now())
+  outcomeA  String?  // "finished", "abandoned", "reported"
+  outcomeB  String?
+  createdAt DateTime @default(now())
+
+  @@unique([userAId, userBId], name: "uh_idx")
+  @@index([userAId])
+  @@index([userBId])
+  @@index([createdAt])
+}
+
 /// User journey state machine (B1 additive migration)
 enum JourneyUserState {
   IDLE         /// Not in queue, not matched

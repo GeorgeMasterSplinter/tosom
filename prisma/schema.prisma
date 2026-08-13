@@ -213,6 +213,7 @@ model JourneyMilestone {
 
   @@index([progressId])
   @@index([day])
+  @@unique([progressId, day])
 }
 
 model ResonanceSession {

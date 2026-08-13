@@ -74,28 +74,6 @@ function PulsingOrb() {
 
 /* ====== Countdown Timer ====== */
 
-function CountdownTimer() {
-  const [seconds, setSeconds] = useState(() => Math.floor(Math.random() * 3600) + 7200); // 2-3 timer mock
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSeconds(prev => (prev > 0 ? prev - 1 : 0));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const hours = Math.floor(seconds / 3600);
-  const mins = Math.floor((seconds % 3600) / 60);
-  const secs = seconds % 60;
-
-  return (
-    <div className="flex items-center justify-center gap-2 mt-4">
-      <span style={{ fontSize: `${typography.fontSize['2xl']}px`, fontWeight: typography.fontWeight.bold, color: 'rgba(212, 175, 55, 0.8)' }}>
-        {String(hours).padStart(2, '0')}:{String(mins).padStart(2, '0')}:{String(secs).padStart(2, '0')}
-      </span>
-    </div>
-  );
-}
 
 /* ====== Main Component ====== */
 
@@ -147,8 +125,8 @@ export function WaitingForMatch({ userName }: { userName: string }) {
             lineHeight: typography.lineHeight.relaxed,
           }}
         >
-          Resonans-motoren leter etter din perfekte match. 
-          Du vil motta en match innen 24 timer — vi ser til at det passer.
+          Vi beregner matcher en gang per natt. 
+          Du får én match om dagen, beregnet i morgen kl. 05:00.
         </p>
 
         <p
@@ -158,11 +136,10 @@ export function WaitingForMatch({ userName }: { userName: string }) {
             fontStyle: 'italic',
           }}
         >
-          Hvert sekund nærmer du deg noen spesiell.
+          Vi tar tiden det krever for å finne en god match.
         </p>
 
         {/* Countdown (mock) */}
-        <CountdownTimer />
 
         {/* Opdater profil-knapp — erstattet rå <a href> med next/link (STEG 4.1) */}
         <Link href="/onboarding" className="block w-full mt-8">

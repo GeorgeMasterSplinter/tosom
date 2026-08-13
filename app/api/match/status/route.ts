@@ -1,12 +1,8 @@
 /**
  * GET /api/match/status
- * 
+ *
  * Hent match-status for ein brukar.
- * Viser:
- * - Aktiv match (dersom begge har akseptert)
- * - Pentende match (dersom ein har akseptert)
- * - Neste tilgjengelege match-tidspunkt
- * - Resonansnivå
+ * B8: Fjerna acceptance-fields; status er no 'active' | 'ended' | 'expired'.
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -24,14 +20,14 @@ export async function GET(req: NextRequest) {
     }
     const user = result.user;
 
-    // 2. Finn aktiv eller pending match for brukaren
+    // 2. Finn aktiv match for brukaren
     const match = await prisma.match.findFirst({
       where: {
         OR: [
           { userAId: user.id },
           { userBId: user.id },
         ],
-        status: { in: ["pending", "matched"] },
+        status: "active",
       },
       include: {
         userA: {
@@ -66,10 +62,10 @@ export async function GET(req: NextRequest) {
 
     // 4. Bygg response
     let nextAvailableAt: string | null = null;
-    
+
     if (!match) {
       const canFindMatch = currentUser?.onboardingComplete && currentUser?.deepProfileComplete;
-      
+
       if (currentUser?.lockedUntil) {
         nextAvailableAt = currentUser.lockedUntil.toISOString();
       } else if (currentUser?.lastMatchAt) {
@@ -91,9 +87,6 @@ export async function GET(req: NextRequest) {
 
     // Finn den andre brukaren (ikke sjølv)
     const otherUser = match.userAId === user.id ? match.userB : match.userA;
-    const isUserA = match.userAId === user.id;
-    const myAccept = isUserA ? match.acceptedByA : match.acceptedByB;
-    const otherAccept = isUserA ? match.acceptedByB : match.acceptedByA;
 
     // Sjekk om vi er i 14-dagers bildefase
     const conversation = await prisma.conversation.findFirst({
@@ -109,8 +102,13 @@ export async function GET(req: NextRequest) {
       ? Math.max(0, Math.ceil((conversation.imageShareAllowedAt.getTime() - Date.now()) / (1000 * 60 * 60)))
       : null;
 
-    // Sjekk om reisen er aktiv
-    const journeyActive = match.status === "matched" && !!match.lockedAt;
+    // Sjekk om reisen er aktiv via JourneyProgress
+    const journey = await prisma.journeyProgress.findFirst({
+      where: {
+        userId: user.id,
+        matchId: match.id,
+      },
+    });
 
     return NextResponse.json({
       hasActiveMatch: true,
@@ -119,7 +117,6 @@ export async function GET(req: NextRequest) {
         status: match.status,
         resonanceLevel: match.resonanceLevel,
         expiresAt: match.expiresAt?.toISOString(),
-        lockedAt: match.lockedAt?.toISOString(),
         lockedUntil: currentUser?.lockedUntil?.toISOString(),
       },
       candidate: {
@@ -128,17 +125,11 @@ export async function GET(req: NextRequest) {
         age: otherUser.profile?.age || null,
         photoUrl: otherUser.profile?.photoUrl || null,
       },
-      acceptance: {
-        myAcceptance: myAccept?.toISOString() || null,
-        otherAcceptance: otherAccept?.toISOString() || null,
-        bothAccepted: !!myAccept && !!otherAccept,
-      },
-      journey: journeyActive
+      journey: journey
         ? {
-            phase: "EARLY",
-            daysRemaining: match.lockedAt
-              ? Math.max(0, Math.ceil((30 * 24 * 60 * 60 * 1000 - (Date.now() - match.lockedAt.getTime())) / (1000 * 60 * 60 * 24)))
-              : 30,
+            phase: journey.phase,
+            day: journey.day,
+            bothSeenAt: journey.bothSeenAt?.toISOString() || null,
           }
         : null,
       imagePhase: {

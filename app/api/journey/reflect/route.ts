@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 3. Finn journey
-    const journey = await prisma.journeyProgress.findUnique({
+    const journey = await prisma.journeyProgress.findFirst({
       where: { userId: user.id },
       select: { id: true, day: true, phase: true, nextDayAt: true, completedDays: true },
     });
@@ -92,7 +92,7 @@ export async function POST(req: NextRequest) {
     // 7. Oppdater completedDays og nextDayAt — bare første gong
     if (!hasReflection) {
       await prisma.journeyProgress.update({
-        where: { userId: user.id },
+        where: { id: journey.id },
         data: {
           completedDays: { increment: 1 },
           nextDayAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 8. Hent oppdatert journey for response
-    const updatedJourney = await prisma.journeyProgress.findUnique({
+    const updatedJourney = await prisma.journeyProgress.findFirst({
       where: { userId: user.id },
       select: { completedDays: true },
     });

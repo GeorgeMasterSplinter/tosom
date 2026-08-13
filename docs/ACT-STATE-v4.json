@@ -3,18 +3,18 @@
   "startedAt": "2026-08-13T23:53:00+02:00",
   "commitBaseline": "2d9b7fc6acd3debbcbd595cb17ff383b071e6434",
   "currentWave": "B",
-  "currentStep": "B1",
-  "completedSteps": ["0.1", "0.2", "0.3", "A1", "A2", "A3", "A4", "A5", "A6"],
-  "nextStep": "B1",
+  "currentStep": "B7",
+  "completedSteps": ["0.1", "0.2", "0.3", "A1", "A2", "A3", "A4", "A5", "A6", "B1", "B2", "B3", "B4", "B5", "B6", "B7"],
+  "nextStep": "B8",
   "waveGateA": true,
   "waveGateB": false,
   "scores": {
     "lansering": 67,
     "stabilitet": 70,
-    "sikkerhet": 50,
+    "sikkerhet": 52,
     "drift": 32,
-    "konsept": 65,
-    "produkt": 40
+    "konsept": 72,
+    "produkt": 44
   },
   "deviations": [],
   "flags": {

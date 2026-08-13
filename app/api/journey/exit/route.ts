@@ -32,7 +32,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const { reason } = body as { reason?: string };
 
     // 3. Finn aktiv journey for brukeren
-    const journey = await prisma.journeyProgress.findUnique({
+    const journey = await prisma.journeyProgress.findFirst({
       where: { userId: user.id },
     });
 
@@ -55,8 +55,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const activeMatch = await prisma.match.findFirst({
       where: {
         OR: [
-          { userAId: user.id, status: 'matched' },
-          { userBId: user.id, status: 'matched' },
+          { userAId: user.id, status: 'active' },
+          { userBId: user.id, status: 'active' },
         ],
         lockedAt: { not: null }, // Bare aktive matcher
       },

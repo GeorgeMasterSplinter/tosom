@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
     const where: Record<string, unknown> = statusFilter ? { status: statusFilter } : {}
 
     const [matches, total] = await Promise.all([
-      prisma.match.findMany({ where, skip, take: limit, orderBy: { createdAt: 'desc' }, select: { id: true, userAId: true, userBId: true, status: true, score: true, normalizedScore: true, resonanceLevel: true, reviewed: true, acceptedByA: true, acceptedByB: true, lockedAt: true, expiresAt: true, createdAt: true, userA: { select: { id: true, email: true, name: true, role: true } }, userB: { select: { id: true, email: true, name: true, role: true } }, insights: { select: { id: true, summary: true, strengths: true, createdAt: true } } } }),
+      prisma.match.findMany({ where, skip, take: limit, orderBy: { createdAt: 'desc' }, select: { id: true, userAId: true, userBId: true, status: true, score: true, normalizedScore: true, resonanceLevel: true, reviewed: true, lockedAt: true, expiresAt: true, createdAt: true, userA: { select: { id: true, email: true, name: true, role: true } }, userB: { select: { id: true, email: true, name: true, role: true } } } }),
       prisma.match.count({ where }),
     ])
 

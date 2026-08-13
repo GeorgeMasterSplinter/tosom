@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 export async function getMatchHistory(userId: string) {
   const matches = await prisma.match.findMany({
     where: {
-      status: { in: ["expired", "ended", "unmatched"] },
+      status: { in: ["expired", "ended", "ended"] },
       OR: [
         { userAId: userId },
         { userBId: userId }

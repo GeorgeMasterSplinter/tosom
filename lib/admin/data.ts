@@ -103,9 +103,15 @@ export async function getAllUsers(page = 1, limit = 20) {
 
 export async function getUserById(id: string): Promise<AdminUserDetail | null> {
   const user = await prisma.user.findUnique({
-    where: { id }, include: { profile: true, journey: { select: { phase: true, day: true, completedDays: true } }, },
+    where: { id }, include: { profile: true },
   });
   if (!user) return null;
+
+  // STEG B4 — JourneyProgress er nå match-scoped, ingen User.journey-relasjon lenger
+  const journey = await prisma.journeyProgress.findFirst({
+    where: { userId: id },
+    orderBy: { startedAt: 'desc' },
+  });
 
   // STEG 9.3 FIX: Reell telling
   const [matchCount, convCount] = await Promise.all([
@@ -129,7 +135,7 @@ export async function getUserById(id: string): Promise<AdminUserDetail | null> {
       maturityLevel: user.profile.maturityLevel, relationshipStyle: user.profile.relationshipStyle,
       deepProfileStep: user.profile.deepProfileStep,
     } : null,
-    journey: user.journey ? { phase: user.journey.phase, day: user.journey.day, completedDays: user.journey.completedDays } : null,
+    journey: journey ? { phase: journey.phase, day: journey.day, completedDays: journey.completedDays } : null,
     matchCount, conversationCount: convCount,
   };
 }
@@ -227,35 +233,24 @@ export async function getProfileById(id: string): Promise<AdminProfile | null> {
 }
 
 /* ====== Innsikter (AI) ====== */
+/* B8: MatchInsight-tabellen er fjerna; funksjonane returnerer tom data */
 
 export async function getAllInsights(page = 1, limit = 20) {
-  const skip = (page - 1) * limit;
-  const insights = await prisma.matchInsight.findMany({
-    skip, take: limit, orderBy: { createdAt: 'desc' },
-    select: { id: true, matchId: true, summary: true, strengths: true, clarity: true, starter: true, model: true, tokensOut: true, createdAt: true, },
-  });
-  return insights.map(i => ({ id: i.id, matchId: i.matchId, summary: i.summary, strengths: i.strengths,
-    clarity: i.clarity, starter: i.starter, model: i.model, tokensOut: i.tokensOut, createdAt: i.createdAt.toISOString(), }));
+  // B8: MatchInsight er sletta; returner empty array
+  return [];
 }
 
-export async function getInsightById(id: string): Promise<AdminInsightDetail | null> {
-  const insight = await prisma.matchInsight.findUnique({ where: { id }, include: { match: { include: { userA: { select: { profile: { select: { identityName: true } } } }, userB: { select: { profile: { select: { identityName: true } } } }, } }, }});
-  if (!insight) return null;
-  return { id: insight.id, matchId: insight.matchId, summary: insight.summary, strengths: insight.strengths,
-    clarity: insight.clarity, starter: insight.starter, model: insight.model, tokensOut: insight.tokensOut, createdAt: insight.createdAt.toISOString(),
-    match: { id: insight.match.id, userAId: insight.match.userAId, userBId: insight.match.userBId,
-      userAName: insight.match.userA.profile?.identityName ?? 'Ukjent',
-      userBName: insight.match.userB.profile?.identityName ?? 'Ukjent',
-      score: insight.match.score, resonanceLevel: insight.match.resonanceLevel, status: insight.match.status, createdAt: insight.match.createdAt.toISOString(), },
-  };
+export async function getInsightById(_id: string): Promise<null> {
+  // B8: MatchInsight er sletta; returner null
+  return null;
 }
 
 /* ====== Stats ====== */
 
 export async function getAdminStats() {
-  const [userCount, matchCount, conversationCount, messageCount, insightCount, activeMatchCount] = await Promise.all([
+  const [userCount, matchCount, conversationCount, messageCount, activeMatchCount] = await Promise.all([
     prisma.user.count(), prisma.match.count(), prisma.conversation.count(),
-    prisma.message.count(), prisma.matchInsight.count(),
+    prisma.message.count(),
     prisma.match.count({ where: { status: 'active' } }),
   ]);
   const now = new Date();
@@ -268,5 +263,5 @@ export async function getAdminStats() {
   ]);
   return { users: { total: userCount, last7d: newUsersLast7d, last30d: newUsersLast30d },
     matches: { total: matchCount, active: activeMatchCount, last7d: newMatchesLast7d },
-    conversations: conversationCount, messages: messageCount, insights: insightCount, };
+    conversations: conversationCount, messages: messageCount, insights: 0, };
 }

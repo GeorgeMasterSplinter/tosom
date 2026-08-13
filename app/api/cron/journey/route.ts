@@ -77,15 +77,7 @@ export async function GET(req: NextRequest) {
             lte: new Date(), // har passert låsetidspunktet
           },
         },
-        include: {
-          user: {
-            select: {
-              id: true,
-              email: true,
-              name: true,
-            },
-          },
-        },
+        // B4: user-relasjonen fjerna frå JourneyProgress — userId er direkte tilgjengeleg
         take: 100, // maksimum per run for performance
       });
 
@@ -95,8 +87,8 @@ export async function GET(req: NextRequest) {
           const activeMatch = await prisma.match.findFirst({
             where: {
               OR: [
-                { userAId: journey.user.id, status: 'active' },
-                { userBId: journey.user.id, status: 'active' },
+                { userAId: journey.userId, status: 'active' },
+                { userBId: journey.userId, status: 'active' },
               ],
             },
             select: { id: true },
@@ -129,7 +121,7 @@ export async function GET(req: NextRequest) {
             // Send avslutningsnotification
             await prisma.notification.create({
               data: {
-                userId: journey.user.id,
+                userId: journey.userId,
                 type: 'JOURNEY',
                 message: 'Reisa di er fullført. Takk for at du gav 30 dager.',
               },
@@ -179,7 +171,7 @@ export async function GET(req: NextRequest) {
           if (phaseChanged) {
             await prisma.notification.create({
               data: {
-                userId: journey.user.id,
+                userId: journey.userId,
                 type: 'JOURNEY',
                 message: `Fase-endring: Du er nå i fase ${newPhase}.`,
               },

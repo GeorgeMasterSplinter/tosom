@@ -198,8 +198,6 @@ async function seedMatch(users: any[]) {
       explanation: 'Sterk overlap i verdier og livssituasjon.',
       scoringBreakdown: { base: 0.82, resonance: 0.75, semantic: 0.70, intimacy: 0.80, future: 0.78 },
       resonanceLevel: 'MODERATE',
-      acceptedByA: new Date(),
-      acceptedByB: new Date(),
       lockedAt: new Date(),
       expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
     },
@@ -222,11 +220,13 @@ async function seedMatch(users: any[]) {
 
   console.log(`  ✅ Conversation oppretta`);
 
+  // B4 — JourneyProgress krever matchId (composite unique [userId, matchId])
   await prisma.journeyProgress.upsert({
-    where: { userId: u1.id },
+    where: { jp_user_match: { userId: u1.id, matchId: match.id } },
     update: {},
     create: {
       userId: u1.id,
+      matchId: match.id,
       phase: JourneyPhase.EARLY,
       day: 5,
       completedDays: 4,

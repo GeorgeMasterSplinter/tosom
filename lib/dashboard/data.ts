@@ -73,14 +73,13 @@ export async function getUserProfile(userId: string): Promise<DashboardProfileSt
           photoUrl: true,
         },
       },
-      journey: {
-        select: {
-          phase: true,
-          day: true,
-          completedDays: true,
-        },
-      },
     },
+  });
+
+  // B4 — JourneyProgress er match-scoped, ingen User.journey-relasjon
+  const journey = await prisma.journeyProgress.findFirst({
+    where: { userId },
+    orderBy: { startedAt: 'desc' },
   });
 
   if (!user || !user.profile) return null;
@@ -91,9 +90,9 @@ export async function getUserProfile(userId: string): Promise<DashboardProfileSt
     deepProfileStep: user.profile.deepProfileStep,
     identityName: user.profile.identityName,
     photoUrl: user.profile.photoUrl,
-    journeyPhase: user.journey?.phase ?? null,
-    journeyDay: user.journey?.day ?? 1,
-    journeyCompleted: (user.journey?.completedDays ?? 0) >= 30,
+    journeyPhase: journey?.phase ?? null,
+    journeyDay: journey?.day ?? 1,
+    journeyCompleted: (journey?.completedDays ?? 0) >= 30,
   };
 }
 
@@ -299,7 +298,7 @@ export async function getUserInsights(
  * All progresjon er lagret i JourneyProgress (user-basert).
  */
 export async function getJourneyStatus(userId: string) {
-  const journey = await prisma.journeyProgress.findUnique({
+  const journey = await prisma.journeyProgress.findFirst({
     where: { userId },
   });
 

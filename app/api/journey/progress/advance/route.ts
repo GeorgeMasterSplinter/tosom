@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     const user = result.user;
 
     // 2. Finn aktiv journey for brukaren
-    const journey = await prisma.journeyProgress.findUnique({
+    const journey = await prisma.journeyProgress.findFirst({
       where: { userId: user.id },
       select: {
         id: true,

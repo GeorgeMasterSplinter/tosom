@@ -62,15 +62,7 @@ export async function POST() {
             },
           },
 
-          // JourneyProgress (korrekt JourneyPhase-verdi: EARLY, ikke START)
-          journey: {
-            create: {
-              phase: JourneyPhase.EARLY,
-              day: 1,
-              startedAt: new Date(),
-            },
-          },
-
+          // B4 — JourneyProgress er match-scoped, opprettest etter matchen under
           // Conversation (korrekte felt: id, userAId, userBId — ingen title/category)
           conversationsA: {
             create: {
@@ -97,8 +89,6 @@ export async function POST() {
               normalizedScore: 0.85,
               resonanceLevel: ResonanceLevel.MODERATE,
               type: 'resonance',
-              acceptedByA: new Date(),
-              acceptedByB: new Date(),
             },
           },
         },

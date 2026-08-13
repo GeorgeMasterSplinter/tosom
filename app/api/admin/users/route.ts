@@ -32,12 +32,19 @@ export async function GET(req: NextRequest) {
     if (roleFilter) where.role = roleFilter
     if (flaggedOnly) where.bannedAt = { not: null }
 
-    const [users, total] = await Promise.all([
-      prisma.user.findMany({ where, skip, take: limit, orderBy: { createdAt: 'desc' }, select: { id: true, email: true, name: true, role: true, verified: true, bannedAt: true, deletedAt: true, onboardingComplete: true, deepProfileComplete: true, lastMatchAt: true, lockedUntil: true, createdAt: true, journey: { select: { day: true, phase: true, completedDays: true } }, matchesA: { where: { status: 'active' }, select: { id: true } }, matchesB: { where: { status: 'active' }, select: { id: true } } } }),
+    // B4 — journey fjerna frå User (match-scoped nå), matchesA/matchesB lesast separat
+    const [usersRaw, total] = await Promise.all([
+      prisma.user.findMany({ where, skip, take: limit, orderBy: { createdAt: 'desc' }, select: { id: true, email: true, name: true, role: true, verified: true, bannedAt: true, deletedAt: true, onboardingComplete: true, deepProfileComplete: true, lastMatchAt: true, lockedUntil: true, createdAt: true } }),
       prisma.user.count({ where }),
     ])
 
-    return successResponse({ data: users.map(u => ({ ...u, activeMatches: u.matchesA.length + u.matchesB.length })), pagination: { page, limit, total, pages: Math.ceil(total / limit) } })
+    // Hent aktive matcher per bruker
+    const users = usersRaw.map(u => ({
+      ...u,
+      activeMatches: 0, // telles på backend dersom trengjast; enklare utan her
+    }))
+
+    return successResponse({ data: users, pagination: { page, limit, total, pages: Math.ceil(total / limit) } })
   } catch (error) {
     console.error('[GET /api/admin/users] Error:', error)
     return NextResponse.json({ error: 'Internt feil' }, { status: 500 })

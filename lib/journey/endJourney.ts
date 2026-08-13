@@ -36,7 +36,6 @@ export async function endJourney(
     include: {
       userA: true,
       userB: true,
-      insights: true,
     },
   });
 
@@ -44,7 +43,8 @@ export async function endJourney(
     throw new Error('Match ikke funnet');
   }
 
-  const { userA, userB, insights } = match;
+  const { userA, userB } = match;
+  // B8: insights er fjerna frå Match-modellen
 
   // Find conversation for this match
   const conversation = await prisma.conversation.findUnique({
@@ -58,10 +58,10 @@ export async function endJourney(
   const conversationId = conversation.id;
 
   // Find JourneyProgress for both users (match-scoped via conversation)
-  const journeyA = await prisma.journeyProgress.findUnique({
+  const journeyA = await prisma.journeyProgress.findFirst({
     where: { userId: userA.id },
   });
-  const journeyB = await prisma.journeyProgress.findUnique({
+  const journeyB = await prisma.journeyProgress.findFirst({
     where: { userId: userB.id },
   });
 
@@ -94,13 +94,13 @@ export async function endJourney(
     }
     deleted.JourneyMilestone = milestonesA + milestonesB;
 
-    // 5. Delete journey progress (for both users)
+    // 5. Delete journey progress (for both users) — B4 composite where [userId, matchId]
     if (journeyA) {
-      await tx.journeyProgress.delete({ where: { userId: userA.id } });
+      await tx.journeyProgress.delete({ where: { jp_user_match: { userId: userA.id, matchId } } });
       deleted.JourneyProgress = (deleted.JourneyProgress ?? 0) + 1;
     }
     if (journeyB) {
-      await tx.journeyProgress.delete({ where: { userId: userB.id } });
+      await tx.journeyProgress.delete({ where: { jp_user_match: { userId: userB.id, matchId } } });
       deleted.JourneyProgress = (deleted.JourneyProgress ?? 0) + 1;
     }
 
@@ -108,11 +108,7 @@ export async function endJourney(
     await tx.conversation.delete({ where: { id: conversationId } });
     deleted.Conversation = 1;
 
-    // 7. Delete match insight if exists
-    if (insights) {
-      await tx.matchInsight.delete({ where: { matchId } });
-      deleted.MatchInsight = 1;
-    }
+    //
 
     // 8. Delete match
     await tx.match.delete({ where: { id: matchId } });

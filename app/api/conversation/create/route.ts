@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 5. Sjekk at begge har akseptert (match-status "matched")
-    if (match.status !== "matched") {
+    if (match.status !== "active") {
       return NextResponse.json(
         { error: "Matchen må vere akseptert av begge parti før chat kan opnast" },
         { status: 400 }

@@ -32,29 +32,23 @@ export async function POST(
       }
     });
 
-    // Reset or create JourneyProgress
-    await prisma.journeyProgress.upsert({
+    // B4 — JourneyProgress er match-scoped: slett alle journey-rekorder for brukeren
+    // (nye reiser opprettes automatisk når brukeren matches)
+    const journeys = await prisma.journeyProgress.findMany({
       where: { userId: id },
-      create: {
-        userId: id,
-        phase: "EARLY",
-        day: 1,
-        completedDays: 0,
-      },
-      update: {
-        phase: "EARLY",
-        day: 1,
-        completedDays: 0,
-      },
+      select: { id: true },
     });
 
-    // Delete all milestones for this user
-    await prisma.journeyMilestone.deleteMany({
-      where: { progress: { userId: id } }
-    });
+    for (const j of journeys) {
+      await prisma.journeyMilestone.deleteMany({ where: { progressId: j.id } });
+    }
+
+    if (journeys.length > 0) {
+      await prisma.journeyProgress.deleteMany({ where: { userId: id } });
+    }
 
     // STEG 9.2 FIX: Logg destruktiv admin-handling
-    await recordAdminAction(adminId, 'JOURNEY_RESET', { targetUserId: id });
+    await recordAdminAction(adminId, 'JOURNEY_RESET', { targetUserId: id, deletedJourneys: journeys.length });
 
     return new Response(JSON.stringify({ ok: true }), { status: 200, headers: { "Content-Type": "application/json" } });
   } catch (error) {

@@ -100,7 +100,7 @@ export async function POST(req: NextRequest) {
     });
 
     // Hent reise-progres
-    const journey = await prisma.journeyProgress.findUnique({
+    const journey = await prisma.journeyProgress.findFirst({
       where: { userId },
       select: {
         id: true,

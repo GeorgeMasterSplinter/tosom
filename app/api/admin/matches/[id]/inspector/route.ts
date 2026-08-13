@@ -29,18 +29,16 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
       select: {
         id: true, userAId: true, userBId: true, status: true, score: true, normalizedScore: true,
         resonanceLevel: true, type: true, explanation: true, scoringBreakdown: true, reviewed: true,
-        acceptedByA: true, acceptedByB: true, lockedAt: true, expiresAt: true, rejectedByA: true,
-        rejectedByB: true, rejectionReason: true, createdAt: true, updatedAt: true,
+        lockedAt: true, expiresAt: true, createdAt: true, updatedAt: true,
         userA: { select: { id: true, email: true, name: true, role: true, verified: true, bannedAt: true, onboardingComplete: true, deepProfileComplete: true, createdAt: true, lastMatchAt: true } },
         userB: { select: { id: true, email: true, name: true, role: true, verified: true, bannedAt: true, onboardingComplete: true, deepProfileComplete: true, createdAt: true, lastMatchAt: true } },
-        insights: { select: { id: true, summary: true, strengths: true, clarity: true, starter: true, model: true, tokensOut: true, createdAt: true } },
       },
     })
     if (!match) return errorResponse('Match ikke funnen', 404)
 
     const [journeyA, journeyB] = await Promise.all([
-      prisma.journeyProgress.findUnique({ where: { userId: match.userAId } }),
-      prisma.journeyProgress.findUnique({ where: { userId: match.userBId } }),
+      prisma.journeyProgress.findFirst({ where: { userId: match.userAId } }),
+      prisma.journeyProgress.findFirst({ where: { userId: match.userBId } }),
     ])
 
     const conversation = await prisma.conversation.findFirst({

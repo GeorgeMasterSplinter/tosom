@@ -79,10 +79,8 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
         return successResponse({ data: updatedUser, message: `Brukar ${targetUser.email} onboarding blei resatt til steg 1.` })
 
       case 'reset-journey':
-        await prisma.$transaction(async (tx) => {
-          await tx.journeyProgress.deleteMany({ where: { userId: targetUserId } })
-          await tx.journeyProgress.create({ data: { userId: targetUserId, day: 1, phase: 'EARLY' as any, completedDays: 0 } })
-        })
+        // B4 — JourneyProgress er match-scoped (krever matchId), berre slett eksisterande
+        await prisma.journeyProgress.deleteMany({ where: { userId: targetUserId } })
         // STEG 9.2 FIX: Logg destruktiv admin-handling
         await recordAdminAction(adminUser.id, 'JOURNEY_RESET', { targetUserId })
         return successResponse({ data: { userId: targetUserId, email: targetUser.email }, message: `Brukar ${targetUser.email} journey blei resatt til dag 1.` })

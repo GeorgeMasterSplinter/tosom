@@ -25,7 +25,7 @@ export async function POST(
     await prisma.match.update({
       where: { id },
       data: {
-        status: "unmatched",
+        status: "ended",
       },
     });
 

@@ -12,8 +12,6 @@ interface MatchItem {
   normalizedScore: number;
   resonanceLevel: string;
   reviewed: boolean;
-  acceptedByA: Date | null;
-  acceptedByB: Date | null;
   lockedAt: Date | null;
   expiresAt: Date | null;
   createdAt: Date;
@@ -129,7 +127,7 @@ export default function AdminMatchesPage() {
       <div style={{ marginBottom: "24px", display: "flex", gap: "12px", alignItems: "center" }}>
         <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} style={{ padding: "8px 16px", borderRadius: "8px", background: "#0A1A2A", border: "1px solid rgba(255,255,255,0.1)", color: "#E0E0E0", fontSize: "13px" }}>
           <option value="">Alle statusar</option>
-          <option value="pending">Pending</option>
+          
           <option value="active">Active</option>
           <option value="matched">Matched</option>
           <option value="expired">Expired</option>

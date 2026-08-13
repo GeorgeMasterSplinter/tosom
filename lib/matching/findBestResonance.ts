@@ -102,8 +102,8 @@ async function isUserMatchable(userId: string): Promise<{
     const activeMatch = await prisma.match.findFirst({
       where: {
         OR: [
-          { userAId: userId, status: "matched" },
-          { userBId: userId, status: "matched" },
+          { userAId: userId, status: "active" },
+          { userBId: userId, status: "active" },
         ],
       },
     });
@@ -172,7 +172,7 @@ export async function findBestResonance(
       ],
       status: {
         // STEG 6.5: Ekskluder også unmatched+ended+expired for å hindre re-matching av fullførte/avviste par
-        in: ["matched", "active", "unmatched", "ended", "expired"],
+        in: ["active"],
       },
     },
     select: {

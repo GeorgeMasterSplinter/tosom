@@ -104,7 +104,7 @@ export async function POST(request: Request): Promise<NextResponse> {
         if (convo) result.conversationId = convo.id;
         
         // Rekn ut dagar att frå journeyProgress
-        const jp = await prisma.journeyProgress.findUnique({
+        const jp = await prisma.journeyProgress.findFirst({
           where: { userId },
           select: { day: true, startedAt: true },
         });
@@ -130,7 +130,7 @@ export async function POST(request: Request): Promise<NextResponse> {
           eligibleAt.setHours(eligibleAt.getHours() + 24);
           result.nextEligibleAt = eligibleAt.toISOString();
         }
-      } else if (statusStr === "ended" || statusStr === "unmatched") {
+      } else if (statusStr === "ended" || statusStr === "ended") {
         result.status = "completed";
         result.hasActiveMatch = false;
       } else {

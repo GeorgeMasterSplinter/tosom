@@ -3,13 +3,12 @@
 // Den gamle scorer.ts er fjernet; alle deprecated funksjonar er borte.
 
 /**
- * HOVEDFUNKSJON: findBestMatchFor()
- * Bruk denne for ALLE match-operasjoner (cron + user-initiated).
+ * HOVEDFUNKSJON: matchingEngine() fra engine.ts
+ * findBestMatchFor er FJERNET (STEG B7) — ToSom kobler, godtar ikke.
  */
 
 // Kjerne-funksjoner
 export { matchingEngine } from "./matching/engine";
-export { findBestMatchFor } from "./matching/findBestMatchFor";
 
 // Scoring — ENHETLIG (9-dimensjonal, skala [0-100])
 export { unifiedScore, calculateTotalScore } from "./matching/unifiedScorer";

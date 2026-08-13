@@ -6,6 +6,10 @@ export const MATCH_DELAY_HOURS = 24;
 export const CHAT_PHASE_DAYS = 30;
 export const DECISION_PHASE_DAYS = 30;
 
+// B6 — Kohort-basert matcherunde
+export const MIN_COHORT_SIZE = 20;
+export const MAX_QUEUE_WAIT_HOURS = 72;
+
 // MATCH_WEIGHTS er no definert i lib/matching/weightConfig.ts
 // og skal IKKE ha eigne verdiar her — berre eksportert for bakoverkompatibilitet
 // Ny vekter (0.35, 0.25, 0.20, 0.10, 0.10) finst i weightConfig.ts

@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
     if (bannedCheck) return bannedCheck;
 
     // 2. Finn journey
-    const journey = await prisma.journeyProgress.findUnique({
+    const journey = await prisma.journeyProgress.findFirst({
       where: { userId: user.id },
       select: {
         id: true,

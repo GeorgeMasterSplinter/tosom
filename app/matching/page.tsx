@@ -1,8 +1,8 @@
 /**
- * ToSom UI 5.0 — Matching Page
- * 
- * Viser alle matcher for brukaren, sortert etter score.
- * Premium styling med glassmorphism, glow og gull-aksentar.
+ * ToSom UI 5.0 — Matching Page (STEG B7: ren visning)
+ *
+ * Viser aktiv match for brukeren.
+ * Ingen Ja/Nei-knapper — ToSom kobler, godtar ikke.
  */
 
 'use client';
@@ -28,21 +28,16 @@ interface MatchData {
 
 export default function MatchingPage() {
   const router = useRouter();
-   const [matches, setMatches] = useState<MatchData[]>([]);
-   const [loading, setLoading] = useState(true);
-   const [error, setError] = useState<string | null>(null);
-   const [processing, setProcessing] = useState<string | null>(null);
+  const [matches, setMatches] = useState<MatchData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-   // Guiding-text per match-steg
-   const guidingText = loading
-     ? 'Vi jobber med å finne noen som passer deg.'
-     : matches.length > 0
-     ? 'Vi har funnet noen som kan passe deg.'
-     : 'Vi gir oss ikke – vi leter videre.';
-
-   const trustText = matches.length > 0
-     ? 'Du kan endre preferansene dine når som helst.'
-     : 'Dette brukes kun til å finne en god match.';
+  // Guiding-text per match-steg
+  const guidingText = loading
+    ? 'Vi jobber med å finne noen som passer deg.'
+    : matches.length > 0
+    ? 'Vi har funnet noen som kan passe deg.'
+    : 'Du er i kø — vi varsler deg her når noen passerer.';
 
   useEffect(() => {
     const fetchMatches = async () => {
@@ -70,92 +65,27 @@ export default function MatchingPage() {
     fetchMatches();
   }, []);
 
-   const handleAccept = async (match: MatchData) => {
-     if (processing) return;
-     setProcessing(match.id || 'accept');
+  const handleSeeMatch = async (match: MatchData) => {
+    if (!match.id) return;
+    router.push(`/matching/${match.id}`);
+  };
 
-     try {
-        const response = await fetch('/api/match/accept', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ matchId: match.id }),
-        });
-
-       const data = await response.json();
-
-       if (!response.ok) {
-         setError(data.error || 'Hmm… dette gikk ikke helt som planlagt. Prøv igjen.');
-         return;
-       }
-
-       // Oppdater match-status i UI
-       setMatches(prev => prev.map(m =>
-         m.id === match.id ? { ...m, status: data.status } : m
-       ));
-
-        if (data.status === 'matched') {
-          // Begge har akseptert → redirect til chat
-          if (data.conversationId) {
-            router.push(`/chat/${data.conversationId}`);
-          } else {
-            alert(data.message || 'Dere er nå låste saman i 30 dager.');
-          }
-        }
-     } catch (err) {
-       setError('Kan du prøve igjen?');
-     } finally {
-       setProcessing(null);
-     }
-   };
-
-   const handleDecline = async (match: MatchData) => {
-     if (processing) return;
-     setProcessing(match.id || 'decline');
-
-     try {
-        const response = await fetch('/api/match/accept', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ matchId: match.id }),
-        });
-
-       const data = await response.json();
-
-       if (!response.ok) {
-         setError('Hmm… dette gikk ikke helt som planlagt. Prøv igjen.');
-         return;
-       }
-
-       // Fjern match frå liste
-       setMatches(prev => prev.filter(m => m.id !== match.id));
-     } catch (err) {
-       setError('Vi gir oss ikke – vi leter videre.');
-     } finally {
-       setProcessing(null);
-     }
-   };
-
-    const handleSeeMatch = async (match: MatchData) => {
-      if (!match.id) return;
-      router.push(`/matching/${match.id}`);
-    };
-
-   const handleRefresh = async () => {
-     try {
-       setLoading(true);
-       setError(null);
-        const response = await fetch('/api/match', {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        });
-       const data = await response.json();
-       setMatches(data.matches || []);
-     } catch (err) {
-       setError('Vi jobber med å fikse dette. Prøv igjen om litt.');
-     } finally {
-       setLoading(false);
-     }
-   };
+  const handleRefresh = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await fetch('/api/match', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const data = await response.json();
+      setMatches(data.matches || []);
+    } catch (err) {
+      setError('Vi jobber med å fikse dette. Prøv igjen om litt.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -205,12 +135,12 @@ export default function MatchingPage() {
               className="text-xs uppercase tracking-[0.3em] font-semibold mb-4 block"
               style={{ color: '#D4AF37' }}
             >
-              Dine matcher
+              Din kobling
             </span>
             <h1
               className="text-3xl md:text-[42px] font-semibold tracking-[-0.02em] text-white leading-[1.1] mb-4"
             >
-              {loading ? 'Søker etter din match...' : 'Dine matcher'}
+              {loading ? 'Søker etter din match...' : 'Din kobling'}
             </h1>
             <p
               className="text-base md:text-lg max-w-lg mx-auto leading-[1.6]"
@@ -219,8 +149,8 @@ export default function MatchingPage() {
               {loading
                 ? 'Vi samanlikner profilen din med andre brukarar...'
                 : matches.length > 0
-                ? `Du har ${matches.length} potentielle match${matches.length > 1 ? 'r' : ''} basert på dykkar profil.`
-                : 'Vi gir oss ikke – vi leter videre.'}
+                ? `Du har ${matches.length} aktiv${matches.length > 1 ? 'e' : ''} kobling basert på dykkar profil.`
+                : 'Du er i kø. Vi varsler deg her når noen passerer.'}
             </p>
           </div>
 
@@ -274,96 +204,51 @@ export default function MatchingPage() {
             </div>
           )}
 
-           {/* Match-grid */}
-           {!loading && !error && matches.length > 0 && (
-             <>
-               {/* Trust-text */}
-               <div className="text-center mb-8">
-                 <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.55)' }}>
-                   {trustText}
-                 </p>
-               </div>
+          {/* Match-grid (ren visning — ingen accept/decline) */}
+          {!loading && !error && matches.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+              {matches.map((match, index) => (
+                <div
+                  key={`match-${index}`}
+                  className="match-card-enter"
+                  style={{ animationDelay: `${index * 0.08}s` }}
+                >
+                  <MatchCard
+                    score={match.score}
+                    otherUser={match.otherUser}
+                    type={match.type}
+                    explanation={match.explanation}
+                    highlight={index === 0}
+                    onSeeMatch={() => handleSeeMatch(match)}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
 
-               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-                 {matches.map((match, index) => (
-                   <div
-                     key={`match-${index}`}
-                     className="match-card-enter"
-                     style={{ animationDelay: `${index * 0.08}s` }}
-                   >
-                     <MatchCard
-                       score={match.score}
-                       otherUser={match.otherUser}
-                       type={match.type}
-                       explanation={match.explanation}
-                       highlight={index === 0}
-                       onSeeMatch={() => handleSeeMatch(match)}
-                       onAccept={() => handleAccept(match)}
-                     />
-                   </div>
-                 ))}
-               </div>
-
-               {/* Action-knappar under card */}
-               <div className="mt-8 flex gap-4 justify-center">
-               <button
-                 onClick={() => handleAccept(matches[0])}
-                 disabled={processing !== null}
-                 className="px-8 py-3 rounded-xl text-sm font-medium transition-all duration-300 hover:scale-[1.015]"
-                 style={{
-                   background: processing ? 'rgba(212,175,55,0.3)' : '#D4AF37',
-                   color: '#0B0E11',
-                   boxShadow: processing ? 'none' : '0 0 25px rgba(212,175,55,0.3), 0 4px 12px rgba(0,0,0,0.2)',
-                   border: 'none',
-                   cursor: processing ? 'not-allowed' : 'pointer',
-                   opacity: processing ? 0.6 : 1,
-                 }}
-               >
-                 {processing === matches[0]?.id ? 'Aksepterer...' : 'Se matchen din'}
-               </button>
-               <button
-                 onClick={() => handleDecline(matches[0])}
-                 disabled={processing !== null}
-                 className="px-8 py-3 rounded-xl text-sm font-medium transition-all duration-300 hover:scale-[1.015]"
-                 style={{
-                   background: processing ? 'rgba(255,77,77,0.1)' : 'transparent',
-                   color: 'rgba(255,255,255,0.4)',
-                   border: '1px solid rgba(255,77,77,0.2)',
-                   cursor: processing ? 'not-allowed' : 'pointer',
-                   opacity: processing ? 0.6 : 1,
-                 }}
-               >
-                 {processing === matches[0]?.id ? 'Avslåer...' : 'Gå tilbake'}
-               </button>
-               </div>
-             </>
-           )}
-
-             {/* Empty-state */}
-             {!loading && !error && matches.length === 0 && (
-               <div className="flex flex-col items-center justify-center py-24 gap-6 fade-in">
-                 <div
-                   className="w-20 h-20 rounded-2xl flex items-center justify-center"
-                   style={{
-                     background: 'rgba(212,175,55,0.06)',
-                     border: '1px solid rgba(212,175,55,0.15)',
-                     color: 'rgba(212,175,55,0.4)',
-                   }}
-                 >
-                   <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                     <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                   </svg>
-                 </div>
-                 <p className="text-base font-medium" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                   Vi gir oss ikke – vi leter videre.
-                 </p>
-                 <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.5)' }}>
-                   Dette kan ta litt tid. I mellomtiden kan du oppdatere preferansene dine.
-                 </p>
-                  {/* Self-loop fixed: no longer redirects to /matching. 
-                      Instead, guide the user to profile editing or waiting. */}
-               </div>
-             )}
+          {/* Empty-state */}
+          {!loading && !error && matches.length === 0 && (
+            <div className="flex flex-col items-center justify-center py-24 gap-6 fade-in">
+              <div
+                className="w-20 h-20 rounded-2xl flex items-center justify-center"
+                style={{
+                  background: 'rgba(212,175,55,0.06)',
+                  border: '1px solid rgba(212,175,55,0.15)',
+                  color: 'rgba(212,175,55,0.4)',
+                }}
+              >
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+              <p className="text-base font-medium" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                Du er i kø — vi leter etter noen som passerer.
+              </p>
+              <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.5)' }}>
+                Dette kan ta litt tid. Vi varsler deg her når noen passerer.
+              </p>
+            </div>
+          )}
         </main>
 
         <Footer />

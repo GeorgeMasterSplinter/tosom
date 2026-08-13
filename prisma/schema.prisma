@@ -34,7 +34,7 @@ model User {
   auditLogs           AuditLog[]           @relation("AdminAuditLogs")
   conversationsA      Conversation[]       @relation("ConversationToUserA")
   conversationsB      Conversation[]       @relation("ConversationToUserB")
-  journey             JourneyProgress?     @relation("UserJourney")
+  // journeys (many, match-scoped etter B4) — les via JourneyProgress.where({ userId })
   matchesA            Match[]              @relation("UserAMatches")
   matchesB            Match[]              @relation("UserBMatches")
   messages            Message[]
@@ -86,30 +86,25 @@ model Profile {
   @@index([matchTags])
 }
 
+// STEG B8: Fjerna acceptedByA/B, rejectedByA/B, rejectionReason, insights-relasjon
 model Match {
   id               String         @id @default(cuid())
   userAId          String
   userBId          String
-  status           MatchStatus    @default(pending)
+  status           MatchStatus    @default(active)
   score            Int            @default(0)
   normalizedScore  Float
-  type             String         @default("pending")
+  type             String         @default("standard")
   explanation      Json?
   scoringBreakdown Json?
   resonanceLevel   ResonanceLevel @default(GENTLE)
   reviewed         Boolean        @default(false)
-  acceptedByA      DateTime?
-  acceptedByB      DateTime?
   lockedAt         DateTime?
   expiresAt        DateTime?
-  rejectedByA      DateTime?
-  rejectedByB      DateTime?
-  rejectionReason  String?
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
   userA            User           @relation("UserAMatches", fields: [userAId], references: [id])
   userB            User           @relation("UserBMatches", fields: [userBId], references: [id])
-  insights         MatchInsight?
 
   @@unique([userAId, userBId])
   @@index([status])
@@ -136,7 +131,7 @@ model Conversation {
   frozenAt            DateTime?
   frozenBy            String?
   createdAt           DateTime           @default(now())
-  updatedAt           DateTime           @updatedAt
+  updatedAt            DateTime           @updatedAt
   imageShareAllowedAt DateTime?
   imageShared         Boolean            @default(false)
   userA               User               @relation("ConversationToUserA", fields: [userAId], references: [id])
@@ -174,12 +169,17 @@ model Message {
 }
 
 // ⚠️ TODO: Legg til CHECK constraint (day >= 1 AND day <= 30) etter at vi migrerer til Prisma v6+ (supportar @@check)
+// STEG B4 — match-scoped JourneyProgress: ONE record per user per match
 model JourneyProgress {
   id            String             @id @default(cuid())
-  userId        String             @unique
+  userId        String
+  matchId       String
   phase         JourneyPhase       @default(EARLY)
-  day           Int                @default(1) // ⚠️ validering bør gjerast i API-nivå (day >= 1 AND day <= 30)
+  day           Int                @default(0) // 0 = ikke startet; validering i API-nivå (day >= 1 AND day <= 30)
   completedDays Int                @default(0)
+  userASeenAt   DateTime?
+  userBSeenAt   DateTime?
+  bothSeenAt    DateTime?          // null = reisen har ikke startet ennå
   nextDayAt     DateTime?
   startedAt     DateTime           @default(now())
   endedAt       DateTime?
@@ -190,9 +190,11 @@ model JourneyProgress {
   continueB     String?
   updatedAt     DateTime           @updatedAt
   milestones    JourneyMilestone[]
-  user          User               @relation("UserJourney", fields: [userId], references: [id])
 
+  @@unique([userId, matchId], name: "jp_user_match")
   @@index([userId])
+  @@index([matchId])
+  @@index([bothSeenAt])
 }
 
 model JourneyStateLog {
@@ -423,22 +425,7 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model MatchInsight {
-  id        String   @id @default(cuid())
-  matchId   String   @unique
-  summary   String
-  strengths String
-  clarity   String
-  starter   String
-  model     String?
-  tokensOut Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  match     Match    @relation(fields: [matchId], references: [id])
-
-  @@index([matchId])
-  @@index([createdAt])
-}
+// STEG B8: MatchInsight er DELETED — ingen ruter skrev til den siden v2.0
 
 model SystemMessage {
   id        String            @id
@@ -488,13 +475,11 @@ enum ResonanceLevel {
   DEEP
 }
 
+// STEG B8: Fra 6 verdier til 3
 enum MatchStatus {
-  pending
-  active
-  matched
-  expired
-  ended
-  unmatched
+  active   // koblet, reise pågår
+  ended    // avsluttet — normalt slettet umiddelbart
+  expired  // forlatt i 14 dager uten at begge var innom
 }
 
 enum MessageCategory {

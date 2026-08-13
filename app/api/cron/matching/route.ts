@@ -1,25 +1,26 @@
 /**
- * ToSom — Daily Matching Cron-Job (Fase B3)
+ * ToSom — Kohort-basert Matcherunde (STEG B6)
  *
  * GET /api/cron/matching
- * - Bruker findBestResonance (full resonans-matching)
- * - Éin match per 24t-regel via User.lastMatchAt + lockedUntil
- * - Oppdaterer lastMatchAt etter match
- * - STEG 4.3: Cursor-basert paginering med tidsbudsjett (fjerner 50-taket)
+ * - Én motor: kohortbasert parvis kobling uten samtykke
+ * - Les QUEUED-brukere, score alle par, grådig matching
+ * - MIN_COHORT_SIZE=20 terskel, 72h defer-ventil
+ * - Opprett Match(active), Conversation, JourneyProgress, Notification × 2
+ * - Ingen push/e-post/SMS (invariant I-4)
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { Prisma } from '@prisma/client';
-import { prisma } from '@/lib/prisma';
+import prisma from '@/lib/prisma';
 import { timingSafeEqual } from 'crypto';
-import { findBestResonance } from '@/lib/matching/findBestResonance';
+import { sjekkAlleDealbreakers } from '@/lib/matching/dealbreaker';
+import { MIN_COHORT_SIZE, MAX_QUEUE_WAIT_HOURS } from '@/config/matching';
 
-// STEG 6.4: Fast advisory lock ID for matching-cron (forskjellig fra journey-cron)
+// Advisory lock ID for matching-cron
 const MATCHING_CRON_LOCK_ID = 123456789;
 
-// STEG 4.3: Batch-størrelse og tidsbudsjett
-const BATCH_SIZE = 200;
-const TIME_BUDGET_MS = 240_000; // 240 sekunder — avslutt før Vercels funksjonsgrense
+// Tidsbudsjett (fra A4 — Hobby-plan)
+const TIME_BUDGET_MS = 240_000;
 
 /** Constant-time string comparison */
 function safeCompare(a: string, b: string): boolean {
@@ -27,11 +28,27 @@ function safeCompare(a: string, b: string): boolean {
   return timingSafeEqual(Buffer.from(a), Buffer.from(b));
 }
 
+/** Normalize pair for MatchHistory lookup */
+function normalizePair(aId: string, bId: string): [string, string] {
+  return aId < bId ? [aId, bId] : [bId, aId];
+}
+
+interface Candidate {
+  id: string;
+  profile: any;
+}
+
+interface ScoredPair {
+  userIdA: string;
+  userIdB: string;
+  score: number;
+}
+
 export async function GET(req: NextRequest) {
   const startedAt = Date.now();
   const deadline = startedAt + TIME_BUDGET_MS;
 
-  // Valider cron-secret via Authorization-header (ikke query-param) med timing-safe sammenligning
+  // Auth
   const expectedSecret = process.env.CRON_SECRET;
   if (!expectedSecret) {
     return NextResponse.json({ error: 'Cron miskonfigurt' }, { status: 500 });
@@ -48,185 +65,232 @@ export async function GET(req: NextRequest) {
   }
 
   let lockAcquired = false;
-  // STEG 1.3: Hoist metrics for outer finally-heartbeat
-  let processed = 0;
-  let created = 0;
+  let deferred = false;
+  let paired = 0;
   const errors: string[] = [];
 
   try {
-    // STEG 6.4: Ta advisory lock for å hindre overlappende cron-kjøringer
+    // Advisory lock
     const lockResult = await prisma.$queryRaw(
       Prisma.sql`SELECT pg_try_advisory_lock(${MATCHING_CRON_LOCK_ID}) AS locked`
     );
-
     const lockCheck = Array.isArray(lockResult) ? (lockResult as any)[0] : (lockResult as any);
-    if (lockCheck && lockCheck.locked) {
-      lockAcquired = true;
-    } else {
+    if (!lockCheck?.locked) {
       return NextResponse.json({
         ok: true,
         skipped: true,
-        message: 'Matching-cron er allerede i kjøring (advisory lock tatt)',
+        message: 'Matching-cron er allerede i kjøring',
       });
     }
+    lockAcquired = true;
 
     try {
-      // STEG 4.3: Cursor-basert paginering — behandle ALLE eligible brukere, ikke kun første 50
-      let cursorId: string | null = null;
-      let remaining = true;
+      // 1. Les QUEUED-brukere FIFO (include profile)
+      const queued = await prisma.user.findMany({
+        where: {
+          journeyState: 'QUEUED',
+          onboardingComplete: true,
+          bannedAt: null,
+          deletedAt: null,
+        },
+        orderBy: { matchQueuedAt: 'asc' },
+        include: {
+          profile: true,
+        },
+      });
 
-      while (remaining && Date.now() < deadline) {
-        // Hent neste batch med cursor-paginering
-        const batch = await prisma.user.findMany({
-          where: {
-            onboardingComplete: true,
-            deepProfileComplete: true,
-            bannedAt: null,
-            deletedAt: null,
-            // Ikke låst (lockedUntil er null eller har utløpt)
-            OR: [
-              { lockedUntil: null },
-              { lockedUntil: { lte: new Date() } },
-              // Eller ikke matchet de siste 24 timene
-              { lastMatchAt: null },
-              { lastMatchAt: { lt: new Date(Date.now() - 24 * 60 * 60 * 1000) } },
-            ],
-            // Ingen aktiv match — må være fri på BEGGE sider (AND-logikk via to separate none-klausuler)
-            AND: [
-              {
-                matchesA: {
-                  none: {
-                    status: { in: ['active', 'matched'] },
-                    expiresAt: { gte: new Date() },
-                  },
-                },
-              },
-              {
-                matchesB: {
-                  none: {
-                    status: { in: ['active', 'matched'] },
-                    expiresAt: { gte: new Date() },
-                  },
-                },
-              },
-            ],
+      const cohortSize = queued.length;
+
+      // 2. Kohort-terskel: under MIN_COHORT_SIZE og ingen >72h → deferer
+      const oldestInQueue = queued[0]?.matchQueuedAt ?? null;
+      const hasStaleEntries =
+        oldestInQueue && Date.now() - oldestInQueue.getTime() > MAX_QUEUE_WAIT_HOURS * 60 * 60 * 1000;
+
+      if (cohortSize < MIN_COHORT_SIZE && !hasStaleEntries) {
+        deferred = true;
+
+        await prisma.systemLog.create({
+          data: {
+            level: 'INFO',
+            message: `Matching deferert: ${cohortSize} i kø (<${MIN_COHORT_SIZE}, ingen >72h)`,
+            module: 'cron:matching',
+            metadata: { deferred: true, queueSize: cohortSize },
           },
-          select: { id: true },
-          take: BATCH_SIZE,
-          cursor: cursorId ? { id: cursorId } : undefined,
-          orderBy: { id: 'asc' },
         });
 
-        if (batch.length === 0) {
-          remaining = false;
-          break;
-        }
+        return NextResponse.json({
+          ok: true,
+          deferred: true,
+          queueSize: cohortSize,
+          message: `Kun ${cohortSize} i kø — vent på fler før matching`,
+        });
+      }
 
-        for (const user of batch) {
-          // Sjekk tidsbudsjett før hver bruker
-          if (Date.now() >= deadline) {
-            // Lag cursor for neste gang
-            cursorId = user.id;
-            remaining = false;
-            break;
+      // 3. Hent sperreliste (alle historiske par) for rask oppslag
+      const history = await prisma.matchHistory.findMany({
+        select: { userAId: true, userBId: true },
+      });
+      const blockSet = new Set(history.map((h) => normalizePair(h.userAId, h.userBId).join(':')));
+
+      // 4. Score alle par — sjekk dealbreakers + sperreliste
+      const pairs: ScoredPair[] = [];
+      const candidates: Candidate[] = queued.map((u) => ({
+        id: u.id,
+        profile: u.profile || null,
+      }));
+
+      for (let i = 0; i < candidates.length && Date.now() < deadline; i++) {
+        for (let j = i + 1; j < candidates.length; j++) {
+          const a = candidates[i];
+          const b = candidates[j];
+
+          // Hopp over uten profil
+          if (!a.profile || !b.profile) continue;
+
+          // Sperreliste
+          const pairKey = normalizePair(a.id, b.id).join(':');
+          if (blockSet.has(pairKey)) {
+            continue;
           }
 
-          // Oppdater cursor til neste bruker
-          cursorId = user.id;
-
-          // Bruk findBestResonance (har innebygd lastMatchAt + lockedUntil-logikk)
-          try {
-            const result = await findBestResonance({ userId: user.id });
-
-            if (!result) {
-              processed++;
-              continue; // Ingen match eller ikke matchable
-            }
-
-            // STEG 6.6: Pakk match+conversation+lastMatchAt inn i transaksjon
-            try {
-              await prisma.$transaction(async (tx) => {
-                const newMatch = await tx.match.create({
-                  data: {
-                    userAId: user.id,
-                    userBId: result.candidateId,
-                    score: Math.round(result.match.resonanceScore),
-                    normalizedScore: result.match.resonanceScore / 100,
-                    type: result.match.resonanceScore >= 70 ? 'high'
-                      : result.match.resonanceScore >= 50 ? 'medium'
-                      : 'low',
-                    explanation: {
-                      score: Math.round(result.match.resonanceScore),
-                      resonanceLevel: result.match.resonanceLevel,
-                    },
-                    scoringBreakdown: {
-                      values: result.match.breakdown.values ?? 0,
-                      personality: result.match.breakdown.personality ?? 0,
-                      relationshipStyle: result.match.breakdown.relationshipStyle ?? 0,
-                      communication: result.match.breakdown.communication ?? 0,
-                      futureVision: result.match.breakdown.futureVision ?? 0,
-                      boundaries: result.match.breakdown.boundaries ?? 0,
-                      emotionalNeeds: result.match.breakdown.emotionalNeeds ?? 0,
-                      lifeRhythm: result.match.breakdown.lifeRhythm ?? 0,
-                      maturity: result.match.breakdown.maturity ?? 0,
-                    },
-                    resonanceLevel: result.match.resonanceLevel as any,
-                    status: 'pending',
-                  },
-                });
-
-                // Opprett conversation for matchen (innenfor samme transaksjon)
-                await tx.conversation.create({
-                  data: {
-                    userAId: user.id,
-                    userBId: result.candidateId,
-                    matchId: newMatch.id,
-                  },
-                });
-
-                // Oppdater lastMatchAt (for 24t-regel)
-                await tx.user.update({
-                  where: { id: user.id },
-                  data: { lastMatchAt: new Date() },
-                });
-              });
-
-              created++;
-              processed++;
-            } catch (txError) {
-              // Transaksjonen feilet — rollback automatisk, ikke tell som opprettet
-              console.error(`[cron] Transaksjon feilet for user ${user.id}:`, txError);
-              errors.push(`user ${user.id}: ${(txError as Error).message}`);
-              processed++;
-            }
-          } catch (engineError) {
-            // STEG 6.6: Logg feilen Uten å telle den som opprettet
-            console.error(`[cron] findBestResonance feil for user ${user.id}:`, engineError);
-            errors.push(`user ${user.id}: ${(engineError as Error).message}`);
-            processed++;
+          // Dealbreakers (tosidig)
+          const abBlocked = sjekkAlleDealbreakers(a.profile, b.profile);
+          const baBlocked = sjekkAlleDealbreakers(b.profile, a.profile);
+          if (abBlocked || baBlocked) {
+            continue;
           }
-        }
 
-        // Hvis batch-en var mindre enn BATCH_SIZE, er vi ferdig (ingen flere eligible brukere)
-        if (batch.length < BATCH_SIZE) {
-          remaining = false;
+          // Enkel score basert på profile-overlap
+          const baseScore = computeQuickScore(a.profile, b.profile);
+          if (baseScore < 0.4) {
+            continue; // MIN_SCORE terskel
+          }
+
+          pairs.push({ userIdA: a.id, userIdB: b.id, score: baseScore });
         }
       }
 
+      // 5. Sorter synkende score, grådig kobling
+      pairs.sort((a, b) => b.score - a.score);
+      const used = new Set<string>();
+      const matchedPairs: ScoredPair[] = [];
+
+      for (const pair of pairs) {
+        if (used.has(pair.userIdA) || used.has(pair.userIdB)) {
+          continue;
+        }
+        used.add(pair.userIdA);
+        used.add(pair.userIdB);
+        matchedPairs.push(pair);
+      }
+
+      // 6. Per par: én transaksjon per match
+      for (const pair of matchedPairs) {
+        if (Date.now() >= deadline) break;
+
+        try {
+          await prisma.$transaction(async (tx) => {
+            // Match(active) — ingen pending-status
+            const newMatch = await tx.match.create({
+              data: {
+                userAId: pair.userIdA,
+                userBId: pair.userIdB,
+                score: Math.round(pair.score * 100),
+                normalizedScore: pair.score,
+                status: 'active',
+                type: 'resonance',
+                resonanceLevel: pair.score >= 0.8 ? 'DEEP' : pair.score >= 0.65 ? 'STRONG' : 'MODERATE',
+              },
+            });
+
+            // Conversation(matchId)
+            await tx.conversation.create({
+              data: {
+                userAId: pair.userIdA,
+                userBId: pair.userIdB,
+                matchId: newMatch.id,
+              },
+            });
+
+            // JourneyProgress(matchId, day: 0, bothSeenAt: null) for begge
+            await tx.journeyProgress.create({
+              data: {
+                userId: pair.userIdA,
+                matchId: newMatch.id,
+                phase: 'EARLY',
+                day: 0,
+                bothSeenAt: null,
+              },
+            });
+
+            await tx.journeyProgress.create({
+              data: {
+                userId: pair.userIdB,
+                matchId: newMatch.id,
+                phase: 'EARLY',
+                day: 0,
+                bothSeenAt: null,
+              },
+            });
+
+            // Notification × 2 (type: MATCH, in-app) — ingen title-felt
+            await tx.notification.create({
+              data: {
+                userId: pair.userIdA,
+                type: 'MATCH',
+                message: 'Du har en ny kobling. Logg inn og se hvem.',
+              },
+            });
+
+            await tx.notification.create({
+              data: {
+                userId: pair.userIdB,
+                type: 'MATCH',
+                message: 'Du har en ny kobling. Logg inn og se hvem.',
+              },
+            });
+
+            // User × 2 → journeyState: MATCHED, lastMatchAt: now()
+            await tx.user.update({
+              where: { id: pair.userIdA },
+              data: { journeyState: 'MATCHED', matchQueuedAt: null, lastMatchAt: new Date() },
+            });
+
+            await tx.user.update({
+              where: { id: pair.userIdB },
+              data: { journeyState: 'MATCHED', matchQueuedAt: null, lastMatchAt: new Date() },
+            });
+          });
+
+          paired++;
+        } catch (err) {
+          errors.push(`pair ${pair.userIdA}+${pair.userIdB}: ${(err as Error).message}`);
+        }
+      }
+
+      const remaining = queued.length - used.size;
       const durationMs = Date.now() - startedAt;
-      const timeRemaining = Math.max(0, deadline - Date.now());
+
+      // Heartbeat
+      await prisma.systemLog.create({
+        data: {
+          level: 'INFO',
+          message: `Matching-runde: ${paired} par koblet, ${remaining} igjen i kø`,
+          module: 'cron:matching',
+          metadata: { paired, remaining, durationMs, deferred, queueSize: cohortSize },
+        },
+      });
 
       return NextResponse.json({
         ok: true,
-        processed,
-        created,
-        duration: `${durationMs}ms`,
-        remaining: remaining ? 'time_budget_exceeded' : 'all_users_processed',
-        message: `Prosessert ${processed} brukarar, oppretta ${created} nye matcher${remaining ? ' (tidsbudsjett brukt opp)' : ''}`,
+        paired,
+        remaining,
+        durationMs,
+        deferred,
+        queueSize: cohortSize,
         errors: errors.length > 0 ? errors.slice(0, 5) : undefined,
       });
     } finally {
-      // Rydd opp advisory lock når vi er ferdig
       if (lockAcquired) {
         await prisma.$queryRaw(
           Prisma.sql`SELECT pg_advisory_unlock(${MATCHING_CRON_LOCK_ID})`
@@ -235,27 +299,79 @@ export async function GET(req: NextRequest) {
     }
   } catch (err) {
     console.error('[cron] Matching feil:', err);
-
     return NextResponse.json(
-      { error: 'Kunne ikke kjøre cron matching', details: (err as Error).message },
+      { error: 'Kunne ikke kjøre matching', details: (err as Error).message },
       { status: 500 }
     );
   } finally {
-    // STEG 1.3: Heartbeat — logg ALLTID til SystemLog (også ved feil)
+    // Heartbeat i SystemLog (sikkerhetsnett)
     const durationMs = Date.now() - startedAt;
     try {
       await prisma.systemLog.create({
         data: {
           level: 'INFO',
-          message: `Cron matching heartbeat: ${processed} behandlet, ${created} opprettet`,
+          message: `Cron matching heartbeat: ${paired} par, deferred=${deferred}`,
           module: 'cron:matching',
-          metadata: { processed, created, durationMs, errors: errors.slice(0, 10) },
+          metadata: { paired, deferred, durationMs, errors: errors.slice(0, 10) },
         },
       });
-    } catch (logErr) {
-      console.error('[cron] Kunne ikke skrive heartbeat:', logErr);
-    }
+    } catch { /* ignore */ }
   }
+}
+
+/**
+ * computeQuickScore — enkel overlapping-score basert på profilverdier.
+ * Foreløpig implementasjon; erstattes av unifiedScore når den er tilgjengelig.
+ */
+function computeQuickScore(profileA: any, profileB: any): number {
+  if (!profileA || !profileB) return 0;
+
+  let score = 0;
+  const components: number[] = [];
+
+  // Aldersnærhet (maks 20%)
+  if (profileA.age && profileB.age) {
+    const ageDiff = Math.abs(profileA.age - profileB.age);
+    score += Math.max(0, 1 - ageDiff / 20) * 0.2;
+  }
+
+  // Verdier-overlap (maks 30%)
+  const valuesA = (profileA.values || []).map((v: any) => String(v).toLowerCase());
+  const valuesB = (profileB.values || []).map((v: any) => String(v).toLowerCase());
+  if (valuesA.length && valuesB.length) {
+    const overlap = valuesA.filter((v: string) => valuesB.includes(v)).length;
+    components.push(overlap / Math.max(valuesA.length, valuesB.length));
+  }
+
+  // Personlighet-overlap (maks 20%)
+  const traitsA = (profileA.personality?.traits || []).map((t: any) => String(t).toLowerCase());
+  const traitsB = (profileB.personality?.traits || []).map((t: any) => String(t).toLowerCase());
+  if (traitsA.length && traitsB.length) {
+    const overlap = traitsA.filter((t: string) => traitsB.includes(t)).length;
+    components.push(overlap / Math.max(traitsA.length, traitsB.length));
+  }
+
+  // Livsstil-overlap (maks 15%)
+  const lifestyleA = (profileA.lifestyle?.activities || []).map((a: any) => String(a).toLowerCase());
+  const lifestyleB = (profileB.lifestyle?.activities || []).map((a: any) => String(a).toLowerCase());
+  if (lifestyleA.length && lifestyleB.length) {
+    const overlap = lifestyleA.filter((a: string) => lifestyleB.includes(a)).length;
+    components.push(overlap / Math.max(lifestyleA.length, lifestyleB.length));
+  }
+
+  // Maturity-nærhet (maks 15%)
+  if (profileA.maturityLevel != null && profileB.maturityLevel != null) {
+    const diff = Math.abs(profileA.maturityLevel - profileB.maturityLevel);
+    components.push(Math.max(0, 1 - diff / 10));
+  }
+
+  // Snitt av komponenter * vekt + base-score
+  if (components.length > 0) {
+    const avg = components.reduce((sum, c) => sum + c, 0) / components.length;
+    score += avg * 0.8;
+  }
+
+  return Math.min(1, Math.max(0, score));
 }
 
 // Ingen caching for cron-endepunkt

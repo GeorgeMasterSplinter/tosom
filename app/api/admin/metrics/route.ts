@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
       // Match metrics
       prisma.match.count(),
       prisma.match.count({ where: { status: "active" } }),
-      prisma.match.count({ where: { status: "pending" } }),
+      prisma.match.count({ where: { status: "active" } }),
 
       // Conversation metrics
       prisma.conversation.count(),

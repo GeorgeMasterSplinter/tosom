@@ -91,7 +91,7 @@ export async function GET(req: NextRequest) {
     const conversationId = url.searchParams.get("conversationId");
 
     // 3. Hent journey progress for brukeren
-    const journey = await prisma.journeyProgress.findUnique({
+    const journey = await prisma.journeyProgress.findFirst({
       where: { userId: user.id },
       select: { day: true, phase: true },
     });

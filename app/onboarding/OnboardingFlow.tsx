@@ -407,17 +407,14 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
         return;
       }
 
+      // B5 — «Start reisen» setter kø, ikke umiddelbar matching
+      // Invariant I-3: valg om å delta, ikke om hvem
       try {
-        const matchRes = await fetch('/api/match', {
+        await fetch('/api/journey/queue', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId }),
         });
-        if (matchRes.ok) {
-          window.location.href = `/matching?userId=${userId}`;
-          return;
-        }
-      } catch { /* matching failed — fall through */ }
+      } catch { /* kø-feil — redirect allikevel */ }
 
       window.location.href = '/dashboard';
     } catch (err) {

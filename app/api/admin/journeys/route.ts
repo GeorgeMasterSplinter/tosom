@@ -49,29 +49,27 @@ export async function GET(req: NextRequest) {
       where.day = { gte: 16 };
     }
 
-    // Hent journey + bruker-info
-    const [journeys, total] = await Promise.all([
-      prisma.journeyProgress.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy: { startedAt: "desc" },
-        include: {
-          user: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-            },
-          },
-        },
-      }),
-      prisma.journeyProgress.count({ where }),
-    ]);
+    // Hent journey + bruker-info (separate query for users since relation removed in B4)
+    const journeys = await prisma.journeyProgress.findMany({
+      where,
+      skip,
+      take: limit,
+      orderBy: { startedAt: "desc" },
+    });
+    const total = await prisma.journeyProgress.count({ where });
+
+    // Fetch user info for all journeys in batch
+    const userIds = [...new Set(journeys.map(j => j.userId))];
+    const users = await prisma.user.findMany({
+      where: { id: { in: userIds } },
+      select: { id: true, name: true, email: true },
+    });
+    const userMap = new Map(users.map(u => [u.id, u]));
 
     // For hver journey, hent match-info hvis tilgjengelig
     const enrichedJourneys = await Promise.all(
       journeys.map(async (j) => {
+        const user = userMap.get(j.userId);
         const match = await prisma.match.findFirst({
           where: {
             OR: [
@@ -89,7 +87,7 @@ export async function GET(req: NextRequest) {
           return {
             id: j.id,
             userId: j.userId,
-            userName: j.user.name || j.user.email || "Ukjent",
+            userName: user?.name || user?.email || "Ukjent",
             day: j.day || 1,
             currentDay: j.day || 1,
             totalDays: 30,
@@ -103,12 +101,12 @@ export async function GET(req: NextRequest) {
           };
         }
 
-        const partner = match.userAId === j.userId ? match.userA : match.userB;
+        const partner = match.userAId === j.userId ? match.userB : match.userA;
 
         return {
           id: j.id,
           userId: j.userId,
-          userName: j.user.name || j.user.email || "Ukjent",
+          userName: user?.name || user?.email || "Ukjent",
           day: j.day || 1,
           currentDay: j.day || 1,
           totalDays: 30,

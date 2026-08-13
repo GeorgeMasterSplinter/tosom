@@ -43,7 +43,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     const userId = session.user.id;
 
     // Hent journeyProgress for brukaren
-    const journeyProgress = await prisma.journeyProgress.findUnique({
+    const journeyProgress = await prisma.journeyProgress.findFirst({
       where: { userId },
       select: {
         id: true,

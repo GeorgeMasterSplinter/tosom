@@ -59,7 +59,7 @@ export async function GET(_request: Request) {
     });
 
     // Hent reise-info
-    const journey = await prisma.journeyProgress.findUnique({
+    const journey = await prisma.journeyProgress.findFirst({
       where: { userId: session.user.id },
     });
 

@@ -38,22 +38,30 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    // Hent alle brukarar som treng match:
-    // - onboardingComplete + deepProfileComplete ✅
-    // - ingen aktiv match (active/matched med expiresAt i framtida)
-    
+    // STEG 6.1 FIX: Byttet OR→AND i eligibility-filteret.
+    // Med OR kunne en bruker bli matchet hvis EITHER matchesA eller matchesB var fri,
+    // selv om den andre siden hadde aktiv match. Med AND må brukeren være fri på BEGGE sider.
+    // STEG 6.2: Legg til take-grense for å begrense sekvensiell loop.
     const eligibleUsers = await prisma.user.findMany({
       where: {
         onboardingComplete: true,
         deepProfileComplete: true,
         bannedAt: null,
         deletedAt: null,
-        // Ingen aktiv match — bruk begge relasjonane
+        // Ikke låst (lockedUntil er null eller har utløpt)
         OR: [
+          { lockedUntil: null },
+          { lockedUntil: { lte: new Date() } },
+          // Eller ikke matchet de siste 24 timene
+          { lastMatchAt: null },
+          { lastMatchAt: { lt: new Date(Date.now() - 24 * 60 * 60 * 1000) } },
+        ],
+        // Ingen aktiv match — må være fri på BEGGE sider (AND-logikk via to separate none-klausuler)
+        AND: [
           {
             matchesA: {
               none: {
-                status: 'active',
+                status: { in: ['active', 'matched'] },
                 expiresAt: { gte: new Date() },
               },
             },
@@ -61,7 +69,7 @@ export async function GET(req: NextRequest) {
           {
             matchesB: {
               none: {
-                status: 'active',
+                status: { in: ['active', 'matched'] },
                 expiresAt: { gte: new Date() },
               },
             },
@@ -69,6 +77,7 @@ export async function GET(req: NextRequest) {
         ],
       },
       select: { id: true },
+      take: 50, // STEG 6.2: Begrens antall kandidater per cron-kjøring
     });
 
     let processed = 0;
@@ -85,7 +94,7 @@ export async function GET(req: NextRequest) {
           continue; // Ingen match eller ikke matchable
         }
 
-        // Opprett match med full resonans-score frå ResonanceResult
+        // STEG 6.6: try/catch per kandidat, created++ kun ved bekreftet suksess
         const newMatch = await prisma.match.create({
           data: {
             userAId: user.id,
@@ -111,7 +120,7 @@ export async function GET(req: NextRequest) {
               maturity: result.match.breakdown.maturity ?? 0,
             },
             resonanceLevel: result.match.resonanceLevel as any,
-            status: 'active',
+            status: 'pending',
           },
         });
 
@@ -126,21 +135,6 @@ export async function GET(req: NextRequest) {
           console.warn(`[cron] Kunne ikke opprette conversation for match ${newMatch.id}:`, err);
         });
 
-        // Opprett journeyProgress for begge brukere (hvis den ikke finnes)
-        for (const userId of [user.id, result.candidateId]) {
-          await prisma.journeyProgress.upsert({
-            where: { userId },
-            create: {
-              userId,
-              phase: 'EARLY',
-              day: 1,
-            },
-            update: {}, // Oppdater ikke hvis den allerede finnes
-          }).catch((err) => {
-            console.warn(`[cron] Kunne ikke opprette journeyProgress for ${userId}:`, err);
-          });
-        }
-
         // Oppdater lastMatchAt (for 24t-regel)
         await prisma.user.update({
           where: { id: user.id },
@@ -150,6 +144,7 @@ export async function GET(req: NextRequest) {
         created++;
         processed++;
       } catch (engineError) {
+        // STEG 6.6: Logg feilen Uten å telle den som opprettet
         console.error(`[cron] findBestResonance feil for user ${user.id}:`, engineError);
         errors.push(`user ${user.id}: ${(engineError as Error).message}`);
         processed++;

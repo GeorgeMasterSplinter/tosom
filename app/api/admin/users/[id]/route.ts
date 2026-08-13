@@ -13,6 +13,7 @@ import prisma from '@/lib/prisma'
 import { requireAuth } from '@/lib/auth/requireAuth'
 import { castToAdminUser } from '@/lib/auth/admin-auth'
 import { errorResponse, successResponse } from '@/lib/api-validator'
+import { recordAdminAction } from '@/lib/admin/audit'
 
 export const dynamic = 'force-dynamic'
 
@@ -59,12 +60,16 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
         if (targetUser.bannedAt) return errorResponse('Brukar er allereie flagga/banna', 400)
         updatedUser = await prisma.user.update({ where: { id: targetUserId }, data: { bannedAt: new Date() }, select: { id: true, email: true, name: true, bannedAt: true } })
         await logSystemLog(`Brukar ${targetUser.email} blei flagga/banna av admin ${adminUser.id}`, 'admin/user-flag', adminUser.id, { targetUserId, reason })
+        // STEG 9.2 FIX: Logg destruktiv admin-handling
+        await recordAdminAction(adminUser.id, 'USER_BAN', { targetUserId, reason })
         return successResponse({ data: updatedUser, message: `Brukar ${targetUser.email} er no flagga/banna.` })
 
       case 'unflag':
         if (!targetUser.bannedAt) return errorResponse('Brukar er ikke flagga', 400)
         updatedUser = await prisma.user.update({ where: { id: targetUserId }, data: { bannedAt: null }, select: { id: true, email: true, name: true, bannedAt: true } })
         await logSystemLog(`Brukar ${targetUser.email} fekk flagga fjerna av admin ${adminUser.id}`, 'admin/user-unflag', adminUser.id, { targetUserId })
+        // STEG 9.2 FIX: Logg destruktiv admin-handling
+        await recordAdminAction(adminUser.id, 'USER_UNBAN', { targetUserId })
         return successResponse({ data: updatedUser, message: `Brukar ${targetUser.email} har no flagga fjerna.` })
 
       case 'reset-onboarding':
@@ -78,6 +83,8 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
           await tx.journeyProgress.deleteMany({ where: { userId: targetUserId } })
           await tx.journeyProgress.create({ data: { userId: targetUserId, day: 1, phase: 'EARLY' as any, completedDays: 0 } })
         })
+        // STEG 9.2 FIX: Logg destruktiv admin-handling
+        await recordAdminAction(adminUser.id, 'JOURNEY_RESET', { targetUserId })
         return successResponse({ data: { userId: targetUserId, email: targetUser.email }, message: `Brukar ${targetUser.email} journey blei resatt til dag 1.` })
 
       case 'force-match-end':
@@ -88,6 +95,8 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
           for (const conv of conversations) await tx.conversation.update({ where: { id: conv.id }, data: { endedAt: new Date() } })
         })
         await logSystemLog(`Brukar ${targetUser.email} force match end blei utført av admin ${adminUser.id}`, 'admin/user-force-match-end', adminUser.id, { targetUserId })
+        // STEG 9.2 FIX: Logg destruktiv admin-handling
+        await recordAdminAction(adminUser.id, 'CONTENT_DELETE', { targetUserId, action: 'force-match-end' })
         return successResponse({ data: { userId: targetUserId, email: targetUser.email }, message: `Aktive matcher og conversations for ${targetUser.email} blei avsluttet.` })
 
       default:

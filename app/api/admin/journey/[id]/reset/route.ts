@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from '@/lib/auth/requireAuth';
+import { recordAdminAction } from '@/lib/admin/audit';
 export const dynamic = 'force-dynamic';
 
 export async function POST(
@@ -11,6 +12,7 @@ export async function POST(
   const result = await requireAdmin(request);
   if (result instanceof NextResponse) return result;
 
+  const adminId = result.user.id;
   const { id } = await context.params;
   try {
     const user = await prisma.user.findUnique({
@@ -50,6 +52,9 @@ export async function POST(
     await prisma.journeyMilestone.deleteMany({
       where: { progress: { userId: id } }
     });
+
+    // STEG 9.2 FIX: Logg destruktiv admin-handling
+    await recordAdminAction(adminId, 'JOURNEY_RESET', { targetUserId: id });
 
     return new Response(JSON.stringify({ ok: true }), { status: 200, headers: { "Content-Type": "application/json" } });
   } catch (error) {

@@ -1,8 +1,8 @@
 {
   "currentWave": 8,
-  "currentStep": "8.4",
-  "completedSteps": ["0.1", "0.2", "0.3", "0.4", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11", "1.12", "1.13", "2.1", "2.2", "2.3", "2.4", "3.1", "3.2", "3.3", "3.4", "4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "5.1", "5.2", "5.3", "5.4", "6.1", "6.2", "6.3", "6.4", "6.5", "6.6", "7.1", "7.2", "7.3", "8.1", "8.2", "8.3", "8.4", "8.6"],
-  "nextStep": "8.5",
+  "currentStep": "8.6",
+  "completedSteps": ["0.1", "0.2", "0.3", "0.4", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11", "1.12", "1.13", "2.1", "2.2", "2.3", "2.4", "3.1", "3.2", "3.3", "3.4", "4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "5.1", "5.2", "5.3", "5.4", "6.1", "6.2", "6.3", "6.4", "6.5", "6.6", "7.1", "7.2", "7.3", "8.1", "8.2", "8.3", "8.4", "8.5", "8.6"],
+  "nextStep": "9.1",
   "status": {
     "tsc": "pass",
     "grep": "pass",
@@ -40,8 +40,9 @@
     "STEG 8.2: Koble inn DashboardNavBar i dashboard-layout (commit 4c515fd)",
     "STEG 8.3: GDPR-dataeksport med /api/settings/export (commit 5b37750)",
     "STEG 8.4: Kontosletting med GDPR-anonymisering (commit e184809)",
-    "STEG 8.6: Fjernet hardkodet e-postadresse 'innlogga@eksempel.no' fra settings-side (commit 7518bd1)"
+    "STEG 8.5: Persistens for notifikasjon/språk/tema via Profile.preferences JSON + as any-cast (commit 54c7bd2)",
+    "STEG 8.6: Fjernet hardkodet e-postadresse 'innlogga@eksempel.no' fra settings-side (commit 7518bd1) — BØLGE 8 FULLFØRT"
   ],
-  "lastCommit": "e184809",
-  "updatedAt": "2026-08-13T01:10:00Z"
+  "lastCommit": "54c7bd2",
+  "updatedAt": "2026-08-13T01:17:00Z"
 }

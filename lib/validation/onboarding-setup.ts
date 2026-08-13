@@ -192,20 +192,22 @@ export type PreferanserInput = z.infer<typeof preferanserSchema>;
    HEIL ONBOARDING-SKJEMA
    ============================================================ */
 
+// STEG 7.1 FIX: Frontend sender ALLE 12 seksjonene (bekreftet i OnboardingFlow.tsx:300-360).
+// Fjernet .optional() fra alle dype seksjoner for server-side håndheving.
 export const onboardingSetupSchema = z.object({
   basic: basicProfileSchema,
-  personlighet: personlighetSchema.optional(),
-  livssituasjon: livssituasjonSchema.optional(),
-  tilknytning: tilknytningSchema.optional(),
-  kommunikasjon: kjærlighetsspråkSchema.optional(), // kommunikasjonsfelt i kjærleiksspråk-skjemaet
-  kjaerlighet: kjærlighetsspråkSchema.optional(),
-  livsstil: livsstilSchema.optional(),
-  relasjonsStil: relasjonsStilSchema.optional(),
-  fremtid: fremtidSchema.optional(),
-  humor: humorSchema.optional(),
-  grenser: grenserSchema.optional(),
-  moden: modenSchema.optional(),
-  preferanser: preferanserSchema.optional(),
+  personlighet: personlighetSchema,
+  livssituasjon: livssituasjonSchema,
+  tilknytning: tilknytningSchema,
+  kommunikasjon: kjærlighetsspråkSchema,
+  kjaerlighet: kjærlighetsspråkSchema,
+  livsstil: livsstilSchema,
+  relasjonsStil: relasjonsStilSchema,
+  fremtid: fremtidSchema,
+  humor: humorSchema,
+  grenser: grenserSchema,
+  moden: modenSchema,
+  preferanser: preferanserSchema,
 });
 
 export type OnboardingSetupInput = z.infer<typeof onboardingSetupSchema>;

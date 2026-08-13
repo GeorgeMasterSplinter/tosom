@@ -1,8 +1,8 @@
 {
-  "currentWave": 6,
-  "currentStep": "6.5",
-  "completedSteps": ["0.1", "0.2", "0.3", "0.4", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11", "1.12", "1.13", "2.1", "2.2", "2.3", "2.4", "3.1", "3.2", "3.3", "3.4", "4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "5.1", "5.2", "5.3", "5.4", "6.1", "6.2", "6.3", "6.4", "6.5"],
-  "nextStep": "6.6",
+  "currentWave": 7,
+  "currentStep": "6.6",
+  "completedSteps": ["0.1", "0.2", "0.3", "0.4", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11", "1.12", "1.13", "2.1", "2.2", "2.3", "2.4", "3.1", "3.2", "3.3", "3.4", "4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "5.1", "5.2", "5.3", "5.4", "6.1", "6.2", "6.3", "6.4", "6.5", "6.6"],
+  "nextStep": "7.1",
   "status": {
     "tsc": "pass",
     "grep": "pass",
@@ -31,8 +31,9 @@
     "AVVIK: STEG 6.1+6.2 kjørt som batch (samme fil, felles build-sjekk) (commit c9d7efc)",
     "STEG 6.3: advisory lock for journey-cron (commit c641b73)",
     "STEG 6.4: advisory lock for matching-cron (commit eab8578)",
-    "STEG 6.5: Ekskluderte unmatched/ended/expired fra re-matching-pool (commit 7c56170)"
+    "STEG 6.5: Ekskluderte unmatched/ended/expired fra re-matching-pool (commit 7c56170)",
+    "STEG 6.6: Transaksjonswrap på cron match-opprettelse med $transaction (commit 9bd5795) — BØLGE 6 FULLFØRT"
   ],
-  "lastCommit": "7c56170",
-  "updatedAt": "2026-08-13T00:25:00Z"
+  "lastCommit": "9bd5795",
+  "updatedAt": "2026-08-13T00:33:00Z"
 }

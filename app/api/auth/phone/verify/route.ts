@@ -13,7 +13,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { prisma } from '@/lib/prisma';
-import { checkVerifyRateLimit } from '@/lib/security/phoneRateLimit';
+import { checkAuthRateLimit } from '@/lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,15 +31,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Rate limiting med lockout
-    const rateLimit = checkVerifyRateLimit(phone);
-    if (!rateLimit.allowed) {
+    // STEG 2.5: Distribuert rate limiting med Upstash Redis (fallback in-memory)
+    const rl = await checkAuthRateLimit('phone/verify', phone);
+    if (!rl.success) {
       return NextResponse.json(
         { 
-          error: rateLimit.lockedOut 
-            ? 'For mange feilforsøk. Konto låst i 30 minutter.' 
-            : `Prøv igjen om ${rateLimit.retryAfter} sekunder.`,
-          lockedOut: rateLimit.lockedOut,
+          error: 'For mange forsøk. Prøv igjen senere.',
         },
         { status: 429 }
       );

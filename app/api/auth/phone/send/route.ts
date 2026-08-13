@@ -11,7 +11,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { checkSendRateLimit } from '@/lib/security/phoneRateLimit';
+import { checkAuthRateLimit } from '@/lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
@@ -33,11 +33,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Rate limiting
-    const rateLimit = checkSendRateLimit(phone, ip);
-    if (!rateLimit.allowed) {
+    // STEG 2.5: Distribuert rate limiting med Upstash Redis (fallback in-memory)
+    const rl = await checkAuthRateLimit('phone/send', phone);
+    if (!rl.success) {
       return NextResponse.json(
-        { error: `For mange forsøk. Prøv igjen om ${rateLimit.retryAfter} sekunder.` },
+        { error: `For mange forsøk. Prøv igjen om ${rl.retryAfter ?? 60} sekunder.` },
         { status: 429 }
       );
     }

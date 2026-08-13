@@ -3,11 +3,11 @@
   "outputDirectory": ".next",
   "crons": [
     {
-      "path": "/api/cron/matching?secret=627562342a0035f120707dd29b4f82dd",
+      "path": "/api/cron/matching",
       "schedule": "0 5 * * *"
     },
     {
-      "path": "/api/cron/journey?secret=627562342a0035f120707dd29b4f82dd",
+      "path": "/api/cron/journey",
       "schedule": "0 7 * * *"
     }
   ]

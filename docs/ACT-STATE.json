@@ -1,8 +1,8 @@
 {
-  "currentWave": 4,
-  "currentStep": "4.5",
-  "completedSteps": ["0.1", "0.2", "0.3", "0.4", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11", "1.12", "1.13", "2.1", "2.2", "2.3", "2.4", "3.1", "3.2", "3.3", "3.4", "4.1", "4.2", "4.3", "4.4", "4.5"],
-  "nextStep": "4.6",
+  "currentWave": 5,
+  "currentStep": "4.6",
+  "completedSteps": ["0.1", "0.2", "0.3", "0.4", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11", "1.12", "1.13", "2.1", "2.2", "2.3", "2.4", "3.1", "3.2", "3.3", "3.4", "4.1", "4.2", "4.3", "4.4", "4.5", "4.6"],
+  "nextStep": "5.1",
   "status": {
     "tsc": "pass",
     "grep": "pass",
@@ -22,8 +22,9 @@
     "STEG 4.1+4.2 kjørt som batch i forrige session (commit e4f3a1a)",
     "STEG 4.3: output:'standalone' lagt til next.config.js (commit 5e3017c)",
     "STEG 4.4: CSP-header lagt til med Stripe/Vipps/Pusher/UploadThing/S3/Railway domener (commit 83b88e2)",
-    "STEG 4.5: allowedOrigins begrenset fra wildcard til app.tosom.no, tosom.no, www.tosom.no, localhost:3000 + NEXT_PUBLIC_APP_URL (commit b91ff8f)"
+    "STEG 4.5: allowedOrigins begrenset fra wildcard til faktiske domener (commit b91ff8f)",
+    "STEG 4.6: testPathIgnorePatterns lagt til i jest.config.js (commit 58de6b6) — BØLGE 4 FULLFØRT"
   ],
-  "lastCommit": "b91ff8f",
-  "updatedAt": "2026-08-12T23:41:00Z"
+  "lastCommit": "58de6b6",
+  "updatedAt": "2026-08-12T23:43:00Z"
 }

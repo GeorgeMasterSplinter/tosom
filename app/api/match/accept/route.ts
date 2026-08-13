@@ -86,18 +86,43 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 7. Oppdater accept
+    // 7. STEG 5.1: Transaksjonssikker oppdatering med betinget updateMany
     const acceptDate = new Date();
-    const updatedMatch = await prisma.match.update({
-      where: { id: matchId },
+    
+    // Betinget update: kun hvis matchen fortsatt er pending (hinder race conditions)
+    const updateResult = await prisma.match.updateMany({
+      where: { 
+        id: matchId, 
+        status: 'pending'  // lowercase — enum-verdi i Prisma
+      },
       data: {
         [acceptField as string]: acceptDate,
       },
+    });
+
+    // Hvis ingen rader ble oppdatert, betyr det at status endret seg (race condition)
+    if (updateResult.count === 0) {
+      return NextResponse.json(
+        { error: "Matchen har endret status — prøv igjen" },
+        { status: 409 }
+      );
+    }
+
+    // Hent oppdatert match
+    const updatedMatch = await prisma.match.findUnique({
+      where: { id: matchId },
       include: {
         userA: { select: { id: true, email: true, profile: { select: { identityName: true, age: true } } } },
         userB: { select: { id: true, email: true, profile: { select: { identityName: true, age: true } } } },
       },
     });
+
+    if (!updatedMatch) {
+      return NextResponse.json(
+        { error: "Match forsvant underveis — prøv igjen" },
+        { status: 500 }
+      );
+    }
 
     // 8. Sjekk om begge har akseptert
     const bothAccepted = updatedMatch.acceptedByA && updatedMatch.acceptedByB;
@@ -105,52 +130,62 @@ export async function POST(req: NextRequest) {
     if (bothAccepted) {
       // Begge har akseptert — lås i 30 dagar og start reise
       const lockedUntil = new Date(acceptDate.getTime() + 30 * 24 * 60 * 60 * 1000);
-      
-      await prisma.match.update({
-        where: { id: matchId },
-        data: {
-          status: "matched",
-          lockedAt: acceptDate,
-          expiresAt: lockedUntil,
-        },
-      });
 
-      // Lås begge brukarar
-      await Promise.all([
-        prisma.user.update({
-          where: { id: match.userAId },
-          data: { lockedUntil },
-        }),
-        prisma.user.update({
-          where: { id: match.userBId },
-          data: { lockedUntil },
-        }),
-      ]);
-
-      // Opprett/restart JourneyProgress for begge
-      for (const uid of [match.userAId, match.userBId]) {
-        await prisma.journeyProgress.upsert({
-          where: { userId: uid },
-          update: { phase: "EARLY", day: 1 },
-          create: { userId: uid, phase: "EARLY", day: 1 },
+      // STEG 5.1: Pakk alt i én transaksjon for å unngå race conditions
+      await prisma.$transaction(async (tx) => {
+        // Oppdater match-status
+        await tx.match.update({
+          where: { id: matchId },
+          data: {
+            status: "matched",
+            lockedAt: acceptDate,
+            expiresAt: lockedUntil,
+          },
         });
-      }
 
-      // Bildedelings-lås opp etter 14 dagar
-      const imageShareAllowedAt = new Date(acceptDate.getTime() + 14 * 24 * 60 * 60 * 1000);
+        // Lås begge brukarar
+        await tx.user.update({
+          where: { id: updatedMatch.userAId },
+          data: { lockedUntil },
+        });
+        await tx.user.update({
+          where: { id: updatedMatch.userBId },
+          data: { lockedUntil },
+        });
 
-      // OPPRETT CONVERSATION — så chat kan opnast!
-      const conversation = await prisma.conversation.create({
-        data: {
-          userAId: match.userAId,
-          userBId: match.userBId,
-          imageShareAllowedAt,
-        },
-        include: {
-          userA: { select: { id: true, profile: { select: { identityName: true } } } },
-          userB: { select: { id: true, profile: { select: { identityName: true } } } },
+        // Opprett/restart JourneyProgress for begge
+        for (const uid of [updatedMatch.userAId, updatedMatch.userBId]) {
+          await tx.journeyProgress.upsert({
+            where: { userId: uid },
+            update: { phase: "EARLY", day: 1 },
+            create: { userId: uid, phase: "EARLY", day: 1 },
+          });
+        }
+
+        // Bildedelings-lås opp etter 14 dagar
+        const imageShareAllowedAt = new Date(acceptDate.getTime() + 14 * 24 * 60 * 60 * 1000);
+
+        // OPPRETT CONVERSATION — så chat kan opnast!
+        await tx.conversation.create({
+          data: {
+            userAId: updatedMatch.userAId,
+            userBId: updatedMatch.userBId,
+            imageShareAllowedAt,
+          },
+        });
+
+        return { acceptDate, imageShareAllowedAt };
+      });
+
+      // Hent conversationen for svar
+      const conversation = await prisma.conversation.findFirst({
+        where: {
+          userAId: updatedMatch.userAId,
+          userBId: updatedMatch.userBId,
         },
       });
+
+      const imageShareDate = new Date(acceptDate.getTime() + 14 * 24 * 60 * 60 * 1000).toLocaleDateString('no-NO');
 
       return NextResponse.json({
         success: true,
@@ -161,8 +196,8 @@ export async function POST(req: NextRequest) {
           resonanceLevel: updatedMatch.resonanceLevel,
         },
         conversation: {
-          id: conversation.id,
-          message: `Din reise med din match har begynte. Bildedelings er låst opp ${imageShareAllowedAt.toLocaleDateString('no-NO')}.`,
+          id: conversation?.id,
+          message: `Din reise med din match har begynt. Bildedeling er låst opp ${imageShareDate}.`,
         },
         journey: {
           phase: "EARLY",

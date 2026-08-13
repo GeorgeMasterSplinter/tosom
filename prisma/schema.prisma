@@ -10,7 +10,7 @@ datasource db {
 model User {
   id                  String               @id @default(cuid())
   email               String               @unique
-  name                String?              // Brukarnamn til visning
+  name                String? // Brukarnamn til visning
   password            String?
   phone               String?
   phoneVerified       Boolean              @default(false)
@@ -51,7 +51,7 @@ model Profile {
   userId            String          @unique
   firstName         String?
   lastName          String?
-  age               Int             // ⚠️ ENDRA frå optional → required
+  age               Int // ⚠️ ENDRA frå optional → required
   identityName      String?
   lifeSituation     Json?
   lifestyle         Json?
@@ -82,17 +82,17 @@ model Profile {
 }
 
 model Match {
-  id               String          @id @default(cuid())
+  id               String         @id @default(cuid())
   userAId          String
   userBId          String
-  status           MatchStatus     @default(active)
-  score            Int             @default(0)
+  status           MatchStatus    @default(active)
+  score            Int            @default(0)
   normalizedScore  Float
-  type             String          @default("pending")
+  type             String         @default("pending")
   explanation      Json?
   scoringBreakdown Json?
-  resonanceLevel   ResonanceLevel  @default(GENTLE)
-  reviewed         Boolean         @default(false)
+  resonanceLevel   ResonanceLevel @default(GENTLE)
+  reviewed         Boolean        @default(false)
   acceptedByA      DateTime?
   acceptedByB      DateTime?
   lockedAt         DateTime?
@@ -100,12 +100,13 @@ model Match {
   rejectedByA      DateTime?
   rejectedByB      DateTime?
   rejectionReason  String?
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  userA            User            @relation("UserAMatches", fields: [userAId], references: [id])
-  userB            User            @relation("UserBMatches", fields: [userBId], references: [id])
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  userA            User           @relation("UserAMatches", fields: [userAId], references: [id])
+  userB            User           @relation("UserBMatches", fields: [userBId], references: [id])
   insights         MatchInsight?
 
+  @@unique([userAId, userBId])
   @@index([status])
   @@index([userAId])
   @@index([userBId])
@@ -113,7 +114,6 @@ model Match {
   @@index([expiresAt])
   @@index([score])
   @@index([normalizedScore])
-  @@unique([userAId, userBId])
 }
 
 model Conversation {
@@ -188,15 +188,15 @@ model JourneyProgress {
 }
 
 model JourneyStateLog {
-  id              String       @id @default(cuid())
-  conversationId  String
-  fromState       JourneyState
-  toState         JourneyState
-  reason          String?      // kva som utløyste endringa
-  triggeredBy     String?      // "user_a", "user_b", "system", "admin"
-  createdAt       DateTime     @default(now())
+  id             String       @id @default(cuid())
+  conversationId String
+  fromState      JourneyState
+  toState        JourneyState
+  reason         String? // kva som utløyste endringa
+  triggeredBy    String? // "user_a", "user_b", "system", "admin"
+  createdAt      DateTime     @default(now())
 
-  conversation    Conversation @relation(fields: [conversationId], references: [id])
+  conversation Conversation @relation(fields: [conversationId], references: [id])
 
   @@index([conversationId])
   @@index([createdAt])
@@ -211,9 +211,9 @@ model JourneyMilestone {
   createdAt  DateTime        @default(now())
   progress   JourneyProgress @relation(fields: [progressId], references: [id])
 
+  @@unique([progressId, day])
   @@index([progressId])
   @@index([day])
-  @@unique([progressId, day])
 }
 
 model ResonanceSession {
@@ -250,26 +250,26 @@ model JourneyDayContent {
 
 // Guidede spørsmål-kategoriar for chat-guiding
 model QuestionCategory {
-  id          String   @id @default(cuid())
-  name        String   @unique  // "Trygghet", "Verdier", osv.
+  id          String           @id @default(cuid())
+  name        String           @unique // "Trygghet", "Verdier", osv.
   description String
   order       Int
-  icon        String?    // ikon-navn (Feather/SVG)
-  color       String?    // gull/blue accent hex
+  icon        String? // ikon-navn (Feather/SVG)
+  color       String? // gull/blue accent hex
   questions   GuidedQuestion[]
-  createdAt   DateTime @default(now())
+  createdAt   DateTime         @default(now())
 
   @@index([order])
 }
 
 model GuidedQuestion {
-  id            String   @id @default(cuid())
-  categoryId    String
-  category      QuestionCategory @relation(fields: [categoryId], references: [id])
-  content       String   // spørsmåls-texten
-  depthLevel    Int      @default(1)  // 1=surface, 2=mid, 3=deep
-  order         Int
-  createdAt     DateTime @default(now())
+  id         String           @id @default(cuid())
+  categoryId String
+  category   QuestionCategory @relation(fields: [categoryId], references: [id])
+  content    String // spørsmåls-texten
+  depthLevel Int              @default(1) // 1=surface, 2=mid, 3=deep
+  order      Int
+  createdAt  DateTime         @default(now())
 
   @@index([categoryId, order])
   @@index([depthLevel])
@@ -414,7 +414,6 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-
 model MatchInsight {
   id        String   @id @default(cuid())
   matchId   String   @unique
@@ -431,7 +430,6 @@ model MatchInsight {
   @@index([matchId])
   @@index([createdAt])
 }
-
 
 model SystemMessage {
   id        String            @id
@@ -489,7 +487,6 @@ enum MatchStatus {
   ended
   unmatched
 }
-
 
 enum MessageCategory {
   user
@@ -561,7 +558,6 @@ enum HttpMethod {
   PATCH
   DELETE
 }
-
 
 enum SystemMessageType {
   INFO

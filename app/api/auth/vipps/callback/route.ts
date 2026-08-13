@@ -197,23 +197,30 @@ export async function GET(request: Request) {
       });
     }
 
-    // Session lagd via cookie — se under
-    
-    // Lagre sesjon i cookies (bruk eksisterande auth-module sin logikk)
+    // Lagre sesjon i cookies — bruk authjs.session-token (NextAuth-kompatibel)
+    // Middleware forventer base64-kodet JSON med sub, role, iat, exp
     const dashboardUrl = `${process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || 'https://app.tosom.no'}/dashboard`;
     const response = NextResponse.redirect(dashboardUrl);
-    
-    // Signer session-cookie med HMAC i stedet for plaintext user.id
-    const secret = process.env.NEXTAUTH_SECRET || '';
-    const sessionToken = crypto.createHmac('sha256', secret).update(user.id + '-vipps').digest('hex');
-    
-    response.cookies.set('tosom_session', sessionToken, {
+
+    // Opprett JWT-lignende payload (base64) som middleware kan dekode
+    const now = Math.floor(Date.now() / 1000);
+    const sessionPayload = Buffer.from(JSON.stringify({
+      sub: user.id,
+      email: user.email,
+      name: user.name,
+      role: (user as any).role ?? 'USER',
+      iat: now,
+      exp: now + 60 * 60 * 24 * 30, // 30 dager
+    })).toString('base64');
+
+    response.cookies.set('authjs.session-token', sessionPayload, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       maxAge: 60 * 60 * 24 * 30, // 30 dager
+      path: '/',
     });
-    
+
     // Slett state-cookie etter bruk
     response.cookies.set('vipps_state', '', { maxAge: 0 });
 

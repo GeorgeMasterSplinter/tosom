@@ -11,7 +11,6 @@ import os from 'os';
  * - DB-ping (allereie eksisterande)
  * - Pusher-status (miljøvariabel-validering)
  * - Uploadthing-status (miljøvariabel-validering)
- * - Stripe-status (miljøvariabel-validering)
  * - OpenAI-status (miljøvariabel-validering)
  * - Cron-siste kjøring (via Prisma MatchingAIRequestLog eller SystemLog)
  */

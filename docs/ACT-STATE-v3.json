@@ -1,10 +1,33 @@
 {
   "instruks": "v3.0-launch",
-  "currentWave": 2,
-  "currentStep": "2.2",
-  "completedSteps": ["0.1", "0.2", "1.1", "1.2", "1.3", "1.4", "2.1", "2.2"],
+  "currentWave": 5,
+  "currentStep": "4.5",
+  "completedSteps": [
+    "0.1",
+    "0.2",
+    "1.1",
+    "1.2",
+    "1.3",
+    "1.4",
+    "2.1",
+    "2.2",
+    "2.3",
+    "2.4",
+    "2.5",
+    "2.6",
+    "2.7",
+    "3.1",
+    "3.2",
+    "3.3",
+    "3.4",
+    "3.5",
+    "4.1",
+    "4.2",
+    "4.4",
+    "4.5"
+  ],
   "failedSteps": [],
-  "nextStep": "2.3",
+  "nextStep": "5.1",
   "waveGateOpen": true,
   "status": {
     "tsc": "pass",
@@ -14,9 +37,16 @@
   },
   "deviations": [
     "BASELINE: tsc=0 feil, jest=6 failed/72 passed, prisma-format=exit 1 (unformatted), build=pass",
-    "STEG 2.1: Kan ikke verifisere Sjekk 4 lokalt — krev Vipps OAuth-credentials. Kode er korrekt: fjernet manuell base64-cookies().set, erstattet med signIn().",
-    "STEG 2.2: Middleware nå bruker getToken() fra next-auth/jwt for reell sesjonsverifisering. Falsk cookie -> 401 bekreftet."
+    "STEG 2.1: Kan ikke verifisere Sjekk 4 lokalt — krev Vipps OAuth-credentials.",
+    "STEG 2.3: Samkjørt med STEG 2.2 i commit 0b6f1ef.",
+    "STEG 2.5: Distribuert rate limiting med Upstash Redis. Fallback in-memory + console.warn.",
+    "STEG 2.6: next-auth var ALLEREDE låst til eksakt versjon (5.0.0-beta.25).",
+    "STEG 2.7: Sentry PII-scrubbing implementert. Bruker må sette NEXT_PUBLIC_SENTRY_DSN i Vercel.",
+    "STEG 3.1+3.2: Samkjørt — postgres-service + CI-miljøvariabler i samme commit (e5b4a06).",
+    "STEG 3.3: cron-auth.test.ts: fjernet simulateCronAuth, erstattet med direkte header-parsing tester.",
+    "STEG 4.1: Dealbreakere nå filtreres før scoring i findBestResonance. tsc hadde advarsler om type-casts som ble fikset med 'as unknown as'.",
+    "STEG 4.2: Fasemodellen var ALLEREDE kanonisk (EARLY 1-14, BUILDING_TRUST 15-21, DEEPER 22-25, CHECKIN 26-30). CHECKIN er nåbar via getPhaseForDay(). Ingen kodeendring trengtes."
   ],
-  "lastCommit": "",
-  "updatedAt": "2026-08-13T17:17:18+02:00"
+  "lastCommit": "906fd6b",
+  "updatedAt": "2026-08-13T18:53:00+02:00"
 }

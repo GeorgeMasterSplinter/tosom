@@ -4,6 +4,7 @@
  * Core-definition: Én match per 24 timer. Bare brukere som ikke er låst.
  * Ingen foto-basert matching. Ingen offentlige profiler.
  * STEG 4.1: Dealbreakere filtreres før scoring i cron-veien.
+ * STEG 4.3: Fjerner take: 50-tak — nå henter vi ALLE kandidater.
  */
 
 import { prisma } from "@/lib/prisma";
@@ -136,6 +137,7 @@ async function isUserMatchable(userId: string): Promise<{
  * Finn den beste matchen for en bruker basert på resonans.
  * Returnerer én match — den med høyest resonans.
  * STEG 4.1: Dealbreakere filtreres før scoring.
+ * STEG 4.3: Fjerner take: 50-tak — ALLE kandidater behandles.
  */
 export async function findBestResonance(
   options: FindBestResonanceOptions
@@ -182,7 +184,7 @@ export async function findBestResonance(
   const excludedIds = new Set(excludedMatches.flatMap(m => [m.userAId, m.userBId]));
   excludedIds.add(userId); // ekskluder selv
 
-  // Finn kandidater som ikke er låste og ikke allerede matchet
+  // STEG 4.3: Hent ALLE kandidater — ingen take: 50-tak lenger
   const candidates = await prisma.user.findMany({
     where: {
       id: {
@@ -200,7 +202,6 @@ export async function findBestResonance(
     include: {
       profile: true,
     },
-    take: 50, // maksimum kandidater for performance (STEG 4.3 fjerner dette)
   });
 
   if (candidates.length === 0) {

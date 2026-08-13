@@ -1,10 +1,11 @@
 /**
  * ToSom — Daily Matching Cron-Job (Fase B3)
- * 
+ *
  * GET /api/cron/matching
  * - Bruker findBestResonance (full resonans-matching)
  * - Éin match per 24t-regel via User.lastMatchAt + lockedUntil
  * - Oppdaterer lastMatchAt etter match
+ * - STEG 4.3: Cursor-basert paginering med tidsbudsjett (fjerner 50-taket)
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -16,6 +17,10 @@ import { findBestResonance } from '@/lib/matching/findBestResonance';
 // STEG 6.4: Fast advisory lock ID for matching-cron (forskjellig fra journey-cron)
 const MATCHING_CRON_LOCK_ID = 123456789;
 
+// STEG 4.3: Batch-størrelse og tidsbudsjett
+const BATCH_SIZE = 200;
+const TIME_BUDGET_MS = 240_000; // 240 sekunder — avslutt før Vercels funksjonsgrense
+
 /** Constant-time string comparison */
 function safeCompare(a: string, b: string): boolean {
   if (a.length !== b.length) return false;
@@ -24,6 +29,7 @@ function safeCompare(a: string, b: string): boolean {
 
 export async function GET(req: NextRequest) {
   const startedAt = Date.now();
+  const deadline = startedAt + TIME_BUDGET_MS;
 
   // Valider cron-secret via Authorization-header (ikke query-param) med timing-safe sammenligning
   const expectedSecret = process.env.CRON_SECRET;
@@ -53,8 +59,8 @@ export async function GET(req: NextRequest) {
       Prisma.sql`SELECT pg_try_advisory_lock(${MATCHING_CRON_LOCK_ID}) AS locked`
     );
 
-    const result = Array.isArray(lockResult) ? (lockResult as any)[0] : (lockResult as any);
-    if (result && result.locked) {
+    const lockCheck = Array.isArray(lockResult) ? (lockResult as any)[0] : (lockResult as any);
+    if (lockCheck && lockCheck.locked) {
       lockAcquired = true;
     } else {
       return NextResponse.json({
@@ -65,130 +71,158 @@ export async function GET(req: NextRequest) {
     }
 
     try {
-      // STEG 6.1 FIX: Byttet OR→AND i eligibility-filteret.
-      // Med OR kunne en bruker bli matchet hvis EITHER matchesA eller matchesB var fri,
-      // selv om den andre siden hadde aktiv match. Med AND må brukeren være fri på BEGGE sider.
-      // STEG 6.2: Legg til take-grense for å begrense sekvensiell loop.
-      const eligibleUsers = await prisma.user.findMany({
-        where: {
-          onboardingComplete: true,
-          deepProfileComplete: true,
-          bannedAt: null,
-          deletedAt: null,
-          // Ikke låst (lockedUntil er null eller har utløpt)
-          OR: [
-            { lockedUntil: null },
-            { lockedUntil: { lte: new Date() } },
-            // Eller ikke matchet de siste 24 timene
-            { lastMatchAt: null },
-            { lastMatchAt: { lt: new Date(Date.now() - 24 * 60 * 60 * 1000) } },
-          ],
-          // Ingen aktiv match — må være fri på BEGGE sider (AND-logikk via to separate none-klausuler)
-          AND: [
-            {
-              matchesA: {
-                none: {
-                  status: { in: ['active', 'matched'] },
-                  expiresAt: { gte: new Date() },
+      // STEG 4.3: Cursor-basert paginering — behandle ALLE eligible brukere, ikke kun første 50
+      let cursorId: string | null = null;
+      let remaining = true;
+
+      while (remaining && Date.now() < deadline) {
+        // Hent neste batch med cursor-paginering
+        const batch = await prisma.user.findMany({
+          where: {
+            onboardingComplete: true,
+            deepProfileComplete: true,
+            bannedAt: null,
+            deletedAt: null,
+            // Ikke låst (lockedUntil er null eller har utløpt)
+            OR: [
+              { lockedUntil: null },
+              { lockedUntil: { lte: new Date() } },
+              // Eller ikke matchet de siste 24 timene
+              { lastMatchAt: null },
+              { lastMatchAt: { lt: new Date(Date.now() - 24 * 60 * 60 * 1000) } },
+            ],
+            // Ingen aktiv match — må være fri på BEGGE sider (AND-logikk via to separate none-klausuler)
+            AND: [
+              {
+                matchesA: {
+                  none: {
+                    status: { in: ['active', 'matched'] },
+                    expiresAt: { gte: new Date() },
+                  },
                 },
               },
-            },
-            {
-              matchesB: {
-                none: {
-                  status: { in: ['active', 'matched'] },
-                  expiresAt: { gte: new Date() },
+              {
+                matchesB: {
+                  none: {
+                    status: { in: ['active', 'matched'] },
+                    expiresAt: { gte: new Date() },
+                  },
                 },
               },
-            },
-          ],
-        },
-        select: { id: true },
-        take: 50, // STEG 6.2: Begrens antall kandidater per cron-kjøring
-      });
+            ],
+          },
+          select: { id: true },
+          take: BATCH_SIZE,
+          cursor: cursorId ? { id: cursorId } : undefined,
+          orderBy: { id: 'asc' },
+        });
 
-      for (const user of eligibleUsers) {
-        // Bruk findBestResonance (har innebygd lastMatchAt + lockedUntil-logikk)
-        try {
-          const result = await findBestResonance({ userId: user.id });
+        if (batch.length === 0) {
+          remaining = false;
+          break;
+        }
 
-          if (!result) {
-            processed++;
-            continue; // Ingen match eller ikke matchable
+        for (const user of batch) {
+          // Sjekk tidsbudsjett før hver bruker
+          if (Date.now() >= deadline) {
+            // Lag cursor for neste gang
+            cursorId = user.id;
+            remaining = false;
+            break;
           }
 
-          // STEG 6.6: Pakk match+conversation+lastMatchAt inn i transaksjon
+          // Oppdater cursor til neste bruker
+          cursorId = user.id;
+
+          // Bruk findBestResonance (har innebygd lastMatchAt + lockedUntil-logikk)
           try {
-            await prisma.$transaction(async (tx) => {
-              const newMatch = await tx.match.create({
-                data: {
-                  userAId: user.id,
-                  userBId: result.candidateId,
-                  score: Math.round(result.match.resonanceScore),
-                  normalizedScore: result.match.resonanceScore / 100,
-                  type: result.match.resonanceScore >= 70 ? 'high'
-                    : result.match.resonanceScore >= 50 ? 'medium'
-                    : 'low',
-                  explanation: {
+            const result = await findBestResonance({ userId: user.id });
+
+            if (!result) {
+              processed++;
+              continue; // Ingen match eller ikke matchable
+            }
+
+            // STEG 6.6: Pakk match+conversation+lastMatchAt inn i transaksjon
+            try {
+              await prisma.$transaction(async (tx) => {
+                const newMatch = await tx.match.create({
+                  data: {
+                    userAId: user.id,
+                    userBId: result.candidateId,
                     score: Math.round(result.match.resonanceScore),
-                    resonanceLevel: result.match.resonanceLevel,
+                    normalizedScore: result.match.resonanceScore / 100,
+                    type: result.match.resonanceScore >= 70 ? 'high'
+                      : result.match.resonanceScore >= 50 ? 'medium'
+                      : 'low',
+                    explanation: {
+                      score: Math.round(result.match.resonanceScore),
+                      resonanceLevel: result.match.resonanceLevel,
+                    },
+                    scoringBreakdown: {
+                      values: result.match.breakdown.values ?? 0,
+                      personality: result.match.breakdown.personality ?? 0,
+                      relationshipStyle: result.match.breakdown.relationshipStyle ?? 0,
+                      communication: result.match.breakdown.communication ?? 0,
+                      futureVision: result.match.breakdown.futureVision ?? 0,
+                      boundaries: result.match.breakdown.boundaries ?? 0,
+                      emotionalNeeds: result.match.breakdown.emotionalNeeds ?? 0,
+                      lifeRhythm: result.match.breakdown.lifeRhythm ?? 0,
+                      maturity: result.match.breakdown.maturity ?? 0,
+                    },
+                    resonanceLevel: result.match.resonanceLevel as any,
+                    status: 'pending',
                   },
-                  scoringBreakdown: {
-                    values: result.match.breakdown.values ?? 0,
-                    personality: result.match.breakdown.personality ?? 0,
-                    relationshipStyle: result.match.breakdown.relationshipStyle ?? 0,
-                    communication: result.match.breakdown.communication ?? 0,
-                    futureVision: result.match.breakdown.futureVision ?? 0,
-                    boundaries: result.match.breakdown.boundaries ?? 0,
-                    emotionalNeeds: result.match.breakdown.emotionalNeeds ?? 0,
-                    lifeRhythm: result.match.breakdown.lifeRhythm ?? 0,
-                    maturity: result.match.breakdown.maturity ?? 0,
+                });
+
+                // Opprett conversation for matchen (innenfor samme transaksjon)
+                await tx.conversation.create({
+                  data: {
+                    userAId: user.id,
+                    userBId: result.candidateId,
+                    matchId: newMatch.id,
                   },
-                  resonanceLevel: result.match.resonanceLevel as any,
-                  status: 'pending',
-                },
+                });
+
+                // Oppdater lastMatchAt (for 24t-regel)
+                await tx.user.update({
+                  where: { id: user.id },
+                  data: { lastMatchAt: new Date() },
+                });
               });
 
-              // Opprett conversation for matchen (innenfor samme transaksjon)
-              await tx.conversation.create({
-                data: {
-                  userAId: user.id,
-                  userBId: result.candidateId,
-                  matchId: newMatch.id,
-                },
-              });
-
-              // Oppdater lastMatchAt (for 24t-regel)
-              await tx.user.update({
-                where: { id: user.id },
-                data: { lastMatchAt: new Date() },
-              });
-            });
-
-            created++;
-            processed++;
-          } catch (txError) {
-            // Transaksjonen feilet — rollback automatisk, ikke tell som opprettet
-            console.error(`[cron] Transaksjon feilet for user ${user.id}:`, txError);
-            errors.push(`user ${user.id}: ${(txError as Error).message}`);
+              created++;
+              processed++;
+            } catch (txError) {
+              // Transaksjonen feilet — rollback automatisk, ikke tell som opprettet
+              console.error(`[cron] Transaksjon feilet for user ${user.id}:`, txError);
+              errors.push(`user ${user.id}: ${(txError as Error).message}`);
+              processed++;
+            }
+          } catch (engineError) {
+            // STEG 6.6: Logg feilen Uten å telle den som opprettet
+            console.error(`[cron] findBestResonance feil for user ${user.id}:`, engineError);
+            errors.push(`user ${user.id}: ${(engineError as Error).message}`);
             processed++;
           }
-        } catch (engineError) {
-          // STEG 6.6: Logg feilen Uten å telle den som opprettet
-          console.error(`[cron] findBestResonance feil for user ${user.id}:`, engineError);
-          errors.push(`user ${user.id}: ${(engineError as Error).message}`);
-          processed++;
+        }
+
+        // Hvis batch-en var mindre enn BATCH_SIZE, er vi ferdig (ingen flere eligible brukere)
+        if (batch.length < BATCH_SIZE) {
+          remaining = false;
         }
       }
 
       const durationMs = Date.now() - startedAt;
+      const timeRemaining = Math.max(0, deadline - Date.now());
 
       return NextResponse.json({
         ok: true,
         processed,
         created,
         duration: `${durationMs}ms`,
-        message: `Prosessert ${processed} brukarar, oppretta ${created} nye matcher`,
+        remaining: remaining ? 'time_budget_exceeded' : 'all_users_processed',
+        message: `Prosessert ${processed} brukarar, oppretta ${created} nye matcher${remaining ? ' (tidsbudsjett brukt opp)' : ''}`,
         errors: errors.length > 0 ? errors.slice(0, 5) : undefined,
       });
     } finally {

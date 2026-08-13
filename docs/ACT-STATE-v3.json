@@ -1,7 +1,7 @@
 {
   "instruks": "v3.0-launch",
   "currentWave": 5,
-  "currentStep": "4.5",
+  "currentStep": "5.1",
   "completedSteps": [
     "0.1",
     "0.2",
@@ -24,10 +24,11 @@
     "4.1",
     "4.2",
     "4.4",
-    "4.5"
+    "4.5",
+    "5.1"
   ],
   "failedSteps": [],
-  "nextStep": "5.1",
+  "nextStep": "5.2",
   "waveGateOpen": true,
   "status": {
     "tsc": "pass",

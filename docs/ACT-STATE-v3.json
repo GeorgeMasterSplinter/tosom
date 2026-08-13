@@ -1,0 +1,18 @@
+{
+  "instruks": "v3.0-launch",
+  "currentWave": 0,
+  "currentStep": "0.1",
+  "completedSteps": ["0.1"],
+  "failedSteps": [],
+  "nextStep": "0.2",
+  "waveGateOpen": false,
+  "status": {
+    "tsc": "not-run",
+    "grep": "not-run",
+    "build": "not-run",
+    "functional": "not-run"
+  },
+  "deviations": [],
+  "lastCommit": "",
+  "updatedAt": "2026-08-13T16:19:04+02:00"
+}

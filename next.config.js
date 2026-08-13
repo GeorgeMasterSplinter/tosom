@@ -6,6 +6,10 @@ const nextConfig = {
     config.resolve.alias['@'] = path.join(__dirname);
     return config;
   },
+
+  // Standalone output for Docker deployment (STEG 4.3)
+  output: 'standalone',
+
   // Prevent prerendering of API routes and dynamic pages
   experimental: {
     serverActions: {

@@ -1,11 +1,15 @@
 /**
  * ToSom — Vipps OAuth Callback Endpoint
  * Handsamer tilbakekalling frå Vipps og opprettar/oppdaterar brukar-session.
+ * 
+ * STEG 2.1: Fjernet manuell base64-sesjonscookie. Bruker nå NextAuth signIn() 
+ * for å utstede signert JWT-token via authjs sin egen mekanisme.
  */
 
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
+import { signIn } from '@/lib/auth/config';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,7 +45,7 @@ function verifyVippsState(stateFromUrl: string | null, cookies: Map<string, stri
   return rawState === stateFromUrl;
 }
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
     const url = new URL(request.url);
     const code = url.searchParams.get('code');
@@ -197,28 +201,15 @@ export async function GET(request: Request) {
       });
     }
 
-    // Lagre sesjon i cookies — bruk authjs.session-token (NextAuth-kompatibel)
-    // Middleware forventer base64-kodet JSON med sub, role, iat, exp
+    // STEG 2.1: Bruk NextAuth signIn() for å utstede signert JWT-token i stedet for manuell base64-cookie
     const dashboardUrl = `${process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || 'https://app.tosom.no'}/dashboard`;
     const response = NextResponse.redirect(dashboardUrl);
 
-    // Opprett JWT-lignende payload (base64) som middleware kan dekode
-    const now = Math.floor(Date.now() / 1000);
-    const sessionPayload = Buffer.from(JSON.stringify({
-      sub: user.id,
+    // Bruk NextAuth signIn med credentials for å utstede signert token
+    await signIn('credentials', {
       email: user.email,
-      name: user.name,
-      role: (user as any).role ?? 'USER',
-      iat: now,
-      exp: now + 60 * 60 * 24 * 30, // 30 dager
-    })).toString('base64');
-
-    response.cookies.set('authjs.session-token', sessionPayload, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 30, // 30 dager
-      path: '/',
+      redirect: false,
+      redirectTo: dashboardUrl,
     });
 
     // Slett state-cookie etter bruk

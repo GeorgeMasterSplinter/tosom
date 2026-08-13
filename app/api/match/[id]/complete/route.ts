@@ -21,19 +21,6 @@ export const dynamic = 'force-dynamic';
  *   action: "accept" | "reject" | "complete",
  *   note?: string (optional note for reject/complete)
  * }
- *
- * Response:
- * {
- *   success: true,
- *   data: {
- *     matchId: string,
- *     previousStatus: string,
- *     newStatus: string,
- *     conversationId: string | null,
- *     lockedUntil: string | null,
- *     message: string
- *   }
- * }
  */
 export async function PUT(
   request: Request,
@@ -119,10 +106,10 @@ export async function PUT(
       "complete": "completed",
     };
 
-    // Map action → MatchStatus enum string (Prisma expects lowercase enum values)
     const newStatus = actionToStatus[action] as "active" | "rejected" | "completed";
 
-    if (!allowedTransitions.includes(newStatus) && previousStatus !== "pending" && action !== "complete") {
+    // STEG 5.2 FIX: Fjernet bypass for `action === "complete"` — alle actions må følge status-vakta
+    if (!allowedTransitions.includes(newStatus)) {
       return NextResponse.json(
         {
           success: false,
@@ -133,79 +120,75 @@ export async function PUT(
       );
     }
 
-    // Oppdater match-status
-    const updatedMatch = await prisma.match.update({
-      where: { id: matchId },
+    // STEG 5.2: Betinget updateMany (hinder race conditions)
+    const updateResult = await prisma.match.updateMany({
+      where: {
+        id: matchId,
+        status: previousStatus, // Kun oppdater hvis status fortsatt er den vi forventer
+      },
       data: {
         status: newStatus as any,
         ...(note ? { rejectionReason: note } : {}),
       },
-      select: {
-        id: true,
-        status: true,
-        lockedAt: true,
-      },
     });
 
-    // Hvis action er "accept" — opprett conversation + journey
+    if (updateResult.count === 0) {
+      return NextResponse.json(
+        { success: false, error: "Matchen har endret status — prøv igjen" },
+        { status: 409, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    // STEG 5.2: Pakk follow-up operasjoner i transaksjon
     let conversationId: string | null = null;
     let lockedUntil: string | null = null;
 
     if (action === "accept") {
-      // Opprett conversation knyttet til denne matchen
-      const convo = await prisma.conversation.create({
-        data: {
-          userAId: match.userAId,
-          userBId: match.userBId,
-          matchId: matchId,
-        },
-        select: { id: true },
-      });
-      conversationId = convo.id;
+      await prisma.$transaction(async (tx) => {
+        // Opprett conversation knyttet til denne matchen
+        const convo = await tx.conversation.create({
+          data: {
+            userAId: match.userAId,
+            userBId: match.userBId,
+            matchId: matchId,
+          },
+          select: { id: true },
+        });
+        conversationId = convo.id;
 
-      // Opprett eller finn journeyProgress og sett til aktiv
-      const existingJP = await prisma.journeyProgress.findUnique({
-        where: { userId },
-        select: { id: true, endedAt: true, pausedAt: true },
-      });
+        // Lås bruker i 30 dager fra nå av
+        const lockedUntilDate = new Date();
+        lockedUntilDate.setDate(lockedUntilDate.getDate() + 30);
+        lockedUntil = lockedUntilDate.toISOString();
 
-      if (!existingJP || (existingJP.endedAt === null && existingJP.pausedAt === null)) {
-        // Sett eller oppdater journeyProgress
-        if (existingJP?.id) {
-          await prisma.journeyProgress.update({
-            where: { id: existingJP.id },
-            data: {
-              day: 1,
-              phase: "EARLY",
-              startedAt: new Date(),
-              endedAt: null,
-              pausedAt: null,
-            },
-          });
-        } else {
-          await prisma.journeyProgress.create({
-            data: {
-              userId,
-              day: 1,
-              phase: "EARLY",
-              startedAt: new Date(),
-            },
-          });
-        }
-      }
-
-      // Lås bruker i 30 dager fra nå av
-      const lockedUntilDate = new Date();
-      lockedUntilDate.setDate(lockedUntilDate.getDate() + 30);
-      lockedUntil = lockedUntilDate.toISOString();
-
-      await prisma.user.update({
-        where: { id: userId },
-        data: { lockedUntil: lockedUntilDate },
+        await tx.user.update({
+          where: { id: userId },
+          data: { lockedUntil: lockedUntilDate },
+        });
       });
     }
 
-    // Hvis action er "reject" — logg hendelsen
+    if (action === "complete") {
+      await prisma.$transaction(async (tx) => {
+        // Merk journey som avsluttet
+        await tx.journeyProgress.updateMany({
+          where: { userId, endedAt: null, pausedAt: null },
+          data: {
+            endedAt: new Date(),
+            phase: "CHECKIN",
+          },
+        });
+
+        // Fjern lås
+        await tx.user.update({
+          where: { id: userId },
+          data: { lockedUntil: null },
+        });
+      });
+
+      await logInfo("Match completed", "match_complete", { matchId, userId });
+    }
+
     if (action === "reject") {
       await logInfo("Match rejected", "match_reject", {
         matchId,
@@ -215,32 +198,13 @@ export async function PUT(
       });
     }
 
-    if (action === "complete") {
-      // Merk journey som avsluttet (CHECKIN er siste gyldige phase før "COMPLETED", men bruk CHECKIN her)
-      await prisma.journeyProgress.updateMany({
-        where: { userId, endedAt: null, pausedAt: null },
-        data: {
-          endedAt: new Date(),
-          phase: "CHECKIN",
-        },
-      });
-
-      // Fjern lås
-      await prisma.user.update({
-        where: { id: userId },
-        data: { lockedUntil: null },
-      });
-
-      await logInfo("Match completed", "match_complete", { matchId, userId });
-    }
-
     return NextResponse.json(
       {
         success: true,
         data: {
-          matchId: updatedMatch.id,
+          matchId,
           previousStatus,
-          newStatus: updatedMatch.status,
+          newStatus,
           conversationId,
           lockedUntil,
           message:

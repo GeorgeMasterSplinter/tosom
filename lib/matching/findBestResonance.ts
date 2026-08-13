@@ -166,7 +166,8 @@ export async function findBestResonance(
         { userBId: userId },
       ],
       status: {
-        in: ["matched", "active"],
+        // STEG 6.5: Ekskluder også unmatched+ended+expired for å hindre re-matching av fullførte/avviste par
+        in: ["matched", "active", "unmatched", "ended", "expired"],
       },
     },
     select: {

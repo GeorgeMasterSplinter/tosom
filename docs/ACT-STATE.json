@@ -1,8 +1,8 @@
 {
   "currentWave": 6,
-  "currentStep": "6.2",
-  "completedSteps": ["0.1", "0.2", "0.3", "0.4", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11", "1.12", "1.13", "2.1", "2.2", "2.3", "2.4", "3.1", "3.2", "3.3", "3.4", "4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "5.1", "5.2", "5.3", "5.4", "6.1", "6.2"],
-  "nextStep": "6.3",
+  "currentStep": "6.4",
+  "completedSteps": ["0.1", "0.2", "0.3", "0.4", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11", "1.12", "1.13", "2.1", "2.2", "2.3", "2.4", "3.1", "3.2", "3.3", "3.4", "4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "5.1", "5.2", "5.3", "5.4", "6.1", "6.2", "6.3", "6.4"],
+  "nextStep": "6.5",
   "status": {
     "tsc": "pass",
     "grep": "pass",
@@ -28,8 +28,10 @@
     "STEG 5.2: match/[id]/complete fikset med updateMany + fjernet complete-bypass (commit d504f46)",
     "STEG 5.3: @unique lagt til på Conversation.matchId (commit ac4dc10)",
     "STEG 5.4: @@unique([progressId, day]) lagt til på JourneyMilestone (commit a8d29eb) — BØLGE 5 FULLFØRT",
-    "AVVIK: STEG 6.1+6.2 kjørt som batch (samme fil, felles build-sjekk) (commit c9d7efc)"
+    "AVVIK: STEG 6.1+6.2 kjørt som batch (samme fil, felles build-sjekk) (commit c9d7efc)",
+    "STEG 6.3: advisory lock for journey-cron (commit c641b73)",
+    "STEG 6.4: advisory lock for matching-cron (commit eab8578)"
   ],
-  "lastCommit": "c9d7efc",
-  "updatedAt": "2026-08-13T00:09:00Z"
+  "lastCommit": "eab8578",
+  "updatedAt": "2026-08-13T00:21:00Z"
 }

@@ -1,18 +1,20 @@
 {
   "instruks": "v3.0-launch",
-  "currentWave": 0,
-  "currentStep": "0.1",
-  "completedSteps": ["0.1"],
+  "currentWave": 1,
+  "currentStep": "0.2",
+  "completedSteps": ["0.1", "0.2"],
   "failedSteps": [],
-  "nextStep": "0.2",
+  "nextStep": "1.1",
   "waveGateOpen": false,
   "status": {
-    "tsc": "not-run",
-    "grep": "not-run",
-    "build": "not-run",
-    "functional": "not-run"
+    "tsc": "pass",
+    "grep": "done",
+    "build": "pass",
+    "functional": "pass"
   },
-  "deviations": [],
-  "lastCommit": "",
+  "deviations": [
+    "BASELINE: tsc=0 feil, jest=6 failed/72 passed, prisma-format=exit 1 (unformatted), build=pass"
+  ],
+  "lastCommit": "a51c1ef",
   "updatedAt": "2026-08-13T16:19:04+02:00"
 }

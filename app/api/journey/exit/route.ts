@@ -1,23 +1,22 @@
 // app/api/journey/exit/route.ts — POST /api/journey/exit
-// Avslutt aktiv reise (tidleg avslutning)
-// Sletter JourneyProgress, Conversation, og oppdaterer Match-status
+// Avslutt aktiv reise (tidlig avslutning)
+// Kaller endJourney() for verifisert sletting og sperrelisete
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth/requireAuth';
+import { endJourney } from '@/lib/journey/endJourney';
 
 export const dynamic = 'force-dynamic';
 
 /**
  * POST /api/journey/exit
- * 
- * Avslutt ein aktiv 30-dagers reise.
- * - Sletter JourneyProgress
- * - Oppdaterer Conversation (endedAt)
- * - Oppdaterer Match-status
- * - Låser opp brukar (fjern lockedUntil)
- * 
- * Response: { success: true, message: string }
+ *
+ * Avslutt en aktiv 30-dagers reise.
+ * Kaller endJourney() som sletter alt innhold verifiserbart (I-6).
+ *
+ * Body: { reason?: string }
+ * Response: { success: true, deleted: Record<string, number> }
  */
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
@@ -32,103 +31,73 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const body = await req.json();
     const { reason } = body as { reason?: string };
 
-    // 3. Finn aktiv journey for brukaren
+    // 3. Finn aktiv journey for brukeren
     const journey = await prisma.journeyProgress.findUnique({
       where: { userId: user.id },
-      include: {
-        milestones: true,
-      },
     });
 
     if (!journey) {
       return NextResponse.json(
-        { error: "Ingen aktiv reise funnen" },
+        { error: 'Ingen aktiv reise funnet' },
         { status: 404 }
       );
     }
 
-    // Sjekk om journey er allereie avsluttet
+    // Sjekk om journey er allerede avsluttet
     if (journey.endedAt || journey.completedAt) {
       return NextResponse.json(
-        { error: "Reisen er allereie avsluttet" },
+        { error: 'Reisen er allerede avsluttet' },
         { status: 409 }
       );
     }
 
-    // Hent den tilknytte matchen (ingen conversation-relasjon på Match, må query separat)
+    // Hent den tilknyttede matchen
     const activeMatch = await prisma.match.findFirst({
       where: {
         OR: [
           { userAId: user.id, status: 'matched' },
           { userBId: user.id, status: 'matched' },
         ],
-        lockedAt: { not: null }, // Berre aktive matcher
+        lockedAt: { not: null }, // Bare aktive matcher
       },
     });
 
     if (!activeMatch) {
       return NextResponse.json(
-        { error: "Ingen aktiv match funnen" },
+        { error: 'Ingen aktiv match funnet' },
         { status: 404 }
       );
     }
 
-    // Hent conversationen separat (via matchId eller user-relasjon)
-    const activeConversation = await prisma.conversation.findFirst({
-      where: {
-        OR: [
-          { matchId: activeMatch.id },
-          { userAId: user.id },
-          { userBId: user.id },
-        ],
-        endedAt: null,
-      },
-    });
+    // 4. Kall endJourney() — verifisert sletting med sperreliste
+    const { deleted } = await endJourney(activeMatch.id, 'early_exit');
 
-    // 4. Avslutt journey (lagre oppsummering)
-    const exitDate = new Date();
-    
-    await prisma.journeyProgress.update({
-      where: { userId: user.id },
-      data: {
-        endedAt: exitDate,
-        day: Math.min(journey.day, 30),
-      },
-    });
-
-    // 5. Avslutt conversation (dersom ein finst)
-    if (activeConversation) {
-      await prisma.conversation.update({
-        where: { id: activeConversation.id },
-        data: {
-          endedAt: exitDate,
-        },
-      });
-    }
-
-    // 6. Lås opp brukar (fjern lockedUntil)
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { lockedUntil: null },
-    });
-
-    // 7. Logg avslutning
-    console.log(`[journey/exit] Brukar ${user.id} avsluttet reise dag ${journey.day}/30`, {
+    // 5. Logg avslutning
+    console.log(`[journey/exit] Bruker ${user.id} avsluttet reise dag ${journey.day}/30`, {
+      matchId: activeMatch.id,
       day: journey.day,
-      totalDays: journey.milestones.length,
       reason,
+      deleted,
     });
 
     return NextResponse.json({
       success: true,
-      message: `Reisen din vart avsluttet. Du har nådd dag ${journey.day} av 30.`,
-      nextStep: 'Du kan starte ein ny reise når du vil.',
+      message: `Reisen din ble avsluttet. Du nådde dag ${journey.day} av 30.`,
+      nextStep: 'Du kan starte en ny reise når du vil.',
+      deleted,
     });
 
   } catch (error) {
     console.error('POST /api/journey/exit feil:', error);
+    const msg = (error as Error).message;
+    if (msg.includes('ikke funnet') || msg.includes('ikke funnet')) {
+      return NextResponse.json(
+        { error: msg },
+        { status: 404 }
+      );
+    }
     return NextResponse.json(
-      { error: 'Kunne ikke avslutte reisen', internal: true },
+      { error: 'Kunne ikke avslutte reisen' },
       { status: 500 }
     );
   }

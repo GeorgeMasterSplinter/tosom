@@ -108,6 +108,8 @@ model Match {
 
   @@unique([userAId, userBId])
   @@index([status])
+  @@index([userAId, status])
+  @@index([userBId, status])
   @@index([userAId])
   @@index([userBId])
   @@index([createdAt])
@@ -163,6 +165,7 @@ model Message {
   sender         User            @relation(fields: [senderId], references: [id])
 
   @@index([createdAt])
+  @@index([conversationId, createdAt])
 }
 
 // ⚠️ TODO: Legg til CHECK constraint (day >= 1 AND day <= 30) etter at vi migrerer til Prisma v6+ (supportar @@check)
@@ -286,6 +289,7 @@ model Notification {
   user      User             @relation(fields: [userId], references: [id])
 
   @@index([userId, createdAt])
+  @@index([userId, readAt, createdAt])
   @@index([type])
   @@index([readAt])
 }

@@ -50,6 +50,25 @@ const nextConfig = {
             key: "Strict-Transport-Security",
             value: "max-age=31536000; includeSubDomains; preload",
           },
+          // Content-Security-Policy (STEG 4.4)
+          // Allows: self, Stripe checkout, Vipps auth, Pusher WS, uploadthing images, S3/Railway storage
+          {
+            key: "Content-Security-Policy",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' *.stripe.com stripe.com",
+              "style-src 'self' 'unsafe-inline'",
+              "img-src 'self' data: blob: *.uploadthing.com uploadthing.com *.s3.amazonaws.com tosom-storage.up.railway.app picsum.photos placehold.co",
+              "media-src 'self'",
+              "font-src 'self' fonts.gstatic.com",
+              "connect-src 'self' api.stripe.com auth.vipps.no vipps.no *.pusher.com *.pubnub.com wss://*.pusher.com",
+              "frame-src *.stripe.com stripe.com",
+              "frame-ancestors 'none'",
+              "base-uri 'self'",
+              "form-action 'self' api.stripe.com",
+              "object-src 'none'",
+            ].join('; '),
+          },
         ],
       },
       {

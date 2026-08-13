@@ -1,9 +1,9 @@
 {
   "currentWave": 11,
-  "currentStep": "10.3",
-  "completedSteps": ["0.1", "0.2", "0.3", "0.4", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11", "1.12", "1.13", "2.1", "2.2", "2.3", "2.4", "3.1", "3.2", "3.3", "3.4", "4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "5.1", "5.2", "5.3", "5.4", "6.1", "6.2", "6.3", "6.4", "6.5", "6.6", "7.1", "7.2", "7.3", "8.1", "8.2", "8.3", "8.4", "8.5", "8.6", "9.1", "9.2", "9.3", "10.1", "10.3"],
+  "currentStep": "11.2",
+  "completedSteps": ["0.1", "0.2", "0.3", "0.4", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11", "1.12", "1.13", "2.1", "2.2", "2.3", "2.4", "3.1", "3.2", "3.3", "3.4", "4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "5.1", "5.2", "5.3", "5.4", "6.1", "6.2", "6.3", "6.4", "6.5", "6.6", "7.1", "7.2", "7.3", "8.1", "8.2", "8.3", "8.4", "8.5", "8.6", "9.1", "9.2", "9.3", "10.1", "10.3", "11.2"],
   "failedSteps": ["10.2", "11.1"],
-  "nextStep": "11.2",
+  "nextStep": "11.3",
   "status": { "tsc": "pass", "grep": "pass", "build": "pass" },
   "deviations": [
     "BASELINE tsc: 0 feil (clean TypeScript-tilstand ved start)",
@@ -24,8 +24,9 @@
     "STEG 8.5: Brukte Profile.preferences JSON + as any-cast pga streng Prisma-typing",
     "STEG 9.3: Refaktorerte lib/admin/data.ts (fjernet ubrukte imports, komprimerte formatet)",
     "FAILED: STEG 10.2 — WebhookEvent model mangler i prisma/schema.prisma, krever database-migrasjon",
-    "FAILED: STEG 11.1 — components/ui/* inneholder levende imports! (Footer, ToSomSection, ToSomButton, CardSkeleton, ErrorState brukt av mange app/pages). Kan IKKE slettes uten først å migrere importene."
+    "FAILED: STEG 11.1 — components/ui/* inneholder levende imports! (Footer, ToSomSection, ToSomButton, CardSkeleton, ErrorState brukt av mange app/pages)",
+    "STEG 11.2: La til ADMIN_JWT_SECRET=build-placeholder i .env.local for å fikse build-feil underveis"
   ],
-  "lastCommit": "ae60cf8",
-  "updatedAt": "2026-08-13T04:53:00Z"
+  "lastCommit": "af476eb",
+  "updatedAt": "2026-08-13T04:58:00Z"
 }

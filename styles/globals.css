@@ -1293,3 +1293,33 @@ textarea.ts-input { resize: vertical; min-height: 100px; }
 .fade-in-up-global {
   animation: fadeInUp 0.3s ease-out forwards;
 }
+
+/* ═══════════════════════════════════════════
+   D8 — Mobiloptimalisering
+   Safe-area insets + trykkflater ≥ 44px
+   ═══════════════════════════════════════════ */
+
+/* Safe-area for iPhone notches */
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.safe-left {
+  padding-left: env(safe-area-inset-left);
+}
+.safe-right {
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Trykkflater ≥ 44x44 px (WCAG 2.5.5) */
+button, a[role="button"], [tabindex="0"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Ingen horisontal scroll på smale skjermer */
+html, body {
+  overflow-x: hidden;
+}

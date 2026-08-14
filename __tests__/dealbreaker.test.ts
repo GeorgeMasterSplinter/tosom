@@ -10,19 +10,26 @@ import type { ProfileData } from '@/lib/matching/types';
 
 function makeProfile(overrides: Partial<ProfileData> = {}): ProfileData {
   return {
-    id: 'test-id',
+    userId: 'test-id',
+    firstName: 'Test',
+    lastName: 'Person',
+    age: 30,
+    bio: null,
+    interests: [],
     matchTags: [],
-    personality: ['open'],
-    lifeSituation: ['family'],
+    personality: { traits: ['open'] },
+    lifeSituation: { values: ['family'] },
     relationshipStyle: 'gradual',
     communication: { style: 'direct' },
     futureVision: { goals: ['growth'] },
-    boundaries: undefined,
+    boundaries: null,
     emotionalNeeds: { needs: ['trust'] },
     lifeRhythm: 'morning',
     maturityLevel: 5,
     securityLevel: 'secure',
-    preferences: undefined,
+    lifestyle: null,
+    intimacy: null,
+    preferences: null,
     ...overrides,
   };
 }
@@ -126,7 +133,7 @@ describe('sjekkAlleDealbreakers', () => {
     });
 
     it('skal tillate når dealbreakers er undefined', () => {
-      const a = makeProfile({ preferences: undefined });
+      const a = makeProfile({ preferences: null });
       const b = makeProfile({ matchTags: ['smoker'] });
 
       const result = sjekkAlleDealbreakers(a, b);
@@ -161,8 +168,8 @@ describe('sjekkAlleDealbreakers', () => {
     });
 
     it('skal ignorere når boundaries mangler', () => {
-      const a = makeProfile({ boundaries: undefined });
-      const b = makeProfile({ boundaries: undefined });
+      const a = makeProfile({ boundaries: null });
+      const b = makeProfile({ boundaries: null });
 
       const result = sjekkAlleDealbreakers(a, b);
       expect(result.hasDealbreaker).toBe(false);

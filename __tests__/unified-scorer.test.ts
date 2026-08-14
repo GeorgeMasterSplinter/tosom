@@ -10,10 +10,15 @@ import type { ProfileData } from '@/lib/matching/types';
 // Miniprofiler for testing
 function makeProfile(overrides: Partial<ProfileData> = {}): ProfileData {
   return {
-    id: 'test-id',
+    userId: 'test-id',
+    firstName: 'Test',
+    lastName: 'Person',
+    age: 30,
+    bio: null,
+    interests: [],
     matchTags: [],
-    personality: ['open', 'calm'],
-    lifeSituation: ['family', 'nature'],
+    personality: { traits: ['open', 'calm'] },
+    lifeSituation: { values: ['family', 'nature'] },
     relationshipStyle: 'gradual',
     communication: { style: 'direct' },
     futureVision: { goals: ['family', 'growth'] },
@@ -22,6 +27,9 @@ function makeProfile(overrides: Partial<ProfileData> = {}): ProfileData {
     lifeRhythm: 'morning',
     maturityLevel: 5,
     securityLevel: 'secure',
+    lifestyle: null,
+    intimacy: null,
+    preferences: null,
     ...overrides,
   };
 }
@@ -51,13 +59,13 @@ describe('unifiedScore', () => {
 
   it('identiske profiler skal gi høy score', () => {
     const a = makeProfile({
-      personality: ['open', 'calm'],
-      lifeSituation: ['family', 'nature'],
+      personality: { traits: ['open', 'calm'] },
+      lifeSituation: { values: ['family', 'nature'] },
       maturityLevel: 5,
     });
     const b = makeProfile({
-      personality: ['open', 'calm'],
-      lifeSituation: ['family', 'nature'],
+      personality: { traits: ['open', 'calm'] },
+      lifeSituation: { values: ['family', 'nature'] },
       maturityLevel: 5,
     });
 
@@ -141,8 +149,8 @@ describe('unifiedScore', () => {
 
   describe('getMatchLevel', () => {
     it('score >= 80 -> DEEP', () => {
-      const a = makeProfile({ personality: ['open'], maturityLevel: 5 });
-      const b = makeProfile({ personality: ['open'], maturityLevel: 5 });
+      const a = makeProfile({ personality: { traits: ['open'] }, maturityLevel: 5 });
+      const b = makeProfile({ personality: { traits: ['open'] }, maturityLevel: 5 });
       const result = unifiedScore(a, b);
       if (result.score >= 80) expect(result.level).toBe('DEEP');
     });

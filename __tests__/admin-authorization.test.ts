@@ -55,7 +55,7 @@ describe('Admin Authorization — Reelle tester mot lib/admin/requireAuth', () =
       const path = await import('path');
 
       const adminDir = path.join(process.cwd(), 'app/api/admin');
-      const routeFiles = fs.readdirSync(adminDir, { recursive: true })
+      const routeFiles: string[] = (fs as any).globSync ? (fs as any).globSync('**/route.ts', { cwd: adminDir }) : fs.readdirSync(adminDir, { recursive: true, encoding: 'utf-8' })
         .filter((f: string) => typeof f === 'string' && f.endsWith('route.ts')) as string[];
       const contents = routeFiles.map((f) => fs.readFileSync(path.join(adminDir, f), 'utf-8'));
 

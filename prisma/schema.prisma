@@ -583,3 +583,34 @@ enum JourneyUserState {
   ON_JOURNEY   /// Both saw each other, journey running
   COMPLETED    /// Journey finished (30 days or manual exit)
 }
+enum ReportCategory {
+  HARASSMENT
+  INAPPROPRIATE
+  SPAM
+  FAKE_PROFILE
+  OTHER
+}
+
+enum ReportStatus {
+  OPEN
+  REVIEWED
+  ACTIONED
+  DISMISSED
+}
+
+// STEG C1 — Brukerstyrt rapportering
+model Report {
+  id          String           @id @default(cuid())
+  reporterId  String
+  reportedId  String
+  matchId     String?
+  category    ReportCategory
+  description String?
+  status      ReportStatus     @default(OPEN)
+  createdAt   DateTime         @default(now())
+  reviewedAt  DateTime?
+  reviewedBy  String?
+
+  @@index([status, createdAt])
+  @@index([reportedId])
+}

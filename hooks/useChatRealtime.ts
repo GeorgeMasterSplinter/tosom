@@ -57,7 +57,7 @@ export function useChatRealtime(options: UseChatRealtimeOptions) {
 
     // Ny melding i samtale
     conversationChannelRef.current.bind('new-message', (message: PusherEvent) => {
-      // Ignorer eigne meldingar (allereie lagt til lokalt)
+      // Ignorer eigne meldingar (allerede lagt til lokalt)
       if (message.senderId === userId) return;
       options.onNewMessage?.(message);
     });

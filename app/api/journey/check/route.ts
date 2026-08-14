@@ -1,5 +1,5 @@
 // app/api/journey/check/route.ts — GET /api/journey/check
-// Returner journey-status for innlogga brukar.
+// Returner journey-status for innlogga bruker.
 // Brukast av dashboard og journey-side for å vise progresjon, dag, phase og milestones.
 
 import { NextResponse } from "next/server";

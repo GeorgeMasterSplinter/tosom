@@ -1,6 +1,6 @@
 /**
  * ToSom — Vipps OAuth Authorization Endpoint
- * Startar Vipps-login-flyten for brukarar.
+ * Startar Vipps-login-flyten for brukere.
  */
 
 import { NextResponse } from 'next/server';

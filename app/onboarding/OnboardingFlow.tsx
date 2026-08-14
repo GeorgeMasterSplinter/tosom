@@ -203,7 +203,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     return () => { if (saveTimerRef.current) clearTimeout(saveTimerRef.current); };
   }, [data]);
 
-   // Rydd draft når reisen startar (allereie eksisterande useEffect)
+   // Rydd draft når reisen startar (allerede eksisterande useEffect)
   useEffect(() => {
     if (step > 11) {
       try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }

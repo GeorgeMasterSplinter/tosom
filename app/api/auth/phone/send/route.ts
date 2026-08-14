@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (!user) {
-      // Finn bruker basert på e-post (allereie oppretta via magic-link)
+      // Finn bruker basert på e-post (allerede oppretta via magic-link)
       // eller opprett ny
       user = await prisma.user.create({
         data: {

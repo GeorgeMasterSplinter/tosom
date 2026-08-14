@@ -1,7 +1,7 @@
 /**
  * POST /api/onboarding/complete
  * Marker djup profil som fullført og start match-prosess
- * Core-definition: Berre brukarar med fullført djup profil kan få match
+ * Core-definition: Berre brukere med fullført djup profil kan få match
  */
 
 import { NextRequest, NextResponse } from "next/server"

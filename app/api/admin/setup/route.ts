@@ -1,8 +1,8 @@
 /**
- * ToSom — Admin brukar-oppsett
+ * ToSom — Admin bruker-oppsett
  * 
  * POST /api/admin/setup
- * Lagar admin-brukar dersom han ikke eksisterer.
+ * Lagar admin-bruker dersom han ikke eksisterer.
  * 
  * SECURITY: Låst bak ADMIN_SETUP_TOKEN + NODE_ENV-sjekk (timing-safe).
  * Kun tilgjengelig i non-production miljø med korrekt token via Authorization-header.
@@ -60,7 +60,7 @@ export async function POST(req: Request) {
 
     const ADMIN_EMAIL = 'admin@tosom.no';
 
-    // --- VAKTKLAUSUL 2: No-op hvis en ADMIN allereie finst (uavhengig av miljø) ---
+    // --- VAKTKLAUSUL 2: No-op hvis en ADMIN allerede finst (uavhengig av miljø) ---
     const existingAdmin = await prisma.user.findFirst({
       where: { role: 'ADMIN' },
     });
@@ -68,12 +68,12 @@ export async function POST(req: Request) {
     if (existingAdmin) {
       return NextResponse.json({
         success: true,
-        message: 'Admin-brukar finst allereie',
+        message: 'Admin-bruker finst allerede',
         adminId: existingAdmin.id,
       });
     }
 
-    // Opprett admin-brukar
+    // Opprett admin-bruker
     const admin = await prisma.user.create({
       data: {
         email: ADMIN_EMAIL,
@@ -91,14 +91,14 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       success: true,
-      message: 'Admin-brukar oppretta',
+      message: 'Admin-bruker oppretta',
       adminId: admin.id,
       adminEmail: admin.email,
     });
   } catch (error) {
     console.error('Admin oppsett feila:', error);
     return NextResponse.json(
-      { error: 'Kunne ikke opprette admin-brukar' },
+      { error: 'Kunne ikke opprette admin-bruker' },
       { status: 500 }
     );
   }

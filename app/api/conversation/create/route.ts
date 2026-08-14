@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
 
     if (!match) {
       return NextResponse.json(
-        { error: "Match ikke funnen" },
+        { error: "Match ikke funnet" },
         { status: 404 }
       );
     }
@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 6. Sjekk at conversation ikke allereie eksisterer
+    // 6. Sjekk at conversation ikke allerede eksisterer
     const existingConversation = await prisma.conversation.findFirst({
       where: {
         OR: [
@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({
         success: true,
         conversationId: existingConversation.id,
-        message: "Chat allereie oppretta.",
+        message: "Chat allerede oppretta.",
       });
     }
 

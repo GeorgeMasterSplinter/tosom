@@ -105,7 +105,7 @@ export function forbiddenResponse(traceId?: string): NextResponse<ApiError> {
 }
 
 /**
- * Opprett eit ikke funnen svar
+ * Opprett eit ikke funnet svar
  */
 export function notFoundResponse(traceId?: string): NextResponse<ApiError> {
   return errorResponse('Not found', { statusCode: 404, code: 'NOT_FOUND', traceId })

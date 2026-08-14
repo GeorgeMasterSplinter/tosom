@@ -11,7 +11,7 @@ export const dynamic = 'force-dynamic';
 /**
  * GET /api/match
  * 
- * Returner match-status + liste over matcher for innlogga brukar.
+ * Returner match-status + liste over matcher for innlogga bruker.
  * Ingen params treng — auth kjem frå session.
  */
 export async function GET(request: Request): Promise<Response> {

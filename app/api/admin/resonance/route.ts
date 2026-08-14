@@ -5,7 +5,7 @@
  * Utvidet 2026-08-03 (Pakke 4.2): ResonanceSession Tracking
  * 
  * Query-params:
- *   - userId: obrigatory — brukar-id
+ *   - userId: obrigatory — bruker-id
  *   - limit: max antal resultat (valgfritt, default 50)
  */
 

@@ -19,7 +19,7 @@ function generateFakeMatchId(): string {
   return `match-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
 }
 
-/* ------ Start matching-prosess for ein brukar ------ */
+/* ------ Start matching-prosess for ein bruker ------ */
 
 export function startMatching(userId: string, matchUserId?: string): void {
   // Allereie i kø eller ferdig? Avvis double-start
@@ -53,7 +53,7 @@ export function startMatching(userId: string, matchUserId?: string): void {
   }, delay);
 }
 
-/* ------ Sjekk matching-status for ein brukar ------ */
+/* ------ Sjekk matching-status for ein bruker ------ */
 
 export function getMatchingStatus(userId: string): {
   status: "pending" | "matched" | "no_match";

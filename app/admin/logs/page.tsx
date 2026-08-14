@@ -236,7 +236,7 @@ export default function AdminLogsPage() {
         ))}
       </div>
 
-      {!logs.length && !error && <div style={{ textAlign: "center", padding: "48px 0", color: "rgba(255,255,255,0.3)" }}>Ingen loggar funnen.</div>}
+      {!logs.length && !error && <div style={{ textAlign: "center", padding: "48px 0", color: "rgba(255,255,255,0.3)" }}>Ingen loggar funnet.</div>}
 
       {/* Pagination */}
       {pagination.pages > 1 && (

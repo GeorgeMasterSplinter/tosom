@@ -1,5 +1,5 @@
-// lib/auth/test-users.ts — Ekte test-brukarar for platform-testing
-// Test-brukarane er fullverdig brukarar utan betalingskrav
+// lib/auth/test-users.ts — Ekte test-brukere for platform-testing
+// Test-brukerne er fullverdig brukere utan betalingskrav
 
 export interface TestUser {
   id: string;
@@ -35,7 +35,7 @@ export function getTestUserByEmail(email: string): TestUser | undefined {
   return TEST_USERS.find(u => u.email === email);
 }
 
-// Oppskrift på fake profil-data for test-brukarane
+// Oppskrift på fake profil-data for test-brukerne
 // Desse blir genererte automatisk når brukaren fullfører onboarding
 export const TEST_PROFILE_OVERRIDES = {
   'test-user-1': {

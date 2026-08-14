@@ -87,7 +87,7 @@ export interface ResonanceData {
 // ─── PRESENCE ENGINE ─────────────────────────────────────────
 
 /**
- * Hent presence-state for ein brukar
+ * Hent presence-state for ein bruker
  */
 export async function getUserPresence(userId: string): Promise<PresenceState> {
   // I produksjon: Hent frå Redis/Pusher presence
@@ -102,7 +102,7 @@ export async function getUserPresence(userId: string): Promise<PresenceState> {
 }
 
 /**
- * Hent journey-position for ein brukar
+ * Hent journey-position for ein bruker
  */
 export async function getJourneyPosition(userId: string): Promise<JourneyPosition | null> {
   // Simulert data — erstatt med ekte DB-spørring
@@ -118,7 +118,7 @@ export async function getJourneyPosition(userId: string): Promise<JourneyPositio
 }
 
 /**
- * Beregn shared position mellom to brukarar
+ * Beregn shared position mellom to brukere
  */
 export function calculateSharedPosition(
   posA: JourneyPosition | null,
@@ -154,7 +154,7 @@ export function calculateSharedPosition(
 }
 
 /**
- * Beregn resonans-data mellom to brukarar
+ * Beregn resonans-data mellom to brukere
  */
 export function calculateResonance(
   userAId: string,
@@ -181,7 +181,7 @@ export function calculateResonance(
 // ─── GENTLE NUDGE ────────────────────────────────────────────
 
 /**
- * Sjekk om brukar bur få ein gentle nudge
+ * Sjekk om bruker bur få ein gentle nudge
  */
 export function shouldSendNudge(
   lastActivityAt: Date | null,

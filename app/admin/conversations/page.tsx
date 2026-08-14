@@ -142,7 +142,7 @@ export default function AdminConversationsPage() {
 
       {!conversations.length && !error && (
         <div style={{ textAlign: "center", padding: "48px 0", color: "rgba(255,255,255,0.3)" }}>
-          Ingen conversations funnen.
+          Ingen conversations funnet.
         </div>
       )}
 

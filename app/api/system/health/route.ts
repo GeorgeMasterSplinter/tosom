@@ -8,7 +8,7 @@ import os from 'os';
  * GET /api/system/health — Detaljert health check med service-kjekk
  * 
  * Utvidet 2026-08-02 (Pakke 3, Steg 3a):
- * - DB-ping (allereie eksisterande)
+ * - DB-ping (allerede eksisterande)
  * - Pusher-status (miljøvariabel-validering)
  * - Uploadthing-status (miljøvariabel-validering)
  * - OpenAI-status (miljøvariabel-validering)

@@ -1070,4 +1070,4 @@ export const journeyAPI = {
   getCurrentDay,
 };
 
-// Ingen ekstra exports trengst — alle er allereie eksporterte øvst i fila.
+// Ingen ekstra exports trengst — alle er allerede eksporterte øvst i fila.

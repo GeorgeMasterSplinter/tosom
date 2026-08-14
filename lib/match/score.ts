@@ -1,7 +1,7 @@
 /**
  * ToSom — Match Score Engine (Produktnivå)
  * 
- * Beregner match-score mellom to brukarar med:
+ * Beregner match-score mellom to brukere med:
  * - matchScore (0-100)
  * - matchStrength (0-100)
  * - futurePotential (0-100)

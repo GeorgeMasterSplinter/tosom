@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
 
     if (!journey) {
       return NextResponse.json(
-        { error: "Ingen aktiv reise funnen", noJourney: true },
+        { error: "Ingen aktiv reise funnet", noJourney: true },
         { status: 404 }
       );
     }
@@ -59,12 +59,12 @@ export async function POST(req: NextRequest) {
 
     if (!conversation) {
       return NextResponse.json(
-        { error: "Ingen conversation funnen" },
+        { error: "Ingen conversation funnet" },
         { status: 404 }
       );
     }
 
-    // 5. Sjekk om allereie har refleksjon for denne dagen
+    // 5. Sjekk om allerede har refleksjon for denne dagen
     const hasReflection = await prisma.journeyMilestone.findFirst({
       where: {
         progress: { userId: user.id },

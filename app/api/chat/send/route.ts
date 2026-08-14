@@ -18,8 +18,8 @@ export const dynamic = "force-dynamic";
 
 /**
  * Map frontend-message type til Prisma MessageCategory.
- * Frontend brukar: "text" | "image" | "task" | "choice"
- * Prisma brukar:   "user" | "image" | "system" | "continue_choice"
+ * Frontend bruker: "text" | "image" | "task" | "choice"
+ * Prisma bruker:   "user" | "image" | "system" | "continue_choice"
  */
 function mapMessageType(frontendType: string): "user" | "system" | "continue_choice" | "image" {
   const mapping: Record<string, "user" | "system" | "continue_choice" | "image"> = {

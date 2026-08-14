@@ -1,5 +1,5 @@
 // app/api/system/messages/route.ts — GET /api/system/messages
-// Returner ulesse systemmeldingar og notifikasjonar for innlogga brukar.
+// Returner ulesse systemmeldingar og notifikasjonar for innlogga bruker.
 // Brukast av journey, chat og dashboard for å vise viktige oppdateringar.
 
 import { NextResponse } from "next/server";
@@ -140,7 +140,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 
       if (!notification) {
         return NextResponse.json(
-          { success: false, error: "Notifikasjon ikke funnen" },
+          { success: false, error: "Notifikasjon ikke funnet" },
           { status: 404, headers: { "Content-Type": "application/json" } }
         );
       }

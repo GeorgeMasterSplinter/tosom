@@ -55,7 +55,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // Valider fil
     if (!file) {
       return NextResponse.json(
-        { error: 'Ingen fil funnen' },
+        { error: 'Ingen fil funnet' },
         { status: 400 }
       );
     }

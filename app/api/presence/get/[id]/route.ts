@@ -29,7 +29,7 @@ export async function GET(
     const presence = getPresence(id);
 
     if (!presence) {
-      // Ingen state funnen — returner default "offline"
+      // Ingen state funnet — returner default "offline"
       return NextResponse.json({
         userId: id,
         isOnline: false,

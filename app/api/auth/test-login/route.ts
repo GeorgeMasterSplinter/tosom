@@ -1,5 +1,5 @@
 // app/api/auth/test-login/route.ts — POST /api/auth/test-login
-// Authentiser ein test-brukar med passord og opprett session via NextAuth
+// Authentiser ein test-bruker med passord og opprett session via NextAuth
 
 import { NextRequest, NextResponse } from 'next/server';
 import { TEST_USERS } from '@/lib/auth/test-users';
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // Finn test-brukar
+    // Finn test-bruker
     const testUser = TEST_USERS.find(u => u.email === email.toLowerCase().trim());
     if (!testUser) {
       return NextResponse.json(

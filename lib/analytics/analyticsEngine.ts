@@ -2,7 +2,7 @@
  * ToSom — Analytics og Innsikt
  * 
  * Innsyn i reise-progresjon, resonans-mønster, match-hvalitet,
- * og brukar-adferd — alt designa roleg og utan stress.
+ * og bruker-adferd — alt designa roleg og utan stress.
  * 
  * Funksjonar:
  *   - Journey analytics (progresjon, dagleg aktivitet)

@@ -136,7 +136,7 @@ export default function JourneyContentEditor() {
       {/* Content list */}
       {!content.length && !error && (
         <div style={{ textAlign: "center", padding: "48px 0", color: "rgba(255,255,255,0.3)" }}>
-          Inget journey-innhald funnen. Køyrd seed-skriptet først.
+          Inget journey-innhald funnet. Køyrd seed-skriptet først.
         </div>
       )}
 

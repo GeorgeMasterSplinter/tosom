@@ -1,6 +1,6 @@
 /**
  * GET /api/onboarding/progress
- * Henta djup profil-fulking for pålogga brukar
+ * Henta djup profil-fulking for pålogga bruker
  * Core-definition: Kun djup profil-data — aldri foto
  */
 

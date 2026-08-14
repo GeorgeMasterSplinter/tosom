@@ -256,7 +256,7 @@ export function BliKjentPanel({ onClose }: BliKjentPanelProps) {
                 </div>
               ) : questions.length === 0 ? (
                 <div className="text-center py-12">
-                  <p className="text-sm font-medium" style={{ color: G.textSecondary }}>Ingen spørsmål funnen.</p>
+                  <p className="text-sm font-medium" style={{ color: G.textSecondary }}>Ingen spørsmål funnet.</p>
                 </div>
               ) : (
                 <div className="space-y-2.5">

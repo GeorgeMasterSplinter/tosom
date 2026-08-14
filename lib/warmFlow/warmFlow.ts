@@ -124,7 +124,7 @@ export const TRANSITION_TEMPLATES: Record<WarmTransitionType, WarmFlowConfig> = 
 // ─── MOOD-ENDRING ─────────────────────
 
 /**
- * Beregn ny mood basert på brukar-aktivitet
+ * Beregn ny mood basert på bruker-aktivitet
  */
 export function determineMood(activity: string, journeyPhase: string): MoodType {
   if (activity === 'milestone' || activity === 'match-accepted') {

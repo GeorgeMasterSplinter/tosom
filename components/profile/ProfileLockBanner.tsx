@@ -3,7 +3,7 @@
 /**
  * ToSom — Profil-lås-banner
  * 
- * Viser at profilen er låst medan brukar har aktiv journey.
+ * Viser at profilen er låst medan bruker har aktiv journey.
 * Bruk: importer og render på /profile og /onboarding.
  */
 

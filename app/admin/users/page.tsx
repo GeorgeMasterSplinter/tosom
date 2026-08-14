@@ -216,7 +216,7 @@ export default function AdminUsersPage() {
 
       {!users.length && !error && (
         <div style={{ textAlign: "center", padding: "48px 0", color: "rgba(255,255,255,0.3)" }}>
-          Ingen brukarar funnen.
+          Ingen brukere funnet.
         </div>
       )}
 

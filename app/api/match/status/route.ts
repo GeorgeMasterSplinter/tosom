@@ -1,7 +1,7 @@
 /**
  * GET /api/match/status
  *
- * Hent match-status for ein brukar.
+ * Hent match-status for ein bruker.
  * B8: Fjerna acceptance-fields; status er no 'active' | 'ended' | 'expired'.
  */
 
@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    // 3. Hent brukar sin lås/info
+    // 3. Hent bruker sin lås/info
     const currentUser = await prisma.user.findUnique({
       where: { id: user.id },
       select: {

@@ -1,7 +1,7 @@
 /**
  * ToSom — Admin Data Layer (STEG 9.3 FIX)
  * 
- * Hentar data for admin-panel: brukarar, profiler, matcher, samtalar, innsikter.
+ * Hentar data for admin-panel: brukere, profiler, matcher, samtalar, innsikter.
  * Fikset matchCount og conversationCount med OR-betingelse (userA + userB).
  */
 

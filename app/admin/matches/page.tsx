@@ -236,7 +236,7 @@ export default function AdminMatchesPage() {
         </div>
       )}
 
-      {!matches.length && !error && <div style={{ textAlign: "center", padding: "48px 0", color: "rgba(255,255,255,0.3)" }}>Ingen matcher funnen.</div>}
+      {!matches.length && !error && <div style={{ textAlign: "center", padding: "48px 0", color: "rgba(255,255,255,0.3)" }}>Ingen matcher funnet.</div>}
 
       {/* Footer */}
       <div style={{ marginTop: "32px", padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", fontSize: "13px", color: "rgba(255,255,255,0.4)" }}>

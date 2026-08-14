@@ -106,7 +106,7 @@ export default function ChatRoom({
 
   const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Hente session (brukar-ID)
+  // Hente session (bruker-ID)
   const fetchSession = useCallback(async () => {
     if (state.sessionFetched) return;
     try {

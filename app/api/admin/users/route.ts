@@ -1,7 +1,7 @@
 /**
  * GET /api/admin/users
  * 
- * Hent alle brukarar med pagination, rolle-filter og flag-status (admin).
+ * Hent alle brukere med pagination, rolle-filter og flag-status (admin).
  * Pakke 4.4.3 — User Flags & Moderation Tools
  * Pakke 5.1 — Zod-validering
  */
@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
     const result = await requireAuth(req)
     if (result instanceof NextResponse) return result
     const adminUser = castToAdminUser(result.user)
-    if (adminUser.role !== 'ADMIN') return errorResponse("Berre admin kan få tilgang til brukarar", 403)
+    if (adminUser.role !== 'ADMIN') return errorResponse("Berre admin kan få tilgang til brukere", 403)
 
     const url = new URL(req.url)
     const queryResult = validateQuery(adminUsersQuerySchema, Object.fromEntries(url.searchParams.entries()))

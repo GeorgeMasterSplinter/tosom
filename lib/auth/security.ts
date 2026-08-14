@@ -10,7 +10,7 @@ import { logWarn } from '@/lib/system/log'
 import { Role } from '@prisma/client'
 
 /**
- * Verifiser at ein brukar er authentisert via NextAuth session.
+ * Verifiser at ein bruker er authentisert via NextAuth session.
  * Returnerar null dersom ikke innlogga.
  */
 export async function verifySession(): Promise<{ userId: string; role: Role } | null> {

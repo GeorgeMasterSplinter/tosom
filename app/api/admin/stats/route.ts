@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
       conversations,
       systemLogs,
     ] = await Promise.all([
-      // 1. Totalt antal brukarar
+      // 1. Totalt antal brukere
       prisma.user.count(),
 
       // 2. Aktive matcher (status: active)
@@ -85,7 +85,7 @@ export async function GET(req: NextRequest) {
       }),
     ]);
 
-    // Hentar nyaste 5 brukarane
+    // Hentar nyaste 5 brukerne
     const recentUsers = await prisma.user.findMany({
       take: 5,
       orderBy: { createdAt: 'desc' },

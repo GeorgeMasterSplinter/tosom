@@ -254,7 +254,7 @@ export default function SystemStatusPage() {
               Siste AI-request logg
             </div>
             <div style={{ fontSize: '14px' }}>
-              {health.cron.lastRun ? new Date(health.cron.lastRun).toLocaleString('nb-NO') : 'Ingen logging funnen'}
+              {health.cron.lastRun ? new Date(health.cron.lastRun).toLocaleString('nb-NO') : 'Ingen logging funnet'}
             </div>
           </div>
         </div>

@@ -1,7 +1,7 @@
 /**
  * PATCH /api/admin/users/[id]
  * 
- * Modereringshandlingar på ein brukar (admin).
+ * Modereringshandlingar på ein bruker (admin).
  * Pakke 4.4.3 — User Flags & Moderation Tools
  * Pakke 5.1 — Zod-validering
  * 
@@ -50,14 +50,14 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       where: { id: targetUserId },
       select: { id: true, email: true, name: true, role: true, bannedAt: true, onboardingComplete: true, createdAt: true },
     })
-    if (!targetUser) return errorResponse('Brukar ikke funnen', 404)
+    if (!targetUser) return errorResponse('Brukar ikke funnet', 404)
     if (targetUserId === adminUser.id) return errorResponse('Du kan ikke handle på eigne konto', 400)
 
     let updatedUser: any
 
     switch (action) {
       case 'flag':
-        if (targetUser.bannedAt) return errorResponse('Brukar er allereie flagga/banna', 400)
+        if (targetUser.bannedAt) return errorResponse('Brukar er allerede flagga/banna', 400)
         updatedUser = await prisma.user.update({ where: { id: targetUserId }, data: { bannedAt: new Date() }, select: { id: true, email: true, name: true, bannedAt: true } })
         await logSystemLog(`Brukar ${targetUser.email} blei flagga/banna av admin ${adminUser.id}`, 'admin/user-flag', adminUser.id, { targetUserId, reason })
         // STEG 9.2 FIX: Logg destruktiv admin-handling
@@ -79,7 +79,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
         return successResponse({ data: updatedUser, message: `Brukar ${targetUser.email} onboarding blei resatt til steg 1.` })
 
       case 'reset-journey':
-        // B4 — JourneyProgress er match-scoped (krever matchId), berre slett eksisterande
+        // B4 — JourneyProgress er match-scoped (krever matchId), bare slett eksisterande
         await prisma.journeyProgress.deleteMany({ where: { userId: targetUserId } })
         // STEG 9.2 FIX: Logg destruktiv admin-handling
         await recordAdminAction(adminUser.id, 'JOURNEY_RESET', { targetUserId })

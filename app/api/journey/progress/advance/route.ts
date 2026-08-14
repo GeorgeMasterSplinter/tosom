@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
 
     if (!journey) {
       return NextResponse.json(
-        { error: "Ingen aktiv reise funnen. Start ein match for å starte reise.", noJourney: true },
+        { error: "Ingen aktiv reise funnet. Start ein match for å starte reise.", noJourney: true },
         { status: 404 }
       );
     }
@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
     // 3. Sjekk om reise er fullført
     if (journey.endedAt) {
       return NextResponse.json(
-        { error: "Reisa di er allereie fullført.", alreadyEnded: true },
+        { error: "Reisa di er allerede fullført.", alreadyEnded: true },
         { status: 409 }
       );
     }
@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
     if (journey.completedDays >= journey.day && journey.day < 30) {
       return NextResponse.json(
         { 
-          error: "Dagen er allereie markert som fullført.",
+          error: "Dagen er allerede markert som fullført.",
           alreadyCompleted: true,
         },
         { status: 409 }
@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
       return JourneyPhase.CHECKIN;
     }
 
-    // 8. Auk til neste dag (dersom ikke allereie ferdig)
+    // 8. Auk til neste dag (dersom ikke allerede ferdig)
     let newDay = journey.day;
     let phaseChangeNotification = false;
     let newPhase: JourneyPhase | undefined;

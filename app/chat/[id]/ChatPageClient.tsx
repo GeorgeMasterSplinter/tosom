@@ -1,6 +1,6 @@
 /**
  * ToSom — Chat Page Client Component
- * Klient-komponent som brukar ChatProvider og ChatContainer.
+ * Klient-komponent som bruker ChatProvider og ChatContainer.
  */
 
 "use client";

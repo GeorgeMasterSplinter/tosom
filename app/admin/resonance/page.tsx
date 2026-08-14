@@ -107,7 +107,7 @@ export default function AdminResonancePage() {
             type="text"
             value={userId}
             onChange={(e) => setUserId(e.target.value)}
-            placeholder="Slå inn brukar-ID..."
+            placeholder="Slå inn bruker-ID..."
             onKeyDown={(e) => e.key === "Enter" && loadData()}
             style={{
               flex: 1,
@@ -147,7 +147,7 @@ export default function AdminResonancePage() {
 
       {!data && !error && !loading && (
         <div style={{ textAlign: "center", padding: "48px 0", color: "rgba(255,255,255,0.3)" }}>
-          Skriv inn ein brukar-ID for å se resonansdata
+          Skriv inn ein bruker-ID for å se resonansdata
         </div>
       )}
 

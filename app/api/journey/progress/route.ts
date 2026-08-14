@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
 
     if (!journey) {
       return NextResponse.json(
-        { error: "Ingen aktiv reise funnen", noJourney: true },
+        { error: "Ingen aktiv reise funnet", noJourney: true },
         { status: 404 }
       );
     }

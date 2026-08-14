@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
 
     if (!user) {
       return NextResponse.json(
-        { error: 'Brukar ikke funnen' },
+        { error: 'Brukar ikke funnet' },
         { status: 404 }
       );
     }

@@ -1,5 +1,5 @@
 // app/api/match/check/route.ts — POST /api/match/check
-// Returner match-status for innlogga brukar utan å opprette ny match.
+// Returner match-status for innlogga bruker utan å opprette ny match.
 // Brukast av frontend for å vise om brukaren har ein aktiv/ventande match.
 
 import { NextRequest, NextResponse } from "next/server";
@@ -43,7 +43,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 
     const userId = session.user.id;
 
-    // Hent brukar info
+    // Hent bruker info
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: { lockedUntil: true, onboardingComplete: true },
@@ -56,7 +56,7 @@ export async function POST(request: Request): Promise<NextResponse> {
       );
     }
 
-    // Sjekk om brukar har fullført onboarding
+    // Sjekk om bruker har fullført onboarding
     if (!user.onboardingComplete) {
       return NextResponse.json(
         { success: true, data: { hasActiveMatch: false, matchId: null, status: "no_match" as const, conversationId: null, lockedUntil: null, nextEligibleAt: null, daysRemaining: null } },

@@ -59,7 +59,7 @@ export default function BlogPostPage() {
     return (
       <main className="min-h-screen flex items-center justify-center" style={{ background: '#0B1520' }}>
         <div className="text-center">
-          <h1 className="mb-4" style={{ ...typographyToStyle('heading-lg'), color: color.text.primary }}>Artikkelen blei ikke funnen</h1>
+          <h1 className="mb-4" style={{ ...typographyToStyle('heading-lg'), color: color.text.primary }}>Artikkelen blei ikke funnet</h1>
           <Link href="/blogg" style={{ ...typographyToStyle('body'), color: color.brand.gold }}>
             Tilbake til bloggen
           </Link>

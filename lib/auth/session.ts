@@ -1,7 +1,7 @@
 /**
  * ToSom — Session helper (NextAuth v5 compatible)
  *
- * Gir compatiblitet for koden som brukar getServerSession.
+ * Gir compatiblitet for koden som bruker getServerSession.
  * I v5 bruker vi auth() frå lib/auth/config istadenfor.
  */
 

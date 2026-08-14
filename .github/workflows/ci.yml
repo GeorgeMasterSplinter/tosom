@@ -279,7 +279,7 @@ jobs:
       - name: Check no nynorsk words remain
         run: |
           echo "Checking for nynorsk words (should be bokmal)..."
-          FOUND=$(grep -rn 'ikkje\|berre\b\|kva\b\|kvarandre\|avslutta\|sjå\b\|nokon\|korleis\|påverka\|mykje\|allereie\|funnen\|brukar\|ikkje\|ver vennleg' \
+          FOUND=$(grep -rnE '\bikkje\b|\bberre\b|\bkva\b|\bkvarandre\b|\bavslutta\b|\bsjå\b|\bnokon\b|\bkorleis\b|\bpåverka\b|\bmykje\b|\ballereie\b|\bfunnen\b|\bbrukar\b|\bbrukarar\b|\bbrukarane\b|ver vennleg' \
             app lib components hooks providers 2>/dev/null \
             | grep -v node_modules || true)
           if [ -n "$FOUND" ]; then

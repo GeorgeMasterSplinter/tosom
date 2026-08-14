@@ -1,6 +1,6 @@
 /**
  * POST /api/onboarding/save
- * Lagre djup profil-steg for pålogga brukar
+ * Lagre djup profil-steg for pålogga bruker
  * Core-definition: Berre djup profil-data brukt — aldri foto-scoring
  */
 

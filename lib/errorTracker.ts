@@ -44,7 +44,7 @@ export async function trackError(
   const message = error instanceof Error ? error.message : String(error)
   const stack: string | undefined = error instanceof Error ? error.stack : undefined
 
-  // Console-logging (allereie i logger.error)
+  // Console-logging (allerede i logger.error)
   logger.error(message, moduleName, { route, userId, ...metadata }, error as Error | undefined)
 
   // Database-logging (asynkron — feil her skal ikke krasje forespørselen)
@@ -58,7 +58,7 @@ export async function trackError(
       },
     })
   } catch {
-    // SystemLog kan ikke lagrast — inga problem, console-logging er allereie gjort
+    // SystemLog kan ikke lagrast — inga problem, console-logging er allerede gjort
   }
 }
 

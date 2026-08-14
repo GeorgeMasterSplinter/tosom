@@ -34,7 +34,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
         userB: { select: { id: true, email: true, name: true, role: true, verified: true, bannedAt: true, onboardingComplete: true, deepProfileComplete: true, createdAt: true, lastMatchAt: true } },
       },
     })
-    if (!match) return errorResponse('Match ikke funnen', 404)
+    if (!match) return errorResponse('Match ikke funnet', 404)
 
     const [journeyA, journeyB] = await Promise.all([
       prisma.journeyProgress.findFirst({ where: { userId: match.userAId } }),

@@ -147,7 +147,7 @@ export default function MatchingPage() {
               style={{ color: 'rgba(255, 255, 255, 0.55)' }}
             >
               {loading
-                ? 'Vi samanlikner profilen din med andre brukarar...'
+                ? 'Vi samanlikner profilen din med andre brukere...'
                 : matches.length > 0
                 ? `Du har ${matches.length} aktiv${matches.length > 1 ? 'e' : ''} kobling basert på dykkar profil.`
                 : 'Du er i kø. Vi varsler deg her når noen passerer.'}

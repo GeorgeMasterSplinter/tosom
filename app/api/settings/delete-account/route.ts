@@ -1,8 +1,15 @@
 /**
- * ToSom — Delete Account Endpoint (STEG 8.4)
- * 
+ * ToSom — Delete Account (STEG C5)
+ *
  * DELETE /api/settings/delete-account
- * GDPR-kompatibel anonymisering av brukerens data.
+ * GDPR art. 17 (rett til sletting).
+ *
+ * Sletterekkefølge:
+ * 1. Hvis aktiv reise → kall endJourney(matchId, 'early_exit') først
+ * 2. Slett Profile, Message, Notification, JourneyProgress
+ * 3. MatchHistory beholdes (bare to ID-er, ingen innhold)
+ * 4. AuditLog med admin-handlinger beholdes (revisjonshensyn)
+ * 5. Slett User-radet helt
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -18,13 +25,13 @@ const DeleteSchema = z.object({
 
 export async function DELETE(req: NextRequest) {
   try {
-    // Krever autentisering
+    // 1. Auth
     const session = await getServerSession();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Uautorisert' }, { status: 401 });
     }
 
-    // Valider bekreftelse
+    // 2. Valider bekreftelse
     let body: unknown;
     try {
       body = await req.json();
@@ -42,45 +49,68 @@ export async function DELETE(req: NextRequest) {
 
     const userId = session.user.id;
 
-    // Kjør anonymisering i transaksjon
+    // 3. Finn aktiv reise og kall endJourney først
+    const activeJourney = await prisma.journeyProgress.findFirst({
+      where: { userId, endedAt: null },
+      select: { matchId: true },
+    });
+
+    if (activeJourney?.matchId) {
+      // Kall journey/exit-endepunktet for å slette samtalen og sette MatchHistory
+      const exitRes = await fetch(
+        `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/journey/exit`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Cookie: req.headers.get('cookie') || '',
+          },
+          body: JSON.stringify({ reason: 'account_deletion' }),
+        }
+      );
+      if (exitRes.ok) {
+        console.log(`[delete-account] endJourney kalt for ${userId}`);
+      }
+    }
+
+    // 4. Slett alt bruker-data i transaksjon
     await prisma.$transaction(async (tx) => {
-      // Slett profiler
+      // Slett profil
       await tx.profile.deleteMany({ where: { userId } });
 
-      // Slett alle meldinger
+      // Slett meldinger
       await tx.message.deleteMany({ where: { senderId: userId } });
 
       // Slett varsler
       await tx.notification.deleteMany({ where: { userId } });
 
-      // Slett reise-progres
+      // Slett journey-progress (endJourney kan ha slettet dem allerede)
       await tx.journeyProgress.deleteMany({ where: { userId } });
 
-      // Marker matcher som 'expired' i stedet for å slette (beholder struktur)
-      await tx.match.updateMany({
+      // Slett matcher (MatchHistory beholdes!)
+      await tx.match.deleteMany({
         where: { OR: [{ userAId: userId }, { userBId: userId }] },
-        data: { status: 'expired' },
       });
 
-      // Marker konversasjoner som avsluttet
+      // Slett konversasjoner
       await tx.conversation.updateMany({
         where: { OR: [{ userAId: userId }, { userBId: userId }] },
         data: { endedAt: new Date() },
       });
 
-      // Anonymiser bruker-data (GDPR sletting via anonymisering)
-      await tx.user.update({
-        where: { id: userId },
-        data: {
-          name: null,
-          email: `anonymized-${Date.now()}@deleted.tosom.local`,
-          phone: null,
-          bannedAt: new Date(), // Blokkerer innlogging etter "sletting"
-        },
-      });
+      // Slett sessions og accounts
+      await tx.session.deleteMany({ where: { userId } });
+      await tx.account.deleteMany({ where: { userId } });
+      await tx.twoFactorSecret.deleteMany({ where: { userId } });
+      await tx.passwordResetToken.deleteMany({ where: { userId } });
+
+      // C5: Slett User-radet helt (GDPR art. 17)
+      await tx.user.delete({ where: { id: userId } });
     });
 
-    return NextResponse.json({ success: true, message: 'Konto slettet' });
+    console.log(`[delete-account] Bruker ${userId} slettet fullstendig`);
+
+    return NextResponse.json({ success: true, message: 'Konto og alle data slettet' });
   } catch (error) {
     console.error('[delete-account] Feil:', error);
     return NextResponse.json({ error: 'Kunne ikke slette konto' }, { status: 500 });

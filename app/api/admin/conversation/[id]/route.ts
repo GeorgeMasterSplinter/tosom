@@ -20,7 +20,7 @@ export async function GET(
     const { id } = await context.params;
 
     // C3: Skriv AuditLog før innsyn — sporet at admin åpner samtale
-    // @ts-expect-error — action-enum utvides ved behov
+    //  — action-enum utvides ved behov
     await prisma.auditLog.create({
       data: {
         adminId: 'system', // adminAuthGuard setter ikke user-id i responsen

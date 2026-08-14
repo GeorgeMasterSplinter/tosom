@@ -3,20 +3,23 @@
  * Henter session og renderar ChatPageClient med sessionUserId.
  */
 
+import { redirect } from 'next/navigation';
 import { getServerSession } from '@/lib/auth/session';
 import ChatPageClient from './ChatPageClient';
 
 export default async function ChatPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession();
-  const resolvedParams = await params;
 
-  // Bruk sessionUserId om tilgjengeleg, elles fallback til conversation-id for dev-mode
-  const sessionUserId = session?.user?.id ?? `dev-user-${resolvedParams.id}`;
+  // B0.7 — Ingen sesjon → ingen pseudo-bruker-id. Send til login for å unngå
+  // at alle meldinger rendres som «meg» og for å lukke en potensiell tilgangsfeil.
+  if (!session?.user?.id) {
+    redirect('/login');
+  }
 
   return (
     <ChatPageClient
       params={params}
-      sessionUserId={sessionUserId}
+      sessionUserId={session.user.id}
     />
   );
 }

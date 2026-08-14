@@ -2,15 +2,18 @@
 
 /**
  * ToSom — Avslutnings-side (2 valg)
- * 
+ *
  * Vises etter 30-dagers reise. Brukeren får 2 valg:
- * 1. "Ja til tosommhet" — Chat slettes, rolige avskjed, SLUTT
- * 2. "Start ny reise" — Chat slettes, onboarding låses opp, LOOP ↺
+ * 1. "Vi fant hverandre" — `endJourney('completed')` → takkeside → IDLE
+ * 2. "Start ny reise" — `endJourney('completed')` → betaling → profil → kø → IDLE
+ *
+ * B10: Begge kaller endJourney(). Forskjellen er kun hvor brukeren sendes etterpå.
+ * Bekreftelsesdialog er påkrevd med ordrett tekst fra konseptet.
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { radius, color, typography } from '@/config/design-tokens';
+import { color, typography } from '@/config/design-tokens';
 
 /* ====== Icons ====== */
 
@@ -114,17 +117,19 @@ function ChoiceCard({ title, description, icon, gradientFrom, gradientTo, border
   );
 }
 
-/* ====== Confirmation Modal ====== */
+/* ====== Confirmation Modal (B10 — påkrevd tekst) ====== */
 
 function ConfirmModal({
   title,
   message,
+  warningText,
   confirmText,
   onCancel,
   onConfirm,
 }: {
   title: string;
   message: string;
+  warningText: string;
   confirmText: string;
   onCancel: () => void;
   onConfirm: () => void;
@@ -150,8 +155,13 @@ function ConfirmModal({
           {title}
         </h3>
 
-        <p style={{ fontSize: '15px', lineHeight: '1.7', color: 'rgba(255, 255, 255, 0.5)', marginBottom: '24px' }}>
+        <p style={{ fontSize: '15px', lineHeight: '1.7', color: 'rgba(255, 255, 255, 0.5)', marginBottom: '16px' }}>
           {message}
+        </p>
+
+        {/* B10 — påkrevd bekreftelsestekst */}
+        <p style={{ fontSize: '13px', lineHeight: '1.5', color: 'rgba(212, 175, 55, 0.8)', marginBottom: '24px', fontStyle: 'italic' }}>
+          {warningText}
         </p>
 
         <button
@@ -186,46 +196,61 @@ export default function AvslutningSide() {
   const router = useRouter();
   const [selected, setSelected] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
+  const [journeyDay, setJourneyDay] = useState<number | null>(null);
 
   // Sjekk om dag 30 er nådd ved side-lasting
-  const checkJourneyComplete = async () => {
-    try {
-      const res = await fetch('/api/journey/status');
-      if (res.ok) {
-        const json = await res.json();
-        if (json.success && json.data && json.data.day < 30) {
-          // Ikke fullført enda - gå tilbake til dashboard
-          router.push('/dashboard');
-          return;
+  useEffect(() => {
+    const checkJourneyComplete = async () => {
+      try {
+        const res = await fetch('/api/dashboard/overview');
+        if (res.ok) {
+          const json = await res.json();
+          if (json.journey) {
+            const day = json.journey.day;
+            setJourneyDay(day);
+            if (day < 30 && day > 0) {
+              // Ikke fullført enda — gå tilbake til dashboard
+              router.push('/dashboard');
+              return;
+            } else if (day === 0 || !day) {
+              // Ingen aktiv reise
+              router.push('/dashboard');
+            }
+          }
         }
+      } catch {
+        console.log('Kan ikke sjekke journey-status');
       }
-    } catch {
-      console.log('Kan ikke sjekke journey-status');
-    }
-  };
+    };
+    checkJourneyComplete();
+  }, [router]);
 
-  const handleChoice1 = () => setSelected(1); // Ja til tosommhet
-  const handleChoice2 = () => setSelected(2); // Start ny reise
-
+  // B10: Begge valg kaller endJourney() med outcome 'completed'
   const confirmChoice = async () => {
     if (!selected) return;
     setLoading(true);
 
     try {
-      const choice = selected === 1 ? 'complete' : 'loop_back';
-      const res = await fetch('/api/journey/reset', {
+      // B10: Begge bruker samme outcome — forskjellen er kun redirect etterpå
+      const res = await fetch('/api/journey/exit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ choice }),
+        body: JSON.stringify({ reason: selected === 2 ? 'ny_reise' : 'completed' }),
       });
 
       if (res.ok) {
         const data = await res.json();
-        localStorage.removeItem('testUserId');
-        router.push(data.redirect);
+        // B10: Valg 1 → takkeside; Valg 2 → tilbake til dashboard for ny reise
+        if (selected === 1) {
+          // "Vi fant hverandre" — takkeside (kan redirecte til /reisen/takk når den finnes)
+          router.push('/dashboard?ended=together');
+        } else {
+          // "Ny reise" → tilbake til dashboard, brukeren kan starte ny reise
+          router.push('/dashboard?ended=new_journey');
+        }
       }
     } catch (err) {
-      console.log('Feil ved journey-reset:', err);
+      console.log('Feil ved journey-avslutning:', err);
     }
 
     setSelected(null);
@@ -283,15 +308,15 @@ export default function AvslutningSide() {
         {/* Choice Cards - 2 valg */}
         <div className="w-full space-y-5">
 
-          {/* Valg 1: Ja til tosommhet */}
+          {/* Valg 1: Vi fant hverandre */}
           <ChoiceCard
-            title="Ja til tosommhet 💛"
-            description="Dere fant hverandre. Møtes utenom ToSom, og lykke til! 🤍"
+            title="Vi fant hverandre 💛"
+            description="Dere møtes utenom ToSom. Lykke til! 🤍"
             icon={<IconHeart />}
             gradientFrom="#D4AF37"
             gradientTo="#E8C766"
             borderColor="rgba(212, 175, 55, 0.3)"
-            onClick={handleChoice1}
+            onClick={() => setSelected(1)}
           />
 
           {/* Valg 2: Start ny reise */}
@@ -302,7 +327,7 @@ export default function AvslutningSide() {
             gradientFrom="#A78BFA"
             gradientTo="#C4B5FD"
             borderColor="rgba(167, 139, 250, 0.3)"
-            onClick={handleChoice2}
+            onClick={() => setSelected(2)}
           />
 
         </div>
@@ -318,11 +343,12 @@ export default function AvslutningSide() {
 
       </div>
 
-      {/* Confirm Modal */}
+      {/* B10: Confirm Modal med påkrevd bekreftelsestekst */}
       {selected === 1 && (
         <ConfirmModal
-          title="Ja til tosommhet?"
-          message="Chat blir slettet. Dere møtes utenom ToSom. Lykke til!"
+          title="Vi fant hverandre?"
+          message="Dere møtes utenom ToSom. Lykke til!"
+          warningText="Dette sletter samtalen for dere begge. Det kan ikke angres."
           confirmText={loading ? "Behandler..." : "Ja, det var noe 💛"}
           onCancel={() => setSelected(null)}
           onConfirm={confirmChoice}
@@ -332,7 +358,8 @@ export default function AvslutningSide() {
       {selected === 2 && (
         <ConfirmModal
           title="Start ny reise?"
-          message="Chat blir slettet. Onboarding låses opp. Du kan endre profil før ny match."
+          message="Onboarding låses opp. Du kan endre profil før ny match."
+          warningText="Dette sletter samtalen for dere begge. Det kan ikke angres."
           confirmText={loading ? "Behandler..." : "Start ny reise 🔄"}
           onCancel={() => setSelected(null)}
           onConfirm={confirmChoice}

@@ -7,8 +7,7 @@ const nextConfig = {
     return config;
   },
 
-  // Standalone output for Docker deployment (STEG 4.3)
-  output: 'standalone',
+  // Vercel deployment — standalone ikke nødvendig (F1)
 
   // Server Actions — restricted origins (STEG 4.5)
   // Replaced wildcard '*' with actual production/staging domains

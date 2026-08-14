@@ -777,7 +777,7 @@ body.landing-page {
   --ts-spacing-96: 24rem;
 
   /* ══ UI 5.0 Background Palette ══ */
-  --ts-bg-primary: #0B0E11;
+  --ts-bg-primary: #0B1520;
   --ts-bg-secondary: #11151A;
   --ts-bg-surface: #1A1F26;
   --ts-bg-surface-elevated: #222830;
@@ -792,7 +792,7 @@ body.landing-page {
   /* ══ UI 5.0 Gold Accents ══ */
   --ts-gold: #D4AF37;
   --ts-gold-light: #E8C766;
-  --ts-gold-dark: #B8942E;
+  --ts-gold-dark: #C49F2F;
   --ts-gold-soft: rgba(212, 175, 55, 0.10);
   --ts-gold-glow: rgba(212, 175, 55, 0.25);
   --ts-gold-glow-strong: rgba(212, 175, 55, 0.40);

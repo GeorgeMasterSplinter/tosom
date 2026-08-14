@@ -1,0 +1,35 @@
+{
+  "instruks": "v5.0-kjerneloftet",
+  "sourceDoc": "docs/TOSOM-MASTERPLAN-v4.0.md",
+  "baseCommit": "837c16f",
+  "currentWave": "0",
+  "currentStep": "0.1",
+  "completedSteps": [],
+  "failedSteps": [],
+  "nextStep": "0.2",
+  "waveGateB0": false,
+  "waveGateB1": false,
+  "preflight": {
+    "vercelPlan": "hobby",
+    "maxDurationAllowed": 60,
+    "dbAccessible": false,
+    "sentryDsnSet": false
+  },
+  "status": {
+    "tsc": "not-run",
+    "grep": "not-run",
+    "build": "not-run",
+    "functional": "not-run",
+    "concept": "not-run",
+    "migration": "not-run",
+    "wired": "not-run"
+  },
+  "scores": {
+    "matchekvalitet": 35,
+    "drift": 50,
+    "lansering": 57
+  },
+  "deviations": [],
+  "lastCommit": "",
+  "updatedAt": ""
+}

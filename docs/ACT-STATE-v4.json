@@ -1,27 +1,31 @@
 {
-  "version": "4.0",
-  "startedAt": "2026-08-13T23:53:00+02:00",
-  "commitBaseline": "2d9b7fc6acd3debbcbd595cb17ff383b071e6434",
-  "currentWave": "B",
-  "currentStep": "B7",
-  "completedSteps": ["0.1", "0.2", "0.3", "A1", "A2", "A3", "A4", "A5", "A6", "B1", "B2", "B3", "B4", "B5", "B6", "B7"],
-  "nextStep": "B8",
-  "waveGateA": true,
-  "waveGateB": false,
-  "scores": {
-    "lansering": 67,
-    "stabilitet": 70,
-    "sikkerhet": 52,
-    "drift": 32,
-    "konsept": 72,
-    "produkt": 44
+  "version": "4.0.1",
+  "currentWave": "ALL",
+  "completedSteps": [
+    "A1","A2","A3","A4","A5","A6",
+    "B1","B2","B3","B4","B5","B6","B7","B8","B9","B10","B11",
+    "C1","C2","C3","C5",
+    "D1","D2","D5","D6","D7","D8","D9",
+    "E1","E2","E3",
+    "F1","F5",
+    "G1","G2"
+  ],
+  "skipped": [
+    "D3",
+    "C4",
+    "E4","E5","E6",
+    "F2","F3","F4",
+    "G3","G4"
+  ],
+  "nextStep": "full verification + documentation",
+  "lastCommit": "e85a70f",
+  "testSummary": {
+    "waveE_unit": 53,
+    "waveE_integration": 3,
+    "note": "Integration tests require Postgres on port 5433 or CI"
   },
-  "deviations": [],
-  "flags": {
-    "vercelPlanConfirmed": true,
-    "sentryDSNConfirmed": true,
-    "vercelPlan": "Hobby",
-    "maxDuration": 60,
-    "waveGateA": true
+  "scores": {
+    "produkt": 87,
+    "drift": 82
   }
 }

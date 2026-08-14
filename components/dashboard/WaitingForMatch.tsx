@@ -126,7 +126,7 @@ export function WaitingForMatch({ userName }: { userName: string }) {
           }}
         >
           Vi beregner matcher en gang per natt. 
-          Du får én match om dagen, beregnet i morgen kl. 05:00.
+          Du får en ny match hver dag.
         </p>
 
         <p

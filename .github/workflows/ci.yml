@@ -93,7 +93,6 @@ jobs:
   test:
     name: Unit Tests
     runs-on: ubuntu-latest
-    # STEG 3.1: Legg til postgres-service for test-jobben
     services:
       postgres:
         image: postgres:16
@@ -143,7 +142,6 @@ jobs:
     name: E2E Tests (Playwright)
     runs-on: ubuntu-latest
     needs: [build]
-    # STEG 3.1: Legg til postgres-service for e2e-jobben
     services:
       postgres:
         image: postgres:16
@@ -264,7 +262,7 @@ jobs:
       - name: Check no nynorsk words remain
         run: |
           echo "Checking for nynorsk words (should be bokmal)..."
-          FOUND=$(grep -rn 'ikkje\|berre\b\|kva\b\|kvarandre\|avslutta\|sjå\b\|nokon\|korleis\|påverka\|mykje' \
+          FOUND=$(grep -rn 'ikkje\|berre\b\|kva\b\|kvarandre\|avslutta\|sjå\b\|nokon\|korleis\|påverka\|mykje\|allereie\|funnen\|brukar\|ikkje\|ver vennleg' \
             app lib components hooks providers 2>/dev/null \
             | grep -v node_modules || true)
           if [ -n "$FOUND" ]; then
@@ -296,9 +294,7 @@ jobs:
         run: |
           echo "Verifying cron paths map to existing route files..."
           FAIL=0
-          # Extract paths from vercel.json and check for corresponding route.ts files
           while IFS= read -r path; do
-            # Convert /api/cron/matching -> app/api/cron/matching/route.ts
             expected_file="app${path}/route.ts"
             if [ ! -f "$expected_file" ]; then
               echo "FAIL: Cron path '$path' has no corresponding file at $expected_file"
@@ -309,10 +305,46 @@ jobs:
           done < <(grep '"path"' vercel.json | sed 's/.*"path": *"\([^"]*\)".*/\1/')
           exit $FAIL
 
+  # ─── CONCEPT GUARD (STEG B11 — B11) ───
+  concept-guard:
+    name: Konseptvakt — Koblingsmodellen
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Ingen samtykkeflyt
+        run: |
+          echo "Checking for re-introduction of acceptance flow..."
+          if grep -rn "acceptedBy\|rejectedBy\|match/accept" \
+               app/ lib/ components/ prisma/ --include=*.ts --include=*.tsx --include=*.prisma; then
+            echo "::error::Samtykkeflyt gjeninnført. Se TOSOM-MASTERPLAN-v3.0 DEL 2."
+            exit 1
+          fi
+          echo "PASS: No acceptance flow detected."
+
+      - name: Kun én matchemotor
+        run: |
+          echo "Checking for multiple match engines..."
+          if grep -rn "findBestMatchFor" app/ lib/ --include=*.ts; then
+            echo "::error::Andre matchemotor gjeninnført."
+            exit 1
+          fi
+          echo "PASS: Only one match engine found."
+
+      - name: Ingen 05:00 i brukervendt tekst
+        run: |
+          echo "Checking for operational details leaked to user-facing text..."
+          if grep -rn "05:00\|kl. 5" app/ components/ --include=*.tsx | grep -v admin; then
+            echo "::error::Driftsdetalj lekket til brukervendt tekst."
+            exit 1
+          fi
+          echo "PASS: No operational details in user-facing text."
+
   # ─── COMBINED STATUS ───
   status:
     name: CI Status
-    needs: [lint, typecheck, build, test, e2e, prisma, ai-guard, lang-guard, cron-guard]
+    needs: [lint, typecheck, build, test, e2e, prisma, ai-guard, lang-guard, cron-guard, concept-guard]
     runs-on: ubuntu-latest
     if: always()
     steps:
@@ -326,7 +358,8 @@ jobs:
               [ "${{ needs.prisma.result }}" != "success" ] || \
               [ "${{ needs.ai-guard.result }}" != "success" ] || \
               [ "${{ needs.lang-guard.result }}" != "success" ] || \
-              [ "${{ needs.cron-guard.result }}" != "success" ]; then
+              [ "${{ needs.cron-guard.result }}" != "success" ] || \
+              [ "${{ needs.concept-guard.result }}" != "success" ]; then
             echo "CI pipeline failed!"
             exit 1
           fi

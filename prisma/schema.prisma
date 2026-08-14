@@ -86,7 +86,7 @@ model Profile {
   @@index([matchTags])
 }
 
-// STEG B8: Fjerna acceptedByA/B, rejectedByA/B, rejectionReason, insights-relasjon
+// B8: Samtykkefelt fjernet — se TOSOM-MASTERPLAN-v3.0 DEL 2
 model Match {
   id               String         @id @default(cuid())
   userAId          String

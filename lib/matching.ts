@@ -4,7 +4,7 @@
 
 /**
  * HOVEDFUNKSJON: matchingEngine() fra engine.ts
- * findBestMatchFor er FJERNET (STEG B7) — ToSom kobler, godtar ikke.
+ * Koblingsmodellen: ToSom kobler automatisk, ingen samtykkeflyt.
  */
 
 // Kjerne-funksjoner

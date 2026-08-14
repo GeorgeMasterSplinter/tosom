@@ -614,3 +614,39 @@ model Report {
   @@index([status, createdAt])
   @@index([reportedId])
 }
+
+// STEG G1 — Order-modell og betalingsgrensesnitt
+model Order {
+  id               String      @id @default(cuid())
+  userId           String
+  amount           Int         @default(34900)   // øre
+  currency         String      @default("NOK")
+  status           OrderStatus @default(PENDING)
+  provider         String      @default("vipps")
+  providerRef      String?     @unique
+  freeQuota        Boolean     @default(false)
+  withdrawalWaiver Boolean     @default(false)   // angrerett, C4
+  waiverAt         DateTime?
+  createdAt        DateTime    @default(now())
+  completedAt      DateTime?
+
+  @@index([userId, status])
+  @@index([status, createdAt])
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+// STEG G1 — WebhookEvent for idempotens (Vipps sender samme hendelse flere ganger)
+model WebhookEvent {
+  id         String   @id            // provider-ID → idempotens
+  provider   String
+  payload    Json
+  receivedAt DateTime @default(now())
+
+  @@index([provider, receivedAt])
+}

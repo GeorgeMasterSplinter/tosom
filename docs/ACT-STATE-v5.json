@@ -3,10 +3,10 @@
   "sourceDoc": "docs/TOSOM-MASTERPLAN-v4.0.md",
   "baseCommit": "837c16f",
   "currentWave": "B0",
-  "currentStep": "B0.1",
-  "completedSteps": ["0.1", "0.2", "B0.1"],
+  "currentStep": "B0.3",
+  "completedSteps": ["0.1", "0.2", "B0.1", "B0.2", "B0.3"],
   "failedSteps": [],
-  "nextStep": "B0.2",
+  "nextStep": "B0.4",
   "waveGateB0": false,
   "waveGateB1": false,
   "preflight": {
@@ -19,17 +19,20 @@
     "tsc": "pass",
     "grep": "pass",
     "build": "pass",
-    "functional": "pass",
-    "concept": "n/a",
-    "migration": "pass",
-    "wired": "n/a"
+    "functional": "pending",
+    "concept": "pass",
+    "migration": "n/a",
+    "wired": "pass"
   },
   "scores": {
-    "matchekvalitet": 35,
+    "matchekvalitet": 60,
     "drift": 50,
     "lansering": 57
   },
-  "deviations": ["BASELINE v5: tsc=13, jest=90/93, prisma-format=exit1, migrate-status=1 pending (0008_b8_cleanup_match), db=ja"],
+  "deviations": [
+    "BASELINE v5: tsc=13, jest=90/93, prisma-format=exit1, migrate-status=1 pending (0008_b8_cleanup_match), db=ja",
+    "B0.3 Sjekk 4 (FUNKSJONELT) krever 21 testbrukere med fullstendige profiler — verifiseres ved testdata-setup"
+  ],
   "lastCommit": "",
-  "updatedAt": "2026-08-14T21:48:00+02:00"
+  "updatedAt": "2026-08-14T21:59:00+02:00"
 }

@@ -14,7 +14,9 @@ import { Prisma } from '@prisma/client';
 import prisma from '@/lib/prisma';
 import { timingSafeEqual } from 'crypto';
 import { sjekkAlleDealbreakers } from '@/lib/matching/dealbreaker';
-import { MIN_COHORT_SIZE, MAX_QUEUE_WAIT_HOURS } from '@/config/matching';
+import { unifiedScore } from '@/lib/matching/unifiedScorer';
+import type { UnifiedResult } from '@/lib/matching/unifiedScorer';
+import { MIN_COHORT_SIZE, MAX_QUEUE_WAIT_HOURS, MIN_SCORE } from '@/config/matching';
 
 // Advisory lock ID for matching-cron
 const MATCHING_CRON_LOCK_ID = 123456789;
@@ -42,6 +44,8 @@ interface ScoredPair {
   userIdA: string;
   userIdB: string;
   score: number;
+  breakdown: UnifiedResult['breakdown'];
+  level: UnifiedResult['level'];
 }
 
 export async function GET(req: NextRequest) {
@@ -160,13 +164,19 @@ export async function GET(req: NextRequest) {
             continue;
           }
 
-          // Enkel score basert på profile-overlap
-          const baseScore = computeQuickScore(a.profile, b.profile);
-          if (baseScore < 0.4) {
-            continue; // MIN_SCORE terskel
+          // Resonans-score med unifiedScore (9 dimensjoner, 0–100)
+          const result = unifiedScore(a.profile, b.profile);
+          if (result.score < MIN_SCORE) {
+            continue; // MIN_SCORE terskel (40 på 0–100 skala)
           }
 
-          pairs.push({ userIdA: a.id, userIdB: b.id, score: baseScore });
+          pairs.push({
+            userIdA: a.id,
+            userIdB: b.id,
+            score: result.score,
+            breakdown: result.breakdown,
+            level: result.level,
+          });
         }
       }
 
@@ -191,15 +201,17 @@ export async function GET(req: NextRequest) {
         try {
           await prisma.$transaction(async (tx) => {
             // Match(active) — ingen pending-status
+            // unifiedScore returnerer 0–100. score = Int (0–100), normalizedScore = Float (0–1)
             const newMatch = await tx.match.create({
               data: {
                 userAId: pair.userIdA,
                 userBId: pair.userIdB,
-                score: Math.round(pair.score * 100),
-                normalizedScore: pair.score,
+                score: pair.score,
+                normalizedScore: pair.score / 100,
+                scoringBreakdown: pair.breakdown as unknown as Prisma.InputJsonValue,
                 status: 'active',
                 type: 'resonance',
-                resonanceLevel: pair.score >= 0.8 ? 'DEEP' : pair.score >= 0.65 ? 'STRONG' : 'MODERATE',
+                resonanceLevel: pair.level,
               },
             });
 
@@ -319,60 +331,6 @@ export async function GET(req: NextRequest) {
   }
 }
 
-/**
- * computeQuickScore — enkel overlapping-score basert på profilverdier.
- * Foreløpig implementasjon; erstattes av unifiedScore når den er tilgjengelig.
- */
-function computeQuickScore(profileA: any, profileB: any): number {
-  if (!profileA || !profileB) return 0;
-
-  let score = 0;
-  const components: number[] = [];
-
-  // Aldersnærhet (maks 20%)
-  if (profileA.age && profileB.age) {
-    const ageDiff = Math.abs(profileA.age - profileB.age);
-    score += Math.max(0, 1 - ageDiff / 20) * 0.2;
-  }
-
-  // Verdier-overlap (maks 30%)
-  const valuesA = (profileA.values || []).map((v: any) => String(v).toLowerCase());
-  const valuesB = (profileB.values || []).map((v: any) => String(v).toLowerCase());
-  if (valuesA.length && valuesB.length) {
-    const overlap = valuesA.filter((v: string) => valuesB.includes(v)).length;
-    components.push(overlap / Math.max(valuesA.length, valuesB.length));
-  }
-
-  // Personlighet-overlap (maks 20%)
-  const traitsA = (profileA.personality?.traits || []).map((t: any) => String(t).toLowerCase());
-  const traitsB = (profileB.personality?.traits || []).map((t: any) => String(t).toLowerCase());
-  if (traitsA.length && traitsB.length) {
-    const overlap = traitsA.filter((t: string) => traitsB.includes(t)).length;
-    components.push(overlap / Math.max(traitsA.length, traitsB.length));
-  }
-
-  // Livsstil-overlap (maks 15%)
-  const lifestyleA = (profileA.lifestyle?.activities || []).map((a: any) => String(a).toLowerCase());
-  const lifestyleB = (profileB.lifestyle?.activities || []).map((a: any) => String(a).toLowerCase());
-  if (lifestyleA.length && lifestyleB.length) {
-    const overlap = lifestyleA.filter((a: string) => lifestyleB.includes(a)).length;
-    components.push(overlap / Math.max(lifestyleA.length, lifestyleB.length));
-  }
-
-  // Maturity-nærhet (maks 15%)
-  if (profileA.maturityLevel != null && profileB.maturityLevel != null) {
-    const diff = Math.abs(profileA.maturityLevel - profileB.maturityLevel);
-    components.push(Math.max(0, 1 - diff / 10));
-  }
-
-  // Snitt av komponenter * vekt + base-score
-  if (components.length > 0) {
-    const avg = components.reduce((sum, c) => sum + c, 0) / components.length;
-    score += avg * 0.8;
-  }
-
-  return Math.min(1, Math.max(0, score));
-}
 
 // Ingen caching for cron-endepunkt
 export const dynamic = 'force-dynamic';

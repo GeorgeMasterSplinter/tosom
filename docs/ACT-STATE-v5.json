@@ -3,10 +3,10 @@
   "sourceDoc": "docs/TOSOM-MASTERPLAN-v4.0.md",
   "baseCommit": "837c16f",
   "currentWave": "B0",
-  "currentStep": "0.2",
-  "completedSteps": ["0.1"],
+  "currentStep": "B0.1",
+  "completedSteps": ["0.1", "0.2", "B0.1"],
   "failedSteps": [],
-  "nextStep": "B0.1",
+  "nextStep": "B0.2",
   "waveGateB0": false,
   "waveGateB1": false,
   "preflight": {
@@ -16,13 +16,13 @@
     "sentryDsnSet": false
   },
   "status": {
-    "tsc": "not-run",
-    "grep": "not-run",
-    "build": "not-run",
-    "functional": "not-run",
-    "concept": "not-run",
-    "migration": "not-run",
-    "wired": "not-run"
+    "tsc": "pass",
+    "grep": "pass",
+    "build": "pass",
+    "functional": "pass",
+    "concept": "n/a",
+    "migration": "pass",
+    "wired": "n/a"
   },
   "scores": {
     "matchekvalitet": 35,
@@ -30,6 +30,6 @@
     "lansering": 57
   },
   "deviations": ["BASELINE v5: tsc=13, jest=90/93, prisma-format=exit1, migrate-status=1 pending (0008_b8_cleanup_match), db=ja"],
-  "lastCommit": "718c55f",
-  "updatedAt": "2026-08-14T21:38:00+02:00"
+  "lastCommit": "",
+  "updatedAt": "2026-08-14T21:48:00+02:00"
 }

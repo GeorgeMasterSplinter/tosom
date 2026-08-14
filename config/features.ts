@@ -1,21 +1,33 @@
 /**
- * ToSom — Feature Flags
- * 
- * Denne fila styrer hvilke funksjonar som er på/av.
+ * ToSom — Feature Flags / Kill Switches (F5)
+ *
+ * Bryterne leses fra miljøvariabler og krever INGEN deploy for å endres
+ * — kun en env-oppdatering i Vercel-dashboardet.
  */
 
 export const features = {
   /**
-   * Om betaling er aktivert.
-   * Når false: brukarar får direkte tilgang utan betaling.
-   * Når true: brukarar blir sende til /betaling før matching.
+   * MATCHING_ENABLED — Stanser matcherunden uten å ta ned produktet.
+   * Køen består. Brukere allerede i kjø står som QUEUED.
    */
-  enablePayments: false,
+  enableMatching: process.env.MATCHING_ENABLED === 'false' ? false : true,
 
   /**
-   * Om match-funksjonalitet er aktivert.
+   * REGISTRATION_ENABLED — Luker registreringen ved kapasitetsproblemer.
    */
-  enableMatching: true,
+  enableRegistration: process.env.REGISTRATION_ENABLED === 'false' ? false : true,
+
+  /**
+   * Om betaling er aktivert (PAYMENTS_ENABLED).
+   * Når false: brukere får direkte tilgang uten betaling (gratiskvote).
+   * Når true: sendes til /betaling før matching.
+   */
+  enablePayments: process.env.PAYMENTS_ENABLED === 'true' ? true : false,
+
+  /**
+   * MAINTENANCE_MODE — Viser app/maintenance flaten.
+   */
+  maintenanceMode: process.env.MAINTENANCE_MODE === 'true' ? true : false,
 
   /**
    * Om reise-funksjonalitet er aktivert.
@@ -28,7 +40,14 @@ export const features = {
   enableChat: true,
 };
 
-/**
- * Sjekk om betaling er aktivert.
- */
+/** Sjekk om betaling er aktivert */
 export const isPaymentsEnabled = (): boolean => features.enablePayments;
+
+/** Sjekk om matching er aktivert (kill switch for runden) */
+export const isMatchingEnabled = (): boolean => features.enableMatching;
+
+/** Sjekk om registrering er aktivert */
+export const isRegistrationEnabled = (): boolean => features.enableRegistration;
+
+/** Sjekk om vedlikeholdsmodus er på */
+export const isMaintenanceMode = (): boolean => features.maintenanceMode;

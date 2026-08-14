@@ -17,6 +17,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth/requireAuth';
+import { isPaymentsEnabled } from '@/config/features';
 
 export const dynamic = 'force-dynamic';
 
@@ -69,6 +70,25 @@ export async function POST(req: NextRequest) {
         { error: 'Kontoen er slettet' },
         { status: 410 }
       );
+    }
+
+    // B0.6 — Kill switch / betalingsgate:
+    // PAYMENTS_ENABLED=true → krev fullført betaling før kø (sendes til /betaling).
+    // PAYMENTS_ENABLED=false → gratismodus, alle slipper rett i kø.
+    if (isPaymentsEnabled()) {
+      const paidOrder = await prisma.order.findFirst({
+        where: { userId: user.id, status: 'PAID' },
+        select: { id: true },
+      });
+      if (!paidOrder) {
+        return NextResponse.json(
+          {
+            error: 'Betaling kreves før du kan starte reisen.',
+            redirectTo: '/betaling',
+          },
+          { status: 402 }
+        );
+      }
     }
 
     // 4. Idempotent kø-settning i en transaksjon

@@ -10,6 +10,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { prisma } from '@/lib/prisma';
 import { signIn } from '@/lib/auth/config';
+import { isRegistrationEnabled } from '@/config/features';
 
 export const dynamic = 'force-dynamic';
 
@@ -147,6 +148,22 @@ export async function GET(request: NextRequest) {
     let user = await prisma.user.findUnique({ where: { email } });
 
     if (!user) {
+      // B0.6 — Kill switch: REGISTRATION_ENABLED=false stenger nye registreringar
+      if (!isRegistrationEnabled()) {
+        await prisma.systemLog.create({
+          data: {
+            level: 'INFO',
+            message: 'Registrering stanset av kill switch (REGISTRATION_ENABLED=false)',
+            module: 'auth:vipps',
+            metadata: { skipped: true, reason: 'registration_disabled' },
+          },
+        });
+        return NextResponse.json(
+          { error: 'Registreringen er midlertidig stengt. Velkommen tilbake litt senere.' },
+          { status: 503 }
+        );
+      }
+
       // Opprett ny brukar
       const name = userInfo.name || userInfo.given_name || 'Ny Brukar';
       user = await prisma.user.create({

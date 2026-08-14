@@ -17,6 +17,7 @@ import { sjekkAlleDealbreakers } from '@/lib/matching/dealbreaker';
 import { unifiedScore } from '@/lib/matching/unifiedScorer';
 import type { UnifiedResult } from '@/lib/matching/unifiedScorer';
 import { MIN_COHORT_SIZE, MAX_QUEUE_WAIT_HOURS, MIN_SCORE } from '@/config/matching';
+import { isMatchingEnabled } from '@/config/features';
 
 // B0.5 — Vercel Hobby: max 60s
 export const maxDuration = 60;
@@ -69,6 +70,19 @@ export async function GET(req: NextRequest) {
   const providedSecret = authHeader.slice(7);
   if (!safeCompare(providedSecret, expectedSecret)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  }
+
+  // B0.6 — Kill switch: MATCHING_ENABLED=false stanser runden uten å røre køen
+  if (!isMatchingEnabled()) {
+    await prisma.systemLog.create({
+      data: {
+        level: 'INFO',
+        message: 'Matching stanset av kill switch (MATCHING_ENABLED=false)',
+        module: 'cron:matching',
+        metadata: { skipped: true, reason: 'matching_disabled' },
+      },
+    });
+    return NextResponse.json({ ok: true, skipped: true, reason: 'matching_disabled' });
   }
 
   let lockAcquired = false;

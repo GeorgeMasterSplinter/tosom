@@ -25,8 +25,11 @@ import type { NextRequest } from 'next/server'
 import { getToken } from 'next-auth/jwt'
 import { verifyAdminCookie } from '@/lib/auth/admin-jwt'
 import { isAdminRole } from '@/lib/auth/roles'
+import { isMaintenanceMode } from '@/config/features'
 
-const MAINTENANCE_ENABLED = process.env.MAINTENANCE_ENABLED === 'true'
+// B0.6 — MAINTENANCE_MODE leses via config/features (kill switch).
+// MAINTENANCE_ENABLED beholdes som bakoverkompatibel alias.
+const MAINTENANCE_ENABLED = isMaintenanceMode() || process.env.MAINTENANCE_ENABLED === 'true'
 const DEV_LOGIN_DISABLED = process.env.DEV_LOGIN_ENABLED !== 'true'
 
 /** Alltid tilgjengelige baner (nivå 0) */
@@ -74,9 +77,16 @@ export async function middleware(req: NextRequest) {
     })
   }
 
-  // Maintenance mode — redirect alt til /maintenance
+  // Maintenance mode — redirect alt til /maintenance, men hold /api/system/* og /admin/* oppe
   if (MAINTENANCE_ENABLED) {
-    if (path !== '/maintenance' && !path.startsWith('/maintenance/')) {
+    const isExcluded =
+      path === '/maintenance' ||
+      path.startsWith('/maintenance/') ||
+      path.startsWith('/api/system') ||
+      path.startsWith('/admin') ||
+      path.startsWith('/_next') ||
+      path === '/favicon.ico'
+    if (!isExcluded) {
       return NextResponse.redirect(new URL('/maintenance', req.url))
     }
     return NextResponse.next()

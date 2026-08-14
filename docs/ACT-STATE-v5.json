@@ -3,10 +3,10 @@
   "sourceDoc": "docs/TOSOM-MASTERPLAN-v4.0.md",
   "baseCommit": "837c16f",
   "currentWave": "B0",
-  "currentStep": "B0.5",
-  "completedSteps": ["0.1", "0.2", "B0.1", "B0.2", "B0.3", "B0.4", "B0.5"],
+  "currentStep": "B0.6",
+  "completedSteps": ["0.1", "0.2", "B0.1", "B0.2", "B0.3", "B0.4", "B0.5", "B0.6"],
   "failedSteps": [],
-  "nextStep": "B0.6",
+  "nextStep": "B0.7",
   "waveGateB0": false,
   "waveGateB1": false,
   "preflight": {
@@ -22,18 +22,19 @@
     "functional": "pending",
     "concept": "pass",
     "migration": "n/a",
-    "wired": "n/a"
+    "wired": "pass"
   },
   "scores": {
     "matchekvalitet": 60,
-    "drift": 60,
+    "drift": 62,
     "lansering": 57
   },
   "deviations": [
     "BASELINE v5: tsc=13, jest=90/93, prisma-format=exit1, migrate-status=1 pending (0008_b8_cleanup_match), db=ja",
     "B0.3 Sjekk 4 (FUNKSJONELT) krever 21 testbrukere med fullstendige profiler — verifiseres ved testdata-setup",
-    "B0.5 Sjekk 4 (FUNKSJONELT) krever 21 brukere i kø — verifiseres ved testdata-setup"
+    "B0.5 Sjekk 4 (FUNKSJONELT) krever 21 brukere i kø — verifiseres ved testdata-setup",
+    "B0.6 enablePayments koblet via isPaymentsEnabled() i /api/journey/queue (402 + redirectTo /betaling når aktiv, gratismodus når av). Ingen egen payment-ordre-rute finnes ennå."
   ],
-  "lastCommit": "d3a0f04",
-  "updatedAt": "2026-08-14T22:39:00+02:00"
+  "lastCommit": "39848f8",
+  "updatedAt": "2026-08-14T23:11:00+02:00"
 }

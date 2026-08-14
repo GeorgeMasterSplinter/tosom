@@ -18,11 +18,14 @@ import { unifiedScore } from '@/lib/matching/unifiedScorer';
 import type { UnifiedResult } from '@/lib/matching/unifiedScorer';
 import { MIN_COHORT_SIZE, MAX_QUEUE_WAIT_HOURS, MIN_SCORE } from '@/config/matching';
 
+// B0.5 — Vercel Hobby: max 60s
+export const maxDuration = 60;
+
 // Advisory lock ID for matching-cron
 const MATCHING_CRON_LOCK_ID = 123456789;
 
 // Tidsbudsjett (fra A4 — Hobby-plan)
-const TIME_BUDGET_MS = 240_000;
+const TIME_BUDGET_MS = 50_000;
 
 /** Constant-time string comparison */
 function safeCompare(a: string, b: string): boolean {
@@ -98,6 +101,7 @@ export async function GET(req: NextRequest) {
           deletedAt: null,
         },
         orderBy: { matchQueuedAt: 'asc' },
+        take: 3000,
         include: {
           profile: true,
         },

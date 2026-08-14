@@ -15,6 +15,7 @@ import { prisma } from '@/lib/prisma';
 import { timingSafeEqual } from 'crypto';
 import { JourneyPhase } from '@prisma/client';
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
 
 /** Constant-time string comparison */
 function safeCompare(a: string, b: string): boolean {

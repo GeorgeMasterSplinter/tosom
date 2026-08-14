@@ -2,6 +2,7 @@
  * ToSom — Dashboard Overview API
  * 
  * Returnerer sammla dashboard-data: match, conversation, journey.
+ * B9: Registrerer oppmøte (userASeenAt/userBSeenAt) og starter reisen når begge har vært innom.
  */
 
 import { getServerSession } from "@/lib/auth/session";
@@ -20,14 +21,16 @@ export async function GET(_request: Request) {
     });
   }
 
+  const userId = session.user.id;
+
   try {
     // Hent aktiv match med profil-info
     const match = await prisma.match.findFirst({
       where: {
         status: "active",
         OR: [
-          { userAId: session.user.id },
-          { userBId: session.user.id },
+          { userAId: userId },
+          { userBId: userId },
         ],
       },
       orderBy: { createdAt: "desc" },
@@ -37,12 +40,73 @@ export async function GET(_request: Request) {
       },
     });
 
+    // B9: Registrer oppmøte og start reise hvis begge har vært innom
+    let bothJustMet = false;
+    if (match) {
+      const matchId = match.id;
+
+      // Finn brukerens JourneyProgress for denne matchen
+      const myJourney = await prisma.journeyProgress.findFirst({
+        where: {
+          userId,
+          matchId,
+        },
+      });
+
+      if (myJourney) {
+        // Bestem om brukeren er A eller B
+        const isUserA = match.userAId === userId;
+
+        await prisma.$transaction(async (tx) => {
+          if (isUserA && myJourney.userASeenAt === null) {
+            // Bruker A møter opp for første gang
+            const updated = await tx.journeyProgress.update({
+              where: { id: myJourney.id },
+              data: { userASeenAt: new Date() },
+            });
+
+            // Hvis B allerede har vært innom, start reisen nå
+            if (updated.userBSeenAt !== null && updated.bothSeenAt === null) {
+              bothJustMet = true;
+              await tx.journeyProgress.update({
+                where: { id: updated.id },
+                data: {
+                  bothSeenAt: new Date(),
+                  day: 1,
+                  nextDayAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+                },
+              });
+            }
+          } else if (!isUserA && myJourney.userBSeenAt === null) {
+            // Bruker B møter opp for første gang
+            const updated = await tx.journeyProgress.update({
+              where: { id: myJourney.id },
+              data: { userBSeenAt: new Date() },
+            });
+
+            // Hvis A allerede har vært innom, start reisen nå
+            if (updated.userASeenAt !== null && updated.bothSeenAt === null) {
+              bothJustMet = true;
+              await tx.journeyProgress.update({
+                where: { id: updated.id },
+                data: {
+                  bothSeenAt: new Date(),
+                  day: 1,
+                  nextDayAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+                },
+              });
+            }
+          }
+        });
+      }
+    }
+
     // Hent samtale-info
     const conversation = await prisma.conversation.findFirst({
       where: {
         OR: [
-          { userAId: session.user.id },
-          { userBId: session.user.id },
+          { userAId: userId },
+          { userBId: userId },
         ],
         endedAt: null,
       },
@@ -58,16 +122,16 @@ export async function GET(_request: Request) {
       },
     });
 
-    // Hent reise-info
+    // Hent reise-info (oppdatert etter eventuel oppmøte-registrering)
     const journey = await prisma.journeyProgress.findFirst({
-      where: { userId: session.user.id },
+      where: { userId },
     });
 
     // Finn match-partnar (den andre brukaren)
     let matchInfo: any = null;
     if (match) {
       const partner =
-        match.userAId === session.user.id ? match.userB : match.userA;
+        match.userAId === userId ? match.userB : match.userA;
       const partnerProfile = partner.profile;
       matchInfo = {
         id: partner.id,
@@ -100,6 +164,7 @@ export async function GET(_request: Request) {
         phase: journey.phase,
         tittel: getPhaseTitle(journey.phase),
         beskrivelse: getPhaseDescription(journey.phase),
+        bothSeenAt: journey.bothSeenAt?.toISOString() ?? null,
       };
     }
 
@@ -108,6 +173,7 @@ export async function GET(_request: Request) {
         match: matchInfo,
         conversation: convoInfo,
         journey: journeyInfo,
+        bothJustMet,
       }),
       { status: 200, headers: { "Content-Type": "application/json" } }
     );

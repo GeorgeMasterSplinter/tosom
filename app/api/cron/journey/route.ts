@@ -5,6 +5,8 @@
  * - Aukar JourneyProgress.day +1 for alle brukarar som har passert nextDayAt
  * - Sjekkar fase-endring og sender notification
  * - Avslutt reise ved dag 30
+ * - B9: Reisen starter først når begge har vært innom (bothSeenAt ≠ null)
+ * - B9: Utløp for reiser >14 dager uten at begge har vært innom
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -47,6 +49,7 @@ export async function GET(req: NextRequest) {
   let processed = 0;
   let advanced = 0;
   let ended = 0;
+  let expired = 0;
   const errors: string[] = [];
 
   try {
@@ -54,7 +57,7 @@ export async function GET(req: NextRequest) {
     const lockResult = await prisma.$queryRaw(
       Prisma.sql`SELECT pg_try_advisory_lock(${JOURNEY_CRON_LOCK_ID}) AS locked`
     );
-    
+
     const result = Array.isArray(lockResult) ? (lockResult as any)[0] : (lockResult as any);
     if (result && result.locked) {
       lockAcquired = true;
@@ -68,16 +71,16 @@ export async function GET(req: NextRequest) {
     }
 
     try {
-      // Hent alle brukarar med aktiv reise som har passert nextDayAt
+      // B9: Hent alle aktive reiser der begge har vært innom og det er tid for ny dag
       const eligibleJourneys = await prisma.journeyProgress.findMany({
         where: {
-          endedAt: null, // ikke fullført
-          pausedAt: null, // ikke pauset
+          endedAt: null,       // ikke fullført
+          pausedAt: null,      // ikke pauset
+          bothSeenAt: { not: null }, // B9: reisen har faktisk startet
           nextDayAt: {
-            lte: new Date(), // har passert låsetidspunktet
+            lte: new Date(),   // har passert låsetidspunktet
           },
         },
-        // B4: user-relasjonen fjerna frå JourneyProgress — userId er direkte tilgjengeleg
         take: 100, // maksimum per run for performance
       });
 
@@ -98,9 +101,7 @@ export async function GET(req: NextRequest) {
             // Ingen aktiv match — reisa kan avsluttes
             await prisma.journeyProgress.update({
               where: { id: journey.id },
-              data: {
-                endedAt: new Date(),
-              },
+              data: { endedAt: new Date() },
             });
             ended++;
             processed++;
@@ -111,9 +112,7 @@ export async function GET(req: NextRequest) {
           if (journey.day >= 30) {
             await prisma.journeyProgress.update({
               where: { id: journey.id },
-              data: {
-                endedAt: new Date(),
-              },
+              data: { endedAt: new Date() },
             });
             ended++;
             processed++;
@@ -187,6 +186,63 @@ export async function GET(req: NextRequest) {
         }
       }
 
+      // B9: Utløp — finn reiser der begge ALDRI har vært innom og matchen er >14 dager gammel
+      const fourteenDaysAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
+      const expiredMatches = await prisma.match.findMany({
+        where: {
+          status: 'active',
+          createdAt: { lt: fourteenDaysAgo },
+        },
+        select: { id: true, userAId: true, userBId: true },
+        take: 50,
+      });
+
+      for (const match of expiredMatches) {
+        try {
+          // Sjekk om noen av brukerne har en journey der bothSeenAt er null
+          const pendingJourneys = await prisma.journeyProgress.findMany({
+            where: {
+              matchId: match.id,
+              endedAt: null,
+              bothSeenAt: null,
+            },
+          });
+
+          if (pendingJourneys.length > 0) {
+            // Markér journey som avsluttet (expired)
+            for (const j of pendingJourneys) {
+              await prisma.journeyProgress.update({
+                where: { id: j.id },
+                data: {
+                  endedAt: new Date(),
+                },
+              });
+              expired++;
+
+              // Send notifikasjon om utløp
+              await prisma.notification.create({
+                data: {
+                  userId: j.userId,
+                  type: 'JOURNEY',
+                  message: 'Reisen har utløpt fordi dere ikke rakk å starte innen 14 dager.',
+                },
+              });
+            }
+
+            // Oppdater match-status til expired
+            await prisma.match.update({
+              where: { id: match.id },
+              data: { status: 'expired' },
+            });
+
+            console.log(`[cron/journey] Match ${match.id} utløpt — ingen startet reisen innen 14 dager`);
+          }
+        } catch (expiryError) {
+          console.error(`[cron/journey] Feil ved utløp for match ${match.id}:`, expiryError);
+          errors.push(`expired match ${match.id}: ${(expiryError as Error).message}`);
+        }
+      }
+
       const duration = Date.now() - startedAt;
 
       return NextResponse.json({
@@ -194,8 +250,9 @@ export async function GET(req: NextRequest) {
         processed,
         advanced,
         ended,
+        expired,
         duration: `${duration}ms`,
-        message: `Prosessert ${processed} brukarar — ${advanced} framrykte, ${ended} avsluttet`,
+        message: `Prosessert ${processed} reiser — ${advanced} framrykte, ${ended} avsluttet, ${expired} utløpt`,
         errors: errors.length > 0 ? errors.slice(0, 5) : undefined,
       });
     } finally {
@@ -208,7 +265,7 @@ export async function GET(req: NextRequest) {
     }
   } catch (err) {
     console.error('[cron] Journey feil:', err);
-    
+
     return NextResponse.json(
       { error: 'Kunne ikke kjøre cron journey', details: (err as Error).message },
       { status: 500 }
@@ -220,9 +277,9 @@ export async function GET(req: NextRequest) {
       await prisma.systemLog.create({
         data: {
           level: 'INFO',
-          message: `Cron journey heartbeat: ${advanced} framrykte, ${ended} avsluttet for ${processed} brukarar`,
+          message: `Cron journey heartbeat: ${advanced} framrykte, ${ended} avsluttet, ${expired} utløpt for ${processed} reiser`,
           module: 'cron:journey',
-          metadata: { processed, advanced, ended, durationMs, errors: errors.slice(0, 10) },
+          metadata: { processed, advanced, ended, expired, durationMs, errors: errors.slice(0, 10) },
         },
       });
     } catch (logErr) {

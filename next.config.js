@@ -100,6 +100,17 @@ const nextConfig = {
     ];
   },
 
+  // D9: Redirect /slik → /slik-fungerer-det (SEO)
+  async redirects() {
+    return [
+      {
+        source: '/slik',
+        destination: '/slik-fungerer-det',
+        permanent: true, // 308
+      },
+    ];
+  },
+
   // Image optimization
   images: {
     loader: "default",

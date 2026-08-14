@@ -13,7 +13,6 @@
     "@auth/prisma-adapter": "^2.11.2",
     "@prisma/client": "^5.14.0",
     "@sentry/nextjs": "^10.70.0",
-    "@supabase/supabase-js": "^2.103.3",
     "@uploadthing/react": "^6.8.0",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.38.2",

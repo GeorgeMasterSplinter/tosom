@@ -7,10 +7,9 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
-const prisma = new PrismaClient();
 
 function isAdmin(req: NextRequest): boolean {
   const adminToken = req.cookies.get("admin_token")?.value;

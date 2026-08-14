@@ -27,9 +27,6 @@ model User {
   updatedAt           DateTime             @updatedAt
   lastMatchAt         DateTime?
   lockedUntil         DateTime?
-
-  @@index([journeyState])
-  @@index([matchQueuedAt])
   accounts            Account[]
   auditLogs           AuditLog[]           @relation("AdminAuditLogs")
   conversationsA      Conversation[]       @relation("ConversationToUserA")
@@ -44,6 +41,8 @@ model User {
   sessions            Session[]
   twoFactor           TwoFactorSecret?
 
+  @@index([journeyState])
+  @@index([matchQueuedAt])
   @@index([role])
   @@index([email])
   @@index([lastMatchAt])
@@ -131,7 +130,7 @@ model Conversation {
   frozenAt            DateTime?
   frozenBy            String?
   createdAt           DateTime           @default(now())
-  updatedAt            DateTime           @updatedAt
+  updatedAt           DateTime           @updatedAt
   imageShareAllowedAt DateTime?
   imageShared         Boolean            @default(false)
   userA               User               @relation("ConversationToUserA", fields: [userAId], references: [id])
@@ -179,7 +178,7 @@ model JourneyProgress {
   completedDays Int                @default(0)
   userASeenAt   DateTime?
   userBSeenAt   DateTime?
-  bothSeenAt    DateTime?          // null = reisen har ikke startet ennå
+  bothSeenAt    DateTime? // null = reisen har ikke startet ennå
   nextDayAt     DateTime?
   startedAt     DateTime           @default(now())
   endedAt       DateTime?
@@ -477,9 +476,9 @@ enum ResonanceLevel {
 
 // STEG B8: Fra 6 verdier til 3
 enum MatchStatus {
-  active   // koblet, reise pågår
-  ended    // avsluttet — normalt slettet umiddelbart
-  expired  // forlatt i 14 dager uten at begge var innom
+  active // koblet, reise pågår
+  ended // avsluttet — normalt slettet umiddelbart
+  expired // forlatt i 14 dager uten at begge var innom
 }
 
 enum MessageCategory {
@@ -563,9 +562,9 @@ model MatchHistory {
   id        String   @id @default(cuid())
   userAId   String
   userBId   String
-  matchId   String?  // Original match ID
+  matchId   String? // Original match ID
   endedAt   DateTime @default(now())
-  outcomeA  String?  // "finished", "abandoned", "reported"
+  outcomeA  String? // "finished", "abandoned", "reported"
   outcomeB  String?
   createdAt DateTime @default(now())
 
@@ -577,12 +576,13 @@ model MatchHistory {
 
 /// User journey state machine (B1 additive migration)
 enum JourneyUserState {
-  IDLE         /// Not in queue, not matched
-  QUEUED       /// In matching queue (via "Start reisen")
-  MATCHED      /// Matched but not yet both seen
-  ON_JOURNEY   /// Both saw each other, journey running
-  COMPLETED    /// Journey finished (30 days or manual exit)
+  IDLE /// Not in queue, not matched
+  QUEUED /// In matching queue (via "Start reisen")
+  MATCHED /// Matched but not yet both seen
+  ON_JOURNEY /// Both saw each other, journey running
+  COMPLETED /// Journey finished (30 days or manual exit)
 }
+
 enum ReportCategory {
   HARASSMENT
   INAPPROPRIATE
@@ -600,14 +600,14 @@ enum ReportStatus {
 
 // STEG C1 — Brukerstyrt rapportering
 model Report {
-  id          String           @id @default(cuid())
+  id          String         @id @default(cuid())
   reporterId  String
   reportedId  String
   matchId     String?
   category    ReportCategory
   description String?
-  status      ReportStatus     @default(OPEN)
-  createdAt   DateTime         @default(now())
+  status      ReportStatus   @default(OPEN)
+  createdAt   DateTime       @default(now())
   reviewedAt  DateTime?
   reviewedBy  String?
 
@@ -619,13 +619,13 @@ model Report {
 model Order {
   id               String      @id @default(cuid())
   userId           String
-  amount           Int         @default(34900)   // øre
+  amount           Int         @default(34900) // øre
   currency         String      @default("NOK")
   status           OrderStatus @default(PENDING)
   provider         String      @default("vipps")
   providerRef      String?     @unique
   freeQuota        Boolean     @default(false)
-  withdrawalWaiver Boolean     @default(false)   // angrerett, C4
+  withdrawalWaiver Boolean     @default(false) // angrerett, C4
   waiverAt         DateTime?
   createdAt        DateTime    @default(now())
   completedAt      DateTime?
@@ -643,7 +643,7 @@ enum OrderStatus {
 
 // STEG G1 — WebhookEvent for idempotens (Vipps sender samme hendelse flere ganger)
 model WebhookEvent {
-  id         String   @id            // provider-ID → idempotens
+  id         String   @id // provider-ID → idempotens
   provider   String
   payload    Json
   receivedAt DateTime @default(now())

@@ -230,6 +230,23 @@ jobs:
       - name: Check Prisma Schema Format
         run: npx prisma format --check
 
+  # ─── PRISMA SINGLETON GUARD (B0.8) ───
+  prisma-singleton:
+    name: Ingen egen PrismaClient
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Kun singleton PrismaClient fra lib/prisma.ts
+        run: |
+          echo "Checking for ad-hoc PrismaClient instances (should use lib/prisma.ts singleton)..."
+          if grep -rn "new PrismaClient" app/ lib/ --include=*.ts | grep -v "lib/prisma.ts"; then
+            echo "::error::Bruk singleton fra lib/prisma.ts"
+            exit 1
+          fi
+          echo "PASS: No ad-hoc PrismaClient found."
+
   # ─── AI DELETION GUARD ───
   ai-guard:
     name: AI Deletion Guard
@@ -344,7 +361,7 @@ jobs:
   # ─── COMBINED STATUS ───
   status:
     name: CI Status
-    needs: [lint, typecheck, build, test, e2e, prisma, ai-guard, lang-guard, cron-guard, concept-guard]
+    needs: [lint, typecheck, build, test, e2e, prisma, prisma-singleton, ai-guard, lang-guard, cron-guard, concept-guard]
     runs-on: ubuntu-latest
     if: always()
     steps:
@@ -356,6 +373,7 @@ jobs:
               [ "${{ needs.test.result }}" != "success" ] || \
               [ "${{ needs.e2e.result }}" != "success" ] || \
               [ "${{ needs.prisma.result }}" != "success" ] || \
+              [ "${{ needs.prisma-singleton.result }}" != "success" ] || \
               [ "${{ needs.ai-guard.result }}" != "success" ] || \
               [ "${{ needs.lang-guard.result }}" != "success" ] || \
               [ "${{ needs.cron-guard.result }}" != "success" ] || \

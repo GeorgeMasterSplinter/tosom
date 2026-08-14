@@ -2,17 +2,17 @@
   "instruks": "v5.0-kjerneloftet",
   "sourceDoc": "docs/TOSOM-MASTERPLAN-v4.0.md",
   "baseCommit": "837c16f",
-  "currentWave": "0",
-  "currentStep": "0.1",
-  "completedSteps": [],
+  "currentWave": "B0",
+  "currentStep": "0.2",
+  "completedSteps": ["0.1"],
   "failedSteps": [],
-  "nextStep": "0.2",
+  "nextStep": "B0.1",
   "waveGateB0": false,
   "waveGateB1": false,
   "preflight": {
     "vercelPlan": "hobby",
     "maxDurationAllowed": 60,
-    "dbAccessible": false,
+    "dbAccessible": true,
     "sentryDsnSet": false
   },
   "status": {
@@ -29,7 +29,7 @@
     "drift": 50,
     "lansering": 57
   },
-  "deviations": [],
-  "lastCommit": "",
-  "updatedAt": ""
+  "deviations": ["BASELINE v5: tsc=13, jest=90/93, prisma-format=exit1, migrate-status=1 pending (0008_b8_cleanup_match), db=ja"],
+  "lastCommit": "718c55f",
+  "updatedAt": "2026-08-14T21:38:00+02:00"
 }

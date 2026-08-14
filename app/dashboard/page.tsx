@@ -41,14 +41,16 @@ const actionItems = [
 
 function ConfirmExitModal({ isOpen, onClose, onConfirm, currentDay }: { isOpen: boolean; onClose: () => void; onConfirm: () => void; currentDay?: number }) {
   const [exiting, setExiting] = useState(false);
+  const [errMsg, setErrMsg] = useState<string | null>(null);
   if (!isOpen) return null;
 
   const handleExit = async () => {
+    setErrMsg(null);
     setExiting(true);
     try {
       const res = await fetch('/api/journey/exit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reason: 'User-initiated exit' }) });
-      if (res.ok) { onConfirm(); } else { const err = await res.json(); alert(err.error || 'Kunne ikke avslutte reisen'); }
-    } catch { alert('Nettverksfeil. Vær så snill og prøv på nytt.'); }
+      if (res.ok) { onConfirm(); } else { const err = await res.json(); setErrMsg(err.error || 'Kunne ikke avslutte reisen'); }
+    } catch { setErrMsg('Nettverksfeil. Vær så snill og prøv på nytt.'); }
     finally { setExiting(false); }
   };
 
@@ -56,6 +58,8 @@ function ConfirmExitModal({ isOpen, onClose, onConfirm, currentDay }: { isOpen: 
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
       <div className="w-full max-w-md rounded-3xl p-8 relative mx-auto" style={{ background: 'rgba(11, 21, 32, 0.95)', backdropFilter: 'blur(24px)', border: '1px solid rgba(212, 175, 55, 0.25)', boxShadow: '0 12px 60px rgba(0,0,0,0.5)' }}>
         <button onClick={onClose} className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center transition-all hover:brightness-125 text-xl" style={{ color: 'rgba(255,255,255,0.5)', background: 'rgba(255,255,255,0.05)' }}>✕</button>
+        {/* D2: Inline feilmelding */}
+        {errMsg && <div className="mb-4 px-4 py-3 rounded-xl text-sm text-center" style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', color: '#EF4444' }}>{errMsg}</div>}
         <div className="text-center">
           <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: 'rgba(255, 77, 77, 0.1)', border: '2px solid rgba(255, 77, 77, 0.3)' }}><span className="text-2xl">🚪</span></div>
           <h3 className="text-xl font-bold mb-2" style={{ color: 'rgba(255,255,255,0.95)' }}>Avslutt reisen?</h3>

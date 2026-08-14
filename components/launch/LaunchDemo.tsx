@@ -79,7 +79,7 @@ export default function LaunchDemo() {
   const handleLaunchComplete = useCallback(
     (route: string, params?: Record<string, any>) => {
       console.log("[LaunchDemo] 🚀 Launch complete →", route, params);
-      alert(`Launch fullført! Gå til: ${route}`);
+      console.log(`[LaunchDemo] Navigerer til ${route}`);
     },
     []
   );

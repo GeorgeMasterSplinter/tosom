@@ -1,14 +1,24 @@
 'use client';
 
 /**
- * ToSom — Admin Dashboard (Kompakt v2) 🟡⭐
+ * ToSom — Admin Dashboard (B5.2) 🟡⭐
  *
- * Kommandopanel med ekte data fra /api/admin/metrics.
- * Kompakt design — sidebar håndterer navigasjon.
+ * Kommandopanel med statusfarger (grønn/gul/rød).
+ * Étt API-kall (/api/admin/overview) for alle indikatorer.
+ * Er alt grønt, trenger du ikke klikke deg videre.
  */
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import StatusBadge, {
+  type Severity,
+  thresholdLastMatchRound,
+  thresholdQueueSize,
+  thresholdRoundDuration,
+  thresholdOpenReports,
+  thresholdFreeQuota,
+  thresholdSentryErrors,
+} from '@/components/admin/StatusBadge';
 
 /* ─── Types ─── */
 interface MetricsData {
@@ -19,6 +29,95 @@ interface MetricsData {
   messages: { total: number };
   system: { errorsLast24h: number };
   timestamp: string;
+}
+
+// B5.2: Overview-data fra /api/admin/overview
+interface OverviewData {
+  indicators: {
+    lastMatchRound: { hoursSince: number | null; lastAt: string | null; durationMs: number | null };
+    queueSize: number;
+    openReports: number;
+    freeQuotaUsed: number;
+    errorsLast24h: number;
+  };
+  counts: { totalUsers: number; activeMatches: number; ongoingJourneys: number };
+  journeyStats: Array<{ outcome: string; count: number }>;
+  timestamp: string;
+}
+
+/* ─── B5.2: StatusPanel — alle indikatorer med StatusBadge ─── */
+function StatusPanel({ overview }: { overview: OverviewData }) {
+  const ind = overview.indicators;
+
+  const indicators: Array<{ label: string; severity: Severity; value: string }> = [
+    {
+      label: 'Siste matcherunde',
+      severity: thresholdLastMatchRound(ind.lastMatchRound.hoursSince),
+      value: ind.lastMatchRound.hoursSince !== null
+        ? `${Math.round(ind.lastMatchRound.hoursSince)} t siden`
+        : 'Aldri',
+    },
+    {
+      label: 'Kø-størrelse',
+      severity: thresholdQueueSize(ind.queueSize),
+      value: `${ind.queueSize}`,
+    },
+    {
+      label: 'Runde-varighet',
+      severity: thresholdRoundDuration(ind.lastMatchRound.durationMs),
+      value: ind.lastMatchRound.durationMs !== null
+        ? `${(ind.lastMatchRound.durationMs / 1000).toFixed(1)} s`
+        : '—',
+    },
+    {
+      label: 'Åpne rapporter',
+      severity: thresholdOpenReports(ind.openReports),
+      value: `${ind.openReports}`,
+    },
+    {
+      label: 'Feil 24 t',
+      severity: thresholdSentryErrors(ind.errorsLast24h),
+      value: `${ind.errorsLast24h}`,
+    },
+    {
+      label: 'Gratiskvote',
+      severity: thresholdFreeQuota(ind.freeQuotaUsed),
+      value: `${ind.freeQuotaUsed.toLocaleString()} / 10 000`,
+    },
+  ];
+
+  // Overall status: verste severity vinner
+  const worst = indicators.reduce<Severity>((acc, i) => {
+    if (i.severity === 'critical') return 'critical';
+    if (i.severity === 'warn' && acc !== 'critical') return 'warn';
+    return acc;
+  }, 'ok');
+
+  return (
+    <div className="rounded-2xl p-5" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-sm font-semibold tracking-wide" style={{ color: 'rgba(255,255,255,0.6)' }}>
+          STATUSOVERSIKT
+        </h3>
+        <StatusBadge
+          severity={worst}
+          label={worst === 'ok' ? 'Alt grønt' : worst === 'warn' ? 'Advarsler' : 'Kritisk'}
+        />
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        {indicators.map((ind) => (
+          <div
+            key={ind.label}
+            className="rounded-xl p-3"
+            style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}
+          >
+            <div className="text-xs mb-2" style={{ color: 'rgba(255,255,255,0.4)' }}>{ind.label}</div>
+            <StatusBadge severity={ind.severity} label="" value={ind.value} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 /* ─── CompactMetric — kompakt metrik-kort ─── */
@@ -145,13 +244,20 @@ function SystemStatus({ errorsLast24h }: { errorsLast24h?: number }) {
 /* ─── Hovedkomponent ─── */
 export default function AdminDashboardPage() {
   const [metrics, setMetrics] = useState<MetricsData | null>(null);
+  const [overview, setOverview] = useState<OverviewData | null>(null); // B5.2
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('/api/admin/metrics')
-      .then((res) => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); })
-      .then(setMetrics)
+    // B5.2: Étt API-kall for alle indikatorer + eksisterende metrics
+    Promise.all([
+      fetch('/api/admin/metrics').then((res) => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); }),
+      fetch('/api/admin/overview').then((res) => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); }).catch(() => null),
+    ])
+      .then(([metricsData, overviewData]) => {
+        setMetrics(metricsData);
+        setOverview(overviewData);
+      })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, []);
@@ -193,6 +299,9 @@ export default function AdminDashboardPage() {
           </>
         ) : null}
       </div>
+
+      {/* B5.2: StatusPanel med alle indikatorer */}
+      {overview && <StatusPanel overview={overview} />}
 
       {/* SystemStatus + JourneyPhase — side om side */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

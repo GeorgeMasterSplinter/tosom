@@ -28,7 +28,7 @@ function normalizePair(aId: string, bId: string): { userAId: string; userBId: st
 
 export async function endJourney(
   matchId: string,
-  outcome: 'completed' | 'early_exit' | 'blocked' | 'expired',
+  outcome: 'completed' | 'early_exit' | 'blocked' | 'expired' | 'found_each_other' | 'new_journey',
 ): Promise<{ deleted: Record<string, number> }> {
   // Fetch match with full relations
   const match = await prisma.match.findUnique({
@@ -133,17 +133,7 @@ export async function endJourney(
     deleted.Notification =
       ((notifResultA as any).count ?? 0) + ((notifResultB as any).count ?? 0);
 
-    // 11. Reset both users to IDLE
-    await tx.user.update({
-      where: { id: userA.id },
-      data: { journeyState: 'IDLE', matchQueuedAt: null, lastMatchAt: null, lockedUntil: null },
-    });
-    await tx.user.update({
-      where: { id: userB.id },
-      data: { journeyState: 'IDLE', matchQueuedAt: null, lastMatchAt: null, lockedUntil: null },
-    });
-
-    // 12. Create audit log
+    // 12. Create audit log FØR eventuell kontosletting (B4.5)
     const totalDeleted = Object.values(deleted).reduce((sum: number, v: number) => sum + v, 0);
     await tx.auditLog.create({
       data: {
@@ -157,6 +147,39 @@ export async function endJourney(
         }),
       },
     });
+
+    // 11. B4.5: Utfallet bestemmer hva som skjer med kontoene
+    // - found_each_other: SLETT begge kontoer permanent (behold MatchHistory + Report + AuditLog)
+    // - new_journey / andre: Reset til IDLE (kontoen lever videre)
+    if (outcome === 'found_each_other') {
+      // Full kontosletting — brukeren har funnet hverandre utenfor ToSom
+      // Behold: MatchHistory (to ID-er), Report (må overleve), AuditLog (admin-handlinger)
+      for (const user of [userA, userB]) {
+        // Slett brukerdata i riktig rekkefølge (FK-avhengigheter)
+        await tx.notification.deleteMany({ where: { userId: user.id } });
+        await tx.phoneVerification.deleteMany({ where: { userId: user.id } });
+        await tx.passwordResetToken.deleteMany({ where: { userId: user.id } });
+        await tx.magicLinkToken.deleteMany({ where: { email: user.email } });
+        await tx.session.deleteMany({ where: { userId: user.id } });
+        await tx.account.deleteMany({ where: { userId: user.id } });
+        await tx.order.deleteMany({ where: { userId: user.id } });
+        await tx.twoFactorSecret.deleteMany({ where: { userId: user.id } });
+        // Profile slettes via cascade fra User
+        // User slettes til slutt
+        await tx.user.delete({ where: { id: user.id } });
+        deleted.User = (deleted.User ?? 0) + 1;
+      }
+    } else {
+      // Reset both users to IDLE — kontoen lever videre
+      await tx.user.update({
+        where: { id: userA.id },
+        data: { journeyState: 'IDLE', matchQueuedAt: null, lastMatchAt: null, lockedUntil: null },
+      });
+      await tx.user.update({
+        where: { id: userB.id },
+        data: { journeyState: 'IDLE', matchQueuedAt: null, lastMatchAt: null, lockedUntil: null },
+      });
+    }
 
     return deleted;
   }, {

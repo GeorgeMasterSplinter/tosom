@@ -682,11 +682,11 @@ lib/matching/weightConfig.ts:17       DEFAULT_WEIGHTS
 3. Autentiser. Verifiser at innlogget bruker faktisk **er koblet til** `targetUserId` — er de ikke det, returner 403. En bruker skal ikke kunne be om resonansdata for vilkårlige personer.
 4. Bruk `unifiedScore` fra `lib/matching/unifiedScorer.ts` med de fem dimensjonene fra `weightConfig.ts`.
 
-**Absolutt krav — konseptregel fra masterplan del 1.4:**
+**Konseptregel fra masterplan del 1.4 (I-12) — gjeldende form (beslutning B, 2026-08-15):**
 
-> Responsen skal **ikke** inneholde en numerisk totalscore. Bruk `toResonanceLevel()` og returner nivået som ord: DEEP, STRONG, MODERATE, GENTLE.
+> Responsen inneholder numeriske verdier som transportdata. **Klientkomponenten** (allerede implementert i B1.5) konverterer til ORD via `toResonanceLevel` + `resonanceLabel` / `toDimensionLabel`. Brukeren ser aldri et tall.
 
-Per dimensjon returneres et relativt uttrykk («sterk», «moderat», «forsiktig») — ikke prosent, ikke tall. Se `app/api/chat/conversations/route.ts:100` for hvordan `MOOD_FROM_LEVEL` gjør dette allerede.
+API-et returnerer `{ totalScore: number, breakdown: { base, resonance, semantic, intimacy, future } }` — alle verdier 0-100. Dette matcher den låste klientkontrakten i `components/MatchBreakdown.tsx`. Farge- og bue-visningen i klienten driver på tallene; display er 100 % ORD.
 
 **Del B — `POST /api/chat/typing`**
 
@@ -702,17 +702,20 @@ Per dimensjon returneres et relativt uttrykk («sterk», «moderat», «forsikti
 test -f app/api/match/breakdown/route.ts && echo OK
 test -f app/api/chat/typing/route.ts && echo OK
 
-# konseptregel: ingen tallscore ut til klient
-grep -n "score" app/api/match/breakdown/route.ts
+# konseptregel (B): API returnerer tall som transportdata, klient konverterer til ORD
+grep -c "unifiedScore" app/api/match/breakdown/route.ts            # >= 1
+grep -c "totalScore" app/api/match/breakdown/route.ts              # >= 1
+grep -c "requireAuth" app/api/match/breakdown/route.ts             # >= 1
+grep -c "403" app/api/match/breakdown/route.ts                     # >= 1 (ikke koblet)
 
-grep -c "toResonanceLevel" app/api/match/breakdown/route.ts        # >= 1
 grep -c "prisma\." app/api/chat/typing/route.ts                    # kun deltakersjekk
+grep -c "triggerTyping" app/api/chat/typing/route.ts               # >= 1
 grep -rn "new Pusher" app/api/chat/typing/route.ts                 # 0 treff
 npx tsc --noEmit
 npm run build
 ```
 
-Ved treff på `score` i breakdown-ruten: kontroller manuelt at ingen numerisk totalscore sendes til klienten. Er den det, **rett det før steget lockes**.
+Tallene i responsen er transportdata. Brukeren ser kun ORD (B1.5-klientkontrakt). Ingen verifikasjon motviser tall i nettverks-responsen lenger.
 
 **State-oppdatering:**
 ```

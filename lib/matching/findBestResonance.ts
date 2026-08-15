@@ -293,6 +293,10 @@ function buildProfileObject(profile: {
   securityLevel: string | null;
   bio: string | null;
   interests: string[];
+  // B1.4: geo + distancePref
+  latitude: number | null;
+  longitude: number | null;
+  deepProfileData: unknown;
 }): Record<string, unknown> {
   return {
     userId: profile.id,
@@ -311,6 +315,10 @@ function buildProfileObject(profile: {
     securityLevel: profile.securityLevel,
     bio: profile.bio,
     interests: profile.interests,
+    // B1.4: geo + radius
+    latitude: profile.latitude,
+    longitude: profile.longitude,
+    distancePref: typeof (profile.deepProfileData as Record<string,unknown>|null)?.distancePref === "number" ? (profile.deepProfileData as Record<string,unknown>).distancePref as number : null,
     // Ingen fotos i resonansberegningen!
   };
 }

@@ -53,7 +53,7 @@ function validBody(): any {
   };
 }
 
-function request(body: any): Request {
+function request(body: any): any {
   return new Request('http://localhost/api/profile/setup', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },

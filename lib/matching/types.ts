@@ -75,6 +75,11 @@ export interface ProfileData {
   // Preferanser og tags
   preferences: Record<string, unknown> | null;
   matchTags: string[];
+
+  // B1.4: Avstand/radius (optional — eksisterende fixture/kall kan mangle dem)
+  latitude?: number | null;
+  longitude?: number | null;
+  distancePref?: number | null;
 }
 
 /**

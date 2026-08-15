@@ -30,6 +30,9 @@ function makeProfile(overrides: Partial<ProfileData> = {}): ProfileData {
     lifestyle: null,
     intimacy: null,
     preferences: null,
+    latitude: null,
+    longitude: null,
+    distancePref: null,
     ...overrides,
   };
 }

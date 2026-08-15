@@ -2,6 +2,7 @@
 // Dealbreakere er essensielle mismatch som automatisk avvise en kandidat
 
 import { ProfileData } from "./types";
+import { haversineKm } from "./distance";
 
 /**
  * DealbreakerResult beskriver hva som ble funnet som dealbreaker.
@@ -132,6 +133,40 @@ function checkBoundaries(a: ProfileData, b: ProfileData): DealbreakerResult {
   return { hasDealbreaker: false };
 }
 
+
+/**
+ * B1.4: checkRadius — tosidig radius-sjekk (dealbreaker, IKKE scoringsdimensjon).
+ *
+ * En aktiv preferanse: om brukeren har satt 30 km, er 800 km feil, ikke "litt dårligere".
+ * Manglende data (én eller begge mangler koordinater) → IKKE blokkér (unngår å
+ * utestenge alle eksisterende brukere som ennå ikke har postnummer). Logges i stedet.
+ */
+function checkRadius(a: ProfileData, b: ProfileData): DealbreakerResult {
+  // Mangler begge koordinater → kan ikke sjekke, ikke blokkér
+  if (a.latitude == null || a.longitude == null || b.latitude == null || b.longitude == null) {
+    // Logg omfanget av manglende geo-data (hjelp til å vite hvor mange som ikke kan matches på avstand)
+    console.log(`[matching] Radius: mangler geo for ${a.userId} lat=${a.latitude} lon=${a.longitude} | ${b.userId} lat=${b.latitude} lon=${b.longitude} — ikke blokkert`);
+    return { hasDealbreaker: false };
+  }
+
+  const distKm = haversineKm(a.latitude, a.longitude, b.latitude, b.longitude);
+
+  // TOSIDIG: blokkér hvis over A SIN grense ELLER B SIN grense
+  if (a.distancePref != null && distKm > a.distancePref) {
+    return {
+      hasDealbreaker: true,
+      reason: `For langt bort (${Math.round(distKm)} km > ${a.distancePref} km grense for ${a.userId})`,
+    };
+  }
+  if (b.distancePref != null && distKm > b.distancePref) {
+    return {
+      hasDealbreaker: true,
+      reason: `For langt bort (${Math.round(distKm)} km > ${b.distancePref} km grense for ${b.userId})`,
+    };
+  }
+  return { hasDealbreaker: false };
+}
+
 /**
  * sjekkAlleDealbreakers — hovedfunksjon som kjører alle dealbreaker-testene.
  * Returnerer resultatet av den første dealbreaker som blir funnet.
@@ -156,7 +191,11 @@ export function sjekkAlleDealbreakers(
   result = checkBoundaries(queryUser, candidate);
   if (result.hasDealbreaker) return result;
   
-  // 5. Security level — AKTIV dealbreaker ved gap >= 2
+  // 5. Radius — B1.4: aktiv preferanse, tosidig blokkering
+  result = checkRadius(queryUser, candidate);
+  if (result.hasDealbreaker) return result;
+
+  // 6. Security level — AKTIV dealbreaker ved gap >= 2
   result = checkSecurityLevelGap(queryUser, candidate);
   if (result.hasDealbreaker) return result;
   

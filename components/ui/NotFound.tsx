@@ -2,7 +2,7 @@
  * ToSom — Not Found (404)
  * 
  * Universal 404-komponent med glassmorphism-panel og gull-knapp.
- * Bruk på alle [id]-sider der ressursen ikke finst.
+ * Bruk på alle [id]-sider der ressursen ikke finnes.
  */
 
 import Link from "next/link";

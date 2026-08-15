@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
-    "verify:api": "node scripts/verify-api-links.mjs"
+    "verify:api": "node scripts/verify-api-links.mjs",
+    "verify:lang": "node scripts/verify-language.mjs"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.2",

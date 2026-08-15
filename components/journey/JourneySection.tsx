@@ -43,7 +43,7 @@ function getDayGuide(day: number): { theme: string; question: string; note?: str
     2: { theme: 'Hva betyr trygghet for deg?', question: 'Hva trenger du av en partner for å føle deg trygg?' },
     3: { theme: 'Dine viktigste verdier', question: 'Navn tre verdier som styrer livet ditt — og hvorfor nettopp de.' },
     4: { theme: 'Når ble du virkelig glad?', question: 'Hva skapte den følelsen? Hva gjor at det har satt seg?' },
-    5: { theme: 'Stille stunder', question: 'Hvor føler du deg mest deg selv — når er du helt deg sjølv?' },
+    5: { theme: 'Stille stunder', question: 'Hvor føler du deg mest deg selv — når er du helt deg selv?' },
     6: { theme: 'Vaner og rutiner', question: 'Hva ser en vanlig dag for deg ut? Hva fungerer, hva vil du endre?' },
     7: { theme: 'Samtaler', question: 'Tenk på en god samtale du har hatt. Hva gjorde den så spesiell?' },
 

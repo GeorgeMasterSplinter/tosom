@@ -8,7 +8,7 @@
  * - Kvar seksjon har eget ikon og typografi
  * - Fade-in animasjon ved lasting
  * 
- * Data kjem frå `GET /api/journey/today`:
+ * Data kommer fra `GET /api/journey/today`:
  * { theme, reflectionQuestion, conversationPrompt, resonanceGoal, phase, source }
  */
 

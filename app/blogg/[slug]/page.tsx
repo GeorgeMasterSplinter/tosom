@@ -15,7 +15,7 @@ const blogPosts = {
       
       <p>Forskning viser at kompatibilitet basert på verdier, livssituasjon og emosjonelle mønstre er langt sterkare prediktorar for varige relasjonar enn utseende.</p>
       
-      <p>ToSom vel å fokusere på det som faktisk skaper varig forbindelse. Når to menneske møter hverandre på eit djupare plan, blir overflateikke det første — det blir det siste.</p>
+      <p>ToSom vel å fokusere på det som faktisk skaper varig forbindelse. Når to menneske møter hverandre på et dypere plan, blir overflateikke det første — det blir det siste.</p>
       
       <p>Vår match-motor måler kompatibilitet gjennom resonans — hvordan to menneske faktisk føles saman, ikke hvordan dei ser ut.</p>
     `,
@@ -43,9 +43,9 @@ const blogPosts = {
       
       <p>Vi trur at rolegheit er den viktigaste funksjonen på heile plattformen. Ingen swipe. Ingen feed. Ingen press.</p>
       
-      <p>Når du fjernar alt støyen, kjem det ekte tilbake. Folk blir seg sjølve. Samtalar blir djupare. Forbinder blir verktruelege.</p>
+      <p>Når du fjerner all støy, kommer det ekte tilbake. Folk blir seg selv. Samtalene blir dypere. Forbindelsen blir ekte.</p>
       
-      <p>Ro er ikke bare ein estetisk valg — det er ein grunnleggjande designprinsipp.</p>
+      <p>Ro er ikke bare et estetisk valg — det er et grunnleggende designprinsipp.</p>
     `,
   },
 };

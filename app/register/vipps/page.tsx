@@ -58,7 +58,7 @@ export default function VippsLoginPage() {
                 VIPPS-innskriving
               </h1>
               <p className="text-white/60 max-w-md mx-auto">
-                VIPPS-integrasjon kjem snart. Du kan likevel registrere deg med e-post under.
+                VIPPS-integrasjon kommer snart. Du kan likevel registrere deg med e-post under.
               </p>
             </div>
 

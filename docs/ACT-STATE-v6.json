@@ -3,7 +3,7 @@
   "baseCommit": "2784ae2",
   "instruks": "docs/TOSOM-ACT-INSTRUKS-v6.0.md",
   "grunnlag": "docs/TOSOM-MASTERPLAN-v5.0.md",
-  "currentStep": "5.1",
+  "currentStep": "5.2",
   "completedSteps": [
     "0.1",
     "0.2",
@@ -14,7 +14,8 @@
     "2.2",
     "2.3",
     "3.1",
-    "4.1"
+    "4.1",
+    "5.1"
   ],
   "lockedSteps": [
     "0.1",
@@ -26,10 +27,10 @@
     "2.2",
     "2.3",
     "3.1",
-    "4.1"
+    "4.1",
+    "5.1"
   ],
   "pendingSteps": [
-    "5.1",
     "5.2"
   ],
   "errors": [],
@@ -42,7 +43,8 @@
     "2.2: Beslutning B (George): API returnerer tall som transportdata. Klientkonverterer til ORD via B1.5. Konseptregel I-12 gjelder display, ikke wire-protocol. Instruksjon oppdatert.",
     "2.3: Vakten fant 5. brudd (/api/payment/create-checkout-session) ikke i baseline. George valgte å fjerne kallet; handlePayment → no-op redirect til /onboarding.",
     "3.1: ChatHeader linje 160 har journeyDay <= 10 som CSS-avstand (ikke fasedefinisjon). phaseLabel rettet til getPhaseForDay(journeyDay).description.",
-    "4.1: verify:lang fant 4 ekstra treff utover baseline (register/vipps, TodayCard, NotFound, ChatPageClient). Alle rettet. deploy/backup.md lates sta (v7 per instruks)."
+    "4.1: verify:lang fant 4 ekstra treff utover baseline (register/vipps, TodayCard, NotFound, ChatPageClient). Alle rettet. deploy/backup.md lates sta (v7 per instruks).",
+    "5.1: jest 116/116 (0.428s), migrate 14/14 applied, test-DB port 5433"
   ],
   "baseline": {
     "tscErrors": 0,
@@ -73,5 +75,5 @@
     },
     "nynorskHits": 4
   },
-  "updatedAt": "2026-08-15T23:48:00+02:00"
+  "updatedAt": "2026-08-15T23:51:00+02:00"
 }

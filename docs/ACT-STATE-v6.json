@@ -3,11 +3,10 @@
   "baseCommit": "2784ae2",
   "instruks": "docs/TOSOM-ACT-INSTRUKS-v6.0.md",
   "grunnlag": "docs/TOSOM-MASTERPLAN-v5.0.md",
-  "currentStep": "2.1",
-  "completedSteps": ["0.1", "0.2", "1.1", "1.2", "1.3"],
-  "lockedSteps": ["0.1", "0.2", "1.1", "1.2", "1.3"],
+  "currentStep": "2.2",
+  "completedSteps": ["0.1", "0.2", "1.1", "1.2", "1.3", "2.1"],
+  "lockedSteps": ["0.1", "0.2", "1.1", "1.2", "1.3", "2.1"],
   "pendingSteps": [
-    "2.1",
     "2.2",
     "2.3",
     "3.1",
@@ -20,7 +19,8 @@
     "1.1: Del A avgjort mot installert kode (10.70.0): begge filer støttes, sentry.client.config.ts gir deprecation. Flyttet til instrumentation-client.ts (git rename).",
     "1.1: disableLogger: true beholdes per George, varsel akseptert.",
     "0.2: 4 nynorsk-treff (ikke 3), JourneyTimeline grep=0 på faseduplisering.",
-    "1.2: captureRequestError via index.types.d.ts:94 (ikke index.d.ts som instruksen angir). Ikke blokkerende."
+    "1.2: captureRequestError via index.types.d.ts:94 (ikke index.d.ts som instruksen angir). Ikke blokkerende.",
+    "2.1: profile/me leser warmScore/phaseOrder i klienten, men feltene finnes ikke i Profile-skjemaet. Faller tilbake på ?? -standardverdier. Døde data i grensesnittet."
   ],
   "baseline": {
     "tscErrors": 0,
@@ -51,5 +51,5 @@
     },
     "nynorskHits": 4
   },
-  "updatedAt": "2026-08-15T20:29:00+02:00"
+  "updatedAt": "2026-08-15T22:06:00+02:00"
 }

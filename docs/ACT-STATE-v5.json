@@ -3,7 +3,7 @@
   "sourceDoc": "docs/TOSOM-MASTERPLAN-v4.0.md",
   "baseCommit": "837c16f",
   "currentWave": "B4",
-  "currentStep": "B4.1",
+  "currentStep": "B4.6",
   "completedSteps": [
     "0.1",
     "0.2",
@@ -30,10 +30,15 @@
     "B2.5",
     "B2.6",
     "B3.1",
-    "B4.1"
+    "B4.1",
+    "B4.2",
+    "B4.3",
+    "B4.4",
+    "B4.5",
+    "B4.6"
   ],
   "failedSteps": [],
-  "nextStep": "B4.2 — Vilkår og angrerett",
+  "nextStep": "B5.1 — StatusBadge med terskler",
   "waveGateB0": true,
   "waveGateB0Notes": "B0-gate verifisert i KJØRING mot reell Postgres (2026-08-15). Alle 8 kriterier grønne: (1) prisma migrate deploy mot rebar DB = OK. (2) SELECT Order/WebhookEvent/Report svarer (0 rader hver — tabeller finnes+avles). (3) matching cron opprettet 10 matcher med score 95 (40-100) + scoringBreakdown + resonanceLevel satt (10/10). (4) matching cron durationMs=70-90ms (<< 50s). (5) MATCHING_ENABLED=false → response {skipped:true, matching_disabled}, 0 nye matcher, kø=20 urørt. (6) GET /api/chat/conversations live (401 uten sesjon; 10 ekte samtaler i DB; B0.7-test verifiserer 200-svarshape — full 'logge inn' er blokkert av pre-eksisterende auth-feil). (7) tsc=0, prisma format=0, jest 94/94 (uten integration; integration krever DB på 5433 lokalt / grønn i CI). (8) — see (7). KRITISK P0 oppdaget+fixet under verifiseringen: matching-cron hadde dealbreaker-bug (sjekkAlleDealbreakers returnerer objekt, testet truthy → ALTID sant → 0 matcher). Fixet i ceac443.",
   "waveGateB1": true,
@@ -56,7 +61,7 @@
   "scores": {
     "matchekvalitet": 90,
     "drift": 65,
-    "lansering": 78
+    "lansering": 85
   },
   "deviations": [
     "BASELINE v5: tsc=13, jest=90/93, prisma-format=exit1, migrate-status=1 pending (0008_b8_cleanup_match), db=ja",
@@ -84,8 +89,13 @@
     "B2.6 (cd6380c): Kanonisk kopi og bokmål. Fix user-facing nynorsk: Ikkje authentisert→Ikke autentisert (2 presence-ruter), savnar/Korleis→savner/Hvordan (presenceEngine), Korleis reagerer→Hvordan reagerer (onboarding-setup), Brukar ikke funnet→Bruker ikke funnet (phone/verify), Ny Brukar→Ny bruker (vipps/callback). 05:00 nevnes aldri i brukervendt tekst (kun i kommentar).",
     "B2.7 (MANGLER): Manuell QA på mobil krever fysisk enhet (iOS Safari + Android Chrome). Sjekkliste: full flyt, trykkflater >=44x44px, ingen horisontal scroll ved 320px, tastatur skjuler ikke skrivefelt, trygge soner, prefers-reduced-motion, moodbytte med tommel, bli kjent-panel på liten skjerm. Må utføres av George.",
     "B3.1 (355e759): Struktur for 12×12=144 spørsmål. Kanoniske kategorier på bokmål: Trygghet, Verdier, Kommunikasjon, Nærhet, Framtidsdrømmer, Livsstil, Relasjonsmønster, Emosjonell innsikt, Konflikt og grenser, Samfunn og tilhørighet, Personlighet og selvinnsikt, Opplevelser og nysgjerrighet. Per kategori: 4 spørsmål depthLevel 1, 4 med 2, 4 med 3. Idempotent seeding (upsert + deleteMany + create). Validering i seed-funksjonen (12 per kategori, 4/4/4 fordeling). Alle spørsmål på bokmål. B3.2 (innhold) er Georges skrivejobb.",
-    "B4.1 (bb080ca): Vilkår lagres på User. Migrering 20260815055710_add_user_terms_consent: termsAcceptedAt(DateTime?), termsVersion(String?), withdrawalWaiverAt(DateTime?). Phone-registrering krever termsAccepted=true i body (400 hvis ikke). Vipps-callback setter termsAcceptedAt+termsVersion ved ny bruker (Vipps=BankID-verifisert samtykke). termsVersion='2026-08-15'. Sjekk 6: 3 kolonner i information_schema, migrate status rent."
+    "B4.1 (bb080ca): Vilkår lagres på User. Migrering 20260815055710_add_user_terms_consent: termsAcceptedAt(DateTime?), termsVersion(String?), withdrawalWaiverAt(DateTime?). Phone-registrering krever termsAccepted=true i body (400 hvis ikke). Vipps-callback setter termsAcceptedAt+termsVersion ved ny bruker (Vipps=BankID-verifisert samtykke). termsVersion='2026-08-15'. Sjekk 6: 3 kolonner i information_schema, migrate status rent.",
+    "B4.2 (2998ac1): Vilkår med angrerett og koblingsmodell. /vilkår oppdatert med 7 seksjoner: aldersgrense 23, konto/innlogging, én reise 30 dager 349 kr, kobling ikke valg, avslutning/sletting, bildefdeling dag 15, angrerett. /betaling rewrite: én pris (I-10), vilkår-checkbox + angrerett-checkbox (ordrett: 'Jeg samtykker til at ToSom starter reisen min straks, og forstår at angreretten dermed bortfaller'). Queue-rute lagrer withdrawalWaiverAt.",
+    "B4.3 (60e5f9d): Gratiskvote som ærlig pass-through. Queue-rute koblet til isFreeQuotaAvailable/createFreeOrder. PAYMENTS_ENABLED=false → opprett Order(freeQuota=true, status=PAID, amount=0) hvis ingen eksisterende. Kvote oppbrukt → 402 med redirectTo /betaling.",
+    "B4.4 (6d7624f): PDF-eksport før sletting ved 'Vi fant hverandre'. Avslutningsside tilbyr print-dialog (window.print → 'Lagre som PDF') FØR endJourney. Outcome endret fra 'completed' til 'found_each_other' for valg 1.",
+    "B4.5 (e3562c1): Full kontosletting ved 'Vi fant hverandre'. endJourney utvidet med outcomes found_each_other/new_journey. found_each_other → slett begge kontoer (notifications, phoneVerification, resetTokens, magicLinkTokens, sessions, accounts, orders, twoFactorSecret, profile via cascade, user). Behold: MatchHistory, Report, AuditLog. AuditLog opprettes FØR sletting. new_journey → reset til IDLE.",
+    "B4.6 (40ecd05): Anonym JourneyStat ved reiseslutt (I-14). Modell med outcome, daysCompleted, messageCount, bothActive, resonanceLevel, ageBandA/B (5-årsintervaller), distanceBand (25 km-intervaller), usedBliKjent. Skrives i endJourney FØR sletting. Migrering 20260815130434_add_journey_stat. resonanceLevel+outcome validerer matchemotoren."
   ],
-  "lastCommit": "bb080ca",
-  "updatedAt": "2026-08-15T08:01:00+02:00"
+  "lastCommit": "40ecd05",
+  "updatedAt": "2026-08-15T15:06:00+02:00"
 }

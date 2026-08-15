@@ -3,11 +3,10 @@
   "baseCommit": "2784ae2",
   "instruks": "docs/TOSOM-ACT-INSTRUKS-v6.0.md",
   "grunnlag": "docs/TOSOM-MASTERPLAN-v5.0.md",
-  "currentStep": "1.1",
-  "completedSteps": ["0.1", "0.2"],
-  "lockedSteps": ["0.1", "0.2"],
+  "currentStep": "1.2",
+  "completedSteps": ["0.1", "0.2", "1.1"],
+  "lockedSteps": ["0.1", "0.2", "1.1"],
   "pendingSteps": [
-    "1.1",
     "1.2",
     "1.3",
     "2.1",
@@ -19,7 +18,11 @@
     "5.2"
   ],
   "errors": [],
-  "observations": [],
+  "observations": [
+    "1.1: Del A avgjort mot installert kode (10.70.0): både sentry.client.config.ts og instrumentation-client.ts støttes, men sentry.client.config.ts gir deprecatingsvarsel i byggelogg. Innholdet ble flyttet til instrumentation-client.ts, sentry.client.config.ts slettet (git rename). Kritisk varsel er eliminert.",
+    "1.1: Byggelogg gir 'DEPRECATION WARNING: disableLogger is deprecated'. Kommer fra instruksens egen wrapper-kode. Per Georges beslutning (15.08.2026): disableLogger: true beholdes, varselet akseptert til videre versjon.",
+    "0.2: baseline-fasen oppdaget 4 nynorsk-treff i stedet for 3 (ekstra: blogg/[slug]/page.tsx:18 'eit djupare plan'). JourneyTimeline.tsx gir 0 grep-treff på faseduplisering i grunnlinjen — steg 3.1 må bekrefte tidslinjen mot faktisk kode."
+  ],
   "baseline": {
     "tscErrors": 0,
     "prismaFormat": "ok",
@@ -49,5 +52,5 @@
     },
     "nynorskHits": 4
   },
-  "updatedAt": "2026-08-15T19:35:00+02:00"
+  "updatedAt": "2026-08-15T20:07:00+02:00"
 }

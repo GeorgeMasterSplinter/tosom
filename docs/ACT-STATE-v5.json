@@ -2,11 +2,11 @@
   "instruks": "v5.0-kjerneloftet",
   "sourceDoc": "docs/TOSOM-MASTERPLAN-v4.0.md",
   "baseCommit": "837c16f",
-  "currentWave": "B0",
-  "currentStep": "B0",
-  "completedSteps": ["0.1", "0.2", "B0.1", "B0.2", "B0.3", "B0.4", "B0.5", "B0.6", "B0.7", "B0.8", "lang-guard-sweep", "B0-gate"],
+  "currentWave": "B1",
+  "currentStep": "B1.1",
+  "completedSteps": ["0.1", "0.2", "B0.1", "B0.2", "B0.3", "B0.4", "B0.5", "B0.6", "B0.7", "B0.8", "lang-guard-sweep", "B0-gate", "B1.1"],
   "failedSteps": [],
-  "nextStep": "B1.1 — Postnummerdatasett (Kjerneløftet)",
+  "nextStep": "B1.2 — Postnummer i onboarding",
   "waveGateB0": true,
   "waveGateB0Notes": "B0-gate verifisert i KJØRING mot reell Postgres (2026-08-15). Alle 8 kriterier grønne: (1) prisma migrate deploy mot rebar DB = OK. (2) SELECT Order/WebhookEvent/Report svarer (0 rader hver — tabeller finnes+avles). (3) matching cron opprettet 10 matcher med score 95 (40-100) + scoringBreakdown + resonanceLevel satt (10/10). (4) matching cron durationMs=70-90ms (<< 50s). (5) MATCHING_ENABLED=false → response {skipped:true, matching_disabled}, 0 nye matcher, kø=20 urørt. (6) GET /api/chat/conversations live (401 uten sesjon; 10 ekte samtaler i DB; B0.7-test verifiserer 200-svarshape — full 'logge inn' er blokkert av pre-eksisterende auth-feil). (7) tsc=0, prisma format=0, jest 94/94 (uten integration; integration krever DB på 5433 lokalt / grønn i CI). (8) — see (7). KRITISK P0 oppdaget+fixet under verifiseringen: matching-cron hadde dealbreaker-bug (sjekkAlleDealbreakers returnerer objekt, testet truthy → ALTID sant → 0 matcher). Fixet i ceac443.",
   "waveGateB1": false,
@@ -41,8 +41,9 @@
     "lang-guard-sweep (3dbcd7b): erstattet ekte nynorsk med bokmål i app/lib/components/hooks/providers (allereie→allerede 19, funnen→funnet 22, berre→bare 1, brukar/brukarar/brukarane→bruker/brukere/brukerne 61, kun kommentarer/feilmeldinger/UI). Guard-pattern presisert med word boundaries, IKKE 'bur du' (korrekt bokmål). lang-guard nå GRØNN. tsc=0, build=0, ingen test-regressjoner (mine 3 nye tester passer).",
     "PRE-EXISTING test-infra (blokkerer 'npx jest grønn' i gate 8): (1) 3 integrasjonstester i __tests__/integration krever test-DB — passer når DATABASE_URL peger på rebar DB (verifisert: 3 passed mot tosom_dev), men feiler lokalt uten DB på 5433. I CI (postgres-service på 5432 + DATABASE_URL) passer de. (2) __tests__/integration/setup.ts er en hjelpefil som jests __tests__/**-matcher feilaktig behandler som tom test-suite ('must contain at least one test') → npm test exit 1 selv med DB. Fixet i 2508ac7 (utelatt fra test-suites). (1) er fortsatt env-dependent lokalt (grønn i CI).",
     "P0 (oppdaget+fixet i B0-gate-verifiseringen, ceac443): matching-cron hadde kritisk dealbreaker-bug — sjekkAlleDealbreakers() returnerer {hasDealbreaker, reason?}, men ruten testet if (abBlocked || baBlocked). Et objekt er ALTID truthy → hver par ble hoppet over → 0 matcher, selv med 20+ QUEUED-brukere som scorer 95/DEEP (ingen dealbreakers). Dette er kjernefunksjonen (B0.3 'VIKTIGST'). Fix: if (abBlocked.hasDealbreaker || baBlocked.hasDealbreaker). Verifisert: paired 0→10 (70-90ms), score 95, scoringBreakdown+resonanceLevel satt. Bare cron-ruten hadde feilen; lib/matching/engine.ts og findBestResonance.ts bruker .hasDealbreaker korrekt.",
-    "B0-gate (waveGateB0=true): alle 8 kriterier verifisert i KJØRING mot reell Postgres 2026-08-15. Seed-skript: scripts/gate-b0-seed.ts (20 QUEUED gate_b0_*, like profiler). Gjenstående: pre-eksisterende auth-feil (magic-link) blokkerer full 'logge inn' i Gate 6 — dokumentert separat."
+    "B0-gate (waveGateB0=true): alle 8 kriterier verifisert i KJØRING mot reell Postgres 2026-08-15. Seed-skript: scripts/gate-b0-seed.ts (20 QUEUED gate_b0_*, like profiler). Gjenstående: pre-eksisterende auth-feil (magic-link) blokkerer full 'logge inn' i Gate 6 — dokumentert separat.",
+    "B1.1 (671d22d): Postnummerdatasett fra Postens åpne register via carestad/norwegian-geodata (opphav Posten Norge/Kartverket). lib/geo/postalCodes.json = 5146 keys, 3375 med reelle sentrumskoordinater (gate/stedsadresse-koder); postboks/postkontor-koder har lat/lon=null (hærlig sjelden for gateadresse-brukere i en koblingsplattform). lookupPostalCode validerer 4 siffer, ukjend/feil→null. Ingen eksternt API, ingen avhengighet. Enhetstest 6/6 (Oslo/Bergen/Tromsø/Trondheim, 9999/abc→null, >4000 keys, koordinater innenfor Norge)."
   ],
-  "lastCommit": "ceac443",
-  "updatedAt": "2026-08-15T02:26:00+02:00"
+  "lastCommit": "671d22d",
+  "updatedAt": "2026-08-15T03:00:00+02:00"
 }

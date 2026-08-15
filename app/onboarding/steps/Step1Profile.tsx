@@ -11,11 +11,12 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { OnboardingSlide } from '@/app/onboarding/components/OnboardingSlide';
 import { OnboardingTextField } from '@/app/onboarding/components/OnboardingTextField';
 import { OnboardingSelectGrid } from '@/app/onboarding/components/OnboardingSelectGrid';
 import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
+import { lookupPostalCode } from '@/lib/geo/lookup';
 
 interface Props {
   data: Record<string, unknown>;
@@ -45,6 +46,10 @@ const validate = (data: Record<string, unknown>): ValidationError[] => {
    if (!String(data['gender'] ?? '').trim()) errors.push({ field: 'gender', message: 'Velg ett kjønn.' });
    if (!String(data['seekingGender'] ?? '').trim()) errors.push({ field: 'seekingGender', message: 'Velg hvem du søker.' });
   if (!String(data['city'] ?? '').trim()) errors.push({ field: 'city', message: 'Hvor bor du?' });
+  
+  const pc = String(data['postalCode'] ?? '').trim();
+  if (!pc) errors.push({ field: 'postalCode', message: 'Postnummer er påkrevd.' });
+  else if (!/^\d{4}$/.test(pc)) errors.push({ field: 'postalCode', message: 'Postnummer må ha fire siffer.' });
   
   const maxDist = Number(data['distancePref']);
   if (isNaN(maxDist) || !maxDist) errors.push({ field: 'distancePref', message: 'Velg en avstand.' });
@@ -96,6 +101,13 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
 
   // Feil-map for visuell markering
   const errorFields = new Set(errors.map(e => e.field));
+
+  // B1.2: Vis stedsnavnet når brukeren skriver postnummer — bekrefter at hun skrev riktig
+  const postalCodeValue = String(data['postalCode'] ?? '').trim();
+  const postalPlace = useMemo(() => {
+    if (!/^\d{4}$/.test(postalCodeValue)) return null;
+    return lookupPostalCode(postalCodeValue);
+  }, [postalCodeValue]);
 
   return (
     <OnboardingSlide
@@ -223,6 +235,24 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             maxLength={100}
             minChars={2}
           />
+
+          {/* postalCode — B1.2: postnummer med stedsnavn-bekreftelse */}
+          <div>
+            <OnboardingTextField
+              label="Postnummer *"
+              value={val('postalCode', '')(data)}
+              onChange={(v) => onChange('postalCode', v.replace(/[^0-9]/g, '').slice(0, 4))}
+              placeholder="F.eks. 0150"
+              mikroguiding="Fire siffer — vi bruker dette for å finne avstand, ikke nøyaktig posisjon"
+              maxLength={4}
+              minChars={4}
+            />
+            {postalPlace && (
+              <p className="text-sm mt-1 ml-1" style={{ color: '#D4AF37' }}>
+                {postalPlace.lat != null ? `✓ ${postalPlace.sted}` : `✓ ${postalPlace.sted} (postboks-kode, ingen avstand)`}
+              </p>
+            )}
+          </div>
 
           {/* distancePref slider */}
           <div className="space-y-3">

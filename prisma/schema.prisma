@@ -72,6 +72,10 @@ model Profile {
   photoUrl          String?
   bio               String?
   interests         String[]
+  // B1.3: Avstands-matching — postnummer som kolonne (filterbar), lat/lon utledet ved lagring
+  postalCode        String?
+  latitude          Float?
+  longitude         Float?
   deepProfileStep   DeepProfileStep @default(IDENTITY)
   deepProfileData   Json?
   preferences       Json?
@@ -83,6 +87,7 @@ model Profile {
   @@index([userId])
   @@index([deepProfileStep])
   @@index([matchTags])
+  @@index([latitude, longitude])
 }
 
 // B8: Samtykkefelt fjernet — se TOSOM-MASTERPLAN-v3.0 DEL 2

@@ -10,6 +10,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from '@/lib/auth/session';
 import { validateOnboarding } from '@/lib/validation/onboarding-setup';
+import { lookupPostalCode } from '@/lib/geo/lookup';
 
 export const dynamic = 'force-dynamic';
 
@@ -51,12 +52,20 @@ export async function POST(req: NextRequest) {
 
     const userId = session.user.id;
 
+    // B1.3: Utled latitude/longitude FRA postalCode ved lagring (ikke ved lesing).
+    // Ukjent postnummer / postboks-kode uten geometri → null (håndteres i B1.4).
+    const geo = lookupPostalCode(basic.postalCode);
+
     // Mapper til Profile-modellen (validering allerede gjort — data er trygt)
     await prisma.profile.upsert({
       where: { userId },
       update: {
         identityName: basic.identityName,
         age: basic.age ?? undefined, // Zod coerces to number already
+        // B1.3: postnummer som kolonne (filterbar) + koordinater utledet ved lagring
+        postalCode: basic.postalCode,
+        latitude: geo?.lat ?? null,
+        longitude: geo?.lon ?? null,
         lifeSituation: {
           gender: basic.gender,
           seekingGender: basic.seekingGender,
@@ -136,6 +145,10 @@ export async function POST(req: NextRequest) {
         userId: userId,
         identityName: basic.identityName,
         age: basic.age ?? 25, // Zod coerces to number already
+        // B1.3: postnummer som kolonne (filterbar) + koordinater utledet ved lagring
+        postalCode: basic.postalCode,
+        latitude: geo?.lat ?? null,
+        longitude: geo?.lon ?? null,
         lifeSituation: {
           gender: basic.gender,
           seekingGender: basic.seekingGender,

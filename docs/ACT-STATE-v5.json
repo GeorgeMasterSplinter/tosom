@@ -2,8 +2,8 @@
   "instruks": "v5.0-kjerneloftet",
   "sourceDoc": "docs/TOSOM-MASTERPLAN-v4.0.md",
   "baseCommit": "837c16f",
-  "currentWave": "B2",
-  "currentStep": "B2.6",
+  "currentWave": "B3",
+  "currentStep": "B3.1",
   "completedSteps": [
     "0.1",
     "0.2",
@@ -28,10 +28,11 @@
     "B2.3",
     "B2.4",
     "B2.5",
-    "B2.6"
+    "B2.6",
+    "B3.1"
   ],
   "failedSteps": [],
-  "nextStep": "B2.7 — Manuell QA på mobil (krever fysisk enhet)",
+  "nextStep": "B3.2 — Redaksjonell gjennomgang (Georges skrivejobb) eller B4.1 — Vilkår lagres",
   "waveGateB0": true,
   "waveGateB0Notes": "B0-gate verifisert i KJØRING mot reell Postgres (2026-08-15). Alle 8 kriterier grønne: (1) prisma migrate deploy mot rebar DB = OK. (2) SELECT Order/WebhookEvent/Report svarer (0 rader hver — tabeller finnes+avles). (3) matching cron opprettet 10 matcher med score 95 (40-100) + scoringBreakdown + resonanceLevel satt (10/10). (4) matching cron durationMs=70-90ms (<< 50s). (5) MATCHING_ENABLED=false → response {skipped:true, matching_disabled}, 0 nye matcher, kø=20 urørt. (6) GET /api/chat/conversations live (401 uten sesjon; 10 ekte samtaler i DB; B0.7-test verifiserer 200-svarshape — full 'logge inn' er blokkert av pre-eksisterende auth-feil). (7) tsc=0, prisma format=0, jest 94/94 (uten integration; integration krever DB på 5433 lokalt / grønn i CI). (8) — see (7). KRITISK P0 oppdaget+fixet under verifiseringen: matching-cron hadde dealbreaker-bug (sjekkAlleDealbreakers returnerer objekt, testet truthy → ALTID sant → 0 matcher). Fixet i ceac443.",
   "waveGateB1": true,
@@ -80,8 +81,9 @@
     "B2.4 (f460e8f): Journey-kalender med dag N av 30, fase (EARLY 1-14, BUILDING_TRUST 15-21, DEEPER 22-25, CHECKIN 26-30), milepæler (dag 1, 15 bilder, 30 avslutning). Reise ikke startet → 'Reisen deres begynner når dere begge har vært innom'. Fase-oversikt med aktiv/past-markering.",
     "B2.5 (3188d86): Stillhetsdeteksjon koblet til journey-cron. STILLHET_HOURS=48. Finder aktive konversasjoner med lastMessageAt < 48t, sjekker aktiv match + 2 aktive journeys, hopper over hvis siste melding er system-type. Henter GuidedQuestion (depthLevel<=2), oppretter Message med type='system' + 💛 prefix. Maks én impuls per 48t per samtale.",
     "B2.6 (cd6380c): Kanonisk kopi og bokmål. Fix user-facing nynorsk: Ikkje authentisert→Ikke autentisert (2 presence-ruter), savnar/Korleis→savner/Hvordan (presenceEngine), Korleis reagerer→Hvordan reagerer (onboarding-setup), Brukar ikke funnet→Bruker ikke funnet (phone/verify), Ny Brukar→Ny bruker (vipps/callback). 05:00 nevnes aldri i brukervendt tekst (kun i kommentar).",
-    "B2.7 (MANGLER): Manuell QA på mobil krever fysisk enhet (iOS Safari + Android Chrome). Sjekkliste: full flyt, trykkflater >=44x44px, ingen horisontal scroll ved 320px, tastatur skjuler ikke skrivefelt, trygge soner, prefers-reduced-motion, moodbytte med tommel, bli kjent-panel på liten skjerm. Må utføres av George."
+    "B2.7 (MANGLER): Manuell QA på mobil krever fysisk enhet (iOS Safari + Android Chrome). Sjekkliste: full flyt, trykkflater >=44x44px, ingen horisontal scroll ved 320px, tastatur skjuler ikke skrivefelt, trygge soner, prefers-reduced-motion, moodbytte med tommel, bli kjent-panel på liten skjerm. Må utføres av George.",
+    "B3.1 (355e759): Struktur for 12×12=144 spørsmål. Kanoniske kategorier på bokmål: Trygghet, Verdier, Kommunikasjon, Nærhet, Framtidsdrømmer, Livsstil, Relasjonsmønster, Emosjonell innsikt, Konflikt og grenser, Samfunn og tilhørighet, Personlighet og selvinnsikt, Opplevelser og nysgjerrighet. Per kategori: 4 spørsmål depthLevel 1, 4 med 2, 4 med 3. Idempotent seeding (upsert + deleteMany + create). Validering i seed-funksjonen (12 per kategori, 4/4/4 fordeling). Alle spørsmål på bokmål. B3.2 (innhold) er Georges skrivejobb."
   ],
-  "lastCommit": "cd6380c",
-  "updatedAt": "2026-08-15T07:48:00+02:00"
+  "lastCommit": "355e759",
+  "updatedAt": "2026-08-15T07:55:00+02:00"
 }

@@ -1,7 +1,10 @@
-# ToSom Backup & Restore-strategi
+# ToSom Backup & Restore-strategi (B5.7)
 
 ## 1. Formål
 Dokumentet beskriver backup- og restore-prosess for ToSom-produksjon. Målet er å sikre at data kan restaureres ved databrest eller data tap.
+
+> **B5.7 KRAV:** En backup som ikke er gjenopprettet, er en antakelse.
+> Gjenopprettingstest skal gjennomføres før beta og dokumenteres med målt tidsbruk (RTO).
 
 ## 2. Backup-strategi
 
@@ -64,13 +67,50 @@ psql -h prod-db -U tosom_prod -d tosom_prod < /tmp/tosom_prod_restore.sql
 - AI-logs
 - Observability
 
-## 5. Test-sjekkliste
+## 5. Test-sjekkliste (B5.7)
 
-- [ ] Dagleg backup kjører automatisk
+- [ ] Daglig backup kjører automatisk (bekreft hos databaseleverandør)
 - [ ] Backup-verifisering (file size > 0)
-- [ ] Restore test i staging kvart kvartal
-- [ ] Backup-restore tid dokumentert (mål: < 30 min)
-- [ ] Alarm ved failed backup
+- [ ] **Gjenopprettingstest gjennomført** (obligatorisk før beta)
+- [ ] Backup-restore tid dokumentert (RTO-mål: < 30 min)
+- [ ] Alarm ved failed backup (koblet via B5.6 sendAlert)
+
+### B5.7: Gjenopprettingstest — prosedyre
+
+1. **Ta manuell backup før test:**
+   ```bash
+   pg_dump -h <db-host> -U <user> -d <db> -F c -f /tmp/tosom_backup_test.dump
+   ```
+
+2. **Opprett ny testdatabase:**
+   ```bash
+   createdb -h <db-host> -U <user> tosom_restore_test
+   ```
+
+3. **Gjenopprett til testdatabase:**
+   ```bash
+   pg_restore -h <db-host> -U <user> -d tosom_restore_test /tmp/tosom_backup_test.dump
+   ```
+
+4. **Verifiser radantall i nøkkeltabeller:**
+   ```sql
+   SELECT 'User' AS table, count(*) FROM "User"
+   UNION ALL SELECT 'Match', count(*) FROM "Match"
+   UNION ALL SELECT 'Message', count(*) FROM "Message"
+   UNION ALL SELECT 'JourneyProgress', count(*) FROM "JourneyProgress"
+   UNION ALL SELECT 'JourneyStat', count(*) FROM "JourneyStat";
+   ```
+
+5. **Dokumenter:**
+   - Dato for test
+   - Tidsbruk (RTO)
+   - Radantall før/etter
+   - Eventuelle avvik
+
+6. **Rydd opp:**
+   ```bash
+   dropdb -h <db-host> -U <user> tosom_restore_test
+   ```
 
 ## 6. Disaster Recovery
 

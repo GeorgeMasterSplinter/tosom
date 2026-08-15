@@ -10,6 +10,15 @@ import { useState, useEffect } from 'react';
 interface DailySeries { signups: number[]; onboarding: number[]; matches: number[]; journeys: number[]; messages: number[]; }
 interface KeyStats { totalUsers: number; activeUsers30d: number; totalMatches: number; avgScore: number; totalJourneys: number; completedJourneys: number; }
 
+// B5.3: JourneyStat — anonym reisestatistikk
+interface JourneyStatItem { outcome: string; count: number; }
+interface JourneyStatSummary {
+  total: number;
+  byOutcome: Record<string, number>;
+  byResonance: Record<string, number>;
+  completionRateByResonance: Record<string, { completed: number; total: number }>;
+}
+
 /* ─── TimeFilter ⏱️ */
 function TimeFilter({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const options = [
@@ -93,21 +102,93 @@ function Skeleton() {
   );
 }
 
+/* ─── B5.3: JourneyStatPanel — reisestatistikk (validerer matchemotoren) ─── */
+function JourneyStatPanel({ stats }: { stats: JourneyStatSummary | null }) {
+  if (!stats || stats.total === 0) {
+    return (
+      <div className="rounded-2xl p-5" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+        <h3 className="text-sm font-semibold mb-3 tracking-wide" style={{ color: 'rgba(255,255,255,0.6)' }}>REISESTATISTIKK (JOURNEYSTAT)</h3>
+        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>Ingen fullførte reiser ennå. Statistikken fylles når reiser avsluttes.</p>
+      </div>
+    );
+  }
+
+  const outcomeLabels: Record<string, string> = {
+    found_each_other: 'Fant hverandre 💛',
+    new_journey: 'Ny reise 🔄',
+    early_exit: 'Tidlig avslutning',
+    expired: 'Utløpt',
+    completed: 'Fullført',
+  };
+
+  const resonanceLabels: Record<string, string> = {
+    DEEP: 'Dyp resonans',
+    STRONG: 'Sterk resonans',
+    MODERATE: 'God resonans',
+    GENTLE: 'Rolig resonans',
+  };
+
+  return (
+    <div className="rounded-2xl p-5" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+      <h3 className="text-sm font-semibold mb-4 tracking-wide" style={{ color: 'rgba(255,255,255,0.6)' }}>
+        REISESTATISTIKK ({stats.total} avsluttede reiser)
+      </h3>
+
+      {/* Utfall */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+        {Object.entries(stats.byOutcome).map(([outcome, count]) => (
+          <div key={outcome} className="rounded-xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
+            <div className="text-xl font-bold" style={{ color: '#D4AF37' }}>{count}</div>
+            <div className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>{outcomeLabels[outcome] || outcome}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Fullføringsgrad per resonansnivå — den viktigste metrikken */}
+      <div className="mb-2">
+        <h4 className="text-xs font-semibold mb-2" style={{ color: 'rgba(255,255,255,0.5)' }}>
+          FULLFØRINGSGRAD PER RESONANSNIVÅ (validerer matchemotoren)
+        </h4>
+        <div className="space-y-2">
+          {Object.entries(stats.completionRateByResonance).map(([level, data]) => {
+            const rate = data.total > 0 ? Math.round((data.completed / data.total) * 100) : 0;
+            return (
+              <div key={level} className="flex items-center gap-3">
+                <span className="text-xs w-28" style={{ color: 'rgba(255,255,255,0.5)' }}>{resonanceLabels[level] || level}</span>
+                <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
+                  <div className="h-full rounded-full" style={{ width: `${rate}%`, background: '#D4AF37' }} />
+                </div>
+                <span className="text-xs font-medium w-16 text-right" style={{ color: '#D4AF37' }}>
+                  {rate} % ({data.completed}/{data.total})
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ─── Hovedkomponent 📊 */
 export default function AdminAnalyticsPage() {
   const [timeFilter, setTimeFilter] = useState('30');
   const [series, setSeries] = useState<DailySeries | null>(null);
   const [stats, setStats] = useState<KeyStats | null>(null);
+  const [journeyStats, setJourneyStats] = useState<JourneyStatSummary | null>(null); // B5.3
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`/api/admin/analytics?days=${timeFilter}`)
-      .then((r) => r.json())
-      .then((data) => {
+    Promise.all([
+      fetch(`/api/admin/analytics?days=${timeFilter}`).then((r) => r.json()),
+      fetch('/api/admin/journey-stats').then((r) => r.json()).catch(() => null), // B5.3
+    ])
+      .then(([data, jsData]) => {
         if (data.success) {
           setSeries(data.dailySeries || { signups: [], onboarding: [], matches: [], journeys: [], messages: [] });
           setStats(data.keyStats || { totalUsers: 0, activeUsers30d: 0, totalMatches: 0, avgScore: 0, totalJourneys: 0, completedJourneys: 0 });
         }
+        if (jsData) setJourneyStats(jsData);
       })
       .catch(() => setSeries({ signups: [], onboarding: [], matches: [], journeys: [], messages: [] }))
       .finally(() => setLoading(false));
@@ -158,6 +239,9 @@ export default function AdminAnalyticsPage() {
           </div>
         </div>
       </div>
+
+      {/* B5.3: Reisestatistikk fra JourneyStat */}
+      <JourneyStatPanel stats={journeyStats} />
     </div>
   );
 }

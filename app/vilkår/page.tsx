@@ -126,38 +126,38 @@ function GlassCard({
 const sections = [
   {
     icon: <IconAge />,
-    title: 'Aldersgrense',
-    content: 'Du må være 23 for å bruke ToSom. Vi tar alderskravet svært alvorlig for å sikre et trygt miljø for voksne som søker ekte forbindelse.',
+    title: 'Aldersgrense — 23 år',
+    content: 'Du må være 23 år for å bruke ToSom. Vi tar alderskravet svært alvorlig for å sikre et trygt miljø for voksne som søker ekte forbindelse. Innlogging via Vipps (BankID) verifiserer alderen din.',
   },
   {
     icon: <IconLogin />,
     title: 'Oppretting av konto og innlogging',
-    content: 'Du oppretter en konto med gyldig e-postadresse. Du mottar en magisk innloggingslenke. I tillegg kan du verifisere telefonnummeret ditt for økt sikkerhet. Kontoen er knyttet til din e-postadresse og eventuelle verifiserte kontaktopplysninger.',
-  },
-  {
-    icon: <IconProfile />,
-    title: 'Profildynamikk',
-    content: 'Profilen din er privat og synlig bare for din match. Du kan redigere profilen din når som helst fra dashbordet.',
+    content: 'Du oppretter en konto med Vipps (BankID-verifisert) eller e-post. Kontoen er knyttet til din identitet. Ved registrering samtykker du til disse vilkårene, og samtykket lagres med tidsstempel.',
   },
   {
     icon: <IconMatch />,
-    title: 'Matching og reiseforløp',
-    content: 'Når du matcher med noen, går dere inn i en styrt 30-dagers reise. Dette forløpet inkluderer daglige refleksjoner, samtaletema og oppgaver som hjelper dere å bli kjent.',
+    title: 'Én reise — 30 dager',
+    content: 'En reise koster 349 kroner og gir deg én match i én 30-dagers reise. De første 10 000 brukerne får reisen gratis. Du kan bare ha én aktiv reise om gangen.',
+  },
+  {
+    icon: <IconProfile />,
+    title: 'Kobling — ikke valg',
+    content: 'ToSom kobler deg til én person basert på kunnskapsbasert matching. Du velger ikke hvem du matcher med, og du kan ikke si ja eller nei til en bestemt person. Dette er kjernen i ToSom: ro, ikke valg.',
+  },
+  {
+    icon: <IconEnd />,
+    title: 'Avslutning og sletting',
+    content: 'Motparten kan avslutte reisen når som helst, og samtalen slettes da for begge. Ved reiseslutt slettes alt innhold. Velger du «Vi fant hverandre», slettes hele kontoen din. Du kan også avslutte tidlig.',
   },
   {
     icon: <ImageIcon />,
     title: 'Bildefdeling',
-    content: 'Bilder kan deles etter 14 dager i reise-forløpet. Før den tid bygger dere en tilknytning basert på dybde og resonans, ikke utseende.',
-  },
-  {
-    icon: <IconEnd />,
-    title: 'Avslutning og oppsigelse',
-    content: 'Du kan avslutte reisen tidlig eller be om sletting av konto og alle data. Kontakt oss på privat@tosom.no.',
+    content: 'Fra dag 15 kan dere dele bilder med hverandre. Før den tid bygger dere en tilknytning basert på dybde og resonans, ikke utseende.',
   },
   {
     icon: <IconCopyright />,
-    title: 'Ansvar og opphavsrett',
-    content: 'Innholdet på plattformen er beskyttet av opphavsrett. Du har lov å bruke det personlig, men ikke å dele eller publisere videre.',
+    title: 'Angrerett',
+    content: 'Norsk lov gir 14 dagers angrerett på digitale tjenester. Ved betaling ber vi deg samtykke til at reisen starter straks. Gir du dette samtykket, bortfaller angreretten. Uten refusjon etter påbegynt reise.',
   },
 ];
 

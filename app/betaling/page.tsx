@@ -1,8 +1,11 @@
 /**
- * ToSom — Betaling
+ * ToSom — Betaling (B4.2)
  * 
- * Premium-side for valg av betalingsplan.
- * Enkel, roleg, gull-aestetikk.
+ * Én pris, én reise. Ingen abonnement, ingen nivåer (I-10).
+ * 349 kr for én 30-dagers reise. De første 10 000 brukerne får reisen gratis.
+ * 
+ * B4.2: Angrerett-avkrysning — uten denne har brukeren 14 dagers ubetinget
+ * krav på pengene tilbake etter norsk angrerettlov.
  */
 
 'use client';
@@ -10,63 +13,53 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-const PLANS = [
-  {
-    id: 'weekly',
-    name: 'Veke',
-    price: '149',
-    period: '/veke',
-    description: 'Prøv ToSom med ei kort avtale.',
-    features: ['Åpne for 1 match', 'Guidet reise i 7 dagar', 'Full tilgang'],
-    highlighted: false,
-  },
-  {
-    id: 'monthly',
-    name: 'Månad',
-    price: '299',
-    period: '/månad',
-    description: 'Den vanlege måten å oppleve ToSom på.',
-    features: ['Åpne for 1 match per 24t', 'Guidet 30-dagers reise', 'Full tilgang til alt'],
-    highlighted: true,
-  },
-  {
-    id: 'quarterly',
-    name: '3 månader',
-    price: '699',
-    period: '/3 mnd',
-    description: 'Set spare dei mest og viser commitment.',
-    features: ['Sparr 226 kr', 'Guidet 30-dagers reise', 'Full tilgang til alt'],
-    highlighted: false,
-  },
-];
-
 export default function BetalingPage() {
-  const [selected, setSelected] = useState('monthly');
   const [loading, setLoading] = useState(false);
+  const [withdrawalWaiver, setWithdrawalWaiver] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  async function handleSubscribe() {
+  async function handleStartJourney() {
+    setError(null);
+
+    // B4.2: Begge avkrysninger kreves
+    if (!termsAccepted) {
+      setError('Du må akseptere vilkårene for bruk for å starte reisen.');
+      return;
+    }
+    if (!withdrawalWaiver) {
+      setError('Du må samtykke til at reisen starter straks for å fortsette.');
+      return;
+    }
+
     setLoading(true);
     try {
-      const res = await fetch('/api/payment/create-checkout-session', {
+      // B4.3: Gratismodus — Vipps-nøkler kommer om ~2 uker
+      // Inntil da: send brukeren direkte til kø
+      const res = await fetch('/api/journey/queue', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ planId: selected }),
+        body: JSON.stringify({
+          termsAccepted: true,
+          withdrawalWaiver: true,
+        }),
       });
-      if (!res.ok) throw new Error('Kunne ikke starte betaling');
-      const { url } = await res.json();
-      if (url) window.location.href = url;
-      else setSelected(selected); // Fallback — redirect til bekreftelse
-    } catch {
-      // Silently fail for dev
-      console.error('Betaling feila');
-    } finally {
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Kunne ikke starte reisen');
+      }
+
+      window.location.href = '/dashboard';
+    } catch (err) {
+      setError((err as Error).message);
       setLoading(false);
     }
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center px-6 py-20" style={{ background: '#0B1520' }}>
-      <div className="w-full max-w-4xl">
+      <div className="w-full max-w-lg">
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="text-2xl font-semibold" style={{ color: '#D4AF37' }}>
@@ -75,93 +68,145 @@ export default function BetalingPage() {
         </div>
 
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-12">
           <h1 className="text-[32px] font-semibold mb-4" style={{ color: '#FFFFFF', letterSpacing: '-0.02em' }}>
-            Fullfør profilen din
+            Én reise. Én pris.
           </h1>
           <p className="text-lg" style={{ color: 'rgba(255,255,255,0.5)', lineHeight: '1.6' }}>
-            Vel den planen som passar deg best.
+            349 kroner for én 30-dagers reise med én match.
+            De første 10 000 brukerne får reisen gratis.
           </p>
         </div>
 
-        {/* Plans */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-          {PLANS.map((plan) => (
-            <button
-              key={plan.id}
-              onClick={() => setSelected(plan.id)}
-              className="text-left transition-all duration-300 w-full"
-              style={{
-                background: selected === plan.id
-                  ? 'rgba(212,175,55,0.12)'
-                  : 'rgba(255,255,255,0.04)',
-                border: selected === plan.id
-                  ? '1px solid rgba(212,175,55,0.5)'
-                  : '1px solid rgba(255,255,255,0.08)',
-                borderRadius: '20px',
-                padding: '24px',
-                cursor: 'pointer',
-                outline: 'none',
-              }}
-            >
-              {plan.highlighted && (
-                <span
-                  className="text-xs font-semibold uppercase tracking-[0.2em]"
-                  style={{ color: '#D4AF37' }}
-                >
-                  Populær
-                </span>
-              )}
-              <h3 className="text-xl font-medium mb-1" style={{ color: '#FFFFFF' }}>
-                {plan.name}
-              </h3>
-              <p className="mb-3" style={{ color: 'rgba(255,255,255,0.6)' }}>
-                {plan.price}{plan.period}
-              </p>
-              <p className="text-sm mb-4" style={{ color: 'rgba(255,255,255,0.45)', lineHeight: '1.5' }}>
-                {plan.description}
-              </p>
-              <ul className="space-y-2">
-                {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-center text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
-                    <span className="mr-2" style={{ color: '#D4AF37' }}>•</span>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </button>
-          ))}
+        {/* Pris-kort */}
+        <div
+          className="mb-8"
+          style={{
+            background: 'rgba(212,175,55,0.08)',
+            border: '1px solid rgba(212,175,55,0.3)',
+            borderRadius: '20px',
+            padding: '32px',
+          }}
+        >
+          <div className="flex items-baseline justify-between mb-4">
+            <h2 className="text-xl font-medium" style={{ color: '#FFFFFF' }}>
+              Én reise
+            </h2>
+            <p className="text-3xl font-semibold" style={{ color: '#D4AF37' }}>
+              349 kr
+            </p>
+          </div>
+          <ul className="space-y-3">
+            {[
+              'Én match — koblet til deg, ikke valgt av deg',
+              '30 dagers guidet reise sammen',
+              'Bli kjent-spørsmål underveis',
+              'Bilder fra dag 15',
+              'Alt slettes ved reiseslutt',
+            ].map((feature) => (
+              <li key={feature} className="flex items-start text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                <span className="mr-3 mt-0.5" style={{ color: '#D4AF37' }}>✓</span>
+                {feature}
+              </li>
+            ))}
+          </ul>
         </div>
+
+        {/* B4.2: Vilkår-samtykke (kreves) */}
+        <div className="mb-6">
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={termsAccepted}
+              onChange={(e) => setTermsAccepted(e.target.checked)}
+              className="mt-1 w-5 h-5 rounded"
+              style={{ accentColor: '#D4AF37' }}
+            />
+            <span className="text-sm" style={{ color: 'rgba(255,255,255,0.7)', lineHeight: '1.6' }}>
+              Jeg har lest og aksepterer{' '}
+              <Link href="/vilkår" className="underline" style={{ color: '#D4AF37' }}>
+                vilkårene for bruk
+              </Link>{' '}
+              og{' '}
+              <Link href="/personvern" className="underline" style={{ color: '#D4AF37' }}>
+                personvernerklæringen
+              </Link>
+              . Jeg forstår at ToSom kobler meg til én person, og at samtalen slettes for begge hvis én av oss avslutter.
+            </span>
+          </label>
+        </div>
+
+        {/* B4.2: Angrerett-samtykke (kreves — ellers 14 dagers refusjonskrav) */}
+        <div
+          className="mb-8"
+          style={{
+            background: 'rgba(255,255,255,0.03)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            borderRadius: '12px',
+            padding: '16px',
+          }}
+        >
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={withdrawalWaiver}
+              onChange={(e) => setWithdrawalWaiver(e.target.checked)}
+              className="mt-1 w-5 h-5 rounded"
+              style={{ accentColor: '#D4AF37' }}
+            />
+            <span className="text-sm" style={{ color: 'rgba(255,255,255,0.7)', lineHeight: '1.6' }}>
+              Jeg samtykker til at ToSom starter reisen min straks, og forstår at angreretten dermed bortfaller.
+            </span>
+          </label>
+        </div>
+
+        {/* Feilmelding */}
+        {error && (
+          <div
+            className="mb-6 text-sm"
+            style={{
+              color: '#FF6B6B',
+              background: 'rgba(255,77,77,0.1)',
+              border: '1px solid rgba(255,77,77,0.2)',
+              borderRadius: '8px',
+              padding: '12px 16px',
+            }}
+          >
+            {error}
+          </div>
+        )}
 
         {/* CTA */}
         <div className="text-center">
           <button
-            onClick={handleSubscribe}
-            disabled={loading}
-            className="font-medium transition-all duration-300"
+            onClick={handleStartJourney}
+            disabled={loading || !termsAccepted || !withdrawalWaiver}
+            className="font-medium transition-all duration-300 w-full"
             style={{
-              background: loading ? 'rgba(212,175,55,0.3)' : '#D4AF37',
+              background: loading || !termsAccepted || !withdrawalWaiver
+                ? 'rgba(212,175,55,0.3)'
+                : '#D4AF37',
               color: '#0B1520',
               borderRadius: '12px',
-              padding: '14px 48px',
+              padding: '16px 48px',
               fontSize: '17px',
               border: 'none',
-              cursor: loading ? 'not-allowed' : 'pointer',
-              opacity: loading ? 0.6 : 1,
+              cursor: loading || !termsAccepted || !withdrawalWaiver ? 'not-allowed' : 'pointer',
+              opacity: loading || !termsAccepted || !withdrawalWaiver ? 0.6 : 1,
             }}
           >
-            {loading ? 'Handlar...' : `Vel ${PLANS.find(p => p.id === selected)?.name} — ${PLANS.find(p => p.id === selected)?.price} kr${PLANS.find(p => p.id === selected)?.period}` }
+            {loading ? 'Starter reisen...' : 'Start reisen'}
           </button>
 
           <p className="mt-6 text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>
-            Trygg betaling. Ingen binding. Avslutt når du vil.
+            De første 10 000 brukerne får reisen gratis.
           </p>
         </div>
 
         {/* Tilbake */}
         <div className="mt-12 text-center">
           <Link
-            href="/onboarding/phone"
+            href="/onboarding"
             style={{ color: 'rgba(255,255,255,0.4)', fontSize: '14px' }}
           >
             ← Tilbake

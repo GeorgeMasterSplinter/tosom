@@ -36,6 +36,13 @@ export async function POST(req: NextRequest) {
     }
     const authUser = result.user;
 
+    // B4.2: Les valgfrie samtykker fra body (withdrawalWaiver lagres på User)
+    let withdrawalWaiver = false;
+    try {
+      const body = await req.json();
+      withdrawalWaiver = body.withdrawalWaiver === true;
+    } catch { /* ingen body — OK */ }
+
     // 2. Hent full User fra DB for å sjekke onboarding/journeyState/bannedAt
     const user = await prisma.user.findUnique({
       where: { id: authUser.id },
@@ -114,6 +121,8 @@ export async function POST(req: NextRequest) {
         data: {
           journeyState: 'QUEUED',
           matchQueuedAt: new Date(),
+          // B4.2: Angrerett-samtykke lagres hvis gitt
+          ...(withdrawalWaiver && !user.deletedAt ? { withdrawalWaiverAt: new Date() } : {}),
         },
         select: {
           journeyState: true,

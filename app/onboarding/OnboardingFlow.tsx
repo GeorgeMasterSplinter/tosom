@@ -169,6 +169,33 @@ function saveDraft(data: ProfileData) {
   } catch { /* ignore */ }
 }
 
+// B2.2 — Server-side autosave: POST ved stegbytte (debounced, ikke-blokkerende)
+async function saveDraftToServer(step: number, data: ProfileData): Promise<void> {
+  try {
+    await fetch('/api/onboarding/draft', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ step, data }),
+    });
+  } catch (err) {
+    // Ikke-blokkerende: feiler lagringen skal brukeren likevel komme videre
+    console.warn('[onboarding] Server-autosave feilet:', err);
+  }
+}
+
+// B2.2 — Hent draft fra serveren ved oppstart (serveren er sannheten)
+async function loadDraftFromServer(): Promise<{ data: Partial<ProfileData>; step: number } | null> {
+  try {
+    const res = await fetch('/api/onboarding/draft');
+    if (!res.ok) return null;
+    const result = await res.json();
+    if (result.data && typeof result.data === 'object') {
+      return { data: result.data, step: result.step ?? 0 };
+    }
+  } catch { /* ignore */ }
+  return null;
+}
+
 interface OnboardingFlowProps {
   onComplete?: (profile: UserProfile) => void;
 }
@@ -181,27 +208,46 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
    // SSR ser alltid tomme felt — klientet hentar lagrede data etter mount
    const [data, setData] = useState<ProfileData>(() => ({ ...initialData }));
 
+   // B2.2: Hent fra serveren ved oppstart (serveren er sannheten, localStorage er hurtigbuffer)
    useEffect(() => {
-     const draft = loadDraft();
-     if (draft && Object.keys(draft).length > 0) {
-       setData((prev) => ({ ...prev, ...draft }));
+     async function init() {
+       // Prøv serveren først
+       const serverDraft = await loadDraftFromServer();
+       if (serverDraft && Object.keys(serverDraft.data).length > 0) {
+         setData((prev) => ({ ...prev, ...serverDraft.data }));
+         if (serverDraft.step > 0) setStep(serverDraft.step);
+         return;
+       }
+       // Fallback til localStorage
+       const localDraft = loadDraft();
+       if (localDraft && Object.keys(localDraft).length > 0) {
+         setData((prev) => ({ ...prev, ...localDraft }));
+       }
      }
+     init();
    }, []);
   const [fadeKey, setFadeKey] = useState(0);
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Autosave med debounce (400ms) + vis "Sparar..."-indikator
+  // Autosave med debounce (400ms) + vis "Lagrer..."-indikator
   const [showSaving, setShowSaving] = useState(false);
   
   useEffect(() => {
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     setShowSaving(true);
     saveTimerRef.current = setTimeout(() => {
-      saveDraft(data);
+      saveDraft(data); // localStorage som hurtigbuffer
       setShowSaving(false);
     }, 400);
     return () => { if (saveTimerRef.current) clearTimeout(saveTimerRef.current); };
   }, [data]);
+
+  // B2.2: Server-side autosave ved stegbytte (ikke-blokkerende)
+  useEffect(() => {
+    if (step > 0) {
+      saveDraftToServer(step, data);
+    }
+  }, [step]); // eslint-disable-line react-hooks/exhaustive-deps
 
    // Rydd draft når reisen startar (allerede eksisterande useEffect)
   useEffect(() => {
@@ -379,7 +425,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
         if (onComplete) {
           onComplete({
             id: '',
-            name: data.identityName || 'Brukar',
+            name: data.identityName || 'Bruker',
             age: parseInt(data.age) || 25,
             bio: data.selfDesc || '',
             values: [data.highPriority || '', data.loveGive || '', data.futureVision || ''].filter(Boolean),
@@ -396,7 +442,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
       if (onComplete) {
         onComplete({
           id: userId,
-          name: data.identityName || 'Brukar',
+          name: data.identityName || 'Bruker',
           age: parseInt(data.age) || 25,
           bio: data.selfDesc || '',
           values: [data.highPriority || '', data.loveGive || '', data.futureVision || ''].filter(Boolean),
@@ -418,7 +464,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
 
       window.location.href = '/dashboard';
     } catch (err) {
-      setError('Kunne ikke lagre profilen din. Ver vennleg å prøv igjen.');
+      setError('Kunne ikke lagre profilen din. Vennligst prøv igjen.');
       setSaving(false);
     }
   };
@@ -466,7 +512,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          <span className="text-xs" style={{ color: 'rgba(212, 175, 55, 0.6)' }}>Sparar...</span>
+          <span className="text-xs" style={{ color: 'rgba(212, 175, 55, 0.6)' }}>Lagrer...</span>
         </div>
       )}
 

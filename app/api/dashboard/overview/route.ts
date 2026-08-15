@@ -8,6 +8,7 @@
 import { getServerSession } from "@/lib/auth/session";
 import prisma from "@/lib/prisma";
 import { JOURNEY_TOTAL_DAYS } from "@/lib/journey/engine";
+import { haversineKm } from "@/lib/matching/distance";
 
 export const dynamic = 'force-dynamic';
 
@@ -127,18 +128,40 @@ export async function GET(_request: Request) {
       where: { userId },
     });
 
-    // Finn match-partnar (den andre brukaren)
+    // Finn match-partner (den andre brukeren)
+    // B1.6: Avstand beregnes og vises som avrundet bånd («ca. 12 km»).
+    // Mangler koordinater → skjul feltet (null), ikke vis «0 km».
     let matchInfo: any = null;
     if (match) {
+      const myProfile = match.userAId === userId ? match.userA.profile : match.userB.profile;
       const partner =
         match.userAId === userId ? match.userB : match.userA;
       const partnerProfile = partner.profile;
+
+      // B1.6: Beregn avstand hvis begge har koordinater
+      let distanceKm: number | null = null;
+      if (
+        myProfile?.latitude != null &&
+        myProfile?.longitude != null &&
+        partnerProfile?.latitude != null &&
+        partnerProfile?.longitude != null
+      ) {
+        const raw = haversineKm(
+          myProfile.latitude,
+          myProfile.longitude,
+          partnerProfile.latitude,
+          partnerProfile.longitude
+        );
+        distanceKm = Math.round(raw);
+      }
+
       matchInfo = {
         id: partner.id,
         name: [partnerProfile?.firstName, partnerProfile?.lastName].filter(Boolean).join(" ") || "Ukjent",
         age: partnerProfile?.age,
         bio: partnerProfile?.bio,
         resonanceLevel: match.resonanceLevel ?? null,
+        distanceKm, // B1.6: null hvis koordinater mangler
       };
     }
 
@@ -197,9 +220,9 @@ function getPhaseTitle(phase: string): string {
 
 function getPhaseDescription(phase: string): string {
   switch (phase) {
-    case "EARLY": return "Del med matchen din en personleg erfaring som har formet deg.";
-    case "BUILDING_TRUST": return "Fortel om ein tid du overvinner ei utfordring.";
-    case "DEEPER": return "Del ein verdi eller overtydning du har gjennom livet.";
+    case "EARLY": return "Del med matchen din en personlig erfaring som har formet deg.";
+    case "BUILDING_TRUST": return "Fortell om en gang du overvant en utfordring.";
+    case "DEEPER": return "Del en verdi eller overbevisning du har gjennom livet.";
     case "CHECKIN": return "Reflekter over hvordan reisen deres har påvirket hverandre.";
     default: return "";
   }

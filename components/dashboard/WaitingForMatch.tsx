@@ -114,7 +114,7 @@ export function WaitingForMatch({ userName }: { userName: string }) {
           Din match er på vei, {userName.split(' ')[0]} 💛
         </h2>
 
-        {/* Undertekst */}
+        {/* Undertekst — B1.6: Kanonisk kopi (I-9: 05:00 nevnes aldri) */}
         <p
           className="mb-2"
           style={{
@@ -125,8 +125,7 @@ export function WaitingForMatch({ userName }: { userName: string }) {
             lineHeight: typography.lineHeight.relaxed,
           }}
         >
-          Vi beregner matcher en gang per natt. 
-          Du får en ny match hver dag.
+          Du får din match i løpet av 24 timer.
         </p>
 
         <p
@@ -136,7 +135,7 @@ export function WaitingForMatch({ userName }: { userName: string }) {
             fontStyle: 'italic',
           }}
         >
-          Vi tar tiden det krever for å finne en god match.
+          Vi venter til vi har nok mennesker til å finne en god match til deg.
         </p>
 
         {/* Countdown (mock) */}

@@ -16,6 +16,7 @@ interface OtherUser {
   name?: string | null;
   age?: number | null;
   photoUrl?: string | null;
+  distanceKm?: number | null; // B1.6: avstand i km (null hvis ukjent)
 }
 
 interface Props {
@@ -65,6 +66,7 @@ export function QuickMatchCard({ score, otherUser, type, highlight }: Props) {
   const name = otherUser?.name || 'Ukjent';
   const age = otherUser?.age;
   const photoUrl = otherUser?.photoUrl;
+  const distanceKm = otherUser?.distanceKm; // B1.6: null hvis koordinater mangler
   const borderColor = highlight ? 'rgba(212,175,55,0.4)' : 'rgba(255,255,255,0.1)';
   const boxShadow = highlight
     ? '0 0 30px rgba(212,175,55,0.2), inset 0 0 20px rgba(212,175,55,0.05)'
@@ -87,6 +89,10 @@ export function QuickMatchCard({ score, otherUser, type, highlight }: Props) {
             <h3 className="text-lg font-semibold text-white truncate">{name}</h3>
             {age && (
               <p className="text-sm text-white/60">{age} år</p>
+            )}
+            {/* B1.6: Avstand vises som «ca. N km». Skjules hvis koordinater mangler. */}
+            {distanceKm != null && (
+              <p className="text-sm text-white/60">ca. {distanceKm} km</p>
             )}
             {type && (
               <span

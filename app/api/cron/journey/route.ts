@@ -10,10 +10,10 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { Prisma } from '@prisma/client';
+import { Prisma, JourneyPhase } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { timingSafeEqual } from 'crypto';
-import { JourneyPhase } from '@prisma/client';
+import type { GuidedQuestion } from '@prisma/client';
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
@@ -25,6 +25,9 @@ function safeCompare(a: string, b: string): boolean {
 
 // STEG 6.3: Fast advisory lock ID for journey-cron
 const JOURNEY_CRON_LOCK_ID = 987654321;
+
+// B2.5 — Stillhetsdeteksjon: 48 timer uten meldinger → varm impuls
+const STILLHET_HOURS = 48;
 
 export async function GET(req: NextRequest) {
   const startedAt = Date.now();
@@ -244,6 +247,93 @@ export async function GET(req: NextRequest) {
         }
       }
 
+      // B2.5 — STILLHETSDETEKSJON
+      // Ingen meldinger i 48 timer og reisen er aktiv → legg ett varmt spørsmål
+      // i samtalen fra ToSom selv. Maks én impuls per 48 timer (sjekkes via
+      // siste meldingstype = system). Ikke en AI-partner — systemet velger et forhåndsskrevet spørsmål.
+      let stillhetsImpulser = 0;
+      try {
+        const stillhetThreshold = new Date(Date.now() - STILLHET_HOURS * 60 * 60 * 1000);
+
+        // Finn aktive konversasjoner med matchId der siste melding er > 48 timer gammel
+        const stilleSamtaler = await prisma.conversation.findMany({
+          where: {
+            endedAt: null,
+            matchId: { not: null },
+            lastMessageAt: { lt: stillhetThreshold },
+          },
+          include: {
+            messages: {
+              take: 1,
+              orderBy: { createdAt: 'desc' },
+            },
+          },
+          take: 20,
+        });
+
+        for (const convo of stilleSamtaler) {
+          try {
+            // Sjekk at matchen er aktiv
+            const activeMatch = await prisma.match.findFirst({
+              where: { id: convo.matchId!, status: 'active' },
+              select: { id: true },
+            });
+            if (!activeMatch) continue;
+
+            // Sjekk at reisen er aktiv (begge har JourneyProgress uten endedAt og med bothSeenAt)
+            const activeJourneys = await prisma.journeyProgress.findMany({
+              where: {
+                matchId: convo.matchId!,
+                endedAt: null,
+                bothSeenAt: { not: null },
+              },
+              select: { id: true },
+            });
+            if (activeJourneys.length < 2) continue;
+
+            // Sjekk at siste melding IKKE er en system-melding (unngå mas)
+            const lastMsg = convo.messages[0];
+            if (lastMsg && lastMsg.type === 'system') {
+              continue; // Allerede sendt impuls nylig
+            }
+
+            // Hent et forhåndsskrevet spørsmål fra GuidedQuestion
+            const question = await prisma.guidedQuestion.findFirst({
+              where: { depthLevel: { lte: 2 } }, // Lett/middels — ikke for dypt
+              orderBy: { createdAt: 'asc' },
+            });
+
+            const questionText = question?.content || 'Hvordan har dere det i dag?';
+
+            // Legg inn varm impuls fra ToSom (senderId = første bruker i samtalen, type = system)
+            // Bruker convo.userAId som "avsender" siden system ikke er en User
+            await prisma.message.create({
+              data: {
+                conversationId: convo.id,
+                senderId: convo.userAId,
+                content: `💛 ${questionText}`,
+                type: 'system',
+              },
+            });
+
+            // Oppdater lastMessageAt
+            await prisma.conversation.update({
+              where: { id: convo.id },
+              data: { lastMessageAt: new Date() },
+            });
+
+            stillhetsImpulser++;
+            console.log(`[cron/journey] Stillhetsimpuls sendt til konversasjon ${convo.id}`);
+          } catch (impulsErr) {
+            console.error(`[cron/journey] Feil ved stillhetsimpuls for ${convo.id}:`, impulsErr);
+            errors.push(`stillhet ${convo.id}: ${(impulsErr as Error).message}`);
+          }
+        }
+      } catch (stillhetErr) {
+        console.error('[cron/journey] Stillhetsdeteksjon feilet:', stillhetErr);
+        errors.push(`stillhetsdeteksjon: ${(stillhetErr as Error).message}`);
+      }
+
       const duration = Date.now() - startedAt;
 
       return NextResponse.json({
@@ -252,8 +342,9 @@ export async function GET(req: NextRequest) {
         advanced,
         ended,
         expired,
+        stillhetsImpulser,
         duration: `${duration}ms`,
-        message: `Prosessert ${processed} reiser — ${advanced} framrykte, ${ended} avsluttet, ${expired} utløpt`,
+        message: `Prosessert ${processed} reiser — ${advanced} framrykte, ${ended} avsluttet, ${expired} utløpt, ${stillhetsImpulser} stillhetsimpulser`,
         errors: errors.length > 0 ? errors.slice(0, 5) : undefined,
       });
     } finally {

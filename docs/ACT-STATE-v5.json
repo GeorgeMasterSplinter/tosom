@@ -2,8 +2,8 @@
   "instruks": "v5.0-kjerneloftet",
   "sourceDoc": "docs/TOSOM-MASTERPLAN-v4.0.md",
   "baseCommit": "837c16f",
-  "currentWave": "B1",
-  "currentStep": "B1.6",
+  "currentWave": "B2",
+  "currentStep": "B2.6",
   "completedSteps": [
     "0.1",
     "0.2",
@@ -22,10 +22,16 @@
     "B1.3",
     "B1.4",
     "B1.5",
-    "B1.6"
+    "B1.6",
+    "B2.1",
+    "B2.2",
+    "B2.3",
+    "B2.4",
+    "B2.5",
+    "B2.6"
   ],
   "failedSteps": [],
-  "nextStep": "B2.1 — Moodvalget huskes",
+  "nextStep": "B2.7 — Manuell QA på mobil (krever fysisk enhet)",
   "waveGateB0": true,
   "waveGateB0Notes": "B0-gate verifisert i KJØRING mot reell Postgres (2026-08-15). Alle 8 kriterier grønne: (1) prisma migrate deploy mot rebar DB = OK. (2) SELECT Order/WebhookEvent/Report svarer (0 rader hver — tabeller finnes+avles). (3) matching cron opprettet 10 matcher med score 95 (40-100) + scoringBreakdown + resonanceLevel satt (10/10). (4) matching cron durationMs=70-90ms (<< 50s). (5) MATCHING_ENABLED=false → response {skipped:true, matching_disabled}, 0 nye matcher, kø=20 urørt. (6) GET /api/chat/conversations live (401 uten sesjon; 10 ekte samtaler i DB; B0.7-test verifiserer 200-svarshape — full 'logge inn' er blokkert av pre-eksisterende auth-feil). (7) tsc=0, prisma format=0, jest 94/94 (uten integration; integration krever DB på 5433 lokalt / grønn i CI). (8) — see (7). KRITISK P0 oppdaget+fixet under verifiseringen: matching-cron hadde dealbreaker-bug (sjekkAlleDealbreakers returnerer objekt, testet truthy → ALTID sant → 0 matcher). Fixet i ceac443.",
   "waveGateB1": true,
@@ -48,7 +54,7 @@
   "scores": {
     "matchekvalitet": 90,
     "drift": 65,
-    "lansering": 72
+    "lansering": 78
   },
   "deviations": [
     "BASELINE v5: tsc=13, jest=90/93, prisma-format=exit1, migrate-status=1 pending (0008_b8_cleanup_match), db=ja",
@@ -67,8 +73,15 @@
     "B1.4 (2916e1f): Radius som dealbreaker (I-11: distancePref samlet inn men lest aldri). lib/matching/distance.ts (haversineKm). ProfileData +latitude/longitude/distancePref (optional). buildProfileObject mapper lat/lon fra Profile-kolonner + distancePref fra deepProfileData. checkRadius i dealbreaker.ts: TOSIDIG blokkering (avstand > A SIN grense ELLER > B SIN grense), radius er DEALBREAKER ikke scoringsdimensjon. Manglende geo-data→IKKE blokkert (logges, unngår utestenging av eksisterende brukere uten postnummer). Sjekk 5 (radius-blokk-teller i heartbeat) dekket av konsoll-logg '[matching] Radius: mangler geo' + dealbreakerFiltered-teller i cron. Sjekker: tsc=0, build=0, haversineKm i dealbreaker.ts=OK. Enhetstest 9/9 (Oslo→Bergen≈305, Oslo→Tromsø≈1150, samme=0, inner Oslo<10; blokkering/tillatelse/tossidig/manglende geo/manglende distancePref). Full suite 113/113.",
     "B1.5 (2e27615): Resonansnivå som ord i stedet for prosent (I-12). lib/matching/resonanceLevel.ts (NY): toResonanceLevel(score) med kanoniske terskler (>=80 DEEP, 65-79 STRONG, 50-64 MODERATE, 40-49 GENTLE), RESONANCE_LABELS (Dyp/Sterk/God/Rolig resonans), resonanceLabel(), toDimensionLabel() for dimensjoner. Cron setter resonanceLevel ved match-opprettelse. MatchBreakdown.tsx viser levelLabel ikke totalScore%. MatchBreakdownItem.tsx viser toDimensionLabel ikke prosent. PremiumResonanceMeter.tsx viser resonanceLabel i sentrum. ChatHeader/ChatMessages/QuickMatchCard bruker resonanceLabel. Sjekk 2: totalScore}% i components=0, resonanceLevel i cron=import+kall, % i MatchBreakdown (utenom width)=0. Sjekk 7: toResonanceLevel har 10 kallende parter, resonanceLabel/toDimensionLabel har 12. Sjekker: tsc=0, build=0, 113 unit tests grønne (integration krever lokal DB).",
     "B1.6 (6330b2e): Avstand i UI og ufravikelig MIN_SCORE. Dashboard-ruten beregner avstand med haversineKm når begge profiler har koordinater, returnerer distanceKm (avrundet, null hvis manglende). QuickMatchCard viser 'ca. N km' (skjules hvis null). MIN_SCORE=40 verifisert ufravikelig: if (result.score < MIN_SCORE) continue er inne i pair-scoring-loop uavhengig av hasStaleEntries — ventilen tvinger runden til å kjøre, aldri koble under terskelen (I-13). Kanonisk kopi i WaitingForMatch: 'Du får din match i løpet av 24 timer.' + 'Vi venter til vi har nok mennesker til å finne en god match til deg.' Fix nynorsk i getPhaseDescription (personleg→personlig, Fortel→Fortell, ein tid→en gang, overvinnar→overvant, ei utfordring→en utfordring, ein verdi→en verdi, overtydning→overbevisning). Sjekker: tsc=0, build=0, 113 tests grønne, km i QuickMatchCard=3 treff, MIN_SCORE i cron=import+bruk.",
-    "B1-gate (waveGateB1=true): Alle 6 kriterier verifisert 2026-08-15. waveGateB1 satt etter B1.6. Score: matchekvalitet=90, lansering=72."
+    "B1-gate (waveGateB1=true): Alle 6 kriterier verifisert 2026-08-15. waveGateB1 satt etter B1.6. Score: matchekvalitet=90, lansering=72.",
+    "B2.1 (18d77d0): Moodvalg huskes i localStorage per samtale-ID (tosom:mood:<conversationId>). loadMoodFromStorage/saveMoodToStorage med validering mot VALID_MOODS. useEffect leser ved montering/samtale-endring, setMood-wrapper lagrer ved bytte. Sjekk 7: localStorage har 7 treff i ChatContainer.tsx.",
+    "B2.2 (62c7988): Server-side autosave koblet til OnboardingFlow. saveDraftToServer (POST, ikke-blokkerende) ved stegbytte, loadDraftFromServer (GET) ved oppstart — serveren er sannheten, localStorage er hurtigbuffer. Fix nynorsk: Brukar→Bruker, Ver vennleg→Vennligst, Sparar→Lagrer. Sjekk 2: onboarding/draft har 2 treff (GET+POST).",
+    "B2.3 (e23ef45): DELETE /api/journey/queue — forlat køen. Kun tillatt når journeyState=QUEUED (409 hvis MATCHED). Setter journeyState=IDLE, matchQueuedAt=null. UI: diskret 'Ut av køen'-knapp i WaitingForMatch med bekreftelsesdialog.",
+    "B2.4 (f460e8f): Journey-kalender med dag N av 30, fase (EARLY 1-14, BUILDING_TRUST 15-21, DEEPER 22-25, CHECKIN 26-30), milepæler (dag 1, 15 bilder, 30 avslutning). Reise ikke startet → 'Reisen deres begynner når dere begge har vært innom'. Fase-oversikt med aktiv/past-markering.",
+    "B2.5 (3188d86): Stillhetsdeteksjon koblet til journey-cron. STILLHET_HOURS=48. Finder aktive konversasjoner med lastMessageAt < 48t, sjekker aktiv match + 2 aktive journeys, hopper over hvis siste melding er system-type. Henter GuidedQuestion (depthLevel<=2), oppretter Message med type='system' + 💛 prefix. Maks én impuls per 48t per samtale.",
+    "B2.6 (cd6380c): Kanonisk kopi og bokmål. Fix user-facing nynorsk: Ikkje authentisert→Ikke autentisert (2 presence-ruter), savnar/Korleis→savner/Hvordan (presenceEngine), Korleis reagerer→Hvordan reagerer (onboarding-setup), Brukar ikke funnet→Bruker ikke funnet (phone/verify), Ny Brukar→Ny bruker (vipps/callback). 05:00 nevnes aldri i brukervendt tekst (kun i kommentar).",
+    "B2.7 (MANGLER): Manuell QA på mobil krever fysisk enhet (iOS Safari + Android Chrome). Sjekkliste: full flyt, trykkflater >=44x44px, ingen horisontal scroll ved 320px, tastatur skjuler ikke skrivefelt, trygge soner, prefers-reduced-motion, moodbytte med tommel, bli kjent-panel på liten skjerm. Må utføres av George."
   ],
-  "lastCommit": "6330b2e",
-  "updatedAt": "2026-08-15T06:56:00+02:00"
+  "lastCommit": "cd6380c",
+  "updatedAt": "2026-08-15T07:48:00+02:00"
 }

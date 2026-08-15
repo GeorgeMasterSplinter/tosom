@@ -3,7 +3,7 @@
   "sourceDoc": "docs/TOSOM-MASTERPLAN-v4.0.md",
   "baseCommit": "837c16f",
   "currentWave": "B1",
-  "currentStep": "B1.4",
+  "currentStep": "B1.5",
   "completedSteps": [
     "0.1",
     "0.2",
@@ -20,10 +20,11 @@
     "B1.1",
     "B1.2",
     "B1.3",
-    "B1.4"
+    "B1.4",
+    "B1.5"
   ],
   "failedSteps": [],
-  "nextStep": "B1.5 — Resonansnivå i stedet for tall",
+  "nextStep": "B1.6 — Avstand i UI og MIN_SCORE som ufravikelig",
   "waveGateB0": true,
   "waveGateB0Notes": "B0-gate verifisert i KJØRING mot reell Postgres (2026-08-15). Alle 8 kriterier grønne: (1) prisma migrate deploy mot rebar DB = OK. (2) SELECT Order/WebhookEvent/Report svarer (0 rader hver — tabeller finnes+avles). (3) matching cron opprettet 10 matcher med score 95 (40-100) + scoringBreakdown + resonanceLevel satt (10/10). (4) matching cron durationMs=70-90ms (<< 50s). (5) MATCHING_ENABLED=false → response {skipped:true, matching_disabled}, 0 nye matcher, kø=20 urørt. (6) GET /api/chat/conversations live (401 uten sesjon; 10 ekte samtaler i DB; B0.7-test verifiserer 200-svarshape — full 'logge inn' er blokkert av pre-eksisterende auth-feil). (7) tsc=0, prisma format=0, jest 94/94 (uten integration; integration krever DB på 5433 lokalt / grønn i CI). (8) — see (7). KRITISK P0 oppdaget+fixet under verifiseringen: matching-cron hadde dealbreaker-bug (sjekkAlleDealbreakers returnerer objekt, testet truthy → ALTID sant → 0 matcher). Fixet i ceac443.",
   "waveGateB1": false,
@@ -61,8 +62,9 @@
     "B0-gate (waveGateB0=true): alle 8 kriterier verifisert i KJØRING mot reell Postgres 2026-08-15. Seed-skript: scripts/gate-b0-seed.ts (20 QUEUED gate_b0_*, like profiler). Gjenstående: pre-eksisterende auth-feil (magic-link) blokkerer full 'logge inn' i Gate 6 — dokumentert separat.",
     "B1.1 (671d22d): Postnummerdatasett fra Postens åpne register via carestad/norwegian-geodata (opphav Posten Norge/Kartverket). lib/geo/postalCodes.json = 5146 keys, 3375 med reelle sentrumskoordinater (gate/stedsadresse-koder); postboks/postkontor-koder har lat/lon=null (hærlig sjelden for gateadresse-brukere i en koblingsplattform). lookupPostalCode validerer 4 siffer, ukjend/feil→null. Ingen eksternt API, ingen avhengighet. Enhetstest 6/6 (Oslo/Bergen/Tromsø/Trondheim, 9999/abc→null, >4000 keys, koordinater innenfor Norge).",
     "B1.2+B1.3 (85afbaa): Postnummer samlet inn i onboarding (Step1, BOSTED-seksjon) med stedsnavn-bekreftelse via lookupPostalCode (viser f.eks. '✓ BERGEN'), client+server validering (4 siffer). Fix nynorsk 'Hvor bur du?'→'Hvor bor du?' (0 treff på 'bur du' i app/lib). Profile fikk kolonner postalCode(String?, filterbar) + latitude/longitude(Float?) + @@index([latitude,longitude]); migrering 20260815015029_add_profile_geo. Setup-ruten utleder lat/lon FRA postnummeret VED LAGRING (update+create), ukjent/postboks-kode→null (håndteres B1.4). Eksisterende profiler uten postnummer → null (ingen backfill; de kan ikke matches på avstand før oppdatering — antallet slike profiler: alle eksisterende profiler i dev-DB, null i prod før lansering). Sjekker: tsc=0, build=0, prisma validate=OK, 3 kolonner i DB, lookupPostalCode koblet i onboarding+setup. Funksjonstest 4/4 (5003→60.39/5.31, 0150→59.89/10.72, '12'/'abcd'→400 ingen lagring). Full suite 104/104.",
-    "B1.4 (2916e1f): Radius som dealbreaker (I-11: distancePref samlet inn men lest aldri). lib/matching/distance.ts (haversineKm). ProfileData +latitude/longitude/distancePref (optional). buildProfileObject mapper lat/lon fra Profile-kolonner + distancePref fra deepProfileData. checkRadius i dealbreaker.ts: TOSIDIG blokkering (avstand > A SIN grense ELLER > B SIN grense), radius er DEALBREAKER ikke scoringsdimensjon. Manglende geo-data→IKKE blokkert (logges, unngår utestenging av eksisterende brukere uten postnummer). Sjekk 5 (radius-blokk-teller i heartbeat) dekket av konsoll-logg '[matching] Radius: mangler geo' + dealbreakerFiltered-teller i cron. Sjekker: tsc=0, build=0, haversineKm i dealbreaker.ts=OK. Enhetstest 9/9 (Oslo→Bergen≈305, Oslo→Tromsø≈1150, samme=0, inner Oslo<10; blokkering/tillatelse/tossidig/manglende geo/manglende distancePref). Full suite 113/113."
+    "B1.4 (2916e1f): Radius som dealbreaker (I-11: distancePref samlet inn men lest aldri). lib/matching/distance.ts (haversineKm). ProfileData +latitude/longitude/distancePref (optional). buildProfileObject mapper lat/lon fra Profile-kolonner + distancePref fra deepProfileData. checkRadius i dealbreaker.ts: TOSIDIG blokkering (avstand > A SIN grense ELLER > B SIN grense), radius er DEALBREAKER ikke scoringsdimensjon. Manglende geo-data→IKKE blokkert (logges, unngår utestenging av eksisterende brukere uten postnummer). Sjekk 5 (radius-blokk-teller i heartbeat) dekket av konsoll-logg '[matching] Radius: mangler geo' + dealbreakerFiltered-teller i cron. Sjekker: tsc=0, build=0, haversineKm i dealbreaker.ts=OK. Enhetstest 9/9 (Oslo→Bergen≈305, Oslo→Tromsø≈1150, samme=0, inner Oslo<10; blokkering/tillatelse/tossidig/manglende geo/manglende distancePref). Full suite 113/113.",
+    "B1.5 (2e27615): Resonansnivå som ord i stedet for prosent (I-12). lib/matching/resonanceLevel.ts (NY): toResonanceLevel(score) med kanoniske terskler (>=80 DEEP, 65-79 STRONG, 50-64 MODERATE, 40-49 GENTLE), RESONANCE_LABELS (Dyp/Sterk/God/Rolig resonans), resonanceLabel(), toDimensionLabel() for dimensjoner. Cron setter resonanceLevel ved match-opprettelse. MatchBreakdown.tsx viser levelLabel ikke totalScore%. MatchBreakdownItem.tsx viser toDimensionLabel ikke prosent. PremiumResonanceMeter.tsx viser resonanceLabel i sentrum. ChatHeader/ChatMessages/QuickMatchCard bruker resonanceLabel. Sjekk 2: totalScore}% i components=0, resonanceLevel i cron=import+kall, % i MatchBreakdown (utenom width)=0. Sjekk 7: toResonanceLevel har 10 kallende parter, resonanceLabel/toDimensionLabel har 12. Sjekker: tsc=0, build=0, 113 unit tests grønne (integration krever lokal DB)."
   ],
-  "lastCommit": "2916e1f",
-  "updatedAt": "2026-08-15T05:06:00+02:00"
+  "lastCommit": "2e27615",
+  "updatedAt": "2026-08-15T06:53:00+02:00"
 }

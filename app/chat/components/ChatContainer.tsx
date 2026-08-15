@@ -585,11 +585,43 @@ interface ChatContainerProps {
   imageShareAllowed?: boolean;
 }
 
+// B2.1 — Moodvalg huskes i localStorage per samtale-ID
+const MOOD_STORAGE_PREFIX = "tosom:mood:";
+const VALID_MOODS = new Set(["calm", "warm", "deep", "gentle", "joyful"]);
+
+function loadMoodFromStorage(conversationId: string | null): string {
+  if (!conversationId || typeof window === "undefined") return "warm";
+  try {
+    const stored = localStorage.getItem(`${MOOD_STORAGE_PREFIX}${conversationId}`);
+    if (stored && VALID_MOODS.has(stored)) return stored;
+  } catch { /* localStorage utilgjengelig */ }
+  return "warm";
+}
+
+function saveMoodToStorage(conversationId: string | null, mood: string): void {
+  if (!conversationId || typeof window === "undefined") return;
+  try {
+    localStorage.setItem(`${MOOD_STORAGE_PREFIX}${conversationId}`, mood);
+  } catch { /* localStorage utilgjengelig */ }
+}
+
 export function ChatContainer({ conversationId, partner, journeyDay = 1, imageShareAllowed = false }: ChatContainerProps) {
   const [isBliKjentOpen, setIsBliKjentOpen] = useState(false);
-  const [mood, setMood] = useState<string>("warm");
+  // B2.1: Moodvalg huskes per samtale (localStorage)
+  const [mood, setMoodState] = useState<string>("warm");
 
-  // Hent sessionUserId frå ChatContext for bildeopplasting
+  // Les mood fra localStorage ved montering / samtale-endring
+  useEffect(() => {
+    setMoodState(loadMoodFromStorage(conversationId));
+  }, [conversationId]);
+
+  // Wrapper som lagrer ved bytte
+  const setMood = (newMood: string) => {
+    setMoodState(newMood);
+    saveMoodToStorage(conversationId, newMood);
+  };
+
+  // Hent sessionUserId fra ChatContext for bildeopplasting
   const ctx = useChat();
   const sessionUserId = ctx.sessionUserId;
 

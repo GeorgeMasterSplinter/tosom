@@ -39,7 +39,7 @@ export const personlighetSchema = z.object({
   selfDesc: z.string().min(10, 'Skriv minst 10 teikn om kven du er').max(500),
   energyGiver: z.string().min(10, 'Kva gir deg energi?').max(300).optional(),
   energyDrainer: z.string().min(10, 'Kva tapper deg for energi?').max(300).optional(),
-  pressureReact: z.string().min(10, 'Korleis reagerer du under press?').max(300).optional(),
+  pressureReact: z.string().min(10, 'Hvordan reagerer du under press?').max(300).optional(),
   quirk: z.string().min(5, 'Skildre ein quirky eigenskap').max(200).optional(),
 });
 

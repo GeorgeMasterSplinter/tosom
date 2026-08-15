@@ -165,7 +165,7 @@ export async function GET(request: NextRequest) {
       }
 
       // Opprett ny bruker
-      const name = userInfo.name || userInfo.given_name || 'Ny Brukar';
+      const name = userInfo.name || userInfo.given_name || 'Ny bruker';
       user = await prisma.user.create({
         data: {
           email,

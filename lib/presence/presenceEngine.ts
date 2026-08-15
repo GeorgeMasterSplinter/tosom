@@ -195,7 +195,7 @@ export function shouldSendNudge(
   if (hoursSinceActivity > 48 && journeyDay < 30) {
     return {
       shouldNudge: true,
-      message: 'Din partner savnar deg i reisa. Korleis har det gått dei siste dagane?',
+      message: 'Din partner savner deg i reisen. Hvordan har det gått de siste dagene?',
     }
   }
 

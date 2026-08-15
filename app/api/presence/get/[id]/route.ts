@@ -20,7 +20,7 @@ export async function GET(
     
     if (!session?.user?.id) {
       return NextResponse.json(
-        { error: 'Ikkje authentisert' },
+        { error: 'Ikke autentisert' },
         { status: 401 }
       );
     }

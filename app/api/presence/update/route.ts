@@ -20,7 +20,7 @@ export async function PATCH(request: NextRequest) {
     
     if (!session?.user?.id) {
       return NextResponse.json(
-        { error: 'Ikkje authentisert' },
+        { error: 'Ikke autentisert' },
         { status: 401 }
       );
     }

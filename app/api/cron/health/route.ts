@@ -27,11 +27,25 @@ export async function GET(req: NextRequest) {
   }
 
   const authHeader = req.headers.get('authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+  let providedSecret: string;
+  if (authHeader) {
+    // Primary path: Bearer header (unchanged behaviour)
+    if (!authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    providedSecret = authHeader.slice(7);
+  } else {
+    // Fallback path: ?token= query param. Used ONLY when the header is entirely
+    // missing, because some free monitoring services cannot send custom headers.
+    const tokenParam = req.nextUrl.searchParams.get('token');
+    if (!tokenParam) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    providedSecret = tokenParam;
   }
 
-  const providedSecret = authHeader.slice(7);
+  // Same constant-time comparison for both paths. The token is never logged.
   if (!safeCompare(providedSecret, expectedSecret)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }

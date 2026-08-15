@@ -225,9 +225,24 @@ export default function AvslutningSide() {
     checkJourneyComplete();
   }, [router]);
 
+  // B4.4: PDF-eksport — åpner print-dialog for samtalen før sletting
+  const [showPdfOffer, setShowPdfOffer] = useState(false);
+
+  const handleExportPdf = () => {
+    // Åpne print-dialog — brukeren kan velge "Lagre som PDF"
+    window.print();
+  };
+
   // B10: Begge valg kaller endJourney() med outcome 'completed'
   const confirmChoice = async () => {
     if (!selected) return;
+
+    // B4.4: Ved "Vi fant hverandre" — tilby PDF-eksport FØR sletting
+    if (selected === 1 && !showPdfOffer) {
+      setShowPdfOffer(true);
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -235,7 +250,7 @@ export default function AvslutningSide() {
       const res = await fetch('/api/journey/exit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ reason: selected === 2 ? 'ny_reise' : 'completed' }),
+        body: JSON.stringify({ reason: selected === 2 ? 'ny_reise' : 'found_each_other' }),
       });
 
       if (res.ok) {
@@ -254,6 +269,7 @@ export default function AvslutningSide() {
     }
 
     setSelected(null);
+    setShowPdfOffer(false);
     setLoading(false);
   };
 
@@ -343,8 +359,8 @@ export default function AvslutningSide() {
 
       </div>
 
-      {/* B10: Confirm Modal med påkrevd bekreftelsestekst */}
-      {selected === 1 && (
+      {/* B10 + B4.4: Confirm Modal med PDF-tilbud */}
+      {selected === 1 && !showPdfOffer && (
         <ConfirmModal
           title="Vi fant hverandre?"
           message="Dere møtes utenom ToSom. Lykke til!"
@@ -352,6 +368,22 @@ export default function AvslutningSide() {
           confirmText={loading ? "Behandler..." : "Ja, det var noe 💛"}
           onCancel={() => setSelected(null)}
           onConfirm={confirmChoice}
+        />
+      )}
+
+      {/* B4.4: PDF-eksport modal — tilby nedlasting FØR sletting */}
+      {selected === 1 && showPdfOffer && (
+        <ConfirmModal
+          title="Ta med deg minnet?"
+          message="Du kan laste ned en PDF av samtalen deres før den slettes. ToSom sletter alt — men minnet er ditt."
+          warningText="Etter nedlasting (eller hvis du velger å hoppe over) slettes samtalen og kontoen din permanent."
+          confirmText={loading ? "Behandler..." : "Last ned PDF og avslutt 💛"}
+          onCancel={() => { setShowPdfOffer(false); setSelected(null); }}
+          onConfirm={() => {
+            handleExportPdf();
+            // Fortsett til sletting etter print-dialog
+            confirmChoice();
+          }}
         />
       )}
 

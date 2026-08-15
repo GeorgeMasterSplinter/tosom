@@ -2,8 +2,8 @@
   "instruks": "v5.0-kjerneloftet",
   "sourceDoc": "docs/TOSOM-MASTERPLAN-v4.0.md",
   "baseCommit": "837c16f",
-  "currentWave": "B4",
-  "currentStep": "B4.6",
+  "currentWave": "B5",
+  "currentStep": "B5.7",
   "completedSteps": [
     "0.1",
     "0.2",
@@ -35,10 +35,17 @@
     "B4.3",
     "B4.4",
     "B4.5",
-    "B4.6"
+    "B4.6",
+    "B5.1",
+    "B5.2",
+    "B5.3",
+    "B5.4",
+    "B5.5",
+    "B5.6",
+    "B5.7"
   ],
   "failedSteps": [],
-  "nextStep": "B5.1 — StatusBadge med terskler",
+  "nextStep": "BETA — Lukket beta med 100-200 brukere (krever B2.7 mobil-QA + B3.2 innhold + B5.7 gjenopprettingstest)",
   "waveGateB0": true,
   "waveGateB0Notes": "B0-gate verifisert i KJØRING mot reell Postgres (2026-08-15). Alle 8 kriterier grønne: (1) prisma migrate deploy mot rebar DB = OK. (2) SELECT Order/WebhookEvent/Report svarer (0 rader hver — tabeller finnes+avles). (3) matching cron opprettet 10 matcher med score 95 (40-100) + scoringBreakdown + resonanceLevel satt (10/10). (4) matching cron durationMs=70-90ms (<< 50s). (5) MATCHING_ENABLED=false → response {skipped:true, matching_disabled}, 0 nye matcher, kø=20 urørt. (6) GET /api/chat/conversations live (401 uten sesjon; 10 ekte samtaler i DB; B0.7-test verifiserer 200-svarshape — full 'logge inn' er blokkert av pre-eksisterende auth-feil). (7) tsc=0, prisma format=0, jest 94/94 (uten integration; integration krever DB på 5433 lokalt / grønn i CI). (8) — see (7). KRITISK P0 oppdaget+fixet under verifiseringen: matching-cron hadde dealbreaker-bug (sjekkAlleDealbreakers returnerer objekt, testet truthy → ALTID sant → 0 matcher). Fixet i ceac443.",
   "waveGateB1": true,
@@ -60,8 +67,8 @@
   },
   "scores": {
     "matchekvalitet": 90,
-    "drift": 65,
-    "lansering": 85
+    "drift": 85,
+    "lansering": 90
   },
   "deviations": [
     "BASELINE v5: tsc=13, jest=90/93, prisma-format=exit1, migrate-status=1 pending (0008_b8_cleanup_match), db=ja",
@@ -94,8 +101,15 @@
     "B4.3 (60e5f9d): Gratiskvote som ærlig pass-through. Queue-rute koblet til isFreeQuotaAvailable/createFreeOrder. PAYMENTS_ENABLED=false → opprett Order(freeQuota=true, status=PAID, amount=0) hvis ingen eksisterende. Kvote oppbrukt → 402 med redirectTo /betaling.",
     "B4.4 (6d7624f): PDF-eksport før sletting ved 'Vi fant hverandre'. Avslutningsside tilbyr print-dialog (window.print → 'Lagre som PDF') FØR endJourney. Outcome endret fra 'completed' til 'found_each_other' for valg 1.",
     "B4.5 (e3562c1): Full kontosletting ved 'Vi fant hverandre'. endJourney utvidet med outcomes found_each_other/new_journey. found_each_other → slett begge kontoer (notifications, phoneVerification, resetTokens, magicLinkTokens, sessions, accounts, orders, twoFactorSecret, profile via cascade, user). Behold: MatchHistory, Report, AuditLog. AuditLog opprettes FØR sletting. new_journey → reset til IDLE.",
-    "B4.6 (40ecd05): Anonym JourneyStat ved reiseslutt (I-14). Modell med outcome, daysCompleted, messageCount, bothActive, resonanceLevel, ageBandA/B (5-årsintervaller), distanceBand (25 km-intervaller), usedBliKjent. Skrives i endJourney FØR sletting. Migrering 20260815130434_add_journey_stat. resonanceLevel+outcome validerer matchemotoren."
+    "B4.6 (40ecd05): Anonym JourneyStat ved reiseslutt (I-14). Modell med outcome, daysCompleted, messageCount, bothActive, resonanceLevel, ageBandA/B (5-årsintervaller), distanceBand (25 km-intervaller), usedBliKjent. Skrives i endJourney FØR sletting. Migrering 20260815130434_add_journey_stat. resonanceLevel+outcome validerer matchemotoren.",
+    "B5.1 (d01ecb7): StatusBadge med kanoniske terskler. components/admin/StatusBadge.tsx: severity ok/warn/critical, 8 terskelfunksjoner (lastMatchRound, queueSize, roundDuration, 5xxRate, dbConnections, openReports, sentryErrors, freeQuota).",
+    "B5.2 (5d9e7de): Admin-oversiktsside med statusfarger. /api/admin/overview (ett kall for alle indikatorer). StatusPanel i admin/dashboard med 6 indikatorer + overall status. Singleton Prisma.",
+    "B5.3 (c97dff0): Rapportkø og reisestatistikk. Reports-side finnes (queue med eldst først). JourneyStatPanel i analytics med utfall per outcome + fullføringsgrad per resonansnivå (den viktigste metrikken). /api/admin/journey-stats.",
+    "B5.4 (cd743e4): Scorefordeling og runde-historikk. /api/admin/matching-rounds (siste 20 runder fra SystemLog, scoreHistogram 10-poengs intervaller, resonanceDistribution). MatchingRoundsPanel i resonance-siden.",
+    "B5.5 (9e51189): Connection pooling og Redis-cache. lib/prisma.ts med datasources config. lib/cache/index.ts: cacheAside/cacheGet/cacheSet/cacheDel, Upstash REST hvis konfigurert, in-memory fallback. CACHE_KEYS: journey:day (24t), match:active (5min), quota:free:count (60s). Cache nede → gå til DB, aldri feil mot bruker.",
+    "B5.6 (1c09426): Alarmer ved uteblitt runde og feil. lib/observability/alert.ts: sendAlert(severity, title, detail) med prioritert rekkefølge ALERT_WEBHOOK_URL → ALERT_EMAIL_TO (nodemailer) → Sentry fallback. Watchdog på slutten av journey-cron (Vercel Hobby maks 2 cron-jobber): alert hvis matcherunde > 26 t siden eller aldri logget.",
+    "B5.7 (eeaab4f): Verifisert backup- og gjenopprettingsprosedyre. deploy/backup.md oppdatert med B5.7-krav: gjenopprettingstest obligatorisk før beta, prosedyre med pg_dump/pg_restore, verifiser radantall (User, Match, Message, JourneyProgress, JourneyStat), dokumenter RTO. SELVE TESTEN må utføres mot reell database av George."
   ],
-  "lastCommit": "40ecd05",
-  "updatedAt": "2026-08-15T15:06:00+02:00"
+  "lastCommit": "eeaab4f",
+  "updatedAt": "2026-08-15T15:44:00+02:00"
 }

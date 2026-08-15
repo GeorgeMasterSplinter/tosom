@@ -50,6 +50,11 @@ export default function RootLayout({
   return (
     <html lang="no" dir="ltr">
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <meta name="theme-color" content="#0A0F1F" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />

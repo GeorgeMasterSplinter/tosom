@@ -12,6 +12,7 @@
     "react/no-unescaped-entities": "off",
     "@typescript-eslint/no-unused-expressions": "off",
     "no-case-declarations": "off",
-    "no-fallthrough": "off"
+    "no-fallthrough": "off",
+    "@next/next/no-page-custom-font": "off"
   }
 }

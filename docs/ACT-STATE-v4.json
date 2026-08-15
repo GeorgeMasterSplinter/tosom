@@ -1,31 +1,96 @@
 {
-  "version": "4.0.1",
+  "version": "4.0.2",
+  "note": "Korrigert 14.08.2026 etter verifisering mot commit 837c16f. Se docs/TOSOM-MASTERPLAN-v4.0.md DEL 0. Fire steg var feilmarkert som fullført: C1, G1 (migrering aldri kjørt), B6 (feil scorer koblet), F5 (kill switches er dødkode).",
   "currentWave": "ALL",
+  "baseCommit": "837c16f",
   "completedSteps": [
-    "A1","A2","A3","A4","A5","A6",
-    "B1","B2","B3","B4","B5","B6","B7","B8","B9","B10","B11",
-    "C1","C2","C3","C5",
-    "D1","D2","D5","D6","D7","D8","D9",
-    "E1","E2","E3",
-    "F1","F5",
-    "G1","G2"
+    "A1", "A2", "A3", "A4", "A5", "A6",
+    "B1", "B2", "B3", "B4", "B5", "B7", "B8", "B9", "B10", "B11",
+    "C2", "C3", "C5",
+    "D1", "D2", "D5", "D6", "D7", "D8", "D9",
+    "E1", "E2", "E3",
+    "F1"
   ],
+  "partiallyCompleted": {
+    "B6": "Kohortalgoritmen er korrekt implementert (MIN_COHORT_SIZE, 72h-ventil, grådig kobling, Notification x2, journeyState=MATCHED). MEN: bruker computeQuickScore (route.ts:164) i stedet for unifiedScore. Kommentar på :324 sier 'erstattes av unifiedScore når den er tilgjengelig' — den ER tilgjengelig. Matcher lages i praksis på aldersnærhet.",
+    "C1": "Report-modell finnes i schema.prisma, API-rute finnes. MEN: ingen migrering. grep -rl '\"Report\"' prisma/migrations/ → 0. Tabellen finnes ikke i databasen. POST /api/report gir 500 i produksjon.",
+    "G1": "Order + WebhookEvent finnes i schema.prisma, PaymentProvider-grensesnitt finnes. MEN: ingen migrering for noen av dem. Betalingsveien gir 500.",
+    "G2": "FreeQuotaProvider og FREE_QUOTA_LIMIT finnes. MEN: avhenger av Order-tabellen som ikke er migrert.",
+    "F5": "Fire kill switches definert i config/features.ts. MEN: grep gir 0 treff utenfor definisjonsfilen. MATCHING_ENABLED=false gjør ingenting. Nødbremsen er dødkode."
+  },
   "skipped": [
-    "D3",
     "C4",
-    "E4","E5","E6",
-    "F2","F3","F4",
-    "G3","G4"
+    "D3",
+    "D4",
+    "E4",
+    "E5",
+    "E6",
+    "F2",
+    "F3",
+    "F4",
+    "G3",
+    "G4"
   ],
-  "nextStep": "full verification + documentation",
-  "lastCommit": "e85a70f",
-  "testSummary": {
-    "waveE_unit": 53,
-    "waveE_integration": 3,
-    "note": "Integration tests require Postgres on port 5433 or CI"
+  "blockers": {
+    "P0-1": "Order, WebhookEvent og Report mangler migrering → 500 ved rapportering og betaling",
+    "P0-2": "Migrering 0008_b8_cleanup_match sorterer alfabetisk FØR 20260628012032_init_postgres_dev → fersk database kan ikke bygges",
+    "P0-3": "Alle fire kill switches er dødkode → ingen nødbrems i produksjon",
+    "P0-4": "app/api/chat/conversations/route.ts finnes ikke, men app/chat/page.tsx:164 kaller den → chat-oversikt alltid tom",
+    "P0-5": "TIME_BUDGET_MS = 240_000 (route.ts:23) vs. maxDuration: 60 i vercel.json → cron kuttes stille etter 60 s"
+  },
+  "verification": {
+    "tsc": "fail",
+    "tscErrors": 13,
+    "tscNote": "Alle 13 i __tests__/, null i produksjonskode. Prisma Json-kolonner er Record<string,unknown>, testene sender string[]. Produksjonskoden er riktig, testene er feil.",
+    "jest": "partial",
+    "jestUnitPassed": 90,
+    "jestTotal": 93,
+    "jestNote": "3 feil = integrasjonstester som krever Postgres på :5433",
+    "prismaFormat": "fail",
+    "prismaValidate": "pass",
+    "build": "pass",
+    "migrationsRunnable": false,
+    "matchingEngineWired": false,
+    "geographyUsed": false,
+    "killSwitchesWired": false,
+    "backupRestoreTested": false
   },
   "scores": {
+    "backend": 72,
+    "chat": 85,
+    "onboarding": 70,
+    "matchekvalitet": 35,
+    "funnel": 40,
+    "admin": 65,
+    "drift": 50,
+    "produkt": 57,
+    "lansering": 57
+  },
+  "previousScores": {
     "produkt": 87,
-    "drift": 82
-  }
+    "drift": 82,
+    "note": "Selvrapportert i v4.0.1. Avvik −30 poeng mot verifisert tilstand. Årsak: steg markert fullført ved skrevet kode, ikke ved observert funksjon."
+  },
+  "verifiedDelivered": [
+    "Samtykkeflyten fjernet — MatchActions.tsx, /api/match/accept, findBestMatchFor slettet",
+    "MatchStatus forenklet fra 6 til 3 verdier",
+    "journeyState innført (JourneyUserState: IDLE, QUEUED, MATCHED, ON_JOURNEY, COMPLETED)",
+    "Kohortmatching med MIN_COHORT_SIZE=20 og 72h-ventil",
+    "endJourney() med sletting, MatchHistory og brukerreset",
+    "MatchHistory migrering KJØRT (5 treff i SQL) — eneste skjemasteg gjort komplett",
+    "bothSeenAt via migrering 20260813230417_b4_journey_match_scoped",
+    "instrumentation.ts + sentry.edge.config.ts",
+    "6 loading.tsx + 6 error.tsx (var 0)",
+    "90 reelle enhetstester inkl. unifiedScorer og dealbreaker",
+    "CI concept-guard",
+    "23-årsgrense konsekvent i 7 filer"
+  ],
+  "nextStep": "B0 — se docs/TOSOM-ACT-INSTRUKS-v5.0.md",
+  "nextInstruks": "v5.0",
+  "newChecksRequired": {
+    "sjekk6": "Migrering kjørt og verifisert med SELECT i databasen. Hullet som slapp Order, WebhookEvent og Report gjennom.",
+    "sjekk7": "Koblet, ikke bare skrevet. Ny kode må ha verifisert kallende part. computeQuickScore og kill switches beviser at 'filen finnes' ikke er nok."
+  },
+  "lastCommit": "837c16f",
+  "updatedAt": "2026-08-14T19:28:00+02:00"
 }

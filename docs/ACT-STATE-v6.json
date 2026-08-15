@@ -3,11 +3,10 @@
   "baseCommit": "2784ae2",
   "instruks": "docs/TOSOM-ACT-INSTRUKS-v6.0.md",
   "grunnlag": "docs/TOSOM-MASTERPLAN-v5.0.md",
-  "currentStep": "0.2",
-  "completedSteps": ["0.1"],
-  "lockedSteps": ["0.1"],
+  "currentStep": "1.1",
+  "completedSteps": ["0.1", "0.2"],
+  "lockedSteps": ["0.1", "0.2"],
   "pendingSteps": [
-    "0.2",
     "1.1",
     "1.2",
     "1.3",
@@ -21,6 +20,34 @@
   ],
   "errors": [],
   "observations": [],
-  "baseline": {},
-  "updatedAt": "2026-08-15T19:13:00+02:00"
+  "baseline": {
+    "tscErrors": 0,
+    "prismaFormat": "ok",
+    "jest": "113/116 (3 failed i 1 suitt: endJourney-integrasjon)",
+    "build": "grønn",
+    "withSentryConfig": 0,
+    "cronCount": 2,
+    "globalErrorExists": 0,
+    "brokenRoutes": [
+      "/api/chat/typing",
+      "/api/journey/status",
+      "/api/match/breakdown",
+      "/api/match/mark-seen",
+      "/api/match/new-status",
+      "/api/match/recommendations",
+      "/api/me",
+      "/api/profile/me",
+      "/api/system/mark-read"
+    ],
+    "phaseDuplicates": {
+      "lib/journey/engine.ts": 8,
+      "app/api/cron/journey/route.ts": 2,
+      "app/dashboard/journey/page.tsx": 3,
+      "app/api/dashboard/overview/route.ts": 4,
+      "components/journey/JourneyTimeline.tsx": 0,
+      "app/chat/components/ChatHeader.tsx": 3
+    },
+    "nynorskHits": 4
+  },
+  "updatedAt": "2026-08-15T19:35:00+02:00"
 }

@@ -1,7 +1,117 @@
 "use client";
 
+/**
+ * ToSom — Admin Resonance (B5.4)
+ * 
+ * Scorefordeling per runde + resonansøkt per bruker.
+ * Eneste måte å justere matchevektene.
+ */
+
 import { useState, useEffect } from "react";
 import Link from "next/link";
+
+// B5.4: Matcherunde-data
+interface MatchingRound {
+  at: string;
+  paired: number;
+  queueSize: number;
+  remaining: number;
+  durationMs: number | null;
+  deferred: boolean;
+  skipped: boolean;
+  reason: string | null;
+}
+
+interface MatchingRoundsData {
+  rounds: MatchingRound[];
+  scoreHistogram: Record<string, number>;
+  resonanceDistribution: Record<string, number>;
+  totalRecentMatches: number;
+}
+
+/* ─── B5.4: MatchingRoundsPanel — scorefordeling og runde-historikk ─── */
+function MatchingRoundsPanel() {
+  const [data, setData] = useState<MatchingRoundsData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/admin/matching-rounds')
+      .then((r) => r.json())
+      .then(setData)
+      .catch(() => setData(null))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="rounded-2xl p-5 animate-pulse" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+        <div className="h-4 bg-white/5 rounded w-1/3 mb-4" />
+        <div className="h-24 bg-white/5 rounded" />
+      </div>
+    );
+  }
+
+  if (!data) return null;
+
+  const maxHistogram = Math.max(...Object.values(data.scoreHistogram), 1);
+
+  return (
+    <div className="rounded-2xl p-5 mb-6" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+      <h3 className="text-sm font-semibold mb-4 tracking-wide" style={{ color: 'rgba(255,255,255,0.6)' }}>
+        MATCHERUNDER — SCOREFORDELING (siste 7 dager: {data.totalRecentMatches} matcher)
+      </h3>
+
+      {/* Scorefordeling histogram */}
+      <div className="mb-4">
+        <div className="flex items-end gap-2 h-24">
+          {Object.entries(data.scoreHistogram).sort(([a], [b]) => parseInt(a) - parseInt(b)).map(([bucket, count]) => (
+            <div key={bucket} className="flex-1 flex flex-col items-center gap-1">
+              <div
+                className="w-full rounded-t transition-all duration-500"
+                style={{
+                  height: `${(count / maxHistogram) * 100}%`,
+                  minHeight: count > 0 ? '4px' : '0',
+                  background: 'linear-gradient(180deg, rgba(212,175,55,0.6) 0%, rgba(212,175,55,0.15) 100%)',
+                }}
+              />
+              <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.3)' }}>{bucket}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Resonansnivå-fordeling */}
+      <div className="grid grid-cols-4 gap-3 mb-4">
+        {Object.entries(data.resonanceDistribution).map(([level, count]) => (
+          <div key={level} className="rounded-xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
+            <div className="text-lg font-bold" style={{ color: '#D4AF37' }}>{count}</div>
+            <div className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>{level}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Siste runder */}
+      <div>
+        <h4 className="text-xs font-semibold mb-2" style={{ color: 'rgba(255,255,255,0.5)' }}>SISTE RUNDER</h4>
+        <div className="space-y-1 max-h-40 overflow-y-auto">
+          {data.rounds.slice(0, 10).map((round, i) => (
+            <div key={i} className="flex items-center justify-between text-xs py-1" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+              <span style={{ color: 'rgba(255,255,255,0.4)' }}>
+                {new Date(round.at).toLocaleString('no-NO', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
+              </span>
+              <span style={{ color: round.skipped ? '#FBBF24' : round.paired > 0 ? '#4ADE80' : 'rgba(255,255,255,0.4)' }}>
+                {round.skipped ? `Hoppet over (${round.reason})` : round.deferred ? 'Deferert' : `${round.paired} par, ${round.queueSize} i kø`}
+              </span>
+              {round.durationMs !== null && (
+                <span style={{ color: 'rgba(255,255,255,0.3)' }}>{(round.durationMs / 1000).toFixed(1)}s</span>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 interface ResSession {
   id: string;
@@ -96,6 +206,9 @@ export default function AdminResonancePage() {
           ← Tilbake til systemstatus
         </Link>
       </div>
+
+      {/* B5.4: Scorefordeling og runde-historikk */}
+      <MatchingRoundsPanel />
 
       {/* Input */}
       <div style={{ marginBottom: "32px" }}>

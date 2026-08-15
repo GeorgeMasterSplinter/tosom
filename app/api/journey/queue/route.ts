@@ -24,6 +24,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth/requireAuth';
 import { isPaymentsEnabled } from '@/config/features';
+import { isFreeQuotaAvailable, createFreeOrder } from '@/lib/payment/freeQuota';
 
 export const dynamic = 'force-dynamic';
 
@@ -85,9 +86,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // B0.6 — Kill switch / betalingsgate:
+    // B0.6 + B4.3 — Kill switch / betalingsgate:
     // PAYMENTS_ENABLED=true → krev fullført betaling før kø (sendes til /betaling).
-    // PAYMENTS_ENABLED=false → gratismodus, alle slipper rett i kø.
+    // PAYMENTS_ENABLED=false → gratismodus: opprett gratisordre hvis kvote tilgjengelig.
     if (isPaymentsEnabled()) {
       const paidOrder = await prisma.order.findFirst({
         where: { userId: user.id, status: 'PAID' },
@@ -101,6 +102,25 @@ export async function POST(req: NextRequest) {
           },
           { status: 402 }
         );
+      }
+    } else {
+      // B4.3: Gratismodus — opprett gratisordre hvis brukeren ikke har en fra før
+      const existingOrder = await prisma.order.findFirst({
+        where: { userId: user.id, status: 'PAID' },
+        select: { id: true },
+      });
+      if (!existingOrder) {
+        const quotaAvailable = await isFreeQuotaAvailable();
+        if (!quotaAvailable) {
+          return NextResponse.json(
+            {
+              error: 'Gratiskvoten er oppbrukt. Betaling kreves for å starte reisen.',
+              redirectTo: '/betaling',
+            },
+            { status: 402 }
+          );
+        }
+        await createFreeOrder(user.id);
       }
     }
 

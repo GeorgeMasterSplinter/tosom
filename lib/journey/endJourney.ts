@@ -65,6 +65,65 @@ export async function endJourney(
     where: { userId: userB.id },
   });
 
+  // B4.6 — JourneyStat: Skriv anonym statistikk FØR sletting (dataene trengs for å fylle den)
+  // Ingen ID-er, ingen navn, ingen innhold, ingen posisjon (I-14).
+  try {
+    const messageCount = conversation
+      ? await prisma.message.count({ where: { conversationId: conversation.id } })
+      : 0;
+
+    // Aldersbånd i femårsintervaller
+    const ageToBand = (age: number | null | undefined): string => {
+      if (!age) return 'ukjent';
+      const lower = Math.floor(age / 5) * 5;
+      return `${lower}-${lower + 4}`;
+    };
+
+    // Avstandsbånd i 25 km-intervaller
+    const distanceToBand = (km: number | null): string => {
+      if (km === null) return 'ukjent';
+      const lower = Math.floor(km / 25) * 25;
+      return `${lower}-${lower + 24}km`;
+    };
+
+    // Beregn avstand hvis begge har koordinater
+    let distanceKm: number | null = null;
+    const profileA = await prisma.profile.findUnique({ where: { userId: userA.id } });
+    const profileB = await prisma.profile.findUnique({ where: { userId: userB.id } });
+    if (profileA?.latitude && profileA?.longitude && profileB?.latitude && profileB?.longitude) {
+      // Enkel haversine-approksimasjon
+      const { haversineKm } = await import('@/lib/matching/distance');
+      distanceKm = haversineKm(profileA.latitude, profileA.longitude, profileB.latitude, profileB.longitude);
+    }
+
+    // Sjekk om de brukte BliKjent (system-meldinger med spørsmål)
+    const bliKjentCount = conversation
+      ? await prisma.message.count({
+          where: { conversationId: conversation.id, type: 'system' },
+        })
+      : 0;
+
+    // Gjennomsnittlig dag fra JourneyProgress
+    const daysCompleted = Math.max(journeyA?.day ?? 0, journeyB?.day ?? 0);
+
+    await prisma.journeyStat.create({
+      data: {
+        outcome,
+        daysCompleted,
+        messageCount,
+        bothActive: (journeyA?.day ?? 0) > 0 && (journeyB?.day ?? 0) > 0,
+        resonanceLevel: match.resonanceLevel ?? 'GENTLE',
+        ageBandA: ageToBand((userA as any).profile?.age ?? null),
+        ageBandB: ageToBand((userB as any).profile?.age ?? null),
+        distanceBand: distanceToBand(distanceKm),
+        usedBliKjent: bliKjentCount > 0,
+      },
+    });
+  } catch (statErr) {
+    // Ikke-blokkerende: statistikk skal ikke hindre sletting
+    console.warn('[endJourney] Kunne ikke skrive JourneyStat:', statErr);
+  }
+
   // Perform the deletion transaction
   const result = await prisma.$transaction(async (tx) => {
     const deleted: Record<string, number> = {};

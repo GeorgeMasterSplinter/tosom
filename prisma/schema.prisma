@@ -659,3 +659,23 @@ model WebhookEvent {
 
   @@index([provider, receivedAt])
 }
+
+// B4.6 — JourneyStat: Anonym statistikk ved reiseslutt (I-14)
+// Ingen ID-er, ingen navn, ingen innhold, ingen posisjon.
+// resonanceLevel + outcome er kombinasjonen som validerer hele matchemotoren.
+model JourneyStat {
+  id             String   @id @default(cuid())
+  endedAt        DateTime @default(now())
+  outcome        String // found_each_other | new_journey | early_exit | expired
+  daysCompleted  Int
+  messageCount   Int
+  bothActive     Boolean
+  resonanceLevel String // DEEP | STRONG | MODERATE | GENTLE
+  ageBandA       String // «23-29» — bånd, ikke alder
+  ageBandB       String
+  distanceBand   String // «0-25km» — bånd, ikke posisjon
+  usedBliKjent   Boolean
+
+  @@index([endedAt])
+  @@index([outcome])
+}

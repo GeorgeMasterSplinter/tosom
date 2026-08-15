@@ -13,6 +13,7 @@
 "use client";
 
 import { useState } from 'react';
+import { getPhaseForDay } from '@/lib/journey/engine'; // ST3.1
 import Image from 'next/image';
 
 /* ═══════════════════════════════════════
@@ -75,7 +76,7 @@ export function ChatHeader({
 }: ChatHeaderProps) {
   // Vis milestone-badge ved fase-overgang
   const isMilestone = journeyDay === 10 || journeyDay === 20 || journeyDay === 30;
-  const phaseLabel = journeyDay <= 10 ? 'Bli kjent' : journeyDay <= 20 ? 'Lek og morro' : 'Djupde';
+  const phaseLabel = getPhaseForDay(journeyDay).description; // ST3.1: fra kanonisk kilde
 
   return (
     <div 

@@ -3,11 +3,30 @@
   "baseCommit": "2784ae2",
   "instruks": "docs/TOSOM-ACT-INSTRUKS-v6.0.md",
   "grunnlag": "docs/TOSOM-MASTERPLAN-v5.0.md",
-  "currentStep": "3.1",
-  "completedSteps": ["0.1", "0.2", "1.1", "1.2", "1.3", "2.1", "2.2", "2.3"],
-  "lockedSteps": ["0.1", "0.2", "1.1", "1.2", "1.3", "2.1", "2.2", "2.3"],
+  "currentStep": "4.1",
+  "completedSteps": [
+    "0.1",
+    "0.2",
+    "1.1",
+    "1.2",
+    "1.3",
+    "2.1",
+    "2.2",
+    "2.3",
+    "3.1"
+  ],
+  "lockedSteps": [
+    "0.1",
+    "0.2",
+    "1.1",
+    "1.2",
+    "1.3",
+    "2.1",
+    "2.2",
+    "2.3",
+    "3.1"
+  ],
   "pendingSteps": [
-    "3.1",
     "4.1",
     "5.1",
     "5.2"
@@ -20,7 +39,8 @@
     "1.2: captureRequestError via index.types.d.ts:94 (ikke index.d.ts som instruksen angir). Ikke blokkerende.",
     "2.1: profile/me leser warmScore/phaseOrder i klienten, men feltene finnes ikke i Profile-skjemaet. Faller tilbake på ?? -standardverdier. Døde data i grensesnittet.",
     "2.2: Beslutning B (George): API returnerer tall som transportdata. Klientkonverterer til ORD via B1.5. Konseptregel I-12 gjelder display, ikke wire-protocol. Instruksjon oppdatert.",
-    "2.3: Vakten fant 5. brudd (/api/payment/create-checkout-session) ikke i baseline. George valgte å fjerne kallet; handlePayment → no-op redirect til /onboarding."
+    "2.3: Vakten fant 5. brudd (/api/payment/create-checkout-session) ikke i baseline. George valgte å fjerne kallet; handlePayment → no-op redirect til /onboarding.",
+    "3.1: ChatHeader linje 160 har journeyDay <= 10 som CSS-avstand (ikke fasedefinisjon). phaseLabel rettet til getPhaseForDay(journeyDay).description."
   ],
   "baseline": {
     "tscErrors": 0,
@@ -51,5 +71,5 @@
     },
     "nynorskHits": 4
   },
-  "updatedAt": "2026-08-15T23:08:00+02:00"
+  "updatedAt": "2026-08-15T23:33:00+02:00"
 }

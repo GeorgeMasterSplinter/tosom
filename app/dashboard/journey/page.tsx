@@ -10,20 +10,24 @@
 
 import { FC } from 'react';
 import { useDashboard } from '../context/DashboardContext';
+import { PHASE_CONFIGS, getPhaseForDay } from '@/lib/journey/engine'; // ST3.1
 
 const TOTAL_DAYS = 30;
 
-// Faser: EARLY 1–14, BUILDING_TRUST 15–21, DEEPER 22–25, CHECKIN 26–30
-const PHASES = [
-  { key: 'EARLY', name: 'Bryt isen', start: 1, end: 14, description: 'De første dagene handler om å bli kjent — rolig og uten press. Del små historier, still spørsmål, og la samtalen vokse naturlig.' },
-  { key: 'BUILDING_TRUST', name: 'Bygg tillit', start: 15, end: 21, description: 'Nå som dere har blitt litt kjent, kan dere dele mer. Fra dag 15 kan dere også dele bilder med hverandre.' },
-  { key: 'DEEPER', name: 'Dypere samtaler', start: 22, end: 25, description: 'De siste dagene før avslutning er for de viktige samtalene — verdier, drømmer, og hva dere har lært om hverandre.' },
-  { key: 'CHECKIN', name: 'Sjekk inn', start: 26, end: 30, description: 'Reisen nærmer seg slutten. Snakk om hva dere tar med dere videre, og forbered dere på dag 30.' },
-];
+// ST3.1: Fasegrenser fra kanonisk kilde. Display-navn er her (UI-spesifikk).
+const PHASE_DISPLAY: Record<string, { name: string; description: string }> = {
+  EARLY: { name: 'Bryt isen', description: 'De første dagene handler om å bli kjent — rolig og uten press. Del små historier, still spørsmål, og la samtalen vokse naturlig.' },
+  BUILDING_TRUST: { name: 'Bygg tillit', description: 'Nå som dere har blitt litt kjent, kan dere dele mer. Fra dag 15 kan dere også dele bilder med hverandre.' },
+  DEEPER: { name: 'Dypere samtaler', description: 'De siste dagene før avslutning er for de viktige samtalene — verdier, drømmer, og hva dere har lært om hverandre.' },
+  CHECKIN: { name: 'Sjekk inn', description: 'Reisen nærmer seg slutten. Snakk om hva dere tar med dere videre, og forbered dere på dag 30.' },
+};
 
-function getPhaseForDay(day: number) {
-  return PHASES.find(p => day >= p.start && day <= p.end) || PHASES[0];
-}
+const PHASES = PHASE_CONFIGS.map(p => ({
+  key: p.phase,
+  start: p.startDay,
+  end: p.endDay,
+  ...PHASE_DISPLAY[p.phase],
+}));
 
 // Milepæler
 const MILESTONES = [
@@ -38,7 +42,8 @@ export default function JourneyPage() {
   const currentDay = state.progress ?? 0;
   const bothSeenAt = (state as any).journey?.bothSeenAt ?? null;
   const journeyStarted = currentDay > 0 || bothSeenAt !== null;
-  const currentPhase = getPhaseForDay(Math.max(currentDay, 1));
+  const currentPhase =
+    PHASES.find((p) => p.key === getPhaseForDay(Math.max(currentDay, 1)).phase) ?? PHASES[0];
   const progressPercent = (currentDay / TOTAL_DAYS) * 100;
 
   return (

@@ -15,6 +15,7 @@ import { prisma } from '@/lib/prisma';
 import { timingSafeEqual } from 'crypto';
 import type { GuidedQuestion } from '@prisma/client';
 import { sendAlert } from '@/lib/observability/alert'; // B5.6
+import { getPhaseForDay } from '@/lib/journey/engine'; // ST3.1
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
@@ -133,17 +134,9 @@ export async function GET(req: NextRequest) {
             continue;
           }
 
-          // Bestem ny phase basert på dag
-          function getPhaseForDay(day: number): JourneyPhase {
-            if (day <= 14) return JourneyPhase.EARLY;
-            if (day <= 21) return JourneyPhase.BUILDING_TRUST;
-            if (day <= 25) return JourneyPhase.DEEPER;
-            return JourneyPhase.CHECKIN;
-          }
-
           const oldPhase = journey.phase;
           const newDay = journey.day + 1;
-          const newPhase = getPhaseForDay(newDay);
+          const newPhase = getPhaseForDay(newDay).phase;
           const phaseChanged = newPhase !== oldPhase;
 
           // Auk dag + phase + nextDayAt

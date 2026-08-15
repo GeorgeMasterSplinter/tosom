@@ -6,20 +6,27 @@
 
 'use client';
 
+import { PHASE_CONFIGS } from '@/lib/journey/engine'; // ST3.1
+
 interface JourneyTimelineProps {
   currentDay: number;
   completedDays: number[];
   phases?: Array<{ name: string; start: number; end: number }>;
 }
 
-const defaultPhases = [
-  { name: 'Introduksjon', start: 1, end: 5 },
-  { name: 'Trygghet', start: 6, end: 10 },
-  { name: 'Åpne deg', start: 11, end: 15 },
-  { name: 'Dypere samtaler', start: 16, end: 20 },
-  { name: 'Sårbarhet', start: 21, end: 25 },
-  { name: 'Felles reise', start: 26, end: 30 },
-];
+// ST3.1: 4 kanoniske faser fra engine (erstattet 6 lokalt definerte)
+const PHASE_DISPLAY_NAMES: Record<string, string> = {
+  EARLY: 'Bryt isen',
+  BUILDING_TRUST: 'Bygg tillit',
+  DEEPER: 'Dypere samtaler',
+  CHECKIN: 'Sjekk inn',
+};
+
+const defaultPhases = PHASE_CONFIGS.map(p => ({
+  name: PHASE_DISPLAY_NAMES[p.phase] ?? p.phase,
+  start: p.startDay,
+  end: p.endDay,
+}));
 
 export const JourneyTimeline = ({ currentDay, completedDays, phases = defaultPhases }: JourneyTimelineProps) => {
   return (

@@ -1,4 +1,5 @@
 const path = require('path');
+const { withSentryConfig } = require('@sentry/nextjs');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -67,7 +68,7 @@ const nextConfig = {
               "img-src 'self' data: blob: *.uploadthing.com uploadthing.com *.s3.amazonaws.com tosom-storage.up.railway.app picsum.photos placehold.co",
               "media-src 'self'",
               "font-src 'self' fonts.gstatic.com",
-              "connect-src 'self' api.stripe.com auth.vipps.no vipps.no *.pusher.com *.pubnub.com wss://*.pusher.com",
+              "connect-src 'self' api.stripe.com auth.vipps.no vipps.no *.pusher.com *.pubnub.com wss://*.pusher.io wss://*.pusher.com *.ingest.sentry.io *.sentry.io",
               "frame-src *.stripe.com stripe.com",
               "frame-ancestors 'none'",
               "base-uri 'self'",
@@ -139,4 +140,9 @@ const nextConfig = {
   poweredByHeader: false,
 };
 
-module.exports = nextConfig;
+module.exports = withSentryConfig(nextConfig, {
+  silent: true,
+  disableLogger: true,
+  widenClientFileUpload: false,
+  telemetry: false,
+});

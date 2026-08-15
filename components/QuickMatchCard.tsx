@@ -8,6 +8,7 @@
 'use client';
 
 import Image from 'next/image';
+import { toResonanceLevel, resonanceLabel } from '@/lib/matching/resonanceLevel';
 
 /* ------ Props ------ */
 
@@ -34,6 +35,8 @@ function ScoreRing({ score }: { score: number }) {
   const circ = 2 * Math.PI * r;
   const offset = circ - (score / 100) * circ;
   const color = score >= 85 ? '#D4AF37' : score >= 70 ? '#E8C766' : 'rgba(255,255,255,0.7)';
+  // B1.5: brukeren ser ORD, aldri tall (I-12). Buen er visuell intensitet, ikke et tall.
+  const label = resonanceLabel(toResonanceLevel(score));
   return (
     <div className="relative inline-flex items-center justify-center flex-shrink-0">
       <svg width="90" height="90" className="-rotate-90">
@@ -49,7 +52,9 @@ function ScoreRing({ score }: { score: number }) {
           className="transition-all duration-1000 ease-out"
         />
       </svg>
-      <span className="absolute text-lg font-semibold" style={{ color }}>{score}</span>
+      <span className="absolute font-semibold text-center leading-tight" style={{ color, fontSize: '12px', width: '70px' }}>
+        {label}
+      </span>
     </div>
   );
 }

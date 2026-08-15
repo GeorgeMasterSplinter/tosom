@@ -1,20 +1,21 @@
 // components/dashboard/PremiumResonanceMeter.tsx — Animert sirkulær resonans-indikator
 'use client';
 
+import { resonanceLabel } from "@/lib/matching/resonanceLevel";
+
 interface ResonanceMeterProps {
-  score: number;        // 0-100
-  level: string;        // "Gentle", "Strong", "Deep"
+  score: number;        // 0-100 (brukes kun for farge/bue, vises ALDRI for brukeren)
+  level: string;        // "GENTLE" | "MODERATE" | "STRONG" | "DEEP"
 }
 
 export function PremiumResonanceMeter({ score, level }: ResonanceMeterProps) {
-  const getColor = (s: number) => 
-    s >= 80 ? '#D4AF37' : 
-    s >= 60 ? '#E8C766' : 
+  const getColor = (s: number) =>
+    s >= 80 ? '#D4AF37' :
+    s >= 60 ? '#E8C766' :
     s >= 40 ? '#FFB86C' : '#8282FF';
 
-  const label = level === 'DEEP' ? 'Dyp resonans' : 
-                level === 'STRONG' ? 'Sterk resonans' : 
-                level === 'MODERATE' ? 'God resonans' : 'Tidlig resonans';
+  // B1.5: brukeren ser ORD, aldri tall (I-12)
+  const label = resonanceLabel(level);
 
   const circumference = 2 * Math.PI * 45;
   const strokeDashoffset = circumference - (score / 100) * circumference;
@@ -52,13 +53,13 @@ export function PremiumResonanceMeter({ score, level }: ResonanceMeterProps) {
             style={{ transition: 'stroke-dashoffset 1s ease-out' }}
           />
         </svg>
-        {/* Senter-innhold */}
+        {/* Senter-innhold - B1.5: ORD i stedet for tall */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span 
-            className="font-bold"
-            style={{ fontSize: '32px', color: getColor(score) }}
+          <span
+            className="font-bold text-center leading-tight"
+            style={{ fontSize: '15px', color: getColor(score), width: '94px' }}
           >
-            {score}%
+            {label}
           </span>
         </div>
       </div>

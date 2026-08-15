@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { toResonanceLevel, resonanceLabel } from '@/lib/matching/resonanceLevel';
 
 interface ChatHeaderProps {
   partnerName: string;
@@ -179,10 +180,12 @@ export default function ChatHeader({
             <span style={{ color: '#D4AF37', fontSize: '13px', fontWeight: 600 }}>Dag {currentDay}/30</span>
           </div>
 
-          {/* Resonans */}
+          {/* Resonans — B1.5: nivå som ord, aldri tall (I-12) */}
           {resonanceScore > 0 && (
-            <div className="relative flex items-center justify-center rounded-full" style={{ width: '48px', height: '48px', background: `${resonanceColor}12`, border: `2px solid ${resonanceColor}40`, boxShadow: `0 0 16px ${resonanceColor}30` }}>
-              <span className="text-sm font-bold" style={{ color: resonanceColor }}>{Math.round(resonanceScore)}%</span>
+            <div className="inline-flex items-center px-3 py-1 rounded-full" style={{ background: `${resonanceColor}12`, border: `1px solid ${resonanceColor}40` }}>
+              <span style={{ color: resonanceColor, fontSize: '12px', fontWeight: 600 }}>
+                {resonanceLabel(toResonanceLevel(resonanceScore))}
+              </span>
             </div>
           )}
 

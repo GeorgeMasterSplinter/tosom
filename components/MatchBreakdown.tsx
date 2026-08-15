@@ -3,6 +3,10 @@ import MatchBreakdownItem from "@/components/MatchBreakdownItem";
 import MatchBreakdownSkeleton from "@/components/MatchBreakdownSkeleton";
 import GlassCard from "@/components/ui/cards/GlassCard";
 import FadeIn from "@/components/ui/FadeIn";
+import {
+  toResonanceLevel,
+  resonanceLabel,
+} from "@/lib/matching/resonanceLevel";
 
 interface MatchBreakdownResponse {
   totalScore: number;
@@ -73,6 +77,11 @@ export default function MatchBreakdown({ targetUserId, className = "" }) {
     return "bg-red-400";
   };
 
+  // B1.5: resonansNIVÅ som ord. scorePct driver kun farge/bue-visning og vises
+  // ALDRI som et tall for brukeren (I-12).
+  const scorePct = data.totalScore;
+  const levelLabel = resonanceLabel(toResonanceLevel(scorePct));
+
   return (
     <FadeIn>
       <GlassCard className={`flex flex-col gap-[var(--space-md)] ${className}`}>
@@ -80,19 +89,19 @@ export default function MatchBreakdown({ targetUserId, className = "" }) {
           Match-beregning
         </h2>
 
-        {/* Total Score */}
+        {/* Resonansnivå — B1.5: brukeren ser ORD, aldri tall (I-12) */}
         <div className="flex flex-col gap-[var(--space-sm)]">
           <div className="flex justify-between items-center">
-            <span className="text-[var(--color-muted)]">Total score</span>
-            <span className={`text-3xl font-bold ${getScoreColor(data.totalScore)}`}>
-              {data.totalScore}%
+            <span className="text-[var(--color-muted)]">Resonans</span>
+            <span className={`text-2xl font-bold ${getScoreColor(scorePct)}`}>
+              {levelLabel}
             </span>
           </div>
 
           <div className="w-full bg-white/10 rounded-full h-3">
             <div
-              className={`h-3 rounded-full ${getBarColor(data.totalScore)} transition-all duration-1000 ease-out`}
-              style={{ width: `${data.totalScore}%` }}
+              className={`h-3 rounded-full ${getBarColor(scorePct)} transition-all duration-1000 ease-out`}
+              style={{ width: `${scorePct}%` }}
             />
           </div>
         </div>
@@ -101,7 +110,7 @@ export default function MatchBreakdown({ targetUserId, className = "" }) {
         <div className="flex flex-col gap-[var(--space-md)]">
           <MatchBreakdownItem label="Base kompatibilitet" value={data.breakdown.base} max={100} />
           <MatchBreakdownItem label="Emosjonell resonans" value={data.breakdown.resonance} max={100} />
-          <MatchBreakdownItem label="Semantisk djupne" value={data.breakdown.semantic} max={100} />
+          <MatchBreakdownItem label="Semantisk dybde" value={data.breakdown.semantic} max={100} />
           <MatchBreakdownItem label="Intimitet" value={data.breakdown.intimacy} max={100} />
           <MatchBreakdownItem label="Fremtidsønsker" value={data.breakdown.future} max={100} />
         </div>

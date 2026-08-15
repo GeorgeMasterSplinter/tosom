@@ -16,6 +16,7 @@ import { timingSafeEqual } from 'crypto';
 import { sjekkAlleDealbreakers } from '@/lib/matching/dealbreaker';
 import { unifiedScore } from '@/lib/matching/unifiedScorer';
 import type { UnifiedResult } from '@/lib/matching/unifiedScorer';
+import { toResonanceLevel } from '@/lib/matching/resonanceLevel';
 import { MIN_COHORT_SIZE, MAX_QUEUE_WAIT_HOURS, MIN_SCORE } from '@/config/matching';
 import { isMatchingEnabled } from '@/config/features';
 
@@ -229,7 +230,9 @@ export async function GET(req: NextRequest) {
                 scoringBreakdown: pair.breakdown as unknown as Prisma.InputJsonValue,
                 status: 'active',
                 type: 'resonance',
-                resonanceLevel: pair.level,
+                // B1.5: resonansNIVÅ beregnes fra score med kanoniske terskler
+                // (>=80 DEEP · 65-79 STRONG · 50-64 MODERATE · 40-49 GENTLE)
+                resonanceLevel: toResonanceLevel(pair.score),
               },
             });
 

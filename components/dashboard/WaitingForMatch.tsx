@@ -5,10 +5,12 @@
  * 
  * Vises når brukeren har fullført onboarding men ingen match ennå.
  * Har glass-panel med animasjon og rolig "match leter..."-følelse.
+ * B2.3: «Ut av køen»-knapp — brukeren kan forlate køen så lenge hun er QUEUED.
  */
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { radius, color, typography } from '@/config/design-tokens';
 
 /* ====== Glass Animasjon ====== */
@@ -78,6 +80,30 @@ function PulsingOrb() {
 /* ====== Main Component ====== */
 
 export function WaitingForMatch({ userName }: { userName: string }) {
+  const router = useRouter();
+  const [leavingQueue, setLeavingQueue] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  // B2.3: Forlat køen — DELETE /api/journey/queue
+  const handleLeaveQueue = async () => {
+    setLeavingQueue(true);
+    try {
+      const res = await fetch('/api/journey/queue', { method: 'DELETE' });
+      if (res.ok) {
+        router.refresh();
+      } else {
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || 'Kunne ikke forlate køen. Prøv igjen.');
+        setLeavingQueue(false);
+        setShowConfirm(false);
+      }
+    } catch {
+      alert('Kunne ikke forlate køen. Prøv igjen.');
+      setLeavingQueue(false);
+      setShowConfirm(false);
+    }
+  };
+
   return (
     <div
       className="w-full rounded-2xl p-8 md:p-12 text-center animate-fadeIn relative overflow-hidden"
@@ -155,6 +181,53 @@ export function WaitingForMatch({ userName }: { userName: string }) {
             Oppdater profil for bedre match
           </button>
         </Link>
+
+        {/* B2.3: Ut av køen — diskret knapp med bekreftelse */}
+        <div className="mt-4">
+          {showConfirm ? (
+            <div className="flex flex-col gap-2">
+              <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                Er du sikker? Du må trykke «Start reisen» på nytt for å komme tilbake i kø.
+              </p>
+              <div className="flex gap-3 justify-center">
+                <button
+                  type="button"
+                  onClick={handleLeaveQueue}
+                  disabled={leavingQueue}
+                  className="px-6 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 disabled:opacity-50"
+                  style={{
+                    background: 'rgba(255, 77, 77, 0.15)',
+                    color: '#FF6B6B',
+                    border: '1px solid rgba(255, 77, 77, 0.3)',
+                  }}
+                >
+                  {leavingQueue ? 'Forlater...' : 'Ja, forlat køen'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowConfirm(false)}
+                  className="px-6 py-2.5 rounded-lg text-sm font-medium transition-all duration-200"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    color: 'rgba(255, 255, 255, 0.7)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                  }}
+                >
+                  Avbryt
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setShowConfirm(true)}
+              className="text-sm underline transition-all duration-200 hover:brightness-125"
+              style={{ color: 'rgba(255, 255, 255, 0.35)' }}
+            >
+              Ut av køen
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

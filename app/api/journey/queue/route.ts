@@ -12,6 +12,12 @@
  *   - ikke bannedAt / deletedAt
  *
  * Idempotent: allerede QUEUED → 200 uten å endre matchQueuedAt.
+ *
+ * DELETE /api/journey/queue (B2.3)
+ *
+ * «Ut av køen» — brukeren kan forlate køen så lenge journeyState = QUEUED.
+ * Er hun MATCHED, er det for sent (409).
+ * Å forlate køen er ikke det samme som å avvise et menneske.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -134,6 +140,72 @@ export async function POST(req: NextRequest) {
     console.error('POST /api/journey/queue error:', error);
     return NextResponse.json(
       { error: 'Kunne ikke sette deg i kø. Prøv igjen senere.' },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * B2.3 — DELETE /api/journey/queue
+ * Forlater køen. Kun tillatt når journeyState = QUEUED.
+ */
+export async function DELETE(req: NextRequest) {
+  try {
+    const result = await requireAuth(req);
+    if (result instanceof NextResponse) {
+      return result;
+    }
+    const authUser = result.user;
+
+    const user = await prisma.user.findUnique({
+      where: { id: authUser.id },
+      select: {
+        id: true,
+        journeyState: true,
+        bannedAt: true,
+        deletedAt: true,
+      },
+    });
+
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Bruker ikke funnet' },
+        { status: 404 }
+      );
+    }
+
+    if (user.bannedAt || user.deletedAt) {
+      return NextResponse.json(
+        { error: 'Kontoen er ikke aktiv' },
+        { status: 403 }
+      );
+    }
+
+    // Kun tillatt å forlate køen når QUEUED — er hun MATCHED, er det for sent
+    if (user.journeyState !== 'QUEUED') {
+      return NextResponse.json(
+        { error: 'Du kan bare forlate køen når du venter på match. Er du allerede matchet, kan du ikke gå ut av køen.' },
+        { status: 409 }
+      );
+    }
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        journeyState: 'IDLE',
+        matchQueuedAt: null,
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+      journeyState: 'IDLE',
+      message: 'Du har forlatt køen. Trykk «Start reisen» når du er klar igjen.',
+    });
+  } catch (error) {
+    console.error('DELETE /api/journey/queue error:', error);
+    return NextResponse.json(
+      { error: 'Kunne ikke forlate køen. Prøv igjen senere.' },
       { status: 500 }
     );
   }

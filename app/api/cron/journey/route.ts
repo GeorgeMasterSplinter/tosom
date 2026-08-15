@@ -14,6 +14,7 @@ import { Prisma, JourneyPhase } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { timingSafeEqual } from 'crypto';
 import type { GuidedQuestion } from '@prisma/client';
+import { sendAlert } from '@/lib/observability/alert'; // B5.6
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
@@ -376,6 +377,33 @@ export async function GET(req: NextRequest) {
       });
     } catch (logErr) {
       console.error('[cron/journey] Kunne ikke skrive heartbeat:', logErr);
+    }
+
+    // B5.6 — WATCHDOG: Sjekk om matcherunden uteble (kjøres på slutten av journey-cron)
+    // Vercel Hobby tillater maks 2 cron-jobber — watchdog ligger her, ikke som egen jobb.
+    try {
+      const lastMatchingLog = await prisma.systemLog.findFirst({
+        where: { module: 'cron:matching' },
+        orderBy: { createdAt: 'desc' },
+        select: { createdAt: true },
+      });
+
+      const hoursSinceLastMatch = lastMatchingLog
+        ? (Date.now() - lastMatchingLog.createdAt.getTime()) / (1000 * 60 * 60)
+        : null;
+
+      // Alert hvis matcherunde uteble i > 26 timer
+      if (hoursSinceLastMatch === null || hoursSinceLastMatch > 26) {
+        await sendAlert(
+          hoursSinceLastMatch === null ? 'critical' : 'warning',
+          'Matcherunde uteble',
+          hoursSinceLastMatch === null
+            ? 'Ingen matcherunde er logget noensinne. Sjekk cron-konfigurasjonen.'
+            : `Siste matcherunde var for ${Math.round(hoursSinceLastMatch)} timer siden (terskel: 26 t).`
+        );
+      }
+    } catch (watchdogErr) {
+      console.error('[cron/journey] Watchdog feilet:', watchdogErr);
     }
   }
 }

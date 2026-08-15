@@ -24,11 +24,20 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
     const phone = (body.phone as string)?.trim();
+    const termsAccepted = body.termsAccepted === true; // B4.1: Vilkår må aksepteres
 
     // Valider telefonnummer (enkel regex for internasjonale format)
     if (!phone || !/^\+?[0-9]{7,15}$/.test(phone.replace(/[\s-]/g, ''))) {
       return NextResponse.json(
         { error: 'Ugyldig telefonnummer' },
+        { status: 400 }
+      );
+    }
+
+    // B4.1: Vilkårssamtykke kreves ved registrering
+    if (!termsAccepted) {
+      return NextResponse.json(
+        { error: 'Du må akseptere vilkårene for bruk for å registrere deg.' },
         { status: 400 }
       );
     }
@@ -49,12 +58,23 @@ export async function POST(req: NextRequest) {
 
     if (!user) {
       // Finn bruker basert på e-post (allerede oppretta via magic-link)
-      // eller opprett ny
+      // eller opprett ny — B4.1: lagre vilkårssamtykke
       user = await prisma.user.create({
         data: {
           email: `temp_${Date.now()}@placeholder.local`,
           phone,
           verified: true,
+          termsAcceptedAt: new Date(),
+          termsVersion: '2026-08-15', // B4.1: versjon som dato-streng
+        },
+      });
+    } else if (!user.termsAcceptedAt) {
+      // Eksisterende bruker uten vilkårssamtykke — oppdater
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          termsAcceptedAt: new Date(),
+          termsVersion: '2026-08-15',
         },
       });
     }

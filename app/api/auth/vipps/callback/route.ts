@@ -164,13 +164,16 @@ export async function GET(request: NextRequest) {
         );
       }
 
-      // Opprett ny bruker
+      // Opprett ny bruker — B4.1: Vipps-innlogging impliserer vilkårssamtykke
+      // (brukeren har sett vilkårene på /login før Vipps-redirect)
       const name = userInfo.name || userInfo.given_name || 'Ny bruker';
       user = await prisma.user.create({
         data: {
           email,
           name,
           verified: true, // Vipps-verifisert automatisk
+          termsAcceptedAt: new Date(), // B4.1: Vipps = BankID-verifisert samtykke
+          termsVersion: '2026-08-15',
           profile: {
             create: {
               identityName: name.split(' ')[0] || '',

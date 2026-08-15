@@ -27,6 +27,10 @@ model User {
   updatedAt           DateTime             @updatedAt
   lastMatchAt         DateTime?
   lockedUntil         DateTime?
+  // B4.1 — Vilkårssamtykke lagres med tidsstempel og versjon
+  termsAcceptedAt     DateTime?
+  termsVersion        String?
+  withdrawalWaiverAt  DateTime? // Angrerett-samtykke (ved betaling)
   accounts            Account[]
   auditLogs           AuditLog[]           @relation("AdminAuditLogs")
   conversationsA      Conversation[]       @relation("ConversationToUserA")

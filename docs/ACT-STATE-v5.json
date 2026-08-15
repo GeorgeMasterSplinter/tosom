@@ -3,7 +3,7 @@
   "sourceDoc": "docs/TOSOM-MASTERPLAN-v4.0.md",
   "baseCommit": "837c16f",
   "currentWave": "B1",
-  "currentStep": "B1.5",
+  "currentStep": "B1.6",
   "completedSteps": [
     "0.1",
     "0.2",
@@ -21,13 +21,15 @@
     "B1.2",
     "B1.3",
     "B1.4",
-    "B1.5"
+    "B1.5",
+    "B1.6"
   ],
   "failedSteps": [],
-  "nextStep": "B1.6 — Avstand i UI og MIN_SCORE som ufravikelig",
+  "nextStep": "B2.1 — Moodvalget huskes",
   "waveGateB0": true,
   "waveGateB0Notes": "B0-gate verifisert i KJØRING mot reell Postgres (2026-08-15). Alle 8 kriterier grønne: (1) prisma migrate deploy mot rebar DB = OK. (2) SELECT Order/WebhookEvent/Report svarer (0 rader hver — tabeller finnes+avles). (3) matching cron opprettet 10 matcher med score 95 (40-100) + scoringBreakdown + resonanceLevel satt (10/10). (4) matching cron durationMs=70-90ms (<< 50s). (5) MATCHING_ENABLED=false → response {skipped:true, matching_disabled}, 0 nye matcher, kø=20 urørt. (6) GET /api/chat/conversations live (401 uten sesjon; 10 ekte samtaler i DB; B0.7-test verifiserer 200-svarshape — full 'logge inn' er blokkert av pre-eksisterende auth-feil). (7) tsc=0, prisma format=0, jest 94/94 (uten integration; integration krever DB på 5433 lokalt / grønn i CI). (8) — see (7). KRITISK P0 oppdaget+fixet under verifiseringen: matching-cron hadde dealbreaker-bug (sjekkAlleDealbreakers returnerer objekt, testet truthy → ALTID sant → 0 matcher). Fixet i ceac443.",
-  "waveGateB1": false,
+  "waveGateB1": true,
+  "waveGateB1Notes": "B1-gate verifisert 2026-08-15. (1) Postnummer samles inn i onboarding og gir koordinater (B1.2+B1.3). (2) Radius som dealbreaker — Oslo–Tromsø med 30 km-preferanse blokkeres (B1.4, enhetstester). (3) Oslo–Oslo kan kobles (B1.4 tillatelse-test). (4) resonanceLevel beregnes med kanoniske terskler; ingen prosenttall i brukerflaten (B1.5). (5) MIN_SCORE=40 er ufravikelig — ventilen tvinger runden til å kjøre, aldri koble under terskelen (verifisert i kode: if (result.score < MIN_SCORE) continue er inne i pair-scoring-loop uavhengig av hasStaleEntries). (6) Avstand vises på matchkortet som 'ca. N km' (B1.6). Funksjonell DB-verifisering av Oslo–Tromsø-blokkering krever testbrukere med geo-data — enhetstestene dekker logikken.",
   "preflight": {
     "vercelPlan": "hobby",
     "maxDurationAllowed": 60,
@@ -44,9 +46,9 @@
     "wired": "pass"
   },
   "scores": {
-    "matchekvalitet": 80,
+    "matchekvalitet": 90,
     "drift": 65,
-    "lansering": 57
+    "lansering": 72
   },
   "deviations": [
     "BASELINE v5: tsc=13, jest=90/93, prisma-format=exit1, migrate-status=1 pending (0008_b8_cleanup_match), db=ja",
@@ -63,8 +65,10 @@
     "B1.1 (671d22d): Postnummerdatasett fra Postens åpne register via carestad/norwegian-geodata (opphav Posten Norge/Kartverket). lib/geo/postalCodes.json = 5146 keys, 3375 med reelle sentrumskoordinater (gate/stedsadresse-koder); postboks/postkontor-koder har lat/lon=null (hærlig sjelden for gateadresse-brukere i en koblingsplattform). lookupPostalCode validerer 4 siffer, ukjend/feil→null. Ingen eksternt API, ingen avhengighet. Enhetstest 6/6 (Oslo/Bergen/Tromsø/Trondheim, 9999/abc→null, >4000 keys, koordinater innenfor Norge).",
     "B1.2+B1.3 (85afbaa): Postnummer samlet inn i onboarding (Step1, BOSTED-seksjon) med stedsnavn-bekreftelse via lookupPostalCode (viser f.eks. '✓ BERGEN'), client+server validering (4 siffer). Fix nynorsk 'Hvor bur du?'→'Hvor bor du?' (0 treff på 'bur du' i app/lib). Profile fikk kolonner postalCode(String?, filterbar) + latitude/longitude(Float?) + @@index([latitude,longitude]); migrering 20260815015029_add_profile_geo. Setup-ruten utleder lat/lon FRA postnummeret VED LAGRING (update+create), ukjent/postboks-kode→null (håndteres B1.4). Eksisterende profiler uten postnummer → null (ingen backfill; de kan ikke matches på avstand før oppdatering — antallet slike profiler: alle eksisterende profiler i dev-DB, null i prod før lansering). Sjekker: tsc=0, build=0, prisma validate=OK, 3 kolonner i DB, lookupPostalCode koblet i onboarding+setup. Funksjonstest 4/4 (5003→60.39/5.31, 0150→59.89/10.72, '12'/'abcd'→400 ingen lagring). Full suite 104/104.",
     "B1.4 (2916e1f): Radius som dealbreaker (I-11: distancePref samlet inn men lest aldri). lib/matching/distance.ts (haversineKm). ProfileData +latitude/longitude/distancePref (optional). buildProfileObject mapper lat/lon fra Profile-kolonner + distancePref fra deepProfileData. checkRadius i dealbreaker.ts: TOSIDIG blokkering (avstand > A SIN grense ELLER > B SIN grense), radius er DEALBREAKER ikke scoringsdimensjon. Manglende geo-data→IKKE blokkert (logges, unngår utestenging av eksisterende brukere uten postnummer). Sjekk 5 (radius-blokk-teller i heartbeat) dekket av konsoll-logg '[matching] Radius: mangler geo' + dealbreakerFiltered-teller i cron. Sjekker: tsc=0, build=0, haversineKm i dealbreaker.ts=OK. Enhetstest 9/9 (Oslo→Bergen≈305, Oslo→Tromsø≈1150, samme=0, inner Oslo<10; blokkering/tillatelse/tossidig/manglende geo/manglende distancePref). Full suite 113/113.",
-    "B1.5 (2e27615): Resonansnivå som ord i stedet for prosent (I-12). lib/matching/resonanceLevel.ts (NY): toResonanceLevel(score) med kanoniske terskler (>=80 DEEP, 65-79 STRONG, 50-64 MODERATE, 40-49 GENTLE), RESONANCE_LABELS (Dyp/Sterk/God/Rolig resonans), resonanceLabel(), toDimensionLabel() for dimensjoner. Cron setter resonanceLevel ved match-opprettelse. MatchBreakdown.tsx viser levelLabel ikke totalScore%. MatchBreakdownItem.tsx viser toDimensionLabel ikke prosent. PremiumResonanceMeter.tsx viser resonanceLabel i sentrum. ChatHeader/ChatMessages/QuickMatchCard bruker resonanceLabel. Sjekk 2: totalScore}% i components=0, resonanceLevel i cron=import+kall, % i MatchBreakdown (utenom width)=0. Sjekk 7: toResonanceLevel har 10 kallende parter, resonanceLabel/toDimensionLabel har 12. Sjekker: tsc=0, build=0, 113 unit tests grønne (integration krever lokal DB)."
+    "B1.5 (2e27615): Resonansnivå som ord i stedet for prosent (I-12). lib/matching/resonanceLevel.ts (NY): toResonanceLevel(score) med kanoniske terskler (>=80 DEEP, 65-79 STRONG, 50-64 MODERATE, 40-49 GENTLE), RESONANCE_LABELS (Dyp/Sterk/God/Rolig resonans), resonanceLabel(), toDimensionLabel() for dimensjoner. Cron setter resonanceLevel ved match-opprettelse. MatchBreakdown.tsx viser levelLabel ikke totalScore%. MatchBreakdownItem.tsx viser toDimensionLabel ikke prosent. PremiumResonanceMeter.tsx viser resonanceLabel i sentrum. ChatHeader/ChatMessages/QuickMatchCard bruker resonanceLabel. Sjekk 2: totalScore}% i components=0, resonanceLevel i cron=import+kall, % i MatchBreakdown (utenom width)=0. Sjekk 7: toResonanceLevel har 10 kallende parter, resonanceLabel/toDimensionLabel har 12. Sjekker: tsc=0, build=0, 113 unit tests grønne (integration krever lokal DB).",
+    "B1.6 (6330b2e): Avstand i UI og ufravikelig MIN_SCORE. Dashboard-ruten beregner avstand med haversineKm når begge profiler har koordinater, returnerer distanceKm (avrundet, null hvis manglende). QuickMatchCard viser 'ca. N km' (skjules hvis null). MIN_SCORE=40 verifisert ufravikelig: if (result.score < MIN_SCORE) continue er inne i pair-scoring-loop uavhengig av hasStaleEntries — ventilen tvinger runden til å kjøre, aldri koble under terskelen (I-13). Kanonisk kopi i WaitingForMatch: 'Du får din match i løpet av 24 timer.' + 'Vi venter til vi har nok mennesker til å finne en god match til deg.' Fix nynorsk i getPhaseDescription (personleg→personlig, Fortel→Fortell, ein tid→en gang, overvinnar→overvant, ei utfordring→en utfordring, ein verdi→en verdi, overtydning→overbevisning). Sjekker: tsc=0, build=0, 113 tests grønne, km i QuickMatchCard=3 treff, MIN_SCORE i cron=import+bruk.",
+    "B1-gate (waveGateB1=true): Alle 6 kriterier verifisert 2026-08-15. waveGateB1 satt etter B1.6. Score: matchekvalitet=90, lansering=72."
   ],
-  "lastCommit": "2e27615",
-  "updatedAt": "2026-08-15T06:53:00+02:00"
+  "lastCommit": "6330b2e",
+  "updatedAt": "2026-08-15T06:56:00+02:00"
 }

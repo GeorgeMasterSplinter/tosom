@@ -178,7 +178,7 @@ export async function GET(req: NextRequest) {
           // Dealbreakers (tosidig)
           const abBlocked = sjekkAlleDealbreakers(a.profile, b.profile);
           const baBlocked = sjekkAlleDealbreakers(b.profile, a.profile);
-          if (abBlocked || baBlocked) {
+          if (abBlocked.hasDealbreaker || baBlocked.hasDealbreaker) {
             continue;
           }
 

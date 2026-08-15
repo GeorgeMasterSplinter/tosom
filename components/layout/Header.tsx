@@ -13,8 +13,8 @@ import NotificationCenter from "@/components/NotificationCenter";
 
 export default function Header() {
   const pathname = usePathname();
-  const [loggedIn, setLoggedIn] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const loggedIn = false; // ST2.3: /api/me-kall fjernet (død rute)
 
   // Mode-detektering (med null-safety)
   const isFocusMode =
@@ -22,20 +22,6 @@ export default function Header() {
     (pathname.startsWith('/onboarding') ||
       pathname.startsWith('/profile/edit') ||
       pathname.startsWith('/messages/write'));
-
-  // Check login-status
-  useEffect(() => {
-    async function check() {
-      try {
-        const res = await fetch('/api/me');
-        const data = await res.json();
-        if (data?.id) setLoggedIn(true);
-      } catch {
-        setLoggedIn(false);
-      }
-    }
-    check();
-  }, []);
 
   // Scroll-basert adaptive presence
   useEffect(() => {

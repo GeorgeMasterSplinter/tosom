@@ -14,20 +14,11 @@ type RecommendationItem = {
   };
 };
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PublicMatchCard from "./PublicMatchCard";
 
 export default function Recommendations() {
-  const [recs, setRecs] = useState<RecommendationItem[]>([]);
-
-  useEffect(() => {
-    async function load() {
-      const res = await fetch("/api/match/recommendations");
-      const data = await res.json();
-      setRecs(data);
-    }
-    load();
-  }, []);
+  const [recs] = useState<RecommendationItem[]>([]); // ST2.3: /api/match/recommendations fjernet (død rute)
 
   if (!recs.length) {
     return (

@@ -69,27 +69,9 @@ export default function PaymentPage() {
   const [selectedPlan, setSelectedPlan] = useState<string>('quarterly');
   const [loading, setLoading] = useState(false);
 
-  async function handlePayment() {
-    setLoading(true);
-    try {
-      const res = await fetch('/api/payment/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ planId: selectedPlan }),
-      });
-
-      if (!res.ok) throw new Error('Kunne ikke starte betaling');
-
-      const { url } = await res.json();
-      if (url) window.location.href = url;
-      else router.push('/onboarding');
-    } catch (err) {
-      console.error('Payment error:', err);
-      // Fallback: fortsett til onboarding for dev
-      router.push('/onboarding');
-    } finally {
-      setLoading(false);
-    }
+  // ST2.3: /api/payment/create-checkout-session fjernet (ruten finnes ikke)
+  function handlePayment() {
+    router.push('/onboarding');
   }
 
   return (

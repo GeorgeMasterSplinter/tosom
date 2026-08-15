@@ -1,37 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import GlassPanel from "@/components/ui/panels/GlassPanel";
 import FadeIn from "@/components/ui/FadeIn";
 import PremiumButton from "@/components/ui/PremiumButton";
 
 export default function MatchPopup() {
-  const [visible, setVisible] = useState(false);
-  const [match, setMatch] = useState<any | null>(null);
-
-  async function check() {
-    const res = await fetch("/api/match/new-status");
-    const data = await res.json();
-
-    if (data.newMatch) {
-      setMatch(data);
-      setVisible(true);
-
-      setTimeout(() => setVisible(false), 6000);
-
-      fetch("/api/match/mark-seen", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ matchId: data.matchId })
-      });
-    }
-  }
-
-  useEffect(() => {
-    check();
-    const interval = setInterval(check, 5000);
-    return () => clearInterval(interval);
-  }, []);
+  // ST2.3: /api/match/new-status og /api/match/mark-seen fjernet (døde ruter)
+  const [visible] = useState(false);
+  const [match] = useState<any | null>(null);
 
   if (!visible || !match) return null;
 

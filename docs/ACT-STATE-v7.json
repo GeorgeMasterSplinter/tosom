@@ -3,7 +3,7 @@
   "baseCommit": "c93b8cb",
   "instruks": "docs/TOSOM-ACT-INSTRUKS-v7.0.md",
   "grunnlag": "docs/TOSOM-MASTERPLAN-v6.0.md",
-  "currentStep": "4.1",
+  "currentStep": null,
   "completedSteps": [
     "0.1",
     "0.2",
@@ -12,7 +12,11 @@
     "1.3",
     "2.1",
     "2.2",
-    "3.1"
+    "3.1",
+    "4.1",
+    "4.2",
+    "4.3",
+    "5.1"
   ],
   "lockedSteps": [
     "0.1",
@@ -22,25 +26,31 @@
     "1.3",
     "2.1",
     "2.2",
-    "3.1"
-  ],
-  "pendingSteps": [
+    "3.1",
     "4.1",
     "4.2",
     "4.3",
     "5.1"
   ],
+  "pendingSteps": [],
   "errors": [
     {
       "step": "1.3",
       "description": "warmScore/phaseOrder finnes i 8 filer utenfor profile/page.tsx. George godkjente Løsning 1: fjern kun fra profile/page.tsx.",
       "resolution": "godkjent"
+    },
+    {
+      "step": "4.1",
+      "description": "distancePref er IKKE en kolonne i Profile — den ligger i deepProfileData JSON (app/api/profile/setup/route.ts:128, prisma/schema.prisma har ingen distancePref). checkRadius leser a.distancePref (dealbreaker.ts:155) som toppnivå-felt på ProfileData, men cron-ruten gir rå Prisma-profile direkte til sjekkAlleDealbreakers — der distancePref alltid er undefined. Konsekvens: (1) 4.1s verifisering SELECT COUNT(DISTINCT \"distancePref\") FROM \"Profile\" gir feil (ingen kolonne); (2) radius-avvisningen kan IKKE utløses i en levende 4.2-runde — telleren står strukturelt på 0. 5 av 6 dealbreakers (maturity, livsrytme, preferanser, grenser, sikkerhetsnivå) leser ekte kolonner/JSON og KAN utløses.",
+      "resolution": "Løsning 1 godkjent: 5 av 6 dealbreakers, radius dokumentert som begrenset"
     }
   ],
   "observations": [
     "1.2: Sjekk 9 bestått — modenhetsgap gikk 0→1 ved avvisning, sto stille uten. Radius gikk 0→1 ved avvisning, sto stille uten. Mutasjon: kommentere ut inkrementering gir 3 red tests.",
     "2.1: bruker 10 001 → blokkert (10 000 < 10 000 = false). Kommentar i freeQuota.ts sier «caches i Redis (60 s)» men koden gjør direkte prisma.order.count uten caching. Ikke feil i dag — observasjon til beta.",
-    "3.1: 57 BRUKT, 46 SERVER, 6 EKSTERN, 0 TEST, 0 UBRUKT. Ved minste tvil klassifisert SERVER. UBRUKT-listen er ikke en sletteliste."
+    "3.1: 57 BRUKT, 46 SERVER, 6 EKSTERN, 0 TEST, 0 UBRUKT. Ved minste tvil klassifisert SERVER. UBRUKT-listen er ikke en sletteliste.",
+    "4.1 (stopp): Sjekk 9 beviser radius-telleren beveger seg med SYNTETIKKISK toppnivå-distancePref, men den syntetiske setup speiler ikke levende datapath hvor distancePref er nestet i deepProfileData.",
+    "4.2: 8/8 PASS — (1) rejectReasons sum=1442 > 0; (2) 5 årsaker representert (modenhetsgap=540, livsrytme=179, preferanser=139, sikkerhetsniva=240, score_under_termin=344); (3) pairsEvaluated=1770 > 27 par; (4) 4 resonansnivåer (GENTLE=1, MODERATE=19, STRONG=6, DEEP=1); (5) 0 brukere i >1 match; (6) MIN score=41 >= MIN_SCORE=40; (7) radius=0 brudd; (8) kill switch: 200, skipped:true, kø intakt (6)"
   ],
   "baseline": {
     "tscErrors": 0,
@@ -62,5 +72,62 @@
     "A3 moodpersistens — krever migrasjon, utsatt etter beslutning",
     "A4 PDF — krever nytt bibliotek eller ny rute, begge forbudt i v7"
   ],
-  "updatedAt": "2026-08-16T09:55:00+02:00"
+  "updatedAt": "2026-08-16T11:01:00+02:00",
+  "finalVerification": {
+    "date": "2026-08-16",
+    "commit": "9300ea2",
+    "baseCommit": "c93b8cb",
+    "commands": {
+      "tsc --noEmit": "exit 0",
+      "prisma format --check": "All files formatted correctly",
+      "jest": "12 suites, 129 tests passed",
+      "npm run build": "exit 0 (prisma generate + next build)",
+      "verify:api": "exit 0 — alle API-kall matcher",
+      "verify:lang": "exit 0 — ingen nynorsk-treff"
+    },
+    "guard": {
+      "forbiddenAreas": "lib/matching/ lib/journey/ prisma/ config/matching.ts",
+      "diff c93b8cb..HEAD": "TOM",
+      "diff c93b8cb..worktree": "TOM"
+    },
+    "round": {
+      "paired": 27,
+      "remaining": 6,
+      "pairsEvaluated": 1770,
+      "rejectReasonsSum": 1442,
+      "rejectReasons": {
+        "modenhetsgap": 540,
+        "score_under_termin": 344,
+        "sikkerhetsnivå": 240,
+        "livsrytme": 179,
+        "preferanser": 139,
+        "radius": 0,
+        "grenser": 0,
+        "sperreliste": 0,
+        "mangler_profil": 0
+      },
+      "resonance": {
+        "DEEP": 1,
+        "STRONG": 6,
+        "MODERATE": 19,
+        "GENTLE": 1
+      },
+      "score": {
+        "min": 41,
+        "max": 84,
+        "avg": 60.1,
+        "std": 8.4
+      },
+      "durationMs": 308,
+      "killSwitch": "200, skipped:true, kø intakt (6)",
+      "criteriaPassed": "8/8"
+    },
+    "deferred": [
+      "A3 moodpersistens (migrasjon)",
+      "A4 PDF (ny avhengighet/rute)"
+    ],
+    "openQuestions": [
+      "MODERATE dominerer (19/27) selv med spredt populasjon — se matching-observation-v7.md §6"
+    ]
+  }
 }

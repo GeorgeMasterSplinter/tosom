@@ -3,11 +3,14 @@
   "baseCommit": "c93b8cb",
   "instruks": "docs/TOSOM-ACT-INSTRUKS-v7.0.md",
   "grunnlag": "docs/TOSOM-MASTERPLAN-v6.0.md",
-  "currentStep": "0.1",
-  "completedSteps": [],
-  "lockedSteps": [],
+  "currentStep": "0.2",
+  "completedSteps": [
+    "0.1"
+  ],
+  "lockedSteps": [
+    "0.1"
+  ],
   "pendingSteps": [
-    "0.1",
     "0.2",
     "1.1",
     "1.2",

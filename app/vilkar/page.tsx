@@ -2,7 +2,8 @@
 
 import { Footer } from '@/components/ui/layout/Footer';
 import { ToSomSection, ToSomButton } from '@/components/ui/system';
-import { color, spacing, typographyToStyle, radius, shadow } from '@/config/design-tokens';
+import { color, typographyToStyle } from '@/config/design-tokens';
+import GlassCard from '@/components/ui/cards/GlassCard';
 
 /* ========================
    INLINE SVG-ikoner
@@ -71,55 +72,6 @@ function IconCopyright() {
       <path d="M14 8a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2" />
       <path d="M10 16a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2" />
     </svg>
-  );
-}
-
-/* ========================
-   HELPER — Ultra-Premium GlassCard
-   ======================== */
-
-function GlassCard({
-  children,
-  padding = 'lg',
-  className = '',
-  style,
-}: {
-  children: React.ReactNode;
-  padding?: 'sm' | 'md' | 'lg' | 'xl';
-  className?: string;
-  style?: React.CSSProperties;
-}) {
-  const paddingMap = { sm: spacing.sm, md: spacing.md, lg: spacing.lg, xl: spacing.xl };
-
-  return (
-    <div
-      className={className}
-      style={{
-        background: 'rgba(255,255,255,0.06)',
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
-        border: '1px solid rgba(255,255,255,0.08)',
-        borderRadius: `${radius.xl}px`,
-        boxShadow: '0 8px 32px rgba(0,0,0,0.20)',
-        padding: `${paddingMap[padding]}px`,
-        transition: 'all 300ms ease-out',
-        ...style,
-      }}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.08)';
-        (e.currentTarget as HTMLElement).style.border = '1px solid rgba(212,175,55,0.20)';
-        (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 40px rgba(212,175,55,0.08)';
-        (e.currentTarget as HTMLElement).style.transform = 'translateY(-4px)';
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.06)';
-        (e.currentTarget as HTMLElement).style.border = '1px solid rgba(255,255,255,0.08)';
-        (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 32px rgba(0,0,0,0.20)';
-        (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
-      }}
-    >
-      {children}
-    </div>
   );
 }
 
@@ -225,7 +177,7 @@ export default function VilkårPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {sections.map((s, idx) => (
-                <GlassCard key={idx} padding="xl" className="space-y-4">
+                <GlassCard key={idx} padding="xl" interactive className="space-y-4">
                   <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
                     {s.icon}
                   </div>

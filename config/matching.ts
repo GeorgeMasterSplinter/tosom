@@ -2,12 +2,16 @@
 // Vekter er no den eine sanne kjelda i lib/matching/weightConfig.ts
 // Dette filen er ein tynn wrapper for oppskriften og reglar.
 
+// OBSOLETT: brukes ingen steder i app/lib/components/hooks (verifisert v8 steg 2.1)
+// Beholdt for bakoverkompatibilitet — ikke slett uten å sjekke alle importsteder
 export const MATCH_DELAY_HOURS = 24;
 export const CHAT_PHASE_DAYS = 30;
 export const DECISION_PHASE_DAYS = 30;
 
 // B6 — Kohort-basert matcherunde
-export const MIN_COHORT_SIZE = 20;
+// v8: senket fra 20 til 2 — ukentlig kadens krever at runden kjører selv med få i kø.
+// MIN_SCORE (40) er uendret: to som scorer 22 skal ikke kobles bare fordi de er de eneste.
+export const MIN_COHORT_SIZE = 2;
 export const MAX_QUEUE_WAIT_HOURS = 72;
 
 // B0.3 — Minste tillatte resonansscore (0–100 skala, unifiedScore)

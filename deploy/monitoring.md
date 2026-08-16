@@ -59,12 +59,23 @@ Varsle ved:
 ## 6. Hva betyr 503?
 
 Matcherunden har ikke skrevet hjerteslag til `SystemLog` (modul
-`cron:matching`) på 30 minutter. Mulige årsaker:
+`cron:matching`) på terskelen (standard 30 minutter). Mulige årsaker:
 
 - Cron-jobben kjører ikke (Vercel-kvote opp, deploy-feil)
 - Matcherunden krasjer før den når loggeringen
 - Databasetilkobling ned
 - Kill switch (`MATCHING_ENABLED=false`) er satt — da er 503 **forventet**
+
+> **v8 — ukentlig kadens:** Matcherunden kjører nå kun natt til lørdag
+> (se seksjon 8). Helsesjekkens standard terskel på **30 minutter gir derfor
+> ikke lenger mening for matcherunden** mellom lørdagene — den vil melde 503
+> de syv dagene uten runde. Endepunktet bruker fortsatt én fellesterkel for
+> begge jobbene, slik at matching-seksjonen i responsen vil vise
+> `heartbeatRecent: false` til neste lørdag. Journey-seksjonen (daglig)
+> fortolkes uendret. **Løsning er ikke implementert i v8** — se rapporten om
+> at terskelen skal skilles per jobb (daglig for journey, ukentlig for
+> matching). Til da: forvent 503 i `matching`-feltet mellom lørdagene, og
+> bruk `journey`-feltet som bekrefter at tjeneren lever.
 
 Responsen viser også `journey`-hjerteslaget, slik at du kan se om én eller
 begge cron-jobbene er stille.
@@ -84,15 +95,17 @@ begge cron-jobbene er stille.
 8. Bekreft at monitoren gir `up` mot et sunt system og `down` ved å
    midlertidig endre tokenet — før du gjenoppretter det.
 
-## 8. Cron-tider (v7)
+## 8. Cron-tider (v8)
 
 Vercel tolker cron-uttrykk alltid som UTC og støtter ikke tidssoner.
 
 | Jobb | UTC | Norsk sommer (CEST, UTC+2) | Norsk vinter (CET, UTC+1) |
 |---|---|---|---|
-| matching | `0 2 * * *` | 04:00 | 03:00 |
-| journey | `0 4 * * *` | 06:00 | 05:00 |
+| matching (ukentlig) | `0 2 * * 6` | lørdag 04:00 | lørdag 03:00 |
+| journey (daglig) | `0 4 * * *` | 06:00 | 05:00 |
 
+Matcherunden kjører nå ukentlig — natt til lørdag. Journey-runden fortsetter
+å kjøre daglig. Antall cron-jobber er fortsatt to (Hobby-grensen er uendret).
 Sommertid er valgt som referanse. Forskyvningen én time om vinteren er
 akseptert (A10).
 

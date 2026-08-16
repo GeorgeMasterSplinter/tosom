@@ -84,7 +84,20 @@ begge cron-jobbene er stille.
 8. Bekreft at monitoren gir `up` mot et sunt system og `down` ved å
    midlertidig endre tokenet — før du gjenoppretter det.
 
-## 8. Status for ACT v6
+## 8. Cron-tider (v7)
+
+Vercel tolker cron-uttrykk alltid som UTC og støtter ikke tidssoner.
+
+| Jobb | UTC | Norsk sommer (CEST, UTC+2) | Norsk vinter (CET, UTC+1) |
+|---|---|---|---|
+| matching | `0 2 * * *` | 04:00 | 03:00 |
+| journey | `0 4 * * *` | 06:00 | 05:00 |
+
+Sommertid er valgt som referanse. Forskyvningen én time om vinteren er
+akseptert (A10).
+
+## 9. Status for ACT v6
+
 
 Dette dokumentet fullfører **repo-delen** av avvik A9. **Registrering av
 monitoren i selve overvåkingstjenesten er en manuell oppgave utenfor

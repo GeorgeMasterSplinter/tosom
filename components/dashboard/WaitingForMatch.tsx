@@ -83,6 +83,7 @@ export function WaitingForMatch({ userName }: { userName: string }) {
   const router = useRouter();
   const [leavingQueue, setLeavingQueue] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [leavingJourney, setLeavingJourney] = useState(false);
 
   // B2.3: Forlat køen — DELETE /api/journey/queue
   const handleLeaveQueue = async () => {
@@ -101,6 +102,28 @@ export function WaitingForMatch({ userName }: { userName: string }) {
       alert('Kunne ikke forlate køen. Prøv igjen.');
       setLeavingQueue(false);
       setShowConfirm(false);
+    }
+  };
+
+  // 1.3: Angrerett — POST /api/journey/exit (eksisterende utmeldingsflyt)
+  const handleAngerett = async () => {
+    setLeavingJourney(true);
+    try {
+      const res = await fetch('/api/journey/exit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reason: 'angrerett' }),
+      });
+      if (res.ok) {
+        router.refresh();
+      } else {
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || 'Kunne ikke melde deg ut. Prøv igjen.');
+        setLeavingJourney(false);
+      }
+    } catch {
+      alert('Kunne ikke melde deg ut. Prøv igjen.');
+      setLeavingJourney(false);
     }
   };
 
@@ -217,6 +240,19 @@ export function WaitingForMatch({ userName }: { userName: string }) {
               Ut av køen
             </button>
           )}
+        </div>
+
+        {/* 1.3: Angrerett — nedtonet lenke (masterplan v8.0 del 9.3) */}
+        <div className="mt-6 text-xs leading-relaxed" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>
+          <button
+            type="button"
+            onClick={handleAngerett}
+            disabled={leavingJourney}
+            className="underline underline-offset-2 transition-opacity duration-200 disabled:opacity-50 hover:opacity-80"
+          >
+            Ombestemmer du deg før lørdag, kan du melde deg ut og få pengene tilbake.
+          </button>
+          <span className="block mt-1">Fra lørdag er dere to i gang.</span>
         </div>
       </div>
     </div>

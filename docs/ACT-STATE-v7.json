@@ -3,17 +3,18 @@
   "baseCommit": "c93b8cb",
   "instruks": "docs/TOSOM-ACT-INSTRUKS-v7.0.md",
   "grunnlag": "docs/TOSOM-MASTERPLAN-v6.0.md",
-  "currentStep": "1.1",
+  "currentStep": "1.2",
   "completedSteps": [
     "0.1",
-    "0.2"
+    "0.2",
+    "1.1"
   ],
   "lockedSteps": [
     "0.1",
-    "0.2"
+    "0.2",
+    "1.1"
   ],
   "pendingSteps": [
-    "1.1",
     "1.2",
     "1.3",
     "2.1",
@@ -46,5 +47,5 @@
     "A3 moodpersistens — krever migrasjon, utsatt etter beslutning",
     "A4 PDF — krever nytt bibliotek eller ny rute, begge forbudt i v7"
   ],
-  "updatedAt": "2026-08-16T08:51:00+02:00"
+  "updatedAt": "2026-08-16T09:01:00+02:00"
 }

@@ -19,6 +19,7 @@ import type { UnifiedResult } from '@/lib/matching/unifiedScorer';
 import { toResonanceLevel } from '@/lib/matching/resonanceLevel';
 import { MIN_COHORT_SIZE, MAX_QUEUE_WAIT_HOURS, MIN_SCORE } from '@/config/matching';
 import { isMatchingEnabled } from '@/config/features';
+import { mapRejectReason } from './rejectReason';
 
 // B0.5 — Vercel Hobby: max 60s
 export const maxDuration = 60;
@@ -101,6 +102,7 @@ export async function GET(req: NextRequest) {
     sikkerhetsniva: 0,
     score_under_termin: 0,
   };
+  const unmapped: string[] = [];
   // ST5.2: Etiketter per avvisningsårsak (tiltak T2) — for lesbart logg-output
   const REJECT_LABELS: Record<string, string> = {
     mangler_profil: 'avvist: mangler profil',
@@ -190,13 +192,15 @@ export async function GET(req: NextRequest) {
         for (let j = i + 1; j < candidates.length; j++) {
           const a = candidates[i];
           const b = candidates[j];
+          pairsEvaluated++;
 
           // Hopp over uten profil
-          if (!a.profile || !b.profile) continue;
+          if (!a.profile || !b.profile) { rejectReasons['mangler_profil']++; continue; }
 
           // Sperreliste
           const pairKey = normalizePair(a.id, b.id).join(':');
           if (blockSet.has(pairKey)) {
+            rejectReasons['sperreliste']++;
             continue;
           }
 
@@ -204,12 +208,19 @@ export async function GET(req: NextRequest) {
           const abBlocked = sjekkAlleDealbreakers(a.profile, b.profile);
           const baBlocked = sjekkAlleDealbreakers(b.profile, a.profile);
           if (abBlocked.hasDealbreaker || baBlocked.hasDealbreaker) {
+            const reason = abBlocked.reason ?? baBlocked.reason;
+            const key = mapRejectReason(reason);
+            rejectReasons[key]++;
+            if (reason && key === 'preferanser' && !reason.startsWith('Dealbreaker')) {
+              unmapped.push(reason);
+            }
             continue;
           }
 
           // Resonans-score med unifiedScore (9 dimensjoner, 0–100)
           const result = unifiedScore(a.profile, b.profile);
           if (result.score < MIN_SCORE) {
+            rejectReasons['score_under_termin']++;
             continue; // MIN_SCORE terskel (40 på 0–100 skala)
           }
 
@@ -336,7 +347,7 @@ export async function GET(req: NextRequest) {
           level: 'INFO',
           message: `Matching-runde: ${paired} par koblet, ${remaining} igjen i kø | Avvisninger: ${rejectSummary.map(([k, v]) => `${k}=${v}`).join(', ') || 'ingen'}`,
           module: 'cron:matching',
-          metadata: { paired, remaining, durationMs, deferred, queueSize: cohortSize, pairsEvaluated, rejectReasons },
+          metadata: { paired, remaining, durationMs, deferred, queueSize: cohortSize, pairsEvaluated, rejectReasons, unmapped: unmapped.length > 0 ? unmapped : undefined },
         },
       });
 

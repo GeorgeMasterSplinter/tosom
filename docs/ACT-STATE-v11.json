@@ -1,12 +1,20 @@
 {
   "version": "11.0",
-  "currentStep": "1.1",
-  "completedSteps": ["0.1"],
-  "lockedSteps": ["0.1"],
-  "pendingSteps": ["1.1", "1.2", "1.3", "2.1", "2.2", "2.3", "2.4", "2.5"],
+  "currentStep": null,
+  "completedSteps": ["0.1", "1.1", "1.2", "1.3", "2.1", "2.2", "2.3", "2.4", "2.5"],
+  "lockedSteps": ["0.1", "1.1", "1.2", "1.3", "2.1", "2.2", "2.3", "2.4", "2.5"],
+  "pendingSteps": [],
   "errors": [],
   "observations": [
-    "0.1: Alle 15 ankre funnet. Matching 7: landing:74, slik-fungerer-det:67, priser:215, priser:224 (én gang i døgnet), Step10:49, auth/payment:31, Hero:46. Support 3: kontakt:148, kontakt:229 (Innen — capital I, matcher ikke lowercase grep), personvern:166. OBS: grep -c 'innen 24 timer' kontakt gir 1 ikke 2 pga. capital I på :229. Pris 349: priser:314, landing:257+304, betaling:5+76+96, vilkar:92. Skrivefeil: vilkar:106 Bildefdeling, ChatHeader:201 Rapporteer. Hard checks: kjører nå."
+    "0.1: Alle 15 ankre funnet. Matching 7: landing:74, slik-fungerer-det:67, priser:215, priser:224 (én gang i døgnet), Step10:49, auth/payment:31, Hero:46. Support 3: kontakt:148, kontakt:229 (Innen — capital I, matcher ikke lowercase grep), personvern:166. OBS: grep -c 'innen 24 timer' kontakt gir 1 ikke 2 pga. capital I på :229. Pris 349: priser:314, landing:257+304, betaling:5+76+96, vilkar:92. Skrivefeil: vilkar:106 Bildefdeling, ChatHeader:201 Rapporteer. Hard checks: kjører nå.",
+    "1.1: Landing + slik-fungerer-det rettet til ukentlig kadens. Commit b14ca96.",
+    "1.2: Prissiden rettet — 'ukentlig lørdag' erstatter '24 timer'. Commit ee84d9f.",
+    "1.3: Step10 + payment + Hero rettet. Commit ed16c5f.",
+    "2.1: 'De første 10 000 får reisen gratis.' lagt til priser + landing. Commit e7ddfe1.",
+    "2.2: Vilkår: angrerett omformulert (refusjon fram til lørdag), Bildefdeling→Bildedeling, 2 nye ordenskort, 'Om avtalen' kort. 7→10 kort. Commit eb65d2b.",
+    "2.3: Rapporteer→Rapporter i ChatHeader.tsx. Commit 79d803c.",
+    "2.4: Rapportvarsling koblet, beskrivelse utelatt av personvernhensyn. sendAlert i try/catch, 3 unit tests. Commit 4431749.",
+    "2.5: Sluttverifikasjon gjennomført. BETA-GO-NOGO.md opprettet. Alle checks grønn."
   ],
   "verifiedAnchors": {
     "matching": {
@@ -37,5 +45,27 @@
       "Rapporteer": { "file": "components/chat/ChatHeader.tsx", "line": 201 }
     }
   },
-  "updatedAt": "2026-08-17T00:19:00+02:00"
+  "finalVerification": {
+    "date": "2026-08-17T01:00:00+02:00",
+    "tsc": "exit 0",
+    "prismaFormat": "All files formatted correctly",
+    "jest": "157 passed, 157 total (16 suites)",
+    "build": "exit 0",
+    "verifyApi": "Alle API-kall matcher eksisterende ruter",
+    "verifyLang": "Ingen nynorsk-treff i .tsx-filer",
+    "vokterkontroll": "git diff a8c70b7..HEAD -- lib/matching/ lib/journey/ prisma/ config/matching.ts → tom",
+    "sannhetskontroll": {
+      "matchInnend24timer": 0,
+      "engangidognet": 0,
+      "kontaktInnend24timer": 2,
+      "personvernInnend24timer": 1
+    },
+    "funkKontroll": {
+      "landingLørdagUken": 3,
+      "landing10000": 1,
+      "landing23plus": 1,
+      "vilkårHTTP": "200 (1 redirect)"
+    }
+  },
+  "updatedAt": "2026-08-17T01:00:00+02:00"
 }

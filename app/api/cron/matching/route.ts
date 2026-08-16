@@ -4,7 +4,7 @@
  * GET /api/cron/matching
  * - Én motor: kohortbasert parvis kobling uten samtykke
  * - Les QUEUED-brukere, score alle par, grådig matching
- * - MIN_COHORT_SIZE=20 terskel, 72h defer-ventil
+ * - MIN_COHORT_SIZE=2 terskel (v8: ukentlig kadens), 72h defer-ventil
  * - Opprett Match(active), Conversation, JourneyProgress, Notification × 2
  * - Ingen push/e-post/SMS (invariant I-4)
  */
@@ -183,10 +183,21 @@ export async function GET(req: NextRequest) {
 
       // 4. Score alle par — sjekk dealbreakers + sperreliste
       const pairs: ScoredPair[] = [];
-      const candidates: Candidate[] = queued.map((u) => ({
-        id: u.id,
-        profile: u.profile || null,
-      }));
+      const candidates: Candidate[] = queued.map((u) => {
+        const p = u.profile || null;
+        return {
+          id: u.id,
+          profile: p
+            ? {
+                ...p,
+                distancePref:
+                  typeof (p.deepProfileData as Record<string, unknown> | null)?.distancePref === 'number'
+                    ? (p.deepProfileData as Record<string, unknown>).distancePref as number
+                    : null,
+              }
+            : null,
+        };
+      });
 
       for (let i = 0; i < candidates.length && Date.now() < deadline; i++) {
         for (let j = i + 1; j < candidates.length; j++) {

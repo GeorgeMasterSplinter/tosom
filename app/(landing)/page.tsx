@@ -155,6 +155,15 @@ export default function LandingPage() {
       />
 
       <main className="relative z-10">
+        {/* 1.4: Dempet aldersmerke 23+ (Tailwind-klasser, gullaksent) */}
+        <div className="relative z-10 flex flex-col items-center gap-1.5 px-6 pt-8">
+          <span className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/25 bg-[#D4AF37]/5 px-4 py-1.5 text-xs font-medium tracking-wide text-[#E8C766]">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#D4AF37]" />
+            23+
+          </span>
+          <p className="text-xs text-white/40">ToSom er for deg som har fylt 23.</p>
+        </div>
+
         {/* Hero */}
         <section className="relative overflow-hidden py-10 ph:py-14 md:py-[60px]">
           <Hero />

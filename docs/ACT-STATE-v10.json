@@ -3,11 +3,10 @@
   "baseCommit": "resultatet av ACT v9",
   "instruks": "docs/TOSOM-ACT-INSTRUKS-v10.0.md",
   "grunnlag": "docs/TOSOM-MASTERPLAN-v8.0.md",
-  "currentStep": "0.1",
-  "completedSteps": [],
-  "lockedSteps": [],
+  "currentStep": "1.1",
+  "completedSteps": ["0.1"],
+  "lockedSteps": ["0.1"],
   "pendingSteps": [
-    "0.1",
     "1.1",
     "1.2",
     "2.1",
@@ -19,8 +18,25 @@
     "3.4"
   ],
   "errors": [],
-  "observations": [],
-  "baseline": {},
+  "observations": [
+    "0.1: grunnlinje målt. 13 lokale GlassCard, 5 glass-filer, 0 animate-ts. 46 bruksteder. Inline (rendret HTML): / 91, /priser 79, /hvorfor 106, /om-oss 106, /reisen 93, /slik-fungerer-det 80, /kontakt 83, /blogg 73, /cookies 82, /personvern 82. tsc 0, jest 140/140, build grønn, verify:api og verify:lang exit 0."
+  ],
+  "baseline": {
+    "lokaleGlassCard": 13,
+    "glassKomponenter": 5,
+    "animateTs": 0,
+    "brukstederTotalt": 46,
+    "inlineRendered": {
+      "root": 91, "priser": 79, "hvorfor": 106, "omOss": 106, "reisen": 93,
+      "slikFungererDet": 80, "kontakt": 83, "blogg": 73, "cookies": 82, "personvern": 82
+    },
+    "brukstederPerSide": {
+      "landing": 2, "hvorfor": 4, "slikFungererDet": 1, "reisen": 8, "priser": 6,
+      "omOss": 4, "kontakt": 3, "blogg": 2, "vilkar": 1, "personvern": 1,
+      "cookies": 6, "register": 1, "settings": 7
+    },
+    "tsc": "0", "jest": "140/140", "build": "grønn", "verifyApi": "0", "verifyLang": "0"
+  },
   "maltilstand": {
     "lokaleGlassCard": 0,
     "glassKomponenter": 1,
@@ -32,5 +48,5 @@
     "All tekstendring — ACT v11",
     "144 spørsmål, DSN, monitor, gjenoppretting — George"
   ],
-  "updatedAt": "2026-08-16T19:34:00+02:00"
+  "updatedAt": "2026-08-16T22:09:15+02:00"
 }

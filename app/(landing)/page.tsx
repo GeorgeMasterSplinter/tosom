@@ -71,8 +71,8 @@ const steps = [
   },
   {
     icon: <IconMatch />,
-    title: 'Match innen 24 timer',
-    content: 'Du får én match om gangen – valgt med omtanke, ikke tilfeldighet. Ingen endeløs sveiping. Ingen overveldende valg.',
+    title: 'Én match i uken',
+    content: 'Vi samler mennesker gjennom uken og kobler natt til lørdag. Du får én match — valgt med omtanke, ikke tilfeldighet. Ingen endeløs sveiping. Ingen overveldende valg.',
   },
   {
     icon: <IconResearch />,

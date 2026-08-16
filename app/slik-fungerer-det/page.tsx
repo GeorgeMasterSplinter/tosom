@@ -64,8 +64,8 @@ const steps = [
   },
   {
     icon: <IconMatch />,
-    title: 'Én match innen 24 timer',
-    intro: 'Når profilen din er klar, får du én gjennomtenkt match. Ikke ti. Ikke hundre. Bare én person som faktisk passer deg basert på verdier, livsstil, kommunikasjon og fremtidsønsker.',
+    title: 'Én match, hver lørdag',
+    intro: 'Når profilen din er klar, stiller du deg i kø. Natt til lørdag kobler vi dem som passer best sammen, og reisen starter lørdag morgen. Ikke ti matcher. Ikke hundre. Bare én person som faktisk passer deg basert på verdier, livsstil, kommunikasjon og fremtidsønsker.',
     points: [
       'én match om gangen',
       'ingen sveiping',

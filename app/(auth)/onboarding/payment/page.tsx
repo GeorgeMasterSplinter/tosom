@@ -28,7 +28,7 @@ const PLANS: Plan[] = [
     price: '149',
     period: '/mnd',
     features: [
-      'Én match per 24 timer',
+      'Én match per reise',
       '30-dagers guidet reise',
       'Refleksjoner og oppgåver',
       'Full tilgang til chat',

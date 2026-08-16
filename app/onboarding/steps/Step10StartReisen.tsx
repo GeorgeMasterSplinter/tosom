@@ -46,7 +46,7 @@ export default function Step10StartReisen({ step, goToStep, loading, onStart }: 
           </svg>
         </div>
         <p style={{ color: 'rgba(255, 255, 255, 0.5)' }}>
-          En match innen 24 timer. Ingen swiping, ingen press.
+          Én match, hver lørdag. Ingen sveiping, ingen press.
         </p>
       </div>
 

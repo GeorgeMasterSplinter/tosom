@@ -43,7 +43,7 @@ export const Hero: FC<HeroProps> = ({
       ),
     },
     { 
-      title: 'Match innen 24 timer', 
+      title: 'Én match i uken', 
       label: 'Én match. Kvalitet framfor hvantitet.',
       icon: (
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none">

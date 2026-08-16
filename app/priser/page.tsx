@@ -212,7 +212,7 @@ export default function PriserPage() {
                         color: color.text.primary,
                       }}
                     >
-                      Match innen 24 timer
+                      Én match hver lørdag
                     </h3>
                     <p
                       style={{
@@ -221,7 +221,7 @@ export default function PriserPage() {
                         lineHeight: '1.8',
                       }}
                     >
-                      ToSoms motor kjører én gang i døgnet og finner den personen som passer deg best — basert på kompatibilitet, ikke utseende. Du får kun én match om gangen.
+                      ToSoms motor kjører én gang i uken, natt til lørdag, og finner den personen som passer deg best — basert på kompatibilitet, ikke utseende. Du får kun én match om gangen.
                     </p>
                   </div>
                 </div>

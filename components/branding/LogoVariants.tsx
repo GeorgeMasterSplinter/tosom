@@ -193,40 +193,24 @@ export interface LogoAnimatedProps {
 }
 
 /**
- * Animert logo med fade-in + scale-effekt.
+ * Animert logo med rolig fade-in (150 ms, kun opacity — ingen scale/transform).
  * Brukes kun i hero-seksjoner.
- * Logo er 3x større enn standard, med "Made in Norway" under.
+ * Logo er 3x større enn standard, med "Made in Norway" under (etterlogo, 150 ms forsinkelse).
  */
 export const LogoAnimated: FC<LogoAnimatedProps> = ({ className = '' }) => {
   return (
     <div className={`relative flex flex-col items-center ${className}`}>
-      <style>{`
-        @keyframes logoFadeIn {
-          from {
-            opacity: 0;
-            transform: scale(0.95) translateY(8px);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-          }
-        }
-        .logo-animated {
-          animation: logoFadeIn 1s ease-out 0.3s both;
-        }
-      `}</style>
-       <div className="logo-animated flex flex-col items-center">
-         <Logo
-           size="5xl"
-           colorVariant="gold"
-         />
-         <span
-           className="mt-3 text-[11px] font-medium tracking-[0.3em] uppercase"
-           style={{ color: 'rgba(212,175,55,0.55)' }}
-         >
-           Made in Norway
-         </span>
-       </div>
+      <div className="animate-ts-fade-in flex flex-col items-center">
+        <Logo
+          size="5xl"
+          colorVariant="gold"
+        />
+        <span
+          className="mt-3 text-[11px] font-medium tracking-[0.3em] uppercase text-[var(--ts-gold)] opacity-55 animate-ts-fade-in [animation-delay:150ms]"
+        >
+          Made in Norway
+        </span>
+      </div>
     </div>
   );
 };

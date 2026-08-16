@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * ToSom — Ventefase-dashbord ("Din match er på vei")
+ * ToSom — Ventefase-dashbord ("Du står i kø")
  * 
  * Vises når brukeren har fullført onboarding men ingen match ennå.
  * Har glass-panel med animasjon og rolig "match leter..."-følelse.
@@ -137,10 +137,10 @@ export function WaitingForMatch({ userName }: { userName: string }) {
             WebkitTextFillColor: 'transparent',
           }}
         >
-          Din match er på vei, {userName.split(' ')[0]} 💛
+          Du står i kø, {userName.split(' ')[0]}
         </h2>
 
-        {/* Undertekst — B1.6: Kanonisk kopi (I-9: 05:00 nevnes aldri) */}
+        {/* Undertekst — natt til lørdag (masterplan v8.0 del 6.4) */}
         <p
           className="mb-2"
           style={{
@@ -151,17 +151,7 @@ export function WaitingForMatch({ userName }: { userName: string }) {
             lineHeight: typography.lineHeight.relaxed,
           }}
         >
-          Du får din match i løpet av 24 timer.
-        </p>
-
-        <p
-          style={{
-            fontSize: `${typography.fontSize.sm}px`,
-            color: 'rgba(255, 255, 255, 0.35)',
-            fontStyle: 'italic',
-          }}
-        >
-          Vi venter til vi har nok mennesker til å finne en god match til deg.
+          Vi kobler natt til lørdag. Da får du beskjed, og reisen starter.
         </p>
 
         {/* Countdown (mock) */}

@@ -198,7 +198,7 @@ export default function ChatHeader({
               {menuOpen && (
                 <div className="absolute right-0 top-10 w-48 rounded-2xl py-2 z-50" style={{ background: 'rgba(15,25,40,0.97)', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }}>
                   <button onClick={() => { setShowReport(true); setMenuOpen(false); }} className="w-full text-left px-4 py-2.5 text-sm transition-all hover:bg-white/5" style={{ color: 'rgba(255,255,255,0.7)' }}>
-                    🚩 Rapporteer brukeren
+                    🚩 Rapporter brukeren
                   </button>
                   <button onClick={() => { setConfirmAction('end'); setMenuOpen(false); }} className="w-full text-left px-4 py-2.5 text-sm transition-all hover:bg-white/5" style={{ color: 'rgba(255,255,255,0.7)' }}>
                     ✋ Avslutt reisen

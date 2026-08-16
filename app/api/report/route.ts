@@ -15,6 +15,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth/requireAuth';
+import { sendAlert } from '@/lib/observability/alert';
 
 export const dynamic = 'force-dynamic';
 
@@ -139,6 +140,17 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       category,
       matchId: report.matchId,
     });
+
+    // 8. Varsling — kategori + identifikatorer, IKKE fritekstbeskrivelsen
+    try {
+      await sendAlert(
+        'warning',
+        'Ny rapport mottatt',
+        `Kategori: ${category}\nRapport-ID: ${report.id}\nRapportør: ${user.id}\nRapportert: ${reportedId}\nMatch: ${report.matchId || 'ukjent'}`
+      );
+    } catch (alertErr) {
+      console.error('[report] Varsling feilet (rapport er lagret):', alertErr);
+    }
 
     return NextResponse.json(
       { success: true, reportId: report.id, message: 'Takk. Rapporten din er mottatt.' },

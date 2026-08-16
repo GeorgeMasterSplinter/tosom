@@ -21,8 +21,6 @@ interface ProfileData {
   identityName: string;
   bio: string;
   tags: string[];
-  warmScore: number;
-  phaseOrder: number;
   currentDay: number;
   daysRemaining: number;
   matchScore: number;
@@ -46,8 +44,6 @@ export default function ProfilePage() {
           identityName: data.identityName || 'Din profil',
           bio: data.bio || '',
           tags: data.tags || [],
-          warmScore: data.warmScore ?? 0,
-          phaseOrder: data.phaseOrder ?? 1,
           currentDay: data.currentDay ?? 1,
           daysRemaining: data.daysRemaining ?? 30,
           matchScore: data.matchScore ?? 0,
@@ -59,8 +55,6 @@ export default function ProfilePage() {
           identityName: 'Din profil',
           bio: 'Bygger reisen min...',
           tags: [],
-          warmScore: 0,
-          phaseOrder: 1,
           currentDay: 1,
           daysRemaining: 30,
           matchScore: 0,
@@ -73,8 +67,6 @@ export default function ProfilePage() {
         identityName: 'Din profil',
         bio: 'Bygger reisen min...',
         tags: [],
-        warmScore: 0,
-        phaseOrder: 1,
         currentDay: 1,
         daysRemaining: 30,
         matchScore: 0,
@@ -95,10 +87,7 @@ export default function ProfilePage() {
 
   if (!profile) return null;
 
-  const phaseColors = ['', '#D4AF37', '#4DFF88', '#B48CFF', '#FF82C8', '#FFD700'];
-  const phaseNames = ['', 'Introduksjon', 'Trygghet', 'Sårbarhet', 'Fremtid', 'Djupne'];
-  const phaseColor = phaseColors[profile.phaseOrder] || '#D4AF37';
-  const phaseName = phaseNames[profile.phaseOrder] || 'Introduksjon';
+  const phaseColor = '#D4AF37';
 
   return (
     <main className="mx-auto max-w-[720px] px-6 py-8">
@@ -124,29 +113,8 @@ export default function ProfilePage() {
           border: `1px solid ${phaseColor}30`,
           color: phaseColor,
         }}>
-          {phaseName} · Dag {profile.currentDay}/30
+          Dag {profile.currentDay}/30
         </span>
-      </div>
-
-      {/* Varme */}
-      <div className="mb-6 p-4 rounded-xl" style={{
-        background: 'rgba(255,255,255,0.03)',
-        border: '1px solid rgba(255,255,255,0.06)',
-      }}>
-        <h2 className="text-base font-medium mb-3" style={{ color: '#FFFFFF' }}>Varme</h2>
-        <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-xl flex items-center justify-center" style={{
-            background: 'rgba(255,184,108,0.1)',
-            border: '1px solid rgba(255,184,108,0.2)',
-          }}>
-            <span style={{ color: '#FFB86C', fontSize: '20px', fontWeight: 600 }}>
-              {profile.warmScore}%
-            </span>
-          </div>
-          <p style={{ color: 'rgba(255,255,255,0.5)' }}>
-            {profile.warmScore >= 80 ? 'Ekko' : profile.warmScore >= 60 ? 'Glødande' : profile.warmScore >= 40 ? 'Varm' : 'Utviklar seg'}
-          </p>
-        </div>
       </div>
 
       {/* Tags */}

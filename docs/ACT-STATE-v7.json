@@ -3,21 +3,22 @@
   "baseCommit": "c93b8cb",
   "instruks": "docs/TOSOM-ACT-INSTRUKS-v7.0.md",
   "grunnlag": "docs/TOSOM-MASTERPLAN-v6.0.md",
-  "currentStep": "1.3",
+  "currentStep": "2.1",
   "completedSteps": [
     "0.1",
     "0.2",
     "1.1",
-    "1.2"
+    "1.2",
+    "1.3"
   ],
   "lockedSteps": [
     "0.1",
     "0.2",
     "1.1",
-    "1.2"
+    "1.2",
+    "1.3"
   ],
   "pendingSteps": [
-    "1.3",
     "2.1",
     "2.2",
     "3.1",
@@ -26,7 +27,13 @@
     "4.3",
     "5.1"
   ],
-  "errors": [],
+  "errors": [
+    {
+      "step": "1.3",
+      "description": "warmScore/phaseOrder finnes i 8 filer utenfor profile/page.tsx. George godkjente Løsning 1: fjern kun fra profile/page.tsx.",
+      "resolution": "godkjent"
+    }
+  ],
   "observations": [
     "1.2: Sjekk 9 bestått — modenhetsgap gikk 0→1 ved avvisning, sto stille uten. Radius gikk 0→1 ved avvisning, sto stille uten. Mutasjon: kommentere ut inkrementering gir 3 red tests."
   ],
@@ -50,5 +57,5 @@
     "A3 moodpersistens — krever migrasjon, utsatt etter beslutning",
     "A4 PDF — krever nytt bibliotek eller ny rute, begge forbudt i v7"
   ],
-  "updatedAt": "2026-08-16T09:05:00+02:00"
+  "updatedAt": "2026-08-16T09:20:00+02:00"
 }

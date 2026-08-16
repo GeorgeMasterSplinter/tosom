@@ -124,7 +124,7 @@ export default function BetalingPage() {
             />
             <span className="text-sm" style={{ color: 'rgba(255,255,255,0.7)', lineHeight: '1.6' }}>
               Jeg har lest og aksepterer{' '}
-              <Link href="/vilkår" className="underline" style={{ color: '#D4AF37' }}>
+              <Link href="/vilkar" className="underline" style={{ color: '#D4AF37' }}>
                 vilkårene for bruk
               </Link>{' '}
               og{' '}

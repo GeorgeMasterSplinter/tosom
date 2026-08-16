@@ -93,7 +93,7 @@ export default function AccessPage() {
             />
             <span className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
               Eg har lese og godtek{' '}
-              <Link href="/vilkår" className="underline hover:no-underline" style={{ color: '#D4AF37' }}>
+              <Link href="/vilkar" className="underline hover:no-underline" style={{ color: '#D4AF37' }}>
                 vilkår for bruk
               </Link>{' '}
               og{' '}

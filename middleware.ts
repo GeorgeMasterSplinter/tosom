@@ -59,7 +59,8 @@ const ADMIN_PREFIX = '/admin'
 
 /** Legacy-ruter som skal rettes til nye stier */
 const LEGACY_REDIRECTS: Record<string, string> = {
-  '/vilk%C3%A5r': '/vilkår',  // URL-encoded variant → korrekt norsk stavemål
+  '/vilk%C3%A5r': '/vilkar',  // URL-encoded variant → ASCII-rute
+  '/vilkår': '/vilkar',       // Norsk stavemål → ASCII-rute
 }
 
 export async function middleware(req: NextRequest) {

@@ -36,7 +36,7 @@ const produktLinks = [
 
 const reglerLinks = [
   { label: 'Personvern', href: '/personvern' },
-  { label: 'Vilkår', href: '/vilkår' },
+  { label: 'Vilkår', href: '/vilkar' },
   { label: 'Cookies', href: '/cookies' },
 ];
 

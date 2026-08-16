@@ -3,15 +3,16 @@
   "baseCommit": "c93b8cb",
   "instruks": "docs/TOSOM-ACT-INSTRUKS-v7.0.md",
   "grunnlag": "docs/TOSOM-MASTERPLAN-v6.0.md",
-  "currentStep": "0.2",
+  "currentStep": "1.1",
   "completedSteps": [
-    "0.1"
+    "0.1",
+    "0.2"
   ],
   "lockedSteps": [
-    "0.1"
+    "0.1",
+    "0.2"
   ],
   "pendingSteps": [
-    "0.2",
     "1.1",
     "1.2",
     "1.3",
@@ -25,10 +26,25 @@
   ],
   "errors": [],
   "observations": [],
-  "baseline": {},
+  "baseline": {
+    "tscErrors": 0,
+    "prismaFormat": "ok",
+    "jest": "116/116",
+    "verifyApi": "exit 0",
+    "verifyLang": "exit 0",
+    "rejectReasonsIncrement": 0,
+    "pairsEvaluatedIncrement": 0,
+    "ghostFieldsInClient": 12,
+    "ghostFieldsInSchema": 0,
+    "paymentWebhookDirExists": true,
+    "paymentWebhookFiles": 0,
+    "cronMatching": "0 5 * * *",
+    "cronJourney": "0 7 * * *",
+    "apiRoutes": 109
+  },
   "deferred": [
     "A3 moodpersistens — krever migrasjon, utsatt etter beslutning",
     "A4 PDF — krever nytt bibliotek eller ny rute, begge forbudt i v7"
   ],
-  "updatedAt": "2026-08-16T08:10:00+02:00"
+  "updatedAt": "2026-08-16T08:51:00+02:00"
 }

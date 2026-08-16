@@ -89,12 +89,22 @@ const sections = [
   {
     icon: <IconMatch />,
     title: 'Én reise — 30 dager',
-    content: 'En reise koster 349 kroner og gir deg én match i én 30-dagers reise. De første 10 000 brukerne får reisen gratis. Du kan bare ha én aktiv reise om gangen.',
+    content: 'En reise koster 349 kroner og gir deg én match i én 30-dagers reise. De første 10 000 brukerne får reisen gratis. Vi kobler natt til lørdag, og reisen starter lørdag morgen. Du kan bare ha én aktiv reise om gangen.',
   },
   {
     icon: <IconProfile />,
     title: 'Kobling — ikke valg',
     content: 'ToSom kobler deg til én person basert på kunnskapsbasert matching. Du velger ikke hvem du matcher med, og du kan ikke si ja eller nei til en bestemt person. Dette er kjernen i ToSom: ro, ikke valg.',
+  },
+  {
+    icon: <IconProfile />,
+    title: 'Hva vi forventer av deg',
+    content: 'ToSom bygger på respekt. Du snakker med et menneske som har valgt å åpne seg. Ingen trakassering, ingen press, ingen upassende innhold. Du deler ikke andres bilder, meldinger eller opplysninger videre. Du bruker ikke ToSom kommersielt eller til å selge noe.',
+  },
+  {
+    icon: <IconEnd />,
+    title: 'Hvis noen bryter reglene',
+    content: 'Opplever du noe ubehagelig, kan du rapportere det direkte i samtalen. Vi leser alle rapporter. Ved brudd gir vi advarsel eller stenger kontoen, avhengig av alvor. Ved grove brudd stenges kontoen umiddelbart og uten refusjon. Du kan også blokkere og avslutte reisen når som helst.',
   },
   {
     icon: <IconEnd />,
@@ -103,13 +113,18 @@ const sections = [
   },
   {
     icon: <ImageIcon />,
-    title: 'Bildefdeling',
+    title: 'Bildedeling',
     content: 'Fra dag 15 kan dere dele bilder med hverandre. Før den tid bygger dere en tilknytning basert på dybde og resonans, ikke utseende.',
   },
   {
     icon: <IconCopyright />,
     title: 'Angrerett',
-    content: 'Norsk lov gir 14 dagers angrerett på digitale tjenester. Ved betaling ber vi deg samtykke til at reisen starter straks. Gir du dette samtykket, bortfaller angreretten. Uten refusjon etter påbegynt reise.',
+    content: 'Norsk lov gir 14 dagers angrerett på digitale tjenester. Reisen starter lørdag morgen, når koblingen er gjort. Melder du meg ut før lørdag, refunderer vi hele beløpet uten spørsmål. Etter at reisen har startet, er tjenesten levert, og angreretten bortfaller.',
+  },
+  {
+    icon: <IconCopyright />,
+    title: 'Om avtalen',
+    content: 'ToSom drives av ToSom AS. Disse vilkårene er avtalen mellom deg og oss. Vi kan endre dem, og varsler deg i god tid før endringer trer i kraft. Avtalen følger norsk rett.',
   },
 ];
 

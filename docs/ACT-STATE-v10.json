@@ -3,17 +3,17 @@
   "baseCommit": "resultatet av ACT v9",
   "instruks": "docs/TOSOM-ACT-INSTRUKS-v10.0.md",
   "grunnlag": "docs/TOSOM-MASTERPLAN-v8.0.md",
-  "currentStep": "3.1",
-  "completedSteps": ["0.1", "1.1", "1.2", "2.1", "2.2", "2.3"],
-  "lockedSteps": ["0.1", "1.1", "1.2", "2.1", "2.2", "2.3"],
+  "currentStep": "3.2",
+  "completedSteps": ["0.1", "1.1", "1.2", "2.1", "2.2", "2.3", "3.1"],
+  "lockedSteps": ["0.1", "1.1", "1.2", "2.1", "2.2", "2.3", "3.1"],
   "pendingSteps": [
-    "3.1",
     "3.2",
     "3.3",
     "3.4"
   ],
   "errors": [],
   "observations": [
+    "3.1: Ingen kodeendring nødvendig. 0 onMouseEnter i alle 13 publikke sider (bekreftet ved grep). 7 gjenstår i ikke-publikke: onboarding (SelectField x3, PremiumCTAButton, OnboardingSelectGrid), chat (ChatHeader x2), reisen/avslutning (ChoiceCard x1), admin (tools x1). Alle er legitime JS-hover i form-komponenter og dropdowns — ikke glass-kort. prefers-reduced-motion allerede global i styles/globals.css (2 blokker ved linje 924 og 1275, dekker *, *::before, *::after). tsc 0, build grønn, git diff --stat tomt (ingen endring).",
     "2.3: Pulje 3 ferdig (reisen, settings, priser, cookies). Alle 13 lokale GlassCard-definisjoner fjernet (mål 0 nådd). reisen (8): gold interactive. priser (6): gold interactive x5 + gold glow (349 kr). cookies (6): interactive (hvitkant). settings (7): outlier — innlogget side, THEME-basert, 6+1 danger. Ny danger-prop på delt GlassCard + --ts-glass-border-danger token i theme.css. settings: beholdt hover:brightness-110 og mb-8 via className, ingen skjemaer/knapper rørt. onMouseEnter 0 i alle 4. git diff --stat: 41 ins / 204 del over 6 filer. tsc 0, glasscard-test 14/14, build grønn, verify:lang 0.",
     "2.2: Pulje 2 ferdig (kontakt, hvorfor, om-oss, landing). 4 lokale GlassCard fjernet, byttet til delt default-import. kontakt: interactive (hvitkant), import color+typographyToStyle. hvorfor: gold interactive (4 bruksteder — kjernet: baseline head-20 klippet det 4., funnet via grep <GlassCard og fikset), import color+typographyToStyle. om-oss: interactive (hvitkant), holder spacing (3 padding: lg på intro/betyr/finnes-bokser), import color+spacing+typographyToStyle. landing: steg-kort gold interactive; priskortet (349 kr) gold glow — erstattet style={{}}-override (bg/border/boxShadow) med glow-propen, fjernet style. holder spacing+radius (betalingsinfo-boks). onMouseEnter 0 i alle. glass-kort 8 til 4. git diff --stat: 22 ins / 217 del over 4 filer. Tekstvakt ren. glasscard-test 14/14. tsc 0. build grønn (alle sider renderer). OBS: glow-tokenet --ts-shadow-gold (0 0 20px gull 0.15) er nært, men ikke identisk, med priskortets opprinnelige 0 0 40px 0.15 — god nok for beta, notert som visuell diff å double-checke i 3.2.",
     "2.1: Pulje 1 ferdig (slik-fungerer-det, vilkar, register, blogg). 4 lokale GlassCard fjernet, byttet til delt default-import. gold+interactive på slik-fungerer-det/register/blogg, interactive (hvit) på vilkar. Importer trimmet: vilkar/slik-fungerer-det/blogg holder bare color+typographyToStyle; register holder color+spacing+typographyToStyle+radius (bruker spacing/radius på betaling-boks), dropper bare shadow. onMouseEnter 0 i alle 4. glass-kort 14 til 8. git diff --stat: 13 ins / 202 del. Tekstvakt: ingen match/reise/pris/kr/timer-lørdag-treff. /vilkår gir 301->/vilkar (kanonisk ASCII) -> 200 (1 redirect, ingen løkke; dette er v9s fix, min endring rører ikke routing). /vilkar 200, alle 7 seksjoner intakt, 7 glass-kort renderes. tsc 0, verify:lang 0, build grønn. OBS: transient 500 i dev fra Next.js devtools SegmentViewNode bundler-glitch (kjent dev-bug, sjøl-heler, ikke relatert til byttet).",
@@ -48,5 +48,5 @@
     "All tekstendring — ACT v11",
     "144 spørsmål, DSN, monitor, gjenoppretting — George"
   ],
-  "updatedAt": "2026-08-16T23:36:20+02:00"
+  "updatedAt": "2026-08-16T23:41:00+02:00"
 }

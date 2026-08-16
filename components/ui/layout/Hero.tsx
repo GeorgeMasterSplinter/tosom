@@ -31,38 +31,6 @@ export const Hero: FC<HeroProps> = ({
   title = 'Ro. Trygghet. Mening.',
   subtitle = 'ToSom er for mennesker som vil noe ekte.\nHer møtes to personer i et rolig og trygt rom – uten støy, uten sveiping, uten jag.\nÉn match. Én reise. En mulighet til å bygge noe som faktisk betyr noe.',
 }) => {
-  const keyPoints = [
-    { 
-      title: 'Veiledet profil', 
-      description: 'Forskningbasert og guidet profil som hjelper deg å forstå hvem du er.',
-      icon: (
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-          <path d="M12 12C14.2091 12 16 10.2091 16 8C16 5.79086 14.2091 4 12 4C9.79086 4 8 5.79086 8 8C8 10.2091 9.79086 12 12 12Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M20.5 21C20.5 18.7909 18.7091 17 16.5 17H7.5C5.29086 17 3.5 18.7909 3.5 21" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      ),
-    },
-    { 
-      title: 'Én match i uken', 
-      label: 'Én match. Kvalitet framfor hvantitet.',
-      icon: (
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-          <path d="M12 2L15 8L21 9L16.5 14L18 21L12 17.5L6 21L7.5 14L3 9L9 8L12 2Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      ),
-    },
-    { 
-      title: 'Trygghet og personvern', 
-      label: 'Ingen offentlige profiler. Ingen swipe.',
-      icon: (
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-          <path d="M12 2L18 5V12C18 16.5 14.5 20.5 12 22C9.5 20.5 6 16.5 6 12V5L12 2Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M9 12L11 14L15 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      ),
-    },
-  ];
-
   /* Premium spacing constants — optimalisert for ro, dybde, optisk base og 8px-grid */
   const heroSpacing = {
     paddingTop: 60,
@@ -122,7 +90,7 @@ export const Hero: FC<HeroProps> = ({
       {/* ── Z-1: Bølgeformer (bak glassblokk) ── */}
       <div className="absolute bottom-[-40px] left-0 w-[140%] opacity-[0.05] pointer-events-none z-[1]">
         <svg
-          viewBox="0 0 1800 256"
+          viewBox="0 0 1800 512"
           preserveAspectRatio="none"
           className="w-full h-full"
           fill="none"
@@ -143,7 +111,7 @@ export const Hero: FC<HeroProps> = ({
         style={{ maxWidth: '1980px' }}
       >
         <svg
-          viewBox="0 0 1980 256"
+          viewBox="0 0 1980 512"
           preserveAspectRatio="none"
           className="w-full h-full"
           fill="none"
@@ -180,7 +148,7 @@ export const Hero: FC<HeroProps> = ({
           >
             {/* H1 — premium, roleg — white/92, balansert leading, ekstra tyngde */}
             <h1
-              className="text-6xl md:text-[100px] font-extrabold tracking-[-0.04em] mb-[48px] animate-riseIn"
+              className="text-5xl sm:text-6xl md:text-[100px] font-extrabold tracking-[-0.04em] mb-[48px] animate-riseIn"
               style={{
                 color: 'rgba(255,255,255,0.92)',
                 letterSpacing: '-0.04em',
@@ -193,7 +161,7 @@ export const Hero: FC<HeroProps> = ({
 
             {/* Undertekst — white/90 — økt kontrast og luft */}
             <p
-              className="text-xl md:text-3xl mb-0 animate-fadeUp delay-[120ms]"
+              className="text-lg sm:text-xl md:text-3xl mb-0 animate-fadeUp delay-[120ms]"
               style={{
                 color: 'rgba(255,255,255,0.88)',
                 lineHeight: '1.7',
@@ -210,44 +178,6 @@ export const Hero: FC<HeroProps> = ({
         </div>
       </div>
 
-      {/* ── Mobiloptimalisering < 640px ── */}
-      <style>{`
-        @media (max-width: 640px) {
-          .hero-wave-primary {
-            width: 180% !important;
-            opacity: 0.035 !important;
-          }
-          .hero-wave-secondary {
-            width: 200% !important;
-            opacity: 0.02 !important;
-          }
-          .hero-waves-container {
-            max-width: 1200px !important;
-          }
-          .hero-spotlight {
-            width: 810px !important;
-            height: 540px !important;
-          }
-          .hero-blue-glow {
-            width: 748px !important;
-            height: 564px !important;
-          }
-          .hero-gold-glow {
-            width: 480px !important;
-            height: 384px !important;
-          }
-          .hero-glass-blur {
-            backdrop-filter: blur(9px) !important;
-            -webkit-backdrop-filter: blur(9px) !important;
-          }
-          .hero-title {
-            font-size: 48px !important;
-          }
-          .hero-subtitle {
-            font-size: 19px !important;
-          }
-        }
-      `}</style>
      </ToSomSection>
   );
 };

@@ -119,7 +119,7 @@ const sections = [
   {
     icon: <IconCopyright />,
     title: 'Angrerett',
-    content: 'Norsk lov gir 14 dagers angrerett på digitale tjenester. Reisen starter lørdag morgen, når koblingen er gjort. Melder du meg ut før lørdag, refunderer vi hele beløpet uten spørsmål. Etter at reisen har startet, er tjenesten levert, og angreretten bortfaller.',
+    content: 'Norsk lov gir 14 dagers angrerett på digitale tjenester. Reisen starter lørdag morgen, når koblingen er gjort. Melder du deg ut før lørdag, refunderer vi hele beløpet uten spørsmål. Etter at reisen har startet, er tjenesten levert, og angreretten bortfaller.',
   },
   {
     icon: <IconCopyright />,

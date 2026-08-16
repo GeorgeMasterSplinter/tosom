@@ -62,7 +62,7 @@ const steps = [
   {
     icon: <IconWellbeing />,
     title: 'Velvære først',
-    content: 'Vi senker tempoet, ikke hvaliteten. Trygghet og emosjonell komfort kommer før alt annet.',
+    content: 'Vi senker tempoet, ikke kvaliteten. Trygghet og emosjonell komfort kommer før alt annet.',
   },
   {
     icon: <IconPrivacy />,
@@ -195,7 +195,7 @@ export default function LandingPage() {
                 color: color.text.secondary,
               }}
             >
-              ToSom er bygget for hvalitet, ikke hvantitet. Her er hvordan det fungerer.
+              ToSom er bygget for kvalitet, ikke kvantitet. Her er hvordan det fungerer.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

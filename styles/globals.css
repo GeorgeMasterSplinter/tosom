@@ -1,6 +1,14 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
 
+/* Tailwind 4 leser ikke `content:` fra tailwind.config.js — kildene må
+   oppgis her, ellers genereres ingen utility-klasser i det hele tatt. */
+@source "../app";
+@source "../components";
+@source "../hooks";
+@source "../lib";
+
+
 /* ═══════════════════════════════════════════
    Tailwind @layer utilities — ToSom tokens
    ═══════════════════════════════════════════ */

@@ -69,16 +69,20 @@ module.exports = {
         'ts-info': 'var(--ts-info)',
       },
 
-      /* ── Spacing ── */
+      /* ── Spacing ──
+         MERK: nøklene er prefikset med `ts-` med hensikt.
+         Uten prefiks overstyrer de Tailwinds egen sm/md/lg/xl-skala,
+         og da blir `max-w-3xl` = 64px i stedet for 48rem. Bruk
+         `p-ts-lg`, `gap-ts-xl` osv. for ToSom-avstander. */
       spacing: {
-        'xs': 'var(--ts-spacing-xs)',
-        'sm': 'var(--ts-spacing-sm)',
-        'md': 'var(--ts-spacing-md)',
-        'lg': 'var(--ts-spacing-lg)',
-        'xl': 'var(--ts-spacing-xl)',
-        '2xl': 'var(--ts-spacing-2xl)',
-        '3xl': 'var(--ts-spacing-3xl)',
-        '4xl': 'var(--ts-spacing-4xl)',
+        'ts-xs': 'var(--ts-spacing-xs)',
+        'ts-sm': 'var(--ts-spacing-sm)',
+        'ts-md': 'var(--ts-spacing-md)',
+        'ts-lg': 'var(--ts-spacing-lg)',
+        'ts-xl': 'var(--ts-spacing-xl)',
+        'ts-2xl': 'var(--ts-spacing-2xl)',
+        'ts-3xl': 'var(--ts-spacing-3xl)',
+        'ts-4xl': 'var(--ts-spacing-4xl)',
 
         /* UI 6.0 — Extended spacing */
         '72': 'var(--ts-spacing-72)',
@@ -355,17 +359,12 @@ module.exports = {
         'ts-notification': '1700',
       },
 
-      /* ── Max Width ── */
-      maxWidth: {
-        'xs': '20rem',
-        'sm': '28rem',
-        'md': '36rem',
-        'lg': '48rem',
-        'xl': '64rem',
-        '2xl': '80rem',
-        '3xl': '96rem',
-        'full': '100%',
-      },
+      /* ── Max Width ──
+         MERK: ingen egendefinert maxWidth-skala her.
+         I Tailwind 4 slår `max-w-*` opp i spacing-skalaen når nøklene
+         kolliderer, slik at `max-w-3xl` ble 64px i stedet for 48rem.
+         Vi bruker Tailwinds innebygde container-skala i stedet. */
+
     },
   },
   plugins: [],

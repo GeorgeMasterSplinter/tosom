@@ -36,6 +36,7 @@
   --ts-glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.20);
   --ts-glass-shadow-hover: 0 12px 40px rgba(212, 175, 55, 0.10);
   --ts-glass-lift: -4px;
+  --ts-glass-border-danger: rgba(255, 77, 77, 0.2);
 
   /* Border */
   --ts-border: rgba(255, 255, 255, 0.08);

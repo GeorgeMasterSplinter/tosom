@@ -4,7 +4,8 @@ import Link from 'next/link';
 import { Footer } from '@/components/ui/layout/Footer';
 import { ToSomSection, ToSomButton } from '@/components/ui/system';
 import { AgeBadge } from '@/components/ui/age-badge/AgeBadge';
-import { color, spacing, typographyToStyle, radius, shadow } from '@/config/design-tokens';
+import { color, typographyToStyle } from '@/config/design-tokens';
+import GlassCard from '@/components/ui/cards/GlassCard';
 
 /* ========================
    INLINE SVG-ikoner
@@ -102,55 +103,6 @@ function IconNew() {
       <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 0 0 4.582 9m0 0H9" />
       <path d="M20 20v-5h-.581m-15.356-2a8.001 8.001 0 0 0 15.356-2m0 0h-5.5" />
     </svg>
-  );
-}
-
-/* ========================
-   HELPER — Ultra-Premium GlassCard
-   ======================== */
-
-function GlassCard({
-  children,
-  padding = 'lg',
-  className = '',
-  style,
-}: {
-  children: React.ReactNode;
-  padding?: 'sm' | 'md' | 'lg' | 'xl';
-  className?: string;
-  style?: React.CSSProperties;
-}) {
-  const paddingMap = { sm: spacing.sm, md: spacing.md, lg: spacing.lg, xl: spacing.xl };
-
-  return (
-    <div
-      className={className}
-      style={{
-        background: 'rgba(255,255,255,0.06)',
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
-        border: '1px solid rgba(212,175,55,0.15)',
-        borderRadius: `${radius.xl}px`,
-        boxShadow: '0 8px 32px rgba(0,0,0,0.20)',
-        padding: `${paddingMap[padding]}px`,
-        transition: 'all 300ms ease-out',
-        ...style,
-      }}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.08)';
-        (e.currentTarget as HTMLElement).style.border = '1px solid rgba(212,175,55,0.25)';
-        (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 40px rgba(212,175,55,0.10)';
-        (e.currentTarget as HTMLElement).style.transform = 'translateY(-4px)';
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.06)';
-        (e.currentTarget as HTMLElement).style.border = '1px solid rgba(212,175,55,0.15)';
-        (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 32px rgba(0,0,0,0.20)';
-        (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
-      }}
-    >
-      {children}
-    </div>
   );
 }
 
@@ -280,7 +232,7 @@ export default function ReisenPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Fase 1 */}
-              <GlassCard padding="xl" className="space-y-4">
+              <GlassCard padding="xl" gold interactive className="space-y-4">
                 <div className="flex justify-center">
                   <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
                     <IconNoImage />
@@ -325,7 +277,7 @@ export default function ReisenPage() {
               </GlassCard>
 
               {/* Fase 2 */}
-              <GlassCard padding="xl" className="space-y-4">
+              <GlassCard padding="xl" gold interactive className="space-y-4">
                 <div className="flex justify-center">
                   <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
                     <IconImage />
@@ -372,7 +324,7 @@ export default function ReisenPage() {
               </GlassCard>
 
               {/* Fase 3 */}
-              <GlassCard padding="xl" className="space-y-4">
+              <GlassCard padding="xl" gold interactive className="space-y-4">
                 <div className="flex justify-center">
                   <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
                     <IconFuture />
@@ -437,7 +389,7 @@ export default function ReisenPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Guidede samtaler */}
-              <GlassCard padding="xl" className="space-y-4">
+              <GlassCard padding="xl" gold interactive className="space-y-4">
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
                     <IconQuestion />
@@ -465,7 +417,7 @@ export default function ReisenPage() {
               </GlassCard>
 
               {/* Små oppgaver sammen */}
-              <GlassCard padding="xl" className="space-y-4">
+              <GlassCard padding="xl" gold interactive className="space-y-4">
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
                     <IconTask />
@@ -512,7 +464,7 @@ export default function ReisenPage() {
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <GlassCard padding="xl" className="space-y-4 text-center">
+              <GlassCard padding="xl" gold interactive className="space-y-4 text-center">
                 <div className="flex justify-center">
                   <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
                     <IconContinue />
@@ -537,7 +489,7 @@ export default function ReisenPage() {
                 </p>
               </GlassCard>
 
-              <GlassCard padding="xl" className="space-y-4 text-center">
+              <GlassCard padding="xl" gold interactive className="space-y-4 text-center">
                 <div className="flex justify-center">
                   <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
                     <IconEnd />
@@ -562,7 +514,7 @@ export default function ReisenPage() {
                 </p>
               </GlassCard>
 
-              <GlassCard padding="xl" className="space-y-4 text-center">
+              <GlassCard padding="xl" gold interactive className="space-y-4 text-center">
                 <div className="flex justify-center">
                   <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
                     <IconNew />

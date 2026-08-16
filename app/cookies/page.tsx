@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { Footer } from '@/components/ui/layout/Footer';
 import { ToSomSection, ToSomButton } from '@/components/ui/system';
-import { color, spacing, typographyToStyle, radius, shadow } from '@/config/design-tokens';
+import { color, typographyToStyle } from '@/config/design-tokens';
+import GlassCard from '@/components/ui/cards/GlassCard';
 
 /* ========================
    INLINE SVG-ikoner
@@ -63,55 +64,6 @@ function IconSettings() {
       <circle cx="12" cy="12" r="3" />
       <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
     </svg>
-  );
-}
-
-/* ========================
-   HELPER — Ultra-Premium GlassCard
-   ======================== */
-
-function GlassCard({
-  children,
-  padding = 'lg',
-  className = '',
-  style,
-}: {
-  children: React.ReactNode;
-  padding?: 'sm' | 'md' | 'lg' | 'xl';
-  className?: string;
-  style?: React.CSSProperties;
-}) {
-  const paddingMap = { sm: spacing.sm, md: spacing.md, lg: spacing.lg, xl: spacing.xl };
-
-  return (
-    <div
-      className={className}
-      style={{
-        background: 'rgba(255,255,255,0.06)',
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
-        border: '1px solid rgba(255,255,255,0.08)',
-        borderRadius: `${radius.xl}px`,
-        boxShadow: '0 8px 32px rgba(0,0,0,0.20)',
-        padding: `${paddingMap[padding]}px`,
-        transition: 'all 300ms ease-out',
-        ...style,
-      }}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.08)';
-        (e.currentTarget as HTMLElement).style.border = '1px solid rgba(212,175,55,0.20)';
-        (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 40px rgba(212,175,55,0.08)';
-        (e.currentTarget as HTMLElement).style.transform = 'translateY(-4px)';
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.06)';
-        (e.currentTarget as HTMLElement).style.border = '1px solid rgba(255,255,255,0.08)';
-        (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 32px rgba(0,0,0,0.20)';
-        (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
-      }}
-    >
-      {children}
-    </div>
   );
 }
 
@@ -221,7 +173,7 @@ export default function CookiesPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Teknisk nødvendige cookies */}
-              <GlassCard padding="xl" className="space-y-4">
+              <GlassCard padding="xl" interactive className="space-y-4">
                 <div className="flex items-center gap-4">
                   <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
                     <IconShield />
@@ -247,7 +199,7 @@ export default function CookiesPage() {
               </GlassCard>
 
               {/* Analytics-cookies */}
-              <GlassCard padding="xl" className="space-y-4">
+              <GlassCard padding="xl" interactive className="space-y-4">
                 <div className="flex items-center gap-4">
                   <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
                     <IconAnalytics />
@@ -273,7 +225,7 @@ export default function CookiesPage() {
               </GlassCard>
 
               {/* Hva er en cookie? */}
-              <GlassCard padding="xl" className="space-y-4">
+              <GlassCard padding="xl" interactive className="space-y-4">
                 <div className="flex items-center gap-4">
                   <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
                     <IconCookie />
@@ -299,7 +251,7 @@ export default function CookiesPage() {
               </GlassCard>
 
               {/* Hvor lenge lagres cookies? */}
-              <GlassCard padding="xl" className="space-y-4">
+              <GlassCard padding="xl" interactive className="space-y-4">
                 <div className="flex items-center gap-4">
                   <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
                     <IconClock />
@@ -353,7 +305,7 @@ export default function CookiesPage() {
               Du kan kontrollere cookies gjennom innstillingene i nettleseren din. Merk at hvis du blokkerer alle cookies, vil plattformen ikke fungere som den skal.
             </p>
 
-            <GlassCard padding="xl" className="space-y-4">
+            <GlassCard padding="xl" interactive className="space-y-4">
               <div className="flex items-center gap-4">
                 <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
                   <IconSettings />
@@ -387,7 +339,7 @@ export default function CookiesPage() {
               Spørsmål om cookies?
             </h2>
 
-            <GlassCard padding="xl" className="space-y-4">
+            <GlassCard padding="xl" interactive className="space-y-4">
               <div className="flex justify-center mb-4">
                 <div className="w-16 h-16 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
                   <IconMail />

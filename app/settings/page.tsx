@@ -7,6 +7,7 @@
 
 import { useState } from "react";
 import { signOut } from "next-auth/react";
+import GlassCard from "@/components/ui/cards/GlassCard";
 
 /* ═══════════════════════════════════════
    DESIGN SYSTEM (kodeklar blueprint)
@@ -46,28 +47,6 @@ const THEME = {
   spaceMd: "24px",
   spaceSm: "16px",
 };
-
-/* ═══════════════════════════════════════
-   GLASS CARD-komponent (signature)
-   ═══════════════════════════════════════ */
-
-function GlassCard({ children, danger }: { children: React.ReactNode; danger?: boolean }) {
-  return (
-    <div
-      className="transition-all duration-300 hover:brightness-110"
-      style={{
-        background: THEME.glassBg,
-        border: `1px solid ${danger ? "rgba(255,77,77,0.2)" : THEME.glassBorder}`,
-        borderRadius: THEME.cardRadius,
-        padding: THEME.spaceLg,
-        marginBottom: THEME.spaceLg,
-        boxShadow: "0 8px 32px rgba(0,0,0,0.25)",
-      }}
-    >
-      {children}
-    </div>
-  );
-}
 
 /* ═══════════════════════════════════════
    SECTION TITTEL (Nordic Gold)
@@ -380,7 +359,7 @@ function ActiveBadge() {
 
 function KontoSection() {
   return (
-    <GlassCard>
+    <GlassCard className="transition-all duration-300 hover:brightness-110 mb-8">
       <SectionTitle>KONTO</SectionTitle>
 
 
@@ -408,7 +387,7 @@ function VarslerSection() {
   const [push, setPush] = useState(true);
   const [email, setEmail] = useState(true);
   return (
-    <GlassCard>
+    <GlassCard className="transition-all duration-300 hover:brightness-110 mb-8">
       <SectionTitle>VARSLER</SectionTitle>
 
       <div className="flex items-center justify-between">
@@ -470,7 +449,7 @@ function VarslerSection() {
 
 function PersonvernSection() {
   return (
-    <GlassCard>
+    <GlassCard className="transition-all duration-300 hover:brightness-110 mb-8">
       <SectionTitle>PERSONVERN</SectionTitle>
 
       <p style={{ color: THEME.whitePrimary, fontSize: "16px", lineHeight: "1.7", marginBottom: "24px" }}>
@@ -496,7 +475,7 @@ function PersonvernSection() {
 function SprakSection() {
   const [lang, setLang] = useState("bokmal");
   return (
-    <GlassCard>
+    <GlassCard className="transition-all duration-300 hover:brightness-110 mb-8">
       <SectionTitle>SPRÅK</SectionTitle>
 
       <div className="space-y-3">
@@ -515,7 +494,7 @@ function SprakSection() {
 function TemaSection() {
   const [theme, setTheme] = useState("mork");
   return (
-    <GlassCard>
+    <GlassCard className="transition-all duration-300 hover:brightness-110 mb-8">
       <SectionTitle>TEMA</SectionTitle>
 
       <div className="space-y-3">
@@ -534,7 +513,7 @@ function TemaSection() {
 
 function MatchSection() {
   return (
-    <GlassCard>
+    <GlassCard className="transition-all duration-300 hover:brightness-110 mb-8">
       <SectionTitle>MATCH</SectionTitle>
 
       <div className="flex gap-3 flex-wrap">
@@ -552,7 +531,7 @@ function MatchSection() {
 function SlettKontoSection() {
   const [showConfirm, setShowConfirm] = useState(false);
   return (
-    <GlassCard danger>
+    <GlassCard danger className="transition-all duration-300 hover:brightness-110 mb-8">
       <SectionTitle>SLETT KONTO</SectionTitle>
 
       <p style={{ color: THEME.deepGrey, fontSize: "16px", lineHeight: "1.7", marginBottom: "24px" }}>

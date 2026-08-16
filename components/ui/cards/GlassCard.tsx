@@ -23,6 +23,8 @@ export interface GlassCardProps {
   padding?: 'sm' | 'md' | 'lg' | 'xl';
   /** Gullkant (møte-gull) i stedet for standard hvitkant. */
   gold?: boolean;
+  /** Rød kant for destruktive handlinger (f.eks. slette konto). */
+  danger?: boolean;
   /**
    * Interaktivt kort: hover-løft (translateY) med gullskygge, lysere
    * bakgrunn og lysere kant. Svarer til det lokale kortenes onMouseEnter.
@@ -46,6 +48,7 @@ const BASE = 'rounded-[var(--ts-radius-xl)] bg-[var(--ts-glass-bg)] backdrop-blu
 
 const BORDER_GOLD = 'border border-[var(--ts-glass-border-gold)]';
 const BORDER_WHITE = 'border border-[var(--ts-glass-border)]';
+const BORDER_DANGER = 'border border-[var(--ts-glass-border-danger)]';
 
 const SHADOW_GLOW = 'shadow-[var(--ts-shadow-gold)]';
 const SHADOW_REST = 'shadow-[var(--ts-glass-shadow)]';
@@ -59,11 +62,12 @@ const GlassCard: React.FC<GlassCardProps> = ({
   children,
   padding = 'lg',
   gold = false,
+  danger = false,
   interactive = false,
   glow = false,
   className = '',
 }) => {
-  const border = gold ? BORDER_GOLD : BORDER_WHITE;
+  const border = danger ? BORDER_DANGER : gold ? BORDER_GOLD : BORDER_WHITE;
   const shadow = glow ? SHADOW_GLOW : SHADOW_REST;
   const hover = interactive ? (gold ? HOVER_GOLD : HOVER_WHITE) : '';
 

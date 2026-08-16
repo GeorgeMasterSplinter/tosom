@@ -1,0 +1,36 @@
+{
+  "version": "10.0",
+  "baseCommit": "resultatet av ACT v9",
+  "instruks": "docs/TOSOM-ACT-INSTRUKS-v10.0.md",
+  "grunnlag": "docs/TOSOM-MASTERPLAN-v8.0.md",
+  "currentStep": "0.1",
+  "completedSteps": [],
+  "lockedSteps": [],
+  "pendingSteps": [
+    "0.1",
+    "1.1",
+    "1.2",
+    "2.1",
+    "2.2",
+    "2.3",
+    "3.1",
+    "3.2",
+    "3.3",
+    "3.4"
+  ],
+  "errors": [],
+  "observations": [],
+  "baseline": {},
+  "maltilstand": {
+    "lokaleGlassCard": 0,
+    "glassKomponenter": 1,
+    "inlineStilerPerSide": "under 20",
+    "onMouseEnter": 0,
+    "animasjonerIBruk": "minst 2"
+  },
+  "deferred": [
+    "All tekstendring — ACT v11",
+    "144 spørsmål, DSN, monitor, gjenoppretting — George"
+  ],
+  "updatedAt": "2026-08-16T19:34:00+02:00"
+}

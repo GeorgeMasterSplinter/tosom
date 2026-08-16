@@ -30,6 +30,12 @@
   --ts-glass-border: rgba(255, 255, 255, 0.08);
   --ts-glass-border-hover: rgba(255, 255, 255, 0.14);
   --ts-glass-blur: 12px;
+  /* Gold-accent glass (brukeres kort med gullkant) */
+  --ts-glass-border-gold: rgba(212, 175, 55, 0.15);
+  --ts-glass-border-gold-hover: rgba(212, 175, 55, 0.25);
+  --ts-glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.20);
+  --ts-glass-shadow-hover: 0 12px 40px rgba(212, 175, 55, 0.10);
+  --ts-glass-lift: -4px;
 
   /* Border */
   --ts-border: rgba(255, 255, 255, 0.08);

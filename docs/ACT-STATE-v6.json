@@ -3,7 +3,7 @@
   "baseCommit": "2784ae2",
   "instruks": "docs/TOSOM-ACT-INSTRUKS-v6.0.md",
   "grunnlag": "docs/TOSOM-MASTERPLAN-v5.0.md",
-  "currentStep": "5.2",
+  "currentStep": null,
   "completedSteps": [
     "0.1",
     "0.2",
@@ -15,7 +15,8 @@
     "2.3",
     "3.1",
     "4.1",
-    "5.1"
+    "5.1",
+    "5.2"
   ],
   "lockedSteps": [
     "0.1",
@@ -28,11 +29,10 @@
     "2.3",
     "3.1",
     "4.1",
-    "5.1"
-  ],
-  "pendingSteps": [
+    "5.1",
     "5.2"
   ],
+  "pendingSteps": [],
   "errors": [],
   "observations": [
     "1.1: Del A avgjort mot installert kode (10.70.0): begge filer støttes, sentry.client.config.ts gir deprecation. Flyttet til instrumentation-client.ts (git rename).",
@@ -44,7 +44,8 @@
     "2.3: Vakten fant 5. brudd (/api/payment/create-checkout-session) ikke i baseline. George valgte å fjerne kallet; handlePayment → no-op redirect til /onboarding.",
     "3.1: ChatHeader linje 160 har journeyDay <= 10 som CSS-avstand (ikke fasedefinisjon). phaseLabel rettet til getPhaseForDay(journeyDay).description.",
     "4.1: verify:lang fant 4 ekstra treff utover baseline (register/vipps, TodayCard, NotFound, ChatPageClient). Alle rettet. deploy/backup.md lates sta (v7 per instruks).",
-    "5.1: jest 116/116 (0.428s), migrate 14/14 applied, test-DB port 5433"
+    "5.1: jest 116/116 (0.428s), migrate 14/14 applied, test-DB port 5433",
+    "5.2: Matcherunde observert i drift (Sjekk 8): 1) 19 par opprettet (krav >=15) 2) 0 brukere i to matcher (krav 0 rader) 3) Score MIN=82 MAX=95 AVG=94.3 (krav MIN>=40 MAX<=100) 4) Resonansnivå: DEEP=19 (alle par scoret 82-95; kun ett nivå representert — ikke stop-regel, den gjelder kun 'alle GENTLE') 5) Avvisningslogg: pairsEvaluated skrevet i metadata, rejectReasons={radius:0,grenser:0,livsrytme:0,preferanser:0,sperreliste:0,modenhetsgap:0,mangler_profil:0,sikkerhetsniva:0,score_under_termin:0} 6) Radius: 19/19 par OK, 0 BRUDD (alle dist_km vel under begge grensene) Kill switch: MATCHING_ENABLED=false → HTTP 200 skipped=true, ingen nye matcher, QUEUED intakt. Total 173ms, 40 seedet, 19 koblet, 2 igjen i kø."
   ],
   "baseline": {
     "tscErrors": 0,
@@ -75,5 +76,5 @@
     },
     "nynorskHits": 4
   },
-  "updatedAt": "2026-08-15T23:51:00+02:00"
+  "updatedAt": "2026-08-16T02:30:00+02:00"
 }

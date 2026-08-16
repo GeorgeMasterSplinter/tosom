@@ -89,6 +89,30 @@ export async function GET(req: NextRequest) {
   let lockAcquired = false;
   let deferred = false;
   let paired = 0;
+  let pairsEvaluated = 0;
+  const rejectReasons: Record<string, number> = {
+    mangler_profil: 0,
+    sperreliste: 0,
+    modenhetsgap: 0,
+    livsrytme: 0,
+    preferanser: 0,
+    grenser: 0,
+    radius: 0,
+    sikkerhetsniva: 0,
+    score_under_termin: 0,
+  };
+  // ST5.2: Etiketter per avvisningsårsak (tiltak T2) — for lesbart logg-output
+  const REJECT_LABELS: Record<string, string> = {
+    mangler_profil: 'avvist: mangler profil',
+    sperreliste: 'avvist: sperreliste',
+    modenhetsgap: 'avvist: modenhetsgap',
+    livsrytme: 'avvist: livsrytme',
+    preferanser: 'avvist: eksplisitte preferanser',
+    grenser: 'avvist: grenser',
+    radius: 'avvist: radius',
+    sikkerhetsniva: 'avvist: sikkerhetsnivå',
+    score_under_termin: 'avvist: score under MIN_SCORE',
+  };
   const errors: string[] = [];
 
   try {
@@ -305,12 +329,14 @@ export async function GET(req: NextRequest) {
       const durationMs = Date.now() - startedAt;
 
       // Heartbeat
+      // ST5.2: Avvisningslogg per årsak (tiltak T2)
+      const rejectSummary = Object.entries(rejectReasons).filter(([, v]) => v > 0);
       await prisma.systemLog.create({
         data: {
           level: 'INFO',
-          message: `Matching-runde: ${paired} par koblet, ${remaining} igjen i kø`,
+          message: `Matching-runde: ${paired} par koblet, ${remaining} igjen i kø | Avvisninger: ${rejectSummary.map(([k, v]) => `${k}=${v}`).join(', ') || 'ingen'}`,
           module: 'cron:matching',
-          metadata: { paired, remaining, durationMs, deferred, queueSize: cohortSize },
+          metadata: { paired, remaining, durationMs, deferred, queueSize: cohortSize, pairsEvaluated, rejectReasons },
         },
       });
 

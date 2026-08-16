@@ -304,6 +304,10 @@ export default function LandingPage() {
               Betal med Vipps — 349 kr
             </ToSomButton>
 
+            <p style={{ ...typographyToStyle('body-sm'), color: color.text.muted }}>
+              De første 10 000 får reisen gratis.
+            </p>
+
             {/* Informasjon om betaling */}
             <div
               className="space-y-3 pt-2"

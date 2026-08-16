@@ -316,6 +316,15 @@ export default function PriserPage() {
 
               <p
                 style={{
+                  ...typographyToStyle('body-sm'),
+                  color: color.text.muted,
+                }}
+              >
+                De første 10 000 får reisen gratis.
+              </p>
+
+              <p
+                style={{
                   ...typographyToStyle('body-lg'),
                   color: color.text.secondary,
                   lineHeight: '1.8',

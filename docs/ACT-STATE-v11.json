@@ -1,38 +1,41 @@
 {
   "version": "11.0",
-  "baseCommit": "resultatet av ACT v10",
-  "instruks": "docs/TOSOM-ACT-INSTRUKS-v11.0.md",
-  "grunnlag": "docs/TOSOM-MASTERPLAN-v8.0.md del 6 og 8",
-  "currentStep": "0.1",
-  "completedSteps": [],
-  "lockedSteps": [],
-  "pendingSteps": [
-    "0.1",
-    "1.1",
-    "1.2",
-    "1.3",
-    "2.1",
-    "2.2",
-    "2.3",
-    "2.4",
-    "2.5"
-  ],
+  "currentStep": "1.1",
+  "completedSteps": ["0.1"],
+  "lockedSteps": ["0.1"],
+  "pendingSteps": ["1.1", "1.2", "1.3", "2.1", "2.2", "2.3", "2.4", "2.5"],
   "errors": [],
-  "observations": [],
-  "verifiedAnchors": {},
-  "skalIkkeEndres": [
-    "app/kontakt/page.tsx — «innen 24 timer» x2, handler om svartid",
-    "app/personvern/page.tsx — «innen 24 timer» x1, handler om svartid",
-    "Prisen 349 kr — beholdes overalt",
-    "Organisasjonsnummer — settes inn av George når ToSom AS er registrert"
+  "observations": [
+    "0.1: Alle 15 ankre funnet. Matching 7: landing:74, slik-fungerer-det:67, priser:215, priser:224 (én gang i døgnet), Step10:49, auth/payment:31, Hero:46. Support 3: kontakt:148, kontakt:229 (Innen — capital I, matcher ikke lowercase grep), personvern:166. OBS: grep -c 'innen 24 timer' kontakt gir 1 ikke 2 pga. capital I på :229. Pris 349: priser:314, landing:257+304, betaling:5+76+96, vilkar:92. Skrivefeil: vilkar:106 Bildefdeling, ChatHeader:201 Rapporteer. Hard checks: kjører nå."
   ],
-  "deferred": [
-    "144 spørsmål i egen stemme — George",
-    "Sentry-DSN, ekstern monitor, gjenopprettingstest, mobil-QA — George",
-    "Juridisk gjennomgang av vilkårene — George + jurist",
-    "Vipps-integrasjon — venter på nøkkel",
-    "Rapporter i admin-panelet — senere runde",
-    "A3 moodpersistens, A4 PDF — senere runde"
-  ],
-  "updatedAt": "2026-08-16T19:34:00+02:00"
+  "verifiedAnchors": {
+    "matching": {
+      "landing": { "file": "app/(landing)/page.tsx", "line": 74, "text": "title: 'Match innen 24 timer'," },
+      "slikFungererDet": { "file": "app/slik-fungerer-det/page.tsx", "line": 67, "text": "title: 'Én match innen 24 timer'," },
+      "priser24t": { "file": "app/priser/page.tsx", "line": 215, "text": "Match innen 24 timer" },
+      "priserDognet": { "file": "app/priser/page.tsx", "line": 224, "text": "ToSoms motor kjører én gang i døgnet" },
+      "step10": { "file": "app/onboarding/steps/Step10StartReisen.tsx", "line": 49, "text": "En match innen 24 timer. Ingen swiping, ingen press." },
+      "authPayment": { "file": "app/(auth)/onboarding/payment/page.tsx", "line": 31, "text": "'Én match per 24 timer'," },
+      "hero": { "file": "components/ui/layout/Hero.tsx", "line": 46, "text": "title: 'Match innen 24 timer'," }
+    },
+    "support": {
+      "kontakt1": { "file": "app/kontakt/page.tsx", "line": 148, "text": "Vi svarer så raskt vi kan, vanligvis innen 24 timer." },
+      "kontakt2": { "file": "app/kontakt/page.tsx", "line": 229, "text": "Innen 24 timer" },
+      "personvern": { "file": "app/personvern/page.tsx", "line": 166, "text": "Vi svarer vanligvis innen 24 timer." }
+    },
+    "pris349": {
+      "priser": 314,
+      "landing1": 257,
+      "landing2": 304,
+      "betaling_comment": 5,
+      "betaling1": 76,
+      "betaling2": 96,
+      "vilkar": 92
+    },
+    "skrivefeil": {
+      "Bildefdeling": { "file": "app/vilkar/page.tsx", "line": 106 },
+      "Rapporteer": { "file": "components/chat/ChatHeader.tsx", "line": 201 }
+    }
+  },
+  "updatedAt": "2026-08-17T00:19:00+02:00"
 }

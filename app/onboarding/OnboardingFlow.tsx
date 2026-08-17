@@ -133,8 +133,8 @@ interface ProfileData extends Record<string, unknown> {
 const initialData: ProfileData = {
   identityName: '', age: '', gender: '', seekingGender: '', height: '',
   bodyType: '', lifestyle: '', smoking: '', religion: '', children: '',
-  wantChildren: '', city: '', distancePref: 50, agePrefMin: 23, agePrefMax: 40,
-  firstName: '', seeking: '', maxDistance: 50, minAge: 23, maxAge: 40, location: '',
+  wantChildren: '', city: '', distancePref: 50, agePrefMin: 21, agePrefMax: 40,
+  firstName: '', seeking: '', maxDistance: 50, minAge: 21, maxAge: 40, location: '',
   politicsImportance: 5, religionImportance: 5, dietPreference: '',
   sleepSchedule: '', pets: '', travelFreq: '', alcoholFreq: '',
   ambitionLevel: '', structureSpontaneity: '', introExtrovert: '',

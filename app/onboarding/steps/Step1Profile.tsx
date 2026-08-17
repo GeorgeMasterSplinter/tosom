@@ -40,7 +40,7 @@ const validate = (data: Record<string, unknown>): ValidationError[] => {
   
   const age = parseInt(String(data['age'] ?? ''));
   if (!data['age'] || !String(data['age']).trim()) errors.push({ field: 'age', message: 'Alder er påkrevd.' });
-  else if (isNaN(age) || age < 23) errors.push({ field: 'age', message: 'Du må være minst 23 år.' });
+  else if (isNaN(age) || age < 21) errors.push({ field: 'age', message: 'Du må være minst 21 år.' });
   else if (age > 99) errors.push({ field: 'age', message: 'Justér alderen litt – dette ser ikke helt riktig ut.' });
   
    if (!String(data['gender'] ?? '').trim()) errors.push({ field: 'gender', message: 'Velg ett kjønn.' });
@@ -55,7 +55,7 @@ const validate = (data: Record<string, unknown>): ValidationError[] => {
   if (isNaN(maxDist) || !maxDist) errors.push({ field: 'distancePref', message: 'Velg en avstand.' });
   
   const minAge = parseInt(String(data['minAge'] ?? ''));
-  if (isNaN(minAge) || minAge < 23) errors.push({ field: 'minAge', message: 'Minste alder må være 23.' });
+  if (isNaN(minAge) || minAge < 21) errors.push({ field: 'minAge', message: 'Minste alder må være 21.' });
   
   const maxAgeVal = parseInt(String(data['maxAge'] ?? ''));
   if (isNaN(maxAgeVal) || maxAgeVal < minAge) errors.push({ field: 'maxAge', message: 'Maks alder må være over minste alder.' });
@@ -91,7 +91,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
 
   const safeMinAge = (() => {
     const v = parseInt(String(data['minAge']));
-    return !isNaN(v) && v >= 23 ? v : 23;
+    return !isNaN(v) && v >= 21 ? v : 21;
   })();
 
   const safeMaxAge = (() => {
@@ -169,7 +169,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             value={val('age', '')(data)}
             onChange={(v) => onChange('age', v)}
             placeholder="25"
-             mikroguiding="Skriv alderen din (må være minst 23)"
+              mikroguiding="Skriv alderen din (må være minst 21)"
             maxLength={3}
             minChars={2}
           />

@@ -12,7 +12,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 const CHECKS = [
-  { icon: '🌱', title: 'Du er 23 år eller eldre', desc: 'ToSom er laga for vaksne som meiningsfull kontakt.' },
+  { icon: '🌱', title: 'Du er 21 år eller eldre', desc: 'ToSom er laga for vaksne som meiningsfull kontakt.' },
   { icon: '💛', title: 'Du søker seriøst forhold', desc: 'Plattforma er for dei som vil verkeleg dybde, ikke overfladisk kontakt.' },
   { icon: '🛡️', title: 'Du respektar andrar grenser', desc: 'Grenser og respekt er grunnlaget for ein trygg prosess.' },
 ];

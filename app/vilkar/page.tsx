@@ -78,8 +78,8 @@ function IconCopyright() {
 const sections = [
   {
     icon: <IconAge />,
-    title: 'Aldersgrense — 23 år',
-    content: 'Du må være 23 år for å bruke ToSom. Vi tar alderskravet svært alvorlig for å sikre et trygt miljø for voksne som søker ekte forbindelse. Innlogging via Vipps (BankID) verifiserer alderen din.',
+    title: 'Aldersgrense — 21 år',
+    content: 'Du må være 21 år for å bruke ToSom. Vi tar alderskravet svært alvorlig for å sikre et trygt miljø for voksne som søker ekte forbindelse. Innlogging via Vipps (BankID) verifiserer alderen din.',
   },
   {
     icon: <IconLogin />,

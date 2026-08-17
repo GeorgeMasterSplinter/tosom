@@ -1,7 +1,7 @@
 /**
  * ToSom – Spørsmålmodul (Bli Kjent)
  * 8 kategorier med 15–20 spørsmål per kategori.
- * Spørsmålene er designet for voksne (23+) og støtter en dyp, men rolig utforskning.
+ * Spørsmålene er designet for voksne (21+) og støtter en dyp, men rolig utforskning.
  */
 
 export const questionCategories = {
@@ -222,7 +222,7 @@ export function getCategoriesWithCounts(): Array<{ key: string; label: string; c
     barndom: "Barndom & røtter",
     verdier: "Verdier & livsstil",
     følelser: "Følelser & emosjonell dybde",
-    moden: "Moden nysgjerrighet (23+)",
+    moden: "Moden nysgjerrighet (21+)",
   };
 
   return Object.entries(questionCategories).map(([key, questions]) => ({

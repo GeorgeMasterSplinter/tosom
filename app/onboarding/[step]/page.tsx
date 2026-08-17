@@ -153,15 +153,15 @@ function Step2Grunnprofil({ onNext, onBack, data }: { onNext: () => void; onBack
       <div className="space-y-4">
         <h4 className="text-sm font-medium" style={{ color: 'rgba(212, 175, 55, 0.5)' }}>Identitet</h4>
         <OnboardingInput label="Navn" name="name" value={data.name as string} onChange={() => {}} placeholder="Ditt fulle navn" />
-        <OnboardingSlider label="Din alder" name="age" min={23} max={99} value={data.age as number} onChange={() => {}} unit="" />
+        <OnboardingSlider label="Din alder" name="age" min={21} max={99} value={data.age as number} onChange={() => {}} unit="" />
         <OnboardingSelect label="Kjønn" name="gender" options={genderOptions} value={data.gender as string} onChange={() => {}} placeholder="Velg kjønn" />
       </div>
 
       {/* Grupper: Preferanser */}
       <div className="space-y-4">
         <h4 className="text-sm font-medium" style={{ color: 'rgba(212, 175, 55, 0.5)' }}>Preferanser</h4>
-        <OnboardingSlider label="Minste alder" name="minAge" min={23} max={90} value={data.minAge as number} onChange={() => {}} unit="" />
-        <OnboardingSlider label="Maks alder" name="maxAge" min={24} max={99} value={data.maxAge as number} onChange={() => {}} unit="" />
+        <OnboardingSlider label="Minste alder" name="minAge" min={21} max={90} value={data.minAge as number} onChange={() => {}} unit="" />
+        <OnboardingSlider label="Maks alder" name="maxAge" min={22} max={99} value={data.maxAge as number} onChange={() => {}} unit="" />
         <OnboardingSelect label="Hva søker du?" name="seeking" options={seekingOptions} value={data.seeking as string} onChange={() => {}} placeholder="Velg..." />
       </div>
 

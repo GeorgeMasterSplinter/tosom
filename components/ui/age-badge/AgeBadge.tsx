@@ -1,5 +1,5 @@
 /**
- * ToSom — AgeBadge (23+ premium symbol)
+ * ToSom — AgeBadge (21+ premium symbol)
  * 
  * Minimalistisk, gull, glassmorphism badge som signaliserer modenhet.
  */
@@ -7,7 +7,7 @@
 export function AgeBadge() {
   return (
     <div
-      title="23+ · Kun for voksne"
+      title="21+ · Kun for voksne"
       className="
         inline-flex items-center justify-center
         w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14
@@ -22,7 +22,7 @@ export function AgeBadge() {
         animate-[fadeInScale_0.6s_ease-out_both]
       "
     >
-      23+
+      21+
     </div>
   );
 }

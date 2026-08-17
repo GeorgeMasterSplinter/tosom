@@ -574,7 +574,7 @@ export default function ReisenPage() {
                   color: color.text.muted,
                 }}
               >
-                ToSom er for deg som har fylt 23
+                ToSom er for deg som har fylt 21+
               </span>
             </div>
 

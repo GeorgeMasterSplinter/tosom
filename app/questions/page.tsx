@@ -1,7 +1,7 @@
 /**
  * ToSom – Spørsmålmodul (Bli Kjent)
  * Side med 8 kategorier og tilfeldig spørmsgenerator.
- * Designet for voksne (23+) og støtter en dyp, men rolig utforskning.
+ * Designet for voksne (21+) og støtter en dyp, men rolig utforskning.
  */
 
 'use client';
@@ -44,7 +44,7 @@ export default function QuestionsPage() {
     barndom: "Barndom & røtter",
     verdier: "Verdier & livsstil",
     følelser: "Følelser & emosjonell dybde",
-    moden: "Moden nysgjerrighet (23+)",
+    moden: "Moden nysgjerrighet (21+)",
   };
 
   return (

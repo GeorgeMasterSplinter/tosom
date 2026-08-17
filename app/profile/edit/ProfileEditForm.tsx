@@ -33,8 +33,8 @@ export default function ProfileEditForm({
 
   const validate = (): Record<string, string> => {
     const e: Record<string, string> = {};
-    if (form?.age && (isNaN(Number(form.age)) || Number(form.age) < 23 || Number(form.age) > 99)) {
-      e.age = "Alder må være mellom 23 og 99.";
+    if (form?.age && (isNaN(Number(form.age)) || Number(form.age) < 21 || Number(form.age) > 99)) {
+      e.age = "Alder må være mellom 21 og 99.";
     }
     if (form?.bio && form.bio.length > 500) {
       e.bio = "Bio kan maks være 500 tegn.";

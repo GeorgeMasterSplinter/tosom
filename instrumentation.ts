@@ -4,12 +4,19 @@
 import * as Sentry from "@sentry/nextjs";
 import { validateEnv } from "./config/env";
 
-// Run env validation at startup (before anything else initializes)
+// Run env validation at startup (before anything else initializes).
+//
+// MERK: denne filen lastes i ALLE runtimes, også Edge der middleware kjører.
+// Edge har ingen process.exit — kallet ga «TypeError: process.exit is not a
+// function» og veltet middleware på hver forespørsel (MIDDLEWARE_INVOCATION_FAILED).
+// Vi avslutter derfor kun i Node, og logger tydelig i Edge.
 try {
   validateEnv();
 } catch (err) {
   console.error('[startup] Environment validation failed:', (err as Error).message);
-  process.exit(1);
+  if (process.env.NEXT_RUNTIME === 'nodejs' && typeof process.exit === 'function') {
+    process.exit(1);
+  }
 }
 
 export const onRequestError = Sentry.captureRequestError;

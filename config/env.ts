@@ -65,7 +65,13 @@ export function getEnvStatus(): {
   }
 }
 
-// Run validation on import (only in non-test environments)
+// Run validation on import (only in non-test environments).
+//
+// MERK: denne filen lastes også i Edge runtime via instrumentation.ts.
+// Edge har ingen process.exit — et kall dit ga «TypeError: process.exit is
+// not a function» og veltet middleware på hver eneste forespørsel.
+// Vi logger derfor tydelig og lar prosessen leve; manglende variabler
+// gir en synlig feil der de faktisk brukes, ikke en total nedetid.
 if (process.env.NODE_ENV !== 'test') {
   try {
     validateEnv()
@@ -73,8 +79,8 @@ if (process.env.NODE_ENV !== 'test') {
     if (error instanceof Error && error.message.includes('Missing required')) {
       console.error('[env] Environment validation failed:')
       console.error(error.message)
-      process.exit(1)
+    } else {
+      throw error
     }
-    throw error
   }
 }

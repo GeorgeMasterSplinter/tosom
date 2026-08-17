@@ -29,7 +29,7 @@ import { isMaintenanceMode } from '@/config/features'
 
 // B0.6 — MAINTENANCE_MODE leses via config/features (kill switch).
 // MAINTENANCE_ENABLED beholdes som bakoverkompatibel alias.
-const MAINTENANCE_ENABLED = isMaintenanceMode() || process.env.MAINTENANCE_ENABLED === 'true'
+const MAINTENANCE_ENABLED = isMaintenanceMode()
 const DEV_LOGIN_DISABLED = process.env.DEV_LOGIN_ENABLED !== 'true'
 
 /** Alltid tilgjengelige baner (nivå 0) */

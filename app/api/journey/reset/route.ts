@@ -1,5 +1,5 @@
 /**
- * ToSom — Journey Reset API 🟡⭐
+ * Tosom — Journey Reset API 🟡⭐
  * POST /api/journey/reset
  *
  * Kjøres når brukeren velger "Ja til tosommhet" eller "Start ny reise" på dag 30.
@@ -93,7 +93,7 @@ export async function POST(req: Request) {
       });
     }
 
-    // "complete" — brukeren er ferdig med ToSom
+    // "complete" — brukeren er ferdig med Tosom
     return NextResponse.json({
       success: true,
       redirect: "/dashboard?journey=complete",

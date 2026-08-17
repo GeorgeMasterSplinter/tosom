@@ -1,5 +1,5 @@
 /**
- * ToSom UI 4.0 — Experience Layer & Productization
+ * Tosom UI 4.0 — Experience Layer & Productization
  *
  * Single import for all UI components.
  *

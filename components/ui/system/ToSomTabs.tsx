@@ -1,5 +1,5 @@
 /**
- * ToSom ToSomTabs — System component
+ * Tosom ToSomTabs — System component
  * 
  * Horizontal tabs with gold underline animation.
  */

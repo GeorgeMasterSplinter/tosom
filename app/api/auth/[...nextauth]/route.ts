@@ -1,5 +1,5 @@
 /**
- * ToSom — NextAuth v5 API Route Handler
+ * Tosom — NextAuth v5 API Route Handler
  *
  * Migrert til NextAuth v5 (beta).
  * Bruker handlers fra lib/auth/config.ts.

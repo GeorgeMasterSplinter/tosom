@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom — Weekly Digest API
+   Tosom — Weekly Digest API
    Genererer ukentlig oppsummering av relasjonsfremskritt
    ═══════════════════════════════════════════ */
 

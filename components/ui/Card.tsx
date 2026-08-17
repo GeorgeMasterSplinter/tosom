@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom Premium — Card Component
+   Tosom Premium — Card Component
    Standard · Glass · Elevated
    ═══════════════════════════════════════════ */
 

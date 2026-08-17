@@ -1,5 +1,5 @@
 /**
- * ToSom — OnboardingSlider (Premium Slider)
+ * Tosom — OnboardingSlider (Premium Slider)
  * Rolig slider med gull-track og radius.full.
  * Bruker design-tokens konsekvent.
  */

@@ -1,5 +1,5 @@
 /**
- * ToSom — OnboardingSelectGrid (Premium Selection Grid)
+ * Tosom — OnboardingSelectGrid (Premium Selection Grid)
  * 
  * Val-side med ikon/grid-layout for å velje mellom alternativ.
  * Alle val på éin side, ikke fragmentert.

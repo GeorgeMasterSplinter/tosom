@@ -1,5 +1,5 @@
 /**
- * ToSom 5.0 — Emotional Suggestions
+ * Tosom 5.0 — Emotional Suggestions
  *
  * AI-powered suggestion cards for messages, questions, and reassurances.
  * Uses StaggeredChildren animation + GlowEffect.

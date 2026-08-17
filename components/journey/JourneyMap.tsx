@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom Premium — JourneyMap Component
+   Tosom Premium — JourneyMap Component
    Vertical timeline with nodes (locked/active/done)
    ═══════════════════════════════════════════ */
 

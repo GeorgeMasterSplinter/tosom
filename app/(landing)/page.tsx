@@ -107,15 +107,6 @@ export default function LandingPage() {
       />
 
       <main className="relative z-10">
-        {/* 1.4: Dempet aldersmerke 21+ (Tailwind-klasser, gullaksent) */}
-        <div className="relative z-10 flex flex-col items-center gap-1.5 px-6 pt-8">
-          <span className="inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/25 bg-[#D4AF37]/5 px-4 py-1.5 text-xs font-medium tracking-wide text-[#E8C766]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#D4AF37]" />
-            21+
-          </span>
-          <p className="text-xs text-white/40">ToSom er for deg som har fylt 21+.</p>
-        </div>
-
         {/* Hero */}
         <section className="relative overflow-hidden py-10 ph:py-14 md:py-[60px]">
           <Hero />
@@ -139,7 +130,7 @@ export default function LandingPage() {
                 color: 'rgba(255,255,255,0.92)',
               }}
             >
-              Hvorfor ToSom?
+              Hvorfor Tosom?
             </h2>
 
             <p
@@ -167,7 +158,7 @@ export default function LandingPage() {
                 marginRight: 'auto',
               }}
             >
-              ToSom gir deg ro, tid og én gjennomtenkt match — slik at du faktisk kan bli kjent.
+              Tosom gir deg ro, tid og én gjennomtenkt match — slik at du faktisk kan bli kjent.
             </p>
           </div>
         </section>
@@ -195,7 +186,7 @@ export default function LandingPage() {
                 color: color.text.secondary,
               }}
             >
-              ToSom er bygget for kvalitet, ikke kvantitet. Her er hvordan det fungerer.
+              Tosom er bygget for kvalitet, ikke kvantitet. Her er hvordan det fungerer.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -264,7 +255,7 @@ export default function LandingPage() {
                   lineHeight: '1.8',
                 }}
               >
-                ToSom — full tilgang. Betales én gang og dekker hele reisen.
+                Tosom — full tilgang. Betales én gang og dekker hele reisen.
               </p>
             </GlassCard>
           </div>
@@ -292,7 +283,7 @@ export default function LandingPage() {
                 lineHeight: '1.8',
               }}
             >
-              Betal med Vipps og få tilgang til hele ToSom — inkludert match, guidet reise og privat rom.
+              Betal med Vipps og få tilgang til hele Tosom — inkludert match, guidet reise og privat rom.
             </p>
 
             {/* Hoved-CTA: Betal med Vipps */}
@@ -325,7 +316,7 @@ export default function LandingPage() {
                   lineHeight: '1.7',
                 }}
               >
-                Betalingsløsning er under utvikling. ToSom er i begrenset testfase.
+                Betalingsløsning er under utvikling. Tosom er i begrenset testfase.
               </p>
               <p
                 style={{

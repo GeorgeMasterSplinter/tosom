@@ -1,7 +1,7 @@
 /**
- * ToSom — Global Header Component
+ * Tosom — Global Header Component
  * 
- * Konsistent header med ToSom-logo og "Made in Norway" under.
+ * Konsistent header med Tosom-logo og "Made in Norway" under.
  * Importer fra '@/components/global/GlobalHeader' for bruk i alle layouts.
  */
 

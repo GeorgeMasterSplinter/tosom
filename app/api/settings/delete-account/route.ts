@@ -1,5 +1,5 @@
 /**
- * ToSom — Delete Account (STEG C5)
+ * Tosom — Delete Account (STEG C5)
  *
  * DELETE /api/settings/delete-account
  * GDPR art. 17 (rett til sletting).

@@ -1,5 +1,5 @@
 /**
- * ToSom ToSomSection — System component
+ * Tosom ToSomSection — System component
  * 
  * Foundation section with global vertical rhythm,
  * spotlight layer support, and centered max-width layout.

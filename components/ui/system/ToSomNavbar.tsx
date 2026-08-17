@@ -1,5 +1,5 @@
 /**
- * ToSom ToSomNavbar — System component
+ * Tosom ToSomNavbar — System component
  * 
  * Sticky top navbar with glassmorphism, scroll-aware opacity, mobile menu.
  */
@@ -68,7 +68,7 @@ export const ToSomNavbar: FC<ToSomNavbarProps> = ({ links, cta, logo }) => {
         <div className="flex-shrink-0">
           {logo || (
             <span style={{ color: colors.gold, fontSize: '20px', fontWeight: '600', letterSpacing: '0.05em' }}>
-              ToSom
+              Tosom
             </span>
           )}
         </div>

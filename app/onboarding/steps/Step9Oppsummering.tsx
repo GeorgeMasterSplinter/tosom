@@ -1,5 +1,5 @@
 /**
- * ToSom — Steg 9: Oppsummering (Premium rebuild 2026 — Fase 4)
+ * Tosom — Steg 9: Oppsummering (Premium rebuild 2026 — Fase 4)
  * 
  * Menneskeleselig oppsummering av hele profilen, gruppert i seksjoner med gull-rammer.
  */

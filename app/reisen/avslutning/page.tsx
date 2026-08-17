@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * ToSom — Avslutnings-side (2 valg)
+ * Tosom — Avslutnings-side (2 valg)
  *
  * Vises etter 30-dagers reise. Brukeren får 2 valg:
  * 1. "Vi fant hverandre" — `endJourney('completed')` → takkeside → IDLE
@@ -327,7 +327,7 @@ export default function AvslutningSide() {
           {/* Valg 1: Vi fant hverandre */}
           <ChoiceCard
             title="Vi fant hverandre 💛"
-            description="Dere møtes utenom ToSom. Lykke til! 🤍"
+            description="Dere møtes utenom Tosom. Lykke til! 🤍"
             icon={<IconHeart />}
             gradientFrom="#D4AF37"
             gradientTo="#E8C766"
@@ -363,7 +363,7 @@ export default function AvslutningSide() {
       {selected === 1 && !showPdfOffer && (
         <ConfirmModal
           title="Vi fant hverandre?"
-          message="Dere møtes utenom ToSom. Lykke til!"
+          message="Dere møtes utenom Tosom. Lykke til!"
           warningText="Dette sletter samtalen for dere begge. Det kan ikke angres."
           confirmText={loading ? "Behandler..." : "Ja, det var noe 💛"}
           onCancel={() => setSelected(null)}
@@ -375,7 +375,7 @@ export default function AvslutningSide() {
       {selected === 1 && showPdfOffer && (
         <ConfirmModal
           title="Ta med deg minnet?"
-          message="Du kan laste ned en PDF av samtalen deres før den slettes. ToSom sletter alt — men minnet er ditt."
+          message="Du kan laste ned en PDF av samtalen deres før den slettes. Tosom sletter alt — men minnet er ditt."
           warningText="Etter nedlasting (eller hvis du velger å hoppe over) slettes samtalen og kontoen din permanent."
           confirmText={loading ? "Behandler..." : "Last ned PDF og avslutt 💛"}
           onCancel={() => { setShowPdfOffer(false); setSelected(null); }}

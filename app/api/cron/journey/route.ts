@@ -1,5 +1,5 @@
 /**
- * ToSom — Daily Journey Cron-Job (Fase C3)
+ * Tosom — Daily Journey Cron-Job (Fase C3)
  * 
  * GET /api/cron/journey
  * - Aukar JourneyProgress.day +1 for alle brukere som har passert nextDayAt
@@ -243,7 +243,7 @@ export async function GET(req: NextRequest) {
 
       // B2.5 — STILLHETSDETEKSJON
       // Ingen meldinger i 48 timer og reisen er aktiv → legg ett varmt spørsmål
-      // i samtalen fra ToSom selv. Maks én impuls per 48 timer (sjekkes via
+      // i samtalen fra Tosom selv. Maks én impuls per 48 timer (sjekkes via
       // siste meldingstype = system). Ikke en AI-partner — systemet velger et forhåndsskrevet spørsmål.
       let stillhetsImpulser = 0;
       try {
@@ -299,7 +299,7 @@ export async function GET(req: NextRequest) {
 
             const questionText = question?.content || 'Hvordan har dere det i dag?';
 
-            // Legg inn varm impuls fra ToSom (senderId = første bruker i samtalen, type = system)
+            // Legg inn varm impuls fra Tosom (senderId = første bruker i samtalen, type = system)
             // Bruker convo.userAId som "avsender" siden system ikke er en User
             await prisma.message.create({
               data: {

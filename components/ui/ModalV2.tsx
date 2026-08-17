@@ -1,7 +1,7 @@
 "use client";
 
 /* ═══════════════════════════════════════════
-   ToSom Premium — Modal v2
+   Tosom Premium — Modal v2
    Posisjonar: center | top | bottom-sheet
    closeOnOutsideClick, closeOnEscape
    ═══════════════════════════════════════════ */

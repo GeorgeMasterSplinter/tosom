@@ -1,11 +1,11 @@
 /**
- * ToSom UI 3.0 — Desktop Window Chrome Component
+ * Tosom UI 3.0 — Desktop Window Chrome Component
  *
  * Electron glass title bar with window controls.
  * Provides native-looking window chrome for desktop builds.
  *
  * Usage:
- *   <DesktopChrome title="ToSom" controls={true}>
+ *   <DesktopChrome title="Tosom" controls={true}>
  *     <AppContent />
  *   </DesktopChrome>
  */
@@ -26,7 +26,7 @@ export interface DesktopChromeProps {
 
 const DesktopChrome: React.FC<DesktopChromeProps> = ({
   children,
-  title = 'ToSom',
+  title = 'Tosom',
   controls = true,
   transparent = false,
   onMinimize,

@@ -1,5 +1,5 @@
 /**
- * ToSom — OnboardingFlow (rebuild 2026)
+ * Tosom — OnboardingFlow (rebuild 2026)
  * 13-stegs flyt med nye steg: Livssituasjon, Relasjonsstil, Grenser.
  * Fasе 4: Autosave + fade-transition.
  */

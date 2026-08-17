@@ -1,5 +1,5 @@
 /**
- * ToSom ToSomButton — System component
+ * Tosom ToSomButton — System component
  * 
  * Foundation button matching existing CTA buttons exactly,
  * but fully token-driven.

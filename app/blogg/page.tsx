@@ -72,7 +72,7 @@ const articles = [
     lesetid: '3 min',
     kategori: 'Emosjonell trygghet',
     tittel: 'Hvorfor ro er vår viktigste funksjon',
-    excerpt: 'I en verden der datingapper konstant konkurrerer om oppmerksomheten din, valgte ToSom en annan vei — en roligare, tryggere og meir mennesleg tilnærming.',
+    excerpt: 'I en verden der datingapper konstant konkurrerer om oppmerksomheten din, valgte Tosom en annan vei — en roligare, tryggere og meir mennesleg tilnærming.',
     reference: 'Gottman, J.M. (1999). The Seven Principles for Making Marriage Work. Crown Publishing.',
     icon: <IconHeart />,
   },

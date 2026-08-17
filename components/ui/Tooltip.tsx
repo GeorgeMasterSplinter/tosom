@@ -1,7 +1,7 @@
 "use client";
 
 /* ═══════════════════════════════════════════
-   ToSom Premium — Tooltip Component
+   Tosom Premium — Tooltip Component
    Props: content, side, delay
    Glassmorphism + gold border + fade-in
    ═══════════════════════════════════════════ */

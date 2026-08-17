@@ -1,5 +1,5 @@
 /**
- * ToSom — Kohort-basert Matcherunde (STEG B6)
+ * Tosom — Kohort-basert Matcherunde (STEG B6)
  *
  * GET /api/cron/matching
  * - Én motor: kohortbasert parvis kobling uten samtykke

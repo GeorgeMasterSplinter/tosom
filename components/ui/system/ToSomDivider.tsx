@@ -1,5 +1,5 @@
 /**
- * ToSom ToSomDivider — System component
+ * Tosom ToSomDivider — System component
  * 
  * Subtle line to separate sections.
  */

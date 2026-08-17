@@ -1,5 +1,5 @@
 /**
- * ToSom — Profil Side (Produktnivå)
+ * Tosom — Profil Side (Produktnivå)
  * 
  * Viser din egen profil med dynamiske oppdateringer fra:
  * - Journey-fase

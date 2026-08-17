@@ -1,5 +1,5 @@
 /**
- * ToSom — AgeBadge (21+ premium symbol)
+ * Tosom — AgeBadge (21+ premium symbol)
  * 
  * Minimalistisk, gull, glassmorphism badge som signaliserer modenhet.
  */

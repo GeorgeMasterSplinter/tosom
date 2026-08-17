@@ -1,5 +1,5 @@
 /**
- * ToSom — Steg 1: Grunnprofil (Premium rebuild 2026 — Fase 2)
+ * Tosom — Steg 1: Grunnprofil (Premium rebuild 2026 — Fase 2)
  * 
  * Oppdatert med:
  * - Mikroguiding per felt (hva er forventet svar?)

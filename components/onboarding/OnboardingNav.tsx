@@ -1,5 +1,5 @@
 /**
- * ToSom — OnboardingNav (Navigasjon)
+ * Tosom — OnboardingNav (Navigasjon)
  * Premium navigasjonsknapper for alle onboarding-sider.
  * Bruker design-tokens konsekvent.
  */

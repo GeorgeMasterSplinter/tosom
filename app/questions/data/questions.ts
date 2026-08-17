@@ -1,5 +1,5 @@
 /**
- * ToSom – Spørsmålmodul (Bli Kjent)
+ * Tosom – Spørsmålmodul (Bli Kjent)
  * 8 kategorier med 15–20 spørsmål per kategori.
  * Spørsmålene er designet for voksne (21+) og støtter en dyp, men rolig utforskning.
  */

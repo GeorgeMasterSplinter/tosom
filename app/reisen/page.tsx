@@ -187,7 +187,7 @@ export default function ReisenPage() {
                 color: 'rgba(212,175,55,0.9)',
               }}
             >
-              ToSom gjør det motsatte.
+              Tosom gjør det motsatte.
             </p>
 
             <p
@@ -574,7 +574,7 @@ export default function ReisenPage() {
                   color: color.text.muted,
                 }}
               >
-                ToSom er for deg som har fylt 21+
+                Tosom er for deg som har fylt 21+
               </span>
             </div>
 

@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom Premium — ProgressBar Component
+   Tosom Premium — ProgressBar Component
    Props: value (0–100), color="gold"
    Smooth transition (300ms)
    ═══════════════════════════════════════════ */

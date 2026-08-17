@@ -1,5 +1,5 @@
 /**
- * ToSom 4.0 — Illustration Layer
+ * Tosom 4.0 — Illustration Layer
  *
  * 12 CSS+SVG illustrations built with abstract shapes, soft gradients, and glassmorphism.
  * No images required.

@@ -1,5 +1,5 @@
 /**
- * ToSom — ChatHeader (Premium Nordic Gold 2026) 🟡⭐
+ * Tosom — ChatHeader (Premium Nordic Gold 2026) 🟡⭐
  * Premium glass-header med gull-aksentar og animerande effektar.
  * 
  * Design:

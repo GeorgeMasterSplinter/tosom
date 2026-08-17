@@ -1,5 +1,5 @@
 /**
- * ToSom — Not Found (404)
+ * Tosom — Not Found (404)
  * 
  * Universal 404-komponent med glassmorphism-panel og gull-knapp.
  * Bruk på alle [id]-sider der ressursen ikke finnes.

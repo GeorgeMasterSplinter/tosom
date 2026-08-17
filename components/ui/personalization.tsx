@@ -1,5 +1,5 @@
 /**
- * ToSom 4.0 — Personalization Layer
+ * Tosom 4.0 — Personalization Layer
  *
  * Theme, motion level, density, and card style customization.
  * Persists to localStorage as `tosom-personalization`.

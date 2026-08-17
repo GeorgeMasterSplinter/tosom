@@ -1,4 +1,4 @@
-// app/not-found.tsx — Global 404-side for ToSom
+// app/not-found.tsx — Global 404-side for Tosom
 // Viser rolig, elegant melding når en side ikke finnes.
 
 import Link from "next/link";

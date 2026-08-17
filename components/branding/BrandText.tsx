@@ -1,4 +1,4 @@
-/** ToSom-tekstkomponentar
+/** Tosom-tekstkomponentar
  *  BR7 — Tekstkomponentar med brand-typografi */
 
 'use client';

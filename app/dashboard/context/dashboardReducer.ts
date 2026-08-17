@@ -1,5 +1,5 @@
 /**
- * ToSom Dashboard 2.0 — dashboardReducer
+ * Tosom Dashboard 2.0 — dashboardReducer
  * Reducer-funksjon for DashboardContext state-håndtering.
  * API-klar arkitektur med typed actions.
  */

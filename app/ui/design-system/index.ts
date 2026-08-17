@@ -1,5 +1,5 @@
 /**
- * ToSom Design System — Index (barrel export)
+ * Tosom Design System — Index (barrel export)
  * 
  * Import alt design system frå éin plass
  */

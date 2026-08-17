@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom StepIndicator — Design System 1.1
+   Tosom StepIndicator — Design System 1.1
    Viser progresjon i onboarding (steg 1-13).
    Bruk med: <StepIndicator current={5} total={13} />
    ═══════════════════════════════════════════ */

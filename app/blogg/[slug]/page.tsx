@@ -15,7 +15,7 @@ const blogPosts = {
       
       <p>Forskning viser at kompatibilitet basert på verdier, livssituasjon og emosjonelle mønstre er langt sterkare prediktorar for varige relasjonar enn utseende.</p>
       
-      <p>ToSom vel å fokusere på det som faktisk skaper varig forbindelse. Når to menneske møter hverandre på et dypere plan, blir overflateikke det første — det blir det siste.</p>
+      <p>Tosom vel å fokusere på det som faktisk skaper varig forbindelse. Når to menneske møter hverandre på et dypere plan, blir overflateikke det første — det blir det siste.</p>
       
       <p>Vår match-motor måler kompatibilitet gjennom resonans — hvordan to menneske faktisk føles saman, ikke hvordan dei ser ut.</p>
     `,
@@ -31,7 +31,7 @@ const blogPosts = {
       
       <p>30 dagar er ikke for lang tid — det er nøyaktig den tida som trengst for to menneske å bli kjende på eit nivå som faktisk betyr noko.</p>
       
-      <p>ToSoms guiderte reise er designa for å støtte denne prosessen med daglege refleksjonar, samtaletema og oppgåver.</p>
+      <p>Tosoms guiderte reise er designa for å støtte denne prosessen med daglege refleksjonar, samtaletema og oppgåver.</p>
     `,
   },
   'rolegheit': {
@@ -39,7 +39,7 @@ const blogPosts = {
     date: '5. januar 2026',
     readTime: '3 min lesing',
     content: `
-      <p>I ein verd der datingapper konstant konkurrerer om oppmerksomheita di med push-notifikasjonar og gamification, valde ToSom ein annan veg.</p>
+      <p>I ein verd der datingapper konstant konkurrerer om oppmerksomheita di med push-notifikasjonar og gamification, valde Tosom ein annan veg.</p>
       
       <p>Vi trur at rolegheit er den viktigaste funksjonen på heile plattformen. Ingen swipe. Ingen feed. Ingen press.</p>
       

@@ -1,5 +1,5 @@
 /**
- * ToSom — QuickMatchCard (dashboard-kort med ScoreRing)
+ * Tosom — QuickMatchCard (dashboard-kort med ScoreRing)
  * 
  * Brukes på /dashboard og /matching for å vise RASK match-forhåndsvisning
  * med ScoreRing-resonans, grunnleggende info og kort action.

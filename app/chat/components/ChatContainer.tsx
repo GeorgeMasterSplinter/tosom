@@ -1,5 +1,5 @@
 /**
- * ToSom — ChatContainer (Premium Nordic Gold 2026) ⭐🟡
+ * Tosom — ChatContainer (Premium Nordic Gold 2026) ⭐🟡
  * Heilt ny versjon: roleg, lett og premium.
  * Premium bubble-animasjonar + resonance-glow + mood-engine + partner presence.
  * Integrerer ChatHeader og BliKjentPanel.

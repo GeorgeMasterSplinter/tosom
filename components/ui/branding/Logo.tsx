@@ -1,7 +1,7 @@
 /**
- * ToSom UI5 — Logo Component
+ * Tosom UI5 — Logo Component
  * 
- * Ren tekstlogo ("ToSom") i gull (#D4AF37).
+ * Ren tekstlogo ("Tosom") i gull (#D4AF37).
  * Støtter size-variants: xs, sm, md, lg, xl
  * Ingen ikoner eller symboler.
  */
@@ -63,7 +63,7 @@ export const Logo: FC<LogoProps> = ({
   showText = true,
   className = '',
   href,
-  ariaLabel = 'ToSom — rolig, privat relasjonsplattform',
+  ariaLabel = 'Tosom — rolig, privat relasjonsplattform',
   style,
   ...rest
 }) => {
@@ -82,7 +82,7 @@ export const Logo: FC<LogoProps> = ({
         ...style,
       }}
     >
-      {showText ? 'ToSom' : 'T'}
+      {showText ? 'Tosom' : 'T'}
     </span>
   );
 

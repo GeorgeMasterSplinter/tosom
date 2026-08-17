@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom Premium — Avatar Component
+   Tosom Premium — Avatar Component
    Props: src, fallback, size, status
    Gold-border for premium variant
    ═══════════════════════════════════════════ */

@@ -1,5 +1,5 @@
 /**
- * ToSom ToSomSelect — System component
+ * Tosom ToSomSelect — System component
  * 
  * Custom select/dropdown with glass panel, gold hover highlight.
  */

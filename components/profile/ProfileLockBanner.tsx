@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * ToSom — Profil-lås-banner
+ * Tosom — Profil-lås-banner
  * 
  * Viser at profilen er låst medan bruker har aktiv journey.
 * Bruk: importer og render på /profile og /onboarding.

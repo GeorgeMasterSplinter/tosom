@@ -1,5 +1,5 @@
 /**
- * ToSom – CategoryButton
+ * Tosom – CategoryButton
  * Knapp for spørsmåls-kategorier med glassmorphism og hover-effekt.
  */
 

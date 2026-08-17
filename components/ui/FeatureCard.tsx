@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom Premium — FeatureCard Component
+   Tosom Premium — FeatureCard Component
    Ikon + tittel + beskrivelse
    ═══════════════════════════════════════════ */
 

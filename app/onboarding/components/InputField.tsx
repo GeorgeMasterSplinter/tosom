@@ -1,5 +1,5 @@
 /**
- * ToSom – InputField
+ * Tosom – InputField
  * Premium input med label, placeholder, validering.
  */
 

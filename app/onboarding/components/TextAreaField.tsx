@@ -1,5 +1,5 @@
 /**
- * ToSom – TextAreaField
+ * Tosom – TextAreaField
  * Premium textarea med label, placeholder, eksempeltekst.
  */
 

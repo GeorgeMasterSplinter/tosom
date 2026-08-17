@@ -1,4 +1,4 @@
-/** ToSom FadeLoading
+/** Tosom FadeLoading
  *  RM8 / RM9 — Loading state med fade overgang (150–200ms) */
 
 'use client';

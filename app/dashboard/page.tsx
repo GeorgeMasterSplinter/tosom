@@ -1,5 +1,5 @@
 /**
- * ToSom — Unified Premium Dashboard ("Din oversikt")
+ * Tosom — Unified Premium Dashboard ("Din oversikt")
  */
 
 'use client';

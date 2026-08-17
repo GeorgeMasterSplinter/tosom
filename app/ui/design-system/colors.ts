@@ -1,5 +1,5 @@
 /**
- * ToSom Design System — Farger
+ * Tosom Design System — Farger
  * 
  * Nordic Gold Premium: mørk base, gullaksentar, glassmorphism
  * Core-definition: Ro, varm, moden

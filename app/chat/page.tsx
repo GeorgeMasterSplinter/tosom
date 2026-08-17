@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * ToSom — Chat Oversikt (Premium Nordic Gold 2026) ⭐
+ * Tosom — Chat Oversikt (Premium Nordic Gold 2026) ⭐
  * Viser liste over aktive samtaler.
  * Én match = én samtale.
  */

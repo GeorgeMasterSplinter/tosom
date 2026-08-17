@@ -1,5 +1,5 @@
 /**
- * ToSom — Onboarding Dynamic Step Page (1-7)
+ * Tosom — Onboarding Dynamic Step Page (1-7)
  * Håndterer alle onboarding-steg med state-håndtering og validering.
  */
 
@@ -135,7 +135,7 @@ function Step1Introduksjon({ onNext }: { onNext: () => void }) {
       >
         I en tid hvor hastighet har erstattet ro, velger du noe annerledes.
         <br /><br />
-        ToSom tror på at de dypeste forbindelsene bygger på felles verdier, trygghet og tid.
+        Tosom tror på at de dypeste forbindelsene bygger på felles verdier, trygghet og tid.
         Ikke utseende, ikke swiping, ikke gaming.
         <br /><br />
         Denne reisen tar ca 10 minutter — men den kan endre hvordan du møter noen for livet.

@@ -1,5 +1,5 @@
 /**
- * ToSom – Onboarding spørsmål og data for alle 10 steg.
+ * Tosom – Onboarding spørsmål og data for alle 10 steg.
  */
 
 export const step0Data = {

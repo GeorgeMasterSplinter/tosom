@@ -1,11 +1,11 @@
 'use client';
 
 /**
- * ToSom — Admin Verktøy 🔧
+ * Tosom — Admin Verktøy 🔧
  * 
  * Trygge admin-verktøy for drift og testing.
  * Alle handlinger blir logga.
- * Design: ToSom Blue + Nordic Gold + Glassmorphism.
+ * Design: Tosom Blue + Nordic Gold + Glassmorphism.
  * Bokmål. Premium. Ro. Moden.
  */
 

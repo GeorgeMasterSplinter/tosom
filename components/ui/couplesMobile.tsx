@@ -1,5 +1,5 @@
 /**
- * ToSom UI 3.0 — Couples Mode Mobile Components
+ * Tosom UI 3.0 — Couples Mode Mobile Components
  *
  * Mobile-optimized shared experience components for couples.
  * All use touch-friendly sizing and scrollable layouts.

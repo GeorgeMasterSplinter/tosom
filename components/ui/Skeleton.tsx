@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom Premium — Skeleton Loading Components
+   Tosom Premium — Skeleton Loading Components
    GPU-composited shimmer (opacity only, no layout)
    Respects prefers-reduced-motion
    ═══════════════════════════════════════════ */

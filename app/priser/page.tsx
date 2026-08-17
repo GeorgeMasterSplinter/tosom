@@ -120,7 +120,7 @@ export default function PriserPage() {
                   lineHeight: '1.8',
                 }}
               >
-                Vi tror at relasjoner trenger ro — ikke press, ikke stress, ikke løpende betalinger. Derfor har ToSom ingen abonnement, ingen nivåer og ingen skjulte funksjoner.
+                Vi tror at relasjoner trenger ro — ikke press, ikke stress, ikke løpende betalinger. Derfor har Tosom ingen abonnement, ingen nivåer og ingen skjulte funksjoner.
               </p>
 
               <p
@@ -169,7 +169,7 @@ export default function PriserPage() {
                 color: color.text.secondary,
               }}
             >
-              ToSom gir deg en komplett, trygg og forskningsbasert prosess for å møte én person — ikke mange, men én som faktisk passer deg.
+              Tosom gir deg en komplett, trygg og forskningsbasert prosess for å møte én person — ikke mange, men én som faktisk passer deg.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -194,7 +194,7 @@ export default function PriserPage() {
                         lineHeight: '1.8',
                       }}
                     >
-                      Du svarer på et gjennomtenket sett med spørsmål om livet ditt, verdiene dine, personligheten din og hva du søker i et forhold. Profilene din blir brukt av ToSoms match-motor for å finne den beste kompatibiliteten.
+                      Du svarer på et gjennomtenket sett med spørsmål om livet ditt, verdiene dine, personligheten din og hva du søker i et forhold. Profilene din blir brukt av Tosoms match-motor for å finne den beste kompatibiliteten.
                     </p>
                   </div>
                 </div>
@@ -221,7 +221,7 @@ export default function PriserPage() {
                         lineHeight: '1.8',
                       }}
                     >
-                      ToSoms motor kjører én gang i uken, natt til lørdag, og finner den personen som passer deg best — basert på kompatibilitet, ikke utseende. Du får kun én match om gangen.
+                      Tosoms motor kjører én gang i uken, natt til lørdag, og finner den personen som passer deg best — basert på kompatibilitet, ikke utseende. Du får kun én match om gangen.
                     </p>
                   </div>
                 </div>
@@ -275,7 +275,7 @@ export default function PriserPage() {
                         lineHeight: '1.8',
                       }}
                     >
-                      Dere går gjennom en strukturert 30-dagers reise med daglige refleksjonsspørsmål, samtaletema, små oppgaver og resonansmåling. Dette er kjernen i ToSom — en prosess som faktisk hjelper dere å bli kjent.
+                      Dere går gjennom en strukturert 30-dagers reise med daglige refleksjonsspørsmål, samtaletema, små oppgaver og resonansmåling. Dette er kjernen i Tosom — en prosess som faktisk hjelper dere å bli kjent.
                     </p>
                   </div>
                 </div>
@@ -330,7 +330,7 @@ export default function PriserPage() {
                   lineHeight: '1.8',
                 }}
               >
-                ToSom — full tilgang. Betales én gang og dekker hele reisen.
+                Tosom — full tilgang. Betales én gang og dekker hele reisen.
               </p>
 
             </GlassCard>

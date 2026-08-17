@@ -93,7 +93,7 @@ export default function SystemStatusPage() {
       {/* Header */}
       <div style={{ marginBottom: '32px' }}>
         <h1 style={{ fontSize: '28px', fontWeight: 600, marginBottom: '8px', color: '#D4AF37' }}>
-          ToSom System Status
+          Tosom System Status
         </h1>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <span

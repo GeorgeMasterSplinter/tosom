@@ -1,5 +1,5 @@
 /*
- * ToSom Branding — Logo Variants
+ * Tosom Branding — Logo Variants
  * 
  * Ekstra logo-varianter for ulike bruksområder.
  * Importer fra '@/components/branding/LogoVariants' når du treng spesifikke varianter.
@@ -42,7 +42,7 @@ export const LogoHorizontal: FC<LogoHorizontalProps> = ({
         size="lg"
         colorVariant="gold"
         href={href}
-        ariaLabel="ToSom — rolig, privat relasjonsplattform"
+        ariaLabel="Tosom — rolig, privat relasjonsplattform"
       />
       {showTagline && (
         <span
@@ -117,7 +117,7 @@ export interface LogoWordmarkProps {
 }
 
 /**
- * "ToSom" med ekstra mellomrom mellom bokstavene.
+ * "Tosom" med ekstra mellomrom mellom bokstavene.
  * Brukes i foten, modaler, og headere.
  */
 export const LogoWordmark: FC<LogoWordmarkProps> = ({
@@ -134,9 +134,9 @@ export const LogoWordmark: FC<LogoWordmarkProps> = ({
         color: color.brand.gold,
         ...style,
       }}
-      aria-label="ToSom — rolig, privat relasjonsplattform"
+      aria-label="Tosom — rolig, privat relasjonsplattform"
     >
-      ToSom
+      Tosom
     </Link>
   );
 };
@@ -153,7 +153,7 @@ export interface LogoStackedProps {
 }
 
 /**
- * Stacked logo: "ToSom" over tagline.
+ * Stacked logo: "Tosom" over tagline.
  * Brukes i footer og onboarding.
  */
 export const LogoStacked: FC<LogoStackedProps> = ({
@@ -200,13 +200,22 @@ export interface LogoAnimatedProps {
 export const LogoAnimated: FC<LogoAnimatedProps> = ({ className = '' }) => {
   return (
     <div className={`relative flex flex-col items-center ${className}`}>
-      <div className="flex flex-col items-center animate-ts-fade-in [animation-duration:600ms]">
+      {/* Premium radial backdrop — myk gull + blå glow */}
+      <div
+        className="absolute inset-[-30px] pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(ellipse 80% 70% at 50% 40%, rgba(212,175,55,0.06) 0%, rgba(80,120,255,0.03) 50%, transparent 75%)',
+          filter: 'blur(20px)',
+        }}
+      />
+      <div className="flex flex-col items-center animate-ts-fade-in [animation-duration:600ms] relative">
         <Logo
           size="3xl"
           colorVariant="gold"
         />
         <span
-          className="mt-4 text-[11px] font-medium tracking-[0.32em] uppercase text-[var(--ts-gold)] opacity-60 animate-ts-fade-in [animation-duration:600ms] [animation-delay:350ms]"
+          className="mt-3 text-[10px] font-medium tracking-[0.35em] uppercase text-[var(--ts-gold)] opacity-35 animate-ts-fade-in [animation-duration:600ms] [animation-delay:350ms]"
         >
           Made in Norway
         </span>

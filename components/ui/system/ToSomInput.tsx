@@ -1,5 +1,5 @@
 /**
- * ToSom ToSomInput — System component
+ * Tosom ToSomInput — System component
  * 
  * Standard input field with glassmorphism, gold focus ring, error state.
  */

@@ -1,5 +1,5 @@
 /**
- * ToSom ToSomTagline — System component
+ * Tosom ToSomTagline — System component
  * 
  * Footer tagline matching the final micro-patch exactly:
  * - text-base/md:text-lg

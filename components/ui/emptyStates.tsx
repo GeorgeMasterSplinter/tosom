@@ -1,5 +1,5 @@
 /**
- * ToSom 4.0 — Empty States System
+ * Tosom 4.0 — Empty States System
  *
  * 7 empty state variants with illustrations and warm microcopy.
  *

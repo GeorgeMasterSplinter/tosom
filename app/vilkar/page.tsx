@@ -79,27 +79,28 @@ const sections = [
   {
     icon: <IconAge />,
     title: 'Aldersgrense — 21 år',
-    content: 'Du må være 21 år for å bruke ToSom. Vi tar alderskravet svært alvorlig for å sikre et trygt miljø for voksne som søker ekte forbindelse. Innlogging via Vipps (BankID) verifiserer alderen din.',
+    content: 'Du må være 21 år for å bruke Tosom. Vi tar alderskravet svært alvorlig for å sikre et trygt miljø for voksne som søker ekte forbindelse. Innlogging via Vipps (BankID) verifiserer alderen din.',
   },
   {
     icon: <IconLogin />,
     title: 'Oppretting av konto og innlogging',
-    content: 'Du oppretter en konto med Vipps (BankID-verifisert) eller e-post. Kontoen er knyttet til din identitet. Ved registrering samtykker du til disse vilkårene, og samtykket lagres med tidsstempel.',
+    content: 'Du oppretter en konto med Vipps (BankID-verifisert). Kontoen er knyttet til din identitet. Ved registrering samtykker du til disse vilkårene, og samtykket lagres med tidsstempel.',
   },
   {
     icon: <IconMatch />,
     title: 'Én reise — 30 dager',
-    content: 'En reise koster 349 kroner og gir deg én match i én 30-dagers reise. De første 10 000 brukerne får reisen gratis. Vi kobler natt til lørdag, og reisen starter lørdag morgen. Du kan bare ha én aktiv reise om gangen.',
+    content: 'En reise koster 349 kroner og gir deg én match i én 30-dagers reise. Vi kobler natt til lørdag, og reisen starter lørdag morgen. Du kan bare ha én aktiv reise om gangen.',
+    note: 'De første 10 000 brukerne får reisen gratis.',
   },
   {
     icon: <IconProfile />,
     title: 'Kobling — ikke valg',
-    content: 'ToSom kobler deg til én person basert på kunnskapsbasert matching. Du velger ikke hvem du matcher med, og du kan ikke si ja eller nei til en bestemt person. Dette er kjernen i ToSom: ro, ikke valg.',
+    content: 'Tosom kobler deg til én person basert på kunnskapsbasert matching.\nDu trenger ikke velge mellom hundre profiler eller sveipe deg gjennom et marked.\nI stedet får du én person som faktisk passer deg — basert på verdier, livsstil, kommunikasjon og fremtidsønsker.\n\nDu slipper valgene som skaper stress.\nVi kobler deg til én person som matcher deg på det som betyr noe.',
   },
   {
     icon: <IconProfile />,
     title: 'Hva vi forventer av deg',
-    content: 'ToSom bygger på respekt. Du snakker med et menneske som har valgt å åpne seg. Ingen trakassering, ingen press, ingen upassende innhold. Du deler ikke andres bilder, meldinger eller opplysninger videre. Du bruker ikke ToSom kommersielt eller til å selge noe.',
+    content: 'Tosom bygger på respekt. Du snakker med et menneske som har valgt å åpne seg. Ingen trakassering, ingen press, ingen upassende innhold. Du deler ikke andres bilder, meldinger eller opplysninger videre. Du bruker ikke Tosom kommersielt eller til å selge noe.',
   },
   {
     icon: <IconEnd />,
@@ -124,7 +125,7 @@ const sections = [
   {
     icon: <IconCopyright />,
     title: 'Om avtalen',
-    content: 'ToSom drives av ToSom AS. Disse vilkårene er avtalen mellom deg og oss. Vi kan endre dem, og varsler deg i god tid før endringer trer i kraft. Avtalen følger norsk rett.',
+    content: 'Tosom drives av Tosom AS. Disse vilkårene er avtalen mellom deg og oss. Vi kan endre dem, og varsler deg i god tid før endringer trer i kraft. Avtalen følger norsk rett.',
   },
 ];
 
@@ -170,7 +171,7 @@ export default function VilkårPage() {
               color: color.text.secondary,
             }}
           >
-            ToSom er designet for voksne mennesker som ønsker ekte forbindelse. Ved å bruke plattformen samtykker du til disse vilkårene.
+            Tosom er designet for voksne mennesker som ønsker ekte forbindelse. Ved å bruke plattformen samtykker du til disse vilkårene.
           </p>
         </ToSomSection>
 
@@ -213,6 +214,18 @@ export default function VilkårPage() {
                   >
                     {s.content}
                   </p>
+                  {s.note && (
+                    <p
+                      style={{
+                        ...typographyToStyle('body-sm'),
+                        color: 'rgba(255,255,255,0.5)',
+                        lineHeight: '1.6',
+                        marginTop: '4px',
+                      }}
+                    >
+                      {s.note}
+                    </p>
+                  )}
                 </GlassCard>
               ))}
             </div>

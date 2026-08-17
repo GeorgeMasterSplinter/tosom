@@ -1,5 +1,5 @@
 /**
- * ToSom ToSomModal — System component
+ * Tosom ToSomModal — System component
  * 
  * Modal with glass panel, backdrop blur, smooth fade + scale motion.
  */

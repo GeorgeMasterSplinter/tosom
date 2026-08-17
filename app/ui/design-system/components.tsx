@@ -1,5 +1,5 @@
 /**
- * ToSom Design System — Base-komponentar
+ * Tosom Design System — Base-komponentar
  * 
  * Alle base-komponentar for premium UI
  * Core-definition: Ro, varm, moden

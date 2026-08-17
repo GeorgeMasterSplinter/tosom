@@ -113,7 +113,7 @@ export default function CookiesPage() {
               color: color.text.secondary,
             }}
           >
-            ToSom bruker bare det nødvendige av cookies. Vi tar personvern alvorlig og deler aldri data med tredjeparts-tracking.
+            Tosom bruker bare det nødvendige av cookies. Vi tar personvern alvorlig og deler aldri data med tredjeparts-tracking.
           </p>
         </ToSomSection>
 
@@ -140,7 +140,7 @@ export default function CookiesPage() {
                 lineHeight: '1.8',
               }}
             >
-              Cookies lar ToSom fungere trygt og effektivt. Vi samler inn minimalt med data — kun det som trengs for å gi deg en god og trygg opplevelse.
+              Cookies lar Tosom fungere trygt og effektivt. Vi samler inn minimalt med data — kun det som trengs for å gi deg en god og trygg opplevelse.
             </p>
 
             <p
@@ -150,7 +150,7 @@ export default function CookiesPage() {
                 lineHeight: '1.8',
               }}
             >
-              Vi deler aldri informasjonen din med annonsører, sporingstjenester eller tredjeparter. Din personvern er en del av ToSom-dnaet.
+              Vi deler aldri informasjonen din med annonsører, sporingstjenester eller tredjeparter. Din personvern er en del av Tosom-dnaet.
             </p>
           </div>
         </ToSomSection>

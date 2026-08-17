@@ -1,5 +1,5 @@
 /**
- * ToSom UI 2.0 — Design Tokens
+ * Tosom UI 2.0 — Design Tokens
  * TypeScript-accessible design tokens for consistent UI development.
  * All values map to CSS custom properties (--ts-*) defined in styles/globals.css
  *

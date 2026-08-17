@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom PremiumTypingIndicator — Design System 1.1
+   Tosom PremiumTypingIndicator — Design System 1.1
    Viser når partner skriv i chat.
    Animert med tre punkt som "tappar".
    ═══════════════════════════════════════════ */

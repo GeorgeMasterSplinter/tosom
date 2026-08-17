@@ -39,7 +39,7 @@ function getCurrentPhase(day: number): string {
 function getDayGuide(day: number): { theme: string; question: string; note?: string } {
   const guides: Record<number, { theme: string; question: string; note?: string }> = {
     // Oppdage-fasen (dag 1-7)
-    1: { theme: 'Hvorfor er du her?', question: 'Hva var det som fikk deg til å opprette en profil på ToSom? Hva søker du?', note: 'Start med å dele dine egentlige motivar' },
+    1: { theme: 'Hvorfor er du her?', question: 'Hva var det som fikk deg til å opprette en profil på Tosom? Hva søker du?', note: 'Start med å dele dine egentlige motivar' },
     2: { theme: 'Hva betyr trygghet for deg?', question: 'Hva trenger du av en partner for å føle deg trygg?' },
     3: { theme: 'Dine viktigste verdier', question: 'Navn tre verdier som styrer livet ditt — og hvorfor nettopp de.' },
     4: { theme: 'Når ble du virkelig glad?', question: 'Hva skapte den følelsen? Hva gjor at det har satt seg?' },

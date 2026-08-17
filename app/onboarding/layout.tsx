@@ -1,5 +1,5 @@
 /**
- * ToSom — Onboarding Layout (Unified Premium)
+ * Tosom — Onboarding Layout (Unified Premium)
  * Felles layout for alle onboarding-sider.
  * UniversalMenu rendres automatisk via root-layout.
  */
@@ -26,7 +26,7 @@ export default function OnboardingLayout({ children }: OnboardingLayoutProps) {
           className="text-xs"
           style={{ color: 'rgba(255, 255, 255, 0.3)' }}
         >
-          ToSom — der sanne møter skjer i ro og trygghet
+          Tosom — der sanne møter skjer i ro og trygghet
         </p>
       </div>
     </div>

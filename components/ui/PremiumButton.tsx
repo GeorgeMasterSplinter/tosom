@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom Premium Button — Design System 1.1
+   Tosom Premium Button — Design System 1.1
    Primary · Secondary · Danger
    Bruk tokens frå components/ui/Tokens.ts
    ═══════════════════════════════════════════ */

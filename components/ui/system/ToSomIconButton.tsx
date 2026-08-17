@@ -1,5 +1,5 @@
 /**
- * ToSom ToSomIconButton — System component
+ * Tosom ToSomIconButton — System component
  * 
  * Round icon button with glassmorphism and microBounce hover.
  */

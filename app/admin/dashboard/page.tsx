@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * ToSom — Admin Dashboard (B5.2) 🟡⭐
+ * Tosom — Admin Dashboard (B5.2) 🟡⭐
  *
  * Kommandopanel med statusfarger (grønn/gul/rød).
  * Étt API-kall (/api/admin/overview) for alle indikatorer.
@@ -268,7 +268,7 @@ export default function AdminDashboardPage() {
       <div className="flex items-start justify-between gap-4 mb-2">
         <div>
           <h1 className="text-2xl font-bold mb-1" style={{ color: 'rgba(255,255,255,0.95)' }}>Kommandopanel</h1>
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>Oversikt over ToSom-plattformen</p>
+          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>Oversikt over Tosom-plattformen</p>
         </div>
         <span className="text-xs px-3 py-1.5 rounded-full font-medium" style={{
           background: loading ? 'rgba(251,191,36,0.1)' : error ? 'rgba(255,77,77,0.1)' : 'rgba(74,222,128,0.1)',

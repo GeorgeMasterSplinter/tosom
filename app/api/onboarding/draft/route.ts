@@ -1,5 +1,5 @@
 /**
- * ToSom — API: Onboarding Draft Autosave (STEG 5.3)
+ * Tosom — API: Onboarding Draft Autosave (STEG 5.3)
  *
  * POST /api/onboarding/draft
  * Lagrer delvis onboarding-data til serveren slik at brukeren ikke mister

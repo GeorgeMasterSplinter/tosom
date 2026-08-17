@@ -1,5 +1,5 @@
 /**
- * ToSom – Spørsmålmodul (Bli Kjent)
+ * Tosom – Spørsmålmodul (Bli Kjent)
  * Side med 8 kategorier og tilfeldig spørmsgenerator.
  * Designet for voksne (21+) og støtter en dyp, men rolig utforskning.
  */

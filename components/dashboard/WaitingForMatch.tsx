@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * ToSom — Ventefase-dashbord ("Du står i kø")
+ * Tosom — Ventefase-dashbord ("Du står i kø")
  * 
  * Vises når brukeren har fullført onboarding men ingen match ennå.
  * Har glass-panel med animasjon og rolig "match leter..."-følelse.

@@ -1,5 +1,5 @@
 /**
- * ToSom 5.0 — Emotional Intelligence Layer
+ * Tosom 5.0 — Emotional Intelligence Layer
  *
  * Core types and constants for emotional analysis.
  */

@@ -1,5 +1,5 @@
 /**
- * ToSom — Dev Login API (v4 — SIKKERHETSFIX)
+ * Tosom — Dev Login API (v4 — SIKKERHETSFIX)
  *
  * FULLVERDIG DEV-LOGIN MED GET OG POST
  *

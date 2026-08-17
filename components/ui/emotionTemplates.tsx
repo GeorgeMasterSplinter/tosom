@@ -1,5 +1,5 @@
 /**
- * ToSom 5.0 — Emotion-Aware Templates 5.0
+ * Tosom 5.0 — Emotion-Aware Templates 5.0
  *
  * Updated ChatTemplate, CoupleTemplate, JourneyTemplate with emotional intelligence layers.
  * Integrates: ToneMeter, MoodTag, EmotionalSuggestions, RelationshipHealth, etc.

@@ -1,5 +1,5 @@
 /**
- * ToSom Design System — Spacing
+ * Tosom Design System — Spacing
  * 
  * Konsistent mellomrom: XS → XL
  * Core-definition: Ro, luftig, ikke-overfylt

@@ -1,5 +1,5 @@
 /**
- * ToSom Design System — Typografi
+ * Tosom Design System — Typografi
  * 
  * Font: Inter (system fallback)
  * Core-definition: Rolig, lessel, moden

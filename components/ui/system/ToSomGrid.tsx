@@ -1,5 +1,5 @@
 /**
- * ToSom ToSomGrid — System component
+ * Tosom ToSomGrid — System component
  * 
  * Grid layout primitive with spacing tokens.
  */

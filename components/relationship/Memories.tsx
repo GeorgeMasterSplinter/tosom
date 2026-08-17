@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom — Shared Memories
+   Tosom — Shared Memories
    Grid layout for felles minner med glassmorphism
    ═══════════════════════════════════════════ */
 

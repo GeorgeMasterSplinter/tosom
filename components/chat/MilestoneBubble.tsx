@@ -1,5 +1,5 @@
 /**
- * ToSom — MilestoneBubble (Premium)
+ * Tosom — MilestoneBubble (Premium)
  * Viktige øyeblikk og markederingar i chat-journey.
  * 
  * Design:

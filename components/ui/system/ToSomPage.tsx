@@ -1,5 +1,5 @@
 /**
- * ToSom ToSomPage — System component
+ * Tosom ToSomPage — System component
  * 
  * Standard page wrapper with max-width, vertical rhythm, spotlight support.
  */

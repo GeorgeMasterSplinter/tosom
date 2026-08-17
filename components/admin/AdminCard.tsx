@@ -1,5 +1,5 @@
 /**
- * ToSom — AdminCard
+ * Tosom — AdminCard
  * 
  * Glassmorphism-kort med warmFlow-glow for admin-ui
  * 

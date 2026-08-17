@@ -1,5 +1,5 @@
 /**
- * ToSom — Betaling (B4.2)
+ * Tosom — Betaling (B4.2)
  * 
  * Én pris, én reise. Ingen abonnement, ingen nivåer (I-10).
  * 349 kr for én 30-dagers reise. De første 10 000 brukerne får reisen gratis.
@@ -63,7 +63,7 @@ export default function BetalingPage() {
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="text-2xl font-semibold" style={{ color: '#D4AF37' }}>
-            ToSom
+            Tosom
           </Link>
         </div>
 
@@ -131,7 +131,7 @@ export default function BetalingPage() {
               <Link href="/personvern" className="underline" style={{ color: '#D4AF37' }}>
                 personvernerklæringen
               </Link>
-              . Jeg forstår at ToSom kobler meg til én person, og at samtalen slettes for begge hvis én av oss avslutter.
+              . Jeg forstår at Tosom kobler meg til én person, og at samtalen slettes for begge hvis én av oss avslutter.
             </span>
           </label>
         </div>
@@ -155,7 +155,7 @@ export default function BetalingPage() {
               style={{ accentColor: '#D4AF37' }}
             />
             <span className="text-sm" style={{ color: 'rgba(255,255,255,0.7)', lineHeight: '1.6' }}>
-              Jeg samtykker til at ToSom starter reisen min straks, og forstår at angreretten dermed bortfaller.
+              Jeg samtykker til at Tosom starter reisen min straks, og forstår at angreretten dermed bortfaller.
             </span>
           </label>
         </div>

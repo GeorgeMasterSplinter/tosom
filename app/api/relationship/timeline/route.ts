@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom — Relationship Timeline API
+   Tosom — Relationship Timeline API
    Henter og lagrer relasjonsmilepæler
    ═══════════════════════════════════════════ */
 

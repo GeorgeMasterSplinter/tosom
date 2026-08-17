@@ -1,5 +1,5 @@
 /**
- * ToSom — User Preferences Endpoint (STEG 8.5)
+ * Tosom — User Preferences Endpoint (STEG 8.5)
  *
  * POST/GET /api/settings/preferences
  * Persisterer notifikasjon/språk/tema-innstillinger i Profile.preferences (Json-felt).

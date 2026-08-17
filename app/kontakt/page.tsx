@@ -273,7 +273,7 @@ export default function KontaktPage() {
               </ToSomCard>
 
               <ToSomCard icon={<IconMessage />} title="Tilbakemeldinger eller forslag" iconWrapperClassName="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)]">
-                Vi elsker tilbakemeldinger. De gjør ToSom bedre.
+                Vi elsker tilbakemeldinger. De gjør Tosom bedre.
               </ToSomCard>
             </div>
           </div>

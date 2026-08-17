@@ -1,5 +1,5 @@
 /**
- * ToSom — Admin Journey Stats API (B5.3)
+ * Tosom — Admin Journey Stats API (B5.3)
  * 
  * GET /api/admin/journey-stats
  * 

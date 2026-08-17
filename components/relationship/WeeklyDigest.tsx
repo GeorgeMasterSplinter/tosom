@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom — Weekly Digest
+   Tosom — Weekly Digest
    Ukentlig oppsummering av relasjonsfremskritt
    ═══════════════════════════════════════════ */
 

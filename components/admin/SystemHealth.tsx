@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom SystemHealth — Design System 1.1
+   Tosom SystemHealth — Design System 1.1
    Visar systemtilstand i admin-dashboard.
    Bruk med: <SystemHealth status="healthy" message="Alt fungerer" />
    ═══════════════════════════════════════════ */

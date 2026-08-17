@@ -1,5 +1,5 @@
 /**
- * ToSom – SelectField (Premium Oppgradert)
+ * Tosom – SelectField (Premium Oppgradert)
  * Custom premium dropdown med mørk bakgrunn, gull-aksentar og glass-djupde.
  */
 

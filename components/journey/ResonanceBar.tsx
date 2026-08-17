@@ -1,5 +1,5 @@
 /**
- * ToSom — ResonanceBar (Premium Nordic Gold 2026) 🟡⭐
+ * Tosom — ResonanceBar (Premium Nordic Gold 2026) 🟡⭐
  * Visualiserer resonansutvikling over dag 1–30 med fase-fargar.
  * 
  * Design:

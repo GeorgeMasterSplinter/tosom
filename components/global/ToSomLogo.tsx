@@ -1,5 +1,5 @@
 /**
- * ToSom — Global Logo Component
+ * Tosom — Global Logo Component
  * 
  * Identisk logo som brukes på landing-siden (Hero-seksjonen).
  * Importer fra '@/components/global/ToSomLogo' for konsistent branding.
@@ -31,7 +31,7 @@ export const ToSomLogo: FC<ToSomLogoProps> = ({
     <Link
       href={href}
       className={`flex flex-col items-center ${className}`}
-      aria-label="ToSom — rolig, privat relasjonsplattform"
+      aria-label="Tosom — rolig, privat relasjonsplattform"
     >
       <Logo size="lg" colorVariant="gold" />
       {showTagline && (

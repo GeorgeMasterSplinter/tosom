@@ -81,7 +81,7 @@ export default function OmOssPage() {
               color: color.text.primary,
             }}
           >
-            Om ToSom
+            Om Tosom
           </h1>
 
           <p
@@ -91,7 +91,7 @@ export default function OmOssPage() {
               color: color.text.secondary,
             }}
           >
-            ToSom ble skapt med én tanke: at ekte forbindelse fortsatt er mulig — når vi gir rom for den.
+            Tosom ble skapt med én tanke: at ekte forbindelse fortsatt er mulig — når vi gir rom for den.
           </p>
         </ToSomSection>
 
@@ -148,7 +148,7 @@ export default function OmOssPage() {
                 fontStyle: 'italic',
               }}
             >
-              ToSom er ikke en markedsplass. Det er ikke en app som jager effektivitet. Det er en prosess — en reise — som hjelper to mennesker å bli kjent på ordentlig.
+              Tosom er ikke en markedsplass. Det er ikke en app som jager effektivitet. Det er en prosess — en reise — som hjelper to mennesker å bli kjent på ordentlig.
             </p>
           </div>
         </ToSomSection>
@@ -254,7 +254,7 @@ export default function OmOssPage() {
                   fontWeight: 600,
                 }}
               >
-                Det er dette ToSom bygger.
+                Det er dette Tosom bygger.
               </p>
             </div>
           </div>
@@ -315,7 +315,7 @@ export default function OmOssPage() {
                   lineHeight: '1.8',
                 }}
               >
-                ToSom finnes fordi mennesker fortjener mer enn tilfeldige matcher og raske vurderinger. Vi finnes fordi relasjoner ikke er effektivitet — de er tilstedeværelse. Vi finnes fordi forskning viser at ekte kontakt oppstår når mennesker møtes med ro, struktur og nysgjerrighet.
+                Tosom finnes fordi mennesker fortjener mer enn tilfeldige matcher og raske vurderinger. Vi finnes fordi relasjoner ikke er effektivitet — de er tilstedeværelse. Vi finnes fordi forskning viser at ekte kontakt oppstår når mennesker møtes med ro, struktur og nysgjerrighet.
               </p>
             </div>
           </div>
@@ -344,12 +344,12 @@ export default function OmOssPage() {
                 color: color.text.secondary,
               }}
             >
-              Hver detalje i ToSom reflekterer verdiene vi bærer.
+              Hver detalje i Tosom reflekterer verdiene vi bærer.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <ToSomCard icon={<IconRo />} title="Ro" iconWrapperClassName="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)]">
-                Alt i ToSom er designet for trygghet, fokus og lav puls. Ingen støy. Ingen press. Bare et rolig rom hvor to mennesker kan bli kjent uten hastverk.
+                Alt i Tosom er designet for trygghet, fokus og lav puls. Ingen støy. Ingen press. Bare et rolig rom hvor to mennesker kan bli kjent uten hastverk.
               </ToSomCard>
 
               <ToSomCard icon={<IconVerdighet />} title="Verdighet" iconWrapperClassName="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)]">
@@ -380,12 +380,12 @@ export default function OmOssPage() {
                 textAlign: 'center',
               }}
             >
-              Teamet bak ToSom
+              Teamet bak Tosom
             </h2>
 
             <GlassCard padding="xl" interactive className="space-y-6">
               <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
-                ToSom er utviklet og driftet fra Norge av et lite, dedikert team som tror på relasjoner, teknologi og menneskelig varme.
+                Tosom er utviklet og driftet fra Norge av et lite, dedikert team som tror på relasjoner, teknologi og menneskelig varme.
               </p>
 
               <p style={{ ...typographyToStyle('body-lg'), color: color.text.primary, lineHeight: '1.8' }}>

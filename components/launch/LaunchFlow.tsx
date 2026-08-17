@@ -90,7 +90,7 @@ export default function LaunchFlow({
             <div className="text-center space-y-4">
               <div className="text-7xl">✨</div>
               <h2 className="text-xl font-medium text-[#4A4A4A]">
-                Velkommen til ToSom
+                Velkommen til Tosom
               </h2>
               <p className="text-xs text-[#4A4A4A]/50">
                 Klart for å start reisen din

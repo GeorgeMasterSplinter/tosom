@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom Premium — Modal Component
+   Tosom Premium — Modal Component
    Overlay · Centered · GPU-composited (opacity + scale)
    Respects prefers-reduced-motion
    ═══════════════════════════════════════════ */

@@ -1,7 +1,7 @@
 "use client";
 
 /* ═══════════════════════════════════════════
-   ToSom Premium — Dialog Component
+   Tosom Premium — Dialog Component
    Bekreftelsesdialog basert på Modal
    ═══════════════════════════════════════════ */
 

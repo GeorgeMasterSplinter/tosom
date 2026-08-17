@@ -65,7 +65,7 @@ const AppNavbar: React.FC<AppNavbarProps> = ({
     >
       {/* ── Logo ── */}
       <div className="flex items-center min-w-0 flex-shrink">
-        {logo || <span className="text-ts-gold font-bold text-lg">ToSom</span>}
+        {logo || <span className="text-ts-gold font-bold text-lg">Tosom</span>}
       </div>
 
       {/* ── Desktop Links ── */}

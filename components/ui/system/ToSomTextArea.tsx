@@ -1,5 +1,5 @@
 /**
- * ToSom ToSomTextArea — System component
+ * Tosom ToSomTextArea — System component
  * 
  * Text area with glassmorphism, gold focus ring, auto-resize.
  */

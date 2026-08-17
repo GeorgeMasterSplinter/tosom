@@ -1,5 +1,5 @@
 /**
- * ToSom Dashboard 1.0 — DashboardTopCard
+ * Tosom Dashboard 1.0 — DashboardTopCard
  * Hovedkort som viser relasjonsstatus, dager sammen og primære handlinger.
  * Context-drevet via useDashboard().
  */

@@ -1,5 +1,5 @@
 /**
- * ToSom — OnboardingLayout (simplified — no duplicate headers)
+ * Tosom — OnboardingLayout (simplified — no duplicate headers)
  * Kun container: progressbar + children.
  * Header (steg-indikator, tittel, undertittel, guidingText) vert rendera av hvart steg-komponent.
  */

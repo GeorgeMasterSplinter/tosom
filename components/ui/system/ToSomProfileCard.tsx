@@ -1,5 +1,5 @@
 /**
- * ToSom ToSomProfileCard — System component
+ * Tosom ToSomProfileCard — System component
  * 
  * Profile card with avatar, badges, and info sections.
  */

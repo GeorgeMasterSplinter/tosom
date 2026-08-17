@@ -1,11 +1,11 @@
 'use client';
 
 /**
- * ToSom — Admin Systemstatus 🚦 (STEG 4c — Ekte data)
+ * Tosom — Admin Systemstatus 🚦 (STEG 4c — Ekte data)
  * 
  * Health heatmap med fargekoder for alle system.
  * KOBLET TIL /api/system/health og /api/admin/system-logs for ekte data.
- * Design: ToSom Blue + Nordic Gold + Glassmorphism.
+ * Design: Tosom Blue + Nordic Gold + Glassmorphism.
  * Bokmål. Premium. Ro. Moden.
  */
 

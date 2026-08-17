@@ -1,5 +1,5 @@
 /**
- * ToSom — BackButton (Premium)
+ * Tosom — BackButton (Premium)
  * Felles Tilbake-knapp for alle onboarding-steg.
  * Glassmorphism med gull-aksent ved hover/fokus.
  */

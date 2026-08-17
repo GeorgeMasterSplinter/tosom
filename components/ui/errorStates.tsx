@@ -1,5 +1,5 @@
 /**
- * ToSom 4.0 — Error States System
+ * Tosom 4.0 — Error States System
  *
  * 6 error state variants with calm, helpful microcopy.
  *
@@ -37,7 +37,7 @@ const variantMap: Record<ErrorVariant, { title: string; description: string; ico
   },
   offline: {
     title: 'Du er frakoblet',
-    description: 'ToSom trenger internet for you to work. Koble til WiFi eller mobil data.',
+    description: 'Tosom trenger internet for you to work. Koble til WiFi eller mobil data.',
     icon: '📡',
     color: '#FF9F43',
   },
@@ -49,7 +49,7 @@ const variantMap: Record<ErrorVariant, { title: string; description: string; ico
   },
   aiUnavailable: {
     title: 'AI er utilgjengelig',
-    description: 'ToSom AI er midlertidig nede. Prøv igjen senere — vi er her når du trenger oss.',
+    description: 'Tosom AI er midlertidig nede. Prøv igjen senere — vi er her når du trenger oss.',
     icon: '🤖',
     color: '#C084FC',
   },

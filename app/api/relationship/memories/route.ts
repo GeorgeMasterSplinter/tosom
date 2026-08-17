@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom — Shared Memories API
+   Tosom — Shared Memories API
    Henter og lagrer felles minner
    ═══════════════════════════════════════════ */
 

@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom JourneyTimeline — Design System 1.1
+   Tosom JourneyTimeline — Design System 1.1
    Viser 30-dagers reise med fase-indikatorar.
    Bruk i dashboard og journey-sider.
    ═══════════════════════════════════════════ */

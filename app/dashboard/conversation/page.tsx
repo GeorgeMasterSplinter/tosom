@@ -1,5 +1,5 @@
 /**
- * ToSom Dashboard 1.0 — Conversation Page
+ * Tosom Dashboard 1.0 — Conversation Page
  * Full chat-visning med premium UI.
  */
 

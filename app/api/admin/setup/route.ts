@@ -1,5 +1,5 @@
 /**
- * ToSom — Admin bruker-oppsett
+ * Tosom — Admin bruker-oppsett
  * 
  * POST /api/admin/setup
  * Lagar admin-bruker dersom han ikke eksisterer.

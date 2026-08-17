@@ -1,5 +1,5 @@
 /**
- * ToSom Design System — System Components
+ * Tosom Design System — System Components
  * 
  * Central export for all design system components.
  * No existing pages migrated yet — this is the foundation layer.

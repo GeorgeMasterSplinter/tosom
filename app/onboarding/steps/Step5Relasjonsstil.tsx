@@ -1,5 +1,5 @@
 /**
- * ToSom — Steg 5b: Relasjonsstil (Premium rebuild 2026 — Fase 4)
+ * Tosom — Steg 5b: Relasjonsstil (Premium rebuild 2026 — Fase 4)
  * - Bokmål (Nynorsk→Bokmål-konvertering)
  */
 'use client';

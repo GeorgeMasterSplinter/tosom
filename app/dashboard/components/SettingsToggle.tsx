@@ -1,5 +1,5 @@
 /**
- * ToSom Dashboard 2.0 — SettingsToggle
+ * Tosom Dashboard 2.0 — SettingsToggle
  * Premium toggle-komponent for innstillinger.
  */
 

@@ -1,5 +1,5 @@
 /**
- * ToSom ToSomToast — System component
+ * Tosom ToSomToast — System component
  * 
  * Toast/notification with slide-in, auto-dismiss (5s).
  */

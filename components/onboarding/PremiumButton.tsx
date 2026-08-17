@@ -1,5 +1,5 @@
 /**
- * ToSom — PremiumButton
+ * Tosom — PremiumButton
  * Felles gull-gradient-knapp for alle onboarding-steg.
  */
 

@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom ResonanceMeter — Design System 1.1
+   Tosom ResonanceMeter — Design System 1.1
    Animert rund meter for resonans-prosent.
    Bruk i dashboard som hovudvisning av resonans.
    ═══════════════════════════════════════════ */

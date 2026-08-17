@@ -116,7 +116,7 @@ export default function HvorforPage() {
                 color: 'rgba(255,255,255,0.92)',
               }}
             >
-              Hvorfor ToSom?
+              Hvorfor Tosom?
             </h1>
 
             <p
@@ -268,7 +268,7 @@ export default function HvorforPage() {
                     color: color.text.primary,
                   }}
                 >
-                  Hvorfor ToSom finnes
+                  Hvorfor Tosom finnes
                 </h2>
               </div>
 
@@ -288,7 +288,7 @@ export default function HvorforPage() {
                   color: color.brand.gold,
                 }}
               >
-                ToSom gjør det motsatte.
+                Tosom gjør det motsatte.
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -392,7 +392,7 @@ export default function HvorforPage() {
                   fontWeight: 600,
                 }}
               >
-                ToSom er laget for deg.
+                Tosom er laget for deg.
               </p>
             </GlassCard>
           </div>
@@ -434,7 +434,7 @@ export default function HvorforPage() {
                   fontWeight: 600,
                 }}
               >
-                ToSom er laget for deg.
+                Tosom er laget for deg.
               </p>
             </GlassCard>
           </div>
@@ -510,7 +510,7 @@ export default function HvorforPage() {
                 fontStyle: 'italic',
               }}
             >
-              ToSom er ikke en app. Det er en prosess. En reise. Et rom hvor to mennesker kan møtes på ordentlig.
+              Tosom er ikke en app. Det er en prosess. En reise. Et rom hvor to mennesker kan møtes på ordentlig.
             </p>
           </div>
         </section>

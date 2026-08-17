@@ -1,5 +1,5 @@
 /**
- * ToSom — Steg 3: Tilknytning & trygghet (Premium rebuild 2026 — Fase 4)
+ * Tosom — Steg 3: Tilknytning & trygghet (Premium rebuild 2026 — Fase 4)
  */
 
 'use client';

@@ -118,7 +118,7 @@ const sections = [
   {
     icon: <IconShield />,
     title: 'Personvern',
-    content: 'Personvern er en av våre kjerneverdier. Alt du deler i ToSom er kryptert, privat og behandlet med dyp respekt. Vi følger GDPR og norsk personvernlovgivning — og vi går lenger enn det som kreves.\n\nVi selger aldri data.\nVi deler aldri data.\nVi sporer aldri for markedsføring.\n\nToSom er bygget for trygghet, ikke overvåkning.',
+    content: 'Personvern er en av våre kjerneverdier. Alt du deler i Tosom er kryptert, privat og behandlet med dyp respekt. Vi følger GDPR og norsk personvernlovgivning — og vi går lenger enn det som kreves.\n\nVi selger aldri data.\nVi deler aldri data.\nVi sporer aldri for markedsføring.\n\nTosom er bygget for trygghet, ikke overvåkning.',
   },
   {
     icon: <IconLock />,
@@ -128,7 +128,7 @@ const sections = [
   {
     icon: <IconDatabase />,
     title: 'Hvilke data vi samler',
-    content: 'Vi samler bare det som er nødvendig for at ToSom skal fungere:\n\n    e‑post\n    profilspørsmål\n    telefonnummer (valgfritt)\n    samtalehistorikk med din match\n    teknisk informasjon som er nødvendig for drift (session‑token, autentisering)\n\nVi samler ikke:\n\n    markedsføringsdata\n    tredjeparts‑tracking\n    skjult analyse\n    data som ikke er relevant for relasjoner',
+    content: 'Vi samler bare det som er nødvendig for at Tosom skal fungere:\n\n    e‑post\n    profilspørsmål\n    telefonnummer (valgfritt)\n    samtalehistorikk med din match\n    teknisk informasjon som er nødvendig for drift (session‑token, autentisering)\n\nVi samler ikke:\n\n    markedsføringsdata\n    tredjeparts‑tracking\n    skjult analyse\n    data som ikke er relevant for relasjoner',
   },
   {
     icon: <IconTarget />,
@@ -138,7 +138,7 @@ const sections = [
   {
     icon: <IconStorage />,
     title: 'Hvor dataene lagres',
-    content: 'Dataene dine lagres på sikre, krypterte servere innenfor EU/EØS.\nToSom er utviklet og driftet fra Norge av et lite, dedikert team.',
+    content: 'Dataene dine lagres på sikre, krypterte servere innenfor EU/EØS.\nTosom er utviklet og driftet fra Norge av et lite, dedikert team.',
   },
   {
     icon: <IconRights />,

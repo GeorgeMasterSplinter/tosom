@@ -1,5 +1,5 @@
 /**
- * ToSom — OnboardingTextField (Premium Text Input)
+ * Tosom — OnboardingTextField (Premium Text Input)
  * 
  * Tekstfelt med:
  * - Mikroguiding (hva er forventet svar?)

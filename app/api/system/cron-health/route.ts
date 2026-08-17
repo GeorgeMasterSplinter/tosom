@@ -1,5 +1,5 @@
 /**
- * ToSom — Cron Health Check
+ * Tosom — Cron Health Check
  *
  * GET /api/system/cron-health
  * - Returnerer 200 hvis begge cron-jobber har logget innenfor de siste 26 timene

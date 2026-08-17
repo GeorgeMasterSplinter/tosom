@@ -52,7 +52,7 @@ export default function LoadingScreen({ state, onStepChange }: LoadingScreenProp
           Laster…
         </h2>
         <p className="text-xs text-[#4A4A4A]/50">
-          Forbereder ToSom-oppdaginga di
+          Forbereder Tosom-oppdaginga di
         </p>
       </div>
 

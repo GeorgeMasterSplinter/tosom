@@ -1,4 +1,4 @@
-/** ToSom BrandDemo
+/** Tosom BrandDemo
  *  BR11 — Vis alle farger, typografi, knapper, ikon og eksempeltekst */
 
 'use client';
@@ -22,7 +22,7 @@ export function BrandDemo() {
       {/* Farger */}
       <section>
         <BrandTitle variant="heading2" className="mb-4">Fargepalett</BrandTitle>
-        <BrandSubtitle className="mb-6">ToSom sin visuelle identitet</BrandSubtitle>
+        <BrandSubtitle className="mb-6">Tosom sin visuelle identitet</BrandSubtitle>
         <div className="grid grid-cols-3 sm:grid-cols-6 gap-4">
           {colorKeys.map((key) => {
             const val = c[key];

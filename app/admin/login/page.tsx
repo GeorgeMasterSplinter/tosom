@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * ToSom — Admin Login Page 🔐
+ * Tosom — Admin Login Page 🔐
  * 
  * Premium login med glassmorphism, gull-aksenter, og bokmål.
  * Flytt oppover på sida med minimering av unødvendig luft nederst.
@@ -83,7 +83,7 @@ export default function AdminLoginPage() {
       {/* Premium glass-kort */}
       <div className="w-full max-w-sm relative z-10">
         
-        {/* ToSom Merke — gull-logo ✨ */}
+        {/* Tosom Merke — gull-logo ✨ */}
         <div className="text-center mb-6">
           <div
             className="inline-flex w-12 h-12 rounded-xl items-center justify-center mb-3 shadow-lg"
@@ -201,7 +201,7 @@ export default function AdminLoginPage() {
 
         {/* Footer */}
         <p className="text-center mt-6 text-xs" style={{ color: 'rgba(255,255,255,0.15)' }}>
-          © 2026 ToSom AS — Alle rettigheter reservert
+          © 2026 Tosom AS — Alle rettigheter reservert
         </p>
       </div>
     </div>

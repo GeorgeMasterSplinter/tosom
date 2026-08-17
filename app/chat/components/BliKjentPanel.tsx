@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /**
- * ToSom — BliKjentPanel (Premium Nordic Gold 2026) 🟡⭐
+ * Tosom — BliKjentPanel (Premium Nordic Gold 2026) 🟡⭐
  * Premium panel for guidede spørsmål med glassmorphism-design.
  * 
  * Pakke 6.5 — Warm Flow Animations (Steg 5): FadeIn wrapper

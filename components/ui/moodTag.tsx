@@ -1,5 +1,5 @@
 /**
- * ToSom 5.0 — Mood Tag
+ * Tosom 5.0 — Mood Tag
  *
  * Display and visualise current mood with color, emoji, and animated glow.
  *

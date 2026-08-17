@@ -1,5 +1,5 @@
 /**
- * ToSom — Match Score API
+ * Tosom — Match Score API
  * POST /api/match/score — berekn match-score
  */
 

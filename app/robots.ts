@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom — Robots.txt
+   Tosom — Robots.txt
    ═══════════════════════════════════════════ */
 
 export default function robots() {

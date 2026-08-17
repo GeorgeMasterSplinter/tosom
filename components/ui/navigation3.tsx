@@ -1,5 +1,5 @@
 /**
- * ToSom UI 3.0 — Navigation System 3.0
+ * Tosom UI 3.0 — Navigation System 3.0
  *
  * Multi-platform navigation with:
  * - Web: AppNavbar + Sidebar + CommandPalette
@@ -28,7 +28,7 @@ export const AppNavbar: React.FC<{ items: NavItem[]; active: string; onNavigate:
   <nav className="sticky top-0 z-50 bg-white/[0.04] border-b border-white/8 backdrop-blur-xl">
     <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
       <div className="flex items-center gap-3">
-        <span className="text-[#D4AF37] text-lg font-semibold">◆ ToSom</span>
+        <span className="text-[#D4AF37] text-lg font-semibold">◆ Tosom</span>
       </div>
       <div className="flex items-center gap-1">
         {items.map(item => (
@@ -60,7 +60,7 @@ export const Sidebar: React.FC<{ items: NavItem[]; active: string; onNavigate: (
 }) => (
   <aside className={`${collapsed ? 'w-16' : 'w-64'} h-screen sticky top-0 bg-white/[0.02] border-r border-white/6 backdrop-blur-xl flex flex-col transition-all duration-300`}>
     <div className="p-4 border-b border-white/6">
-      {!collapsed && <span className="text-[#D4AF37] text-lg font-semibold">◆ ToSom</span>}
+      {!collapsed && <span className="text-[#D4AF37] text-lg font-semibold">◆ Tosom</span>}
       {collapsed && <span className="text-[#D4AF37] text-center block">◆</span>}
     </div>
     <nav className="flex-1 p-2 space-y-1">
@@ -90,7 +90,7 @@ export const CommandPalette: React.FC<{ open: boolean; onClose: () => void; onSe
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
       <div className="relative w-full max-w-lg bg-white/[0.04] border border-white/8 rounded-2xl backdrop-blur-xl shadow-xl overflow-hidden">
         <input
-          placeholder="Søk i ToSom..."
+          placeholder="Søk i Tosom..."
           className="w-full bg-transparent px-6 py-4 text-white text-lg outline-none placeholder:text-white/40"
           autoFocus
           onChange={e => onSearch?.(e.target.value)}
@@ -124,7 +124,7 @@ export const MobileBottomNav: React.FC<{ items: NavItem[]; active: string; onNav
 );
 
 /* ── Mobile Navbar (top bar for mobile) ── */
-export const MobileNavbar: React.FC<{ title?: string; onMenu?: () => void; onBack?: () => void }> = ({ title = 'ToSom', onMenu, onBack }) => (
+export const MobileNavbar: React.FC<{ title?: string; onMenu?: () => void; onBack?: () => void }> = ({ title = 'Tosom', onMenu, onBack }) => (
   <nav className="sticky top-0 z-50 bg-[#0A0F1F]/95 border-b border-white/8 backdrop-blur-xl px-4 h-14 flex items-center justify-between">
     {onBack ? (
       <button onClick={onBack} className="text-white/65 hover:text-white transition-colors">←</button>
@@ -160,7 +160,7 @@ export const NavSystem3: React.FC<{
     <>
       {isMobile ? (
         <>
-          <MobileNavbar title="ToSom" />
+          <MobileNavbar title="Tosom" />
           <MobileBottomNav items={items} active={active} onNavigate={onNavigate} />
         </>
       ) : (

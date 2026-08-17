@@ -1,5 +1,5 @@
 /**
- * ToSom — Presence Update API (Partner Presence v2026) 🟡⭐
+ * Tosom — Presence Update API (Partner Presence v2026) 🟡⭐
  * 
  * PATCH /api/presence/update
  * Body: { isOnline?: boolean; isTyping?: boolean }

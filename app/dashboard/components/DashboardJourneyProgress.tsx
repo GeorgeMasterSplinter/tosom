@@ -1,5 +1,5 @@
 /**
- * ToSom Dashboard 1.0 — DashboardJourneyProgress
+ * Tosom Dashboard 1.0 — DashboardJourneyProgress
  * Viser total fremdrift i 30-dagersreisen og kommende steg.
  * Context-drevet via useDashboard().
  */

@@ -1,5 +1,5 @@
 /**
- * ToSom — StatusBadge (B5.1)
+ * Tosom — StatusBadge (B5.1)
  * 
  * Admin-komponent for grønn/gul/rød statusfarging.
  * «Ting er delt opp i farger basert på tilstand grønn, gul/orange og rødt.»

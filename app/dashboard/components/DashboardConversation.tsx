@@ -1,5 +1,5 @@
 /**
- * ToSom Dashboard 1.0 — DashboardConversation
+ * Tosom Dashboard 1.0 — DashboardConversation
  * Viser dagens samtaletema og forslag til dybdeskommunikasjon.
  * Context-drevet via useDashboard().
  */

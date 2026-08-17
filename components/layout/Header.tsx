@@ -1,5 +1,5 @@
 /**
- * ToSom — Smart Header (Premium Final)
+ * Tosom — Smart Header (Premium Final)
  * Two modes: Normal (dashboard/matcher/profil) and Focus (onboarding/redigering/skriving).
  * Adaptive Presence, Soft Shadow Fade, Dynamic Blur Strength.
  */
@@ -57,7 +57,7 @@ export default function Header() {
       `}>
         {/* Logo — erstattet rå <a href> med next/link (STEG 4.2) */}
         <Link href="/" className={logoClass}>
-          ToSom
+          Tosom
         </Link>
 
         {/* Navigasjon */}
@@ -66,7 +66,7 @@ export default function Header() {
             Hvordan det fungerer
           </Link>
           <Link href="/om" className="hover:text-[#D4AF37] transition-colors duration-300 ease-out">
-            Om ToSom
+            Om Tosom
           </Link>
 
           {/* Hvis bruker er innlogget → vis NotificationCenter + Dashboard */}

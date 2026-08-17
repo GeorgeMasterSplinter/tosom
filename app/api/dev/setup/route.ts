@@ -56,7 +56,7 @@ export async function POST() {
               firstName: 'Testbruker',
               age: 30,
               bio: 'Dev-user for testing',
-              interests: ['Utvikling', 'AI', 'ToSom'],
+              interests: ['Utvikling', 'AI', 'Tosom'],
               deepProfileData: { identity: { name: 'Testbruker', age: 30 } } as any,
               deepProfileStep: DeepProfileStep.SUMMARY,
             },

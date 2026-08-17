@@ -1,5 +1,5 @@
 /**
- * ToSom — Chat Page (Server Wrapper)
+ * Tosom — Chat Page (Server Wrapper)
  * Henter session og renderar ChatPageClient med sessionUserId.
  */
 

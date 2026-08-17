@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom — Sitemap
+   Tosom — Sitemap
    ═══════════════════════════════════════════ */
 
 export default function sitemap() {

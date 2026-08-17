@@ -1,5 +1,5 @@
 /**
- * ToSom — Steg 10: Start reisen (Premium rebuild 2026 — Fase 4)
+ * Tosom — Steg 10: Start reisen (Premium rebuild 2026 — Fase 4)
  * - Bokmål (Nynorsk→Bokmål-konvertering)
  * 
  * Den siste sida av onboarding. Brukar OnboardingSlide-wrapper med:

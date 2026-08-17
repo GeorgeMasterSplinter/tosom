@@ -1,5 +1,5 @@
 /**
- * ToSom — useChatScroll Hook
+ * Tosom — useChatScroll Hook
  * Optimalisert scroll-handtering for chat.
  * 
  * Funksjonar:

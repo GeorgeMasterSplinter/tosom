@@ -1,5 +1,5 @@
 /**
- * ToSom Dashboard 2.0 — DashboardEventProvider
+ * Tosom Dashboard 2.0 — DashboardEventProvider
  * Kobler eventStream med addNotification fra NotificationContext.
  */
 

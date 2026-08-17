@@ -1,5 +1,5 @@
 /**
- * ToSom — AtmosphereLayer
+ * Tosom — AtmosphereLayer
  * 
  * Ambient bakgrunnslag for ChatRoom med:
  *   - Mood-basert gradient (reagerer på WarmFlow-mood)

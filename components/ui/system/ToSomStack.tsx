@@ -1,5 +1,5 @@
 /**
- * ToSom ToSomStack — System component
+ * Tosom ToSomStack — System component
  * 
  * Vertical layout primitive with spacing tokens.
  */

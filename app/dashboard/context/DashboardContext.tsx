@@ -1,5 +1,5 @@
 /**
- * ToSom Dashboard 2.0 — DashboardContext
+ * Tosom Dashboard 2.0 — DashboardContext
  * Sentral motor for Dashboard-data og state-håndtering.
  * API-klar arkitektur med useReducer + action-based dispatch.
  * Ingen UI-endringer. Kun arkitektur.
@@ -68,7 +68,7 @@ const mockDashboardData: MockDashboardData = {
     },
     {
       title: 'Ingen offentlig profil',
-      description: 'ToSom har ingen feed, ingen søkefunksjon og ingen åpne profiler.',
+      description: 'Tosom har ingen feed, ingen søkefunksjon og ingen åpne profiler.',
     },
     {
       title: 'Bygget for trygghet',

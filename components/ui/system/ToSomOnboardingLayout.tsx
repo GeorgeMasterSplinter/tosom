@@ -1,5 +1,5 @@
 /**
- * ToSom ToSomOnboardingLayout — System component
+ * Tosom ToSomOnboardingLayout — System component
  * 
  * Standard onboarding layout with stepper + glass panel.
  */

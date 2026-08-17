@@ -1,5 +1,5 @@
 /**
- * ToSom ToSomStepper — System component
+ * Tosom ToSomStepper — System component
  * 
  * Step indicator for onboarding flows with gold active state.
  */

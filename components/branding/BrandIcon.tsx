@@ -1,4 +1,4 @@
-/** ToSom-ikonkomponent
+/** Tosom-ikonkomponent
  *  BR9 — BrandIcon med outline-stil, 1.75px stroke, runde hjørner */
 
 'use client';

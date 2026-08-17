@@ -1,5 +1,5 @@
 /**
- * ToSom — Admin Analytics API 📊
+ * Tosom — Admin Analytics API 📊
  * Henter virkelige tall fra database for dashboardet.
  */
 

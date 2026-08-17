@@ -1,5 +1,5 @@
 /**
- * ToSom Dashboard 2.0 — Event Stream
+ * Tosom Dashboard 2.0 — Event Stream
  * Event handlers og connect-funksjon for realtime oppdateringer.
  * Mock-eventer simulerer SSE/WebStream later erstattet med ekte implementasjon.
  */

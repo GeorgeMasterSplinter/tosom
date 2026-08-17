@@ -1,5 +1,5 @@
 /**
- * ToSom — TodayCard (Premium Nordic Gold 2026) 🟡⭐
+ * Tosom — TodayCard (Premium Nordic Gold 2026) 🟡⭐
  * Viser dagens JourneyDayContent-tema med refleksjon, samtalesprompt og resonansmål.
  * 
  * Design:

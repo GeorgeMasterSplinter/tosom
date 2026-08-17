@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom Premium — DashboardHeader Component
+   Tosom Premium — DashboardHeader Component
    Welcome section with avatar, greeting, subtitle
    ═══════════════════════════════════════════ */
 

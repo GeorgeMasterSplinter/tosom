@@ -1,5 +1,5 @@
 /**
- * ToSom 4.0 — Onboarding Experience
+ * Tosom 4.0 — Onboarding Experience
  *
  * Full onboarding journey: welcome → personality → interests → goals → AI → finish.
  * Uses PageTransition + StaggeredChildren + GlowEffect + GuidedFlow.
@@ -155,7 +155,7 @@ const WelcomeScreen: React.FC = () => {
           <span className="text-5xl">♡</span>
         </div>
         <h1 className="text-white font-semibold text-4xl mb-4 leading-tight">
-          Velkommen til<br /><span className="text-[#D4AF37]">ToSom</span>
+          Velkommen til<br /><span className="text-[#D4AF37]">Tosom</span>
         </h1>
         <p className="text-white/50 text-lg mb-2 leading-relaxed">
           To mennesker. Én reise.

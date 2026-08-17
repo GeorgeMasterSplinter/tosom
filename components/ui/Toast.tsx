@@ -1,7 +1,7 @@
 "use client";
 
 /* ═══════════════════════════════════════════
-   ToSom Premium — Toast Component
+   Tosom Premium — Toast Component
    success, error, info, warning
    GPU-composited (opacity + transform only)
    Respects prefers-reduced-motion

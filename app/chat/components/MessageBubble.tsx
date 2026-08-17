@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 /**
- * ToSom — MessageBubble (Premium Nordic Gold 2026) 🟡⭐
+ * Tosom — MessageBubble (Premium Nordic Gold 2026) 🟡⭐
  * Premium komponent for alle meldingstyper: TEXT, IMAGE, TASK, CHOICE, SYSTEM
  * 
  * Pakke 6.5 — Warm Flow Animations (Steg 4): FadeIn animasjon på chat-bobler

@@ -1,5 +1,5 @@
 /**
- * ToSom — OnboardingSlide (Premium Slide Component)
+ * Tosom — OnboardingSlide (Premium Slide Component)
  * 
  * Ein slide-per-komponent med gull-bokmerke, fade-in animasjon,
  * og 130% zoom designsystem (32–48px spacing).

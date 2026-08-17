@@ -1,5 +1,5 @@
 /**
- * ToSom Dashboard 1.0 — DashboardProfileCard
+ * Tosom Dashboard 1.0 — DashboardProfileCard
  * Lite, rolig, premium profilkort øverst i Dashboardet.
  */
 

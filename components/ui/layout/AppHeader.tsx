@@ -1,9 +1,9 @@
 /**
- * ToSom — Global AppHeader (Premium Polish)
+ * Tosom — Global AppHeader (Premium Polish)
  * 
  * Brukes på ALLE sider automatisk via global layout.
  * 
- * Venstre: Tilbake-pil (ikke på forsiden) + ToSom-logo
+ * Venstre: Tilbake-pil (ikke på forsiden) + Tosom-logo
  * Høyre: "Logg inn" + "Opprett konto"
  * Premium glassmorphism, animasjoner og micro-interactions
  */
@@ -50,7 +50,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ hideOn = false }) => {
   const showBack = !isHome;
 
   const navItems = [
-    { label: 'Hvorfor ToSom', href: '/hvorfor' },
+    { label: 'Hvorfor Tosom', href: '/hvorfor' },
     { label: 'Slik fungerer det', href: '/slik-fungerer-det' },
     { label: 'Reisen', href: '/reisen' },
     { label: 'Priser', href: '/priser' },

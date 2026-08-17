@@ -1,5 +1,5 @@
 /**
- * ToSom Dashboard 2.0 — NotificationContainer
+ * Tosom Dashboard 2.0 — NotificationContainer
  * Viser alle aktive notifikasjoner i et globalt overlay.
  */
 

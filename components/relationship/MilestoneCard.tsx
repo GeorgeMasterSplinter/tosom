@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom — Milestone Card
+   Tosom — Milestone Card
    Viser enkelt relasjons-milepæl
    ═══════════════════════════════════════════ */
 

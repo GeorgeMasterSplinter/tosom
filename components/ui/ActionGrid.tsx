@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom ActionGrid — Design System 1.1
+   Tosom ActionGrid — Design System 1.1
    2x2 grid for handlingar i dashboard.
    Bruk glassmorphism-kort med ikoner.
    ═══════════════════════════════════════════ */

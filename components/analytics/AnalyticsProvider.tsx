@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom — Analytics Provider (Plausible + Custom Events)
+   Tosom — Analytics Provider (Plausible + Custom Events)
    ═══════════════════════════════════════════ */
 
 "use client";

@@ -1,5 +1,5 @@
 /**
- * ToSom — FadeIn (Warm Flow Animations v2026) 🟡⭐
+ * Tosom — FadeIn (Warm Flow Animations v2026) 🟡⭐
  * Premium fade-in komponent med scroll-trigger, stagger og variantar.
  * 
  * Pakke 6.5 — Warm Flow Animations (Steg 1)

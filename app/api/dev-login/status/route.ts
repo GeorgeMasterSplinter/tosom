@@ -1,5 +1,5 @@
 /**
- * ToSom — Dev Login Status API
+ * Tosom — Dev Login Status API
  * 
  * GET /api/dev-login/status
  * Returnerer om dev-login er aktivert og hva testbrukarar som er tilgjengelege.

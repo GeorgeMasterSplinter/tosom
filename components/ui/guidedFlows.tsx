@@ -1,5 +1,5 @@
 /**
- * ToSom 4.0 — Guided Flows System
+ * Tosom 4.0 — Guided Flows System
  *
  * 5 guided flows with step-by-step progress indicators and warm transitions.
  *

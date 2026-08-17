@@ -1,5 +1,5 @@
 /**
- * ToSom — Global Header Wrapper (Route-Based Conditional)
+ * Tosom — Global Header Wrapper (Route-Based Conditional)
  * 
  * Kun landing og auth-sider får AppHeader.
  * Dashboard, settings, journey, profile, chat, onboarding har egne headers.

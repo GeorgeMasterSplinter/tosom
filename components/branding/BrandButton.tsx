@@ -1,4 +1,4 @@
-/** ToSom-knappkomponentar
+/** Tosom-knappkomponentar
  *  BR8 — Knappestil
  *
  *  Primær: blå

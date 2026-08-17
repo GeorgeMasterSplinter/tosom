@@ -1,7 +1,7 @@
 /**
- * ToSom — Onboarding steg: Betaling
+ * Tosom — Onboarding steg: Betaling
  * 
- * Ro, trygg betalingsside med ToSom-tone.
+ * Ro, trygg betalingsside med Tosom-tone.
  * Visar planar, prisar og gir moglegheit til å velje abonnement.
  */
 
@@ -81,7 +81,7 @@ export default function PaymentPage() {
         {/* Logo */}
         <div className="text-center mb-10">
           <Link href="/" className="text-3xl font-semibold tracking-tight" style={{ color: '#D4AF37' }}>
-            ToSom
+            Tosom
           </Link>
         </div>
 
@@ -91,7 +91,7 @@ export default function PaymentPage() {
             Vel den som passar deg
           </h1>
           <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
-            ToSom er ein investering i verkelege relasjonar. 
+            Tosom er ein investering i verkelege relasjonar. 
             Ingen binding — se opp når du ønskjer det.
           </p>
         </div>
@@ -209,7 +209,7 @@ export default function PaymentPage() {
               opacity: loading ? 0.6 : 1,
             }}
           >
-            {loading ? 'Behandler...' : `Bli med på ToSom — kr ${PLANS.find(p => p.id === selectedPlan)?.price}⁰${PLANS.find(p => p.id === selectedPlan)?.period || '/mnd'}`}
+            {loading ? 'Behandler...' : `Bli med på Tosom — kr ${PLANS.find(p => p.id === selectedPlan)?.price}⁰${PLANS.find(p => p.id === selectedPlan)?.period || '/mnd'}`}
             <span style={{ fontSize: '18px' }}>→</span>
           </button>
         </div>

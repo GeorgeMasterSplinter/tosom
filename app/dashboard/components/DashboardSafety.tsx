@@ -1,5 +1,5 @@
 /**
- * ToSom Dashboard 1.0 — DashboardSafety
+ * Tosom Dashboard 1.0 — DashboardSafety
  * Viser trygghetspunkter som gir brukeren kontroll og ro.
  * Context-drevet via useDashboard().
  */
@@ -58,7 +58,7 @@ export const DashboardSafety: FC = () => {
 
       {/* Undertekst */}
       <p className="text-[var(--ts-text-soft)] leading-[1.7] max-w-md">
-        ToSom er bygget for å gi deg kontroll og ro.
+        Tosom er bygget for å gi deg kontroll og ro.
       </p>
 
       {/* Trygghetspunkter */}

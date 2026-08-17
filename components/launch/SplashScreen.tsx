@@ -1,6 +1,6 @@
 "use client";
 
-/** SplashScreen.tsx — førsteinntrykk av ToSom
+/** SplashScreen.tsx — førsteinntrykk av Tosom
  *  LF5 — fade-in animasjon, etter 1.5s → nextStep()
  *  LF18–LF19 — rolige blå/grønne toner, moden og varm typografi */
 
@@ -39,7 +39,7 @@ export default function SplashScreen({ state, onStepChange }: SplashScreenProps)
       <div className="text-7xl animate-pulse">💫</div>
       <div>
         <h1 className="text-3xl font-semibold text-[#4A4A4A] mb-3 tracking-tight">
-          ToSom
+          Tosom
         </h1>
         <p className="text-sm text-[#4A4A4A]/60 max-w-sm leading-relaxed">
           Rolige møter. Ekte forbindelser.

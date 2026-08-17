@@ -1,5 +1,5 @@
 /**
- * ToSom ToSomCard — System component
+ * Tosom ToSomCard — System component
  * 
  * Foundation card matching "Slik fungerer det" cards exactly,
  * but fully token-driven with icon, title, and content support.

@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom — Dynamic Imports (Performance)
+   Tosom — Dynamic Imports (Performance)
    Lazy-load tunge komponenter med next/dynamic
    ═══════════════════════════════════════════ */
 

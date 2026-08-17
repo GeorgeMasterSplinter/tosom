@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * ToSom — Admin: Rapportbehandling (STEG C3)
+ * Tosom — Admin: Rapportbehandling (STEG C3)
  *
  * Lister alle rapporter med status=OPEN, sortert eldst først.
  * Handlinger: se kontekst, marker gjennomgått, iverksett (ban), avvis.

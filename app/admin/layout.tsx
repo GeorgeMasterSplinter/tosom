@@ -1,5 +1,5 @@
 /**
- * ToSom — Admin Root Layout (med sidebar + content wrapper)
+ * Tosom — Admin Root Layout (med sidebar + content wrapper)
  *
  * Alle sider under /admin/ får automatisk:
  * - Sidebar-navigasjon til venstre (240px)
@@ -17,8 +17,8 @@ import { headers } from 'next/headers';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 
 export const metadata = {
-  title: 'ToSom Admin',
-  description: 'Administrasjonspanel for ToSom-plattformen',
+  title: 'Tosom Admin',
+  description: 'Administrasjonspanel for Tosom-plattformen',
 };
 
 export default async function AdminRootLayout({

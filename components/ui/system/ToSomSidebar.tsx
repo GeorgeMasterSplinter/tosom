@@ -1,5 +1,5 @@
 /**
- * ToSom ToSomSidebar — System component
+ * Tosom ToSomSidebar — System component
  * 
  * Collapsible sidebar for dashboard/admin with icons, labels, active state.
  */

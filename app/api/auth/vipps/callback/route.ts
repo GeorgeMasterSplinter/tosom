@@ -1,5 +1,5 @@
 /**
- * ToSom — Vipps OAuth Callback Endpoint
+ * Tosom — Vipps OAuth Callback Endpoint
  * Handsamer tilbakekalling frå Vipps og opprettar/oppdaterar bruker-session.
  * 
  * STEG 2.1: Fjernet manuell base64-sesjonscookie. Bruker nå NextAuth signIn() 

@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom — Social Graph Visualization
+   Tosom — Social Graph Visualization
    Lightweight canvas-basert visualisering av relasjonsdynamikk
    ═══════════════════════════════════════════ */
 

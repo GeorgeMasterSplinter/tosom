@@ -1,5 +1,5 @@
 /**
- * ToSom — Loading Skeleton (Premium)
+ * Tosom — Loading Skeleton (Premium)
  * 
  * Gjenbrukbare skeleton-komponentar for alle sider.
  * Bruk under data-innlasting i staden for generisk "Laster..." tekst.

@@ -1,5 +1,5 @@
 /**
- * ToSom AuthCTA — Unified authentication CTA component
+ * Tosom AuthCTA — Unified authentication CTA component
  *
  * Compact premium gold + dark glass buttons with consistent branding.
  * Replaces all inline CTAs throughout the app.

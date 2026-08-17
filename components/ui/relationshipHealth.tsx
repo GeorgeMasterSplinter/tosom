@@ -1,5 +1,5 @@
 /**
- * ToSom 5.0 — Relationship Health Score
+ * Tosom 5.0 — Relationship Health Score
  *
  * 5 dimensions: communication, emotionalSafety, curiosity, sharedGoals, connection
  * Gauge visualization + trend arrows + health summary.

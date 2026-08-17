@@ -1,5 +1,5 @@
 /**
- * ToSom Admin Stats API
+ * Tosom Admin Stats API
  * 
  * Hentar sanntidsstatistikk frå databasen for dashboard.
  * Berre tilgjengeleg for admin (krevar admin_token eller session med admin-role).

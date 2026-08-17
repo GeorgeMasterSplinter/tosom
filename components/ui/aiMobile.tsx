@@ -1,5 +1,5 @@
 /**
- * ToSom UI 3.0 — AI Components Mobile
+ * Tosom UI 3.0 — AI Components Mobile
  *
  * Mobile-optimized AI assistant components.
  * - AIInsightsPanel -> bottom sheet

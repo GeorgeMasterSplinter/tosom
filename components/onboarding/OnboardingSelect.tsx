@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/role-has-required-aria-props */
 /**
- * ToSom — OnboardingSelect (Premium Select)
+ * Tosom — OnboardingSelect (Premium Select)
  * Rolig select med glassmorphism og gull-pil.
  * Bruker design-tokens konsekvent.
  */

@@ -1,5 +1,5 @@
 /**
- * ToSom — Chat Page Client Component
+ * Tosom — Chat Page Client Component
  * Klient-komponent som bruker ChatProvider og ChatContainer.
  */
 

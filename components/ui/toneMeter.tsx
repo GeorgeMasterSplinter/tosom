@@ -1,5 +1,5 @@
 /**
- * ToSom 5.0 — Tone Meter
+ * Tosom 5.0 — Tone Meter
  * Visualise emotional tone across 5 dimensions.
  * UI 4.6: React.memo + useMemo + GPU-optimised bar.
  */

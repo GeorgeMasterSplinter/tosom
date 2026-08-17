@@ -1,5 +1,5 @@
 /**
- * ToSom ToSomChatInput — System component
+ * Tosom ToSomChatInput — System component
  * 
  * Chat input with send button and typing indicator.
  */

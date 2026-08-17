@@ -1,5 +1,5 @@
 /**
- * ToSom – SliderField
+ * Tosom – SliderField
  * Premium slider med label, min, max, verdi.
  */
 

@@ -1,5 +1,5 @@
 /**
- * ToSom UI 2.0 — Card Components Barrel Export
+ * Tosom UI 2.0 — Card Components Barrel Export
  */
 export { default as GlassCard } from './GlassCard';
 export { default as ElevatedCard } from './ElevatedCard';

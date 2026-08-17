@@ -1,4 +1,4 @@
-/** ToSom BrandProvider
+/** Tosom BrandProvider
  *  BR5 — Legg fargar og typografi i React context
  *  Eksporterer: useBrandColors(), useBrandTypography() */
 

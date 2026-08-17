@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * ToSom — Admin Sidebar 📋
+ * Tosom — Admin Sidebar 📋
  * Felles navigasjon for alle admin-sider.
  */
 
@@ -72,7 +72,7 @@ export function AdminSidebar() {
         className="py-4 px-6 text-xs"
         style={{ borderTop: '1px solid rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.2)' }}
       >
-        ToSom Admin v1.0
+        Tosom Admin v1.0
       </div>
     </div>
   );

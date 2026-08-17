@@ -1,5 +1,5 @@
 /**
- * ToSom — PremiumCTAButton (Call-to-Action Button)
+ * Tosom — PremiumCTAButton (Call-to-Action Button)
  * 
  * Stor, roleg CTA-knapp med:
  * - Gull-gradient hover-effekt

@@ -1,7 +1,7 @@
 /**
- * ToSom — Onboarding steg: Tilgangskontroll
+ * Tosom — Onboarding steg: Tilgangskontroll
  * 
- * Visar kven som kan bruke ToSom, tryggleikskriteria og gir brukaren
+ * Visar kven som kan bruke Tosom, tryggleikskriteria og gir brukaren
  * moglegheit til å bekrefte at dei oppfyller kravene før vidare.
  */
 
@@ -12,7 +12,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 const CHECKS = [
-  { icon: '🌱', title: 'Du er 21 år eller eldre', desc: 'ToSom er laga for vaksne som meiningsfull kontakt.' },
+  { icon: '🌱', title: 'Du er 21 år eller eldre', desc: 'Tosom er laga for vaksne som meiningsfull kontakt.' },
   { icon: '💛', title: 'Du søker seriøst forhold', desc: 'Plattforma er for dei som vil verkeleg dybde, ikke overfladisk kontakt.' },
   { icon: '🛡️', title: 'Du respektar andrar grenser', desc: 'Grenser og respekt er grunnlaget for ein trygg prosess.' },
 ];
@@ -31,7 +31,7 @@ export default function AccessPage() {
         {/* Logo */}
         <div className="text-center mb-10">
           <Link href="/" className="text-3xl font-semibold tracking-tight" style={{ color: '#D4AF37' }}>
-            ToSom
+            Tosom
           </Link>
         </div>
 
@@ -41,7 +41,7 @@ export default function AccessPage() {
             Trygghet først
           </h1>
           <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
-            ToSom er bygd for voksne som ønskjer ein dypare måte å møte noen på. 
+            Tosom er bygd for voksne som ønskjer ein dypare måte å møte noen på. 
             Desse kriteria gjeld for alle brukere.
           </p>
         </div>
@@ -139,7 +139,7 @@ export default function AccessPage() {
         {/* Footer */}
         <div className="mt-10 text-center">
           <p className="text-xs" style={{ color: 'rgba(255,255,255,0.25)' }}>
-            ToSom bruker verifisering og moderering for å halde samfunnet trygt.
+            Tosom bruker verifisering og moderering for å halde samfunnet trygt.
           </p>
         </div>
 

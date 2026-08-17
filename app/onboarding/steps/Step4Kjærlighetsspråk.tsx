@@ -1,5 +1,5 @@
 /**
- * ToSom — Steg 4: Kjærlighetsspråk & nærhet (Premium rebuild 2026 — Fase 4)
+ * Tosom — Steg 4: Kjærlighetsspråk & nærhet (Premium rebuild 2026 — Fase 4)
  * - Bokmål (Nynorsk→Bokmål-konvertering)
  */
 

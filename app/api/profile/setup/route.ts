@@ -1,5 +1,5 @@
 /**
- * ToSom – API: Profile Setup
+ * Tosom – API: Profile Setup
  * Mottar og lagrar all onboarding-data og mappar til Prisma Profile-modellen.
  *
  * O1 FIX: Input-validering med Zod-schema (onboardingSetupSchema).

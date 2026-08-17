@@ -1,5 +1,5 @@
 /**
- * ToSom Dashboard 1.0 — DashboardNavBar
+ * Tosom Dashboard 1.0 — DashboardNavBar
  * Premium sticky top-navigasjon for Dashboardet.
  * Redusert til 5 hovedlenker per redesign-spec.
  */

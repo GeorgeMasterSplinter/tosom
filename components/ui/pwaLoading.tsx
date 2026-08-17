@@ -1,5 +1,5 @@
 /**
- * ToSom UI 3.0 — PWA Loading Screen
+ * Tosom UI 3.0 — PWA Loading Screen
  *
  * First-content-for-PWA screen with brand animation.
  * Shows while service worker and app initialize.
@@ -89,7 +89,7 @@ const PWALoadingScreen: React.FC = () => {
         color: '#D4AF37',
         letterSpacing: -0.5,
         marginBottom: 8,
-      }}>ToSom</span>
+      }}>Tosom</span>
 
       {/* Tagline */}
       <span style={{

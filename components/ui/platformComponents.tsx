@@ -1,5 +1,5 @@
 /**
- * ToSom UI 3.0 — Platform-Aware Components
+ * Tosom UI 3.0 — Platform-Aware Components
  *
  * Auto-selects the correct component implementation based on runtime platform.
  * All wrappers use Tailwind classes only — no inline styles.

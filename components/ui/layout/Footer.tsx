@@ -1,8 +1,8 @@
 /**
- * ToSom UI5 — Footer (Premium Dark + Glassmorphism)
+ * Tosom UI5 — Footer (Premium Dark + Glassmorphism)
  * 
  * Premium footer med design-tokens, strukturert layout.
- * Migrated to ToSom Design System.
+ * Migrated to Tosom Design System.
  * Moderne norsk bokmål.
  */
 
@@ -28,7 +28,7 @@ export interface FooterProps {
    ======================== */
 
 const produktLinks = [
-  { label: 'Hvorfor ToSom', href: '/hvorfor' },
+  { label: 'Hvorfor Tosom', href: '/hvorfor' },
   { label: 'Slik fungerer det', href: '/slik-fungerer-det' },
   { label: 'Reisen', href: '/reisen' },
   { label: 'Priser', href: '/priser' },
@@ -51,7 +51,7 @@ const omLinks = [
     ======================== */
 
 export const Footer: FC<FooterProps> = ({
-  companyName = 'ToSom',
+  companyName = 'Tosom',
   year = new Date().getFullYear(),
 }) => {
   return (
@@ -164,13 +164,13 @@ export const Footer: FC<FooterProps> = ({
             </ul>
           </div>
 
-           {/* Kolonne 3: Om ToSom */}
+           {/* Kolonne 3: Om Tosom */}
            <div>
              <h4
                className="text-[10px] uppercase tracking-[0.2em] font-semibold mb-5"
                style={{ color: 'rgba(212,175,55,0.55)' }}
              >
-               Om ToSom
+               Om Tosom
              </h4>
              <ul className="space-y-[7px]">
                {omLinks.map((link) => (
@@ -200,7 +200,7 @@ export const Footer: FC<FooterProps> = ({
         {/* Botntekst */}
         <div className="text-center pt-20 ph:pt-24 md:pt-28">
           <ToSomTagline>
-            ToSom — en rolig, moden måte å møtes på. To mennesker. Én reise. Ekte kontakt.
+            Tosom — en rolig, moden måte å møtes på. To mennesker. Én reise. Ekte kontakt.
           </ToSomTagline>
 
           {/* Made in Norway */}
@@ -218,7 +218,7 @@ export const Footer: FC<FooterProps> = ({
               className="text-sm md:text-base font-medium"
               style={{ color: 'rgba(212,175,55,0.75)', letterSpacing: '0.15em' }}
             >
-              ToSom er utviklet og driftet fra Norge
+              Tosom er utviklet og driftet fra Norge
             </span>
           </div>
         </div>

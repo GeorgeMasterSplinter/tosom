@@ -1,5 +1,5 @@
 /**
- * ToSom — OnboardingTextarea (Premium Textarea)
+ * Tosom — OnboardingTextarea (Premium Textarea)
  * Rolig textarea med maks 4000 tegn og glassmorphism.
  * Bruker design-tokens konsekvent.
  */

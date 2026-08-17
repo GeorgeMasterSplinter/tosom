@@ -1,6 +1,6 @@
 // app/api/match/route.ts — GET /api/match (B7: POST fjernet)
 // GET → list eksisterande matcher for brukaren
-// POST er FJERNET (STEG B7) — ToSom kobler, godtar ikke.
+// POST er FJERNET (STEG B7) — Tosom kobler, godtar ikke.
 
 import prisma from "@/lib/prisma";
 import { getServerSession } from "@/lib/auth/session";

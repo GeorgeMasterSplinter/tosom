@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * ToSom — Admin Analytics 📊
+ * Tosom — Admin Analytics 📊
  * Viser virkelige tall fra databasen (ingen fake data).
  */
 
@@ -205,7 +205,7 @@ export default function AdminAnalyticsPage() {
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h1 className="text-2xl font-bold mb-1" style={{ color: 'rgba(255,255,255,0.95)' }}>📊 Statistikk</h1>
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>Ekte data fra ToSom-plattformen</p>
+          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>Ekte data fra Tosom-plattformen</p>
         </div>
         <TimeFilter value={timeFilter} onChange={setTimeFilter} />
       </div>

@@ -1,9 +1,9 @@
 'use client';
 
 /**
- * ToSom — Admin Reiser 🕓
+ * Tosom — Admin Reiser 🕓
  *
- * Oversikt over pågående og fullførte ToSom-reiser.
+ * Oversikt over pågående og fullførte Tosom-reiser.
  * Bruker Ekte data fra /api/admin/journeys.
  */
 
@@ -117,7 +117,7 @@ export default function AdminJourneysPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold mb-1" style={{ color: 'rgba(255,255,255,0.95)' }}>🕓 Reiser</h1>
-        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>Oversikt over alle ToSom-reiser (30-dagers guiding)</p>
+        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>Oversikt over alle Tosom-reiser (30-dagers guiding)</p>
       </div>
 
       {loading ? (

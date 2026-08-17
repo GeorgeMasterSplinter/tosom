@@ -1,5 +1,5 @@
 /**
- * ToSom Design System — Border Radii
+ * Tosom Design System — Border Radii
  * 
  * Store, blide hjørne — aldri skarpe
  * Core-definition: Ro, varm, myk

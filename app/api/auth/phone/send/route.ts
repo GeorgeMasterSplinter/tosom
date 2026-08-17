@@ -1,5 +1,5 @@
 /**
- * ToSom — Send telefonverifiseringskode
+ * Tosom — Send telefonverifiseringskode
  * 
  * POST /api/auth/phone/send
  * - Valider telefonnummer

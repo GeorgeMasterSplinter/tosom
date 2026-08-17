@@ -1,7 +1,7 @@
 "use client";
 
 /* ═══════════════════════════════════════════
-   ToSom Premium — Section Component
+   Tosom Premium — Section Component
    Wrapper med fade-in via IntersectionObserver
    ═══════════════════════════════════════════ */
 

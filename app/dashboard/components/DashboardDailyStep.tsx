@@ -1,5 +1,5 @@
 /**
- * ToSom Dashboard 1.0 — DashboardDailyStep
+ * Tosom Dashboard 1.0 — DashboardDailyStep
  * Viser dagens steg i 30-dagersreisen med fremdriftsindikator.
  * Context-drevet via useDashboard().
  */

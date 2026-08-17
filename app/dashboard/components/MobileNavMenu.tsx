@@ -1,5 +1,5 @@
 /**
- * ToSom Dashboard 1.0 — MobileNavMenu
+ * Tosom Dashboard 1.0 — MobileNavMenu
  * Hamburger-knapp + slide-in panel for mobil-navigasjon.
  */
 

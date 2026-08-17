@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * ToSom — Admin Resonance (B5.4)
+ * Tosom — Admin Resonance (B5.4)
  * 
  * Scorefordeling per runde + resonansøkt per bruker.
  * Eneste måte å justere matchevektene.

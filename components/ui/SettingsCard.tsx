@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom SettingsCard — Design System 1.1
+   Tosom SettingsCard — Design System 1.1
    Glassmorphism kort for innstillinger.
    Bruk i dashboard og settings-sider.
    ═══════════════════════════════════════════ */

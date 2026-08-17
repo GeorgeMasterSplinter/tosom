@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom Premium — JourneyCard Component
+   Tosom Premium — JourneyCard Component
    Glass card med title, description, CTA
    ═══════════════════════════════════════════ */
 

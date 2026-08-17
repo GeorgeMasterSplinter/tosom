@@ -1,5 +1,5 @@
 /**
- * ToSom — OnboardingInput (Premium Input)
+ * Tosom — OnboardingInput (Premium Input)
  * Rolig input med glassmorphism og gull-focus.
  * Bruker design-tokens konsekvent.
  */

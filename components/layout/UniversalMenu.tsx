@@ -1,8 +1,8 @@
 /**
- * ToSom — Universal Menu Component
+ * Tosom — Universal Menu Component
  * 
  * Universell hamburger-meny som rendres på ALLE sider.
- - ToSom-logo (samme som landing)
+ - Tosom-logo (samme som landing)
 - Hamburger-ikon med mobil meny
 - Global navigasjon
 - Ingen side-spesifikk logikk
@@ -17,7 +17,7 @@ import { Logo } from '@/components/ui/branding/Logo';
 import { color } from '@/config/design-tokens';
 
 const navItems = [
-  { label: 'Hvorfor ToSom', href: '/hvorfor' },
+  { label: 'Hvorfor Tosom', href: '/hvorfor' },
   { label: 'Slik fungerer det', href: '/slik-fungerer-det' },
   { label: 'Reisen', href: '/reisen' },
   { label: 'Priser', href: '/priser' },

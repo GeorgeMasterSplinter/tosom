@@ -1,5 +1,5 @@
 /**
- * ToSom Admin — Loading Skeleton (gjenbrukbar)
+ * Tosom Admin — Loading Skeleton (gjenbrukbar)
  * 
  * Viser eit ryddig skeleton når data lastar frå API.
  */

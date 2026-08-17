@@ -1,7 +1,7 @@
 /**
- * ToSom — GlassPanel (Universal)
+ * Tosom — GlassPanel (Universal)
  * 
- * Gjenbrukbart glass-panel med ToSom Blue + Nordic Gold design.
+ * Gjenbrukbart glass-panel med Tosom Blue + Nordic Gold design.
  * Bruk på tvers av chat, dashboard, settings, admin og onboarding.
  */
 

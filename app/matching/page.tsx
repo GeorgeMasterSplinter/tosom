@@ -1,8 +1,8 @@
 /**
- * ToSom UI 5.0 — Matching Page (STEG B7: ren visning)
+ * Tosom UI 5.0 — Matching Page (STEG B7: ren visning)
  *
  * Viser aktiv match for brukeren.
- * Ingen Ja/Nei-knapper — ToSom kobler, godtar ikke.
+ * Ingen Ja/Nei-knapper — Tosom kobler, godtar ikke.
  */
 
 'use client';

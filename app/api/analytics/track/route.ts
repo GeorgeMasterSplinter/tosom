@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom — Server-Side Analytics Tracker
+   Tosom — Server-Side Analytics Tracker
    Logger analytics events til database/extern tjeneste
    ═══════════════════════════════════════════ */
 

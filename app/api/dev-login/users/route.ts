@@ -1,5 +1,5 @@
 /**
- * ToSom — Dev Login Users API
+ * Tosom — Dev Login Users API
  * 
  * GET /api/dev-login/users
  * Returnerer liste over tilgjengelege testbrukarar.

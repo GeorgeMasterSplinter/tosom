@@ -1,11 +1,11 @@
 'use client';
 
 /**
- * ToSom — Admin Chat (metadata) 💬
+ * Tosom — Admin Chat (metadata) 💬
  * 
  * Oversikt over alle samtaler — metadata kun.
  * Ingen innsyn i meldingsinnhold eller bilder.
- * Design: ToSom Blue + Nordic Gold + Glassmorphism.
+ * Design: Tosom Blue + Nordic Gold + Glassmorphism.
  * Bokmål. Premium. Ro. Moden.
  */
 

@@ -1,7 +1,7 @@
 "use client";
 
 /* ═══════════════════════════════════════════
-   ToSom Premium — Navbar Component
+   Tosom Premium — Navbar Component
    Glassmorphism sticky header med mobilmeny
    ═══════════════════════════════════════════ */
 
@@ -15,11 +15,11 @@ interface NavbarProps {
 
 const defaultLinks = [
   { label: "Hjem", href: "/" },
-  { label: "Om ToSom", href: "/om" },
+  { label: "Om Tosom", href: "/om" },
   { label: "Logg inn", href: "/login" },
 ];
 
-export const Navbar = ({ brand = "ToSom", links = defaultLinks }: NavbarProps) => {
+export const Navbar = ({ brand = "Tosom", links = defaultLinks }: NavbarProps) => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
@@ -40,7 +40,7 @@ export const Navbar = ({ brand = "ToSom", links = defaultLinks }: NavbarProps) =
             href="/"
             className="text-lg font-semibold transition-colors duration-150 hover:opacity-80 focus-visible:ring-2 focus-visible:ring-[var(--ts-gold)]/50"
             style={{ color: "var(--ts-gold)" }}
-            aria-label="ToSom forsiden"
+            aria-label="Tosom forsiden"
           >
             {brand}
           </Link>

@@ -1,5 +1,5 @@
 /**
- * ToSom — Verifiser telefonkode
+ * Tosom — Verifiser telefonkode
  * 
  * POST /api/auth/phone/verify
  * - Finn kode i DB

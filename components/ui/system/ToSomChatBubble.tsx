@@ -1,5 +1,5 @@
 /**
- * ToSom ToSomChatBubble — System component
+ * Tosom ToSomChatBubble — System component
  * 
  * Chat message bubble with sent/received variants.
  */

@@ -1,5 +1,5 @@
 /**
- * ToSom ToSomDashboardCard — System component
+ * Tosom ToSomDashboardCard — System component
  * 
  * Dashboard stats card with icon, value, label, and trend.
  */

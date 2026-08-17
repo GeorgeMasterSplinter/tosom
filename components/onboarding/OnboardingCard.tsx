@@ -1,5 +1,5 @@
 /**
- * ToSom — OnboardingCard (Premium Glassmorphism)
+ * Tosom — OnboardingCard (Premium Glassmorphism)
  * Hovedkort for alle onboarding-sider.
  * Bruker design-tokens konsekvent.
  */

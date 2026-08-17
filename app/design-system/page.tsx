@@ -1,5 +1,5 @@
 /**
- * ToSom Design System — Design Audit Page
+ * Tosom Design System — Design Audit Page
  * 
  * Interaktivt audit-verktøy som viser alle design-tokens, komponentar og
  * live previews. Bruk for å verifisere konsistens på tvers av heile appen.
@@ -103,7 +103,7 @@ export default function DesignSystemPage() {
       {/* ── HEADER ── */}
       <ToSomSection spotlight="none" className="text-center">
         <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: 'rgba(255,255,255,0.92)' }}>
-          ToSom Design Audit
+          Tosom Design Audit
         </h1>
         <p className="text-lg md:text-xl" style={{ color: 'rgba(255,255,255,0.75)' }}>
           Konsistensverktøy for design-tokens, komponentar og visuelle element.
@@ -252,7 +252,7 @@ export default function DesignSystemPage() {
           ════════════════════════════════════ */}
       <ToSomSection spotlight="none">
         <SectionTitle>Farge Audit</SectionTitle>
-        <SubsectionTitle description="Alle primære fargar med visuell preview">ToSom Blue + Nordic Gold</SubsectionTitle>
+        <SubsectionTitle description="Alle primære fargar med visuell preview">Tosom Blue + Nordic Gold</SubsectionTitle>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <div className="h-20 rounded-xl" style={{ background: '#4A7BA7' }}>

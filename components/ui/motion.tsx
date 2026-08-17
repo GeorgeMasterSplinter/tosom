@@ -1,5 +1,5 @@
 /**
- * ToSom UI 3.0 — Motion System 3.0
+ * Tosom UI 3.0 — Motion System 3.0
  *
  * Unified motion tokens for:
  * - Web: CSS keyframes (already in globals.css)

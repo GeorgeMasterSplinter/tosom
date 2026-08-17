@@ -1,5 +1,5 @@
 /**
- * ToSom — VIPPS Login Side
+ * Tosom — VIPPS Login Side
  * 
  * Placeholder for VIPPS-integrasjon.
  * Brukarar blir no redirecta til /register for vanleg innskriving.

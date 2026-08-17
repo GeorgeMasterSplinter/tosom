@@ -1,5 +1,5 @@
 /**
- * ToSom ToSomForm — System component
+ * Tosom ToSomForm — System component
  * 
  * Form wrapper for Input/TextArea/Select with error summary and loading state.
  */

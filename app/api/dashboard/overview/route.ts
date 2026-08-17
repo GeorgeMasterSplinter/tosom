@@ -1,5 +1,5 @@
 /**
- * ToSom — Dashboard Overview API
+ * Tosom — Dashboard Overview API
  * 
  * Returnerer sammla dashboard-data: match, conversation, journey.
  * B9: Registrerer oppmøte (userASeenAt/userBSeenAt) og starter reisen når begge har vært innom.

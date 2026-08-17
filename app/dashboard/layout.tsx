@@ -1,5 +1,5 @@
 /**
- * ToSom — Dashboard Layout (cleaned 2026)
+ * Tosom — Dashboard Layout (cleaned 2026)
  * 
  * Berre context-providers + navigasjon. Alt innhald styres av page.tsx.
  */

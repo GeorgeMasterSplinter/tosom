@@ -1,5 +1,5 @@
 /**
- * ToSom — Admin Journeys API 🕓
+ * Tosom — Admin Journeys API 🕓
  * GET /api/admin/journeys
  *
  * Returnerer alle reiser (journeys) med ekte data fra database.

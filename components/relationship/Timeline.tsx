@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom — Relationship Timeline
+   Tosom — Relationship Timeline
    Vertikal timeline med relasjons-milepæler
    ═══════════════════════════════════════════ */
 

@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom UI — Component Library Index
+   Tosom UI — Component Library Index
    Eksporterer alle komponentar frå design system 1.1
    ═══════════════════════════════════════════ */
 

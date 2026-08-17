@@ -1,5 +1,5 @@
 /**
- * ToSom — Settings Page (Premium Nordic Gold 2026) ⭐
+ * Tosom — Settings Page (Premium Nordic Gold 2026) ⭐
  * Fullstendig ny oppbygging etter din blueprint — rolig, moden, premium.
  */
 
@@ -453,7 +453,7 @@ function PersonvernSection() {
       <SectionTitle>PERSONVERN</SectionTitle>
 
       <p style={{ color: THEME.whitePrimary, fontSize: "16px", lineHeight: "1.7", marginBottom: "24px" }}>
-        ToSom lagrar bare data som er nødvendig for å gi deg ei trygg og roleg relasjonsoppleving. 
+        Tosom lagrar bare data som er nødvendig for å gi deg ei trygg og roleg relasjonsoppleving. 
         Du kan til enhver tid be om uttrekk eller sletting av dine persondata.
       </p>
 
@@ -499,7 +499,7 @@ function TemaSection() {
 
       <div className="space-y-3">
         <GoldRadio label="Mørk blå" selected={theme === "mork"} onClick={() => setTheme("mork")} />
-        <GoldRadio label="ToSom Blue + Nordic Gold" sublabel="Premium kombinasjon" selected={theme === "premium"} onClick={() => setTheme("premium")} />
+        <GoldRadio label="Tosom Blue + Nordic Gold" sublabel="Premium kombinasjon" selected={theme === "premium"} onClick={() => setTheme("premium")} />
         <GoldRadio label="Lys" sublabel="Kommer snart" selected={theme === "lys"} onClick={() => setTheme("lys")} />
         <GoldRadio label="Lys bakgrunn med gull-aksenter" sublabel="Kommer snart" selected={theme === "gul"} onClick={() => setTheme("gul")} />
       </div>

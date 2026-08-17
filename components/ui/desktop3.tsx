@@ -1,5 +1,5 @@
 /**
- * ToSom UI 3.0 — Desktop Enhancements 3.0
+ * Tosom UI 3.0 — Desktop Enhancements 3.0
  *
  * Desktop-specific components:
  * - Resizable sidebar
@@ -56,7 +56,7 @@ export const DesktopSidebarResizable: React.FC<{
         className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-[#D4AF37]/20 transition-colors"
       />
       <div className="p-4 border-b border-white/6">
-        <span className="text-[#D4AF37] text-lg font-semibold">◆ ToSom</span>
+        <span className="text-[#D4AF37] text-lg font-semibold">◆ Tosom</span>
       </div>
       <nav className="flex-1 p-2 space-y-1">
         {items.map(item => (
@@ -184,7 +184,7 @@ export const DesktopWindow: React.FC<{
   commandOpen?: boolean;
   onCommandClose?: () => void;
 }> = ({
-  title = 'ToSom',
+  title = 'Tosom',
   children,
   sidebarItems,
   sidebarActive,

@@ -1,5 +1,5 @@
 /**
- * ToSom Chat Types (Premium Nordic Gold 2026) 🟡
+ * Tosom Chat Types (Premium Nordic Gold 2026) 🟡
  */
 
 export type SenderType = "me" | "partner" | "system";

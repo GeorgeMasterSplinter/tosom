@@ -1,8 +1,8 @@
 /**
- * ToSom 4.0 — Microcopy System
+ * Tosom 4.0 — Microcopy System
  *
  * 200+ korte, varme tekster for hele plattformen.
- * Alle tekster følger ToSom-tonen: rolig, varm, trygg.
+ * Alle tekster følger Tosom-tonen: rolig, varm, trygg.
  *
  * Usage:
  *   import { microcopy } from '@/components/ui/microcopy'
@@ -87,7 +87,7 @@ export const microcopy = {
     seeYou: 'Vi h\u00F8res!',
     comeBack: 'Kom igjen',
     welcomeBack: 'Velkommen tilbake',
-    welcome: 'Velkommen til ToSom',
+    welcome: 'Velkommen til Tosom',
     thanks: 'Takk skal du ha',
     please: 'V\u00E6r s\u00E5 snill',
     thankYou: 'Takk for at du er her',
@@ -1403,7 +1403,7 @@ export const microcopy = {
 
   /* ── Onboarding Prompts (30+) ── */
   onboarding: {
-    welcome_1: 'Velkommen til ToSom',
+    welcome_1: 'Velkommen til Tosom',
     welcomeSubtitle: 'To mennesker. Én reise.',
     letBegin: 'La oss begynne reisen din',
     whatName: 'Hva heter du?',
@@ -1461,7 +1461,7 @@ export const microcopy = {
 
   /* ── AI Prompts (30+) ── */
   ai: {
-    greeting_2: 'Hei! Jeg er ToSom AI-assistent.',
+    greeting_2: 'Hei! Jeg er Tosom AI-assistent.',
     greetingSub: 'Kan jeg hjelpe deg med noe?',
     whatNeed: 'Hva kan jeg hjelpe deg med?',
     suggestMe: 'Jeg kan hjelpe med:',
@@ -1501,11 +1501,11 @@ export const microcopy = {
     anniversaryReminder: 'Årsdags påminner',
     anniversaryReminderSub: 'En spesiell dag er snart!',
     notification: 'Melding',
-    notificationSub: 'Du har en ny melding fra ToSom AI',
+    notificationSub: 'Du har en ny melding fra Tosom AI',
     newFeature: 'Ny funksjon',
     newFeatureSub: 'Vi har lagt til noe nytt for deg',
     updateAvailable: 'Oppdatering tilgjengelig',
-    updateAvailableSub: 'ToSom har blitt bedre!',
+    updateAvailableSub: 'Tosom har blitt bedre!',
     maintenance: 'Vedlikehold',
     maintenanceSub: 'Vi utfører vedlikehold snart',
     scheduled: 'Planlagt',
@@ -1557,7 +1557,7 @@ export const microcopy = {
     deliveryUpdate: 'Leveringsoppdatering',
     deliveryUpdateSub: 'Din levering er underveis',
     deliveryComplete: 'Levering fullført',
-    deliveryCompleteSub: 'Takk for at du valgte ToSom',
+    deliveryCompleteSub: 'Takk for at du valgte Tosom',
     packageReceived: 'Pakke mottatt',
     packageReceivedSub: 'Har du mottatt pakken din?',
     packageDamaged: 'Pakke skadet',

@@ -1,5 +1,5 @@
 /**
- * ToSom ToSomBadge — System component
+ * Tosom ToSomBadge — System component
  * 
  * Small label component with variants.
  */

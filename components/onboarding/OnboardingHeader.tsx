@@ -1,5 +1,5 @@
 /**
- * ToSom — OnboardingHeader (Premium Header)
+ * Tosom — OnboardingHeader (Premium Header)
  * Rolig header for alle onboarding-sider.
  * Bruker design-tokens konsekvent.
  */

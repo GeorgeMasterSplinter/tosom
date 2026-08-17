@@ -50,7 +50,13 @@ function IconRoom() {
    STEG-DATA
    ======================== */
 
-const steps = [
+const steps: Array<{
+  icon: React.ReactNode;
+  title: string;
+  intro: string;
+  points: string[];
+  closing?: string;
+}> = [
   {
     icon: <IconProfile />,
     title: 'Veiledet profil',
@@ -65,13 +71,14 @@ const steps = [
   {
     icon: <IconMatch />,
     title: 'Én match, hver lørdag',
-    intro: 'Når profilen din er klar, stiller du deg i kø. Natt til lørdag kobler vi dem som passer best sammen, og reisen starter lørdag morgen. Ikke ti matcher. Ikke hundre. Bare én person som faktisk passer deg basert på verdier, livsstil, kommunikasjon og fremtidsønsker.',
+    intro: 'Når profilen din er klar, blir du med i neste matchrunde. Natt til lørdag kobler vi dem som passer best sammen, og reisen starter lørdag morgen. Ikke ti matcher. Ikke hundre. Bare én person som faktisk passer deg basert på verdier, livsstil, kommunikasjon og fremtidsønsker.',
     points: [
       'én match om gangen',
       'ingen sveiping',
       'ingen konkurranse',
       'fokus og ro',
     ],
+    closing: 'Du blir med når tiden er riktig – og vi matcher deg når det faktisk betyr noe.',
   },
   {
     icon: <IconJourney />,
@@ -133,7 +140,7 @@ export default function SlikPage() {
               color: color.text.primary,
             }}
           >
-            Slik fungerer ToSom
+            Slik fungerer Tosom
           </h1>
 
           <p
@@ -193,6 +200,19 @@ export default function SlikPage() {
                     </p>
                   ))}
                 </div>
+                {step.closing && (
+                  <p
+                    className="pt-4"
+                    style={{
+                      ...typographyToStyle('body'),
+                      color: 'rgba(255,255,255,0.55)',
+                      lineHeight: '1.7',
+                      letterSpacing: '0.1px',
+                    }}
+                  >
+                    {step.closing}
+                  </p>
+                )}
               </GlassCard>
             ))}
           </div>

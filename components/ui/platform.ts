@@ -1,5 +1,5 @@
 /**
- * ToSom UI 3.0 — Platform Registry
+ * Tosom UI 3.0 — Platform Registry
  *
  * Maps platform identifiers to their component implementations.
  * Enables automatic platform-aware component selection.

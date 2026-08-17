@@ -1,4 +1,4 @@
-/** ToSom FallbackScreen
+/** Tosom FallbackScreen
  *  RM3 — Viser når en feil oppstår */
 
 'use client';

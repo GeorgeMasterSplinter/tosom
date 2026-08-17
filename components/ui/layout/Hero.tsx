@@ -1,9 +1,9 @@
 /**
- * ToSom UI 5.0 — Hero Ultra-Premium (Nordic Calm + Bølgeform)
+ * Tosom UI 5.0 — Hero Ultra-Premium (Nordic Calm + Bølgeform)
  * 
  * Tittel: "Ro. Trygghet. Mening."
  * Undertekst på moderne norsk bokmål
- * Migrated to ToSom Design System.
+ * Migrated to Tosom Design System.
  * Mobiloptimalisert < 640px
  * Alle tekst er på moderne norsk bokmål.
  */
@@ -29,7 +29,7 @@ interface HeroProps {
 
 export const Hero: FC<HeroProps> = ({
   title = 'Ro. Trygghet. Mening.',
-  subtitle = 'ToSom er for mennesker som vil noe ekte.\nHer møtes to personer i et rolig og trygt rom – uten støy, uten sveiping, uten jag.\nÉn match. Én reise. En mulighet til å bygge noe som faktisk betyr noe.',
+  subtitle = 'Tosom er for mennesker som vil noe ekte.\nHer møtes to personer i et rolig og trygt rom – uten støy, uten sveiping, uten jag.\nÉn match. Én reise. En mulighet til å bygge noe som faktisk betyr noe.',
 }) => {
   /* Premium spacing constants — optimalisert for ro, dybde, optisk base og 8px-grid */
   const heroSpacing = {
@@ -148,7 +148,7 @@ export const Hero: FC<HeroProps> = ({
           >
             {/* H1 — premium, roleg — white/92, balansert leading, ekstra tyngde */}
             <h1
-              className="text-4xl sm:text-5xl md:text-[64px] font-bold tracking-[-0.03em] mb-[32px] animate-riseIn"
+              className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-[-0.03em] mb-[32px] animate-riseIn"
               style={{
                 color: 'rgba(255,255,255,0.92)',
                 letterSpacing: '-0.03em',

@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom — Milestone System API
+   Tosom — Milestone System API
    Administrerer relasjons-milepæler
    ═══════════════════════════════════════════ */
 

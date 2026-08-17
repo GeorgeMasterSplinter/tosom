@@ -1,5 +1,5 @@
 /**
- * ToSom — Chat Components (Barrel Export)
+ * Tosom — Chat Components (Barrel Export)
  */
 
 export { MessageBubble } from '@/app/chat/components/MessageBubble';

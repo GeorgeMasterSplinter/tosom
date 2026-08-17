@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * ToSom — Admin Root Page
+ * Tosom — Admin Root Page
  * 
  * Redirect til /admin/login (automatisk).
  */

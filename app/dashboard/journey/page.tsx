@@ -1,5 +1,5 @@
 /**
- * ToSom Dashboard — Journey Page (B2.4)
+ * Tosom Dashboard — Journey Page (B2.4)
  * Reise-kalender med dag N av 30, fase, milepæler og hva fasen betyr.
  * 
  * B2.4: Reise ikke startet → «Reisen deres begynner når dere begge har vært innom»

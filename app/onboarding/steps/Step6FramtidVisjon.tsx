@@ -1,5 +1,5 @@
 /**
- * ToSom — Steg 6: Framtid & visjon (Premium rebuild 2026 — Fase 4)
+ * Tosom — Steg 6: Framtid & visjon (Premium rebuild 2026 — Fase 4)
  * - Bokmål (Nynorsk→Bokmål-konvertering)
  */
 'use client';

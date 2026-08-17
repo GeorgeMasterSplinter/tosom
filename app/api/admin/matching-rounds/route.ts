@@ -1,5 +1,5 @@
 /**
- * ToSom — Admin Matching Rounds API (B5.4)
+ * Tosom — Admin Matching Rounds API (B5.4)
  * 
  * GET /api/admin/matching-rounds
  * 

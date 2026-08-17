@@ -1,5 +1,5 @@
 /**
- * ToSom UI 5.0 - GlassPanel (Round 3 Premium Visual Polish)
+ * Tosom UI 5.0 - GlassPanel (Round 3 Premium Visual Polish)
  * 
  * Forbedringar:
  * - Sterkare ytre glow: 0 0 50px rgba(80,120,255,0.15)

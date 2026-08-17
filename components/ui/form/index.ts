@@ -1,5 +1,5 @@
 /**
- * ToSom UI 2.0 — Form Components
+ * Tosom UI 2.0 — Form Components
  * Export barrel file
  */
 

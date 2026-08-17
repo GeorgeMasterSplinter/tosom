@@ -1,5 +1,5 @@
 /**
- * ToSom 4.0 — Success States System
+ * Tosom 4.0 — Success States System
  *
  * 8 success state variants with warm animations and microcopy.
  *

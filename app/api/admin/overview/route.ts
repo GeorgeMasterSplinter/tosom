@@ -1,5 +1,5 @@
 /**
- * ToSom — Admin Overview API (B5.2)
+ * Tosom — Admin Overview API (B5.2)
  * 
  * GET /api/admin/overview
  * 

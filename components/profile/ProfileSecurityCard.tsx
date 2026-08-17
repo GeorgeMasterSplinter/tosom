@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom ProfileSecurityCard — Design System 1.1
+   Tosom ProfileSecurityCard — Design System 1.1
    Viser at profilen er privat og trygg.
    Bruk i profile-sider for å trygge brukaren.
    ═══════════════════════════════════════════ */

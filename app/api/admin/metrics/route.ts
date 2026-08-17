@@ -1,5 +1,5 @@
 /**
- * ToSom — Admin Metrics API (STEG 4)
+ * Tosom — Admin Metrics API (STEG 4)
  * 
  * GET /api/admin/metrics
  * Returnerer ekte metrics fra database for admin-dashboard.

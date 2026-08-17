@@ -1,5 +1,5 @@
 /**
- * ToSom — Data Export (STEG C5)
+ * Tosom — Data Export (STEG C5)
  *
  * GET /api/settings/export
  * GDPR art. 20 (dataportabilitet).

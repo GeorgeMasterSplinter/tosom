@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom Premium — FadeIn Animation Component
+   Tosom Premium — FadeIn Animation Component
    GPU-composited transitions (transform + opacity only)
    Respects prefers-reduced-motion
    ═══════════════════════════════════════════ */

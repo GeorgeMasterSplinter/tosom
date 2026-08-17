@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   ToSom Premium — Input Component
+   Tosom Premium — Input Component
    Text, Email, Password, Textarea, Select
    ═══════════════════════════════════════════ */
 

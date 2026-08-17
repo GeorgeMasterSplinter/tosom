@@ -5,36 +5,36 @@ import { UniversalMenu } from '@/components/layout/UniversalMenu';
 import { SentryErrorBoundary } from "@/components/system/SentryErrorBoundary";
 
 export const metadata = {
-  title: "ToSom — En rolig plass for ekte møter",
-  description: "ToSom er en rolig, moden plattform for ekte relasjoner og guidede reiser for par.",
+  title: "Tosom — En rolig plass for ekte møter",
+  description: "Tosom er en rolig, moden plattform for ekte relasjoner og guidede reiser for par.",
   keywords: ["dating", "par", "relasjoner", "norsk", "premium"],
-  authors: [{ name: "ToSom Team" }],
-  creator: "ToSom",
-  publisher: "ToSom",
+  authors: [{ name: "Tosom Team" }],
+  creator: "Tosom",
+  publisher: "Tosom",
   robots: {
     index: true,
     follow: true,
   },
   openGraph: {
-    title: "ToSom — En rolig plass for ekte møter",
-    description: "ToSom er en rolig, moden plattform for ekte relasjoner og guidede reiser for par.",
+    title: "Tosom — En rolig plass for ekte møter",
+    description: "Tosom er en rolig, moden plattform for ekte relasjoner og guidede reiser for par.",
     type: "website",
     url: "https://tosom.no",
-    siteName: "ToSom",
+    siteName: "Tosom",
     locale: "no_NO",
     images: [
       {
         url: "https://tosom.no/og-image.png",
         width: 1200,
         height: 630,
-        alt: "ToSom — Ekte møter",
+        alt: "Tosom — Ekte møter",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "ToSom — En rolig plass for ekte møter",
-    description: "ToSom er en rolig, moden plattform for ekte relasjoner og guidede reiser for par.",
+    title: "Tosom — En rolig plass for ekte møter",
+    description: "Tosom er en rolig, moden plattform for ekte relasjoner og guidede reiser for par.",
     images: ["https://tosom.no/og-image.png"],
   },
   verification: {

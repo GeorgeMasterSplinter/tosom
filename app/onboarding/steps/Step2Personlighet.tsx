@@ -1,5 +1,5 @@
 /**
- * ToSom — Steg 2a: Personlighet & identitet (Premium rebuild 2026 — Fase 4)
+ * Tosom — Steg 2a: Personlighet & identitet (Premium rebuild 2026 — Fase 4)
  * 
  * Oppdatert med:
  * - OnboardingSlide for hel-steg layout

@@ -1,5 +1,5 @@
 /**
- * ToSom — Error State
+ * Tosom — Error State
  * 
  * Universal feil-handtering med glassmorphism-panel og gull-knapp.
  * Bruk ved API-feil, runtime-feil og data-innlasting-feil.

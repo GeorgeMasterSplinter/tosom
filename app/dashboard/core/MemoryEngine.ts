@@ -1,5 +1,5 @@
 /**
- * ToSom Dashboard 1.0 — Memory Engine
+ * Tosom Dashboard 1.0 — Memory Engine
  * Sentral lagring og henting av all Dashboard-data via localStorage.
  */
 

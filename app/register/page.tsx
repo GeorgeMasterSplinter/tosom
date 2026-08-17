@@ -69,7 +69,7 @@ export default function RegisterPage() {
               lineHeight: '1.8',
             }}
           >
-            ToSom er bygd for trygghet og modenhet. Vi bruker Vipps både til innlogging og betaling — så du vet at alle på plattformen er ekte.
+            Tosom er bygd for trygghet og modenhet. Vi bruker Vipps både til innlogging og betaling — så du vet at alle på plattformen er ekte.
           </p>
         </ToSomSection>
 
@@ -102,7 +102,7 @@ export default function RegisterPage() {
                   textAlign: 'center',
                 }}
               >
-                ToSom er bygd for voksne mennesker som ønsker en trygg, rolig og ekte prosess. Derfor bruker vi Vipps både til innlogging og betaling.
+                Tosom er bygd for voksne mennesker som ønsker en trygg, rolig og ekte prosess. Derfor bruker vi Vipps både til innlogging og betaling.
               </p>
 
               <div className="space-y-3 pt-2">
@@ -142,7 +142,7 @@ export default function RegisterPage() {
                   marginTop: '8px',
                 }}
               >
-                Vipps gjør ToSom til en trygg plattform for voksne mennesker som ønsker en ekte reise.
+                Vipps gjør Tosom til en trygg plattform for voksne mennesker som ønsker en ekte reise.
               </p>
             </GlassCard>
           </div>
@@ -174,7 +174,7 @@ export default function RegisterPage() {
                 lineHeight: '1.8',
               }}
             >
-              Betal med Vipps og få tilgang til hele ToSom — inkludert match, guidet reise og privat rom.
+              Betal med Vipps og få tilgang til hele Tosom — inkludert match, guidet reise og privat rom.
             </p>
 
             {/* Hoved-CTA: Betal med Vipps */}
@@ -203,7 +203,7 @@ export default function RegisterPage() {
                   lineHeight: '1.7',
                 }}
               >
-                Betalingsløsning er under utvikling. ToSom er i begrenset testfase.
+                Betalingsløsning er under utvikling. Tosom er i begrenset testfase.
               </p>
               <p
                 style={{

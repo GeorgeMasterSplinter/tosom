@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /**
- * ToSom — ChatContext (Premium Nordic Gold 2026) 🟡
+ * Tosom — ChatContext (Premium Nordic Gold 2026) 🟡
  * Global state for heile chat-sida — mindre prop-drilling
  * Brukars-ID blir no sendt som prop frå server-komponent.
  */

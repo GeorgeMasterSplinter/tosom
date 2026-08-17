@@ -1,5 +1,5 @@
 /**
- * ToSom — Onboarding steg 1: Start
+ * Tosom — Onboarding steg 1: Start
  * 
  * Redirect til /register som hovedinngang.
  */

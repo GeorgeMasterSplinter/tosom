@@ -1,5 +1,5 @@
 /**
- * ToSom — Vipps OAuth Authorization Endpoint
+ * Tosom — Vipps OAuth Authorization Endpoint
  * Startar Vipps-login-flyten for brukere.
  */
 

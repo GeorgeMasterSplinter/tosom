@@ -1,5 +1,5 @@
 /**
- * ToSom Dashboard 2.0 — NotificationContext
+ * Tosom Dashboard 2.0 — NotificationContext
  * Globalt notifikasjonssystem som reagerer på realtime-eventer.
  */
 

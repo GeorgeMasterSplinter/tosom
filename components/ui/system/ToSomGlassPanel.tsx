@@ -1,5 +1,5 @@
 /**
- * ToSom ToSomGlassPanel — System component
+ * Tosom ToSomGlassPanel — System component
  * 
  * Reusable glass container for onboarding, modals, info panels.
  */

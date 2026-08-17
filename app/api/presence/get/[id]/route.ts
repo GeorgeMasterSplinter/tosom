@@ -1,5 +1,5 @@
 /**
- * ToSom — Presence Get API (Partner Presence v2026) 🟡⭐
+ * Tosom — Presence Get API (Partner Presence v2026) 🟡⭐
  * 
  * GET /api/presence/get/[id]
  * Returnerer presence state for ein spesifikk bruker.

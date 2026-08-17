@@ -1,5 +1,5 @@
 /**
- * ToSom — Chat Layout (Premium Nordic Gold 2026) ⭐
+ * Tosom — Chat Layout (Premium Nordic Gold 2026) ⭐
  * Wrapper for chat-sider med max-width og sentrering.
  */
 

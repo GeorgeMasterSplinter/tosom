@@ -148,11 +148,11 @@ export const Hero: FC<HeroProps> = ({
           >
             {/* H1 — premium, roleg — white/92, balansert leading, ekstra tyngde */}
             <h1
-              className="text-5xl sm:text-6xl md:text-[100px] font-extrabold tracking-[-0.04em] mb-[48px] animate-riseIn"
+              className="text-4xl sm:text-5xl md:text-[64px] font-bold tracking-[-0.03em] mb-[32px] animate-riseIn"
               style={{
                 color: 'rgba(255,255,255,0.92)',
-                letterSpacing: '-0.04em',
-                lineHeight: '1.1',
+                letterSpacing: '-0.03em',
+                lineHeight: '1.15',
                 textShadow: '0 0 48px rgba(255,255,255,0.06)',
               }}
             >
@@ -161,12 +161,12 @@ export const Hero: FC<HeroProps> = ({
 
             {/* Undertekst — white/90 — økt kontrast og luft */}
             <p
-              className="text-lg sm:text-xl md:text-3xl mb-0 animate-fadeUp delay-[120ms]"
+              className="text-base sm:text-lg md:text-xl mb-0 animate-ts-fade-in [animation-delay:120ms]"
               style={{
-                color: 'rgba(255,255,255,0.88)',
+                color: 'rgba(255,255,255,0.82)',
                 lineHeight: '1.7',
-                letterSpacing: '0.25px',
-                maxWidth: '740px',
+                letterSpacing: '0.15px',
+                maxWidth: '640px',
                 marginLeft: 'auto',
                 marginRight: 'auto',
               }}

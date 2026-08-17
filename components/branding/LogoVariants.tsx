@@ -200,13 +200,13 @@ export interface LogoAnimatedProps {
 export const LogoAnimated: FC<LogoAnimatedProps> = ({ className = '' }) => {
   return (
     <div className={`relative flex flex-col items-center ${className}`}>
-      <div className="animate-ts-fade-in flex flex-col items-center">
+      <div className="flex flex-col items-center animate-ts-fade-in [animation-duration:600ms]">
         <Logo
-          size="5xl"
+          size="3xl"
           colorVariant="gold"
         />
         <span
-          className="mt-3 text-[11px] font-medium tracking-[0.3em] uppercase text-[var(--ts-gold)] opacity-55 animate-ts-fade-in [animation-delay:150ms]"
+          className="mt-4 text-[11px] font-medium tracking-[0.32em] uppercase text-[var(--ts-gold)] opacity-60 animate-ts-fade-in [animation-duration:600ms] [animation-delay:350ms]"
         >
           Made in Norway
         </span>

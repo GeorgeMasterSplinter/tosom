@@ -565,13 +565,22 @@ export default function ReisenPage() {
             Lag profilen din i ditt eget tempo og møt noen som faktisk passer deg — på ordentlig.
           </p>
 
-          <div className="flex flex-col md:flex-row items-center justify-center gap-4 pt-4">
-            <div className="flex items-center gap-3">
-              <ToSomButton href="/register" variant="gold" size="xl">
-                Start reisen
-              </ToSomButton>
+          <div className="flex flex-col items-center gap-4 pt-4 w-full max-w-md mx-auto">
+            <div className="flex items-center gap-2">
               <AgeBadge />
+              <span
+                style={{
+                  ...typographyToStyle('body-sm'),
+                  color: color.text.muted,
+                }}
+              >
+                ToSom er for deg som har fylt 23
+              </span>
             </div>
+
+            <ToSomButton href="/register" variant="gold" size="xl">
+              Start reisen
+            </ToSomButton>
 
             <ToSomButton href="/login" variant="secondary" size="lg">
               Logg inn

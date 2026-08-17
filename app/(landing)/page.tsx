@@ -3,7 +3,7 @@
 import { Footer } from '@/components/ui/layout/Footer';
 import { Hero } from '@/components/ui/layout/Hero';
 import { ToSomSection, ToSomButton } from '@/components/ui/system';
-import { color, spacing, typographyToStyle, radius } from '@/config/design-tokens';
+import { color, typographyToStyle } from '@/config/design-tokens';
 import GlassCard from '@/components/ui/cards/GlassCard';
 
 /* ========================
@@ -283,51 +283,27 @@ export default function LandingPage() {
                 lineHeight: '1.8',
               }}
             >
-              Betal med Vipps og få tilgang til hele Tosom — inkludert match, guidet reise og privat rom.
+              Betal med Vipps og få tilgang til hele Tosom — inkludert match, guidet reise og privat rom. De første 10 000 får reisen gratis.
             </p>
 
-            {/* Hoved-CTA: Betal med Vipps */}
+            {/* Hoved-CTA: Logg inn med Vipps */}
             <ToSomButton
-              href="/api/payment/vipps"
+              href="/api/auth/vipps"
               variant="gold"
               size="xl"
             >
-              Betal med Vipps — 349 kr
+              Logg inn med Vipps
             </ToSomButton>
 
-            <p style={{ ...typographyToStyle('body-sm'), color: color.text.muted }}>
-              De første 10 000 får reisen gratis.
-            </p>
-
-            {/* Informasjon om betaling */}
-            <div
-              className="space-y-3 pt-2"
+            <p
               style={{
-                background: 'rgba(212,175,55,0.04)',
-                border: '1px solid rgba(212,175,55,0.12)',
-                borderRadius: `${radius.lg}px`,
-                padding: `${spacing.lg}px`,
+                ...typographyToStyle('body-sm'),
+                color: color.text.muted,
+                lineHeight: '1.7',
               }}
             >
-              <p
-                style={{
-                  ...typographyToStyle('body-sm'),
-                  color: 'rgba(255,255,255,0.6)',
-                  lineHeight: '1.7',
-                }}
-              >
-                Betalingsløsning er under utvikling. Tosom er i begrenset testfase.
-              </p>
-              <p
-                style={{
-                  ...typographyToStyle('body-sm'),
-                  color: color.text.secondary,
-                  lineHeight: '1.7',
-                }}
-              >
-                Når betaling er godkjent, blir du sendt til første steg i onboarding for å lage profilen din.
-              </p>
-            </div>
+              Når innlogging er godkjent, blir du sendt til første steg i onboarding for å lage profilen din.
+            </p>
           </div>
 
           {/* Lær mer — sekundær */}

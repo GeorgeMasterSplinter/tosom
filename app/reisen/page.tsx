@@ -132,7 +132,7 @@ export default function ReisenPage() {
       <div className="relative z-10">
 
         {/* ===== HERO ===== */}
-        <section className="px-6 mt-32 mb-96 md:mt-48 md:mb-[12rem] text-center">
+        <section className="px-6 mt-32 mb-24 md:mt-48 md:mb-32 text-center">
           <div className="mx-auto max-w-[780px] space-y-6">
             <h1
               style={{
@@ -158,7 +158,7 @@ export default function ReisenPage() {
         </section>
 
         {/* ===== INTRO ===== */}
-        <section className="px-6 mt-96 mb-32 md:mt-[12rem] md:mb-48">
+        <section className="px-6 mt-24 mb-32 md:mt-32 md:mb-48">
           <div
             className="mx-auto max-w-[780px] rounded-[28px] p-10 md:p-14 space-y-6"
             style={{
@@ -566,16 +566,12 @@ export default function ReisenPage() {
           </p>
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 pt-4">
-            <div className="flex items-center gap-3 hidden md:flex">
+            <div className="flex items-center gap-3">
               <ToSomButton href="/register" variant="gold" size="xl">
                 Start reisen
               </ToSomButton>
               <AgeBadge />
             </div>
-
-            <ToSomButton href="/register" variant="gold" size="xl">
-              Start reisen
-            </ToSomButton>
 
             <ToSomButton href="/login" variant="secondary" size="lg">
               Logg inn

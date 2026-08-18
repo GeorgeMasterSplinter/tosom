@@ -38,7 +38,7 @@ export function OnboardingSlide({
 
   return (
     <div
-      className="w-full max-w-2xl mx-auto transition-all duration-700 ease-out"
+      className="w-full transition-all duration-700 ease-out"
       style={{
         opacity: isVisible ? 1 : 0,
         transform: isVisible ? 'translateY(0)' : 'translateY(12px)',
@@ -64,7 +64,7 @@ export function OnboardingSlide({
           }}
         />
 
-        <div className="relative z-10" style={{ padding: '32px' }}>
+        <div className="relative z-10 px-4 py-6 sm:px-6 sm:py-7 md:px-8 md:py-9">
           {/* Slide indicator */}
           {totalSlides > 1 && (
             <div className="flex items-center justify-center gap-1.5 mb-7" suppressHydrationWarning>

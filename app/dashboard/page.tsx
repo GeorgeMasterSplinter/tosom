@@ -1,275 +1,572 @@
 /**
- * Tosom — Unified Premium Dashboard ("Din oversikt")
+ * Tosom — Dashboard (Rebuild 2026)
+ *
+ * Rollo: Hoved-hub for aktiv reise.
+ * - Velkommen + navn
+ * - Match-revelasjon modal (første gang, 12 sek)
+ * - Resonanse-kort (2 kort + ORD i midten)
+ * - Knapper: [Samtale] [⚙]
+ * - Kalendar (30 dager, 4 faser)
+ * - Milepæler (gjeldende dag)
+ * - Profil privat
+ *
+ * Ingen aktiv match → redirect /matching
  */
 
 'use client';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import ChatIcon from '@/components/icons/ChatIcon';
-import ProfileIcon from '@/components/icons/ProfileIcon';
-import SettingsIcon from '@/components/icons/SettingsIcon';
-import { color, radius, typography, glassVariant } from '@/config/design-tokens';
-import PremiumButton from '@/components/ui/PremiumButton';
-import { AmbientGlow, AmbientGlowStyles } from '@/components/atmosphere/AmbientGlow';
-import { PulseGlowStyles } from '@/components/ui/PulseGlow';
-import { GlassPanelStyles } from '@/components/ui/system/ToSomGlassPanel';
-import { PremiumJourneyDayView, getDayContent } from '@/components/journey/PremiumJourneyDayView';
-import { PremiumJourneyProgressTracker } from '@/components/journey/PremiumJourneyProgressTracker';
-import { JourneyTimeline } from '@/components/journey/JourneyTimeline';
-import { ImageShareLockBanner } from '@/components/journey/ImageShareLockBanner';
-import { GradientOverlay } from '@/components/atmosphere/GradientOverlay';
-import { WaitingForMatch } from '@/components/dashboard/WaitingForMatch';
-import { ProfileLockBanner } from '@/components/profile/ProfileLockBanner';
-import { TodayCard } from '@/components/journey/TodayCard';
-import { FadeIn, StaggerContainer } from '@/components/animations/FadeIn';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { Footer } from '@/components/ui/layout/Footer';
+import { color, typographyToStyle } from '@/config/design-tokens';
+import GlassCard from '@/components/ui/cards/GlassCard';
+
+/* ═══════════════════════════════════════
+   TYPES
+   ═══════════════════════════════════════ */
 
 interface DashboardData {
-  userName: string;
-  matched: boolean;
-  partnerName: string | null;
-  daysTogether: number;
-  daysCompleted: number;
-  currentDay: number;
+  match: {
+    id: string;
+    name: string;
+    age: number | null;
+    distanceKm: number | null;
+    resonanceLevel: string | null;
+    bio: string | null;
+  } | null;
+  conversation: {
+    conversationId: string;
+  } | null;
+  journey: {
+    day: number;
+    totalDays: number;
+    phase: string;
+    tittel: string;
+    beskrivelse: string;
+    bothSeenAt: string | null;
+  } | null;
+  bothJustMet: boolean;
 }
 
-const actionItems = [
-  { label: 'Gå til samtalen', href: '/chat', icon: <ChatIcon className="w-6 h-6 flex-shrink-0" /> },
-  { label: 'Oppdater profil', href: '/onboarding', icon: <ProfileIcon className="w-6 h-6 flex-shrink-0" /> },
-  { label: 'Innstillinger', href: '/settings', icon: <SettingsIcon className="w-6 h-6 flex-shrink-0" /> },
+/* ═══════════════════════════════════════
+   PHASES
+   ═══════════════════════════════════════ */
+
+const PHASES = [
+  { key: 'EARLY', name: 'Bryt isen', start: 1, end: 7, color: '#5B9BD5' },
+  { key: 'BUILDING_TRUST', name: 'Bygg tillit', start: 8, end: 14, color: '#D4AF37' },
+  { key: 'DEEPER', name: 'Dypere samtaler', start: 15, end: 21, color: '#4ECDC4' },
+  { key: 'CHECKIN', name: 'Sjekk inn', start: 22, end: 30, color: '#E8875B' },
 ];
 
-function ConfirmExitModal({ isOpen, onClose, onConfirm, currentDay }: { isOpen: boolean; onClose: () => void; onConfirm: () => void; currentDay?: number }) {
-  const [exiting, setExiting] = useState(false);
-  const [errMsg, setErrMsg] = useState<string | null>(null);
-  if (!isOpen) return null;
+function getPhaseForDay(day: number) {
+  return PHASES.find(p => day >= p.start && day <= p.end) ?? PHASES[0];
+}
 
-  const handleExit = async () => {
-    setErrMsg(null);
-    setExiting(true);
-    try {
-      const res = await fetch('/api/journey/exit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reason: 'User-initiated exit' }) });
-      if (res.ok) { onConfirm(); } else { const err = await res.json(); setErrMsg(err.error || 'Kunne ikke avslutte reisen'); }
-    } catch { setErrMsg('Nettverksfeil. Vær så snill og prøv på nytt.'); }
-    finally { setExiting(false); }
-  };
+/* ═══════════════════════════════════════
+   RESONANS LABELS
+   ═══════════════════════════════════════ */
+
+function getResonanceLabel(level: string | null | undefined): string {
+  switch (level?.toUpperCase()) {
+    case 'DEEP': return 'Dyp resonans';
+    case 'STRONG': return 'Sterk resonans';
+    case 'MODERATE': return 'God resonans';
+    case 'GENTLE': return 'Rolig resonans';
+    default: return 'Rolig resonans';
+  }
+}
+
+function getResonanceGlow(level: string | null | undefined): string {
+  switch (level?.toUpperCase()) {
+    case 'DEEP': return '0 0 32px rgba(77,255,136,0.3)';
+    case 'STRONG': return '0 0 24px rgba(212,175,55,0.3)';
+    case 'MODERATE': return '0 0 18px rgba(255,184,108,0.2)';
+    default: return '0 0 12px rgba(130,130,255,0.15)';
+  }
+}
+
+/* ═══════════════════════════════════════
+   GREETING
+   ═══════════════════════════════════════ */
+
+function getGreeting(): string {
+  const h = new Date().getHours();
+  if (h >= 5 && h < 12) return 'God morgen';
+  if (h >= 12 && h < 17) return 'God ettermiddag';
+  if (h >= 17 && h < 22) return 'God kveld';
+  return 'God natt';
+}
+
+/* ═══════════════════════════════════════
+   MATCH REVEAL MODAL
+   ═══════════════════════════════════════ */
+
+function MatchRevealModal({
+  userName,
+  partnerName,
+  partnerAge,
+  partnerDistance,
+  resonanceLabel,
+  onClose,
+}: {
+  userName: string;
+  partnerName: string;
+  partnerAge: number | null;
+  partnerDistance: number | null;
+  resonanceLabel: string;
+  onClose: () => void;
+}) {
+  useEffect(() => {
+    const timer = setTimeout(onClose, 12000);
+    return () => clearTimeout(timer);
+  }, [onClose]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
-      <div className="w-full max-w-md rounded-3xl p-8 relative mx-auto" style={{ background: 'rgba(11, 21, 32, 0.95)', backdropFilter: 'blur(24px)', border: '1px solid rgba(212, 175, 55, 0.25)', boxShadow: '0 12px 60px rgba(0,0,0,0.5)' }}>
-        <button onClick={onClose} className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center transition-all hover:brightness-125 text-xl" style={{ color: 'rgba(255,255,255,0.5)', background: 'rgba(255,255,255,0.05)' }}>✕</button>
-        {/* D2: Inline feilmelding */}
-        {errMsg && <div className="mb-4 px-4 py-3 rounded-xl text-sm text-center" style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', color: '#EF4444' }}>{errMsg}</div>}
-        <div className="text-center">
-          <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: 'rgba(255, 77, 77, 0.1)', border: '2px solid rgba(255, 77, 77, 0.3)' }}><span className="text-2xl">🚪</span></div>
-          <h3 className="text-xl font-bold mb-2" style={{ color: 'rgba(255,255,255,0.95)' }}>Avslutt reisen?</h3>
-          <p className="text-sm mb-6 leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>Du er nå på dag {currentDay ?? 0} av 30. Reisen din vil bli avsluttet.</p>
-          <div className="flex gap-3">
-            <button onClick={onClose} disabled={exiting} className="flex-1 py-4 rounded-2xl font-bold transition-all hover:brightness-110 text-base" style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.15)' }}>Fortsett</button>
-            <button onClick={handleExit} disabled={exiting} className="flex-1 py-4 rounded-2xl font-bold transition-all hover:brightness-110 active:scale-[0.98] text-base disabled:opacity-50" style={{ background: 'linear-gradient(135deg, #FF4D4D, #FF6B6B)', color: '#fff', boxShadow: '0 6px 24px rgba(255, 77, 77, 0.3)' }}>{exiting ? 'Avslutter...' : 'Avslutt reise'}</button>
+    <div
+      className="fixed inset-0 z-[1000] flex items-center justify-center p-6"
+      style={{
+        background: 'rgba(0,0,0,0.92)',
+        backdropFilter: 'blur(20px)',
+        animation: 'revealFadeIn 1s ease-out',
+      }}
+    >
+      <style>{`
+        @keyframes revealFadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes revealPulse {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.05); }
+        }
+      `}</style>
+
+      <div className="text-center max-w-md w-full relative">
+        {/* Close */}
+        <button
+          onClick={onClose}
+          className="absolute -top-16 right-0 text-sm transition-all hover:opacity-70"
+          style={{ color: 'rgba(255,255,255,0.4)' }}
+        >
+          Lukke →
+        </button>
+
+        {/* Heart */}
+        <div
+          className="mx-auto mb-8 w-20 h-20 rounded-full flex items-center justify-center text-4xl"
+          style={{
+            background: 'rgba(212,175,55,0.12)',
+            border: '2px solid rgba(212,175,55,0.3)',
+            boxShadow: '0 0 48px rgba(212,175,55,0.2)',
+            animation: 'revealPulse 3s infinite ease-in-out',
+          }}
+        >
+          💛
+        </div>
+
+        {/* Title */}
+        <h2
+          className="text-3xl font-semibold mb-3"
+          style={{ color: '#D4AF37' }}
+        >
+          Din match er her
+        </h2>
+
+        {/* Two cards */}
+        <div className="flex items-center justify-center gap-4 my-8">
+          {/* User card */}
+          <div
+            className="flex-1 rounded-2xl p-5 text-center"
+            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}
+          >
+            <p className="font-semibold text-lg" style={{ color: 'rgba(255,255,255,0.9)' }}>{userName}</p>
+            <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>Deg</p>
+          </div>
+
+          {/* Resonance */}
+          <div className="text-center px-2">
+            <p className="text-sm font-medium tracking-wider" style={{ color: '#D4AF37', textShadow: getResonanceGlow(resonanceLabel) }}>
+              {resonanceLabel}
+            </p>
+          </div>
+
+          {/* Partner card */}
+          <div
+            className="flex-1 rounded-2xl p-5 text-center"
+            style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.2)' }}
+          >
+            <p className="font-semibold text-lg" style={{ color: 'rgba(255,255,255,0.9)' }}>{partnerName}</p>
+            {partnerAge && <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>{partnerAge} år</p>}
+            {partnerDistance != null && <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>ca. {partnerDistance} km</p>}
           </div>
         </div>
+
+        {/* Description */}
+        <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
+          Vi koblet dere basert på verdier, livsstil og emosjonell kompatibilitet.
+        </p>
+        <p className="text-sm mt-3 font-medium" style={{ color: 'rgba(255,255,255,0.7)' }}>
+          Reisen starter nå. 30 dager. Fire faser.
+        </p>
       </div>
     </div>
   );
 }
 
-export default function Dashboard() {
-  const [data, setData] = useState<DashboardData | null>(null);
-  const [greeting, setGreeting] = useState('');
-  const [selectedDay, setSelectedDay] = useState<number>(7);
-  const [showExitModal, setShowExitModal] = useState(false);
+/* ═══════════════════════════════════════
+   JOURNEY CALENDAR
+   ═══════════════════════════════════════ */
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+function JourneyCalendar({ currentDay }: { currentDay: number }) {
+  const [hoveredDay, setHoveredDay] = useState<number | null>(null);
+
+  return (
+    <div>
+      {/* Phase labels */}
+      <div className="grid grid-cols-4 gap-1 mb-2">
+        {PHASES.map(phase => (
+          <div
+            key={phase.key}
+            className="text-center py-1.5 rounded-lg"
+            style={{
+              background: currentDay >= phase.start && currentDay <= phase.end ? `${phase.color}18` : 'transparent',
+              border: currentDay >= phase.start && currentDay <= phase.end ? `1px solid ${phase.color}40` : '1px solid transparent',
+            }}
+          >
+            <p className="text-[10px] font-medium truncate px-1" style={{ color: phase.color }}>
+              {phase.name}
+            </p>
+            <p className="text-[9px]" style={{ color: 'rgba(255,255,255,0.3)' }}>
+              dag {phase.start}–{phase.end}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      {/* Day grid */}
+      <div className="grid grid-cols-10 gap-1">
+        {Array.from({ length: 30 }, (_, i) => i + 1).map(day => {
+          const phase = getPhaseForDay(day);
+          const isCurrent = day === currentDay;
+          const isPast = day < currentDay;
+          const isFuture = day > currentDay;
+
+          return (
+            <div
+              key={day}
+              onMouseEnter={() => setHoveredDay(day)}
+              onMouseLeave={() => setHoveredDay(null)}
+              className="aspect-square rounded-md flex items-center justify-center text-[10px] transition-all duration-200 cursor-default"
+              style={{
+                background: isCurrent
+                  ? `${phase.color}30`
+                  : isPast
+                  ? `${phase.color}15`
+                  : 'rgba(255,255,255,0.03)',
+                border: isCurrent
+                  ? `2px solid ${phase.color}`
+                  : `1px solid ${isPast ? phase.color + '30' : 'rgba(255,255,255,0.06)'}`,
+                color: isCurrent ? '#fff' : isPast ? phase.color + 'CC' : 'rgba(255,255,255,0.25)',
+                fontWeight: isCurrent ? 700 : 400,
+                boxShadow: isCurrent ? `0 0 12px ${phase.color}40` : 'none',
+              }}
+            >
+              {day}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Hover tooltip */}
+      {hoveredDay && (
+        <div className="mt-3 text-center">
+          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            Dag {hoveredDay} — {getPhaseForDay(hoveredDay).name}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════
+   MILESTONES
+   ═══════════════════════════════════════ */
+
+const MILESTONES: Array<{ day: number; label: string; description: string }> = [
+  { day: 1, label: 'Reisen starter', description: 'Dag 1 begynner når dere begge har vært innom. Si hei til hverandre.' },
+  { day: 5, label: 'Første oppgave', description: 'Del en liten ting fra dagen din. Noe enkelt, noe ærlig.' },
+  { day: 10, label: 'Bygg tillit', description: 'Nå kan dere dele mer. Hva gjør at du føler deg trygg i en samtale?' },
+  { day: 15, label: 'Bilder åpnes', description: 'Fra dag 15 kan dere dele bilder med hverandre. Grunnlaget er lagt.' },
+  { day: 21, label: 'Dypere samtaler', description: 'Snakk om verdier, drømmer og hva som betyr mest for dere.' },
+  { day: 25, label: 'Nærmere slutten', description: 'Reflekter over hva reisen har gitt dere. Hva tar dere med videre?' },
+  { day: 30, label: 'Avslutning', description: 'Dag 30: Velg hvordan reisen skal ende.' },
+];
+
+function Milestones({ currentDay }: { currentDay: number }) {
+  // Vis kun gjeldende + neste (ikke alle)
+  const current = MILESTONES.find(m => m.day === currentDay);
+  const next = MILESTONES.find(m => m.day > currentDay);
+
+  return (
+    <div className="space-y-4">
+      {/* Dagens milestone */}
+      {current ? (
+        <div
+          className="rounded-2xl p-5"
+          style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.2)' }}
+        >
+          <p className="text-xs font-medium uppercase tracking-wider mb-2" style={{ color: '#D4AF37' }}>
+            I dag
+          </p>
+          <p className="font-semibold" style={{ color: 'rgba(255,255,255,0.9)', fontSize: '16px' }}>
+            {current.label}
+          </p>
+          <p className="mt-2 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            {current.description}
+          </p>
+        </div>
+      ) : (
+        <div
+          className="rounded-2xl p-5"
+          style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}
+        >
+          <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            Ta dere tid i dag. Ingen oppgave. Bare å være sammen.
+          </p>
+        </div>
+      )}
+
+      {/* Neste milestone (kun hvis ikke i dag) */}
+      {next && next.day !== currentDay && (
+        <div className="flex items-center gap-3 px-4 py-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.02)' }}>
+          <span className="text-xs font-medium tabular-nums w-12 shrink-0" style={{ color: 'rgba(255,255,255,0.3)' }}>
+            Dag {next.day}
+          </span>
+          <span className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
+            {next.label}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════
+   PROFILE PRIVATE SECTION
+   ═══════════════════════════════════════ */
+
+function ProfilePrivateSection() {
+  return (
+    <div
+      className="rounded-2xl p-5"
+      style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}
+    >
+      <div className="flex items-center gap-2 mb-3">
+        <span className="text-sm">🔒</span>
+        <p className="font-medium text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
+          Din profil er privat
+        </p>
+      </div>
+      <div className="space-y-1.5">
+        {[
+          'Bare din match kan se profilen din. Ingen andre brukere har tilgang.',
+          'Profildata er kryptert og lagret sikkert.',
+          'Bilder deles først etter 14 dager.',
+          'Du kan når som helst slette profilen din.',
+          'Ingen deling med tredjepart.',
+        ].map((text, i) => (
+          <p key={i} className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.35)' }}>
+            {text}
+          </p>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════
+   MAIN DASHBOARD
+   ═══════════════════════════════════════ */
+
+export default function Dashboard() {
+  const [userName, setUserName] = useState('');
+  const [data, setData] = useState<DashboardData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [showReveal, setShowReveal] = useState(false);
+  const revealedRef = useRef(false);
+
   useEffect(() => {
-    const hour = new Date().getHours();
-    if (hour < 6) setGreeting('God natt');
-    else if (hour < 12) setGreeting('God morgen');
-    else if (hour < 18) setGreeting('God ettermiddag');
-    else setGreeting('God kveld');
-    fetchDashboardData();
+    async function load() {
+      try {
+        // Sesjon
+        const sessionRes = await fetch('/api/auth/session');
+        const session = sessionRes.ok ? await sessionRes.json() : null;
+        if (!session?.user) {
+          window.location.href = '/login';
+          return;
+        }
+        setUserName(session.user.name || '');
+
+        // Dashboard data
+        const res = await fetch('/api/dashboard/overview');
+        if (!res.ok) throw new Error('No access');
+        const json: DashboardData = await res.json();
+        setData(json);
+
+        // Ingen aktiv match → redirect /matching
+        if (!json.match || !json.journey || json.journey.day < 1) {
+          window.location.href = '/matching';
+          return;
+        }
+
+        // Match reveal modal (første gang)
+        const revealKey = `tosom_revealed_${json.match.id}`;
+        if (!revealedRef.current && !sessionStorage.getItem(revealKey)) {
+          revealedRef.current = true;
+          setShowReveal(true);
+          sessionStorage.setItem(revealKey, '1');
+        }
+      } catch {
+        // No match or error → go to waiting
+        window.location.href = '/matching';
+        return;
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
   }, []);
 
-  const fetchUserName = async (): Promise<string> => {
-    try {
-      const res = await fetch('/api/auth/session');
-      if (res.ok) {
-        const json = await res.json();
-        if (json?.user?.name) return json.user.name;
-        if (json?.user?.email) return json.user.email.split('@')[0];
-      }
-    } catch {}
-    const storedUser = localStorage.getItem('testUserId') || 'Bruker';
-    if (storedUser === 'test-user-1') return 'Astrid';
-    if (storedUser === 'test-user-2') return 'Magnus';
-    return 'Ane';
-  };
+  const handleCloseReveal = useCallback(() => setShowReveal(false), []);
 
-  const fetchDashboardData = async () => {
-    try {
-      const userName = await fetchUserName();
-      const matchRes = await fetch('/api/match/check', { method: 'POST', headers: { 'Content-Type': 'application/json' } });
-      if (matchRes.ok) {
-        const matchJson = await matchRes.json();
-        if (matchJson.success && matchJson.data) {
-          let partnerName = null;
-          let daysTogether = 0;
-          let daysCompleted = 0;
-          let currentDay = 0;
-
-          if (matchJson.data.hasActiveMatch) {
-            const matchesRes = await fetch('/api/match');
-            if (matchesRes.ok) {
-              const matchesJson = await matchesRes.json();
-              if (matchesJson?.activeMatches?.[0]) partnerName = matchesJson.activeMatches[0].partnerName || null;
-            }
-            const journeyRes = await fetch('/api/journey/status');
-            if (journeyRes.ok) {
-              const journeyJson = await journeyRes.json();
-              if (journeyJson.success && journeyJson.data) {
-                currentDay = journeyJson.data.day || 1;
-                daysCompleted = journeyJson.data.completedDays || currentDay - 1;
-                daysTogether = currentDay;
-              } else { currentDay = 1; daysTogether = 1; }
-            } else { currentDay = 1; daysTogether = 1; }
-          }
-
-          setData({ userName, matched: matchJson.data.hasActiveMatch, partnerName, daysTogether, daysCompleted, currentDay });
-        }
-      } else {
-        setData({ userName, matched: false, partnerName: null, daysTogether: 0, daysCompleted: 0, currentDay: 0 });
-      }
-    } catch {
-      const userName = await fetchUserName();
-      setData({ userName, matched: false, partnerName: null, daysTogether: 0, daysCompleted: 0, currentDay: 0 });
-    }
-  };
-
-  if (!data) {
+  /* ═══ LOADING ═══ */
+  if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: color.bg.primary }}>
-        <div className="text-white/40 text-lg animate-pulse">Laster rommet ditt...</div>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(180deg, #0B1520 0%, #0F1A26 100%)' }}>
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 rounded-full border-2 animate-spin" style={{ borderColor: 'rgba(212,175,55,0.2)', borderTopColor: '#D4AF37' }} />
+          <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '14px' }}>Laster din reise…</p>
+        </div>
       </div>
     );
   }
 
+  /* ═══ INGEN DATA (should redirect, but fallback) ═══ */
+  if (!data || !data.match || !data.journey) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#0B1520' }}>
+        <p style={{ color: 'rgba(255,255,255,0.4)' }}>Du har ingen aktiv reise.</p>
+      </div>
+    );
+  }
+
+  const { match, journey, conversation } = data;
+  const currentDay = journey.day;
+  const currentPhase = getPhaseForDay(currentDay);
+  const resonanceLabel = getResonanceLabel(match.resonanceLevel);
+  const chatUrl = conversation?.conversationId ? `/chat/${conversation.conversationId}` : '/chat';
+
   return (
-    <>
-      <AmbientGlow color="blue" position="top-right" intensity={0.08} speed={7} />
-      <AmbientGlowStyles />
-      <PulseGlowStyles />
-      <GlassPanelStyles />
-      <GradientOverlay color="hero" position="bottom" intensity={0.4} />
+    <main className="relative min-h-screen overflow-hidden">
+      {/* Bakgrunn */}
+      <div className="fixed inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, #0B1520 0%, #121E2E 50%, #0B1520 100%)' }} />
+      <div className="absolute top-20 right-0 w-[600px] h-[400px] pointer-events-none opacity-15" style={{ background: 'radial-gradient(ellipse at 70% 30%, rgba(80,120,255,0.04), transparent 70%)' }} />
 
-      <div className="min-h-screen w-full py-8 md:py-12 relative overflow-hidden" style={{ background: color.bg.primary }}>
-        <div className="mx-auto max-w-[720px] space-y-6 px-4 md:px-0 relative z-10">
+      <div className="relative z-10 max-w-[720px] mx-auto px-5 pt-6 pb-16">
 
-          {/* Header */}
-          <FadeIn variant="fadeInUp" delay={0}>
-            <div className="w-full rounded-2xl p-6 md:p-8" style={{ background: 'rgba(255, 255, 255, 0.04)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: `${radius.xl}px` }}>
-              <h1 className="mb-2" style={{ fontSize: `${typography.fontSize['3xl']}px`, fontWeight: typography.fontWeight.semibold, color: color.text.primary }}>{greeting}, {data.userName.split(' ')[0]}</h1>
-              <p style={{ fontSize: `${typography.fontSize.lg}px`, lineHeight: typography.lineHeight.normal, color: color.text.secondary }}>Ta deg tid. Her møter du partneren din, steg for steg.</p>
-            </div>
-          </FadeIn>
-
-          {/* Handlinger */}
-          {data.matched && (
-            <FadeIn variant="fadeInUp" delay={0.1}>
-              <div className="w-full rounded-xl p-6" style={{ background: 'rgba(255, 255, 255, 0.04)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: `${radius.xl}px` }}>
-                <p className="mb-4" style={{ fontSize: `${typography.fontSize.lg}px`, fontWeight: typography.fontWeight.semibold, color: 'rgba(212, 175, 55, 0.6)' }}>Handlinger</p>
-                <StaggerContainer stagger={0.1} delayFirst={0.2}>
-                  <div className="flex gap-4">
-                    {actionItems.map((item) => (
-                      <Link key={item.href} href={item.href} className="flex-1 block">
-                        <PremiumButton variant="tertiary" size="md" className="w-full justify-center text-sm py-3.5 px-4 rounded-xl min-h-[52px]"><span className="flex items-center justify-center gap-2">{item.icon}<span>{item.label}</span></span></PremiumButton>
-                      </Link>
-                    ))}
-                  </div>
-                </StaggerContainer>
-              </div>
-            </FadeIn>
-          )}
-
-          {/* Ventefase */}
-          {!data.matched && <FadeIn variant="fadeInUp" delay={0.1}><WaitingForMatch userName={data.userName} /></FadeIn>}
-
-          {/* Profil + Partner */}
-          {data.matched && (
-            <FadeIn variant="fadeInUp" delay={0.2}>
-              <div className="flex justify-between items-center gap-6">
-                <div className="flex-1 rounded-xl p-6" style={{ background: 'rgba(255, 255, 255, 0.04)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: `${radius.xl}px` }}>
-                  <p className="mb-2" style={{ fontSize: `${typography.fontSize.sm}px`, fontWeight: typography.fontWeight.medium, color: 'rgba(212, 175, 55, 0.6)' }}>Din profil</p>
-                  <h3 style={{ fontSize: `${typography.fontSize.xl}px`, fontWeight: typography.fontWeight.bold, color: color.text.primary }}>{data.userName}</h3>
-                  <p style={{ fontSize: `${typography.fontSize.base}px`, color: color.text.secondary }}>Profil fullført ✓</p>
-                </div>
-                <div className="flex-1 rounded-xl p-6" style={{ background: 'rgba(212, 175, 55, 0.06)', backdropFilter: 'blur(12px)', border: '1px solid rgba(212, 175, 55, 0.15)', borderRadius: `${radius.xl}px` }}>
-                  <p className="mb-2" style={{ fontSize: `${typography.fontSize.sm}px`, fontWeight: typography.fontWeight.medium, color: 'rgba(212, 175, 55, 0.6)' }}>Partner</p>
-                  <h3 style={{ fontSize: `${typography.fontSize.xl}px`, fontWeight: typography.fontWeight.bold, color: color.text.primary }}>{data.partnerName || '—'}</h3>
-                  <p style={{ fontSize: `${typography.fontSize.base}px`, color: color.text.secondary }}>Dag {data.daysTogether} av 30</p>
-                </div>
-              </div>
-            </FadeIn>
-          )}
-
-          {/* Profil-lås-banner */}
-          {data.matched && data.currentDay > 0 && data.currentDay < 30 && (
-            <FadeIn variant="fadeInUp" delay={0.15}><ProfileLockBanner partnerName={data.partnerName || 'partneren din'} currentDay={data.currentDay} totalDays={30} /></FadeIn>
-          )}
-
-          {/* Avslutt reise-knapp */}
-          {data.matched && data.currentDay > 0 && data.currentDay < 30 && (
-            <FadeIn variant="fadeInUp" delay={0.2}>
-              <div className="text-center mt-4">
-                <button onClick={() => setShowExitModal(true)} className="px-6 py-3 rounded-xl text-sm font-medium transition-all hover:brightness-110 active:scale-[0.98]" style={{ background: 'rgba(255, 77, 77, 0.08)', color: 'rgba(255, 77, 77, 0.8)', border: '1px solid rgba(255, 77, 77, 0.2)' }}>Avslutt reisen</button>
-              </div>
-            </FadeIn>
-          )}
-
-          {/* Journey */}
-          {data.matched && (
-            <FadeIn variant="slideUp" scrollTrigger delay={0.3}>
-              <div className="w-full rounded-2xl p-6 md:p-8 relative overflow-hidden" style={{ background: 'rgba(255, 255, 255, 0.04)', backdropFilter: 'blur(12px)', border: '1px solid rgba(212, 175, 55, 0.12)', borderRadius: `${radius.xl}px` }}>
-                <div className="text-center mb-8">
-                  <h2 className="mb-2" style={{ fontSize: `${typography.fontSize['2xl']}px`, fontWeight: typography.fontWeight.semibold, background: 'linear-gradient(90deg, #D4AF37, #E8C766)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Velkommen til din reise</h2>
-                  <p style={{ fontSize: `${typography.fontSize.base}px`, color: 'rgba(255, 255, 255, 0.6)', maxWidth: '500px', margin: '0 auto' }}>Hver dag gir en ny mulighet — for å kjenne, forstå og nærme deg partneren din.</p>
-                </div>
-
-                <div className="mb-8"><TodayCard journeyDay={data.currentDay || data.daysCompleted} /></div>
-                <div className="mb-8"><JourneyTimeline currentDay={data.currentDay} completedDays={Array.from({ length: data.daysCompleted }, (_, i) => i + 1)} /></div>
-
-                <div className="text-center mb-8">
-                  <PremiumJourneyProgressTracker completedDays={Array.from({ length: data.daysCompleted }, (_, i) => i + 1)} currentDay={data.currentDay} onDaySelect={(day) => setSelectedDay(day)} />
-                </div>
-
-                {(() => {
-                  const dayContent = getDayContent(selectedDay);
-                  return (
-                    <div className="rounded-[18px] p-6 mb-6" style={{ background: 'rgba(255, 255, 255, 0.04)', backdropFilter: 'blur(12px)', border: '1px solid rgba(212, 175, 55, 0.15)' }}>
-                      <PremiumJourneyDayView content={{ day: selectedDay, phase: selectedDay <= 14 ? 'Etablering' : 'Dybde', theme: dayContent.theme, title: dayContent.title, reflection: dayContent.reflection }} />
-
-                      {data.currentDay < 30 && (selectedDay === data.currentDay || selectedDay < data.currentDay) && (
-                        <button className="w-full min-h-[48px] py-3 px-6 rounded-xl text-base font-medium flex items-center justify-center transition-all duration-300 mt-6" style={{ background: 'linear-gradient(90deg, #D4AF37, #E8C766)', color: '#0B1520', boxShadow: '0 0 24px rgba(212, 175, 55, 0.3)' }}>Neste dag — utforsk sammen → Dag {data.currentDay + 1}</button>
-                      )}
-
-                      {selectedDay !== data.currentDay && (
-                        <button onClick={() => setSelectedDay(data.currentDay)} className="w-full min-h-[48px] py-3 px-6 rounded-xl text-sm font-medium flex items-center justify-center transition-all duration-300 mt-6" style={{ background: 'rgba(212, 175, 55, 0.12)', color: '#D4AF37', border: '1px solid rgba(212, 175, 55, 0.35)' }}>← Tilbake til dag {data.currentDay}</button>
-                      )}
-
-                      {data.currentDay >= 30 && (
-                        <p className="text-center text-base" style={{ color: 'rgba(255, 255, 255, 0.6)', fontStyle: 'italic' }}>Reisen din er fullført. Ta deg tid til å reflektere over veien dere har gått sammen.</p>
-                      )}
-                    </div>
-                  );
-                })()}
-
-                <div className="mt-4"><ImageShareLockBanner imageShareAllowedAt={selectedDay >= 14 ? new Date() : null} /></div>
-              </div>
-            </FadeIn>
-          )}
+        {/* ═══ HEADER ═══ */}
+        <div className="mb-10">
+          <h1 style={{ fontSize: '28px', fontWeight: 600, color: 'rgba(255,255,255,0.92)' }}>
+            {getGreeting()}, {userName}
+          </h1>
+          <p className="mt-1 text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
+            Dere er på dag {currentDay} av {journey.totalDays}. {currentPhase.name}.
+          </p>
         </div>
+
+        {/* ═══ RESONANSE KORT ═══ */}
+        <GlassCard className="mb-8">
+          <div className="flex items-center justify-center gap-6 py-6">
+            {/* User card */}
+            <div
+              className="flex-1 max-w-[180px] rounded-2xl p-5 text-center"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}
+            >
+              <p className="font-semibold" style={{ color: 'rgba(255,255,255,0.9)', fontSize: '18px' }}>
+                {userName}
+              </p>
+              <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>Deg</p>
+            </div>
+
+            {/* Resonance word */}
+            <div className="text-center px-4 py-2 rounded-xl" style={{ boxShadow: getResonanceGlow(match.resonanceLevel) }}>
+              <p
+                className="font-semibold tracking-wide"
+                style={{ color: '#D4AF37', fontSize: '16px' }}
+              >
+                {resonanceLabel}
+              </p>
+            </div>
+
+            {/* Partner card */}
+            <div
+              className="flex-1 max-w-[180px] rounded-2xl p-5 text-center"
+              style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.2)' }}
+            >
+              <p className="font-semibold" style={{ color: 'rgba(255,255,255,0.9)', fontSize: '18px' }}>
+                {match.name}
+              </p>
+              {match.age && <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>{match.age} år</p>}
+              {match.distanceKm != null && (
+                <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>ca. {match.distanceKm} km</p>
+              )}
+            </div>
+          </div>
+        </GlassCard>
+
+        {/* ═══ KALENDAR ═══ */}
+        <GlassCard className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-semibold text-lg" style={{ color: 'rgba(255,255,255,0.8)' }}>
+              Deres reise
+            </h2>
+            <span
+              className="px-3 py-1 rounded-full text-xs font-medium"
+              style={{ background: `${currentPhase.color}15`, color: currentPhase.color, border: `1px solid ${currentPhase.color}30` }}
+            >
+              {currentPhase.name}
+            </span>
+          </div>
+          <JourneyCalendar currentDay={currentDay} />
+        </GlassCard>
+
+        {/* ═══ MILEPÆLER ═══ */}
+        <GlassCard className="mb-8">
+          <h2 className="font-semibold text-lg mb-4" style={{ color: 'rgba(255,255,255,0.8)' }}>
+            Milepæler
+          </h2>
+          <Milestones currentDay={currentDay} />
+        </GlassCard>
+
+        {/* ═══ PROFIL PRIVAT ═══ */}
+        <ProfilePrivateSection />
+
       </div>
 
-      <ConfirmExitModal isOpen={showExitModal} onClose={() => setShowExitModal(false)} currentDay={data?.currentDay} onConfirm={() => { setShowExitModal(false); setData(prev => prev ? { ...prev, matched: false, currentDay: 0 } : null); }} />
-    </>
+      {/* ═══ MATCH REVEAL MODAL ═══ */}
+      {showReveal && (
+        <MatchRevealModal
+          userName={userName}
+          partnerName={match.name}
+          partnerAge={match.age}
+          partnerDistance={match.distanceKm}
+          resonanceLabel={resonanceLabel}
+          onClose={handleCloseReveal}
+        />
+      )}
+
+      <Footer />
+    </main>
   );
 }

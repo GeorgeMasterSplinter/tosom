@@ -25,6 +25,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { createHash } from 'crypto';
 export const dynamic = 'force-dynamic';
 
 // ─── Konfigurasjon ───
@@ -39,30 +40,23 @@ const TEST_USERS: Record<string, {
   role: 'USER' | 'ADMIN';
   description: string;
 }> = {
-  'test-user-1': {
-    id: '1',
-    email: 'test@tosom.no',
-    name: 'Test User',
+  'testA': {
+    id: 'devuser_testA',
+    email: 'testA@tosom.dev',
+    name: 'Test A',
     role: 'USER',
-    description: 'Standard testbruker – full onboarding (matches conversation.userAId)',
+    description: 'E2E testbruker — full onboarding + match + journey',
   },
-  'test-user-2': {
-    id: '999',
-    email: 'test999@tosom.no',
-    name: 'Test User 2',
+  'testB': {
+    id: 'devuser_testB',
+    email: 'testB@tosom.dev',
+    name: 'Test B',
     role: 'USER',
-    description: 'Standard testbruker – partner (matches conversation.userBId)',
+    description: 'E2E testbruker — partner (matches conversation.userBId)',
   },
-  'test-user-3': {
-    id: 'dev-test-user-3',
-    email: 'test3@tosom.no',
-    name: 'Testbruker 3',
-    role: 'USER',
-    description: 'Standard testbruker – med match og reise',
-  },
-  'test-admin': {
-    id: 'dev-admin-user-1',
-    email: 'admin@tosom.no',
+  'admin': {
+    id: 'devuser_admin',
+    email: 'admin@tosom.dev',
     name: 'Admin Test',
     role: 'ADMIN',
     description: 'Admin-testbruker med tilgang til admin-panel',
@@ -71,11 +65,9 @@ const TEST_USERS: Record<string, {
 
 type DevRedirectTarget = 'onboarding' | 'dashboard' | 'journey' | 'chat';
 
-function getRedirectTarget(userId: string, existingProgress: boolean): DevRedirectTarget {
-  if (existingProgress) return 'journey';
-  if (userId === 'test-user-3') return 'journey';
-  if (userId === 'test-admin') return 'dashboard';
-  return 'onboarding';
+function getRedirectTarget(_userId: string, _existingProgress: boolean): DevRedirectTarget {
+  // Fallback — frontend sender alltid en custom redirect (/admin for ADMIN, /dashboard for USER)
+  return 'dashboard';
 }
 
 // ─── Hjelpere ───
@@ -83,7 +75,7 @@ function getRedirectTarget(userId: string, existingProgress: boolean): DevRedire
 async function ensureDevUserInDb(testUser: { id: string; email: string; name: string; role: string }) {
   let user = await prisma.user.findFirst({
     where: { email: testUser.email },
-    select: { id: true },
+    select: { id: true, profile: { select: { id: true } } },
   });
 
   if (!user) {
@@ -93,12 +85,146 @@ async function ensureDevUserInDb(testUser: { id: string; email: string; name: st
         email: testUser.email,
         name: testUser.name,
         role: testUser.role as any,
+        onboardingComplete: true,
+        deepProfileComplete: true,
       },
-      select: { id: true },
+      select: { id: true, profile: { select: { id: true } } },
+    });
+  }
+
+  // Sikre at onboarding-flaggene er satt (f.eks. eksisterende brukere)
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { onboardingComplete: true, deepProfileComplete: true },
+  });
+
+  // Opprett profil hvis manglende
+  if (!user.profile) {
+    const displayName = testUser.name;
+    const firstName = displayName.split(' ')[0] || displayName;
+    await prisma.profile.create({
+      data: {
+        userId: user.id,
+        firstName,
+        age: 30,
+        bio: 'E2E testbruker — ToSom dev',
+        interests: ['Test', 'Utvikling'],
+        deepProfileStep: 'SUMMARY' as any,
+        deepProfileData: { identity: { name: displayName, age: 30 } } as any,
+      },
     });
   }
 
   return user;
+}
+
+/**
+ * Sikrer at testA og testB har en aktiv match med conversation og journey-progress.
+ * Idempotent — oppretter manglende komponenter selv når matchen allerede finnes.
+ */
+async function ensureTestPair() {
+  const userA = await prisma.user.findUnique({ where: { id: 'devuser_testA' } });
+  const userB = await prisma.user.findUnique({ where: { id: 'devuser_testB' } });
+  if (!userA || !userB) return;
+
+  // Finn aktiv match
+  const activeMatch = await prisma.match.findFirst({
+    where: {
+      status: 'active',
+      OR: [
+        { userAId: 'devuser_testA', userBId: 'devuser_testB' },
+        { userAId: 'devuser_testB', userBId: 'devuser_testA' },
+      ],
+    },
+  });
+
+  // Ingen match → opprett alt fra null
+  if (!activeMatch) {
+    await prisma.$transaction(async (tx) => {
+      const newMatch = await tx.match.create({
+        data: {
+          userAId: 'devuser_testA',
+          userBId: 'devuser_testB',
+          status: 'active',
+          score: 75,
+          normalizedScore: 0.75,
+          type: 'resonance',
+          resonanceLevel: 'MODERATE',
+        },
+      });
+
+      await tx.conversation.create({
+        data: {
+          userAId: 'devuser_testA',
+          userBId: 'devuser_testB',
+          matchId: newMatch.id,
+        },
+      });
+
+      await tx.journeyProgress.create({
+        data: {
+          userId: 'devuser_testA',
+          matchId: newMatch.id,
+          phase: 'EARLY',
+          day: 0,
+          bothSeenAt: null,
+        },
+      });
+
+      await tx.journeyProgress.create({
+        data: {
+          userId: 'devuser_testB',
+          matchId: newMatch.id,
+          phase: 'EARLY',
+          day: 0,
+          bothSeenAt: null,
+        },
+      });
+
+      await tx.user.update({
+        where: { id: 'devuser_testA' },
+        data: { journeyState: 'MATCHED', lastMatchAt: new Date() },
+      });
+
+      await tx.user.update({
+        where: { id: 'devuser_testB' },
+        data: { journeyState: 'MATCHED', lastMatchAt: new Date() },
+      });
+    });
+    return;
+  }
+
+  // Match finnes — sikrer at aktiv conversation også finnes
+  const activeConvo = await prisma.conversation.findFirst({
+    where: { matchId: activeMatch.id, endedAt: null },
+  });
+
+  if (!activeConvo) {
+    await prisma.conversation.create({
+      data: {
+        userAId: 'devuser_testA',
+        userBId: 'devuser_testB',
+        matchId: activeMatch.id,
+      },
+    });
+  }
+
+  // Sikrer at journey-progress finnes for begge
+  const [journeyA, journeyB] = await Promise.all([
+    prisma.journeyProgress.findFirst({ where: { userId: 'devuser_testA', matchId: activeMatch.id } }),
+    prisma.journeyProgress.findFirst({ where: { userId: 'devuser_testB', matchId: activeMatch.id } }),
+  ]);
+
+  if (!journeyA) {
+    await prisma.journeyProgress.create({
+      data: { userId: 'devuser_testA', matchId: activeMatch.id, phase: 'EARLY', day: 0, bothSeenAt: null },
+    });
+  }
+  if (!journeyB) {
+    await prisma.journeyProgress.create({
+      data: { userId: 'devuser_testB', matchId: activeMatch.id, phase: 'EARLY', day: 0, bothSeenAt: null },
+    });
+  }
 }
 
 /**
@@ -115,20 +241,26 @@ async function createDevVerificationToken(testUser: { email: string }): Promise<
   );
   const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 timer
 
+  // NextAuth hashes the token with SHA-256(token + secret) before lookup.
+  // We must store the hashed version in the DB.
+  const secret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || '';
+  const hashedToken = createHash('sha256').update(token + secret, 'utf8').digest('hex');
+
   // Fjern gamle tokens for denne emailen
   await prisma.verificationToken.deleteMany({
     where: { identifier: testUser.email },
   });
 
-  // Opprett nytt token
+  // Opprett nytt token (hashed, slik NextAuth forventer)
   await prisma.verificationToken.create({
     data: {
       identifier: testUser.email,
-      token,
+      token: hashedToken,
       expires,
     },
   });
 
+  // Return the RAW token — it goes in the URL, NextAuth will hash it
   return token;
 }
 
@@ -153,7 +285,7 @@ export async function GET(req: NextRequest) {
       {
         error: 'Ugyldig userId. Tilgjengelige brukere:',
         available: availableUsers,
-        usage: 'GET /api/dev-login?userId=test-user-1',
+        usage: 'GET /api/dev-login?userId=testA',
       },
       { status: 400 }
     );
@@ -215,7 +347,7 @@ export async function POST(req: NextRequest) {
       {
         error: 'Ugyldig userId. Tilgjengelige brukere:',
         available: availableUsers,
-        usage: 'POST /api/dev-login { "userId": "test-user-1" }',
+        usage: 'POST /api/dev-login { "userId": "testA" }',
       },
       { status: 400 }
     );
@@ -224,6 +356,16 @@ export async function POST(req: NextRequest) {
   const testUser = TEST_USERS[userId as keyof typeof TEST_USERS];
 
   await ensureDevUserInDb(testUser);
+
+  // Sikre at test-paret (A + B) har aktiv match — kun for USER-roller
+  if (testUser.role === 'USER') {
+    const otherKey = userId === 'testA' ? 'testB' : 'testA';
+    const otherUser = TEST_USERS[otherKey as keyof typeof TEST_USERS];
+    if (otherUser) {
+      await ensureDevUserInDb(otherUser);
+      await ensureTestPair();
+    }
+  }
 
   try {
     const token = await createDevVerificationToken(testUser);
@@ -235,7 +377,7 @@ export async function POST(req: NextRequest) {
     if (customRedirect && customRedirect.startsWith('/')) {
       redirectUrl = customRedirect;
     } else {
-      const existingProgress = userId === 'test-user-3' || userId === 'test-admin';
+      const existingProgress = userId === 'admin';
       redirectUrl = `/${getRedirectTarget(userId, existingProgress)}`;
     }
 

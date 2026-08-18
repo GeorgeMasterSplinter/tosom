@@ -36,15 +36,8 @@ export default function QuestionsPage() {
     setQuestion(null);
   };
 
-  const categoryLabels: Record<string, string> = {
-    personlighet: "Personlighet & identitet",
-    forhold: "Forhold & tilknytning",
-    fremtid: "Fremtid & livsvisjon",
-    humor: "Lek & humor",
-    barndom: "Barndom & røtter",
-    verdier: "Verdier & livsstil",
-    følelser: "Følelser & emosjonell dybde",
-    moden: "Moden nysgjerrighet (21+)",
+  const getCategoryName = (id: string) => {
+    return questionCategories.find(c => c.id === id)?.name || id;
   };
 
   return (
@@ -65,10 +58,10 @@ export default function QuestionsPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {categories.map((cat) => (
             <CategoryButton
-              key={cat.key}
-              label={cat.label}
+              key={cat.id}
+              label={cat.name}
               count={cat.count}
-              onClick={() => handleCategory(cat.key)}
+              onClick={() => handleCategory(cat.id)}
             />
           ))}
         </div>
@@ -125,7 +118,7 @@ export default function QuestionsPage() {
             
             <div className="relative z-10">
               <p className="text-[var(--ts-gold)] text-sm font-medium mb-3">
-                {selectedCategory ? (categoryLabels[selectedCategory] || selectedCategory) : ''}
+                {selectedCategory ? getCategoryName(selectedCategory) : ''}
               </p>
               <p className="leading-relaxed">{question}</p>
             </div>

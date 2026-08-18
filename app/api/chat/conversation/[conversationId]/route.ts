@@ -1,11 +1,12 @@
 /**
- * GET /api/chat/conversation/:conversationId
+* GET /api/chat/conversation/:conversationId
  * Hent conversation-info med partner-data.
  */
 
 import { NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth/session";
 import { prisma } from "@/lib/prisma";
+import { haversineKm } from "@/lib/matching/distance";
 
 export const dynamic = "force-dynamic";
 
@@ -43,14 +44,18 @@ export async function GET(
 
     // Finn partneren — prøv name-felt først, deretter firstName
     const partnerId = isA ? conversation.userBId : conversation.userAId;
-    const [partnerUser, partnerProfile] = await Promise.all([
+    const [partnerUser, partnerProfile, meProfile] = await Promise.all([
       prisma.user.findUnique({
         where: { id: partnerId },
         select: { name: true },
       }),
       prisma.profile.findUnique({
         where: { userId: partnerId },
-        select: { age: true },
+        select: { age: true, latitude: true, longitude: true },
+      }),
+      prisma.profile.findUnique({
+        where: { userId: session.user.id },
+        select: { latitude: true, longitude: true },
       }),
     ]);
 
@@ -59,10 +64,30 @@ export async function GET(
     const partnerName = partnerUser?.name || partnerFirstName;
     const partnerAge = partnerProfile?.age ?? 25;
 
+    // Beregn avstand hvis begge har koordinater
+    let distanceKm: number | null = null;
+    if (
+      partnerProfile?.latitude != null &&
+      partnerProfile?.longitude != null &&
+      meProfile?.latitude != null &&
+      meProfile?.longitude != null
+    ) {
+      distanceKm = Math.round(
+        haversineKm(
+          meProfile.latitude,
+          meProfile.longitude,
+          partnerProfile.latitude,
+          partnerProfile.longitude
+        )
+      );
+    }
+
     return NextResponse.json({
       conversationId: conversation.id,
+      partnerId,
       partnerName,
       partnerAge,
+      distanceKm,
       imageShareAllowed: conversation.imageShareAllowedAt != null,
       lastMessageAt: conversation.lastMessageAt,
     });

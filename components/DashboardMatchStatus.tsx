@@ -41,13 +41,13 @@ export default function DashboardMatchStatus() {
       <div className="space-y-4">
         {status.state === "idle" && (
           <p className="text-neutral-300 leading-relaxed">
-            Du er ikke i kø. Trykk for å starte matching.
+            Du er ikke i venterommet. Trykk for å starte matching.
           </p>
         )}
 
         {status.state === "queue" && (
           <p className="text-neutral-300 leading-relaxed">
-            Du står i kø… vi finner en match til deg.
+            Du er i venterommet… vi finner en match til deg.
           </p>
         )}
 

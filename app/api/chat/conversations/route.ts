@@ -33,7 +33,7 @@ export async function GET(request: Request) {
 
   try {
     // Aktive samtaler der brukeren er part A eller B. Ingen avslutte/frysne.
-    const conversations = await prisma.conversation.findMany({
+    let conversations = await prisma.conversation.findMany({
       where: {
         OR: [{ userAId: me }, { userBId: me }],
         endedAt: null,
@@ -62,6 +62,57 @@ export async function GET(request: Request) {
         },
       },
     });
+
+    // Self-healing: Hvis ingen conversation finnes men aktiv match er tilstede, opprett den.
+    if (conversations.length === 0) {
+      const activeMatch = await prisma.match.findFirst({
+        where: {
+          status: 'active',
+          OR: [{ userAId: me }, { userBId: me }],
+        },
+      });
+
+      if (activeMatch) {
+        await prisma.conversation.create({
+          data: {
+            userAId: activeMatch.userAId,
+            userBId: activeMatch.userBId,
+            matchId: activeMatch.id,
+          },
+        });
+
+        // Hent den nyopprettede conversationen med full include
+        conversations = await prisma.conversation.findMany({
+          where: {
+            OR: [{ userAId: me }, { userBId: me }],
+            endedAt: null,
+          },
+          orderBy: { lastMessageAt: { sort: "desc", nulls: "last" } },
+          select: {
+            id: true,
+            matchId: true,
+            userAId: true,
+            userBId: true,
+            lastMessageAt: true,
+            lastMessagePreview: true,
+            unreadCountA: true,
+            unreadCountB: true,
+            userA: {
+              select: {
+                name: true,
+                profile: { select: { identityName: true, age: true, photoUrl: true } },
+              },
+            },
+            userB: {
+              select: {
+                name: true,
+                profile: { select: { identityName: true, age: true, photoUrl: true } },
+              },
+            },
+          },
+        });
+      }
+    }
 
     const matchIds = conversations
       .map((c) => c.matchId)

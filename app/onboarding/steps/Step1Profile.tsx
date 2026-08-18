@@ -1,22 +1,22 @@
 /**
- * Tosom — Steg 1: Grunnprofil (Premium rebuild 2026 — Fase 2)
- * 
- * Oppdatert med:
- * - Mikroguiding per felt (hva er forventet svar?)
- * - Progresjons-indikasjon under hvert tekstfelt
- * - OnboardingTextField + OnboardingSelectGrid komponentar
- * - PremiumCTAButton med 56px høgde
- * - 48–64px spacing (desktop), 32–48px (mobil)
+ * Tosom — Steg 1: Grunnprofil (Premium rebuild 2026 — Rework)
+ *
+ * Dempet nordisk design med subtil fargeidentitet pr. seksjon.
+ * - OnboardingSection for rolig overskrifter
+ * - Nøytrale divider (ikke gull)
+ * - Farge-tilordning: blå (identitet), teal (bosted), grønn (livsstil)
  */
 
 'use client';
 
 import { useState, useMemo } from 'react';
 import { OnboardingSlide } from '@/app/onboarding/components/OnboardingSlide';
+import { OnboardingSection } from '@/app/onboarding/components/OnboardingSection';
 import { OnboardingTextField } from '@/app/onboarding/components/OnboardingTextField';
 import { OnboardingSelectGrid } from '@/app/onboarding/components/OnboardingSelectGrid';
 import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { lookupPostalCode } from '@/lib/geo/lookup';
+import { OB } from '@/app/onboarding/theme';
 
 interface Props {
   data: Record<string, unknown>;
@@ -33,30 +33,30 @@ interface ValidationError {
 
 const validate = (data: Record<string, unknown>): ValidationError[] => {
   const errors: ValidationError[] = [];
-  
+
   const name = String(data['identityName'] ?? '').trim();
   if (!name) errors.push({ field: 'identityName', message: 'Fyll inn navnet ditt.' });
   else if (name.length < 2) errors.push({ field: 'identityName', message: 'Navnet må være minst 2 tegn.' });
-  
+
   const age = parseInt(String(data['age'] ?? ''));
   if (!data['age'] || !String(data['age']).trim()) errors.push({ field: 'age', message: 'Alder er påkrevd.' });
   else if (isNaN(age) || age < 21) errors.push({ field: 'age', message: 'Du må være minst 21 år.' });
   else if (age > 99) errors.push({ field: 'age', message: 'Justér alderen litt – dette ser ikke helt riktig ut.' });
-  
-   if (!String(data['gender'] ?? '').trim()) errors.push({ field: 'gender', message: 'Velg ett kjønn.' });
-   if (!String(data['seekingGender'] ?? '').trim()) errors.push({ field: 'seekingGender', message: 'Velg hvem du søker.' });
+
+  if (!String(data['gender'] ?? '').trim()) errors.push({ field: 'gender', message: 'Velg ett kjønn.' });
+  if (!String(data['seekingGender'] ?? '').trim()) errors.push({ field: 'seekingGender', message: 'Velg hvem du søker.' });
   if (!String(data['city'] ?? '').trim()) errors.push({ field: 'city', message: 'Hvor bor du?' });
-  
+
   const pc = String(data['postalCode'] ?? '').trim();
   if (!pc) errors.push({ field: 'postalCode', message: 'Postnummer er påkrevd.' });
   else if (!/^\d{4}$/.test(pc)) errors.push({ field: 'postalCode', message: 'Postnummer må ha fire siffer.' });
-  
+
   const maxDist = Number(data['distancePref']);
   if (isNaN(maxDist) || !maxDist) errors.push({ field: 'distancePref', message: 'Velg en avstand.' });
-  
+
   const minAge = parseInt(String(data['minAge'] ?? ''));
   if (isNaN(minAge) || minAge < 21) errors.push({ field: 'minAge', message: 'Minste alder må være 21.' });
-  
+
   const maxAgeVal = parseInt(String(data['maxAge'] ?? ''));
   if (isNaN(maxAgeVal) || maxAgeVal < minAge) errors.push({ field: 'maxAge', message: 'Maks alder må være over minste alder.' });
 
@@ -83,7 +83,6 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
     return v !== undefined && v !== null ? String(v) : fallback;
   };
 
-  // Faste verdiar for SSR-sikker rendering
   const safeDistance = (() => {
     const v = Number(data['distancePref']);
     return !isNaN(v) && v > 0 ? v : 50;
@@ -99,10 +98,8 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
     return !isNaN(v) && v >= safeMinAge ? v : 40;
   })();
 
-  // Feil-map for visuell markering
   const errorFields = new Set(errors.map(e => e.field));
 
-  // B1.2: Vis stedsnavnet når brukeren skriver postnummer — bekrefter at hun skrev riktig
   const postalCodeValue = String(data['postalCode'] ?? '').trim();
   const postalPlace = useMemo(() => {
     if (!/^\d{4}$/.test(postalCodeValue)) return null;
@@ -116,17 +113,18 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
       guidingText="Dette er starten på reisen din. Vi holder det enkelt."
       slideIndex={0}
       totalSlides={13}
+      accentColor={OB.section.identity}
     >
       {/* Error summary */}
       {errors.length > 0 && (
         <div className="mb-8 rounded-xl p-4 border" style={{
-          background: 'rgba(255, 77, 77, 0.08)',
-          borderColor: 'rgba(255, 77, 77, 0.2)',
+          background: 'rgba(255, 77, 77, 0.06)',
+          borderColor: 'rgba(255, 77, 77, 0.15)',
         }}>
           <p className="text-sm font-medium mb-2" style={{ color: '#FF4D4D' }}>
             Vennligst fyll ut de markerte feltene:
           </p>
-          <ul className="text-sm space-y-1" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+          <ul className="text-sm space-y-1" style={{ color: OB.textSecondary }}>
             {errors.map((err) => (
               <li key={err.field}>• {err.message}</li>
             ))}
@@ -134,129 +132,103 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
         </div>
       )}
 
-      {/* ────────────────────────────────────── */}
       {/* SEKSJON A — Identitet og søk */}
-      {/* ────────────────────────────────────── */}
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-4">
-          <div
-            className="w-3 h-3 rounded-full"
-            style={{ background: 'linear-gradient(135deg, #D4AF37, #E8C766)', boxShadow: '0 0 12px rgba(212, 175, 55, 0.4)' }}
-          />
-          <h2 className="text-[20px] font-bold tracking-wide" style={{ color: '#D4AF37' }}>
-            IDENTITET OG SØK
-          </h2>
-        </div>
-           <p className="text-sm mb-6 font-semibold" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-            Dette hjelper oss å forstå hvem du er og hvem du ønsker å møte.
-          </p>
-
-        <div className="space-y-6">
-          {/* identityName med mikroguiding */}
+      <OnboardingSection
+        title="Identitet og søk"
+        accentColor={OB.section.identity}
+        description="Dette hjelper oss å forstå hvem du er og hvem du ønsker å møte."
+      >
+        <div className="space-y-5">
           <OnboardingTextField
             label="Hva vil du at vi skal kalle deg? *"
             value={val('identityName', '')(data)}
             onChange={(v) => onChange('identityName', v)}
             placeholder="Navn eller kallenavn"
-            mikroguiding="Skriv f.eks. Kalla meg Sofia, Jonas eller Lia"
+            mikroguiding="Skriv f.eks. Sofia, Jonas eller Lia"
             maxLength={50}
             minChars={2}
           />
 
-          {/* age med mikroguiding */}
           <OnboardingTextField
             label="Alder *"
             value={val('age', '')(data)}
             onChange={(v) => onChange('age', v)}
             placeholder="25"
-              mikroguiding="Skriv alderen din (må være minst 21)"
+            mikroguiding="Må være minst 21"
             maxLength={3}
             minChars={2}
           />
 
-           {/* gender med OnboardingSelectGrid — 4 val */}
-           <OnboardingSelectGrid
-             label="Ditt kjønn *"
-             mikroguiding="Velg det som passer best for deg"
-             options={[
-               { value: 'Mann', label: 'Mann', icon: '👨' },
-               { value: 'Kvinne', label: 'Kvinne', icon: '👩' },
-               { value: 'Ikke-binær', label: 'Ikke-binær', icon: '🏳️‍🌈' },
-               { value: 'Genderfluid', label: 'Genderfluid', icon: '🌊' },
-             ]}
-             selectedValue={val('gender', '')(data)}
-             onChange={(v) => onChange('gender', v)}
-           />
+          <OnboardingSelectGrid
+            label="Ditt kjønn *"
+            mikroguiding="Velg det som passer best for deg"
+            options={[
+              { value: 'Mann', label: 'Mann', icon: '👨' },
+              { value: 'Kvinne', label: 'Kvinne', icon: '👩' },
+              { value: 'Ikke-binær', label: 'Ikke-binær', icon: '🏳️‍🌈' },
+              { value: 'Genderfluid', label: 'Genderfluid', icon: '🌊' },
+            ]}
+            selectedValue={val('gender', '')(data)}
+            onChange={(v) => onChange('gender', v)}
+            accentColor={OB.section.identity}
+          />
 
-           {/* seekingGender med OnboardingSelectGrid */}
-           <OnboardingSelectGrid
-             label="Hvem søker du? *"
-             mikroguiding="Velg hvem du ønsker å møte"
-             options={[
-               { value: 'Mann', label: 'Mann', icon: '👨' },
-               { value: 'Kvinne', label: 'Kvinne', icon: '👩' },
-               { value: 'Alle-kjon', label: 'Alle kjønn', icon: '💫' },
-               { value: 'Kjemisk-tiltrekning', label: 'Kjemisk tiltrekning', icon: '💜' },
-             ]}
-             selectedValue={val('seekingGender', '')(data)}
-             onChange={(v) => onChange('seekingGender', v)}
-           />
+          <OnboardingSelectGrid
+            label="Hvem søker du? *"
+            mikroguiding="Velg hvem du ønsker å møte"
+            options={[
+              { value: 'Mann', label: 'Mann', icon: '👨' },
+              { value: 'Kvinne', label: 'Kvinne', icon: '👩' },
+              { value: 'Alle-kjon', label: 'Alle kjønn', icon: '💫' },
+              { value: 'Kjemisk-tiltrekning', label: 'Kjemisk tiltrekning', icon: '💜' },
+            ]}
+            selectedValue={val('seekingGender', '')(data)}
+            onChange={(v) => onChange('seekingGender', v)}
+            accentColor={OB.section.identity}
+          />
         </div>
-      </div>
+      </OnboardingSection>
 
       {/* Divider */}
-      <div className="mb-8" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)' }} />
+      <div className="mb-8" style={{ borderTop: `1px solid ${OB.divider}` }} />
 
-      {/* ────────────────────────────────────── */}
       {/* SEKSJON B — Bosted og avstand */}
-      {/* ────────────────────────────────────── */}
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-4">
-          <div
-            className="w-3 h-3 rounded-full"
-            style={{ background: 'linear-gradient(135deg, #D4AF37, #E8C766)', boxShadow: '0 0 12px rgba(212, 175, 55, 0.4)' }}
-          />
-          <h2 className="text-[20px] font-bold tracking-wide" style={{ color: '#D4AF37' }}>
-            BOSTED OG AVSTAND
-          </h2>
-        </div>
-        <p className="text-sm mb-6 font-semibold" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-          Vi bruker dette til å finne noen som faktisk passer deg.
-        </p>
-
-        <div className="space-y-6">
-          {/* city med mikroguiding */}
+      <OnboardingSection
+        title="Bosted og avstand"
+        accentColor={OB.section.location}
+        description="Vi bruker dette til å finne noen som faktisk passer deg."
+      >
+        <div className="space-y-5">
           <OnboardingTextField
             label="Bosted *"
             value={val('city', '')(data)}
             onChange={(v) => onChange('city', v)}
             placeholder="Hvor bor du?"
-            mikroguiding="Skriv f.eks. Asker, Bergen eller Stavanger"
+            mikroguiding="F.eks. Asker, Bergen eller Stavanger"
             maxLength={100}
             minChars={2}
           />
 
-          {/* postalCode — B1.2: postnummer med stedsnavn-bekreftelse */}
           <div>
             <OnboardingTextField
               label="Postnummer *"
               value={val('postalCode', '')(data)}
               onChange={(v) => onChange('postalCode', v.replace(/[^0-9]/g, '').slice(0, 4))}
               placeholder="F.eks. 0150"
-              mikroguiding="Fire siffer — vi bruker dette for å finne avstand, ikke nøyaktig posisjon"
+              mikroguiding="Fire siffer — vi bruker dette for avstand, ikke nøyaktig posisjon"
               maxLength={4}
               minChars={4}
             />
             {postalPlace && (
-              <p className="text-sm mt-1 ml-1" style={{ color: '#D4AF37' }}>
-                {postalPlace.lat != null ? `✓ ${postalPlace.sted}` : `✓ ${postalPlace.sted} (postboks-kode, ingen avstand)`}
+              <p className="text-[12px] mt-1 ml-1" style={{ color: OB.section.location }}>
+                ✓ {postalPlace.sted}
               </p>
             )}
           </div>
 
           {/* distancePref slider */}
-          <div className="space-y-3">
-            <label className="block text-[14px] font-medium" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+          <div className="space-y-2">
+            <label className="block text-[14px] font-medium" style={{ color: OB.textSecondary }}>
               Maks avstand *
             </label>
             <div className="flex items-center gap-4">
@@ -266,10 +238,10 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
                 max={300}
                 value={safeDistance}
                 onChange={(e) => onChange('distancePref', Number(e.target.value))}
-                className="flex-1 h-3 rounded-lg cursor-pointer"
-                style={{ background: 'rgba(255, 255, 255, 0.12)', accentColor: '#D4AF37' }}
+                className="flex-1 h-2 rounded-lg cursor-pointer"
+                style={{ background: 'rgba(255,255,255,0.08)', accentColor: OB.section.location }}
               />
-              <span className="text-[16px] font-medium min-w-[80px] text-right" style={{ color: '#D4AF37' }}>
+              <span className="text-[14px] font-medium min-w-[60px] text-right" style={{ color: OB.textSecondary }}>
                 {safeDistance} km
               </span>
             </div>
@@ -278,52 +250,39 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
           {/* minAge + maxAge */}
           <div className="grid grid-cols-2 gap-4" style={{ minWidth: 0 }}>
             <div style={{ minWidth: 0 }}>
-            <OnboardingTextField
-              label="Min alder *"
-              value={val('minAge', '')(data)}
-              onChange={(v) => onChange('minAge', v)}
-              placeholder={String(safeMinAge)}
-              maxLength={3}
-              minChars={2}
-            />
+              <OnboardingTextField
+                label="Min alder *"
+                value={val('minAge', '')(data)}
+                onChange={(v) => onChange('minAge', v)}
+                placeholder={String(safeMinAge)}
+                maxLength={3}
+                minChars={2}
+              />
             </div>
             <div style={{ minWidth: 0 }}>
-            <OnboardingTextField
-              label="Maks alder *"
-              value={val('maxAge', '')(data)}
-              onChange={(v) => onChange('maxAge', v)}
-              placeholder={String(safeMaxAge)}
-              maxLength={3}
-              minChars={2}
-            />
+              <OnboardingTextField
+                label="Maks alder *"
+                value={val('maxAge', '')(data)}
+                onChange={(v) => onChange('maxAge', v)}
+                placeholder={String(safeMaxAge)}
+                maxLength={3}
+                minChars={2}
+              />
             </div>
           </div>
         </div>
-      </div>
+      </OnboardingSection>
 
       {/* Divider */}
-      <div className="mb-8" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)' }} />
+      <div className="mb-8" style={{ borderTop: `1px solid ${OB.divider}` }} />
 
-      {/* ────────────────────────────────────── */}
-      {/* SEKSJON C — LIVSTIL */}
-      {/* ────────────────────────────────────── */}
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-4">
-          <div
-            className="w-3 h-3 rounded-full"
-            style={{ background: 'linear-gradient(135deg, #D4AF37, #E8C766)', boxShadow: '0 0 12px rgba(212, 175, 55, 0.4)' }}
-          />
-          <h2 className="text-[20px] font-bold tracking-wide" style={{ color: '#D4AF37' }}>
-            LIVSTIL
-          </h2>
-        </div>
-
-        <p className="text-sm mb-6 font-semibold" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-          Litt om deg og hvordan du lever livet. (Valgfritt)
-        </p>
-
-        <div className="space-y-10">
-          {/* height */}
+      {/* SEKSJON C — Livsstil */}
+      <OnboardingSection
+        title="Livsstil"
+        accentColor={OB.section.lifestyle}
+        description="Litt om deg og hvordan du lever livet. (Valgfritt)"
+      >
+        <div className="space-y-6">
           <OnboardingTextField
             label="Høyde (cm)"
             value={val('height', '')(data)}
@@ -333,31 +292,28 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             minChars={0}
           />
 
-          {/* bodyType med SelectGrid */}
-          <div>
-            <OnboardingSelectGrid
-               label="Kroppstype"
-               mikroguiding="Velg det som passer best for deg"
-               options={[
-                 { value: 'Slank', label: 'Slank', icon: '🏃' },
-                { value: 'Gjennomsnittlig', label: 'Gjennomsnittlig', icon: '🧍' },
-                { value: 'Atletisk', label: 'Atletisk', icon: '💪' },
-                { value: 'Kraftig', label: 'Kraftig', icon: '🦍' },
-                { value: 'Myk', label: 'Myk', icon: '🌸' },
-               ]}
-               selectedValue={val('bodyType', '')(data)}
-               onChange={(v) => onChange('bodyType', v)}
-            />
-          </div>
+          <OnboardingSelectGrid
+            label="Kroppstype"
+            mikroguiding="Velg det som passer best for deg"
+            options={[
+              { value: 'Slank', label: 'Slank', icon: '🏃' },
+              { value: 'Gjennomsnittlig', label: 'Gjennomsnittlig', icon: '🧍' },
+              { value: 'Atletisk', label: 'Atletisk', icon: '💪' },
+              { value: 'Kraftig', label: 'Kraftig', icon: '🦍' },
+              { value: 'Myk', label: 'Myk', icon: '🌸' },
+            ]}
+            selectedValue={val('bodyType', '')(data)}
+            onChange={(v) => onChange('bodyType', v)}
+            accentColor={OB.section.lifestyle}
+          />
 
-          {/* Separator — kategori-skilje mellom Kroppstype og Livsstil */}
-          <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
+          {/* Divider — nøytral */}
+          <div style={{ borderTop: `1px solid ${OB.divider}`, margin: '16px 0' }} />
 
-           {/* lifestyle med SelectGrid */}
-            <OnboardingSelectGrid
-              label="Din hverdag"
-              mikroguiding="Velg det som passer best for deg"
-             options={[
+          <OnboardingSelectGrid
+            label="Din hverdag"
+            mikroguiding="Velg det som passer best for deg"
+            options={[
               { value: 'Aktiv', label: 'Aktiv', icon: '🏔️' },
               { value: 'Rolig', label: 'Rolig', icon: '🌿' },
               { value: 'Balansert', label: 'Balansert', icon: '⚖️' },
@@ -366,53 +322,50 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             ]}
             selectedValue={val('lifestyle', '')(data)}
             onChange={(v) => onChange('lifestyle', v)}
+            accentColor={OB.section.lifestyle}
           />
 
-          {/* Separator — tydeleg kategori-skilje */}
-          <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
+          <div style={{ borderTop: `1px solid ${OB.divider}`, margin: '16px 0' }} />
 
-           {/* smoking med SelectGrid */}
-           <OnboardingSelectGrid
-             label="Røyking / snus"
-             mikroguiding="Velg det som passer best"
-              options={[
-               { value: 'Roker-snuser-ikke', label: 'Røyker/Snuser ikke', icon: '🚭' },
-               { value: 'Roker-av-og-til', label: 'Røyker av og til', icon: '💨' },
-               { value: 'Snuser', label: 'Snuser', icon: '🧢' },
-               { value: 'Roker', label: 'Røyker', icon: '🚬' },
-             ]}
+          <OnboardingSelectGrid
+            label="Røyking / snus"
+            mikroguiding="Velg det som passer best"
+            options={[
+              { value: 'Roker-snuser-ikke', label: 'Røyker/Snuser ikke', icon: '🚭' },
+              { value: 'Roker-av-og-til', label: 'Røyker av og til', icon: '💨' },
+              { value: 'Snuser', label: 'Snuser', icon: '🧢' },
+              { value: 'Roker', label: 'Røyker', icon: '🚬' },
+            ]}
             selectedValue={val('smoking', '')(data)}
             onChange={(v) => onChange('smoking', v)}
+            accentColor={OB.section.lifestyle}
           />
 
-          {/* Divider */}
-          <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
+          <div style={{ borderTop: `1px solid ${OB.divider}`, margin: '16px 0' }} />
 
-           {/* religion med SelectGrid */}
-           <OnboardingSelectGrid
-             label="Religion / livssyn"
-             mikroguiding="Velg det som passer best"
-              options={[
-               { value: 'Kristen', label: 'Kristen', icon: '✝️' },
-               { value: 'Katolsk', label: 'Katolsk', icon: '⛪' },
-               { value: 'Agnostiker', label: 'Agnostiker', icon: '🤔' },
-               { value: 'Ateist', label: 'Ateist', icon: '🔬' },
-               { value: 'Muslim', label: 'Muslim', icon: '☪️' },
-               { value: 'Jehovas-vitne', label: 'Jehovas vitne', icon: '🔯' },
-               { value: 'Hindu', label: 'Hindu', icon: '🕉️' },
-               { value: 'Judedom', label: 'Jødedom', icon: '✡️' },
-               { value: 'Buddhist', label: 'Buddhist', icon: '☯️' },
-               { value: 'Spirituell', label: 'Spirituell', icon: '🌙' },
-               { value: 'Annet', label: 'Annet', icon: '✨' },
-             ]}
+          <OnboardingSelectGrid
+            label="Religion / livssyn"
+            mikroguiding="Velg det som passer best"
+            options={[
+              { value: 'Kristen', label: 'Kristen', icon: '✝️' },
+              { value: 'Katolsk', label: 'Katolsk', icon: '⛪' },
+              { value: 'Agnostiker', label: 'Agnostiker', icon: '🤔' },
+              { value: 'Ateist', label: 'Ateist', icon: '🔬' },
+              { value: 'Muslim', label: 'Muslim', icon: '☪️' },
+              { value: 'Jehovas-vitne', label: 'Jehovas vitne', icon: '🔯' },
+              { value: 'Hindu', label: 'Hindu', icon: '🕉️' },
+              { value: 'Judedom', label: 'Jødedom', icon: '✡️' },
+              { value: 'Buddhist', label: 'Buddhist', icon: '☯️' },
+              { value: 'Spirituell', label: 'Spirituell', icon: '🌙' },
+              { value: 'Annet', label: 'Annet', icon: '✨' },
+            ]}
             selectedValue={val('religion', '')(data)}
             onChange={(v) => onChange('religion', v)}
+            accentColor={OB.section.lifestyle}
           />
 
-          {/* Divider */}
-          <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
+          <div style={{ borderTop: `1px solid ${OB.divider}`, margin: '16px 0' }} />
 
-          {/* children med SelectGrid */}
           <OnboardingSelectGrid
             label="Barn?"
             options={[
@@ -422,12 +375,11 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             ]}
             selectedValue={val('children', '')(data)}
             onChange={(v) => onChange('children', v)}
+            accentColor={OB.section.lifestyle}
           />
 
-          {/* Divider */}
-          <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
+          <div style={{ borderTop: `1px solid ${OB.divider}`, margin: '16px 0' }} />
 
-          {/* wantChildren med SelectGrid */}
           <OnboardingSelectGrid
             label="Ønsker du barn?"
             options={[
@@ -437,9 +389,10 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             ]}
             selectedValue={val('wantChildren', '')(data)}
             onChange={(v) => onChange('wantChildren', v)}
+            accentColor={OB.section.lifestyle}
           />
         </div>
-      </div>
+      </OnboardingSection>
 
       {/* Premium CTA */}
       <div className="mt-8 space-y-4">
@@ -449,10 +402,9 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
           disabled={!canProceed}
           fullWidth
         />
-        
-        {/* Trust text */}
-        <p className="text-center text-xs" style={{ color: 'rgba(255, 255, 255, 0.35)' }}>
-           Svarene dine brukes kun til å bygge profilen din og finne en god match.
+
+        <p className="text-center text-[12px]" style={{ color: OB.textSubtle }}>
+          Svarene dine brukes kun til å bygge profilen din og finne en god match.
         </p>
       </div>
     </OnboardingSlide>

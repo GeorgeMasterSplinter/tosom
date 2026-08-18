@@ -15,6 +15,7 @@ import { useChat } from "@/app/chat/context/ChatContext";
 import { MessageBubble, MessageBubbleStyles } from "@/app/chat/components/MessageBubble";
 import { ChatHeader } from "@/app/chat/components/ChatHeader";
 import { BliKjentPanel } from "@/app/chat/components/BliKjentPanel";
+import { OppgaverPanel } from "@/app/chat/components/OppgaverPanel";
 import { useChatScroll } from "@/components/chat/useChatScroll";
 import { usePresence } from "@/hooks/usePresence";
 
@@ -129,7 +130,7 @@ function MoodSelector({
               borderRight: `1px solid ${G.glassBorder}`,
             }}
           >
-            <span className="text-5xl leading-none">{palette.emoji}</span>
+            <span className="text-xl leading-none">{palette.emoji}</span>
             <span className="text-xs font-semibold tracking-wide">{palette.name}</span>
           </button>
         );
@@ -463,35 +464,39 @@ function ChatInput({
             : '0 2px 8px rgba(0,0,0,0.05)',
         }}
       >
-        {/* Kamera-ikon — Premium glass-knapp */}
-        {imageShareAllowed && (
-          <>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/jpeg,image/png,image/webp"
-              onChange={handleImageUpload}
-              className="hidden"
-            />
-            <button 
-              onClick={() => fileInputRef.current?.click()}
-              disabled={uploading}
-              className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 hover:brightness-125 active:scale-90 disabled:opacity-40" 
-              style={{ 
-                color: G.gold,
-                background: G.glassBg,
-                border: `1px solid ${G.glassBorder}`,
-              }} 
-              title={uploading ? "Lagar bilete..." : "Send bilde"}
+        {/* Bilde-ikon — Premium glass-knapp (låst før dag 15) */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          onChange={handleImageUpload}
+          className="hidden"
+        />
+        <button
+          onClick={imageShareAllowed ? () => fileInputRef.current?.click() : undefined}
+          disabled={!imageShareAllowed || uploading}
+          className={`flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 relative ${imageShareAllowed ? 'hover:brightness-125 active:scale-90' : 'cursor-not-allowed'}`}
+          style={{
+            color: G.gold,
+            background: G.glassBg,
+            border: `1px solid ${imageShareAllowed ? G.glassBorder : 'rgba(255,255,255,0.04)'}`,
+            opacity: imageShareAllowed ? 1 : 0.5,
+          }}
+          title={uploading ? "Laster opp..." : imageShareAllowed ? "Send bilde" : "🔒 Bildedeling låses opp dag 15"}
+        >
+          <span className="text-sm">📷</span>
+          {!imageShareAllowed && (
+            <span
+              className="absolute -bottom-0.5 -right-0.5 text-[10px] flex items-center justify-center w-4 h-4 rounded-full"
+              style={{ background: 'rgba(11,21,32,0.9)', border: '1px solid rgba(255,255,255,0.1)' }}
             >
-              {uploading ? (
-                <span className="text-xs" style={{ animation: 'spin 1s linear infinite' }}>⏳</span>
-              ) : (
-                '📷'
-              )}
-            </button>
-          </>
-        )}
+              🔒
+            </span>
+          )}
+          {uploading && (
+            <span className="text-xs" style={{ animation: 'spin 1s linear infinite' }}>⏳</span>
+          )}
+        </button>
 
         {/* Input — Glass-stil med gull-focus */}
         <textarea
@@ -509,23 +514,6 @@ function ChatInput({
             caretColor: G.gold,
           }}
         />
-
-        {/* Snøggval-knapp for "Bli kjent" */}
-        {!text.trim() && (
-          <button
-            className="flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200 hover:brightness-125 active:scale-90"
-            style={{
-              color: G.textMuted,
-              background: 'transparent',
-            }}
-            title="Bli kjent — guidede spørsmål"
-            onClick={() => {
-              // Trigger BliKjentPanel — handled in parent
-            }}
-          >
-            📖
-          </button>
-        )}
 
         {/* Send-knapp — Premium gull-gradient sirkel */}
         <button
@@ -607,6 +595,7 @@ function saveMoodToStorage(conversationId: string | null, mood: string): void {
 
 export function ChatContainer({ conversationId, partner, journeyDay = 1, imageShareAllowed = false }: ChatContainerProps) {
   const [isBliKjentOpen, setIsBliKjentOpen] = useState(false);
+  const [isOppgaverOpen, setIsOppgaverOpen] = useState(false);
   // B2.1: Moodvalg huskes per samtale (localStorage)
   const [mood, setMoodState] = useState<string>("warm");
 
@@ -633,65 +622,66 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
       {/* Premium CSS-animasjonar (warm-glow, mood-transition) */}
       <MessageBubbleStyles />
 
-      <div className="w-full h-screen flex items-center justify-center" style={{ background: G.bgPrimary }}>
+      <div className="w-full h-full flex flex-col overflow-hidden" style={{ background: G.bgChat }}>
         {/* Subtil spotlight i bakgrunnen */}
         <div className="fixed inset-0 pointer-events-none" style={{
           background: 'radial-gradient(circle at 50% 30%, rgba(212,175,55,0.04) 0%, transparent 60%)',
         }} />
 
-        {/* Chat-container — sentralisert med max-width */}
-        <div className="w-full max-w-[720px] mx-auto flex flex-col h-screen" style={{ paddingTop: "96px", paddingBottom: "96px" }}>
-          <div className="flex-1 flex flex-col rounded-3xl overflow-hidden relative" style={{
-            background: G.bgChat,
-            border: `1px solid ${G.glassBorder}`,
-            boxShadow: '0 8px 40px rgba(0,0,0,0.2)',
-          }}>
-
-             {/* HEADER — med presence-indikator */}
-             <ChatHeader
-               partner={partner}
-               journeyDay={journeyDay}
-               onOpenBliKjent={() => setIsBliKjentOpen(prev => !prev)}
-               isBliKjentOpen={isBliKjentOpen}
-             />
-
-             {/* MOOD SELECTOR — under header */}
-             <div className="border-b flex-shrink-0" style={{ borderColor: G.glassBorder }}>
-               <MoodSelector mood={mood} setMood={setMood} />
-             </div>
-
-             {/* BLI KJENT PANEL — slide-down frå header */}
-            {isBliKjentOpen && (
-              <div className="relative z-10">
-                <BliKjentPanel
-                  onClose={() => setIsBliKjentOpen(false)}
-                />
-              </div>
-            )}
-
-             {/* MESSAGE LIST — premium med animasjonar + mood-bakgrunn */}
-             <div
-               className="flex-1 overflow-y-auto"
-               style={{
-                 scrollbarWidth: 'thin',
-                 scrollbarColor: `${G.goldMuted} transparent`,
-                 backgroundImage: moodGradients[mood] || moodGradients.warm,
-                 backgroundSize: 'cover',
-                 transition: 'background-image 1.5s ease-in-out',
-               }}
-             >
-               <MessageList partner={partner} journeyDay={journeyDay} />
-             </div>
-
-              {/* CHAT INPUT — Premium glass med typing-indikator */}
-             <ChatInput 
-               imageShareAllowed={imageShareAllowed} 
-               conversationId={conversationId}
-               senderId={sessionUserId ?? undefined}
-               partnerId={partnerId}
-             />
-          </div>
+        {/* MOOD SELECTOR — helt øverst i kanten */}
+        <div className="border-b flex-shrink-0" style={{ borderColor: G.glassBorder }}>
+          <MoodSelector mood={mood} setMood={setMood} />
         </div>
+
+        {/* HEADER — navn + alder + avstand + dag */}
+        <ChatHeader
+          partner={partner}
+          journeyDay={journeyDay}
+          onOpenBliKjent={() => { setIsBliKjentOpen(prev => !prev); setIsOppgaverOpen(false); }}
+          isBliKjentOpen={isBliKjentOpen}
+          onOpenOppgaver={() => { setIsOppgaverOpen(prev => !prev); setIsBliKjentOpen(false); }}
+          isOppgaverOpen={isOppgaverOpen}
+        />
+
+        {/* BLI KJENT PANEL — slide-down frå header */}
+        {isBliKjentOpen && (
+          <div className="relative z-10">
+            <BliKjentPanel
+              onClose={() => setIsBliKjentOpen(false)}
+            />
+          </div>
+        )}
+
+        {/* OPPGAVER PANEL — slide-down frå header */}
+        {isOppgaverOpen && (
+          <div className="relative z-10">
+            <OppgaverPanel
+              onClose={() => setIsOppgaverOpen(false)}
+            />
+          </div>
+        )}
+
+        {/* MESSAGE LIST — fyller mellom header og input */}
+        <div
+          className="flex-1 overflow-y-auto"
+          style={{
+            scrollbarWidth: 'thin',
+            scrollbarColor: `${G.goldMuted} transparent`,
+            backgroundImage: moodGradients[mood] || moodGradients.warm,
+            backgroundSize: 'cover',
+            transition: 'background-image 1.5s ease-in-out',
+          }}
+        >
+          <MessageList partner={partner} journeyDay={journeyDay} />
+        </div>
+
+        {/* CHAT INPUT — helt nederst i kanten */}
+        <ChatInput
+          imageShareAllowed={imageShareAllowed}
+          conversationId={conversationId}
+          senderId={sessionUserId ?? undefined}
+          partnerId={partnerId}
+        />
       </div>
     </>
   );

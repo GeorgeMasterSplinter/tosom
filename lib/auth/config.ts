@@ -10,12 +10,12 @@
 
 import NextAuth from "next-auth"
 import EmailProvider from "next-auth/providers/email"
-import { PrismaAdapter } from "@auth/prisma-adapter"
+import { adapter } from "@/lib/auth/prisma-adapter"
 import { prisma } from "@/lib/prisma"
 import { defaultRole } from "@/lib/auth/roles"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(prisma),
+  adapter,
 
   providers: [
     EmailProvider({

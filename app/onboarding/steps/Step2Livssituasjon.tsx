@@ -14,6 +14,7 @@
 
 import { useState } from 'react';
 import { OnboardingSlide } from '@/app/onboarding/components/OnboardingSlide';
+import { OB } from '@/app/onboarding/theme';
 import { OnboardingTextField } from '@/app/onboarding/components/OnboardingTextField';
 import { OnboardingSelectGrid } from '@/app/onboarding/components/OnboardingSelectGrid';
 import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
@@ -82,6 +83,7 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
       guidingText="Livssituasjonen din gir oss en viktig oversikt over hverdagen din."
       slideIndex={2}
       totalSlides={13}
+      accentColor={OB.section.personality}
     >
       {/* Error summary */}
       {errors.length > 0 && (
@@ -123,7 +125,7 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
       />
 
       {/* Separator */}
-      <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
+      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
 
       {/* ────────────────────────────────────── */}
       {/* BOSETTING */}
@@ -144,7 +146,7 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
       />
 
       {/* Separator */}
-      <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
+      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
 
       <OnboardingSelectGrid
         label="Hvor mange bor det i hjemmet? *"
@@ -160,7 +162,7 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
       />
 
       {/* Separator */}
-      <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
+      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
 
       {/* ────────────────────────────────────── */}
       {/* ØKONOMI */}
@@ -180,7 +182,7 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
       />
 
       {/* Separator */}
-      <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
+      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
 
       {/* ────────────────────────────────────── */}
       {/* ANSVAR & HVERDAG */}

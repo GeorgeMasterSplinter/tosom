@@ -321,7 +321,7 @@ export default function OnboardingStepPage() {
       router.push(`/onboarding/${currentStep + 1}`);
     } else {
       console.log('Onboarding fullført:', stepData_);
-      router.push('/dashboard');
+      router.push('/matching');
     }
   };
 

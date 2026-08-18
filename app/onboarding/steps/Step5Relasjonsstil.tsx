@@ -5,6 +5,7 @@
 'use client';
 import { useState } from 'react';
 import { OnboardingSlide } from '@/app/onboarding/components/OnboardingSlide';
+import { OB } from '@/app/onboarding/theme';
 import { OnboardingTextField } from '@/app/onboarding/components/OnboardingTextField';
 import { OnboardingSelectGrid } from '@/app/onboarding/components/OnboardingSelectGrid';
 import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
@@ -23,7 +24,8 @@ export default function Step5Relasjonsstil({ data, onChange, onBack, onNext }: P
   const handleNext = () => { const ve = validate(data); if (ve.length > 0) { setErrors(ve); return; } setErrors([]); onNext(); };
   const getValue = (f: string, fb = '') => { const v = data[f]; return v !== undefined && v !== null ? String(v) : fb; };
   return (
-    <OnboardingSlide title="Relasjonsstil" subtitle="Hvordan søker du relasjon — og hvordan balanserer du selvstende med fellesskap?" guidingText="Relasjonsstil forteller oss hvordan du søker — og det er like viktig som verdier." slideIndex={6} totalSlides={13}>
+    <OnboardingSlide title="Relasjonsstil" subtitle="Hvordan søker du relasjon — og hvordan balanserer du selvstende med fellesskap?" guidingText="Relasjonsstil forteller oss hvordan du søker — og det er like viktig som verdier." slideIndex={6} totalSlides={13}
+      accentColor={OB.section.personality}>
        {errors.length > 0 && (<div className="mb-8 rounded-xl p-4 border" style={{ background: 'rgba(255,77,77,0.08)', borderColor: 'rgba(255,77,77,0.2)' }}><p className="text-sm font-medium mb-2" style={{ color: '#FF4D4D' }}>Vennligst fyll ut alle påkrevde felt:</p><ul className="text-sm space-y-1" style={{ color: 'rgba(255,255,255,0.7)' }}>{errors.map((x) => (<li key={x.field}>• {x.message}</li>))}</ul></div>)}
 
        {/* Relasjonsstilar — vel hva type relasjon du søker */}

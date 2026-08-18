@@ -32,6 +32,14 @@ export async function GET() {
       language: (prefs.language as string) || 'bokmal',
       theme: (prefs.theme as string) || 'mork',
       notifications: (prefs.notifications as boolean) ?? true,
+      push: (prefs.push as boolean) ?? true,
+      email: (prefs.email as boolean) ?? true,
+      pushMatch: (prefs.pushMatch as boolean) ?? true,
+      pushMessages: (prefs.pushMessages as boolean) ?? true,
+      pushJourney: (prefs.pushJourney as boolean) ?? true,
+      emailMatch: (prefs.emailMatch as boolean) ?? true,
+      emailMessages: (prefs.emailMessages as boolean) ?? true,
+      emailJourney: (prefs.emailJourney as boolean) ?? true,
     });
   } catch (error) {
     console.error('[preferences GET] Feil:', error);
@@ -41,7 +49,7 @@ export async function GET() {
 
 /**
  * POST: Oppdaterer brukerens preferanser i Profile.preferences JSON-feltet.
- * Body: { language?: string, theme?: string, notifications?: boolean }
+ * Body: { language?, theme?, notifications?, push?, email?, pushMatch?, pushMessages?, pushJourney?, emailMatch?, emailMessages?, emailJourney? }
  */
 export async function POST(req: NextRequest) {
   try {
@@ -68,6 +76,9 @@ export async function POST(req: NextRequest) {
       ? body.notifications
       : undefined;
 
+    // Granular varsler
+    const booleanFields: string[] = ['push', 'email', 'pushMatch', 'pushMessages', 'pushJourney', 'emailMatch', 'emailMessages', 'emailJourney'];
+
     // Hent eksisterende preferences eller opprett tom objekt
     const existing = await prisma.profile.findUnique({
       where: { userId: session.user.id },
@@ -80,6 +91,12 @@ export async function POST(req: NextRequest) {
     if (language !== undefined) updatedPrefs.language = language;
     if (theme !== undefined) updatedPrefs.theme = theme;
     if (notifications !== undefined) updatedPrefs.notifications = notifications;
+
+    for (const field of booleanFields) {
+      if (typeof body[field] === 'boolean') {
+        updatedPrefs[field] = body[field];
+      }
+    }
 
     // Oppdater eller opprett profil med nye preferences
     // Bruk `as any` fordi Prisma sitt Json-typ-system er strengt mot Record<string, unknown>
@@ -100,6 +117,14 @@ export async function POST(req: NextRequest) {
       language: updatedPrefs.language,
       theme: updatedPrefs.theme,
       notifications: updatedPrefs.notifications,
+      push: updatedPrefs.push,
+      email: updatedPrefs.email,
+      pushMatch: updatedPrefs.pushMatch,
+      pushMessages: updatedPrefs.pushMessages,
+      pushJourney: updatedPrefs.pushJourney,
+      emailMatch: updatedPrefs.emailMatch,
+      emailMessages: updatedPrefs.emailMessages,
+      emailJourney: updatedPrefs.emailJourney,
     });
   } catch (error) {
     console.error('[preferences POST] Feil:', error);

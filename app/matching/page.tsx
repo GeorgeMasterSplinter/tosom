@@ -1,258 +1,563 @@
 /**
- * Tosom UI 5.0 — Matching Page (STEG B7: ren visning)
+ * Tosom — Venterom (Waiting Room)
  *
- * Viser aktiv match for brukeren.
- * Ingen Ja/Nei-knapper — Tosom kobler, godtar ikke.
+ * Tre tilstander:
+ * 1. I kø (mandag–fredag): Nedtelling til fredag 23:59, kan melde seg ut
+ * 2. Låst (fredag 23:59 – lørdag 06:00): Vent på matchmotoren
+ * 3. Ingen match (etter lørdag 06:00): Ærlig melding + valg
+ *
+ * Har aktiv match → redirect /dashboard
  */
 
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, useCallback } from 'react';
 import { Footer } from '@/components/ui/layout/Footer';
-import { QuickMatchCard as MatchCard } from '@/components/QuickMatchCard';
+import { color, typographyToStyle } from '@/config/design-tokens';
+import GlassCard from '@/components/ui/cards/GlassCard';
+import { PulsingOrb } from '@/components/ui/feedback/PulsingOrb';
 
-interface MatchData {
-  id?: string;
-  score: number;
-  otherUser?: {
-    name?: string | null;
-    age?: number | null;
-    photoUrl?: string | null;
-  };
-  type?: string;
-  explanation?: Record<string, unknown> | null;
-  isTopMatch?: boolean;
-  status?: string;
+/* ═══════════════════════════════════════
+   TYPES
+   ═══════════════════════════════════════ */
+
+interface OverviewData {
+  match: {
+    id: string;
+    name: string;
+    age: number | null;
+    distanceKm: number | null;
+    resonanceLevel: string | null;
+  } | null;
+  journey: {
+    day: number;
+    totalDays: number;
+    phase: string;
+  } | null;
 }
 
+type QueueState = 'loading' | 'in_queue' | 'locked' | 'no_match';
+
+/* ═══════════════════════════════════════
+   COUNTDOWN HELPERS
+   ═══════════════════════════════════════ */
+
+/** Neste fredag 23:59:59 (siste sjanse å melde seg ut) */
+function getNextFriday2359(): Date {
+  const now = new Date();
+  const day = now.getDay(); // 0=Sun, 1=Mon, ..., 5=Fri, 6=Sat
+  // Dager til neste fredag
+  let daysUntilFriday: number;
+  if (day === 5 && now.getHours() < 24) {
+    // Er allerede fredag
+    const friday = new Date(now);
+    friday.setHours(23, 59, 59, 0);
+    if (friday > now) return friday;
+    // Er etter 23:59 fredag → neste uke
+    daysUntilFriday = 7;
+  } else {
+    daysUntilFriday = (5 - day + 7) % 7;
+    if (daysUntilFriday === 0) daysUntilFriday = 7; // Er før fredag 23:59
+  }
+  const result = new Date(now);
+  result.setDate(result.getDate() + daysUntilFriday);
+  result.setHours(23, 59, 59, 0);
+  return result;
+}
+
+/** Neste lørdag 04:00 (når cron kjører) */
+function getNextSaturday0400(): Date {
+  const now = new Date();
+  const day = now.getDay();
+  let daysUntilSaturday: number;
+  if (day === 6 && now.getHours() < 4) {
+    // Er allerede lørdag før 04:00
+    const sat = new Date(now);
+    sat.setHours(4, 0, 0, 0);
+    if (sat > now) return sat;
+    daysUntilSaturday = 7;
+  } else {
+    daysUntilSaturday = (6 - day + 7) % 7;
+    if (daysUntilSaturday === 0) daysUntilSaturday = 7;
+  }
+  const result = new Date(now);
+  result.setDate(result.getDate() + daysUntilSaturday);
+  result.setHours(4, 0, 0, 0);
+  return result;
+}
+
+function formatCountdown(ms: number): string {
+  if (ms <= 0) return '0m';
+  const totalMinutes = Math.floor(ms / 60000);
+  const days = Math.floor(totalMinutes / 1440);
+  const hours = Math.floor((totalMinutes % 1440) / 60);
+  const minutes = totalMinutes % 60;
+
+  const parts: string[] = [];
+  if (days > 0) parts.push(`${days}d`);
+  if (hours > 0) parts.push(`${hours}t`);
+  parts.push(`${minutes}m`);
+  return parts.join(' ');
+}
+
+function getGreeting(): string {
+  const h = new Date().getHours();
+  if (h >= 5 && h < 12) return 'God morgen';
+  if (h >= 12 && h < 17) return 'God ettermiddag';
+  if (h >= 17 && h < 22) return 'God kveld';
+  return 'God natt';
+}
+
+/* ═══════════════════════════════════════
+   RESONANS LABELS (ord, ikke tall)
+   ═══════════════════════════════════════ */
+
+function getResonanceLabel(level: string | null | undefined): string {
+  switch (level?.toUpperCase()) {
+    case 'DEEP': return 'Dyp resonans';
+    case 'STRONG': return 'Sterk resonans';
+    case 'MODERATE': return 'God resonans';
+    case 'GENTLE': return 'Rolig resonans';
+    default: return 'Rolig resonans';
+  }
+}
+
+/* ═══════════════════════════════════════
+   MAIN COMPONENT
+   ═══════════════════════════════════════ */
+
 export default function MatchingPage() {
-  const router = useRouter();
-  const [matches, setMatches] = useState<MatchData[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  // Guiding-text per match-steg
-  const guidingText = loading
-    ? 'Vi jobber med å finne noen som passer deg.'
-    : matches.length > 0
-    ? 'Vi har funnet noen som kan passe deg.'
-    : 'Du er i kø — vi varsler deg her når noen passerer.';
-
-  useEffect(() => {
-    const fetchMatches = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch('/api/match', {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        });
-
-        if (!response.ok) {
-          throw new Error('Kunne ikke hente matcher');
-        }
-
-        const data = await response.json();
-        setMatches(data.matches || []);
-      } catch (err) {
-        console.error('Feil ved henting av matcher:', err);
-        setError('Kunne ikke hente matcher. Prøv igjen seinare.');
-      } finally {
-        setLoading(false);
+  const [userName, setUserName] = useState('');
+  // DEV: ?state= tvinger visningstilstand umiddelbart (bypass-er redirect)
+  const [queueState, setQueueState] = useState<QueueState>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const forced = params.get('state');
+      if (forced === 'in_queue' || forced === 'locked' || forced === 'no_match') {
+        return forced;
       }
-    };
+    }
+    return 'loading';
+  });
+  const [countdown, setCountdown] = useState('');
+  const [countdownLabel, setCountdownLabel] = useState('');
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [exiting, setExiting] = useState(false);
+  const [showSkipConfirm, setShowSkipConfirm] = useState(false);
+  const [skipping, setSkipping] = useState(false);
 
-    fetchMatches();
+  // Hvis state ble tvinget via query-param, hopp over hel load
+  const forcedState = typeof window !== 'undefined'
+    ? new URLSearchParams(window.location.search).get('state')
+    : null;
+
+  // Hent sesjon + dashboard-data
+  useEffect(() => {
+    // Hvis state ble tvinget via query-param, sett state og hopp over hel load
+    if (forcedState === 'in_queue' || forcedState === 'locked' || forcedState === 'no_match') {
+      setQueueState(forcedState);
+      return;
+    }
+
+    async function load() {
+      try {
+        // Sesjon
+        const sessionRes = await fetch('/api/auth/session');
+        const session = sessionRes.ok ? await sessionRes.json() : null;
+        if (!session?.user) {
+          window.location.href = '/login';
+          return;
+        }
+        setUserName(session.user.name || '');
+
+        // Dashboard overview for match-status
+        const overviewRes = await fetch('/api/dashboard/overview');
+        if (overviewRes.ok) {
+          const data: OverviewData = await overviewRes.json();
+
+          // Har aktiv match → redirect til dashboard
+          if (data.match && data.journey && data.journey.day > 0) {
+            window.location.href = '/dashboard';
+            return;
+          }
+
+          // Bestem kø-tilstand
+          const now = new Date();
+          const day = now.getDay();
+          const hour = now.getHours();
+
+          // Lørdag 04:00 – 06:00: matchmotoren kjører (låst)
+          if (day === 6 && hour >= 4 && hour < 6) {
+            setQueueState('locked');
+          }
+          // Fredag 23:59 – Lørdag 04:00: låst
+          else if ((day === 5 && hour >= 23) || (day === 6 && hour < 4)) {
+            setQueueState('locked');
+          }
+          // Etter lørdag 06:00 uten match: ingen match denne runden
+          else if (day === 6 && hour >= 6 && !data.match) {
+            setQueueState('no_match');
+          }
+          // Mandag–fredag: i kø
+          else {
+            setQueueState('in_queue');
+          }
+        } else {
+          setQueueState('in_queue');
+        }
+      } catch {
+        setQueueState('in_queue');
+      }
+    }
+    load();
   }, []);
 
-  const handleSeeMatch = async (match: MatchData) => {
-    if (!match.id) return;
-    router.push(`/matching/${match.id}`);
-  };
+  // Nedtelling (oppdaterer hvert sekund)
+  useEffect(() => {
+    if (queueState === 'loading') return;
 
-  const handleRefresh = async () => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      if (queueState === 'locked') {
+        const target = getNextSaturday0400();
+        const diff = target.getTime() - now.getTime();
+        setCountdown(formatCountdown(diff));
+        setCountdownLabel('til lørdag 04:00');
+      } else if (queueState === 'no_match') {
+        const target = getNextFriday2359();
+        const diff = target.getTime() - now.getTime();
+        setCountdown(formatCountdown(diff));
+        setCountdownLabel('til neste fredag 23:59');
+      } else {
+        const target = getNextFriday2359();
+        const diff = target.getTime() - now.getTime();
+        setCountdown(formatCountdown(diff));
+        setCountdownLabel('til fredag 23:59');
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [queueState]);
+
+  const handleExit = useCallback(async () => {
+    setExiting(true);
     try {
-      setLoading(true);
-      setError(null);
-      const response = await fetch('/api/match', {
-        method: 'GET',
+      await fetch('/api/journey/exit', {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reason: 'queue_exit' }),
       });
-      const data = await response.json();
-      setMatches(data.matches || []);
-    } catch (err) {
-      setError('Vi jobber med å fikse dette. Prøv igjen om litt.');
-    } finally {
-      setLoading(false);
+      window.location.href = '/';
+    } catch {
+      setExiting(false);
+      setShowExitConfirm(false);
     }
-  };
+  }, []);
+
+  const handleSkipRound = useCallback(async () => {
+    setSkipping(true);
+    try {
+      await fetch('/api/journey/queue', { method: 'DELETE' });
+      window.location.href = '/';
+    } catch {
+      setSkipping(false);
+      setShowSkipConfirm(false);
+    }
+  }, []);
+
+  const greeting = getGreeting();
+
+  /* ═══ LOADING ═══ */
+  if (queueState === 'loading') {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(180deg, #0B1520 0%, #0F1A26 100%)' }}>
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 rounded-full border-2 animate-spin" style={{ borderColor: 'rgba(212,175,55,0.2)', borderTopColor: '#D4AF37' }} />
+          <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '14px' }}>Laster…</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <>
-      {/* Animasjonar */}
-      <style>{`
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .match-card-enter {
-          animation: fadeUp 0.5s ease-out both;
-        }
-        @keyframes pulseGlow {
-          0%, 100% { filter: drop-shadow(0 0 8px rgba(212,175,55,0.3)); }
-          50% { filter: drop-shadow(0 0 20px rgba(212,175,55,0.55)); }
-        }
-        .pulse-icon { animation: pulseGlow 2.5s infinite ease-in-out; }
-      `}</style>
+    <main className="relative min-h-screen overflow-hidden">
+      {/* Bakgrunn */}
+      <div className="fixed inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, #0B1520 0%, #121E2E 50%, #0B1520 100%)' }} />
+      <div className="absolute top-20 right-0 w-[600px] h-[400px] pointer-events-none opacity-20" style={{ background: 'radial-gradient(ellipse at 70% 30%, rgba(80,120,255,0.04), transparent 70%)' }} />
 
-      <div className="min-h-screen relative" style={{ background: 'linear-gradient(180deg, #0E1218 0%, #1A1F26 100%)' }}>
-        {/* Ambient glow */}
-        <div
-          className="fixed inset-0 pointer-events-none z-0"
-          style={{
-            background: `
-              radial-gradient(ellipse 60% 50% at 50% 30%, rgba(212,175,55,0.06), transparent 70%),
-              radial-gradient(ellipse 80% 60% at 30% 70%, rgba(80,120,255,0.05), transparent 65%),
-              linear-gradient(180deg, #0E1218 0%, #1A1F26 100%)
-            `,
-          }}
-        />
+      <div className="relative z-10 max-w-[640px] mx-auto px-6 pt-24 pb-16">
 
-        <main className="relative z-10 max-w-6xl mx-auto px-6 lg:px-8 py-20">
-          {/* Guiding-text */}
-          <div className="text-center mb-6">
-            <p
-              className="text-lg leading-relaxed"
-              style={{ color: 'rgba(255, 255, 255, 0.75)' }}
-            >
-              {guidingText}
-            </p>
-          </div>
+        {/* ═══ HEDDING ═══ */}
+        <div className="text-center mb-12">
+          <h1 style={{ ...typographyToStyle('hero'), fontSize: '36px', color: 'rgba(255,255,255,0.92)' }}>
+            {greeting}, {userName}
+          </h1>
+          <p className="mt-3" style={{ fontSize: '17px', color: 'rgba(255,255,255,0.55)', lineHeight: '1.6' }}>
+            Ta deg tid. Her møter du partneren din, steg for steg.
+          </p>
+        </div>
 
-          {/* Seksjonstittel */}
-          <div className="text-center mb-16">
-            <span
-              className="text-xs uppercase tracking-[0.3em] font-semibold mb-4 block"
-              style={{ color: '#D4AF37' }}
-            >
-              Din kobling
-            </span>
-            <h1
-              className="text-3xl md:text-[42px] font-semibold tracking-[-0.02em] text-white leading-[1.1] mb-4"
-            >
-              {loading ? 'Søker etter din match...' : 'Din kobling'}
-            </h1>
-            <p
-              className="text-base md:text-lg max-w-lg mx-auto leading-[1.6]"
-              style={{ color: 'rgba(255, 255, 255, 0.55)' }}
-            >
-              {loading
-                ? 'Vi samanlikner profilen din med andre brukere...'
-                : matches.length > 0
-                ? `Du har ${matches.length} aktiv${matches.length > 1 ? 'e' : ''} kobling basert på dykkar profil.`
-                : 'Du er i kø. Vi varsler deg her når noen passerer.'}
-            </p>
-          </div>
-
-          {/* Loading-state */}
-          {loading && (
-            <div className="flex flex-col items-center justify-center py-24 gap-6">
-              <div
-                className="w-16 h-16 rounded-full flex items-center justify-center pulse-icon"
-                style={{
-                  background: 'rgba(212, 175, 55, 0.12)',
-                  border: '2px solid rgba(212, 175, 55, 0.25)',
-                  color: '#D4AF37',
-                }}
-              >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 2L15 8L21 9L16.5 14L18 21L12 17.5L6 21L7.5 14L3 9L9 8L12 2Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+        {/* ═══ TILSTAND 1: I KØ ═══ */}
+        {queueState === 'in_queue' && (
+          <div className="space-y-8">
+            {/* Status-kort */}
+            <GlassCard className="text-center py-10 px-8">
+              <div className="flex justify-center mb-4">
+                <PulsingOrb size="lg" />
               </div>
-              <p className="text-gray-400 text-sm">Søker etter din perfekte match...</p>
-            </div>
-          )}
+              <h2 className="text-xl font-semibold mb-2" style={{ color: '#D4AF37' }}>
+                Du er i venterommet, {userName}
+              </h2>
+              <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '16px', lineHeight: '1.7' }}>
+                Vi kobler deg til lørdag morgen. Da starter reisen.
+              </p>
 
-          {/* Error */}
-          {error && (
-            <div className="flex flex-col items-center justify-center py-24 gap-6">
-              <div
-                className="w-16 h-16 rounded-full flex items-center justify-center"
-                style={{
-                  background: 'rgba(255,77,77,0.1)',
-                  border: '2px solid rgba(255,77,77,0.25)',
-                  color: '#FF4D4D',
-                }}
-              >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 12V16M12 8H12.01M3 12C3 7.03 7.03 3 12 3C16.97 3 21 7.03 21 12C21 16.97 16.97 21 12 21C7.03 21 3 16.97 3 12Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+              {/* Nedtelling */}
+              <div className="mt-8 px-6 py-4 rounded-2xl mx-auto max-w-[320px]" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.15)' }}>
+                <p className="text-3xl font-bold tabular-nums" style={{ color: '#D4AF37' }}>
+                  {countdown}
+                </p>
+                <p className="mt-1 text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                  {countdownLabel} — siste sjanse å ombestemme
+                </p>
               </div>
-              <p className="text-gray-400 text-sm">{error}</p>
+            </GlassCard>
+
+            {/* Oppdater profil */}
+            <GlassCard className="py-6 px-6">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '16px', fontWeight: 500 }}>
+                    Oppdater profil for bedre match
+                  </p>
+                  <p className="mt-1" style={{ color: 'rgba(255,255,255,0.4)', fontSize: '14px' }}>
+                    Jo dypere profilen, jo bedre kan vi matche deg.
+                  </p>
+                </div>
+                <button
+                  onClick={() => window.location.href = '/onboarding'}
+                  className="shrink-0 px-5 py-3 rounded-2xl font-medium text-sm transition-all duration-300 hover:brightness-110"
+                  style={{ background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)', color: '#D4AF37' }}
+                >
+                  Gå til profil
+                </button>
+              </div>
+            </GlassCard>
+
+            {/* Får du kalde føtter (ingen refund) */}
+            <GlassCard className="py-6 px-6">
+              <p className="font-medium" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '16px' }}>
+                Får du kalde føtter
+              </p>
+              <p className="mt-2" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '15px', lineHeight: '1.6' }}>
+                Du kan velge å vente til neste runde. Pengene går med, men du beholder plassen din. Ingen press.
+              </p>
               <button
-                onClick={handleRefresh}
-                className="px-8 py-3 rounded-xl text-sm font-medium transition-all duration-300"
-                style={{
-                  background: '#D4AF37',
-                  color: '#0B0E11',
-                  boxShadow: '0 0 25px rgba(212,175,55,0.3), 0 4px 12px rgba(0,0,0,0.2)',
-                  border: '1px solid rgba(212,175,55,0.5)',
-                }}
+                onClick={() => setShowSkipConfirm(true)}
+                className="mt-4 px-5 py-3 rounded-2xl text-sm font-medium transition-all duration-300 hover:bg-white/5"
+                style={{ border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.7)' }}
               >
-                Prøv igjen
+                Vente til neste runde
+              </button>
+            </GlassCard>
+
+            {/* Ombestemme deg (full refund) */}
+            <GlassCard className="py-6 px-6">
+              <p className="font-medium" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '16px' }}>
+                Ombestemme deg
+              </p>
+              <p className="mt-2" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '15px', lineHeight: '1.6' }}>
+                Ombestemmer du deg før fredag 23:59, kan du melde deg ut og få pengene tilbake.
+                Fra lørdag er dere to i gang. Vil du melde deg på igjen, starter du på nytt.
+              </p>
+              <button
+                onClick={() => setShowExitConfirm(true)}
+                className="mt-4 px-5 py-3 rounded-2xl text-sm font-medium transition-all duration-300 hover:bg-red-500/10"
+                style={{ border: '1px solid rgba(255,77,77,0.3)', color: 'rgba(255,77,77,0.8)' }}
+              >
+                Melde meg ut og få pengene tilbake
+              </button>
+            </GlassCard>
+          </div>
+        )}
+
+        {/* ═══ TILSTAND 2: LÅST ═══ */}
+        {queueState === 'locked' && (
+          <div className="space-y-8">
+            <GlassCard className="text-center py-12 px-8">
+              <div className="flex justify-center mb-4">
+                <PulsingOrb size="lg" />
+              </div>
+              <h2 className="text-xl font-semibold mb-2" style={{ color: '#D4AF37' }}>
+                Du er i venterommet
+              </h2>
+              <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '16px', lineHeight: '1.7' }}>
+                Reisen starter lørdag morgen. Vi jobber med å finne noen som passer deg.
+              </p>
+
+              <div className="mt-8 px-6 py-4 rounded-2xl mx-auto max-w-[320px]" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.15)' }}>
+                <p className="text-3xl font-bold tabular-nums" style={{ color: '#D4AF37' }}>
+                  {countdown}
+                </p>
+                <p className="mt-1 text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                  {countdownLabel}
+                </p>
+              </div>
+
+              <p className="mt-6 text-sm" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                Tålmodighet er ikke passivitet. Det er tillit.
+              </p>
+            </GlassCard>
+          </div>
+        )}
+
+        {/* ═══ TILSTAND 3: INGEN MATCH ═══ */}
+        {queueState === 'no_match' && (
+          <div className="space-y-8">
+            <GlassCard className="text-center py-12 px-8">
+              <div className="flex justify-center mb-4">
+                <PulsingOrb size="lg" />
+              </div>
+              <h2 className="text-xl font-semibold mb-4" style={{ color: '#D4AF37' }}>
+                Vi fant ingen god nok match denne runden
+              </h2>
+              <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '16px', lineHeight: '1.8', maxWidth: '480px', margin: '0 auto' }}>
+                Vi vet at det kan være en skuffelse. Men vi mener på det sterkeste:
+                det er bedre å vente på en god match enn å få en dårlig.
+                Din neste match skal være verdt ventetiden.
+              </p>
+            </GlassCard>
+
+            {/* Oppdater profil */}
+            <GlassCard className="py-6 px-6">
+              <p className="font-medium" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '16px' }}>
+                Oppdater profilen din
+              </p>
+              <p className="mt-2" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '15px', lineHeight: '1.6' }}>
+                De detaljene du deler er alt vi har å gå etter.
+                Jo dypere profilen, jo bedre kan vi matche deg.
+              </p>
+              <button
+                onClick={() => window.location.href = '/onboarding'}
+                className="mt-4 px-6 py-3 rounded-2xl font-medium text-sm transition-all duration-300 hover:brightness-110"
+                style={{ background: 'linear-gradient(135deg, #D4AF37, #E8C766)', color: '#0B1520', fontWeight: 600 }}
+              >
+                Gå til onboarding
+              </button>
+            </GlassCard>
+
+            {/* Vente på neste runde */}
+            <GlassCard className="py-6 px-6">
+              <p className="font-medium" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '16px' }}>
+                Vente på neste runde
+              </p>
+              <p className="mt-2" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '15px', lineHeight: '1.6' }}>
+                Du er fortsatt i venterommet. Neste mulighet er fredag.
+              </p>
+              <div className="mt-4 px-5 py-3 rounded-2xl inline-block" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.15)' }}>
+                <p className="text-2xl font-bold tabular-nums" style={{ color: '#D4AF37' }}>
+                  {countdown}
+                </p>
+                <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                  {countdownLabel}
+                </p>
+              </div>
+            </GlassCard>
+
+            {/* Trekk deg */}
+            <GlassCard className="py-6 px-6">
+              <p className="font-medium" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '16px' }}>
+                Melde deg ut og få pengene tilbake
+              </p>
+              <p className="mt-2" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '15px', lineHeight: '1.6' }}>
+                Du har alltid muligheten. Hvis vi ikke finner en god nok match,
+                er det ingen grunn å betale. Ingen spørsmål, ingen binding.
+              </p>
+              <button
+                onClick={() => setShowExitConfirm(true)}
+                className="mt-4 px-5 py-3 rounded-2xl text-sm font-medium transition-all duration-300 hover:bg-red-500/10"
+                style={{ border: '1px solid rgba(255,77,77,0.3)', color: 'rgba(255,77,77,0.8)' }}
+              >
+                Melde meg ut
+              </button>
+            </GlassCard>
+          </div>
+        )}
+
+        {/* ═══ SETTINGS (diskret) ═══ */}
+        <div className="mt-12 text-center">
+          <button
+            onClick={() => window.location.href = '/settings'}
+            className="text-sm transition-all hover:opacity-70"
+            style={{ color: 'rgba(255,255,255,0.3)' }}
+          >
+            ⚙ Innstillinger
+          </button>
+        </div>
+
+        {/* ═══ SKIP ROUND CONFIRM MODAL ═══ */}
+        {showSkipConfirm && (
+          <div className="fixed inset-0 z-[999] flex items-center justify-center p-6" style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(12px)' }}>
+            <div className="w-full max-w-sm rounded-3xl p-8 text-center relative" style={{ background: 'rgba(11,21,32,0.97)', border: '1px solid rgba(255,255,255,0.15)' }}>
+              <button onClick={() => setShowSkipConfirm(false)} className="absolute top-4 right-4" style={{ color: 'rgba(255,255,255,0.4)' }}>✕</button>
+              <h3 className="text-xl font-bold mb-3" style={{ color: 'rgba(255,255,255,0.9)' }}>
+                Vente til neste runde?
+              </h3>
+              <p className="text-sm mb-6 leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                Du hopper over denne runden. Pengene går med, men du kan melde deg på igjen neste uke.
+              </p>
+              <button
+                onClick={handleSkipRound}
+                disabled={skipping}
+                className="w-full py-4 rounded-2xl font-bold text-base transition-all disabled:opacity-50"
+                style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.9)' }}
+              >
+                {skipping ? 'Behandler...' : 'Ja, vent til neste runde'}
+              </button>
+              <button
+                onClick={() => setShowSkipConfirm(false)}
+                className="w-full mt-3 py-3 rounded-xl text-sm transition-all hover:opacity-80"
+                style={{ color: 'rgba(255,255,255,0.4)' }}
+              >
+                Avbryt
               </button>
             </div>
-          )}
+          </div>
+        )}
 
-          {/* Match-grid (ren visning — ingen accept/decline) */}
-          {!loading && !error && matches.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-              {matches.map((match, index) => (
-                <div
-                  key={`match-${index}`}
-                  className="match-card-enter"
-                  style={{ animationDelay: `${index * 0.08}s` }}
-                >
-                  <MatchCard
-                    score={match.score}
-                    otherUser={match.otherUser}
-                    type={match.type}
-                    explanation={match.explanation}
-                    highlight={index === 0}
-                    onSeeMatch={() => handleSeeMatch(match)}
-                  />
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Empty-state */}
-          {!loading && !error && matches.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-24 gap-6 fade-in">
-              <div
-                className="w-20 h-20 rounded-2xl flex items-center justify-center"
-                style={{
-                  background: 'rgba(212,175,55,0.06)',
-                  border: '1px solid rgba(212,175,55,0.15)',
-                  color: 'rgba(212,175,55,0.4)',
-                }}
+        {/* ═══ EXIT CONFIRM MODAL ═══ */}
+        {showExitConfirm && (
+          <div className="fixed inset-0 z-[999] flex items-center justify-center p-6" style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(12px)' }}>
+            <div className="w-full max-w-sm rounded-3xl p-8 text-center relative" style={{ background: 'rgba(11,21,32,0.97)', border: '1px solid rgba(255,77,77,0.2)' }}>
+              <button onClick={() => setShowExitConfirm(false)} className="absolute top-4 right-4" style={{ color: 'rgba(255,255,255,0.4)' }}>✕</button>
+              <h3 className="text-xl font-bold mb-3" style={{ color: '#FF4D4D' }}>
+                Melde deg ut?
+              </h3>
+              <p className="text-sm mb-6 leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                Du får pengene tilbake og kontoen slettes.
+                Vil du melde deg på igjen senere, starter du hele prosessen på nytt.
+              </p>
+              <button
+                onClick={handleExit}
+                disabled={exiting}
+                className="w-full py-4 rounded-2xl font-bold text-base transition-all disabled:opacity-50"
+                style={{ background: 'linear-gradient(135deg, #FF4D4D, #FF6B6B)', color: '#fff' }}
               >
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
-              <p className="text-base font-medium" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                Du er i kø — vi leter etter noen som passerer.
-              </p>
-              <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.5)' }}>
-                Dette kan ta litt tid. Vi varsler deg her når noen passerer.
-              </p>
+                {exiting ? 'Behandler...' : 'Ja, melde meg ut'}
+              </button>
+              <button
+                onClick={() => setShowExitConfirm(false)}
+                className="w-full mt-3 py-3 rounded-xl text-sm transition-all hover:opacity-80"
+                style={{ color: 'rgba(255,255,255,0.4)' }}
+              >
+                Avbryt
+              </button>
             </div>
-          )}
-        </main>
-
-        <Footer />
+          </div>
+        )}
       </div>
-    </>
+
+      <Footer />
+    </main>
   );
 }

@@ -434,7 +434,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
             readyForMatch: true,
           });
         }
-        window.location.href = '/dashboard';
+        window.location.href = '/matching';
         return;
       }
 
@@ -462,7 +462,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
         });
       } catch { /* kø-feil — redirect allikevel */ }
 
-      window.location.href = '/dashboard';
+      window.location.href = '/matching';
     } catch (err) {
       setError('Kunne ikke lagre profilen din. Vennligst prøv igjen.');
       setSaving(false);

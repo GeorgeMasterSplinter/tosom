@@ -16,8 +16,10 @@ interface ChatPageParams {
 }
 
 interface PartnerInfo {
+  id: string;
   name: string;
   age: number;
+  distanceKm: number | null;
 }
 
 /** Hent partner-info frå conversation */
@@ -27,8 +29,10 @@ async function fetchPartnerInfo(conversationId: string): Promise<PartnerInfo | n
     if (!res.ok) return null;
     const data = await res.json();
     return {
+      id: data.partnerId || '',
       name: data.partnerName || 'Din partner',
       age: data.partnerAge ?? 25,
+      distanceKm: data.distanceKm ?? null,
     };
   } catch {
     return null;
@@ -110,7 +114,7 @@ export default function ChatPage({ params, sessionUserId }: ChatPageProps) {
     );
   }
 
-  const partnerData = partner ?? { name: 'Din partner', age: 25 };
+  const partnerData = partner ?? { id: '', name: 'Din partner', age: 25, distanceKm: null };
 
   return (
     <ChatProvider

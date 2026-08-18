@@ -18,7 +18,7 @@ jest.mock('@/lib/auth/session', () => ({
 jest.mock('@/lib/prisma', () => ({
   prisma: {
     conversation: { findMany: jest.fn() },
-    match: { findMany: jest.fn() },
+    match: { findMany: jest.fn(), findFirst: jest.fn() },
     journeyProgress: { findMany: jest.fn() },
     $disconnect: jest.fn(),
   },
@@ -31,7 +31,7 @@ import { GET } from '@/app/api/chat/conversations/route';
 const mockedSession = getServerSession as jest.Mock;
 const mockedPrisma = prisma as unknown as {
   conversation: { findMany: jest.Mock };
-  match: { findMany: jest.Mock };
+  match: { findMany: jest.Mock; findFirst: jest.Mock };
   journeyProgress: { findMany: jest.Mock };
 };
 
@@ -112,6 +112,7 @@ describe('GET /api/chat/conversations (B0.7)', () => {
   it('returnerer tom liste når det ikke finnes aktive samtaler', async () => {
     mockedPrisma.conversation.findMany.mockResolvedValue([]);
     mockedPrisma.match.findMany.mockResolvedValue([]);
+    mockedPrisma.match.findFirst.mockResolvedValue(null); // self-healing: ingen aktiv match
     mockedPrisma.journeyProgress.findMany.mockResolvedValue([]);
     mockedSession.mockResolvedValueOnce({ user: { id: USER_A, role: 'USER' } });
 

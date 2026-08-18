@@ -12,6 +12,7 @@
 
 import { useState } from 'react';
 import { OnboardingSlide } from '@/app/onboarding/components/OnboardingSlide';
+import { OB } from '@/app/onboarding/theme';
 import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { BackButton } from '@/components/onboarding/BackButton';
 
@@ -33,6 +34,7 @@ export default function Step10StartReisen({ step, goToStep, loading, onStart }: 
       guidingText="Nå er det bare å trykke på «Start reisen» så finner vi din match."
       slideIndex={12}
       totalSlides={13}
+      accentColor={OB.section.summary}
     >
       {/* Hjarte-ikon og intro */}
       <div className="text-center space-y-4 mb-8">

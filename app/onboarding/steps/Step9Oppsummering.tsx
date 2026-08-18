@@ -7,6 +7,7 @@
 'use client';
 
 import { OnboardingSlide } from '@/app/onboarding/components/OnboardingSlide';
+import { OB } from '@/app/onboarding/theme';
 import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { BackButton } from '@/components/onboarding/BackButton';
 
@@ -59,6 +60,7 @@ export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
        guidingText="Dette er hele profilen din — rolig, trygg og komplett."
       slideIndex={11}
       totalSlides={13}
+      accentColor={OB.section.summary}
     >
       <div className="space-y-6">
         {/* Grunnprofil */}

@@ -1,13 +1,14 @@
 /**
  * Tosom — OnboardingSlide (Premium Slide Component)
- * 
- * Ein slide-per-komponent med gull-bokmerke, fade-in animasjon,
- * og 130% zoom designsystem (32–48px spacing).
+ *
+ * Ein slide-per-komponent med subtil fargeidentitet pr. seksjon,
+ * fade-in animasjon, og dempet glass-design som speiler dashboard.
  */
 
 'use client';
 
 import { useEffect, useState } from 'react';
+import { OB, sectionColor } from '@/app/onboarding/theme';
 
 interface OnboardingSlideProps {
   title: string;
@@ -16,15 +17,9 @@ interface OnboardingSlideProps {
   children: React.ReactNode;
   slideIndex?: number;
   totalSlides?: number;
+  accentColor?: string;
 }
 
-/**
- * Premium Slide-komponent med:
- * - Gull-bokmerke for aktivt steg
- * - Fade-in animasjon
- * - Stor typografi (36–42px overskrift)
- * - Breid glassmorphism card med 130% zoom spacing
- */
 export function OnboardingSlide({
   title,
   subtitle,
@@ -32,115 +27,108 @@ export function OnboardingSlide({
   children,
   slideIndex = 0,
   totalSlides = 1,
+  accentColor = OB.section.identity,
 }: OnboardingSlideProps) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Fade-in etter mount
     const timer = setTimeout(() => setIsVisible(true), 50);
     return () => clearTimeout(timer);
   }, []);
 
   return (
-      <div
-        className="w-full max-w-2xl mx-auto transition-all duration-700 ease-out"
-        style={{
-          opacity: isVisible ? 1 : 0,
-          transform: isVisible ? 'translateY(0)' : 'translateY(12px)',
-        }}
-        suppressHydrationWarning
-      >
-      {/* Glass card med 48–64px padding og 130% zoom spacing */}
+    <div
+      className="w-full max-w-2xl mx-auto transition-all duration-700 ease-out"
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? 'translateY(0)' : 'translateY(12px)',
+      }}
+      suppressHydrationWarning
+    >
       <div
         className="relative overflow-hidden"
         style={{
-          background: 'rgba(255, 255, 255, 0.04)',
+          background: OB.glassBg,
           backdropFilter: 'blur(24px)',
           WebkitBackdropFilter: 'blur(24px)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          borderRadius: '24px',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.25), inset 0 0 24px rgba(255, 255, 255, 0.02)',
+          border: `1px solid ${OB.glassBorder}`,
+          borderRadius: '20px',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
         }}
       >
-        {/* Spotlight overlay — premium djupne */}
-        <div className="absolute inset-0 pointer-events-none" style={{
-          background: 'radial-gradient(circle at 30% 20%, rgba(212, 175, 55, 0.06) 0%, transparent 60%)',
-        }} />
+        {/* Spotlight overlay — subtil i seksjonsfargen */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: `radial-gradient(circle at 30% 20%, ${sectionColor(accentColor, 6)} 0%, transparent 60%)`,
+          }}
+        />
 
-         <div className="relative z-10" style={{ padding: '36px' }}>
-           {/* Slide indicator */}
+        <div className="relative z-10" style={{ padding: '32px' }}>
+          {/* Slide indicator */}
           {totalSlides > 1 && (
-            <div className="flex items-center justify-center gap-2 mb-8" suppressHydrationWarning>
+            <div className="flex items-center justify-center gap-1.5 mb-7" suppressHydrationWarning>
               {Array.from({ length: totalSlides }).map((_, i) => (
                 <div
                   key={i}
-                  className="h-1.5 rounded-full transition-all duration-400"
+                  className="h-1 rounded-full transition-all duration-300"
                   style={{
-                    width: i === slideIndex ? '32px' : '8px',
+                    width: i === slideIndex ? '20px' : '6px',
                     background: i === slideIndex
-                      ? 'linear-gradient(90deg, #D4AF37, #E8C766)'
-                      : 'rgba(255, 255, 255, 0.12)',
+                      ? accentColor
+                      : 'rgba(255,255,255,0.1)',
+                    opacity: i === slideIndex ? 1 : 0.6,
                   }}
                 />
               ))}
             </div>
           )}
 
-          {/* Header med gull-bokmerke og stor typografi */}
-          <div className="mb-8">
-            {/* Gull-bokmerke */}
-            <div className="flex items-center gap-3 mb-4">
+          {/* Header */}
+          <div className="mb-7">
+            {/* Steg-indikator — nøytral */}
+            <div className="flex items-center gap-2 mb-3">
               <div
-                className="w-3 h-3 rounded-full"
-                style={{
-                  background: 'linear-gradient(135deg, #D4AF37, #E8C766)',
-                  boxShadow: '0 0 12px rgba(212, 175, 55, 0.4)',
-                }}
+                className="w-[4px] h-[4px] rounded-full"
+                style={{ background: sectionColor(accentColor, 50) }}
               />
-              <span className="text-xs uppercase tracking-widest" style={{ color: 'rgba(212, 175, 55, 0.6)' }}>
+              <span
+                className="text-[11px] uppercase tracking-[0.1em]"
+                style={{ color: OB.textMuted }}
+              >
                 Steg {slideIndex + 1} av {totalSlides}
               </span>
             </div>
 
-            {/* Overskrift med stor typografi (36–42px) */}
+            {/* Overskrift */}
             <h1
-              className="text-[36px] md:text-[42px] font-light leading-tight mb-3"
+              className="text-[28px] md:text-[34px] font-light leading-tight mb-3"
               style={{
-                color: '#FFFFFF',
-                letterSpacing: '-0.03em',
+                color: OB.textPrimary,
+                letterSpacing: '-0.02em',
               }}
             >
               {title}
             </h1>
 
-            {/* Undertittel */}
             {subtitle && (
-              <p className="text-[18px] leading-relaxed mb-4" style={{ color: 'rgba(255, 255, 255, 0.65)' }}>
+              <p className="text-[15px] leading-relaxed mb-3" style={{ color: OB.textSecondary }}>
                 {subtitle}
               </p>
             )}
 
-            {/* Guiding text (gull-farge) */}
             {guidingText && (
-              <p
-                className="text-[16px] leading-relaxed italic"
-                style={{
-                  color: 'rgba(212, 175, 55, 0.7)',
-                  fontStyle: 'italic',
-                }}
-              >
+              <p className="text-[14px] leading-relaxed" style={{ color: OB.textMuted }}>
                 {guidingText}
               </p>
             )}
           </div>
 
           {/* Divider */}
-          <div className="mb-8" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)' }} />
+          <div className="mb-7" style={{ borderTop: `1px solid ${OB.divider}` }} />
 
-           {/* Children — innhaldet (breiare) */}
-           <div style={{ padding: '0 4px' }}>
-             {children}
-           </div>
+          {/* Children */}
+          <div>{children}</div>
         </div>
       </div>
     </div>

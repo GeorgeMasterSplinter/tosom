@@ -1,13 +1,16 @@
 /**
  * Tosom — OnboardingSelectGrid (Premium Selection Grid)
- * 
- * Val-side med ikon/grid-layout for å velje mellom alternativ.
+ *
+ * Val-side med ikon/grid-layout for å velge mellom alternativ.
  * Alle val på éin side, ikke fragmentert.
+ *
+ * Design: dempet fargeidentitet pr. seksjon, subtil valgt-state.
  */
 
 'use client';
 
 import { useState } from 'react';
+import { OB, sectionColor } from '@/app/onboarding/theme';
 
 interface SelectOption {
   value: string;
@@ -22,16 +25,17 @@ interface OnboardingSelectGridProps {
   options: SelectOption[];
   selectedValue: string;
   onChange: (value: string) => void;
-   columns?: 1 | 2 | 3 | 4;
+  columns?: 1 | 2 | 3 | 4;
   maxSelected?: number; // For multi-select (default: 1)
+  accentColor?: string; // Seksjonsfarge (default: OB.section.identity)
 }
 
 /**
- * Premium select-grid med gull-aksent:
+ * Premium select-grid med subtil fargeidentitet:
  * - Grid-layout (responsive, 2–4 kolonnar)
  * - Kvar option er ein glass-kort med hover-effekt
- * - Gull-bokmerke for vald alternativ
- * - Ikon + label + valfritt beskrivingstekst
+ * - Ikon i dempet fargetone
+ * - Vald-state: subtil farge-border + flat checkmark
  */
 export function OnboardingSelectGrid({
   label,
@@ -41,10 +45,10 @@ export function OnboardingSelectGrid({
   onChange,
   columns = 2,
   maxSelected = 1,
+  accentColor = OB.section.identity,
 }: OnboardingSelectGridProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-  // Kolonnar basert på responsive breakpoint
   const gridCols = columns === 4
     ? 'grid-cols-2 md:grid-cols-4'
     : columns === 3
@@ -56,22 +60,19 @@ export function OnboardingSelectGrid({
   return (
     <div className="space-y-4">
       {/* Label */}
-      <label className="block" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-        <span className="text-[16px] font-medium">{label}</span>
+      <label className="block" style={{ color: OB.textSecondary }}>
+        <span className="text-[15px] font-medium">{label}</span>
       </label>
 
       {/* Mikroguiding */}
       {mikroguiding && (
-        <p
-          className="text-[13px] leading-relaxed"
-          style={{ color: 'rgba(212, 175, 55, 0.5)', fontStyle: 'italic' }}
-        >
+        <p className="text-[13px] leading-relaxed" style={{ color: OB.textMuted }}>
           {mikroguiding}
         </p>
       )}
 
       {/* Grid med val-moglegheiter */}
-      <div className={`grid ${gridCols} gap-4`}>
+      <div className={`grid ${gridCols} gap-3`}>
         {options.map((option, index) => {
           const isSelected = selectedValue === option.value;
           const isHovered = hoveredIndex === index;
@@ -83,61 +84,64 @@ export function OnboardingSelectGrid({
               onClick={() => onChange(option.value)}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
-              className="relative rounded-[20px] transition-all duration-300 ease-out text-left"
+              className="relative rounded-[14px] transition-all duration-200 ease-out text-left"
               suppressHydrationWarning
               style={{
                 background: isSelected
-                  ? 'rgba(212, 175, 55, 0.1)'
+                  ? sectionColor(accentColor, 10)
                   : isHovered
-                    ? 'rgba(255, 255, 255, 0.06)'
-                    : 'rgba(255, 255, 255, 0.03)',
+                    ? OB.glassBgHover
+                    : OB.glassBg,
                 border: isSelected
-                  ? '1px solid rgba(212, 175, 55, 0.4)'
+                  ? `1px solid ${sectionColor(accentColor, 50)}`
                   : isHovered
-                    ? '1px solid rgba(255, 255, 255, 0.15)'
-                    : '1px solid rgba(255, 255, 255, 0.08)',
+                    ? `1px solid ${OB.glassBorderHover}`
+                    : `1px solid ${OB.glassBorder}`,
                 boxShadow: isSelected
-                  ? '0 4px 20px rgba(212, 175, 55, 0.15), inset 0 0 12px rgba(212, 175, 55, 0.05)'
-                  : isHovered
-                    ? '0 4px 16px rgba(0, 0, 0, 0.1)'
-                    : 'none',
-                transform: isHovered || isSelected ? 'scale(1.02)' : 'scale(1)',
+                  ? `0 2px 8px rgba(0,0,0,0.1)`
+                  : 'none',
+                transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
               }}
             >
-              {/* Gull-bokmerke for vald */}
+              {/* Subtil checkmark for vald */}
               {isSelected && (
                 <div
-                  className="absolute -top-2 -right-2 w-5 h-5 rounded-full flex items-center justify-center"
-                  style={{
-                    background: 'linear-gradient(135deg, #D4AF37, #E8C766)',
-                    boxShadow: '0 0 12px rgba(212, 175, 55, 0.4)',
-                  }}
+                  className="absolute top-2.5 right-2.5 w-4 h-4 rounded-full flex items-center justify-center"
+                  style={{ background: accentColor }}
                   suppressHydrationWarning
                 >
-                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={3}>
+                  <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth={3}>
                     <path d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
               )}
 
               {/* Innhald */}
-              <div className="p-6 space-y-2">
-                {/* Ikon/Emoji */}
+              <div className="p-4 space-y-1.5">
+                {/* Ikon med subtil fargetone */}
                 {option.icon && (
-                  <span className="text-[28px]">{option.icon}</span>
+                  <div
+                    className="w-9 h-9 rounded-lg flex items-center justify-center mb-1"
+                    style={{
+                      background: sectionColor(accentColor, 8),
+                      border: `1px solid ${sectionColor(accentColor, 15)}`,
+                    }}
+                  >
+                    <span className="text-[20px] leading-none">{option.icon}</span>
+                  </div>
                 )}
 
                 {/* Label */}
                 <div
-                  className="text-[16px] font-medium leading-tight"
-                  style={{ color: isSelected ? '#D4AF37' : 'rgba(255, 255, 255, 0.8)' }}
+                  className="text-[14px] font-medium leading-tight"
+                  style={{ color: isSelected ? accentColor : OB.textPrimary }}
                 >
                   {option.label}
                 </div>
 
                 {/* Beskriving */}
                 {option.description && (
-                  <p className="text-[13px] leading-relaxed" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
+                  <p className="text-[12px] leading-relaxed" style={{ color: OB.textMuted }}>
                     {option.description}
                   </p>
                 )}
@@ -149,7 +153,7 @@ export function OnboardingSelectGrid({
 
       {/* Multi-select hint */}
       {maxSelected > 1 && (
-        <p className="text-[12px] text-center" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>
+        <p className="text-[12px] text-center" style={{ color: OB.textSubtle }}>
           Vel opp til {maxSelected} alternativ
         </p>
       )}

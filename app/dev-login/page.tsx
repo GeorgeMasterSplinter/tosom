@@ -37,16 +37,17 @@ export default function DevLogin() {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleLogin = async (userId: string) => {
+  const handleLogin = async (userId: string, role: 'USER' | 'ADMIN') => {
+    const redirect = role === 'ADMIN' ? '/admin' : '/dashboard';
     try {
       const res = await fetch('/api/dev-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, redirect: '/dashboard' }),
+        body: JSON.stringify({ userId, redirect }),
       });
 
       if (res.ok) {
-        window.location.href = '/dashboard';
+        window.location.href = redirect;
       } else {
         const data = await res.json();
         setError(data.error || 'Innlogging feilet');
@@ -121,7 +122,7 @@ export default function DevLogin() {
         {users.map((user) => (
           <button
             key={user.id}
-            onClick={() => handleLogin(user.id)}
+            onClick={() => handleLogin(user.id, user.role)}
             className="px-8 py-4 bg-[#D4AF37] text-[#0A0F1A] rounded-lg text-lg font-medium hover:bg-[#E8C766] transition-colors duration-200 text-left shadow-[0_4px_12px_rgba(212,175,55,0.2)]"
           >
             <div>Logg inn som {user.name}</div>

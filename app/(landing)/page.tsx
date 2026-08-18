@@ -283,7 +283,9 @@ export default function LandingPage() {
                 lineHeight: '1.8',
               }}
             >
-              Betal med Vipps og få tilgang til hele Tosom — inkludert match, guidet reise og privat rom. De første 10 000 får reisen gratis.
+              Betal med Vipps og få tilgang til hele Tosom — inkludert match, guidet reise og privat rom.
+              <br />
+              De første 5 000 får reisen gratis.
             </p>
 
             {/* Hoved-CTA: Logg inn med Vipps */}

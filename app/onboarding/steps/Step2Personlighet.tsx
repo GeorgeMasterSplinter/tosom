@@ -16,6 +16,7 @@ import { OnboardingSlide } from '@/app/onboarding/components/OnboardingSlide';
 import { OnboardingTextField } from '@/app/onboarding/components/OnboardingTextField';
 import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { BackButton } from '@/components/onboarding/BackButton';
+import { OB } from '@/app/onboarding/theme';
 
 interface Props {
   data: Record<string, unknown>;
@@ -90,17 +91,18 @@ export default function Step2Personlighet({ data, onChange, onBack, onNext }: Pr
       guidingText="Personligheten din er det som gjør deg til deg."
       slideIndex={1}
       totalSlides={13}
+      accentColor={OB.section.personality}
     >
       {/* Error summary */}
       {errors.length > 0 && (
         <div className="mb-8 rounded-xl p-4 border" style={{
-          background: 'rgba(255, 77, 77, 0.08)',
-          borderColor: 'rgba(255, 77, 77, 0.2)',
+          background: 'rgba(255, 77, 77, 0.06)',
+          borderColor: 'rgba(255, 77, 77, 0.15)',
         }}>
           <p className="text-sm font-medium mb-2" style={{ color: '#FF4D4D' }}>
             Vennligst fyll ut alle påkrevde felt:
           </p>
-          <ul className="text-sm space-y-1" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+          <ul className="text-sm space-y-1" style={{ color: OB.textSecondary }}>
             {errors.map((err) => (
               <li key={err.field}>• {err.message}</li>
             ))}
@@ -127,7 +129,7 @@ export default function Step2Personlighet({ data, onChange, onBack, onNext }: Pr
       />
 
       {/* Separator */}
-      <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
+      <div style={{ borderTop: `1px solid ${OB.divider}`, marginTop: '20px', marginBottom: '20px' }} />
 
       {/* energyGiver med mikroguiding */}
       <OnboardingTextField
@@ -143,7 +145,7 @@ export default function Step2Personlighet({ data, onChange, onBack, onNext }: Pr
         />
 
         {/* Separator */}
-        <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
+        <div style={{ borderTop: `1px solid ${OB.divider}`, marginTop: '20px', marginBottom: '20px' }} />
 
         {/* energyDrainer med mikroguiding */}
         <OnboardingTextField
@@ -159,7 +161,7 @@ export default function Step2Personlighet({ data, onChange, onBack, onNext }: Pr
         />
 
         {/* Separator */}
-        <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
+        <div style={{ borderTop: `1px solid ${OB.divider}`, marginTop: '20px', marginBottom: '20px' }} />
 
         {/* pressureReact med mikroguiding */}
         <OnboardingTextField
@@ -175,7 +177,7 @@ export default function Step2Personlighet({ data, onChange, onBack, onNext }: Pr
         />
 
         {/* Separator */}
-        <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
+        <div style={{ borderTop: `1px solid ${OB.divider}`, marginTop: '20px', marginBottom: '20px' }} />
 
         {/* quirk med mikroguiding */}
       <OnboardingTextField
@@ -191,7 +193,7 @@ export default function Step2Personlighet({ data, onChange, onBack, onNext }: Pr
       />
 
       {/* Trust text */}
-      <p className="text-center text-xs mt-8" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>
+      <p className="text-center text-xs mt-8" style={{ color: OB.textSubtle }}>
         Det er ingen rette eller gale svar. Svarene dine hjelper oss å forstå deg bedre.
       </p>
 

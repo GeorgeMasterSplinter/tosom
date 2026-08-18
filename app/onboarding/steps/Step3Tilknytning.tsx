@@ -6,6 +6,7 @@
 
 import { useState } from 'react';
 import { OnboardingSlide } from '@/app/onboarding/components/OnboardingSlide';
+import { OB } from '@/app/onboarding/theme';
 import { OnboardingTextField } from '@/app/onboarding/components/OnboardingTextField';
 import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { BackButton } from '@/components/onboarding/BackButton';
@@ -59,6 +60,7 @@ export default function Step3Tilknytning({ data, onChange, onBack, onNext }: Pro
       guidingText="Tilknytningsmønsteret ditt sier mye om hvordan du møter andre mennesker." 
       slideIndex={3} 
       totalSlides={13}
+      accentColor={OB.section.personality}
     >
       {errors.length > 0 && (
         <div className="mb-8 rounded-xl p-4 border" style={{ background: 'rgba(255, 77, 77, 0.08)', borderColor: 'rgba(255, 77, 77, 0.2)' }}>
@@ -67,13 +69,13 @@ export default function Step3Tilknytning({ data, onChange, onBack, onNext }: Pro
         </div>
       )}
       <OnboardingTextField label="Hva gjør deg trygg i en relasjon? *" value={getValue('safetyNeed', '')} onChange={(v) => onChange('safetyNeed', v)} placeholder="Skriv f.eks. At noen lytter uten å dømme" mikroguiding="Skriv f.eks. At noen lytter uten å dømme" maxLength={300} minChars={10} rows={3} multiline />
-      <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
+      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
       <OnboardingTextField label="Hva utløser usikkerhet hos deg? *" value={getValue('insecurityTrigger', '')} onChange={(v) => onChange('insecurityTrigger', v)} placeholder="Skriv f.eks. Når folk lover noe og holder ikke ordet" mikroguiding="Skriv f.eks. Når folk lover noe og holder ikke ordet" maxLength={300} minChars={10} rows={3} multiline />
-      <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
+      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
       <OnboardingTextField label="Hva trenger du når du er lei? *" value={getValue('sadnessNeed', '')} onChange={(v) => onChange('sadnessNeed', v)} placeholder="Skriv f.eks. En klem og at noen sier det skal gå bra" mikroguiding="Skriv f.eks. En klem og at noen sier det skal gå bra" maxLength={300} minChars={10} rows={3} multiline />
-      <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
+      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
       <OnboardingTextField label="Hva trenger du under stress? *" value={getValue('stressNeed', '')} onChange={(v) => onChange('stressNeed', v)} placeholder="Skriv f.eks. At noen tar over ansvaret midlertidig" mikroguiding="Skriv f.eks. At noen tar over ansvaret midlertidig" maxLength={300} minChars={10} rows={3} multiline />
-      <div style={{ borderTop: '2px solid rgba(212, 175, 55, 0.2)', marginTop: '20px', marginBottom: '20px' }} />
+      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
       <OnboardingTextField label="Hva grenser er viktigst for deg? *" value={getValue('importantBoundary', '')} onChange={(v) => onChange('importantBoundary', v)} placeholder="Skriv f.eks. Jeg trenger tid alene etter en tung dag" mikroguiding="Skriv f.eks. Jeg trenger tid alene etter en tung dag" maxLength={300} minChars={10} rows={3} multiline />
       <p className="text-center text-xs mt-8" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>Tilknytningsmønsteret ditt sier mye om hvordan du møter andre mennesker.</p>
       <div className="mt-8 space-y-4">

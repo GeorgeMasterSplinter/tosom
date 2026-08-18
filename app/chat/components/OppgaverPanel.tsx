@@ -1,16 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /**
- * ToSom — BliKjentPanel (Premium Nordic Gold 2026)
- * Hardkodede kategorier og spørsmål — samme for alle brukere.
- * 12 kategorier × 20 spørsmål = 240 spørsmål.
+ * ToSom — OppgaverPanel (Premium Nordic Gold 2026)
+ * Hardkodede oppgaver — 6 kategorier × 15 = 90 oppgaver.
+ * Samme for alle brukere. Tekst-basert, sendes som chat-melding.
  */
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useChat } from '@/app/chat/context/ChatContext';
 import { FadeIn } from '@/components/animations/FadeIn';
-import { questionCategories, type QuestionCategory } from '@/app/questions/data/questions';
+import { taskCategories, type TaskCategory } from '@/app/chat/data/tasks';
 
 /* ═══════════════════════════════════════
    THEME TOKENS — PREMIUM GLASS
@@ -33,34 +33,34 @@ const G = {
 };
 
 /* ═══════════════════════════════════════
-   BLI KJENT PANEL — hovudkomponent
+   OPPGAVER PANEL — hovudkomponent
    ═══════════════════════════════════════ */
 
-interface BliKjentPanelProps {
+interface OppgaverPanelProps {
   onClose: () => void;
 }
 
-export function BliKjentPanel({ onClose }: BliKjentPanelProps) {
+export function OppgaverPanel({ onClose }: OppgaverPanelProps) {
   const { sendMessage } = useChat();
-  const [selectedCategory, setSelectedCategory] = useState<QuestionCategory | null>(null);
-  const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<TaskCategory | null>(null);
+  const [selectedTask, setSelectedTask] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);
 
   // Animer panel-open
-  useState(() => {
+  useEffect(() => {
     const timer = setTimeout(() => setPanelOpen(true), 50);
     return () => clearTimeout(timer);
-  });
+  }, []);
 
-  const handleSendQuestion = async () => {
-    if (!selectedQuestion || sending) return;
+  const handleSendTask = async () => {
+    if (!selectedTask || sending) return;
     setSending(true);
     try {
-      await sendMessage(selectedQuestion, 'text');
+      await sendMessage(selectedTask, 'text');
       setTimeout(() => onClose(), 200);
     } catch (err) {
-      console.error('Feil ved sending av spørsmål:', err);
+      console.error('Feil ved sending av oppgave:', err);
     } finally {
       setSending(false);
     }
@@ -68,7 +68,7 @@ export function BliKjentPanel({ onClose }: BliKjentPanelProps) {
 
   const handleBack = () => {
     setSelectedCategory(null);
-    setSelectedQuestion(null);
+    setSelectedTask(null);
   };
 
   const handleClose = () => {
@@ -118,7 +118,7 @@ export function BliKjentPanel({ onClose }: BliKjentPanelProps) {
                   <span style={{ color: selectedCategory.color }}>{selectedCategory.icon}</span>
                   {' '}— {selectedCategory.name}
                 </span>
-              ) : 'Bli kjent med partneren'}
+              ) : 'Gjør sammen'}
             </h3>
           </div>
           <button
@@ -132,11 +132,11 @@ export function BliKjentPanel({ onClose }: BliKjentPanelProps) {
 
         {/* ═══ BODY — Scrollbart ═══ */}
         <div className="overflow-y-auto max-h-[400px] p-5">
-          {/* ═══ KATEGORIER ═══ */}
+          {/* ═══ KATEGORIER — 6 i grid (2×3 mobile, 3×2 desktop) ═══ */}
           {!selectedCategory && (
             <FadeIn variant="fadeInUp" staggerChildren={0.05}>
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-                {questionCategories.map((cat) => (
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {taskCategories.map((cat) => (
                   <button
                     key={cat.id}
                     onClick={() => setSelectedCategory(cat)}
@@ -157,7 +157,7 @@ export function BliKjentPanel({ onClose }: BliKjentPanelProps) {
                     </div>
                     <div className="text-center">
                       <p className="text-xs font-semibold tracking-wide" style={{ color: G.textPrimary }}>{cat.name}</p>
-                      <p className="text-[10px] mt-0.5 font-medium" style={{ color: G.textSecondary }}>{cat.questions.length} spørsmål</p>
+                      <p className="text-[10px] mt-0.5 font-medium" style={{ color: G.textSecondary }}>{cat.tasks.length} oppgaver</p>
                     </div>
                   </button>
                 ))}
@@ -165,34 +165,34 @@ export function BliKjentPanel({ onClose }: BliKjentPanelProps) {
             </FadeIn>
           )}
 
-          {/* ═══ SPØRSMÅL ═══ */}
+          {/* ═══ OPPGAVER ═══ */}
           {selectedCategory && (
             <div className="space-y-2.5">
-              {selectedCategory.questions.map((q, i) => (
+              {selectedCategory.tasks.map((t, i) => (
                 <button
                   key={i}
-                  onClick={() => setSelectedQuestion(q)}
-                  className={`w-full text-left p-4 rounded-xl transition-all duration-200 ${selectedQuestion === q ? 'scale-[1.01]' : 'hover:scale-[1.005]'}`}
+                  onClick={() => setSelectedTask(t)}
+                  className={`w-full text-left p-4 rounded-xl transition-all duration-200 ${selectedTask === t ? 'scale-[1.01]' : 'hover:scale-[1.005]'}`}
                   style={{
-                    background: selectedQuestion === q
+                    background: selectedTask === t
                       ? `linear-gradient(135deg, ${G.goldSoft}, rgba(212,175,55,0.12))`
                       : `linear-gradient(135deg, ${G.glassBg}, ${G.glassBgHover})`,
-                    border: `1px solid ${selectedQuestion === q ? G.goldMuted : G.glassBorder}`,
+                    border: `1px solid ${selectedTask === t ? G.goldMuted : G.glassBorder}`,
                   }}
                 >
                   <p
                     className="text-sm leading-relaxed"
-                    style={{ color: selectedQuestion === q ? G.textPrimary : 'rgba(255,255,255,0.75)' }}
+                    style={{ color: selectedTask === t ? G.textPrimary : 'rgba(255,255,255,0.75)' }}
                   >
-                    {q}
+                    {t}
                   </p>
                 </button>
               ))}
             </div>
           )}
 
-          {/* ═══ SPØRSMÅL VALGT ═══ */}
-          {selectedQuestion && (
+          {/* ═══ OPPGAVE VALGT ═══ */}
+          {selectedTask && (
             <FadeIn variant="fadeInUp" delay={0.1}>
               <div
                 className="mt-5 p-5 rounded-2xl"
@@ -206,18 +206,18 @@ export function BliKjentPanel({ onClose }: BliKjentPanelProps) {
                   <div className="w-2 h-2 rounded-full" style={{ background: G.gold, boxShadow: `0 0 8px ${G.goldMuted}` }} />
                   <p className="text-xs font-semibold tracking-wide uppercase" style={{ color: G.goldLight }}>Send til partner?</p>
                 </div>
-                <p className="text-base leading-relaxed mb-4 font-medium italic" style={{ color: G.textPrimary }}>"{selectedQuestion}"</p>
+                <p className="text-base leading-relaxed mb-4 font-medium italic" style={{ color: G.textPrimary }}>"{selectedTask}"</p>
                 <div className="flex gap-2.5">
                   <button
-                    onClick={handleSendQuestion}
+                    onClick={handleSendTask}
                     disabled={sending}
                     className="flex-1 px-4 py-3 rounded-xl text-xs font-bold transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-50"
                     style={{ background: `linear-gradient(135deg, ${G.gold}, ${G.goldLight})`, color: '#0B1520' }}
                   >
-                    {sending ? 'Sender...' : '✨ Send spørsmål'}
+                    {sending ? 'Sender...' : '🎲 Send oppgave'}
                   </button>
                   <button
-                    onClick={() => setSelectedQuestion(null)}
+                    onClick={() => setSelectedTask(null)}
                     className="px-4 py-3 rounded-xl text-xs font-medium transition-all hover:brightness-125 active:scale-[0.98]"
                     style={{ background: G.glassBg, border: `1px solid ${G.glassBorder}`, color: G.textSecondary }}
                   >
@@ -239,4 +239,4 @@ export function BliKjentPanel({ onClose }: BliKjentPanelProps) {
   );
 }
 
-export default BliKjentPanel;
+export default OppgaverPanel;

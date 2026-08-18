@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 import "@/styles/animated.css";
 import { AnalyticsProvider } from "@/components/analytics/AnalyticsProvider";
 import { UniversalMenu } from '@/components/layout/UniversalMenu';
+import { ContentWrapper } from '@/components/layout/ContentWrapper';
 import { SentryErrorBoundary } from "@/components/system/SentryErrorBoundary";
 
 export const metadata = {
@@ -71,9 +72,7 @@ export default function RootLayout({
         <SentryErrorBoundary>
           <AnalyticsProvider />
           <UniversalMenu />
-          <div className="pt-[64px]">
-            {children}
-          </div>
+          <ContentWrapper>{children}</ContentWrapper>
         </SentryErrorBoundary>
       </body>
     </html>

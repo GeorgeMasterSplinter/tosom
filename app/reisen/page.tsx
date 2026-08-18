@@ -410,7 +410,7 @@ export default function ReisenPage() {
                         lineHeight: '1.8',
                       }}
                     >
-                      Hver dag får dere nye spørsmål som hjelper dere å bli kjent dypere. Vil dere grave dypere? Samlingen med over 160 spørsmål dekker alt fra hverdag til verdier, drømmer og fortid — slik at dere aldri går tom for stoff.
+                      Hver dag får dere nye spørsmål som hjelper dere å bli kjent dypere. 12 kategorier med over 240 spørsmål — fra lek og humor til nærhet, intimitet og modne samtaler. Dere velger selv hvor dypere dere vil grave.
                     </p>
                   </div>
                 </div>

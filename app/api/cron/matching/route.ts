@@ -31,6 +31,9 @@ const MATCHING_CRON_LOCK_ID = 123456789;
 // Tidsbudsjett (fra A4 — Hobby-plan)
 const TIME_BUDGET_MS = 50_000;
 
+// S4: Kø-tak konfigurerbart via miljøvariabel (standard 5 000)
+const QUEUE_LIMIT = Math.max(1, parseInt(process.env.MATCHING_QUEUE_LIMIT ?? '5000', 10));
+
 /** Constant-time string comparison */
 function safeCompare(a: string, b: string): boolean {
   if (a.length !== b.length) return false;
@@ -159,7 +162,7 @@ export async function GET(req: NextRequest) {
           deletedAt: null,
         },
         orderBy: { matchQueuedAt: 'asc' },
-        take: 3000,
+        take: QUEUE_LIMIT,
         include: {
           profile: true,
         },

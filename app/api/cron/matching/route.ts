@@ -101,6 +101,7 @@ export async function GET(req: NextRequest) {
     radius: 0,
     sikkerhetsniva: 0,
     score_under_termin: 0,
+    scoring_feil: 0,
   };
   const unmapped: string[] = [];
   // ST5.2: Etiketter per avvisningsårsak (tiltak T2) — for lesbart logg-output
@@ -114,6 +115,7 @@ export async function GET(req: NextRequest) {
     radius: 'avvist: radius',
     sikkerhetsniva: 'avvist: sikkerhetsnivå',
     score_under_termin: 'avvist: score under MIN_SCORE',
+    scoring_feil: 'avvist: scoring kastet (korrupt profil)',
   };
   const errors: string[] = [];
 
@@ -225,33 +227,51 @@ export async function GET(req: NextRequest) {
             continue;
           }
 
-          // Dealbreakers (tosidig)
-          const abBlocked = sjekkAlleDealbreakers(a.profile, b.profile);
-          const baBlocked = sjekkAlleDealbreakers(b.profile, a.profile);
-          if (abBlocked.hasDealbreaker || baBlocked.hasDealbreaker) {
-            const reason = abBlocked.reason ?? baBlocked.reason;
-            const key = mapRejectReason(reason);
-            rejectReasons[key]++;
-            if (reason && key === 'preferanser' && !reason.startsWith('Dealbreaker')) {
-              unmapped.push(reason);
+          // M-3: Én korrupt profil må aldri velte heile lørdagsrunden.
+          // Dealbreaker + scoring les profilen og kan kaste — fang og hopp over
+          // PARET, ikkje runden. Logg begge bruker-ID-er så korrupt profil kan rettes.
+          try {
+            // Dealbreakers (tosidig)
+            const abBlocked = sjekkAlleDealbreakers(a.profile, b.profile);
+            const baBlocked = sjekkAlleDealbreakers(b.profile, a.profile);
+            if (abBlocked.hasDealbreaker || baBlocked.hasDealbreaker) {
+              const reason = abBlocked.reason ?? baBlocked.reason;
+              const key = mapRejectReason(reason);
+              rejectReasons[key]++;
+              if (reason && key === 'preferanser' && !reason.startsWith('Dealbreaker')) {
+                unmapped.push(reason);
+              }
+              continue;
             }
+
+            // Resonans-score med unifiedScore (9 dimensjoner, 0–100)
+            const result = unifiedScore(a.profile, b.profile);
+            if (result.score < MIN_SCORE) {
+              rejectReasons['score_under_termin']++;
+              continue; // MIN_SCORE terskel (40 på 0–100 skala)
+            }
+
+            pairs.push({
+              userIdA: a.id,
+              userIdB: b.id,
+              score: result.score,
+              breakdown: result.breakdown,
+              level: result.level,
+            });
+          } catch (err) {
+            rejectReasons['scoring_feil']++;
+            const msg = (err as Error)?.message ?? String(err);
+            errors.push(`scoring ${a.id}+${b.id}: ${msg}`);
+            await prisma.systemLog.create({
+              data: {
+                level: 'ERROR',
+                message: `Scoring feila for par ${a.id}+${b.id} — paret hoppast, runden fortset (M-3)`,
+                module: 'cron:matching',
+                metadata: { userA: a.id, userB: b.id, error: msg },
+              },
+            }).catch(() => {});
             continue;
           }
-
-          // Resonans-score med unifiedScore (9 dimensjoner, 0–100)
-          const result = unifiedScore(a.profile, b.profile);
-          if (result.score < MIN_SCORE) {
-            rejectReasons['score_under_termin']++;
-            continue; // MIN_SCORE terskel (40 på 0–100 skala)
-          }
-
-          pairs.push({
-            userIdA: a.id,
-            userIdB: b.id,
-            score: result.score,
-            breakdown: result.breakdown,
-            level: result.level,
-          });
         }
       }
 

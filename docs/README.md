@@ -1,46 +1,31 @@
-# ToSom — Dokumentasjon
+# TOSOM — Dokumentasjon
 
-Dette er dokumentasjonsindeksen for ToSom-plattformen. Alle referanser peker på filer som finnes i repoet per 2026-08-13.
+Kort inngangsport. Alle referanser peker på filer som finnes i repoet per 2026-08-19.
 
 ---
 
-## Hoveddokumenter
+## Kanonisk systembeskrivelse
 
 | Dokument | Stikkord |
 |----------|----------|
-| **[TOSOM-MASTERPLAN-v2.0.md](TOSOM-MASTERPLAN-v2.0.md)** | **KANONISK masterplan** — systemforklaring, tilstand, skalering, sikkerhet, roadmap |
-| **[TOSOM-ACT-INSTRUKS-v3.0.md](TOSOM-ACT-INSTRUKS-v3.0.md)** | **AKTIV ACT-instruks** — 30 steg i 7 bølger, Launch Edition |
-| [TOSOM-PLATTFORMDIAGNOSE-v1.0.md](TOSOM-PLATTFORMDIAGNOSE-v1.0.md) | Full plattformdiagnose (underlag for v2.0) |
-| [TOSOM-ACT-FINAL-REPORT.md](TOSOM-ACT-FINAL-REPORT.md) | Sluttrapport ACT v2.0 — se v2.0 §2 for korrigert tilstandsvurdering |
-| [TOSOM-ACT-INSTRUKS-v2.0.md](TOSOM-ACT-INSTRUKS-v2.0.md) | ⬇️ Fullført — erstattet av v3.0 |
-| [repo-structure.md](repo-structure.md) | Komplett filstruktur med beskrivelser |
-| [SECURITY-STABILITY-PLAN-v1.md](SECURITY-STABILITY-PLAN-v1.md) | Sikkerhets- og stabilitetsplan (v1.0, delvis foreldet) |
-| [match-status-lifecycle.md](match-status-lifecycle.md) | MatchStatus-livssyklus + CHECKIN-fase |
-| [design-token-migration-guide.md](design-token-migration-guide.md) | Design-token-system og migreringsveiledning |
-| [journey-engine-refactor-plan.md](journey-engine-refactor-plan.md) | Journey Engine refaktorering |
-| [tosom-concept-v2-skisse.md](tosom-concept-v2-skisse.md) | Platform-konsept og Vipps-betaling |
-| [tosom-masterplan-v4.md](tosom-masterplan-v4.md) | ⬇️ Erstattet av v2.0 — historisk referanse |
-| [tosom-platform-map.html](tosom-platform-map.html) | Visuell plattformkartlegging |
+| **[TOSOM-SUPER-MASTERPLAN-v1.0.md](TOSOM-SUPER-MASTERPLAN-v1.0.md)** | **Kanonisk.** Produkt, teknikk, invarianter, vei til beta. Erstatter MASTERPLAN v2–v8. |
 
----
+## Spesialplaner
 
-## Gjeldende beslutninger (13.08.2026)
+| Dokument | Stikkord |
+|----------|----------|
+| **[TOSOM-PLATTFORMDIAGNOSE-v2.0.md](TOSOM-PLATTFORMDIAGNOSE-v2.0.md)** | As-is tilstand, blokkere, avvik, teknisk gjeld. |
+| **[SECURITY-STABILITY-PLAN-v2.0.md](SECURITY-STABILITY-PLAN-v2.0.md)** | Sikkerhet, auth, rate limiting, GDPR, drift. |
+| **[MATCHING-TUNING-PLAN-v1.0.md](MATCHING-TUNING-PLAN-v1.0.md)** | Motoren: retting før beta, tuning etter observasjon. |
+| **[BETA-ACCESS-PLAN-v1.0.md](BETA-ACCESS-PLAN-v1.0.md)** | Lukket beta: invitasjonsport, rekruttering, observasjon, testmatrise. |
+| **[ACT-PIPELINE-v1.0.md](ACT-PIPELINE-v1.0.md)** | Arbeidssyklus, patch-regler, invarianter, verifisering. Erstatter ACT-INSTRUKS v2–v11. |
+| **[DOCS-RESTRUCTURE-v1.0.md](DOCS-RESTRUCTURE-v1.0.md)** | Denne restruktureringen: plan + gjennomførte valg. |
 
-| Område | Beslutning |
-|--------|------------|
-| Betaling | **Vipps only** — Stripe fjernes. `PAYMENT-STRATEGY-DECISION.md` er opphevet |
-| Lansering | **Gratis** — premium utsettes til v2.1/v3.0 |
-| Skalering | **300k = 12–24 mnd mål** — arkitektur forberedes nå |
+## Levende tilstand
 
----
-
-## Aktivt arbeid
-
-**Instruks:** `TOSOM-ACT-INSTRUKS-v3.0.md` — 30 steg i 7 bølger.
-**Tilstandsfil:** `docs/ACT-STATE-v3.json` (opprettes i steg 0.1).
-**Sperre:** Bølge 1 (gjenoppliv cron) må fullføres og verifiseres før bølge 2 startes.
-
-Nytt i v3.0: hvert steg krever et **funksjonelt ferdigkriterium** (verifisert DB-tilstand eller HTTP-respons) i tillegg til tsc/grep/build. Grønn kompilering alene er ikke bevis på at noe virker.
+| Fil | Stikkord |
+|-----|----------|
+| **[ACT-STATE.json](ACT-STATE.json)** | Eneste levende tilstandsfil. Oppdateres etter hver fullførte oppgave. |
 
 ---
 
@@ -48,36 +33,20 @@ Nytt i v3.0: hvert steg krever et **funksjonelt ferdigkriterium** (verifisert DB
 
 | Mappe | Innhold |
 |-------|---------|
-| [`archive/`](archive/) | Arkiverte og utdaterte dokumenter |
-| [`core/`](core/) | Kernedokumentasjon (master overview, architecture) |
-| [`system/`](system/) | Systemrapporter og auto-genererte filer |
-| [`v2/`](v2/) | Versjon 2 planer |
-
----
-
-## Arkiv
-
-Utdaterte rapporter som er flyttet hit:
-
-| Fil | Original dato | Årsak |
-|-----|---------------|-------|
-| [MOTION_21_REPORT.md](archive/MOTION_21_REPORT.md) | 2026-06-20 | Pre-launch analyse |
-| [TOSOM_DUPLICATE_ANALYSIS_REPORT.md](archive/TOSOM_DUPLICATE_ANALYSIS_REPORT.md) | 2026-06-24 | Superseded av ny analyse |
-| [TOSOM_READINESS_REPORT.md](archive/TOSOM_READINESS_REPORT.md) | august 2026 | Utdatert etter roadmap-arbeid |
-| [security-stability-plan-v1.md](archive/security-stability-plan-v1.md) | 2026-08-05 | Case-kollisjon løst (kortere versjon) |
-
-**Til arkivering i steg 5.1:** `PAYMENT-STRATEGY-DECISION.md` (opphevet — Vipps only), `tosom-masterplan-v4.md` (erstattet av v2.0).
+| [`reference/`](reference/) | Levende oppslagsverk (API-ruter, match-status, design tokens) |
+| [`core/`](core/) | Kernedokumentasjon (blueprint, matching, journey, security, roadmap) |
+| [`archive/`](archive/) | Historikk. **Aldri normativ.** |
 
 ---
 
 ## Dokumentasjonsregler
 
-1. **Alltid oppdater** når en subsystem endres vesentlig
-2. **Aldri slett** uten godkjenning — flytt til `archive/` i stedet
-3. **Skriv i bokmål** — aldri nynorsk eller svensk
-4. **Én kilde for sannhet** — ingen duplikater av samme dokument
-5. **Verifiser mot kode** — dokumentasjon som motsier kildekoden er en feil
+1. **Koden vinner alltid over dokumentasjonen.** Finner du avvik: rapporter det.
+2. **Én kilde for sannhet.** SUPER-MASTERPLAN er kanonisk.
+3. **Skriv i bokmål.** Varmt, modent, trygt, klart.
+4. **Aldri slett uten godkjenning.** Flytt til `archive/` i stedet.
+5. **Verifiser mot kode.** Dokumentasjon som motsier kildekoden er en feil.
 
 ---
 
-*Sist oppdatert: 2026-08-13 (TOSOM-ACT-INSTRUKS-v3.0)*
+*Sist oppdatert: 2026-08-19 (DOCS-RESTRUCTURE v1.0)*

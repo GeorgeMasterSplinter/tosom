@@ -2,10 +2,11 @@
  * Seed-skript for JourneyDayContent
  * 
  * Oppretter 30 records for dag 1-30 med tema, refleksjonspørsmål og samtaleprompt.
- * Fase-inndeling frå engine.ts:
- *   Dag 1-10:  EARLY       (bryt isen)
- *   Dag 11-20: BUILDING_TRUST (bygg tillit)
- *   Dag 21-30: DEEPER      (djupe samtaler + check-in)
+ * Fase-inndeling frå engine.ts (kanonisk, PHASE_CONFIGS):
+ *   Dag 1-14:  EARLY          (bryt isen, utan bilder)
+ *   Dag 15-21: BUILDING_TRUST (bygg tillit, bilder tillatt)
+ *   Dag 22-25: DEEPER         (djupe samtaler)
+ *   Dag 26-30: CHECKIN        (refleksjon og oppsummering)
  * 
  * Kjøring:
  *   npx tsx scripts/seed-journey-content.ts
@@ -30,7 +31,7 @@ interface DayContentData {
 }
 
 const JOURNEY_CONTENT: DayContentData[] = [
-  // ───────────── EARLY (Dag 1-10) ─────────────
+  // ───────────── EARLY (Dag 1-10, fortsetter til 14) ─────────────
   {
     day: 1,
     phase: 'EARLY',
@@ -122,10 +123,10 @@ const JOURNEY_CONTENT: DayContentData[] = [
     resonanceGoal: 'Bevisstheit om eigen utvikling',
   },
 
-  // ───────────── BUILDING_TRUST (Dag 11-20) ─────────────
+  // ───────────── EARLY (Dag 11-14) · BUILDING_TRUST (Dag 15-20) ─────────────
   {
     day: 11,
-    phase: 'BUILDING_TRUST',
+    phase: 'EARLY',
     theme: 'Å vere åpen og sårbar',
     reflectionQuestion: 'Kva gjer at du føler deg trygg nok til å opne deg for ein annan? Kva er det første steget?',
     conversationPrompt: 'Fortel noko du ikkje seier til alle. Kva var det som fekk deg til å velje akkurat denne personen?',
@@ -134,7 +135,7 @@ const JOURNEY_CONTENT: DayContentData[] = [
   },
   {
     day: 12,
-    phase: 'BUILDING_TRUST',
+    phase: 'EARLY',
     theme: 'Konflikt og respekt',
     reflectionQuestion: 'Korleis håndterer du uenigheiter? Trekkjer du deg tilbake eller går du rett på saka?',
     conversationPrompt: 'Fortel om ein konflikt du har vore i. Korleis enda han? Kva lærte du?',
@@ -143,7 +144,7 @@ const JOURNEY_CONTENT: DayContentData[] = [
   },
   {
     day: 13,
-    phase: 'BUILDING_TRUST',
+    phase: 'EARLY',
     theme: 'Grenser og respekt',
     reflectionQuestion: 'Kva er ditt "ikkje-rør"-område? Kva ting vil du aldri tolerere eller akseptere?',
     conversationPrompt: 'Fortel om ein grense du har sett — eller ønskjer å setje. Korlei kan partneren din respektere den?',
@@ -152,7 +153,7 @@ const JOURNEY_CONTENT: DayContentData[] = [
   },
   {
     day: 14,
-    phase: 'BUILDING_TRUST',
+    phase: 'EARLY',
     theme: 'Takksemd og verdsetjing',
     reflectionQuestion: 'Kva er noko du meiner ofte blir undervurdert — men som eigentleg betyr mykje?',
     conversationPrompt: 'Fortel partneren din kva du set pris på ved dei. Kva har dei gjort som har betydd noko for deg?',
@@ -214,10 +215,10 @@ const JOURNEY_CONTENT: DayContentData[] = [
     resonanceGoal: 'Medvit om eigen tillitsreise',
   },
 
-  // ───────────── DEEPER (Dag 21-30) ─────────────
+  // ───────────── BUILDING_TRUST (Dag 21) · DEEPER (Dag 22-25) · CHECKIN (Dag 26-30) ─────────────
   {
     day: 21,
-    phase: 'DEEPER',
+    phase: 'BUILDING_TRUST',
     theme: 'Frykt og mot',
     reflectionQuestion: 'Kva er den største frykta di i ein relasjon? Og kva gjer du likevel for å vere motvillig?',
     conversationPrompt: 'Fortel noko skummelt — men også viktig. Kva er det som gjer at du tør å dele det no?',
@@ -262,7 +263,7 @@ const JOURNEY_CONTENT: DayContentData[] = [
   },
   {
     day: 26,
-    phase: 'DEEPER',
+    phase: 'CHECKIN',
     theme: 'Oppsummering av reisa',
     reflectionQuestion: 'Kva har denne reisen lært deg om deg sjølv, og om korlei du møter andre?',
     conversationPrompt: 'Samanfatt kva du har opplevd dei siste dagane. Kva er den viktigaste tinga du vil ta med deg?',
@@ -271,7 +272,7 @@ const JOURNEY_CONTENT: DayContentData[] = [
   },
   {
     day: 27,
-    phase: 'DEEPER',
+    phase: 'CHECKIN',
     theme: 'Fortsetjing eller avslutning',
     reflectionQuestion: 'Viss du skulle velje — vil du halde fram? Er det noko du føler du veit no som du ikkje visste før?',
     conversationPrompt: 'Fortel kva du ønskjer å skje vidare. Er det noko du meiner må endre seg, eller er alt som det skal vere?',
@@ -280,7 +281,7 @@ const JOURNEY_CONTENT: DayContentData[] = [
   },
   {
     day: 28,
-    phase: 'DEEPER',
+    phase: 'CHECKIN',
     theme: 'Når du er sint',
     reflectionQuestion: 'Kva gjer du når du er sint? Gått du i dekning, eller konfronter du?",
     conversationPrompt: 'Fortel om ein gong du var sint — og korlei du håndterte det. Kva lærte deg av den opplevinga?',
@@ -289,7 +290,7 @@ const JOURNEY_CONTENT: DayContentData[] = [
   },
   {
     day: 29,
-    phase: 'DEEPER',
+    phase: 'CHECKIN',
     theme: 'Døme på kjærleik',
     reflectionQuestion: 'Kva er det beste dømet på kjærleik du har opplevd — eller vitna på? Kva fekk deg til å tenkje "slik skal det vere"?',
     conversationPrompt: 'Fortel om eit øyeblikk der du såre at kjærleik eksisterer — i verkelegheita.',
@@ -298,7 +299,7 @@ const JOURNEY_CONTENT: DayContentData[] = [
   },
   {
     day: 30,
-    phase: 'DEEPER',
+    phase: 'CHECKIN',
     theme: 'Neste kapittel',
     reflectionQuestion: 'Kva vil du seie til deg sjølv — og til din partner — når denne reisen er over? Kva tar du med deg vidare?',
     conversationPrompt: 'Avslutt med ei takksemd, ei visjon eller eit løfte. Kva betyr denne reisa for deg?',

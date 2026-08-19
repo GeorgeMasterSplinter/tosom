@@ -6,6 +6,7 @@
 
 import {
   getPhaseForDay,
+  dayToPhase,
   isPhotosAllowed,
   isJourneyActive,
   isJourneyCompleted,
@@ -54,6 +55,21 @@ describe('Journey Engine', () => {
 
     test('Ukjent dag > 30 skal falle tilbake til CHECKIN', () => {
       expect(getPhaseForDay(31).phase).toBe(JourneyPhase.CHECKIN);
+    });
+  });
+
+  // M-5: journeySync importerer dayToPhase — pin CHECKIN på dag 26-30.
+  describe('dayToPhase (M-5: CHECKIN oppnåelig)', () => {
+    test('dag 26-30 skal være CHECKIN', () => {
+      for (const day of [26, 27, 28, 29, 30]) {
+        expect(dayToPhase(day)).toBe(JourneyPhase.CHECKIN);
+      }
+    });
+
+    test('dag 22-25 skal være DEEPER (ikke CHECKIN)', () => {
+      for (const day of [22, 23, 24, 25]) {
+        expect(dayToPhase(day)).toBe(JourneyPhase.DEEPER);
+      }
     });
   });
 

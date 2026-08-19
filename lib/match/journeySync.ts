@@ -3,15 +3,10 @@
 
 import prisma from "@/lib/prisma";
 import type { JourneyPhase } from "@prisma/client";
+// M-5: Én kilde for fasedefinisjon — importerer fra engine (DEEPER 22-25, CHECKIN 26-30).
+import { dayToPhase } from "@/lib/journey/engine";
 
 const TOTAL_DAYS = 30;
-
-function phaseForDay(day: number): JourneyPhase {
-  if (day <= 14) return "EARLY";
-  if (day <= 21) return "BUILDING_TRUST";
-  if (day <= 30) return "DEEPER";
-  return "CHECKIN";
-}
 
 // findFirst uses WhereInput — simple { userId, matchId } works
 const whereForFind = (userId: string, matchId: string) => ({ userId, matchId });
@@ -48,7 +43,7 @@ export async function advanceMatchJourney(
   const newDay = jp.day + 1;
   jp = await prisma.journeyProgress.update({
     where: whereUnique(userId, matchId),
-    data: { day: newDay, phase: phaseForDay(newDay) as JourneyPhase },
+    data: { day: newDay, phase: dayToPhase(newDay) },
   });
   return { day: jp.day, changed: true, completed: jp.day >= TOTAL_DAYS, phase: jp.phase };
 }

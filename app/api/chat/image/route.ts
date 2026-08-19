@@ -1,14 +1,19 @@
 // app/api/chat/image/route.ts — POST /api/chat/image
-// Handsamar fil-opplasting for bilete i chat
-// Lagrar til public/uploads/images/{conversationId}/{uuid}.{ext}
+//
+// Handsamar fil-opplasting for bilete i chat. Bildet lagres i objektlagring
+// (R2 i produksjon, lokal fil i utvikling) via lib/storage — ALDRI i
+// public/. Bildet knyttes til en Message-rad ved imageKey, slik at:
+//   1. Lesing skjer via GET /api/chat/image/{messageId} (signert URL).
+//   2. Filen kan slettes ved reiseslutt (GDPR art. 17).
+//
+// Ingen offentlig sti eksponeres noensinne.
 
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
 import { randomUUID } from 'crypto';
-import path from 'path';
 import { getServerSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/prisma';
 import { isPhotosAllowed } from '@/lib/journey/engine';
+import { getImageStorage, buildImageKey, assertSafeImageKey } from '@/lib/storage';
 
 export const dynamic = 'force-dynamic';
 
@@ -27,17 +32,18 @@ const EXT_MAP: Record<string, string> = {
 
 /**
  * POST /api/chat/image
- * 
+ *
  * Body: FormData
  *   - file: File (max 5MB, image/jpeg/png/webp)
  *   - conversationId: string
- *   - senderId: string
- * 
+ *   - messageId: string — Message-rad (type=image) som bildet skal knyttes til
+ *
  * Response: { success: true, imageUrl: string }
+ *   imageUrl peker på GET /api/chat/image/{messageId} (signert URL ved lesing).
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
-    // STREG 1 — Fix 2: Krever session og conversation-tilhørighet
+    // STEG 1 — Krever session. senderId kjem alltid frå session, IKKE frå klienten.
     const session = await getServerSession();
     if (!session?.user?.id) {
       return NextResponse.json(
@@ -45,20 +51,17 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         { status: 401 }
       );
     }
+    const senderId = session.user.id;
 
     // Hent FormData
     const formData = await request.formData();
     const file = formData.get('file') as File;
     const conversationId = formData.get('conversationId') as string;
-    // senderId kommer fra session, IKKE fra klienten
-    const senderId = session.user.id;
+    const messageId = formData.get('messageId') as string;
 
     // Valider fil
     if (!file) {
-      return NextResponse.json(
-        { error: 'Ingen fil funnet' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Ingen fil funnet' }, { status: 400 });
     }
 
     // Valider bilete-type
@@ -71,21 +74,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // Valider filstorleik
     if (file.size > MAX_FILE_SIZE) {
-      return NextResponse.json(
-        { error: 'Fila er for stor. Maks 5 MB.' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Fila er for stor. Maks 5 MB.' }, { status: 400 });
     }
 
     // Valider conversationId
     if (!conversationId) {
-      return NextResponse.json(
-        { error: 'Manglande conversationId' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Manglande conversationId' }, { status: 400 });
     }
 
-    // STREG 1 — Fix 2: Sjekk at brukeren er deltaker i konversasjonen
+    // Sjekk at brukeren er deltaker i konversasjonen
     const conversation = await prisma.conversation.findUnique({
       where: { id: conversationId },
       select: { userAId: true, userBId: true, matchId: true },
@@ -106,7 +103,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     // M-6: Bilde-lås håndheves server-side på journey-dag (kanonisk isPhotosAllowed: dag >= 15).
-    // Uten denne sjekken kunne klienten laste opp bilder før låsen var opphøyet.
+    // Denne sjekken kjører FØR opplastning, slik at ingen bilde når lagringen før låsen er opphøyet.
     if (conversation.matchId) {
       const journey = await prisma.journeyProgress.findFirst({
         where: { userId: senderId, matchId: conversation.matchId },
@@ -121,40 +118,69 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       }
     }
 
-    // Generer trygt filnamn med UUID
-    const ext = EXT_MAP[file.type];
-    const uuid = randomUUID();
-    const fileName = `${uuid}${ext}`;
-
-    // Sikker mappesti — bare i public/uploads/images/{conversationId}/
-    const uploadDir = path.resolve(process.cwd(), 'public', 'uploads', 'images', conversationId);
-    
-    // Sikkerheit: forsikre oss om at uploadDir startar med forventa prefix
-    if (!uploadDir.startsWith(path.resolve(process.cwd(), 'public', 'uploads'))) {
+    // Bildet må knyttes til en melding for å kunne leses (signert URL) og slettes (GDPR).
+    if (!messageId) {
       return NextResponse.json(
-        { error: 'Ugyldig opplastingsmappe' },
+        { error: 'Manglande messageId' },
         { status: 400 }
       );
     }
 
-    // Opprett mappe dersom han ikke eksisterer
-    await mkdir(uploadDir, { recursive: true });
+    // Valider meldingen: finnes, type=image, eid av sender, og ingen bilde ennå (idempotens).
+    const message = await prisma.message.findUnique({
+      where: { id: messageId },
+      select: { id: true, type: true, imageKey: true, senderId: true, conversationId: true },
+    });
 
-    const filePath = path.join(uploadDir, fileName);
+    if (!message || message.conversationId !== conversationId) {
+      return NextResponse.json(
+        { error: 'Meldingen finnes ikke i denne konversasjonen' },
+        { status: 404 }
+      );
+    }
+    if (message.senderId !== senderId) {
+      return NextResponse.json(
+        { error: 'Uautorisert — du kan ikke laste opp til denne meldingen' },
+        { status: 403 }
+      );
+    }
+    if (message.type !== 'image') {
+      return NextResponse.json(
+        { error: 'Meldingen er ikke av type bilde' },
+        { status: 400 }
+      );
+    }
+    if (message.imageKey) {
+      return NextResponse.json(
+        { error: 'Meldingen har allerede et bilde' },
+        { status: 409 }
+      );
+    }
 
-    // Konverter File til Buffer og lagrar
+    // Bygg en trygg nøkkel: {conversationId}/{uuid}.{ext}
+    const ext = EXT_MAP[file.type];
+    const uuid = randomUUID();
+    const key = assertSafeImageKey(buildImageKey(conversationId, uuid, ext));
+
+    // Konverter File til Buffer og lagrar i objektlagringen.
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
-    
-    await writeFile(filePath, buffer);
 
-    // Returnerer relativ URL (tilgjengeleg frå nettverket)
-    const imageUrl = `/uploads/images/${conversationId}/${fileName}`;
+    const storage = getImageStorage();
+    await storage.putImage(key, buffer, { contentType: file.type });
+
+    // Knytt nøkkelen til meldinga.
+    await prisma.message.update({
+      where: { id: messageId },
+      data: { imageKey: key },
+    });
+
+    // Returnerer URL-en til side-ruta — aldri en direkte filsti.
+    const imageUrl = `/api/chat/image/${messageId}`;
 
     return NextResponse.json({
       success: true,
       imageUrl,
-      fileName,
       size: file.size,
       type: file.type,
     });

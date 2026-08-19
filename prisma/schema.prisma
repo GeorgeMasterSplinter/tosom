@@ -162,6 +162,10 @@ model Message {
   senderId       String
   content        String
   type           MessageCategory @default(user)
+  // STEG: R2-bildelagring. Nøkkel til objektlagring (R2) når type=image.
+  // Null for tekst-meldinger. Brukes til (1) å utstede signerte URL-er ved lesing
+  // og (2) å slette filen ved reiseslutt (GDPR art. 17). Aldri en offentlig sti.
+  imageKey       String?
   state          MessageState    @default(SENT)
   deliveredAt    DateTime?
   readAt         DateTime?

@@ -66,11 +66,23 @@ export const journeyDayUpdateSchema = z.object({
 // ═══════════════════════════════════════════════════════════
 
 /** Chat send message body */
-export const chatSendMessageSchema = z.object({
-  conversationId: z.string().min(1, 'Manglande conversationId'),
-  content: z.string().trim().min(1, 'Melding kan ikke vere tom').max(5000, 'Meldinga er for lang'),
-  type: z.enum(['text', 'image', 'user', 'continue_choice']).default('text'),
-})
+export const chatSendMessageSchema = z
+  .object({
+    conversationId: z.string().min(1, 'Manglande conversationId'),
+    // content kan vere tom når type=image — da bærer bildet seg sjølv, og
+    // imageKey setjast seinare av /api/chat/image (to-stegs opplastning).
+    content: z.string().trim().max(5000, 'Meldinga er for lang').default(''),
+    type: z.enum(['text', 'image', 'user', 'continue_choice']).default('text'),
+  })
+  .superRefine((data, ctx) => {
+    if (data.type !== 'image' && data.content.length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['content'],
+        message: 'Melding kan ikke vere tom',
+      });
+    }
+  })
 
 /** Chat messages query params */
 export const chatMessagesQuerySchema = paginationSchema.extend({

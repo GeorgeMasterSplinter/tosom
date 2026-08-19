@@ -20,8 +20,7 @@
  */
 
 import { prisma } from '@/lib/prisma';
-import { rm, stat as fsStat } from 'fs/promises';
-import path from 'path';
+import { getImageStorage } from '@/lib/storage';
 
 /** Normalize pair — consistent ordering for MatchHistory unique constraint */
 function normalizePair(aId: string, bId: string): { userAId: string; userBId: string } {
@@ -58,6 +57,18 @@ export async function endJourney(
   }
 
   const conversationId = conversation.id;
+
+  // Hent imageKeys FØR transaksjonen — Message-radene blir sletta inne i
+  // transaksjonen, så nøklene må vere samla på førehand for å kunne slette
+  // dei tilhøyrande objekta i lagringen etterpå (GDPR art. 17).
+  const imageKeys: string[] = (
+    await prisma.message.findMany({
+      where: { conversationId, imageKey: { not: null } },
+      select: { imageKey: true },
+    })
+  )
+    .map((m) => m.imageKey)
+    .filter((k): k is string => typeof k === 'string' && k.length > 0);
 
   // Find JourneyProgress for both users (match-scoped via conversation)
   const journeyA = await prisma.journeyProgress.findFirst({
@@ -249,17 +260,24 @@ export async function endJourney(
     timeout: 30_000,
   });
 
-  // S-9: Slett også opplaaste BILDE-FILer fra disken. DB-radene (Message type=image)
-  // er allerede borte, men filene i public/uploads/images/{conversationId}/ er ellers
-  // en reell lekkasjevei (S-9 punkt 5). Best-effort: feil her skal ikke blokkere.
-  try {
-    const uploadDir = path.resolve(process.cwd(), 'public', 'uploads', 'images', conversationId);
-    const dirStat = await fsStat(uploadDir);
-    if (dirStat && dirStat.isDirectory()) {
-      await rm(uploadDir, { recursive: true, force: true });
+  // S-9 + GDPR art. 17: Slett også dei opplaaste BILDE-objekta frå lagringen.
+  // DB-radene (Message type=image) er allereie borte, men objektet i R2/local
+  // ligg ellers att som ein reell lekkasjeway. Best-effort: feil her skal ikkje
+  // blokkere reiseslutt — men logg tydeleg for å fange tapte slettingar.
+  if (imageKeys.length > 0) {
+    const storage = getImageStorage();
+    let deletedImageCount = 0;
+    for (const key of imageKeys) {
+      try {
+        await storage.deleteImage(key);
+        deletedImageCount += 1;
+      } catch (imgErr) {
+        console.warn(`[endJourney] Kunne ikkje slette bilde-objekt ${key}:`, imgErr);
+      }
     }
-  } catch (imgErr) {
-    console.warn('[endJourney] Kunne ikke slette opplaaste bildefiler:', imgErr);
+    if (deletedImageCount > 0) {
+      result.ImageObject = deletedImageCount;
+    }
   }
 
   // Create SystemLog entry for the event

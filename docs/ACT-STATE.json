@@ -1,19 +1,35 @@
 {
   "version": "1.0",
   "updatedAt": "2026-08-19",
-  "commit": "bc1ef13",
+  "commit": "e7fe325",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v1.0.md",
   "health": {
-    "tests": "157/157",
+    "tests": "192/192",
     "typecheck": "0 errors",
-    "productionBuild": "unverified"
+    "productionBuild": "verified"
   },
-  "currentPhaseId": "runde-1-blokkere",
+  "currentPhaseId": "spore-b-fase-1-lagring",
   "blockers": [
-    { "id": "B-1", "title": "Magic link sendes ikke", "status": "open" },
-    { "id": "B-4", "title": "Admin-eskalering", "status": "open" },
-    { "id": "B-3", "title": "PDF-eksport mangler", "status": "open" },
-    { "id": "B-2", "title": "Vipps død kode", "status": "open" }
+    {
+      "id": "B-1",
+      "title": "Magic link sendes ikke",
+      "status": "closed"
+    },
+    {
+      "id": "B-4",
+      "title": "Admin-eskalering",
+      "status": "closed"
+    },
+    {
+      "id": "B-3",
+      "title": "PDF-eksport mangler",
+      "status": "closed"
+    },
+    {
+      "id": "B-2",
+      "title": "Vipps død kode",
+      "status": "closed"
+    }
   ],
-  "nextAction": "S-18: verifiser next build"
+  "nextAction": "Spor B Fase 1 klar: R2-bildelagring ferdig (lib/storage + Message.imageKey + signerte URL-er + fil-sletting ved reiseslutt). Neste: S1 batch-transaksjoner i cron."
 }

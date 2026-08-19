@@ -5,27 +5,49 @@
  * bekrefter:
  *   1. User, Profile, Message, Conversation, JourneyProgress er BORTE for begge
  *   2. MatchHistory, Report, AuditLog BESTÅR (overlever kontosletting)
- *   3. Opplaaste bilde-FILER på disken er slettet (S-9 punkt 5 — reell lekkasjevei)
+ *   3. Opplaaste bilde-OBJEKTA i lagringen er slettet (GDPR art. 17 — reell
+ *      lekkasjevei). Testen kjører mot local-driver mot ein isolert tempdir,
+ *      slik at vi kan verifisere at fila faktisk er borte frå disken.
+ *
+ * (Oppdatert: bildet knyttest no til meldinga via imageKey og slettast per
+ * nøkkel via lib/storage — ikkje lenger som mappe-rydding i public/.)
  */
 
 import path from 'path';
-import { writeFile, mkdir, rm, stat } from 'fs/promises';
+import fs from 'fs/promises';
+import os from 'os';
 import { testPrisma } from './setup';
 import { endJourney } from '@/lib/journey/endJourney';
+import { LocalImageStorage, _resetImageStorageForTesting } from '@/lib/storage';
 
 const db = testPrisma;
 
 const CONV_ID = 's9-test-conversation';
-// Stien endJourney() rydder: {cwd}/public/uploads/images/{conversationId}
-const UPLOAD_DIR = path.resolve(process.cwd(), 'public', 'uploads', 'images', CONV_ID);
+// Nøkkelen bildet får i lagringen (format: {conversationId}/{uuid}.{ext})
+const IMAGE_KEY = 's9-test-conversation/bilde.jpg';
 
 describe('S-9: endJourney(found_each_other) — fullstendig sletting', () => {
-  afterAll(async () => {
-    // Sikker rydding av test-mappen, også dersom endJourney feilet midt i
-    await rm(UPLOAD_DIR, { recursive: true, force: true }).catch(() => {});
+  let storageDir: string;
+  let storage: LocalImageStorage;
+
+  beforeAll(async () => {
+    // Isoler storage til ein tempdir for denne testen.
+    storageDir = await fs.mkdtemp(path.join(os.tmpdir(), 'tosom-s9-'));
+    // Setje env FØR endJourney kallar getImageStorage() (singleton).
+    process.env.STORAGE_DRIVER = 'local';
+    process.env.STORAGE_LOCAL_DIR = storageDir;
+    _resetImageStorageForTesting();
+    storage = new LocalImageStorage({ rootDir: storageDir });
   });
 
-  it('sletter konto+innhold+bildefiler, men behold MatchHistory/Report/AuditLog', async () => {
+  afterAll(async () => {
+    _resetImageStorageForTesting();
+    delete process.env.STORAGE_DRIVER;
+    delete process.env.STORAGE_LOCAL_DIR;
+    await fs.rm(storageDir, { recursive: true, force: true }).catch(() => {});
+  });
+
+  it('sletter konto+innhold+bilde-objekt, men behold MatchHistory/Report/AuditLog', async () => {
     const suffix = Date.now();
     const userA = await db.user.create({
       data: { id: `s9-a-${suffix}`, email: `s9a${suffix}@example.com`, journeyState: 'MATCHED' },
@@ -44,30 +66,29 @@ describe('S-9: endJourney(found_each_other) — fullstendig sletting', () => {
         normalizedScore: 0.85,
       },
     });
-    // Konversasjon med kjent ID, slik at vi treffer den eksakte opprydningsstien
+    // Konversasjon med kjent ID
     const conversation = await db.conversation.create({
       data: { id: CONV_ID, matchId: match.id, userAId: userA.id, userBId: userB.id },
     });
     await db.journeyProgress.create({ data: { userId: userA.id, matchId: match.id, day: 30 } });
     await db.journeyProgress.create({ data: { userId: userB.id, matchId: match.id, day: 30 } });
 
-    // Meldinger, inkludert ett opplastet bilde (DB-rad type=image)
+    // Meldingar: to tekst + ein bilde-melding KNYTT TIL ETT OBJEKT I LAGRINGA
     await db.message.create({ data: { conversationId: conversation.id, senderId: userA.id, content: 'Hei!' } });
     await db.message.create({ data: { conversationId: conversation.id, senderId: userB.id, content: 'Heisann!' } });
     await db.message.create({
       data: {
         conversationId: conversation.id,
         senderId: userA.id,
-        content: '/uploads/images/s9-test-conversation/bilde.jpg',
+        content: '',
         type: 'image',
+        imageKey: IMAGE_KEY,
       },
     });
 
-    // Opplaaste BILDEFIL på den eksakte diskestien endJourney() rydder
-    await mkdir(UPLOAD_DIR, { recursive: true });
-    const imgPath = path.join(UPLOAD_DIR, 'bilde.jpg');
-    await writeFile(imgPath, Buffer.from([0xff, 0xd8, 0xff, 0xe0]), 'binary');
-    await stat(imgPath); // finnes før sletting
+    // Last opp BILDE-OBJEKTA i lagringa (via local-driver mot tempdir)
+    await storage.putImage(IMAGE_KEY, Buffer.from([0xff, 0xd8, 0xff, 0xe0]), { contentType: 'image/jpeg' });
+    expect(await storage.exists(IMAGE_KEY)).toBe(true);
 
     // Report som MÅ overleve kontosletting
     const report = await db.report.create({
@@ -104,8 +125,6 @@ describe('S-9: endJourney(found_each_other) — fullstendig sletting', () => {
 
     expect(await db.report.findUnique({ where: { id: report.id } })).not.toBeNull();
 
-    // AuditLog overlever i ANONYMISERT form: aktøren (userA) er slettet, så
-    // adminId er nulla ut (SetNull) — loggen består, men refererer ikke til slettet bruker.
     const survivingAudit = await db.auditLog.findFirst({
       where: { action: 'JOURNEY_RESET' },
     });
@@ -113,13 +132,8 @@ describe('S-9: endJourney(found_each_other) — fullstendig sletting', () => {
     expect(survivingAudit?.adminId).toBeNull();
     expect(JSON.parse(survivingAudit!.metadata!)).toMatchObject({ outcome: 'found_each_other' });
 
-    // 3) Bildefiler på disken er slettet (S-9 punkt 5 — reell lekkasjevei)
-    let fileGone = false;
-    try {
-      await stat(imgPath);
-    } catch {
-      fileGone = true;
-    }
-    expect(fileGone).toBe(true);
+    // 3) Bilde-OBJEKTA i lagringa er slettet (GDPR art. 17 — reell lekkasjevei)
+    expect(await storage.exists(IMAGE_KEY)).toBe(false);
+    expect(await storage._getBuffer(IMAGE_KEY)).toBeNull();
   }, 30000);
 });

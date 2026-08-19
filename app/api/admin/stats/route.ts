@@ -5,25 +5,17 @@
  * Berre tilgjengeleg for admin (krevar admin_token eller session med admin-role).
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { adminAuthGuard } from '@/lib/auth/adminAuthGuard';
 
 export const dynamic = 'force-dynamic';
 
-/** Sjekk om admin er autentisert via admin_token-cookie eller session */
-function isAdmin(req: NextRequest): boolean {
-  const adminToken = req.cookies.get('admin_token')?.value;
-  const sessionToken = req.cookies.get('authjs.session-token')?.value 
-    ?? req.cookies.get('next-auth.session-token')?.value;
-  
-  return !!(adminToken || sessionToken);
-}
-
-export async function GET(req: NextRequest) {
-  // Autentiseringssjekk
-  if (!isAdmin(req)) {
-    return NextResponse.json({ error: 'Uautorisert' }, { status: 401 });
-  }
+export async function GET() {
+  // B-4 FIX: Bruk kanonisk admin-guard (session + admin-role) — erstatter lokal
+  // isAdmin() som sjekket kun at en cookie eksisterte (privilegie-eskalering).
+  const denied = await adminAuthGuard();
+  if (denied) return denied;
 
   try {
     // Hentar alle statistikk i eitt omgang for å unngå N+1-spørringar

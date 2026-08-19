@@ -131,6 +131,69 @@ export const Hero: FC<HeroProps> = ({
        <div className="mx-auto max-w-6xl px-6 lg:px-8 relative z-20" style={{ paddingTop: `${heroSpacing.paddingTop}px`, paddingBottom: `${heroSpacing.paddingBottom}px` }}>
         <div className="max-w-3xl mx-auto text-center">
 
+          {/* Beta-info — glød uten ramme, over logo */}
+          <div className="relative mb-12 animate-ts-fade-in [animation-delay:80ms]">
+            {/* Myk glow-bakgrunn */}
+            <div
+              className="absolute inset-[-40px] pointer-events-none"
+              style={{
+                background:
+                  'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(212,175,55,0.05) 0%, rgba(80,120,255,0.03) 40%, transparent 70%)',
+                filter: 'blur(40px)',
+              }}
+            />
+            {/* Badge */}
+            <div className="relative flex justify-center mb-5">
+              <span
+                className="inline-flex items-center gap-1.5 rounded-full px-3 py-1"
+                style={{
+                  border: '1px solid rgba(212,175,55,0.25)',
+                  background: 'rgba(212,175,55,0.06)',
+                }}
+              >
+                <span
+                  className="w-[6px] h-[6px] rounded-full bg-[#D4AF37] animate-pulse"
+                />
+                <span
+                  className="text-[10px] font-medium tracking-[0.2em] uppercase"
+                  style={{ color: 'rgba(255,255,255,0.50)' }}
+                >
+                  Beta
+                </span>
+              </span>
+            </div>
+            {/* Hode */}
+            <h2
+              className="relative text-lg sm:text-xl font-medium mb-3"
+              style={{
+                color: 'rgba(255,255,255,0.90)',
+                letterSpacing: '0.1px',
+              }}
+            >
+              ToSom testes nå med ekte brukere.
+            </h2>
+            {/* Brukstext */}
+            <div
+              className="relative max-w-[520px] mx-auto"
+              style={{
+                color: 'rgba(255,255,255,0.62)',
+                fontSize: '14px',
+                lineHeight: '1.7',
+                letterSpacing: '0.15px',
+              }}
+            >
+              <p className="mb-2">
+                Vi finjusterer opplevelsen, forbedrer reisen og optimaliserer plattformen basert på tilbakemeldinger fra testgruppen.
+              </p>
+              <p className="mb-2">
+                Samtidig oppdaterer vi vilkår, personvern og trygghetsrutiner slik at ToSom skal være sikkert for alle.
+              </p>
+              <p>
+                Takk for at du prøver en tidlig versjon og hjelper oss forme noe nytt i Norge.
+              </p>
+            </div>
+          </div>
+
           {/* Animert tekst-logo — flytt opp + Made in Norway */}
           <div className="flex justify-center mb-12">
             <LogoAnimated />

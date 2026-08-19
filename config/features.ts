@@ -18,6 +18,14 @@ export const features = {
   enableRegistration: process.env.REGISTRATION_ENABLED === 'false' ? false : true,
 
   /**
+   * VIPPS_ENABLED — Vipps-innlogging.
+   * Default: SKJULT (B-2/S-2). Callback kaller en fjernet CredentialsProvider,
+   * så Vipps er død kode inntil fullverdig OAuth er implementert.
+   * Sett NEXT_PUBLIC_VIPPS_ENABLED=true når Vipps er på plass.
+   */
+  enableVipps: process.env.NEXT_PUBLIC_VIPPS_ENABLED === 'true',
+
+  /**
    * Om betaling er aktivert (PAYMENTS_ENABLED).
    * Når false: brukere får direkte tilgang uten betaling (gratiskvote).
    * Når true: sendes til /betaling før matching.

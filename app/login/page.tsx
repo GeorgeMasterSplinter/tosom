@@ -131,16 +131,20 @@ export default function LoginPage() {
               margin: 0,
             }}
           >
-            Logg inn med Vipps for å fortsette reisen din
-          </p>
-        </div>
+          {process.env.NEXT_PUBLIC_VIPPS_ENABLED === 'true'
+            ? 'Logg inn med Vipps for å fortsette reisen din'
+            : 'Logg inn med e-post for å fortsette reisen din'}
+        </p>
+      </div>
 
-        {/* Primær CTA — Vipps */}
+      {/* Primær CTA — Vipps (S-2: skjult bak VIPPS_ENABLED) */}
+      {process.env.NEXT_PUBLIC_VIPPS_ENABLED === 'true' && (
         <div className="w-full mb-10">
           <UnifiedButton href="/api/auth/vipps" variant="gold">
             Logg inn med Vipps
           </UnifiedButton>
         </div>
+      )}
 
         {/* Registrer deg */}
         <div className="w-full mb-14">
@@ -149,25 +153,27 @@ export default function LoginPage() {
           </UnifiedButton>
         </div>
 
-        {/* Vipps-informasjon */}
-        <div
-          className="text-center space-y-3 w-full rounded-2xl px-6 py-5"
-          style={{
-            background: 'rgba(212,175,55,0.04)',
-            border: '1px solid rgba(212,175,55,0.15)',
-            borderRadius: '18px',
-          }}
-        >
-          <div className="flex items-center justify-center gap-3">
-            <IconInfo />
-            <span style={{ fontSize: "16px", color: 'rgba(255,255,255,0.6)', fontWeight: 500 }}>
-              Vipps gir trygg innlogging og betaling
-            </span>
+        {/* Vipps-informasjon (S-2: skjult bak VIPPS_ENABLED) */}
+        {process.env.NEXT_PUBLIC_VIPPS_ENABLED === 'true' && (
+          <div
+            className="text-center space-y-3 w-full rounded-2xl px-6 py-5"
+            style={{
+              background: 'rgba(212,175,55,0.04)',
+              border: '1px solid rgba(212,175,55,0.15)',
+              borderRadius: '18px',
+            }}
+          >
+            <div className="flex items-center justify-center gap-3">
+              <IconInfo />
+              <span style={{ fontSize: "16px", color: 'rgba(255,255,255,0.6)', fontWeight: 500 }}>
+                Vipps gir trygg innlogging og betaling
+              </span>
+            </div>
+            <p style={{ fontSize: "15px", color: 'rgba(255,255,255,0.4)', lineHeight: '1.7', margin: 0 }}>
+              Vi bruker Vipps både til innlogging og betaling for å sikre at alle på plattformen er ekte. Så snart betalingsløsning er klar, kan du logge inn og starte reisen din.
+            </p>
           </div>
-          <p style={{ fontSize: "15px", color: 'rgba(255,255,255,0.4)', lineHeight: '1.7', margin: 0 }}>
-            Vi bruker Vipps både til innlogging og betaling for å sikre at alle på plattformen er ekte. Så snart betalingsløsning er klar, kan du logge inn og starte reisen din.
-          </p>
-        </div>
+        )}
 
       </div>
     </main>

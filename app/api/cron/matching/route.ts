@@ -4,7 +4,7 @@
  * GET /api/cron/matching
  * - Én motor: kohortbasert parvis kobling uten samtykke
  * - Les QUEUED-brukere, score alle par, grådig matching
- * - MIN_COHORT_SIZE=2 terskel (v8: ukentlig kadens), 72h defer-ventil
+ * - MIN_COHORT_SIZE=2 terskel (v8: ukentlig kadens) — køalder logges som observasjon
  * - Opprett Match(active), Conversation, JourneyProgress, Notification × 2
  * - Ingen push/e-post/SMS (invariant I-4)
  */
@@ -17,7 +17,7 @@ import { sjekkAlleDealbreakers } from '@/lib/matching/dealbreaker';
 import { unifiedScore } from '@/lib/matching/unifiedScorer';
 import type { UnifiedResult } from '@/lib/matching/unifiedScorer';
 import { toResonanceLevel } from '@/lib/matching/resonanceLevel';
-import { MIN_COHORT_SIZE, MAX_QUEUE_WAIT_HOURS, MIN_SCORE } from '@/config/matching';
+import { MIN_COHORT_SIZE, MIN_SCORE } from '@/config/matching';
 import { isMatchingEnabled } from '@/config/features';
 import { mapRejectReason } from './rejectReason';
 
@@ -150,20 +150,29 @@ export async function GET(req: NextRequest) {
 
       const cohortSize = queued.length;
 
-      // 2. Kohort-terskel: under MIN_COHORT_SIZE og ingen >72h → deferer
+      // 2. Kohort-terskel: ett par krever minst to i kø. Den som ikke får match,
+      //    venter til neste lørdag. (M-2: fjerna døde 72h-stale-ventilen — den kunne
+      //    aldri produsere et par under MIN_COHORT_SIZE=2.)
       const oldestInQueue = queued[0]?.matchQueuedAt ?? null;
-      const hasStaleEntries =
-        oldestInQueue && Date.now() - oldestInQueue.getTime() > MAX_QUEUE_WAIT_HOURS * 60 * 60 * 1000;
 
-      if (cohortSize < MIN_COHORT_SIZE && !hasStaleEntries) {
+      if (cohortSize < MIN_COHORT_SIZE) {
         deferred = true;
+
+        // Køalder som observasjon (M-2/M-9): venter noen forgjeves lenge?
+        const oldestQueueAgeDays = oldestInQueue
+          ? Math.floor((Date.now() - oldestInQueue.getTime()) / (1000 * 60 * 60 * 24))
+          : 0;
+        const staleWarning =
+          oldestQueueAgeDays > 14
+            ? ` (oldest i kø: ${oldestQueueAgeDays} dager)`
+            : '';
 
         await prisma.systemLog.create({
           data: {
-            level: 'INFO',
-            message: `Matching deferert: ${cohortSize} i kø (<${MIN_COHORT_SIZE}, ingen >72h)`,
+            level: oldestQueueAgeDays > 14 ? 'WARN' : 'INFO',
+            message: `Matching deferert: ${cohortSize} i kø (<${MIN_COHORT_SIZE})${staleWarning}`,
             module: 'cron:matching',
-            metadata: { deferred: true, queueSize: cohortSize },
+            metadata: { deferred: true, queueSize: cohortSize, oldestQueueAgeDays },
           },
         });
 
@@ -171,6 +180,7 @@ export async function GET(req: NextRequest) {
           ok: true,
           deferred: true,
           queueSize: cohortSize,
+          oldestQueueAgeDays,
           message: `Kun ${cohortSize} i kø — vent på fler før matching`,
         });
       }

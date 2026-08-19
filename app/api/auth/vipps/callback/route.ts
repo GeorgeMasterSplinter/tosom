@@ -10,7 +10,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { prisma } from '@/lib/prisma';
 import { signIn } from '@/lib/auth/config';
-import { isRegistrationEnabled } from '@/config/features';
+import { isRegistrationEnabled, features } from '@/config/features';
 
 export const dynamic = 'force-dynamic';
 
@@ -48,6 +48,15 @@ function verifyVippsState(stateFromUrl: string | null, cookies: Map<string, stri
 
 export async function GET(request: NextRequest) {
   try {
+    // S-2: Vipps er død kode (signIn('credentials') kaller fjernet provider). Skjult
+    // bak VIPPS_ENABLED til fullverdig OAuth er implementert. Defense-in-depth.
+    if (!features.enableVipps) {
+      const loginUrl = `${process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || 'https://app.tosom.no'}/login?error=${encodeURIComponent('Vipps-innlogging er ikke tilgjengelig enda. Bruk e-post-innlogging i stedet.')}`;
+      const response = NextResponse.redirect(loginUrl);
+      response.cookies.set('vipps_state', '', { maxAge: 0 });
+      return response;
+    }
+
     const url = new URL(request.url);
     const code = url.searchParams.get('code');
     const state = url.searchParams.get('state');

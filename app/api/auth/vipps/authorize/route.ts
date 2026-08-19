@@ -5,11 +5,21 @@
 
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
+import { features } from '@/config/features';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
+    // S-2: Vipps er død kode (callback kaller fjernet CredentialsProvider). Skjult
+    // bak VIPPS_ENABLED til fullverdig OAuth er implementert.
+    if (!features.enableVipps) {
+      return NextResponse.json(
+        { error: 'Vipps-innlogging er ikke tilgjengelig enda' },
+        { status: 503 }
+      );
+    }
+
     const vippsClientId = process.env.VIPPS_CLIENT_ID;
     
     if (!vippsClientId) {

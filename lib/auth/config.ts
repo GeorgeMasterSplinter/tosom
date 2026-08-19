@@ -10,6 +10,7 @@
 
 import NextAuth from "next-auth"
 import EmailProvider from "next-auth/providers/email"
+import nodemailer from "nodemailer"
 import { adapter } from "@/lib/auth/prisma-adapter"
 import { prisma } from "@/lib/prisma"
 import { defaultRole } from "@/lib/auth/roles"
@@ -28,12 +29,38 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         },
       },
       from: process.env.EMAIL_FROM || "ToSom <no-reply@tosom.no>",
-      // Override to disable default Magic Link UI — all handled via custom login page
-      async sendVerificationRequest(params) {
-        const { identifier, url, provider } = params
-        const host = provider.server.host
-        console.log(`[ToSom Magic Link] ${identifier} → https://${host}${url}`)
-        // We redirect to our premium login page — no default Magic Link UI is rendered
+      // B-1 FIX: Send faktisk e-post med magic link (var tidligere kun console.log).
+      // Innholdet følger språkmanualen: rolig, varm, uten press.
+      async sendVerificationRequest({ identifier, url, provider }) {
+        if (!process.env.EMAIL_SERVER_HOST || !process.env.EMAIL_SERVER_USER) {
+          // Ingen SMTP konfigurert — logg lenken slik at dev kan logge inn manuelt.
+          console.log(`[Tosom Magic Link] (ingen SMTP) ${identifier} → ${url}`)
+          return
+        }
+        const message = [
+          "Hei,",
+          "",
+          "Her er lenken din til Tosom. Den er gyldig i 24 timer.",
+          "",
+          url,
+          "",
+          "Hvis du ikke ba om denne lenken, kan du se bort fra e-posten.",
+          "",
+          "Tosom",
+        ].join("\r\n")
+        const server = provider.server as nodemailer.SMTPTransport.Options
+        const transporter = nodemailer.createTransport({
+          host: server.host,
+          port: server.port,
+          secure: server.port === 465,
+          auth: server.auth,
+        })
+        await transporter.sendMail({
+          from: provider.from,
+          to: identifier,
+          subject: "Din innlogging til Tosom",
+          text: message,
+        })
       },
     }),
   ],

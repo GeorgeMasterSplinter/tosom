@@ -1,14 +1,14 @@
 {
   "version": "1.0",
-  "updatedAt": "2026-08-19",
-  "commit": "2c12a0d",
+  "updatedAt": "2026-08-20",
+  "commit": "75dd640",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v1.0.md",
   "health": {
-    "tests": "192/192",
+    "tests": "203/203",
     "typecheck": "0 errors",
     "productionBuild": "verified"
   },
-  "currentPhaseId": "uke2-dag10-postnummer-dekning",
+  "currentPhaseId": "uke2-dag11-tetthetsbasert-radius",
   "blockers": [
     {
       "id": "B-1",
@@ -31,5 +31,8 @@
       "status": "closed"
     }
   ],
-  "nextAction": "S1-S4 + dag 10 ferdig: 100% postnummer-dekning (5146/5146). Neste: dag 11 — tetthetsbasert radius 30-300 / 50-400 (testere for by og land)."
+  "nextAction": "Dag 11 ferdig: tetthetsbasert radius. config/distance-prefs.ts (urban >=8 postnummer/sted 30-500 km, land 50-750 km, fallback rural), dynamisk validering i onboarding-setup.ts, dynamisk slider i Step1Profile.tsx. Dealbreaker-motoren endres ikke. Neste: dag 12."
 }
+
+</parameter>
+</write_to_file>

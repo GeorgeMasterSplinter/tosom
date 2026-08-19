@@ -29,7 +29,7 @@ ToSom gir **én match per 24 timer** basert på dyp profilkompatibilitet — ald
 ## 2. MATCHING-FLOW
 
 ```
-1. BRUKER FULLFØRER ONBOARDING (9 steg)
+1. BRUKER FULLFØRER ONBOARDING (13 steg)
    ↓
 2. PROFIL LAGRER I Profile-tablet med deepProfileData JSON
    ↓

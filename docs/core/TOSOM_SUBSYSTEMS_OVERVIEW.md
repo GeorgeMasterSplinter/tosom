@@ -51,10 +51,10 @@ Brukerautentisering og -identitet for hele plattformen.
 ## 2. ONBOARDING-SYSTEMET
 
 ### Formål
-Bygge en dyp, privat profil fra bruker med 9 steg.  
+Bygge en dyp, privat profil fra bruker med 13 steg (9 kategorier).
 Profilen er kun tilgjengelig for match-motoren — aldri offentlig.
 
-### Struktur (9 steg)
+### Struktur (13 UI-steg over 9 kategorier — se SUPER-MASTERPLAN §3)
 | Steg | Kategori | Beskrivelse |
 |------|----------|-------------|
 | 1 | Identitet | Navn, alder, grunnleggende info |

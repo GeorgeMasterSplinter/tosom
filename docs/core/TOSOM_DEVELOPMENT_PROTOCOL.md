@@ -260,7 +260,7 @@ prisma migrate deploy
 ### E2E-Testing (Playwright)
 Kritiske flows må ha E2E-tester:
 1. **Login/Register** — Magic link, Vipps, phone verification
-2. **Onboarding** — Alle 9 steg
+2. **Onboarding** — Alle 13 steg
 3. **Matching** — Match mottatt, akseptert
 4. **Journey** — Dag 1-5 progression
 5. **Chat** — Send/motta melding
@@ -269,7 +269,7 @@ Kritiske flows må ha E2E-tester:
 ```typescript
 test('bruker kan fullføre onboarding', async ({ page }) => {
   // 1. Log inn
-  // 2. Gå gjennom alle 9 steg
+  // 2. Gå gjennom alle 13 steg
   // 3. Bekrefte at dashboard vises
 });
 ```

@@ -13,6 +13,11 @@ import { DeepProfileStep, JourneyPhase, ResonanceLevel } from '@prisma/client'
 export const dynamic = 'force-dynamic';
 
 export async function POST() {
+  // S-3: Hard gate — dev-ruter avsløres ikke i produksjon (fail-closed, 404).
+  if (process.env.NODE_ENV === 'production') {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+
   try {
     const DEV_USER_ID = 'dev-user'
 

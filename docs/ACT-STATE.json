@@ -1,14 +1,14 @@
 {
   "version": "1.0",
   "updatedAt": "2026-08-20",
-  "commit": "b6112850",
+  "commit": "fc5e40e",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v1.0.md",
   "health": {
     "tests": "211/211 (1 pre-existing DB-state fail: s9-deletion)",
     "typecheck": "0 errors",
     "productionBuild": "verified"
   },
-  "currentPhaseId": "uke2-dag12-distribuert-rate-limiting",
+  "currentPhaseId": "s18-prodbuild-verifisert",
   "blockers": [
     {
       "id": "B-1",
@@ -31,5 +31,5 @@
       "status": "closed"
     }
   ],
-  "nextAction": "Dag 12 ferdig: distribuert rate limiting med Postgres-fallback. Ny RateLimitCounter-tabell (migration 20260819232842), lib/rate-limit-pg.ts (pgCheck + cleanupStale, fail-open), lib/rate-limit.ts bruker Postgres når Upstash Redis utilgjengelig. 8 nye enhetstester grønn, ingen regresjon. Neste: dag 13."
+  "nextAction": "S-18 ferdig: produksjonsbuild verifisert (next build exit=0) etter dag-11/12 endringene. Health: tsc 0, jest 211 (1 pre-existing DB-state fail: s9-deletion), build grønn. Neste: S-9 fullstendig sletting (re-parere s9-deletion mot clean DB) eller S-13 server-side bildesperre."
 }

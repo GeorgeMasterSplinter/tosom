@@ -362,11 +362,14 @@ model TwoFactorSecret {
 
 model AuditLog {
   id        String      @id @default(cuid())
-  adminId   String
+  // S-9: adminId er nullable + SetNull. Ved permanent kontosletting (found_each_other)
+  // MÅ AuditLog overleve i anonymisert form — aktøren nulls ut i stedet for at loggen
+  // forsvinner (eller at slettingen feiler på FK).
+  adminId   String?
   action    AuditAction
   metadata  String?
   createdAt DateTime    @default(now())
-  admin     User        @relation("AdminAuditLogs", fields: [adminId], references: [id])
+  admin     User?       @relation("AdminAuditLogs", fields: [adminId], references: [id], onDelete: SetNull)
 
   @@index([adminId])
   @@index([action])

@@ -25,7 +25,7 @@ export async function getAuditLogSummary(sinceHours = 24): Promise<{
   totalActions: number
   byAction: Record<string, number>
   topAdmins: Array<{ adminId: string; count: number }>
-  recentActions: Array<{ action: string; adminId: string; createdAt: Date }>
+  recentActions: Array<{ action: string; adminId: string | null; createdAt: Date }>
 }> {
   const since = new Date(Date.now() - sinceHours * 60 * 60 * 1000)
 
@@ -44,7 +44,10 @@ export async function getAuditLogSummary(sinceHours = 24): Promise<{
   const adminCounts: Record<string, number> = {}
   for (const log of logs) {
     byAction[log.action] = (byAction[log.action] ?? 0) + 1
-    adminCounts[log.adminId] = (adminCounts[log.adminId] ?? 0) + 1
+    // S-9: adminId kan vere null (anonymisert, brukeren er slettet) — tel ikkje nullen
+    if (log.adminId) {
+      adminCounts[log.adminId] = (adminCounts[log.adminId] ?? 0) + 1
+    }
   }
 
   const topAdmins = Object.entries(adminCounts)

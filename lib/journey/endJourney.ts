@@ -20,6 +20,8 @@
  */
 
 import { prisma } from '@/lib/prisma';
+import { rm, stat as fsStat } from 'fs/promises';
+import path from 'path';
 
 /** Normalize pair — consistent ordering for MatchHistory unique constraint */
 function normalizePair(aId: string, bId: string): { userAId: string; userBId: string } {
@@ -223,7 +225,8 @@ export async function endJourney(
         await tx.account.deleteMany({ where: { userId: user.id } });
         await tx.order.deleteMany({ where: { userId: user.id } });
         await tx.twoFactorSecret.deleteMany({ where: { userId: user.id } });
-        // Profile slettes via cascade fra User
+        // S-9: Profile har INGEN cascade fra User (Profile_userId_fkey = Restrict)
+        await tx.profile.deleteMany({ where: { userId: user.id } });
         // User slettes til slutt
         await tx.user.delete({ where: { id: user.id } });
         deleted.User = (deleted.User ?? 0) + 1;
@@ -245,6 +248,19 @@ export async function endJourney(
     maxWait: 10_000,
     timeout: 30_000,
   });
+
+  // S-9: Slett også opplaaste BILDE-FILer fra disken. DB-radene (Message type=image)
+  // er allerede borte, men filene i public/uploads/images/{conversationId}/ er ellers
+  // en reell lekkasjevei (S-9 punkt 5). Best-effort: feil her skal ikke blokkere.
+  try {
+    const uploadDir = path.resolve(process.cwd(), 'public', 'uploads', 'images', conversationId);
+    const dirStat = await fsStat(uploadDir);
+    if (dirStat && dirStat.isDirectory()) {
+      await rm(uploadDir, { recursive: true, force: true });
+    }
+  } catch (imgErr) {
+    console.warn('[endJourney] Kunne ikke slette opplaaste bildefiler:', imgErr);
+  }
 
   // Create SystemLog entry for the event
   await prisma.systemLog.create({

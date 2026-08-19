@@ -225,12 +225,12 @@ export default function AvslutningSide() {
     checkJourneyComplete();
   }, [router]);
 
-  // B4.4: PDF-eksport — åpner print-dialog for samtalen før sletting
+  // B4.4: PDF-eksport — åpner samtalen som print-vennlig PDF før sletting (B-3)
   const [showPdfOffer, setShowPdfOffer] = useState(false);
 
   const handleExportPdf = () => {
-    // Åpne print-dialog — brukeren kan velge "Lagre som PDF"
-    window.print();
+    // B-3: Åpne den faktiske samtalen som print-HTML (Lagre som PDF) i nytt vindu
+    window.open('/api/journey/export-pdf', '_blank', 'noopener,width=800,height=1000');
   };
 
   // B10: Begge valg kaller endJourney() med outcome 'completed'

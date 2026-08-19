@@ -39,6 +39,9 @@ beforeEach(async () => {
     await global.prisma!.matchHistory.deleteMany({});
     await global.prisma!.auditLog.deleteMany({});
     await global.prisma!.systemLog.deleteMany({});
+    // S-9: Report og JourneyStat må også ryddas mellom kjør (Report overlever sletting)
+    await global.prisma!.report.deleteMany({});
+    await global.prisma!.journeyStat.deleteMany({});
     await global.prisma!.match.deleteMany({});
     await global.prisma!.profile.deleteMany({});
     await global.prisma!.user.deleteMany({});

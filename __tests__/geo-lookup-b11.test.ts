@@ -41,12 +41,11 @@ describe('lookupPostalCode (B1.1)', () => {
     expect(tromso!.lon).toBeCloseTo(18.96, 1); // ~18,96
   });
 
-  it('datasettet er tilstrekkelig komplett (>4000 postnummer, de fleste med koordinat)', () => {
+  it('datasettet har 100 % koordinat-dekning (dag 10: 0 uten koordinater)', () => {
     const total = postalCodeCount();
     const withCoords = postalCodeCountWithCoords();
     expect(total).toBeGreaterThan(4000); // gate-kriterium: > 4000 keys
-    expect(withCoords).toBeGreaterThan(3000); // de fleste (gateadresse-koder) har koordinat
-    expect(withCoords).toBeLessThanOrEqual(total);
+    expect(withCoords).toBe(total); // 100 % — ingen postnummer uten sentrumspunkt
   });
 
   it('koordinater er innenfor Norges geografiske område', () => {

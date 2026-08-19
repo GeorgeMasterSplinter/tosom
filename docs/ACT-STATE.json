@@ -1,14 +1,14 @@
 {
   "version": "1.0",
   "updatedAt": "2026-08-19",
-  "commit": "de05a7e",
+  "commit": "c83b375",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v1.0.md",
   "health": {
     "tests": "192/192",
     "typecheck": "0 errors",
     "productionBuild": "verified"
   },
-  "currentPhaseId": "uke2-s3-fortsettelses-cron",
+  "currentPhaseId": "uke2-s4-queue-limit",
   "blockers": [
     {
       "id": "B-1",
@@ -31,5 +31,5 @@
       "status": "closed"
     }
   ],
-  "nextAction": "S1+S3 klar: matching-cron batcher 50 par/transaksjon + fortsettelses-runder 15/30 min (vercel.json) tar resten av køen over opptil 3 runder. Advisory lock + QUEUED-spørring gjør re-kjøring trygg (ta kun gjenståenden, FIFO). Neste: S4 (MATCHING_QUEUE_LIMIT konfigurerbar, standard 5 000)."
+  "nextAction": "S1+S3+S4 klar: matching-cron batcher 50 par/transaksjon + fortsettelses-runder 15/30 min + MATCHING_QUEUE_LIMIT konfigurerbar (standard 5 000). Skaleringstiltakene S1-S4 er ferdige. Neste: postnummer-dekning til 100 % (dag 10) eller tetthetsbasert radius (dag 11)."
 }

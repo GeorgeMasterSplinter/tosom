@@ -712,3 +712,14 @@ model JourneyStat {
   @@index([endedAt])
   @@index([outcome])
 }
+
+// Dag 12 — Delt rate limiting via Postgres.
+// Enkel teller per nøkkel med tidsvindu. Atomisk UPSERT for serverless-sikkerhet.
+model RateLimitCounter {
+  key      String   @id
+  count    Int      @default(0)
+  resetAt  DateTime
+  createdAt DateTime @default(now())
+
+  @@index([resetAt])
+}

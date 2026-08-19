@@ -7,6 +7,7 @@
  */
 
 import { Redis } from '@upstash/redis'
+import { pgCheck } from '@/lib/rate-limit-pg'
 
 interface RateLimitConfig {
   requests: number
@@ -43,13 +44,6 @@ function getRedisClient(): Redis | null {
   }
 }
 
-// ── In-memory fallback store ─────────────────────────────────────────
-interface InMemoryEntry {
-  count: number
-  resetAt: number
-}
-const memStore = new Map<string, InMemoryEntry>()
-
 // ── Core check logic ─────────────────────────────────────────────────
 async function redisCheck(key: string, max: number, windowSec: number): Promise<{ ok: boolean; remaining: number }> {
   const redis = getRedisClient()!
@@ -65,29 +59,6 @@ async function redisCheck(key: string, max: number, windowSec: number): Promise<
     // fail-open
     return { ok: true, remaining: max }
   }
-}
-
-function memCheck(key: string, max: number, windowMs: number): { ok: boolean; remaining: number } {
-  const now = Date.now()
-  const entry = memStore.get(key)
-
-  if (!entry || now > entry.resetAt) {
-    memStore.set(key, { count: 1, resetAt: now + windowMs })
-    // Cleanup
-    if (memStore.size > 10000) {
-      for (const [k, v] of memStore.entries()) {
-        if (now > v.resetAt) memStore.delete(k)
-      }
-    }
-    return { ok: true, remaining: max - 1 }
-  }
-
-  if (entry.count >= max) {
-    return { ok: false, remaining: 0 }
-  }
-
-  entry.count++
-  return { ok: true, remaining: max - entry.count }
 }
 
 // ── Public API ───────────────────────────────────────────────────────
@@ -112,15 +83,14 @@ export async function checkAuthRateLimit(
     return { success: true, remaining: result.remaining, isDistributed: true }
   }
 
-  // Fallback: in-memory
-  console.warn(`[rate-limit] WARNING: Redis not configured. Using in-memory fallback for ${endpoint}. No serverless protection.`)
-  const memKey = `mem:${config.prefix}:${identifier}`
-  const result = memCheck(memKey, config.requests, config.windowSeconds * 1000)
+  // Fallback: Postgres (delt mellom instanser)
+  const pgKey = `tosom:${config.prefix}:${identifier}`
+  const result = await pgCheck(pgKey, config.requests, config.windowSeconds)
 
   if (!result.ok) {
-    return { success: false, retryAfter: config.windowSeconds, isDistributed: false }
+    return { success: false, retryAfter: config.windowSeconds, isDistributed: true }
   }
-  return { success: true, remaining: result.remaining, isDistributed: false }
+  return { success: true, remaining: result.remaining, isDistributed: true }
 }
 
 export async function checkCustomRateLimit(
@@ -137,9 +107,8 @@ export async function checkCustomRateLimit(
     return { success: true }
   }
 
-  console.warn('[rate-limit] Redis not configured. In-memory fallback for custom limit.')
-  const memKey = `mem:custom:${key}`
-  const result = memCheck(memKey, requests, windowSeconds * 1000)
+  // Fallback: Postgres
+  const result = await pgCheck(fullKey, requests, windowSeconds)
   if (!result.ok) return { success: false, retryAfter: windowSeconds }
   return { success: true }
 }

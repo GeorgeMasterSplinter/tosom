@@ -16,6 +16,7 @@ import { MessageBubble, MessageBubbleStyles } from "@/app/chat/components/Messag
 import { ChatHeader } from "@/app/chat/components/ChatHeader";
 import { BliKjentPanel } from "@/app/chat/components/BliKjentPanel";
 import { OppgaverPanel } from "@/app/chat/components/OppgaverPanel";
+import { MoodsPanel } from "@/app/chat/components/MoodsPanel";
 import { useChatScroll } from "@/components/chat/useChatScroll";
 import { usePresence } from "@/hooks/usePresence";
 
@@ -102,44 +103,6 @@ function TypingIndicator() {
 }
 
 /* ═══════════════════════════════════════
-    MOOD SELECTOR — Små tags under header
-    ═══════════════════════════════════════ */
-
-function MoodSelector({ 
-  mood, 
-  setMood 
-}: { 
-  mood: string; 
-  setMood: (m: string) => void;
-}) {
-  return (
-    <div className="flex w-full gap-0">
-      {moodOrder.map((key) => {
-        const isActive = mood === key;
-        const palette = moodPalettes[key];
-        return (
-          <button
-            key={key}
-            onClick={() => setMood(key)}
-            className="flex-1 py-4 px-2 rounded-none font-semibold transition-all duration-300 flex flex-col items-center justify-center gap-1.5 border-r last:border-r-0"
-            style={{
-              background: isActive
-                ? `linear-gradient(135deg, ${G.gold}, ${G.goldLight})`
-                : "rgba(255,255,255,0.04)",
-              color: isActive ? G.bgPrimary : G.textPrimary,
-              borderRight: `1px solid ${G.glassBorder}`,
-            }}
-          >
-            <span className="text-xl leading-none">{palette.emoji}</span>
-            <span className="text-xs font-semibold tracking-wide">{palette.name}</span>
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════
     THEME TOKENS — PREMIUM GLASS V2
     ═══════════════════════════════════════ */
 
@@ -159,76 +122,6 @@ const G = {
   textMuted: "rgba(255,255,255,0.35)",
   dangerRed: "#FF4D4D",
 };
-
-/* ═══════════════════════════════════════
-    MOOD GRADIENTS — Bakgrunn for chat-rommet
-    ═══════════════════════════════════════ */
-
-const moodGradients: Record<string, string> = {
-  calm: "linear-gradient(135deg, rgba(10,26,58,0.5), rgba(11,21,32,0.7))",
-  warm: "linear-gradient(135deg, rgba(212,175,55,0.08), rgba(15,26,38,0.6))",
-  deep: "linear-gradient(135deg, rgba(49,10,101,0.35), rgba(11,21,32,0.7))",
-  gentle: "linear-gradient(135deg, rgba(16,185,129,0.08), rgba(11,21,32,0.6))",
-  joyful: "linear-gradient(135deg, rgba(245,158,11,0.1), rgba(11,21,32,0.6))",
-};
-
-/* ═══════════════════════════════════════
-    MOOD — Fargepalett for bobler og UI
-    ═══════════════════════════════════════ */
-
-interface MoodPalette {
-  name: string;
-  emoji: string;
-  bubbleMeStart: string;
-  bubbleMeEnd: string;
-  bubblePartnerBg: string;
-  inputGlow: string;
-}
-
-const moodPalettes: Record<string, MoodPalette> = {
-  calm: {
-    name: "Calm",
-    emoji: "🌊",
-    bubbleMeStart: "rgba(30,58,138,0.2)",
-    bubbleMeEnd: "rgba(59,130,246,0.08)",
-    bubblePartnerBg: "rgba(10,26,58,0.3)",
-    inputGlow: "rgba(59,130,246,0.25)",
-  },
-  warm: {
-    name: "Warm",
-    emoji: "☀️",
-    bubbleMeStart: "rgba(212,175,55,0.18)",
-    bubbleMeEnd: "rgba(212,175,55,0.06)",
-    bubblePartnerBg: "rgba(255,255,255,0.04)",
-    inputGlow: "rgba(212,175,55,0.25)",
-  },
-  deep: {
-    name: "Deep",
-    emoji: "🔮",
-    bubbleMeStart: "rgba(88,28,135,0.18)",
-    bubbleMeEnd: "rgba(88,28,135,0.06)",
-    bubblePartnerBg: "rgba(49,10,101,0.15)",
-    inputGlow: "rgba(139,92,246,0.25)",
-  },
-  gentle: {
-    name: "Gentle",
-    emoji: "🌿",
-    bubbleMeStart: "rgba(16,185,129,0.15)",
-    bubbleMeEnd: "rgba(16,185,129,0.05)",
-    bubblePartnerBg: "rgba(16,185,129,0.06)",
-    inputGlow: "rgba(16,185,129,0.25)",
-  },
-  joyful: {
-    name: "Joyful",
-    emoji: "✨",
-    bubbleMeStart: "rgba(245,158,11,0.15)",
-    bubbleMeEnd: "rgba(245,158,11,0.05)",
-    bubblePartnerBg: "rgba(245,158,11,0.06)",
-    inputGlow: "rgba(245,158,11,0.25)",
-  },
-};
-
-const moodOrder = ["calm", "warm", "deep", "gentle", "joyful"] as const;
 
 /* ═══════════════════════════════════════
    MESSAGE LIST — PREMIUM MED ANIMASJONAR
@@ -327,7 +220,7 @@ function ChatInput({
   senderId?: string;
   partnerId?: string | null;
 }) {
-  const { sendMessage } = useChat();
+  const { sendMessage, moodTheme } = useChat();
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -447,8 +340,9 @@ function ChatInput({
     <div 
       className="px-4 py-3.5 sm:px-6"
       style={{ 
-        borderTop: `1px solid ${G.glassBorderGold}`,
+        borderTop: `1px solid ${moodTheme.accentMuted}`,
         background: `linear-gradient(0deg, rgba(11,21,32,0.8) 0%, rgba(11,21,32,0.4) 100%)`,
+        transition: 'border-color 1.2s ease-in-out',
       }}
     >
       {/* Premium glass-container for input */}
@@ -456,12 +350,13 @@ function ChatInput({
         className="flex items-end gap-2.5 rounded-2xl p-3 transition-all duration-300"
         style={{
           background: isFocused 
-            ? `linear-gradient(135deg, rgba(212,175,55,0.06), rgba(212,175,55,0.02))`
+            ? `linear-gradient(135deg, ${moodTheme.inputFocusBg}, rgba(255,255,255,0.01))`
             : `linear-gradient(135deg, ${G.glassBg}, rgba(255,255,255,0.01))`,
-          border: `1px solid ${isFocused ? G.goldMuted : G.glassBorder}`,
+          border: `1px solid ${isFocused ? moodTheme.inputBorder : G.glassBorder}`,
           boxShadow: isFocused 
-            ? `0 0 20px ${G.goldSoft}, 0 4px 16px rgba(0,0,0,0.1)`
+            ? `0 0 20px ${moodTheme.inputGlow}, 0 4px 16px rgba(0,0,0,0.1)`
             : '0 2px 8px rgba(0,0,0,0.05)',
+          transition: 'border-color 0.3s ease, box-shadow 0.3s ease, background 0.5s ease',
         }}
       >
         {/* Bilde-ikon — Premium glass-knapp (låst før dag 15) */}
@@ -477,10 +372,11 @@ function ChatInput({
           disabled={!imageShareAllowed || uploading}
           className={`flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 relative ${imageShareAllowed ? 'hover:brightness-125 active:scale-90' : 'cursor-not-allowed'}`}
           style={{
-            color: G.gold,
+            color: moodTheme.accent,
             background: G.glassBg,
             border: `1px solid ${imageShareAllowed ? G.glassBorder : 'rgba(255,255,255,0.04)'}`,
             opacity: imageShareAllowed ? 1 : 0.5,
+            transition: 'color 1.2s ease-in-out',
           }}
           title={uploading ? "Laster opp..." : imageShareAllowed ? "Send bilde" : "🔒 Bildedeling låses opp dag 15"}
         >
@@ -511,7 +407,8 @@ function ChatInput({
           className="flex-1 resize-none bg-transparent outline-none text-sm leading-relaxed py-1.5"
           style={{ 
             color: G.textPrimary,
-            caretColor: G.gold,
+            caretColor: moodTheme.accent,
+            transition: 'caret-color 1.2s ease-in-out',
           }}
         />
 
@@ -522,11 +419,12 @@ function ChatInput({
           className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-90 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
           style={{
             background: text.trim() 
-              ? `linear-gradient(135deg, ${G.gold}, ${G.goldLight})`
+              ? `linear-gradient(135deg, ${moodTheme.sendBtnStart}, ${moodTheme.sendBtnEnd})`
               : G.glassBg,
             boxShadow: text.trim() 
-              ? `0 4px 16px ${G.goldMuted}`
+              ? `0 4px 16px ${moodTheme.accentMuted}`
               : 'none',
+            transition: 'background 0.5s ease, box-shadow 0.5s ease',
           }}
         >
           {sending ? (
@@ -573,46 +471,15 @@ interface ChatContainerProps {
   imageShareAllowed?: boolean;
 }
 
-// B2.1 — Moodvalg huskes i localStorage per samtale-ID
-const MOOD_STORAGE_PREFIX = "tosom:mood:";
-const VALID_MOODS = new Set(["calm", "warm", "deep", "gentle", "joyful"]);
-
-function loadMoodFromStorage(conversationId: string | null): string {
-  if (!conversationId || typeof window === "undefined") return "warm";
-  try {
-    const stored = localStorage.getItem(`${MOOD_STORAGE_PREFIX}${conversationId}`);
-    if (stored && VALID_MOODS.has(stored)) return stored;
-  } catch { /* localStorage utilgjengelig */ }
-  return "warm";
-}
-
-function saveMoodToStorage(conversationId: string | null, mood: string): void {
-  if (!conversationId || typeof window === "undefined") return;
-  try {
-    localStorage.setItem(`${MOOD_STORAGE_PREFIX}${conversationId}`, mood);
-  } catch { /* localStorage utilgjengelig */ }
-}
-
 export function ChatContainer({ conversationId, partner, journeyDay = 1, imageShareAllowed = false }: ChatContainerProps) {
   const [isBliKjentOpen, setIsBliKjentOpen] = useState(false);
   const [isOppgaverOpen, setIsOppgaverOpen] = useState(false);
-  // B2.1: Moodvalg huskes per samtale (localStorage)
-  const [mood, setMoodState] = useState<string>("warm");
+  const [isMoodsOpen, setIsMoodsOpen] = useState(false);
 
-  // Les mood fra localStorage ved montering / samtale-endring
-  useEffect(() => {
-    setMoodState(loadMoodFromStorage(conversationId));
-  }, [conversationId]);
-
-  // Wrapper som lagrer ved bytte
-  const setMood = (newMood: string) => {
-    setMoodState(newMood);
-    saveMoodToStorage(conversationId, newMood);
-  };
-
-  // Hent sessionUserId fra ChatContext for bildeopplasting
+  // Hent sessionUserId + mood fra ChatContext
   const ctx = useChat();
   const sessionUserId = ctx.sessionUserId;
+  const moodTheme = ctx.moodTheme;
 
   // Partner ID for presence tracking
   const partnerId = partner?.id || null;
@@ -622,25 +489,24 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
       {/* Premium CSS-animasjonar (warm-glow, mood-transition) */}
       <MessageBubbleStyles />
 
-      <div className="w-full h-full flex flex-col overflow-hidden" style={{ background: G.bgChat }}>
-        {/* Subtil spotlight i bakgrunnen */}
-        <div className="fixed inset-0 pointer-events-none" style={{
-          background: 'radial-gradient(circle at 50% 30%, rgba(212,175,55,0.04) 0%, transparent 60%)',
-        }} />
-
-        {/* MOOD SELECTOR — helt øverst i kanten */}
-        <div className="border-b flex-shrink-0" style={{ borderColor: G.glassBorder }}>
-          <MoodSelector mood={mood} setMood={setMood} />
-        </div>
-
-        {/* HEADER — navn + alder + avstand + dag */}
+      <div
+        className="w-full h-full flex flex-col overflow-hidden relative"
+        style={{
+          background: moodTheme.containerBg,
+          transition: 'background 1.2s ease-in-out',
+        }}
+      >
+        {/* HEADER — navn + alder + avstand + dag + 3 panel-knappar */}
         <ChatHeader
           partner={partner}
           journeyDay={journeyDay}
-          onOpenBliKjent={() => { setIsBliKjentOpen(prev => !prev); setIsOppgaverOpen(false); }}
+          onOpenBliKjent={() => { setIsBliKjentOpen(prev => !prev); setIsOppgaverOpen(false); setIsMoodsOpen(false); }}
           isBliKjentOpen={isBliKjentOpen}
-          onOpenOppgaver={() => { setIsOppgaverOpen(prev => !prev); setIsBliKjentOpen(false); }}
+          onOpenOppgaver={() => { setIsOppgaverOpen(prev => !prev); setIsBliKjentOpen(false); setIsMoodsOpen(false); }}
           isOppgaverOpen={isOppgaverOpen}
+          onOpenMoods={() => { setIsMoodsOpen(prev => !prev); setIsBliKjentOpen(false); setIsOppgaverOpen(false); }}
+          isMoodsOpen={isMoodsOpen}
+          moodTheme={moodTheme}
         />
 
         {/* BLI KJENT PANEL — slide-down frå header */}
@@ -661,15 +527,21 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
           </div>
         )}
 
+        {/* MOODS PANEL — slide-down frå header */}
+        {isMoodsOpen && (
+          <div className="relative z-10">
+            <MoodsPanel
+              onClose={() => setIsMoodsOpen(false)}
+            />
+          </div>
+        )}
+
         {/* MESSAGE LIST — fyller mellom header og input */}
         <div
           className="flex-1 overflow-y-auto"
           style={{
             scrollbarWidth: 'thin',
-            scrollbarColor: `${G.goldMuted} transparent`,
-            backgroundImage: moodGradients[mood] || moodGradients.warm,
-            backgroundSize: 'cover',
-            transition: 'background-image 1.5s ease-in-out',
+            scrollbarColor: `${moodTheme.accentMuted} transparent`,
           }}
         >
           <MessageList partner={partner} journeyDay={journeyDay} />

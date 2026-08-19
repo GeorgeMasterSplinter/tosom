@@ -104,7 +104,7 @@ const sections: { icon: React.ReactNode; title: string; content: string; note?: 
   {
     icon: <IconEnd />,
     title: 'Hvis noen bryter reglene',
-    content: 'Opplever du noe ubehagelig, kan du rapportere det direkte i samtalen. Vi leser alle rapporter. Ved brudd gir vi advarsel eller stenger kontoen, avhengig av alvor. Ved grove brudd stenges kontoen umiddelbart og uten refusjon. Du kan også blokkere og avslutte reisen når som helst.',
+    content: 'Opplever du noe ubehagelig, kan du rapportere det i samtalen eller under Innstillinger → Sikkerhet. Vi leser alle rapporter. Ved brudd gir vi advarsel eller stenger kontoen, avhengig av alvor. Ved grove brudd stenges kontoen umiddelbart og uten refusjon. Du kan også avslutte reisen eller blokkere og avslutte reisen når som helst.',
   },
   {
     icon: <IconEnd />,

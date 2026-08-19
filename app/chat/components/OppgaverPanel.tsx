@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /**
  * ToSom — OppgaverPanel (Premium Nordic Gold 2026)
- * Hardkodede oppgaver — 6 kategorier × 15 = 90 oppgaver.
+ * Hardkodede oppgaver — 9 kategorier × 15 = 135 oppgaver.
  * Samme for alle brukere. Tekst-basert, sendes som chat-melding.
  */
 
@@ -41,7 +41,7 @@ interface OppgaverPanelProps {
 }
 
 export function OppgaverPanel({ onClose }: OppgaverPanelProps) {
-  const { sendMessage } = useChat();
+  const { sendMessage, moodTheme } = useChat();
   const [selectedCategory, setSelectedCategory] = useState<TaskCategory | null>(null);
   const [selectedTask, setSelectedTask] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
@@ -83,10 +83,11 @@ export function OppgaverPanel({ onClose }: OppgaverPanelProps) {
         style={{
           maxHeight: panelOpen ? '480px' : '0px',
           opacity: panelOpen ? 1 : 0,
-          background: `linear-gradient(180deg, ${G.glassBgDark} 0%, rgba(7,13,20,0.95) 100%)`,
-          borderTop: `1px solid ${G.glassBorderGold}`,
-          borderBottom: `1px solid ${G.glassBorderGold}`,
-          boxShadow: `0 8px 32px rgba(0,0,0,0.3), 0 0 16px ${G.goldSoft}`,
+          background: `linear-gradient(180deg, ${moodTheme.accentSoft} 0%, rgba(7,13,20,0.97) 100%)`,
+          borderTop: `1px solid ${moodTheme.accentMuted}`,
+          borderBottom: `1px solid ${moodTheme.accentMuted}`,
+          boxShadow: `0 8px 32px rgba(0,0,0,0.3), 0 0 16px ${moodTheme.accentSoft}`,
+          transition: 'background 1.2s ease, border-color 1.2s ease, box-shadow 1.2s ease',
         }}
       >
         {/* ═══ HEADER ═══ */}
@@ -132,7 +133,7 @@ export function OppgaverPanel({ onClose }: OppgaverPanelProps) {
 
         {/* ═══ BODY — Scrollbart ═══ */}
         <div className="overflow-y-auto max-h-[400px] p-5">
-          {/* ═══ KATEGORIER — 6 i grid (2×3 mobile, 3×2 desktop) ═══ */}
+          {/* ═══ KATEGORIER — 9 i grid (2×3 mobile, 3×3 desktop) ═══ */}
           {!selectedCategory && (
             <FadeIn variant="fadeInUp" staggerChildren={0.05}>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -175,14 +176,14 @@ export function OppgaverPanel({ onClose }: OppgaverPanelProps) {
                   className={`w-full text-left p-4 rounded-xl transition-all duration-200 ${selectedTask === t ? 'scale-[1.01]' : 'hover:scale-[1.005]'}`}
                   style={{
                     background: selectedTask === t
-                      ? `linear-gradient(135deg, ${G.goldSoft}, rgba(212,175,55,0.12))`
+                      ? `linear-gradient(135deg, ${moodTheme.accentSoft}, ${moodTheme.accentMuted})`
                       : `linear-gradient(135deg, ${G.glassBg}, ${G.glassBgHover})`,
-                    border: `1px solid ${selectedTask === t ? G.goldMuted : G.glassBorder}`,
+                    border: `1px solid ${selectedTask === t ? moodTheme.accentMuted : G.glassBorder}`,
                   }}
                 >
                   <p
                     className="text-sm leading-relaxed"
-                    style={{ color: selectedTask === t ? G.textPrimary : 'rgba(255,255,255,0.75)' }}
+                    style={{ color: selectedTask === t ? moodTheme.accentLight : 'rgba(255,255,255,0.75)' }}
                   >
                     {t}
                   </p>
@@ -197,14 +198,15 @@ export function OppgaverPanel({ onClose }: OppgaverPanelProps) {
               <div
                 className="mt-5 p-5 rounded-2xl"
                 style={{
-                  background: `linear-gradient(135deg, ${G.goldSoft}, rgba(212,175,55,0.12))`,
-                  border: `1px solid ${G.goldMuted}`,
-                  boxShadow: `0 4px 20px rgba(212,175,55,0.1)`,
+                  background: `linear-gradient(135deg, ${moodTheme.accentSoft}, ${moodTheme.accentMuted})`,
+                  border: `1px solid ${moodTheme.accentMuted}`,
+                  boxShadow: `0 4px 20px ${moodTheme.accentSoft}`,
+                  transition: 'background 1.2s ease, border-color 1.2s ease, box-shadow 1.2s ease',
                 }}
               >
                 <div className="flex items-center gap-2 mb-3">
-                  <div className="w-2 h-2 rounded-full" style={{ background: G.gold, boxShadow: `0 0 8px ${G.goldMuted}` }} />
-                  <p className="text-xs font-semibold tracking-wide uppercase" style={{ color: G.goldLight }}>Send til partner?</p>
+                  <div className="w-2 h-2 rounded-full" style={{ background: moodTheme.accent, boxShadow: `0 0 8px ${moodTheme.accentMuted}` }} />
+                  <p className="text-xs font-semibold tracking-wide uppercase" style={{ color: moodTheme.accentLight }}>Send til partner?</p>
                 </div>
                 <p className="text-base leading-relaxed mb-4 font-medium italic" style={{ color: G.textPrimary }}>"{selectedTask}"</p>
                 <div className="flex gap-2.5">
@@ -212,7 +214,7 @@ export function OppgaverPanel({ onClose }: OppgaverPanelProps) {
                     onClick={handleSendTask}
                     disabled={sending}
                     className="flex-1 px-4 py-3 rounded-xl text-xs font-bold transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-50"
-                    style={{ background: `linear-gradient(135deg, ${G.gold}, ${G.goldLight})`, color: '#0B1520' }}
+                    style={{ background: `linear-gradient(135deg, ${moodTheme.accent}, ${moodTheme.accentLight})`, color: '#0B1520', transition: 'background 1.2s ease' }}
                   >
                     {sending ? 'Sender...' : '🎲 Send oppgave'}
                   </button>

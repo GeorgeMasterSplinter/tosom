@@ -568,6 +568,7 @@ function VarslerSection({
 function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchStatus; journeyStatus: JourneyStatus }) {
   const [showReport, setShowReport] = useState(false);
   const [showBlock, setShowBlock] = useState(false);
+  const [showEndConfirm, setShowEndConfirm] = useState(false);
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
   const [sending, setSending] = useState(false);
@@ -576,10 +577,15 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
   const hasActiveMatch = matchStatus.hasActiveMatch;
 
   const severities = [
-    { value: "LOW", label: "Lav", desc: "Ubehagelig eller uønsket atferd", color: "#D4AF37", bg: "rgba(212,175,55,0.12)", border: "rgba(212,175,55,0.4)" },
-    { value: "MEDIUM", label: "Middel", desc: "Gjentatt eller bevisst uønsket atferd", color: "#E8875B", bg: "rgba(232,135,91,0.12)", border: "rgba(232,135,91,0.4)" },
-    { value: "HIGH", label: "Høy", desc: "Trusler, voldelige uttrykk eller grov atferd", color: "#FF4D4D", bg: "rgba(255,77,77,0.12)", border: "rgba(255,77,77,0.4)" },
+    { value: "LOW", label: "Lav", desc: "Ubehagelig eller uønsket atferd", color: "#D4AF37", bg: "rgba(212,175,55,0.12)", border: "rgba(212,175,55,0.4)", apiCategory: "INAPPROPRIATE" },
+    { value: "MEDIUM", label: "Middel", desc: "Gjentatt eller bevisst uønsket atferd", color: "#E8875B", bg: "rgba(232,135,91,0.12)", border: "rgba(232,135,91,0.4)", apiCategory: "HARASSMENT" },
+    { value: "HIGH", label: "Høy", desc: "Trusler, voldelige uttrykk eller grov atferd", color: "#FF4D4D", bg: "rgba(255,77,77,0.12)", border: "rgba(255,77,77,0.4)", apiCategory: "HARASSMENT" },
   ];
+
+  const severityToApi = (value: string): string => {
+    const s = severities.find((x) => x.value === value);
+    return s ? (s as any).apiCategory : "OTHER";
+  };
 
   const handleSubmit = async () => {
     if (!category || !matchStatus.matchId) return;
@@ -601,7 +607,7 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
       const res = await fetch("/api/report", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reportedId: partnerId, matchId: matchStatus.matchId, category, description }),
+        body: JSON.stringify({ reportedId: partnerId, matchId: matchStatus.matchId, category: severityToApi(category), description }),
       });
 
       if (res.ok) {
@@ -631,6 +637,22 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
     } catch {
       console.error("Feil ved blokkering");
       setSending(false);
+    }
+  };
+
+  const handleEndJourney = async () => {
+    setSending(true);
+    try {
+      await fetch("/api/journey/exit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reason: "early_exit" }),
+      });
+      window.location.href = "/dashboard?ended=early";
+    } catch {
+      console.error("Feil ved avslutt reise");
+      setSending(false);
+      setShowEndConfirm(false);
     }
   };
 
@@ -672,10 +694,49 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
         >
           Rapporter
         </button>
-        {hasActiveMatch && (
-          <DangerButton onClick={() => setShowBlock(true)}>Blokker og avslutt</DangerButton>
-        )}
+        <OutlineGoldButton onClick={() => setShowEndConfirm(true)} disabled={!hasActiveMatch}>Avslutt reisen</OutlineGoldButton>
+        <DangerButton onClick={() => setShowBlock(true)} disabled={!hasActiveMatch}>Blokkere og avslutt</DangerButton>
       </div>
+
+      {/* End Journey Confirm Modal */}
+      {showEndConfirm && (
+        <div
+          className="fixed inset-0 z-[999] flex items-center justify-center p-6"
+          style={{ background: "rgba(0,0,0,0.85)", backdropFilter: "blur(12px)" }}
+        >
+          <div
+            className="w-full max-w-sm rounded-3xl p-8 text-center relative"
+            style={{ background: "rgba(11,21,32,0.97)", border: `1px solid ${THEME.goldMuted}` }}
+          >
+            <button
+              onClick={() => setShowEndConfirm(false)}
+              className="absolute top-4 right-4"
+              style={{ color: "rgba(255,255,255,0.4)" }}
+            >
+              ✕
+            </button>
+            <h3 className="mb-3 text-xl font-bold" style={{ color: THEME.nordicGold }}>
+              Avslutt reisen?
+            </h3>
+            <p style={{ fontSize: "15px", lineHeight: "1.7", color: "rgba(255,255,255,0.5)", marginBottom: "12px" }}>
+              Reisen avsluttes. Samtalen slettes for dere begge.
+            </p>
+            <p style={{ fontSize: "13px", lineHeight: "1.5", color: "rgba(212,175,55,0.8)", marginBottom: "24px", fontStyle: "italic" }}>
+              Du kan starte en ny reise når du vil.
+            </p>
+            <GoldButton fullWidth onClick={handleEndJourney} disabled={sending}>
+              {sending ? "Behandler..." : "Ja, avslutt reisen"}
+            </GoldButton>
+            <button
+              onClick={() => setShowEndConfirm(false)}
+              className="w-full mt-3 py-3 rounded-xl text-sm transition-all hover:opacity-80"
+              style={{ color: "rgba(255,255,255,0.4)" }}
+            >
+              Avbryt
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Report Modal */}
       {showReport && (
@@ -712,11 +773,11 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
                       onClick={() => setCategory(s.value)}
                       className="w-full text-left px-4 py-3 rounded-xl transition-all"
                       style={{
-                        background: category === s.value ? s.bg : "rgba(255,255,255,0.03)",
-                        border: `1px solid ${category === s.value ? s.border : "rgba(255,255,255,0.06)"}`,
+                        background: category === s.value ? (s as any).bg : "rgba(255,255,255,0.03)",
+                        border: `1px solid ${category === s.value ? (s as any).border : "rgba(255,255,255,0.06)"}`,
                       }}
                     >
-                      <p style={{ color: s.color, fontSize: "15px", fontWeight: 600 }}>{s.label}</p>
+                      <p style={{ color: category === s.value ? (s as any).color : THEME.softWhite, fontSize: "15px", fontWeight: 600 }}>{s.label}</p>
                       <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "13px", marginTop: "4px" }}>{s.desc}</p>
                     </button>
                   ))}

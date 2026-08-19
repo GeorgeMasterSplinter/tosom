@@ -622,6 +622,20 @@ model BetaInvite {
   @@index([usedAt])
 }
 
+// STEG S1 — Sperreliste: bruker blokkerer en annen fra påtreffende matching
+model UserBlock {
+  id        String   @id @default(cuid())
+  blockerId String   // hvem som blokkerer
+  blockedId String   // hvem som blokkeres (aldri blir matchet med blocker)
+  matchId   String?  // lenke til matchen (historikk, kan være null)
+  reason    String?  // "blocked" | "reported"
+  createdAt DateTime @default(now())
+
+  @@unique([blockerId, blockedId])
+  @@index([blockerId])
+  @@index([blockedId])
+}
+
 // STEG C1 — Brukerstyrt rapportering
 model Report {
   id          String         @id @default(cuid())

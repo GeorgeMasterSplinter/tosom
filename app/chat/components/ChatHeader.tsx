@@ -15,6 +15,7 @@
 
 import { getPhaseForDay } from '@/lib/journey/engine';
 import { usePresence } from '@/hooks/usePresence';
+import { MoodTheme } from '@/app/chat/lib/mood';
 
 /* ═══════════════════════════════════════
    THEME TOKENS
@@ -90,6 +91,9 @@ interface ChatHeaderProps {
   isBliKjentOpen?: boolean;
   onOpenOppgaver?: () => void;
   isOppgaverOpen?: boolean;
+  onOpenMoods?: () => void;
+  isMoodsOpen?: boolean;
+  moodTheme?: MoodTheme;
 }
 
 export function ChatHeader({
@@ -99,9 +103,21 @@ export function ChatHeader({
   isBliKjentOpen = false,
   onOpenOppgaver,
   isOppgaverOpen = false,
+  onOpenMoods,
+  isMoodsOpen = false,
+  moodTheme,
 }: ChatHeaderProps) {
   const isMilestone = journeyDay === 10 || journeyDay === 20 || journeyDay === 30;
-  const phaseLabel = getPhaseForDay(journeyDay).description;
+
+  // Mood-aksent faller tilbake til gull om ikkje tema er gitt
+  const accent = moodTheme?.accent ?? G.gold;
+  const accentLight = moodTheme?.accentLight ?? G.goldLight;
+  const accentMuted = moodTheme?.accentMuted ?? G.goldMuted;
+  const accentSoft = moodTheme?.accentSoft ?? G.goldSoft;
+  const accentGlow = moodTheme?.accentGlow ?? G.goldGlow;
+  const accentBorder = moodTheme
+    ? accentMuted.replace(/[\d.]+\)$/, "0.35)")
+    : "rgba(212,175,55,0.35)";
 
   return (
     <div
@@ -141,8 +157,8 @@ export function ChatHeader({
           {/* Dag + fase + milestone */}
           <div className="flex items-center gap-1.5 mt-0.5">
             <p
-              className="text-xs font-medium"
-              style={{ color: G.gold }}
+              className="text-xs font-medium transition-colors duration-500"
+              style={{ color: accent }}
             >
               Dag {journeyDay} av 30
               {journeyDay <= 10 && ' · 🌱'}
@@ -152,11 +168,11 @@ export function ChatHeader({
 
             {isMilestone && (
               <span
-                className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold flex-shrink-0"
+                className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold flex-shrink-0 transition-colors duration-500"
                 style={{
-                  background: `linear-gradient(135deg, ${G.gold}, ${G.goldLight})`,
+                  background: `linear-gradient(135deg, ${accent}, ${accentLight})`,
                   color: '#0B1520',
-                  boxShadow: `0 0 8px ${G.goldMuted}`,
+                  boxShadow: `0 0 8px ${accentMuted}`,
                 }}
               >
                 ✨
@@ -165,18 +181,18 @@ export function ChatHeader({
           </div>
         </div>
 
-        {/* ═══ BLI KJENT-KNAPP — Premium med subtil pulse ═══ */}
+        {/* ═══ BLI KJENT-KNAPP — Premium med subtil pulse (mood-aksent) ═══ */}
         <button
           onClick={onOpenBliKjent}
-          className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all duration-300 group"
+          className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all duration-500 group"
           style={{
             background: isBliKjentOpen
-              ? G.goldGlow
-              : `linear-gradient(135deg, ${G.goldSoft}, ${G.goldMuted})`,
-            border: `1px solid ${isBliKjentOpen ? G.goldMuted : 'rgba(212,175,55,0.35)'}`,
-            color: isBliKjentOpen ? G.goldLight : G.gold,
+              ? accentGlow
+              : `linear-gradient(135deg, ${accentSoft}, ${accentMuted})`,
+            border: `1px solid ${isBliKjentOpen ? accentMuted : accentBorder}`,
+            color: isBliKjentOpen ? accentLight : accent,
             boxShadow: isBliKjentOpen
-              ? `0 0 24px ${G.goldGlow}, 0 0 8px ${G.goldMuted}`
+              ? `0 0 24px ${accentGlow}, 0 0 8px ${accentMuted}`
               : undefined,
             animation: !isBliKjentOpen ? 'bli-kjent-pulse 3s ease-in-out infinite' : 'none',
           }}
@@ -185,19 +201,19 @@ export function ChatHeader({
           <span className="hidden sm:inline">Bli kjent</span>
         </button>
 
-        {/* ═══ OPPGAVER-KNAPP — Premium med subtil pulse ═══ */}
+        {/* ═══ OPPGAVER-KNAPP — Premium med subtil pulse (mood-aksent) ═══ */}
         {onOpenOppgaver && (
           <button
             onClick={onOpenOppgaver}
-            className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all duration-300 group"
+            className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all duration-500 group"
             style={{
               background: isOppgaverOpen
-                ? G.goldGlow
-                : `linear-gradient(135deg, ${G.goldSoft}, ${G.goldMuted})`,
-              border: `1px solid ${isOppgaverOpen ? G.goldMuted : 'rgba(212,175,55,0.35)'}`,
-              color: isOppgaverOpen ? G.goldLight : G.gold,
+                ? accentGlow
+                : `linear-gradient(135deg, ${accentSoft}, ${accentMuted})`,
+              border: `1px solid ${isOppgaverOpen ? accentMuted : accentBorder}`,
+              color: isOppgaverOpen ? accentLight : accent,
               boxShadow: isOppgaverOpen
-                ? `0 0 24px ${G.goldGlow}, 0 0 8px ${G.goldMuted}`
+                ? `0 0 24px ${accentGlow}, 0 0 8px ${accentMuted}`
                 : undefined,
               animation: !isOppgaverOpen ? 'oppgaver-pulse 3.5s ease-in-out infinite' : 'none',
             }}
@@ -207,25 +223,57 @@ export function ChatHeader({
           </button>
         )}
 
-        {/* Pulse-animasjon for Bli kjent og Oppgaver knapper */}
+        {/* ═══ MOODS-KNAPP — Premium med subtil pulse (mood-aksent) ═══ */}
+        {onOpenMoods && (
+          <button
+            onClick={onOpenMoods}
+            className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all duration-500 group"
+            style={{
+              background: isMoodsOpen
+                ? accentGlow
+                : `linear-gradient(135deg, ${accentSoft}, ${accentMuted})`,
+              border: `1px solid ${isMoodsOpen ? accentMuted : accentBorder}`,
+              color: isMoodsOpen ? accentLight : accent,
+              boxShadow: isMoodsOpen
+                ? `0 0 24px ${accentGlow}, 0 0 8px ${accentMuted}`
+                : undefined,
+              animation: !isMoodsOpen ? 'moods-pulse 4s ease-in-out infinite' : 'none',
+            }}
+          >
+            <span className="text-base transition-transform duration-300 group-hover:rotate-12">🎨</span>
+            <span className="hidden sm:inline">Moods</span>
+          </button>
+        )}
+
+        {/* Pulse-animasjon for Bli kjent, Oppgaver og Moods knappar */}
         <style jsx>{`
           @keyframes bli-kjent-pulse {
             0%, 100% {
-              box-shadow: 0 0 10px rgba(212, 175, 55, 0.15);
+              box-shadow: 0 0 10px ${accentSoft};
               transform: scale(1);
             }
             50% {
-              box-shadow: 0 0 22px rgba(212, 175, 55, 0.35);
+              box-shadow: 0 0 22px ${accentMuted};
               transform: scale(1.03);
             }
           }
           @keyframes oppgaver-pulse {
             0%, 100% {
-              box-shadow: 0 0 10px rgba(212, 175, 55, 0.12);
+              box-shadow: 0 0 10px ${accentSoft};
               transform: scale(1);
             }
             50% {
-              box-shadow: 0 0 22px rgba(212, 175, 55, 0.3);
+              box-shadow: 0 0 22px ${accentMuted};
+              transform: scale(1.03);
+            }
+          }
+          @keyframes moods-pulse {
+            0%, 100% {
+              box-shadow: 0 0 10px ${accentSoft};
+              transform: scale(1);
+            }
+            50% {
+              box-shadow: 0 0 22px ${accentMuted};
               transform: scale(1.03);
             }
           }

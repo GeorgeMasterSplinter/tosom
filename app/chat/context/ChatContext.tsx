@@ -11,6 +11,7 @@
 "use client";
 
 import { createContext, useContext, useState, useCallback, useEffect, useRef, ReactNode } from "react";
+import { MoodId, MoodTheme, getMoodTheme, VALID_MOODS, DEFAULT_MOOD } from "@/app/chat/lib/mood";
 
 /* ═══════════════════════════════════════
    TYPES
@@ -55,9 +56,37 @@ export interface ChatContextValue {
   sessionUserId: string | null;
   sendMessage: (content: string, type?: MessageType) => Promise<void>;
   loadMessages: () => Promise<void>;
+  /** Aktive mood */
+  mood: MoodId;
+  /** Byt mood (persistert per samtale) */
+  setMood: (mood: MoodId) => void;
+  /** Resolved mood-tema for aktiv mood */
+  moodTheme: MoodTheme;
 }
 
 const ChatContext = createContext<ChatContextValue | null>(null);
+
+/* ═══════════════════════════════════════
+   MOOD STORAGE — persistert per samtale-ID
+   ═══════════════════════════════════════ */
+
+const MOOD_STORAGE_PREFIX = "tosom:mood:";
+
+function loadMoodFromStorage(conversationId: string | null): MoodId {
+  if (!conversationId || typeof window === "undefined") return DEFAULT_MOOD;
+  try {
+    const stored = localStorage.getItem(`${MOOD_STORAGE_PREFIX}${conversationId}`);
+    if (stored && VALID_MOODS.has(stored as MoodId)) return stored as MoodId;
+  } catch { /* localStorage utilgjengelig */ }
+  return DEFAULT_MOOD;
+}
+
+function saveMoodToStorage(conversationId: string | null, mood: MoodId): void {
+  if (!conversationId || typeof window === "undefined") return;
+  try {
+    localStorage.setItem(`${MOOD_STORAGE_PREFIX}${conversationId}`, mood);
+  } catch { /* localStorage utilgjengelig */ }
+}
 
 /* ═══════════════════════════════════════
    PROVIDER-KOMPONENT
@@ -83,6 +112,20 @@ export function ChatProvider({
   const [error, setError] = useState<string | null>(null);
   const lastMsgIdRef = useRef<string | null>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Mood-state — init fra DEFAULT_MOOD, les frå storage ved montering/samtale-endring
+  const [mood, setMoodState] = useState<MoodId>(DEFAULT_MOOD);
+
+  useEffect(() => {
+    setMoodState(loadMoodFromStorage(conversationId));
+  }, [conversationId]);
+
+  const setMood = useCallback((newMood: MoodId) => {
+    setMoodState(newMood);
+    saveMoodToStorage(conversationId, newMood);
+  }, [conversationId]);
+
+  const moodTheme = getMoodTheme(mood);
 
   const loadMessages = useCallback(async (isPolling = false) => {
     if (!conversationId) return;
@@ -192,6 +235,9 @@ export function ChatProvider({
       sessionUserId: sessionUserId ?? null,
       sendMessage,
       loadMessages,
+      mood,
+      setMood,
+      moodTheme,
     }}>
       {children}
     </ChatContext.Provider>

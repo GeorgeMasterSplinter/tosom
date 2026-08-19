@@ -8,7 +8,7 @@
     "typecheck": "0 errors",
     "productionBuild": "verified"
   },
-  "currentPhaseId": "s15-blokkering-verifisert",
+  "currentPhaseId": "s12-s15-s18-verifisert",
   "blockers": [
     {
       "id": "B-1",
@@ -31,5 +31,5 @@
       "status": "closed"
     }
   ],
-  "nextAction": "S-15 verifisert: UserBlock-modell (migrasjon 20260815140000), matching-cron sjekker UserBlock (begge veier), journey/exit lager UserBlock ved 'blocked'. S-14 ferdig: 403-tester. S-13 auditert: bilde-lås OK. Neste: S-10 retention, S-16 PII-skrubbing, eller S-12 profilvalidering."
+  "nextAction": "S-12/13/14/15/18 alle verifisert ferdig (try/catch par-scoring, isPhotosAllowed dag>=15, eierskapstester, UserBlock, prodbuild). Neste åpen: S-16 PII-skrubbing i Sentry, S-10 retention, S-17 varsling, S-9 sletting (clean DB)."
 }

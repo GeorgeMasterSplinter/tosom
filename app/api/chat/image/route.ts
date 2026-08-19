@@ -8,6 +8,7 @@ import { randomUUID } from 'crypto';
 import path from 'path';
 import { getServerSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/prisma';
+import { isPhotosAllowed } from '@/lib/journey/engine';
 
 export const dynamic = 'force-dynamic';
 
@@ -87,7 +88,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // STREG 1 — Fix 2: Sjekk at brukeren er deltaker i konversasjonen
     const conversation = await prisma.conversation.findUnique({
       where: { id: conversationId },
-      select: { userAId: true, userBId: true },
+      select: { userAId: true, userBId: true, matchId: true },
     });
 
     if (!conversation) {
@@ -102,6 +103,22 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         { error: 'Uautorisert — du er ikke deltaker i denne konversasjonen' },
         { status: 403 }
       );
+    }
+
+    // M-6: Bilde-lås håndheves server-side på journey-dag (kanonisk isPhotosAllowed: dag >= 15).
+    // Uten denne sjekken kunne klienten laste opp bilder før låsen var opphøyet.
+    if (conversation.matchId) {
+      const journey = await prisma.journeyProgress.findFirst({
+        where: { userId: senderId, matchId: conversation.matchId },
+        select: { day: true },
+      });
+      if (!journey || !isPhotosAllowed(journey.day)) {
+        const day = journey?.day ?? 0;
+        return NextResponse.json(
+          { error: `Bilder blir låst opp på dag 15 av reisen (nå: dag ${day}).` },
+          { status: 423 }
+        );
+      }
     }
 
     // Generer trygt filnamn med UUID

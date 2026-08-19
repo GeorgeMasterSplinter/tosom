@@ -3,8 +3,8 @@
 
 import prisma from "@/lib/prisma";
 import type { JourneyPhase } from "@prisma/client";
-// M-5: Én kilde for fasedefinisjon — importerer fra engine (DEEPER 22-25, CHECKIN 26-30).
-import { dayToPhase } from "@/lib/journey/engine";
+// M-5/M-6: Én kilde for fasedefinisjon og bilde-lås — importerer fra engine.
+import { dayToPhase, isPhotosAllowed } from "@/lib/journey/engine";
 
 const TOTAL_DAYS = 30;
 
@@ -23,7 +23,8 @@ export async function startJourneyOnMatch(
       data: { userId, matchId, phase: "EARLY" as JourneyPhase, day: 0 },
     });
   }
-  return { day: jp.day, phase: jp.phase, photosEnabled: jp.day >= 13 };
+  // M-6: bilde-lås på dag >= 15 (kanonisk isPhotosAllowed), ikke dag >= 13.
+  return { day: jp.day, phase: jp.phase, photosEnabled: isPhotosAllowed(jp.day) };
 }
 
 export async function advanceMatchJourney(
@@ -72,5 +73,6 @@ export async function getMatchJourney(
 ): Promise<{ day: number; phase: string; photosEnabled: boolean }> {
   const jp = await prisma.journeyProgress.findFirst({ where: whereForFind(userId, matchId) });
   if (!jp) { return { day: 0, phase: "EARLY", photosEnabled: false }; }
-  return { day: jp.day, phase: jp.phase, photosEnabled: jp.day >= 13 };
+  // M-6: bilde-lås på dag >= 15 (kanonisk isPhotosAllowed), ikke dag >= 13.
+  return { day: jp.day, phase: jp.phase, photosEnabled: isPhotosAllowed(jp.day) };
 }

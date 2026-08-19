@@ -1,14 +1,14 @@
 {
   "version": "1.0",
   "updatedAt": "2026-08-19",
-  "commit": "c83b375",
+  "commit": "2c12a0d",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v1.0.md",
   "health": {
     "tests": "192/192",
     "typecheck": "0 errors",
     "productionBuild": "verified"
   },
-  "currentPhaseId": "uke2-s4-queue-limit",
+  "currentPhaseId": "uke2-dag10-postnummer-dekning",
   "blockers": [
     {
       "id": "B-1",
@@ -31,5 +31,5 @@
       "status": "closed"
     }
   ],
-  "nextAction": "S1+S3+S4 klar: matching-cron batcher 50 par/transaksjon + fortsettelses-runder 15/30 min + MATCHING_QUEUE_LIMIT konfigurerbar (standard 5 000). Skaleringstiltakene S1-S4 er ferdige. Neste: postnummer-dekning til 100 % (dag 10) eller tetthetsbasert radius (dag 11)."
+  "nextAction": "S1-S4 + dag 10 ferdig: 100% postnummer-dekning (5146/5146). Neste: dag 11 — tetthetsbasert radius 30-300 / 50-400 (testere for by og land)."
 }

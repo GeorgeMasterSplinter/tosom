@@ -1,14 +1,14 @@
 {
   "version": "1.0",
   "updatedAt": "2026-08-19",
-  "commit": "e7fe325",
+  "commit": "de05a7e",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v1.0.md",
   "health": {
     "tests": "192/192",
     "typecheck": "0 errors",
     "productionBuild": "verified"
   },
-  "currentPhaseId": "spore-b-fase-1-lagring",
+  "currentPhaseId": "uke2-s3-fortsettelses-cron",
   "blockers": [
     {
       "id": "B-1",
@@ -31,5 +31,5 @@
       "status": "closed"
     }
   ],
-  "nextAction": "Spor B Fase 1 klar: R2-bildelagring ferdig (lib/storage + Message.imageKey + signerte URL-er + fil-sletting ved reiseslutt). Neste: S1 batch-transaksjoner i cron."
+  "nextAction": "S1+S3 klar: matching-cron batcher 50 par/transaksjon + fortsettelses-runder 15/30 min (vercel.json) tar resten av køen over opptil 3 runder. Advisory lock + QUEUED-spørring gjør re-kjøring trygg (ta kun gjenståenden, FIFO). Neste: S4 (MATCHING_QUEUE_LIMIT konfigurerbar, standard 5 000)."
 }

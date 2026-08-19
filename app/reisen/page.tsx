@@ -299,7 +299,7 @@ export default function ReisenPage() {
                     lineHeight: '1.8',
                   }}
                 >
-                  Etter to uker med dype samtaler, kommer bildene.
+                  Når dere har snakket sammen i to uker, åpner muligheten for bilder. Det er helt valgfritt — du deler hvis det føles naturlig.
                 </p>
                 <p
                   style={{
@@ -308,7 +308,7 @@ export default function ReisenPage() {
                     lineHeight: '1.8',
                   }}
                 >
-                  Men nå er grunnlaget allerede lagt — dere kjenner hverandre innenfra.
+                  Bildene kommer sent av en grunn: Først trygghet, så ansikt. Først samtalen, så bekreftelsen.
                 </p>
                 <p
                   style={{
@@ -319,7 +319,7 @@ export default function ReisenPage() {
                     fontStyle: 'italic',
                   }}
                 >
-                  Bildene bekrefter det hjertet allerede vet: "Ja, det er deg."
+                  Bildene bygger videre på det dere allerede har skapt.
                 </p>
               </GlassCard>
 
@@ -346,7 +346,7 @@ export default function ReisenPage() {
                     lineHeight: '1.8',
                   }}
                 >
-                  Disse dagene handler om fremtiden.
+                  Her handler det om hvordan dere møter fremtiden — ikke sammen, men som to mennesker som vurderer om de passer.
                 </p>
                 <p
                   style={{
@@ -355,7 +355,7 @@ export default function ReisenPage() {
                     lineHeight: '1.8',
                   }}
                 >
-                  Dere deler mål, drømmer, frykter og styrker.
+                  Dere snakker om mål, grenser, styrker og utfordringer. Dere ser hvordan dere håndterer forskjeller, og hvordan dere bygger videre på tryggheten dere har skapt.
                 </p>
                 <p
                   style={{
@@ -364,7 +364,7 @@ export default function ReisenPage() {
                     lineHeight: '1.8',
                   }}
                 >
-                  Dette er der forbindelsen blir til noe varig — et fundament av tillit, forståelse og felles visjon.
+                  Det er en fase som gir innsikt, ikke forventning.
                 </p>
               </GlassCard>
             </div>

@@ -69,11 +69,30 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // 4. Kall endJourney() — verifisert sletting med sperreliste
-    const { deleted } = await endJourney(activeMatch.id, 'early_exit');
+    // STEG S1: Blokkering lager en permanent sperreliste-oppføring FØR sletting.
+    // (Sperrelisten overlever endJourney-sletting — match history og blocks beholdes.)
+    const isBlocked = reason === 'blocked';
+    const outcome = isBlocked ? 'blocked' : 'early_exit';
+
+    if (isBlocked) {
+      const partnerId = activeMatch.userAId === user.id ? activeMatch.userBId : activeMatch.userAId;
+      await prisma.userBlock.upsert({
+        where: { blockerId_blockedId: { blockerId: user.id, blockedId: partnerId } },
+        create: {
+          blockerId: user.id,
+          blockedId: partnerId,
+          matchId: activeMatch.id,
+          reason: 'blocked',
+        },
+        update: { matchId: activeMatch.id, reason: 'blocked' },
+      });
+    }
+
+    // 4. Kall endJourney() — verifisert sletting
+    const { deleted } = await endJourney(activeMatch.id, outcome);
 
     // 5. Logg avslutning
-    console.log(`[journey/exit] Bruker ${user.id} avsluttet reise dag ${journey.day}/30`, {
+    console.log(`[journey/exit] Bruker ${user.id} ${isBlocked ? 'blokkerte' : 'avsluttet'} reise dag ${journey.day}/30`, {
       matchId: activeMatch.id,
       day: journey.day,
       reason,
@@ -82,7 +101,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({
       success: true,
-      message: `Reisen din ble avsluttet. Du nådde dag ${journey.day} av 30.`,
+      message: isBlocked
+        ? 'Reisen ble avsluttet og brukeren blokkeres permanent.'
+        : `Reisen din ble avsluttet. Du nådde dag ${journey.day} av 30.`,
       nextStep: 'Du kan starte en ny reise når du vil.',
       deleted,
     });

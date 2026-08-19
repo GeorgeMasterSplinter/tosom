@@ -14,6 +14,7 @@
 
 import { useEffect, useRef } from "react";
 import { FadeIn } from "@/components/animations/FadeIn";
+import { useChat } from "@/app/chat/context/ChatContext";
 
 /* ═══════════════════════════════════════
    THEME TOKENS — PREMIUM GLASS V2
@@ -263,6 +264,7 @@ function Avatar({ senderInfo }: { senderInfo?: { name: string; imageUrl?: string
 
 export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
   const { id, sender, type, content, metadata, resonanceLevel, isMilestone, isBliKjent } = message;
+  const { moodTheme } = useChat();
   const isMe = sender === "me";
   const isSystem = sender === "system";
   
@@ -401,17 +403,18 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
             className="px-5 py-[16px] relative overflow-hidden"
             style={{
               background: isMe
-                ? `linear-gradient(135deg, ${G.bubbleMeBgStart}, ${G.bubbleMeBgEnd})`
-                : `linear-gradient(135deg, ${G.glassBg}, rgba(255,255,255,0.02))`,
+                ? `linear-gradient(135deg, ${moodTheme.bubbleMeStart}, ${moodTheme.bubbleMeEnd})`
+                : `linear-gradient(135deg, ${moodTheme.bubblePartnerBg}, rgba(255,255,255,0.02))`,
               border: isMe
-                ? `1px solid ${G.goldMuted}`
-                : `1px solid ${G.glassBorder}`,
+                ? `1px solid ${moodTheme.bubbleMeBorder}`
+                : `1px solid ${moodTheme.bubblePartnerBorder}`,
               borderRadius: isMe
                 ? "20px 20px 6px 20px"
                 : "20px 20px 20px 6px",
               boxShadow: isMe
                 ? resonanceGlow.boxShadow
                 : '0 4px 16px rgba(0,0,0,0.2)',
+              transition: 'background 1.2s ease-in-out, border-color 1.2s ease-in-out',
             }}
           >
             {/* Subtilt glass-overlegg for "me" */}

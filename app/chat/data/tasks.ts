@@ -1,6 +1,6 @@
 /**
  * ToSom — Oppgaver (Gjør sammen)
- * 6 kategorier × 15 oppgaver = 90 oppgaver totalt.
+ * 9 kategorier × 15 oppgaver = 135 oppgaver totalt.
  * Alle oppgaver er tekst-baserte og sendes som melding i chat.
  * Voksne 23+. Bokmål. Lett, morsomt, ingen konkurranse.
  */
@@ -153,6 +153,76 @@ const uventet: string[] = [
 ];
 
 /* ═══════════════════════════════════════
+   7. NORDISK KVELD
+   Kos, valg, hverdagsliv. Design kvelden sammen.
+   ═══════════════════════════════════════ */
+
+const nordiskKveld: string[] = [
+  "Velg: peis, stearinlys, eller taklys til kvelden. Motiver på ett ord.",
+  "Hvem lager kaffe og hvem lager maten til fredagskos? (Svar: meg / deg / skift)",
+  "Design den perfekte norske ukeend for oss to — i akkurat 5 ord.",
+  "Regnet slår i ruten, det er onsdag kveld. Hva gjør vi? Du starter, jeg tar over.",
+  "Velg én ting: varm kaffe, te med honning, eller kakao. Fortell meg hva du serverer meg og hvorfor.",
+  "Vi har én time på oss. Ingen telefoner. Hva gjør vi? Beskriv i to setninger.",
+  "Velg: tynn pels, ullgenser, eller dunjakke til en tur ut. Og — går vi i skogen, langs elven, eller i byen?",
+  "Du lager maten, jeg vasker opp. (Eller omvendt.) Hva lager du? Og — er det enrett eller toretter?",
+  "Velg lyset: fullt slukket, halvt, eller fullt på. Og — er det rolig eller festet stemning i huset?",
+  "Vi sitter på balkongen med to krus. Det er stille. Hva sier du først?",
+  "Velg: film, brettspill, eller bare å snakke. Og — hvem velger hva, eller om det er film?",
+  "Design vår lille hyttetur: én natt, én dag. Hva tar vi med, og hva gjør vi?",
+  "Velg én matrett vi lager sammen. Du starter med hovedretten, jeg tar desserten.",
+  "Det er torsdag. Klokka 19. Du har kontroll. Hva skjer de neste 3 timene?",
+  "Velg: vi lager mat sammen, bestiller, eller spiser noe rart og nytt. Du starter, jeg følger.",
+];
+
+/* ═══════════════════════════════════════
+   8. GJETTER DU MEG?
+   Gjettingsspill. Én gjetter, én lurer. Bytter om.
+   ═══════════════════════════════════════ */
+
+const gjetterDuMeg: string[] = [
+  "Jeg tenker på et ord som beskriver dagen min. Du gjetter på 5 forsøk. Hver gjetting får en ledetråd.",
+  "Ranger disse fra 1–10 uten å se på meg: min kaffestyrke i dag, mitt morgenhumør, mitt energinivå.",
+  "Hvilken av disse er mitt humør akkurat nå? A) 'Landsby' B) 'Stum di' C) 'Dance Monkey'. Gjetter du?",
+  "Jeg tenker på en matrett. Du får tre ledetråder fra meg. Hvilken er det?",
+  "Gjetter du hvilken dag i uken jeg er mest meg selv? Du har to forsøk.",
+  "Jeg velger tre ord som beskriver meg i dag. Du gjetter hvilket av dem jeg liker minst. Gjetter du?",
+  "Du gjetter hvor mange krus kaffe jeg har hatt i dag. Maks 5 forsøk, jeg svarer bare 'høyere' eller 'lavere'.",
+  "Jeg tenker på et sted i Norge. Du gjetter hvilket, med kun ja/nei-spørsmål. Maks 7.",
+  "Ranger: min motivasjon i dag, mitt tålmodighetsnivå, mitt lystenivå på å le. Du starter.",
+  "Jeg skriver et ord. Du gjetter hvilken følelse det uttrykker. Jeg forteller deg om jeg har rett.",
+  "Du gjetter hvilket år jeg ble født. Du får tre ledetråder fra meg etter hvert forsøk.",
+  "Jeg tenker på en aktivitet jeg gjorde i går. Du gjetter hva det var. Ja/nei-spørsmål, maks 5.",
+  "Ranger mine tre favorittsesonger fra varmest til kuldest i humør. Du starter.",
+  "Du gjetter hva jeg spiste til lunsj i dag. Du får én ledetråd før hvert forsøk. Maks 3.",
+  "Jeg velger et sted. Du gjetter om det er i Norge eller i utlandet. Deretter: nord, sørd, øst, vest. Maks 4.",
+];
+
+/* ═══════════════════════════════════════
+   9. BYGG EN HISTORIE
+   Kreativt spill. Du skriver én setning, jeg skriver én.
+   Fortsett til det blir absurd.
+   ═══════════════════════════════════════ */
+
+const byggEnHistorie: string[] = [
+  "Vi bygger en historie. Du starter med én setning. Jeg fortsetter. Siste som blir seriøs har tapt.",
+  "Beskriv vår perfekte lørdag i akkurat 7 ord. Gå. (Bare 7.)",
+  "Lag en norsk film i 5 setninger sammen. Du starter med tittelen. Jeg tar neste.",
+  "Fortell meg en historie der hovedpersonen er en kaffekopp. Du starter.",
+  "Vi bygger en ukeend. Du skriver mandag, jeg skriver tirsdag, du onsdag... Siste som sier 'og så døde de' vinner.",
+  "Du starter: 'Det var en gang to nordmann som...' Fortsett. Jeg tar neste setning.",
+  "Lag en oppskrift på vår perfekte kveld. Du starter med hovedingrediensen. Jeg tar neste.",
+  "Vi bygger en sang. Du starter med vers 1 (to linjer). Jeg tar vers 2. Refrenget: begge.",
+  "Du skriver en setning som begynner med 'Og så...'. Jeg fortsetter. Fortsett i 6 setninger totalt.",
+  "Lag et kort eventyr der hovedpersonene er vi to. Du starter. Maks 5 setninger hver.",
+  "Vi bygger en ukeend som bare går galt. Du starter med fredag. Jeg tar lørdag. Du søndag.",
+  "Du skriver én setning om morgenen min. Jeg skriver én setning om kvelden din. Siste som sier 'og så sov de' vinner.",
+  "Lag en ny norsk tradisjon i 3 setninger. Du starter med navnet. Jeg tar beskrivelsen.",
+  "Vi bygger en dag i livet til en nabo. Du starter med kl. 07:00. Jeg tar neste tidspunkt.",
+  "Du starter: 'Dagen begynte helt vanlig, men...' Jeg fortsetter. Fortsett til en av oss sier 'det var det. full stopp.'",
+];
+
+/* ═══════════════════════════════════════
    EKSPORTERT KATEGORILISTE
    ═══════════════════════════════════════ */
 
@@ -198,5 +268,26 @@ export const taskCategories: TaskCategory[] = [
     icon: '💥',
     color: '#FF9800',
     tasks: uventet,
+  },
+  {
+    id: 'nordisk-kveld',
+    name: 'Nordisk kveld',
+    icon: '🫖',
+    color: '#8B7355',
+    tasks: nordiskKveld,
+  },
+  {
+    id: 'gjetter-du-meg',
+    name: 'Gjetter du meg?',
+    icon: '🎯',
+    color: '#4ECDC4',
+    tasks: gjetterDuMeg,
+  },
+  {
+    id: 'bygg-en-historie',
+    name: 'Bygg en historie',
+    icon: '📖',
+    color: '#E8C766',
+    tasks: byggEnHistorie,
   },
 ];

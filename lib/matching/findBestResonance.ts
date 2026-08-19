@@ -184,6 +184,15 @@ export async function findBestResonance(
   const excludedIds = new Set(excludedMatches.flatMap(m => [m.userAId, m.userBId]));
   excludedIds.add(userId); // ekskluder selv
 
+  // STEG S1: Ekskluder brukere denne brukeren har blokkert (permanente sperreliste)
+  const blocks = await prisma.userBlock.findMany({
+    where: { blockerId: userId },
+    select: { blockedId: true },
+  });
+  for (const b of blocks) {
+    excludedIds.add(b.blockedId);
+  }
+
   // STEG 4.3: Hent ALLE kandidater — ingen take: 50-tak lenger
   const candidates = await prisma.user.findMany({
     where: {

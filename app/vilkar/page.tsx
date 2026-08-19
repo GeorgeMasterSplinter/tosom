@@ -75,7 +75,7 @@ function IconCopyright() {
   );
 }
 
-const sections = [
+const sections: { icon: React.ReactNode; title: string; content: string; note?: string }[] = [
   {
     icon: <IconAge />,
     title: 'Aldersgrense — 21 år',
@@ -90,7 +90,6 @@ const sections = [
     icon: <IconMatch />,
     title: 'Én reise — 30 dager',
     content: 'En reise koster 349 kroner og gir deg én match i én 30-dagers reise. Vi kobler natt til lørdag, og reisen starter lørdag morgen. Du kan bare ha én aktiv reise om gangen.',
-    note: 'De første 10 000 brukerne får reisen gratis.',
   },
   {
     icon: <IconProfile />,

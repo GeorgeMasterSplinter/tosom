@@ -5,8 +5,9 @@
 // (a) score->nivå med kanoniske terskler, og (b) kanonisk ord-kopi for brukeren.
 //
 // TERSKLER (B1.5): >=80 DEEP · 65-79 STRONG · 50-64 MODERATE · 40-49 GENTLE
-// OBS: disse skiller fra unifiedScorer.getMatchLevel (>=80/>=60/>=40). B1.5 setter
-// eksplisitt disse tersklene for resonansNIVÅET som vises.
+// M-1: Desse tersklene er ÉN KILDE — unifiedScorer.level, cron/db (toResonanceLevel)
+// og alle UI-komponenter bruker denne funksjonen. Den gamle dupliserte getMatchLevel
+// (>=80/>=60/>=40) i unifiedScorer.ts er fjerna.
 
 import { ResonanceLevel } from "@prisma/client";
 

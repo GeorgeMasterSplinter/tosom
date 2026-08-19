@@ -5,6 +5,8 @@
  */
 
 import { unifiedScore, calculateTotalScore, UnifiedResult } from '@/lib/matching/unifiedScorer';
+import { toResonanceLevel } from '@/lib/matching/resonanceLevel';
+import { ResonanceLevel } from '@prisma/client';
 import type { ProfileData } from '@/lib/matching/types';
 
 // Miniprofiler for testing
@@ -147,35 +149,36 @@ describe('unifiedScore', () => {
     expect(wSum).toBeCloseTo(1.0, 4);
   });
 
-  describe('getMatchLevel', () => {
-    it('score >= 80 -> DEEP', () => {
-      const a = makeProfile({ personality: { traits: ['open'] }, maturityLevel: 5 });
-      const b = makeProfile({ personality: { traits: ['open'] }, maturityLevel: 5 });
-      const result = unifiedScore(a, b);
-      if (result.score >= 80) expect(result.level).toBe('DEEP');
+  // M-1: Én kilde for resonansterskler. Nivået kjem frå toResonanceLevel
+  // (kanonisk 80/65/50/40), ikkje ein separat getMatchLevel (som hadde 80/60/40).
+  describe('M-1: resonansnivå frå toResonanceLevel (kanonisk 80/65/50/40)', () => {
+    it('score 62 -> MODERATE (gamle getMatchLevel ga 62 -> STRONG)', () => {
+      // toResonanceLevel: 50-64 = MODERATE. Gamle getMatchLevel: >=60 = STRONG.
+      expect(toResonanceLevel(62)).toBe(ResonanceLevel.MODERATE);
     });
 
-    it('score >= 60 -> STRONG', () => {
-      const a = makeProfile();
-      const b = makeProfile();
-      const result = unifiedScore(a, b);
-      if (result.score >= 60 && result.score < 80) expect(result.level).toBe('STRONG');
+    it('terskelane 80/65/50/40 er kanoniske', () => {
+      expect(toResonanceLevel(80)).toBe(ResonanceLevel.DEEP);
+      expect(toResonanceLevel(79)).toBe(ResonanceLevel.STRONG);
+      expect(toResonanceLevel(65)).toBe(ResonanceLevel.STRONG);
+      expect(toResonanceLevel(64)).toBe(ResonanceLevel.MODERATE);
+      expect(toResonanceLevel(50)).toBe(ResonanceLevel.MODERATE);
+      expect(toResonanceLevel(49)).toBe(ResonanceLevel.GENTLE);
+      expect(toResonanceLevel(40)).toBe(ResonanceLevel.GENTLE);
     });
 
-    it('score >= 40 -> MODERATE', () => {
-      // Motsatte profiler for lav score
-      const a = makeProfile({ lifeRhythm: 'morning', maturityLevel: 1, relationshipStyle: 'gradual' });
-      const b = makeProfile({ lifeRhythm: 'evening', maturityLevel: 7, relationshipStyle: 'independent' });
-      const result = unifiedScore(a, b);
-      if (result.score >= 40 && result.score < 60) expect(result.level).toBe('MODERATE');
-    });
-
-    it('score < 40 -> GENTLE', () => {
-      // Meget lav score krever mange dimensjoner med lave verdier
-      const a = makeProfile({ maturityLevel: 1, lifeRhythm: 'morning' });
-      const b = makeProfile({ maturityLevel: 7, lifeRhythm: 'evening' });
-      const result = unifiedScore(a, b);
-      if (result.score < 40) expect(result.level).toBe('GENTLE');
+    it('unifiedScore().level er alltid = toResonanceLevel(score) (én kilde)', () => {
+      // Uansett profil: scorer-ets nivå må stemme med den kanoniske funksjonen.
+      const cases = [
+        [makeProfile(), makeProfile()],
+        [makeProfile({ personality: { traits: ['open'] }, maturityLevel: 5 }), makeProfile({ personality: { traits: ['open'] }, maturityLevel: 5 })],
+        [makeProfile({ maturityLevel: 1, lifeRhythm: 'morning' }), makeProfile({ maturityLevel: 7, lifeRhythm: 'evening' })],
+        [{} as ProfileData, {} as ProfileData],
+      ];
+      for (const [a, b] of cases) {
+        const result = unifiedScore(a, b);
+        expect(result.level).toBe(toResonanceLevel(result.score));
+      }
     });
   });
 });

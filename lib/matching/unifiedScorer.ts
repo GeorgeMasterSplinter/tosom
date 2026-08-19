@@ -9,6 +9,9 @@
 // Skala: 0-100 (høyere = dypere resonans)
 
 import { ProfileData } from "./types";
+import { ResonanceLevel } from "@prisma/client";
+// M-1: Én kilde for resonansterskler — nivået kjem frå toResonanceLevel (kanonisk 80/65/50/40).
+import { toResonanceLevel } from "./resonanceLevel";
 
 /* ---------- OUTPUT TYPES ---------- */
 
@@ -30,7 +33,9 @@ export interface UnifiedResult {
   level: MatchLevel;
 }
 
-export type MatchLevel = "GENTLE" | "MODERATE" | "STRONG" | "DEEP";
+// M-1: Brukar Prisma-enumen ResonanceLevel (samme verdiar som før), ikkje ein
+// separat string-union — slik at tersklene kjem éin stad: toResonanceLevel().
+export type MatchLevel = ResonanceLevel;
 
 /* ---------- WEIGHTS (summer til 1.0) ---------- */
 
@@ -80,9 +85,11 @@ export function unifiedScore(
     }, 0)
   );
 
-  const level = getMatchLevel(score);
+  const clampedScore = clamp(score, 0, 100);
+  // M-1: Kanonisk resonansnivå (80/65/50/40) — same funksjon som cron/db bruker.
+  const level = toResonanceLevel(clampedScore);
 
-  return { score: clamp(score, 0, 100), breakdown, level };
+  return { score: clampedScore, breakdown, level };
 }
 
 /* ---------- DIMENsjonsfunksjoner ---------- */
@@ -292,13 +299,6 @@ function overlapScore(a: string[], b: string[]): number {
 
   const maxPossible = Math.max(setA.size, setB.size);
   return maxPossible === 0 ? 50 : (matches / maxPossible) * 100;
-}
-
-function getMatchLevel(score: number): MatchLevel {
-  if (score >= 80) return "DEEP";
-  if (score >= 60) return "STRONG";
-  if (score >= 40) return "MODERATE";
-  return "GENTLE";
 }
 
 function clamp(n: number, min: number, max: number): number {

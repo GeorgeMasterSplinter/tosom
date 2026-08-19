@@ -176,7 +176,7 @@ Plattformen hjelper to mennesker å møtes på en trygg, moden og strukturert m�
 | System | Beskrivelse | Status |
 |--------|-------------|--------|
 | **Auth** | Vipps OAuth, Magic Link, Phone Verification, 2FA, passord-tilbakestilling | Ferdig |
-| **Onboarding** | 9-stegs dyp profilbygging | Ferdig (noen UI-feil kan finnes) |
+| **Onboarding** | 13-stegs dyp profilbygging | Ferdig (noen UI-feil kan finnes) |
 | **Matching** | Cron-jobb, resonans-algoritme, accept/decline flow | Ferdig |
 | **Journey** | 30-dagers reise med daglige temaer, refleksjoner, oppgaver | Delvis (skal valideres) |
 | **Chat** | Realtime-meldinger via Pusher, guidede spørsmål, bilde-share etter 14d | Ferdig |
@@ -202,7 +202,7 @@ Plattformen hjelper to mennesker å møtes på en trygg, moden og strukturert m�
 6. **~130 dokumenter i /docs/** — Mange duplikater, historiske fix-dokumenter og utdatert informasjon.
 
 ### Mindre
-7. **Onboarding step numbering** — Noen referanser til steg 9-10 mens spec sier 9 steg.
+7. **Onboarding step numbering** — ✅ LØST (2026-08-19). 13 steg bekreftet i `OnboardingFlow.tsx` (`totalSteps = 13`), SUPER-MASTERPLAN §3.
 8. **Config-filer spredt** — Matching config i både `config/matching.ts` og `lib/config/matching.ts`.
 
 ---

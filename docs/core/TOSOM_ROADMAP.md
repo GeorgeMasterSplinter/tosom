@@ -66,11 +66,11 @@ Denne filen gir ei prioriterert oversikt over hva som er ferdig, hva som manglar
 - [x] Oppdatert TOSOM_API_OVERVIEW.md med canonical og fjerna ruter
 
 ### 2.3 Onboarding Steg-nummering
-**Status**: Nokre referanser til steg 9-10 mens spec seier 9 steg.
+**Status**: ✅ LØST (2026-08-19). Onboarding er **13 steg** (indeks 0-12) — verifisert i `OnboardingFlow.tsx` (`totalSteps = 13`) og SUPER-MASTERPLAN §3.
 **Handling**:
-- [ ] Sjekk all onboarding-kode for å bekrefte nøyaktig 9 steg
-- [ ] Oppdater DeepProfileStep enum viss nødvendig
-- [ ] Bekrefte at frontend viser nøyaktig 9 steg
+- [x] Bekreftet i kode: `OnboardingFlow.tsx` `totalSteps = 13`
+- [x] DeepProfileStep enum (9 verdier + SUMMARY) — bevisst design, endres ikke
+- [x] Frontend viser 13 steg (Step1Profile → Step10StartReisen, delte nummer)
 
 ---
 

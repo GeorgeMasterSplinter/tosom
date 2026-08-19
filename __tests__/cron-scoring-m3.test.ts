@@ -17,6 +17,7 @@ jest.mock('@/lib/prisma', () => {
     $queryRaw: jest.fn(),
     user: { findMany: jest.fn() },
     matchHistory: { findMany: jest.fn() },
+    userBlock: { findMany: jest.fn() },
     systemLog: { create: jest.fn() },
     $transaction: jest.fn(),
   };
@@ -60,6 +61,7 @@ const db = prisma as unknown as {
   $queryRaw: jest.Mock;
   user: { findMany: jest.Mock };
   matchHistory: { findMany: jest.Mock };
+  userBlock: { findMany: jest.Mock };
   systemLog: { create: jest.Mock };
   $transaction: jest.Mock;
 };
@@ -88,6 +90,7 @@ describe('M-3: robust parscoring i cron', () => {
     process.env.CRON_SECRET = VALID_SECRET;
     db.$queryRaw.mockResolvedValue({ locked: true });
     db.matchHistory.findMany.mockResolvedValue([]);
+    db.userBlock.findMany.mockResolvedValue([]);
     db.systemLog.create.mockResolvedValue({});
     db.$transaction.mockImplementation(
       async (fn: (tx: any) => Promise<any>) =>

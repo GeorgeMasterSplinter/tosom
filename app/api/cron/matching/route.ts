@@ -227,6 +227,18 @@ export async function GET(req: NextRequest) {
       });
       const blockSet = new Set(history.map((h) => normalizePair(h.userAId, h.userBId).join(':')));
 
+      // S-15: Eksplisitt UserBlock-sjekk i hovedmotoren. En blokkert bruker skal
+      // ALDRI matches med den som blokkerte. (findBestResonance sjekker også, men
+      // den primære kohort-motoren sjekket kun MatchHistory — dette er forsikringen.)
+      // Blokkering er rettet (blockerId→blockedId), men vi sperrer paret begge veier.
+      const userBlocks = await prisma.userBlock.findMany({
+        select: { blockerId: true, blockedId: true },
+      });
+      for (const b of userBlocks) {
+        blockSet.add(normalizePair(b.blockerId, b.blockedId).join(':'));
+      }
+      const userBlockPairs = userBlocks.length;
+
       // 4. Score alle par — sjekk dealbreakers + sperreliste
       const pairs: ScoredPair[] = [];
       const candidates: Candidate[] = queued.map((u) => {
@@ -460,6 +472,7 @@ export async function GET(req: NextRequest) {
             paired, remaining, durationMs, deferred,
             queueSize: cohortSize, pairsEvaluated, rejectReasons,
             scoreDistribution, levelDistribution: levelCounts, oldestQueueAgeDays,
+            userBlockPairs,
             unmapped: unmapped.length > 0 ? unmapped : undefined,
           },
         },

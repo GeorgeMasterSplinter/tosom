@@ -130,7 +130,8 @@ model Profile {
 }
 ```
 
-**Påkrevd onboarding (9 steg):** IDENTITY → LIFE_SITUATION → LIFESTYLE → PERSONALITY → RELATIONSHIP_STYLE → COMMUNICATION → INTIMACY → FUTURE_VISION → BOUNDARIES
+**Påkrevd onboarding (13 steg / 10 logiske grupper):**
+Se seksjon 19 for full liste. `DeepProfileStep`-enumen har 9 verdier + SUMMARY, men implementasjonen bruker 13 step-komponenter med delte nummer (f.eks. Step2 har to under-steg).
 
 ---
 
@@ -456,10 +457,27 @@ Innloggingsmetodar:
 
 ---
 
-## 19) ONBOARDING — 9 STEG
+## 19) ONBOARDING — 13 STEG (oppdatert 2026-08-05, Punkt 8)
 
-Onboarding er dyp profilbygging:
-1. IDENTITY → 2. LIFE_SITUATION → 3. LIFESTYLE → 4. PERSONALITY → 5. RELATIONSHIP_STYLE → 6. COMMUNICATION → 7. INTIMACY → 8. FUTURE_VISION → 9. BOUNDARIES
+Onboarding er dyp profilbygging med 13 step-komponenter (nogle deler nummer):
+
+| Steg | Fil | Mappede til DeepProfileStep |
+|------|-----|---------------------------|
+| 1 | Step1Profile.tsx | IDENTITY |
+| 2a | Step2Livssituasjon.tsx | LIFE_SITUATION |
+| 2b | Step2Personlighet.tsx | PERSONALITY |
+| 3 | Step3Tilknytning.tsx | COMMUNICATION |
+| 4 | Step4Kjærlighetsspråk.tsx | INTIMACY |
+| 5a | Step5LivsstilVerdier.tsx | LIFESTYLE |
+| 5b | Step5Relasjonsstil.tsx | RELATIONSHIP_STYLE |
+| 6 | Step6FramtidVisjon.tsx | FUTURE_VISION |
+| 7 | Step7HumorPersonlighet.tsx | (PERSONALITY — utvidet) |
+| 8a | Step8Grenser.tsx | BOUNDARIES |
+| 8b | Step8ModenNysgjerrighet.tsx | (BOUNDARIES — modenhet) |
+| 9 | Step9Oppsummering.tsx | SUMMARY |
+| 10 | Step10StartReisen.tsx | (avslutning/redirect) |
+
+**Korreksjon:** Blueprint v2.0 sa "9 steg", men implementasjonen har 13 step-filer med delte nummer (to Step2, to Step5, to Step8). Dette er business decision — dypere onboarding gir bedre profiler og bedre matching.
 
 Lagrar i `Profile.deepProfileData` JSON og `Profile.deepProfileStep`.
 

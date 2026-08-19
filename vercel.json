@@ -12,6 +12,10 @@
       "schedule": "0 2 * * 6"
     },
     {
+      "path": "/api/cron/matching",
+      "schedule": "15,30 2 * * 6"
+    },
+    {
       "path": "/api/cron/journey",
       "schedule": "0 4 * * *"
     }

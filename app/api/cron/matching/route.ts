@@ -12,7 +12,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Prisma } from '@prisma/client';
 import prisma from '@/lib/prisma';
-import { timingSafeEqual } from 'crypto';
+import { timingSafeEqual, randomUUID } from 'crypto';
 import { sjekkAlleDealbreakers } from '@/lib/matching/dealbreaker';
 import { unifiedScore } from '@/lib/matching/unifiedScorer';
 import type { UnifiedResult } from '@/lib/matching/unifiedScorer';
@@ -338,91 +338,74 @@ export async function GET(req: NextRequest) {
         matchedPairs.push(pair);
       }
 
-      // 6. Per par: én transaksjon per match
-      for (const pair of matchedPairs) {
+      // 6. Per batch: én transaksjon for BATCH_SIZE par (S1 — batch transaksjoner)
+      const BATCH_SIZE = 50;
+
+      for (let batchIdx = 0; batchIdx < matchedPairs.length; batchIdx += BATCH_SIZE) {
         if (Date.now() >= deadline) break;
+
+        const batch = matchedPairs.slice(batchIdx, batchIdx + BATCH_SIZE);
+        const now = new Date();
+
+        // Pre-generer match-ID-er for hele batchen
+        const batchMatches = batch.map((pair) => ({
+          id: randomUUID(),
+          pair,
+        }));
 
         try {
           await prisma.$transaction(async (tx) => {
-            // Match(active) — ingen pending-status
-            // unifiedScore returnerer 0–100. score = Int (0–100), normalizedScore = Float (0–1)
-            const newMatch = await tx.match.create({
-              data: {
+            // 1. Match × N (createMany)
+            await tx.match.createMany({
+              data: batchMatches.map(({ id, pair }) => ({
+                id,
                 userAId: pair.userIdA,
                 userBId: pair.userIdB,
                 score: pair.score,
                 normalizedScore: pair.score / 100,
                 scoringBreakdown: pair.breakdown as unknown as Prisma.InputJsonValue,
-                status: 'active',
+                status: 'active' as const,
                 type: 'resonance',
-                // B1.5: resonansNIVÅ beregnes fra score med kanoniske terskler
-                // (>=80 DEEP · 65-79 STRONG · 50-64 MODERATE · 40-49 GENTLE)
                 resonanceLevel: toResonanceLevel(pair.score),
-              },
+              })),
             });
 
-            // Conversation(matchId)
-            await tx.conversation.create({
-              data: {
+            // 2. Conversation × N (createMany)
+            await tx.conversation.createMany({
+              data: batchMatches.map(({ id, pair }) => ({
                 userAId: pair.userIdA,
                 userBId: pair.userIdB,
-                matchId: newMatch.id,
-              },
+                matchId: id,
+              })),
             });
 
-            // JourneyProgress(matchId, day: 0, bothSeenAt: null) for begge
-            await tx.journeyProgress.create({
-              data: {
-                userId: pair.userIdA,
-                matchId: newMatch.id,
-                phase: 'EARLY',
-                day: 0,
-                bothSeenAt: null,
-              },
+            // 3. JourneyProgress × 2N (createMany)
+            await tx.journeyProgress.createMany({
+              data: batchMatches.flatMap(({ id, pair }) => [
+                { userId: pair.userIdA, matchId: id, phase: 'EARLY', day: 0, bothSeenAt: null },
+                { userId: pair.userIdB, matchId: id, phase: 'EARLY', day: 0, bothSeenAt: null },
+              ]),
             });
 
-            await tx.journeyProgress.create({
-              data: {
-                userId: pair.userIdB,
-                matchId: newMatch.id,
-                phase: 'EARLY',
-                day: 0,
-                bothSeenAt: null,
-              },
+            // 4. Notification × 2N (createMany)
+            await tx.notification.createMany({
+              data: batchMatches.flatMap(({ pair }) => [
+                { userId: pair.userIdA, type: 'MATCH' as const, message: 'Du har en ny kobling. Logg inn og se hvem.' },
+                { userId: pair.userIdB, type: 'MATCH' as const, message: 'Du har en ny kobling. Logg inn og se hvem.' },
+              ]),
             });
 
-            // Notification × 2 (type: MATCH, in-app) — ingen title-felt
-            await tx.notification.create({
-              data: {
-                userId: pair.userIdA,
-                type: 'MATCH',
-                message: 'Du har en ny kobling. Logg inn og se hvem.',
-              },
-            });
-
-            await tx.notification.create({
-              data: {
-                userId: pair.userIdB,
-                type: 'MATCH',
-                message: 'Du har en ny kobling. Logg inn og se hvem.',
-              },
-            });
-
-            // User × 2 → journeyState: MATCHED, lastMatchAt: now()
-            await tx.user.update({
-              where: { id: pair.userIdA },
-              data: { journeyState: 'MATCHED', matchQueuedAt: null, lastMatchAt: new Date() },
-            });
-
-            await tx.user.update({
-              where: { id: pair.userIdB },
-              data: { journeyState: 'MATCHED', matchQueuedAt: null, lastMatchAt: new Date() },
+            // 5. User × 2N → journeyState: MATCHED (updateMany med felles data)
+            const allUserIds = batchMatches.flatMap(({ pair }) => [pair.userIdA, pair.userIdB]);
+            await tx.user.updateMany({
+              where: { id: { in: allUserIds } },
+              data: { journeyState: 'MATCHED', matchQueuedAt: null, lastMatchAt: now },
             });
           });
 
-          paired++;
+          paired += batch.length;
         } catch (err) {
-          errors.push(`pair ${pair.userIdA}+${pair.userIdB}: ${(err as Error).message}`);
+          errors.push(`batch ${Math.floor(batchIdx / BATCH_SIZE) + 1} (${batch.length} par): ${(err as Error).message}`);
         }
       }
 

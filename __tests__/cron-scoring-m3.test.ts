@@ -95,11 +95,11 @@ describe('M-3: robust parscoring i cron', () => {
     db.$transaction.mockImplementation(
       async (fn: (tx: any) => Promise<any>) =>
         fn({
-          match: { create: jest.fn().mockResolvedValue({ id: 'm1' }) },
-          conversation: { create: jest.fn().mockResolvedValue({}) },
-          journeyProgress: { create: jest.fn().mockResolvedValue({}) },
-          notification: { create: jest.fn().mockResolvedValue({}) },
-          user: { update: jest.fn().mockResolvedValue({}) },
+          match: { createMany: jest.fn().mockResolvedValue({ count: 0 }) },
+          conversation: { createMany: jest.fn().mockResolvedValue({ count: 0 }) },
+          journeyProgress: { createMany: jest.fn().mockResolvedValue({ count: 0 }) },
+          notification: { createMany: jest.fn().mockResolvedValue({ count: 0 }) },
+          user: { updateMany: jest.fn().mockResolvedValue({ count: 0 }) },
         })
     );
   });

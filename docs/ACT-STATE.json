@@ -1,40 +1,19 @@
 {
-  "currentWave": 13,
-  "currentStep": "12.8",
-  "completedSteps": ["0.1", "0.2", "0.3", "0.4", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11", "1.12", "1.13", "2.1", "2.2", "2.3", "2.4", "3.1", "3.2", "3.3", "3.4", "4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "5.1", "5.2", "5.3", "5.4", "6.1", "6.2", "6.3", "6.4", "6.5", "6.6", "7.1", "7.2", "7.3", "8.1", "8.2", "8.3", "8.4", "8.5", "8.6", "9.1", "9.2", "9.3", "10.1", "10.3", "11.2", "11.3", "11.5", "11.6", "12.1", "12.2", "12.3", "12.4", "12.5", "12.6", "12.7", "12.8"],
-  "failedSteps": ["10.2", "11.1", "11.4"],
-  "nextStep": "FULLFØRT",
-  "status": { "tsc": "pass", "grep": "pass", "build": "pass" },
-  "deviations": [
-    "BASELINE tsc: 0 feil (clean TypeScript-tilstand ved start)",
-    "AVVIK: STEG 1.2+1.3 kjørt som batch med delt build-sjekk",
-    "STEG 1.5 valgte alternativ B (fjern rute)",
-    "AVVIK: STEG 1.7+1.8 kjørt som batch",
-    "AVVIK: STEG 1.12+1.13 kjørt som batch",
-    "STEG 2.2: Ingen kodeendring nødvendig — mapMessageType() var allerede korrekt",
-    "STEG 2.4: Brukte crypto.randomUUID() istedenfor Prisma cuid()",
-    "STEG 3.2: La kun til bannedAt-sjekk i 3 kritiske API-ruter",
-    "STEG 3.3: Erstattet signIn('credentials') med HMAC-signert tosom_session-cookie",
-    "STEG 3.4: Erstattet tosom_session med authjs.session-token (base64 JSON payload)",
-    "STEG 4.1+4.2 kjørt som batch i forrige session",
-    "STEG 5.1-5.4 fullført i forrige session",
-    "AVVIK: STEG 6.1+6.2 kjørt som batch (samme fil, felles build-sjekk)",
-    "STEG 7.1: Håndhevet alle 12 profilseksjoner server-side ved å fjerne .optional()",
-    "STEG 7.3: Ingen kodeendring nødvendig — feilhåndtering var allerede på plass",
-    "STEG 8.5: Brukte Profile.preferences JSON + as any-cast pga streng Prisma-typing",
-    "STEG 9.3: Refaktorerte lib/admin/data.ts (fjernet ubrukte imports, komprimerte formatet)",
-    "FAILED: STEG 10.2 — WebhookEvent model mangler i prisma/schema.prisma",
-    "FAILED: STEG 11.1 — components/ui/* inneholder levende imports!",
-    "STEG 11.3: Beholdt audit.ts, data.ts, requireAuth.ts, system.ts (i aktiv bruk). Fjernet 6 døde filer.",
-    "FAILED: STEG 11.4 — For kompleks: resonanceScore/score/presenceEngine importeres av 10+ steder",
-    "STEG 11.5: styles/tokens.ts var allerede dødkode (0 levende imports) — fjernet direkte",
-    "STEG 11.6: Fjernet alle 4 ignorePatterns fra .eslintrc.json",
-    "STEG 12.1+12.2 kjørt som batch",
-    "STEG 12.3: Opprettet e2e/global-setup.ts wrapper + byttet playwright.config.ts til å bruke den",
-    "STEG 12.4+12.5 kjørt som batch (admin-authorization + cron-auth tester)",
-    "STEG 12.6: Installerte node-mocks-http for å fikse TS-feil i admin-authorization.test.ts og cron-auth.test.ts",
-    "STEG 12.8: SentryErrorBoundary importeres fra app/layout.tsx (server component) men er en client component — virker i Next.js App Router da den brukes inne i <body>"
+  "version": "1.0",
+  "updatedAt": "2026-08-19",
+  "commit": "bc1ef13",
+  "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v1.0.md",
+  "health": {
+    "tests": "157/157",
+    "typecheck": "0 errors",
+    "productionBuild": "unverified"
+  },
+  "currentPhaseId": "runde-1-blokkere",
+  "blockers": [
+    { "id": "B-1", "title": "Magic link sendes ikke", "status": "open" },
+    { "id": "B-4", "title": "Admin-eskalering", "status": "open" },
+    { "id": "B-3", "title": "PDF-eksport mangler", "status": "open" },
+    { "id": "B-2", "title": "Vipps død kode", "status": "open" }
   ],
-  "lastCommit": "b288e19",
-  "updatedAt": "2026-08-13T14:45:00Z"
+  "nextAction": "S-18: verifiser next build"
 }

@@ -5,29 +5,43 @@
  */
 
 import { z } from 'zod';
+import { getDistancePrefRange } from '@/config/distance-prefs';
 
 /* ============================================================
    BASIC PROFILE (Steg 1: Grunnprofil)
    ============================================================ */
 
-export const basicProfileSchema = z.object({
-  identityName: z.string().min(2, 'Navn må vere minst 2 tegn').max(50, 'Navn kan vere maks 50 tegn'),
-  age: z.coerce.number().min(23, 'Du må vere minst 23 år').max(99, 'Alder kan ikke vere over 99'),
-  gender: z.string().min(1, 'Velg eit kjønn'),
-  seekingGender: z.string().min(1, 'Velg kven du søker'),
-  height: z.coerce.number().min(100).max(250).optional(),
-  bodyType: z.string().optional(),
-  lifestyle: z.string().optional(),
-  smoking: z.string().optional(),
-  religion: z.string().optional(),
-  children: z.string().optional(),
-  wantChildren: z.string().optional(),
-  city: z.string().min(1, 'Hvor bor du?').max(100),
-  postalCode: z.string().regex(/^\d{4}$/, 'Postnummer må ha fire siffer'),
-  distancePref: z.coerce.number().min(1).max(300),
-  agePrefMin: z.coerce.number().min(23).max(99),
-  agePrefMax: z.coerce.number().min(23).max(99),
-});
+export const basicProfileSchema = z
+  .object({
+    identityName: z.string().min(2, 'Navn må vere minst 2 tegn').max(50, 'Navn kan vere maks 50 tegn'),
+    age: z.coerce.number().min(23, 'Du må vere minst 23 år').max(99, 'Alder kan ikke vere over 99'),
+    gender: z.string().min(1, 'Velg eit kjønn'),
+    seekingGender: z.string().min(1, 'Velg kven du søker'),
+    height: z.coerce.number().min(100).max(250).optional(),
+    bodyType: z.string().optional(),
+    lifestyle: z.string().optional(),
+    smoking: z.string().optional(),
+    religion: z.string().optional(),
+    children: z.string().optional(),
+    wantChildren: z.string().optional(),
+    city: z.string().min(1, 'Hvor bor du?').max(100),
+    postalCode: z.string().regex(/^\d{4}$/, 'Postnummer må ha fire siffer'),
+    distancePref: z.coerce.number(),
+    agePrefMin: z.coerce.number().min(23).max(99),
+    agePrefMax: z.coerce.number().min(23).max(99),
+  })
+  .superRefine((val, ctx) => {
+    // Dag 11: tetthetsbasert avstandsvalg — område basert på postnummer
+    const range = getDistancePrefRange(val.postalCode);
+    const v = Number(val.distancePref);
+    if (Number.isNaN(v) || v < range.min || v > range.max) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['distancePref'],
+        message: `Maks avstand må være mellom ${range.min} og ${range.max} km.`,
+      });
+    }
+  });
 
 export type BasicProfileInput = z.infer<typeof basicProfileSchema>;
 

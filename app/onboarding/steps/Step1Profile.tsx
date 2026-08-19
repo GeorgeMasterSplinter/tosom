@@ -16,6 +16,7 @@ import { OnboardingTextField } from '@/app/onboarding/components/OnboardingTextF
 import { OnboardingSelectGrid } from '@/app/onboarding/components/OnboardingSelectGrid';
 import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { lookupPostalCode } from '@/lib/geo/lookup';
+import { getDistancePrefRange } from '@/config/distance-prefs';
 import { OB } from '@/app/onboarding/theme';
 
 interface Props {
@@ -83,9 +84,15 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
     return v !== undefined && v !== null ? String(v) : fallback;
   };
 
+  const distanceRange = useMemo(
+    () => getDistancePrefRange(String(data['postalCode'] ?? '').trim()),
+    [data['postalCode']],
+  );
+
   const safeDistance = (() => {
     const v = Number(data['distancePref']);
-    return !isNaN(v) && v > 0 ? v : 50;
+    const inRange = !isNaN(v) && v >= distanceRange.min && v <= distanceRange.max;
+    return inRange ? v : distanceRange.min;
   })();
 
   const safeMinAge = (() => {
@@ -234,8 +241,8 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             <div className="flex items-center gap-4">
               <input
                 type="range"
-                min={1}
-                max={300}
+                min={distanceRange.min}
+                max={distanceRange.max}
                 value={safeDistance}
                 onChange={(e) => onChange('distancePref', Number(e.target.value))}
                 className="flex-1 h-2 rounded-lg cursor-pointer"
@@ -245,6 +252,9 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
                 {safeDistance} km
               </span>
             </div>
+            <p className="text-[12px] mt-1 ml-1" style={{ color: OB.textSubtle }}>
+              Velg mellom {distanceRange.min} og {distanceRange.max} km
+            </p>
           </div>
 
           {/* minAge + maxAge */}

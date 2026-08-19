@@ -1,5 +1,8 @@
 "use client";
 
+import { useState } from "react";
+import { signIn } from "next-auth/react";
+
 /* ========================
    INLINE SVG-ikoner
    ======================== */
@@ -87,6 +90,35 @@ function UnifiedButton({
    ======================== */
 
 export default function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "sent" | "closed">("idle");
+
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+    setStatus("loading");
+
+    try {
+      const res = await fetch("/api/beta/invite/request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+      const data = await res.json();
+
+      if (data.invited) {
+        // Invitert — trigger magic link (sendVerificationRequest sender e-posten)
+        await signIn("email", { email: email.trim(), callbackUrl: "/dashboard" });
+        setStatus("sent");
+      } else {
+        // Ikke invitert — rolig lukket-beta-melding
+        setStatus("closed");
+      }
+    } catch {
+      setStatus("sent"); // Fallback: vis at lenken er "sendt"
+    }
+  };
+
   return (
     <main className="relative min-h-screen overflow-hidden flex items-start justify-center" style={{ paddingTop: "80px", paddingBottom: "60px" }}>
       {/* Bakgrunn */}
@@ -146,11 +178,68 @@ export default function LoginPage() {
         </div>
       )}
 
-        {/* Registrer deg */}
-        <div className="w-full mb-14">
-          <UnifiedButton href="/register" variant="secondary">
-            Ikke registrert? Registrer deg nå
-          </UnifiedButton>
+        {/* E-post magic link (Invitasjonsport BETA-ACCESS §3) */}
+        <div className="w-full mb-10">
+          <form onSubmit={handleEmailSubmit} className="space-y-4">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="din@epost.no"
+              disabled={status === "loading"}
+              style={{
+                width: "100%",
+                height: "64px",
+                borderRadius: "16px",
+                background: "rgba(255,255,255,0.03)",
+                border: "1px solid rgba(255,255,255,0.1)",
+                padding: "0 20px",
+                fontSize: "18px",
+                color: "white",
+                outline: "none",
+                transition: "border 300ms",
+              }}
+              onFocus={(e) => (e.currentTarget.style.border = "1px solid rgba(212,175,55,0.5)")}
+              onBlur={(e) => (e.currentTarget.style.border = "1px solid rgba(255,255,255,0.1)")}
+            />
+            <button
+              type="submit"
+              disabled={status === "loading"}
+              style={{
+                width: "100%",
+                height: "64px",
+                borderRadius: "16px",
+                fontWeight: 700,
+                fontSize: "18px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "10px",
+                cursor: status === "loading" ? "wait" : "pointer",
+                transition: "all 300ms ease-out",
+                border: "none",
+                background: status === "loading"
+                  ? "rgba(212,175,55,0.3)"
+                  : "linear-gradient(135deg, #D4AF37, #E8C766)",
+                color: "#0B1520",
+                opacity: status === "loading" ? 0.6 : 1,
+              }}
+            >
+              {status === "loading" ? "Sender…" : "Send innloggingslenke"}
+            </button>
+          </form>
+
+          {/* Status-melding */}
+          {status === "sent" && (
+            <p className="text-center mt-4 text-sm" style={{ color: "rgba(255,255,255,0.5)" }}>
+              Hvis adressen din er invitert, får du snart en lenke. Den er gyldig i 24 timer.
+            </p>
+          )}
+          {status === "closed" && (
+            <p className="text-center mt-4 text-sm" style={{ color: "rgba(255,255,255,0.5)" }}>
+              Tosom er i lukket beta. Vi åpner for flere etter hvert.
+            </p>
+          )}
         </div>
 
         {/* Vipps-informasjon (S-2: skjult bak VIPPS_ENABLED) */}

@@ -14,6 +14,8 @@ import nodemailer from "nodemailer"
 import { adapter } from "@/lib/auth/prisma-adapter"
 import { prisma } from "@/lib/prisma"
 import { defaultRole } from "@/lib/auth/roles"
+import { isBetaInviteMode } from "@/config/features"
+import { isInvitedEmail, markInviteUsed } from "@/lib/beta/invites"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter,
@@ -32,6 +34,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       // B-1 FIX: Send faktisk e-post med magic link (var tidligere kun console.log).
       // Innholdet følger språkmanualen: rolig, varm, uten press.
       async sendVerificationRequest({ identifier, url, provider }) {
+        // Invitasjonsport (BETA-ACCESS §3): i lukket beta sender vi NÅR ENKELT
+        // magic link til ikke-inviterte e-poster. «Adressen er nøkkelen.»
+        // Dette er forsvarsdybde — primær-gaten er i /api/beta/invite/request.
+        if (isBetaInviteMode() && !(await isInvitedEmail(identifier))) {
+          console.log(`[Tosom Beta] Magic link NEKTET (ikke invitert): ${identifier}`)
+          return
+        }
+
         if (!process.env.EMAIL_SERVER_HOST || !process.env.EMAIL_SERVER_USER) {
           // Ingen SMTP konfigurert — logg lenken slik at dev kan logge inn manuelt.
           console.log(`[Tosom Magic Link] (ingen SMTP) ${identifier} → ${url}`)
@@ -61,6 +71,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           subject: "Din innlogging til Tosom",
           text: message,
         })
+
+        // Merk invitasjonen som brukt (best effort) for admin-flaten.
+        if (isBetaInviteMode()) {
+          await markInviteUsed(identifier).catch(() => {})
+        }
       },
     }),
   ],

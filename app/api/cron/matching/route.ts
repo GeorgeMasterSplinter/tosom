@@ -20,6 +20,7 @@ import { toResonanceLevel } from '@/lib/matching/resonanceLevel';
 import { MIN_COHORT_SIZE, MIN_SCORE } from '@/config/matching';
 import { isMatchingEnabled } from '@/config/features';
 import { mapRejectReason } from './rejectReason';
+import { sendAlert } from '@/lib/observability/alert';
 
 // B0.5 — Vercel Hobby: max 60s
 export const maxDuration = 60;
@@ -39,6 +40,17 @@ function safeCompare(a: string, b: string): boolean {
 /** Normalize pair for MatchHistory lookup */
 function normalizePair(aId: string, bId: string): [string, string] {
   return aId < bId ? [aId, bId] : [bId, aId];
+}
+
+// M-4: utfall som betyr PERMANENT sperre (trygghet veier tyngre enn tilgang på kandidater)
+const PERMANENT_OUTCOMES = ['blocked', 'early_exit'];
+
+// M-9: median for scorefordeling
+function median(arr: number[]): number {
+  if (arr.length === 0) return 0;
+  const s = [...arr].sort((a, b) => a - b);
+  const m = Math.floor(s.length / 2);
+  return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
 }
 
 interface Candidate {
@@ -118,6 +130,9 @@ export async function GET(req: NextRequest) {
     scoring_feil: 'avvist: scoring kastet (korrupt profil)',
   };
   const errors: string[] = [];
+  // M-9: samling for score-/nivåfordeling (til tuning)
+  const allScores: number[] = [];
+  const levelCounts: Record<string, number> = {};
 
   try {
     // Advisory lock
@@ -152,22 +167,29 @@ export async function GET(req: NextRequest) {
 
       const cohortSize = queued.length;
 
-      // 2. Kohort-terskel: ett par krever minst to i kø. Den som ikke får match,
-      //    venter til neste lørdag. (M-2: fjerna døde 72h-stale-ventilen — den kunne
-      //    aldri produsere et par under MIN_COHORT_SIZE=2.)
+      // 2. Køalder som observasjon (M-2/M-9/S-17): venter noen forgjeves lenge?
+      //    Hoisted slik at verdien gjelder både deferred- og kjøringsvei.
       const oldestInQueue = queued[0]?.matchQueuedAt ?? null;
+      const oldestQueueAgeDays = oldestInQueue
+        ? Math.floor((Date.now() - oldestInQueue.getTime()) / (1000 * 60 * 60 * 24))
+        : 0;
 
       if (cohortSize < MIN_COHORT_SIZE) {
         deferred = true;
 
-        // Køalder som observasjon (M-2/M-9): venter noen forgjeves lenge?
-        const oldestQueueAgeDays = oldestInQueue
-          ? Math.floor((Date.now() - oldestInQueue.getTime()) / (1000 * 60 * 60 * 24))
-          : 0;
         const staleWarning =
           oldestQueueAgeDays > 14
             ? ` (oldest i kø: ${oldestQueueAgeDays} dager)`
             : '';
+
+        // S-17: venter noen forgjeves? (kritisk for brukeropplevelsen)
+        if (oldestQueueAgeDays > 14) {
+          sendAlert(
+            'warning',
+            `Eldste i match-kø: ${oldestQueueAgeDays} dager`,
+            `Kun ${cohortSize} i kø — runden ble ikke kjørt. Noen venter >14 dager uten match.`
+          ).catch(() => {});
+        }
 
         await prisma.systemLog.create({
           data: {
@@ -187,8 +209,20 @@ export async function GET(req: NextRequest) {
         });
       }
 
-      // 3. Hent sperreliste (alle historiske par) for rask oppslag
+      // 3. Sperreliste (M-4 — differensiert tidsvindu):
+      //    - blocked / early_exit  → PERMANENT (trygghet veier tyngre enn tilgang)
+      //    - completed / new_journey / expired → 6 måneder (mennesker endrer seg)
+      //    Løser samtidig minneproblemet (S-11): gamle par forsvinner ut av spørringa.
+      const sixMonthsAgo = new Date(Date.now() - 6 * 30 * 24 * 60 * 60 * 1000);
       const history = await prisma.matchHistory.findMany({
+        where: {
+          OR: [
+            // Permanent: aktivt avsluttet eller blokkert (uansett tidspunkt)
+            { OR: [{ outcomeA: { in: PERMANENT_OUTCOMES } }, { outcomeB: { in: PERMANENT_OUTCOMES } }] },
+            // Tidsbegrenset: endt innenfor de siste 6 månedene
+            { endedAt: { gte: sixMonthsAgo } },
+          ],
+        },
         select: { userAId: true, userBId: true },
       });
       const blockSet = new Set(history.map((h) => normalizePair(h.userAId, h.userBId).join(':')));
@@ -246,6 +280,9 @@ export async function GET(req: NextRequest) {
 
             // Resonans-score med unifiedScore (9 dimensjoner, 0–100)
             const result = unifiedScore(a.profile, b.profile);
+            // M-9: samle score-/nivåfordeling for alle parscorede par (til tuning)
+            allScores.push(result.score);
+            levelCounts[result.level] = (levelCounts[result.level] ?? 0) + 1;
             if (result.score < MIN_SCORE) {
               rejectReasons['score_under_termin']++;
               continue; // MIN_SCORE terskel (40 på 0–100 skala)
@@ -380,15 +417,51 @@ export async function GET(req: NextRequest) {
       const remaining = queued.length - used.size;
       const durationMs = Date.now() - startedAt;
 
+      // M-9: score-/nivåfordeling (til tuning). Mediana fra alle parscorede par.
+      const sortedScores = [...allScores].sort((a, b) => a - b);
+      const scoreDistribution = allScores.length
+        ? { min: sortedScores[0], median: median(allScores), max: sortedScores[sortedScores.length - 1] }
+        : { min: 0, median: 0, max: 0 };
+
+      // S-17: varsling til operatøren (webhook → e-post → Sentry). Skal aldri kaste runden.
+      try {
+        if (durationMs >= TIME_BUDGET_MS) {
+          await sendAlert(
+            'warning',
+            'Matcherunde traff tidsbudsjettet',
+            `Runden kjørte ${durationMs} ms (budsjett ${TIME_BUDGET_MS} ms). ${paired} par koblet — enkelte par kan være hoppa.`
+          );
+        }
+        if (paired === 0 && cohortSize >= 10) {
+          await sendAlert(
+            'warning',
+            'Matcherunde: null matcher med ≥10 i kø',
+            `${cohortSize} i kø, men 0 par koblet. Sjekk dealbreakers og kø-konfig.`
+          );
+        }
+        if (oldestQueueAgeDays > 14) {
+          await sendAlert(
+            'warning',
+            `Eldste i match-kø: ${oldestQueueAgeDays} dager`,
+            'Noen venter lenger enn 14 dager uten match — sjekk kohort- og kø-konfig.'
+          );
+        }
+      } catch { /* alert kan aldri kaste runden */ }
+
       // Heartbeat
       // ST5.2: Avvisningslogg per årsak (tiltak T2)
       const rejectSummary = Object.entries(rejectReasons).filter(([, v]) => v > 0);
       await prisma.systemLog.create({
         data: {
-          level: 'INFO',
+          level: paired === 0 && cohortSize >= 10 ? 'WARN' : 'INFO',
           message: `Matching-runde: ${paired} par koblet, ${remaining} igjen i kø | Avvisninger: ${rejectSummary.map(([k, v]) => `${k}=${v}`).join(', ') || 'ingen'}`,
           module: 'cron:matching',
-          metadata: { paired, remaining, durationMs, deferred, queueSize: cohortSize, pairsEvaluated, rejectReasons, unmapped: unmapped.length > 0 ? unmapped : undefined },
+          metadata: {
+            paired, remaining, durationMs, deferred,
+            queueSize: cohortSize, pairsEvaluated, rejectReasons,
+            scoreDistribution, levelDistribution: levelCounts, oldestQueueAgeDays,
+            unmapped: unmapped.length > 0 ? unmapped : undefined,
+          },
         },
       });
 
@@ -410,6 +483,8 @@ export async function GET(req: NextRequest) {
     }
   } catch (err) {
     console.error('[cron] Matching feil:', err);
+    // S-17: runden kastet — kritisk (alle i kø mister uka)
+    sendAlert('critical', 'Matcherunde kastet en feil', (err as Error).message).catch(() => {});
     return NextResponse.json(
       { error: 'Kunne ikke kjøre matching', details: (err as Error).message },
       { status: 500 }

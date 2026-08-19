@@ -610,6 +610,18 @@ enum ReportStatus {
   DISMISSED
 }
 
+// BETA — Invitasjonsport (lukket beta). Adressen er nøkkelen: kun inviterte
+// får magic link sendt. usedAt = når invitasjonen ble tatt i bruk.
+model BetaInvite {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  invitedAt DateTime  @default(now())
+  usedAt    DateTime?
+  note      String?
+
+  @@index([usedAt])
+}
+
 // STEG C1 — Brukerstyrt rapportering
 model Report {
   id          String         @id @default(cuid())

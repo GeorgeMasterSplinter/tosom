@@ -1,14 +1,14 @@
 {
   "version": "1.0",
   "updatedAt": "2026-08-20",
-  "commit": "2d39dd8",
+  "commit": "b726ef8",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v1.0.md",
   "health": {
-    "tests": "215 (214 pass, 1 pre-existing DB-state fail: s9-deletion)",
+    "tests": "224/224",
     "typecheck": "0 errors",
     "productionBuild": "verified"
   },
-  "currentPhaseId": "s12-s15-s18-verifisert",
+  "currentPhaseId": "s16-pii-skrubbing",
   "blockers": [
     {
       "id": "B-1",
@@ -31,5 +31,5 @@
       "status": "closed"
     }
   ],
-  "nextAction": "S-12/13/14/15/18 alle verifisert ferdig (try/catch par-scoring, isPhotosAllowed dag>=15, eierskapstester, UserBlock, prodbuild). Neste åpen: S-16 PII-skrubbing i Sentry, S-10 retention, S-17 varsling, S-9 sletting (clean DB)."
+  "nextAction": "S-16 ferdig: PII-skrubbing via én felles modul (lib/observability/pii.ts). Fjerner dupliserte inline-skrubbere fra 4 Sentry-configs, legger på sendDefaultPii:false, skruber structured DeepProfile rekursivt. 9 nye enhetstester. S-12/13/14/15/18 verifisert ferdig. Neste åpen: S-17 varsling, S-10 retention, S-9 sletting."
 }

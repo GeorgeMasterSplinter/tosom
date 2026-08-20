@@ -170,9 +170,9 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             label="Ditt kjønn *"
             mikroguiding="Velg det som passer best for deg"
             options={[
-              { value: 'Mann', label: 'Mann', icon: '👨' },
-              { value: 'Kvinne', label: 'Kvinne', icon: '👩' },
-              { value: 'Ikke-binær', label: 'Ikke-binær', icon: '🏳️‍🌈' },
+              { value: 'Mann', label: 'Mann', icon: '♂' },
+              { value: 'Kvinne', label: 'Kvinne', icon: '♀' },
+              { value: 'Ikke-binær', label: 'Ikke-binær', icon: '⚧' },
               { value: 'Genderfluid', label: 'Genderfluid', icon: '🌊' },
             ]}
             selectedValue={val('gender', '')(data)}
@@ -184,9 +184,9 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             label="Hvem søker du? *"
             mikroguiding="Velg hvem du ønsker å møte"
             options={[
-              { value: 'Mann', label: 'Mann', icon: '👨' },
-              { value: 'Kvinne', label: 'Kvinne', icon: '👩' },
-              { value: 'Alle-kjon', label: 'Alle kjønn', icon: '💫' },
+              { value: 'Mann', label: 'Mann', icon: '♂' },
+              { value: 'Kvinne', label: 'Kvinne', icon: '♀' },
+              { value: 'Alle-kjon', label: 'Alle kjønn', icon: '♂♀' },
               { value: 'Kjemisk-tiltrekning', label: 'Kjemisk tiltrekning', icon: '💜' },
             ]}
             selectedValue={val('seekingGender', '')(data)}
@@ -359,7 +359,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             options={[
               { value: 'Kristen', label: 'Kristen', icon: '✝️' },
               { value: 'Katolsk', label: 'Katolsk', icon: '⛪' },
-              { value: 'Agnostiker', label: 'Agnostiker', icon: '🤔' },
+              { value: 'Agnostiker', label: 'Agnostiker', icon: '?' },
               { value: 'Ateist', label: 'Ateist', icon: '🔬' },
               { value: 'Muslim', label: 'Muslim', icon: '☪️' },
               { value: 'Jehovas-vitne', label: 'Jehovas vitne', icon: '🔯' },
@@ -379,8 +379,8 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
           <OnboardingSelectGrid
             label="Barn?"
             options={[
-              { value: 'Har-barn', label: 'Har barn', icon: '👶' },
-              { value: 'Har-vaksen-barn', label: 'Har voksne barn', icon: '🧑' },
+              { value: 'Har-barn', label: 'Har barn', icon: '🍼' },
+              { value: 'Har-vaksen-barn', label: 'Har voksne barn', icon: '👤' },
               { value: 'Har-ikke-barn', label: 'Har ikke barn', icon: '🌱' },
             ]}
             selectedValue={val('children', '')(data)}

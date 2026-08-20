@@ -379,7 +379,8 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
           <OnboardingSelectGrid
             label="Barn?"
             options={[
-              { value: 'Har-barn', label: 'Har barn', icon: '🍼' },
+              { value: 'Har-små-barn', label: 'Har små barn', icon: '🍼' },
+              { value: 'Har-barn', label: 'Har barn', icon: '🎒' },
               { value: 'Har-vaksen-barn', label: 'Har voksne barn', icon: '👤' },
               { value: 'Har-ikke-barn', label: 'Har ikke barn', icon: '🌱' },
             ]}

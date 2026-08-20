@@ -67,8 +67,9 @@ export default function Step10StartReisen({ step, goToStep, loading, onStart }: 
       />
 
       {/* Trust text */}
-      <p className="text-center text-xs mt-6" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>
-        Når reisen starter kan du ikke endre svarene dine før etter 30 dager.
+      <p className="text-center text-xs mt-6" style={{ color: 'rgba(255, 255, 255, 0.3)', lineHeight: 1.6 }}>
+        Du kan endre svarene dine i venterommet frem til fredag 23:59.
+        Etter at reisen har startet (lørdag), låses profilen din for denne reisen.
       </p>
     </OnboardingSlide>
   );

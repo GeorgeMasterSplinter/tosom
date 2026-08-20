@@ -80,7 +80,7 @@ export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
 
         {/* Livsstil & verdier */}
         <Section title="Livsstil & verdier">
-          <Field label="Høgaste prioritet" value={val('highPriority')(data)} showIf />
+          <Field label="Høyeste prioritet" value={val('highPriority')(data)} showIf />
           <Field label="God hverdag" value={val('goodEveryday')(data)} showIf />
            <Field label="Ønsket livsstil" value={val('desiredLifestyle')(data)} showIf />
         </Section>
@@ -104,7 +104,7 @@ export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
         <Section title="Livssituasjon">
           <Field label="Arbeid" value={val('workType')(data)} showIf />
           <Field label="Boetype" value={val('housingType')(data)} showIf />
-          <Field label="Hushaldning" value={val('householdSize')(data)} showIf />
+          <Field label="Husholdning" value={val('householdSize')(data)} showIf />
           <Field label="Økonomi" value={val('economicStability')(data)} showIf />
           <Field label="Ansvar" value={val('responsibilities')(data)} showIf />
            <Field label="Hverdagsrutine" value={val('dailyRoutine')(data)} showIf />
@@ -123,7 +123,7 @@ export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
         <Section title="Kjærlighetsspråk & nærhet">
           <Field label="Viser kjærlighet" value={val('loveGive')(data)} showIf />
           <Field label="Mottar kjærlighet" value={val('loveReceive')(data)} showIf />
-          <Field label="Byggjer nærheit" value={val('closenessBuilder')(data)} showIf />
+          <Field label="Bygger nærhet" value={val('closenessBuilder')(data)} showIf />
           <Field label="Skaper avstand" value={val('distanceCreator')(data)} showIf />
            <Field label="Liten ting som betyr mye" value={val('smallThing')(data)} showIf />
         </Section>
@@ -131,17 +131,17 @@ export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
         {/* Relasjonsstil */}
         <Section title="Relasjonsstil">
           <Field label="Søker" value={val('relationshipSeeking')(data)} showIf />
-          <Field label="Nærheitsbehov" value={val('closenessNeed')(data)} showIf />
-           <Field label="Selvstend vs fellesskap" value={val('independenceBalance')(data)} showIf />
+          <Field label="Nærhetsbehov" value={val('closenessNeed')(data)} showIf />
+           <Field label="Selvstendighet vs fellesskap" value={val('independenceBalance')(data)} showIf />
         </Section>
 
         {/* Framtid */}
-        <Section title="Framtid og visjon">
-          <Field label="Din framtidvisjon" value={val('futureVision')(data)} showIf />
+        <Section title="Fremtid og visjon">
+          <Field label="Din fremtidsvisjon" value={val('futureVision')(data)} showIf />
           <Field label="Din største drøm" value={val('dreamGoal')(data)} showIf />
-          <Field label="Bygge saman" value={val('buildTogether')(data)} showIf />
-          <Field label="Oppleve aleine" value={val('experienceAlone')(data)} showIf />
-          <Field label="Oppleve saman" value={val('experienceTogether')(data)} showIf />
+          <Field label="Bygge sammen" value={val('buildTogether')(data)} showIf />
+          <Field label="Oppleve alene" value={val('experienceAlone')(data)} showIf />
+          <Field label="Oppleve sammen" value={val('experienceTogether')(data)} showIf />
         </Section>
 
         {/* Humor */}
@@ -165,8 +165,8 @@ export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
         <Section title="Moden nysgjerrighet">
           <Field label="Intimitet trygg" value={val('intimacySafety')(data)} showIf />
           <Field label="Komfortabel med" value={val('comfortableWith')(data)} showIf />
-          <Field label="Personleg grense" value={val('boundary')(data)} showIf />
-          <Field label="Nærheitstype" value={val('nearerType')(data)} showIf />
+          <Field label="Personlig grense" value={val('boundary')(data)} showIf />
+          <Field label="Nærhetstype" value={val('nearerType')(data)} showIf />
           <Field label="Treng tid til" value={val('needsTime')(data)} showIf />
         </Section>
 

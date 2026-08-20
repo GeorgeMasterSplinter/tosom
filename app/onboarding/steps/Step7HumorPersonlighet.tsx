@@ -32,7 +32,7 @@ export default function Step7HumorPersonlighet({ data, onChange, onBack, onNext 
       <OnboardingTextField label="Hva er noe som kjennes helt deg? *" value={getValue('totallyYou', '')} onChange={(v) => onChange('totallyYou', v)} placeholder="Beskriv noe du kan fortelle eller gjenkjenne umiddelbart som utelukkende handler om deg — en lidenskap, en vane eller en måte å se på verden" mikroguiding="Skriv f.eks. Jeg kan snakke i timer om kaffe uten å bli lei meg" maxLength={300} minChars={10} rows={3} multiline />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
       <OnboardingTextField label="Hva tror du partneren din ville le av? *" value={getValue('partnerWouldLaugh', '')} onChange={(v) => onChange('partnerWouldLaugh', v)} placeholder="Tenk på en liten gjenkjennelig detalj med deg som nok skulle få noen som kjenner deg til å smile eller le — beskriv den" mikroguiding="Skriv f.eks. Hvordan jeg danser i kjøkkenen når ingen ser" maxLength={200} minChars={5} rows={3} multiline />
-      <p className="text-center text-xs mt-8" style={{ color: 'rgba(255,255,255,0.3)' }}>Dei små detaljene — som humor — forteller hvem du er.</p>
+      <p className="text-center text-xs mt-8" style={{ color: 'rgba(255,255,255,0.3)' }}>De små detaljene — som humor — forteller hvem du er.</p>
       <div className="mt-8 space-y-4"><BackButton onClick={onBack} /><PremiumCTAButton onClick={handleNext} label={!canProceed ? 'Fyll ut alle påkrevde felt' : 'Fortsett til neste steg'} disabled={!canProceed} fullWidth /></div>
     </OnboardingSlide>
   );

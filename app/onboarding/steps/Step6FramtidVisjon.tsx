@@ -29,7 +29,7 @@ export default function Step6FramtidVisjon({ data, onChange, onBack, onNext }: P
     experienceAlone: 'Beskriv en opplevelse eller reise du ønsker å gjøre alene, og hva du håper å lære om deg selv gjennom den',
     experienceTogether: 'Del konkrete hverdagslige øyeblikk du drømmer om å dele med noen — de små, gjentatte ritualer som bygger fellesskap',
   };
-  const labels: Record<string, string> = { futureVision: 'Hva er din framtidvisjon?', dreamGoal: 'Hva er din største drøm?', buildTogether: 'Hva kan dere bygge sammen?', experienceAlone: 'Hva vil du oppleve alene?', experienceTogether: 'Hva vil du oppleve sammen?' };
+  const labels: Record<string, string> = { futureVision: 'Hva er din fremtidsvisjon?', dreamGoal: 'Hva er din største drøm?', buildTogether: 'Hva kan dere bygge sammen?', experienceAlone: 'Hva vil du oppleve alene?', experienceTogether: 'Hva vil du oppleve sammen?' };
   return (
     <OnboardingSlide title="Framtid & visjon" subtitle="Hva drømmer du om å bygge?" guidingText="Framtidsønsker viser veien for hva dere kan bygge sammen." slideIndex={7} totalSlides={13}
       accentColor={OB.section.values}>

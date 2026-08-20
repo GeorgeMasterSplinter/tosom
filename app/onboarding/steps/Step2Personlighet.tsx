@@ -113,7 +113,7 @@ export default function Step2Personlighet({ data, onChange, onBack, onNext }: Pr
       {/* ────────────────────────────────────── */}
       {/* KJERNE — Personlighet */}
       {/* ────────────────────────────────────── */}
-      {/* Ingen space-y — eg legg til separatorar manuelt */}
+      {/* Ingen space-y — jeg legger til separatorer manuelt */}
 
       {/* selfDesc med mikroguiding */}
       <OnboardingTextField
@@ -136,7 +136,7 @@ export default function Step2Personlighet({ data, onChange, onBack, onNext }: Pr
           label="Hva gir deg energi? *"
           value={getValue('energyGiver', '')}
           onChange={(v) => onChange('energyGiver', v)}
-          placeholder="Hva får deg til å kjende deg levende og til stede?"
+          placeholder="Hva får deg til å kjenne deg levende og til stede?"
           mikroguiding="Skriv f.eks. Gode samtaler, natur, kreativt arbeid"
           maxLength={300}
           minChars={10}

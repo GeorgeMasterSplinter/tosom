@@ -277,7 +277,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     { title: 'Tilknytning & trygghet', subtitle: 'Dette hjelper oss å forstå hva du trenger for å føle deg trygg.' },
     { title: 'Kjærlighetsspråk & nærhet', subtitle: 'Hvordan viser og mottar du kjærlighet?' },
     { title: 'Livsstil & verdier', subtitle: 'Hva prioriterer du i hverdagen?' },
-    { title: 'Relasjonsstil', subtitle: 'Hvordan søker du relasjon — og hvordan balanserer du selvstende med fellesskap?' },
+    { title: 'Relasjonsstil', subtitle: 'Hvordan søker du relasjon — og hvordan balanserer du selvstendighet med fellesskap?' },
     { title: 'Framtid & visjon', subtitle: 'Hva drømmer du om å bygge?' },
     { title: 'Lek, humor & personlighet', subtitle: 'De små detaljene som gjør deg til deg.' },
     { title: 'Grenser & behov', subtitle: 'Hvordan ser du på grenser i en relasjon — og hva trenger du at partneren din forstår?' },

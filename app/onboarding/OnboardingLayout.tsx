@@ -164,7 +164,7 @@ export const OnboardingLayout: FC<OnboardingLayoutProps> = ({
         </div>
       )}
 
-      {/* Children — glass-kortet renderast av OnboardingSlide (én kort, ikkje nestla) */}
+      {/* Children — glass-kortet renderes av OnboardingSlide (ett kort, ikke nestlet) */}
       <div>{children}</div>
 
       {/* Rolig påminnelse om matcherunden — på alle steg */}

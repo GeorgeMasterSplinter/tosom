@@ -169,7 +169,7 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
       {/* ────────────────────────────────────── */}
       <OnboardingSelectGrid
         label="Økonomisk stabilitet? *"
-        mikroguiding="Ingen detaljar trengs — bare hva som passer best"
+        mikroguiding="Ingen detaljer trengs — bare hva som passer best"
         options={[
           { value: 'stabil', label: 'Stabil økonomi', icon: '💰' },
           { value: 'dekker', label: 'Nøye penninger dekker utgifter', icon: '📊' },

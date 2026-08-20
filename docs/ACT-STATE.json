@@ -1,14 +1,14 @@
 {
   "version": "1.0",
   "updatedAt": "2026-08-20",
-  "commit": "604cf2c",
+  "commit": "465e118",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v1.0.md",
   "health": {
-    "tests": "224/224",
+    "tests": "227/227",
     "typecheck": "0 errors",
     "productionBuild": "verified"
   },
-  "currentPhaseId": "s17-varsling-watchdog",
+  "currentPhaseId": "s10-anonymiserings-kjerne",
   "blockers": [
     {
       "id": "B-1",
@@ -31,5 +31,5 @@
       "status": "closed"
     }
   ],
-  "nextAction": "S-12/13/14/15/16/17/18 alle ferdig/verifisert. S-17: watchdog for mista lørdagskjøring lagt til (SystemLog-sjekk >8d → critical alert); de andre 4 varslene eksisterte. Gjenstår: S-9 sletting (re-test mot clean DB), S-10 retention, S-11 paginering (uproblematisk ved beta-volum)."
+  "nextAction": "S-9 verifisert ferdig (s9-deletion dekker alle 5 punkter inkl. bilde-lagring, grønn). S-10 kjernen ferdig: lib/privacy/anonymize.ts (anonymizeUser — sletter auth+profile, nuller PII, beholder User/MatchHistory/Report, partner-sikker, idempotent) + 3 tester. jest.config.js: maxWorkers=1 fikser flak ved parallelle DB-suites som deler én test-DB. Gjenstår: S-10 cron-kabling (inaktivitetsgrense + forvarsel 30d), S-11 paginering (uproblematisk ved beta-volum)."
 }

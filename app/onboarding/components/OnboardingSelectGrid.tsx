@@ -57,6 +57,25 @@ export function OnboardingSelectGrid({
         ? 'grid-cols-1'
         : 'grid-cols-1 md:grid-cols-2';
 
+  // Multi-select helper: parse/toggle kommaseparert verdi
+  const selectedValues = selectedValue ? selectedValue.split(',').map(s => s.trim()).filter(Boolean) : [];
+  const isMulti = maxSelected > 1;
+
+  const toggleValue = (value: string) => {
+    if (!isMulti) {
+      onChange(value);
+      return;
+    }
+    const current = new Set(selectedValues);
+    if (current.has(value)) {
+      current.delete(value);
+    } else {
+      if (current.size >= maxSelected) return; // maks nådd
+      current.add(value);
+    }
+    onChange([...current].join(','));
+  };
+
   return (
     <div className="space-y-4">
       {/* Label */}
@@ -74,14 +93,14 @@ export function OnboardingSelectGrid({
       {/* Grid med val-moglegheiter */}
       <div className={`grid ${gridCols} gap-3`}>
         {options.map((option, index) => {
-          const isSelected = selectedValue === option.value;
+          const isSelected = isMulti ? selectedValues.includes(option.value) : selectedValue === option.value;
           const isHovered = hoveredIndex === index;
 
           return (
             <button
               key={option.value}
               type="button"
-              onClick={() => onChange(option.value)}
+              onClick={() => toggleValue(option.value)}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
               className="relative rounded-[14px] transition-all duration-200 ease-out text-left"

@@ -39,9 +39,10 @@ export default function Step5Relasjonsstil({ data, onChange, onBack, onNext }: P
            { value: 'åpen uforpliktende', label: 'Åpen & Uforpliktende', icon: '🌊', description: 'Lette og naturlige møter uten krav' },
          ]}
          selectedValue={getValue('relationshipSeeking', '')}
-         onChange={(v) => onChange('relationshipSeeking', v)}
-         columns={2}
-       />
+          onChange={(v) => onChange('relationshipSeeking', v)}
+          columns={2}
+          maxSelected={4}
+        />
 
        {/* Næringsbehov — kor mye nærheit du treng */}
        <OnboardingSelectGrid
@@ -58,7 +59,7 @@ export default function Step5Relasjonsstil({ data, onChange, onBack, onNext }: P
        />
 
        {/* Sjølvstende vs. fellesskap — fritt tekstfelt */}
-       <OnboardingTextField label="Hvordan balanserer du selvstendighet med fellesskap? *" value={getValue('independenceBalance', '')} onChange={(v) => onChange('independenceBalance', v)} placeholder="Skriv f.eks. Jeg trenger tid alene for å lade batteriene, men elsker også å dele hverdagen" mikroguiding="Del gjerne hvordan du håndterer dette i dag" maxLength={300} minChars={10} rows={4} multiline />
+       <OnboardingTextField label="Hvordan balanserer du selvstendighet med fellesskap? *" value={getValue('independenceBalance', '')} onChange={(v) => onChange('independenceBalance', v)} placeholder="Reflekter over hvordan du navigerer mellom å være selvstendig og å ønske fellesskap — beskriv konkrete situasjoner der denne balansen har vært krevende og hvordan du løste det" mikroguiding="Skriv f.eks. Jeg trenger tid alene for å lade batteriene, men elsker også å dele hverdagen" maxLength={300} minChars={10} rows={4} multiline />
       <p className="text-center text-xs mt-8" style={{ color: 'rgba(255,255,255,0.3)' }}>Relasjonsstilen din er viktig for å finne noen som passer deg.</p>
       <div className="mt-8 space-y-4"><BackButton onClick={onBack} /><PremiumCTAButton onClick={handleNext} label={!canProceed ? 'Fyll ut alle påkrevde felt' : 'Fortsett til neste steg'} disabled={!canProceed} fullWidth /></div>
     </OnboardingSlide>

@@ -192,7 +192,7 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
           label="Hva ansvar har du i livet ditt? *"
           value={getValue('responsibilities', '')}
           onChange={(v) => onChange('responsibilities', v)}
-          placeholder="Skriv f.eks. Jeg har to barn som bor hos meg, jeg tar omsorg for en foreldre..."
+          placeholder="Beskriv de faste ansvarsområdene du har utover deg selv — omsorg, økonomi, husholdning eller andre forpliktelser — med konkrete eksempler på hvordan de former hverdagen din"
           mikroguiding="Skriv f.eks. Jeg har to barn som bor hos meg, jeg tar omsorg for en forelder"
           maxLength={500}
           minChars={10}

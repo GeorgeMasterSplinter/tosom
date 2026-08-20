@@ -7,6 +7,7 @@
 'use client';
 
 import { FC, ReactNode, useState, useEffect } from 'react';
+import { signOut } from 'next-auth/react';
 
 /** Neste fredag 23:59:59 (siste sjanse til å være med på runden). */
 function getNextFriday2359(): Date {
@@ -83,12 +84,54 @@ function RoundReminder() {
   );
 }
 
+/**
+ * Rolig bunnstreng: «Lagret»-bekreftelse + «Logg ut».
+ * «Lagret» toner rolig inn når autosave er ferdig, og toner ut etter en stund.
+ */
+function SaveLogoutBar({ isSaving }: { isSaving: boolean }) {
+  const [saved, setSaved] = useState(false);
+
+  // Vis «Lagret» et kort øyeblikk når lagringen avsluttes
+  useEffect(() => {
+    if (isSaving) return;
+    setSaved(true);
+    const t = setTimeout(() => setSaved(false), 2500);
+    return () => clearTimeout(t);
+  }, [isSaving]);
+
+  return (
+    <div className="mt-5 flex items-center justify-between px-1">
+      <span
+        className="inline-flex items-center gap-1.5 text-xs transition-opacity duration-500"
+        style={{ color: 'rgba(255, 255, 255, 0.45)', opacity: isSaving ? 0.5 : saved ? 1 : 0.4 }}
+        aria-live="polite"
+      >
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'rgba(77, 213, 158, 0.7)' }}>
+          <path d="M20 6 9 17l-5-5" />
+        </svg>
+        {isSaving ? 'Lagrer…' : 'Lagret'}
+      </span>
+
+      <button
+        type="button"
+        onClick={() => signOut({ callbackUrl: '/' })}
+        className="text-xs transition-colors duration-300 hover:opacity-100"
+        style={{ color: 'rgba(255, 255, 255, 0.35)' }}
+      >
+        Logg ut
+      </button>
+    </div>
+  );
+}
+
 interface OnboardingLayoutProps {
   currentStep: number;
   totalSteps: number;
   children: ReactNode;
   progressPercent?: number;
   error?: string | null;
+  /** True mens autosave kjører — brukes i bunnstrengen (Lagrer…/Lagret). */
+  isSaving?: boolean;
 }
 
 export const OnboardingLayout: FC<OnboardingLayoutProps> = ({
@@ -97,6 +140,7 @@ export const OnboardingLayout: FC<OnboardingLayoutProps> = ({
   children,
   progressPercent,
   error,
+  isSaving = false,
 }) => {
   const progress = progressPercent ?? ((currentStep + 1) / totalSteps) * 100;
 
@@ -125,6 +169,9 @@ export const OnboardingLayout: FC<OnboardingLayoutProps> = ({
 
       {/* Rolig påminnelse om matcherunden — på alle steg */}
       <RoundReminder />
+
+      {/* Lagret + Logg ut — på alle steg */}
+      <SaveLogoutBar isSaving={isSaving} />
     </div>
   );
 };

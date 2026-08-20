@@ -9,12 +9,31 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 import NotificationCenter from "@/components/NotificationCenter";
 
 export default function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
-  const loggedIn = false; // ST2.3: /api/me-kall fjernet (død rute)
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  // Hent session på mount — bestem om brukeren er innlogget
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch('/api/auth/session');
+        if (!res.ok) return;
+        const session = await res.json();
+        if (!cancelled && session?.user) setLoggedIn(true);
+      } catch { /* ignore */ }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  const handleSignOut = () => {
+    signOut({ callbackUrl: '/' });
+  };
 
   // Mode-detektering (med null-safety)
   const isFocusMode =
@@ -76,12 +95,12 @@ export default function Header() {
                 Dashboard
               </Link>
               <NotificationCenter />
-              <Link
-                href="/logout"
-                className="bg-[#D4AF37]/20 border border-[#D4AF37]/30 px-4 py-2 rounded-lg hover:text-[#D4AF37] transition-colors duration-300 ease-out"
+              <button
+                onClick={handleSignOut}
+                className="bg-[#D4AF37]/20 border border-[#D4AF37]/30 px-4 py-2 rounded-lg hover:text-[#D4AF37] transition-colors duration-300 ease-out cursor-pointer"
               >
                 Logg ut
-              </Link>
+              </button>
             </>
           ) : (
             <>

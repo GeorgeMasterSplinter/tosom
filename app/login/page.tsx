@@ -2,14 +2,12 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 /* ========================
    PAGE COMPONENT
    ======================== */
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
@@ -30,10 +28,25 @@ export default function LoginPage() {
     if (res?.error) {
       setStatus("error");
       setError("Kunne ikke logge inn. Prøv igjen.");
-    } else {
-      router.push("/dashboard");
-      router.refresh();
+      return;
     }
+
+    // Bestem målretning basert på onboarding-status.
+    // Hard navigasjon (window.location.href) garanterer at session-cookie
+    // settes og påtverkes på nytt — påliteligere enn klient-navigasjon.
+    let target = "/dashboard";
+    try {
+      const obRes = await fetch("/api/onboarding/progress");
+      if (obRes.ok) {
+        const ob = await obRes.json();
+        if (ob && ob.onboardingComplete === false) {
+          target = "/onboarding";
+        }
+      }
+    } catch {
+      // feiler — gå til dashboard (der er det også en onboarding-guard)
+    }
+    window.location.href = target;
   };
 
   const inputStyle: React.CSSProperties = {

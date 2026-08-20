@@ -49,7 +49,8 @@ export async function GET(req: NextRequest) {
           imageShared: true,
           imageShareAllowedAt: true,
           userA: { select: { id: true, email: true, name: true, role: true } },
-          userB: { select: { id: true, email: true, name: true, role: true } }
+          userB: { select: { id: true, email: true, name: true, role: true } },
+          _count: { select: { messages: true } }
         }
       }),
       prisma.conversation.count({ where }),

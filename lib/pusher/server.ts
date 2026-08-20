@@ -35,3 +35,8 @@ export async function triggerTyping(conversationId: string, senderId: string, is
   const pusher = getPusherServer();
   await pusher.trigger(`conversation-${conversationId}`, 'typing', { senderId, isTyping });
 }
+
+export async function triggerMoodChange(conversationId: string, senderId: string, mood: string) {
+  const pusher = getPusherServer();
+  await pusher.trigger(`conversation-${conversationId}`, 'mood-changed', { senderId, mood });
+}

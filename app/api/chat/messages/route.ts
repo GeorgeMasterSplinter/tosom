@@ -26,7 +26,7 @@ export async function GET(request: Request) {
     // IDOR-vern: verifiser at brukeren er del av samtalen før meldinger returneres
     const conversation = await prisma.conversation.findUnique({
       where: { id: conversationId },
-      select: { userAId: true, userBId: true },
+      select: { userAId: true, userBId: true, mood: true },
     });
 
     if (!conversation) {
@@ -62,7 +62,7 @@ export async function GET(request: Request) {
       },
     });
 
-    return NextResponse.json({ messages });
+    return NextResponse.json({ messages, mood: conversation.mood });
   } catch (error) {
     console.error("GET /api/chat/messages error:", error);
     return NextResponse.json(

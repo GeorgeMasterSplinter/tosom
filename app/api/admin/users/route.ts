@@ -25,23 +25,43 @@ export async function GET(req: NextRequest) {
     const url = new URL(req.url)
     const queryResult = validateQuery(adminUsersQuerySchema, Object.fromEntries(url.searchParams.entries()))
     if (queryResult instanceof NextResponse) return queryResult
-    const { page, limit, role: roleFilter, flaggedOnly } = queryResult.data
+    const { page, limit, role: roleFilter, flaggedOnly, search } = queryResult.data
 
     const skip = (page - 1) * limit
     const where: Record<string, unknown> = {}
     if (roleFilter) where.role = roleFilter
     if (flaggedOnly) where.bannedAt = { not: null }
+    if (search && search.trim()) {
+      const q = search.trim().toLowerCase()
+      where.OR = [
+        { name: { contains: q, mode: 'insensitive' } },
+        { email: { contains: q, mode: 'insensitive' } },
+      ]
+    }
 
     // B4 — journey fjerna frå User (match-scoped nå), matchesA/matchesB lesast separat
     const [usersRaw, total] = await Promise.all([
-      prisma.user.findMany({ where, skip, take: limit, orderBy: { createdAt: 'desc' }, select: { id: true, email: true, name: true, role: true, verified: true, bannedAt: true, deletedAt: true, onboardingComplete: true, deepProfileComplete: true, lastMatchAt: true, lockedUntil: true, createdAt: true } }),
+      prisma.user.findMany({ where, skip, take: limit, orderBy: { createdAt: 'desc' }, select: { id: true, email: true, name: true, role: true, verified: true, bannedAt: true, deletedAt: true, onboardingStep: true, onboardingComplete: true, deepProfileComplete: true, lastMatchAt: true, lockedUntil: true, createdAt: true } }),
       prisma.user.count({ where }),
     ])
 
-    // Hent aktive matcher per bruker
+    // Ekte antall aktive matcher per bruker (A- eller B-side, status active)
+    const matchCounts = usersRaw.length
+      ? await prisma.match.groupBy({
+          by: ['userAId', 'userBId'],
+          where: { status: 'active' },
+        })
+      : []
+
+    const activeCountFor = (userId: string): number =>
+      matchCounts.reduce(
+        (sum, m) => sum + (m.userAId === userId ? 1 : 0) + (m.userBId === userId ? 1 : 0),
+        0,
+      )
+
     const users = usersRaw.map(u => ({
       ...u,
-      activeMatches: 0, // telles på backend dersom trengjast; enklare utan her
+      activeMatches: activeCountFor(u.id),
     }))
 
     return successResponse({ data: users, pagination: { page, limit, total, pages: Math.ceil(total / limit) } })

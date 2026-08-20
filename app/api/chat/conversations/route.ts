@@ -48,6 +48,7 @@ export async function GET(request: Request) {
         lastMessagePreview: true,
         unreadCountA: true,
         unreadCountB: true,
+        mood: true,
         userA: {
           select: {
             name: true,
@@ -97,6 +98,7 @@ export async function GET(request: Request) {
             lastMessagePreview: true,
             unreadCountA: true,
             unreadCountB: true,
+            mood: true,
             userA: {
               select: {
                 name: true,
@@ -148,7 +150,9 @@ export async function GET(request: Request) {
         partnerAge: partner.profile?.age ?? undefined,
         partnerImageUrl: partner.profile?.photoUrl ?? undefined,
         journeyDay: matchId ? dayByMatch.get(matchId) ?? 0 : 0,
-        mood: resonance ? MOOD_FROM_LEVEL[resonance] ?? "calm" : "calm",
+        // Delt mood (server-styrt per samtale). Faller tilbake til resonans-avledt mood
+        // kun for eksisterende samtaler som ennå ikke har en eksplisitt mood satt.
+        mood: c.mood || (resonance ? MOOD_FROM_LEVEL[resonance] ?? "calm" : "calm"),
         unreadCount,
         lastMessage: c.lastMessagePreview ?? undefined,
         lastMessageTime: c.lastMessageAt ? c.lastMessageAt.toISOString() : undefined,

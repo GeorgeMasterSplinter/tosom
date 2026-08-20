@@ -142,6 +142,7 @@ model Conversation {
   updatedAt           DateTime           @updatedAt
   imageShareAllowedAt DateTime?
   imageShared         Boolean            @default(false)
+  mood                String             @default("warm")
   userA               User               @relation("ConversationToUserA", fields: [userAId], references: [id])
   userB               User               @relation("ConversationToUserB", fields: [userBId], references: [id])
   stateLogs           JourneyStateLog[]

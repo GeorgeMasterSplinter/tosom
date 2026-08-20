@@ -15,6 +15,7 @@ const HIDDEN_ROUTES = [
   '/settings',
   '/onboarding',
   '/dev-login',
+  '/admin',
 ];
 
 const isHiddenRoute = (pathname: string | null): boolean => {

@@ -1,16 +1,16 @@
 'use client';
 
 /**
- * Tosom — Admin Dashboard (B5.2) 🟡⭐
+ * Tosom — Admin Dashboard (B5.2)
  *
  * Kommandopanel med statusfarger (grønn/gul/rød).
  * Étt API-kall (/api/admin/overview) for alle indikatorer.
  * Er alt grønt, trenger du ikke klikke deg videre.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import StatusBadge, {
+import {
   type Severity,
   thresholdLastMatchRound,
   thresholdQueueSize,
@@ -19,6 +19,15 @@ import StatusBadge, {
   thresholdFreeQuota,
   thresholdSentryErrors,
 } from '@/components/admin/StatusBadge';
+import { actionFor, explainFor } from '@/components/admin/thresholds';
+import { ActionRequired, type ActionItem } from '@/components/admin/ActionRequired';
+import {
+  UsersIcon,
+  MatchIcon,
+  JourneyIcon,
+  ChatIcon,
+  OverviewIcon,
+} from '@/components/admin/icons';
 
 /* ─── Types ─── */
 interface MetricsData {
@@ -31,7 +40,7 @@ interface MetricsData {
   timestamp: string;
 }
 
-// B5.2: Overview-data fra /api/admin/overview
+// Overview-data fra /api/admin/overview
 interface OverviewData {
   indicators: {
     lastMatchRound: { hoursSince: number | null; lastAt: string | null; durationMs: number | null };
@@ -45,24 +54,29 @@ interface OverviewData {
   timestamp: string;
 }
 
-/* ─── B5.2: StatusPanel — alle indikatorer med StatusBadge ─── */
-function StatusPanel({ overview }: { overview: OverviewData }) {
+/* ─── Bygg ActionItem[] fra overview-dataene ─── */
+function buildActionItems(overview: OverviewData): ActionItem[] {
   const ind = overview.indicators;
 
-  const indicators: Array<{ label: string; severity: Severity; value: string }> = [
+  const defs: Array<{ key: string; label: string; severity: Severity; value: string; href?: string }> = [
     {
+      key: 'lastMatchRound',
       label: 'Siste matcherunde',
       severity: thresholdLastMatchRound(ind.lastMatchRound.hoursSince),
       value: ind.lastMatchRound.hoursSince !== null
         ? `${Math.round(ind.lastMatchRound.hoursSince)} t siden`
         : 'Aldri',
+      href: '/admin/system/status',
     },
     {
-      label: 'Kø-størrelse',
+      key: 'queueSize',
+      label: 'Kø til neste runde',
       severity: thresholdQueueSize(ind.queueSize),
       value: `${ind.queueSize}`,
+      href: '/admin/invites',
     },
     {
+      key: 'roundDuration',
       label: 'Runde-varighet',
       severity: thresholdRoundDuration(ind.lastMatchRound.durationMs),
       value: ind.lastMatchRound.durationMs !== null
@@ -70,64 +84,84 @@ function StatusPanel({ overview }: { overview: OverviewData }) {
         : '—',
     },
     {
+      key: 'openReports',
       label: 'Åpne rapporter',
       severity: thresholdOpenReports(ind.openReports),
       value: `${ind.openReports}`,
+      href: '/admin/reports',
     },
     {
-      label: 'Feil 24 t',
+      key: 'errorsLast24h',
+      label: 'Feil siste døgn',
       severity: thresholdSentryErrors(ind.errorsLast24h),
       value: `${ind.errorsLast24h}`,
+      href: '/admin/logs',
     },
     {
+      key: 'freeQuota',
       label: 'Gratiskvote',
       severity: thresholdFreeQuota(ind.freeQuotaUsed),
-      value: `${ind.freeQuotaUsed.toLocaleString()} / 10 000`,
+      value: `${ind.freeQuotaUsed.toLocaleString('nb-NO')} / 10 000`,
     },
   ];
 
-  // Overall status: verste severity vinner
-  const worst = indicators.reduce<Severity>((acc, i) => {
-    if (i.severity === 'critical') return 'critical';
-    if (i.severity === 'warn' && acc !== 'critical') return 'warn';
-    return acc;
-  }, 'ok');
+  return defs.map((d) => ({ ...d, action: actionFor(d.key, d.severity) }));
+}
+
+const SEVERITY_COLOR: Record<Severity, string> = {
+  ok: '#34D399',
+  warn: '#FBBF24',
+  critical: '#FF4D4D',
+};
+
+/* ─── Indikatorkort med forklaring ─── */
+function IndicatorCard({ item }: { item: ActionItem }) {
+  const color = SEVERITY_COLOR[item.severity];
 
   return (
-    <div className="rounded-2xl p-5" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold tracking-wide" style={{ color: 'rgba(255,255,255,0.6)' }}>
-          STATUSOVERSIKT
-        </h3>
-        <StatusBadge
-          severity={worst}
-          label={worst === 'ok' ? 'Alt grønt' : worst === 'warn' ? 'Advarsler' : 'Kritisk'}
-        />
+    <div
+      className="rounded-xl p-4"
+      style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}
+    >
+      <div className="flex items-center gap-2 mb-2">
+        <span className="h-1.5 w-1.5 rounded-full flex-shrink-0" style={{ background: color }} />
+        <span className="text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>{item.label}</span>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-        {indicators.map((ind) => (
-          <div
-            key={ind.label}
-            className="rounded-xl p-3"
-            style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}
-          >
-            <div className="text-xs mb-2" style={{ color: 'rgba(255,255,255,0.4)' }}>{ind.label}</div>
-            <StatusBadge severity={ind.severity} label="" value={ind.value} />
-          </div>
-        ))}
+      <div className="text-lg font-mono font-semibold mb-1" style={{ color }}>
+        {item.value}
       </div>
+      <p className="text-[11px] leading-snug" style={{ color: 'rgba(255,255,255,0.28)' }}>
+        {item.action ?? explainFor(item.key)}
+      </p>
     </div>
   );
 }
 
-/* ─── CompactMetric — kompakt metrik-kort ─── */
-function CompactMetric({ label, value, color, href }: { label: string; value: string | number; color: string; href?: string }) {
-  const Wrapper = href ? Link : 'div';
+/* ─── Nøkkelkort med ikon og monospace ─── */
+function MetricCard({
+  label, value, color, href, Icon,
+}: {
+  label: string;
+  value: string | number;
+  color: string;
+  href: string;
+  Icon: (p: { className?: string; size?: number }) => JSX.Element;
+}) {
   return (
-    <Wrapper href={href || ''} className={`rounded-xl p-4 ${href ? 'transition-all duration-200 hover:brightness-110' : ''}`} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
-      <div className="text-3xl font-bold mb-1" style={{ color }}>{value}</div>
+    <Link
+      href={href}
+      className="rounded-xl p-4 block transition-colors duration-200 hover:bg-white/[0.04]"
+      style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
+    >
+      <div className="flex items-center justify-between mb-2">
+        <Icon size={15} className="opacity-40" />
+        <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.2)' }}>→</span>
+      </div>
+      <div className="text-2xl font-mono font-bold leading-none mb-1.5" style={{ color }}>
+        {value}
+      </div>
       <div className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>{label}</div>
-    </Wrapper>
+    </Link>
   );
 }
 
@@ -139,7 +173,7 @@ function JourneyPhaseMonitor({ phases }: { phases?: Record<string, number> }) {
 
   const phaseData = phaseKeys.map((key, i) => ({
     label: phaseLabels[i],
-    count: (phases?.[key] ?? 0),
+    count: phases?.[key] ?? 0,
     color: phaseColors[i],
   }));
 
@@ -147,7 +181,9 @@ function JourneyPhaseMonitor({ phases }: { phases?: Record<string, number> }) {
 
   return (
     <div className="rounded-2xl p-5" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
-      <h3 className="text-sm font-semibold mb-4 tracking-wide" style={{ color: 'rgba(255,255,255,0.6)' }}>REISEFASEMONITOR</h3>
+      <h3 className="text-xs font-semibold mb-4 uppercase tracking-[0.12em]" style={{ color: 'rgba(255,255,255,0.4)' }}>
+        Reisefasemonitor
+      </h3>
 
       <div className="flex rounded-full overflow-hidden h-3 mb-4" style={{ background: 'rgba(255,255,255,0.05)' }}>
         {phaseData.map((p) => (
@@ -162,7 +198,7 @@ function JourneyPhaseMonitor({ phases }: { phases?: Record<string, number> }) {
               <div className="w-2.5 h-2.5 rounded-full" style={{ background: p.color }} />
               <span className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>{p.label}</span>
             </div>
-            <span className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.7)' }}>
+            <span className="text-xs font-mono" style={{ color: 'rgba(255,255,255,0.7)' }}>
               {p.count} ({Math.round((p.count / total) * 100)}%)
             </span>
           </div>
@@ -183,10 +219,10 @@ function SystemStatus({ errorsLast24h }: { errorsLast24h?: number }) {
       .then((data) => {
         if (data?.services) {
           setServices(
-            Object.entries(data.services).map(([name, status]: [string, any]) => ({
+            Object.entries(data.services).map(([name, status]: [string, unknown]) => ({
               name,
               status: status === 'ok' ? 'ok' : status === 'error' ? 'error' : 'warning',
-            }))
+            })),
           );
         } else {
           setServices([
@@ -208,10 +244,12 @@ function SystemStatus({ errorsLast24h }: { errorsLast24h?: number }) {
 
   return (
     <div className="rounded-2xl p-5" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
-      <h3 className="text-sm font-semibold mb-4 tracking-wide" style={{ color: 'rgba(255,255,255,0.6)' }}>SYSTEMSTATUS</h3>
+      <h3 className="text-xs font-semibold mb-4 uppercase tracking-[0.12em]" style={{ color: 'rgba(255,255,255,0.4)' }}>
+        Systemtjenester
+      </h3>
 
       {loading ? (
-        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>Laster...</p>
+        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>Laster …</p>
       ) : (
         <div className="space-y-3">
           {services.map((s) => {
@@ -232,8 +270,8 @@ function SystemStatus({ errorsLast24h }: { errorsLast24h?: number }) {
       {errorsLast24h !== undefined && (
         <div className="mt-4 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
           <span className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>
-            Feil 24t:{' '}
-            <strong style={{ color: errorsLast24h > 0 ? '#FBBF24' : '#4ADE80' }}>{errorsLast24h}</strong>
+            Feil 24 t:{' '}
+            <span className="font-mono font-semibold" style={{ color: errorsLast24h > 0 ? '#FBBF24' : '#4ADE80' }}>{errorsLast24h}</span>
           </span>
         </div>
       )}
@@ -244,42 +282,81 @@ function SystemStatus({ errorsLast24h }: { errorsLast24h?: number }) {
 /* ─── Hovedkomponent ─── */
 export default function AdminDashboardPage() {
   const [metrics, setMetrics] = useState<MetricsData | null>(null);
-  const [overview, setOverview] = useState<OverviewData | null>(null); // B5.2
+  const [overview, setOverview] = useState<OverviewData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
-  useEffect(() => {
-    // B5.2: Étt API-kall for alle indikatorer + eksisterende metrics
+  const load = useCallback(() => {
+    setLoading(true);
+    setError(null);
     Promise.all([
-      fetch('/api/admin/metrics').then((res) => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); }),
-      fetch('/api/admin/overview').then((res) => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); }).catch(() => null),
+      fetch('/api/admin/metrics')
+        .then((res) => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); }),
+      fetch('/api/admin/overview')
+        .then((res) => (res.ok ? res.json() : null))
+        .catch(() => null),
     ])
       .then(([metricsData, overviewData]) => {
         setMetrics(metricsData);
         setOverview(overviewData);
+        setLastUpdated(new Date());
       })
-      .catch((err) => setError(err.message))
+      .catch((err: Error) => setError(err.message))
       .finally(() => setLoading(false));
   }, []);
 
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  const actionItems = overview ? buildActionItems(overview) : [];
+
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-start justify-between gap-4 mb-2">
-        <div>
-          <h1 className="text-2xl font-bold mb-1" style={{ color: 'rgba(255,255,255,0.95)' }}>Kommandopanel</h1>
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>Oversikt over Tosom-plattformen</p>
+      {/* Topplinje */}
+      <div className="pb-4" style={{ borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-xl font-semibold mb-0.5" style={{ color: 'rgba(255,255,255,0.92)' }}>
+              Kommandopanel
+            </h1>
+            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>
+              {lastUpdated
+                ? `Oppdatert ${lastUpdated.toLocaleTimeString('nb-NO', { hour: '2-digit', minute: '2-digit' })}`
+                : 'Henter data …'}
+            </p>
+          </div>
+          <button
+            onClick={load}
+            disabled={loading}
+            className="text-xs px-3 py-1.5 rounded-lg transition-colors disabled:opacity-40"
+            style={{
+              background: 'rgba(212,175,55,0.08)',
+              border: '1px solid rgba(212,175,55,0.2)',
+              color: '#D4AF37',
+            }}
+          >
+            {loading ? 'Henter …' : 'Oppdater'}
+          </button>
         </div>
-        <span className="text-xs px-3 py-1.5 rounded-full font-medium" style={{
-          background: loading ? 'rgba(251,191,36,0.1)' : error ? 'rgba(255,77,77,0.1)' : 'rgba(74,222,128,0.1)',
-          color: loading ? '#FBBF24' : error ? '#FF4D4D' : '#4ADE80',
-          border: `1px solid ${loading ? 'rgba(251,191,36,0.2)' : error ? 'rgba(255,77,77,0.2)' : 'rgba(74,222,128,0.2)'}`,
-        }}>
-          {loading ? '⏳ Laster...' : error ? `⚠ ${error}` : '● System aktiv'}
-        </span>
       </div>
 
-      {/* Kompakte Metrikk-kort */}
+      {error && (
+        <div
+          className="rounded-xl px-4 py-3"
+          style={{ background: 'rgba(255,77,77,0.08)', border: '1px solid rgba(255,77,77,0.2)' }}
+        >
+          <p className="text-xs" style={{ color: '#FF4D4D' }}>
+            {error}
+          </p>
+        </div>
+      )}
+
+      {/* Krever handling */}
+      {overview && <ActionRequired items={actionItems} />}
+
+      {/* Nøkkelkort */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         {loading ? (
           Array.from({ length: 6 }).map((_, i) => (
@@ -290,20 +367,31 @@ export default function AdminDashboardPage() {
           ))
         ) : metrics ? (
           <>
-            <CompactMetric label="Brukere" value={metrics.users.total.toLocaleString()} color="#D4AF37" href="/admin/users" />
-            <CompactMetric label="Aktive" value={metrics.users.active.toLocaleString()} color="#4ADE80" href="/admin/users?active=1" />
-            <CompactMetric label="Matcher" value={metrics.matches.active.toLocaleString()} color="#D4AF37" href="/admin/matches" />
-            <CompactMetric label="Reiser" value={metrics.journeys.ongoing.toLocaleString()} color="#60A5FA" href="/admin/journeys" />
-            <CompactMetric label="Meldinger" value={metrics.messages.total.toLocaleString()} color="#34D399" href="/admin/conversations" />
-            <CompactMetric label="Konvers." value={metrics.conversations.active.toLocaleString()} color="#8B5CF6" href="/admin/conversations" />
+            <MetricCard label="Brukere" value={metrics.users.total.toLocaleString('nb-NO')} color="#D4AF37" href="/admin/users" Icon={UsersIcon} />
+            <MetricCard label="Aktive" value={metrics.users.active.toLocaleString('nb-NO')} color="#4ADE80" href="/admin/users" Icon={UsersIcon} />
+            <MetricCard label="Matcher" value={metrics.matches.active.toLocaleString('nb-NO')} color="#D4AF37" href="/admin/matches" Icon={MatchIcon} />
+            <MetricCard label="Reiser" value={metrics.journeys.ongoing.toLocaleString('nb-NO')} color="#60A5FA" href="/admin/journeys" Icon={JourneyIcon} />
+            <MetricCard label="Meldinger" value={metrics.messages.total.toLocaleString('nb-NO')} color="#34D399" href="/admin/conversations" Icon={ChatIcon} />
+            <MetricCard label="Konvers." value={metrics.conversations.active.toLocaleString('nb-NO')} color="#8B5CF6" href="/admin/conversations" Icon={OverviewIcon} />
           </>
         ) : null}
       </div>
 
-      {/* B5.2: StatusPanel med alle indikatorer */}
-      {overview && <StatusPanel overview={overview} />}
+      {/* Alle indikatorer med forklaring */}
+      {overview && (
+        <div>
+          <h3 className="text-xs font-semibold uppercase tracking-[0.12em] mb-3" style={{ color: 'rgba(255,255,255,0.3)' }}>
+            Indikatorer
+          </h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {actionItems.map((item) => (
+              <IndicatorCard key={item.key} item={item} />
+            ))}
+          </div>
+        </div>
+      )}
 
-      {/* SystemStatus + JourneyPhase — side om side */}
+      {/* Systemtjenester + reisefaser side om side */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <SystemStatus errorsLast24h={metrics?.system.errorsLast24h} />
         <JourneyPhaseMonitor phases={metrics?.journeys.phases} />

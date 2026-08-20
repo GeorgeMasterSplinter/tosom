@@ -27,6 +27,7 @@ export const statusFilterSchema = paginationSchema.extend({
 export const adminUsersQuerySchema = paginationSchema.extend({
   role: z.enum(['USER', 'ADMIN']).optional(),
   flaggedOnly: z.enum(['true', 'false']).optional().transform(v => v === 'true'),
+  search: z.string().optional(),
 })
 
 /** Pagination med optional module/level-filter (system logs) */

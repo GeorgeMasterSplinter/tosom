@@ -67,28 +67,6 @@ export interface ChatContextValue {
 const ChatContext = createContext<ChatContextValue | null>(null);
 
 /* ═══════════════════════════════════════
-   MOOD STORAGE — persistert per samtale-ID
-   ═══════════════════════════════════════ */
-
-const MOOD_STORAGE_PREFIX = "tosom:mood:";
-
-function loadMoodFromStorage(conversationId: string | null): MoodId {
-  if (!conversationId || typeof window === "undefined") return DEFAULT_MOOD;
-  try {
-    const stored = localStorage.getItem(`${MOOD_STORAGE_PREFIX}${conversationId}`);
-    if (stored && VALID_MOODS.has(stored as MoodId)) return stored as MoodId;
-  } catch { /* localStorage utilgjengelig */ }
-  return DEFAULT_MOOD;
-}
-
-function saveMoodToStorage(conversationId: string | null, mood: MoodId): void {
-  if (!conversationId || typeof window === "undefined") return;
-  try {
-    localStorage.setItem(`${MOOD_STORAGE_PREFIX}${conversationId}`, mood);
-  } catch { /* localStorage utilgjengelig */ }
-}
-
-/* ═══════════════════════════════════════
    PROVIDER-KOMPONENT
    ═══════════════════════════════════════ */
 
@@ -113,16 +91,23 @@ export function ChatProvider({
   const lastMsgIdRef = useRef<string | null>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Mood-state — init fra DEFAULT_MOOD, les frå storage ved montering/samtale-endring
+  // Mood-state — DELT mood, server-styrt per samtale. Begge parter deler den;
+  // når én bytter, synkroniseres den for begge via polling (og Pusher om aktivert).
   const [mood, setMoodState] = useState<MoodId>(DEFAULT_MOOD);
-
-  useEffect(() => {
-    setMoodState(loadMoodFromStorage(conversationId));
-  }, [conversationId]);
+  const moodRef = useRef<MoodId>(DEFAULT_MOOD);
 
   const setMood = useCallback((newMood: MoodId) => {
+    if (!conversationId) return;
+    // Optimistisk: skift temaet lokalt umiddelbart, så bekräftes av server/polling.
+    moodRef.current = newMood;
     setMoodState(newMood);
-    saveMoodToStorage(conversationId, newMood);
+    fetch("/api/chat/mood", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ conversationId, mood: newMood }),
+    }).catch(() => {
+      /* Feil ved mood-bytte — polling resynkroniserer fra serveren */
+    });
   }, [conversationId]);
 
   const moodTheme = getMoodTheme(mood);
@@ -138,6 +123,13 @@ export function ChatProvider({
       }
       const data = await res.json();
       const currentId = sessionUserId;
+
+      // Synkroniser DELT mood fra serveren (begge parter ser alltid samme mood)
+      const serverMood = data.mood as MoodId | undefined;
+      if (serverMood && VALID_MOODS.has(serverMood) && serverMood !== moodRef.current) {
+        moodRef.current = serverMood;
+        setMoodState(serverMood);
+      }
       const converted: ChatMessage[] = (data.messages || []).map((m: any) => {
         const senderInfo = m.sender ? {
           name: m.sender.name ?? "Bruker",

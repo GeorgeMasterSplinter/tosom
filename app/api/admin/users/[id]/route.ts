@@ -14,10 +14,59 @@ import { requireAuth } from '@/lib/auth/requireAuth'
 import { castToAdminUser } from '@/lib/auth/admin-auth'
 import { errorResponse, successResponse } from '@/lib/api-validator'
 import { recordAdminAction } from '@/lib/admin/audit'
+import { hardDeleteUser } from '@/lib/admin/deleteUser'
 
 export const dynamic = 'force-dynamic'
 
 type AdminAction = 'flag' | 'unflag' | 'reset-onboarding' | 'reset-journey' | 'force-match-end'
+
+/**
+ * DELETE /api/admin/users/[id]
+ *
+ * Permanent sletting av én bruker + alt relasjonert innhold (testdata-rensing).
+ * Destruktiv og uforandrerbar — krever ADMIN og forbyr sletting av seg selv.
+ */
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const result = await requireAuth(req)
+    if (result instanceof NextResponse) return result
+    const adminUser = castToAdminUser(result.user)
+
+    if (adminUser.role !== 'ADMIN') return errorResponse('Berre admin kan slette brukere', 403)
+
+    const targetUserId = (await params).id
+    if (targetUserId === adminUser.id) return errorResponse('Du kan ikke slette din eigen konto', 400)
+
+    const targetUser = await prisma.user.findUnique({
+      where: { id: targetUserId },
+      select: { id: true, email: true, role: true },
+    })
+    if (!targetUser) return errorResponse('Brukar ikkje funnet', 404)
+
+    // Slett permanent (alt relasjonert innhold + bruker)
+    const del = await hardDeleteUser(targetUserId)
+    if (del.skipped === 'not_found') return errorResponse('Brukar ikkje funnet', 404)
+
+    // Logg destruktiv admin-handling
+    await recordAdminAction(adminUser.id, 'USER_DEACTIVATE', { targetUserId, email: targetUser.email, hardDelete: true })
+    await prisma.systemLog.create({
+      data: {
+        level: 'INFO',
+        message: `Brukar ${targetUser.email} blei slettet permanent av admin ${adminUser.id}`,
+        module: 'admin/user-delete',
+        metadata: { targetUserId, adminId: adminUser.id, deleted: del.deleted, imageObjects: del.imageObjects ?? 0 },
+      },
+    }).catch(() => { /* SystemLog-feil skal ikke blokkere */ })
+
+    return successResponse({
+      data: { userId: targetUserId, email: targetUser.email, deleted: del.deleted },
+      message: `Brukar ${targetUser.email} er no slettet permanent.`,
+    })
+  } catch (error) {
+    console.error('[DELETE /api/admin/users/[id]] Error:', error)
+    return NextResponse.json({ error: 'Internt feil' }, { status: 500 })
+  }
+}
 
 async function logSystemLog(message: string, module: string, adminId: string, metadata: Record<string, unknown>) {
   try {

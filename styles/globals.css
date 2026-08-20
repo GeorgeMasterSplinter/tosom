@@ -1330,3 +1330,9 @@ button, a[role="button"], [tabindex="0"] {
 html, body {
   overflow-x: hidden;
 }
+
+/* Rolig puls for aktive statusindikatorer i admin */
+@keyframes ts-pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%      { opacity: 0.15; transform: scale(1.8); }
+}

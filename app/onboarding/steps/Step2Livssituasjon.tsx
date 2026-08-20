@@ -204,6 +204,8 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
           label="Hvordan starter en typisk dag for deg? *"
           value={getValue('dailyRoutine', '')}
           onChange={(v) => onChange('dailyRoutine', v)}
+          placeholder="Beskriv rytmen i en typisk dag — når du er mest aktiv, faste rutiner og hvordan du fyller tiden — så kan vi finne noen hvis hverdagsrytme passer din"
+          mikroguiding="Skriv f.eks. Jeg står opp tidlig, drikker kaffe i ro og går en tur før jobben"
           maxLength={500}
           minChars={10}
           rows={4}

@@ -23,6 +23,17 @@ export default function Step5Relasjonsstil({ data, onChange, onBack, onNext }: P
   const canProceed = validate(data).length === 0;
   const handleNext = () => { const ve = validate(data); if (ve.length > 0) { setErrors(ve); return; } setErrors([]); onNext(); };
   const getValue = (f: string, fb = '') => { const v = data[f]; return v !== undefined && v !== null ? String(v) : fb; };
+  const OPEN_REL = 'åpen uforpliktende';
+  // Regel: vennskap, dating og langvarig parforhold kan kombineres.
+  // «Åpen & uforpliktende» velges alltid alene.
+  const handleRelSeeking = (v: string) => {
+    const vals = v.split(',').map(s => s.trim()).filter(Boolean);
+    if (vals.includes(OPEN_REL) && vals.length > 1) {
+      onChange('relationshipSeeking', OPEN_REL);
+      return;
+    }
+    onChange('relationshipSeeking', vals.join(','));
+  };
   return (
     <OnboardingSlide title="Relasjonsstil" subtitle="Hvordan søker du relasjon — og hvordan balanserer du selvstende med fellesskap?" guidingText="Relasjonsstil forteller oss hvordan du søker — og det er like viktig som verdier." slideIndex={6} totalSlides={13}
       accentColor={OB.section.personality}>
@@ -31,7 +42,7 @@ export default function Step5Relasjonsstil({ data, onChange, onBack, onNext }: P
        {/* Relasjonsstilar — vel hva type relasjon du søker */}
        <OnboardingSelectGrid
          label="Hva type relasjon søker du? *"
-         mikroguiding="Velg den relasjonstypen som passer deg best. Du kan få flere samtidig."
+         mikroguiding="Velg det som passer deg. Vennskap, dating og langvarig parforhold kan kombineres — «Åpen & uforpliktende» velges alltid alene."
          options={[
            { value: 'dyp vennskap', label: 'Dyp Vennskap', icon: '🤝', description: 'Meningsfulle og varige vennskapsband' },
            { value: 'dating', label: 'Dating', icon: '💛', description: 'Romantisk møting med rom for utvikling' },
@@ -39,9 +50,10 @@ export default function Step5Relasjonsstil({ data, onChange, onBack, onNext }: P
            { value: 'åpen uforpliktende', label: 'Åpen & Uforpliktende', icon: '🌊', description: 'Lette og naturlige møter uten krav' },
          ]}
          selectedValue={getValue('relationshipSeeking', '')}
-          onChange={(v) => onChange('relationshipSeeking', v)}
+          onChange={handleRelSeeking}
           columns={2}
-          maxSelected={4}
+          maxSelected={3}
+          multiHint="Du kan velge 1–3 typer — unntatt «Åpen & uforpliktende», som velges alene."
         />
 
        {/* Næringsbehov — kor mye nærheit du treng */}

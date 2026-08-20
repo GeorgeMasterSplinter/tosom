@@ -27,6 +27,7 @@ interface OnboardingSelectGridProps {
   onChange: (value: string) => void;
   columns?: 1 | 2 | 3 | 4;
   maxSelected?: number; // For multi-select (default: 1)
+  multiHint?: string; // Egendefinert hint for multi-select (default: "Vel opp til N alternativ")
   accentColor?: string; // Seksjonsfarge (default: OB.section.identity)
 }
 
@@ -45,6 +46,7 @@ export function OnboardingSelectGrid({
   onChange,
   columns = 2,
   maxSelected = 1,
+  multiHint,
   accentColor = OB.section.identity,
 }: OnboardingSelectGridProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -173,7 +175,7 @@ export function OnboardingSelectGrid({
       {/* Multi-select hint */}
       {maxSelected > 1 && (
         <p className="text-[12px] text-center" style={{ color: OB.textSubtle }}>
-          Vel opp til {maxSelected} alternativ
+          {multiHint ?? `Vel opp til ${maxSelected} alternativ`}
         </p>
       )}
     </div>

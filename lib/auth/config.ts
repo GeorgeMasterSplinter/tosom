@@ -1,81 +1,78 @@
 /**
- * ToSom — NextAuth v5 Configuration (FINAL)
+ * ToSom — NextAuth v5 Configuration (BETA: Email + Passord)
  *
- * Magic Link auth with Prisma adapter + Email provider.
- * Full v5 syntax. No deprecated fields.
+ * Midlertidig auth for beta-test: epost + passord (CredentialsProvider).
+ * Auto-registrering: ny epost → konto lages automatisk.
  *
- * SIKKERHET: CredentialsProvider er FJERNET fra hovedkonfig.
- * Dev-login håndteres via /api/dev-login/ med IP-whitelist og miljø-sikring.
+ * ENDTELIG LØSNING: Vipps (VIPPS-INTEGRATION-PLAN-v1.0.md).
+ * Når Vipps er på plass, fjernes CredentialsProvider og
+ * settes NEXT_PUBLIC_VIPPS_ENABLED=true.
  */
 
 import NextAuth from "next-auth"
-import EmailProvider from "next-auth/providers/email"
-import nodemailer from "nodemailer"
+import CredentialsProvider from "next-auth/providers/credentials"
 import { adapter } from "@/lib/auth/prisma-adapter"
 import { prisma } from "@/lib/prisma"
 import { defaultRole } from "@/lib/auth/roles"
-import { isBetaInviteMode } from "@/config/features"
-import { isInvitedEmail, markInviteUsed } from "@/lib/beta/invites"
+import { hashPassword, verifyPassword } from "@/lib/auth/hash"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter,
 
   providers: [
-    EmailProvider({
-      server: {
-        host: process.env.EMAIL_SERVER_HOST!,
-        port: Number(process.env.EMAIL_SERVER_PORT || 587),
-        auth: {
-          user: process.env.EMAIL_SERVER_USER!,
-          pass: process.env.EMAIL_SERVER_PASSWORD!,
-        },
+    CredentialsProvider({
+      name: "Email & Passord",
+      credentials: {
+        email: { label: "Epost", type: "email" },
+        password: { label: "Passord", type: "password" },
       },
-      from: process.env.EMAIL_FROM || "ToSom <no-reply@tosom.no>",
-      // B-1 FIX: Send faktisk e-post med magic link (var tidligere kun console.log).
-      // Innholdet følger språkmanualen: rolig, varm, uten press.
-      async sendVerificationRequest({ identifier, url, provider }) {
-        // Invitasjonsport (BETA-ACCESS §3): i lukket beta sender vi NÅR ENKELT
-        // magic link til ikke-inviterte e-poster. «Adressen er nøkkelen.»
-        // Dette er forsvarsdybde — primær-gaten er i /api/beta/invite/request.
-        if (isBetaInviteMode() && !(await isInvitedEmail(identifier))) {
-          console.log(`[Tosom Beta] Magic link NEKTET (ikke invitert): ${identifier}`)
-          return
+      async authorize(credentials) {
+        const email = String((credentials as any)?.email ?? "").trim().toLowerCase()
+        const password = String((credentials as any)?.password ?? "")
+
+        if (!email || !password) return null
+
+        // Sjekk om brukeren finnes
+        let user = await prisma.user.findUnique({ where: { email } })
+
+        if (!user) {
+          // AUTO-REGISTRERING: ny epost → lag konto
+          const passwordHash = await hashPassword(password)
+          user = await prisma.user.create({
+            data: {
+              email,
+              password: passwordHash,
+              verified: true,
+              role: "USER",
+            },
+          })
+
+          // Lag minimal profil (onboarding fyller resten)
+          await prisma.profile.create({
+            data: {
+              userId: user.id,
+              age: 25,
+              deepProfileStep: "IDENTITY",
+            },
+          }).catch(() => {})
+
+          console.log(`[Tosom Beta] Ny bruker registrert: ${email}`)
+        } else {
+          // EKISTERENDE BRUKER: verifiser passord
+          if (!user.password) {
+            // Bruker uten passord (fra tidligere magic-link-æra) — sett nytt
+            const passwordHash = await hashPassword(password)
+            await prisma.user.update({
+              where: { id: user.id },
+              data: { password: passwordHash },
+            })
+          } else {
+            const valid = await verifyPassword(password, user.password)
+            if (!valid) return null
+          }
         }
 
-        if (!process.env.EMAIL_SERVER_HOST || !process.env.EMAIL_SERVER_USER) {
-          // Ingen SMTP konfigurert — logg lenken slik at dev kan logge inn manuelt.
-          console.log(`[Tosom Magic Link] (ingen SMTP) ${identifier} → ${url}`)
-          return
-        }
-        const message = [
-          "Hei,",
-          "",
-          "Her er lenken din til Tosom. Den er gyldig i 24 timer.",
-          "",
-          url,
-          "",
-          "Hvis du ikke ba om denne lenken, kan du se bort fra e-posten.",
-          "",
-          "Tosom",
-        ].join("\r\n")
-        const server = provider.server as nodemailer.SMTPTransport.Options
-        const transporter = nodemailer.createTransport({
-          host: server.host,
-          port: server.port,
-          secure: server.port === 465,
-          auth: server.auth,
-        })
-        await transporter.sendMail({
-          from: provider.from,
-          to: identifier,
-          subject: "Din innlogging til Tosom",
-          text: message,
-        })
-
-        // Merk invitasjonen som brukt (best effort) for admin-flaten.
-        if (isBetaInviteMode()) {
-          await markInviteUsed(identifier).catch(() => {})
-        }
+        return { id: user.id, email: user.email, name: user.name }
       },
     }),
   ],

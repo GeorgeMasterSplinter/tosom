@@ -408,6 +408,16 @@ export default function Dashboard() {
         }
         setUserName(session.user.name || '');
 
+        // Onboarding-guard: ny bruker må fullføre profil først
+        const obRes = await fetch('/api/onboarding/progress');
+        if (obRes.ok) {
+          const ob = await obRes.json();
+          if (!ob.onboardingComplete) {
+            window.location.href = '/onboarding';
+            return;
+          }
+        }
+
         // Dashboard data
         const res = await fetch('/api/dashboard/overview');
         if (!res.ok) throw new Error('No access');

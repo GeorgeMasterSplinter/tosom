@@ -1,7 +1,7 @@
 # TOSOM — BETA-DRIFTSPLAN v1.0
 
-**Dato:** 2026-08-20
-**Commit:** `c3ad9f6`
+**Dato:** 2026-08-21
+**Commit:** `d1cae09`
 **Status:** Aktiv. Gjelder fra siste kodeoppgave til beta er avsluttet.
 **Kanonisk kilde:** `TOSOM-SUPER-MASTERPLAN-v1.0.md`
 **Følgedokumenter:** `ADMIN-KOMMANDOPANEL-v1.0.md`, `BETA-ACCESS-PLAN-v1.0.md`, `ACT-PIPELINE-v1.0.md`, `ACT-STATE.json`
@@ -71,20 +71,20 @@ Beta betyr at ekte mennesker legger ekte historier inn i systemet. Fra den dagen
 
 Tosom har ingen supportavdeling. Det finnes én person som skal se hele plattformen: George. Da må plattformen kunne ses fra ett sted.
 
-### 🔴 AVVIK — D-1 … D-7
-Admin-panelet er ikke driftsklart. Sju konkrete avvik, alle kartlagt i `ADMIN-KOMMANDOPANEL-v1.0.md`:
+### 🟢 IMPLEMENTERT — D-1 … D-7 alle lukket
+De sju avvikene i admin-panelet (kartlagt i `ADMIN-KOMMANDOPANEL-v1.0.md`) er alle lukket i commit `d1cae09` (K-1 … K-9):
 
-| ID | Avvik | Alvor |
+| ID | Avvik | Status |
 |---|---|---|
-| D-1 | Sju sider er bygget, men ikke lenket i navigasjonen — blant dem `/admin/reports` (moderering) og `/admin/invites` (invitasjonsporten) | 🔴 |
-| D-2 | `/admin/chat` viser oppdiktede samtaler (`mockChats`, linje 167) | 🔴 |
-| D-3 | `/admin/tools` viser oppdiktet logg (`mockLogs`, linje 94) | 🔴 |
-| D-4 | Indikatorer viser tall uten å si hva tallet betyr eller hva som skal gjøres | 🟠 |
-| D-5 | Ingen samlet visning av hva som krever handling nå | 🟠 |
-| D-6 | Emoji som ikonspråk, farger hardkodet utenfor tokensystemet | 🟡 |
-| D-7 | Layout leser sti via `x-url`-header — skjørt | 🟡 |
+| D-1 | Sju sider ikke lenket i navigasjonen | ✅ K-2 — alle ruter lenket i 4 grupper |
+| D-2 | `/admin/chat` viste oppdiktede samtaler | ✅ K-7 — mot ekte data, `mockChats` fjernet |
+| D-3 | `/admin/tools` viste oppdiktet logg | ✅ K-8 — mot ekte logg, `mockLogs` fjernet |
+| D-4 | Indikatorer uten mening | ✅ K-3 — `thresholds.ts` sier hva tallet betyr |
+| D-5 | Ingen handlingsoversikt | ✅ K-4 — «Krever handling»-stripe |
+| D-6 | Emoji + hardkodet farge | ✅ K-1 — SVG-ikoner, tokens |
+| D-7 | Layout leste sti via `x-url`-header | ✅ K-9 — restrukturert med rutegruppe `(panel)/` |
 
-D-2 og D-3 er de alvorligste. **Et panel som viser oppdiktede tall er verre enn ingen panel**, fordi det gir falsk trygghet.
+**Et panel som viser oppdiktede tall er verre enn ingen panel** — derfor var D-2 og D-3 forutsetningen for første invitasjon. De er nå mot sannt data.
 
 ---
 
@@ -217,13 +217,13 @@ DI-1 er en tillitsregel. Panelet skal vise **at** en samtale finnes og hvor akti
 
 ### Før første invitasjon
 
-| Steg | Hva | Dokument |
-|---|---|---|
-| 1 | Lukk D-2 og D-3 — fjern alle oppdiktede tall | KOMMANDOPANEL K-7, K-8 |
-| 2 | Lukk D-1 — gjør alle sider synlige | KOMMANDOPANEL K-2 |
-| 3 | Lukk D-4 og D-5 — panelet skal si hva som skal gjøres | KOMMANDOPANEL K-3, K-4, K-5 |
-| 4 | F-6 — hemmeligheter til passordhåndterer | MASTERSPLINTER |
-| 5 | Legg inn 10 adresser, ikke 50 | BETA-ACCESS |
+| Steg | Hva | Dokument | Status |
+|---|---|---|---|
+| 1 | Lukk D-2 og D-3 — fjern alle oppdiktede tall | KOMMANDOPANEL K-7, K-8 | ✅ lukket (`d1cae09`) |
+| 2 | Lukk D-1 — gjør alle sider synlige | KOMMANDOPANEL K-2 | ✅ lukket (`d1cae09`) |
+| 3 | Lukk D-4 og D-5 — panelet skal si hva som skal gjøres | KOMMANDOPANEL K-3, K-4, K-5 | ✅ lukket (`d1cae09`) |
+| 4 | F-6 — hemmeligheter til passordhåndterer | MASTERSPLINTER | ⏳ manuelt (George) |
+| 5 | Legg inn 10 adresser, ikke 50 | BETA-ACCESS | ⏳ manuelt (George) |
 
 ### Etter de første ti
 

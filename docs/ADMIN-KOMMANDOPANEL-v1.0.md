@@ -1,8 +1,8 @@
 # TOSOM — ADMIN KOMMANDOPANEL v1.0
 
-**Dato:** 2026-08-20
-**Commit:** `c3ad9f6`
-**Status:** Gjennomføringsdokument. Lukker D-1 … D-7 i `TOSOM-BETA-DRIFTSPLAN-v1.0.md`.
+**Dato:** 2026-08-21
+**Commit:** `d1cae09`
+**Status:** GJENNOMFØRT. D-1 … D-7 i `TOSOM-BETA-DRIFTSPLAN-v1.0.md` er alle lukket (K-1 … K-9).
 **Kanonisk kilde:** `TOSOM-SUPER-MASTERPLAN-v1.0.md`
 **Arbeidsmetode:** `ACT-PIPELINE-v1.0.md` — ett steg om gangen, patch-format, verifisering mellom hver.
 
@@ -62,21 +62,21 @@ De åtte terskelfunksjonene (`thresholdLastMatchRound`, `thresholdQueueSize`, `t
 
 ## 3. Nåværende tilstand
 
-### 🔴 AVVIK
+### 🟢 IMPLEMENTERT — alle lukket
 
-| ID | Avvik | Bevis |
-|---|---|---|
-| D-1 | Sju sider uten navigasjon | 15 ruter finnes, 8 er lenket i `AdminSidebar.tsx` |
-| D-2 | Oppdiktede samtaler | `app/admin/chat/page.tsx:167` — `mockChats` |
-| D-3 | Oppdiktet logg | `app/admin/tools/page.tsx:94` — `mockLogs` |
-| D-4 | Tall uten mening | `dashboard/page.tsx` viser verdi, aldri konsekvens |
-| D-5 | Ingen handlingsoversikt | Du må lese alle seks kort for å vite om noe haster |
-| D-6 | Emoji + hardkodet farge | `AdminSidebar.tsx:11-20`, inline `rgba()` i alle sider |
-| D-7 | Skjør sti-lesing | `app/admin/layout.tsx` leser `x-url`-header |
+De sju avvikene under var tilstanden da dette dokumentet ble skrevet. Alle er nå lukket i commit `d1cae09`. Stegene K-1 … K-9 nedenfor er referanse for hvordan de ble gjennomført.
 
-**Usynlige ruter i dag:** `/admin/reports`, `/admin/invites`, `/admin/logs`, `/admin/resonance`, `/admin/journey-content`, `/admin/chat`, `/admin/system`.
+| ID | Avvik (før) | Lukt med | Status |
+|---|---|---|---|
+| D-1 | Sju sider uten navigasjon | K-2 | ✅ |
+| D-2 | Oppdiktede samtaler (`mockChats`) | K-7 | ✅ |
+| D-3 | Oppdiktet logg (`mockLogs`) | K-8 | ✅ |
+| D-4 | Tall uten mening | K-3 | ✅ |
+| D-5 | Ingen handlingsoversikt | K-4 | ✅ |
+| D-6 | Emoji + hardkodet farge | K-1 | ✅ |
+| D-7 | Skjør sti-lesing (`x-url`) | K-9 | ✅ |
 
-At `/admin/reports` er usynlig er alvorlig — det er moderering. At `/admin/invites` er usynlig er blokkerende for beta.
+Alle admin-ruter er nå lenket i `AdminSidebar.tsx` (4 grupper: Oversikt · Mennesker · System · Verktøy), inkludert `/admin/reports` (moderering) og `/admin/invites` (invitasjonsporten). `/admin/chat` og `/admin/tools` viser sannt data.
 
 ---
 

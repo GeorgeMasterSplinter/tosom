@@ -1,14 +1,14 @@
 {
   "version": "1.0",
   "updatedAt": "2026-08-20",
-  "commit": "b726ef8",
+  "commit": "604cf2c",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v1.0.md",
   "health": {
     "tests": "224/224",
     "typecheck": "0 errors",
     "productionBuild": "verified"
   },
-  "currentPhaseId": "s16-pii-skrubbing",
+  "currentPhaseId": "s17-varsling-watchdog",
   "blockers": [
     {
       "id": "B-1",
@@ -31,5 +31,5 @@
       "status": "closed"
     }
   ],
-  "nextAction": "S-16 ferdig: PII-skrubbing via én felles modul (lib/observability/pii.ts). Fjerner dupliserte inline-skrubbere fra 4 Sentry-configs, legger på sendDefaultPii:false, skruber structured DeepProfile rekursivt. 9 nye enhetstester. S-12/13/14/15/18 verifisert ferdig. Neste åpen: S-17 varsling, S-10 retention, S-9 sletting."
+  "nextAction": "S-12/13/14/15/16/17/18 alle ferdig/verifisert. S-17: watchdog for mista lørdagskjøring lagt til (SystemLog-sjekk >8d → critical alert); de andre 4 varslene eksisterte. Gjenstår: S-9 sletting (re-test mot clean DB), S-10 retention, S-11 paginering (uproblematisk ved beta-volum)."
 }

@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: tosom
       POSTGRES_DB: tosom_dev
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"   # F-2 (MASTERSPLINTER): bind til loopback — ikke eksponert på nettverket
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

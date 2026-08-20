@@ -102,6 +102,30 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ ok: true, skipped: true, reason: 'matching_disabled' });
   }
 
+  // S-17: Watchdog — «runden ble ikke kjørt innen 03:00 lørdag».
+  // Runden kjører en gang i uken. Dersom sist logga kjøring er eldre enn
+  // en uke (8 dager for tåle en ekstra uke), har scheduleren mistet en eller
+  // flere kjøringer — og folk i køen venter forgjeves. Varsler kritisk.
+  // Sjekken er best-effort: en feil her må aldri bryte selve runden.
+  try {
+    const lastRun = await prisma.systemLog.findFirst({
+      where: { module: 'cron:matching', level: { in: ['INFO', 'WARN'] } },
+      orderBy: { createdAt: 'desc' },
+      select: { createdAt: true },
+    });
+    const MAX_STALE_MS = 8 * 24 * 60 * 60 * 1000;
+    if (lastRun && Date.now() - lastRun.createdAt.getTime() > MAX_STALE_MS) {
+      const staleDays = Math.round((Date.now() - lastRun.createdAt.getTime()) / (24 * 60 * 60 * 1000));
+      await sendAlert(
+        'critical',
+        'Matcherunde ser ut til å ikke ha kjørt',
+        `Sist logga lørdagskjøring var for ${staleDays} dager siden. Scheduleren kan ha mistet en eller flere kjøringer — noen i køen venter forgjeves.`
+      );
+    }
+  } catch {
+    // Watchdog feiler aldri runden.
+  }
+
   let lockAcquired = false;
   let deferred = false;
   let paired = 0;

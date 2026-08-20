@@ -8,7 +8,7 @@
     "typecheck": "0 errors",
     "productionBuild": "verified"
   },
-  "currentPhaseId": "security-stability-plan-komplett",
+  "currentPhaseId": "beta-klar-alle-runder-ferdig",
   "blockers": [
     {
       "id": "B-1",
@@ -31,5 +31,5 @@
       "status": "closed"
     }
   ],
-  "nextAction": "SECURITY-STABILITY-PLAN v2.0 KOMPLETT. Alle S-items ferdig/verifisert: S-9 (sletting), S-10 (oppbevaring: anonymizeUser + retention-cron), S-11 (sperreliste: A-4 6m tidsvindu på plass — uproblematisk ved beta-volum), S-12 (try/catch par-scoring), S-13 (bilde-lås), S-14 (eierskapstester), S-15 (UserBlock), S-16 (PII-skrubbing), S-17 (varsling + watchdog), S-18 (prodbuild). Følg-opp (ikke S-items): lastLoginAt (presis inaktivitet), endedAt-index på MatchHistory ved volumvekst, lib/email.ts (varsling-kanal)."
+  "nextAction": "BETA-KLAR — alle 4 runder i SUPER-MASTERPLAN §15 ferdig. Runde 1-2 (blokkere B-1→B-4, PDF B-3): closed. Runde 3 (beta-drift): invitasjonsport (lib/beta/invites.ts + isBetaInviteMode gate + /admin/invites) + M-9 observasjon (alle 10 runde-felt logges til SystemLog) + admin-analytics — alt på plass. Runde 4 (opprydding G-1/G-2/G-3/G-5): G-1=M-7 (døde motorer borte), G-2=M-2 (kø-ventil fjernet), G-3=M-8 (memory.json rett), G-5 (docs ryddet, TOSOM-MASTERPLAN-v9.0 arkivert). Gjenstår før første invitasjon: §7.8 full-loop-test i dev (onboarding→kø→match→reise→PDF→sletting), og MASTERSPLINTER F-6 (.env→passordhåndterer, manuelt). Følg-opp: lastLoginAt, endedAt-index, lib/email.ts."
 }

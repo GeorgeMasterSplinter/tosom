@@ -1,14 +1,14 @@
 {
   "version": "1.0",
   "updatedAt": "2026-08-20",
-  "commit": "465e118",
+  "commit": "ac08d46",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v1.0.md",
   "health": {
-    "tests": "227/227",
+    "tests": "229/229",
     "typecheck": "0 errors",
     "productionBuild": "verified"
   },
-  "currentPhaseId": "s10-anonymiserings-kjerne",
+  "currentPhaseId": "s10-retention-cron-ferdig",
   "blockers": [
     {
       "id": "B-1",
@@ -31,5 +31,5 @@
       "status": "closed"
     }
   ],
-  "nextAction": "S-9 verifisert ferdig (s9-deletion dekker alle 5 punkter inkl. bilde-lagring, grønn). S-10 kjernen ferdig: lib/privacy/anonymize.ts (anonymizeUser — sletter auth+profile, nuller PII, beholder User/MatchHistory/Report, partner-sikker, idempotent) + 3 tester. jest.config.js: maxWorkers=1 fikser flak ved parallelle DB-suites som deler én test-DB. Gjenstår: S-10 cron-kabling (inaktivitetsgrense + forvarsel 30d), S-11 paginering (uproblematisk ved beta-volum)."
+  "nextAction": "S-10 FULLSTENDIG: kjernen (anonymizeUser) + retention-cron (runRetention — 12m anonymiser, 11m varsel, RETENTION_ENABLED off default, wired i journey-cron, 2 tester). Inaktivitetstegn: updatedAt (proksy, ingen schema-endring); lastLoginAt er dokumentert follow-up. S-9 verifisert ferdig. jest maxWorkers=1. Gjenstår: S-11 paginering (uproblematisk ved beta-volum ifølge plan)."
 }

@@ -67,9 +67,17 @@ export const features = {
   enableJourney: true,
 
   /**
-   * Om chat er aktivert.
+   * Om chat er aktivert
    */
   enableChat: true,
+
+  /**
+   * S-10: RETENTION_ENABLED — oppbevaringskron for inaktive kontoer.
+   * Default: OFF (opt-in). Sett RETENTION_ENABLED=true når du er klar.
+   * Varsler ved 11 mnd inaktivitet (Notification + SystemLog),
+   * anonymiserer ved 12 mnd via lib/privacy/anonymize.ts.
+   */
+  enableRetention: process.env.RETENTION_ENABLED === 'true',
 };
 
 /** Sjekk om betaling er aktivert */
@@ -86,3 +94,10 @@ export const isMaintenanceMode = (): boolean => features.maintenanceMode;
 
 /** Sjekk om lukket beta (invitasjonsport) er aktiv */
 export const isBetaInviteMode = (): boolean => features.betaInviteMode;
+
+/**
+ * S-10: Sjekk om oppbevaringskron (retention) er aktiv.
+ * Leses LIVE fra env (ikke features.enableRetention på modul-load) slik at
+ * det kan slås til/av uten restart og testes isolert.
+ */
+export const isRetentionEnabled = (): boolean => process.env.RETENTION_ENABLED === 'true';

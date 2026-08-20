@@ -16,6 +16,7 @@ import { timingSafeEqual } from 'crypto';
 import type { GuidedQuestion } from '@prisma/client';
 import { sendAlert } from '@/lib/observability/alert'; // B5.6
 import { getPhaseForDay } from '@/lib/journey/engine'; // ST3.1
+import { runRetention } from '@/lib/privacy/retention'; // S-10
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
@@ -397,6 +398,15 @@ export async function GET(req: NextRequest) {
       }
     } catch (watchdogErr) {
       console.error('[cron/journey] Watchdog feilet:', watchdogErr);
+    }
+
+    // S-10: Oppbevaring — anonymiserer inaktive kontoer (opt-in via RETENTION_ENABLED).
+    // Kjører best-effort: en feil her bryter aldri heartbeat eller resten av cronen.
+    // (Hobby: maks 2 cron-jobber — derfor i journey-cron, ikke som egen endpoint.)
+    try {
+      await runRetention();
+    } catch (retErr) {
+      console.error('[cron/journey] Retention feilet:', retErr);
     }
   }
 }

@@ -14,7 +14,7 @@ import { getDistancePrefRange } from '@/config/distance-prefs';
 export const basicProfileSchema = z
   .object({
     identityName: z.string().min(2, 'Navn må vere minst 2 tegn').max(50, 'Navn kan vere maks 50 tegn'),
-    age: z.coerce.number().min(23, 'Du må vere minst 23 år').max(99, 'Alder kan ikke vere over 99'),
+    age: z.coerce.number().min(21, 'Du må vere minst 21 år').max(99, 'Alder kan ikke vere over 99'),
     gender: z.string().min(1, 'Velg eit kjønn'),
     seekingGender: z.string().min(1, 'Velg kven du søker'),
     height: z.coerce.number().min(100).max(250).optional(),
@@ -27,8 +27,9 @@ export const basicProfileSchema = z
     city: z.string().min(1, 'Hvor bor du?').max(100),
     postalCode: z.string().regex(/^\d{4}$/, 'Postnummer må ha fire siffer'),
     distancePref: z.coerce.number(),
-    agePrefMin: z.coerce.number().min(23).max(99),
-    agePrefMax: z.coerce.number().min(23).max(99),
+    agePrefMin: z.coerce.number().min(21).max(99),
+    agePrefMax: z.coerce.number().min(21).max(99),
+
   })
   .superRefine((val, ctx) => {
     // Dag 11: tetthetsbasert avstandsvalg — område basert på postnummer

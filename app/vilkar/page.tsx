@@ -1,137 +1,287 @@
 'use client';
 
+/**
+ * Tosom — Vilkår for bruk
+ *
+ * Versjonert via config/legal.ts. Ved endring: bump TERMS_VERSION der,
+ * slik at User.termsVersion dokumenterer hvilken tekst brukeren aksepterte.
+ *
+ * ⚠️ Utkast til advokatgjennomgang. Se docs/JURIDISK-GRUNNLAG-v1.0.md
+ * for åpne spørsmål — særlig A-1 (angrerett) og A-4 (ansvarsbegrensning).
+ */
+
+import Link from 'next/link';
 import { Footer } from '@/components/ui/layout/Footer';
-import { ToSomSection, ToSomButton } from '@/components/ui/system';
+import { ToSomSection } from '@/components/ui/system';
 import { color, typographyToStyle } from '@/config/design-tokens';
-import GlassCard from '@/components/ui/cards/GlassCard';
+import { COMPANY, companyIdentification, companyFooterLine, TERMS_VERSION, TERMS_UPDATED, MIN_AGE, PRICING, JOURNEY } from '@/config/legal';
 
 /* ========================
-   INLINE SVG-ikoner
+   INNHOLD
    ======================== */
 
-function IconAge() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
-    </svg>
-  );
+interface Clause {
+  id: string;
+  title: string;
+  paragraphs: string[];
+  list?: string[];
 }
 
-function IconLogin() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-      <polyline points="10,17 15,12 10,7" />
-      <line x1="15" y1="12" x2="3" y2="12" />
-    </svg>
-  );
-}
-
-function IconProfile() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
-    </svg>
-  );
-}
-
-function IconMatch() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-    </svg>
-  );
-}
-
-function ImageIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-      <circle cx="8.5" cy="8.5" r="1.5" />
-      <polyline points="21,15 16,10 5,21" />
-    </svg>
-  );
-}
-
-function IconEnd() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-      <polyline points="16,17 21,12 16,7" />
-      <line x1="21" y1="12" x2="9" y2="12" />
-    </svg>
-  );
-}
-
-function IconCopyright() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="10" />
-      <path d="M14 8a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2" />
-      <path d="M10 16a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2" />
-    </svg>
-  );
-}
-
-const sections: { icon: React.ReactNode; title: string; content: string; note?: string }[] = [
+const clauses: Clause[] = [
   {
-    icon: <IconAge />,
-    title: 'Aldersgrense — 21 år',
-    content: 'Du må være 21 år for å bruke Tosom. Vi tar alderskravet svært alvorlig for å sikre et trygt miljø for voksne som søker ekte forbindelse. Innlogging via Vipps (BankID) verifiserer alderen din.',
+    id: '1',
+    title: 'Avtalen og partene',
+    paragraphs: [
+      `Disse vilkårene utgjør avtalen mellom deg som bruker og ${companyIdentification()}.`,
+      'Ved å opprette konto bekrefter du at du har lest og godtatt vilkårene. Godtar du dem ikke, kan du ikke bruke Tosom.',
+      'Avtalen gjelder fra du oppretter konto, og til kontoen er slettet.',
+    ],
   },
   {
-    icon: <IconLogin />,
-    title: 'Oppretting av konto og innlogging',
-    content: 'Du oppretter en konto med Vipps (BankID-verifisert). Kontoen er knyttet til din identitet. Ved registrering samtykker du til disse vilkårene, og samtykket lagres med tidsstempel.',
+    id: '2',
+    title: 'Hva Tosom er',
+    paragraphs: [
+      'Tosom er en relasjonsplattform for voksne. Vi kobler to personer og gir dere et privat rom med en guidet reise over 30 dager.',
+      'Tosom er ikke en datingapp. Det finnes ingen strøm av profiler, ingen sveiping og ingen mulighet til å velge mellom flere personer. Du får én kobling om gangen.',
+    ],
   },
   {
-    icon: <IconMatch />,
-    title: 'Én reise — 30 dager',
-    content: 'En reise koster 349 kroner og gir deg én match i én 30-dagers reise. Vi kobler natt til lørdag, og reisen starter lørdag morgen. Du kan bare ha én aktiv reise om gangen.',
+    id: '3',
+    title: 'Hva vi leverer',
+    paragraphs: [
+      'Det du får er én kobling til én person.',
+      `Koblingen skjer natt til lørdag. Sammen med den får dere et privat samtalerom og en guidet reise over ${JOURNEY.totalDays} dager. Reisen er rammen koblingen leveres i — det er koblingen som er selve leveransen.`,
+      'Konkret betyr det:',
+    ],
+    list: [
+      'Én kobling til én annen bruker, gjort av vår matching-motor',
+      'Et privat samtalerom mellom dere to',
+      `Daglige tema og spørsmål gjennom ${JOURNEY.totalDays} dager`,
+      `Mulighet til å dele bilder fra dag ${JOURNEY.imageUnlockDay}`,
+      'Mulighet til å avslutte når du vil',
+    ],
   },
   {
-    icon: <IconProfile />,
-    title: 'Kobling — ikke valg',
-    content: 'Tosom kobler deg til én person basert på kunnskapsbasert matching.\nDu trenger ikke velge mellom hundre profiler eller sveipe deg gjennom et marked.\nI stedet får du én person som faktisk passer deg — basert på verdier, livsstil, kommunikasjon og fremtidsønsker.\n\nDu slipper valgene som skaper stress.\nVi kobler deg til én person som matcher deg på det som betyr noe.',
+    id: '4',
+    title: 'Hva vi ikke lover',
+    paragraphs: [
+      'Dette er viktig, og vi vil være tydelige på det.',
+      'Vi lover en kobling og et rom. Vi lover ikke et resultat.',
+    ],
+    list: [
+      'Vi kan ikke garantere at du får en kobling i en bestemt runde. Det avhenger av hvem andre som står i kø.',
+      'Vi kan ikke garantere at koblingen fører til kontakt, vennskap eller forhold.',
+      'Vi kan ikke garantere at den andre personen svarer, eller at samtalen fortsetter.',
+      'Vi gjør ingen bakgrunnssjekk av brukere utover identitet og alder verifisert gjennom Vipps.',
+      'Vi kan ikke garantere at plattformen alltid er tilgjengelig uten avbrudd.',
+    ],
   },
   {
-    icon: <IconProfile />,
+    id: '5',
+    title: `Aldersgrense — ${MIN_AGE} år`,
+    paragraphs: [
+      `Du må ha fylt ${MIN_AGE} år for å bruke Tosom. Alderen verifiseres gjennom Vipps, som bruker BankID.`,
+      `Oppdager vi at en bruker er under ${MIN_AGE} år, stenges kontoen umiddelbart og alle opplysninger slettes.`,
+    ],
+  },
+  {
+    id: '6',
+    title: 'Konto og innlogging',
+    paragraphs: [
+      'Du oppretter konto med Vipps. Kontoen er personlig, og du kan bare ha én.',
+      'Du er ansvarlig for aktiviteten på kontoen din. Mistenker du at noen andre har fått tilgang, skal du si fra til oss.',
+      'Du kan ikke overdra kontoen til andre, og du kan ikke opptre på vegne av noen andre.',
+    ],
+  },
+  {
+    id: '7',
+    title: 'Profilen din',
+    paragraphs: [
+      'Profilen du bygger i onboarding er privat. Den vises aldri offentlig, og andre brukere ser den ikke.',
+      'Profilen brukes kun av matching-motoren for å finne en kobling. Personen du kobles med ser bare et begrenset utvalg opplysninger.',
+      'Du er ansvarlig for at opplysningene du oppgir er riktige. Bevisst uriktige opplysninger er brudd på vilkårene.',
+    ],
+  },
+  {
+    id: '8',
+    title: 'Koblingen',
+    paragraphs: [
+      'Matcherunden kjøres én gang i uken, natt til lørdag. Koblingen gjøres automatisk av matching-motoren, basert på det du har oppgitt om verdier, livssituasjon og relasjonsstil.',
+      'Du velger ikke hvem du kobles med, og du kan ikke be om en annen. Får du ingen kobling i en runde, står du i kø til neste lørdag.',
+      'Motoren bruker aldri bilder eller utseende.',
+    ],
+  },
+  {
+    id: '9',
+    title: 'Reisen',
+    paragraphs: [
+      `Reisen varer ${JOURNEY.totalDays} dager og er delt i fire faser. Innholdet er regelstyrt og likt for alle — det finnes ingen AI som skriver meldinger, gir råd eller opptrer som samtalepartner.`,
+      `Bilder kan først deles fra dag ${JOURNEY.imageUnlockDay}. Dette er en bevisst begrensning som ikke kan omgås.`,
+      'Du kan ha én aktiv reise om gangen.',
+    ],
+  },
+  {
+    id: '10',
     title: 'Hva vi forventer av deg',
-    content: 'Tosom bygger på respekt. Du snakker med et menneske som har valgt å åpne seg. Ingen trakassering, ingen press, ingen upassende innhold. Du deler ikke andres bilder, meldinger eller opplysninger videre. Du bruker ikke Tosom kommersielt eller til å selge noe.',
+    paragraphs: [
+      'Tosom skal være et rom der voksne kan møtes med ro og respekt. Derfor forventer vi at du:',
+    ],
+    list: [
+      'Er ærlig om hvem du er',
+      'Behandler den andre personen med respekt',
+      'Respekterer grenser som blir satt',
+      'Ikke deler innhold som er støtende, truende eller ulovlig',
+      'Ikke bruker plattformen til markedsføring, salg eller innsamling',
+      'Ikke forsøker å omgå tekniske begrensninger',
+      'Ikke deler andres opplysninger eller bilder utenfor plattformen',
+    ],
   },
   {
-    icon: <IconEnd />,
-    title: 'Hvis noen bryter reglene',
-    content: 'Opplever du noe ubehagelig, kan du rapportere det i samtalen eller under Innstillinger → Sikkerhet. Vi leser alle rapporter. Ved brudd gir vi advarsel eller stenger kontoen, avhengig av alvor. Ved grove brudd stenges kontoen umiddelbart og uten refusjon. Du kan også avslutte reisen eller blokkere og avslutte reisen når som helst.',
+    id: '11',
+    title: 'Forbudt bruk',
+    paragraphs: [
+      'Følgende fører til umiddelbar stenging av kontoen:',
+    ],
+    list: [
+      'Trakassering, trusler eller hatefulle ytringer',
+      'Seksuelt innhold som deles uten samtykke',
+      'Innhold som involverer mindreårige',
+      'Falsk identitet eller villedende opplysninger om hvem du er',
+      'Økonomisk utnyttelse, svindel eller forsøk på dette',
+      'Automatisert innhenting av data fra plattformen',
+      'Forsøk på å skaffe seg uberettiget tilgang til systemet',
+    ],
   },
   {
-    icon: <IconEnd />,
+    id: '12',
+    title: 'Rapportering og moderering',
+    paragraphs: [
+      'Opplever du noe ubehagelig, kan du rapportere det fra samtalen eller under Innstillinger. Alle rapporter blir lest.',
+      'Ved brudd på vilkårene kan vi gi advarsel, fryse samtalen, avslutte reisen eller stenge kontoen. Hvilket tiltak vi velger avhenger av alvoret.',
+      'Ved grove brudd stenger vi kontoen umiddelbart og uten varsel.',
+      'Vi leser ikke samtaler uten at det foreligger en rapport. Dette er en fast regel hos oss.',
+      'Du kan når som helst blokkere den du er koblet med, og avslutte reisen.',
+    ],
+  },
+  {
+    id: '13',
+    title: 'Bilder',
+    paragraphs: [
+      `Bilder kan deles fra dag ${JOURNEY.imageUnlockDay} av reisen. Du bestemmer selv om du vil dele.`,
+      'Du beholder rettighetene til bildene dine. Du gir oss en begrenset rett til å lagre og vise dem i samtalen, kun så lenge det er nødvendig for å levere tjenesten.',
+      'Du kan ikke laste opp bilder av andre uten deres samtykke, og ikke bilder du ikke har rett til å dele.',
+      'Bilder slettes når reisen avsluttes.',
+    ],
+  },
+  {
+    id: '14',
+    title: 'Pris og betaling',
+    paragraphs: [
+      'Tosom er i lukket beta. I denne perioden er tjenesten gratis for inviterte brukere, og det kreves ingen betaling.',
+      `Når Tosom åpner for alle, blir reisen gratis for de første ${PRICING.freeUserCap.toLocaleString('nb-NO')} brukerne. Deretter koster én reise ${PRICING.journeyPrice} kroner, betalt én gang. Det er ingen abonnement og ingen løpende kostnader.`,
+      'Vi varsler i god tid før prismodellen trer i kraft. Du blir aldri belastet uten at du har godkjent det på forhånd.',
+    ],
+  },
+  {
+    id: '15',
+    title: 'Angrerett og refusjon',
+    paragraphs: [
+      'Så lenge tjenesten er gratis, har dette punktet ingen økonomisk betydning. Det gjelder fra betaling innføres.',
+      'Norsk lov gir deg som forbruker angrerett på digitale tjenester. Retten faller bort når leveringen har begynt, forutsatt at du på forhånd har samtykket til det og forstått hva det innebærer. Du blir bedt om begge deler før du betaler.',
+      'Grensen går ved koblingen:',
+    ],
+    list: [
+      'Fram til koblingen er gjort natt til lørdag, kan du melde deg ut og få hele beløpet tilbake. Uten spørsmål.',
+      'Når koblingen er gjort, er tjenesten levert, og angreretten er bortfalt.',
+    ],
+  },
+  {
+    id: '16',
+    title: 'Hvorfor grensen går ved koblingen',
+    paragraphs: [
+      'Vi vil at du skal forstå hvorfor, ikke bare at det er slik.',
+      `Det du betaler for er koblingen til én bestemt person. I det øyeblikket koblingen skjer, har vi levert det du kjøpte — uavhengig av hva som skjer videre i de ${JOURNEY.totalDays} dagene.`,
+      'Koblingen kan heller ikke gjøres om. En annen person er tildelt deg, og den personen er dermed ikke tilgjengelig for noen andre den uken. Leveransen berører et annet menneske, og den kan ikke tas tilbake.',
+      'Derfor er refusjonsretten romslig helt fram til koblingen, og opphører idet den er gjort.',
+    ],
+  },
+  {
+    id: '17',
     title: 'Avslutning og sletting',
-    content: 'Motparten kan avslutte reisen når som helst, og samtalen slettes da for begge. Ved reiseslutt slettes alt innhold. Velger du «Vi fant hverandre», slettes hele kontoen din. Du kan også avslutte tidlig.',
+    paragraphs: [
+      'Du kan avslutte reisen eller slette kontoen når som helst, uten å oppgi grunn.',
+      'Velger dere «vi fant hverandre», slettes begge kontoene og hele samtalen. Dette kan ikke angres, og begge må bekrefte.',
+      'Ved sletting fjernes profil, samtaler og bilder. Enkelte opplysninger kan beholdes der loven krever det, eller der de er nødvendige for å håndtere en rapport om alvorlige forhold.',
+      'Du kan be om en kopi av opplysningene dine før sletting.',
+      'Vi kan avslutte avtalen med deg ved brudd på vilkårene, eller hvis vi legger ned tjenesten. Ved nedleggelse varsler vi i god tid.',
+    ],
   },
   {
-    icon: <ImageIcon />,
-    title: 'Bildedeling',
-    content: 'Fra dag 15 kan dere dele bilder med hverandre. Før den tid bygger dere en tilknytning basert på dybde og resonans, ikke utseende.',
+    id: '18',
+    title: 'Vårt ansvar',
+    paragraphs: [
+      'Tosom formidler kontakt mellom voksne mennesker. Vi er ikke part i det som skjer mellom dere.',
+      'Vi er ikke ansvarlige for hva andre brukere gjør, sier eller unnlater å gjøre — verken på plattformen eller utenfor.',
+      'Velger dere å møtes fysisk, skjer det på eget ansvar. Vi anbefaler at du leser rådene på trygghetssiden vår først.',
+      'Vi er ikke ansvarlige for indirekte tap, tapt fortjeneste eller følgeskader. Vårt samlede ansvar er begrenset til det du har betalt for den aktuelle reisen.',
+      'Ingenting i disse vilkårene begrenser ansvar som ikke kan begrenses etter norsk rett, herunder ansvar for forsett eller grov uaktsomhet.',
+    ],
   },
   {
-    icon: <IconCopyright />,
-    title: 'Angrerett',
-    content: 'Norsk lov gir 14 dagers angrerett på digitale tjenester. Reisen starter lørdag morgen, når koblingen er gjort. Melder du deg ut før lørdag, refunderer vi hele beløpet uten spørsmål. Etter at reisen har startet, er tjenesten levert, og angreretten bortfaller.',
+    id: '19',
+    title: 'Driftsavbrudd',
+    paragraphs: [
+      'Vi arbeider for at Tosom skal være tilgjengelig, men kan ikke garantere sammenhengende drift.',
+      'Ved planlagt vedlikehold varsler vi når det lar seg gjøre. Ved forhold utenfor vår kontroll — som svikt hos underleverandører, strømbrudd eller angrep mot systemet — er vi ikke ansvarlige for avbruddet.',
+      'Blir en reise vesentlig forstyrret av forhold på vår side, kan du kontakte oss, så finner vi en løsning.',
+    ],
   },
   {
-    icon: <IconCopyright />,
-    title: 'Om avtalen',
-    content: 'Tosom drives av Tosom AS. Disse vilkårene er avtalen mellom deg og oss. Vi kan endre dem, og varsler deg i god tid før endringer trer i kraft. Avtalen følger norsk rett.',
+    id: '20',
+    title: 'Immaterielle rettigheter',
+    paragraphs: [
+      `Tosom, med navn, logo, design, tekster og programvare, tilhører ${COMPANY.name}.`,
+      'Du får en personlig, ikke-overførbar rett til å bruke tjenesten så lenge avtalen løper. Du kan ikke kopiere, endre eller gjenbruke innholdet vårt uten skriftlig samtykke.',
+      'Det du selv skriver, eier du.',
+    ],
+  },
+  {
+    id: '21',
+    title: 'Personvern',
+    paragraphs: [
+      'Hvordan vi behandler personopplysningene dine står i personvernerklæringen, som er en del av denne avtalen.',
+      'Enkelte av opplysningene du deler i onboarding er særlig sensitive. Disse behandles kun med ditt uttrykkelige samtykke, og brukes utelukkende av matching-motoren.',
+    ],
+  },
+  {
+    id: '22',
+    title: 'Endringer i vilkårene',
+    paragraphs: [
+      'Vi kan endre vilkårene, for eksempel når tjenesten utvikles eller regelverket endres.',
+      'Ved vesentlige endringer varsler vi deg i god tid før de trer i kraft, og du må godta den nye versjonen for å fortsette å bruke Tosom.',
+      'Godtar du ikke endringene, kan du slette kontoen. Har du en pågående reise, kan du fullføre den på de vilkårene du opprinnelig godtok.',
+    ],
+  },
+  {
+    id: '23',
+    title: 'Lovvalg og tvister',
+
+    paragraphs: [
+      'Avtalen er underlagt norsk rett.',
+      'Er du uenig i noe, håper vi du tar kontakt med oss først. De fleste ting løser seg i en samtale.',
+      'Kommer vi ikke til enighet, kan du bringe saken inn for Forbrukertilsynet eller Forbrukerklageutvalget. Tvister kan også bringes inn for de alminnelige domstolene, med Oslo tingrett som verneting.',
+    ],
   },
 ];
 
-export default function VilkårPage() {
+/* ========================
+   SIDE
+   ======================== */
+
+export default function VilkarPage() {
   return (
     <main className="relative min-h-screen overflow-hidden">
-      {/* Bakgrunn — Deep Blue gradient */}
+      {/* Bakgrunn */}
       <div
         className="fixed inset-0 pointer-events-none"
         style={{
@@ -139,167 +289,133 @@ export default function VilkårPage() {
         }}
       />
 
-      {/* Ambient glød — blue */}
-      <div
-        className="absolute top-20 right-0 w-[600px] h-[400px] pointer-events-none opacity-30"
-        style={{
-          background: 'radial-gradient(ellipse at 70% 30%, rgba(80,120,255,0.04), transparent 70%)',
-        }}
-      />
-
       <div className="relative z-10">
-
         {/* ===== HERO ===== */}
-        <ToSomSection
-          spotlight="blue"
-          className="px-6 text-center space-y-6"
-        >
-          <h1
-            style={{
-              ...typographyToStyle('hero'),
-              color: color.text.primary,
-            }}
-          >
+        <ToSomSection spotlight="blue" className="px-6 text-center space-y-6">
+          <h1 style={{ ...typographyToStyle('hero'), color: color.text.primary }}>
             Vilkår for bruk
           </h1>
 
           <p
             className="max-w-2xl mx-auto"
-            style={{
-              ...typographyToStyle('body-lg'),
-              color: color.text.secondary,
-            }}
+            style={{ ...typographyToStyle('body-lg'), color: color.text.secondary }}
           >
-            Tosom er designet for voksne mennesker som ønsker ekte forbindelse. Ved å bruke plattformen samtykker du til disse vilkårene.
+            Tosom er laget for voksne som ønsker en rolig og ekte forbindelse. Her står hva du kan
+            forvente av oss, og hva vi forventer av deg.
+          </p>
+
+          <p
+            style={{ ...typographyToStyle('body-sm'), color: color.text.muted }}
+          >
+            Versjon {TERMS_VERSION} · Sist oppdatert {TERMS_UPDATED}
           </p>
         </ToSomSection>
 
-        {/* ===== SEKSJONER ===== */}
-        <ToSomSection
-          spotlight="blue"
-          className="px-6"
-        >
-          <div className="mx-auto max-w-5xl">
-            <h2
-              className="text-center mb-6"
-              style={{
-                ...typographyToStyle('heading-lg'),
-                color: color.text.primary,
-              }}
-            >
-              Hva du bør vite
-            </h2>
+        {/* ===== PARAGRAFER ===== */}
+        <ToSomSection spotlight="none" className="px-6">
+          <div className="mx-auto max-w-[760px] space-y-12">
+            {clauses.map((clause) => (
+              <section key={clause.id} id={`punkt-${clause.id}`} className="space-y-4">
+                <h2
+                  className="flex gap-3"
+                  style={{ ...typographyToStyle('heading-md'), color: color.text.primary }}
+                >
+                  <span style={{ color: color.brand.gold }}>{clause.id}.</span>
+                  <span>{clause.title}</span>
+                </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {sections.map((s, idx) => (
-                <GlassCard key={idx} padding="xl" interactive className="space-y-4">
-                  <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
-                    {s.icon}
-                  </div>
-                  <h3
-                    style={{
-                      ...typographyToStyle('heading-sm'),
-                      color: color.brand.gold,
-                    }}
-                  >
-                    {s.title}
-                  </h3>
+                {clause.paragraphs.map((text, i) => (
                   <p
+                    key={i}
                     style={{
                       ...typographyToStyle('body'),
                       color: color.text.secondary,
-                      lineHeight: '1.8',
+                      lineHeight: '1.85',
                     }}
                   >
-                    {s.content}
+                    {text}
                   </p>
-                  {s.note && (
-                    <p
-                      style={{
-                        ...typographyToStyle('body-sm'),
-                        color: 'rgba(255,255,255,0.5)',
-                        lineHeight: '1.6',
-                        marginTop: '4px',
-                      }}
-                    >
-                      {s.note}
-                    </p>
-                  )}
-                </GlassCard>
-              ))}
-            </div>
+                ))}
+
+                {clause.list && (
+                  <ul className="space-y-2.5 pl-1">
+                    {clause.list.map((item, i) => (
+                      <li key={i} className="flex gap-3">
+                        <span
+                          className="flex-shrink-0 mt-[11px] w-1 h-1 rounded-full"
+                          style={{ background: color.brand.gold }}
+                        />
+                        <span
+                          style={{
+                            ...typographyToStyle('body'),
+                            color: color.text.secondary,
+                            lineHeight: '1.85',
+                          }}
+                        >
+                          {item}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </section>
+            ))}
           </div>
         </ToSomSection>
 
         {/* ===== KONTAKT ===== */}
-        <ToSomSection
-          spotlight="soft"
-          className="px-6"
-        >
-          <div className="mx-auto max-w-3xl space-y-8 text-center">
-            <h2
-              style={{
-                ...typographyToStyle('heading-lg'),
-                color: color.text.primary,
-              }}
-            >
+        <ToSomSection spotlight="soft" className="px-6">
+          <div className="mx-auto max-w-[760px] space-y-4">
+            <h2 style={{ ...typographyToStyle('heading-md'), color: color.text.primary }}>
               Spørsmål om vilkårene?
             </h2>
 
             <p
               style={{
-                ...typographyToStyle('body-lg'),
+                ...typographyToStyle('body'),
                 color: color.text.secondary,
+                lineHeight: '1.85',
               }}
             >
-              Kontakt oss på{' '}
-              <span
-                style={{
-                  color: color.brand.gold,
-                  cursor: 'pointer',
-                }}
+              Ta kontakt på{' '}
+              <a
+                href={`mailto:${COMPANY.email}`}
+                className="underline underline-offset-4"
+                style={{ color: color.brand.gold }}
               >
-                privat@tosom.no
-              </span>
+                {COMPANY.email}
+              </a>
+              . Du finner også{' '}
+              <Link
+                href="/personvern"
+                className="underline underline-offset-4"
+                style={{ color: color.brand.gold }}
+              >
+                personvernerklæringen
+              </Link>{' '}
+              og{' '}
+              <Link
+                href="/trygghet"
+                className="underline underline-offset-4"
+                style={{ color: color.brand.gold }}
+              >
+                trygghetssiden
+              </Link>{' '}
+              vår.
+            </p>
+
+            <p
+              style={{
+                ...typographyToStyle('body-sm'),
+                color: color.text.muted,
+                lineHeight: '1.7',
+              }}
+            >
+              {companyFooterLine()}
             </p>
           </div>
         </ToSomSection>
 
-        {/* ===== CTA ===== */}
-        <ToSomSection
-          spotlight="cta"
-          className="px-6 text-center space-y-6"
-        >
-          <h2
-            style={{
-              ...typographyToStyle('heading-lg'),
-              color: color.text.primary,
-            }}
-          >
-            Klar til å starte?
-          </h2>
-
-          <p
-            style={{
-              ...typographyToStyle('body-lg'),
-              color: color.text.secondary,
-            }}
-          >
-            Lag profilen din i ditt eget tempo og møt noen som faktisk passer deg — på ordentlig.
-          </p>
-
-          <div className="flex flex-col md:flex-row items-center justify-center gap-4 pt-4">
-            <ToSomButton href="/register" variant="gold" size="xl">
-              Start reisen
-            </ToSomButton>
-
-            <ToSomButton href="/login" variant="secondary" size="lg">
-              Logg inn
-            </ToSomButton>
-          </div>
-        </ToSomSection>
-
-        {/* ===== FOOTER ===== */}
         <Footer />
       </div>
     </main>

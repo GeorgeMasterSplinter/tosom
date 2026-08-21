@@ -218,7 +218,8 @@ export default function LandingPage() {
           </div>
         </ToSomSection>
 
-        {/* ===== PRISBLOKK ===== */}
+        {/* ===== BETA-BLOKK ===== */}
+        {/* Under beta vises ingen pris. Betalingsvei er ikke implementert. */}
         <ToSomSection
           spotlight="blue"
           className="px-6"
@@ -230,7 +231,7 @@ export default function LandingPage() {
                 color: color.text.primary,
               }}
             >
-              Én pris. Alt inkludert.
+              Gratis i lukket beta
             </h2>
 
             <GlassCard
@@ -241,11 +242,11 @@ export default function LandingPage() {
             >
               <div
                 style={{
-                  ...typographyToStyle('heading-xl'),
+                  ...typographyToStyle('heading-lg'),
                   color: color.brand.gold,
                 }}
               >
-                349 kr
+                Gratis
               </div>
 
               <p
@@ -255,7 +256,7 @@ export default function LandingPage() {
                   lineHeight: '1.8',
                 }}
               >
-                Tosom — full tilgang. Betales én gang og dekker hele reisen.
+                Tosom er i lukket beta, og reisen er gratis for deg som er invitert. Vi sier fra i god tid før prismodellen trer i kraft.
               </p>
             </GlassCard>
           </div>
@@ -283,9 +284,8 @@ export default function LandingPage() {
                 lineHeight: '1.8',
               }}
             >
-              Betal med Vipps og få tilgang til hele Tosom — inkludert match, guidet reise og privat rom.
-              <br />
-              De første 5 000 får reisen gratis.
+              Logg inn og bygg profilen din. Neste kobling skjer natt til lørdag.
+
             </p>
 
             {/* Hoved-CTA: Logg inn med Vipps */}

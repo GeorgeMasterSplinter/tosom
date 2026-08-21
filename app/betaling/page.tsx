@@ -1,12 +1,22 @@
 /**
- * Tosom — Betaling (B4.2)
- * 
- * Én pris, én reise. Ingen abonnement, ingen nivåer (I-10).
- * 349 kr for én 30-dagers reise. De første 10 000 brukerne får reisen gratis.
- * 
- * B4.2: Angrerett-avkrysning — uten denne har brukeren 14 dagers ubetinget
- * krav på pengene tilbake etter norsk angrerettlov.
+ * Tosom — Start reisen (B4.2)
+ *
+ * BETA: Reisen er gratis for alle inviterte. Ingen betaling skjer her.
+ * Betalingsvei er ikke implementert (config/features.ts kaster ved
+ * PAYMENTS_ENABLED=true). Derfor vises ingen pris på denne siden.
+ *
+ * Ved lansering: første 5 000 gratis, deretter 349 kr per reise.
+ * Prisinformasjon settes inn igjen samtidig som betaling aktiveres.
+ *
+ * B4.2: Samtykket om oppstart lagres som withdrawalWaiverAt. Teksten oppfyller
+ * kravet i angrerettloven § 22 om uttrykkelig forhåndssamtykke og erkjennelse
+ * av at angreretten faller bort. Under beta er tjenesten vederlagsfri, så
+ * bestemmelsen har ingen økonomisk virkning ennå.
+ *
+ * Grensen går ved koblingen, ikke ved en dato — se config/legal.ts REFUND.
  */
+
+
 
 'use client';
 
@@ -70,11 +80,10 @@ export default function BetalingPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-[32px] font-semibold mb-4" style={{ color: '#FFFFFF', letterSpacing: '-0.02em' }}>
-            Én reise. Én pris.
+            Klar til å starte reisen?
           </h1>
           <p className="text-lg" style={{ color: 'rgba(255,255,255,0.5)', lineHeight: '1.6' }}>
-            349 kroner for én 30-dagers reise med én match.
-            De første 10 000 brukerne får reisen gratis.
+            Tosom er i lukket beta. Reisen er gratis for deg som er invitert.
           </p>
         </div>
 
@@ -92,8 +101,8 @@ export default function BetalingPage() {
             <h2 className="text-xl font-medium" style={{ color: '#FFFFFF' }}>
               Én reise
             </h2>
-            <p className="text-3xl font-semibold" style={{ color: '#D4AF37' }}>
-              349 kr
+            <p className="text-xl font-semibold" style={{ color: '#D4AF37' }}>
+              Gratis i beta
             </p>
           </div>
           <ul className="space-y-3">
@@ -155,7 +164,8 @@ export default function BetalingPage() {
               style={{ accentColor: '#D4AF37' }}
             />
             <span className="text-sm" style={{ color: 'rgba(255,255,255,0.7)', lineHeight: '1.6' }}>
-              Jeg samtykker til at Tosom starter reisen min straks, og forstår at angreretten dermed bortfaller.
+              Jeg samtykker til at reisen starter ved neste kobling, natt til lørdag, og forstår at
+              angreretten bortfaller når koblingen er gjort. Fram til da kan jeg melde meg ut.
             </span>
           </label>
         </div>
@@ -199,8 +209,9 @@ export default function BetalingPage() {
           </button>
 
           <p className="mt-6 text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>
-            De første 10 000 brukerne får reisen gratis.
+            Ingen betaling under beta. Du blir varslet i god tid før dette endrer seg.
           </p>
+
         </div>
 
         {/* Tilbake */}

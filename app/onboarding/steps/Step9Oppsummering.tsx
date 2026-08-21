@@ -50,7 +50,8 @@ export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
   const getAge = val('age');
   const getHeight = val('height');
   const getDistance = num('distancePref', 50);
-  const getMinAge = num('minAge', 23);
+  const getMinAge = num('minAge', 21);
+
   const getMaxAge = num('maxAge', 40);
 
   return (

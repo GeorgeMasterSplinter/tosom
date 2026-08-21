@@ -70,7 +70,8 @@ export const PasswordResetSchema = z.object({
 export const ProfileSetupSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
-  age: z.number().min(23).max(99).optional(),
+  age: z.number().min(21).max(99).optional(),
+
   bio: z.string().max(500).optional(),
   identityName: z.string().optional(),
    lifeSituation: z.record(z.any(), z.any()).optional(),

@@ -1,6 +1,6 @@
 # TOSOM — Dokumentasjon
 
-Kort inngangsport. Alle referanser peker på filer som finnes i repoet per 2026-08-20.
+Kort inngangsport. Alle referanser peker på filer som finnes i repoet per 2026-08-21.
 
 
 ---
@@ -21,6 +21,8 @@ Kort inngangsport. Alle referanser peker på filer som finnes i repoet per 2026-
 | **[BETA-ACCESS-PLAN-v1.0.md](BETA-ACCESS-PLAN-v1.0.md)** | Lukket beta: invitasjonsport, rekruttering, observasjon, testmatrise. |
 | **[TOSOM-BETA-DRIFTSPLAN-v1.0.md](TOSOM-BETA-DRIFTSPLAN-v1.0.md)** | Hvor vi står, hva som gjenstår før invitasjon, driftsrutinen under beta. |
 | **[ADMIN-KOMMANDOPANEL-v1.0.md](ADMIN-KOMMANDOPANEL-v1.0.md)** | Ombygging av admin til kommandopanel. Steg K-1…K-9 med kode. |
+| **[LANDING-SIGNATUR-v1.0.md](LANDING-SIGNATUR-v1.0.md)** | Signatur-laget på landingssiden: resonans-motivet, calm-motion. Steg S-1…S-10 med kode. |
+| **[JURIDISK-GRUNNLAG-v1.0.md](JURIDISK-GRUNNLAG-v1.0.md)** | Vilkår, personvern, trygghet: funn, beslutninger og advokat-brief (A-1…A-7). |
 | **[ACT-PIPELINE-v1.0.md](ACT-PIPELINE-v1.0.md)** | Arbeidssyklus, patch-regler, invarianter, verifisering. Erstatter ACT-INSTRUKS v2–v11. |
 | **[DOCS-RESTRUCTURE-v1.0.md](DOCS-RESTRUCTURE-v1.0.md)** | Denne restruktureringen: plan + gjennomførte valg. |
 
@@ -53,5 +55,7 @@ Kort inngangsport. Alle referanser peker på filer som finnes i repoet per 2026-
 
 ---
 
-*Sist oppdatert: 2026-08-20 (BETA-DRIFTSPLAN + ADMIN-KOMMANDOPANEL v1.0)*
+*Sist oppdatert: 2026-08-21 (JURIDISK-GRUNNLAG v1.0)*
+
+
 

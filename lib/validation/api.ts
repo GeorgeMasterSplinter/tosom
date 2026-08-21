@@ -110,7 +110,8 @@ export type JourneyAdvanceInput = z.infer<typeof journeyAdvanceSchema>;
 export const profileSetupSchema = z.object({
   basic: z.object({
     identityName: z.string().min(1, 'identityName er påkrevd').max(50),
-    age: z.number().min(23).max(100).optional(),
+    age: z.number().min(21).max(100).optional(),
+
     gender: z.string().optional(),
     seekingGender: z.string().optional(),
     city: z.string().optional(),

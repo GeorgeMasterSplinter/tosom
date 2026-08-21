@@ -296,7 +296,7 @@ export default function PriserPage() {
                 color: color.text.primary,
               }}
             >
-              Én pris. Alt inkludert.
+              Gratis i lukket beta
             </h2>
 
             <GlassCard
@@ -311,7 +311,7 @@ export default function PriserPage() {
                   color: color.brand.gold,
                 }}
               >
-                349 kr
+                Gratis
               </div>
 
               <p
@@ -321,10 +321,21 @@ export default function PriserPage() {
                   lineHeight: '1.8',
                 }}
               >
-                Tosom — full tilgang. Betales én gang og dekker hele reisen.
+                Tosom er i lukket beta. Reisen er gratis for deg som er invitert, og det kreves ingen betaling.
+              </p>
+
+              <p
+                style={{
+                  ...typographyToStyle('body'),
+                  color: color.text.muted,
+                  lineHeight: '1.7',
+                }}
+              >
+                Når Tosom åpner for alle, blir reisen gratis for de første 5 000 brukerne. Deretter koster én reise 349 kroner, betalt én gang. Vi varsler i god tid før dette trer i kraft.
               </p>
 
             </GlassCard>
+
           </div>
         </ToSomSection>
 

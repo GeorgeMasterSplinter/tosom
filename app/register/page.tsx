@@ -69,7 +69,7 @@ export default function RegisterPage() {
               lineHeight: '1.8',
             }}
           >
-            Tosom er bygd for trygghet og modenhet. Vi bruker Vipps både til innlogging og betaling — så du vet at alle på plattformen er ekte.
+            Tosom er bygd for trygghet og modenhet. Vi bruker Vipps til innlogging — så du vet at alle på plattformen er ekte.
           </p>
         </ToSomSection>
 
@@ -91,7 +91,7 @@ export default function RegisterPage() {
                   textAlign: 'center',
                 }}
               >
-                Hvorfor Vipps Login og Vipps betaling?
+                Hvorfor Vipps-innlogging?
               </h2>
 
               <p
@@ -102,7 +102,7 @@ export default function RegisterPage() {
                   textAlign: 'center',
                 }}
               >
-                Tosom er bygd for voksne mennesker som ønsker en trygg, rolig og ekte prosess. Derfor bruker vi Vipps både til innlogging og betaling.
+                Tosom er bygd for voksne mennesker som ønsker en trygg, rolig og ekte prosess. Derfor bruker vi Vipps til innlogging.
               </p>
 
               <div className="space-y-3 pt-2">
@@ -110,8 +110,7 @@ export default function RegisterPage() {
                   'Verifisert identitet — ingen fake profiler',
                   'Ekte fødselsdato — trygg alderskontroll',
                   'Ingen duplikat-brukere — én person, én profil',
-                  'Norsk sikkerhetsstandard — trygg betalingsflyt',
-                  'Ingen skjulte gebyrer — én pris, ingen stress',
+                  'Norsk sikkerhetsstandard — trygg innlogging',
                 ].map((text, i) => (
                   <div key={i} className="flex items-start gap-3">
                     <div
@@ -174,17 +173,18 @@ export default function RegisterPage() {
                 lineHeight: '1.8',
               }}
             >
-              Betal med Vipps og få tilgang til hele Tosom — inkludert match, guidet reise og privat rom.
+              Logg inn med Vipps og få tilgang til hele Tosom — inkludert kobling, guidet reise og privat rom. Gratis i lukket beta.
             </p>
 
-            {/* Hoved-CTA: Betal med Vipps */}
+            {/* Hoved-CTA: Logg inn med Vipps */}
             <ToSomButton
-              href="/api/payment/vipps"
+              href="/api/auth/vipps"
               variant="gold"
               size="xl"
             >
-              Betal med Vipps — 349 kr
+              Logg inn med Vipps
             </ToSomButton>
+
 
             {/* informasjon om betaling */}
             <div
@@ -212,7 +212,8 @@ export default function RegisterPage() {
                   lineHeight: '1.7',
                 }}
               >
-                Når betaling er godkjent, blir du sendt til første steg i onboarding for å lage profilen din.
+                Når innloggingen er godkjent, blir du sendt til første steg i onboarding for å lage profilen din.
+
               </p>
             </div>
           </div>

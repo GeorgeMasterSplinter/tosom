@@ -354,14 +354,14 @@ export default function CookiesPage() {
               >
                 Kontakt oss på{' '}
                 <Link
-                  href="mailto:privacy@tosom.no"
+                  href="mailto:support@tosom.no"
                   style={{
                     color: color.brand.gold,
                     textDecoration: 'none',
                     borderBottom: '1px solid rgba(212,175,55,0.3)',
                   }}
                 >
-                  privacy@tosom.no
+                  support@tosom.no
                 </Link>
               </p>
             </GlassCard>

@@ -1,9 +1,13 @@
 /**
- * Tosom — FadeIn (Warm Flow Animations v2026) 🟡⭐
+ * @deprecated Byggt av ToSom-signaturen i `components/motion/Reveal.tsx` (S-9, LANDING-SIGNATUR-v1.0).
+ * Reveal bruker IntersectionObserver + CSS (ingen framer-motion), og følger calm-motion (6 % bevegelse,
+ * ease-out cubic, 80 ms stagger). Nye scroll-reveals skal bruke Reveal, ikke denne komponenten.
+ *
+ * ── Original (Warm Flow Animations v2026) 🟡⭐
  * Premium fade-in komponent med scroll-trigger, stagger og variantar.
- * 
+ *
  * Pakke 6.5 — Warm Flow Animations (Steg 1)
- * 
+ *
  * Variantar:
  * - fadeInUp — standard (0.5s ease-out)
  * - fadeIn — bare opacity (0.3s)

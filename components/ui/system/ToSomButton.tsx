@@ -43,7 +43,7 @@ const baseStyles: CSSProperties = {
   borderRadius: radius['3xl'],
   border: 'none',
   cursor: 'pointer',
-  transition: 'all 250ms ease-out',
+  transition: 'transform 400ms var(--ts-ease-resonance), box-shadow 400ms var(--ts-ease-resonance), background 400ms var(--ts-ease-resonance)',
   textDecoration: 'none',
   gap: '8px',
 };
@@ -53,8 +53,8 @@ const variants = {
     ...baseStyles,
     background: 'linear-gradient(90deg, #D4AF37, #E8C766)',
     color: '#0B1520',
-    boxShadow: '0 0 40px rgba(212,175,55,0.30)',
     letterSpacing: '0.02em',
+    animation: 'ts-cta-breath var(--ts-breath) ease-in-out infinite',
   },
   secondary: {
     ...baseStyles,

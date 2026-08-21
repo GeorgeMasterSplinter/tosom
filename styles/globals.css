@@ -894,6 +894,23 @@ body.landing-page {
   --ts-motion-stagger-normal: 80ms;
   --ts-motion-stagger-slow: 120ms;
 
+  /* ── ToSom signatur-motion ──
+     Pusten: 6 s er hvilepuls hos et voksent menneske.
+     All ambient bevegelse deler denne syklusen. */
+  --ts-breath: 6s;
+  --ts-breath-slow: 12s;
+  --ts-drift: 24s;
+
+  /* Resonans-easing — lang utgang, ingen overskyting */
+  --ts-ease-resonance: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Signatur-glød */
+  --ts-glow-resonance: radial-gradient(
+    circle at center,
+    rgba(212, 175, 55, 0.055),
+    transparent 68%
+  );
+
   /* ══ UI 5.0 Typography ══ */
   --ts-font-display-xl: 64px;
   --ts-font-display-l: 56px;
@@ -1279,15 +1296,7 @@ textarea.ts-input { resize: vertical; min-height: 100px; }
   padding: var(--ts-spacing-4xl) 0;
 }
 
-/* ── Accessibility: prefers-reduced-motion ── */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
+/* prefers-reduced-motion behandles i den konsoliderte blokken øverst (ToSom UI 4.6). */
 
 /* ═══════════════════════════════════════════
    Chat-bubble animasjon (ny)
@@ -1335,4 +1344,35 @@ html, body {
 @keyframes ts-pulse {
   0%, 100% { opacity: 0.6; transform: scale(1); }
   50%      { opacity: 0.15; transform: scale(1.8); }
+}
+
+/* ═══════════════════════════════════════════
+   ToSom signatur — pust og drift
+   ═══════════════════════════════════════════ */
+
+/* Pusten: knapt synlig skala og lysendring */
+@keyframes ts-breath {
+  0%, 100% { transform: scale(1);      opacity: 0.85; }
+  50%      { transform: scale(1.018);  opacity: 1;    }
+}
+
+/* Resonans: to sirkler som driver mot hverandre og tilbake */
+@keyframes ts-resonance-left {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(2.2%, -1.1%, 0); }
+}
+
+@keyframes ts-resonance-right {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(-2.2%, 1.1%, 0); }
+}
+
+.ts-breath {
+  animation: ts-breath var(--ts-breath) ease-in-out infinite;
+}
+
+/* CTA-pust — gløden alene, aldri geometrien (S-7) */
+@keyframes ts-cta-breath {
+  0%, 100% { box-shadow: 0 0 34px rgba(212,175,55,0.24); }
+  50%      { box-shadow: 0 0 52px rgba(212,175,55,0.38); }
 }

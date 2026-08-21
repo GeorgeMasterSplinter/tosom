@@ -5,52 +5,74 @@ import { Hero } from '@/components/ui/layout/Hero';
 import { ToSomSection, ToSomButton } from '@/components/ui/system';
 import { color, typographyToStyle } from '@/config/design-tokens';
 import GlassCard from '@/components/ui/cards/GlassCard';
+import { Reveal } from '@/components/motion/Reveal';
 
 /* ========================
-   INLINE SVG-ikoner
+   Ikoner — bygget på resonans-motivet
+   Alle 24×24, stroke 1.5, currentColor.
    ======================== */
 
+/** Velvære — sirkel med rolig indre bue */
 function IconWellbeing() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" />
-      <path d="M12 8V12L14 14" />
+      <circle cx="12" cy="12" r="9" />
+      <path d="M7.5 13.5c1.8-2.4 3.2-2.4 4.5 0s2.7 2.4 4.5 0" />
     </svg>
   );
 }
 
+/** Privat profil — sirkel med skjermet indre */
 function IconPrivacy() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 12C14.2091 12 16 10.2091 16 8C16 5.79086 14.2091 4 12 4C9.79086 4 8 5.79086 8 8C8 10.2091 9.79086 12 12 12Z" />
-      <path d="M20.5 21C20.5 18.7909 18.7091 17 16.5 17H7.5C5.29086 17 3.5 18.7909 3.5 21" />
+      <circle cx="12" cy="12" r="9" />
+      <circle cx="12" cy="12" r="3.5" />
+      <path d="M12 3v2.6M12 18.4V21M3 12h2.6M18.4 12H21" />
     </svg>
   );
 }
 
+/** Én match — signaturmotivet: to sirkler som møtes */
 function IconMatch() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+      <circle cx="9" cy="12" r="6" />
+      <circle cx="15" cy="12" r="6" />
     </svg>
   );
 }
 
+/** Forskningsbasert — sirkel med målpunkt */
 function IconResearch() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M9 3H5C4.46957 3 3.96086 3.21071 3.58579 3.58579C3.21071 3.96086 3 4.46957 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3H15" />
-      <path d="M9 3V7C9 8.10457 9.89543 9 11 9H13" />
-      <path d="M9 15L11 17L15 13" />
+      <circle cx="12" cy="12" r="9" />
+      <circle cx="12" cy="12" r="4.5" />
+      <circle cx="12" cy="12" r="1" fill="currentColor" stroke="none" />
     </svg>
   );
 }
 
+/** Dybde — konsentriske buer, nedover */
 function IconDepth() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" />
+      <circle cx="12" cy="12" r="9" />
+      <path d="M5.4 9.6h13.2M6.9 13.2h10.2M9 16.8h6" />
     </svg>
+  );
+}
+
+/** Resonans-skille — motivet i miniatyr */
+function ResonanceDivider() {
+  return (
+    <div className="flex justify-center py-2" aria-hidden="true">
+      <svg width="44" height="20" viewBox="0 0 44 20" fill="none">
+        <circle cx="16" cy="10" r="7" stroke="rgba(212,175,55,0.28)" strokeWidth="1" />
+        <circle cx="28" cy="10" r="7" stroke="rgba(212,175,55,0.28)" strokeWidth="1" />
+      </svg>
+    </div>
   );
 }
 
@@ -73,6 +95,7 @@ const steps = [
     icon: <IconMatch />,
     title: 'Én match i uken',
     content: 'Vi samler mennesker gjennom uken og kobler natt til lørdag. Du får én match — valgt med omtanke, ikke tilfeldighet. Ingen endeløs sveiping. Ingen overveldende valg.',
+    featured: true,
   },
   {
     icon: <IconResearch />,
@@ -114,6 +137,7 @@ export default function LandingPage() {
 
         {/* ===== HVORFOR TOSOM ===== */}
         <section className="px-6 py-16 md:py-24 text-center">
+          <Reveal direction="up" duration={1000}>
           <div
             className="mx-auto max-w-[780px] rounded-[28px] p-10 md:p-14 space-y-6"
             style={{
@@ -161,7 +185,10 @@ export default function LandingPage() {
               Tosom gir deg ro, tid og én gjennomtenkt match — slik at du faktisk kan bli kjent.
             </p>
           </div>
+          </Reveal>
         </section>
+
+        <ResonanceDivider />
 
         {/* ===== Slik fungerer det ===== */}
         <ToSomSection
@@ -169,6 +196,7 @@ export default function LandingPage() {
           className="px-6"
         >
           <div className="mx-auto max-w-5xl">
+            <Reveal direction="up" delay={0}>
             <h2
               className="text-center mb-6"
               style={{
@@ -178,7 +206,9 @@ export default function LandingPage() {
             >
               Slik fungerer det
             </h2>
+            </Reveal>
 
+            <Reveal direction="up" delay={120}>
             <p
               className="max-w-3xl mx-auto text-center mb-12"
               style={{
@@ -188,31 +218,40 @@ export default function LandingPage() {
             >
               Tosom er bygget for kvalitet, ikke kvantitet. Her er hvordan det fungerer.
             </p>
+            </Reveal>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {steps.map((step, idx) => (
-                <GlassCard key={idx} padding="xl" gold interactive className="space-y-4">
-                  <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
-                    {step.icon}
-                  </div>
-                  <h3
-                    style={{
-                      ...typographyToStyle('heading-md'),
-                      color: color.brand.gold,
-                    }}
+                <Reveal key={idx} direction="up" delay={idx * 80} duration={900}>
+                  <GlassCard
+                    padding="xl"
+                    gold
+                    glow={step.featured}
+                    interactive
+                    className={`space-y-4 h-full ${step.featured ? 'lg:col-span-2' : ''}`}
                   >
-                    {step.title}
-                  </h3>
-                  <p
-                    style={{
-                      ...typographyToStyle('body-lg'),
-                      color: color.text.secondary,
-                      lineHeight: '1.8',
-                    }}
-                  >
-                    {step.content}
-                  </p>
-                </GlassCard>
+                    <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                      {step.icon}
+                    </div>
+                    <h3
+                      style={{
+                        ...typographyToStyle('heading-md'),
+                        color: color.brand.gold,
+                      }}
+                    >
+                      {step.title}
+                    </h3>
+                    <p
+                      style={{
+                        ...typographyToStyle('body-lg'),
+                        color: color.text.secondary,
+                        lineHeight: '1.8',
+                      }}
+                    >
+                      {step.content}
+                    </p>
+                  </GlassCard>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -261,6 +300,8 @@ export default function LandingPage() {
             </GlassCard>
           </div>
         </ToSomSection>
+
+        <ResonanceDivider />
 
         {/* ===== CTA ===== */}
         <ToSomSection

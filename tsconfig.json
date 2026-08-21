@@ -48,6 +48,7 @@
     "node_modules",
     "scripts",
     "e2e",
+    "archive",
     "playwright.config.ts"
   ]
 }

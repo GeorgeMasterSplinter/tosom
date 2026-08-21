@@ -11,10 +11,11 @@ import { prisma } from '@/lib/prisma';
 import { getServerSession } from '@/lib/auth/session';
 import { validateOnboarding } from '@/lib/validation/onboarding-setup';
 import { lookupPostalCode } from '@/lib/geo/lookup';
+import { withMetrics } from '@/lib/observability/withMetrics';
 
 export const dynamic = 'force-dynamic';
 
-export async function POST(req: NextRequest) {
+async function postHandler(req: NextRequest) {
   try {
     const body = await req.json();
 
@@ -249,3 +250,5 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
+export const POST = withMetrics('/api/profile/setup', postHandler);

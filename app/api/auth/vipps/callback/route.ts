@@ -8,6 +8,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
+import { withMetrics } from '@/lib/observability/withMetrics';
 import { prisma } from '@/lib/prisma';
 import { signIn } from '@/lib/auth/config';
 import { isRegistrationEnabled, features } from '@/config/features';
@@ -46,7 +47,7 @@ function verifyVippsState(stateFromUrl: string | null, cookies: Map<string, stri
   return rawState === stateFromUrl;
 }
 
-export async function GET(request: NextRequest) {
+async function getHandler(request: NextRequest) {
   try {
     // S-2: Vipps er død kode (signIn('credentials') kaller fjernet provider). Skjult
     // bak VIPPS_ENABLED til fullverdig OAuth er implementert. Defense-in-depth.
@@ -252,3 +253,5 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+export const GET = withMetrics('/api/auth/vipps/callback', getHandler);

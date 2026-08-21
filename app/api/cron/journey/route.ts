@@ -17,6 +17,7 @@ import type { GuidedQuestion } from '@prisma/client';
 import { sendAlert } from '@/lib/observability/alert'; // B5.6
 import { getPhaseForDay } from '@/lib/journey/engine'; // ST3.1
 import { runRetention } from '@/lib/privacy/retention'; // S-10
+import { recordMetric } from '@/lib/observability/metric'; // O-3
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
@@ -58,6 +59,7 @@ export async function GET(req: NextRequest) {
   let ended = 0;
   let expired = 0;
   const errors: string[] = [];
+  let cronJobOutcome: 'ok' | 'error' = 'ok';
 
   try {
     // STEG 6.3: Ta advisory lock for å hindre overlappende cron-kjøringer
@@ -352,6 +354,7 @@ export async function GET(req: NextRequest) {
     }
   } catch (err) {
     console.error('[cron] Journey feil:', err);
+    cronJobOutcome = 'error';
 
     return NextResponse.json(
       { error: 'Kunne ikke kjøre cron journey', details: (err as Error).message },
@@ -360,6 +363,9 @@ export async function GET(req: NextRequest) {
   } finally {
     // STEG 1.3: Heartbeat — logg ALLTID til SystemLog (også ved feil)
     const durationMs = Date.now() - startedAt;
+    // OBSERVABILITY O-3: cron-jobb som metrikk (Vercel viser kun HTTP-status;
+    // dette sier om jobben faktisk fullførte).
+    recordMetric('cron.duration_ms', durationMs, 'ms', { job: 'journey', outcome: cronJobOutcome });
     try {
       await prisma.systemLog.create({
         data: {

@@ -8,10 +8,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth/requireAuth";
+import { withMetrics } from "@/lib/observability/withMetrics";
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(req: NextRequest) {
+async function getHandler(req: NextRequest) {
   try {
     // 1. Auth
     const result = await requireAuth(req);
@@ -148,3 +149,5 @@ export async function GET(req: NextRequest) {
     );
   }
 }
+
+export const GET = withMetrics("/api/match/status", getHandler);

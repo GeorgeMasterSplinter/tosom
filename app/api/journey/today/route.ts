@@ -9,6 +9,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth/requireAuth";
+import { withMetrics } from "@/lib/observability/withMetrics";
 import { trackError } from "@/lib/errorTracker";
 
 export const dynamic = 'force-dynamic';
@@ -79,7 +80,7 @@ function getFallbackTask(day: number, phase: string, conversationId: string | nu
   return { day, phase, ...t, conversationId };
 }
 
-export async function GET(req: NextRequest) {
+async function getHandler(req: NextRequest) {
   try {
     // 1. Auth
     const result = await requireAuth(req);
@@ -143,3 +144,5 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
+
+export const GET = withMetrics("/api/journey/today", getHandler);

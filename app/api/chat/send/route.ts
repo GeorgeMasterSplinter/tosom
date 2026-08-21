@@ -11,6 +11,7 @@
 
 import { NextResponse } from "next/server";
 import { getServerSession, requireNotBanned } from "@/lib/auth/session";
+import { withMetrics } from "@/lib/observability/withMetrics";
 import { prisma } from "@/lib/prisma";
 import { chatSendMessageSchema, errorResponse, successResponse } from "@/lib/api-validator";
 
@@ -31,7 +32,7 @@ function mapMessageType(frontendType: string): "user" | "system" | "continue_cho
   return mapping[frontendType] ?? "user";
 }
 
-export async function POST(request: Request) {
+async function postHandler(request: Request) {
   const session = await getServerSession();
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Ikke autentisert" }, { status: 401 });
@@ -105,3 +106,5 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export const POST = withMetrics("/api/chat/send", postHandler);

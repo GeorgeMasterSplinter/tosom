@@ -21,6 +21,7 @@ import { MIN_COHORT_SIZE, MIN_SCORE } from '@/config/matching';
 import { isMatchingEnabled } from '@/config/features';
 import { mapRejectReason } from './rejectReason';
 import { sendAlert } from '@/lib/observability/alert';
+import { recordMetric } from '@/lib/observability/metric';
 
 // B0.5 — Vercel Hobby: max 60s
 export const maxDuration = 60;
@@ -130,6 +131,7 @@ export async function GET(req: NextRequest) {
   let deferred = false;
   let paired = 0;
   let pairsEvaluated = 0;
+  let cronJobOutcome: 'ok' | 'error' = 'ok';
   const rejectReasons: Record<string, number> = {
     mangler_profil: 0,
     sperreliste: 0,
@@ -439,6 +441,17 @@ export async function GET(req: NextRequest) {
       const remaining = queued.length - used.size;
       const durationMs = Date.now() - startedAt;
 
+      // OBSERVABILITY O-2: matcherunden som metrikk (Vercel-graf + SystemLog-historikk).
+      // Ingen PII — kun tall og kategorier. rejectReasons er allerede aggregert under
+      // runden, så én kall per årsak holder antall DB-skrivinger nede (regel M-3: aldri vent).
+      recordMetric('match.round.duration_ms', durationMs, 'ms');
+      recordMetric('match.round.paired', paired, 'count');
+      recordMetric('match.round.queue_before', cohortSize, 'count');
+      recordMetric('match.round.queue_after', remaining, 'count');
+      for (const [reason, count] of Object.entries(rejectReasons)) {
+        if (count > 0) recordMetric('match.round.rejected', count, 'count', { reason });
+      }
+
       // M-9: score-/nivåfordeling (til tuning). Mediana fra alle parscorede par.
       const sortedScores = [...allScores].sort((a, b) => a - b);
       const scoreDistribution = allScores.length
@@ -508,6 +521,7 @@ export async function GET(req: NextRequest) {
     console.error('[cron] Matching feil:', err);
     // S-17: runden kastet — kritisk (alle i kø mister uka)
     sendAlert('critical', 'Matcherunde kastet en feil', (err as Error).message).catch(() => {});
+    cronJobOutcome = 'error';
     return NextResponse.json(
       { error: 'Kunne ikke kjøre matching', details: (err as Error).message },
       { status: 500 }
@@ -515,6 +529,9 @@ export async function GET(req: NextRequest) {
   } finally {
     // Heartbeat i SystemLog (sikkerhetsnett)
     const durationMs = Date.now() - startedAt;
+    // OBSERVABILITY O-3: cron-jobb som metrikk (Vercel viser kun HTTP-status;
+    // dette sier om jobben faktisk fullførte — inkludert deferred som 'ok').
+    recordMetric('cron.duration_ms', durationMs, 'ms', { job: 'matching', outcome: cronJobOutcome });
     try {
       await prisma.systemLog.create({
         data: {

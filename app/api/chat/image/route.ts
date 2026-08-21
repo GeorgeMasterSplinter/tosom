@@ -10,6 +10,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { randomUUID } from 'crypto';
+import { withMetrics } from '@/lib/observability/withMetrics';
 import { getServerSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/prisma';
 import { isPhotosAllowed } from '@/lib/journey/engine';
@@ -41,7 +42,7 @@ const EXT_MAP: Record<string, string> = {
  * Response: { success: true, imageUrl: string }
  *   imageUrl peker på GET /api/chat/image/{messageId} (signert URL ved lesing).
  */
-export async function POST(request: NextRequest): Promise<NextResponse> {
+async function postHandler(request: NextRequest): Promise<NextResponse> {
   try {
     // STEG 1 — Krever session. senderId kjem alltid frå session, IKKE frå klienten.
     const session = await getServerSession();
@@ -193,3 +194,5 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     );
   }
 }
+
+export const POST = withMetrics('/api/chat/image', postHandler);

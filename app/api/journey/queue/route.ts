@@ -23,12 +23,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth/requireAuth';
+import { withMetrics } from '@/lib/observability/withMetrics';
+import { recordEvent } from '@/lib/observability/metric';
 import { isPaymentsEnabled } from '@/config/features';
 import { isFreeQuotaAvailable, createFreeOrder } from '@/lib/payment/freeQuota';
 
 export const dynamic = 'force-dynamic';
 
-export async function POST(req: NextRequest) {
+async function postHandler(req: NextRequest) {
   try {
     // 1. Auth (AuthUser gir oss id + email + role)
     const result = await requireAuth(req);
@@ -153,6 +155,9 @@ export async function POST(req: NextRequest) {
       return updatedUser;
     });
 
+    // OBSERVABILITY O-7: brukeren stiller seg i match-køen
+    recordEvent('queue.entered');
+
     return NextResponse.json({
       success: true,
       journeyState: updated.journeyState,
@@ -178,7 +183,7 @@ export async function POST(req: NextRequest) {
  * B2.3 — DELETE /api/journey/queue
  * Forlater køen. Kun tillatt når journeyState = QUEUED.
  */
-export async function DELETE(req: NextRequest) {
+async function deleteHandler(req: NextRequest) {
   try {
     const result = await requireAuth(req);
     if (result instanceof NextResponse) {
@@ -239,3 +244,6 @@ export async function DELETE(req: NextRequest) {
     );
   }
 }
+
+export const POST = withMetrics('/api/journey/queue', postHandler);
+export const DELETE = withMetrics('/api/journey/queue', deleteHandler);

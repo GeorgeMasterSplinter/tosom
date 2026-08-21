@@ -5,11 +5,12 @@
 
 import { NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth/session";
+import { withMetrics } from "@/lib/observability/withMetrics";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(request: Request) {
+async function getHandler(request: Request) {
   const session = await getServerSession();
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Ikke autentisert" }, { status: 401 });
@@ -71,3 +72,5 @@ export async function GET(request: Request) {
     );
   }
 }
+
+export const GET = withMetrics("/api/chat/messages", getHandler);

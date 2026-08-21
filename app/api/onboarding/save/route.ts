@@ -6,6 +6,8 @@
 
 import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "@/lib/auth/session"
+import { withMetrics } from "@/lib/observability/withMetrics"
+import { recordEvent } from "@/lib/observability/metric"
 import prisma from "@/lib/prisma"
 import { DeepProfileStep } from "@prisma/client"
 
@@ -27,7 +29,7 @@ const DEEP_STEPS: string[] = [
 
 type JsonData = null | string | number | boolean | JsonData[] | { [key: string]: JsonData }
 
-export async function POST(req: NextRequest) {
+async function postHandler(req: NextRequest) {
   const session = await getServerSession()
 
   if (!session?.user?.id) {
@@ -92,6 +94,9 @@ export async function POST(req: NextRequest) {
       return false
     })
 
+    // OBSERVABILITY O-6: onboarding-steg fullført (mest verdifulle metrikken i planen)
+    recordEvent("onboarding.step.completed", { step: String(step) })
+
     // Merk djup profil som fullført
     let userUpdated: { deepProfileComplete: boolean } | null = null
     if (allStepsComplete) {
@@ -119,3 +124,5 @@ export async function POST(req: NextRequest) {
     )
   }
 }
+
+export const POST = withMetrics("/api/onboarding/save", postHandler)

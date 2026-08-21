@@ -10,10 +10,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireAdmin } from '@/lib/auth/requireAuth';
+import { withMetrics } from '@/lib/observability/withMetrics';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(req: NextRequest) {
+async function getHandler(req: NextRequest) {
   try {
     const authResult = await requireAdmin(req);
     if (authResult instanceof NextResponse) {
@@ -105,3 +106,5 @@ export async function GET(req: NextRequest) {
     );
   }
 }
+
+export const GET = withMetrics('/api/admin/overview', getHandler);

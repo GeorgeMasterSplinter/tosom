@@ -4,6 +4,7 @@ import { AnalyticsProvider } from "@/components/analytics/AnalyticsProvider";
 import { UniversalMenu } from '@/components/layout/UniversalMenu';
 import { ContentWrapper } from '@/components/layout/ContentWrapper';
 import { SentryErrorBoundary } from "@/components/system/SentryErrorBoundary";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata = {
   title: "Tosom — En rolig plass for ekte møter",
@@ -74,6 +75,7 @@ export default function RootLayout({
           <UniversalMenu />
           <ContentWrapper>{children}</ContentWrapper>
         </SentryErrorBoundary>
+        <SpeedInsights />
       </body>
     </html>
   );

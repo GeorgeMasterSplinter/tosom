@@ -104,7 +104,7 @@ const DIMENSIONS: Array<{
   {
     icon: <IconVerdier />,
     name: 'Verdier',
-    why: 'Det som betyr noe for deg er fundamentet. Vi ser ikke om dere bruker de samme ordene — vi ser om det dere setter høyt faktisk harmonerer.',
+    why: 'Det som betyr noe for deg er fundamentet. Vi ser ikke om dere bruker de samme ordene — vi ser om det dere setter høyt harmonerer.',
     modern: 'Schwartz la grunnlaget i 1992, og det holder fremdeles. Verditester er fortsatt i bruk i moderne forskning over hele verden.',
   },
   {

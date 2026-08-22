@@ -268,7 +268,7 @@ export async function getUserInsights(
     insights.push({
       title: 'Ein samtale i gang',
       text: 'Du har éin aktiv samtale. Ta det roleg — dei beste sambanda bygges sakte.',
-      suggestion: 'Ver nysgjerrig. Spør om hva som faktisk betyr noko for dei.',
+      suggestion: 'Ver nysgjerrig. Spør om hva som betyr noko for dei.',
     });
   } else {
     insights.push({

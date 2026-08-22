@@ -104,7 +104,7 @@ const sections: Section[] = [
     callout:
       'Dette er den viktigste delen av erklæringen. Les den før du fullfører onboarding.',
     paragraphs: [
-      'For å kunne koble deg med noen som faktisk passer, spør vi om ting som er personlige. Noen av dem regnes som særlige kategorier av personopplysninger etter personvernforordningen artikkel 9, og har ekstra sterkt vern.',
+      'For å kunne koble deg med noen som passer, spør vi om ting som er personlige. Noen av dem regnes som særlige kategorier av personopplysninger etter personvernforordningen artikkel 9, og har ekstra sterkt vern.',
       'Dette gjelder opplysninger som kan si noe om:',
     ],
     list: [

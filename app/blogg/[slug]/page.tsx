@@ -11,13 +11,13 @@ const blogPosts = {
     date: '15. januar 2026',
     readTime: '5 min lesing',
     content: `
-      <p>I eit samfunn der vi konstant blir eksponert for bilder og overflatefokus, er det lett å glemtje hva som faktisk betyr noko i ein relasjon.</p>
+      <p>I eit samfunn der vi konstant blir eksponert for bilder og overflatefokus, er det lett å glemtje hva som betyr noko i ein relasjon.</p>
       
       <p>Studier viser at kompatibilitet basert på verdier, livssituasjon og emosjonelle mønstre er langt sterkare prediktorar for varige relasjonar enn utseende.</p>
       
-      <p>Tosom vel å fokusere på det som faktisk skaper varig forbindelse. Når to menneske møter hverandre på et dypere plan, blir overflateikke det første — det blir det siste.</p>
+      <p>Tosom vel å fokusere på det som skaper varig forbindelse. Når to menneske møter hverandre på et dypere plan, blir overflateikke det første — det blir det siste.</p>
       
-      <p>Vår match-motor måler kompatibilitet gjennom resonans — hvordan to menneske faktisk føles saman, ikke hvordan dei ser ut.</p>
+      <p>Vår match-motor måler kompatibilitet gjennom resonans — hvordan to menneske føles saman, ikke hvordan dei ser ut.</p>
     `,
   },
   'reisetemaer': {
@@ -29,7 +29,7 @@ const blogPosts = {
       
       <p>Den fyrsteuka handlar om å identifisere hverandre. Den andreuka handlar om sårbarheit. Den tredje uka handlar om djupe samtalar. Og den fjerde uka handlar om felles framtid.</p>
       
-      <p>30 dagar er ikke for lang tid — det er nøyaktig den tida som trengst for to menneske å bli kjende på eit nivå som faktisk betyr noko.</p>
+      <p>30 dagar er ikke for lang tid — det er nøyaktig den tida som trengst for to menneske å bli kjende på eit nivå som betyr noko.</p>
       
       <p>Tosoms guiderte reise er designa for å støtte denne prosessen med daglege refleksjonar, samtaletema og oppgåver.</p>
     `,

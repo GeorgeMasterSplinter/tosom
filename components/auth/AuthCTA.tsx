@@ -17,7 +17,7 @@ export function AuthCTA() {
       </h2>
 
       <p className="text-base md:text-lg text-white/70 leading-relaxed px-6">
-        Lag profilen din i ditt eget tempo og møt noen som faktisk passer deg — på ordentlig.
+        Lag profilen din i ditt eget tempo og møt noen som passer deg — på ordentlig.
       </p>
 
       <div className="flex flex-col md:flex-row items-center justify-center gap-4 pt-6 px-6">

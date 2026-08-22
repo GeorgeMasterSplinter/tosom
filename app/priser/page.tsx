@@ -275,7 +275,7 @@ export default function PriserPage() {
                         lineHeight: '1.8',
                       }}
                     >
-                      Dere går gjennom en strukturert 30-dagers reise med daglige refleksjonsspørsmål, samtaletema, små oppgaver og resonansmåling. Dette er kjernen i Tosom — en prosess som faktisk hjelper dere å bli kjent.
+                      Dere går gjennom en strukturert 30-dagers reise med daglige refleksjonsspørsmål, samtaletema, små oppgaver og resonansmåling. Dette er kjernen i Tosom — en prosess som hjelper dere å bli kjent.
                     </p>
                   </div>
                 </div>

@@ -146,7 +146,7 @@ const uventet: string[] = [
   "Hva er noe du er stolt av, men som ville virket helt idiotisk for en fremmed?",
   "Hva er den verste tingen du har fortalt en fremmed for å virke smartere?",
   "Hva er noe du har en uforholdsmessig sterk mening om som ingen andre bryr seg om?",
-  "Hva er noe du frykter at folk syns er rart, men som du faktisk liker?",
+  "Hva er noe du frykter at folk syns er rart, men som du liker?",
   "Hva er en ting du har prøvd å slutte med i tre år, men aldri klart?",
   "Hva er noe du har grinet over som du aldri har fortalt noen?",
   "Hva er den overraskende tingen du er mest takknemlig for i livet ditt?",

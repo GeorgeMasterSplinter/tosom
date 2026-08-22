@@ -138,7 +138,7 @@ export default function OmOssPage() {
                 lineHeight: '1.8',
               }}
             >
-              Et sted der to mennesker kan senke skuldrene, være til stede og faktisk møtes.
+              Et sted der to mennesker kan senke skuldrene, være til stede og møtes.
             </p>
 
             <p
@@ -242,7 +242,7 @@ export default function OmOssPage() {
                   textAlign: 'center',
                 }}
               >
-                Det er ikke bare &ldquo;to personer&rdquo;. Det er et mellomrom — et rom som oppstår når man møter noen som faktisk passer, og man gir det tid til å vokse.
+                Det er ikke bare &ldquo;to personer&rdquo;. Det er et mellomrom — et rom som oppstår når man møter noen som passer, og man gir det tid til å vokse.
               </p>
 
               <p
@@ -265,18 +265,7 @@ export default function OmOssPage() {
           spotlight="blue"
           className="px-6"
         >
-          <div
-            className="mx-auto max-w-3xl space-y-8"
-            style={{
-              background: 'rgba(255,255,255,0.045)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: '28px',
-              padding: `${spacing.lg}px`,
-              boxShadow: '0 12px 40px rgba(0,0,0,0.20), 0 0 24px rgba(212,175,55,0.05)',
-            }}
-          >
+          <div className="mx-auto max-w-5xl">
             <h2
               className="text-center mb-6"
               style={{
@@ -287,37 +276,95 @@ export default function OmOssPage() {
               Hvorfor vi finnes
             </h2>
 
-            <div className="space-y-6">
-              <p
-                style={{
-                  ...typographyToStyle('body-lg'),
-                  color: color.text.secondary,
-                  lineHeight: '1.8',
-                }}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <GlassCard
+                padding="xl"
+                gold
+                interactive
+                className="space-y-4"
               >
-                Moderne dating er rask, støyende og fragmentert. Folk sveiper, vurderer og hopper videre før de rekker å kjenne etter.
-              </p>
+                <h3
+                  style={{
+                    ...typographyToStyle('heading-md'),
+                    color: color.text.primary,
+                  }}
+                >
+                  Støyen
+                </h3>
+                <p
+                  style={{
+                    ...typographyToStyle('body-lg'),
+                    color: color.text.secondary,
+                    lineHeight: '1.8',
+                  }}
+                >
+                  Moderne dating er rask, støyende og fragmentert. Folk sveiper, vurderer og hopper videre før de rekker å kjenne etter.
+                </p>
+              </GlassCard>
 
-              <p
-                style={{
-                  ...typographyToStyle('body-lg'),
-                  color: color.text.secondary,
-                  lineHeight: '1.8',
-                }}
+              <GlassCard
+                padding="xl"
+                gold
+                glow
+                interactive
+                className="space-y-4"
               >
-                Vi ønsket å skape det motsatte: et rom hvor to mennesker kan ta tiden tilbake, kjenne etter, og møtes på en måte som faktisk betyr noe.
-              </p>
+                <h3
+                  style={{
+                    ...typographyToStyle('heading-md'),
+                    color: color.brand.gold,
+                  }}
+                >
+                  Rommet
+                </h3>
+                <p
+                  style={{
+                    ...typographyToStyle('body-lg'),
+                    color: color.text.secondary,
+                    lineHeight: '1.8',
+                  }}
+                >
+                  Vi ønsket å skape det motsatte: et rom hvor to mennesker kan ta tiden tilbake, kjenne etter, og møtes på en måte som betyr noe.
+                </p>
+              </GlassCard>
 
-              <p
-                style={{
-                  ...typographyToStyle('body-lg'),
-                  color: color.text.primary,
-                  lineHeight: '1.8',
-                }}
+              <GlassCard
+                padding="xl"
+                gold
+                interactive
+                className="space-y-4"
               >
-                Tosom finnes fordi mennesker fortjener mer enn tilfeldige matcher og raske vurderinger. Vi finnes fordi relasjoner ikke er effektivitet — de er tilstedeværelse. Vi bygger på etablerte relasjonsmodeller som peker i retning av at ekte kontakt oppstår når mennesker møtes med ro, struktur og nysgjerrighet — se nøyaktig hva vi bygger på.
-              </p>
+                <h3
+                  style={{
+                    ...typographyToStyle('heading-md'),
+                    color: color.text.primary,
+                  }}
+                >
+                  Grunden
+                </h3>
+                <p
+                  style={{
+                    ...typographyToStyle('body-lg'),
+                    color: color.text.secondary,
+                    lineHeight: '1.8',
+                  }}
+                >
+                  Relasjoner ikke er effektivitet — de er tilstedeværelse. Vi bygger på etablerte relasjonsmodeller som peker i retning av ekte kontakt — når mennesker møtes med ro, struktur og nysgjerrighet.
+                </p>
+              </GlassCard>
             </div>
+
+            <p
+              className="text-center mt-10"
+              style={{
+                ...typographyToStyle('body-lg'),
+                color: color.brand.gold,
+                lineHeight: '1.8',
+                fontWeight: 600,
+              }}
+            >
+              Tosom finnes fordi mennesker fortjener mer enn tilfeldige matcher.
+            </p>
           </div>
         </ToSomSection>
 
@@ -372,7 +419,7 @@ export default function OmOssPage() {
           spotlight="blue"
           className="px-6"
         >
-          <div className="mx-auto max-w-3xl space-y-8">
+          <div className="mx-auto max-w-5xl space-y-10">
             <h2
               style={{
                 ...typographyToStyle('heading-lg'),
@@ -383,23 +430,80 @@ export default function OmOssPage() {
               Teamet bak Tosom
             </h2>
 
-            <GlassCard padding="xl" interactive className="space-y-6">
-              <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
-                Tosom er utviklet og driftet fra Norge av et lite, dedikert team som tror på relasjoner, teknologi og menneskelig varme.
-              </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <GlassCard
+                padding="xl"
+                gold
+                interactive
+                className="text-center space-y-3"
+              >
+                <div className="w-12 h-12 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37] mx-auto">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                </div>
+                <p style={{ ...typographyToStyle('heading-sm'), color: color.brand.gold }}>
+                  Utviklet i Norge
+                </p>
+                <p style={{ ...typographyToStyle('body-sm'), color: color.text.secondary }}>
+                  Fra et lite land, med stor omsorg for detaljene.
+                </p>
+              </GlassCard>
 
-              <p style={{ ...typographyToStyle('body-lg'), color: color.text.primary, lineHeight: '1.8' }}>
-                Vi bygger ikke en app.
-              </p>
+              <GlassCard
+                padding="xl"
+                gold
+                glow
+                interactive
+                className="text-center space-y-3"
+              >
+                <div className="w-12 h-12 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37] mx-auto">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="9" cy="12" r="5" />
+                    <circle cx="15" cy="12" r="5" />
+                  </svg>
+                </div>
+                <p style={{ ...typographyToStyle('heading-sm'), color: color.brand.gold }}>
+                  Lite team, stor varme
+                </p>
+                <p style={{ ...typographyToStyle('body-sm'), color: color.text.secondary }}>
+                  Vi tror på relasjoner, teknologi og menneskelig varme.
+                </p>
+              </GlassCard>
 
-              <p style={{ ...typographyToStyle('heading-sm'), color: color.brand.gold }}>
-                Vi bygger et rom.
-              </p>
+              <GlassCard
+                padding="xl"
+                gold
+                interactive
+                className="text-center space-y-3"
+              >
+                <div className="w-12 h-12 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37] mx-auto">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9,22 9,12 15,12 15,22" />
+                  </svg>
+                </div>
+                <p style={{ ...typographyToStyle('heading-sm'), color: color.brand.gold }}>
+                  Vi bygger et rom
+                </p>
+                <p style={{ ...typographyToStyle('body-sm'), color: color.text.secondary }}>
+                  Et rom der mennesker kan møtes på en trygg, moden og meningsfull måte.
+                </p>
+              </GlassCard>
+            </div>
 
-              <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
-                Et rom der mennesker kan møtes på en trygg, moden og meningsfull måte.
-              </p>
-            </GlassCard>
+            <p
+              className="text-center"
+              style={{
+                ...typographyToStyle('body-lg'),
+                color: color.brand.gold,
+                lineHeight: '1.8',
+                fontWeight: 600,
+              }}
+            >
+              Vi bygger ikke en app. Vi bygger et rom.
+            </p>
           </div>
         </ToSomSection>
 
@@ -423,7 +527,7 @@ export default function OmOssPage() {
               color: color.text.secondary,
             }}
           >
-            Lag profilen din i ditt eget tempo og møt noen som faktisk passer deg — på ordentlig.
+            Lag profilen din i ditt eget tempo og møt noen som passer deg — på ordentlig.
           </p>
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 pt-4">

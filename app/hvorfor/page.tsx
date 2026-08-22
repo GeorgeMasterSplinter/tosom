@@ -292,7 +292,7 @@ export default function HvorforPage() {
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {['ro', 'trygghet', 'én match', 'én prosess', 'én reise', 'én mulighet til å faktisk bli kjent'].map((item, idx) => (
+                {['ro', 'trygghet', 'én match', 'én prosess', 'én reise', 'én mulighet til å bli kjent'].map((item, idx) => (
                   <p
                     key={idx}
                     style={{
@@ -324,7 +324,7 @@ export default function HvorforPage() {
                   fontWeight: 600,
                 }}
               >
-                Bare deg — og én person som faktisk passer deg.
+                Bare deg — og én person som passer deg.
               </p>
             </GlassCard>
           </div>
@@ -535,7 +535,7 @@ export default function HvorforPage() {
               color: color.text.secondary,
             }}
           >
-            Lag profilen din i ditt eget tempo og møt noen som faktisk passer deg — på ordentlig.
+            Lag profilen din i ditt eget tempo og møt noen som passer deg — på ordentlig.
           </p>
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 pt-4">

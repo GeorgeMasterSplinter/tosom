@@ -78,7 +78,7 @@ const steps: Array<{
       'ingen konkurranse',
       'fokus og ro',
     ],
-    closing: 'Du blir med når tiden er riktig – og vi matcher deg når det faktisk betyr noe.',
+    closing: 'Du blir med når tiden er riktig – og vi matcher deg når det betyr noe.',
   },
   {
     icon: <IconJourney />,

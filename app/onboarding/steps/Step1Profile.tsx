@@ -203,7 +203,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
       <OnboardingSection
         title="Bosted og avstand"
         accentColor={OB.section.location}
-        description="Vi bruker dette til å finne noen som faktisk passer deg."
+        description="Vi bruker dette til å finne noen som passer deg."
       >
         <div className="space-y-5">
           <OnboardingTextField

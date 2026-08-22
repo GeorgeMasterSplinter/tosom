@@ -182,7 +182,7 @@ export default function LandingPage() {
                 marginRight: 'auto',
               }}
             >
-              Tosom gir deg ro, tid og én gjennomtenkt match — slik at du faktisk kan bli kjent.
+              Tosom gir deg ro, tid og én gjennomtenkt match — slik at du kan bli kjent.
             </p>
           </div>
           </Reveal>

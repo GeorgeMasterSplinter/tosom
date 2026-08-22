@@ -43,7 +43,7 @@ function IconMatch() {
   );
 }
 
-/** Forskningsbasert — sirkel med målpunkt */
+/** Gjennomtenkt matching — sirkel med målpunkt */
 function IconResearch() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -99,7 +99,7 @@ const steps = [
   },
   {
     icon: <IconResearch />,
-    title: 'Forskningsbasert matching',
+    title: 'Gjennomtenkt matching',
     content: 'Vi matcher på livssituasjon, verdier, relasjonsstil og emosjonell kompatibilitet. Ikke overflate. Ikke tilfeldigheter. Bare det som faktisk betyr noe i et forhold.',
   },
   {

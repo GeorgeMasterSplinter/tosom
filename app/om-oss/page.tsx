@@ -419,7 +419,7 @@ export default function OmOssPage() {
           spotlight="blue"
           className="px-6"
         >
-          <div className="mx-auto max-w-5xl space-y-10">
+          <div className="mx-auto max-w-3xl space-y-8">
             <h2
               style={{
                 ...typographyToStyle('heading-lg'),
@@ -430,80 +430,23 @@ export default function OmOssPage() {
               Teamet bak Tosom
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <GlassCard
-                padding="xl"
-                gold
-                interactive
-                className="text-center space-y-3"
-              >
-                <div className="w-12 h-12 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37] mx-auto">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z" />
-                    <circle cx="12" cy="10" r="3" />
-                  </svg>
-                </div>
-                <p style={{ ...typographyToStyle('heading-sm'), color: color.brand.gold }}>
-                  Utviklet i Norge
-                </p>
-                <p style={{ ...typographyToStyle('body-sm'), color: color.text.secondary }}>
-                  Fra et lite land, med stor omsorg for detaljene.
-                </p>
-              </GlassCard>
+            <GlassCard padding="xl" gold glow interactive className="space-y-6">
+              <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
+                Tosom er utviklet og driftet fra Norge av et lite, dedikert team som tror på relasjoner, teknologi og menneskelig varme.
+              </p>
 
-              <GlassCard
-                padding="xl"
-                gold
-                glow
-                interactive
-                className="text-center space-y-3"
-              >
-                <div className="w-12 h-12 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37] mx-auto">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="9" cy="12" r="5" />
-                    <circle cx="15" cy="12" r="5" />
-                  </svg>
-                </div>
-                <p style={{ ...typographyToStyle('heading-sm'), color: color.brand.gold }}>
-                  Lite team, stor varme
-                </p>
-                <p style={{ ...typographyToStyle('body-sm'), color: color.text.secondary }}>
-                  Vi tror på relasjoner, teknologi og menneskelig varme.
-                </p>
-              </GlassCard>
+              <p style={{ ...typographyToStyle('body-lg'), color: color.text.primary, lineHeight: '1.8' }}>
+                Vi bygger ikke en app.
+              </p>
 
-              <GlassCard
-                padding="xl"
-                gold
-                interactive
-                className="text-center space-y-3"
-              >
-                <div className="w-12 h-12 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37] mx-auto">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                    <polyline points="9,22 9,12 15,12 15,22" />
-                  </svg>
-                </div>
-                <p style={{ ...typographyToStyle('heading-sm'), color: color.brand.gold }}>
-                  Vi bygger et rom
-                </p>
-                <p style={{ ...typographyToStyle('body-sm'), color: color.text.secondary }}>
-                  Et rom der mennesker kan møtes på en trygg, moden og meningsfull måte.
-                </p>
-              </GlassCard>
-            </div>
+              <p style={{ ...typographyToStyle('heading-sm'), color: color.brand.gold }}>
+                Vi bygger et rom.
+              </p>
 
-            <p
-              className="text-center"
-              style={{
-                ...typographyToStyle('body-lg'),
-                color: color.brand.gold,
-                lineHeight: '1.8',
-                fontWeight: 600,
-              }}
-            >
-              Vi bygger ikke en app. Vi bygger et rom.
-            </p>
+              <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
+                Et rom der mennesker kan møtes på en trygg, moden og meningsfull måte.
+              </p>
+            </GlassCard>
           </div>
         </ToSomSection>
 

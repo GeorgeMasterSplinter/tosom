@@ -261,7 +261,7 @@ export default function KontaktPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
               <ToSomCard icon={<IconProfile />} title="Spørsmål om profilen din" iconWrapperClassName="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)]">
-                Vi hjelper deg med alt fra bildevalg til profiltekst.
+                Er du usikker på hvordan profilen fungerer? Skriv til oss — vi svarer raskt.
               </ToSomCard>
 
               <ToSomCard icon={<IconHeart />} title="Problemer med match eller reise" iconWrapperClassName="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)]">

@@ -10,8 +10,8 @@ export { unifiedScore, calculateTotalScore } from "./matching/unifiedScorer";
 // Dealbreaker
 export { sjekkAlleDealbreakers } from "./matching/dealbreaker";
 
-// Vekter
-export { getWeights, validateWeights } from "./matching/weightConfig";
+// Vekter (F-8)
+export { DIMENSION_WEIGHTS } from "./matching/unifiedScorer";
 
 // Forklaring
 export { generateExplanation } from "./matching/explainer";

@@ -1,10 +1,14 @@
 // lib/matching/unifiedScorer.ts — EINTILT SCORING-SYSTEM for ToSom
 //
 // SIKKERHET: Én kilde for all scoring. Både engine.ts (API) og findBestResonance.ts (cron)
-// bruker denne motoren nå. Ingen duplisering, ingen inkonsistens.
+// bruker denne motoren. Ingen duplisering, ingen inkonsistens.
 //
-// Dimensjoner (9): values, personality, relationshipStyle, communication, futureVision,
-//   boundaries, emotionalNeeds, lifeRhythm, maturity
+// FORSKNINGSMOTOR F-8: Ni dimensjoner → seks, med vektene fra §7.
+// Kvar dimensjon bruker psykometriske skårer når begge profiler har dei;
+// ellers faller vi tilbake til dagens ordoverlapp. Ingen bruker blir utan score.
+//
+// Dimensjoner (6): values, attachment, personality, communication,
+//   emotionRegulation, lifeSituation
 //
 // Skala: 0-100 (høyere = dypere resonans)
 
@@ -12,19 +16,32 @@ import { ProfileData } from "./types";
 import { ResonanceLevel } from "@prisma/client";
 // M-1: Én kilde for resonansterskler — nivået kjem frå toResonanceLevel (kanonisk 80/65/50/40).
 import { toResonanceLevel } from "./resonanceLevel";
+// FORSKNINGSMOTOR F-7: ein funksjon per dimensjon.
+import {
+  scoreAttachmentCompat,
+  scorePersonalityCompat,
+  scoreValueCompat,
+  scoreEmotionRegCompat,
+  scoreCommunicationCompat,
+  scoreLifeSituationCompat,
+} from "./dimensions";
+import type {
+  AttachmentScores,
+  BigFiveScores,
+  ValueProfile,
+  ERScores,
+  CommScores,
+} from "@/lib/psychometrics/scoring";
 
 /* ---------- OUTPUT TYPES ---------- */
 
 export interface UnifiedBreakdown {
-  values: number;            // Kjerneverdier
-  personality: number;       // Personlighetstrekk
-  relationshipStyle: number; // Relasjonsstil
-  communication: number;     // Kommunikasjon
-  futureVision: number;      // Fremtidsvisjon
-  boundaries: number;        // Grenser
-  emotionalNeeds: number;    // Emosjonelle behov
-  lifeRhythm: number;        // Livsrytme
-  maturity: number;          // Modenhet
+  values: number;            // Verdier (PVQ-10 korrelasjon)
+  attachment: number;        // Tilknytning (engstelig/unnvikende-matrise)
+  personality: number;       // Personlighet (BFI-10, per trekk)
+  communication: number;     // Kommunikasjon (Gottman-prinsipper)
+  emotionRegulation: number; // Emosjonsregulering (ERQ-6)
+  lifeSituation: number;     // Livssituasjon (praktisk kompatibilitet)
 }
 
 export interface UnifiedResult {
@@ -33,22 +50,19 @@ export interface UnifiedResult {
   level: MatchLevel;
 }
 
-// M-1: Brukar Prisma-enumen ResonanceLevel (samme verdiar som før), ikkje ein
+// M-1: Brukar Prisma-enumen ResonanceLevel (same verdiar som før), ikkje ein
 // separat string-union — slik at tersklene kjem éin stad: toResonanceLevel().
 export type MatchLevel = ResonanceLevel;
 
-/* ---------- WEIGHTS (summer til 1.0) ---------- */
+/* ---------- WEIGHTS (summer til 1.0) — §7 ---------- */
 
-const W: Record<keyof UnifiedBreakdown, number> = {
-  values:            0.25, // Verdier — høyest vekt
-  personality:       0.20, // Personlighet
-  relationshipStyle: 0.15, // Relasjonsstil
-  communication:     0.15, // Kommunikasjon
-  futureVision:      0.10, // Fremtidsvisjon
-  boundaries:        0.05, // Grenser
-  emotionalNeeds:    0.05, // Emosjonelle behov
-  lifeRhythm:        0.03, // Livsrytme
-  maturity:          0.02, // Modenhet
+export const DIMENSION_WEIGHTS: Record<keyof UnifiedBreakdown, number> = {
+  values:            0.25, // Verdier — sterkest prediktor for langsiktig samsvar
+  attachment:        0.25, // Tilknytning — best dokumenterte funn i parforskning
+  personality:       0.15, // Personlighet — reell men svakare effekt
+  communication:     0.15, // Kommunikasjon — Gottmans kjerneområde
+  emotionRegulation: 0.10, // Emosjonsregulering — påverkar konflikthåndtering
+  lifeSituation:     0.10, // Livssituasjon — praktisk kompatibilitet
 };
 
 /* ---------- HOVEDFUNKSJON ---------- */
@@ -56,7 +70,7 @@ const W: Record<keyof UnifiedBreakdown, number> = {
 /**
  * unifiedScore — EINTILT SCORING for to profiler.
  * Aksepterer både ProfileData (engine.ts) og raw JSON (findBestResonance.ts).
- * Returnerer score 0-100 med breakdown i alle 9 dimensjoner.
+ * Returnerer score 0-100 med breakdown i alle 6 dimensjonene.
  */
 export function unifiedScore(
   a: ProfileData | Record<string, unknown>,
@@ -65,22 +79,19 @@ export function unifiedScore(
   const pA = normalizeProfile(a);
   const pB = normalizeProfile(b);
 
-  // Beregn alle 9 dimensjoner (hver [0-100])
+  // Beregn alle 6 dimensjonene (hver [0-100]) med fallback.
   const breakdown: UnifiedBreakdown = {
-    values:            dimensionValues(pA, pB),
-    personality:       dimensionPersonality(pA, pB),
-    relationshipStyle: dimensionRelationshipStyle(pA, pB),
-    communication:     dimensionCommunication(pA, pB),
-    futureVision:      dimensionFutureVision(pA, pB),
-    boundaries:        dimensionBoundaries(pA, pB),
-    emotionalNeeds:    dimensionEmotionalNeeds(pA, pB),
-    lifeRhythm:        dimensionLifeRhythm(pA, pB),
-    maturity:          dimensionMaturity(pA, pB),
+    values:            dimValues(pA, pB),
+    attachment:        dimAttachment(pA, pB),
+    personality:       dimPersonality(pA, pB),
+    communication:     dimCommunication(pA, pB),
+    emotionRegulation: dimEmotionRegulation(pA, pB),
+    lifeSituation:     dimLifeSituation(pA, pB),
   };
 
   // Vektet sum [0-100]
   const score = Math.round(
-    Object.entries(W).reduce((sum, [key, weight]) => {
+    Object.entries(DIMENSION_WEIGHTS).reduce((sum, [key, weight]) => {
       return sum + (breakdown[key as keyof UnifiedBreakdown] * weight);
     }, 0)
   );
@@ -92,145 +103,133 @@ export function unifiedScore(
   return { score: clampedScore, breakdown, level };
 }
 
-/* ---------- DIMENsjonsfunksjoner ---------- */
+/* ---------- DIMENSJONSFUNKSJONER (psych-first, fallback til ordoverlapp) ---------- */
 
-/** Verdier: sammenfall mellom kjerneverdier (lifeSituation.values) */
-function dimensionValues(a: P, b: P): number {
-  const vA = safeStrings(a.lifeSituation);
-  const vB = safeStrings(b.lifeSituation);
-  return overlapScore(vA, vB);
+/** Verdier: PVQ-10-korrelasjon dersom begge har valueProfile, ellers ordoverlapp. */
+function dimValues(a: P, b: P): number {
+  const vA = readValueProfile(a);
+  const vB = readValueProfile(b);
+  if (vA && vB) return scoreValueCompat(vA, vB);
+  // Fallback (dagens metode): sammenfall mellom kjerneverdier.
+  return overlapScore(safeStrings(a.lifeSituation), safeStrings(b.lifeSituation));
 }
 
-/** Personlighet: kompatibilitet mellom trekk */
-function dimensionPersonality(a: P, b: P): number {
+/** Tilknytning: engstelig/unnvikende-matrise dersom begge har attachment, ellers fallback. */
+function dimAttachment(a: P, b: P): number {
+  const attA = readAttachment(a);
+  const attB = readAttachment(b);
+  if (attA && attB) return scoreAttachmentCompat(attA, attB);
+  // Fallback: relasjonsstil-overlap som proxy (næraste dagens dimensjon).
+  return dimensionRelationshipStyle(a, b);
+}
+
+/** Personlighet: BFI-10 per trekk dersom begge har bigFive, ellers ordoverlapp. */
+function dimPersonality(a: P, b: P): number {
+  const pA = readBigFive(a);
+  const pB = readBigFive(b);
+  if (pA && pB) return scorePersonalityCompat(pA, pB);
   const tA = safeStrings(a.personality);
   const tB = safeStrings(b.personality);
   if (!tA.length || !tB.length) return 50;
-  // Enkel overlap med kompatibilitetsbonus for komplementære trekk
   return overlapScore(tA, tB);
 }
 
-/** Relasjonsstil: string-match eller complementary */
+/** Kommunikasjon: Gottman-trekk dersom begge har communicationScores, ellers ordoverlapp. */
+function dimCommunication(a: P, b: P): number {
+  const cA = readCommScores(a);
+  const cB = readCommScores(b);
+  if (cA && cB) return scoreCommunicationCompat(cA, cB);
+  const cA2 = safeStrings(a.communication);
+  const cB2 = safeStrings(b.communication);
+  if (!cA2.length || !cB2.length) return 50;
+  const styleA = extractStringProp(a.communication, 'style');
+  const styleB = extractStringProp(b.communication, 'style');
+  if (styleA && styleB && styleA.toLowerCase() === styleB.toLowerCase()) return 85;
+  return overlapScore(cA2, cB2);
+}
+
+/** Emosjonsregulering: ERQ-6 dersom begge har emotionRegulation, ellers emosjonelle-behov-overlap. */
+function dimEmotionRegulation(a: P, b: P): number {
+  const eA = readER(a);
+  const eB = readER(b);
+  if (eA && eB) return scoreEmotionRegCompat(eA, eB);
+  // Fallback: dagens emosjonelle-behov-overlap (nærmaste tilgjelde dimensjon).
+  const nA = safeStrings(a.emotionalNeeds);
+  const nB = safeStrings(b.emotionalNeeds);
+  if (!nA.length || !nB.length) return 50;
+  return overlapScore(nA, nB);
+}
+
+/** Livssituasjon: praktisk kompatibilitet. Alltid tilgjengeleg (defensiv tolking). */
+function dimLifeSituation(a: P, b: P): number {
+  return scoreLifeSituationCompat(a as unknown as Record<string, unknown>, b as unknown as Record<string, unknown>);
+}
+
+/* ---------- PSYCH-READERS (defensive — manglar data gir null) ---------- */
+
+function readBigFive(p: P): BigFiveScores | null {
+  const bf = p.bigFive as Record<string, unknown> | null | undefined;
+  if (!bf || typeof bf !== "object") return null;
+  const need: Array<keyof BigFiveScores> = [
+    "openness", "conscientiousness", "extraversion", "agreeableness", "neuroticism",
+  ];
+  for (const k of need) if (typeof bf[k] !== "number") return null;
+  return bf as unknown as BigFiveScores;
+}
+
+function readAttachment(p: P): AttachmentScores | null {
+  const att = p.attachment as Record<string, unknown> | null | undefined;
+  if (!att || typeof att !== "object") return null;
+  if (typeof att.style !== "string") return null;
+  return {
+    anxiety: typeof att.anxiety === "number" ? att.anxiety : 3,
+    avoidance: typeof att.avoidance === "number" ? att.avoidance : 3,
+    style: att.style as AttachmentScores["style"],
+  };
+}
+
+function readValueProfile(p: P): ValueProfile | null {
+  const vp = p.valueProfile as Record<string, unknown> | null | undefined;
+  if (!vp || typeof vp !== "object") return null;
+  const entries = Object.entries(vp).filter(([, v]) => typeof v === "number");
+  if (entries.length === 0) return null;
+  return Object.fromEntries(entries) as ValueProfile;
+}
+
+function readER(p: P): ERScores | null {
+  const er = p.emotionRegulation as Record<string, unknown> | null | undefined;
+  if (!er || typeof er !== "object") return null;
+  if (typeof er.reappraisal !== "number" || typeof er.suppression !== "number") return null;
+  return er as unknown as ERScores;
+}
+
+function readCommScores(p: P): CommScores | null {
+  // Kommunikationsskår ligg i deepProfileData.communicationScores (F-6).
+  const dpd = p.deepProfileData as Record<string, unknown> | null | undefined;
+  const cs = dpd?.communicationScores as Record<string, unknown> | null | undefined;
+  if (!cs || typeof cs !== "object") return null;
+  const entries = Object.entries(cs).filter(([, v]) => typeof v === "number");
+  if (entries.length === 0) return null;
+  return Object.fromEntries(entries) as CommScores;
+}
+
+/* ---------- LEGACY FALLBACK-DIMENSJONER (dagens ordoverlapp) ---------- */
+
+/** Relasjonsstil (fallback for tilknytning): string-match eller complementary. */
 function dimensionRelationshipStyle(a: P, b: P): number {
   const sA = String(a.relationshipStyle || '').toLowerCase();
   const sB = String(b.relationshipStyle || '').toLowerCase();
   if (!sA || !sB) return 50;
   if (sA === sB) return 100;
-  // Komplementære par
   const pairs = [["gradual", "direct"], ["indirect", "direct"], ["independent", "connecting"]];
   for (const [x, y] of pairs) {
     if ((sA === x && sB === y) || (sA === y && sB === x)) return 70;
   }
-  // Delvis match basert på ord-overlap
   const wordsA = new Set(sA.split(/\s+/));
   const wordsB = new Set(sB.split(/\s+/));
   let matches = 0;
   for (const w of wordsA) { if (wordsB.has(w)) matches++; }
   return matches > 0 ? Math.min(matches * 15, 60) : 40;
-}
-
-/** Kommunikasjon: sammenfall i preferanser */
-function dimensionCommunication(a: P, b: P): number {
-  const cA = safeStrings(a.communication);
-  const cB = safeStrings(b.communication);
-  if (!cA.length || !cB.length) return 50;
-
-  // Sjekk om communication er objekt med style-felt (ProfileData-tilfelle)
-  const styleA = extractStringProp(a.communication, 'style');
-  const styleB = extractStringProp(b.communication, 'style');
-  if (styleA && styleB && styleA.toLowerCase() === styleB.toLowerCase()) return 85;
-
-  return overlapScore(cA, cB);
-}
-
-/** Fremtidsvisjon: sammenfall i livsmål */
-function dimensionFutureVision(a: P, b: P): number {
-  const fA = safeStrings(a.futureVision);
-  const fB = safeStrings(b.futureVision);
-  if (!fA.length || !fB.length) return 50;
-
-  // Sjekk om futureVision er objekt med goals-felt
-  const goalsA = extractArrayProp(a.futureVision, 'goals');
-  const goalsB = extractArrayProp(b.futureVision, 'goals');
-  if (goalsA && goalsB) {
-    // Jaccard-similaritet
-    const union = new Set([...goalsA, ...goalsB]).size;
-    const shared = goalsA.filter(g => goalsB.includes(g)).length;
-    return union > 0 ? (shared / union) * 100 : 50;
-  }
-
-  return overlapScore(fA, fB);
-}
-
-/** Grenser: respekt for hverandres grenser */
-function dimensionBoundaries(a: P, b: P): number {
-  const bA = safeStrings(a.boundaries);
-  const bB = safeStrings(b.boundaries);
-  if (!bA.length || !bB.length) return 50;
-
-  // "slow-pace" bonus (sterk resonans-indikator)
-  const slowA = bA.some(s => s.toLowerCase().includes("slow"));
-  const slowB = bB.some(s => s.toLowerCase().includes("slow"));
-  if (slowA && slowB) return 85;
-
-  // Sjekk om boundaries er objekt med preferredDistance
-  const distA = extractStringProp(a.boundaries, 'preferredDistance');
-  const distB = extractStringProp(b.boundaries, 'preferredDistance');
-  if (distA && distB && distA.toLowerCase() === distB.toLowerCase()) return 85;
-
-  return overlapScore(bA, bB);
-}
-
-/** Emosjonelle behov: støtte hverandres behov */
-function dimensionEmotionalNeeds(a: P, b: P): number {
-  const nA = safeStrings(a.emotionalNeeds);
-  const nB = safeStrings(b.emotionalNeeds);
-  if (!nA.length || !nB.length) return 50;
-
-  // "depth" bonus (sterk resonans-indikator)
-  const depthA = nA.some(s => s.toLowerCase().includes("depth"));
-  const depthB = nB.some(s => s.toLowerCase().includes("depth"));
-  if (depthA && depthB) return 80;
-
-  // Sjekk om emotionalNeeds er objekt med needs-felt
-  const needsA = extractArrayProp(a.emotionalNeeds, 'needs');
-  const needsB = extractArrayProp(b.emotionalNeeds, 'needs');
-  if (needsA && needsB) {
-    const shared = needsA.filter(n => needsB.includes(n)).length;
-    const maxPossible = Math.max(needsA.length, needsB.length);
-    return maxPossible > 0 ? (shared / maxPossible) * 100 : 50;
-  }
-
-  return overlapScore(nA, nB);
-}
-
-/** Livsrytme: samkjørte livsstiler */
-function dimensionLifeRhythm(a: P, b: P): number {
-  const rA = String(a.lifeRhythm || '').toLowerCase();
-  const rB = String(b.lifeRhythm || '').toLowerCase();
-  if (!rA || !rB) return 50;
-  if (rA === rB) return 100;
-
-  // Komplementære rytmer
-  const pairs = [["morning", "evening"], ["fast", "slow"]];
-  for (const [x, y] of pairs) {
-    if ((rA === x && rB === y) || (rA === y && rB === x)) return 60;
-  }
-
-  return 40;
-}
-
-/** Modenhet: kompatibilitet i modenhetsnivå */
-function dimensionMaturity(a: P, b: P): number {
-  const mA = Number(a.maturityLevel);
-  const mB = Number(b.maturityLevel);
-  if (!mA || !mB || isNaN(mA) || isNaN(mB)) return 50;
-
-  const diff = Math.abs(mA - mB);
-  if (diff <= 1) return 100;
-  if (diff <= 2) return 80;
-  if (diff <= 3) return 60;
-  return 40;
 }
 
 /* ---------- HJELPEFUNKSJONER ---------- */
@@ -240,35 +239,34 @@ interface P {
   personality?: unknown;
   relationshipStyle?: unknown;
   communication?: unknown;
-  futureVision?: unknown;
-  boundaries?: unknown;
   emotionalNeeds?: unknown;
-  lifeRhythm?: unknown;
-  maturityLevel?: unknown;
+  // FORSKNINGSMOTOR F-8: psykometriske skårer
+  bigFive?: unknown;
+  attachment?: unknown;
+  valueProfile?: unknown;
+  emotionRegulation?: unknown;
+  deepProfileData?: unknown;
 }
 
 function normalizeProfile(p: ProfileData | Record<string, unknown>): P {
   return p as P;
 }
 
-/** Trekk string-array fra JSON-felt (håndterer både array og objekt) */
+/** Trekk string-array frå JSON-felt (håndterer både array og objekt). */
 function safeStrings(value: unknown): string[] {
   if (Array.isArray(value)) return value.map(String).filter(Boolean);
   if (typeof value === "string") {
     try { return JSON.parse(value); } catch { return [value]; }
   }
   if (typeof value === "object" && value !== null) {
-    // Objekt med felt — trekk verdiene
     const obj = value as Record<string, unknown>;
     const arr = extractArrayProp(obj, 'values') || extractArrayProp(obj, 'traits') || extractArrayProp(obj, 'goals');
     if (arr && arr.length > 0) return arr;
-    // Ellers trekk string-verdier fra objektet
     return Object.values(obj).filter(v => typeof v === 'string').map(String);
   }
   return [];
 }
 
-/** Hent spesifikk prop fra JSON-felt */
 function extractStringProp(value: unknown, key: string): string | null {
   if (typeof value === "object" && value !== null) {
     const obj = value as Record<string, unknown>;
@@ -277,7 +275,6 @@ function extractStringProp(value: unknown, key: string): string | null {
   return null;
 }
 
-/** Hent spesifikk array-prop fra JSON-felt */
 function extractArrayProp(value: unknown, key: string): string[] | null {
   if (typeof value === "object" && value !== null) {
     const obj = value as Record<string, unknown>;
@@ -287,16 +284,13 @@ function extractArrayProp(value: unknown, key: string): string[] | null {
   return null;
 }
 
-/** Overlap-score mellom to string-arrays (0-100) */
+/** Overlap-score mellom to string-arrays (0-100). */
 function overlapScore(a: string[], b: string[]): number {
   if (!a.length || !b.length) return 50; // neutral ved manglende data
-
   const setA = new Set(a.map(s => s.toLowerCase()));
   const setB = new Set(b.map(s => s.toLowerCase()));
-
   let matches = 0;
   for (const s of setA) { if (setB.has(s)) matches++; }
-
   const maxPossible = Math.max(setA.size, setB.size);
   return maxPossible === 0 ? 50 : (matches / maxPossible) * 100;
 }
@@ -309,7 +303,7 @@ function clamp(n: number, min: number, max: number): number {
 
 /**
  * calculateTotalScore — wrapper for backwards-kompatibilitet med engine.ts.
- * Returnerer resultat i [0,1] skala (gamle format).
+ * Returnerer resultat i [0,1] skala (gamle format) med dei 5 sub-scorerne.
  * @deprecated Bruk unifiedScore() direkte for [0-100] skala.
  */
 export function calculateTotalScore(
@@ -322,16 +316,16 @@ export function calculateTotalScore(
 } {
   const result = unifiedScore(queryProfile, candidateProfile);
 
-  // Kartlegg 9 dimensjoner til 5 sub-scorers (for backwards-kompatibilitet)
+  // Kartlegg 6 nye dimensjoner til dei 5 legacy sub-scorerne.
   return {
     breakdown: {
-      base:      result.score / 100,         // base ≈ total score
+      base:      result.score / 100,
       resonance: result.breakdown.communication / 100,
       semantic:  result.breakdown.values / 100,
-      intimacy:  result.breakdown.emotionalNeeds / 100,
-      future:    result.breakdown.futureVision / 100,
+      intimacy:  result.breakdown.attachment / 100,
+      future:    result.breakdown.emotionRegulation / 100,
     },
-    totalScore: result.score / 100, // [0-1] for backwards-kompatibilitet med engine.ts
-    weights: W as any,
+    totalScore: result.score / 100,
+    weights: { ...DIMENSION_WEIGHTS },
   };
 }

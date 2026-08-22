@@ -60,7 +60,7 @@ const steps: Array<{
   {
     icon: <IconProfile />,
     title: 'Veiledet profil',
-    intro: 'Du starter med en forskningsbasert og guidet profil som hjelper deg å forstå hvem du er, hva du trenger og hva som faktisk passer deg i en relasjon.',
+    intro: 'Du starter med en guidet profil, underbygd av etablerte relasjonsmodeller (se Forskningsgrunnlaget), som hjelper deg å forstå hvem du er, hva du trenger og hva som kan passe deg i en relasjon.',
     points: [
       'basert på relasjonspsykologi',
       'hjelper deg å forstå dine behov',
@@ -71,7 +71,7 @@ const steps: Array<{
   {
     icon: <IconMatch />,
     title: 'Én match, hver lørdag',
-    intro: 'Når profilen din er klar, blir du med i neste matchrunde. Natt til lørdag kobler vi dem som passer best sammen, og reisen starter lørdag morgen. Ikke ti matcher. Ikke hundre. Bare én person som faktisk passer deg basert på verdier, livsstil, kommunikasjon og fremtidsønsker.',
+    intro: 'Når profilen din er klar, blir du med i neste matchrunde. Natt til lørdag kobler vi dem som passer best sammen, og reisen starter lørdag morgen. Ikke ti matcher. Ikke hundre. Bare én person, valgt med omtanke — ut fra verdier, livsstil, kommunikasjon og fremtidsønsker.',
     points: [
       'én match om gangen',
       'ingen sveiping',
@@ -151,7 +151,7 @@ export default function SlikPage() {
               lineHeight: '1.8',
             }}
           >
-            En rolig og trygg prosess som hjelper deg å møte én person som faktisk passer deg. Ingen stress. Ingen sveiping. Bare hvalitet.
+            En rolig og trygg prosess som hjelper deg å møte én person, valgt med omtanke. Ingen stress. Ingen sveiping. Bare kvalitet.
           </p>
         </ToSomSection>
 
@@ -238,7 +238,7 @@ export default function SlikPage() {
               color: color.text.secondary,
             }}
           >
-            Lag profilen din i ditt eget tempo og møt noen som faktisk passer deg — på ordentlig.
+            Lag profilen din i ditt eget tempo og møt én person, valgt med omtanke — på ordentlig.
           </p>
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 pt-4">

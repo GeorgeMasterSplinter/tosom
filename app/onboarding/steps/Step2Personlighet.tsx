@@ -17,6 +17,8 @@ import { OnboardingTextField } from '@/app/onboarding/components/OnboardingTextF
 import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { BackButton } from '@/components/onboarding/BackButton';
 import { OB } from '@/app/onboarding/theme';
+import { ScaleQuestion } from '@/components/onboarding/ScaleQuestion';
+import { BFI10 } from '@/lib/psychometrics/instruments';
 
 interface Props {
   data: Record<string, unknown>;
@@ -191,6 +193,22 @@ export default function Step2Personlighet({ data, onChange, onBack, onNext }: Pr
         rows={3}
         multiline
       />
+
+      {/* FORSKNINGSMOTOR F-5 — BFI-10 (kortform av Big Five) */}
+      <div style={{ borderTop: `1px solid ${OB.divider}`, marginTop: '28px', marginBottom: '8px' }} />
+      <p className="text-sm mb-4" style={{ color: OB.textSecondary }}>
+        Noen påstander. Svar det som kjennes riktigst — det finnes ingen fasit.
+      </p>
+      <div className="space-y-3">
+        {BFI10.map((item) => (
+          <ScaleQuestion
+            key={item.id}
+            text={item.text}
+            value={typeof data[item.id] === 'number' ? (data[item.id] as number) : null}
+            onChange={(v) => onChange(item.id, v)}
+          />
+        ))}
+      </div>
 
       {/* Trust text */}
       <p className="text-center text-xs mt-8" style={{ color: OB.textSubtle }}>

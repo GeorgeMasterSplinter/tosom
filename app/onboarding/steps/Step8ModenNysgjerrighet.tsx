@@ -5,6 +5,8 @@ import { OB } from '@/app/onboarding/theme';
 import { OnboardingTextField } from '@/app/onboarding/components/OnboardingTextField';
 import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { BackButton } from '@/components/onboarding/BackButton';
+import { ScaleQuestion } from '@/components/onboarding/ScaleQuestion';
+import { ERQ6 } from '@/lib/psychometrics/instruments';
 interface Props { data: Record<string, unknown>; onChange: (f: string, v: unknown) => void; onBack: () => void; step: number; goToStep: (s: number) => void; onNext: () => void; }
 interface ValidationError { field: string; message: string; }
 const validate = (d: Record<string, unknown>): ValidationError[] => {
@@ -45,6 +47,21 @@ export default function Step8ModenNysgjerrighet({ data, onChange, onBack, onNext
       <OnboardingTextField label={`${labels['nearerType']} *`} value={getValue('nearerType', '')} onChange={(v) => onChange('nearerType', v)} placeholder={placeholders['nearerType']} mikroguiding={guiding['nearerType']} maxLength={300} minChars={10} rows={3} multiline />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
       <OnboardingTextField label={`${labels['needsTime']} *`} value={getValue('needsTime', '')} onChange={(v) => onChange('needsTime', v)} placeholder={placeholders['needsTime']} mikroguiding={guiding['needsTime']} maxLength={300} minChars={10} rows={3} multiline />
+      {/* FORSKNINGSMOTOR F-5 — ERQ-6 (emotiv romslighet) */}
+      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '28px', marginBottom: '8px' }} />
+      <p className="text-sm mb-4" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+        Romslighet i kjønnsrelaterte roller. Svar det som kjennes mest riktig.
+      </p>
+      <div className="space-y-3">
+        {ERQ6.map((item) => (
+          <ScaleQuestion
+            key={item.id}
+            text={item.text}
+            value={typeof data[item.id] === 'number' ? (data[item.id] as number) : null}
+            onChange={(v) => onChange(item.id, v)}
+          />
+        ))}
+      </div>
       <p className="text-center text-xs mt-8" style={{ color: 'rgba(255,255,255,0.3)' }}>Modne svar viser hvem du er — del bare det du kjenner deg trygg med.</p>
       <div className="mt-8 space-y-4"><BackButton onClick={onBack} /><PremiumCTAButton onClick={handleNext} label={!canProceed ? 'Fyll ut alle påkrevde felt' : 'Fortsett til neste steg'} disabled={!canProceed} fullWidth /></div>
     </OnboardingSlide>

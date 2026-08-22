@@ -194,7 +194,7 @@ prisma/schema.prisma
 
 #### Steg 2a: Personlighet & identitet (`Step2Personlighet.tsx`)
 
-**Formål:** personlegheitstrekk (Big Five light)  
+**Formål:** personlegheitstrekk (fritekstfelt — ikkje ein Big Five-skala). Merk: ombygd til ein reell BFI-10-skala i FORSKNINGSMOTOR F-5.  
 **UI-layout:** Single page, max-w-3xl, space-y-8/10  
 **Komponentar:** TextAreaField, PremiumButton, BackButton  
 **Felt (alle textarea ≥10 teikn):**
@@ -870,8 +870,8 @@ FASE 1 — IDENTITET (Kven er du?)
 └── Steg 3: Kroppstype + stil + energi (Slideshow-side)
 
 FASE 2 — PERSONLIGHET (Korleis er du?)
-├── Steg 4: Personlighetstrekk (Big Five light)
-├── Steg 5: Verdier (3–5 kjerneverdier)
+├── Steg 4: Personlighetstrekk (kortform av Big Five / BFI-10)
+├── Steg 5: Verdier (PVQ-10)
 ├── Steg 6: Livsstil (søvn, sosialt, tempo)
 └── Steg 7: Interesser (valg-side, ikkje blandet)
 
@@ -922,9 +922,9 @@ FASE 3 — RELASJON (Kven søker du?)
 
 #### Fase 2 — Personlighet
 
-**Steg 4: Personlighetstrekk (Big Five light)**
+**Steg 4: Personlighetstrekk (kortform av Big Five / BFI-10)**
 - Tema: Psykologisk profil
-- Forskning: Big Five er forskningsbasert for personlegdom-matching
+- Forskning: Big Five er forskningsbasert for personlegdom-matching (kortforma BFI-10)
 - Guiding: "Dette er forskningsbasert. Ta det rolig."
 
 **Steg 5: Verdier (3–5 kjerneverdier)**

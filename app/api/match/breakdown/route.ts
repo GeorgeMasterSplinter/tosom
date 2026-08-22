@@ -21,9 +21,10 @@ import { ProfileData } from "@/lib/matching/types";
 export const dynamic = "force-dynamic";
 
 /**
- * Mapp 9-dimensjonsresultat fra unifiedScore til de 5 dimensjonene
+ * Mapp 6-dimensjonsresultat fra unifiedScore til de 5 dimensjonene
  * klienten forventer. Samme logikk som calculateTotalScore (deprecated)
  * men i 0-100 skala i stedet for [0,1].
+ * FORSKNINGSMOTOR F-8: nye dimensjonsnavn (values, attachment, communication, ...).
  */
 function mapToFiveDimensions(result: UnifiedResult): {
   totalScore: number;
@@ -41,8 +42,8 @@ function mapToFiveDimensions(result: UnifiedResult): {
       base: Math.round(result.score),
       resonance: Math.round(result.breakdown.communication),
       semantic: Math.round(result.breakdown.values),
-      intimacy: Math.round(result.breakdown.emotionalNeeds),
-      future: Math.round(result.breakdown.futureVision),
+      intimacy: Math.round(result.breakdown.attachment),
+      future: Math.round(result.breakdown.emotionRegulation),
     },
   };
 }
@@ -93,6 +94,13 @@ function toProfileData(profile: {
     lifeRhythm: profile.lifeRhythm,
     maturityLevel: profile.maturityLevel,
     securityLevel: profile.securityLevel,
+    // FORSKNINGSMOTOR F-8: psykometriske skårer (valfrie — fallback i motoren)
+    bigFive: (profile as any).bigFive ?? null,
+    attachment: (profile as any).attachment ?? null,
+    valueProfile: (profile as any).valueProfile ?? null,
+    emotionRegulation: (profile as any).emotionRegulation ?? null,
+    deepProfileData: ((profile as any).deepProfileData as Record<string, unknown> | null) ?? null,
+    psychometricVersion: (profile as any).psychometricVersion ?? null,
     preferences: (profile.preferences as Record<string, unknown> | null) ?? null,
     matchTags: profile.matchTags,
     latitude: profile.latitude,

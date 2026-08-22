@@ -10,6 +10,8 @@ import { OB } from '@/app/onboarding/theme';
 import { OnboardingTextField } from '@/app/onboarding/components/OnboardingTextField';
 import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { BackButton } from '@/components/onboarding/BackButton';
+import { ScaleQuestion } from '@/components/onboarding/ScaleQuestion';
+import { ATTACHMENT } from '@/lib/psychometrics/instruments';
 
 interface Props {
   data: Record<string, unknown>;
@@ -77,6 +79,21 @@ export default function Step3Tilknytning({ data, onChange, onBack, onNext }: Pro
       <OnboardingTextField label="Hva trenger du under stress? *" value={getValue('stressNeed', '')} onChange={(v) => onChange('stressNeed', v)} placeholder="Beskriv hvordan stress reagerer i kroppen din og hvilken type støtte som hjelper deg mest med å regulere og gjenopprette balanse" mikroguiding="Skriv f.eks. At noen tar over ansvaret midlertidig" maxLength={300} minChars={10} rows={3} multiline />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
       <OnboardingTextField label="Hva grenser er viktigst for deg? *" value={getValue('importantBoundary', '')} onChange={(v) => onChange('importantBoundary', v)} placeholder="Reflekter over hva du absolutt ikke kan tolerere i en relasjon — beskriv grensen og hvorfor den er essensiell for din velvære" mikroguiding="Skriv f.eks. Jeg trenger tid alene etter en tung dag" maxLength={300} minChars={10} rows={3} multiline />
+      {/* FORSKNINGSMOTOR F-5 — Tilknytning (egne items, Bowlby/Ainsworth/Hazan-Shaver) */}
+      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '28px', marginBottom: '8px' }} />
+      <p className="text-sm mb-4" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+        Noen påstander om trygghet og nærhet. Svar det som kjennes riktigst — det finnes ingen fasit.
+      </p>
+      <div className="space-y-3">
+        {ATTACHMENT.map((item) => (
+          <ScaleQuestion
+            key={item.id}
+            text={item.text}
+            value={typeof data[item.id] === 'number' ? (data[item.id] as number) : null}
+            onChange={(v) => onChange(item.id, v)}
+          />
+        ))}
+      </div>
       <p className="text-center text-xs mt-8" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>Tilknytningsmønsteret ditt sier mye om hvordan du møter andre mennesker.</p>
       <div className="mt-8 space-y-4">
         <BackButton onClick={onBack} />

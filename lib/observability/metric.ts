@@ -14,7 +14,7 @@
 import prisma from '@/lib/prisma';
 
 /** Enheter vi måler i. */
-export type MetricUnit = 'ms' | 'count' | 'days' | 'bytes' | 'percent';
+export type MetricUnit = 'ms' | 'count' | 'days' | 'bytes' | 'percent' | 'points';
 
 export interface MetricTags {
   [key: string]: string | number;

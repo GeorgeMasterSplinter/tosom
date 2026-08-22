@@ -140,7 +140,7 @@ export default function PriserPage() {
                   lineHeight: '1.8',
                 }}
               >
-                Bare én pris, én reise, én mulighet til å møte noen som faktisk passer deg.
+                Bare én pris, én reise, én mulighet til å møte én person, valgt med omtanke.
               </p>
             </GlassCard>
           </div>
@@ -169,7 +169,7 @@ export default function PriserPage() {
                 color: color.text.secondary,
               }}
             >
-              Tosom gir deg en komplett, trygg og forskningsbasert prosess for å møte én person — ikke mange, men én som faktisk passer deg.
+              Tosom gir deg en komplett, trygg prosess — underbygd av etablerte relasjonsmodeller (se Forskningsgrunnlaget) — for å møte én person, valgt med omtanke.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -185,7 +185,7 @@ export default function PriserPage() {
                         color: color.text.primary,
                       }}
                     >
-                      Veiledet, forskningsbasert profil
+                      Veiledet profil, underbygd av relasjonsmodeller
                     </h3>
                     <p
                       style={{
@@ -359,7 +359,7 @@ export default function PriserPage() {
               color: color.text.secondary,
             }}
           >
-            Lag profilen din i ditt eget tempo og møt noen som faktisk passer deg — på ordentlig.
+            Lag profilen din i ditt eget tempo og møt én person, valgt med omtanke — på ordentlig.
           </p>
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 pt-4">

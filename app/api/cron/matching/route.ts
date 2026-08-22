@@ -465,6 +465,18 @@ export async function GET(req: NextRequest) {
         ? { min: sortedScores[0], median: median(allScores), max: sortedScores[sortedScores.length - 1] }
         : { min: 0, median: 0, max: 0 };
 
+      // FORSKNINGSMOTOR F-9: logg score-/nivåfordeling som metrikk (ikke-blokkerande).
+      // Resonanstersklene (80/65/50/40) er kalibrerte for ordoverlapp; skårede
+      // instrument gir annan fordeling. Vi skal ettersjå fordelinga etter beta og
+      // kalibrere tersklene på nytt dersom trengst (invariant I-12 held: brukaren ser ord).
+      recordMetric('match.round.score_median', scoreDistribution.median, 'points', { source: 'psych_or_overlap' });
+      recordMetric('match.round.score_min', scoreDistribution.min, 'points');
+      recordMetric('match.round.score_max', scoreDistribution.max, 'points');
+      recordMetric('match.round.scored_pairs', allScores.length, 'count');
+      for (const [level, count] of Object.entries(levelCounts)) {
+        if (count > 0) recordMetric('match.round.level', count, 'count', { level });
+      }
+
       // S-17: varsling til operatøren (webhook → e-post → Sentry). Skal aldri kaste runden.
       try {
         if (durationMs >= TIME_BUDGET_MS) {

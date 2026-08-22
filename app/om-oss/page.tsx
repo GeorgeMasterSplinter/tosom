@@ -315,7 +315,7 @@ export default function OmOssPage() {
                   lineHeight: '1.8',
                 }}
               >
-                Tosom finnes fordi mennesker fortjener mer enn tilfeldige matcher og raske vurderinger. Vi finnes fordi relasjoner ikke er effektivitet — de er tilstedeværelse. Vi finnes fordi forskning viser at ekte kontakt oppstår når mennesker møtes med ro, struktur og nysgjerrighet.
+                Tosom finnes fordi mennesker fortjener mer enn tilfeldige matcher og raske vurderinger. Vi finnes fordi relasjoner ikke er effektivitet — de er tilstedeværelse. Vi bygger på relasjonsforskning som peker i retning av at ekte kontakt oppstår når mennesker møtes med ro, struktur og nysgjerrighet — se nøyaktig hva vi bruker på Forskningsgrunnlaget.
               </p>
             </div>
           </div>
@@ -357,7 +357,7 @@ export default function OmOssPage() {
               </ToSomCard>
 
               <ToSomCard icon={<IconForskning />} title="Forskning" iconWrapperClassName="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)]">
-                Vi bygger på psykologiske modeller og relasjonsforskning — ikke trender. Hvert designvalg, hver match og hver guiding er forskningsinformert for å skape ekte forbindelse.
+                Vi bygger på etablerte psykologiske modeller og relasjonsforskning — ikke trender. Se nøyaktig hva vi bruker, og hva vi ikke lover, på Forskningsgrunnlaget.
               </ToSomCard>
 
               <ToSomCard icon={<IconPersonvern />} title="Personvern" iconWrapperClassName="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)]">

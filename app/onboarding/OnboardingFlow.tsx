@@ -22,6 +22,7 @@ import Step8Grenser from './steps/Step8Grenser';
 import Step8ModenNysgjerrighet from './steps/Step8ModenNysgjerrighet';
 import Step9Oppsummering from './steps/Step9Oppsummering';
 import Step10StartReisen from './steps/Step10StartReisen';
+import { ALL_ITEMS } from '@/lib/psychometrics/instruments';
 import type { UserProfile } from "../../lib/profile/userProfile";
 
 const STORAGE_KEY = 'tosom_onboarding_draft';
@@ -279,7 +280,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     { title: 'Livsstil & verdier', subtitle: 'Hva prioriterer du i hverdagen?' },
     { title: 'Relasjonsstil', subtitle: 'Hvordan søker du relasjon — og hvordan balanserer du selvstendighet med fellesskap?' },
     { title: 'Framtid & visjon', subtitle: 'Hva drømmer du om å bygge?' },
-    { title: 'Lek, humor & personlighet', subtitle: 'De små detaljene som gjør deg til deg.' },
+    { title: 'Kommunikasjon & tilpasning', subtitle: 'Hvordan møter du endring og avklaring i en relasjon?' },
     { title: 'Grenser & behov', subtitle: 'Hvordan ser du på grenser i en relasjon — og hva trenger du at partneren din forstår?' },
     { title: 'Moden nysgjerrighet', subtitle: 'Hva trenger du for å føle deg trygg i nærhet?' },
     { title: 'Oppsummering', subtitle: 'Se over det du har delt. Du kan endre alt senere.' },
@@ -295,7 +296,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     'Livsstilssvarene dine hjelper oss å finne noen som trives i hverdagen sammen med deg.',
     'Relasjonsstil forteller oss hvordan du søker — og det er like viktig som verdier.',
     'Fremtidsønsker viser veien for hva dere kan bygge sammen.',
-    'De små detaljene — som humor — forteller hvem du er.',
+    'Slik dere kommuniserer, er like viktig som hva dere deler.',
     'Grenser beskytter deg selv — og den du elsker. Del bare det du føler deg trygg med.',
     'Modne svar viser hvem du er. Del det du er komfortabel med.',
     'Du har nesten kommet helt til ende. Se over det du har delt.',
@@ -343,6 +344,17 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     setSaving(true);
     setError(null);
     try {
+      // FORSKNINGSMOTOR F-6: Samle de 44 rå skalasvarene (1–5) etter item-id.
+      // Kun verdier som faktisk er tall sendes — ubesvarte items utelates
+      // (scoring.ts behandler manglende som nøytrale).
+      const psychometrics: Record<string, number> = {};
+      for (const item of ALL_ITEMS) {
+        const v = data[item.id];
+        if (typeof v === 'number' && v >= 1 && v <= 5) {
+          psychometrics[item.id] = v;
+        }
+      }
+
       const payload = {
         basic: {
           identityName: data.identityName, age: data.age, gender: data.gender,
@@ -404,6 +416,8 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
           structureSpontaneity: data.structureSpontaneity, introExtrovert: data.introExtrovert,
           attachmentStyle: data.attachmentStyle,
         },
+        // FORSKNINGSMOTOR F-6: Rå psykometriske svar (1–5 per item)
+        psychometrics,
       };
 
       const profileRes = await fetch('/api/profile/setup', {

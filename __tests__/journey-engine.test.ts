@@ -15,7 +15,7 @@ import {
 } from '@/lib/journey/engine';
 import { JourneyPhase } from '@prisma/client';
 import { MATCH_DELAY_HOURS } from '@/config/matching';
-import { MATCH_WEIGHTS } from '@/config/matching';
+import { DIMENSION_WEIGHTS } from '@/lib/matching/unifiedScorer';
 
 describe('Journey Engine', () => {
   // ── Faseoverganger (dag 14→15, 21→22, 25→26) ──
@@ -149,36 +149,35 @@ describe('Journey Engine', () => {
   });
 });
 
-// ── Matching Weights ──
+// ── Matching Weights (F-8: 6 forskningsbaserte dimensjoner, §7) ──
 
-describe('Matching Weights', () => {
-  test('base vekt skal være 0.35', () => {
-    expect(MATCH_WEIGHTS.base).toBe(0.35);
+describe('Matching Weights (DIMENSION_WEIGHTS)', () => {
+  test('values vekt skal være 0.25', () => {
+    expect(DIMENSION_WEIGHTS.values).toBe(0.25);
   });
 
-  test('resonance vekt skal være 0.25', () => {
-    expect(MATCH_WEIGHTS.resonance).toBe(0.25);
+  test('attachment vekt skal være 0.25', () => {
+    expect(DIMENSION_WEIGHTS.attachment).toBe(0.25);
   });
 
-  test('semantic vekt skal være 0.20', () => {
-    expect(MATCH_WEIGHTS.semantic).toBe(0.20);
+  test('personality vekt skal være 0.15', () => {
+    expect(DIMENSION_WEIGHTS.personality).toBe(0.15);
   });
 
-  test('intimacy vekt skal være 0.10', () => {
-    expect(MATCH_WEIGHTS.intimacy).toBe(0.10);
+  test('communication vekt skal være 0.15', () => {
+    expect(DIMENSION_WEIGHTS.communication).toBe(0.15);
   });
 
-  test('future vekt skal være 0.10', () => {
-    expect(MATCH_WEIGHTS.future).toBe(0.10);
+  test('emotionRegulation vekt skal være 0.10', () => {
+    expect(DIMENSION_WEIGHTS.emotionRegulation).toBe(0.10);
+  });
+
+  test('lifeSituation vekt skal være 0.10', () => {
+    expect(DIMENSION_WEIGHTS.lifeSituation).toBe(0.10);
   });
 
   test('summen av alle vekter skal være 1.0', () => {
-    const total =
-      MATCH_WEIGHTS.base +
-      MATCH_WEIGHTS.resonance +
-      MATCH_WEIGHTS.semantic +
-      MATCH_WEIGHTS.intimacy +
-      MATCH_WEIGHTS.future;
+    const total = Object.values(DIMENSION_WEIGHTS).reduce((s, w) => s + w, 0);
     expect(total).toBeCloseTo(1.0, 5);
   });
 });

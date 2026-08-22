@@ -12,6 +12,8 @@ import { getServerSession } from '@/lib/auth/session';
 import { validateOnboarding } from '@/lib/validation/onboarding-setup';
 import { lookupPostalCode } from '@/lib/geo/lookup';
 import { withMetrics } from '@/lib/observability/withMetrics';
+import { scoreAll } from '@/lib/psychometrics/scoring';
+import { INSTRUMENT_SET_VERSION } from '@/lib/psychometrics/instruments';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,7 +42,12 @@ async function postHandler(req: NextRequest) {
       humor,
       moden,
       preferanser,
+      psychometrics,
     } = data;
+
+    // FORSKNINGSMOTOR F-6: Beregn psykometriske skårer frå rå svar (1–5 per item).
+    // Manglende items behandles som nøytrale i scoring.ts — ingen crash ved partial profil.
+    const psychScores = psychometrics ? scoreAll(psychometrics as Record<string, number>) : null;
 
     // Valider session via NextAuth
     const session = await getServerSession();
@@ -124,6 +131,14 @@ async function postHandler(req: NextRequest) {
         },
         maturityLevel: moden?.intimacySafety ? 7 : 5,
         securityLevel: preferanser?.attachmentStyle || 'secure',
+        // FORSKNINGSMOTOR F-6: Psykometriske skårer (additive felt).
+        // Prisma Json-kolonner krever InputJsonValue — kaster for å unngå index-signature-feil.
+        psychometricAnswers: (psychometrics as any) ?? undefined,
+        bigFive: psychScores ? (psychScores.bigFive as any) : undefined,
+        attachment: psychScores ? (psychScores.attachment as any) : undefined,
+        valueProfile: psychScores ? (psychScores.values as any) : undefined,
+        emotionRegulation: psychScores ? (psychScores.emotionRegulation as any) : undefined,
+        psychometricVersion: psychScores ? INSTRUMENT_SET_VERSION : undefined,
         deepProfileStep: 'SUMMARY',
         deepProfileData: {
           distancePref: basic.distancePref,
@@ -140,6 +155,8 @@ async function postHandler(req: NextRequest) {
           ambitionLevel: preferanser?.ambitionLevel,
           structureSpontaneity: preferanser?.structureSpontaneity,
           introExtrovert: preferanser?.introExtrovert,
+          // Kommunikasjonsskår (FORSKNINGSMOTOR) — lagres i deepProfileData, ikke dedikert kolonne
+          communicationScores: psychScores?.communication ?? undefined,
         },
       },
       create: {
@@ -207,6 +224,14 @@ async function postHandler(req: NextRequest) {
         },
         maturityLevel: moden?.intimacySafety ? 7 : 5,
         securityLevel: preferanser?.attachmentStyle || 'secure',
+        // FORSKNINGSMOTOR F-6: Psykometriske skårer (additive felt).
+        // Prisma Json-kolonner krever InputJsonValue — kaster for å unngå index-signature-feil.
+        psychometricAnswers: (psychometrics as any) ?? undefined,
+        bigFive: psychScores ? (psychScores.bigFive as any) : undefined,
+        attachment: psychScores ? (psychScores.attachment as any) : undefined,
+        valueProfile: psychScores ? (psychScores.values as any) : undefined,
+        emotionRegulation: psychScores ? (psychScores.emotionRegulation as any) : undefined,
+        psychometricVersion: psychScores ? INSTRUMENT_SET_VERSION : undefined,
         deepProfileStep: 'SUMMARY',
         deepProfileData: {
           distancePref: basic.distancePref,
@@ -223,6 +248,8 @@ async function postHandler(req: NextRequest) {
           ambitionLevel: preferanser?.ambitionLevel,
           structureSpontaneity: preferanser?.structureSpontaneity,
           introExtrovert: preferanser?.introExtrovert,
+          // Kommunikasjonsskår (FORSKNINGSMOTOR) — lagres i deepProfileData, ikke dedikert kolonne
+          communicationScores: psychScores?.communication ?? undefined,
         },
       },
     });

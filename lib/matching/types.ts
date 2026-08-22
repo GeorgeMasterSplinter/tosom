@@ -72,6 +72,14 @@ export interface ProfileData {
   maturityLevel: number | null;      // 1-10
   securityLevel: string | null;      // "unsicher" | "ambivalent" | "secure"
 
+  // FORSKNINGSMOTOR F-8: Psykometriske skårer (valfrie — fallback til ordoverlapp)
+  bigFive?: Record<string, unknown> | null;
+  attachment?: Record<string, unknown> | null;
+  valueProfile?: Record<string, unknown> | null;
+  emotionRegulation?: Record<string, unknown> | null;
+  deepProfileData?: Record<string, unknown> | null;
+  psychometricVersion?: string | null;
+
   // Preferanser og tags
   preferences: Record<string, unknown> | null;
   matchTags: string[];

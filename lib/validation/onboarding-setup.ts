@@ -205,6 +205,21 @@ export const preferanserSchema = z.object({
 export type PreferanserInput = z.infer<typeof preferanserSchema>;
 
 /* ============================================================
+   PSYKOMETRIK (FORSKNINGSMOTOR F-6)
+   Rå svar per item (1–5). Manglende items behandles som nøytrale
+   i scoring.ts — derfor er seksjonen valgfri i skjemaet.
+   ============================================================ */
+
+export const psychometricsSchema = z
+  .record(
+    z.string(),
+    z.coerce.number().min(1, 'Skalavertien må være mellom 1 og 5').max(5, 'Skalavertien må være mellom 1 og 5'),
+  )
+  .optional();
+
+export type PsychometricsInput = z.infer<typeof psychometricsSchema>;
+
+/* ============================================================
    HEIL ONBOARDING-SKJEMA
    ============================================================ */
 
@@ -224,6 +239,7 @@ export const onboardingSetupSchema = z.object({
   grenser: grenserSchema,
   moden: modenSchema,
   preferanser: preferanserSchema,
+  psychometrics: psychometricsSchema,
 });
 
 export type OnboardingSetupInput = z.infer<typeof onboardingSetupSchema>;

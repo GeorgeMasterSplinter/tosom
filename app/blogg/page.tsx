@@ -129,7 +129,7 @@ export default function BloggPage() {
                     Om denne bloggen
                   </h2>
                   <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
-                    Alle artiklene er basert på vitenskapelige studier og vår erfaring med å bygge en plattform for ekte menneskelige relasjoner. Vi trur at kunnskap er grunnen til trygge relasjoner — og at ro og dybde alltid vil vinne over støy og overflate.
+                    Alle artiklene bygger på etablert relasjonsforskning og vår erfaring med å bygge en plattform for ekte menneskelige relasjoner. Vi tror at kunnskap er grunnen til trygge relasjoner — og at ro og dybde alltid vil vinne over støy og overflate.
                   </p>
                 </div>
               </div>
@@ -181,7 +181,7 @@ export default function BloggPage() {
             Klar til å starte?
           </h2>
           <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary }}>
-            Lag profilen din i ditt eget tempo og møt noen som faktisk passer deg — på ordentlig.
+            Lag profilen din i ditt eget tempo og møt én person, valgt med omtanke — på ordentlig.
           </p>
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 pt-4">

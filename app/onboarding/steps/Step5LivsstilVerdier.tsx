@@ -12,6 +12,8 @@ import { OnboardingTextField } from '@/app/onboarding/components/OnboardingTextF
 import { OnboardingSelectGrid } from '@/app/onboarding/components/OnboardingSelectGrid';
 import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { BackButton } from '@/components/onboarding/BackButton';
+import { ScaleQuestion } from '@/components/onboarding/ScaleQuestion';
+import { PVQ10 } from '@/lib/psychometrics/instruments';
 
 interface Props { data: Record<string, unknown>; onChange: (f: string, v: unknown) => void; onBack: () => void; step: number; goToStep: (s: number) => void; onNext: () => void; }
 interface ValidationError { field: string; message: string; }
@@ -42,6 +44,21 @@ export default function Step5LivsstilVerdier({ data, onChange, onBack, onNext, s
       <OnboardingSelectGrid label="Hvordan ønsker du å leve? *" mikroguiding="Dette er hva du drømmer om" options={[{ value: 'roleg', label: 'Rogelig og forutsigbart', icon: '🌿' }, { value: 'eventyr', label: 'Eventyr og endring', icon: '🧭' }, { value: 'balansert', label: 'Balansen mellom ro og aktivitet', icon: '⚖️' }, { value: 'skapende', label: 'Skapende og kunstnarisk', icon: '🎨' }]} selectedValue={getValue('desiredLifestyle', '')} onChange={(v) => onChange('desiredLifestyle', v)} />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
       <OnboardingSelectGrid label="Hvordan ønsker du IKKE å leve? *" mikroguiding="Hva du vil unngå" options={[{ value: 'ensom', label: 'Alene og isolert', icon: '😔' }, { value: 'stress', label: 'Konstant stress', icon: '🌀' }, { value: 'rutine', label: 'Monoton rutine', icon: '😐' }, { value: 'økonomisk-utrygg', label: 'Økonomisk utrygghet', icon: '💸' }]} selectedValue={getValue('undesiredLifestyle', '')} onChange={(v) => onChange('undesiredLifestyle', v)} />
+      {/* FORSKNINGSMOTOR F-5 — PVQ-10 (verdier) */}
+      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '28px', marginBottom: '8px' }} />
+      <p className="text-sm mb-4" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+        Noen ting som kan være viktige. Hvor viktig er hvert for deg — i et parforhold?
+      </p>
+      <div className="space-y-3">
+        {PVQ10.map((item) => (
+          <ScaleQuestion
+            key={item.id}
+            text={item.text}
+            value={typeof data[item.id] === 'number' ? (data[item.id] as number) : null}
+            onChange={(v) => onChange(item.id, v)}
+          />
+        ))}
+      </div>
       <p className="text-center text-xs mt-8" style={{ color: 'rgba(255,255,255,0.3)' }}>Hverdagssvarene dine hjelper oss å finne noen som trives sammen med deg.</p>
       <div className="mt-8 space-y-4"><BackButton onClick={onBack} /><PremiumCTAButton onClick={handleNext} label={!canProceed ? 'Fyll ut alle påkrevde felt' : 'Fortsett til neste steg'} disabled={!canProceed} fullWidth /></div>
     </OnboardingSlide>

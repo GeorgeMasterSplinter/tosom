@@ -451,6 +451,13 @@ export async function GET(req: NextRequest) {
       for (const [reason, count] of Object.entries(rejectReasons)) {
         if (count > 0) recordMetric('match.round.rejected', count, 'count', { reason });
       }
+      // OBSERVABILITY O-7: hvor lenge venter folk faktisk (per matchet bruker)
+      for (const u of queued) {
+        if (used.has(u.id) && u.matchQueuedAt) {
+          const waitedDays = Math.floor((Date.now() - u.matchQueuedAt.getTime()) / 86_400_000);
+          recordMetric('queue.waited_days', waitedDays, 'days');
+        }
+      }
 
       // M-9: score-/nivåfordeling (til tuning). Mediana fra alle parscorede par.
       const sortedScores = [...allScores].sort((a, b) => a - b);

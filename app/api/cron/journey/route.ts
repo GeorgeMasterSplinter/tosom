@@ -17,7 +17,7 @@ import type { GuidedQuestion } from '@prisma/client';
 import { sendAlert } from '@/lib/observability/alert'; // B5.6
 import { getPhaseForDay } from '@/lib/journey/engine'; // ST3.1
 import { runRetention } from '@/lib/privacy/retention'; // S-10
-import { recordMetric } from '@/lib/observability/metric'; // O-3
+import { recordMetric, recordEvent } from '@/lib/observability/metric'; // O-3
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
@@ -112,6 +112,8 @@ export async function GET(req: NextRequest) {
               where: { id: journey.id },
               data: { endedAt: new Date() },
             });
+            // OBSERVABILITY O-8: reisen ble avsluttet tidlig
+            recordEvent('journey.ended_early', { day: String(journey.day), reason: 'no_active_match' });
             ended++;
             processed++;
             continue;
@@ -151,6 +153,9 @@ export async function GET(req: NextRequest) {
               nextDayAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // lås neste dag i 24t
             },
           });
+
+          // OBSERVABILITY O-8: reisen nådde ny dag
+          recordMetric('journey.day.reached', newDay, 'count', { phase: newPhase });
 
           // Lagre milestone ved ny dag (STEG 5.4 unik constraint hindrer duplikater)
           await prisma.journeyMilestone.create({
@@ -218,6 +223,8 @@ export async function GET(req: NextRequest) {
                   endedAt: new Date(),
                 },
               });
+              // OBSERVABILITY O-8: reisen utløp uten at begge startet
+              recordEvent('journey.ended_early', { day: String(j.day), reason: 'expired' });
               expired++;
 
               // Send notifikasjon om utløp
@@ -329,6 +336,23 @@ export async function GET(req: NextRequest) {
       } catch (stillhetErr) {
         console.error('[cron/journey] Stillhetsdeteksjon feilet:', stillhetErr);
         errors.push(`stillhetsdeteksjon: ${(stillhetErr as Error).message}`);
+      }
+
+      // OBSERVABILITY O-6: onboarding-frafall — brukere som startet men ikke fullførte
+      // og har ingen aktivitet på 7 dager. Kun aggregert tall, ingen PII.
+      const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+      const abandonedUsers = await prisma.user.groupBy({
+        by: ['onboardingStep'],
+        where: {
+          onboardingStep: { gt: 0 },
+          onboardingComplete: false,
+          deletedAt: null,
+          updatedAt: { lt: sevenDaysAgo },
+        },
+        _count: { _all: true },
+      });
+      for (const group of abandonedUsers) {
+        recordEvent('onboarding.abandoned', { last_step: String(group.onboardingStep) });
       }
 
       const duration = Date.now() - startedAt;

@@ -1018,7 +1018,7 @@ function MatchSection({
       <GlassCard className="transition-all duration-300 hover:brightness-110 mb-8">
         <SectionTitle>MATCH</SectionTitle>
         <p style={{ color: THEME.deepGrey, fontSize: "16px", lineHeight: "1.7", marginBottom: "24px" }}>
-          Du har ingen aktiv match. Når match-motoren har funnet en god kandidat, mottar du den her.
+          Du har ingen aktiv match. Når resonansen har funnet en rytme som svinger med din, mottar du den her.
         </p>
         <GoldButton onClick={() => window.location.href = "/dashboard"}>Gå til dashboard</GoldButton>
       </GlassCard>

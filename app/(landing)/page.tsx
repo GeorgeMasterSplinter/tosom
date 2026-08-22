@@ -100,7 +100,7 @@ const steps = [
   {
     icon: <IconResearch />,
     title: 'Gjennomtenkt matching',
-    content: 'Vi matcher på livssituasjon, verdier, relasjonsstil og emosjonell kompatibilitet. Ikke overflate. Ikke tilfeldigheter. Bare det som faktisk betyr noe i et forhold.',
+    content: 'Vi måler resonans på livssituasjon, verdier, relasjonsstil og emosjonell rytme. Ikke overflate. Ikke tilfeldigheter. Bare de to som svinger sammen.',
   },
   {
     icon: <IconDepth />,

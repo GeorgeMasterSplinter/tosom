@@ -134,7 +134,7 @@ const DIMENSIONS: Array<{
   {
     icon: <IconLivssituasjon />,
     name: 'Livssituasjon',
-    why: 'Praktisk kompatibilitet er undervurdert. Vilje til barn, røyking og hverdagsrytme setter en ramme.',
+    why: 'Praktisk resonans er undervurdert. Vilje til barn, røyking og hverdagsrytme setter en ramme.',
     modern: 'Livsvalg er en av de sterkeste prediktorene for relasjonsstabilitet i nyere parstudier (2015–2024).',
   },
 ];
@@ -263,7 +263,7 @@ export default function MetoderPage() {
             <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
               Det vi gjør, er å la etablerte, publiserte og moderne psykologiske modeller
               veilede hva vi spør om og hvordan vi vekter det.
-              Matchingmotoren er en veiviser, ikke en fasit.
+              Resonansmålingen er en veiviser, ikke en fasit.
             </p>
           </div>
         </ToSomSection>
@@ -392,13 +392,17 @@ export default function MetoderPage() {
               Hva resonans er — og hva den ikke er
             </h2>
             <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
-              Resonans er et kvalitativt begrep hos oss. Det forteller deg hvor sterkt to profiler
-              samsvarer på de seks dimensjonene — som et utgangspunkt, ikke et sluttresultat.
+              Hver person har en egen rytme. En natur. Noen svinger bredt, noen smalt.
+              Noen trenger tid før de åpner seg, noen er åpne fra første øyeblikk.
             </p>
             <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
-              Resonans er ikke kjærlighet. Den er ikke en diagnose, ikke en bedømmelse av verdi, og
-              ikke en garanti for at dere passer sammen. Den er en veiviser som hjelper to mennesker
-              å vurdere om det verdt å gå videre — og å gjøre det med bevisstheten.
+              Resonans er det som skjer når to rytmer møter hverandre i riktig takt.
+              Ikke når de er identiske — men når de forsterker hverandre.
+            </p>
+            <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
+              Vår resonansmåling er ikke en kjærlighetsdiagnose. Den er ikke en bedømmelse av verdi.
+              Den er et utgangspunkt — en veiviser som forteller om de to rytmene deres kan svinge sammen.
+              Resten er opp til dere. Små, jevne dult i rett takt.
             </p>
           </div>
         </ToSomSection>

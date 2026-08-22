@@ -203,7 +203,7 @@ function MatchRevealModal({
 
         {/* Description */}
         <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
-          Vi koblet dere basert på verdier, livsstil og emosjonell kompatibilitet.
+          Vi koblet dere basert på resonans — verdier, livsstil og emosjonell rytme.
         </p>
         <p className="text-sm mt-3 font-medium" style={{ color: 'rgba(255,255,255,0.7)' }}>
           Reisen starter nå. 30 dager. Fire faser.

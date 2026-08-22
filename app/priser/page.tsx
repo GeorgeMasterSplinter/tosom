@@ -194,7 +194,7 @@ export default function PriserPage() {
                         lineHeight: '1.8',
                       }}
                     >
-                      Du svarer på et gjennomtenket sett med spørsmål om livet ditt, verdiene dine, personligheten din og hva du søker i et forhold. Profilene din blir brukt av Tosoms match-motor for å finne den beste kompatibiliteten.
+                      Du svarer på et gjennomtenkt sett med spørsmål om livet ditt, verdiene dine, personligheten din og hva du søker i et forhold. Profilene dine blir målt mot hverandre gjennom resonansmålingen — for å finne den rytmen som svinger med din.
                     </p>
                   </div>
                 </div>
@@ -221,7 +221,7 @@ export default function PriserPage() {
                         lineHeight: '1.8',
                       }}
                     >
-                      Tosoms motor kjører én gang i uken, natt til lørdag, og finner den personen som passer deg best — basert på kompatibilitet, ikke utseende. Du får kun én match om gangen.
+                      Natt til lørdag måler vi resonansen. Vi leter ikke etter den som ser lik deg ut — vi leter etter den som får svingen din til å vokse. Du får kun én match om gangen.
                     </p>
                   </div>
                 </div>

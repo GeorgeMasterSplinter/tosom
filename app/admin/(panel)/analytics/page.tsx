@@ -170,6 +170,93 @@ function JourneyStatPanel({ stats }: { stats: JourneyStatSummary | null }) {
   );
 }
 
+/* ─── O-10: MetricsPanel — drift-metrikker fra O-9 API ─── */
+interface MetricPoint { date: string; value: number; count: number; }
+interface MetricSummary { avg: number; min: number; max: number; p95: number; count: number; }
+interface MetricResponse { metric: string; days: number; agg: string; points: MetricPoint[]; summary: MetricSummary; }
+
+function MetricsPanel() {
+  const [data, setData] = useState<Record<string, MetricResponse> | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const metrics = ['match.round.duration_ms', 'match.round.paired', 'cron.duration_ms', 'error.5xx'];
+    Promise.all(
+      metrics.map((m) =>
+        fetch(`/api/admin/observability/metrics?metric=${encodeURIComponent(m)}&days=30&agg=avg`)
+          .then((r) => (r.ok ? r.json() : null))
+          .catch(() => null)
+      )
+    ).then((results) => {
+      const map: Record<string, MetricResponse> = {};
+      results.forEach((r, i) => { if (r) map[metrics[i]] = r; });
+      setData(map);
+    }).finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="rounded-2xl p-5 animate-pulse" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+        <div className="h-4 w-32 mb-4 rounded bg-white/5" />
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {[1,2,3,4].map(i => <div key={i} className="h-20 rounded-xl bg-white/5" />)}
+        </div>
+      </div>
+    );
+  }
+
+  if (!data || Object.keys(data).length === 0) {
+    return (
+      <div className="rounded-2xl p-5" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+        <h3 className="text-sm font-semibold mb-3 tracking-wide" style={{ color: 'rgba(255,255,255,0.6)' }}>DRIFT-METRIKKER (30 DAGER)</h3>
+        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>Ingen drift-data ennå. Data fylles etter første matcherunde + API-trafikk.</p>
+      </div>
+    );
+  }
+
+  const labels: Record<string, string> = {
+    'match.round.duration_ms': 'Matcherunde (ms)',
+    'match.round.paired': 'Par koblet (gj.snitt)',
+    'cron.duration_ms': 'Cron-varighet (ms)',
+    'error.5xx': '5xx-feil (sum/dag)',
+  };
+
+  return (
+    <div className="rounded-2xl p-5" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+      <h3 className="text-sm font-semibold mb-4 tracking-wide" style={{ color: 'rgba(255,255,255,0.6)' }}>
+        DRIFT-METRIKKER (30 DAGER)
+      </h3>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {Object.entries(data).map(([metric, resp]) => (
+          <div key={metric} className="rounded-xl p-3" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
+            <div className="text-xs mb-2" style={{ color: 'rgba(255,255,255,0.45)' }}>{labels[metric] || metric}</div>
+            <div className="text-xl font-bold" style={{ color: '#D4AF37' }}>
+              {resp.summary.count > 0 ? `${resp.summary.avg.toLocaleString()}` : '—'}
+            </div>
+            <div className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>
+              p95: {resp.summary.p95.toLocaleString()} · n={resp.summary.count}
+            </div>
+            {/* Mini bar chart (siste 14 dager) */}
+            {resp.points.length > 0 && (
+              <div className="flex items-end gap-0.5 h-8 mt-2">
+                {resp.points.slice(-14).map((p, i) => {
+                  const max = Math.max(...resp.points.map(x => x.value), 1);
+                  return (
+                    <div key={i} className="flex-1 rounded-t" style={{
+                      height: `${Math.max(4, (p.value / max) * 100)}%`,
+                      background: 'rgba(212,175,55,0.4)',
+                    }} />
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ─── Hovedkomponent 📊 */
 export default function AdminAnalyticsPage() {
   const [timeFilter, setTimeFilter] = useState('30');
@@ -242,6 +329,9 @@ export default function AdminAnalyticsPage() {
 
       {/* B5.3: Reisestatistikk fra JourneyStat */}
       <JourneyStatPanel stats={journeyStats} />
+
+      {/* O-10: Drift-metrikker */}
+      <MetricsPanel />
     </div>
   );
 }

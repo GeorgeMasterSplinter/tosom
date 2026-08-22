@@ -18,6 +18,12 @@ import { sendAlert } from '@/lib/observability/alert'; // B5.6
 import { getPhaseForDay } from '@/lib/journey/engine'; // ST3.1
 import { runRetention } from '@/lib/privacy/retention'; // S-10
 import { recordMetric, recordEvent } from '@/lib/observability/metric'; // O-3
+import {
+  thresholdQueueSize,
+  thresholdRoundDuration,
+  threshold5xxRate,
+  thresholdOpenReports,
+} from '@/components/admin/StatusBadge'; // O-11
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
@@ -437,6 +443,85 @@ export async function GET(req: NextRequest) {
       await runRetention();
     } catch (retErr) {
       console.error('[cron/journey] Retention feilet:', retErr);
+    }
+
+    // OBSERVABILITY O-11: Terskelvarsling.
+    // Ett varsel per tilstand per døgn (SystemLog-markør som rate-limiter).
+    try {
+      const HOUR_MS = 3600_000;
+      const DAY_MS = 86_400_000;
+      const oneHourAgo = new Date(Date.now() - HOUR_MS);
+      const oneDayAgo = new Date(Date.now() - DAY_MS);
+
+      // Hent siste matcherunde-varighet
+      const lastMatchLog = await prisma.systemLog.findFirst({
+        where: { module: 'cron:matching' },
+        orderBy: { createdAt: 'desc' },
+        select: { metadata: true },
+      });
+      const roundDuration = (lastMatchLog?.metadata as Record<string, unknown> | null)?.durationMs as number | undefined;
+
+      // Kø-størrelse
+      const queueSize = await prisma.user.count({
+        where: { journeyState: 'QUEUED', bannedAt: null, deletedAt: null },
+      });
+
+      // 5xx siste time (fra metric-metrikker)
+      const fivexxCount = await prisma.systemLog.count({
+        where: {
+          module: 'metric',
+          metadata: { path: ['metric'], equals: 'error.5xx' },
+          createdAt: { gte: oneHourAgo },
+        },
+      });
+
+      // Åpne rapporter
+      const openReports = await prisma.report.count({ where: { status: 'OPEN' } });
+
+      // Definer tilstander som bryter terskel
+      const breaches: Array<{ key: string; severity: 'warning' | 'critical'; title: string; detail: string }> = [];
+
+      if (thresholdQueueSize(queueSize) === 'critical') {
+        breaches.push({ key: 'queue_zero', severity: 'critical', title: 'Match-køen er tom', detail: `Kø-størrelse: ${queueSize}. Ingen brukere venter på match.` });
+      }
+      if (thresholdRoundDuration(roundDuration ?? null) === 'critical') {
+        breaches.push({ key: 'round_slow', severity: 'warning', title: 'Matcherunde over 50 s', detail: `Siste runde: ${roundDuration} ms. Høy last eller langsom DB.` });
+      }
+      if (threshold5xxRate(fivexxCount) === 'critical') {
+        breaches.push({ key: 'fivexx_high', severity: 'critical', title: `${fivexxCount} 5xx-feil siste time`, detail: 'Uvant antall serverfeil. Sjekk Sentry.' });
+      }
+      if (thresholdOpenReports(openReports) === 'warn') {
+        breaches.push({ key: 'open_reports', severity: 'warning', title: `${openReports} åpne rapporter`, detail: 'Ubehandlet trygghetsrapport i køen.' });
+      }
+      if (cronJobOutcome === 'error') {
+        breaches.push({ key: 'cron_failed', severity: 'critical', title: 'Journey-cron feilet', detail: (errors[0] ?? 'Ukjent feil').slice(0, 200) });
+      }
+
+      // Fire alerts (max 1 per tilstand per døgn)
+      for (const b of breaches) {
+        // Sjekk om vi allerede har varslet denne tilstanden innenfor 24 t
+        const alreadyAlerted = await prisma.systemLog.count({
+          where: {
+            module: 'cron:alerts',
+            message: b.key,
+            createdAt: { gte: oneDayAgo },
+          },
+        });
+        if (alreadyAlerted > 0) continue; // allerede varslet i dag
+
+        await sendAlert(b.severity, b.title, b.detail);
+        // Marker at vi har varslet (rate-limiter)
+        await prisma.systemLog.create({
+          data: {
+            level: 'WARN',
+            message: b.key,
+            module: 'cron:alerts',
+            metadata: { severity: b.severity, title: b.title },
+          },
+        });
+      }
+    } catch (alertErr) {
+      console.error('[cron/journey] Terskelvarsling feilet:', alertErr);
     }
   }
 }

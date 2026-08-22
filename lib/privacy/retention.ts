@@ -76,6 +76,34 @@ export async function runRetention(): Promise<RetentionStats> {
       const ageMs = now - user.updatedAt.getTime();
 
       if (ageMs >= ANONYMIZE_THRESHOLD_MS) {
+        // OBSERVABILITY O-12: Aggregert data beholdes også etter anonymisering.
+        // Før anonymisering: lagre sammenfatte tall (matcher, reiser, meldinger) i SystemLog.
+        try {
+          const matchCount = await prisma.match.count({
+            where: { OR: [{ userAId: user.id }, { userBId: user.id }] },
+          });
+          const journeyCount = await prisma.journeyProgress.count({
+            where: { userId: user.id, endedAt: { not: null } },
+          });
+          const messageCount = await prisma.message.count({
+            where: { senderId: user.id },
+          });
+          await prisma.systemLog.create({
+            data: {
+              level: 'INFO',
+              message: `Retention aggregate for anonymized user`,
+              module: 'retention:aggregate',
+              metadata: {
+                userId_hash: user.id.slice(0, 8),
+                matches: matchCount,
+                journeys_completed: journeyCount,
+                messages_sent: messageCount,
+                inactive_days: Math.round(ageMs / 86_400_000),
+              },
+            },
+          });
+        } catch { /* aggregate-feil bryter aldri anonymisering */ }
+
         // 12+ mnd inaktiv → anonymiser (idempotent; anonymizeUser sjekker deletedAt).
         const res = await anonymizeUser(user.id, 'inactivity_12m');
         if (res.anonymized) anonymized++;

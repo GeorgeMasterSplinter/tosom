@@ -98,49 +98,42 @@ function IconLivssituasjon() {
 const DIMENSIONS: Array<{
   icon: React.ReactNode;
   name: string;
-  weight: string;
   why: string;
   modern: string;
 }> = [
   {
     icon: <IconVerdier />,
     name: 'Verdier',
-    weight: '25 %',
-    why: 'Den sterkeste prediktoren for langsiktig samsvar. Vi ser på korrelasjon mellom to verdiprofiler — ikke om dere bruker like ord.',
-    modern: 'Schwartz Value Theory brukes fortsatt i 2020-tallets tverrkulturelle studier og prediksjon av livsvalg.',
+    why: 'Det som betyr noe for deg er fundamentet. Vi ser ikke om dere bruker de samme ordene — vi ser om det dere setter høyt faktisk harmonerer.',
+    modern: 'Schwartz la grunnlaget i 1992, og det holder fremdeles. Verditester er fortsatt i bruk i moderne forskning over hele verden.',
   },
   {
     icon: <IconTilknytning />,
     name: 'Tilknytning',
-    weight: '25 %',
-    why: 'Det best dokumenterte funnet i parpsykologi. Vi ser på de to akserne angst og unnvikelse — ikke bare om dere «er trygge».',
-    modern: 'Fraley (2018) og nyere meta-analyser viser at tilknytning fortsatt er en av de sterkeste prediktorene for relasjonskvalitet.',
+    why: 'Hvordan du holder deg nær — og hvor mye du trenger å trekke deg vekk. Det er ikke om du «er trygg» eller ikke. Det er om dere kan være hos hverandre uten å miste dere selv.',
+    modern: 'Bowlby la til grunn det vi vet i dag, og moderne forskning (Fraley 2018 og nyere) fortsetter å bekrefte: hvordan vi knytter oss, former hvordan vi elsker.',
   },
   {
     icon: <IconPersonlighet />,
     name: 'Personlighet',
-    weight: '15 %',
-    why: 'Reell effekt, men svakere enn ofte antatt. Høy nevrotisisme hos begge er en risiko — ikke et poengtrekk.',
-    modern: 'Big Five brukes i moderne parstudier (2010–2024) og predikerer stabilitet, men mindre enn verdier og tilknytning.',
+    why: 'Alle har en rytme. Noen er stille, noen er fulle av energi. Vi ser om rytmen deres kan danne en melodi sammen — ikke om den er «riktig».',
+    modern: 'Big Five er i bruk i moderne parstudier. Forskningen er tydelig: personlighet alene sier mindre om et forhold enn verdier og tilknytning.',
   },
   {
     icon: <IconKommunikasjon />,
     name: 'Kommunikasjon',
-    weight: '15 %',
-    why: 'Bygget på prinsipper fra Gottmans studier: reparasjon, respons på invitasjoner, konfliktstil.',
-    modern: 'Gottman Institute har publisert kontinuerlig (2000–2024). Kommunikasjonsmønstre er fortsatt den sterkeste prediktoren for om par holder sammen.',
+    why: 'Hvordan dere snakker med hverandre når det er lett — og spesielt når det er vanskelig. Vi ser på hvordan dere reparerer, hvordan dere lytter, og hvordan dere holder ut uenighet.',
+    modern: 'Gottman observerte tusenvis av par over 40 år. Det han fant, holder. Vi bygger på prinsippene, ikke på selve skjemaene.',
   },
   {
     icon: <IconEmosjon />,
     name: 'Emosjonsregulering',
-    weight: '10 %',
-    why: 'Påvirker konflikthåndtering direkte. Høy undertrykking hos begge er et konfliktpotensial.',
-    modern: 'Emosjonsregulering er ett av de mest aktive feltene i 2020-tallet (Aldao et al. 2010, Gross 2015).',
+    why: 'Hvordan du er i kroppen når det blir tungt. Ikke om du «bør» føle mindre — men om dere sammen kan være i det uten at det bryter dere.',
+    modern: 'Emosjonsregulering er ett av de mest aktive feltene i psykologien i dag (Gross 2015, Aldao 2010). Det sier litt om hvor viktig dette er.',
   },
   {
     icon: <IconLivssituasjon />,
     name: 'Livssituasjon',
-    weight: '10 %',
     why: 'Praktisk kompatibilitet er undervurdert. Vilje til barn, røyking og hverdagsrytme setter en ramme.',
     modern: 'Livsvalg er en av de sterkeste prediktorene for relasjonsstabilitet i nyere parstudier (2015–2024).',
   },
@@ -152,42 +145,36 @@ const DIMENSIONS: Array<{
 
 const INSTRUMENTS: Array<{
   name: string;
-  items: number;
   source: string;
   modern?: string;
   note?: string;
 }> = [
   {
     name: 'Kortform av Big Five',
-    items: 10,
     source: 'Rammstedt & John (2007), Journal of Research in Personality 41(1)',
     modern: 'I bruk i moderne studier (2010–2024).',
     note: 'Oversettelsen er vår — merket som «bør kvalitetssikres».',
   },
   {
     name: 'Tilknytning (ECR-12)',
-    items: 12,
     source: 'Inspirert av Bowlby (1969), Ainsworth et al. (1978), Hazan & Shaver (1987), Wei et al. (2007–2015)',
     modern: 'Fraley (2018) — tilknytning hos voksne, meta-analyser.',
     note: 'Våre egne items som taper på akserne angst og unnvikelse.',
   },
   {
     name: 'Verdier (PVQ-10)',
-    items: 10,
     source: 'Schwartz (1992), Advances in Experimental Social Psychology 25',
     modern: 'PVQ i bruk i moderne tverrkulturelle studier (2010–2024).',
     note: 'Oversettelsen er vår — merket som «bør kvalitetssikres».',
   },
   {
     name: 'Emosjonsregulering (ERQ-6)',
-    items: 6,
     source: 'Gross & John (2003), Journal of Personality and Social Psychology 85(2)',
     modern: 'Fortsett standard i nyere studier. Aldao et al. (2010) meta-analyse.',
     note: 'Oversettelsen er vår — merket som «bør kvalitetssikres».',
   },
   {
     name: 'Kommunikasjon',
-    items: 6,
     source: 'Prinsipper fra Gottman & Levenson (1992), Journal of Personality and Social Psychology 63(2)',
     modern: 'Gottman Institute publisering 2000–2024.',
     note: 'Våre egne items bygget på prinsippene — vi bruker ikke Gottman Institute sine skjemaer.',
@@ -291,7 +278,7 @@ export default function MetoderPage() {
               className="max-w-3xl mx-auto text-center mb-10"
               style={{ ...typographyToStyle('body-lg'), color: color.text.secondary }}
             >
-              Hver dimensjon har et instrument bak seg, og hver har en vekt som summerer til 100 %.
+              Seks dimensjoner, hver med et etablert instrument bak seg.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {DIMENSIONS.map((d) => (
@@ -303,9 +290,6 @@ export default function MetoderPage() {
                     <div className="flex-1">
                       <p style={{ ...typographyToStyle('heading-sm'), color: color.text.primary }}>{d.name}</p>
                     </div>
-                    <span style={{ ...typographyToStyle('body-sm'), color: color.brand.gold, fontWeight: 600 }}>
-                      {d.weight}
-                    </span>
                   </div>
                   <p style={{ ...typographyToStyle('body'), color: color.text.secondary, lineHeight: '1.7' }}>
                     {d.why}
@@ -319,7 +303,7 @@ export default function MetoderPage() {
           </div>
         </ToSomSection>
 
-        {/* ===== 3. ER DETTE FOR GAMMELT? ===== */}
+        {/* ===== 3. GAMMALT TRE, NYE GRENER ===== */}
         <ToSomSection spotlight="blue" className="px-6">
           <div
             className="mx-auto max-w-3xl space-y-6"
@@ -333,19 +317,19 @@ export default function MetoderPage() {
             }}
           >
             <h2 style={{ ...typographyToStyle('heading-lg'), color: color.text.primary }}>
-              Er dette for gammelt?
+              Gammelt tre, nye grener
             </h2>
             <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
-              <strong style={{ color: color.text.primary }}>Nei.</strong>{' '}
-              Psykologi fungerer slik at grunnmodellene (1960–1990) er fundamentet som alt moderne
-              bygger på. Ingen har «erstattet» Bowlby, Big Five eller Schwartz — de er fortsatt
-              standard i moderne parpsykologi.
+              Modellene vi bygger på er ikke fra forrige lekegård. Men de er gamle nok til å ha ro i seg.
             </p>
             <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
-              <strong style={{ color: color.text.primary }}>Ja, litt.</strong>{' '}
-              Hvis man kun viser til gamle studier, ser det ut som modellen ikke er oppdatert.
-              Derfor viser vi her at modellene fortsatt brukes i 2024, med moderne referanser
-              under hver dimensjon.
+              Bowlby, Big Five, Schwartz — de kom i 1960- til 1990-tallet. Og de holder fortsatt.
+              Ikke fordi psykologien har stått stille, men fordi godt håndverk ikke blir gammelt.
+              Et tre plantet riktig bærer i tiår.
+            </p>
+            <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
+              Vi har byttet ingenting. Bare vasket støvet av, og lagt moderne referanser under
+              hver dimensjon — slik at du kan se at grenene fortsatt vokser.
             </p>
           </div>
         </ToSomSection>
@@ -366,13 +350,14 @@ export default function MetoderPage() {
             <h2 style={{ ...typographyToStyle('heading-lg'), color: color.text.primary, textAlign: 'center' }}>
               Instrumentene vi bruker
             </h2>
+            <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
+              Hver dimensjon støttes av et etablert instrument. Vi har ikke utviklet dem selv —
+              vi bruker dem som de er ment å brukes, og er ærlige om der vi har gjort egne tilpasninger.
+            </p>
             <div className="space-y-4">
               {INSTRUMENTS.map((i) => (
                 <GlassCard key={i.name} padding="md" interactive className="space-y-2">
-                  <div className="flex items-baseline justify-between gap-4">
-                    <p style={{ ...typographyToStyle('heading-sm'), color: color.brand.gold }}>{i.name}</p>
-                    <p style={{ ...typographyToStyle('body'), color: color.text.muted }}>{i.items} spørsmål</p>
-                  </div>
+                  <p style={{ ...typographyToStyle('heading-sm'), color: color.brand.gold }}>{i.name}</p>
                   <p style={{ ...typographyToStyle('body'), color: color.text.secondary }}>{i.source}</p>
                   {i.modern && (
                     <p style={{ ...typographyToStyle('body-sm'), color: color.text.muted }}>
@@ -488,7 +473,7 @@ export default function MetoderPage() {
               {[
                 'Vi lover ikke at du får en match, eller at den du får blir til et langsiktig parforhold.',
                 'Vi lover ikke at scoringen er feilfri eller at den «beviser» at to personer passer sammen.',
-                'Vi lover ikke at tersklene våre er ferdig kalibrert — de etterprøves etter betafasen.',
+                'Vi lover ikke at tersklene våre er ferdig kalibrert — de fortsatt etterprøves.',
                 'Vi lover at vi er ærlige om metoden, kildene og grensene for hva den kan.',
               ].map((line, idx) => (
                 <li key={idx} className="flex gap-3">

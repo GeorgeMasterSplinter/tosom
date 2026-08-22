@@ -24,6 +24,7 @@ Kort inngangsport. Alle referanser peker på filer som finnes i repoet per 2026-
 | **[LANDING-SIGNATUR-v1.0.md](LANDING-SIGNATUR-v1.0.md)** | Signatur-laget på landingssiden: resonans-motivet, calm-motion. Steg S-1…S-10 med kode. |
 | **[JURIDISK-GRUNNLAG-v1.0.md](JURIDISK-GRUNNLAG-v1.0.md)** | Vilkår, personvern, trygghet: funn, beslutninger og advokat-brief (A-1…A-7). |
 | **[OBSERVABILITY-PLAN-v1.0.md](OBSERVABILITY-PLAN-v1.0.md)** | Metrikker, logging, varsling. Vercel Custom Metrics + SystemLog. Steg O-1…O-12. |
+| **[FORSKNINGSMOTOR-v1.0.md](FORSKNINGSMOTOR-v1.0.md)** | Validerte instrumenter i motoren: BFI-10, ECR-S, PVQ-10, ERQ-6. Steg F-1…F-12. |
 | **[ACT-PIPELINE-v1.0.md](ACT-PIPELINE-v1.0.md)** | Arbeidssyklus, patch-regler, invarianter, verifisering. Erstatter ACT-INSTRUKS v2–v11. |
 | **[DOCS-RESTRUCTURE-v1.0.md](DOCS-RESTRUCTURE-v1.0.md)** | Denne restruktureringen: plan + gjennomførte valg. |
 
@@ -56,7 +57,8 @@ Kort inngangsport. Alle referanser peker på filer som finnes i repoet per 2026-
 
 ---
 
-*Sist oppdatert: 2026-08-21 (OBSERVABILITY-PLAN v1.0)*
+*Sist oppdatert: 2026-08-22 (FORSKNINGSMOTOR v1.0)*
+
 
 
 

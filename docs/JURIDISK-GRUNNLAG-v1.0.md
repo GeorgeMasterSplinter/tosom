@@ -156,7 +156,12 @@ Markedsføringsloven § 3 andre ledd krever at påstander kan dokumenteres.
 | `app/slik-fungerer-det/page.tsx` | 65 | «basert på relasjonspsykologi» |
 | `app/priser/page.tsx` | — | «forskningsbasert prosess» |
 
-**To veier:** dokumenter metoden med kilder, eller myk språket. Anbefaling: myk språket nå, dokumenter senere hvis dere vil ta ordet tilbake.
+**Oppdatert 2026-08-22.** Kartleggingen viste at motoren beregner alt med ordoverlapp mellom fritekstsvar — ingen validerte instrumenter var i bruk.
+
+**Valgt løsning: bygge det vi sier.** Beta er utsatt, og motoren bygges om med BFI-10, ECR-S, PVQ-10 og ERQ-6. Se `FORSKNINGSMOTOR-v1.0.md`.
+
+Språket presiseres samtidig, men beholdes: «kortform av Big Five», «prinsipper fra Gottmans forskning». Tekstene skrives **etter** at koden er verifisert — aldri før.
+
 
 ### 🟠 Kvalitetspåstander om utfall
 
@@ -321,12 +326,30 @@ Formulert for å kunne besvares raskt. Bakgrunnen står over, så spørsmålene 
 
 ### A-6 — «Forskningsbasert»
 
-**Situasjonen:** Ordet brukes fem steder. Matching bygger på anerkjente prinsipper fra relasjonspsykologi, men det finnes ingen publisert studie av Tosoms egen motor.
+**Oppdatert 2026-08-22.** Kartleggingen avdekket at motoren i dag beregner alle dimensjoner med **ordoverlapp mellom fritekstsvar**. Ingen validerte instrumenter var i bruk, og påstanden hadde derfor ikke dekning.
+
+**Valgt løsning:** bygge det vi sier, ikke myke språket. Se `FORSKNINGSMOTOR-v1.0.md`.
+
+Motoren bygges om til seks dimensjoner basert på:
+
+| Rammeverk | Instrument | Lisens |
+|---|---|---|
+| Big Five (kortform) | BFI-10, Rammstedt & John (2007) | Fritt |
+| Tilknytning | ECR-S, Wei et al. (2007) | Fritt for ikke-kommersiell bruk |
+| Verdier | PVQ-10 etter Schwartz (1992) | Fritt |
+| Emosjonsregulering | ERQ-6, Gross & John (2003) | Fritt |
+| Kommunikasjon | Egne items på Gottman-*prinsipper* | Vi skriver dem selv |
+
+Beta er utsatt til dette er ferdig. Tekstene skrives **etter** at koden er verifisert.
 
 **Spørsmål:**
-1. Er bruken forsvarlig etter markedsføringsloven § 3 andre ledd?
-2. Hvilken dokumentasjon kreves for å beholde ordet?
-3. Hvilke formuleringer er trygge uten slik dokumentasjon?
+1. Med validerte instrumenter faktisk i bruk — er «forskningsbasert matching» da forsvarlig etter markedsføringsloven § 3 andre ledd?
+2. Vi bruker **ikke** Gottmans lisensierte skjemaer, kun egne spørsmål bygget på publiserte prinsipper. Er formuleringen «prinsipper fra Gottmans forskning» dekkende, eller bør Gottman-navnet utelates helt?
+3. BFI-10 har lavere reliabilitet enn fullversjonen. Er «kortform av Big Five» en tilstrekkelig presisering?
+4. ECR-S er «fritt for ikke-kommersiell forskning». Tosom er kommersielt. Kreves lisens, og gjelder det tilsvarende for PVQ og ERQ?
+5. Må kildene oppgis på den brukervendte siden, eller holder det at de er dokumentert internt?
+6. Kan «resonans» brukes som eget begrep uten at det oppfattes som en påstand om en validert modell?
+
 
 ---
 

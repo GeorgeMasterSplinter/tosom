@@ -80,13 +80,20 @@ model Profile {
   postalCode        String?
   latitude          Float?
   longitude         Float?
-  deepProfileStep   DeepProfileStep @default(IDENTITY)
-  deepProfileData   Json?
-  preferences       Json?
-  matchTags         String[]
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
-  user              User            @relation("UserProfile", fields: [userId], references: [id])
+   deepProfileStep   DeepProfileStep @default(IDENTITY)
+   deepProfileData   Json?
+   preferences       Json?
+   matchTags         String[]
+   // FORSKNINGSMOTOR F-3: Psykometriske skårer (additive, ingen eksisterende felt røres)
+   psychometricAnswers   Json?  // Rå svar: { "bfi1": 4, "att_a1": 2, ... }
+   bigFive               Json?  // { openness, conscientiousness, extraversion, agreeableness, neuroticism }
+   attachment            Json?  // { anxiety, avoidance, style }
+   valueProfile          Json?  // { benevolence, security, ... } (PVQ-10)
+   emotionRegulation     Json?  // { reappraisal, suppression } (ERQ-6)
+   psychometricVersion   String? // Versjon av instrumentsettet
+   createdAt         DateTime        @default(now())
+   updatedAt         DateTime        @updatedAt
+   user              User            @relation("UserProfile", fields: [userId], references: [id])
 
   @@index([userId])
   @@index([deepProfileStep])

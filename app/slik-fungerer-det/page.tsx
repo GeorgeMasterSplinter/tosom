@@ -60,7 +60,7 @@ const steps: Array<{
   {
     icon: <IconProfile />,
     title: 'Veiledet profil',
-    intro: 'Du starter med en guidet profil, underbygd av etablerte relasjonsmodeller (se Forskningsgrunnlaget), som hjelper deg å forstå hvem du er, hva du trenger og hva som kan passe deg i en relasjon.',
+    intro: 'Du starter med en guidet profil, underbygd av etablerte relasjonsmodeller (se det vi bygger på), som hjelper deg å forstå hvem du er, hva du trenger og hva som kan passe deg i en relasjon.',
     points: [
       'basert på relasjonspsykologi',
       'hjelper deg å forstå dine behov',

@@ -26,7 +26,7 @@ function IconVerdighet() {
   );
 }
 
-function IconForskning() {
+function IconModeller() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="M9 3V21M9 17H15M9 3H15M9 3L7 6M9 3L11 6" />
@@ -315,7 +315,7 @@ export default function OmOssPage() {
                   lineHeight: '1.8',
                 }}
               >
-                Tosom finnes fordi mennesker fortjener mer enn tilfeldige matcher og raske vurderinger. Vi finnes fordi relasjoner ikke er effektivitet — de er tilstedeværelse. Vi bygger på relasjonsforskning som peker i retning av at ekte kontakt oppstår når mennesker møtes med ro, struktur og nysgjerrighet — se nøyaktig hva vi bruker på Forskningsgrunnlaget.
+                Tosom finnes fordi mennesker fortjener mer enn tilfeldige matcher og raske vurderinger. Vi finnes fordi relasjoner ikke er effektivitet — de er tilstedeværelse. Vi bygger på etablerte relasjonsmodeller som peker i retning av at ekte kontakt oppstår når mennesker møtes med ro, struktur og nysgjerrighet — se nøyaktig hva vi bygger på.
               </p>
             </div>
           </div>
@@ -356,8 +356,8 @@ export default function OmOssPage() {
                 Alle mennesker fortjener en plattform som behandler dem med respekt og varme. Hvert element, hver tekst og hvert valg er laget med omtanke.
               </ToSomCard>
 
-              <ToSomCard icon={<IconForskning />} title="Forskning" iconWrapperClassName="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)]">
-                Vi bygger på etablerte psykologiske modeller og relasjonsforskning — ikke trender. Se nøyaktig hva vi bruker, og hva vi ikke lover, på Forskningsgrunnlaget.
+              <ToSomCard icon={<IconModeller />} title="Metoder" iconWrapperClassName="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)]">
+                Vi bygger på etablerte psykologiske modeller og relasjonsmodeller — ikke trender. Se nøyaktig hva vi bygger på, og hva vi ikke lover.
               </ToSomCard>
 
               <ToSomCard icon={<IconPersonvern />} title="Personvern" iconWrapperClassName="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)]">

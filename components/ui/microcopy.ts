@@ -233,7 +233,7 @@ export const microcopy = {
     inspection: 'Inspeksjon',
     examination: 'Unders\u00F8kelse',
     investigation: 'Unders\u00F8king',
-    research: 'Forskning',
+    research: 'Metoder',
     study: 'Studie',
     exploration: 'Utforskning',
     discovery: 'Oppdaging',

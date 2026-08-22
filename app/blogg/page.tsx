@@ -52,9 +52,9 @@ const articles = [
   {
     dato: '24. juni 2026',
     lesetid: '5 min',
-    kategori: 'Relasjonsforskning',
+    kategori: 'Relasjonsmodeller',
     tittel: 'Hvorfor kompatibilitet betyr mer enn utseende',
-    excerpt: 'Forskning viser at verdier, livsstil og emosjonelle mønstre er langt sterkere indikatorer på varige relasjoner enn det ytre.',
+    excerpt: 'Studier viser at verdier, livsstil og emosjonelle mønstre er langt sterkere indikatorer på varige relasjoner enn det ytre.',
     reference: 'Fetvedt, G. (2018). Kjærlighetsforskning: Hva bygger varige relasjoner? Universitetsforlaget.',
     icon: <IconResearch />,
   },
@@ -112,7 +112,7 @@ export default function BloggPage() {
             className="max-w-2xl mx-auto"
             style={{ ...typographyToStyle('body-lg'), color: color.text.secondary }}
           >
-            I bloggen deler vi innsikt om relasjoner, emosjonell trygghet og forskning på langsomme, meningsfulle forbindelser.
+            I bloggen deler vi innsikt om relasjoner, emosjonell trygghet og langsomme, meningsfulle forbindelser.
           </p>
         </ToSomSection>
 
@@ -129,7 +129,7 @@ export default function BloggPage() {
                     Om denne bloggen
                   </h2>
                   <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
-                    Alle artiklene bygger på etablert relasjonsforskning og vår erfaring med å bygge en plattform for ekte menneskelige relasjoner. Vi tror at kunnskap er grunnen til trygge relasjoner — og at ro og dybde alltid vil vinne over støy og overflate.
+                    Alle artiklene bygger på etablerte relasjonsmodeller og vår erfaring med å bygge en plattform for ekte menneskelige relasjoner. Vi tror at kunnskap er grunnen til trygge relasjoner — og at ro og dybde alltid vil vinne over støy og overflate.
                   </p>
                 </div>
               </div>

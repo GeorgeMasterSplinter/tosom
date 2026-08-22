@@ -64,6 +64,72 @@ function IconDepth() {
   );
 }
 
+/** Verdier — kompass */
+function IconDimVerdier() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 3v3M12 18v3M3 12h3M18 12h3" />
+      <circle cx="12" cy="12" r="2" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+/** Tilknytning — to sirkler */
+function IconDimTilknytning() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="9" cy="12" r="5" />
+      <circle cx="15" cy="12" r="5" />
+    </svg>
+  );
+}
+
+/** Personlighet — 5 noder */
+function IconDimPersonlighet() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="9" />
+      <circle cx="12" cy="6" r="1.5" fill="currentColor" stroke="none" />
+      <circle cx="6" cy="10" r="1.5" fill="currentColor" stroke="none" />
+      <circle cx="8.5" cy="16.5" r="1.5" fill="currentColor" stroke="none" />
+      <circle cx="15.5" cy="16.5" r="1.5" fill="currentColor" stroke="none" />
+      <circle cx="18" cy="10" r="1.5" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+/** Kommunikasjon — talebuer */
+function IconDimKommunikasjon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 7a3 3 0 013-3h6a3 3 0 013 3v1a3 3 0 01-3 3H8l-3 3V7z" />
+      <path d="M14 12a3 3 0 013 3v1a3 3 0 01-3 3h-1l-2 2v-2h-2" />
+    </svg>
+  );
+}
+
+/** Emosjonsregulering — bølge */
+function IconDimEmosjon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M7 12c1.5-2 3-2 5 0s3.5 2 5 0" />
+    </svg>
+  );
+}
+
+/** Livssituasjon — klokke/hjem */
+function IconDimLivssituasjon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5M12 12l3 3" />
+      <path d="M8 17h8" />
+    </svg>
+  );
+}
+
 /** Resonans-skille — motivet i miniatyr */
 function ResonanceDivider() {
   return (
@@ -75,6 +141,19 @@ function ResonanceDivider() {
     </div>
   );
 }
+
+/* ========================
+   DIMENSJONS-DATA — 6 KORT
+   ======================== */
+
+const dimensions = [
+  { icon: <IconDimVerdier />, name: 'Verdier', weight: '25 %', desc: 'Den sterkeste prediktoren for langsiktig samsvar.' },
+  { icon: <IconDimTilknytning />, name: 'Tilknytning', weight: '25 %', desc: 'Angst og unnvikelse — ikke bare om dere «er trygge».' },
+  { icon: <IconDimPersonlighet />, name: 'Personlighet', weight: '15 %', desc: 'Reell effekt, men svakere enn ofte antatt.' },
+  { icon: <IconDimKommunikasjon />, name: 'Kommunikasjon', weight: '15 %', desc: 'Reparasjon, respons og konfliktstil.' },
+  { icon: <IconDimEmosjon />, name: 'Emosjonsregulering', weight: '10 %', desc: 'Påvirker konflikthåndtering direkte.' },
+  { icon: <IconDimLivssituasjon />, name: 'Livssituasjon', weight: '10 %', desc: 'Barn, røyking, hverdagsrytme — praktisk ramme.' },
+];
 
 /* ========================
    STEG-DATA — 5 KORT
@@ -99,7 +178,7 @@ const steps = [
   },
   {
     icon: <IconResearch />,
-    title: 'Forskningsbasert matching',
+    title: 'Modeller vi bygger på',
     content: 'Vi matcher på livssituasjon, verdier, relasjonsstil og emosjonell kompatibilitet. Ikke overflate. Ikke tilfeldigheter. Bare det som faktisk betyr noe i et forhold.',
   },
   {
@@ -256,6 +335,80 @@ export default function LandingPage() {
             </div>
           </div>
         </ToSomSection>
+
+        {/* ===== METODER VI BRUKER — 6 DIMENSJONER ===== */}
+        <ToSomSection
+          spotlight="blue"
+          className="px-6"
+        >
+          <div className="mx-auto max-w-5xl">
+            <Reveal direction="up" delay={0}>
+              <h2
+                className="text-center mb-6"
+                style={{
+                  ...typographyToStyle('heading-lg'),
+                  color: color.text.primary,
+                }}
+              >
+                Metoder vi bruker
+              </h2>
+            </Reveal>
+
+            <Reveal direction="up" delay={120}>
+              <p
+                className="max-w-3xl mx-auto text-center mb-12"
+                style={{
+                  ...typographyToStyle('body-lg'),
+                  color: color.text.secondary,
+                }}
+              >
+                Seks dimensjoner bygget på etablerte psykologiske modeller. Vekter som summerer til 100 %.
+              </p>
+            </Reveal>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {dimensions.map((dim, idx) => (
+                <Reveal key={dim.name} direction="up" delay={idx * 80} duration={900}>
+                  <GlassCard
+                    padding="lg"
+                    gold
+                    interactive
+                    className="space-y-3 h-full"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37] flex-shrink-0">
+                        {dim.icon}
+                      </div>
+                      <div className="flex-1">
+                        <p style={{ ...typographyToStyle('heading-sm'), color: color.text.primary }}>{dim.name}</p>
+                      </div>
+                      <span style={{ ...typographyToStyle('body-sm'), color: color.brand.gold, fontWeight: 600 }}>
+                        {dim.weight}
+                      </span>
+                    </div>
+                    <p
+                      style={{
+                        ...typographyToStyle('body'),
+                        color: color.text.secondary,
+                        lineHeight: '1.7',
+                      }}
+                    >
+                      {dim.desc}
+                    </p>
+                  </GlassCard>
+                </Reveal>
+              ))}
+            </div>
+
+            <div className="flex justify-center mt-10">
+              <ToSomButton href="/metoder" variant="dark" size="md">
+                Les mer
+              </ToSomButton>
+            </div>
+          </div>
+        </ToSomSection>
+
+        <ResonanceDivider />
 
         {/* ===== BETA-BLOKK ===== */}
         {/* Under beta vises ingen pris. Betalingsvei er ikke implementert. */}

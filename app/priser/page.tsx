@@ -169,7 +169,7 @@ export default function PriserPage() {
                 color: color.text.secondary,
               }}
             >
-              Tosom gir deg en komplett, trygg prosess — underbygd av etablerte relasjonsmodeller (se Forskningsgrunnlaget) — for å møte én person, valgt med omtanke.
+              Tosom gir deg en komplett, trygg prosess — underbygd av etablerte relasjonsmodeller (se det vi bygger på) — for å møte én person, valgt med omtanke.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -13,7 +13,7 @@ const blogPosts = {
     content: `
       <p>I eit samfunn der vi konstant blir eksponert for bilder og overflatefokus, er det lett å glemtje hva som faktisk betyr noko i ein relasjon.</p>
       
-      <p>Forskning viser at kompatibilitet basert på verdier, livssituasjon og emosjonelle mønstre er langt sterkare prediktorar for varige relasjonar enn utseende.</p>
+      <p>Studier viser at kompatibilitet basert på verdier, livssituasjon og emosjonelle mønstre er langt sterkare prediktorar for varige relasjonar enn utseende.</p>
       
       <p>Tosom vel å fokusere på det som faktisk skaper varig forbindelse. Når to menneske møter hverandre på et dypere plan, blir overflateikke det første — det blir det siste.</p>
       

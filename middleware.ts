@@ -147,6 +147,12 @@ export async function middleware(req: NextRequest) {
   // 3. API-vern
   for (const prefix of PROTECTED_API_PREFIXES) {
     if (path.startsWith(prefix)) {
+      // STEG 13.4 FIX: /api/admin/* aksepterer signert admin_token (precheck);
+      // sjølve HMAC-signaturen verifiserast async i ruta via requireAuth.
+      // Utan dette feila admin-panelet sine data-kall 401 → tom brukarliste.
+      if (path.startsWith('/api/admin') && verifyAdminCookie(req)) {
+        return response
+      }
       // STEG 2.2: Krev verifisert token — ikke bare tilstedeværelse av cookie
       if (!token) {
         return NextResponse.json(

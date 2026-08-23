@@ -361,6 +361,9 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
           seekingGender: data.seekingGender, height: data.height, bodyType: data.bodyType,
           lifestyle: data.lifestyle, smoking: data.smoking, religion: data.religion,
           children: data.children, wantChildren: data.wantChildren, city: data.city,
+          // FIX: postalCode kreves av basicProfileSchema (lib/validation/onboarding-setup.ts)
+          // men ble aldri sendt — ga 400 på /api/profile/setup hver gang.
+          postalCode: data.postalCode,
           distancePref: data.distancePref, agePrefMin: data.agePrefMin, agePrefMax: data.agePrefMax,
         },
         personlighet: {

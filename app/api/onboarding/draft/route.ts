@@ -29,12 +29,18 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { step, data } = body;
 
+    // STEG 13.2 FIX: Profile.age er NOT NULL utan default — INSERT må alltid
+    // setje alder, elles feilar draft-autosave for brukarar utan Profile-rad.
+    // Frontend har age som streng ('' før steg 1 er fylt) → 0 som plasshaldar;
+    // /api/profile/setup skriv den ekte alderen seinare.
+    const ageNum = Math.max(0, Math.floor(Number(data?.age)) || 0);
+
     // Bruk $executeRaw for å unngå Prisma type-problemer med enum-casting
     const enumStep = step !== undefined ? (STEP_ENUMS[Math.min(step, STEP_ENUMS.length - 1)] || 'IDENTITY') : null;
 
     await prisma.$executeRaw`
-      INSERT INTO "Profile" ("userId", "deepProfileData", "deepProfileStep")
-      VALUES (${session.user.id}, ${JSON.stringify(data || {})}::jsonb, ${enumStep}::text)
+      INSERT INTO "Profile" ("userId", "age", "deepProfileData", "deepProfileStep")
+      VALUES (${session.user.id}, ${ageNum}, ${JSON.stringify(data || {})}::jsonb, ${enumStep}::text)
       ON CONFLICT ("userId")
       DO UPDATE SET
         "deepProfileData" = ${JSON.stringify(data || {})}::jsonb,

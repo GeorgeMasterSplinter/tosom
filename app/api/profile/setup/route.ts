@@ -24,6 +24,8 @@ async function postHandler(req: NextRequest) {
     // O1 FIX: Valider med Zod-skjemaet FØR du skriver til databasen
     const validation = validateOnboarding(body);
     if (!validation.success) {
+      // STEG 13.3: logg Zod-avvisingar så framtidige 400-ar er synlege i Vercel-loggen
+      console.error('[profile/setup] validation failed:', JSON.stringify(validation.errors));
       return NextResponse.json(
         { error: 'Ugyldig input', details: validation.errors },
         { status: 400 }

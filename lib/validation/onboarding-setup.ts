@@ -8,6 +8,29 @@ import { z } from 'zod';
 import { getDistancePrefRange } from '@/config/distance-prefs';
 
 /* ============================================================
+   HJELPERE — tolerant input frå frontend (STEG 13.1 FIX)
+   Frontend sender '' for ALLE felt brukaren ikkje fylte ut
+   (OnboardingFlow.tsx initialData), medan Zod .optional() berre
+   tolererer undefined. '' på valfrie felt ga derfor 400 på
+   /api/profile/setup kvar gong eit steg vart hoppa over.
+   Blank streng → undefined før validering. Obligatoriske felt
+   (gata klient-side) blir ikkje rørte.
+   ============================================================ */
+
+function blankToUndefined(v: unknown): unknown {
+  if (typeof v === 'string' && v.trim() === '') return undefined;
+  return v;
+}
+
+/** Valgfri streng-felt: '' vert handsama som "ikkje svart". */
+function optStr(max?: number, min = 0, msg?: string) {
+  let s: z.ZodString = z.string();
+  if (min > 0) s = msg ? s.min(min, msg) : s.min(min);
+  if (max !== undefined) s = s.max(max);
+  return z.preprocess(blankToUndefined, s.optional());
+}
+
+/* ============================================================
    BASIC PROFILE (Steg 1: Grunnprofil)
    ============================================================ */
 
@@ -17,13 +40,13 @@ export const basicProfileSchema = z
     age: z.coerce.number().min(21, 'Du må vere minst 21 år').max(99, 'Alder kan ikke vere over 99'),
     gender: z.string().min(1, 'Velg eit kjønn'),
     seekingGender: z.string().min(1, 'Velg kven du søker'),
-    height: z.coerce.number().min(100).max(250).optional(),
-    bodyType: z.string().optional(),
-    lifestyle: z.string().optional(),
-    smoking: z.string().optional(),
-    religion: z.string().optional(),
-    children: z.string().optional(),
-    wantChildren: z.string().optional(),
+    height: z.preprocess(blankToUndefined, z.coerce.number().min(100).max(250).optional()),
+    bodyType: optStr(),
+    lifestyle: optStr(),
+    smoking: optStr(),
+    religion: optStr(),
+    children: optStr(),
+    wantChildren: optStr(),
     city: z.string().min(1, 'Hvor bor du?').max(100),
     postalCode: z.string().regex(/^\d{4}$/, 'Postnummer må ha fire siffer'),
     distancePref: z.coerce.number(),
@@ -52,10 +75,10 @@ export type BasicProfileInput = z.infer<typeof basicProfileSchema>;
 
 export const personlighetSchema = z.object({
   selfDesc: z.string().min(10, 'Skriv minst 10 teikn om kven du er').max(500),
-  energyGiver: z.string().min(10, 'Kva gir deg energi?').max(300).optional(),
-  energyDrainer: z.string().min(10, 'Kva tapper deg for energi?').max(300).optional(),
-  pressureReact: z.string().min(10, 'Hvordan reagerer du under press?').max(300).optional(),
-  quirk: z.string().min(5, 'Skildre ein quirky eigenskap').max(200).optional(),
+  energyGiver: optStr(300, 10, 'Kva gir deg energi?'),
+  energyDrainer: optStr(300, 10, 'Kva tapper deg for energi?'),
+  pressureReact: optStr(300, 10, 'Hvordan reagerer du under press?'),
+  quirk: optStr(200, 5, 'Skildre ein quirky eigenskap'),
 });
 
 export type PersonlighetInput = z.infer<typeof personlighetSchema>;
@@ -65,12 +88,12 @@ export type PersonlighetInput = z.infer<typeof personlighetSchema>;
    ============================================================ */
 
 export const livssituasjonSchema = z.object({
-  workType: z.string().optional(),
-  housingType: z.string().optional(),
-  householdSize: z.string().optional(),
-  economicStability: z.string().optional(),
-  responsibilities: z.string().min(10).max(500).optional(),
-  dailyRoutine: z.string().min(10).max(500).optional(),
+  workType: optStr(),
+  housingType: optStr(),
+  householdSize: optStr(),
+  economicStability: optStr(),
+  responsibilities: optStr(500, 10),
+  dailyRoutine: optStr(500, 10),
 });
 
 export type LivssituasjonInput = z.infer<typeof livssituasjonSchema>;
@@ -80,11 +103,11 @@ export type LivssituasjonInput = z.infer<typeof livssituasjonSchema>;
    ============================================================ */
 
 export const tilknytningSchema = z.object({
-  safetyNeed: z.string().min(10).max(300).optional(),
-  insecurityTrigger: z.string().min(10).max(300).optional(),
-  sadnessNeed: z.string().min(10).max(300).optional(),
-  stressNeed: z.string().min(10).max(300).optional(),
-  importantBoundary: z.string().min(10).max(300).optional(),
+  safetyNeed: optStr(300, 10),
+  insecurityTrigger: optStr(300, 10),
+  sadnessNeed: optStr(300, 10),
+  stressNeed: optStr(300, 10),
+  importantBoundary: optStr(300, 10),
 });
 
 export type TilknytningInput = z.infer<typeof tilknytningSchema>;
@@ -94,11 +117,11 @@ export type TilknytningInput = z.infer<typeof tilknytningSchema>;
    ============================================================ */
 
 export const kjærlighetsspråkSchema = z.object({
-  loveGive: z.string().optional(),
-  loveReceive: z.string().optional(),
-  closenessBuilder: z.string().min(10).max(300).optional(),
-  distanceCreator: z.string().min(10).max(300).optional(),
-  smallThing: z.string().min(10).max(300).optional(),
+  loveGive: optStr(),
+  loveReceive: optStr(),
+  closenessBuilder: optStr(300, 10),
+  distanceCreator: optStr(300, 10),
+  smallThing: optStr(300, 10),
 });
 
 export type KjærlighetsspråkInput = z.infer<typeof kjærlighetsspråkSchema>;
@@ -108,11 +131,11 @@ export type KjærlighetsspråkInput = z.infer<typeof kjærlighetsspråkSchema>;
    ============================================================ */
 
 export const livsstilSchema = z.object({
-  highPriority: z.string().optional(),
-  lowPriority: z.string().optional(),
-  goodEveryday: z.string().min(10).max(300).optional(),
-  desiredLifestyle: z.string().optional(),
-  undesiredLifestyle: z.string().optional(),
+  highPriority: optStr(),
+  lowPriority: optStr(),
+  goodEveryday: optStr(300, 10),
+  desiredLifestyle: optStr(),
+  undesiredLifestyle: optStr(),
 });
 
 export type LivsstilInput = z.infer<typeof livsstilSchema>;
@@ -122,9 +145,9 @@ export type LivsstilInput = z.infer<typeof livsstilSchema>;
    ============================================================ */
 
 export const relasjonsStilSchema = z.object({
-  relationshipSeeking: z.string().optional(),
-  closenessNeed: z.string().optional(),
-  independenceBalance: z.string().optional(),
+  relationshipSeeking: optStr(),
+  closenessNeed: optStr(),
+  independenceBalance: optStr(),
 });
 
 export type RelasjonsStilInput = z.infer<typeof relasjonsStilSchema>;
@@ -134,11 +157,11 @@ export type RelasjonsStilInput = z.infer<typeof relasjonsStilSchema>;
    ============================================================ */
 
 export const fremtidSchema = z.object({
-  futureVision: z.string().min(10).max(500).optional(),
-  dreamGoal: z.string().min(10).max(300).optional(),
-  buildTogether: z.string().min(10).max(300).optional(),
-  experienceAlone: z.string().min(10).max(300).optional(),
-  experienceTogether: z.string().min(10).max(300).optional(),
+  futureVision: optStr(500, 10),
+  dreamGoal: optStr(300, 10),
+  buildTogether: optStr(300, 10),
+  experienceAlone: optStr(300, 10),
+  experienceTogether: optStr(300, 10),
 });
 
 export type FremtidInput = z.infer<typeof fremtidSchema>;
@@ -148,11 +171,11 @@ export type FremtidInput = z.infer<typeof fremtidSchema>;
    ============================================================ */
 
 export const humorSchema = z.object({
-  laughterTrigger: z.string().max(200).optional(),
-  quirkyHabit: z.string().min(5).max(200).optional(),
-  guiltyPleasure: z.string().min(10).max(300).optional(),
-  totallyYou: z.string().min(10).max(300).optional(),
-  partnerWouldLaugh: z.string().max(200).optional(),
+  laughterTrigger: optStr(200),
+  quirkyHabit: optStr(200, 5),
+  guiltyPleasure: optStr(300, 10),
+  totallyYou: optStr(300, 10),
+  partnerWouldLaugh: optStr(200),
 });
 
 export type HumorInput = z.infer<typeof humorSchema>;
@@ -162,10 +185,10 @@ export type HumorInput = z.infer<typeof humorSchema>;
    ============================================================ */
 
 export const grenserSchema = z.object({
-  neverCrossBoundary: z.string().min(10).max(300).optional(),
-  understandPartnersBoundaries: z.string().min(10).max(300).optional(),
-  limitations: z.string().max(300).optional(),
-  partnerMustUnderstand: z.string().min(10).max(300).optional(),
+  neverCrossBoundary: optStr(300, 10),
+  understandPartnersBoundaries: optStr(300, 10),
+  limitations: optStr(300),
+  partnerMustUnderstand: optStr(300, 10),
 });
 
 export type GrenserInput = z.infer<typeof grenserSchema>;
@@ -175,11 +198,11 @@ export type GrenserInput = z.infer<typeof grenserSchema>;
    ============================================================ */
 
 export const modenSchema = z.object({
-  intimacySafety: z.string().max(300).optional(),
-  comfortableWith: z.string().max(300).optional(),
-  boundary: z.string().max(200).optional(),
-  nearerType: z.string().max(200).optional(),
-  needsTime: z.string().max(200).optional(),
+  intimacySafety: optStr(300),
+  comfortableWith: optStr(300),
+  boundary: optStr(200),
+  nearerType: optStr(200),
+  needsTime: optStr(200),
 });
 
 export type ModenInput = z.infer<typeof modenSchema>;
@@ -191,15 +214,15 @@ export type ModenInput = z.infer<typeof modenSchema>;
 export const preferanserSchema = z.object({
   politicsImportance: z.number().min(1).max(10).optional(),
   religionImportance: z.number().min(1).max(10).optional(),
-  dietPreference: z.string().optional(),
-  sleepSchedule: z.string().optional(),
-  pets: z.string().optional(),
-  travelFreq: z.string().optional(),
-  alcoholFreq: z.string().optional(),
-  ambitionLevel: z.string().optional(),
-  structureSpontaneity: z.string().optional(),
-  introExtrovert: z.string().optional(),
-  attachmentStyle: z.string().optional(),
+  dietPreference: optStr(),
+  sleepSchedule: optStr(),
+  pets: optStr(),
+  travelFreq: optStr(),
+  alcoholFreq: optStr(),
+  ambitionLevel: optStr(),
+  structureSpontaneity: optStr(),
+  introExtrovert: optStr(),
+  attachmentStyle: optStr(),
 });
 
 export type PreferanserInput = z.infer<typeof preferanserSchema>;

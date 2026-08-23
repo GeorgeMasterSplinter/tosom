@@ -11,6 +11,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { Prisma, type DeepProfileStep } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from '@/lib/auth/session';
 
@@ -35,17 +36,27 @@ export async function POST(req: NextRequest) {
     // /api/profile/setup skriv den ekte alderen seinare.
     const ageNum = Math.max(0, Math.floor(Number(data?.age)) || 0);
 
-    // Bruk $executeRaw for å unngå Prisma type-problemer med enum-casting
-    const enumStep = step !== undefined ? (STEP_ENUMS[Math.min(step, STEP_ENUMS.length - 1)] || 'IDENTITY') : null;
+    // STEG 13.5 FIX: erstatta $executeRaw med typa upsert.
+    // - Rå-INSERT mangla "id": @default(cuid()) er klient-side, DB-kolonnen har
+    //   ingen default → NOT NULL 23502 for kvar ny brukar.
+    // - Typa klient handsamar enum-cast og NOT NULL age automatisk.
+    // - update hoppar over deepProfileStep når step ikkje er sendt (undefined).
+    const enumStep: DeepProfileStep =
+      (step !== undefined ? STEP_ENUMS[Math.min(step, STEP_ENUMS.length - 1)] : null) ?? 'IDENTITY';
 
-    await prisma.$executeRaw`
-      INSERT INTO "Profile" ("userId", "age", "deepProfileData", "deepProfileStep")
-      VALUES (${session.user.id}, ${ageNum}, ${JSON.stringify(data || {})}::jsonb, ${enumStep}::text)
-      ON CONFLICT ("userId")
-      DO UPDATE SET
-        "deepProfileData" = ${JSON.stringify(data || {})}::jsonb,
-        "deepProfileStep" = CASE WHEN ${step as number} IS NOT NULL THEN ${enumStep}::text ELSE "Profile"."deepProfileStep" END
-    `;
+    await prisma.profile.upsert({
+      where: { userId: session.user.id },
+      create: {
+        userId: session.user.id,
+        age: ageNum,
+        deepProfileData: (data || {}) as Prisma.InputJsonValue,
+        deepProfileStep: enumStep,
+      },
+      update: {
+        deepProfileData: (data || {}) as Prisma.InputJsonValue,
+        deepProfileStep: step !== undefined ? enumStep : undefined,
+      },
+    });
 
     return NextResponse.json({ ok: true, step });
   } catch (err) {

@@ -206,6 +206,7 @@ export default function Step2Personlighet({ data, onChange, onBack, onNext }: Pr
             text={item.text}
             value={typeof data[item.id] === 'number' ? (data[item.id] as number) : null}
             onChange={(v) => onChange(item.id, v)}
+            accentColor={OB.section.personality}
           />
         ))}
       </div>

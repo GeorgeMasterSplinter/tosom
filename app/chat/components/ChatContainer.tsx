@@ -131,7 +131,9 @@ function MessageList({ partner, journeyDay }: {
   partner?: { name: string; imageUrl?: string; id?: string };
   journeyDay?: number;
 }) {
-  const { messages: ctxMessages, loading, error } = useChat();
+  const { messages: ctxMessages, loading, error, moodTheme } = useChat();
+  const tPrimary = moodTheme.textPrimary;
+  const tSecondary = moodTheme.textSecondary;
   const allMessages = ctxMessages;
 
   // Scroll-manager
@@ -165,8 +167,8 @@ function MessageList({ partner, journeyDay }: {
           <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${G.goldSoft}, ${G.goldMuted})`, border: `1px solid ${G.goldMuted}` }}>
             <span className="text-2xl">💬</span>
           </div>
-          <p className="text-lg font-medium mb-2" style={{ color: G.textPrimary }}>Start reisen med en varm melding</p>
-          <p className="text-sm" style={{ color: G.textSecondary }}>Dei beste relasjonane byrjar med eit lite steg.</p>
+          <p className="text-lg font-medium mb-2" style={{ color: tPrimary }}>Start reisen med en varm melding</p>
+          <p className="text-sm" style={{ color: tSecondary }}>Dei beste relasjonane byrjar med eit lite steg.</p>
         </div>
       </div>
     );
@@ -178,7 +180,7 @@ function MessageList({ partner, journeyDay }: {
       <div className="flex-1 overflow-y-auto p-6 flex items-center justify-center" ref={scrollRef}>
         <div className="text-center rounded-[20px] p-8 max-w-sm" style={{ background: G.glassBg, border: "1px solid rgba(255,77,77,0.15)" }}>
           <p className="text-lg font-medium mb-3" style={{ color: G.dangerRed }}>Kunne ikke laste samtalen</p>
-          <p className="text-sm mb-4" style={{ color: G.textSecondary }}>{error}</p>
+          <p className="text-sm mb-4" style={{ color: tSecondary }}>{error}</p>
           <button onClick={() => window.location.reload()} className="px-6 py-3 rounded-xl font-medium transition-all hover:brightness-110" style={{ background: `linear-gradient(135deg, ${G.gold}, ${G.goldLight})`, color: G.bgPrimary, borderRadius: "12px" }}>Prøv igjen</button>
         </div>
       </div>
@@ -406,7 +408,7 @@ function ChatInput({
           rows={1}
           className="flex-1 resize-none bg-transparent outline-none text-sm leading-relaxed py-1.5"
           style={{ 
-            color: G.textPrimary,
+            color: moodTheme.textPrimary,
             caretColor: moodTheme.accent,
             transition: 'caret-color 1.2s ease-in-out',
           }}
@@ -443,7 +445,7 @@ function ChatInput({
       {/* Mikro-copy under input */}
       <p 
         className="text-[10px] text-center mt-2 tracking-wide"
-        style={{ color: G.textMuted }}
+        style={{ color: moodTheme.textMuted }}
       >
         Trykk Enter for å sende · Shift+Enter for ny linje
       </p>

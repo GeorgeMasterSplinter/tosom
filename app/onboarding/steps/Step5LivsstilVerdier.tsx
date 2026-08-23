@@ -56,6 +56,7 @@ export default function Step5LivsstilVerdier({ data, onChange, onBack, onNext, s
             text={item.text}
             value={typeof data[item.id] === 'number' ? (data[item.id] as number) : null}
             onChange={(v) => onChange(item.id, v)}
+            accentColor={OB.section.lifestyle}
           />
         ))}
       </div>

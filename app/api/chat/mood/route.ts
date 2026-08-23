@@ -14,12 +14,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth/requireAuth";
 import { prisma } from "@/lib/prisma";
 import { triggerMoodChange } from "@/lib/pusher/server";
+import { VALID_MOODS } from "@/app/chat/lib/mood";
 
 export const dynamic = "force-dynamic";
-
-const VALID_MOODS = new Set([
-  "calm", "warm", "deep", "gentle", "joyful", "romantic", "cozy", "dreamy", "playful",
-]);
 
 export async function PATCH(req: NextRequest) {
   const result = await requireAuth(req);

@@ -18,7 +18,8 @@ Kort inngangsport. Alle referanser peker på filer som finnes i repoet per 2026-
 | **[TOSOM-PLATTFORMDIAGNOSE-v2.0.md](TOSOM-PLATTFORMDIAGNOSE-v2.0.md)** | As-is tilstand, blokkere, avvik, teknisk gjeld. |
 | **[SECURITY-STABILITY-PLAN-v2.0.md](SECURITY-STABILITY-PLAN-v2.0.md)** | Sikkerhet, auth, rate limiting, GDPR, drift. |
 | **[MATCHING-TUNING-PLAN-v1.0.md](MATCHING-TUNING-PLAN-v1.0.md)** | Motoren: retting før beta, tuning etter observasjon. |
-| **[BETA-ACCESS-PLAN-v1.0.md](BETA-ACCESS-PLAN-v1.0.md)** | Lukket beta: invitasjonsport, rekruttering, observasjon, testmatrise. |
+| **[BETA-TEST-v1.0.md](BETA-TEST-v1.0.md)** | **Åpen beta med ekte brukere: fri tilgang (e-post + passord), faser B-1…B-5. Gjelder til Vipps er på plass.** |
+| **[BETA-ACCESS-PLAN-v1.0.md](BETA-ACCESS-PLAN-v1.0.md)** | Lukket beta: invitasjonsport, rekruttering, observasjon, testmatrise. *Erstattet av BETA-TEST v1.0 for inneværende periode.* |
 | **[TOSOM-BETA-DRIFTSPLAN-v1.0.md](TOSOM-BETA-DRIFTSPLAN-v1.0.md)** | Hvor vi står, hva som gjenstår før invitasjon, driftsrutinen under beta. |
 | **[ADMIN-KOMMANDOPANEL-v1.0.md](ADMIN-KOMMANDOPANEL-v1.0.md)** | Ombygging av admin til kommandopanel. Steg K-1…K-9 med kode. |
 | **[LANDING-SIGNATUR-v1.0.md](LANDING-SIGNATUR-v1.0.md)** | Signatur-laget på landingssiden: resonans-motivet, calm-motion. Steg S-1…S-10 med kode. |
@@ -57,7 +58,7 @@ Kort inngangsport. Alle referanser peker på filer som finnes i repoet per 2026-
 
 ---
 
-*Sist oppdatert: 2026-08-22 (FORSKNINGSMOTOR v1.0)*
+*Sist oppdatert: 2026-08-23 (BETA-TEST v1.0)*
 
 
 

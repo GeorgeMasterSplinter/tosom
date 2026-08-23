@@ -18,7 +18,8 @@ import { unifiedScore } from '@/lib/matching/unifiedScorer';
 import type { UnifiedResult } from '@/lib/matching/unifiedScorer';
 import { toResonanceLevel } from '@/lib/matching/resonanceLevel';
 import { MIN_COHORT_SIZE, MIN_SCORE } from '@/config/matching';
-import { isMatchingEnabled } from '@/config/features';
+import { isMatchingEnabled, isBetaMatchEmailEnabled } from '@/config/features';
+import { sendMatchEmail } from '@/lib/email';
 import { mapRejectReason } from './rejectReason';
 import { sendAlert } from '@/lib/observability/alert';
 import { recordMetric } from '@/lib/observability/metric';
@@ -433,6 +434,26 @@ export async function GET(req: NextRequest) {
           });
 
           paired += batch.length;
+
+          // B-2: Match-varsel på e-post — bak flagget BETA_MATCH_EMAIL.
+          // Invariant I-4 står urørt i koden; avviket er eksplisitt og flagget.
+          // Sendes etter transaksjonen (best-effort — e-postfeil skal aldri velte runden).
+          if (isBetaMatchEmailEnabled()) {
+            const batchUserIds = batch.flatMap((p) => [p.userIdA, p.userIdB]);
+            try {
+              const users = await prisma.user.findMany({
+                where: { id: { in: batchUserIds } },
+                select: { id: true, email: true },
+              });
+              for (const user of users) {
+                if (user.email) {
+                  sendMatchEmail(user.email).catch(() => {});
+                }
+              }
+            } catch {
+              // E-postfeil skal aldri velte runden
+            }
+          }
         } catch (err) {
           errors.push(`batch ${Math.floor(batchIdx / BATCH_SIZE) + 1} (${batch.length} par): ${(err as Error).message}`);
         }

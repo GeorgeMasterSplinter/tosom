@@ -52,7 +52,7 @@ interface PartnerInfo {
    PRESENCE DOT — Grøn/gul indikator
    ═══════════════════════════════════════ */
 
-function PresenceDot({ partnerId }: { partnerId?: string | null }) {
+function PresenceDot({ partnerId, accent, tMuted }: { partnerId?: string | null; accent?: string; tMuted?: string }) {
   const { isOnline, isTyping } = usePresence(partnerId || null);
 
   if (!partnerId) return null;
@@ -71,7 +71,7 @@ function PresenceDot({ partnerId }: { partnerId?: string | null }) {
       {(isOnline || isTyping) && (
         <span
           className="text-[10px] italic transition-all duration-300"
-          style={{ color: isTyping ? '#D4AF37' : 'rgba(255,255,255,0.45)' }}
+          style={{ color: isTyping ? (accent ?? '#D4AF37') : (tMuted ?? 'rgba(255,255,255,0.4)') }}
         >
           {isTyping ? 'Skriver…' : 'Online'}
         </span>
@@ -119,6 +119,11 @@ export function ChatHeader({
     ? accentMuted.replace(/[\d.]+\)$/, "0.35)")
     : "rgba(212,175,55,0.35)";
 
+  // Mood-tekstfarger
+  const tPrimary = moodTheme?.textPrimary ?? G.textPrimary;
+  const tSecondary = moodTheme?.textSecondary ?? G.textSecondary;
+  const tMuted = moodTheme?.textMuted ?? G.textMuted;
+
   return (
     <div
       className="px-4 py-3 sm:px-6 sm:py-4 relative overflow-hidden"
@@ -142,16 +147,16 @@ export function ChatHeader({
           <div className="flex items-center gap-2">
             <h2
               className="text-sm sm:text-base font-medium truncate"
-              style={{ color: G.textPrimary }}
+              style={{ color: tPrimary }}
             >
               {partner?.name || "Din match"}, {partner?.age} år
               {partner?.distanceKm != null && (
-                <span style={{ color: G.textSecondary }}>
+                <span style={{ color: tSecondary }}>
                   {' '}· ca. {partner.distanceKm} km
                 </span>
               )}
             </h2>
-            <PresenceDot partnerId={partner?.id} />
+            <PresenceDot partnerId={partner?.id} accent={accent} tMuted={tMuted} />
           </div>
 
           {/* Dag + fase + milestone */}

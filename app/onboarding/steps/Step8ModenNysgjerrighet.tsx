@@ -59,6 +59,7 @@ export default function Step8ModenNysgjerrighet({ data, onChange, onBack, onNext
             text={item.text}
             value={typeof data[item.id] === 'number' ? (data[item.id] as number) : null}
             onChange={(v) => onChange(item.id, v)}
+            accentColor={OB.section.boundaries}
           />
         ))}
       </div>

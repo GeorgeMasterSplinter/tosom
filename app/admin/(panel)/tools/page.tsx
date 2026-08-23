@@ -36,23 +36,25 @@ function ToolButton({
   title,
   description,
   available = false,
+  loading = false,
   onClick,
 }: {
   title: string;
   description: string;
   available?: boolean;
+  loading?: boolean;
   onClick?: () => void;
 }) {
   return (
     <button
-      onClick={available ? onClick : undefined}
-      disabled={!available}
+      onClick={available && !loading ? onClick : undefined}
+      disabled={!available || loading}
       className="w-full text-left px-4 py-3 rounded-xl transition-all duration-200 group"
       style={{
         background: available ? 'rgba(212,175,55,0.08)' : 'rgba(255,255,255,0.02)',
         border: `1px solid ${available ? 'rgba(212,175,55,0.2)' : 'rgba(255,255,255,0.06)'}`,
-        cursor: available ? 'pointer' : 'not-allowed',
-        opacity: available ? 1 : 0.6,
+        cursor: available && !loading ? 'pointer' : 'not-allowed',
+        opacity: available && !loading ? 1 : 0.6,
       }}
     >
       <div className="flex items-center gap-2 mb-2">
@@ -64,7 +66,7 @@ function ToolButton({
           className="text-sm font-medium"
           style={{ color: available ? '#D4AF37' : 'rgba(255,255,255,0.4)' }}
         >
-          {title}
+          {loading ? 'Kjører …' : title}
         </span>
       </div>
       <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.35)' }}>
@@ -136,6 +138,8 @@ export default function AdminToolsPage() {
   const [logs, setLogs] = useState<SystemLog[] | null>(null);
   const [stats, setStats] = useState<LogStats | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [matchRunning, setMatchRunning] = useState(false);
+  const [matchResult, setMatchResult] = useState<string | null>(null);
 
   const fetchLogs = useCallback(() => {
     setError(null);
@@ -151,6 +155,26 @@ export default function AdminToolsPage() {
   useEffect(() => {
     fetchLogs();
   }, [fetchLogs]);
+
+  /** B-3: Kjør matcherunde manuelt */
+  const runMatching = async () => {
+    setMatchRunning(true);
+    setMatchResult(null);
+    try {
+      const res = await fetch('/api/admin/run-matching', { method: 'POST' });
+      const data = await res.json();
+      if (res.ok) {
+        setMatchResult(data.message ?? 'Matcherunde fullført');
+      } else {
+        setMatchResult(`Feil: ${data.error ?? 'Ukjent feil'}`);
+      }
+    } catch {
+      setMatchResult('Feil: Kunne ikke nå serveren');
+    } finally {
+      setMatchRunning(false);
+      fetchLogs();
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -197,8 +221,11 @@ export default function AdminToolsPage() {
             description="Start reise på nytt (dag 1/30)"
           />
           <ToolButton
-            title="Kjør cron manuelt"
-            description="Trigg journey-oppdatering og matching"
+            title="Kjør matching manuelt"
+            description="Trigg matcherunden nå (i stedet for lørdag natt)"
+            available
+            loading={matchRunning}
+            onClick={runMatching}
           />
           <ToolButton
             title="Generer testdata"
@@ -210,6 +237,20 @@ export default function AdminToolsPage() {
           />
         </div>
       </div>
+
+      {/* Match-resultat */}
+      {matchResult && (
+        <div
+          className="rounded-xl px-4 py-3 text-sm"
+          style={{
+            background: matchResult.startsWith('Feil') ? 'rgba(255,77,77,0.08)' : 'rgba(212,175,55,0.06)',
+            border: `1px solid ${matchResult.startsWith('Feil') ? 'rgba(255,77,77,0.2)' : 'rgba(212,175,55,0.15)'}`,
+            color: matchResult.startsWith('Feil') ? '#FF4D4D' : 'rgba(255,255,255,0.7)',
+          }}
+        >
+          {matchResult}
+        </div>
+      )}
 
       {/* Systemlogg */}
       <div

@@ -1,14 +1,14 @@
 {
   "version": "1.0",
-  "updatedAt": "2026-08-21",
-  "commit": "d1cae09",
+  "updatedAt": "2026-08-23",
+  "commit": "1292096",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v1.0.md",
   "health": {
     "tests": "231/231",
     "typecheck": "0 errors",
     "productionBuild": "verified"
   },
-  "currentPhaseId": "beta-klar-alle-runder-ferdig",
+  "currentPhaseId": "apen-beta-test",
   "blockers": [
     {
       "id": "B-1",
@@ -27,9 +27,22 @@
     },
     {
       "id": "B-2",
-      "title": "Vipps død kode",
-      "status": "closed"
+      "title": "Vipps død kode — CTA-er pekte til /api/auth/vipps (404)",
+      "status": "closed",
+      "note": "Løst i BETA-TEST-v1.0 B-1: CTA-er peker nå til /login. /register redirecter til /login. Innlogging via e-post + passord med auto-registrering (lib/auth/config.ts)."
+    },
+    {
+      "id": "B-5",
+      "title": "E-post rørlegging — EMAIL_SERVER_* vs SMTP_*",
+      "status": "closed",
+      "note": "Løst i BETA-TEST-v1.0 B-2: lib/email/index.ts leser EMAIL_SERVER_*, sendAlert koblet til, match-e-post bak BETA_MATCH_EMAIL-flagg (standard av, invariant I-4)."
+    },
+    {
+      "id": "B-6",
+      "title": "Matching kun lørdag natt — kan ikke teste",
+      "status": "closed",
+      "note": "Løst i BETA-TEST-v1.0 B-3: /admin/tools har nå «Kjør matching manuelt»-knapp via /api/admin/run-matching. vercel.json redusert fra 3 til 2 cron-jobber (Hobby-plan)."
     }
   ],
-  "nextAction": "BETA-KLAR — alle 4 runder i SUPER-MASTERPLAN §15 ferdig. D-1…D-7 (admin-panelet): closed i d1cae09 (K-1…K-9: ekte chat/logg-data, actionstripe, alle ruter lenket, (panel)-rutegruppe, SVG-ikoner). Alle blokkere B-1→B-4: closed. Runde 3 (beta-drift) + Runde 4 (opprydding G-1/G-2/G-3/G-5): closed. Gjenstår før første invitasjon (kun manuelt, ingen kode): F-6 (.env→passordhåndterer) + F-7 (sende invitasjoner, 10 adresser i /admin/invites). Følg-opp (valgfritt, ikke blokkerende): lastLoginAt (mangler i schema), endedAt-index (plass), lib/email.ts (stub — e-postvarsling ikke implementert)."
+  "nextAction": "ÅPEN BETA — følg docs/BETA-TEST-v1.0.md. B-1→B-4 fullført (kode). B-5 (dokumenter) fullført. Gjenstår før første tester: manuell sjekkliste i §10 (env i Vercel, MAINTENANCE_MODE av, DEV_LOGIN_ENABLED ikke true i prod, admin-passord, support@tosom.no videresending, noreplay@tosom.no autosvar). Match-e-post første runde: BETA_MATCH_EMAIL ikke satt (av) — mål organisk oppdagelse av match (I-4-data)."
 }

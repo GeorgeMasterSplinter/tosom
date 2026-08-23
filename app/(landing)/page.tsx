@@ -329,13 +329,13 @@ export default function LandingPage() {
 
             </p>
 
-            {/* Hoved-CTA: Logg inn med Vipps */}
+            {/* Hoved-CTA: Logg inn */}
             <ToSomButton
-              href="/api/auth/vipps"
+              href="/login"
               variant="gold"
               size="xl"
             >
-              Logg inn med Vipps
+              Logg inn
             </ToSomButton>
 
             <p

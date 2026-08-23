@@ -47,32 +47,18 @@ async function sendWebhook(payload: AlertPayload, url: string): Promise<boolean>
   }
 }
 
-/** Send alert til e-post via nodemailer (hvis konfigurert) */
+/** Send alert til e-post via lib/email (leser EMAIL_SERVER_*) */
 async function sendEmail(payload: AlertPayload, to: string): Promise<boolean> {
   try {
-    // Dynamisk import for å unngå build-feil hvis nodemailer ikke er installert
-    const nodemailer = await import('nodemailer').catch(() => null);
-    if (!nodemailer) return false;
-
-    const smtpHost = process.env.SMTP_HOST;
-    const smtpUser = process.env.SMTP_USER;
-    const smtpPass = process.env.SMTP_PASS;
-    if (!smtpHost || !smtpUser || !smtpPass) return false;
-
-    const transporter = nodemailer.createTransport({
-      host: smtpHost,
-      port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: process.env.SMTP_SECURE === 'true',
-      auth: { user: smtpUser, pass: smtpPass },
-    });
-
-    await transporter.sendMail({
-      from: smtpUser,
+    const { sendAlertEmail } = await import('@/lib/email');
+    const result = await sendAlertEmail(
       to,
-      subject: `[ToSom ${payload.severity.toUpperCase()}] ${payload.title}`,
-      text: `${payload.title}\n\n${payload.detail}\n\nTid: ${payload.timestamp}`,
-    });
-    return true;
+      payload.severity,
+      payload.title,
+      payload.detail,
+      payload.timestamp
+    );
+    return result.success;
   } catch {
     return false;
   }

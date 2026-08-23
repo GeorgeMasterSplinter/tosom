@@ -204,14 +204,14 @@ function SystemCard({ children }: { children: React.ReactNode }) {
    TIMESTAMP — Tidløyper v2
    ═══════════════════════════════════════ */
 
-function Timestamp({ value }: { value: string }) {
+function Timestamp({ value, color }: { value: string; color?: string }) {
   try {
     const date = new Date(value);
     if (isNaN(date.getTime())) return null;
     return (
       <p
         className="text-[10px] mt-1.5 text-right tracking-wide"
-        style={{ color: G.textMuted }}
+        style={{ color: color || G.textMuted }}
       >
         {date.toLocaleTimeString("no", { hour: "2-digit", minute: "2-digit" })}
       </p>
@@ -265,6 +265,9 @@ function Avatar({ senderInfo }: { senderInfo?: { name: string; imageUrl?: string
 export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
   const { id, sender, type, content, metadata, resonanceLevel, isMilestone, isBliKjent } = message;
   const { moodTheme } = useChat();
+  const tPrimary = moodTheme.textPrimary;
+  const tSecondary = moodTheme.textSecondary;
+  const tMuted = moodTheme.textMuted;
   const isMe = sender === "me";
   const isSystem = sender === "system";
   
@@ -354,7 +357,7 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
                 )}
                 <p
                   className="text-[14px] leading-relaxed"
-                  style={{ color: 'rgba(255,255,255,0.65)' }}
+                  style={{ color: tSecondary }}
                 >
                   {content}
                 </p>
@@ -447,7 +450,7 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
             <p
               className="leading-relaxed relative z-10"
               style={{
-                color: isMe ? G.textPrimary : 'rgba(255,255,255,0.8)',
+                color: tPrimary,
                 whiteSpace: "pre-wrap",
                 wordBreak: "break-word",
                 fontSize: "15px",
@@ -458,7 +461,7 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
             </p>
 
             {/* Timestamp */}
-            {metadata?.timestamp && <Timestamp value={String(metadata.timestamp)} />}
+            {metadata?.timestamp && <Timestamp value={String(metadata.timestamp)} color={tMuted} />}
           </div>
 
           {/* Resonance-indikator for "me" med høg resonance */}
@@ -475,7 +478,7 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
               />
               <span 
                 className="text-[9px] font-medium tracking-wider uppercase"
-                style={{ color: G.textMuted }}
+                style={{ color: tMuted }}
               >
                 Resonans
               </span>
@@ -486,7 +489,7 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
           {!isMe && metadata?.senderInfo && sender === "partner" && (
             <p
               className="mt-1.5 ml-2 text-[11px] font-medium tracking-wide"
-              style={{ color: G.textMuted }}
+              style={{ color: tMuted }}
             >
               {metadata.senderInfo.name}
             </p>

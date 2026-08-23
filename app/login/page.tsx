@@ -164,6 +164,49 @@ export default function LoginPage() {
           </button>
         </form>
 
+        {/* Beta-infotekst */}
+        <div
+          className="w-full mt-8 space-y-2"
+          style={{
+            background: "rgba(212,175,55,0.04)",
+            border: "1px solid rgba(212,175,55,0.12)",
+            borderRadius: "16px",
+            padding: "20px",
+          }}
+        >
+          <p
+            style={{
+              fontSize: "15px",
+              lineHeight: "1.7",
+              color: "rgba(255,255,255,0.6)",
+              margin: 0,
+            }}
+          >
+            Tosom er i åpen test. Gratis. Vi stresstester systemet — trykk på alt, prøv å knekke det.
+          </p>
+          <p
+            style={{
+              fontSize: "15px",
+              lineHeight: "1.7",
+              color: "rgba(255,255,255,0.6)",
+              margin: 0,
+            }}
+          >
+            Test gjerne å rapportere, blokkere og avslutte reisen tidlig. Tilbakemelding:{" "}
+            <span style={{ color: "#D4AF37" }}>support@tosom.no</span>
+          </p>
+          <p
+            style={{
+              fontSize: "14px",
+              lineHeight: "1.7",
+              color: "rgba(255,255,255,0.4)",
+              margin: 0,
+            }}
+          >
+            Tosom er for voksne over 21 år.
+          </p>
+        </div>
+
         {/* Error */}
         {status === "error" && (
           <p className="text-center mt-4 text-sm" style={{ color: "rgba(255,80,80,0.8)" }}>

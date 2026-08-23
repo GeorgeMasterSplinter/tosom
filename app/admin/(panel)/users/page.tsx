@@ -15,6 +15,13 @@ interface UserItem {
   email: string;
   name: string | null;
   role: string;
+  verified: boolean;
+  bannedAt: string | null;
+  deletedAt: string | null;
+  onboardingStep: number;
+  onboardingComplete: boolean;
+  journeyState: string;
+  activeMatches: number;
   createdAt: string;
 }
 
@@ -167,8 +174,9 @@ export default function AdminUsersPage() {
         className="rounded-2xl overflow-hidden"
         style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}
       >
-        <div className="grid grid-cols-[1fr_auto] items-center px-4 py-3" style={{ background: 'rgba(255,255,255,0.02)' }}>
+        <div className="grid grid-cols-[1fr_auto_auto] items-center px-4 py-3 gap-3" style={{ background: 'rgba(255,255,255,0.02)' }}>
           <span className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>Epost · Registrert</span>
+          <span className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>Status</span>
           <span className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>Handling</span>
         </div>
 
@@ -185,32 +193,62 @@ export default function AdminUsersPage() {
         )}
 
         {!loading &&
-          users.map((u) => (
-            <div
-              key={u.id}
-              className="grid grid-cols-[1fr_auto] items-center gap-3 px-4 py-3"
-              style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}
-            >
-              <div className="min-w-0">
-                <p className="text-sm break-all" style={{ color: 'rgba(255,255,255,0.85)' }}>
-                  {u.email}
-                </p>
-                <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                  {new Date(u.createdAt).toLocaleDateString('nb-NO')}
-                  {u.role === 'ADMIN' ? ' · Admin' : ''}
-                </p>
-              </div>
-              <button
-                onClick={() => setConfirmEmail(u.email)}
-                disabled={u.role === 'ADMIN' || deleting !== null}
-                title={u.role === 'ADMIN' ? 'Kan ikke slette en admin' : 'Slett konto'}
-                className="px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors disabled:opacity-30"
-                style={{ background: 'rgba(239,68,68,0.1)', color: '#EF4444', border: '1px solid rgba(239,68,68,0.25)' }}
+          users.map((u) => {
+            // Status-farger
+            const journeyColor =
+              u.journeyState === 'MATCHED' ? '#34D399'
+              : u.journeyState === 'QUEUED' ? '#D4AF37'
+              : u.journeyState === 'IN_JOURNEY' ? '#60A5FA'
+              : 'rgba(255,255,255,0.35)';
+            const journeyLabel =
+              u.journeyState === 'MATCHED' ? 'Matchet'
+              : u.journeyState === 'QUEUED' ? 'I kø'
+              : u.journeyState === 'IN_JOURNEY' ? 'I reise'
+              : u.journeyState === 'IDLE' ? 'Idle'
+              : u.journeyState;
+
+            return (
+              <div
+                key={u.id}
+                className="grid grid-cols-[1fr_auto_auto] items-center gap-3 px-4 py-3"
+                style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}
               >
-                Slett
-              </button>
-            </div>
-          ))}
+                <div className="min-w-0">
+                  <p className="text-sm break-all" style={{ color: 'rgba(255,255,255,0.85)' }}>
+                    {u.email}
+                  </p>
+                  <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                    {new Date(u.createdAt).toLocaleDateString('nb-NO')}
+                    {u.role === 'ADMIN' ? ' · Admin' : ''}
+                    {u.bannedAt ? ' · Utestengt' : ''}
+                    {u.deletedAt ? ' · Slettet' : ''}
+                  </p>
+                </div>
+                <div className="flex flex-col items-end gap-1">
+                  <span
+                    className="text-[10px] font-mono px-2 py-0.5 rounded-full whitespace-nowrap"
+                    style={{ background: 'rgba(255,255,255,0.04)', color: journeyColor }}
+                  >
+                    {journeyLabel}
+                  </span>
+                  <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                    {u.onboardingComplete
+                      ? 'Onboarding fullført'
+                      : `Onboarding steg ${u.onboardingStep}`}
+                  </span>
+                </div>
+                <button
+                  onClick={() => setConfirmEmail(u.email)}
+                  disabled={u.role === 'ADMIN' || deleting !== null}
+                  title={u.role === 'ADMIN' ? 'Kan ikke slette en admin' : 'Slett konto'}
+                  className="px-3 py-1.5 rounded-lg text-[11px] font-medium transition-colors disabled:opacity-30"
+                  style={{ background: 'rgba(239,68,68,0.1)', color: '#EF4444', border: '1px solid rgba(239,68,68,0.25)' }}
+                >
+                  Slett
+                </button>
+              </div>
+            );
+          })}
       </div>
 
       {/* Paginering */}

@@ -91,6 +91,7 @@ export default function Step3Tilknytning({ data, onChange, onBack, onNext }: Pro
             text={item.text}
             value={typeof data[item.id] === 'number' ? (data[item.id] as number) : null}
             onChange={(v) => onChange(item.id, v)}
+            accentColor={OB.section.personality}
           />
         ))}
       </div>

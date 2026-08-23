@@ -1,11 +1,12 @@
 /**
  * Tosom — Onboarding steg 1: Start
  * 
- * Redirect til /register som hovedinngang.
+ * BETA: Redirect til /login som hovedinngang.
+ * (Registrering skjer via auto-registrering på /login.)
  */
 
 import { redirect } from "next/navigation";
 
 export default function Page() {
-  redirect("/register");
+  redirect("/login");
 }

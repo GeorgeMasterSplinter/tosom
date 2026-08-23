@@ -78,6 +78,17 @@ export const features = {
    * anonymiserer ved 12 mnd via lib/privacy/anonymize.ts.
    */
   enableRetention: process.env.RETENTION_ENABLED === 'true',
+
+  /**
+   * BETA_MATCH_EMAIL — match-varsel på e-post etter matcherunde.
+   * Default: AV (invariant I-4: «ingen push/e-post/SMS ved match»).
+   *
+   * Beta tester hypotesen: første runde uten (måler hvor mange som
+   * oppdager matchen selv innen 24/48 t), deretter på for resten av
+   * testen slik at reisen faktisk gjennomføres.
+   * Se docs/BETA-TEST-v1.0.md §4.
+   */
+  betaMatchEmail: process.env.BETA_MATCH_EMAIL === 'true',
 };
 
 /** Sjekk om betaling er aktivert */
@@ -101,3 +112,10 @@ export const isBetaInviteMode = (): boolean => features.betaInviteMode;
  * det kan slås til/av uten restart og testes isolert.
  */
 export const isRetentionEnabled = (): boolean => process.env.RETENTION_ENABLED === 'true';
+
+/**
+ * BETA: Sjekk om match-varsel på e-post er aktiv.
+ * Leses LIVE fra env slik at flagget kan slås på/av uten deploy —
+ * kun en env-oppdatering i Vercel-dashboardet.
+ */
+export const isBetaMatchEmailEnabled = (): boolean => process.env.BETA_MATCH_EMAIL === 'true';

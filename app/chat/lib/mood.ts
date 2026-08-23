@@ -4,7 +4,7 @@
  * Hver mood har fullt tema: container-bg, boblar, input, aksenter.
  */
 
-export type MoodId = "calm" | "warm" | "deep" | "gentle" | "joyful" | "romantic" | "cozy" | "dreamy" | "playful";
+export type MoodId = "calm" | "warm" | "deep" | "gentle" | "joyful" | "romantic" | "cozy" | "dreamy" | "playful" | "cotton" | "flammus" | "sage";
 
 export interface MoodTheme {
   id: MoodId;
@@ -43,9 +43,14 @@ export interface MoodTheme {
   /** Typing-indikator */
   typingBg: string;
   typingDot: string;
+
+  /** Tekstfarger (tilpasset lys/mørk bakgrunn) */
+  textPrimary: string;
+  textSecondary: string;
+  textMuted: string;
 }
 
-export const moodOrder: MoodId[] = ["calm", "warm", "deep", "gentle", "joyful", "romantic", "cozy", "dreamy", "playful"];
+export const moodOrder: MoodId[] = ["calm", "warm", "deep", "gentle", "joyful", "romantic", "cozy", "dreamy", "playful", "cotton", "flammus", "sage"];
 
 export const moodThemes: Record<MoodId, MoodTheme> = {
   calm: {
@@ -71,6 +76,9 @@ export const moodThemes: Record<MoodId, MoodTheme> = {
     sendBtnEnd: "#60A5FA",
     typingBg: "rgba(30,64,175,0.2)",
     typingDot: "rgba(96,165,250,0.7)",
+    textPrimary: "rgba(255,255,255,0.95)",
+    textSecondary: "rgba(255,255,255,0.6)",
+    textMuted: "rgba(255,255,255,0.4)",
   },
 
   warm: {
@@ -96,6 +104,9 @@ export const moodThemes: Record<MoodId, MoodTheme> = {
     sendBtnEnd: "#E8C766",
     typingBg: "rgba(212,175,55,0.1)",
     typingDot: "rgba(212,175,55,0.7)",
+    textPrimary: "rgba(255,255,255,0.95)",
+    textSecondary: "rgba(255,255,255,0.6)",
+    textMuted: "rgba(255,255,255,0.4)",
   },
 
   deep: {
@@ -121,6 +132,9 @@ export const moodThemes: Record<MoodId, MoodTheme> = {
     sendBtnEnd: "#A78BFA",
     typingBg: "rgba(88,28,135,0.2)",
     typingDot: "rgba(167,139,250,0.7)",
+    textPrimary: "rgba(255,255,255,0.95)",
+    textSecondary: "rgba(255,255,255,0.6)",
+    textMuted: "rgba(255,255,255,0.4)",
   },
 
   gentle: {
@@ -146,6 +160,9 @@ export const moodThemes: Record<MoodId, MoodTheme> = {
     sendBtnEnd: "#34D399",
     typingBg: "rgba(16,185,129,0.1)",
     typingDot: "rgba(52,211,153,0.7)",
+    textPrimary: "rgba(255,255,255,0.95)",
+    textSecondary: "rgba(255,255,255,0.6)",
+    textMuted: "rgba(255,255,255,0.4)",
   },
 
   joyful: {
@@ -171,6 +188,9 @@ export const moodThemes: Record<MoodId, MoodTheme> = {
     sendBtnEnd: "#FBBF24",
     typingBg: "rgba(245,158,11,0.1)",
     typingDot: "rgba(251,191,36,0.7)",
+    textPrimary: "rgba(255,255,255,0.95)",
+    textSecondary: "rgba(255,255,255,0.6)",
+    textMuted: "rgba(255,255,255,0.4)",
   },
 
   romantic: {
@@ -196,6 +216,9 @@ export const moodThemes: Record<MoodId, MoodTheme> = {
     sendBtnEnd: "#FB7185",
     typingBg: "rgba(244,63,94,0.1)",
     typingDot: "rgba(251,113,133,0.7)",
+    textPrimary: "rgba(255,255,255,0.95)",
+    textSecondary: "rgba(255,255,255,0.6)",
+    textMuted: "rgba(255,255,255,0.4)",
   },
 
   cozy: {
@@ -221,6 +244,9 @@ export const moodThemes: Record<MoodId, MoodTheme> = {
     sendBtnEnd: "#E07A2F",
     typingBg: "rgba(194,87,11,0.1)",
     typingDot: "rgba(224,122,47,0.7)",
+    textPrimary: "rgba(255,255,255,0.95)",
+    textSecondary: "rgba(255,255,255,0.6)",
+    textMuted: "rgba(255,255,255,0.4)",
   },
 
   dreamy: {
@@ -246,6 +272,9 @@ export const moodThemes: Record<MoodId, MoodTheme> = {
     sendBtnEnd: "#B3BFF8",
     typingBg: "rgba(147,163,248,0.1)",
     typingDot: "rgba(179,191,248,0.7)",
+    textPrimary: "rgba(255,255,255,0.95)",
+    textSecondary: "rgba(255,255,255,0.6)",
+    textMuted: "rgba(255,255,255,0.4)",
   },
 
   playful: {
@@ -271,6 +300,93 @@ export const moodThemes: Record<MoodId, MoodTheme> = {
     sendBtnEnd: "#22D3EE",
     typingBg: "rgba(6,182,212,0.1)",
     typingDot: "rgba(34,211,238,0.7)",
+    textPrimary: "rgba(255,255,255,0.95)",
+    textSecondary: "rgba(255,255,255,0.6)",
+    textMuted: "rgba(255,255,255,0.4)",
+  },
+
+  cotton: {
+    id: "cotton",
+    name: "Cotton",
+    emoji: "☁️",
+    containerBg: "linear-gradient(180deg, #F8F6F2 0%, #F0EDE8 100%)",
+    bubbleMeStart: "rgba(255,255,255,0.85)",
+    bubbleMeEnd: "rgba(255,255,255,0.65)",
+    bubbleMeBorder: "rgba(0,0,0,0.08)",
+    bubbleMeGlow: "rgba(0,0,0,0.04)",
+    bubblePartnerBg: "rgba(255,255,255,0.55)",
+    bubblePartnerBorder: "rgba(0,0,0,0.06)",
+    inputBorder: "rgba(0,0,0,0.1)",
+    inputGlow: "rgba(0,0,0,0.04)",
+    inputFocusBg: "rgba(255,255,255,0.7)",
+    accent: "#8C8278",
+    accentLight: "#A69B90",
+    accentMuted: "rgba(140,130,120,0.3)",
+    accentSoft: "rgba(140,130,120,0.08)",
+    accentGlow: "rgba(140,130,120,0.15)",
+    sendBtnStart: "#8C8278",
+    sendBtnEnd: "#A69B90",
+    typingBg: "rgba(140,130,120,0.1)",
+    typingDot: "rgba(140,130,120,0.6)",
+    textPrimary: "rgba(26,26,36,0.92)",
+    textSecondary: "rgba(26,26,36,0.55)",
+    textMuted: "rgba(26,26,36,0.35)",
+  },
+
+  flammus: {
+    id: "flammus",
+    name: "Flammus",
+    emoji: "🖤",
+    containerBg: "linear-gradient(180deg, #000000 0%, #0A0A0A 100%)",
+    bubbleMeStart: "rgba(255,255,255,0.12)",
+    bubbleMeEnd: "rgba(255,255,255,0.04)",
+    bubbleMeBorder: "rgba(255,255,255,0.15)",
+    bubbleMeGlow: "rgba(255,255,255,0.06)",
+    bubblePartnerBg: "rgba(255,255,255,0.06)",
+    bubblePartnerBorder: "rgba(255,255,255,0.08)",
+    inputBorder: "rgba(255,255,255,0.12)",
+    inputGlow: "rgba(255,255,255,0.05)",
+    inputFocusBg: "rgba(255,255,255,0.03)",
+    accent: "#8A8A8A",
+    accentLight: "#B0B0B0",
+    accentMuted: "rgba(138,138,138,0.3)",
+    accentSoft: "rgba(138,138,138,0.08)",
+    accentGlow: "rgba(138,138,138,0.2)",
+    sendBtnStart: "#8A8A8A",
+    sendBtnEnd: "#B0B0B0",
+    typingBg: "rgba(138,138,138,0.1)",
+    typingDot: "rgba(176,176,176,0.6)",
+    textPrimary: "rgba(255,255,255,0.92)",
+    textSecondary: "rgba(255,255,255,0.55)",
+    textMuted: "rgba(255,255,255,0.3)",
+  },
+
+  sage: {
+    id: "sage",
+    name: "Sage",
+    emoji: "🌾",
+    containerBg: "radial-gradient(ellipse at 50% 20%, rgba(120,140,120,0.15) 0%, rgba(10,14,10,0.95) 55%), linear-gradient(180deg, #0C120C 0%, #0F160F 100%)",
+    bubbleMeStart: "rgba(120,140,120,0.25)",
+    bubbleMeEnd: "rgba(160,180,155,0.08)",
+    bubbleMeBorder: "rgba(140,160,140,0.35)",
+    bubbleMeGlow: "rgba(140,160,140,0.15)",
+    bubblePartnerBg: "rgba(12,20,12,0.6)",
+    bubblePartnerBorder: "rgba(140,160,140,0.12)",
+    inputBorder: "rgba(140,160,140,0.3)",
+    inputGlow: "rgba(140,160,140,0.1)",
+    inputFocusBg: "rgba(120,140,120,0.06)",
+    accent: "#8FA68F",
+    accentLight: "#A8C4A0",
+    accentMuted: "rgba(143,166,143,0.25)",
+    accentSoft: "rgba(143,166,143,0.08)",
+    accentGlow: "rgba(143,166,143,0.3)",
+    sendBtnStart: "#8FA68F",
+    sendBtnEnd: "#A8C4A0",
+    typingBg: "rgba(120,140,120,0.1)",
+    typingDot: "rgba(168,196,160,0.6)",
+    textPrimary: "rgba(255,255,255,0.95)",
+    textSecondary: "rgba(255,255,255,0.6)",
+    textMuted: "rgba(255,255,255,0.4)",
   },
 };
 

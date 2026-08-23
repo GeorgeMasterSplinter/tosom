@@ -91,6 +91,11 @@ export async function GET(request: NextRequest) {
       cronLastRun = 'ukjent';
     }
 
+    // ─── Auth-config-kjekk ───
+    // Uavhengig av lib/auth/config: ein feil i auth-modulen skal ikkje
+    // ta ned health-endpoenket. Speilar configen i lib/auth/config.ts.
+    const authConfig = checkAuthConfig();
+
     // Overall status
     const criticalServicesOk = dbStatus === 'connected';
     const allConfigured = Object.values(services).every(
@@ -120,6 +125,7 @@ export async function GET(request: NextRequest) {
         nextVersion,
       },
       services,
+      auth: authConfig,
       cron: {
         lastRun: cronLastRun,
       },
@@ -160,4 +166,51 @@ function formatUptime(seconds: number): string {
   parts.push(`${secs}s`);
 
   return parts.join(' ');
+}
+
+/**
+ * Sjekkar NextAuth miljøkonfig utan å importere auth-modulen.
+ * Offentleg endpoint: rapporterer berre lengd og gyldigheit — aldri
+ * selve secret-verdien. Speilar secret- og trustHost-logikken i
+ * lib/auth/config.ts.
+ */
+function checkAuthConfig() {
+  const problems: string[] = [];
+
+  const rawUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL || '';
+  let urlOk = false;
+  if (!rawUrl) {
+    problems.push('NEXTAUTH_URL mangler');
+  } else {
+    try {
+      new URL(rawUrl);
+      urlOk = true;
+    } catch {
+      problems.push('NEXTAUTH_URL er ikke et gyldig URL (mangler skema som https://?)');
+    }
+  }
+
+  const secret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || '';
+  if (secret.length === 0) {
+    problems.push('AUTH_SECRET/NEXTAUTH_SECRET mangler');
+  } else if (secret.length < 32) {
+    problems.push('Secret er kortere enn 32 tegn');
+  }
+
+  const trustHost =
+    process.env.NODE_ENV === 'production'
+      ? Boolean(process.env.VERCEL_URL || process.env.NEXTAUTH_URL)
+      : true;
+  if (!trustHost) {
+    problems.push('trustHost=false i produksjon (sett VERCEL_URL eller NEXTAUTH_URL)');
+  }
+
+  return {
+    status: problems.length === 0 ? 'ok' : 'error',
+    url: rawUrl || null,
+    urlOk,
+    secretLength: secret.length,
+    trustHost,
+    problems,
+  };
 }

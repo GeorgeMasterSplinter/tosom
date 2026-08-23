@@ -1,8 +1,26 @@
 const path = require('path');
 const { withSentryConfig } = require('@sentry/nextjs');
 
+/**
+ * Env-sanering for URL-variabler.
+ * Fjerner leading/trailing whitespace og kontrolltegn (inkl. linjeskift) som kan
+ * følge med ved innliming i miljøvariabler. next-auth/react kjører
+ * `new URL(process.env.NEXTAUTH_URL)` ved modulinit; en skitten verdi gir
+ * "TypeError: Invalid URL" og feiler statisk generering under `next build`.
+ */
+function sanitizeUrlEnv(value) {
+  if (typeof value !== 'string') return value;
+  return value.trim().replace(/[\u0000-\u001f\u007f]/g, '');
+}
+
+const NEXTAUTH_URL = sanitizeUrlEnv(process.env.NEXTAUTH_URL);
+const NEXTAUTH_URL_INTERNAL = sanitizeUrlEnv(process.env.NEXTAUTH_URL_INTERNAL);
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Hardening: inline rensede verdier slik at også klient/modulinit-kode får ren URL
+  ...(NEXTAUTH_URL ? { env: { NEXTAUTH_URL } } : {}),
+  ...(NEXTAUTH_URL_INTERNAL ? { env: { NEXTAUTH_URL_INTERNAL } } : {}),
   webpack: (config) => {
     config.resolve.alias['@'] = path.join(__dirname);
     return config;

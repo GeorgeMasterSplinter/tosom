@@ -3,7 +3,7 @@
 **Dato:** 2026-08-22
 **Commit:** `6041525`
 **Status:** Gjennomføringsdokument. Klart for ACT.
-**Kanonisk kilde:** `TOSOM-SUPER-MASTERPLAN-v1.0.md`
+**Kanonisk kilde:** `TOSOM-SUPER-MASTERPLAN-v2.0.md`
 **Lukker:** A-6 i `JURIDISK-GRUNNLAG-v1.0.md`, M-13, og deler av `MATCHING-TUNING-PLAN-v1.0.md`
 **Arbeidsmetode:** `ACT-PIPELINE-v1.0.md` — ett steg om gangen, patch-format, verifisering mellom hver.
 

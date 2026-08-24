@@ -3,7 +3,7 @@
 **Dato:** 2026-08-21
 **Commit:** `0cd8007`
 **Status:** GJENNOMFØRT. S-1 … S-10 alle gjennomført (S-10: død kode arkivert til `archive/`, `FadeIn` merket erstattet av `Reveal`).
-**Kanonisk kilde:** `TOSOM-SUPER-MASTERPLAN-v1.0.md`
+**Kanonisk kilde:** `TOSOM-SUPER-MASTERPLAN-v2.0.md`
 **Arbeidsmetode:** `ACT-PIPELINE-v1.0.md` — ett steg om gangen, patch-format, verifisering mellom hver.
 
 > **Gjennomført 2026-08-21.** Runde 1–5 utført med verifisering mellom hver (tsc + jest 231/231 + build). Visuell verifisering i nettleser anbefales som siste steg (resonansfeltets styrke, parallakse-dybde, kort-stagger).
@@ -973,4 +973,4 @@ Da tenker ikke besøkende «for en fin side». Da tenker de ingenting — de bar
 
 ---
 
-*Følgedokumenter: `TOSOM-BETA-DRIFTSPLAN-v1.0.md`, `ADMIN-KOMMANDOPANEL-v1.0.md`*
+*Følgedokumenter: `TOSOM-BETA-DRIFTSPLAN-v1.1.md`, `archive/ferdig/ADMIN-KOMMANDOPANEL-v1.0.md`*

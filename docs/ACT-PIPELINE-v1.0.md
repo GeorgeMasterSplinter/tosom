@@ -43,7 +43,7 @@ Ved motstrid gjelder øverste kilde:
 |---|---|---|
 | 1 | **Koden** | Hva systemet faktisk gjør |
 | 2 | `ai/system_prompt.md` | Identitet, filosofi, språk, design |
-| 3 | `TOSOM-SUPER-MASTERPLAN-v1.0.md` | Systembeskrivelse, invarianter |
+| 3 | `TOSOM-SUPER-MASTERPLAN-v2.0.md` | Systembeskrivelse, invarianter |
 | 4 | `Splinter.md` | Arbeidsmetode, datamodell-fasit |
 | 5 | Spesialplanene | Sikkerhet, tuning, beta, docs |
 | 6 | `docs/archive/` | Historikk. **Aldri normativ.** |
@@ -204,7 +204,7 @@ Før hver patch: sjekk om noen berøres.
   "version": "1.0",
   "updatedAt": "2026-08-19",
   "commit": "bc1ef13",
-  "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v1.0.md",
+  "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
     "tests": "157/157",
     "typecheck": "0 errors",
@@ -256,7 +256,7 @@ Invitasjonsport → M-9 → S-17 → S-15 → M-4
 
 **Runde 4 — Opprydding**
 Mål: én sannhet per emne.
-M-7 → M-8 → M-2 → DOCS-RESTRUCTURE
+M-7 → M-8 → M-2 → DOCS-RESTRUCTURE (ferdig — i archive/ferdig/)
 
 ---
 

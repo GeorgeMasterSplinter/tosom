@@ -16,6 +16,7 @@ Kort inngangsport. Alt som ligger på toppnivå her **gjelder nå**.
 |----------|----------|
 | **[BETA-TEST-v1.0.md](BETA-TEST-v1.0.md)** | **Åpen beta med ekte brukere:** fri tilgang (e-post + passord), faser, målinger, sjekkliste. Gjelder til Vipps er på plass. |
 | **[TOSOM-BETA-DRIFTSPLAN-v1.1.md](TOSOM-BETA-DRIFTSPLAN-v1.1.md)** | Driften under beta: rytmen, tersklene, suksess- og avbruddskriterier. |
+| **[TOSOM-BETA-VURDERING-v1.0.md](TOSOM-BETA-VURDERING-v1.0.md)** | Lanseringsvurdering 2026-08-24: dok-audit, klarhet mot koden, anbefalinger, åpne poster. |
 
 ## 3. Aktive planer
 

@@ -2,7 +2,7 @@
 
 **Dato:** 2026-08-19
 **Commit:** `bc1ef13`
-**Grunnlag:** `TOSOM-PLATTFORMDIAGNOSE-v2.0.md`
+**Grunnlag:** `archive/snapshots/TOSOM-PLATTFORMDIAGNOSE-v2.0.md`
 **Formål:** Gjøre matching-motoren lanseringsklar for lukket beta.
 
 ---

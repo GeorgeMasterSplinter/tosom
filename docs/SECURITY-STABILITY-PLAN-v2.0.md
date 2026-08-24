@@ -3,7 +3,7 @@
 **Dato:** 2026-08-19
 **Commit:** `bc1ef13`
 **Erstatter:** `SECURITY-STABILITY-PLAN-v1.md`
-**Grunnlag:** `TOSOM-PLATTFORMDIAGNOSE-v2.0.md`
+**Grunnlag:** `archive/snapshots/TOSOM-PLATTFORMDIAGNOSE-v2.0.md`
 
 ---
 
@@ -166,7 +166,7 @@ Se diagnose B-3. `endJourney.ts:211-213` sletter begge kontoer permanent. `avslu
 
 **Dette er både en GDPR-sak og en tillitssak.** Vi sletter brukerens data etter å ha lovet dem en kopi.
 
-**Tiltak:** Bygg eksporten før beta. Detaljer i BETA-ACCESS §6.
+**Tiltak:** Bygg eksporten før beta. Detaljer i `archive/erstattet/BETA-ACCESS-PLAN-v1.0.md` §6. (Lukket — B-3, se SUPER-MASTERPLAN §14.)
 
 **Ufravikelig krav:** Slettingen skal ikke kunne fullføres uten at eksporten er tilbudt og enten lastet ned eller aktivt avvist.
 

@@ -77,7 +77,7 @@ Beta betyr at ekte mennesker legger ekte historier inn i systemet. Fra den dagen
 Tosom har ingen supportavdeling. Det finnes én person som skal se hele plattformen: George. Da må plattformen kunne ses fra ett sted.
 
 ### 🟢 IMPLEMENTERT — D-1 … D-7 alle lukket
-De sju avvikene i admin-panelet (kartlagt i `ADMIN-KOMMANDOPANEL-v1.0.md`) er alle lukket i commit `d1cae09` (K-1 … K-9):
+De sju avvikene i admin-panelet (kartlagt i `archive/ferdig/ADMIN-KOMMANDOPANEL-v1.0.md`) er alle lukket i commit `d1cae09` (K-1 … K-9):
 
 | ID | Avvik | Status |
 |---|---|---|
@@ -250,4 +250,4 @@ Deretter: ti mennesker, én lørdag, og tretti dager.
 
 ---
 
-*Neste dokument: `ADMIN-KOMMANDOPANEL-v1.0.md` — gjennomføring av D-1 … D-7.*
+*Neste dokument: `archive/ferdig/ADMIN-KOMMANDOPANEL-v1.0.md` — gjennomføring av D-1 … D-7.*

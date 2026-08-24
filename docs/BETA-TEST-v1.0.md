@@ -70,7 +70,7 @@ I `app/api/auth/` finnes bare `vipps/authorize/` og `vipps/callback/`. Ruten `/a
 
 ### I-4 — «Ingen push/e-post/SMS ved match»
 
-Invarianten står i `TOSOM-SUPER-MASTERPLAN-v1.0.md`, `ACT-PIPELINE-v1.0.md` og `BETA-ACCESS-PLAN-v1.0.md`, og er kodet i `app/api/cron/matching/route.ts` linje 9. Tanken er at matchen skal oppdages av eget initiativ — ikke dyttes på folk. Derfor opprettes en `Notification`-rad, men ingenting sendes ut.
+Invarianten står i `TOSOM-SUPER-MASTERPLAN-v2.0.md` og `ACT-PIPELINE-v1.0.md`, og er kodet i `app/api/cron/matching/route.ts` linje 9. Tanken er at matchen skal oppdages av eget initiativ — ikke dyttes på folk. Derfor opprettes en `Notification`-rad, men ingenting sendes ut.
 
 **Beta er designet for å teste nettopp denne hypotesen.** Fra `docs/archive/act-instruks`:
 

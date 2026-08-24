@@ -3,7 +3,7 @@
 **Dato:** 2026-08-21
 **Commit:** `0d13e42`
 **Status:** Gjennomføringsdokument. Klart for ACT.
-**Kanonisk kilde:** `TOSOM-SUPER-MASTERPLAN-v1.0.md`
+**Kanonisk kilde:** `TOSOM-SUPER-MASTERPLAN-v2.0.md`
 **Arbeidsmetode:** `ACT-PIPELINE-v1.0.md` — ett steg om gangen, patch-format, verifisering mellom hver.
 
 ---
@@ -556,7 +556,7 @@ npx jest --ci --silent
 
 **Fil:** `app/admin/analytics/page.tsx`
 **Runde:** 3
-**Avhenger av:** O-9, og `ADMIN-KOMMANDOPANEL-v1.0.md` K-2
+**Avhenger av:** O-9, og `archive/ferdig/ADMIN-KOMMANDOPANEL-v1.0.md` K-2
 
 ### Innhold
 
@@ -692,4 +692,4 @@ Er alt grønt på kommandopanelet, skal du kunne lukke fanen og gå videre. Det 
 
 ---
 
-*Følgedokumenter: `TOSOM-BETA-DRIFTSPLAN-v1.0.md`, `ADMIN-KOMMANDOPANEL-v1.0.md`, `SECURITY-STABILITY-PLAN-v2.0.md`*
+*Følgedokumenter: `TOSOM-BETA-DRIFTSPLAN-v1.1.md`, `archive/ferdig/ADMIN-KOMMANDOPANEL-v1.0.md`, `SECURITY-STABILITY-PLAN-v2.0.md`*

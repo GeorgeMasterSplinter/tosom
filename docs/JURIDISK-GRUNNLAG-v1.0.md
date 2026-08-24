@@ -4,7 +4,7 @@
 **Commit:** `0cd8007`
 **Status:** Internt arbeidsdokument. Ikke brukervendt.
 **Formål:** Grunnlag for vilkår, personvernerklæring og trygghetsside — og brief til advokat.
-**Kanonisk kilde:** `TOSOM-SUPER-MASTERPLAN-v1.0.md`
+**Kanonisk kilde:** `TOSOM-SUPER-MASTERPLAN-v2.0.md`
 
 ---
 
@@ -403,4 +403,4 @@ Det som gjenstår er å skrive dokumenter som sier sannheten om en plattform som
 
 ---
 
-*Følgedokumenter: `TOSOM-BETA-DRIFTSPLAN-v1.0.md`, `ADMIN-KOMMANDOPANEL-v1.0.md`, `LANDING-SIGNATUR-v1.0.md`*
+*Følgedokumenter: `TOSOM-BETA-DRIFTSPLAN-v1.1.md`, `archive/ferdig/ADMIN-KOMMANDOPANEL-v1.0.md`, `LANDING-SIGNATUR-v1.0.md`*

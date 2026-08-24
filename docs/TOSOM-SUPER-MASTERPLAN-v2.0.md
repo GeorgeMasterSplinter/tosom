@@ -162,21 +162,20 @@ Den som ikke får match, **venter til neste lørdag**. Ingen unntak, ingen haste
 ## 5. unifiedScore
 
 ### 🟢 IMPLEMENTERT
-`lib/matching/unifiedScorer.ts`. Ni dimensjoner, skala 0–100, vekter summerer til **1,00**:
+`lib/matching/unifiedScorer.ts` (`DIMENSION_WEIGHTS`) + `lib/matching/dimensions.ts`. Seks forskningsbaserte dimensjoner (FORSKNINGSMOTOR F-1…F-8), skala 0–100, vekter summerer til **1,00**:
 
-| Dimensjon | Vekt |
-|---|---|
-| `values` — kjerneverdier | **0,25** |
-| `personality` | **0,20** |
-| `relationshipStyle` | **0,15** |
-| `communication` | **0,15** |
-| `futureVision` | **0,10** |
-| `boundaries` | **0,05** |
-| `emotionalNeeds` | **0,05** |
-| `lifeRhythm` | **0,03** |
-| `maturity` | **0,02** |
+| Dimensjon | Vekt | Instrument | Fallback |
+|---|---|---|---|
+| `values` — verdier | **0,25** | PVQ-10 (Pearson-korrelasjon) | ordoverlapp på kjerneverdier |
+| `attachment` — tilknytning | **0,25** | 12 items angst/unnvikelse (stil-matrise) | relasjonsstil-overlap |
+| `personality` — personlighet | **0,15** | BFI-10 (Big Five) | ordoverlapp på personlighet |
+| `communication` — kommunikasjon | **0,15** | 6 items (Gottman) | ordoverlapp + stil-match |
+| `emotionRegulation` — emosjonsregulering | **0,10** | ERQ-6 (reappraisal/undertrykking) | emosjonelle-behov-overlap |
+| `lifeSituation` — livssituasjon | **0,10** | praktiske profildata | — (alltid tilgjengelig) |
 
-Manglende data gir nøytral 50 — motoren straffer ikke tomme felt.
+Hver dimensjon har to lag: **psykometrisk** først (med skårer i profilen), **fallback til ordoverlapp** ved manglende data — ingen bruker blir uten score, og gamle profiler fortsetter å fungere. Manglende data gir nøytral 50.
+
+Full referanse: `reference/matching-dimensions.md`. Terskler for observasjon og kalibrering etter beta: FORSKNINGSMOTOR F-9.
 
 ### Resonansnivåer — én kilde (M-1, løser A-3)
 `lib/matching/resonanceLevel.ts` er kanonisk. `unifiedScorer` importerer nivået fra der — det finnes ikke lenger to terskelsett.

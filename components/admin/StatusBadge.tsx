@@ -9,6 +9,8 @@
 
 'use client';
 
+import { PRICING } from '@/config/legal';
+
 export type Severity = 'ok' | 'warn' | 'critical';
 
 interface StatusBadgeProps {
@@ -121,10 +123,27 @@ export function thresholdSentryErrors(count: number): Severity {
   return 'critical';
 }
 
-/** Gratiskvote: < 8000 = ok, 8000–9500 = warn, > 9500 = critical */
-export function thresholdFreeQuota(usedCount: number): Severity {
-  if (usedCount < 8000) return 'ok';
-  if (usedCount <= 9500) return 'warn';
+/**
+ * Gratiskvote: < 80 % av taket = ok, 80–95 % = warn, > 95 % = critical.
+ * Taket er PRICING.freeUserCap (config/legal.ts) — det samme tallet
+ * vilkårene lover brukeren. Aldri hardkod: panelet må vise samme tall
+ * som produktet håndhever.
+ */
+export function thresholdFreeQuota(usedCount: number, cap: number = PRICING.freeUserCap): Severity {
+  const safeCap = Math.max(1, cap);
+  if (usedCount < safeCap * 0.8) return 'ok';
+  if (usedCount <= safeCap * 0.95) return 'warn';
+  return 'critical';
+}
+
+/**
+ * Reiser som venter på fremrykk (nextDayAt passert, ikke prosessert):
+ * 0 = ok, 1–99 = warn (selvkorrigeres ved neste timekøring), ≥ 100 = critical
+ * (cronen kjører kanskje ikke, eller batchen er for liten).
+ */
+export function thresholdPendingJourneys(count: number): Severity {
+  if (count === 0) return 'ok';
+  if (count < 100) return 'warn';
   return 'critical';
 }
 

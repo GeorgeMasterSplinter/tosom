@@ -13,7 +13,7 @@
     },
     {
       "path": "/api/cron/journey",
-      "schedule": "0 4 * * *"
+      "schedule": "0 * * * *"
     }
   ]
 }

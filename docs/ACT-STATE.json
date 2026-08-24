@@ -4,9 +4,9 @@
   "commit": "26c0b66",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
-    "tests": "311/311 (35 suiter)",
+    "tests": "320/320 (36 suiter)",
     "typecheck": "0 errors",
-    "productionBuild": "verified"
+    "productionBuild": "verified (2026-08-24, et quota-fix + journey-cron kapasitet)"
   },
   "currentPhaseId": "apen-beta-test",
   "blockers": [
@@ -71,6 +71,12 @@
       "id": "DOKS",
       "title": "Dokumentasjonen konsolidert til én sannhet",
       "content": "SUPER-MASTERPLAN v2.0 (kanonisk), core/ (11 uverifiserte overviews) + ferdige/erstattet dokumenter arkivert, BETA-DRIFTSPLAN v1.1 (åpen beta-model), reference/ regenerert (116 ruter, WP1-dealbreakere), concepts/ for ubegjente konsepter, README ny inngangsport. Se git-log 2026-08-24."
+    },
+    {
+      "dato": "2026-08-24",
+      "id": "BETA-DEPLOY",
+      "title": "Deploy-klargjøring: kvote-fix i panelet + journey-cron kapasitet + GEORGE.md",
+      "content": "1) Admin-panelet viste hardkodet 'X / 10 000' med terskler 8000/9500 mot et tak som aldri har eksistert — nå viser det PRICING.freeUserCap (5 000) med relative terskler 80 %/95 %. Test: __tests__/free-quota-threshold.test.ts (9 tester). 2) Journey-cron: 'take: 100' + én gang/dag = ~100 samtidige reiser som tak — nå timebasert (vercel.json '0 * * * *') + JOURNEY_BATCH_SIZE env (standard 100, 300 på Vercel ≈ 7 200 samtidige) + pendingJourneys i /api/admin/overview, dashboard-indikator 'Reiser som venter på fremrykk' og journey_backlog-alert (24 t rate-limited). 3) GEORGE.md i rot: komplett manuell deploy-guide (Neon/R2/Pusher/Resend/Vercel-env/kill switches/kvote/kapasitet/daglig oversikt/fase 2). Åpen beta krever ingen kodeendring: auto-registrering i lib/auth/config.ts, BETA_INVITE_MODE=false som hygiene."
     }
   ],
   "verifiedFlow": {
@@ -81,9 +87,9 @@
       "/metoder — ikke lenket noe sted"
     ]
   },
-  "nextAction": "1) BETA-TEST §10-sjekklisten (manuelt i Vercel: secrets, MAINTENANCE_MODE av, DEV_LOGIN av, admin-passord, support@/noreplay@). 2) La første testere registrere seg på tosom.no. 3) Lenk /trygghet og /metoder i menyen. 4) Hosting-migrering (Vercel/Neon/R2). 5) Geo-koordinater til 100 %.",
+  "nextAction": "1) Deploy til Vercel etter GEORGE.md (steg 2–9: Neon + migrate, R2, Pusher, Resend, env, 7 verifiseringspunkter). 2) Slipp inn 10 testere → 50. 3) Fase 2: gjenstaarFoerLansering (matching-skaling S1/S3 først).",
   "gjenstaarFoerBeta": [
-    "Manuell sjekkliste i docs/BETA-TEST-v1.0.md §10 (F-8)",
+    "Manuell sjekkliste — nå konsolidert i GEORGE.md (steg 2–9, env-liste, kill switches)",
     "F-6: .env-hemmeligheter til passordhåndterer (før produksjonsdata finnes)"
   ],
   "gjenstaarFoerLansering": [

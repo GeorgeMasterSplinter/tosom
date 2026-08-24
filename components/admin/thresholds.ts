@@ -6,6 +6,7 @@
  */
 
 import type { Severity } from './StatusBadge';
+import { PRICING } from '@/config/legal';
 
 export interface IndicatorMeaning {
   /** Hva indikatoren måler — vises som hjelpetekst */
@@ -28,7 +29,7 @@ export const INDICATOR_MEANING: Record<string, IndicatorMeaning> = {
     action: {
       ok: null,
       warn: 'Få i kø. Runden gir færre matcher enn den kunne.',
-      critical: 'Ingen i kø. Send flere invitasjoner.',
+      critical: 'Ingen i kø. Fortell flere om testen.',
     },
   },
   roundDuration: {
@@ -56,11 +57,19 @@ export const INDICATOR_MEANING: Record<string, IndicatorMeaning> = {
     },
   },
   freeQuota: {
-    explains: 'Forbruk mot gratiskvoten på eksterne tjenester.',
+    explains: `Antall brukere som har fått reisen gratis. Taket (${PRICING.freeUserCap.toLocaleString('nb-NO')}) er det samme tallet vilkårene lover.`,
     action: {
       ok: null,
-      warn: 'Kvoten nærmer seg. Planlegg oppgradering.',
-      critical: 'Kvoten er nesten brukt opp. Oppgrader før den treffer taket.',
+      warn: 'Over 80 % av kvoten brukt. Følg med — betalingsveien (Vipps) må være klar før kvoten tar slutt.',
+      critical: 'Over 95 % av kvoten brukt. Klar Vipps-betalingsveien nå, før kvoten tar slutt.',
+    },
+  },
+  pendingJourneys: {
+    explains: 'Reiser som har passert neste låsetidspunkt og venter på fremrykk. Cronen kjører timevis.',
+    action: {
+      ok: null,
+      warn: 'Noen reiser ventet lenger enn planlagt. Selvkorrigerende — bekreft at tallet er 0 igjen innen en time.',
+      critical: 'Reisekøen henger. Cronen kjører kanskje ikke — sjekk Vercel Logs og JOURNEY_BATCH_SIZE.',
     },
   },
   dbConnections: {

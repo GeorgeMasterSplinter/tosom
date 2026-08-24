@@ -39,6 +39,11 @@ const JOURNEY_CRON_LOCK_ID = 987654321;
 // B2.5 — Stillhetsdeteksjon: 48 timer uten meldinger → varm impuls
 const STILLHET_HOURS = 48;
 
+// Skalerbarheit (før lansering): kor mange reisedagar som framrykkast per køring.
+// Cronen kjører timevis (vercel.json), slik at JOURNEY_BATCH_SIZE=300 gir
+// kapasitet for ~7 200 samtidige reiser. Standard 100 (uten env = gammal atferd).
+const JOURNEY_BATCH_SIZE = Math.max(1, parseInt(process.env.JOURNEY_BATCH_SIZE ?? '100', 10));
+
 export async function GET(req: NextRequest) {
   const startedAt = Date.now();
 
@@ -64,6 +69,7 @@ export async function GET(req: NextRequest) {
   let advanced = 0;
   let ended = 0;
   let expired = 0;
+  let pendingJourneys = 0;
   const errors: string[] = [];
   let cronJobOutcome: 'ok' | 'error' = 'ok';
 
@@ -86,18 +92,25 @@ export async function GET(req: NextRequest) {
     }
 
     try {
-      // B9: Hent alle aktive reiser der begge har vært innom og det er tid for ny dag
-      const eligibleJourneys = await prisma.journeyProgress.findMany({
-        where: {
-          endedAt: null,       // ikke fullført
-          pausedAt: null,      // ikke pauset
-          bothSeenAt: { not: null }, // B9: reisen har faktisk startet
-          nextDayAt: {
-            lte: new Date(),   // har passert låsetidspunktet
-          },
+      // B9: Hent aktive reiser der begge har vært innom og det er tid for ny dag
+      const eligibleWhere = {
+        endedAt: null,       // ikke fullført
+        pausedAt: null,      // ikke pauset
+        bothSeenAt: { not: null }, // B9: reisen har faktisk startet
+        nextDayAt: {
+          lte: new Date(),   // har passert låsetidspunktet
         },
-        take: 100, // maksimum per run for performance
-      });
+      };
+      const [eligibleJourneys, eligibleTotal] = await Promise.all([
+        prisma.journeyProgress.findMany({
+          where: eligibleWhere,
+          take: JOURNEY_BATCH_SIZE, // maksimum per run for performance
+        }),
+        prisma.journeyProgress.count({ where: eligibleWhere }),
+      ]);
+      // Reiser som passerte låsetidspunktet, men ikke rakk med i denne batchen.
+      // Selvkorrigeres ved neste timekøring; vises i panelet via /api/admin/overview.
+      pendingJourneys = Math.max(0, eligibleTotal - eligibleJourneys.length);
 
       for (const journey of eligibleJourneys) {
         try {
@@ -370,6 +383,7 @@ export async function GET(req: NextRequest) {
         ended,
         expired,
         stillhetsImpulser,
+        pendingJourneys,
         duration: `${duration}ms`,
         message: `Prosessert ${processed} reiser — ${advanced} framrykte, ${ended} avsluttet, ${expired} utløpt, ${stillhetsImpulser} stillhetsimpulser`,
         errors: errors.length > 0 ? errors.slice(0, 5) : undefined,
@@ -402,7 +416,7 @@ export async function GET(req: NextRequest) {
           level: 'INFO',
           message: `Cron journey heartbeat: ${advanced} framrykte, ${ended} avsluttet, ${expired} utløpt for ${processed} reiser`,
           module: 'cron:journey',
-          metadata: { processed, advanced, ended, expired, durationMs, errors: errors.slice(0, 10) },
+          metadata: { processed, advanced, ended, expired, pendingJourneys, durationMs, errors: errors.slice(0, 10) },
         },
       });
     } catch (logErr) {
@@ -483,6 +497,11 @@ export async function GET(req: NextRequest) {
 
       if (thresholdQueueSize(queueSize) === 'critical') {
         breaches.push({ key: 'queue_zero', severity: 'critical', title: 'Match-køen er tom', detail: `Kø-størrelse: ${queueSize}. Ingen brukere venter på match.` });
+      }
+      if (pendingJourneys >= JOURNEY_BATCH_SIZE) {
+        breaches.push({ key: 'journey_backlog', severity: 'critical', title: 'Reisekø er større enn batch', detail: `${pendingJourneys} reiser venter på fremrykk. Sjekk cronen (Vercel) og vurder å heve JOURNEY_BATCH_SIZE.` });
+      } else if (pendingJourneys > 0) {
+        breaches.push({ key: 'journey_backlog', severity: 'warning', title: 'Reiser venter på fremrykk', detail: `${pendingJourneys} reiser har passert nextDayAt men ble ikke framrykt. Selvkorrigeres ved neste timekøring.` });
       }
       if (thresholdRoundDuration(roundDuration ?? null) === 'critical') {
         breaches.push({ key: 'round_slow', severity: 'warning', title: 'Matcherunde over 50 s', detail: `Siste runde: ${roundDuration} ms. Høy last eller langsom DB.` });

@@ -49,6 +49,17 @@ async function getHandler(req: NextRequest) {
       where: { freeQuota: true, status: 'PAID' },
     });
 
+    // 4b. Reiser som venter på fremrykk — samme definisjon som journey-cron
+    // (endedAt/pausedAt null, reisen startet, nextDayAt passert).
+    const pendingJourneys = await prisma.journeyProgress.count({
+      where: {
+        endedAt: null,
+        pausedAt: null,
+        bothSeenAt: { not: null },
+        nextDayAt: { lte: new Date() },
+      },
+    });
+
     // 5. Aktive matcher og reiser
     const activeMatches = await prisma.match.count({
       where: { status: 'active' },
@@ -85,6 +96,7 @@ async function getHandler(req: NextRequest) {
         queueSize,
         openReports,
         freeQuotaUsed,
+        pendingJourneys,
         errorsLast24h,
       },
       counts: {

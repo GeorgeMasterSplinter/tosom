@@ -17,8 +17,10 @@ import {
   thresholdRoundDuration,
   thresholdOpenReports,
   thresholdFreeQuota,
+  thresholdPendingJourneys,
   thresholdSentryErrors,
 } from '@/components/admin/StatusBadge';
+import { PRICING } from '@/config/legal';
 import { actionFor, explainFor } from '@/components/admin/thresholds';
 import { ActionRequired, type ActionItem } from '@/components/admin/ActionRequired';
 import {
@@ -47,6 +49,7 @@ interface OverviewData {
     queueSize: number;
     openReports: number;
     freeQuotaUsed: number;
+    pendingJourneys: number;
     errorsLast24h: number;
   };
   counts: { totalUsers: number; activeMatches: number; ongoingJourneys: number };
@@ -101,7 +104,14 @@ function buildActionItems(overview: OverviewData): ActionItem[] {
       key: 'freeQuota',
       label: 'Gratiskvote',
       severity: thresholdFreeQuota(ind.freeQuotaUsed),
-      value: `${ind.freeQuotaUsed.toLocaleString('nb-NO')} / 10 000`,
+      value: `${ind.freeQuotaUsed.toLocaleString('nb-NO')} / ${PRICING.freeUserCap.toLocaleString('nb-NO')}`,
+    },
+    {
+      key: 'pendingJourneys',
+      label: 'Reiser som venter på fremrykk',
+      severity: thresholdPendingJourneys(ind.pendingJourneys),
+      value: `${ind.pendingJourneys}`,
+      href: '/admin/journeys',
     },
   ];
 

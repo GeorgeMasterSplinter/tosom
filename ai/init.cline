@@ -10,6 +10,8 @@
   "agent": {
     "mode": "plan-act-validate",
     "patch_format": true,
+    "parallel_reads": true,
+    "sequential_writes": true,
     "rules": {
       "use_global_rules": true,
       "use_language_manual": true,
@@ -22,6 +24,7 @@
 
   "behavior": {
     "tone": "rolig, varm, moden, trygg",
+    "language": "norsk bokmål",
     "philosophy": "Én match, én reise, én relasjon",
     "identity": "ToSom Blue + Nordic Gold"
   },

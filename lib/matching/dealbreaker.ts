@@ -1,5 +1,9 @@
 // lib/matching/dealbreaker.ts — Harde filtre for matching
 // Dealbreakere er essensielle mismatch som automatisk avvise en kandidat
+//
+// Inaktive filtre (kodet og testet, men ingen datasource i dagens onboarding):
+// livsrytme-konflikt og eksplisitte preferanser/matchTags. De aktiveres
+// automatisk når dataene finnes.
 
 import { ProfileData } from "./types";
 import { haversineKm } from "./distance";
@@ -54,24 +58,35 @@ function checkLifeRhythmConflict(a: ProfileData, b: ProfileData): DealbreakerRes
 }
 
 /**
- * sjekkSecurityLevelIncompatibility — sikkerhetsnivå er en AKTIV dealbreaker
+ * checkSecurityLevelGap — sikkerhetsnivå er en AKTIV dealbreaker
  * hvis det er en stor uoverensstemmelse (gap >= 2).
  *
  * ToSom-filosofi: et stort sikkerhetsnivå-gap betyr at to personer har helt
  * ulik trygghetsprofil. Det skaper risiko for misforståelser, utrygghet og
  * dårlig match. Matching-motoren skal beskytte brukerne, ikke gamble.
+ *
+ * Verdiene har historisk blandet staving (engelsk/tysk: secure/unsicher,
+ * norsk legacy: sikker/trygg, usikker/ukomfortabel) → normaliseres.
+ * Ukjent/manglende verdi → blokkerer IKKE (forsvarlig, samme mønster som radius).
  */
+// Tilknytningsnivåer: usikker (1) → ambivalent (2) → sikker (3)
+const SECURITY_LEVELS: Record<string, number> = {
+  secure: 3, sikker: 3, trygg: 3,
+  ambivalent: 2, ambivalert: 2,
+  usikker: 1, unsicher: 1, ukomfortabel: 1,
+};
+
+function securityLevelToNum(level: string): number | null {
+  return SECURITY_LEVELS[level.trim().toLowerCase()] ?? null;
+}
+
 function checkSecurityLevelGap(a: ProfileData, b: ProfileData): DealbreakerResult {
-  if (!a.securityLevel || !b.securityLevel) return { hasDealbreaker: false };
-  
-  // Tilknytningsnivåer: unsicher (1) → ambivalent (2) → secure (3)
-  const levels: Record<string, number> = {
-    unsicher: 1,
-    ambivalent: 2,
-    secure: 3,
-  };
-  
-  const gap = Math.abs(levels[a.securityLevel] - levels[b.securityLevel]);
+  const levelA = a.securityLevel ? securityLevelToNum(a.securityLevel) : null;
+  const levelB = b.securityLevel ? securityLevelToNum(b.securityLevel) : null;
+  // Ukjent eller manglende verdi → kan ikke sjekke, ikke blokkér
+  if (levelA == null || levelB == null) return { hasDealbreaker: false };
+
+  const gap = Math.abs(levelA - levelB);
   if (gap >= 2) {
     // AKTIV dealbreaker: automatisk avvis ved stort trygghetsgap
     return {
@@ -168,6 +183,107 @@ function checkRadius(a: ProfileData, b: ProfileData): DealbreakerResult {
 }
 
 /**
+ * checkGenderSeeking — kjønnspreferanse er en AKTIV dealbreaker (bidireksjonell).
+ *
+ * Steg 1 i onboarding spør om kjønn og hvem du søker. En bruker som søker
+ * kvinner skal ikke matches med en bruker som ikke søker menn — det bryter
+ * kjerneløftet om én god match. Åpne valg («Alle kjønner», «Kjemisk
+ * tiltrekning» og legacy «begge») matcher ethvert kjent kjønn.
+ * Manglende/ukjent verdi → blokkerer IKKE (forsvarlig, samme mønster som radius).
+ */
+// Kjente kjønn-verdier: UI-et (Mann/Kvinne/Ikke-binær/Genderfluid),
+// legacy-onboarding (man/kvinne/annen) og seed-data (male/female) normaliseres.
+const GENDER_ALIASES: Record<string, 'man' | 'kvinne' | 'annen'> = {
+  man: 'man', mann: 'man', male: 'man',
+  kvinne: 'kvinne', female: 'kvinne',
+  'ikke-binær': 'annen', 'ikke binær': 'annen', 'non-binær': 'annen', nonbinær: 'annen',
+  genderfluid: 'annen', annen: 'annen', annet: 'annen',
+};
+// Åpne søk-verdier: matcher ethvert kjent kjønn.
+const SEEKING_OPEN_ALIASES: Record<string, true> = {
+  'alle-kjon': true, 'alle kjønner': true, alle: true, begge: true,
+  'kjemisk-tiltrekning': true, 'kjemisk tiltrekning': true,
+};
+
+function normalizeGender(raw: unknown): 'man' | 'kvinne' | 'annen' | null {
+  if (typeof raw !== 'string') return null;
+  return GENDER_ALIASES[raw.trim().toLowerCase()] ?? null;
+}
+
+function normalizeSeeking(raw: unknown): 'man' | 'kvinne' | 'annen' | 'open' | null {
+  if (typeof raw !== 'string') return null;
+  const key = raw.trim().toLowerCase();
+  // Åpent søk — inkludert legacy «annen»/«annet» (ikke spesifisert)
+  if (SEEKING_OPEN_ALIASES[key] || key === 'annen' || key === 'annet') return 'open';
+  return GENDER_ALIASES[key] ?? null;
+}
+
+function checkGenderSeekingOneWay(seeker: ProfileData, partner: ProfileData): string | null {
+  const seekingRaw =
+    typeof seeker.lifeSituation?.seekingGender === 'string' ? seeker.lifeSituation.seekingGender : null;
+  const seeking = seekingRaw ? normalizeSeeking(seekingRaw) : null;
+  // Ukjent/ikke oppgitt søk, eller åpent søk → blokkerer ikke
+  if (!seeking || seeking === 'open') return null;
+
+  const partnerRaw =
+    typeof partner.lifeSituation?.gender === 'string' ? partner.lifeSituation.gender : null;
+  const partnerGender = partnerRaw ? normalizeGender(partnerRaw) : null;
+  // Partnerens kjønn ukjent/ikke oppgitt → blokkerer ikke (forsvarlig)
+  if (!partnerGender) return null;
+
+  if (partnerGender === seeking) return null;
+  return `Kjønnspreferanse: søker «${seekingRaw}», men kandidaten er «${partnerRaw}» (${seeker.userId})`;
+}
+
+function checkGenderSeeking(a: ProfileData, b: ProfileData): DealbreakerResult {
+  // TOSIDIG: begge parters eksplisitte valg må akseptere den andre
+  const reason = checkGenderSeekingOneWay(a, b) ?? checkGenderSeekingOneWay(b, a);
+  if (reason) return { hasDealbreaker: true, reason };
+  return { hasDealbreaker: false };
+}
+
+/**
+ * checkAgePreference — alderspreferanse er en AKTIV dealbreaker (bidireksjonell).
+ *
+ * Steg 1 lar brukeren velge min/maks alder (agePrefMin/agePrefMax i
+ * deepProfileData). Kandidatens alder (Profile.age) må ligge i begge parters
+ * intervall. Manglende/ugyldig preferanse eller alder → blokkerer IKKE
+ * (forsvarlig, samme mønster som radius).
+ */
+function toAgeNumber(raw: unknown): number | null {
+  if (typeof raw === 'number') return Number.isFinite(raw) ? raw : null;
+  if (typeof raw === 'string' && raw.trim() !== '') {
+    const n = Number(raw);
+    if (Number.isFinite(n)) return n;
+  }
+  return null;
+}
+
+function checkAgePreferenceOneWay(seeker: ProfileData, partner: ProfileData): string | null {
+  const min = toAgeNumber(seeker.deepProfileData?.agePrefMin);
+  const max = toAgeNumber(seeker.deepProfileData?.agePrefMax);
+  if (min == null && max == null) return null; // ingen preferanse satt → blokkerer ikke
+
+  const age = toAgeNumber(partner.age);
+  if (age == null) return null; // ukjent alder → blokkerer ikke (forsvarlig)
+
+  if (min != null && age < min) {
+    return `Alderspreferanse: kandidat er ${age} år, under minste alder ${min} for ${seeker.userId}`;
+  }
+  if (max != null && age > max) {
+    return `Alderspreferanse: kandidat er ${age} år, over maks alder ${max} for ${seeker.userId}`;
+  }
+  return null;
+}
+
+function checkAgePreference(a: ProfileData, b: ProfileData): DealbreakerResult {
+  // TOSIDIG: begge parters aldersintervall gjelder
+  const reason = checkAgePreferenceOneWay(a, b) ?? checkAgePreferenceOneWay(b, a);
+  if (reason) return { hasDealbreaker: true, reason };
+  return { hasDealbreaker: false };
+}
+
+/**
  * sjekkAlleDealbreakers — hovedfunksjon som kjører alle dealbreaker-testene.
  * Returnerer resultatet av den første dealbreaker som blir funnet.
  */
@@ -175,27 +291,35 @@ export function sjekkAlleDealbreakers(
   queryUser: ProfileData,
   candidate: ProfileData
 ): DealbreakerResult {
-  // 1. Modenhets-gap
-  let result = checkMaturityGap(queryUser, candidate);
+  // 1. Kjønnspreferanse — det eksplisitte valget fra steg 1 (bidireksjonell)
+  let result = checkGenderSeeking(queryUser, candidate);
+  if (result.hasDealbreaker) return result;
+
+  // 2. Alderspreferanse — min/maks alder fra steg 1 (bidireksjonell)
+  result = checkAgePreference(queryUser, candidate);
+  if (result.hasDealbreaker) return result;
+
+  // 3. Modenhets-gap
+  result = checkMaturityGap(queryUser, candidate);
   if (result.hasDealbreaker) return result;
   
-  // 2. Livsrytme-konflikt
+  // 4. Livsrytme-konflikt
   result = checkLifeRhythmConflict(queryUser, candidate);
   if (result.hasDealbreaker) return result;
   
-  // 3. Eksplisitte preferanser
+  // 5. Eksplisitte preferanser
   result = checkExplicitPreferences(queryUser, candidate);
   if (result.hasDealbreaker) return result;
   
-  // 4. Grenser
+  // 6. Grenser
   result = checkBoundaries(queryUser, candidate);
   if (result.hasDealbreaker) return result;
   
-  // 5. Radius — B1.4: aktiv preferanse, tosidig blokkering
+  // 7. Radius — B1.4: aktiv preferanse, tosidig blokkering
   result = checkRadius(queryUser, candidate);
   if (result.hasDealbreaker) return result;
 
-  // 6. Security level — AKTIV dealbreaker ved gap >= 2
+  // 8. Security level — AKTIV dealbreaker ved gap >= 2
   result = checkSecurityLevelGap(queryUser, candidate);
   if (result.hasDealbreaker) return result;
   

@@ -7,7 +7,7 @@ Les denne filen først før dudykker inn i underliggende dokumenter.
 
 ## 1. HVA ER TOSOM
 
-ToSom er en rolig, privat og forskningsbasert relasjonsplattform for voksne (23+).  
+ToSom er en rolig, privat og forskningsbasert relasjonsplattform for voksne (21+).  
 Plattformen hjelper to mennesker å møtes på en trygg, moden og strukturert måte — uten støy, uten jag, uten overflate.
 
 ### Kjerneverdi

@@ -7,7 +7,7 @@ jest.mock('@/lib/auth/session', () => ({
 }));
 jest.mock('@/lib/prisma', () => ({
   prisma: {
-    profile: { upsert: jest.fn() },
+    profile: { upsert: jest.fn(), update: jest.fn() },
     user: { update: jest.fn() },
     $disconnect: jest.fn(),
   },
@@ -19,7 +19,7 @@ import { POST } from '@/app/api/profile/setup/route';
 
 const mockedSession = getServerSession as jest.Mock;
 const mockedPrisma = prisma as unknown as {
-  profile: { upsert: jest.Mock };
+  profile: { upsert: jest.Mock; update: jest.Mock };
   user: { update: jest.Mock };
 };
 

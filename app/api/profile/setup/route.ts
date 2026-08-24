@@ -7,6 +7,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from '@/lib/auth/session';
 import { validateOnboarding } from '@/lib/validation/onboarding-setup';
@@ -40,8 +41,10 @@ async function postHandler(req: NextRequest) {
       kommunikasjon,
       kjaerlighet,
       livsstil,
+      relasjonsStil,
       fremtid,
       humor,
+      grenser,
       moden,
       preferanser,
       psychometrics,
@@ -88,6 +91,12 @@ async function postHandler(req: NextRequest) {
           smoking: basic.smoking,
           children: basic.children,
           wantChildren: basic.wantChildren,
+          // Livsstil & verdier (steg 5a) — additive nøkler i lifestyle-kolonnen
+          highPriority: livsstil?.highPriority,
+          lowPriority: livsstil?.lowPriority,
+          goodEveryday: livsstil?.goodEveryday,
+          desiredLifestyle: livsstil?.desiredLifestyle,
+          undesiredLifestyle: livsstil?.undesiredLifestyle,
         },
         personality: {
           selfDesc: personlighet?.selfDesc,
@@ -117,12 +126,18 @@ async function postHandler(req: NextRequest) {
           experienceAlone: fremtid?.experienceAlone,
           experienceTogether: fremtid?.experienceTogether,
         },
+        // boundaries-kolonnen bærer både humor (steg 7) og grenser (steg 8a) —
+        // additive nøkler, eksisterende data beholdes ikke her (full oppskrivning ved setup).
         boundaries: {
           laughterTrigger: humor?.laughterTrigger,
           quirkyHabit: humor?.quirkyHabit,
           guiltyPleasure: humor?.guiltyPleasure,
           totallyYou: humor?.totallyYou,
           partnerWouldLaugh: humor?.partnerWouldLaugh,
+          neverCrossBoundary: grenser?.neverCrossBoundary,
+          understandPartnersBoundaries: grenser?.understandPartnersBoundaries,
+          limitations: grenser?.limitations,
+          partnerMustUnderstand: grenser?.partnerMustUnderstand,
         },
         emotionalNeeds: {
           safetyNeed: tilknytning?.safetyNeed,
@@ -157,6 +172,9 @@ async function postHandler(req: NextRequest) {
           ambitionLevel: preferanser?.ambitionLevel,
           structureSpontaneity: preferanser?.structureSpontaneity,
           introExtrovert: preferanser?.introExtrovert,
+          // Relasjonsstil (steg 5b) — kolonnen relationshipStyle er String,
+          // så hele seksjonen lagres her som additiv nøkkel
+          relasjonsStil: relasjonsStil ?? undefined,
           // Kommunikasjonsskår (FORSKNINGSMOTOR) — lagres i deepProfileData, ikke dedikert kolonne
           communicationScores: psychScores?.communication ?? undefined,
         },
@@ -181,6 +199,12 @@ async function postHandler(req: NextRequest) {
           smoking: basic.smoking,
           children: basic.children,
           wantChildren: basic.wantChildren,
+          // Livsstil & verdier (steg 5a) — additive nøkler i lifestyle-kolonnen
+          highPriority: livsstil?.highPriority,
+          lowPriority: livsstil?.lowPriority,
+          goodEveryday: livsstil?.goodEveryday,
+          desiredLifestyle: livsstil?.desiredLifestyle,
+          undesiredLifestyle: livsstil?.undesiredLifestyle,
         },
         personality: {
           selfDesc: personlighet?.selfDesc,
@@ -216,6 +240,10 @@ async function postHandler(req: NextRequest) {
           guiltyPleasure: humor?.guiltyPleasure,
           totallyYou: humor?.totallyYou,
           partnerWouldLaugh: humor?.partnerWouldLaugh,
+          neverCrossBoundary: grenser?.neverCrossBoundary,
+          understandPartnersBoundaries: grenser?.understandPartnersBoundaries,
+          limitations: grenser?.limitations,
+          partnerMustUnderstand: grenser?.partnerMustUnderstand,
         },
         emotionalNeeds: {
           safetyNeed: tilknytning?.safetyNeed,
@@ -250,10 +278,21 @@ async function postHandler(req: NextRequest) {
           ambitionLevel: preferanser?.ambitionLevel,
           structureSpontaneity: preferanser?.structureSpontaneity,
           introExtrovert: preferanser?.introExtrovert,
+          // Relasjonsstil (steg 5b) — kolonnen relationshipStyle er String,
+          // så hele seksjonen lagres her som additiv nøkkel
+          relasjonsStil: relasjonsStil ?? undefined,
           // Kommunikasjonsskår (FORSKNINGSMOTOR) — lagres i deepProfileData, ikke dedikert kolonne
           communicationScores: psychScores?.communication ?? undefined,
         },
       },
+    });
+
+    // WP2: Rydd onboarding-utkastet — profilen er nå fullførte. Draften bor
+    // i eget felt (onboardingDraft) og kan aldri overskrive matching-dataen
+    // over; vi sletter den for at neste onboarding-omgang starter rent.
+    await prisma.profile.update({
+      where: { userId },
+      data: { onboardingDraft: Prisma.DbNull },
     });
 
     // Marker onboarding som fullført

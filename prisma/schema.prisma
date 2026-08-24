@@ -82,6 +82,9 @@ model Profile {
   longitude         Float?
    deepProfileStep   DeepProfileStep @default(IDENTITY)
    deepProfileData   Json?
+   // Onboarding-utkast ({ step, data }) underveis i onboarding — eget hjem slik at
+   // draft-autosave aldri overskriver deepProfileData (matching-data). Ryddes ved fullføring.
+   onboardingDraft   Json?
    preferences       Json?
    matchTags         String[]
    // FORSKNINGSMOTOR F-3: Psykometriske skårer (additive, ingen eksisterende felt røres)

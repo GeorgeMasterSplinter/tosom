@@ -136,6 +136,8 @@ export async function GET(req: NextRequest) {
   const rejectReasons: Record<string, number> = {
     mangler_profil: 0,
     sperreliste: 0,
+    kjonn: 0,
+    alder: 0,
     modenhetsgap: 0,
     livsrytme: 0,
     preferanser: 0,
@@ -150,6 +152,8 @@ export async function GET(req: NextRequest) {
   const REJECT_LABELS: Record<string, string> = {
     mangler_profil: 'avvist: mangler profil',
     sperreliste: 'avvist: sperreliste',
+    kjonn: 'avvist: kjønnspreferanse',
+    alder: 'avvist: alderspreferanse',
     modenhetsgap: 'avvist: modenhetsgap',
     livsrytme: 'avvist: livsrytme',
     preferanser: 'avvist: eksplisitte preferanser',

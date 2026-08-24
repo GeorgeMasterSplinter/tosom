@@ -9,7 +9,7 @@
 
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { OnboardingSlide } from '@/app/onboarding/components/OnboardingSlide';
 import { OnboardingSection } from '@/app/onboarding/components/OnboardingSection';
 import { OnboardingTextField } from '@/app/onboarding/components/OnboardingTextField';
@@ -17,6 +17,7 @@ import { OnboardingSelectGrid } from '@/app/onboarding/components/OnboardingSele
 import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { lookupPostalCode } from '@/lib/geo/lookup';
 import { getDistancePrefRange } from '@/config/distance-prefs';
+import { MIN_AGE } from '@/config/legal';
 import { OB } from '@/app/onboarding/theme';
 
 interface Props {
@@ -41,7 +42,7 @@ const validate = (data: Record<string, unknown>): ValidationError[] => {
 
   const age = parseInt(String(data['age'] ?? ''));
   if (!data['age'] || !String(data['age']).trim()) errors.push({ field: 'age', message: 'Alder er påkrevd.' });
-  else if (isNaN(age) || age < 21) errors.push({ field: 'age', message: 'Du må være minst 21 år.' });
+  else if (isNaN(age) || age < MIN_AGE) errors.push({ field: 'age', message: `Du må være minst ${MIN_AGE} år.` });
   else if (age > 99) errors.push({ field: 'age', message: 'Justér alderen litt – dette ser ikke helt riktig ut.' });
 
   if (!String(data['gender'] ?? '').trim()) errors.push({ field: 'gender', message: 'Velg ett kjønn.' });
@@ -52,14 +53,32 @@ const validate = (data: Record<string, unknown>): ValidationError[] => {
   if (!pc) errors.push({ field: 'postalCode', message: 'Postnummer er påkrevd.' });
   else if (!/^\d{4}$/.test(pc)) errors.push({ field: 'postalCode', message: 'Postnummer må ha fire siffer.' });
 
+  // Avstanden må ligge i det tetthetsbaserte området for postnummeret.
+  // Serveren håndhever dette (lib/validation/onboarding-setup.ts). Uten samme
+  // sjekk her slapp klienten brukeren videre, og steg 13 feilet med 400.
   const maxDist = Number(data['distancePref']);
-  if (isNaN(maxDist) || !maxDist) errors.push({ field: 'distancePref', message: 'Velg en avstand.' });
+  const distRange = getDistancePrefRange(pc);
+  if (isNaN(maxDist) || !maxDist) {
+    errors.push({ field: 'distancePref', message: 'Velg en avstand.' });
+  } else if (maxDist < distRange.min || maxDist > distRange.max) {
+    errors.push({
+      field: 'distancePref',
+      message: `Maks avstand må være mellom ${distRange.min} og ${distRange.max} km.`,
+    });
+  }
 
-  const minAge = parseInt(String(data['minAge'] ?? ''));
-  if (isNaN(minAge) || minAge < 21) errors.push({ field: 'minAge', message: 'Minste alder må være 21.' });
+  // Feltnavnene må være de samme som payloaden sender (agePrefMin/agePrefMax).
+  // Tidligere skrev feltene til minAge/maxAge, som ingen leste — brukerens
+  // aldersvalg forsvant stille, og defaultene ble sendt i stedet.
+  const minAge = parseInt(String(data['agePrefMin'] ?? ''));
+  if (isNaN(minAge) || minAge < MIN_AGE) {
+    errors.push({ field: 'agePrefMin', message: `Minste alder må være ${MIN_AGE}.` });
+  }
 
-  const maxAgeVal = parseInt(String(data['maxAge'] ?? ''));
-  if (isNaN(maxAgeVal) || maxAgeVal < minAge) errors.push({ field: 'maxAge', message: 'Maks alder må være over minste alder.' });
+  const maxAgeVal = parseInt(String(data['agePrefMax'] ?? ''));
+  if (isNaN(maxAgeVal) || maxAgeVal < minAge) {
+    errors.push({ field: 'agePrefMax', message: 'Maks alder må være over minste alder.' });
+  }
 
   return errors;
 };
@@ -89,19 +108,34 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
     [data['postalCode']],
   );
 
+  // Klamp til nærmeste grense, ikke til minimum. Valgte brukeren 700 km og
+  // bytter til et postnummer der taket er 500, er 500 det hun mente —
+  // ikke 30. Kun tomt/ugyldig valg faller tilbake til minimum.
   const safeDistance = (() => {
     const v = Number(data['distancePref']);
-    const inRange = !isNaN(v) && v >= distanceRange.min && v <= distanceRange.max;
-    return inRange ? v : distanceRange.min;
+    if (isNaN(v) || !v) return distanceRange.min;
+    if (v < distanceRange.min) return distanceRange.min;
+    if (v > distanceRange.max) return distanceRange.max;
+    return v;
   })();
 
+  // Skriv den klampede verdien tilbake til dataen.
+  // Uten dette viste slideren én verdi mens data.distancePref holdt en annen
+  // (f.eks. 700 km valgt med tomt postnummer, deretter Oslo der maks er 500).
+  // Serveren avviste da med 400 på siste steg.
+  useEffect(() => {
+    if (Number(data['distancePref']) !== safeDistance) {
+      onChange('distancePref', safeDistance);
+    }
+  }, [safeDistance]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const safeMinAge = (() => {
-    const v = parseInt(String(data['minAge']));
-    return !isNaN(v) && v >= 21 ? v : 21;
+    const v = parseInt(String(data['agePrefMin']));
+    return !isNaN(v) && v >= MIN_AGE ? v : MIN_AGE;
   })();
 
   const safeMaxAge = (() => {
-    const v = parseInt(String(data['maxAge']));
+    const v = parseInt(String(data['agePrefMax']));
     return !isNaN(v) && v >= safeMinAge ? v : 40;
   })();
 
@@ -262,8 +296,8 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             <div style={{ minWidth: 0 }}>
               <OnboardingTextField
                 label="Min alder *"
-                value={val('minAge', '')(data)}
-                onChange={(v) => onChange('minAge', v)}
+                value={val('agePrefMin', '')(data)}
+                onChange={(v) => onChange('agePrefMin', v)}
                 placeholder={String(safeMinAge)}
                 maxLength={3}
                 minChars={2}
@@ -272,8 +306,8 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             <div style={{ minWidth: 0 }}>
               <OnboardingTextField
                 label="Maks alder *"
-                value={val('maxAge', '')(data)}
-                onChange={(v) => onChange('maxAge', v)}
+                value={val('agePrefMax', '')(data)}
+                onChange={(v) => onChange('agePrefMax', v)}
                 placeholder={String(safeMaxAge)}
                 maxLength={3}
                 minChars={2}

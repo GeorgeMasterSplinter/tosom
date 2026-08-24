@@ -2,7 +2,7 @@
  * ToSom — Oppgaver (Gjør sammen)
  * 9 kategorier × 15 oppgaver = 135 oppgaver totalt.
  * Alle oppgaver er tekst-baserte og sendes som melding i chat.
- * Voksne 23+. Bokmål. Lett, morsomt, ingen konkurranse.
+ * Voksne 21+. Bokmål. Lett, morsomt, ingen konkurranse.
  */
 
 export interface TaskCategory {

@@ -197,6 +197,65 @@ async function loadDraftFromServer(): Promise<{ data: Partial<ProfileData>; step
   return null;
 }
 
+// WP2 — Prefill fra fullførte profiler (én kilde for init-tilstand,
+// serveren mappet via /api/onboarding/prefill → lib/profile/toOnboardingData)
+async function loadPrefill(): Promise<{ data: Partial<ProfileData>; step: number } | null> {
+  try {
+    const res = await fetch('/api/onboarding/prefill');
+    if (!res.ok) return null;
+    const result = await res.json();
+    if (result.data && typeof result.data === 'object') {
+      return { data: result.data, step: typeof result.step === 'number' ? result.step : 0 };
+    }
+  } catch { /* ignore */ }
+  return null;
+}
+
+/** Norske feltnavn for valideringsfeil fra /api/profile/setup */
+const FIELD_LABELS: Record<string, string> = {
+  'basic.identityName': 'Navn',
+  'basic.age': 'Alder',
+  'basic.gender': 'Kjønn',
+  'basic.seekingGender': 'Hvem du søker',
+  'basic.city': 'Sted',
+  'basic.postalCode': 'Postnummer',
+  'basic.distancePref': 'Maks avstand',
+  'basic.agePrefMin': 'Min alder',
+  'basic.agePrefMax': 'Maks alder',
+  'personlighet.selfDesc': 'Om deg selv',
+};
+
+/**
+ * Gjør serverens feilsvar om til noe brukeren faktisk kan handle på.
+ * Ved 400 lister vi felt og årsak, slik at hun vet hva som må rettes
+ * og på hvilket steg — i stedet for en generisk «prøv igjen».
+ */
+function formatSetupError(status: number, body: string): string {
+  if (status === 401) {
+    return 'Du er ikke lenger innlogget. Logg inn på nytt — svarene dine er lagret.';
+  }
+
+  try {
+    const parsed = JSON.parse(body);
+    const details = parsed?.details;
+    if (Array.isArray(details) && details.length > 0) {
+      const lines = details
+        .slice(0, 5)
+        .map((d: { field?: string; message?: string }) => {
+          const label = FIELD_LABELS[d.field ?? ''] ?? d.field ?? 'Ukjent felt';
+          return `${label}: ${d.message ?? 'ugyldig verdi'}`;
+        });
+      const rest = details.length > 5 ? ` (+${details.length - 5} til)` : '';
+      return `Noe mangler i profilen din — ${lines.join('. ')}${rest}. Gå tilbake og rett det, så prøver vi igjen.`;
+    }
+    if (parsed?.error) return String(parsed.error);
+  } catch {
+    /* ikke JSON — fall gjennom til generisk melding */
+  }
+
+  return 'Kunne ikke lagre profilen din. Vennligst prøv igjen.';
+}
+
 interface OnboardingFlowProps {
   onComplete?: (profile: UserProfile) => void;
 }
@@ -209,17 +268,27 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
    // SSR ser alltid tomme felt — klientet hentar lagrede data etter mount
    const [data, setData] = useState<ProfileData>(() => ({ ...initialData }));
 
-   // B2.2: Hent fra serveren ved oppstart (serveren er sannheten, localStorage er hurtigbuffer)
+   // WP2: Init-tilstand (én kilde): server-draft (pågående utkast) >
+   // prefill (fullførte profiler, redigeringsøkt) > localStorage (hurtigbuffer)
    useEffect(() => {
      async function init() {
-       // Prøv serveren først
-       const serverDraft = await loadDraftFromServer();
+       const [serverDraft, prefill] = await Promise.all([
+         loadDraftFromServer(),
+         loadPrefill(),
+       ]);
+       // 1) Pågående utkast vinner — brukerens nyeste tilstand
        if (serverDraft && Object.keys(serverDraft.data).length > 0) {
          setData((prev) => ({ ...prev, ...serverDraft.data }));
          if (serverDraft.step > 0) setStep(serverDraft.step);
          return;
        }
-       // Fallback til localStorage
+       // 2) Fullførte profiler pre-fylles
+       if (prefill && prefill.data && Object.keys(prefill.data).length > 0) {
+         setData((prev) => ({ ...prev, ...prefill.data }));
+         if (prefill.step > 0) setStep(prefill.step);
+         return;
+       }
+       // 3) Fallback til localStorage
        const localDraft = loadDraft();
        if (localDraft && Object.keys(localDraft).length > 0) {
          setData((prev) => ({ ...prev, ...localDraft }));
@@ -250,12 +319,9 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     }
   }, [step]); // eslint-disable-line react-hooks/exhaustive-deps
 
-   // Rydd draft når reisen startar (allerede eksisterande useEffect)
-  useEffect(() => {
-    if (step > 11) {
-      try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
-    }
-  }, [step]);
+  // WP2: Draft-rydding skjer ved VELLYKKET «Start reisen» (handleStartReisen) —
+  // ikke ved å nå siste steg som tidligere (da gikk lokal buffer tapt selv
+  // om innsending feilet, f.eks. nettverksfeil).
 
   const setField = (field: string, value: unknown) => {
     setData((prev) => ({ ...prev, [field]: value }));
@@ -430,12 +496,23 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
       });
 
       if (!profileRes.ok) {
+        // Serveren svarer { error, details: [{ field, message }] } ved 400.
+        // Tidligere ble svaret lest og kastet — brukeren fikk kun «prøv igjen»,
+        // og å prøve igjen med samme data hjalp aldri. Nå vises årsaken.
         const errBody = await profileRes.text().catch(() => '');
-        throw new Error('Kunne ikke lagre profil');
+        throw new Error(formatSetupError(profileRes.status, errBody));
       }
 
       const profileData = await profileRes.json();
       const userId = profileData.userId || profileData.user?.id || '';
+
+      // WP2: Profilen er lagret — rydd draft (server + lokal buffer) for at
+      // neste onboarding-omgang starter rent. Fire-and-forget: bruker skal
+      // ikke vente på rydding, og ryddingsfeil skal ikke blokkere suksessen.
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch { /* ignore */ }
+      fetch('/api/onboarding/draft', { method: 'DELETE' }).catch(() => {});
 
       if (!userId) {
         // Kall onComplete-callback om han er definert (frå AppShell)
@@ -481,7 +558,13 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
 
       window.location.href = '/matching';
     } catch (err) {
-      setError('Kunne ikke lagre profilen din. Vennligst prøv igjen.');
+      // Behold den konkrete årsaken fra formatSetupError — ikke overskriv
+      // den med en generisk tekst. Nettverksfeil har ingen melding å vise,
+      // og faller derfor tilbake til den rolige standardteksten.
+      const message = err instanceof Error && err.message
+        ? err.message
+        : 'Kunne ikke lagre profilen din. Vennligst prøv igjen.';
+      setError(message);
       setSaving(false);
     }
   };

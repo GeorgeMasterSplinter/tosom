@@ -60,7 +60,7 @@ Dette dokumentet er din permanente referanse.
 
 ## 1. TOSOM IDENTITET & KJERNEFILOSOFI
 
-ToSom er en rolig, moderne og forskningsbasert relasjonsplattform for voksne (23+). 
+ToSom er en rolig, moderne og forskningsbasert relasjonsplattform for voksne (21+). 
 Plattformen hjelper to mennesker å møtes på en trygg, moden og strukturert måte — uten støy, uten jag, uten overflate.
 
 Brukeren bygger en dyp, veiledet profil, og når profilen er fullført, mottar de én match innen 24 timer. 

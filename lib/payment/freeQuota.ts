@@ -1,14 +1,22 @@
 /**
- * ToSom — Gratiskvote for de første 10 000 brukerne (G2)
+ * ToSom — Gratiskvote ved lansering (G2)
  *
- * Lansering er gratis til 10 000 brukere. Deretter betaling før onboarding.
+ * Lansering er gratis til grensen i PRICING.freeUserCap (config/legal.ts).
+ * Deretter betaling før onboarding.
  * Telleren caches i Redis (60 s). Ved terskelen kan en håndfull ekstra
  * slippe gjennom — akseptabelt og bedre enn ukachet teller ved hver reisestart.
  */
 
 import { prisma } from '@/lib/prisma';
+import { PRICING } from '@/config/legal';
 
-const FREE_QUOTA_LIMIT = 10_000;
+/**
+ * Kvoten er den samme som vilkårene lover brukeren.
+ * Tallet bor i config/legal.ts (PRICING.freeUserCap) og vises i
+ * app/vilkar/page.tsx. Én kilde — ellers lover vi ett tall og
+ * håndhever et annet.
+ */
+const FREE_QUOTA_LIMIT = PRICING.freeUserCap;
 
 /**
  * Sjekk om gratiskvoten er oppbrukt.

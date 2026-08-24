@@ -59,6 +59,10 @@ Hver oppgave følger seks steg. Ingen hopp.
 ### Steg 1 — Forstå
 Les oppgaven. Les de berørte filene **i sin helhet**. Ikke bare de linjene du tror du skal endre.
 
+Lesing skjer parallelt: samle alle søk, filer og statussjekker du trenger i én
+runde. Rene leseoperasjoner har ingen sideeffekter og krever ingen godkjenning.
+Jo mer kontekst før Steg 2, jo bedre plan.
+
 ### Steg 2 — Plan
 3–5 konkrete steg. Hvert steg skal navngi filen som endres og hva som skjer.
 
@@ -109,6 +113,8 @@ Kort. Hva ble endret, hva ble verifisert, hva er neste steg. Ingen overforklarin
 ### Rekkefølge ved flere filer
 Når en endring krever flere filer: én patch om gangen, verifiser mellom hver. Aldri parallelt.
 
+Dette gjelder **skriving**. Lesing er unntatt — se Steg 1.
+
 ---
 
 ## 5. Domeneregler
@@ -154,8 +160,11 @@ include: { userA: true, userB: true, journeyStep: true, journeyProgress: true }
 - Aldri lokale `isAdmin()`-varianter
 - Dev-ruter dør i produksjon
 
-### 5.5 Språk mot bruker
-Bokmål. Varmt, modent, trygt, klart.
+### 5.5 Språk
+Bokmål — overalt. Brukerflate, dokumentasjon, kodekommentarer og commit-meldinger.
+Ingen nynorsk, ingen svorsk, ingen slang.
+
+Mot bruker i tillegg: varmt, modent, trygt, klart.
 
 Aldri: «AI anbefaler…», «Systemet har analysert…», «Du må…», «Vi har bestemt…»
 
@@ -180,7 +189,7 @@ Før hver patch: sjekk om noen berøres.
 | I-11 | Uten match → vent til neste lørdag |
 | I-12 | Brukeren ser ord, aldri tall |
 | I-13 | «Vi fant hverandre» sletter begge kontoer |
-| I-14 | Aldersgrense 23+ |
+| I-14 | Aldersgrense 21+ (`MIN_AGE` i `config/legal.ts`) |
 
 **Berører patchen en invariant → stopp og spør.** Uansett hvor åpenbart det virker.
 

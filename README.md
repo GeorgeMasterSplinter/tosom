@@ -1,12 +1,15 @@
-# ToSom — En rolig, privat plattform for ekte relasjonar
+# ToSom — En rolig, privat plattform for ekte relasjoner
 
-ToSom er ein relationsplattform for vaksne (23+) som söker ekte forbindelse.
-Ingen swipe. Ingen feed. Éin match innan 24 timer.
+ToSom er en relasjonsplattform for voksne (21+) som søker ekte forbindelse.
+Ingen swipe. Ingen feed. Én match innen 24 timer.
 
 ## Språkprofil
 
-Språkprofilen for ToSom er definert i [docs/language-guidelines.md](docs/language-guidelines.md).
-Base: norsk bokmål. Nynorsk er tillatt i tagline og enkelte overskrifter.
+Språket i ToSom er **norsk bokmål** — overalt. Brukerflate, dokumentasjon,
+kodekommentarer og commit-meldinger. Ingen nynorsk, ingen svorsk, ingen slang.
+
+Språkmanualen står i [ai/system_prompt.md](ai/system_prompt.md) §2 og er
+oppsummert i [docs/TOSOM-SUPER-MASTERPLAN-v1.0.md](docs/TOSOM-SUPER-MASTERPLAN-v1.0.md) §2.
 
 ## Kom-i-gang
 

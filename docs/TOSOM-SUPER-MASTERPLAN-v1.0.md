@@ -26,7 +26,7 @@ Konseptet er ikke endret i dette dokumentet. Det er beskrevet, verifisert og må
 ## 1. Kjerne
 
 ### 🔵 KONSEPT
-Tosom er en relasjonsplattform for voksne (23+). Ikke en datingapp.
+Tosom er en relasjonsplattform for voksne (21+). Ikke en datingapp.
 
 Brukeren bygger en dyp, veiledet profil. Når profilen er ferdig, stiller brukeren seg i kø. **Natt til lørdag** kjøres én matcherunde. Får du en match, går dere inn i en guidet **30-dagers reise**.
 
@@ -57,7 +57,7 @@ Aldersgrensen håndheves i `components/AgeRequirement.tsx` og onboarding-valider
 Tokens i `config/design-tokens.ts` og `tailwind.config.js`. Glassmorphism gjennomgående i `components/ui/`.
 
 ### 🔴 AVVIK — mindre
-Kodekommentarer inneholder nynorsk-former («berre», «kjelde», «frå», «einaste») i bl.a. `lib/matching/resonanceLevel.ts`, `config/matching.ts`, `lib/journey/engine.ts`. Dette rammer **ikke** brukerflaten — språkmanualen gjelder brukerrettet tekst. Verdt å rydde ved neste berøring, ikke en egen oppgave.
+Kodekommentarer inneholder nynorsk-former («berre», «kjelde», «frå», «einaste») i bl.a. `lib/matching/resonanceLevel.ts`, `config/matching.ts`, `lib/journey/engine.ts`. Flere commit-meldinger er også nynorsk. **Bokmål gjelder overalt**, også utenfor brukerflaten. Rydd ved neste berøring av filen — ikke en egen oppgave.
 
 ---
 

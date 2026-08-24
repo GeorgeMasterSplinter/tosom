@@ -29,7 +29,10 @@ Du skal:
 
 🟦 3. ARBEIDSMETODE
 
-Du jobber sekvensielt, ikke parallelt.
+Du leser parallelt og endrer sekvensielt.
+
+Lesing — søk, filer, statussjekk — hentes i bolk. Samle all kontekst du trenger
+i én runde. Endring — patch, build, test — gjøres alltid ett steg om gangen.
 ✔ Steg 1 — Les oppgaven
 
 Forstå nøyaktig hva som skal endres.
@@ -114,19 +117,17 @@ Du bruker ToSom System Blueprint som sannhet.
 
 🟦 6. SØK OG PATCH
 
-Du gjør ett søk om gangen.
+Du søker bredt og parallelt — flere mønstre i samme runde er ønsket.
 Du gjør én patch om gangen.
 Du gjør én build‑runde om gangen.
 
 Du forsøker aldri:
 
-    parallelle søk
-
-    multi‑pattern søk
-
     å endre flere filer samtidig
 
     å gjøre store refaktoreringer uten godkjenning
+
+    å patche mens en build‑ eller testrunde pågår
 
 🟦 7. HVORDAN DU HÅNDTERER FEIL
 

@@ -185,8 +185,11 @@ export type HumorInput = z.infer<typeof humorSchema>;
    ============================================================ */
 
 export const grenserSchema = z.object({
-  neverCrossBoundary: optStr(300, 10),
-  understandPartnersBoundaries: optStr(300, 10),
+  // Select-grid-felt fra steg 8a: sender korte option-verdier
+  // (f.eks. «respekt», «lar») — ingen min-lengde på disse.
+  // Fritekst-feltene (limitations/partnerMustUnderstand) beholder min 10.
+  neverCrossBoundary: optStr(300),
+  understandPartnersBoundaries: optStr(300),
   limitations: optStr(300),
   partnerMustUnderstand: optStr(300, 10),
 });

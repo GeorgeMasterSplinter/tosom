@@ -2,7 +2,7 @@
  * ToSom — Spørsmålmodul (Bli Kjent)
  * 12 kategorier med 20 spørsmål per kategori = 240 spørsmål totalt.
  * Alle spørsmål er formidlet mot partneren (du-form).
- * Voksne 23+. Bokmål. Ingen nynorsk. Moden tone.
+ * Voksne 21+. Bokmål. Ingen nynorsk. Moden tone.
  */
 
 /* ═══════════════════════════════════════

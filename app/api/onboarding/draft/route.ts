@@ -1,60 +1,79 @@
 /**
- * Tosom — API: Onboarding Draft Autosave (STEG 5.3)
+ * Tosom — API: Onboarding Draft Autosave (STEG 5.3 / B2.2)
  *
  * POST /api/onboarding/draft
- * Lagrer delvis onboarding-data til serveren slik at brukeren ikke mister
- * framdrift ved enhetsbytte eller nettleser-tømning.
- * Serveren er sannhet; localStorage blir kun hurtigbuffer.
+ * Lagrer delvis onboarding-data på serveren slik at brukeren ikke mister
+ * fremdrift ved bytte av enhet eller sletting av nettleser. Serveren er
+ * sannhets-kilden; localStorage er kun hurtigbuffer.
  *
  * GET /api/onboarding/draft
  * Henter siste lagrede draft fra serveren.
+ *
+ * DELETE /api/onboarding/draft
+ * Sletter draften (kald av onboarding-flowen når profilen er fullført).
+ *
+ * WP2 (2026-08-24): Draften bor nå i Profile.onboardingDraft ({ step, data })
+ * — et eget felt. Tidligere delte den Profile.deepProfileData, samme kolonne
+ * som /api/profile/setup skriver strukturert matching-data i, så draft og
+ * profil trappet over hverandre (kritisk datatak: psychometrics,
+ * wantsChildren m.m. ble slettet ved draft-autosave). Med eget felt kan de
+ * aldri kollidere, og matching-motoren leser aldri halvdata.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { Prisma, type DeepProfileStep } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from '@/lib/auth/session';
 
 export const dynamic = 'force-dynamic';
 
-const STEP_ENUMS = ['IDENTITY', 'PERSONALITY', 'LIFE_SITUATION', 'RELATIONSHIP_STYLE',
-  'COMMUNICATION', 'INTIMACY', 'FUTURE_VISION', 'BOUNDARIES'] as const;
+/** Lagret form for onboardingDraft. */
+interface DraftPayload {
+  step: number;
+  data: Record<string, unknown>;
+}
+
+async function requireUserId(): Promise<string | null> {
+  const session = await getServerSession();
+  return session?.user?.id ?? null;
+}
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await getServerSession();
-    if (!session?.user?.id) {
+    const userId = await requireUserId();
+    if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await req.json();
-    const { step, data } = body;
+    const rawStep = body?.step;
+    const rawData = body?.data;
 
-    // STEG 13.2 FIX: Profile.age er NOT NULL utan default — INSERT må alltid
-    // setje alder, elles feilar draft-autosave for brukarar utan Profile-rad.
-    // Frontend har age som streng ('' før steg 1 er fylt) → 0 som plasshaldar;
-    // /api/profile/setup skriv den ekte alderen seinare.
-    const ageNum = Math.max(0, Math.floor(Number(data?.age)) || 0);
+    // Defensivt: aksepter kun den kjente formen — autosave må ikke kunne
+    // skrive søppel i draften (samme filosofi som Zod i setup-ruten).
+    if (rawData == null || typeof rawData !== 'object' || Array.isArray(rawData)) {
+      return NextResponse.json({ error: 'Ugyldig draft' }, { status: 400 });
+    }
+    const step =
+      typeof rawStep === 'number' && Number.isFinite(rawStep)
+        ? Math.max(0, Math.min(12, Math.floor(rawStep)))
+        : 0;
 
-    // STEG 13.5 FIX: erstatta $executeRaw med typa upsert.
-    // - Rå-INSERT mangla "id": @default(cuid()) er klient-side, DB-kolonnen har
-    //   ingen default → NOT NULL 23502 for kvar ny brukar.
-    // - Typa klient handsamar enum-cast og NOT NULL age automatisk.
-    // - update hoppar over deepProfileStep når step ikkje er sendt (undefined).
-    const enumStep: DeepProfileStep =
-      (step !== undefined ? STEP_ENUMS[Math.min(step, STEP_ENUMS.length - 1)] : null) ?? 'IDENTITY';
+    // STEG 13.2 (beholdt): Profile.age er NOT NULL — placeholder 0 for
+    // brukere uten Profile-rad; /api/profile/setup skriver den sanne alderen.
+    const ageNum = Math.max(0, Math.floor(Number((rawData as { age?: unknown }).age)) || 0);
+
+    const draft: DraftPayload = { step, data: rawData as Record<string, unknown> };
 
     await prisma.profile.upsert({
-      where: { userId: session.user.id },
+      where: { userId },
       create: {
-        userId: session.user.id,
+        userId,
         age: ageNum,
-        deepProfileData: (data || {}) as Prisma.InputJsonValue,
-        deepProfileStep: enumStep,
+        onboardingDraft: draft as unknown as Prisma.InputJsonValue,
       },
       update: {
-        deepProfileData: (data || {}) as Prisma.InputJsonValue,
-        deepProfileStep: step !== undefined ? enumStep : undefined,
+        onboardingDraft: draft as unknown as Prisma.InputJsonValue,
       },
     });
 
@@ -62,7 +81,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error('[onboarding/draft] save failed:', err);
     return NextResponse.json(
-      { error: 'Failed to save draft' },
+      { error: 'Kunne ikke lagre draft' },
       { status: 500 }
     );
   }
@@ -70,38 +89,54 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   try {
-    const session = await getServerSession();
-    if (!session?.user?.id) {
+    const userId = await requireUserId();
+    if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const profile = await prisma.profile.findUnique({
-      where: { userId: session.user.id },
-      select: { deepProfileData: true, deepProfileStep: true },
+      where: { userId },
+      select: { onboardingDraft: true },
     });
 
-    if (!profile?.deepProfileData) {
+    const draft = profile?.onboardingDraft as unknown as DraftPayload | null;
+    if (!draft || typeof draft !== 'object' || draft.data == null) {
       return NextResponse.json({ data: null, step: null });
     }
 
     return NextResponse.json({
-      data: profile.deepProfileData,
-      step: mapEnumToStep(profile.deepProfileStep),
+      data: draft.data,
+      step: typeof draft.step === 'number' ? draft.step : null,
     });
   } catch (err) {
     console.error('[onboarding/draft] load failed:', err);
     return NextResponse.json(
-      { error: 'Failed to load draft' },
+      { error: 'Kunne ikke laste draft' },
       { status: 500 }
     );
   }
 }
 
-function mapEnumToStep(enumVal: string): number {
-  const map: Record<string, number> = {
-    IDENTITY: 0, PERSONALITY: 1, LIFE_SITUATION: 2,
-    RELATIONSHIP_STYLE: 3, COMMUNICATION: 4, INTIMACY: 5,
-    FUTURE_VISION: 7, BOUNDARIES: 9, SUMMARY: 11,
-  };
-  return map[enumVal] ?? 0;
+export async function DELETE(req: NextRequest) {
+  try {
+    const userId = await requireUserId();
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Idempotent: ingen profil eller allerede tom draft → ok
+    // Prisma.DbNull = database-NULL (ikke JSON-null) for Json?-felt
+    await prisma.profile.updateMany({
+      where: { userId },
+      data: { onboardingDraft: Prisma.DbNull },
+    });
+
+    return NextResponse.json({ ok: true });
+  } catch (err) {
+    console.error('[onboarding/draft] delete failed:', err);
+    return NextResponse.json(
+      { error: 'Kunne ikke slette draft' },
+      { status: 500 }
+    );
+  }
 }

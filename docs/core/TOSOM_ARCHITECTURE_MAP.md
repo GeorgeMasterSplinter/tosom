@@ -178,7 +178,7 @@ POST /api/analytics/track            → Analytics event
 ### Top-nivå komponenter (14 filer)
 ```
 components/
-├── AgeRequirement.tsx               → Aldersvalidering (23+)
+├── AgeRequirement.tsx               → Aldersvalidering (21+)
 ├── DashboardMatchBanner.tsx         → Match-banner på dashboard
 ├── DashboardMatchStatus.tsx         → "Neste match om X timer"
 ├── DashboardSkeleton.tsx            → Loading-skeleton for dashboard

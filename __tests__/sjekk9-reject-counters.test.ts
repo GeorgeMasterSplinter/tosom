@@ -53,6 +53,8 @@ function simulateRound(
   const rejectReasons: Record<string, number> = {
     mangler_profil: 0,
     sperreliste: 0,
+    kjonn: 0,
+    alder: 0,
     modenhetsgap: 0,
     livsrytme: 0,
     preferanser: 0,
@@ -170,9 +172,89 @@ describe('Sjekk 9 — radius-telleren kan bevege seg', () => {
   });
 });
 
+describe('Sjekk 9 — kjønnspreferanse-telleren kan bevege seg (WP1)', () => {
+  it('skal gå fra 0 til 1 ved konstruert avvisning (søker kvinne, kandidat er mann)', () => {
+    const a = makeProfile({
+      userId: 'kv-a',
+      lifeSituation: { gender: 'Kvinne', seekingGender: 'Mann' },
+    });
+    const b = makeProfile({
+      userId: 'man-b',
+      lifeSituation: { gender: 'Mann', seekingGender: 'Mann' },
+    });
+
+    const result = simulateRound([[a, b]]);
+
+    expect(result.pairsEvaluated).toBe(1);
+    expect(result.rejectReasons['kjonn']).toBe(1);
+  });
+
+  it('skal stå stille (0) når preferansene er enige', () => {
+    const a = makeProfile({
+      userId: 'kv-a',
+      lifeSituation: { gender: 'Kvinne', seekingGender: 'Mann' },
+    });
+    const b = makeProfile({
+      userId: 'man-b',
+      lifeSituation: { gender: 'Mann', seekingGender: 'Kvinne' },
+    });
+
+    const result = simulateRound([[a, b]]);
+
+    expect(result.pairsEvaluated).toBe(1);
+    expect(result.rejectReasons['kjonn']).toBe(0);
+    expect(Object.values(result.rejectReasons).reduce((s, v) => s + v, 0)).toBe(0);
+  });
+});
+
+describe('Sjekk 9 — alderspreferanse-telleren kan bevege seg (WP1)', () => {
+  it('skal gå fra 0 til 1 ved konstruert avvisning (kandidat under minste alder)', () => {
+    const a = makeProfile({
+      userId: 'user-a',
+      age: 35,
+      deepProfileData: { agePrefMin: 28, agePrefMax: 45 },
+    });
+    const b = makeProfile({
+      userId: 'user-b',
+      age: 22,
+    });
+
+    const result = simulateRound([[a, b]]);
+
+    expect(result.pairsEvaluated).toBe(1);
+    expect(result.rejectReasons['alder']).toBe(1);
+  });
+
+  it('skal stå stille (0) når kandidaten er innenfor intervallet', () => {
+    const a = makeProfile({
+      userId: 'user-a',
+      age: 35,
+      deepProfileData: { agePrefMin: 28, agePrefMax: 45 },
+    });
+    const b = makeProfile({
+      userId: 'user-b',
+      age: 30,
+    });
+
+    const result = simulateRound([[a, b]]);
+
+    expect(result.pairsEvaluated).toBe(1);
+    expect(result.rejectReasons['alder']).toBe(0);
+    expect(Object.values(result.rejectReasons).reduce((s, v) => s + v, 0)).toBe(0);
+  });
+});
+
 describe('mapRejectReason — kartleggingen er eksplisitt', () => {
   it('skal kartlegge Modenhets-gap til modenhetsgap', () => {
     expect(mapRejectReason('Modenhets-gap for stort (1 vs 9)')).toBe('modenhetsgap');
+  });
+
+  it('skal kartlegge Kjønnspreferanse til kjonn (WP1)', () => {
+    expect(mapRejectReason('Kjønnspreferanse: søker «Kvinne», men kandidaten er «Mann» (user-a)')).toBe('kjonn');
+  });
+
+  it('skal kartlegge Alderspreferanse til alder (WP1)', () => {
+    expect(mapRejectReason('Alderspreferanse: kandidat er 25 år, under minste alder 28 for user-a')).toBe('alder');
   });
 
   it('skal kartlegge Inkompatibel livsrytme til livsrytme', () => {

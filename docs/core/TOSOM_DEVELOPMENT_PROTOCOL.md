@@ -55,7 +55,7 @@ en dating-app · en feed · en markedsplass · en konkurranse · en like-økonom
 ## 3. SPRÅKMANUAL
 
 ### Grunnprinsipper
-- **Bokmål** — aldri nynorsk, aldri svorsk
+- **Bokmål** — aldri nynorsk, aldri svorsk. Gjelder overalt: brukerflate, dokumentasjon, kodekommentarer og commit-meldinger.
 - **Varmt, modent, trygt, klart**
 - **Uten slang, teknisk jargon, "AI-aktig" språk**
 

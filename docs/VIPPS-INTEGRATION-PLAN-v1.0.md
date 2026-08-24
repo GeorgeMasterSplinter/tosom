@@ -92,7 +92,7 @@ I `lib/auth/config.ts`, som en `OAuthConfig` med:
 | `name` | Fornavn til profilen |
 | `phoneNumber` | Unik identifikator |
 | `email` | Varsler |
-| **`birthDate`** | **Aldersgrense 23+ (invariant I-14)** |
+| **`birthDate`** | **Aldersgrense 21+ (invariant I-14)** |
 
 `birthDate` fra Vipps er BankID-verifisert. Det gir en **reell** aldersgrense — ikke en avkrysningsboks. Det er en betydelig forbedring over dagens selvrapporterte alder.
 
@@ -195,7 +195,7 @@ Vipps vurderer risiko og omdømme. Vær ærlig og presis:
 
 Ikke bruk ordet «dating» hvis du kan unngå det — Tosom er ikke det, og noen kategorier utløser strengere vurdering.
 
-**Nevn aldersverifisering.** At du bruker `birthDate` for å håndheve 23+ er et argument *for* deg.
+**Nevn aldersverifisering.** At du bruker `birthDate` for å håndheve 21+ er et argument *for* deg.
 
 ### 6.3 Prosessen
 
@@ -333,7 +333,7 @@ Vipps gir Tosom tre ting utover innlogging:
 
 **BankID-verifisert identitet.** Ekte mennesker, ikke engangs-e-poster. For et produkt der to fremmede skal snakke fortrolig i 30 dager, er det et betydelig trygghetsløft — særlig for kvinner.
 
-**Reell aldersgrense.** `birthDate` fra BankID gjør 23+ til et faktum framfor en avkrysningsboks.
+**Reell aldersgrense.** `birthDate` fra BankID gjør 21+ til et faktum framfor en avkrysningsboks.
 
 **Norsk betaling nordmenn stoler på.** 349 kr i Vipps er én bekreftelse. Kortskjema er friksjon og mistenksomhet.
 

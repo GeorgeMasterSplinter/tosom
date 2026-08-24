@@ -127,7 +127,7 @@ enum ResonanceLevel {
 | Onboarding fullført | `User.onboardingComplete === true` |
 | Ingen aktiv reise | `JourneyProgress.endedAt !== null || JourneyProgress === null` |
 | Ikke låst fra forrige match | Begge aksepterte og reisen er over, eller ingen av dem har aktiv reise |
-| Alder | Brukere må være 23+ (valideres i onboarding) |
+| Alder | Brukere må være 21 år eller eldre (valideres i onboarding) |
 | Ingen active match | `Match.status !== 'active'` for brukeren |
 
 ### Hvem kan IKKE matches?

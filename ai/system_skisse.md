@@ -8,7 +8,7 @@
 ## 1. PLATTFORMOVERSIKT
 
 ### Konsept
-ToSom er en rolig, moden og forskningsbasert relasjonsplattform for voksne (23+). Plattformen hjelper to mennesker å møtes på en trygg, strukturert måte — uten støy, uten jag, uten overflate.
+ToSom er en rolig, moden og forskningsbasert relasjonsplattform for voksne (21+). Plattformen hjelper to mennesker å møtes på en trygg, strukturert måte — uten støy, uten jag, uten overflate.
 
 ### Kjerneverdier
 - Privat · Forskningsbasert · Moden · Rolig · High-tech · Premium

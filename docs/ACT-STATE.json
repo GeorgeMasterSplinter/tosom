@@ -1,10 +1,10 @@
 {
   "version": "1.0",
-  "updatedAt": "2026-08-23",
-  "commit": "109327d",
-  "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v1.0.md",
+  "updatedAt": "2026-08-24",
+  "commit": "26c0b66",
+  "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
-    "tests": "264/264",
+    "tests": "311/311 (35 suiter)",
     "typecheck": "0 errors",
     "productionBuild": "verified"
   },
@@ -25,12 +25,14 @@
     {
       "id": "B-3",
       "title": "PDF-eksport mangler",
-      "status": "closed"
+      "status": "closed",
+      "resolvedIn": "app/api/journey/export-pdf/route.ts"
     },
     {
       "id": "B-4",
       "title": "Admin-eskalering",
-      "status": "closed"
+      "status": "closed",
+      "resolvedIn": "adminAuthGuard() på alle admin-endepunkter"
     },
     {
       "id": "B-5",
@@ -48,21 +50,41 @@
       "id": "B-7",
       "title": "Vanlige brukere kastes ut rett etter innlogging i produksjon",
       "status": "closed",
-      "resolvedIn": "middleware.ts getToken() manglet secureCookie. I NextAuth v5 er cookie-navnet saltet i nøkkelavledningen (@auth/core/jwt.js: salt = cookieName). Config skriver __Secure-authjs.session-token i produksjon; middleware leste authjs.session-token → feil cookie og feil salt → dekryptering feilet. Admin var upåvirket (egen admin_token-vei), derfor kom kun admin inn. Test: __tests__/middleware-cookie-salt.test.ts"
+      "resolvedIn": "middleware.ts getToken() manglet secureCookie (salt = cookieName). Test: __tests__/middleware-cookie-salt.test.ts"
+    }
+  ],
+  "leveranser": [
+    {
+      "dato": "2026-08-24",
+      "id": "WP1",
+      "title": "Matching: kjønn- og alderspreferanse som bidireksjonelle dealbreakere",
+      "content": "checkGenderSeeking + checkAgePreference i lib/matching/dealbreaker.ts (normaliserer legacy/UI/seed-ordforråd). checkSecurityLevelGap normaliserer blandet språk (secure/sikker/trygg/unsicher). Ukjent/manglende data blokkerer aldri. rejectReason + cron/matching får kjonn- og alder-kategorier (M-12-observasjon). Test: __tests__/dealbreaker-gender-age.test.ts (23 tester)."
+    },
+    {
+      "dato": "2026-08-24",
+      "id": "WP2",
+      "title": "Onboarding: isolert draft + prefill, ingen datakorupsjon",
+      "content": "Profile.onboardingDraft Json? (migration 20260824085229). Draft-ruten bruker det nye feltet i stedet for å overskrive deepProfileData (psychometrics, wantsChildren). Prefill via lib/profile/toOnboardingData.ts + /api/onboarding/prefill. OnboardingFlow: server-draft > prefill > localStorage; draft ryddes først etter vellykket send. profile/setup persisterer grenser, livsstilsgitter, relasjonsStil. Test: __tests__/toOnboardingData.test.ts (13 tester)."
+    },
+    {
+      "dato": "2026-08-24",
+      "id": "DOKS",
+      "title": "Dokumentasjonen konsolidert til én sannhet",
+      "content": "SUPER-MASTERPLAN v2.0 (kanonisk), core/ (11 uverifiserte overviews) + ferdige/erstattet dokumenter arkivert, BETA-DRIFTSPLAN v1.1 (åpen beta-model), reference/ regenerert (116 ruter, WP1-dealbreakere), concepts/ for ubegjente konsepter, README ny inngangsport. Se git-log 2026-08-24."
     }
   ],
   "verifiedFlow": {
-    "registrering": "/register og /onboarding/start redirecter til /login; auto-registrering i lib/auth/config.ts:38-59 oppretter User + Profile ved ny e-post",
-    "navigasjon": "UniversalMenu er levende meny (Hvorfor/Slik fungerer det/Reisen/Priser). Header.tsx og GlobalHeaderWrapper.tsx var død kode med 3 døde lenker (/hvordan-det-fungerer, /om, /signup) — slettet.",
+    "registrering": "/register og /onboarding/start redirecter til /login; auto-registrering i lib/auth/config.ts oppretter User + Profile ved ny e-post",
+    "navigasjon": "UniversalMenu er levende meny (Hvorfor/Slik fungerer det/Reisen/Priser). Header.tsx og GlobalHeaderWrapper.tsx var død kode — slettet.",
     "ikkeLenket": [
       "/trygghet — kun lenket fra /vilkar og /personvern, ikke fra hovedmeny",
       "/metoder — ikke lenket noe sted"
     ]
   },
-  "nextAction": "Deploy middleware-fiksen og la en tester registrere seg på tosom.no. Deretter: lenke /trygghet og /metoder i menyen, hosting-migrering (Vercel/Neon/R2), geo-koordinater til 100 %. Vipps er fortsatt kritisk sti for 5 000-bølgen.",
+  "nextAction": "1) BETA-TEST §10-sjekklisten (manuelt i Vercel: secrets, MAINTENANCE_MODE av, DEV_LOGIN av, admin-passord, support@/noreplay@). 2) La første testere registrere seg på tosom.no. 3) Lenk /trygghet og /metoder i menyen. 4) Hosting-migrering (Vercel/Neon/R2). 5) Geo-koordinater til 100 %.",
   "gjenstaarFoerBeta": [
-    "Deploy + verifisert innlogging med ekte tester",
-    "Manuell sjekkliste i docs/BETA-TEST-v1.0.md §10"
+    "Manuell sjekkliste i docs/BETA-TEST-v1.0.md §10 (F-8)",
+    "F-6: .env-hemmeligheter til passordhåndterer (før produksjonsdata finnes)"
   ],
   "gjenstaarFoerLansering": [
     "Vipps Login (eneste innlogging)",

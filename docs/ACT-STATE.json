@@ -1,12 +1,12 @@
 {
   "version": "1.0",
   "updatedAt": "2026-08-24",
-  "commit": "26c0b66",
+  "commit": "a31288c",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
-    "tests": "320/320 (36 suiter)",
+    "tests": "336/336 (38 suiter)",
     "typecheck": "0 errors",
-    "productionBuild": "verified (2026-08-24, et quota-fix + journey-cron kapasitet)"
+    "productionBuild": "verified (2026-08-24, et F2-skaling + atomisk kvote)"
   },
   "currentPhaseId": "apen-beta-test",
   "blockers": [
@@ -77,6 +77,30 @@
       "id": "BETA-DEPLOY",
       "title": "Deploy-klargjøring: kvote-fix i panelet + journey-cron kapasitet + GEORGE.md",
       "content": "1) Admin-panelet viste hardkodet 'X / 10 000' med terskler 8000/9500 mot et tak som aldri har eksistert — nå viser det PRICING.freeUserCap (5 000) med relative terskler 80 %/95 %. Test: __tests__/free-quota-threshold.test.ts (9 tester). 2) Journey-cron: 'take: 100' + én gang/dag = ~100 samtidige reiser som tak — nå timebasert (vercel.json '0 * * * *') + JOURNEY_BATCH_SIZE env (standard 100, 300 på Vercel ≈ 7 200 samtidige) + pendingJourneys i /api/admin/overview, dashboard-indikator 'Reiser som venter på fremrykk' og journey_backlog-alert (24 t rate-limited). 3) GEORGE.md i rot: komplett manuell deploy-guide (Neon/R2/Pusher/Resend/Vercel-env/kill switches/kvote/kapasitet/daglig oversikt/fase 2). Åpen beta krever ingen kodeendring: auto-registrering i lib/auth/config.ts, BETA_INVITE_MODE=false som hygiene."
+    },
+    {
+      "dato": "2026-08-24",
+      "id": "F2-0",
+      "title": "Mood-panelet skjulte halve moods-utvalget (F2-0)",
+      "content": "MoodsPanel.tsx hadde maxHeight 440px + overflow-hidden medan BliKjentPanel/OppgaverPanel har scrollbar — 12 moods, 6+ avskorne på desktop. Fiksa: 480px-utverknad + overflow-y-auto max-h-[400px] på body, same mønster som nabopanelene."
+    },
+    {
+      "dato": "2026-08-24",
+      "id": "F2-1",
+      "title": "Matcherunden skalbar: prekalkulerte dealbreakers + S3 (S1/S3)",
+      "content": "1) Scoring-kjernen utteken til lib/matching/scoreRound.ts (ren, testbar utan DB) + lib/matching/cheapFeatures.ts: normalisering ein gong per kandidat (O(n)) i staden for per par (O(n²)); cheapSjekkAll reproduserer nøyaktig same 11 steg og same reason-strenger som sjekkAlleDealbreakers(A,B) ?? (B,A) — verifisert av ekvivalens-testar (fixture-matrise 45 profiler + 4 000 seeda tilfeldige par + målt dry-run: 5 000 kandidatar i ~11 s, 4,7× raskare filter, 0 avvikingar). 2) S3: matching-cron '0 2 * * 6' → '0 2,3,4 * * 6' (tre lørdagskjøringer; matcha brukarar forlèt køen, så neste runde fortset der førre stoppa). M-12-nøklar, M-3-loggar og alle rutesemantikk uendra. Test: __tests__/matching-score-round.test.ts (11 tester)."
+    },
+    {
+      "dato": "2026-08-24",
+      "id": "F2-2",
+      "title": "Atomisk gratiskvote (race-fri grense)",
+      "content": "Quota-tabell (migration 20260824123756, backfill frå Order-teljinga) + claimFreeQuota i lib/payment/freeQuota.ts: éin betinga UPDATE ... SET used = used+1 WHERE used < cap — Postgres row-lock gjer at berre éin vinn grenseplassen ved taket (tidlegare: count-deretter-create, 'e handfull ekstra kan slippe gjennom'). Rollback dersom Order-kreeringa feilar. app/api/journey/queue bruker claimFreeQuota; Order-taljen forblir audit-loggen (admin-panelet uendra). Test: __tests__/free-quota-claim.test.ts (5 tester)."
+    },
+    {
+      "dato": "2026-08-17",
+      "id": "F2-3",
+      "title": "Geo-koordinatar 100 % (ferdig 10.08)",
+      "content": "postalCodes.json: 5 146/5 146 postnummer med sted/lat/lon (git 2c12a0d, dag 10). Ingen null-verdiar att — radius-filteret og avstandskartet dekkjer heile landet."
     }
   ],
   "verifiedFlow": {
@@ -87,7 +111,7 @@
       "/metoder — ikke lenket noe sted"
     ]
   },
-  "nextAction": "1) Deploy til Vercel etter GEORGE.md (steg 2–9: Neon + migrate, R2, Pusher, Resend, env, 7 verifiseringspunkter). 2) Slipp inn 10 testere → 50. 3) Fase 2: gjenstaarFoerLansering (matching-skaling S1/S3 først).",
+  "nextAction": "1) Deploy til Vercel etter GEORGE.md (steg 2–9: Neon + migrate (inkl. Quota-backfill), R2, Pusher, Resend, env, 7 verifiseringspunkter). 2) Slipp inn 10 testere → 50. 3) Gjenståande fase 2: Vipps Login/Betaling, DPA+DPIA, tetthetsbasert radius, kostnadsplan.",
   "gjenstaarFoerBeta": [
     "Manuell sjekkliste — nå konsolidert i GEORGE.md (steg 2–9, env-liste, kill switches)",
     "F-6: .env-hemmeligheter til passordhåndterer (før produksjonsdata finnes)"
@@ -95,9 +119,8 @@
   "gjenstaarFoerLansering": [
     "Vipps Login (eneste innlogging)",
     "Vipps Betaling 349 kr",
-    "Gratis-kvote 5 000 reiser (atomisk teller)",
-    "Geo-koordinater 100 % dekning",
+    "DPA + DPIA (juridisk før kampanje)",
     "Tetthetsbasert radius 30-300 / 50-400 km",
-    "S1 batch-transaksjoner + S3 fortsettelses-cron"
+    "Kostnadsplan: Vercel Pro/Fluid, Pusher/Resend betalte tier, R2-lagring"
   ]
 }

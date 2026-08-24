@@ -60,7 +60,7 @@ For George. Alt du skal gjere manuelt står her. Alt anna er allereie i koden.
 1. [ ] Open `tosom.no` → landingsida lastar (ikkje `/maintenance`)
 2. [ ] `/login` → ny e-post + passord → havnar i onboarding (auto-registreringa fungerer)
 3. [ ] `/admin/login` → panelet opnar; kvoten viser **`0 / 5 000`**
-4. [ ] Vercel → **Cron** → to jobbar: `journey` (timevis) og `matching` (laurdag 02:00)
+4. [ ] Vercel → **Cron** → to jobbar: `journey` (timevis) og `matching` (laurdag 02:00, 03:00 og 04:00 — tre kjøringer)
 5. [ ] Vercel → Logs: ingen 5xx ved testane over
 6. [ ] Lag **partall** testbrukere (min. 2), fullfør onboarding, still dei i kø, så: `/admin/tools` → «Kjør matching manuelt» → paret får match
 7. [ ] E-post: driftsvarslet til `ALERT_EMAIL_TO` kjem fram
@@ -137,6 +137,7 @@ Endring: Vercel → Settings → Environment Variables → endre → **Redeploy*
 - **Panelet:** grønt < 4 000 · gult 4 000–4 750 · raudt > 4 750.
 - **Ved taket:** ny brukar får «Gratiskvoten er oppbrukt. Betaling kreves» — skjer ikkje med 50 testere.
 - **Skal taket opp seinare:** éin linje i `config/legal.ts` (vilkåra følgjer automatisk).
+- **Grensa er race-fri (F2-2):** kvoteplassen vert klamma med éin atomisk database-operasjon (`Quota.free_users`) — to samtidige onboardingar ved taket kan ikkje begge slippe gjennom. Panelet les framleis Order-teljinga (audit-loggen); tellaren synkroniserast ved kvar claim.
 
 ---
 
@@ -145,7 +146,7 @@ Endring: Vercel → Settings → Environment Variables → endre → **Redeploy*
 | Komponent | Kapasitet i dag | Risiko med 50 testere |
 |---|---|---|
 | Journey-cron (timevis × 300) | ~7 200 samtidige reiser | Ingen (50 testere = ~25 reiser) |
-| Matcherunde (laurdag, 50 s budsjett, maks 5 000 i kø) | 50-s-runde | Ingen |
+| Matcherunde (laurdag 02–04, 3×50 s budsjett, maks 5 000 i kø) | 5 000 kandidatar i ~11 s (målt, F2-1) | Ingen — ~4× budsjett i éin runde, pluss to fleire |
 | API / DB / R2 / Pusher | Skalierer | Ingen |
 
 **Kvar du ser varsla først:**
@@ -174,12 +175,12 @@ Endring: Vercel → Settings → Environment Variables → endre → **Redeploy*
 ## 8. Etter betaen — før lansering (fase 2, lokal jobb)
 
 Rekkjefølgje (saman med `ACT-STATE.gjenstaarFoerLansering`):
-1. **Matcherunden skalering:** prefilter (kjønn/avstand før den kvadratiske loopen) + batch + fortsetjande-cron (S1/S3) + dry-run med 5 000 syntetiske profiler (må vere < 50 s med margin).
+1. ✅ **Matcherunden skalering (F2-1, 17.08):** prekalkulerte dealbreakers (O(n) i staden for O(n²) normalisering), 4,7× raskare filter, 5 000 kandidatar i ~11 s, laurdagstidasvindauget utvida til 02–04 (S3). Ekvivalens-testar låser semantikken.
 2. **Vipps Login + Betaling** (349 kr) — då erstattast e-post+passord, og kvoten får sin betalings-tilbakefall.
 3. **DPA + DPIA** (HOSTING-plan §6) — juridisk før kampanje.
-4. **Geo-koordinatar 100 %** (40 % i dag).
+4. ✅ **Geo-koordinatar 100 %** (ferdig 10.08 — `postalCodes.json` har 5 146/5 146 med koordinatar).
 5. **Kostnadar/planar:** Vercel Pro/Fluid, Pusher/Resend betalte tier, R2-lagring.
-6. **Atomisk kvote-teller** (i dag: `count()` + rask create — «e handfull ekstra kan slippe gjennom» ved selve taket; akseptabelt, men ta det med Vipps-runden).
+6. ✅ **Atomisk kvote-teller (F2-2, 17.08):** `Quota.free_users` med betinga `UPDATE ... SET used = used+1 WHERE used < cap` — grenseplassen kan ikkje verta klamma to gonger.
 
 Med fase 2 på plass held arkitekturen 100 000 brukere over eitt år med margin — dei to cron-takene var dei einskaste flaushalsane, og begge har kjende fixar.
 

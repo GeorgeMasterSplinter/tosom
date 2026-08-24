@@ -26,7 +26,7 @@ import { requireAuth } from '@/lib/auth/requireAuth';
 import { withMetrics } from '@/lib/observability/withMetrics';
 import { recordEvent } from '@/lib/observability/metric';
 import { isPaymentsEnabled } from '@/config/features';
-import { isFreeQuotaAvailable, createFreeOrder } from '@/lib/payment/freeQuota';
+import { claimFreeQuota } from '@/lib/payment/freeQuota';
 
 export const dynamic = 'force-dynamic';
 
@@ -112,8 +112,10 @@ async function postHandler(req: NextRequest) {
         select: { id: true },
       });
       if (!existingOrder) {
-        const quotaAvailable = await isFreeQuotaAvailable();
-        if (!quotaAvailable) {
+        // F2-2: atomisk claim — berre éin kan vinne grenseplassen ved
+        // taket (tidlegare var det check-then-create med race-vinda).
+        const claimed = await claimFreeQuota(user.id);
+        if (!claimed) {
           return NextResponse.json(
             {
               error: 'Gratiskvoten er oppbrukt. Betaling kreves for å starte reisen.',
@@ -122,7 +124,6 @@ async function postHandler(req: NextRequest) {
             { status: 402 }
           );
         }
-        await createFreeOrder(user.id);
       }
     }
 

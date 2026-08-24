@@ -53,3 +53,57 @@ export async function createFreeOrder(userId: string) {
 
 /** Maks antall gratisbrukere */
 export { FREE_QUOTA_LIMIT };
+
+/* ═══════════ F2-2: Atomisk kvote-claim (race-fri grense) ═══════════ */
+
+/** Nøkkelen til gratiskvote-raden i Quota-tabellen. */
+const FREE_QUOTA_KEY = 'free_users';
+
+/**
+ * F2-2: Atomisk claim av éin gratisbrukar-plass.
+ *
+ * Tidlegare var dette check-then-create (countFreeQuotaOrders → create)
+ * — to samtidige onboardingar ved taket kunne begge seie «4 999 < 5 000»
+ * og begge få plass. Noko som skal vere éin grense skal vere éin grense.
+ *
+ * Mekanismen: éin betinga
+ *   UPDATE "Quota" SET "used" = "used" + 1
+ *   WHERE "id" = 'free_users' AND "used" < cap
+ * Postgres sin row-lock seriariserer samtidige oppdateringar av same
+ * rad: den andre ser den oppdaterte verdien og matcher ikkje lenger
+ * WHERE-klausulen → count = 0 → kvota full. Ingen overskriding.
+ *
+ * @returns Order-enheiten ved suksess, null dersom kvota er full.
+ * @throws dersom Order-kreeringa feilar (telleren blir da rolla attende)
+ */
+export async function claimFreeQuota(userId: string) {
+  const row = await prisma.quota.findUnique({ where: { id: FREE_QUOTA_KEY } });
+  if (!row) {
+    // Skulle ikkje hende: migreringa seedar raden. Feil høyrast — ikkje
+    // tyst gjennomslag ved ukjend teller.
+    throw new Error(`Quota-rad manglar (${FREE_QUOTA_KEY}) — køyr migreringa`);
+  }
+
+  const result = await prisma.quota.updateMany({
+    where: { id: FREE_QUOTA_KEY, used: { lt: FREE_QUOTA_LIMIT } },
+    data: { used: { increment: 1 } },
+  });
+
+  if (result.count === 0) {
+    return null; // grenseplassen vart teken (eller kvota er full)
+  }
+
+  try {
+    return await createFreeOrder(userId);
+  } catch (err) {
+    // Order feila — gi plassen att slik at telleren ikkje dryppar
+    // frå Order-teljinga (admin-panelet les den).
+    await prisma.quota
+      .updateMany({
+        where: { id: FREE_QUOTA_KEY },
+        data: { used: { decrement: 1 } },
+      })
+      .catch(() => {});
+    throw err;
+  }
+}

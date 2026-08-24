@@ -63,7 +63,7 @@ export function MoodsPanel({ onClose }: MoodsPanelProps) {
       <div
         className="overflow-hidden transition-all duration-300 ease-out"
         style={{
-          maxHeight: panelOpen ? '440px' : '0px',
+          maxHeight: panelOpen ? '480px' : '0px',
           opacity: panelOpen ? 1 : 0,
           background: `linear-gradient(180deg, ${G.glassBgDark} 0%, rgba(7,13,20,0.95) 100%)`,
           borderTop: `1px solid ${accentMuted}`,
@@ -101,8 +101,8 @@ export function MoodsPanel({ onClose }: MoodsPanelProps) {
           </button>
         </div>
 
-        {/* ═══ BODY — Mood-kort ═══ */}
-        <div className="p-5">
+        {/* ═══ BODY — Mood-kort ═══ (scrollbar — same mønster som BliKjent/Oppgaver) */}
+        <div className="overflow-y-auto max-h-[400px] p-5">
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-3">
             {moodOrder.map((key: MoodId, i) => {
               const theme = moodThemes[key];

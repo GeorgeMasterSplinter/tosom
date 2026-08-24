@@ -1,40 +1,42 @@
 # TOSOM — Dokumentasjon
 
-Kort inngangsport. Alle referanser peker på filer som finnes i repoet per 2026-08-21.
-
+Kort inngangsport. Alt som ligger på toppnivå her **gjelder nå**.
 
 ---
 
-## Kanonisk systembeskrivelse
+## 1. Kanonisk
 
 | Dokument | Stikkord |
 |----------|----------|
-| **[TOSOM-SUPER-MASTERPLAN-v1.0.md](TOSOM-SUPER-MASTERPLAN-v1.0.md)** | **Kanonisk.** Produkt, teknikk, invarianter, vei til beta. Erstatter MASTERPLAN v2–v8. |
+| **[TOSOM-SUPER-MASTERPLAN-v2.0.md](TOSOM-SUPER-MASTERPLAN-v2.0.md)** | **Én sannhet.** Produkt, teknikk, invarianter, vei til beta og lansering. |
 
-## Spesialplaner
+## 2. Beta — inneværende periode
 
 | Dokument | Stikkord |
 |----------|----------|
-| **[TOSOM-PLATTFORMDIAGNOSE-v2.0.md](TOSOM-PLATTFORMDIAGNOSE-v2.0.md)** | As-is tilstand, blokkere, avvik, teknisk gjeld. |
+| **[BETA-TEST-v1.0.md](BETA-TEST-v1.0.md)** | **Åpen beta med ekte brukere:** fri tilgang (e-post + passord), faser, målinger, sjekkliste. Gjelder til Vipps er på plass. |
+| **[TOSOM-BETA-DRIFTSPLAN-v1.1.md](TOSOM-BETA-DRIFTSPLAN-v1.1.md)** | Driften under beta: rytmen, tersklene, suksess- og avbruddskriterier. |
+
+## 3. Aktive planer
+
+| Dokument | Stikkord |
+|----------|----------|
+| **[MATCHING-TUNING-PLAN-v1.0.md](MATCHING-TUNING-PLAN-v1.0.md)** | Motoren: retting før beta (M-1…M-6, ferdig), tuning etter observasjon. |
 | **[SECURITY-STABILITY-PLAN-v2.0.md](SECURITY-STABILITY-PLAN-v2.0.md)** | Sikkerhet, auth, rate limiting, GDPR, drift. |
-| **[MATCHING-TUNING-PLAN-v1.0.md](MATCHING-TUNING-PLAN-v1.0.md)** | Motoren: retting før beta, tuning etter observasjon. |
-| **[BETA-TEST-v1.0.md](BETA-TEST-v1.0.md)** | **Åpen beta med ekte brukere: fri tilgang (e-post + passord), faser B-1…B-5. Gjelder til Vipps er på plass.** |
-| **[BETA-ACCESS-PLAN-v1.0.md](BETA-ACCESS-PLAN-v1.0.md)** | Lukket beta: invitasjonsport, rekruttering, observasjon, testmatrise. *Erstattet av BETA-TEST v1.0 for inneværende periode.* |
-| **[TOSOM-BETA-DRIFTSPLAN-v1.0.md](TOSOM-BETA-DRIFTSPLAN-v1.0.md)** | Hvor vi står, hva som gjenstår før invitasjon, driftsrutinen under beta. |
-| **[ADMIN-KOMMANDOPANEL-v1.0.md](ADMIN-KOMMANDOPANEL-v1.0.md)** | Ombygging av admin til kommandopanel. Steg K-1…K-9 med kode. |
-| **[LANDING-SIGNATUR-v1.0.md](LANDING-SIGNATUR-v1.0.md)** | Signatur-laget på landingssiden: resonans-motivet, calm-motion. Steg S-1…S-10 med kode. |
-| **[JURIDISK-GRUNNLAG-v1.0.md](JURIDISK-GRUNNLAG-v1.0.md)** | Vilkår, personvern, trygghet: funn, beslutninger og advokat-brief (A-1…A-7). |
-| **[OBSERVABILITY-PLAN-v1.0.md](OBSERVABILITY-PLAN-v1.0.md)** | Metrikker, logging, varsling. Vercel Custom Metrics + SystemLog. Steg O-1…O-12. |
-| **[FORSKNINGSMOTOR-v1.0.md](FORSKNINGSMOTOR-v1.0.md)** | Validerte instrumenter i motoren: BFI-10, ECR-S, PVQ-10, ERQ-6. Steg F-1…F-12. |
-| **[ACT-PIPELINE-v1.0.md](ACT-PIPELINE-v1.0.md)** | Arbeidssyklus, patch-regler, invarianter, verifisering. Erstatter ACT-INSTRUKS v2–v11. |
-| **[DOCS-RESTRUCTURE-v1.0.md](DOCS-RESTRUCTURE-v1.0.md)** | Denne restruktureringen: plan + gjennomførte valg. |
+| **[MASTERSPLINTER-SIKKERHET-v1.0.md](MASTERSPLINTER-SIKKERHET-v1.0.md)** | Komplett sikkerhetsguide for maskin og drift. |
+| **[OBSERVABILITY-PLAN-v1.0.md](OBSERVABILITY-PLAN-v1.0.md)** | Metrikker, logging, varsling. Steg O-1…O-12. |
+| **[FORSKNINGSMOTOR-v1.0.md](FORSKNINGSMOTOR-v1.0.md)** | Validerte instrumenter i motoren: BFI-10, ECR, PVQ-10, ERQ-6. F-9 kalibreres etter beta. |
+| **[JURIDISK-GRUNNLAG-v1.0.md](JURIDISK-GRUNNLAG-v1.0.md)** | Vilkår, personvern, trygghet: funn, beslutninger og advokat-brief. |
+| **[VIPPS-INTEGRATION-PLAN-v1.0.md](VIPPS-INTEGRATION-PLAN-v1.0.md)** | Lansering: Vipps Login (eneste innlogging) + Vipps Betaling 349 kr. |
+| **[HOSTING-MIGRATION-PLAN-v1.0.md](HOSTING-MIGRATION-PLAN-v1.0.md)** | Vercel/Neon/R2-migrering. |
+| **[LANDING-SIGNATUR-v1.0.md](LANDING-SIGNATUR-v1.0.md)** | Signatur-laget på landingssiden: resonans-motivet, calm-motion. |
 
+## 4. Prosess
 
-## Levende tilstand
-
-| Fil | Stikkord |
-|-----|----------|
-| **[ACT-STATE.json](ACT-STATE.json)** | Eneste levende tilstandsfil. Oppdateres etter hver fullførte oppgave. |
+| Dokument | Stikkord |
+|----------|----------|
+| **[ACT-PIPELINE-v1.0.md](ACT-PIPELINE-v1.0.md)** | Arbeidssyklus, patch-regler, invarianter, verifisering. |
+| **[ACT-STATE.json](ACT-STATE.json)** | **Eneste levende tilstandsfil.** Må oppdateres i samme commit som den siste koden i en oppgave. |
 
 ---
 
@@ -42,9 +44,9 @@ Kort inngangsport. Alle referanser peker på filer som finnes i repoet per 2026-
 
 | Mappe | Innhold |
 |-------|---------|
-| [`reference/`](reference/) | Levende oppslagsverk (API-ruter, match-status, design tokens) |
-| [`core/`](core/) | Kernedokumentasjon (blueprint, matching, journey, security, roadmap) |
-| [`archive/`](archive/) | Historikk. **Aldri normativ.** |
+| [`reference/`](reference/) | Levende oppslagsverk (API-ruter, matching-dimensjoner, match-status, design tokens) |
+| [`concepts/`](concepts/) | Skisserte konsepter — **aldri normativ** |
+| [`archive/`](archive/) | Historikk: `snapshots/` (punkt-in-tid-diagnoser), `ferdig/` (utførte planer), `erstattet/` (utsatte dokumenter) m.m. **Aldri normativ.** |
 
 ---
 
@@ -52,15 +54,12 @@ Kort inngangsport. Alle referanser peker på filer som finnes i repoet per 2026-
 
 1. **Koden vinner alltid over dokumentasjonen.** Finner du avvik: rapporter det.
 2. **Én kilde for sannhet.** SUPER-MASTERPLAN er kanonisk.
-3. **Skriv i bokmål.** Varmt, modent, trygt, klart.
-4. **Aldri slett uten godkjenning.** Flytt til `archive/` i stedet.
+3. **Skriv i bokmål.** Varmt, modent, trygt, klart. Gjelder kodekommentarer og commit-meldinger med.
+4. **Aldri slett uten godkjenning.** Flytt til `archive/` i stedet. Ferdige og erstatte dokumenter forlater toppnivået **innen 24 timer** etter at de er ferdig/erstattet.
 5. **Verifiser mot kode.** Dokumentasjon som motsier kildekoden er en feil.
+6. **Diagnoser er snapshots.** Dato + commit i tittelen, og de hører i `archive/snapshots/` — aldri på toppnivået.
+7. **`ACT-STATE.json` ligger aldri bak.** Den oppdateres i samme commit som den siste koden i oppgaven.
 
 ---
 
-*Sist oppdatert: 2026-08-23 (BETA-TEST v1.0)*
-
-
-
-
-
+*Sist oppdatert: 2026-08-24 (dokumentasjonen konsolidert til én sannhet)*

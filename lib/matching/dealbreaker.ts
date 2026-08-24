@@ -76,7 +76,7 @@ const SECURITY_LEVELS: Record<string, number> = {
   usikker: 1, unsicher: 1, ukomfortabel: 1,
 };
 
-function securityLevelToNum(level: string): number | null {
+export function securityLevelToNum(level: string): number | null {
   return SECURITY_LEVELS[level.trim().toLowerCase()] ?? null;
 }
 
@@ -205,12 +205,12 @@ const SEEKING_OPEN_ALIASES: Record<string, true> = {
   'kjemisk-tiltrekning': true, 'kjemisk tiltrekning': true,
 };
 
-function normalizeGender(raw: unknown): 'man' | 'kvinne' | 'annen' | null {
+export function normalizeGender(raw: unknown): 'man' | 'kvinne' | 'annen' | null {
   if (typeof raw !== 'string') return null;
   return GENDER_ALIASES[raw.trim().toLowerCase()] ?? null;
 }
 
-function normalizeSeeking(raw: unknown): 'man' | 'kvinne' | 'annen' | 'open' | null {
+export function normalizeSeeking(raw: unknown): 'man' | 'kvinne' | 'annen' | 'open' | null {
   if (typeof raw !== 'string') return null;
   const key = raw.trim().toLowerCase();
   // Åpent søk — inkludert legacy «annen»/«annet» (ikke spesifisert)
@@ -250,7 +250,7 @@ function checkGenderSeeking(a: ProfileData, b: ProfileData): DealbreakerResult {
  * intervall. Manglende/ugyldig preferanse eller alder → blokkerer IKKE
  * (forsvarlig, samme mønster som radius).
  */
-function toAgeNumber(raw: unknown): number | null {
+export function toAgeNumber(raw: unknown): number | null {
   if (typeof raw === 'number') return Number.isFinite(raw) ? raw : null;
   if (typeof raw === 'string' && raw.trim() !== '') {
     const n = Number(raw);

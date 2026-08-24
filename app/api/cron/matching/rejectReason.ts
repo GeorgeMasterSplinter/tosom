@@ -1,21 +1,7 @@
 /**
- * A13: Kartlegger dealbreaker-reason til rejectReasons-nøkkel.
- *
- * Ren funksjon — ingen sideeffekter, testbar uten DB.
- * Treffer ingen kjent form → 'preferanser' (fallback).
- *
- * Brukes av route.ts og Sjekk-9-testen. Ikke en rute — kun et modul.
+ * A13: Re-export for bakoverkompatibilitet.
+ * Implementasjonen bur i lib/matching/rejectReason.ts (F2: scoreRound-kjernen
+ * i lib trengje funksjonen). Kjør ikkje — berre ein modul.
  */
 
-export function mapRejectReason(reason: string | undefined): string {
-  if (!reason) return 'preferanser';
-  if (reason.startsWith('Kjønnspreferanse')) return 'kjonn';
-  if (reason.startsWith('Alderspreferanse')) return 'alder';
-  if (reason.startsWith('Modenhets-gap')) return 'modenhetsgap';
-  if (reason.startsWith('Inkompatibel livsrytme')) return 'livsrytme';
-  if (reason.startsWith('Sikkerhetsnivå')) return 'sikkerhetsniva';
-  if (reason.startsWith('Grense brutt')) return 'grenser';
-  if (reason.startsWith('For langt bort')) return 'radius';
-  // 'Dealbreaker:' og alt ukjent → preferanser
-  return 'preferanser';
-}
+export { mapRejectReason } from '@/lib/matching/rejectReason';

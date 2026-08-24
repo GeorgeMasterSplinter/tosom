@@ -9,7 +9,7 @@
   "crons": [
     {
       "path": "/api/cron/matching",
-      "schedule": "0 2 * * 6"
+      "schedule": "0 2,3,4 * * 6"
     },
     {
       "path": "/api/cron/journey",

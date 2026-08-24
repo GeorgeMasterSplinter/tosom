@@ -13,14 +13,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Prisma } from '@prisma/client';
 import prisma from '@/lib/prisma';
 import { timingSafeEqual, randomUUID } from 'crypto';
-import { sjekkAlleDealbreakers } from '@/lib/matching/dealbreaker';
-import { unifiedScore } from '@/lib/matching/unifiedScorer';
-import type { UnifiedResult } from '@/lib/matching/unifiedScorer';
 import { toResonanceLevel } from '@/lib/matching/resonanceLevel';
+import { buildCheapFeatures } from '@/lib/matching/cheapFeatures';
+import { scoreRound, normalizePair, emptyRejectReasons } from '@/lib/matching/scoreRound';
+import type { ScoredPair } from '@/lib/matching/scoreRound';
 import { MIN_COHORT_SIZE, MIN_SCORE } from '@/config/matching';
 import { isMatchingEnabled, isBetaMatchEmailEnabled } from '@/config/features';
 import { sendMatchEmail } from '@/lib/email';
-import { mapRejectReason } from './rejectReason';
 import { sendAlert } from '@/lib/observability/alert';
 import { recordMetric } from '@/lib/observability/metric';
 
@@ -42,11 +41,6 @@ function safeCompare(a: string, b: string): boolean {
   return timingSafeEqual(Buffer.from(a), Buffer.from(b));
 }
 
-/** Normalize pair for MatchHistory lookup */
-function normalizePair(aId: string, bId: string): [string, string] {
-  return aId < bId ? [aId, bId] : [bId, aId];
-}
-
 // M-4: utfall som betyr PERMANENT sperre (trygghet veier tyngre enn tilgang på kandidater)
 const PERMANENT_OUTCOMES = ['blocked', 'early_exit'];
 
@@ -61,14 +55,6 @@ function median(arr: number[]): number {
 interface Candidate {
   id: string;
   profile: any;
-}
-
-interface ScoredPair {
-  userIdA: string;
-  userIdB: string;
-  score: number;
-  breakdown: UnifiedResult['breakdown'];
-  level: UnifiedResult['level'];
 }
 
 export async function GET(req: NextRequest) {
@@ -133,21 +119,8 @@ export async function GET(req: NextRequest) {
   let paired = 0;
   let pairsEvaluated = 0;
   let cronJobOutcome: 'ok' | 'error' = 'ok';
-  const rejectReasons: Record<string, number> = {
-    mangler_profil: 0,
-    sperreliste: 0,
-    kjonn: 0,
-    alder: 0,
-    modenhetsgap: 0,
-    livsrytme: 0,
-    preferanser: 0,
-    grenser: 0,
-    radius: 0,
-    sikkerhetsniva: 0,
-    score_under_termin: 0,
-    scoring_feil: 0,
-  };
-  const unmapped: string[] = [];
+  let rejectReasons: Record<string, number> = emptyRejectReasons();
+  let unmapped: string[] = [];
   // ST5.2: Etiketter per avvisningsårsak (tiltak T2) — for lesbart logg-output
   const REJECT_LABELS: Record<string, string> = {
     mangler_profil: 'avvist: mangler profil',
@@ -164,9 +137,9 @@ export async function GET(req: NextRequest) {
     scoring_feil: 'avvist: scoring kastet (korrupt profil)',
   };
   const errors: string[] = [];
-  // M-9: samling for score-/nivåfordeling (til tuning)
-  const allScores: number[] = [];
-  const levelCounts: Record<string, number> = {};
+  // M-9: samling for score-/nivåfordeling (til tuning) — fyllast av scoreRound
+  let allScores: number[] = [];
+  let levelCounts: Record<string, number> = {};
 
   try {
     // Advisory lock
@@ -273,8 +246,9 @@ export async function GET(req: NextRequest) {
       }
       const userBlockPairs = userBlocks.length;
 
-      // 4. Score alle par — sjekk dealbreakers + sperreliste
-      const pairs: ScoredPair[] = [];
+      // 4. Score alle par — F2: prekalkulat per kandidat + ren kjerne i
+      //    lib/matching/scoreRound (same semantikk som før: dealbreakers →
+      //    unifiedScore → MIN_SCORE, M-3 fangar korrupte par, M-12 nøklar)
       const candidates: Candidate[] = queued.map((u) => {
         const p = u.profile || null;
         return {
@@ -291,71 +265,33 @@ export async function GET(req: NextRequest) {
         };
       });
 
-      for (let i = 0; i < candidates.length && Date.now() < deadline; i++) {
-        for (let j = i + 1; j < candidates.length; j++) {
-          const a = candidates[i];
-          const b = candidates[j];
-          pairsEvaluated++;
+      // Prekalkuler dealbreaker-features EN GANG per kandidat (O(n)) —
+      // den dyre normaliseringa gjekk tidlegare per PAR (O(n²)).
+      const features = candidates.map((c) => (c.profile ? buildCheapFeatures(c.profile) : null));
 
-          // Hopp over uten profil
-          if (!a.profile || !b.profile) { rejectReasons['mangler_profil']++; continue; }
+      const scored = scoreRound(candidates, features, blockSet, {
+        deadline,
+        minScore: MIN_SCORE,
+      });
 
-          // Sperreliste
-          const pairKey = normalizePair(a.id, b.id).join(':');
-          if (blockSet.has(pairKey)) {
-            rejectReasons['sperreliste']++;
-            continue;
-          }
+      pairsEvaluated = scored.pairsEvaluated;
+      rejectReasons = scored.rejectReasons;
+      unmapped = scored.unmapped;
+      allScores = scored.allScores;
+      levelCounts = scored.levelCounts;
+      const pairs: ScoredPair[] = scored.pairs;
 
-          // M-3: Én korrupt profil må aldri velte heile lørdagsrunden.
-          // Dealbreaker + scoring les profilen og kan kaste — fang og hopp over
-          // PARET, ikkje runden. Logg begge bruker-ID-er så korrupt profil kan rettes.
-          try {
-            // Dealbreakers (tosidig)
-            const abBlocked = sjekkAlleDealbreakers(a.profile, b.profile);
-            const baBlocked = sjekkAlleDealbreakers(b.profile, a.profile);
-            if (abBlocked.hasDealbreaker || baBlocked.hasDealbreaker) {
-              const reason = abBlocked.reason ?? baBlocked.reason;
-              const key = mapRejectReason(reason);
-              rejectReasons[key]++;
-              if (reason && key === 'preferanser' && !reason.startsWith('Dealbreaker')) {
-                unmapped.push(reason);
-              }
-              continue;
-            }
-
-            // Resonans-score med unifiedScore (9 dimensjoner, 0–100)
-            const result = unifiedScore(a.profile, b.profile);
-            // M-9: samle score-/nivåfordeling for alle parscorede par (til tuning)
-            allScores.push(result.score);
-            levelCounts[result.level] = (levelCounts[result.level] ?? 0) + 1;
-            if (result.score < MIN_SCORE) {
-              rejectReasons['score_under_termin']++;
-              continue; // MIN_SCORE terskel (40 på 0–100 skala)
-            }
-
-            pairs.push({
-              userIdA: a.id,
-              userIdB: b.id,
-              score: result.score,
-              breakdown: result.breakdown,
-              level: result.level,
-            });
-          } catch (err) {
-            rejectReasons['scoring_feil']++;
-            const msg = (err as Error)?.message ?? String(err);
-            errors.push(`scoring ${a.id}+${b.id}: ${msg}`);
-            await prisma.systemLog.create({
-              data: {
-                level: 'ERROR',
-                message: `Scoring feila for par ${a.id}+${b.id} — paret hoppast, runden fortset (M-3)`,
-                module: 'cron:matching',
-                metadata: { userA: a.id, userB: b.id, error: msg },
-              },
-            }).catch(() => {});
-            continue;
-          }
-        }
+      // M-3: éin korrupt profil kasta berre paret — logg kvar linje i SystemLog
+      for (const e of scored.scoringErrors) {
+        errors.push(`scoring ${e.userA}+${e.userB}: ${e.error}`);
+        await prisma.systemLog.create({
+          data: {
+            level: 'ERROR',
+            message: `Scoring feila for par ${e.userA}+${e.userB} — paret hoppast, runden fortset (M-3)`,
+            module: 'cron:matching',
+            metadata: { userA: e.userA, userB: e.userB, error: e.error },
+          },
+        }).catch(() => {});
       }
 
       // 5. Sorter synkende score, grådig kobling

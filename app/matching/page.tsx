@@ -363,7 +363,7 @@ export default function MatchingPage() {
               </h2>
               <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '16px', lineHeight: '1.7' }}>
                 Profilen din er fullført. Når du starter reisen, stiller du deg i
-                køen – og lørdag morgen finn vi nokon som passar deg.
+                køen – og lørdag morgen finn vi noen som passer deg.
               </p>
               <button
                 onClick={handleStartJourney}

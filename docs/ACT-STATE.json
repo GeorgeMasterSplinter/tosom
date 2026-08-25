@@ -58,6 +58,12 @@
   "leveranser": [
     {
       "dato": "2026-08-25",
+      "id": "B3-NEXTDAY-INDEKS",
+      "title": "B-3 — nextDayAt-indeks på JourneyProgress (fjerner full table scan i journey-cron)",
+      "content": "JourneyProgress manglede indeks på nextDayAt; journey-cron (advanceJourneysToNextDay, kvar time) filtrerer på nextDayAt <= NOW og gjorde full table scan. Rettet: @@index([nextDayAt]) i prisma/schema.prisma (JourneyProgress) + ny migration 20260825182046_add_journey_next_day_index (CREATE INDEX \"JourneyProgress_nextDayAt_idx\"). Verifisert mot throwaway-DB: prisma validate OK, prisma migrate deploy appliserte alle 25 migrasjonar utan feil, EXPLAIN ANALYZE på hot query (50 000 rader, 100 matchande = 0,2 % selektivitet) viser 'Index Scan using JourneyProgress_nextDayAt_idx' (0,015 ms) i staden for seq scan. tsc 0, jest 344/345, språkvakt grønn. Kun schema + migration, ingen kode/logikk endra."
+    },
+    {
+      "dato": "2026-08-25",
       "id": "B2-BETA-TEKST",
       "title": "B-2 — aldersløftet rettet: ærlig beta-tekst (Vipps/BankID-loftet trukket)",
       "content": "Aldersverifisering via Vipps/BankID lovet i 4 brukervendte steder som ikke finnes i beta (innlogging er e-post+passord, age settes hardkodet). Rettet: config/legal.ts TERMS_VERSION/TERMS_UPDATED 2026-08-21→2026-08-25; app/vilkar/page.tsx:75+83; app/trygghet/page.tsx:9+46+48; app/personvern/page.tsx:69+149. Tekst: 'Aldersverifisering vil bli innført ved lansering. I beta er alderen selvrapportert, og brukere bekrefter at de er 21 år eller eldre.' Ingen logikk, kun strenger. B-1 (én database) og B-6 (F-6 hemmeligheter) bekreftet fullført av George. Verifisert: tsc 0, jest 344/345, lint 0, språkvakt grønn."
@@ -125,7 +131,7 @@
       "/metoder — ikke lenket noe sted"
     ]
   },
-  "nextAction": "Bølge B, fortsetter. B-1 (én database), B-2 (aldersløft — ærlig beta-tekst) og B-6 (F-6 hemmeligheter) er DONE. Neste for agenten: B-3 nextDayAt-indeks (B-1 bekreftet, migration sikker nå), deretter B-4 rate limiting på skrivende ruter (5 ruter, pgCheck-mønster fra A5, én rute per patch), deretter B-5 timing-safe admin-passord (krever ADMIN_PASSWORD_HASH i env — B-6 ferdig, env tilgjengelig). B-7 (slipp inn 10→50 testere) er George.",
+  "nextAction": "Bølge B, fortsetter. B-1 (én database), B-2 (aldersløft — ærlig beta-tekst), B-3 (nextDayAt-indeks) og B-6 (F-6 hemmeligheter) er DONE. Neste for agenten: B-4 rate limiting på gjenverande skrivende ruter (5 ruter, pgCheck-mønster fra A5, én rute per patch), deretter B-5 timing-safe admin-passord (krever ADMIN_PASSWORD_HASH i env — B-6 ferdig, env tilgjengelig). B-7 (slipp inn 10→50 testere) er George.",
   "gjenstaarFoerBeta": [
     "Manuell sjekkliste — nå konsolidert i GEORGE.md (steg 2–9, env-liste, kill switches)"
   ],

@@ -218,6 +218,7 @@ model JourneyProgress {
   @@index([userId])
   @@index([matchId])
   @@index([bothSeenAt])
+  @@index([nextDayAt]) // B-3: journey-cron filtrerer på nextDayAt <= NOW (hver time)
 }
 
 model JourneyStateLog {

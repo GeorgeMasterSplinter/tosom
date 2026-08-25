@@ -14,8 +14,18 @@ import { getServerSession, requireNotBanned } from "@/lib/auth/session";
 import { withMetrics } from "@/lib/observability/withMetrics";
 import { prisma } from "@/lib/prisma";
 import { chatSendMessageSchema, errorResponse, successResponse } from "@/lib/api-validator";
+import { pgCheck } from "@/lib/rate-limit-pg";
 
 export const dynamic = "force-dynamic";
+
+// A5 — Rate limiting på meldingssending.
+// Ruten var udekket: en løkke kunne flomme en samtale med meldinger og fylle
+// databasen. Taket er satt høyt nok til at det aldri merkes i en ekte samtale
+// (ToSom er langsom av natur), men lavt nok til å stoppe et skript.
+// pgCheck er atomisk (INSERT ... ON CONFLICT) og deles mellom instanser, og
+// feiler åpent — rate limiting skal aldri stoppe en legitim melding.
+const CHAT_RATE_MAX = 30;          // meldinger
+const CHAT_RATE_WINDOW_SEC = 60;   // per minutt, per bruker
 
 /**
  * Map frontend-message type til Prisma MessageCategory.
@@ -41,6 +51,20 @@ async function postHandler(request: Request) {
   // Sjekk om brukaren er utestengt (STEG 3.2 — sesjons-revokering)
   const bannedCheck = await requireNotBanned(session.user.id);
   if (bannedCheck) return bannedCheck;
+
+  // A5: Rate limiting per bruker. Nøkkelen bruker sesjons-ID, ikke IP — to
+  // personer bak samme nett skal ikke kunne bremse hverandre.
+  const limit = await pgCheck(
+    `chat:send:${session.user.id}`,
+    CHAT_RATE_MAX,
+    CHAT_RATE_WINDOW_SEC
+  );
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "Du sender meldinger litt for raskt. Vent et øyeblikk." },
+      { status: 429 }
+    );
+  }
 
   try {
     // STEG 3: Zod-validering av body

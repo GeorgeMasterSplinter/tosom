@@ -52,7 +52,7 @@ export async function requireAuth(
 
   if (!session?.user?.id) {
     return NextResponse.json(
-      { error: "Uautorisert — logg inn eller oppdater side" },
+      { error: "Ikke innlogget. Logg inn og prøv igjen." },
       { status: 401 }
     );
   }
@@ -81,7 +81,7 @@ export async function requireAdmin(
 
   if (!isAdminRole(result.user.role)) {
     return NextResponse.json(
-      { error: "Aðgang nei — admin bare" },
+      { error: "Ingen tilgang — kun for administratorer" },
       { status: 403 }
     );
   }

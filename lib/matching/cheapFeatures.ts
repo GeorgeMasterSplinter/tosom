@@ -61,7 +61,7 @@ export interface CheapFeatures {
 
 /**
  * Bygg prekalkulatene ein gong per kandidat (O(n) i heile runden,
- * ikkje O(n²) per par).
+ * ikke O(n²) per par).
  */
 export function buildCheapFeatures(profile: ProfileData): CheapFeatures {
   const lifeSituation = profile.lifeSituation ?? null;
@@ -200,7 +200,7 @@ function securityGap(a: CheapFeatures, b: CheapFeatures): string | null {
  *   sjekkAlleDealbreakers(A, B).reason ?? sjekkAlleDealbreakers(B, A).reason
  * med prekalkulat data — ingen normalisering per par.
  *
- * Rekkjefølgje (må ikkje endrast utan ekvivalens-test):
+ * Rekkefølge (må ikke endres uten ekvivalens-test):
  *   1. kjønn (bilkreftig)   2. alder (bilkreftig)   3. modenheit (symmetrisk)
  *   4. livsrytme A→B        5. preferansar A→B      6. grenser A→B
  *   7. radius (bilkreftig)  8. sikkerheit (symmetrisk)

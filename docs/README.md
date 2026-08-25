@@ -17,6 +17,7 @@ Kort inngangsport. Alt som ligger på toppnivå her **gjelder nå**.
 | **[BETA-TEST-v1.0.md](BETA-TEST-v1.0.md)** | **Åpen beta med ekte brukere:** fri tilgang (e-post + passord), faser, målinger, sjekkliste. Gjelder til Vipps er på plass. |
 | **[TOSOM-BETA-DRIFTSPLAN-v1.1.md](TOSOM-BETA-DRIFTSPLAN-v1.1.md)** | Driften under beta: rytmen, tersklene, suksess- og avbruddskriterier. |
 | **[TOSOM-BETA-VURDERING-v1.0.md](TOSOM-BETA-VURDERING-v1.0.md)** | Lanseringsvurdering 2026-08-24: dok-audit, klarhet mot koden, anbefalinger, åpne poster. |
+| **[TOSOM-MASTERPLAN-v2.0.md](TOSOM-MASTERPLAN-v2.0.md)** | **Lanseringsvurdering 2026-08-25** (ikke kanonisk): full systemgjennomgang mot koden, score 78/100, risikoanalyse R-1…R-7, roadmap 30/60 dager. |
 
 ## 3. Aktive planer
 
@@ -36,7 +37,8 @@ Kort inngangsport. Alt som ligger på toppnivå her **gjelder nå**.
 
 | Dokument | Stikkord |
 |----------|----------|
-| **[ACT-PIPELINE-v1.0.md](ACT-PIPELINE-v1.0.md)** | Arbeidssyklus, patch-regler, invarianter, verifisering. |
+| **[ACT-PIPELINE-v1.0.md](ACT-PIPELINE-v1.0.md)** | Arbeidssyklus, patch-regler, invarianter, verifisering. **Hvordan** vi jobber. |
+| **[TOSOM-ACT-INSTRUKS-v3.0.md](TOSOM-ACT-INSTRUKS-v3.0.md)** | Launch Edition: **hva** som gjenstår. Bølge A (utført), B (dag 1–30), C (dag 31–60) med atomiske steg og patch-skisser. |
 | **[ACT-STATE.json](ACT-STATE.json)** | **Eneste levende tilstandsfil.** Må oppdateres i samme commit som den siste koden i en oppgave. |
 
 ---

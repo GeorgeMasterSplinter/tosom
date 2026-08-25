@@ -281,7 +281,7 @@ export async function GET(req: NextRequest) {
       levelCounts = scored.levelCounts;
       const pairs: ScoredPair[] = scored.pairs;
 
-      // M-3: éin korrupt profil kasta berre paret — logg kvar linje i SystemLog
+      // M-3: én korrupt profil kastet kun paret — logg hver linje i SystemLog
       for (const e of scored.scoringErrors) {
         errors.push(`scoring ${e.userA}+${e.userB}: ${e.error}`);
         await prisma.systemLog.create({

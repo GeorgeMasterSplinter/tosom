@@ -72,7 +72,7 @@ async function postHandler(req: NextRequest) {
     // BUG 1 ROBUSTHET: Dei tre skrivingane (profil-upsert, draft-rydding,
     // user-flagg) ligg i éin atomisk transaksjon — all-eller-ingenting.
     // Tidlegare kunne ein feil midt i sekvensen la att delvis tilstand
-    // (f.eks. profil lagra, men onboardingComplete ikkje satt).
+    // (f.eks. profil lagret, men onboardingComplete ikke satt).
     await prisma.$transaction(async (tx) => {
     // Mapper til Profile-modellen (validering allerede gjort — data er trygt)
     await tx.profile.upsert({
@@ -320,7 +320,7 @@ async function postHandler(req: NextRequest) {
     // BUG 1 DIAGNOSTIKK: Logg Prisma-feilkode og -melding eksplisitt, slik at
     // ein produksjonssvikt er med eitt blikk identifiserbar i Vercel-loggen.
     // Mest sannsynlege årsak til 500 her: manglande kolonne i DB-en
-    // (P2022) — typisk ved ikkje-deploya migrasjon mot produksjonen.
+    // (P2022) — typisk ved ikke-deployet migrasjon mot produksjonen.
     const prismaCode = (error as { code?: string })?.code;
     const message = error instanceof Error ? error.message : String(error);
     console.error(

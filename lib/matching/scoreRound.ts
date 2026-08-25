@@ -6,13 +6,13 @@
 // Semantikken er identisk med den gamle ruten:
 //   - FIFO-par (i < j), deadline-sjekk på ytste i-loop
 //   - mangler_profil → sperreliste → dealbreakers → unifiedScore → MIN_SCORE
-//   - M-3: éin korrupt profil kastar berre PARET, ikkje runden
+//   - M-3: én korrupt profil kaster kun PARET, ikke runden
 //     (scoringErrors returnerast; ruten skriv dei same SystemLog-radene)
 //   - M-12: rejectReasons-nøklar og unmapped-lista er uendra
 //
 // Prestasjon (F2): dealbreakers køyrast via prekalkulat CheapFeatures
 // (cheapSjekkAll) i staden for sjekkAlleDealbreakers ×2 med normalisering
-// per par. unifiedScore kjøyrast berre for par som overlever filtera.
+// per par. unifiedScore kjøres kun for par som overlever filtrene.
 
 import { ProfileData } from './types';
 import { CheapFeatures } from './cheapFeatures';

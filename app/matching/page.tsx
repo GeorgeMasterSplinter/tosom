@@ -188,12 +188,12 @@ export default function MatchingPage() {
           }
 
           // Bestem kø-tilstand
-          // BUG 3: Bruk SANNE reise-tilstandar frå databasen, ikkje vekeplan-gjett.
-          // Tidlegare viste venterommet «Du er i kø» for ALLE innlogga brukarar,
+          // BUG 3: Bruk SANNE reise-tilstander fra databasen, ikke ukeplan-gjetning.
+          // Tidligere viste venterommet «Du er i kø» for ALLE innloggede brukere,
           // uansett om dei faktisk stod i køen.
           const journeyState = data.journeyState ?? 'IDLE';
 
-          // IDLE: ikkje i køen. Vis «Start reisen» (eller fullfør onboarding først).
+          // IDLE: ikke i køen. Vis «Start reisen» (eller fullfør onboarding først).
           if (journeyState === 'IDLE') {
             setQueueState(data.onboardingComplete ? 'start' : 'not_started');
             return;
@@ -263,17 +263,17 @@ export default function MatchingPage() {
     return () => clearInterval(interval);
   }, [queueState]);
 
-  // BUG 4 FIX: «Meld deg ut» i venterommet = forlate KØEN, ikkje avslutte reise.
+  // BUG 4 FIX: «Meld deg ut» i venterommet = forlate KØEN, ikke avslutte reise.
   // Den gamle koden kalte POST /api/journey/exit, som avsluttar ein AKTIV reise
-  // (matcha brukarar) og svarar 404 «Ingen aktiv reise funnet» for ein køende
-  // brukar — knappa gjorde altså ingenting. DELETE /api/journey/queue set
+  // (matchede brukere) og svarer 404 «Ingen aktiv reise funnet» for en køende
+  // bruker — knappen gjorde altså ingenting. DELETE /api/journey/queue set
   // journeyState tilbake til IDLE, som er rett semantikk her.
   const handleExit = useCallback(async () => {
     setExiting(true);
     try {
       const res = await fetch('/api/journey/queue', { method: 'DELETE' });
       if (!res.ok) {
-        // 409: allereie matcha — då er venterommet feil staden å vere
+        // 409: allerede matchet — da er venterommet feil sted å være
         window.location.href = '/dashboard';
         return;
       }
@@ -311,7 +311,7 @@ export default function MatchingPage() {
         window.location.href = '/betaling';
         return;
       }
-      // 409: onboarding ikkje fullført (eller annan tilstand)
+      // 409: onboarding ikke fullført (eller annen tilstand)
       window.location.href = '/onboarding';
     } catch {
       setStarting(false);

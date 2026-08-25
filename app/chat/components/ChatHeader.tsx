@@ -109,7 +109,7 @@ export function ChatHeader({
 }: ChatHeaderProps) {
   const isMilestone = journeyDay === 10 || journeyDay === 20 || journeyDay === 30;
 
-  // Mood-aksent faller tilbake til gull om ikkje tema er gitt
+  // Mood-aksent faller tilbake til gull om tema ikke er gitt
   const accent = moodTheme?.accent ?? G.gold;
   const accentLight = moodTheme?.accentLight ?? G.goldLight;
   const accentMuted = moodTheme?.accentMuted ?? G.goldMuted;

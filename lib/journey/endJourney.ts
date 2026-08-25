@@ -261,8 +261,8 @@ export async function endJourney(
   });
 
   // S-9 + GDPR art. 17: Slett også dei opplaaste BILDE-objekta frå lagringen.
-  // DB-radene (Message type=image) er allereie borte, men objektet i R2/local
-  // ligg ellers att som ein reell lekkasjeway. Best-effort: feil her skal ikkje
+  // DB-radene (Message type=image) er allerede borte, men objektet i R2/local
+  // ligger ellers igjen som en reell lekkasje. Best-effort: feil her skal ikke
   // blokkere reiseslutt — men logg tydeleg for å fange tapte slettingar.
   if (imageKeys.length > 0) {
     const storage = getImageStorage();
@@ -272,7 +272,7 @@ export async function endJourney(
         await storage.deleteImage(key);
         deletedImageCount += 1;
       } catch (imgErr) {
-        console.warn(`[endJourney] Kunne ikkje slette bilde-objekt ${key}:`, imgErr);
+        console.warn(`[endJourney] Kunne ikke slette bilde-objekt ${key}:`, imgErr);
       }
     }
     if (deletedImageCount > 0) {

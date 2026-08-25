@@ -1,12 +1,14 @@
 {
   "version": "1.0",
-  "updatedAt": "2026-08-24",
-  "commit": "a31288c",
+  "updatedAt": "2026-08-25",
+  "commit": "2f0eb6a",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
-    "tests": "336/336 (38 suiter)",
+    "tests": "344/345 (40 suiter, 1 skippet)",
     "typecheck": "0 errors",
-    "productionBuild": "verified (2026-08-24, et F2-skaling + atomisk kvote)"
+    "lint": "0 warnings",
+    "ciGuards": "6/6 grønne (lang, ai, concept, one-engine, 05:00, cron)",
+    "productionBuild": "verified (2026-08-24, etter F2-skalering + atomisk kvote)"
   },
   "currentPhaseId": "apen-beta-test",
   "blockers": [
@@ -54,6 +56,18 @@
     }
   ],
   "leveranser": [
+    {
+      "dato": "2026-08-25",
+      "id": "B2-BETA-TEKST",
+      "title": "B-2 — aldersløftet rettet: ærlig beta-tekst (Vipps/BankID-loftet trukket)",
+      "content": "Aldersverifisering via Vipps/BankID lovet i 4 brukervendte steder som ikke finnes i beta (innlogging er e-post+passord, age settes hardkodet). Rettet: config/legal.ts TERMS_VERSION/TERMS_UPDATED 2026-08-21→2026-08-25; app/vilkar/page.tsx:75+83; app/trygghet/page.tsx:9+46+48; app/personvern/page.tsx:69+149. Tekst: 'Aldersverifisering vil bli innført ved lansering. I beta er alderen selvrapportert, og brukere bekrefter at de er 21 år eller eldre.' Ingen logikk, kun strenger. B-1 (én database) og B-6 (F-6 hemmeligheter) bekreftet fullført av George. Verifisert: tsc 0, jest 344/345, lint 0, språkvakt grønn."
+    },
+    {
+      "dato": "2026-08-25",
+      "id": "BOLGE-A",
+      "title": "Bølge A — sikkerhet og kvalitetsport (lanseringsgjennomgang)",
+      "content": "A1: /api/notifications slettet — leste userId fra query-param uten sesjonssjekk (IDOR: hvem som helst kunne lese en annens varsler). Ruten var død kode: 0 kallere, 0 tester, 0 dok-referanser; NotificationCenter bruker /api/system/messages. A2: /api/notifications + /api/relationship lagt i PROTECTED_API_PREFIXES (forsvar i dybden). A3: cd.yml gated på workflow_run + conclusion=='success' — CD deployet tidligere uansett om CI var rød. A4: releaseFreeQuota() i lib/payment/freeQuota.ts + kobling i journey/queue — en claimet gratisplass ble brent permanent hvis kø-transaksjonen feilet. Test: __tests__/free-quota-release.test.ts (4 tester). A5: rate limiting på /api/chat/send via pgCheck (30/min/bruker) — ruten var udekket. A6+A7: bokmål i brukervendte feilmeldinger (onboarding/complete: «Umagalet»→«Ikke innlogget»; requireAdmin: «Aðgang nei — admin bare»). A8: 39 nynorsk-treff i 15 filer ryddet — CI-språkvakten FEILET på main, og siden status-jobben krever alle vakter grønne, feilet hele kjeden. Kun kommentarer/strenger, ingen logikk. Dokumenter: docs/TOSOM-MASTERPLAN-v2.0.md (vurdering, score 78/100) + docs/TOSOM-ACT-INSTRUKS-v3.0.md (Launch Edition)."
+    },
     {
       "dato": "2026-08-24",
       "id": "WP1",
@@ -111,10 +125,9 @@
       "/metoder — ikke lenket noe sted"
     ]
   },
-  "nextAction": "1) Deploy til Vercel etter GEORGE.md (steg 2–9: Neon + migrate (inkl. Quota-backfill), R2, Pusher, Resend, env, 7 verifiseringspunkter). 2) Slipp inn 10 testere → 50. 3) Gjenståande fase 2: Vipps Login/Betaling, DPA+DPIA, tetthetsbasert radius, kostnadsplan.",
+  "nextAction": "Bølge B, fortsetter. B-1 (én database), B-2 (aldersløft — ærlig beta-tekst) og B-6 (F-6 hemmeligheter) er DONE. Neste for agenten: B-3 nextDayAt-indeks (B-1 bekreftet, migration sikker nå), deretter B-4 rate limiting på skrivende ruter (5 ruter, pgCheck-mønster fra A5, én rute per patch), deretter B-5 timing-safe admin-passord (krever ADMIN_PASSWORD_HASH i env — B-6 ferdig, env tilgjengelig). B-7 (slipp inn 10→50 testere) er George.",
   "gjenstaarFoerBeta": [
-    "Manuell sjekkliste — nå konsolidert i GEORGE.md (steg 2–9, env-liste, kill switches)",
-    "F-6: .env-hemmeligheter til passordhåndterer (før produksjonsdata finnes)"
+    "Manuell sjekkliste — nå konsolidert i GEORGE.md (steg 2–9, env-liste, kill switches)"
   ],
   "gjenstaarFoerLansering": [
     "Vipps Login (eneste innlogging)",

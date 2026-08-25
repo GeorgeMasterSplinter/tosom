@@ -1,10 +1,16 @@
 # ToSom — CD Pipeline (Vercel Deployment)
-# Kjøres ved push til main/master
+# Kjøres etter at CI er fullført med grønn status på main/master
 
 name: ToSom CD
 
+# A3 — Kvalitetsporten. CD gikk tidligere rett på push til main, uavhengig av
+# CI. En rød CI (typefeil, rød test, brutt invariant-vakt) stanset altså ingen
+# deploy. Nå kjører CD kun etter at «ToSom CI» er FULLFØRT med konklusjon
+# 'success' på main — porten er reell, ikke dekorativ.
 on:
-  push:
+  workflow_run:
+    workflows: ["ToSom CI"]
+    types: [completed]
     branches: [main, master]
   workflow_dispatch:
 
@@ -16,6 +22,11 @@ jobs:
   deploy:
     name: Deploy to Vercel
     runs-on: ubuntu-latest
+    # Manuell kjøring (workflow_dispatch) slipper gjennom; automatisk kjøring
+    # krever at CI-kjøringen som utløste denne faktisk var grønn.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
     environment:
       name: production
       url: https://tosom.no

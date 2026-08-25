@@ -41,11 +41,11 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
       where: { id: targetUserId },
       select: { id: true, email: true, role: true },
     })
-    if (!targetUser) return errorResponse('Brukar ikkje funnet', 404)
+    if (!targetUser) return errorResponse('Fant ingen bruker', 404)
 
     // Slett permanent (alt relasjonert innhold + bruker)
     const del = await hardDeleteUser(targetUserId)
-    if (del.skipped === 'not_found') return errorResponse('Brukar ikkje funnet', 404)
+    if (del.skipped === 'not_found') return errorResponse('Fant ingen bruker', 404)
 
     // Logg destruktiv admin-handling
     await recordAdminAction(adminUser.id, 'USER_DEACTIVATE', { targetUserId, email: targetUser.email, hardDelete: true })

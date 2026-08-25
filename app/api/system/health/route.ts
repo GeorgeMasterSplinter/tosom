@@ -92,7 +92,7 @@ export async function GET(request: NextRequest) {
     }
 
     // ─── Auth-config-kjekk ───
-    // Uavhengig av lib/auth/config: ein feil i auth-modulen skal ikkje
+    // Uavhengig av lib/auth/config: en feil i auth-modulen skal ikke
     // ta ned health-endpoenket. Speilar configen i lib/auth/config.ts.
     const authConfig = checkAuthConfig();
 
@@ -170,7 +170,7 @@ function formatUptime(seconds: number): string {
 
 /**
  * Sjekkar NextAuth miljøkonfig utan å importere auth-modulen.
- * Offentleg endpoint: rapporterer berre lengd og gyldigheit — aldri
+ * Offentlig endepunkt: rapporterer kun lengde og gyldighet — aldri
  * selve secret-verdien. Speilar secret- og trustHost-logikken i
  * lib/auth/config.ts.
  */

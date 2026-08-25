@@ -53,6 +53,12 @@ const PROTECTED_API_PREFIXES = [
   '/api/system',
   '/api/ai',
   '/api/admin',
+  // A2 — Forsvar i dybden. /api/notifications ble slettet (A1) fordi den leste
+  // userId fra query-parameteren uten sesjonssjekk (IDOR): hvem som helst kunne
+  // lese en annens varsler. Prefiksene står igjen slik at rutene ikke kan
+  // gjenoppstå uten innlogging. Varsler leses via /api/system/messages.
+  '/api/notifications',
+  '/api/relationship',
 ]
 
 const ADMIN_PREFIX = '/admin'

@@ -70,7 +70,7 @@ const FREE_QUOTA_KEY = 'free_users';
  *   UPDATE "Quota" SET "used" = "used" + 1
  *   WHERE "id" = 'free_users' AND "used" < cap
  * Postgres sin row-lock seriariserer samtidige oppdateringar av same
- * rad: den andre ser den oppdaterte verdien og matcher ikkje lenger
+ * rad: den andre ser den oppdaterte verdien og matcher ikke lenger
  * WHERE-klausulen → count = 0 → kvota full. Ingen overskriding.
  *
  * @returns Order-enheiten ved suksess, null dersom kvota er full.
@@ -79,7 +79,7 @@ const FREE_QUOTA_KEY = 'free_users';
 export async function claimFreeQuota(userId: string) {
   const row = await prisma.quota.findUnique({ where: { id: FREE_QUOTA_KEY } });
   if (!row) {
-    // Skulle ikkje hende: migreringa seedar raden. Feil høyrast — ikkje
+    // Skulle ikke skje: migrasjonen seeder raden. Feil skal høres — ikke
     // tyst gjennomslag ved ukjend teller.
     throw new Error(`Quota-rad manglar (${FREE_QUOTA_KEY}) — køyr migreringa`);
   }
@@ -96,8 +96,8 @@ export async function claimFreeQuota(userId: string) {
   try {
     return await createFreeOrder(userId);
   } catch (err) {
-    // Order feila — gi plassen att slik at telleren ikkje dryppar
-    // frå Order-teljinga (admin-panelet les den).
+    // Order feilet — gi plassen tilbake slik at telleren ikke driver
+    // fra Order-tellingen (admin-panelet leser den).
     await prisma.quota
       .updateMany({
         where: { id: FREE_QUOTA_KEY },
@@ -105,5 +105,38 @@ export async function claimFreeQuota(userId: string) {
       })
       .catch(() => {});
     throw err;
+  }
+}
+
+/**
+ * A4: Gi tilbake én gratisplass som ble claimet, men aldri tatt i bruk.
+ *
+ * claimFreeQuota() ruller kun tilbake hvis selve Order-opprettingen feiler.
+ * Feiler noe ETTER at plassen er claimet — for eksempel kø-transaksjonen i
+ * /api/journey/queue — er telleren allerede økt uten at noen fikk en reise.
+ * Plassen ville da vært brent permanent: gratiskvoten krymper for hver slike
+ * feil, og en bruker som prøver igjen får «Gratiskvoten er oppbrukt».
+ *
+ * Sletter også gratisordren, slik at Quota-telleren og Order-tellingen
+ * (audit-loggen admin-panelet leser) forblir enige.
+ *
+ * Best-effort: kaster aldri — dette kjører i en feilhåndteringssti, og skal
+ * aldri skygge for den opprinnelige feilen.
+ */
+export async function releaseFreeQuota(orderId: string): Promise<void> {
+  try {
+    await prisma.order.delete({ where: { id: orderId } });
+  } catch {
+    /* ordren finnes ikke lenger — fortsett og rett opp telleren */
+  }
+
+  try {
+    // used > 0 hindrer at telleren kan gå i minus ved dobbelt frigjøring.
+    await prisma.quota.updateMany({
+      where: { id: FREE_QUOTA_KEY, used: { gt: 0 } },
+      data: { used: { decrement: 1 } },
+    });
+  } catch {
+    /* telleren skal aldri velte feilhåndteringen */
   }
 }

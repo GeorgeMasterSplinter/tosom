@@ -44,7 +44,7 @@ export async function getAuditLogSummary(sinceHours = 24): Promise<{
   const adminCounts: Record<string, number> = {}
   for (const log of logs) {
     byAction[log.action] = (byAction[log.action] ?? 0) + 1
-    // S-9: adminId kan vere null (anonymisert, brukeren er slettet) — tel ikkje nullen
+    // S-9: adminId kan være null (anonymisert, brukeren er slettet) — tell ikke nullen
     if (log.adminId) {
       adminCounts[log.adminId] = (adminCounts[log.adminId] ?? 0) + 1
     }

@@ -26,11 +26,15 @@ import { requireAuth } from '@/lib/auth/requireAuth';
 import { withMetrics } from '@/lib/observability/withMetrics';
 import { recordEvent } from '@/lib/observability/metric';
 import { isPaymentsEnabled } from '@/config/features';
-import { claimFreeQuota } from '@/lib/payment/freeQuota';
+import { claimFreeQuota, releaseFreeQuota } from '@/lib/payment/freeQuota';
 
 export const dynamic = 'force-dynamic';
 
 async function postHandler(req: NextRequest) {
+  // A4: Holder gratisplassen som ble claimet i denne forespørselen, slik at
+  // den kan gis tilbake dersom noe feiler før brukeren faktisk står i kø.
+  let claimedOrderId: string | null = null;
+
   try {
     // 1. Auth (AuthUser gir oss id + email + role)
     const result = await requireAuth(req);
@@ -112,8 +116,8 @@ async function postHandler(req: NextRequest) {
         select: { id: true },
       });
       if (!existingOrder) {
-        // F2-2: atomisk claim — berre éin kan vinne grenseplassen ved
-        // taket (tidlegare var det check-then-create med race-vinda).
+        // F2-2: atomisk claim — kun én kan vinne grenseplassen ved
+        // taket (tidligere var det check-then-create med race-vindu).
         const claimed = await claimFreeQuota(user.id);
         if (!claimed) {
           return NextResponse.json(
@@ -124,6 +128,9 @@ async function postHandler(req: NextRequest) {
             { status: 402 }
           );
         }
+        // A4: Plassen er nå claimet. Feiler kø-transaksjonen under, må den gis
+        // tilbake — ellers er en gratisplass brent uten at noen fikk en reise.
+        claimedOrderId = claimed.id;
       }
     }
 
@@ -166,6 +173,14 @@ async function postHandler(req: NextRequest) {
       message: 'Du er nå i kø. Du blir varslet her når noen passerer.',
     });
   } catch (error) {
+    // A4: Kø-settingen kom aldri i mål. Er en gratisplass claimet i denne
+    // forespørselen, gis den tilbake — ellers krymper gratiskvoten permanent
+    // for hver feil, og brukeren møter «Gratiskvoten er oppbrukt» ved neste
+    // forsøk uten at hun noen gang fikk en reise.
+    if (claimedOrderId) {
+      await releaseFreeQuota(claimedOrderId);
+    }
+
     if (error instanceof Error && error.message.includes('Kan ikke settes i kø')) {
       return NextResponse.json(
         { error: error.message },

@@ -9,12 +9,12 @@ import { getDistancePrefRange } from '@/config/distance-prefs';
 
 /* ============================================================
    HJELPERE — tolerant input frå frontend (STEG 13.1 FIX)
-   Frontend sender '' for ALLE felt brukaren ikkje fylte ut
-   (OnboardingFlow.tsx initialData), medan Zod .optional() berre
+   Frontend sender '' for ALLE felt brukeren ikke fylte ut
+   (OnboardingFlow.tsx initialData), mens Zod .optional() kun
    tolererer undefined. '' på valfrie felt ga derfor 400 på
    /api/profile/setup kvar gong eit steg vart hoppa over.
    Blank streng → undefined før validering. Obligatoriske felt
-   (gata klient-side) blir ikkje rørte.
+   (fanget klient-side) blir ikke rørt.
    ============================================================ */
 
 function blankToUndefined(v: unknown): unknown {
@@ -22,7 +22,7 @@ function blankToUndefined(v: unknown): unknown {
   return v;
 }
 
-/** Valgfri streng-felt: '' vert handsama som "ikkje svart". */
+/** Valgfri streng-felt: '' behandles som "ikke svart". */
 function optStr(max?: number, min = 0, msg?: string) {
   let s: z.ZodString = z.string();
   if (min > 0) s = msg ? s.min(min, msg) : s.min(min);

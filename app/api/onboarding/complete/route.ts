@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
   const session = await getServerSession()
 
   if (!session?.user?.id) {
-    return NextResponse.json({ error: "Umagalet" }, { status: 401 })
+    return NextResponse.json({ error: "Ikke innlogget. Logg inn og prøv igjen." }, { status: 401 })
   }
 
   try {
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
 
     if (!user?.profile) {
       return NextResponse.json(
-        { error: "Profil finst ikke" },
+        { error: "Fant ingen profil" },
         { status: 404 }
       )
     }
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
 
     if (!allComplete) {
       return NextResponse.json(
-        { error: "Alle djup profil-steg må vera fylte før onboarding kan fullførast" },
+        { error: "Alle stegene i profilen må være fylt ut før du kan fullføre." },
         { status: 400 }
       )
     }
@@ -79,12 +79,12 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: "Onboarding fullført — du kan no få din fyrste match",
+      message: "Profilen er fullført — nå kan du starte reisen.",
     })
   } catch (error) {
     console.error("Onboarding complete error:", error)
     return NextResponse.json(
-      { error: "Kunne ikke fullføra onboarding" },
+      { error: "Kunne ikke fullføre. Prøv igjen." },
       { status: 500 }
     )
   }

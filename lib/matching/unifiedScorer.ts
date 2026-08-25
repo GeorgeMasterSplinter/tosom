@@ -50,7 +50,7 @@ export interface UnifiedResult {
   level: MatchLevel;
 }
 
-// M-1: Brukar Prisma-enumen ResonanceLevel (same verdiar som før), ikkje ein
+// M-1: Bruker Prisma-enumen ResonanceLevel (samme verdier som før), ikke en
 // separat string-union — slik at tersklene kjem éin stad: toResonanceLevel().
 export type MatchLevel = ResonanceLevel;
 

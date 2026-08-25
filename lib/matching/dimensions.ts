@@ -3,7 +3,7 @@
 // Éin funksjon per dimensjon. Alle returnerer 0–100 (høgare = dypare resonans).
 // Reglane kjem frå FORSKNINGSMOTOR-v1.0.md §8 (Kompatibilitetsreglene).
 //
-// Likheit er ikkje alltid bra — reglane er bevisst asymmetriske.
+// Likhet er ikke alltid bra — reglene er bevisst asymmetriske.
 
 import {
   AttachmentScores,
@@ -60,7 +60,7 @@ export function scoreAttachmentCompat(
 
 /* ─────────────────────────────────────────────────────────────
    PERSONLIGHEIT (vekt 0,15) — §8, per trekk
-   To sterkt nevrotiske skal ikkje få full uttelling.
+   To sterkt nevrotiske skal ikke få full uttelling.
    ───────────────────────────────────────────────────────────── */
 
 export function scorePersonalityCompat(
@@ -96,7 +96,7 @@ export function scorePersonalityCompat(
 
 /* ─────────────────────────────────────────────────────────────
    VERDIER (vekt 0,25) — §8
-   Korrelasjon mellom to PVQ-profiler, ikkje ordtelling.
+   Korrelasjon mellom to PVQ-profiler, ikke ordtelling.
    ───────────────────────────────────────────────────────────── */
 
 export function scoreValueCompat(a: ValueProfile, b: ValueProfile): number {
@@ -127,7 +127,7 @@ export function scoreValueCompat(a: ValueProfile, b: ValueProfile): number {
 
   const denom = Math.sqrt(varA * varB);
   if (denom === 0) {
-    // Ein av profilane er flatt (ikkje-variasjon) — bruk nærleik på gjennomsnitt.
+    // En av profilene er flat (ingen variasjon) — bruk nærhet på gjennomsnitt.
     const meanClose = 100 - (Math.abs(meanA - meanB) / 4) * 100;
     return clamp(Math.round(meanClose), 0, 100);
   }
@@ -232,7 +232,7 @@ export function scoreLifeSituationCompat(
   for (const [keys, weight] of dimensions) {
     const va = pickField(a, ...keys);
     const vb = pickField(b, ...keys);
-    if (!va || !vb) continue; // skipar om manglar — ikkje straff for tom profil
+    if (!va || !vb) continue; // hopper over om det mangler — ikke straff for tom profil
     total += categoryMatch(va, vb) * weight;
     weightSum += weight;
   }

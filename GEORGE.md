@@ -28,7 +28,13 @@ For George. Alt du skal gjere manuelt står her. Alt anna er allereie i koden.
   ```bash
   DATABASE_URL="..." npx prisma migrate deploy
   ```
-  (22 migrasjonar, inkl. `add_onboarding_draft`. Skal køyre utan feil.)
+  (23 migrasjonar. Skal køyre utan feil.)
+
+  > **AVVIK notert 25.08:** `DATABASE_URL` i `.env.prod` peikar på ein `db.prisma.io`-DB,
+  > ikkje ein Neon-Frankfurt-DB. Det var den `db.prisma.io`-DB-en som mangla
+  > `add_onboarding_draft` + `free_quota_counter` (årsak til 500 i onboarding-lagring) —
+  > no deploya og verifisert. **Før neste migrasjon: verifiser at Vercel sin
+  > `DATABASE_URL` er den same DB-en du køyrer `migrate deploy` mot.**
 
 ### Steg 3 — Cloudflare R2 (bilde-lagring)
 - [ ] Lag R2-bucket **tosom-images** (EU, t.d. eu-central-1)

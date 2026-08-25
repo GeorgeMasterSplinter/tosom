@@ -72,7 +72,7 @@ const clauses: Clause[] = [
       'Vi kan ikke garantere at du får en kobling i en bestemt runde. Det avhenger av hvem andre som står i kø.',
       'Vi kan ikke garantere at koblingen fører til kontakt, vennskap eller forhold.',
       'Vi kan ikke garantere at den andre personen svarer, eller at samtalen fortsetter.',
-      'Vi gjør ingen bakgrunnssjekk av brukere utover identitet og alder verifisert gjennom Vipps.',
+      'Vi gjør ingen bakgrunnssjekk av brukere utover den selvrapporterte alderen i betaperioden.',
       'Vi kan ikke garantere at plattformen alltid er tilgjengelig uten avbrudd.',
     ],
   },
@@ -80,7 +80,7 @@ const clauses: Clause[] = [
     id: '5',
     title: `Aldersgrense — ${MIN_AGE} år`,
     paragraphs: [
-      `Du må ha fylt ${MIN_AGE} år for å bruke Tosom. Alderen verifiseres gjennom Vipps, som bruker BankID.`,
+      `Du må ha fylt ${MIN_AGE} år for å bruke Tosom. Aldersverifisering vil bli innført ved lansering. I beta er alderen selvrapportert, og brukere bekrefter at de er ${MIN_AGE} år eller eldre.`,
       `Oppdager vi at en bruker er under ${MIN_AGE} år, stenges kontoen umiddelbart og alle opplysninger slettes.`,
     ],
   },

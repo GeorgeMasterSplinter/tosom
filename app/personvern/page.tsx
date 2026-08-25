@@ -66,7 +66,7 @@ const sections: Section[] = [
         {
           cells: [
             'Konto',
-            'E-postadresse, navn, telefonnummer, alder og identitet verifisert gjennom Vipps',
+            'E-postadresse, navn, telefonnummer og alder (selvrapportert i betaperioden)',
             'Avtale (art. 6.1.b)',
             'Til kontoen slettes',
           ],
@@ -146,7 +146,7 @@ const sections: Section[] = [
     table: {
       headers: ['Leverandør', 'Hva de behandler', 'Formål'],
       rows: [
-        { cells: ['Vipps', 'Identitet og alder', 'Innlogging og aldersverifisering'] },
+        { cells: ['Vipps (fra lansering)', 'Identitet og alder', 'Innlogging og aldersverifisering'] },
         { cells: ['Databaseleverandør', 'All lagret data', 'Drift av databasen'] },
         { cells: ['Pusher', 'Meldinger i sanntid', 'Levere chat uten forsinkelse'] },
         { cells: ['Cloudflare R2', 'Bilder du deler', 'Sikker lagring av bilder'] },

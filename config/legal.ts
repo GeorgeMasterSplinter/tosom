@@ -59,8 +59,8 @@ export function companyFooterLine(): string {
 }
 
 /** Gjeldende versjon av vilkårene. Lagres på bruker ved aksept. */
-export const TERMS_VERSION = '2026-08-21';
-export const TERMS_UPDATED = '21. august 2026';
+export const TERMS_VERSION = '2026-08-25';
+export const TERMS_UPDATED = '25. august 2026';
 
 /** Gjeldende versjon av personvernerklæringen. */
 export const PRIVACY_VERSION = '2026-08-21';

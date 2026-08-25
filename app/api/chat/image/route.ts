@@ -15,8 +15,13 @@ import { getServerSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/prisma';
 import { isPhotosAllowed } from '@/lib/journey/engine';
 import { getImageStorage, buildImageKey, assertSafeImageKey } from '@/lib/storage';
+import { pgCheck } from '@/lib/rate-limit-pg';
 
 export const dynamic = 'force-dynamic';
+
+// B-4: Rate-limit-tak per bruker (mønster fra A5).
+const CHAT_IMAGE_RATE_MAX = 10;
+const CHAT_IMAGE_RATE_WINDOW_SEC = 60;
 
 // Maks filstorleik: 5 MB
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
@@ -53,6 +58,19 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
       );
     }
     const senderId = session.user.id;
+
+    // B-4: Rate limiting per bruker (mønster fra A5, fail-open).
+    const imageLimit = await pgCheck(
+      `chat:image:${senderId}`,
+      CHAT_IMAGE_RATE_MAX,
+      CHAT_IMAGE_RATE_WINDOW_SEC
+    );
+    if (!imageLimit.ok) {
+      return NextResponse.json(
+        { error: 'Du laster opp for ofte. Vent et øyeblikk.' },
+        { status: 429 }
+      );
+    }
 
     // Hent FormData
     const formData = await request.formData();

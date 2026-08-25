@@ -24,8 +24,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from '@/lib/auth/session';
+import { pgCheck } from '@/lib/rate-limit-pg';
 
 export const dynamic = 'force-dynamic';
+
+// B-4: Rate-limit-tak per bruker (mønster fra A5).
+const ONBOARDING_DRAFT_RATE_MAX = 120;
+const ONBOARDING_DRAFT_RATE_WINDOW_SEC = 60;
 
 /** Lagret form for onboardingDraft. */
 interface DraftPayload {
@@ -43,6 +48,19 @@ export async function POST(req: NextRequest) {
     const userId = await requireUserId();
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // B-4: Rate limiting per bruker (mønster fra A5, fail-open).
+    const draftLimit = await pgCheck(
+      `onboarding:draft:${userId}`,
+      ONBOARDING_DRAFT_RATE_MAX,
+      ONBOARDING_DRAFT_RATE_WINDOW_SEC
+    );
+    if (!draftLimit.ok) {
+      return NextResponse.json(
+        { error: 'Du lagrer for ofte. Vent et øyeblikk.' },
+        { status: 429 }
+      );
     }
 
     const body = await req.json();

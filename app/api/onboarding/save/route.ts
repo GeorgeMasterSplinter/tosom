@@ -10,8 +10,13 @@ import { withMetrics } from "@/lib/observability/withMetrics"
 import { recordEvent } from "@/lib/observability/metric"
 import prisma from "@/lib/prisma"
 import { DeepProfileStep } from "@prisma/client"
+import { pgCheck } from "@/lib/rate-limit-pg"
 
 export const dynamic = 'force-dynamic'
+
+// B-4: Rate-limit-tak per bruker (mønster fra A5).
+const ONBOARDING_SAVE_RATE_MAX = 60
+const ONBOARDING_SAVE_RATE_WINDOW_SEC = 60
 
 // Deep profile-steg
 const DEEP_STEPS: string[] = [
@@ -34,6 +39,19 @@ async function postHandler(req: NextRequest) {
 
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Umagalet" }, { status: 401 })
+  }
+
+  // B-4: Rate limiting per bruker (mønster fra A5, fail-open).
+  const saveLimit = await pgCheck(
+    `onboarding:save:${session.user.id}`,
+    ONBOARDING_SAVE_RATE_MAX,
+    ONBOARDING_SAVE_RATE_WINDOW_SEC
+  )
+  if (!saveLimit.ok) {
+    return NextResponse.json(
+      { error: "Du lagrer for ofte. Vent et øyeblikk." },
+      { status: 429 }
+    )
   }
 
   try {

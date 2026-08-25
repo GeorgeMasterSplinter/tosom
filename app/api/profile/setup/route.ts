@@ -15,8 +15,13 @@ import { lookupPostalCode } from '@/lib/geo/lookup';
 import { withMetrics } from '@/lib/observability/withMetrics';
 import { scoreAll } from '@/lib/psychometrics/scoring';
 import { INSTRUMENT_SET_VERSION } from '@/lib/psychometrics/instruments';
+import { pgCheck } from '@/lib/rate-limit-pg';
 
 export const dynamic = 'force-dynamic';
+
+// B-4: Rate-limit-tak per bruker (mønster fra A5).
+const PROFILE_SETUP_RATE_MAX = 20;
+const PROFILE_SETUP_RATE_WINDOW_SEC = 60;
 
 async function postHandler(req: NextRequest) {
   try {
@@ -64,6 +69,19 @@ async function postHandler(req: NextRequest) {
     }
 
     const userId = session.user.id;
+
+    // B-4: Rate limiting per bruker (mønster fra A5, fail-open).
+    const setupLimit = await pgCheck(
+      `profile:setup:${userId}`,
+      PROFILE_SETUP_RATE_MAX,
+      PROFILE_SETUP_RATE_WINDOW_SEC
+    );
+    if (!setupLimit.ok) {
+      return NextResponse.json(
+        { error: 'Du sender for mange forespørsler. Vent et øyeblikk.' },
+        { status: 429 }
+      );
+    }
 
     // B1.3: Utled latitude/longitude FRA postalCode ved lagring (ikke ved lesing).
     // Ukjent postnummer / postboks-kode uten geometri → null (håndteres i B1.4).

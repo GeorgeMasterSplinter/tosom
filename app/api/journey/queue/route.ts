@@ -27,8 +27,13 @@ import { withMetrics } from '@/lib/observability/withMetrics';
 import { recordEvent } from '@/lib/observability/metric';
 import { isPaymentsEnabled } from '@/config/features';
 import { claimFreeQuota, releaseFreeQuota } from '@/lib/payment/freeQuota';
+import { pgCheck } from '@/lib/rate-limit-pg';
 
 export const dynamic = 'force-dynamic';
+
+// B-4: Rate-limit-tak per bruker (mønster fra A5).
+const JOURNEY_QUEUE_RATE_MAX = 10;
+const JOURNEY_QUEUE_RATE_WINDOW_SEC = 60;
 
 async function postHandler(req: NextRequest) {
   // A4: Holder gratisplassen som ble claimet i denne forespørselen, slik at
@@ -42,6 +47,19 @@ async function postHandler(req: NextRequest) {
       return result;
     }
     const authUser = result.user;
+
+    // B-4: Rate limiting per bruker (mønster fra A5, fail-open).
+    const queueLimit = await pgCheck(
+      `journey:queue:${authUser.id}`,
+      JOURNEY_QUEUE_RATE_MAX,
+      JOURNEY_QUEUE_RATE_WINDOW_SEC
+    );
+    if (!queueLimit.ok) {
+      return NextResponse.json(
+        { error: 'Du prøver for ofte. Vent et øyeblikk og prøv igjen.' },
+        { status: 429 }
+      );
+    }
 
     // B4.2: Les valgfrie samtykker fra body (withdrawalWaiver lagres på User)
     let withdrawalWaiver = false;

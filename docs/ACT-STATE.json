@@ -58,6 +58,12 @@
   "leveranser": [
     {
       "dato": "2026-08-25",
+      "id": "B4-RATE-LIMITING",
+      "title": "B-4 — rate limiting på 5 skrivende ruter (mønster fra A5, pgCheck per bruker)",
+      "content": "pgCheck (atomisk, fail-open) lagt på de 5 øvrige skrivende rutene: /api/journey/queue (10/60s, nøkkel journey:queue:<id>), /api/onboarding/save (60/60s, onboarding:save:<id>), /api/onboarding/draft (120/60s, onboarding:draft:<id>), /api/profile/setup (20/60s, profile:setup:<id>), /api/chat/image (10/60s, chat:image:<id>). Nøkkel per bruker-ID fra sesjon (ikke IP). 429 ved overskridelse. Test: __tests__/rate-limit-b4.test.ts (5 tester: 429 + korrekt nøkkel/tak/vindu per rute). Verifisert: tsc 0, jest 349/350 (344 baseline + 5 nye), CI-Language-Guard grønn (strenger ren bokmål)."
+    },
+    {
+      "dato": "2026-08-25",
       "id": "B3-NEXTDAY-INDEKS",
       "title": "B-3 — nextDayAt-indeks på JourneyProgress (fjerner full table scan i journey-cron)",
       "content": "JourneyProgress manglede indeks på nextDayAt; journey-cron (advanceJourneysToNextDay, kvar time) filtrerer på nextDayAt <= NOW og gjorde full table scan. Rettet: @@index([nextDayAt]) i prisma/schema.prisma (JourneyProgress) + ny migration 20260825182046_add_journey_next_day_index (CREATE INDEX \"JourneyProgress_nextDayAt_idx\"). Verifisert mot throwaway-DB: prisma validate OK, prisma migrate deploy appliserte alle 25 migrasjonar utan feil, EXPLAIN ANALYZE på hot query (50 000 rader, 100 matchande = 0,2 % selektivitet) viser 'Index Scan using JourneyProgress_nextDayAt_idx' (0,015 ms) i staden for seq scan. tsc 0, jest 344/345, språkvakt grønn. Kun schema + migration, ingen kode/logikk endra."
@@ -131,7 +137,7 @@
       "/metoder — ikke lenket noe sted"
     ]
   },
-  "nextAction": "Bølge B, fortsetter. B-1 (én database), B-2 (aldersløft — ærlig beta-tekst), B-3 (nextDayAt-indeks) og B-6 (F-6 hemmeligheter) er DONE. Neste for agenten: B-4 rate limiting på gjenverande skrivende ruter (5 ruter, pgCheck-mønster fra A5, én rute per patch), deretter B-5 timing-safe admin-passord (krever ADMIN_PASSWORD_HASH i env — B-6 ferdig, env tilgjengelig). B-7 (slipp inn 10→50 testere) er George.",
+  "nextAction": "Bølge B, fortsetter. B-1 (én database), B-2 (aldersløft — ærlig beta-tekst), B-3 (nextDayAt-indeks), B-4 (rate limiting på 5 skrivende ruter) og B-6 (F-6 hemmeligheter) er DONE. Neste for agenten: B-5 timing-safe admin-passord (timing-safe compare + hashet ADMIN_PASSWORD_HASH i env — B-6 ferdig, env tilgjengelig). B-7 (slipp inn 10→50 testere) er George. Gjenstår også push-decision: 5 lokale commits foran origin/main.",
   "gjenstaarFoerBeta": [
     "Manuell sjekkliste — nå konsolidert i GEORGE.md (steg 2–9, env-liste, kill switches)"
   ],

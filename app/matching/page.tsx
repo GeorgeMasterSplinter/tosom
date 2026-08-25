@@ -34,9 +34,13 @@ interface OverviewData {
     totalDays: number;
     phase: string;
   } | null;
+  // BUG 3: Sanne reise-tilstandar frå databasen (dashboard/overview)
+  journeyState?: 'IDLE' | 'QUEUED' | 'MATCHED' | 'ON_JOURNEY' | 'COMPLETED';
+  onboardingComplete?: boolean;
+  matchQueuedAt?: string | null;
 }
 
-type QueueState = 'loading' | 'in_queue' | 'locked' | 'no_match';
+type QueueState = 'loading' | 'in_queue' | 'locked' | 'no_match' | 'start' | 'not_started';
 
 /* ═══════════════════════════════════════
    COUNTDOWN HELPERS
@@ -145,6 +149,8 @@ export default function MatchingPage() {
   const [exiting, setExiting] = useState(false);
   const [showSkipConfirm, setShowSkipConfirm] = useState(false);
   const [skipping, setSkipping] = useState(false);
+  // BUG 3: «Start reisen»-knappen (IDLE + onboarding fullført)
+  const [starting, setStarting] = useState(false);
 
   // Hvis state ble tvinget via query-param, hopp over hel load
   const forcedState = typeof window !== 'undefined'
@@ -182,6 +188,24 @@ export default function MatchingPage() {
           }
 
           // Bestem kø-tilstand
+          // BUG 3: Bruk SANNE reise-tilstandar frå databasen, ikkje vekeplan-gjett.
+          // Tidlegare viste venterommet «Du er i kø» for ALLE innlogga brukarar,
+          // uansett om dei faktisk stod i køen.
+          const journeyState = data.journeyState ?? 'IDLE';
+
+          // IDLE: ikkje i køen. Vis «Start reisen» (eller fullfør onboarding først).
+          if (journeyState === 'IDLE') {
+            setQueueState(data.onboardingComplete ? 'start' : 'not_started');
+            return;
+          }
+
+          // MATCHED/ON_JOURNEY: reisen er i gang – dashboardet viser ho.
+          if (journeyState === 'MATCHED' || journeyState === 'ON_JOURNEY') {
+            window.location.href = '/dashboard';
+            return;
+          }
+
+          // QUEUED (og COMPLETED → kan køre seg på nytt): kø-tilstand frå vekeplan
           const now = new Date();
           const day = now.getDay();
           const hour = now.getHours();
@@ -239,14 +263,20 @@ export default function MatchingPage() {
     return () => clearInterval(interval);
   }, [queueState]);
 
+  // BUG 4 FIX: «Meld deg ut» i venterommet = forlate KØEN, ikkje avslutte reise.
+  // Den gamle koden kalte POST /api/journey/exit, som avsluttar ein AKTIV reise
+  // (matcha brukarar) og svarar 404 «Ingen aktiv reise funnet» for ein køende
+  // brukar — knappa gjorde altså ingenting. DELETE /api/journey/queue set
+  // journeyState tilbake til IDLE, som er rett semantikk her.
   const handleExit = useCallback(async () => {
     setExiting(true);
     try {
-      await fetch('/api/journey/exit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ reason: 'queue_exit' }),
-      });
+      const res = await fetch('/api/journey/queue', { method: 'DELETE' });
+      if (!res.ok) {
+        // 409: allereie matcha — då er venterommet feil staden å vere
+        window.location.href = '/dashboard';
+        return;
+      }
       window.location.href = '/';
     } catch {
       setExiting(false);
@@ -262,6 +292,29 @@ export default function MatchingPage() {
     } catch {
       setSkipping(false);
       setShowSkipConfirm(false);
+    }
+  }, []);
+
+  // BUG 3: «Start reisen» — setter brukaren i match-køen (POST /api/journey/queue).
+  // Idempotent på serveren; krev onboardingComplete (409 elles).
+  const handleStartJourney = useCallback(async () => {
+    setStarting(true);
+    try {
+      const res = await fetch('/api/journey/queue', { method: 'POST' });
+      if (res.ok) {
+        // Nå i køen — last om for å vise kø-tilstanden
+        window.location.reload();
+        return;
+      }
+      // 402: betaling krevst → betalingsfløte
+      if (res.status === 402) {
+        window.location.href = '/betaling';
+        return;
+      }
+      // 409: onboarding ikkje fullført (eller annan tilstand)
+      window.location.href = '/onboarding';
+    } catch {
+      setStarting(false);
     }
   }, []);
 
@@ -298,6 +351,78 @@ export default function MatchingPage() {
         </div>
 
         {/* ═══ TILSTAND 1: I KØ ═══ */}
+        {/* ═══ TILSTAND: KLAR TIL Å STARTE (IDLE + onboarding fullført) ═══ */}
+        {queueState === 'start' && (
+          <div className="space-y-8">
+            <GlassCard className="text-center py-12 px-8">
+              <div className="flex justify-center mb-4">
+                <PulsingOrb size="lg" />
+              </div>
+              <h2 className="text-xl font-semibold mb-2" style={{ color: '#D4AF37' }}>
+                Klar for å starte?
+              </h2>
+              <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '16px', lineHeight: '1.7' }}>
+                Profilen din er fullført. Når du starter reisen, stiller du deg i
+                køen – og lørdag morgen finn vi nokon som passar deg.
+              </p>
+              <button
+                onClick={handleStartJourney}
+                disabled={starting}
+                className="mt-8 px-10 py-4 rounded-2xl font-semibold text-base transition-all duration-300 hover:brightness-110 disabled:opacity-50"
+                style={{ background: 'linear-gradient(135deg, #D4AF37, #E8C766)', color: '#0B1520', fontWeight: 600 }}
+              >
+                {starting ? 'Stiller deg i kø…' : 'Start reisen'}
+              </button>
+            </GlassCard>
+
+            {/* Oppdater profil (valfritt før start) */}
+            <GlassCard className="py-6 px-6">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '16px', fontWeight: 500 }}>
+                    Oppdater profil for betre match
+                  </p>
+                  <p className="mt-1" style={{ color: 'rgba(255,255,255,0.4)', fontSize: '14px' }}>
+                    Jo dypare profilen, jo betre kan vi matche deg.
+                  </p>
+                </div>
+                <button
+                  onClick={() => window.location.href = '/onboarding'}
+                  className="shrink-0 px-5 py-3 rounded-2xl font-medium text-sm transition-all duration-300 hover:brightness-110"
+                  style={{ background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)', color: '#D4AF37' }}
+                >
+                  Gå til profil
+                </button>
+              </div>
+            </GlassCard>
+          </div>
+        )}
+
+        {/* ═══ TILSTAND: ONBOARDING IKKJE FULLFØRT (IDLE) ═══ */}
+        {queueState === 'not_started' && (
+          <div className="space-y-8">
+            <GlassCard className="text-center py-12 px-8">
+              <div className="flex justify-center mb-4">
+                <PulsingOrb size="lg" />
+              </div>
+              <h2 className="text-xl font-semibold mb-2" style={{ color: '#D4AF37' }}>
+                Fullfør profilen din først
+              </h2>
+              <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '16px', lineHeight: '1.7' }}>
+                Før du kan starte reisen må vi kjenne deg litt betre.
+                Det tar nokre minutt – så kan du stille deg i køen.
+              </p>
+              <button
+                onClick={() => window.location.href = '/onboarding'}
+                className="mt-8 px-10 py-4 rounded-2xl font-semibold text-base transition-all duration-300 hover:brightness-110"
+                style={{ background: 'linear-gradient(135deg, #D4AF37, #E8C766)', color: '#0B1520', fontWeight: 600 }}
+              >
+                Gå til onboarding
+              </button>
+            </GlassCard>
+          </div>
+        )}
+
         {queueState === 'in_queue' && (
           <div className="space-y-8">
             {/* Status-kort */}
@@ -540,8 +665,8 @@ export default function MatchingPage() {
                 Melde deg ut?
               </h3>
               <p className="text-sm mb-6 leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                Du får pengene tilbake og kontoen slettes.
-                Vil du melde deg på igjen senere, starter du hele prosessen på nytt.
+                Du forlater køen – profilen din blir behalden.
+                Når du er klar igjen, trykk «Start reisen» og still deg i køen på nytt.
               </p>
               <button
                 onClick={handleExit}

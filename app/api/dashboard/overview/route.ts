@@ -25,6 +25,17 @@ export async function GET(_request: Request) {
   const userId = session.user.id;
 
   try {
+    // BUG 3: Eksponer reise-tilstand slik at venterommet kan vise sanne tilstander
+    // (IDLE/QUEUED/MATCHED/…) i staden for å gjette seg fram frå vekeplan.
+    const me = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        journeyState: true,
+        onboardingComplete: true,
+        matchQueuedAt: true,
+      },
+    });
+
     // Hent aktiv match med profil-info
     const match = await prisma.match.findFirst({
       where: {
@@ -197,6 +208,10 @@ export async function GET(_request: Request) {
         conversation: convoInfo,
         journey: journeyInfo,
         bothJustMet,
+        // BUG 3: Sanne reise-tilstandar for venterommet
+        journeyState: me?.journeyState ?? "IDLE",
+        onboardingComplete: me?.onboardingComplete ?? false,
+        matchQueuedAt: me?.matchQueuedAt ? me.matchQueuedAt.toISOString() : null,
       }),
       { status: 200, headers: { "Content-Type": "application/json" } }
     );

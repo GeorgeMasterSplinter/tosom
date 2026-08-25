@@ -69,8 +69,13 @@ async function postHandler(req: NextRequest) {
     // Ukjent postnummer / postboks-kode uten geometri → null (håndteres i B1.4).
     const geo = lookupPostalCode(basic.postalCode);
 
+    // BUG 1 ROBUSTHET: Dei tre skrivingane (profil-upsert, draft-rydding,
+    // user-flagg) ligg i éin atomisk transaksjon — all-eller-ingenting.
+    // Tidlegare kunne ein feil midt i sekvensen la att delvis tilstand
+    // (f.eks. profil lagra, men onboardingComplete ikkje satt).
+    await prisma.$transaction(async (tx) => {
     // Mapper til Profile-modellen (validering allerede gjort — data er trygt)
-    await prisma.profile.upsert({
+    await tx.profile.upsert({
       where: { userId },
       update: {
         identityName: basic.identityName,
@@ -290,19 +295,20 @@ async function postHandler(req: NextRequest) {
     // WP2: Rydd onboarding-utkastet — profilen er nå fullførte. Draften bor
     // i eget felt (onboardingDraft) og kan aldri overskrive matching-dataen
     // over; vi sletter den for at neste onboarding-omgang starter rent.
-    await prisma.profile.update({
+    await tx.profile.update({
       where: { userId },
       data: { onboardingDraft: Prisma.DbNull },
     });
 
     // Marker onboarding som fullført
-    await prisma.user.update({
+    await tx.user.update({
       where: { id: userId },
       data: {
         onboardingComplete: true,
         deepProfileComplete: true,
         onboardingStep: 10,
       },
+    });
     });
 
     return NextResponse.json({
@@ -311,7 +317,20 @@ async function postHandler(req: NextRequest) {
       message: 'Profil fullført!',
     });
   } catch (error) {
-    console.error('Profile setup error:', error);
+    // BUG 1 DIAGNOSTIKK: Logg Prisma-feilkode og -melding eksplisitt, slik at
+    // ein produksjonssvikt er med eitt blikk identifiserbar i Vercel-loggen.
+    // Mest sannsynlege årsak til 500 her: manglande kolonne i DB-en
+    // (P2022) — typisk ved ikkje-deploya migrasjon mot produksjonen.
+    const prismaCode = (error as { code?: string })?.code;
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(
+      `[profile/setup] 500${prismaCode ? ` (Prisma ${prismaCode})` : ''}: ${message.slice(0, 500)}`
+    );
+    if (prismaCode === 'P2022' || message.includes('does not exist')) {
+      console.error(
+        '[profile/setup] Kolonne manglar i databasen. Kjør `prisma migrate deploy` mot produksjons-DB-en og verifiser at alle migrasjonar (inkl. add_psychometrics og add_onboarding_draft) er applied.'
+      );
+    }
     return NextResponse.json(
       { error: 'Kunne ikke lagre profil' },
       { status: 500 }

@@ -5,13 +5,19 @@
 jest.mock('@/lib/auth/session', () => ({
   getServerSession: jest.fn(),
 }));
-jest.mock('@/lib/prisma', () => ({
-  prisma: {
+jest.mock('@/lib/prisma', () => {
+  // $transaction køyrer callbacken med same mock som tx, slik ruta no skriv
+  // alle tre operasjonane (upsert + draft-rydding + user-flagg) atomisk.
+  const prismaMock = {
     profile: { upsert: jest.fn(), update: jest.fn() },
     user: { update: jest.fn() },
     $disconnect: jest.fn(),
-  },
-}));
+    $transaction: jest.fn((cb: unknown) =>
+      typeof cb === 'function' ? cb(prismaMock) : Promise.resolve(),
+    ),
+  };
+  return { prisma: prismaMock, default: prismaMock };
+});
 
 import { getServerSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/prisma';
@@ -21,6 +27,7 @@ const mockedSession = getServerSession as jest.Mock;
 const mockedPrisma = prisma as unknown as {
   profile: { upsert: jest.Mock; update: jest.Mock };
   user: { update: jest.Mock };
+  $transaction: jest.Mock;
 };
 
 const UID = 'b12_user';

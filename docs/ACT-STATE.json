@@ -143,7 +143,7 @@
       "/metoder — ikke lenket noe sted"
     ]
   },
-  "nextAction": "Bølge B, fortsetter. B-1 (én database), B-2 (aldersløft), B-3 (nextDayAt-indeks), B-4 (rate limiting på 5 skrivende ruter) og B-5 (admin-passord som hash + timing-safe, S-2 lukket) er DONE. B-6 (F-6 hemmeligheter) var tidligere markert DONE av George, men delinga av admin-passordet var IKKE i koden — dette er nå faktisk levert via B-5. Neste: B-7 (slipp inn 10→50 testere) er George. DRIFT (George): set ADMIN_PASSWORD_HASH i env (node scripts/generate-admin-hash.mjs \"<passord>\") — admin-innlogging krever hasjen, gammelt ADMIN_PASSWORD virker ikke lenger. Gjenstår push: B-5 (3ef3abf) er den siste lokale commiten — B-2/B-3/B-4 er allerede på origin/main (1e06267).",
+  "nextAction": "Bølge B, fortsetter. B-1 (én database), B-2 (aldersløft), B-3 (nextDayAt-indeks), B-4 (rate limiting på 5 skrivende ruter) og B-5 (admin-passord som hash + timing-safe, S-2 lukket) er DONE. B-6 (F-6 hemmeligheter) var tidligere markert DONE av George, men delinga av admin-passordet var IKKE i koden — dette er nå faktisk levert via B-5. Neste: B-7 (slipp inn 10→50 testere) er George. DRIFT (George): set ADMIN_PASSWORD_HASH i env (node scripts/generate-admin-hash.mjs \"<passord>\") — admin-innlogging krever hasjen, gammelt ADMIN_PASSWORD virker ikke lenger. B-5 er pusha; alle agent-commits for Bølge B er på origin/main.",
   "gjenstaarFoerBeta": [
     "Manuell sjekkliste — nå konsolidert i GEORGE.md (steg 2–9, env-liste, kill switches)"
   ],

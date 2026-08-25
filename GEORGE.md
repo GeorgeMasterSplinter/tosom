@@ -88,7 +88,7 @@ For George. Alt du skal gjere manuelt står her. Alt anna er allerede i koden.
 | `NEXTAUTH_URL` | `https://tosom.no` |
 | `CRON_SECRET` | `openssl rand -base64 32` |
 | `ADMIN_EMAIL` | din e-post |
-| `ADMIN_PASSWORD` | sterkt passord |
+| `ADMIN_PASSWORD_HASH` | scrypt-hash av passordet — generer: `node scripts/generate-admin-hash.mjs "<passord>"` |
 | `ADMIN_JWT_SECRET` | `openssl rand -base64 32` |
 | `EMAIL_SERVER_HOST` | `smtp.resend.com` |
 | `EMAIL_SERVER_PORT` | `587` |

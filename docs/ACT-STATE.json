@@ -58,6 +58,12 @@
   "leveranser": [
     {
       "dato": "2026-08-25",
+      "id": "B5-ADMIN-PASSORD-HASH",
+      "title": "B-5 — admin-passord som hash (scrypt) + timing-safe (S-2 lukket)",
+      "content": "S-2: /api/admin/auth sammenlignet ADMIN_PASSWORD med !== (ikke timing-safe) og passordet lå i klartext i env. Rettet: ny lib/admin-hash.ts (scrypt + salt, samme stil som lib/auth/reset.ts — ingen ny avheng) med hashAdminPassword / verifyAdminPassword (timingSafeEqual) / loadAdminPasswordHash / safeCompare; alle feiler lukka (mangler/feil format gir false). /api/admin/auth bruker nå loadAdminPasswordHash + safeCompare(epost) + verifyAdminPassword(passord) mot ADMIN_PASSWORD_HASH — aldri klartext, og 500 (feiler lukka) om hasjen mangler. ADMIN_PASSWORD er fjerna fra ruten, .env.example og GEORGE.md. Ny scripts/generate-admin-hash.mjs for å lage hasjen. Test: __tests__/admin-auth-password.test.ts (11 tester: hash-lib + rute: rett gir 200+cookie, feil gir 401, hash mangler gir 500); round-trip script/til-lib verifisert true. VERDIK: dette var faktisk IKKE i koden før nå (B-6/George 'F-6 hemmeligheter' dekte ikke delinga av admin-passordet). Drift: George MÅ sette ADMIN_PASSWORD_HASH i env for at admin-innlogging skal fungere (gammelt ADMIN_PASSWORD virker ikke lenger). Verifisert: tsc 0, jest 360/361, CI-Language-Guard grønn."
+    },
+    {
+      "dato": "2026-08-25",
       "id": "B4-RATE-LIMITING",
       "title": "B-4 — rate limiting på 5 skrivende ruter (mønster fra A5, pgCheck per bruker)",
       "content": "pgCheck (atomisk, fail-open) lagt på de 5 øvrige skrivende rutene: /api/journey/queue (10/60s, nøkkel journey:queue:<id>), /api/onboarding/save (60/60s, onboarding:save:<id>), /api/onboarding/draft (120/60s, onboarding:draft:<id>), /api/profile/setup (20/60s, profile:setup:<id>), /api/chat/image (10/60s, chat:image:<id>). Nøkkel per bruker-ID fra sesjon (ikke IP). 429 ved overskridelse. Test: __tests__/rate-limit-b4.test.ts (5 tester: 429 + korrekt nøkkel/tak/vindu per rute). Verifisert: tsc 0, jest 349/350 (344 baseline + 5 nye), CI-Language-Guard grønn (strenger ren bokmål)."
@@ -137,7 +143,7 @@
       "/metoder — ikke lenket noe sted"
     ]
   },
-  "nextAction": "Bølge B, fortsetter. B-1 (én database), B-2 (aldersløft — ærlig beta-tekst), B-3 (nextDayAt-indeks), B-4 (rate limiting på 5 skrivende ruter) og B-6 (F-6 hemmeligheter) er DONE. Neste for agenten: B-5 timing-safe admin-passord (timing-safe compare + hashet ADMIN_PASSWORD_HASH i env — B-6 ferdig, env tilgjengelig). B-7 (slipp inn 10→50 testere) er George. Gjenstår også push-decision: 5 lokale commits foran origin/main.",
+  "nextAction": "Bølge B, fortsetter. B-1 (én database), B-2 (aldersløft), B-3 (nextDayAt-indeks), B-4 (rate limiting på 5 skrivende ruter) og B-5 (admin-passord som hash + timing-safe, S-2 lukket) er DONE. B-6 (F-6 hemmeligheter) var tidligere markert DONE av George, men delinga av admin-passordet var IKKE i koden — dette er nå faktisk levert via B-5. Neste: B-7 (slipp inn 10→50 testere) er George. DRIFT (George): set ADMIN_PASSWORD_HASH i env (node scripts/generate-admin-hash.mjs \"<passord>\") — admin-innlogging krever hasjen, gammelt ADMIN_PASSWORD virker ikke lenger. Gjenstår push: B-5 (3ef3abf) er den siste lokale commiten — B-2/B-3/B-4 er allerede på origin/main (1e06267).",
   "gjenstaarFoerBeta": [
     "Manuell sjekkliste — nå konsolidert i GEORGE.md (steg 2–9, env-liste, kill switches)"
   ],

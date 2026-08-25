@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { signAdminToken } from '@/lib/auth/admin-jwt';
 import { recordFailedLogin, clearFailedLogin } from '@/lib/security/bruteforce';
+import { loadAdminPasswordHash, verifyAdminPassword, safeCompare } from '@/lib/admin-hash';
 
 export async function POST(req: NextRequest) {
   try {
@@ -11,16 +12,20 @@ export async function POST(req: NextRequest) {
     const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
 
     const adminEmail = process.env.ADMIN_EMAIL || process.env.ADMIN_USERNAME;
-    const adminPassword = process.env.ADMIN_PASSWORD || process.env.ADMIN_PASSWORD_PROD;
+    const adminPasswordHash = loadAdminPasswordHash();
 
-    if (!adminEmail || !adminPassword) {
+    if (!adminEmail || !adminPasswordHash) {
       return NextResponse.json(
         { error: 'Admin-oppsett manglende i miljøvariabler' },
         { status: 500 }
       );
     }
 
-    if (email !== adminEmail || password !== adminPassword) {
+    // B-5: timing-safe — epost via safeCompare, passord mot scrypt-hash i env
+    // (ADMIN_PASSWORD_HASH), aldri klartext.
+    const emailOk = safeCompare(email ?? '', adminEmail);
+    const passOk = verifyAdminPassword(password ?? '', adminPasswordHash);
+    if (!emailOk || !passOk) {
       // BF FIX: Registrer feilet loginforsøk (kun ved FEILET login)
       const bfCheck = await recordFailedLogin(ip, email || '');
 

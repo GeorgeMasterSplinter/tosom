@@ -177,7 +177,7 @@ export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
             Du har fullført hele profilen din! Nå er det klart for matching.
           </p>
           <BackButton onClick={() => goToStep(10)} />
-          <PremiumCTAButton onClick={onNext} label="Start reisen din" fullWidth />
+          <PremiumCTAButton onClick={onNext} label="Fortsett" fullWidth />
         </div>
       </div>
     </OnboardingSlide>

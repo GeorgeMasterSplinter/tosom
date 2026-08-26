@@ -256,6 +256,24 @@ function formatSetupError(status: number, body: string): string {
   return 'Kunne ikke lagre profilen din. Vennligst prøv igjen.';
 }
 
+/**
+ * Konkret, rolig melding ved feil fra match-køen (POST /api/journey/queue).
+ * Tidligere var kø-kallet fire-and-forget: brukeren landet i venterommet
+ * uten å stå i køen, og ingen feil viste seg noensinne.
+ */
+function queueErrorFor(status: number): string {
+  if (status === 401) {
+    return 'Sesjonen din utløp. Logg inn på nytt — svarene dine er lagret.';
+  }
+  if (status === 429) {
+    return 'For mange forsøk akkurat nå. Prøv igjen om et øyeblikk.';
+  }
+  if (status === 409) {
+    return 'Noe stemmer ikke med profilen din. Prøv å starte på nytt.';
+  }
+  return 'Profilen din er lagret, men vi klarte ikke å stille deg i køen ennå. Prøv å starte på nytt.';
+}
+
 interface OnboardingFlowProps {
   onComplete?: (profile: UserProfile) => void;
 }
@@ -548,13 +566,23 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
       }
 
       // B5 — «Start reisen» setter kø, ikke umiddelbar matching
-      // Invariant I-3: valg om å delta, ikke om hvem
-      try {
-        await fetch('/api/journey/queue', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-        });
-      } catch { /* kø-feil — redirect allikevel */ }
+      // Invariant I-3: valg om å delta, ikke om hvem.
+      // Sjekk svaret fra køen: feil vises på dette steg (med mulighet til
+      // å prøve igjen), ikke slettes. Profilen er allerede lagret, så retry
+      // bruker samme data — det går ingenting tapt.
+      const queueRes = await fetch('/api/journey/queue', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (!queueRes.ok) {
+        // 402: fri kvote brukt → betalingsflyt
+        if (queueRes.status === 402) {
+          window.location.href = '/betaling';
+          return;
+        }
+        throw new Error(queueErrorFor(queueRes.status));
+      }
 
       window.location.href = '/matching';
     } catch (err) {

@@ -40,7 +40,7 @@ interface OverviewData {
   matchQueuedAt?: string | null;
 }
 
-type QueueState = 'loading' | 'in_queue' | 'locked' | 'no_match' | 'start' | 'not_started';
+type QueueState = 'loading' | 'in_queue' | 'locked' | 'no_match' | 'start' | 'not_started' | 'matched';
 
 /* ═══════════════════════════════════════
    COUNTDOWN HELPERS
@@ -137,7 +137,7 @@ export default function MatchingPage() {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const forced = params.get('state');
-      if (forced === 'in_queue' || forced === 'locked' || forced === 'no_match') {
+      if (forced === 'in_queue' || forced === 'locked' || forced === 'no_match' || forced === 'matched') {
         return forced;
       }
     }
@@ -151,6 +151,9 @@ export default function MatchingPage() {
   const [skipping, setSkipping] = useState(false);
   // BUG 3: «Start reisen»-knappen (IDLE + onboarding fullført)
   const [starting, setStarting] = useState(false);
+  const [startError, setStartError] = useState<string | null>(null);
+  // Data fra /api/dashboard/overview — match-kortet trenger navn/avstand/resonans
+  const [overview, setOverview] = useState<OverviewData | null>(null);
 
   // Hvis state ble tvinget via query-param, hopp over hel load
   const forcedState = typeof window !== 'undefined'
@@ -160,7 +163,7 @@ export default function MatchingPage() {
   // Hent sesjon + dashboard-data
   useEffect(() => {
     // Hvis state ble tvinget via query-param, sett state og hopp over hel load
-    if (forcedState === 'in_queue' || forcedState === 'locked' || forcedState === 'no_match') {
+    if (forcedState === 'in_queue' || forcedState === 'locked' || forcedState === 'no_match' || forcedState === 'matched') {
       setQueueState(forcedState);
       return;
     }
@@ -181,9 +184,11 @@ export default function MatchingPage() {
         if (overviewRes.ok) {
           const data: OverviewData = await overviewRes.json();
 
-          // Har aktiv match → redirect til dashboard
+          // Har aktiv match → match-kort i venterommet (åpenbaringen).
+          // Fra kortet går hun til dashboardet — og derfra til samtalen.
           if (data.match && data.journey && data.journey.day > 0) {
-            window.location.href = '/dashboard';
+            setOverview(data);
+            setQueueState('matched');
             return;
           }
 
@@ -199,9 +204,11 @@ export default function MatchingPage() {
             return;
           }
 
-          // MATCHED/ON_JOURNEY: reisen er i gang – dashboardet viser ho.
+          // MATCHED/ON_JOURNEY: reisen er i gang — match-kortet viser veien
+          // videre til dashboardet (også ved day=0, før journey er oppretta).
           if (journeyState === 'MATCHED' || journeyState === 'ON_JOURNEY') {
-            window.location.href = '/dashboard';
+            setOverview(data);
+            setQueueState('matched');
             return;
           }
 
@@ -297,8 +304,11 @@ export default function MatchingPage() {
 
   // BUG 3: «Start reisen» — setter brukaren i match-køen (POST /api/journey/queue).
   // Idempotent på serveren; krev onboardingComplete (409 elles).
+  // Feil vises i venterommet (ikke sile hop til /onboarding) — brukeren kan
+  // prøve igjen uten å miste plassen sin.
   const handleStartJourney = useCallback(async () => {
     setStarting(true);
+    setStartError(null);
     try {
       const res = await fetch('/api/journey/queue', { method: 'POST' });
       if (res.ok) {
@@ -311,9 +321,15 @@ export default function MatchingPage() {
         window.location.href = '/betaling';
         return;
       }
-      // 409: onboarding ikke fullført (eller annen tilstand)
-      window.location.href = '/onboarding';
+      // 409/429/500: konkret melding i venterommet + prøv igjen
+      setStartError(
+        res.status === 429
+          ? 'For mange forsøk akkurat nå. Prøv igjen om et øyeblikk.'
+          : 'Vi klarte ikke å stille deg i køen ennå. Prøv igjen.'
+      );
+      setStarting(false);
     } catch {
+      setStartError('Nettverksfeil — sjekk internettilkoblingen og prøv igjen.');
       setStarting(false);
     }
   }, []);
@@ -350,6 +366,54 @@ export default function MatchingPage() {
           </p>
         </div>
 
+        {/* ═══ TILSTAND: MATCH FUNNET — match-kortet (åpenbaringen) ═══ */}
+        {/* Venterommet er der matchen vises: et rolig kort med matchen, og
+            en vei videre til dashboardet — og derfra til samtalen. */}
+        {queueState === 'matched' && (
+          <div className="space-y-8">
+            <GlassCard className="text-center py-12 px-8">
+              <div className="flex justify-center mb-4">
+                <PulsingOrb size="lg" />
+              </div>
+              <h2 className="text-xl font-semibold mb-2" style={{ color: '#D4AF37' }}>
+                Her er matchen din
+              </h2>
+              <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '16px', lineHeight: '1.7' }}>
+                {overview?.match?.name
+                  ? `${overview.match.name}${overview.match.age ? `, ${overview.match.age} år` : ''} — vi har koblet dere sammen.`
+                  : 'Vi har koblet dere sammen. Reisen starter rolig, i deres tempo.'}
+              </p>
+              {overview?.match && (
+                <div
+                  className="mt-8 px-6 py-5 rounded-2xl mx-auto max-w-[320px]"
+                  style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.2)' }}
+                >
+                  <p className="font-semibold" style={{ color: 'rgba(255,255,255,0.9)', fontSize: '20px' }}>
+                    {overview.match.name || 'Din match'}
+                  </p>
+                  <div className="mt-1 flex items-center justify-center gap-3 text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                    {overview.match.age != null && <span>{overview.match.age} år</span>}
+                    {overview.match.distanceKm != null && <span>ca. {overview.match.distanceKm} km</span>}
+                  </div>
+                  <p className="mt-3 text-sm" style={{ color: '#D4AF37' }}>
+                    {getResonanceLabel(overview.match.resonanceLevel)}
+                  </p>
+                </div>
+              )}
+              <p className="mt-6 text-sm" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                Reisen deres er i gang. Dere har 30 dager — rolig og i deres tempo.
+              </p>
+              <button
+                onClick={() => { window.location.href = '/dashboard'; }}
+                className="mt-8 px-10 py-4 rounded-2xl font-semibold text-base transition-all duration-300 hover:brightness-110"
+                style={{ background: 'linear-gradient(135deg, #D4AF37, #E8C766)', color: '#0B1520', fontWeight: 600 }}
+              >
+                Gå til reisen
+              </button>
+            </GlassCard>
+          </div>
+        )}
+
         {/* ═══ TILSTAND 1: I KØ ═══ */}
         {/* ═══ TILSTAND: KLAR TIL Å STARTE (IDLE + onboarding fullført) ═══ */}
         {queueState === 'start' && (
@@ -373,6 +437,11 @@ export default function MatchingPage() {
               >
                 {starting ? 'Stiller deg i kø…' : 'Start reisen'}
               </button>
+              {startError && (
+                <p className="mt-4 text-sm" style={{ color: '#FF6B6B' }} role="alert">
+                  {startError}
+                </p>
+              )}
             </GlassCard>
 
             {/* Oppdater profil (valfritt før start) */}

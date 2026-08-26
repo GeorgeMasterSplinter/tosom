@@ -40,9 +40,18 @@ export default function DashboardMatchStatus() {
 
       <div className="space-y-4">
         {status.state === "idle" && (
-          <p className="text-neutral-300 leading-relaxed">
-            Du er ikke i venterommet. Trykk for å starte matching.
-          </p>
+          <div className="space-y-3">
+            <p className="text-neutral-300 leading-relaxed">
+              Du er ikke i venterommet ennå.
+            </p>
+            <a
+              href="/matching"
+              className="inline-block px-4 py-2 rounded-lg text-sm transition-all hover:brightness-110"
+              style={{ background: "linear-gradient(135deg, #D4AF37, #E8C766)", color: "#0B1520", fontWeight: 600 }}
+            >
+              Gå til venterommet og start matching
+            </a>
+          </div>
         )}
 
         {status.state === "queue" && (

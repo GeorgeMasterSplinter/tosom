@@ -51,12 +51,14 @@ export async function GET(request: Request) {
         mood: true,
         userA: {
           select: {
+            id: true,
             name: true,
             profile: { select: { identityName: true, age: true, photoUrl: true } },
           },
         },
         userB: {
           select: {
+            id: true,
             name: true,
             profile: { select: { identityName: true, age: true, photoUrl: true } },
           },
@@ -101,12 +103,14 @@ export async function GET(request: Request) {
             mood: true,
             userA: {
               select: {
+                id: true,
                 name: true,
                 profile: { select: { identityName: true, age: true, photoUrl: true } },
               },
             },
             userB: {
               select: {
+                id: true,
                 name: true,
                 profile: { select: { identityName: true, age: true, photoUrl: true } },
               },
@@ -146,6 +150,8 @@ export async function GET(request: Request) {
 
       return {
         id: c.id,
+        // Motpartens bruker-ID (trengs bl.a. for rapportering i innstillinger)
+        partnerId: partner.id,
         partnerName: partner.profile?.identityName || partner.name || "Partner",
         partnerAge: partner.profile?.age ?? undefined,
         partnerImageUrl: partner.profile?.photoUrl ?? undefined,

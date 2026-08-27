@@ -184,7 +184,23 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       take: 50,
     });
 
-    return NextResponse.json({ reports });
+    // Report-modellen har ingen relasjoner til User — hent navn/epost separat
+    const userIds = Array.from(new Set(reports.flatMap((r) => [r.reporterId, r.reportedId])));
+    const users = userIds.length
+      ? await prisma.user.findMany({
+          where: { id: { in: userIds } },
+          select: { id: true, name: true, email: true },
+        })
+      : [];
+    const userById = new Map(users.map((u) => [u.id, u]));
+
+    const withUsers = reports.map((r) => ({
+      ...r,
+      reporter: userById.get(r.reporterId) ?? null,
+      reportedUser: userById.get(r.reportedId) ?? null,
+    }));
+
+    return NextResponse.json({ reports: withUsers });
   } catch (error) {
     console.error('GET /api/report feil:', error);
     return NextResponse.json({ error: 'Kunne ikke hente rapporter' }, { status: 500 });

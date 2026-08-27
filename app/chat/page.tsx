@@ -6,7 +6,7 @@
  * Én match = én samtale.
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { color } from '@/config/design-tokens';
 
@@ -154,6 +154,7 @@ export default function ChatOverviewPage() {
   const router = useRouter();
   const [conversations, setConversations] = useState<ConversationData[]>([]);
   const [loading, setLoading] = useState(true);
+  const redirectedRef = useRef(false);
 
   useEffect(() => {
     fetchConversations();
@@ -166,6 +167,12 @@ export default function ChatOverviewPage() {
         const json = await res.json();
         if (json.success && json.data) {
           setConversations(json.data);
+          // Direkte ruting: én match = én samtale. Gå rett inn i den
+          // nyeste aktive samtalen i steden for å sitte igjen i lista.
+          if (!redirectedRef.current && json.data.length > 0) {
+            redirectedRef.current = true;
+            router.replace(`/chat/${json.data[0].id}`);
+          }
         }
       }
     } catch {

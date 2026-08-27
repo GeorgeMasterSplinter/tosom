@@ -573,6 +573,7 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
   const [description, setDescription] = useState("");
   const [sending, setSending] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [reportError, setReportError] = useState<string | null>(null);
 
   const hasActiveMatch = matchStatus.hasActiveMatch;
 
@@ -590,16 +591,21 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
   const handleSubmit = async () => {
     if (!category || !matchStatus.matchId) return;
     setSending(true);
+    setReportError(null);
     try {
       // Hent partnerId via conversation
       const convRes = await fetch(`/api/chat/conversations`);
-      const convData = convRes.ok ? await convRes.json() : { conversations: [] };
-      const conversations = convData.conversations || [];
-      const currentConvo = conversations.find((c: any) => c.id === matchStatus.conversationId);
+      const convData = convRes.ok ? await convRes.json() : {};
+      // API-et returnerer { success, data: [...] } — «data», ikke «conversations»
+      const conversations: any[] = convData.data || [];
+      const currentConvo =
+        conversations.find((c) => c.id === matchStatus.conversationId) ||
+        conversations[0];
       const partnerId = currentConvo?.partnerId || currentConvo?.partner?.id;
 
       if (!partnerId) {
         console.error("Kunne ikke finne partnerId");
+        setReportError("Fant ingen aktiv samtale å rapportere. Gå til chatten først, og prøv igjen.");
         setSending(false);
         return;
       }
@@ -618,9 +624,13 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
           setShowReport(false);
           setSuccess(false);
         }, 2500);
+      } else {
+        const errJson = await res.json().catch(() => null);
+        setReportError(errJson?.error || "Kunne ikke sende rapporten. Prøv igjen.");
       }
     } catch {
       console.error("Feil ved rapportering");
+      setReportError("Noe gikk galt ved sending av rapporten. Prøv igjen.");
     }
     setSending(false);
   };
@@ -790,6 +800,9 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
                   className="w-full px-4 py-3 rounded-xl text-sm mb-4 bg-transparent border resize-none focus:outline-none"
                   style={{ borderColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.7)" }}
                 />
+                {reportError && (
+                  <p style={{ color: "#FF4D4D", fontSize: "13px", marginBottom: "12px", lineHeight: "1.5" }}>{reportError}</p>
+                )}
                 <GoldButton fullWidth disabled={!category || sending} onClick={handleSubmit}>
                   {sending ? "Sender..." : "Send rapport"}
                 </GoldButton>
@@ -1261,9 +1274,10 @@ export default function SettingsPage() {
         setAuthStatus("authenticated");
 
         // Deretter: last inn settings-data
+        // /api/match/check er POST (GET gir 405 og match-statusen blir aldri lastet)
         const [profileRes, matchRes, journeyRes, prefsRes] = await Promise.all([
           fetch("/api/profile/me"),
-          fetch("/api/match/check"),
+          fetch("/api/match/check", { method: "POST" }),
           fetch("/api/journey/status"),
           fetch("/api/settings/preferences"),
         ]);

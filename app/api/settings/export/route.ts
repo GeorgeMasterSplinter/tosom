@@ -2,10 +2,15 @@
  * Tosom — Data Export (STEG C5)
  *
  * GET /api/settings/export
- * GDPR art. 20 (dataportabilitet).
+ * GDPR art. 15 (tilgang) og art. 20 (dataportabilitet).
  *
- * Returnerer JSON med profil, svar, aktiv reise og meldinger.
- * Kun brukerens egne data. Rate-limitet via enkel teller.
+ * Returnerer eit menneskelesbart JSON-uttrekk (norske nøkkelord) med
+ * brukarens personopplysningar: konto, profil (inkl. dypprofil),
+ * preferansar, reiser, eigne meldingar, varslar og eigne rapportar.
+ *
+ * Kun brukarens eige data. Interne ID-ar (cuid) inkluderast aldri —
+ * uttrekket skal vere sjølvforklarande ved levering.
+ * Rate-limitet via enkel teller.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -27,6 +32,44 @@ function checkExportLimit(userId: string): boolean {
   return true;
 }
 
+/* ═══════════════════════════════════════
+   NORSKE ETIKETTER
+   ═══════════════════════════════════════ */
+
+const messageTypeLabels: Record<string, string> = {
+  user: 'Tekstmelding',
+  image: 'Bilde',
+  system: 'Systemmelding',
+  continue_choice: 'Valg',
+};
+
+const reportCategoryLabels: Record<string, string> = {
+  HARASSMENT: 'Uønsket atferd',
+  INAPPROPRIATE: 'Upassende innhold',
+  SPAM: 'Spam',
+  FAKE_PROFILE: 'Falsk profil',
+  OTHER: 'Annet',
+};
+
+const reportStatusLabels: Record<string, string> = {
+  OPEN: 'Mottatt',
+  REVIEWED: 'Gjennomgått',
+  ACTIONED: 'Iverksett',
+  DISMISSED: 'Avvist',
+};
+
+const phaseLabels: Record<string, string> = {
+  EARLY: 'Bryt isen',
+  BUILDING_TRUST: 'Bygg tillit',
+  DEEPER: 'Dypere samtaler',
+  CHECKIN: 'Sjekk inn',
+};
+
+function iso(d: Date | string | null | undefined): string | null {
+  if (!d) return null;
+  return new Date(d).toISOString();
+}
+
 export async function GET(req: NextRequest) {
   try {
     // 1. Auth
@@ -45,16 +88,24 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // 3. Hent all bruker-data
-    const [user, profile, messages, journeys, notifications] = await Promise.all([
+    // 3. Hent all persondata
+    const [user, profile, messages, journeys, notifications, myReports] = await Promise.all([
       prisma.user.findUnique({
         where: { id: userId },
-        select: { id: true, email: true, name: true, phone: true, createdAt: true, role: true },
+        select: {
+          email: true,
+          name: true,
+          phone: true,
+          phoneVerified: true,
+          verified: true,
+          createdAt: true,
+          termsAcceptedAt: true,
+        },
       }),
       prisma.profile.findUnique({ where: { userId } }),
       prisma.message.findMany({
         where: { senderId: userId },
-        select: { id: true, content: true, type: true, createdAt: true, conversationId: true },
+        select: { content: true, type: true, createdAt: true },
         orderBy: { createdAt: 'asc' },
       }),
       prisma.journeyProgress.findMany({
@@ -66,59 +117,108 @@ export async function GET(req: NextRequest) {
         orderBy: { createdAt: 'desc' },
         take: 100,
       }),
+      prisma.report.findMany({
+        where: { reporterId: userId },
+        orderBy: { createdAt: 'asc' },
+      }),
     ]);
 
-    // 4. Bygg export-pakke
+    // 4. Bygg menneskelesbart uttrekk (norske nøkkelord, ingen interne ID-ar)
+    const firstName = profile?.firstName || user?.name || user?.email?.split('@')[0] || 'bruker';
+    const safeFileName = firstName
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/å/g, 'a')
+      .replace(/æ/g, 'ae')
+      .replace(/ø/g, 'o')
+      .replace(/[^a-z0-9-]/g, '-');
+
     const exportData = {
-      exportDate: new Date().toISOString(),
-      user: {
-        email: user?.email,
-        name: user?.name,
-        phone: user?.phone,
-        createdAt: user?.createdAt,
-        role: user?.role,
+      Dokument: 'ToSom — uttrekk av personopplysninger',
+      Grunnlag:
+        'GDPR art. 15 (rett til innsyn) og art. 20 (dataportabilitet). Dette uttrekket inneholder alle personopplysninger ToSom behandler om deg.',
+      Eksportert: new Date().toISOString(),
+
+      Konto: {
+        'Navn': user?.name || null,
+        'E-post': user?.email,
+        'Telefon': user?.phone || null,
+        'Telefon bekreftet': user?.phoneVerified ?? false,
+        'Identitet verifisert': user?.verified ?? false,
+        'Medlem siden': iso(user?.createdAt),
+        'Vilkår godkjent': iso(user?.termsAcceptedAt),
       },
-      profile: profile ? {
-        age: profile.age,
-        bio: profile.bio,
-        interests: profile.interests,
-        lifeRhythm: profile.lifeRhythm,
-        relationshipStyle: profile.relationshipStyle,
-        maturityLevel: profile.maturityLevel,
-        createdAt: profile.createdAt,
-        updatedAt: profile.updatedAt,
-      } : null,
-      messages: messages.map((m) => ({
-        id: m.id,
-        content: m.content,
-        type: m.type,
-        sentAt: m.createdAt.toISOString(),
-        conversationId: m.conversationId,
-      })),
-      journeys: journeys.map((j) => ({
-        matchId: j.matchId,
-        phase: j.phase,
-        day: j.day,
-        completedDays: j.completedDays,
-        startedAt: j.startedAt.toISOString(),
-        endedAt: j.endedAt?.toISOString() || null,
-        milestones: j.milestones.map((ml) => ({
-          day: ml.day,
-          title: ml.title,
-          summary: ml.summary,
+
+      Profil: profile
+        ? {
+            'Fornavn': profile.firstName || null,
+            'Etternavn': profile.lastName || null,
+            'Alder': profile.age,
+            'Kallenavn på ToSom': profile.identityName || null,
+            'Om meg': profile.bio || null,
+            'Interesser': profile.interests?.length ? profile.interests : null,
+            'Postnummer': profile.postalCode || null,
+            'Posisjon (utledet fra postnummer)':
+              profile.latitude != null && profile.longitude != null
+                ? { breddegrad: profile.latitude, lengdegrad: profile.longitude }
+                : null,
+            'Profilbilde (URL)': profile.photoUrl || null,
+            'Relasjonsstil': profile.relationshipStyle || null,
+            'Livssituasjon': profile.lifeSituation ?? null,
+            'Livsstil': profile.lifestyle ?? null,
+            'Personlighet': profile.personality ?? null,
+            'Kommunikasjon': profile.communication ?? null,
+            'Nærhet og intimitet': profile.intimacy ?? null,
+            'Framtidsbilder': profile.futureVision ?? null,
+            'Grenser': profile.boundaries ?? null,
+            'Emosjonelle behov': profile.emotionalNeeds ?? null,
+            'Sist oppdatert': iso(profile.updatedAt),
+          }
+        : null,
+
+      Preferanser: profile?.preferences ?? null,
+
+      Reiser: journeys.map((j) => ({
+        'Fase': phaseLabels[j.phase] || j.phase,
+        'Dag': j.day,
+        'Startet': iso(j.startedAt),
+        'Avsluttet': iso(j.endedAt),
+        'Fullført': Boolean(j.completedAt),
+        'Milepæler': j.milestones.map((ml) => ({
+          'Dag': ml.day,
+          'Tittel': ml.title,
+          'Sammendrag': ml.summary,
         })),
       })),
-      notifications: notifications.map((n) => ({
-        type: n.type,
-        message: n.message,
-        readAt: n.readAt?.toISOString() || null,
-        createdAt: n.createdAt.toISOString(),
+
+      'Egne meldinger': messages.map((m) => ({
+        'Tidspunkt': iso(m.createdAt),
+        'Type': messageTypeLabels[m.type] || m.type,
+        'Innhold': m.type === 'image' ? '[Bilede]' : m.content,
+      })),
+
+      Varsler: notifications.map((n) => ({
+        'Tidspunkt': iso(n.createdAt),
+        'Melding': n.message,
+        'Lest': Boolean(n.readAt),
+      })),
+
+      'Egne rapporter': myReports.map((r) => ({
+        'Tidspunkt': iso(r.createdAt),
+        'Kategori': reportCategoryLabels[r.category] || r.category,
+        'Beskrivelse': r.description || null,
+        'Status': reportStatusLabels[r.status] || r.status,
       })),
     };
 
-    return NextResponse.json(exportData, {
+    // 5. Lever som JSON-fil (pretty-print, norsk filnavn)
+    const json = JSON.stringify(exportData, null, 2);
+    return new Response(json, {
+      status: 200,
       headers: {
-        'Content-Disposition': `attachment; filename="tosom-export-${userId.slice(0, 8)}.json"`,
+        'Content-Type': 'application/json; charset=utf-8',
+        'Content-Disposition': `attachment; filename="tosom-personopplysninger-${safeFileName}.json"`,
       },
     });
   } catch (error) {

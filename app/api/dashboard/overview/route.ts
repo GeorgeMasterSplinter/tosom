@@ -177,14 +177,21 @@ export async function GET(_request: Request) {
     }
 
     // Finn samtale-partnar og siste melding
+    // conversationId skal ALLTID vere til stades når samtalen eksisterer
+    // (også før første melding), slik at klienten kan route direkte til /chat/[id]
     let convoInfo: any = null;
-    if (conversation && conversation.messages.length > 0) {
-      const msg = conversation.messages[0];
+    if (conversation) {
+      const msg = conversation.messages[0] ?? null;
+      const partner =
+        conversation.userAId === userId ? conversation.userB : conversation.userA;
       convoInfo = {
-        partnerName: "Ukjent",
-        lastMessage: msg.content,
-        time: msg.createdAt,
         conversationId: conversation.id,
+        partnerName:
+          [partner.profile?.firstName, partner.profile?.lastName]
+            .filter(Boolean)
+            .join(" ") || "Ukjent",
+        lastMessage: msg?.content ?? null,
+        time: msg?.createdAt ?? null,
       };
     }
 

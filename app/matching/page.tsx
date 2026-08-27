@@ -38,6 +38,13 @@ interface OverviewData {
   journeyState?: 'IDLE' | 'QUEUED' | 'MATCHED' | 'ON_JOURNEY' | 'COMPLETED';
   onboardingComplete?: boolean;
   matchQueuedAt?: string | null;
+  // Direkte ruting: conversationId finst når samtalen er oppretta
+  conversation?: {
+    conversationId: string;
+    partnerName: string;
+    lastMessage: string | null;
+    time: string | null;
+  } | null;
 }
 
 type QueueState = 'loading' | 'in_queue' | 'locked' | 'no_match' | 'start' | 'not_started' | 'matched';
@@ -404,11 +411,16 @@ export default function MatchingPage() {
                 Reisen deres er i gang. Dere har 30 dager — rolig og i deres tempo.
               </p>
               <button
-                onClick={() => { window.location.href = '/dashboard'; }}
+                onClick={() => {
+                  // Direkte ruting: når samtalen eksisterer går vi rett inn i
+                  // /chat/[id] i steden for via dashboardet.
+                  const convId = overview?.conversation?.conversationId;
+                  window.location.href = convId ? `/chat/${convId}` : '/dashboard';
+                }}
                 className="mt-8 px-10 py-4 rounded-2xl font-semibold text-base transition-all duration-300 hover:brightness-110"
                 style={{ background: 'linear-gradient(135deg, #D4AF37, #E8C766)', color: '#0B1520', fontWeight: 600 }}
               >
-                Gå til reisen
+                {overview?.conversation?.conversationId ? 'Gå til samtalen' : 'Gå til reisen'}
               </button>
             </GlassCard>
           </div>

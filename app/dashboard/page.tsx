@@ -424,8 +424,10 @@ export default function Dashboard() {
         const json: DashboardData = await res.json();
         setData(json);
 
-        // Ingen aktiv match → redirect /matching
-        if (!json.match || !json.journey || json.journey.day < 1) {
+        // Ingen aktiv match/reise → redirect /matching.
+        // Merk: dag 0 (reise startet, begge har ikkje møtt opp enno) BLIR vist
+        // her — ikkje bounsa til /matching.
+        if (!json.match || !json.journey) {
           window.location.href = '/matching';
           return;
         }
@@ -473,7 +475,10 @@ export default function Dashboard() {
 
   const { match, journey, conversation } = data;
   const currentDay = journey.day;
-  const currentPhase = getPhaseForDay(currentDay);
+  // Dag 0: reisen er oppretta, men begge har ikkje møtt opp enno
+  const isDayZero = currentDay < 1;
+  const displayDay = Math.max(1, currentDay);
+  const currentPhase = getPhaseForDay(displayDay);
   const resonanceLabel = getResonanceLabel(match.resonanceLevel);
   const chatUrl = conversation?.conversationId ? `/chat/${conversation.conversationId}` : '/chat';
 
@@ -491,8 +496,26 @@ export default function Dashboard() {
             {getGreeting()}, {userName}
           </h1>
           <p className="mt-1 text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
-            Dere er på dag {currentDay} av {journey.totalDays}. {currentPhase.name}.
+            {isDayZero
+              ? 'Reisen starter når dere begge har vært innom.'
+              : `Dere er på dag ${currentDay} av ${journey.totalDays}. ${currentPhase.name}.`}
           </p>
+        </div>
+
+        {/* ═══ SAMTALE CTA (direkte ruting inn i chatten) ═══ */}
+        <div className="mb-8">
+          <button
+            onClick={() => (window.location.href = chatUrl)}
+            className="w-full flex items-center justify-center gap-2 rounded-2xl py-4 font-medium transition-transform hover:scale-[1.01] active:scale-[0.99]"
+            style={{
+              background: 'linear-gradient(135deg, rgba(212,175,55,0.95), rgba(176,141,41,0.95))',
+              color: '#0B1520',
+              fontSize: '15px',
+              boxShadow: '0 8px 32px rgba(212,175,55,0.15)',
+            }}
+          >
+            💬 {isDayZero ? 'Møt matchen din' : 'Fortsett samtalen'}
+          </button>
         </div>
 
         {/* ═══ RESONANSE KORT ═══ */}
@@ -556,7 +579,24 @@ export default function Dashboard() {
           <h2 className="font-semibold text-lg mb-4" style={{ color: 'rgba(255,255,255,0.8)' }}>
             Milepæler
           </h2>
-          <Milestones currentDay={currentDay} />
+          {isDayZero ? (
+            <div
+              className="rounded-2xl p-5"
+              style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.2)' }}
+            >
+              <p className="text-xs font-medium uppercase tracking-wider mb-2" style={{ color: '#D4AF37' }}>
+                Neste
+              </p>
+              <p className="font-semibold" style={{ color: 'rgba(255,255,255,0.9)', fontSize: '16px' }}>
+                Reisen starter
+              </p>
+              <p className="mt-2 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                Dag 1 begynner når dere begge har vært innom. Si hei til hverandre i samtalen.
+              </p>
+            </div>
+          ) : (
+            <Milestones currentDay={currentDay} />
+          )}
         </GlassCard>
 
         {/* ═══ PROFIL PRIVAT ═══ */}

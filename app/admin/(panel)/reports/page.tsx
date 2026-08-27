@@ -18,6 +18,8 @@ interface ReportItem {
   description?: string;
   status: string;
   createdAt: string;
+  reporter?: { name?: string | null; email: string } | null;
+  reportedUser?: { name?: string | null; email: string } | null;
 }
 
 const categoryLabels: Record<string, string> = {
@@ -100,9 +102,10 @@ export default function AdminReportsPage() {
             {selected === r.id && (
               <div className="mt-4 pt-4 border-t border-white/6 space-y-3" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
                 <div className="text-xs text-white/40 grid grid-cols-2 gap-2">
-                  <span>Reporter: {r.reporterId.slice(0, 12)}...</span>
-                  <span>Reportet: {r.reportedId.slice(0, 12)}...</span>
-                  {r.matchId && <span>Match: {r.matchId.slice(0, 12)}...</span>}
+                  <span>Reporter: {r.reporter?.name || r.reporter?.email || 'Ukjent'}</span>
+                  <span>Meldt om: {r.reportedUser?.name || r.reportedUser?.email || 'Ukjent'}</span>
+                  {r.reporter?.email && r.reporter.name && <span>E-post: {r.reporter.email}</span>}
+                  {r.reportedUser?.email && r.reportedUser.name && <span>E-post: {r.reportedUser.email}</span>}
                 </div>
 
                 <div className="flex gap-2">

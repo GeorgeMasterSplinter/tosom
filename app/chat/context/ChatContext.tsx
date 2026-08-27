@@ -53,8 +53,10 @@ export interface ChatContextValue {
   imageShareAllowed: boolean;
   loading: boolean;
   error: string | null;
+  /** Send-feil (vises ved inputfeltet; polling slettar ikkje denne) */
+  sendError: string | null;
   sessionUserId: string | null;
-  sendMessage: (content: string, type?: MessageType) => Promise<void>;
+  sendMessage: (content: string, type?: MessageType) => Promise<boolean>;
   loadMessages: () => Promise<void>;
   /** Aktive mood */
   mood: MoodId;
@@ -88,6 +90,10 @@ export function ChatProvider({
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Send-feil er eigen state: loadMessages (polling) må ikkje tilsidesetje
+  // ein send-feil — tidlegare forsvann feilen seinast etter 3 sekund, og ein
+  // feila send vart fullstendig stille.
+  const [sendError, setSendError] = useState<string | null>(null);
   const lastMsgIdRef = useRef<string | null>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -185,16 +191,24 @@ export function ChatProvider({
     };
   }, [conversationId, loadMessages]);
 
-  const sendMessage = useCallback(async (content: string, type: MessageType = "text") => {
-    if (!conversationId) return;
+  const sendMessage = useCallback(async (content: string, type: MessageType = "text"): Promise<boolean> => {
+    if (!conversationId) return false;
     try {
       const res = await fetch("/api/chat/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ conversationId, content, type }),
       });
-      if (!res.ok) throw new Error(`Feil ved sending: ${res.status}`);
+      if (!res.ok) {
+        let detail = `Feil ved sending: ${res.status}`;
+        try {
+          const errBody = await res.json();
+          if (errBody?.error) detail = String(errBody.error);
+        } catch { /* held status-meldinga */ }
+        throw new Error(detail);
+      }
       const data = await res.json();
+      setSendError(null);
 
       // Optimistic update — vis melding umiddelbart
       const newMsgId = data.message.id || `msg-${Date.now()}`;
@@ -209,9 +223,12 @@ export function ChatProvider({
           metadata: { timestamp: new Date().toISOString(), senderInfo: partner },
         },
       ]);
+      return true;
     } catch (e) {
       console.error("Feil ved sending av melding:", e);
-      setError(e instanceof Error ? e.message : "Kunne ikke sende melding");
+      // EIGEN feilstate — polling slettar ikkje denne, så feilen blir synleg
+      setSendError(e instanceof Error ? e.message : "Kunne ikke sende melding");
+      return false;
     }
   }, [conversationId, partner]);
 
@@ -224,6 +241,7 @@ export function ChatProvider({
       imageShareAllowed,
       loading,
       error,
+      sendError,
       sessionUserId: sessionUserId ?? null,
       sendMessage,
       loadMessages,

@@ -12,8 +12,6 @@
 
 "use client";
 
-import { useEffect, useRef } from "react";
-import { FadeIn } from "@/components/animations/FadeIn";
 import { useChat } from "@/app/chat/context/ChatContext";
 
 /* ═══════════════════════════════════════
@@ -263,7 +261,7 @@ function Avatar({ senderInfo }: { senderInfo?: { name: string; imageUrl?: string
    ═══════════════════════════════════════ */
 
 export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
-  const { id, sender, type, content, metadata, resonanceLevel, isMilestone, isBliKjent } = message;
+  const { sender, type, content, metadata, resonanceLevel, isMilestone, isBliKjent } = message;
   const { moodTheme } = useChat();
   const tPrimary = moodTheme.textPrimary;
   const tSecondary = moodTheme.textSecondary;
@@ -271,26 +269,14 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
   const isMe = sender === "me";
   const isSystem = sender === "system";
   
-  // Stagger-delay basert på indeks
-  const delay = index * 50;
-
-  // Ref for animasjon (warmGlow fallback for direkte CSS)
-  const bubbleRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (bubbleRef.current && !isSystem) {
-      bubbleRef.current.style.animation = isMe ? "fadeInUp 0.5s ease-out forwards" : "slideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards";
-    } else if (bubbleRef.current && isSystem) {
-      bubbleRef.current.style.animation = "fadeIn 0.3s ease-out forwards";
-    }
-  }, [id, isMe, isSystem]);
+  // Stagger-delay basert på indeks (takset — lang historikk må ikkje «vente» usynleg)
+  const delay = Math.min(index * 50, 400);
 
   // ═══ MILESTONE BUBBLE — milestone-feiring ═══
   if (isMilestone || (type === "system" && content.includes("Dag") && content.includes("av 30"))) {
     return (
-      <div style={{ marginBottom: "24px", opacity: 0 }}>
-        <FadeIn variant="scaleIn" delay={delay}>
-          <MilestoneBubble message={message} />
-        </FadeIn>
+      <div className="message-enter-scale" style={{ marginBottom: "24px", animationDelay: `${delay}ms` }}>
+        <MilestoneBubble message={message} />
       </div>
     );
   }
@@ -300,8 +286,8 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
     const imageUrl = metadata?.imageUrl || content;
     return (
       <div
-        className={`flex ${sender === "me" ? "justify-end" : "justify-start"} py-3 px-6 animate-warmGlow`}
-        style={{ opacity: 0 }}
+        className={`flex ${sender === "me" ? "justify-end" : "justify-start"} py-3 px-6 ${sender === "me" ? "message-enter-me" : "message-enter-partner"}`}
+        style={{ animationDelay: `${delay}ms` }}
       >
         <div
           className="rounded-2xl overflow-hidden relative max-w-[280px]"
@@ -334,9 +320,8 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
   // ═══ SYSTEM-MELDING — premium kort-layout (rask fade) ═══
   if (isSystem) {
     return (
-      <div style={{ marginBottom: "20px", opacity: 0 }}>
-        <FadeIn variant="fadeIn" delay={delay * 0.5}>
-          <SystemCard>
+      <div className="message-enter-system" style={{ marginBottom: "20px", animationDelay: `${Math.round(delay * 0.5)}ms` }}>
+        <SystemCard>
             <div className="flex items-start gap-3">
               {/* Gull prikke-ikon med glow */}
               <div
@@ -376,17 +361,13 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
             )}
 
           </SystemCard>
-        </FadeIn>
       </div>
     );
   }
 
-  // ═══ BRUKAR-MELDING — Premium bubble v2 med FadeIn ═══
+  // ═══ BRUKAR-MELDING — Premium bubble v2 (CSS-animasjon; synleg om animasjonen feilar) ═══
   const isLeft = sender === "partner";
   const resonanceGlow = getResonanceGlow(resonanceLevel || (isMe ? 30 : 10));
-  
-  // Vel variant basert på sender
-  const fadeInVariant: 'fadeInUp' | 'slideUp' | 'fadeIn' = isLeft ? 'slideUp' : 'fadeInUp';
 
   return (
     <div
@@ -396,12 +377,12 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
       }}
       className="flex"
     >
-      <FadeIn variant={fadeInVariant} delay={delay} scrollTrigger>
+      <div className={isLeft ? "message-enter-partner" : "message-enter-me"} style={{ animationDelay: `${delay}ms` }}>
         {/* Avatar for partner */}
         {isLeft && !isMe && metadata?.senderInfo && <Avatar senderInfo={metadata.senderInfo} />}
 
         {/* Bubble-container */}
-        <div ref={bubbleRef} style={{ maxWidth: "85%" }}>
+        <div style={{ maxWidth: "85%" }}>
           <div
             className="px-5 py-[16px] relative overflow-hidden"
             style={{
@@ -500,7 +481,7 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
         {isMe && (
           <div className="w-8.5 flex-shrink-0 mr-2.5" />
         )}
-      </FadeIn>
+      </div>
     </div>
   );
 }
@@ -545,6 +526,42 @@ export function MessageBubbleStyles() {
 
       .message-system-enter {
         animation: softLand 0.45s ease-out forwards;
+      }
+
+      /* ── Pålitelige inn-felt-animasjonar (LIVE-FIX 2026-08-27) ──
+         Tidlegare brukte boblane FadeIn (framer-motion useInView) med
+         start-verdi opacity:0 — om inView-triggeren aldri fyra (t.d. i
+         produksjon), forblei meldinga usynleg for alltid.
+         Her: vanlege CSS-keyframes med fill-mode both — dersom
+         animasjonen feilar eller keyframes manglar, er bobla likevel
+         fullt synleg. Ingen JS-avheng heilt. */
+      @keyframes msgFadeInUp {
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes msgSlideUp {
+        from { opacity: 0; transform: translateY(12px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes msgFadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+      }
+      @keyframes msgScaleIn {
+        from { opacity: 0; transform: scale(0.96); }
+        to   { opacity: 1; transform: scale(1); }
+      }
+      .message-enter-me {
+        animation: msgFadeInUp 0.45s ease-out both;
+      }
+      .message-enter-partner {
+        animation: msgSlideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+      }
+      .message-enter-system {
+        animation: msgFadeIn 0.35s ease-out both;
+      }
+      .message-enter-scale {
+        animation: msgScaleIn 0.35s ease-out both;
       }
     `}</style>
   );

@@ -222,7 +222,7 @@ function ChatInput({
   senderId?: string;
   partnerId?: string | null;
 }) {
-  const { sendMessage, moodTheme } = useChat();
+  const { sendMessage, moodTheme, sendError } = useChat();
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -287,9 +287,13 @@ function ChatInput({
 
     setSending(true);
     try {
-      await sendMessage(text.trim(), "text");
-      setText("");
-      inputRef.current?.focus();
+      const ok = await sendMessage(text.trim(), "text");
+      // Tøm inputfeltet berre ved SUKSES — ved feil står meldinga igjen
+      // (kan sendast på nytt) og sendError blir vist over feltet.
+      if (ok) {
+        setText("");
+        inputRef.current?.focus();
+      }
     } catch (e) {
       console.error("Feil ved sending:", e);
     } finally {
@@ -347,6 +351,13 @@ function ChatInput({
         transition: 'border-color 1.2s ease-in-out',
       }}
     >
+      {/* Send-feil — synleg til neste vellykka send (polling slettar ikkje denne) */}
+      {sendError && (
+        <p className="px-2 pb-2 text-xs" style={{ color: G.dangerRed }} role="alert">
+          ⚠ {sendError} — meldinga er ikkje send, prøv igjen
+        </p>
+      )}
+
       {/* Premium glass-container for input */}
       <div 
         className="flex items-end gap-2.5 rounded-2xl p-3 transition-all duration-300"

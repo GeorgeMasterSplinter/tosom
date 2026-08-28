@@ -516,6 +516,11 @@ export default function Dashboard() {
           >
             💬 {isDayZero ? 'Møt matchen din' : 'Fortsett samtalen'}
           </button>
+          {isDayZero && (
+            <p className="text-center text-xs mt-3" style={{ color: 'rgba(255,255,255,0.35)' }}>
+              Dag 1 startar når {match.name} også har vært innom ein gong.
+            </p>
+          )}
         </div>
 
         {/* ═══ RESONANSE KORT ═══ */}
@@ -566,9 +571,11 @@ export default function Dashboard() {
             </h2>
             <span
               className="px-3 py-1 rounded-full text-xs font-medium"
-              style={{ background: `${currentPhase.color}15`, color: currentPhase.color, border: `1px solid ${currentPhase.color}30` }}
+              style={isDayZero
+                ? { background: 'rgba(212,175,55,0.08)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.25)' }
+                : { background: `${currentPhase.color}15`, color: currentPhase.color, border: `1px solid ${currentPhase.color}30` }}
             >
-              {currentPhase.name}
+              {isDayZero ? 'Dag 0 — starter' : currentPhase.name}
             </span>
           </div>
           <JourneyCalendar currentDay={currentDay} />

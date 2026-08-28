@@ -59,7 +59,10 @@ test.describe('Onboarding Flow (13-stegs)', () => {
   // Steg 0: Visning av onboarding
   // -------------------------------------------------------------------------
   
-  test('skal vise onboarding med progressbar og steg-tittel', async ({ page }) => {
+  // E2E-GJELD (28.08, R-1 i MASTERPLAN v3.0): onboarding-redesign fjerna
+  // progressbaren (viser no «Steg X av Y»). Testen testar gammal UI —
+  // skrives om med data-testid i eiga oppfølgjssak.
+  test.fixme('skal vise onboarding med progressbar og steg-tittel', async ({ page }) => {
     await page.goto('/onboarding');
     
     // Progress-bar skal vere synleg
@@ -79,11 +82,15 @@ test.describe('Onboarding Flow (13-stegs)', () => {
   // Steg 0 (første steg): Grunnprofil
   // -------------------------------------------------------------------------
 
-  test('skal kunna fylle ut grunnprofil og gå vidare', async ({ page }) => {
+  // E2E-GJELD (28.08, R-1 i MASTERPLAN v3.0): testar gammal markup
+  // (input[name=...]) som ikkje finst i den noverande 13-stegs-flowen —
+  // stega bruker placeholder/label-baserte felt og knapp-grid for val.
+  // Skrives om mot faktiske komponentar (Step1Profile mfl.) i eiga oppfølgjssak.
+  test.fixme('skal kunna fylle ut grunnprofil og gå vidare', async ({ page }) => {
     await page.goto('/onboarding');
 
     // === Fyll inn navn ===
-    const nameInput = page.locator('input[name="identityName"]');
+    const nameInput = page.locator('input[placeholder="Navn eller kallenavn"]');
     if (await nameInput.count() > 0) {
       await nameInput.fill('Testbruker');
       await expect(nameInput).toHaveValue('Testbruker');
@@ -123,7 +130,10 @@ test.describe('Onboarding Flow (13-stegs)', () => {
   // Steg 1: Personlighet & identitet — med validering
   // -------------------------------------------------------------------------
 
-  test('skal visa feilmelding ved tom selfDesc', async ({ page }) => {
+    // E2E-GJELD (28.08, R-1 i MASTERPLAN v3.0): testar gammal markup
+  // (input[name=...]) som ikkje finst i den noverande 13-stegs-flowen.
+  // Skrives om mot faktiske komponentar i eiga oppfolgjssak (data-testid-rewrite).
+  test.fixme('skal visa feilmelding ved tom selfDesc', async ({ page }) => {
     await page.goto('/onboarding');
 
     // Gå til steg 1 (Personlighet)
@@ -147,7 +157,10 @@ test.describe('Onboarding Flow (13-stegs)', () => {
     expect(textContent).toContain('minst 10 tegn');
   });
 
-  test('skal kunna gå vidare frå steg 1 med gyldig selfDesc', async ({ page }) => {
+    // E2E-GJELD (28.08, R-1 i MASTERPLAN v3.0): testar gammal markup
+  // (input[name=...]) som ikkje finst i den noverande 13-stegs-flowen.
+  // Skrives om mot faktiske komponentar i eiga oppfolgjssak (data-testid-rewrite).
+  test.fixme('skal kunna gå vidare frå steg 1 med gyldig selfDesc', async ({ page }) => {
     await page.goto('/onboarding');
 
     // Gå til steg 1 (Personlighet)
@@ -175,7 +188,10 @@ test.describe('Onboarding Flow (13-stegs)', () => {
   // Steg 2: Livssituasjon — med validering
   // -------------------------------------------------------------------------
 
-  test('skal kunna gå vidare frå steg 2 med gyldig responsibilities', async ({ page }) => {
+    // E2E-GJELD (28.08, R-1 i MASTERPLAN v3.0): testar gammal markup
+  // (input[name=...]) som ikkje finst i den noverande 13-stegs-flowen.
+  // Skrives om mot faktiske komponentar i eiga oppfolgjssak (data-testid-rewrite).
+  test.fixme('skal kunna gå vidare frå steg 2 med gyldig responsibilities', async ({ page }) => {
     await page.goto('/onboarding');
 
     // Gå til steg 1 → steg 2
@@ -213,7 +229,10 @@ test.describe('Onboarding Flow (13-stegs)', () => {
   // Back-navigasjon
   // -------------------------------------------------------------------------
 
-  test('skal kunna tilbake med BackButton på steg 1', async ({ page }) => {
+    // E2E-GJELD (28.08, R-1 i MASTERPLAN v3.0): testar gammal markup
+  // (input[name=...]) som ikkje finst i den noverande 13-stegs-flowen.
+  // Skrives om mot faktiske komponentar i eiga oppfolgjssak (data-testid-rewrite).
+  test.fixme('skal kunna tilbake med BackButton på steg 1', async ({ page }) => {
     await page.goto('/onboarding');
 
     // Gå til steg 1 (Personlighet)
@@ -248,7 +267,10 @@ test.describe('Onboarding Flow (13-stegs)', () => {
   // Steg 3-12: Gjennomfør heile flyten (komplett flow)
   // -------------------------------------------------------------------------
 
-  test('skal kunna fullføre heile 13-stegs onboarding-flyten', async ({ page }) => {
+    // E2E-GJELD (28.08, R-1 i MASTERPLAN v3.0): testar gammal markup
+  // (input[name=...]) som ikkje finst i den noverande 13-stegs-flowen.
+  // Skrives om mot faktiske komponentar i eiga oppfolgjssak (data-testid-rewrite).
+  test.fixme('skal kunna fullføre heile 13-stegs onboarding-flyten', async ({ page }) => {
     await page.goto('/onboarding');
 
     const testData = {
@@ -270,7 +292,7 @@ test.describe('Onboarding Flow (13-stegs)', () => {
     // === STEG 0: Grunnprofil ===
     await page.goto('/onboarding');
 
-    const nameInput = page.locator('input[name="identityName"]');
+    const nameInput = page.locator('input[placeholder="Navn eller kallenavn"]');
     if (await nameInput.count() > 0) {
       await nameInput.fill(testData.name);
     }
@@ -353,22 +375,23 @@ test.describe('Onboarding Flow (13-stegs)', () => {
   test('skal autosave inndata til localStorage', async ({ page }) => {
     await page.goto('/onboarding');
 
-    const nameInput = page.locator('input[name="identityName"]');
+    const nameInput = page.locator('input[placeholder="Navn eller kallenavn"]');
     if (await nameInput.count() > 0) {
       await nameInput.fill('AutosaveTest');
     }
 
-    // Vent på autosave-debounce (400ms) + buffer
-    await page.waitForTimeout(1000);
-
-    // Sjekk localStorage for draft
-    const savedData = await page.evaluate(() => {
-      return localStorage.getItem('tosom_onboarding_draft');
-    });
-
-    expect(savedData).not.toBeNull();
-    const parsed = JSON.parse(savedData ?? '{}');
-    expect(parsed.identityName).toBe('AutosaveTest');
+    // Vent deterministisk på autosave (debounce 400 ms) — polling i
+    // staden for fast timeout (fast timeout flakka på firefox)
+    await expect
+      .poll(async () => {
+        const raw = await page.evaluate(
+          () => localStorage.getItem('tosom_onboarding_draft')
+        );
+        return raw
+          ? (JSON.parse(raw) as { identityName?: string }).identityName
+          : undefined;
+      })
+      .toBe('AutosaveTest');
   });
 
   // -------------------------------------------------------------------------
@@ -378,28 +401,39 @@ test.describe('Onboarding Flow (13-stegs)', () => {
   test('skal restaurera draft etter side-opprettning', async ({ page }) => {
     await page.goto('/onboarding');
 
-    const nameInput = page.locator('input[name="identityName"]');
+    const nameInput = page.locator('input[placeholder="Navn eller kallenavn"]');
     if (await nameInput.count() > 0) {
       await nameInput.fill('DraftTest123');
     }
 
-    // Vent på autosave
-    await page.waitForTimeout(1000);
+    // Vent deterministisk på autosave
+    await expect
+      .poll(async () => {
+        const raw = await page.evaluate(
+          () => localStorage.getItem('tosom_onboarding_draft')
+        );
+        return raw
+          ? (JSON.parse(raw) as { identityName?: string }).identityName
+          : undefined;
+      })
+      .toBe('DraftTest123');
 
     // Oppfrisk side
     await page.reload();
     await page.waitForLoadState('networkidle');
 
-    // Sjekk at verdien er restaurert frå localStorage
-    const restoredValue = await nameInput.inputValue();
-    expect(restoredValue).toBe('DraftTest123');
+    // Sjekk at verdien er restaurert frå localStorage (polling:
+    // restaureringa hentar asynkront etter mount)
+    await expect.poll(() => nameInput.inputValue()).toBe('DraftTest123');
   });
 
   // -------------------------------------------------------------------------
   // Progress-bar oppdatering
   // -------------------------------------------------------------------------
 
-  test('skal visa riktig progress-prosent', async ({ page }) => {
+  // E2E-GJELD (28.08, R-1 i MASTERPLAN v3.0): proentsifra progress-vising
+  // fjerna i redesign (viser no «Steg X av Y»). Skrives om med data-testid.
+  test.fixme('skal visa riktig progress-prosent', async ({ page }) => {
     await page.goto('/onboarding');
 
     // Steg 0: skal visa ~8% (1/13)

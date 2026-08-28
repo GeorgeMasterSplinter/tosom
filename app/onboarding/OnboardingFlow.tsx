@@ -302,9 +302,21 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
          if (serverDraft.step > 0) setStep(serverDraft.step);
          return;
        }
-       // 2) Fullførte profiler pre-fylles
+       // 2) Fullførte profiler pre-fylles — men felt brukeren allerede
+       // har skrevet lokalt vinner (uten dette forsvant f.eks. navnet ved
+       // reload for brukere med eksisterende profil, da prefill slo over
+       // localStorage-fallbacket)
        if (prefill && prefill.data && Object.keys(prefill.data).length > 0) {
-         setData((prev) => ({ ...prev, ...prefill.data }));
+         const merged: Record<string, unknown> = { ...prefill.data };
+         const localDraft = loadDraft();
+         if (localDraft) {
+           for (const [k, v] of Object.entries(localDraft)) {
+             if (v !== '' && v !== null && v !== undefined) {
+               merged[k] = v;
+             }
+           }
+         }
+         setData((prev) => ({ ...prev, ...merged }));
          if (prefill.step > 0) setStep(prefill.step);
          return;
        }
@@ -321,8 +333,16 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
 
   // Autosave med debounce (400ms) + vis "Lagrer..."-indikator
   const [showSaving, setShowSaving] = useState(false);
-  
+  const isFirstRender = useRef(true);
+
   useEffect(() => {
+    // Hopp over fyrste kørsel: ved mount er data endå tomme (draft-
+    // restaureringa hentar asynkront). Uten dette kan ein tom draft
+    // overstyre localStorage dersom server-kalla tek lengre enn debounce-vinduet.
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     setShowSaving(true);
     saveTimerRef.current = setTimeout(() => {
@@ -374,7 +394,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
   ];
 
   const guidingTexts = [
-    '',  // Steg 0 har eigen header i Step1Profile — ingen duplikat-guiding
+    '',  // Steg 0 har egen header i Step1Profile — ingen duplikat-guiding
     'Personligheten din er det som gjør deg til deg.',
     'Livssituasjonen din gir oss en viktig oversikt over hverdagen din.',
     'Tilknytningsmønsteret ditt sier mye om hvordan du møter andre mennesker.',
@@ -425,7 +445,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     }
   };
 
-  // === Save + Matching (trigga frå Step10StartReisen) ===
+  // === Save + Matching (trigga fra Step10StartReisen) ===
   const handleStartReisen = async () => {
     setSaving(true);
     setError(null);
@@ -535,7 +555,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
       fetch('/api/onboarding/draft', { method: 'DELETE' }).catch(() => {});
 
       if (!userId) {
-        // Kall onComplete-callback om han er definert (frå AppShell)
+        // Kall onComplete-callback om han er definert (fra AppShell)
         if (onComplete) {
           onComplete({
             id: '',
@@ -552,7 +572,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
         return;
       }
 
-      // Kall onComplete-callback om han er definert (frå AppShell)
+      // Kall onComplete-callback om han er definert (fra AppShell)
       if (onComplete) {
         onComplete({
           id: userId,

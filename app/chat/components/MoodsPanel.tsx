@@ -167,6 +167,14 @@ export function MoodsPanel({ onClose }: MoodsPanelProps) {
               );
             })}
           </div>
+
+          {/* C-5: delings-hint — stemninga er DELT for begge partar */}
+          <p
+            className="text-[11px] text-center mt-4 tracking-wide"
+            style={{ color: G.textMuted }}
+          >
+            🤝 Stemninga er delt — når du byter, endrar den seg for begge
+          </p>
         </div>
 
         <style jsx>{`

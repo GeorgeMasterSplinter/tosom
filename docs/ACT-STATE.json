@@ -1,7 +1,7 @@
 {
   "version": "1.0",
-  "updatedAt": "2026-08-25",
-  "commit": "2f0eb6a",
+  "updatedAt": "2026-08-28",
+  "commit": "9ab7041",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
     "tests": "344/345 (40 suiter, 1 skippet)",
@@ -56,6 +56,24 @@
     }
   ],
   "leveranser": [
+    {
+      "dato": "2026-08-28",
+      "id": "CHAT-BUBLE-SYNLIGHET",
+      "title": "Chat: pålitelig boble-synlighet (CSS-animasjon) + synlige send-feil",
+      "content": "Meldingsbobler brukte FadeIn (framer-motion useInView med start opacity:0) — om inView-triggeren aldri fyrer (t.d. i produksjon), forblei meldinga usynleg for alltid. Bytt til vanlege CSS-keyframes (fill-mode both) i MessageBubbleStyles: msgFadeInUp/msgSlideUp/msgFadeIn/msgScaleIn — bobla er fullt synleg sjølv om animasjonen feilar, ingen JS-avheng. Send-feil: eigen sendError-state i ChatContext (polling slettar ikkje feilen), inputfeltet tømmes berre ved suksess (ChatInput), feilen vises over feltet. Commit 9ab7041 (ChatContainer.tsx, MessageBubble.tsx, ChatContext.tsx)."
+    },
+    {
+      "dato": "2026-08-27",
+      "id": "RAPPORT-GDPR-CHAT",
+      "title": "Rapport/GDPR/chat: rapport-innsending, profesjonell GDPR-eksport, direkte chat-ruting",
+      "content": "1) Rapport-innsending retta: /api/report POST verifierer aktiv match + partnerId, admin-panelet (reports) sende riktig format. 2) Profesjonell GDPR-eksport: /api/settings/export skrive om — struktert eksport av profil, djupprofil, reise, chat og samtykke med lesbar metadata. 3) Direkte chat-ruting: /api/dashboard/overview returnerer conversationId ALLTID når samtalen eksisterer (også før første melding) + partnernamn; dashboard/matching routerer direkte til /chat/[id]. Dashboard viser no dag 0 (reise oppretta, begge ikkje møtt opp enno) i staden for å bønse til /matching. Commit 8014dd2 (9 filer)."
+    },
+    {
+      "dato": "2026-08-26",
+      "id": "VENTEROM-MATCH-KORT",
+      "title": "Venterom: match-kort ved match + kø-feil vises i stedenfor slette",
+      "content": "Matching-venterommet viser no et match-kort (partner + CTA til chatten) når match finnes, og kø-feil (f.eks. oppbrukt kvote, allerede i kø) vises som melding i stedenfor at brukeren stillentiggen slettes fra køen. Påslag i onboarding-fløya (OnboardingFlow, Step9Oppsummering) og statusvising (DashboardMatchStatus). Commit 858e4a3 (4 filer)."
+    },
     {
       "dato": "2026-08-25",
       "id": "B5-ADMIN-PASSORD-HASH",
@@ -143,7 +161,7 @@
       "/metoder — ikke lenket noe sted"
     ]
   },
-  "nextAction": "Bølge B, fortsetter. B-1 (én database), B-2 (aldersløft), B-3 (nextDayAt-indeks), B-4 (rate limiting på 5 skrivende ruter) og B-5 (admin-passord som hash + timing-safe, S-2 lukket) er DONE. B-6 (F-6 hemmeligheter) var tidligere markert DONE av George, men delinga av admin-passordet var IKKE i koden — dette er nå faktisk levert via B-5. Neste: B-7 (slipp inn 10→50 testere) er George. DRIFT (George): set ADMIN_PASSWORD_HASH i env (node scripts/generate-admin-hash.mjs \"<passord>\") — admin-innlogging krever hasjen, gammelt ADMIN_PASSWORD virker ikke lenger. B-5 er pusha; alle agent-commits for Bølge B er på origin/main.",
+  "nextAction": "Bølge B er DONE (B-1..B-5 agent-arbeid, B-6/B-7 bekreftet). George: B-7 (slipp inn 10→50 testere) + DRIFT: set ADMIN_PASSWORD_HASH i env (node scripts/generate-admin-hash.mjs \"<passord>\") — gammelt ADMIN_PASSWORD virker ikke lenger. Nå: Bølge CHAT-POLISH startet 2026-08-28 (bestilt av George): boble-bredd (kort tekst deles), scroll (siste melding alltid synlig nede), ekte optimistisk send, «Bli Kjent»/«Oppgave»-etikett i boblen, mood-verifisering (prod: virker ikke som den skal — live-diagnose nødvendig), responsivt chat (dvh/desktop-kort), dag-0-polsing på dashboard (variant A: behol «begge skal være innom»), klient-routing i stedenfor full-reload. Prod = main (Vercel auto-deploy verifisert: build 1787869967843 = 28.08 00:33, 1 min etter siste commit).",
   "gjenstaarFoerBeta": [
     "Manuell sjekkliste — nå konsolidert i GEORGE.md (steg 2–9, env-liste, kill switches)"
   ],

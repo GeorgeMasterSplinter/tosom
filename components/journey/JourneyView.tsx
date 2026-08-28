@@ -48,7 +48,7 @@ export default function JourneyView({ currentDay }: JourneyViewProps) {
   const faseTekst = journeyState.journeyCompleted
     ? "Denne matchen er ferdig. Reisen varer i 30 dager."
     : !journeyState.journeyActive
-    ? "Reisen din er ikke startet enno."
+    ? "Reisen din er ikke startet ennå."
     : `Fase ${phaseConfig.phase === "EARLY" ? "1" : "2"}`;
 
   const faseUnderTekst = journeyState.journeyCompleted

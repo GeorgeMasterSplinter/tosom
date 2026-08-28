@@ -156,8 +156,8 @@ export default function AdminConversationsPage() {
             <button onClick={() => setSelectedConversation(null)} style={{ background: "none", border: "none", color: "#E0E0E0", cursor: "pointer", fontSize: "18px" }}>✕</button>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", fontSize: "13px" }}>
-            <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Brukar A:</span> {selectedConversation.userA.name || selectedConversation.userA.email}</div>
-            <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Brukar B:</span> {selectedConversation.userB.name || selectedConversation.userB.email}</div>
+            <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Bruker A:</span> {selectedConversation.userA.name || selectedConversation.userA.email}</div>
+            <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Bruker B:</span> {selectedConversation.userB.name || selectedConversation.userB.email}</div>
             <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Match score:</span> {selectedConversation.match?.score ?? '—'}</div>
             <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Status:</span> {statusBadge(selectedConversation)}</div>
             <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Oppretta:</span> {new Date(selectedConversation.createdAt).toLocaleString('nb-NO')}</div>

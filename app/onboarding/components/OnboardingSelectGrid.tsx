@@ -137,7 +137,7 @@ export function OnboardingSelectGrid({
                 </div>
               )}
 
-              {/* Innhald */}
+              {/* Innhold */}
               <div className="p-4 space-y-1.5">
                 {/* Ikon med subtil fargetone */}
                 {option.icon && (

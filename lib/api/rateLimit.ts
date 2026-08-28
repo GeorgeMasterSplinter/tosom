@@ -2,7 +2,7 @@
  * ToSom — Enkel rate limiting (in-memory)
  *
  * Bruk på auth, chat, matching og admin-endepunkt.
- * Merk: Virkar bare på éin instans (ikke for fleire instansar).
+ * Merk: Virkar bare på éin instans (ikke for flere instansar).
  */
 
 interface RateLimitEntry {

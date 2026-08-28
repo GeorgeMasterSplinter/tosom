@@ -60,7 +60,7 @@ export async function POST(req: Request) {
 
     const ADMIN_EMAIL = 'admin@tosom.no';
 
-    // --- VAKTKLAUSUL 2: No-op hvis en ADMIN allerede finst (uavhengig av miljø) ---
+    // --- VAKTKLAUSUL 2: No-op hvis en ADMIN allerede finnes (uavhengig av miljø) ---
     const existingAdmin = await prisma.user.findFirst({
       where: { role: 'ADMIN' },
     });
@@ -68,7 +68,7 @@ export async function POST(req: Request) {
     if (existingAdmin) {
       return NextResponse.json({
         success: true,
-        message: 'Admin-bruker finst allerede',
+        message: 'Admin-bruker finnes allerede',
         adminId: existingAdmin.id,
       });
     }

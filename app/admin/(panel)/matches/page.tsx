@@ -166,7 +166,7 @@ export default function AdminMatchesPage() {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "20px" }}>
                 {([inspectorData.userA, inspectorData.userB] as any[]).map((u, i) => (
                   <div key={i} style={{ padding: "12px", borderRadius: "8px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}>
-                    <div style={{ fontSize: "13px", fontWeight: 600, marginBottom: "8px", color: i === 0 ? "#34D399" : "#60A5FA" }}>Brukar {i + 1}</div>
+                    <div style={{ fontSize: "13px", fontWeight: 600, marginBottom: "8px", color: i === 0 ? "#34D399" : "#60A5FA" }}>Bruker {i + 1}</div>
                     <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.6)" }}>{u.name || u.email}</div>
                     <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)", marginBottom: "4px" }}>{u.email}</div>
                     {u.journey ? (

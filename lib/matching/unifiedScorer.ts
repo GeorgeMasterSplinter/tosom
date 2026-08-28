@@ -5,7 +5,7 @@
 //
 // FORSKNINGSMOTOR F-8: Ni dimensjoner → seks, med vektene fra §7.
 // Kvar dimensjon bruker psykometriske skårer når begge profiler har dei;
-// ellers faller vi tilbake til dagens ordoverlapp. Ingen bruker blir utan score.
+// ellers faller vi tilbake til dagens ordoverlapp. Ingen bruker blir uten score.
 //
 // Dimensjoner (6): values, attachment, personality, communication,
 //   emotionRegulation, lifeSituation
@@ -14,7 +14,7 @@
 
 import { ProfileData } from "./types";
 import { ResonanceLevel } from "@prisma/client";
-// M-1: Én kilde for resonansterskler — nivået kjem frå toResonanceLevel (kanonisk 80/65/50/40).
+// M-1: Én kilde for resonansterskler — nivået kommer fra toResonanceLevel (kanonisk 80/65/50/40).
 import { toResonanceLevel } from "./resonanceLevel";
 // FORSKNINGSMOTOR F-7: ein funksjon per dimensjon.
 import {
@@ -51,7 +51,7 @@ export interface UnifiedResult {
 }
 
 // M-1: Bruker Prisma-enumen ResonanceLevel (samme verdier som før), ikke en
-// separat string-union — slik at tersklene kjem éin stad: toResonanceLevel().
+// separat string-union — slik at tersklene kommer éin stad: toResonanceLevel().
 export type MatchLevel = ResonanceLevel;
 
 /* ---------- WEIGHTS (summer til 1.0) — §7 ---------- */
@@ -252,7 +252,7 @@ function normalizeProfile(p: ProfileData | Record<string, unknown>): P {
   return p as P;
 }
 
-/** Trekk string-array frå JSON-felt (håndterer både array og objekt). */
+/** Trekk string-array fra JSON-felt (håndterer både array og objekt). */
 function safeStrings(value: unknown): string[] {
   if (Array.isArray(value)) return value.map(String).filter(Boolean);
   if (typeof value === "string") {

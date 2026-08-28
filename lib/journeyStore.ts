@@ -9,9 +9,9 @@ interface JourneyData {
 const journeys = new Map<string, JourneyData>();
 
 const DEFAULT_STEPS: JourneyStep[] = [
-  { id: "step1", title: "Start reisen", description: "Del noko enkelt om dagen din." },
-  { id: "step2", title: "Litt djupare", description: "Kva er noko du ser fram til denne veka?" },
-  { id: "step3", title: "Felles refleksjon", description: "Kva gjer at du trivst i samtalar med andre?" },
+  { id: "step1", title: "Start reisen", description: "Del noe enkelt om dagen din." },
+  { id: "step2", title: "Litt dypere", description: "Hva er noe du ser frem til denne uken?" },
+  { id: "step3", title: "Felles refleksjon", description: "Hva gjer at du trivst i samtaler med andre?" },
 ];
 
 export function initJourney(conversationId: string): JourneyData {

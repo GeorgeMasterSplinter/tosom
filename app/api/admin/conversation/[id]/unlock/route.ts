@@ -19,7 +19,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     const result = await requireAuth(req)
     if (result instanceof NextResponse) return result
     const adminUser = castToAdminUser(result.user)
-    if (adminUser.role !== 'ADMIN') return errorResponse("Berre admin kan låse opp conversations", 403)
+    if (adminUser.role !== 'ADMIN') return errorResponse("Kun admin kan låse opp conversations", 403)
 
     const conversationId = (await params).id
     if (!isValidObjectId(conversationId)) return errorResponse('Ugyldig conversation ID.', 400)

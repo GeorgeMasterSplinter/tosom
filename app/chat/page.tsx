@@ -168,7 +168,7 @@ export default function ChatOverviewPage() {
         if (json.success && json.data) {
           setConversations(json.data);
           // Direkte ruting: én match = én samtale. Gå rett inn i den
-          // nyeste aktive samtalen i steden for å sitte igjen i lista.
+          // nyeste aktive samtalen i stedet for å sitte igjen i lista.
           if (!redirectedRef.current && json.data.length > 0) {
             redirectedRef.current = true;
             router.replace(`/chat/${json.data[0].id}`);

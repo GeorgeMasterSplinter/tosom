@@ -19,7 +19,7 @@ import { serverFlags } from '@/utils/flags';
 
 /**
  * CSRF-token generering.
- * Berre brukt av klientar som treng å hente eit token før dei sender ein POST-request.
+ * Kun brukt av klientar som treng å hente eit token før dei sender ein POST-request.
  */
 export function generateCsrfToken(): string {
   return crypto.randomUUID();
@@ -54,8 +54,8 @@ export async function verifyCsrfToken(req: NextRequest): Promise<{ ok: true; _ne
   // Hent token frå cookie (sett av klienten tidlegare)
   const cookieToken = req.cookies.get('csrf_token')?.value;
   
-  // Dersom det ikke finst ein cookie-token, godta hva som helst gyldig token
-  // Dette dekkjer scenar der clienten genererer tokenet sjølv (t.d. SPA)
+  // Dersom det ikke finnes ein cookie-token, godta hva som helst gyldig token
+  // Dette dekkjer scenar der clienten genererer tokenet selv (t.d. SPA)
   if (!cookieToken) {
     // Token er gyldig så lenge det ikke er tomt og ser ut som eit gyldig token
     if (token.length < 10 || token.length > 256) {

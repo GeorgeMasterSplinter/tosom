@@ -138,7 +138,7 @@ function EmptyState({ journeyDay }: { journeyDay?: number }) {
         className="text-lg font-medium mb-2"
         style={{ color: G.textPrimary }}
       >
-        Ingen dagens innhald tilgjengeleg
+        Ingen dagens innhold tilgjengeleg
       </p>
     </div>
   );
@@ -216,7 +216,7 @@ export function TodayCard({ journeyDay, onCompleteReflection }: TodayCardProps) 
       const data = await res.json();
       setContent(data);
     } catch (err) {
-      console.error('Feil ved lasting av dagens innhald:', err);
+      console.error('Feil ved lasting av dagens innhold:', err);
     } finally {
       setLoading(false);
     }
@@ -349,7 +349,7 @@ export function TodayCard({ journeyDay, onCompleteReflection }: TodayCardProps) 
           className="text-xs font-medium transition-all hover:brightness-125 flex items-center gap-1.5 mx-auto"
           style={{ color: G.textSecondary }}
         >
-          <span>🔄</span> Oppdater dagens innhald
+          <span>🔄</span> Oppdater dagens innhold
         </button>
       </div>
 

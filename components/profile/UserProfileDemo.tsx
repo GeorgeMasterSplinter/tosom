@@ -1,6 +1,6 @@
 "use client";
 
-/** UserProfileDemo — test UserProfileView utan dashboard
+/** UserProfileDemo — test UserProfileView uten dashboard
  *  UP21 — opprett demo-komponent
  *  UP22 — dummy userProfile
  *  UP23–UP24 — knappar for open/lukk modal + logg endringar

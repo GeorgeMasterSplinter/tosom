@@ -14,7 +14,7 @@ interface ModalStackProps {
   onReset: () => void;
 }
 
-/* ── Hjelp: modal-innhald basert på type ── */
+/* ── Hjelp: modal-innhold basert på type ── */
 function ModalContent({ entry }: { entry: ModalEntry }) {
   const { type, props } = entry;
   const p = props || {};
@@ -34,7 +34,7 @@ function ModalContent({ entry }: { entry: ModalEntry }) {
       return (
         <div className="space-y-4">
           <h3 className="text-lg font-medium text-[#4A4A4A]">{p.title || "Min profil"}</h3>
-          <p className="text-sm text-[#4A4A4A]/60">Her vil din eigen profil-visninga koma.</p>
+          <p className="text-sm text-[#4A4A4A]/60">Her vil din egen profil-visninga koma.</p>
           {p.onClose && typeof p.onClose === "function" ? (
             <button onClick={p.onClose} className="px-5 py-2 text-xs rounded-xl bg-white border border-[#e2e8f0] text-[#4A4A4A]/60 hover:bg-[#f8fafc] transition-colors">← Lukk</button>
           ) : null}

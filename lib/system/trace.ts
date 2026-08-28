@@ -2,7 +2,7 @@
  * ToSom Request Tracing
  * 
  * Genererer og sporer traceId for alle API-kall.
- * Brukar cuid()-format for unike trace-identifikatorar.
+ * Bruker cuid()-format for unike trace-identifikatorar.
  */
 
 const TRACE_HEADER = 'x-trace-id'

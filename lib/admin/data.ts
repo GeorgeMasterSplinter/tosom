@@ -1,7 +1,7 @@
 /**
  * ToSom — Admin Data Layer (STEG 9.3 FIX)
  * 
- * Hentar data for admin-panel: brukere, profiler, matcher, samtalar, innsikter.
+ * Hentar data for admin-panel: brukere, profiler, matcher, samtaler, innsikter.
  * Fikset matchCount og conversationCount med OR-betingelse (userA + userB).
  */
 
@@ -51,7 +51,7 @@ export interface AdminInsight { id: string; matchId: string; summary: string; st
   clarity: string; starter: string; model: string | null; tokensOut: number; createdAt: string; }
 export interface AdminInsightDetail extends AdminInsight { match: AdminMatch; }
 
-/* ====== Brukarar ====== */
+/* ====== Brukere ====== */
 
 export async function getAllUsers(page = 1, limit = 20) {
   const skip = (page - 1) * limit;

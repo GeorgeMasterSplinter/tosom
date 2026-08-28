@@ -12,8 +12,8 @@
 //
 // Grunn: sjekkAlleDealbreakers køyrer 8 sjekk i fast rekkjefølgje og returnerer
 // den FØRSTE feilen. Kjønns/alders/modenheit/radius/sikkerheit er symmetriske
-// (bilkreftige i seg sjølve), medan livsrytme/preferanser/grenser er retta —
-// difor 11 steg: A→B-sida si rekkjefølgje, deretter B→A si resterande del.
+// (bilkreftige i seg selve), mens livsrytme/preferanser/grenser er retta —
+// derfor 11 steg: A→B-sida si rekkjefølgje, deretter B→A si resterande del.
 //
 // Identitet er verifisert av __tests__/matching-score-round.test.ts
 // (ekvivalens-test: same fixture-matrise gjennom gammal og ny logikk).

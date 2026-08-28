@@ -1,7 +1,7 @@
 /**
  * Tosom — Dashboard Layout (cleaned 2026)
  * 
- * Berre context-providers + navigasjon. Alt innhald styres av page.tsx.
+ * Kun context-providers + navigasjon. Alt innhold styres av page.tsx.
  */
 
 'use client';

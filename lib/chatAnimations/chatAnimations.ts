@@ -31,15 +31,15 @@ export interface BubbleAnimation {
 }
 
 export interface ChatMessageAnimation {
-  /** Animasjon for denne meldinga */
+  /** Animasjon for denne meldingen */
   bubble: BubbleAnimation
-  /** Skal meldinga ha resonance-glow? */
+  /** Skal meldingen ha resonance-glow? */
   hasResonanceGlow: boolean
   /** Resonans-nivå for glow */
   resonanceLevel: number // 0-100
   /** Progressiv avdekking aktiv? */
   progressiveReveal: boolean
-  /** Avdekkingsfart (ms per teikn) */
+  /** Avdekkingsfart (ms per tegn) */
   revealSpeed: number
 }
 

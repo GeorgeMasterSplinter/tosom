@@ -2,7 +2,7 @@
 export const dynamic = "force-dynamic";
 
 import { requestResetSchema } from "@/lib/validation/auth";
-import { checkRateLimit } from "@/lib/rateLimit";
+import { pgCheck } from "@/lib/rate-limit-pg";
 import { prisma } from "@/lib/prisma";
 import { storeResetToken, generateResetToken } from "@/lib/auth/reset";
 
@@ -23,8 +23,13 @@ export async function POST(
 
   const { email } = parse.data;
 
-  // Rate limiting: 3 forsøk per time per e-post
-  if (checkRateLimit(`reset:${email}`, 3, 3_600_000)) {
+  // Rate limiting: 3 forsøk per time per e-post.
+  // pgCheck er atomisk og deles mellom serverless-instanser — den gamle
+  // in-memory telleren ga hver instans sin egen kvote (reelt: 3 × antall
+  // instanser). MERK: pgCheck returnerer ok=true når foresprørselen er
+  // innenfor grensen, motsatt av gamle checkRateLimit.
+  const rl = await pgCheck(`reset:${email}`, 3, 3600);
+  if (!rl.ok) {
     return new Response(JSON.stringify({ error: "For mange forsøk. Vent ei time før du prøver igjen." }), { status: 429, headers: { "Content-Type": "application/json" } });
   }
 

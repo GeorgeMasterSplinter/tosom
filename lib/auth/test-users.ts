@@ -1,5 +1,5 @@
 // lib/auth/test-users.ts — Ekte test-brukere for platform-testing
-// Test-brukerne er fullverdig brukere utan betalingskrav
+// Test-brukerne er fullverdig brukere uten betalingskrav
 
 export interface TestUser {
   id: string;
@@ -56,7 +56,7 @@ export const TEST_PROFILE_OVERRIDES = {
     // Framtidsønsker
     futureGoals: ['bygge heim', 'reise', 'personleg utvikling'],
     // Grenser
-    boundaries: ['treng tid å seg sjølv', 'verdsætter ærlighet'],
+    boundaries: ['treng tid å seg selv', 'verdsætter ærlighet'],
     // Emosjonelle behov
     emotionalNeeds: ['bli sett og høyrt', 'trygghet', 'dype samtaler'],
     // Livsstil

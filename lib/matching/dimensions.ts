@@ -1,7 +1,7 @@
 // lib/matching/dimensions.ts — FORSKNINGSMOTOR F-7
 //
 // Éin funksjon per dimensjon. Alle returnerer 0–100 (høgare = dypare resonans).
-// Reglane kjem frå FORSKNINGSMOTOR-v1.0.md §8 (Kompatibilitetsreglene).
+// Reglane kommer fra FORSKNINGSMOTOR-v1.0.md §8 (Kompatibilitetsreglene).
 //
 // Likhet er ikke alltid bra — reglene er bevisst asymmetriske.
 
@@ -28,8 +28,8 @@ function centered(v: number): number {
 
 /* ─────────────────────────────────────────────────────────────
    TILKNYTNING (vekt 0,25) — §8
-   Matrise frå stil-paret. Engstelig + unnvikende er det
-   best dokumenterte negative mønsteret — gjev lågast score.
+   Matrise fra stil-paret. Engstelig + unnvikende er det
+   best dokumenterte negative mønsteret — gir lågast score.
    ───────────────────────────────────────────────────────────── */
 
 const ATTACHMENT_MATRIX: Record<string, number> = {
@@ -133,7 +133,7 @@ export function scoreValueCompat(a: ValueProfile, b: ValueProfile): number {
   }
 
   const r = clamp(cov / denom, -1, 1);
-  // Mapp Pearson r frå [-1,1] til [0,100].
+  // Mapp Pearson r fra [-1,1] til [0,100].
   return Math.round(((r + 1) / 2) * 100);
 }
 
@@ -179,12 +179,12 @@ export function scoreCommunicationCompat(
 
 /* ─────────────────────────────────────────────────────────────
    LIVSSITUASJON (vekt 0,10)
-   Praktisk kompatibilitet. Tolter data frå Profilen defensivt —
-   manglar data gjev nøytral 50.
+   Praktisk kompatibilitet. Tolter data fra Profilen defensivt —
+   manglar data gir nøytral 50.
    ───────────────────────────────────────────────────────────── */
 
 /**
- * Trekk eit felt frå ei profil som kan vere Prisma-Json, Objekt, eller flate.
+ * Trekk eit felt fra ei profil som kan være Prisma-Json, Objekt, eller flate.
  * Sjekkar flere mogelege stadar sidan forma varierar mellom engine.ts og cron.
  */
 function pickField(profile: Record<string, unknown>, ...keys: string[]): string | null {

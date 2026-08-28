@@ -2,7 +2,7 @@
  * ToSom Auth Security
  * 
  * Sikkerheitslag for autentisering og autorisasjon.
- * Brukar getServerSession (NextAuth) sidan det ikke eksisterer ein Session model i Prisma.
+ * Bruker getServerSession (NextAuth) sidan det ikke eksisterer ein Session model i Prisma.
  */
 
 import { getServerSession } from '@/lib/auth/session'
@@ -54,7 +54,7 @@ export async function requireAdmin(): Promise<string> {
 
 /**
  * Detekter anomali i sesjon (IP/agent-endring)
- * Merk: Ikkje implementert utan IP-logging i DB.
+ * Merk: Ikke implementert uten IP-logging i DB.
  */
 export async function detectSessionAnomaly(
   _userId: string,

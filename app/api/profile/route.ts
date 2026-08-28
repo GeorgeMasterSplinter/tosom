@@ -1,7 +1,7 @@
 
 import { getServerSession } from "@/lib/auth/session";
 import prisma from "@/lib/prisma";
-import { checkRateLimit } from "@/lib/rateLimit";
+import { pgCheck } from "@/lib/rate-limit-pg";
 import { profileUpdateSchema } from "@/lib/validation/profile";
 export const dynamic = 'force-dynamic';
 
@@ -26,10 +26,13 @@ export async function PUT(request: Request) {
     return Response.json({ error: "Du må være logget inn" }, { status: 401 });
   }
 
-  // Rate limiting: maks 5 profil-oppdateringar/minutt
-  if (checkRateLimit(`profile:${session.user.id}`, 5, 60_000)) {
+  // Rate limiting: maks 5 profiloppdateringer per minutt.
+  // pgCheck er atomisk og delt mellom instanser (in-memory-telleren ga
+  // hver serverless-instans sin egen kvote). ok=true = innenfor grensen.
+  const rl = await pgCheck(`profile:${session.user.id}`, 5, 60);
+  if (!rl.ok) {
     return Response.json(
-      { error: "For mange forsøk. Vent eit par sekund." },
+      { error: "For mange forsøk. Vent et par sekunder." },
       { status: 429 }
     );
   }
@@ -41,7 +44,7 @@ export async function PUT(request: Request) {
 
   if (journey && journey.phase !== null) {
     return Response.json(
-      { error: "Profilen er låst under reise. Du kan ikke endre profilen medan du er i en aktiv 30-dagers reise." },
+      { error: "Profilen er låst under reise. Du kan ikke endre profilen mens du er i en aktiv 30-dagers reise." },
       { status: 409 }
     );
   }

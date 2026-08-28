@@ -14,7 +14,7 @@ export interface DynamicProfileData {
 }
 
 export function updateProfileFromJourney(profile: Partial<DynamicProfileData>, phaseOrder: number, currentDay: number, daysRemaining: number): Partial<DynamicProfileData> {
-  const phaseNames = ['', 'Introduksjon', 'Trygghet', 'Sårbarhet', 'Fremtid', 'Djupne'];
+  const phaseNames = ['', 'Introduksjon', 'Trygghet', 'Sårbarhet', 'Fremtid', 'Dybde'];
   const phaseLabels = ['', 'Fase 1', 'Fase 2', 'Fase 3', 'Fase 4', 'Fase 5'];
   return {
     ...profile,
@@ -36,10 +36,10 @@ export function updateProfileFromResonance(profile: Partial<DynamicProfileData>,
 }
 
 export function updateProfileFromWarm(profile: Partial<DynamicProfileData>, warmScore: number, warmLevel: string): Partial<DynamicProfileData> {
-  const warmthLabels: Record<string, string> = { 'Kald': 'Enno kjølig', 'Lukten': 'Ein svak lukte', 'Varm': 'Varmen kjem', 'Glødande': 'Gløden aukar', 'Ekko': 'Varmen ekkoer' };
+  const warmthLabels: Record<string, string> = { 'Kald': 'Ennå kjølig', 'Lukten': 'Ein svak lukte', 'Varm': 'Varmen kommer', 'Glødande': 'Gløden øker', 'Ekko': 'Varmen ekkoer' };
   return { ...profile, warmthLevel: warmLevel, resonanceHighlight: warmthLabels[warmLevel] || 'Utviklar seg', lastUpdated: new Date().toISOString() };
 }
 
 export function getDynamicProfileDisplay(profile: DynamicProfileData): { displayName: string; displayBio: string; displayTags: string[]; progressBadge: string; } {
-  return { displayName: profile.identityName || 'Din match', displayBio: profile.bio || 'Ingen bio enno.', displayTags: [...new Set(profile.tags || [])], progressBadge: profile.resonanceHighlight || 'Utviklar seg' };
+  return { displayName: profile.identityName || 'Din match', displayBio: profile.bio || 'Ingen bio ennå.', displayTags: [...new Set(profile.tags || [])], progressBadge: profile.resonanceHighlight || 'Utviklar seg' };
 }

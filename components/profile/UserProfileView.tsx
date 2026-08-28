@@ -15,7 +15,7 @@ import { validateProfile } from "../../lib/profile/userProfile";
 
 /* UP4 — Props */
 interface UserProfileViewProps {
-  /** UP32 — TODO: Koble til ekte brukerdata frå backend seinare */
+  /** UP32 — TODO: Koble til ekte brukerdata fra backend senere */
   profile: UserProfile;
   /** UP32 — TODO: Lagre profilendringar i database */
   onUpdate?: (updated: UserProfile) => void;
@@ -126,7 +126,7 @@ export default function UserProfileView({
           )}
         </div>
 
-        {/* UP19 — Scroll-innhald */}
+        {/* UP19 — Scroll-innhold */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {/* UP7 — Redigerbar bio */}
           <section>

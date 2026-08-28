@@ -19,7 +19,7 @@ export const dummyUserProfile: UserProfile = {
   id: "me-demo",
   name: "Deg",
   age: 30,
-  bio: "Eg er opptatt av djupe samtalar og meningsfulle møte. Trur på ro, ærlegheit og å være til stades.",
+  bio: "Eg er opptatt av djupe samtaler og meningsfulle møte. Trur på ro, ærlegheit og å være til stades.",
   values: ["Ærlegheit", "Trygghet", "Vekst", "Nyskaping", "Empati"],
   interests: ["Friluftsliv", "Musikk", "Lesing", "Fotografi", "Matlaging"],
   photos: [

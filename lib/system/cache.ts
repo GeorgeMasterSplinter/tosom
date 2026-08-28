@@ -2,7 +2,7 @@
  * ToSom In-Memory Cache
  * 
  * Enkel cache med TTL-støtte.
- * Klar for eventuell Redis seinare.
+ * Klar for eventuell Redis senere.
  */
 
 interface CacheEntry {

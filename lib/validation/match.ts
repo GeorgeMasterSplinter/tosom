@@ -15,7 +15,7 @@ export type MatchCreateInput = z.infer<typeof matchCreateSchema>;
 export const matchDecisionSchema = z.object({
   matchId: z.string().min(1, "matchId er påkrevd"),
   decision: z.enum(["like", "dislike", "skip", "super"], {
-    message: "decision må vere 'like', 'dislike', 'skip' eller 'super'",
+    message: "decision må være 'like', 'dislike', 'skip' eller 'super'",
   }),
 });
 

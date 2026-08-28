@@ -55,6 +55,12 @@ next-env.d.ts
 Thumbs.db
 .env*
 
-# Uploaded files (bilete-opplasting i chat)
+# Uploaded files (bildeopplasting i chat)
 /public/uploads/
 backups/
+
+# Testartefakter og lokal database (var sporet i git ved en feil — ryddet 28.08)
+/test-results/
+/playwright-report/
+prisma/dev.db
+prisma/dev.db-journal

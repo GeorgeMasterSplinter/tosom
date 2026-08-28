@@ -1,6 +1,6 @@
 // app/api/chat/image/route.ts — POST /api/chat/image
 //
-// Handsamar fil-opplasting for bilete i chat. Bildet lagres i objektlagring
+// Håndterer filopplasting for bilder i chat. Bildet lagres i objektlagring
 // (R2 i produksjon, lokal fil i utvikling) via lib/storage — ALDRI i
 // public/. Bildet knyttes til en Message-rad ved imageKey, slik at:
 //   1. Lesing skjer via GET /api/chat/image/{messageId} (signert URL).
@@ -49,7 +49,7 @@ const EXT_MAP: Record<string, string> = {
  */
 async function postHandler(request: NextRequest): Promise<NextResponse> {
   try {
-    // STEG 1 — Krever session. senderId kjem alltid frå session, IKKE frå klienten.
+    // STEG 1 — Krever session. senderId kommer alltid fra session, IKKE fra klienten.
     const session = await getServerSession();
     if (!session?.user?.id) {
       return NextResponse.json(
@@ -86,7 +86,7 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
     // Valider bilete-type
     if (!ALLOWED_TYPES.includes(file.type)) {
       return NextResponse.json(
-        { error: 'Ugyldig bilete-type. Berre JPG, PNG og WebP er tillatne.' },
+        { error: 'Ugyldig bilete-type. Kun JPG, PNG og WebP er tillatne.' },
         { status: 400 }
       );
     }
@@ -98,7 +98,7 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
 
     // Valider conversationId
     if (!conversationId) {
-      return NextResponse.json({ error: 'Manglande conversationId' }, { status: 400 });
+      return NextResponse.json({ error: 'Mangler conversationId' }, { status: 400 });
     }
 
     // Sjekk at brukeren er deltaker i konversasjonen
@@ -140,7 +140,7 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
     // Bildet må knyttes til en melding for å kunne leses (signert URL) og slettes (GDPR).
     if (!messageId) {
       return NextResponse.json(
-        { error: 'Manglande messageId' },
+        { error: 'Mangler messageId' },
         { status: 400 }
       );
     }
@@ -188,7 +188,7 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
     const storage = getImageStorage();
     await storage.putImage(key, buffer, { contentType: file.type });
 
-    // Knytt nøkkelen til meldinga.
+    // Knytt nøkkelen til meldingen.
     await prisma.message.update({
       where: { id: messageId },
       data: { imageKey: key },

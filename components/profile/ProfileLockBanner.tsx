@@ -3,14 +3,14 @@
 /**
  * Tosom — Profil-lås-banner
  * 
- * Viser at profilen er låst medan bruker har aktiv journey.
+ * Viser at profilen er låst mens bruker har aktiv journey.
 * Bruk: importer og render på /profile og /onboarding.
  */
 
 import { radius, color } from '@/config/design-tokens';
 
 interface ProfileLockBannerProps {
-  /** Partner name — visast i teksten */
+  /** Partnerens navn — vises i teksten */
   partnerName?: string;
   /** Dagen de er på (f.eks. 7 av 30) */
   currentDay?: number;
@@ -77,7 +77,7 @@ export function ProfileLockBanner({
               margin: 0,
             }}
           >
-            Profilen din er låst medan du er i reise med {partnerName}. 
+            Profilen din er låst mens du er i reise med {partnerName}. 
             Dag {currentDay} av {totalDays}. Du kan oppdatere profilen din igjen etter at reisa er fullført.
           </p>
 
@@ -156,7 +156,7 @@ export function JourneyLockOverlay() {
             margin: 0,
           }}
         >
-          Du kan ikke oppdatere profilen medan du er i reise. 
+          Du kan ikke oppdatere profilen mens du er i reise. 
           Ta deg tid til å kjenne og forstå partneren din først.
         </p>
 

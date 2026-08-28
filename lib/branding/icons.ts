@@ -15,7 +15,7 @@ export interface BrandIconProps {
   className?: string;
 }
 
-/** Teikne innhald for hvart ikon — outline, 1.75px stroke, runde hjørner */
+/** Teikne innhold for hvart ikon — outline, 1.75px stroke, runde hjørner */
 export function iconPath(name: IconName): string {
   switch (name) {
     case 'heart':

@@ -1,6 +1,6 @@
 "use client";
 
-/** PartnerProfileDemo — test PartnerProfileView utan dashboard
+/** PartnerProfileDemo — test PartnerProfileView uten dashboard
  *  PP11 — opprett demo-komponent
  *  PP12 — dummy journeyState (currentDay: 12, photosAllowed: false)
  *  PP13–PP14 — knappar for fasebytte og open/lukk modal

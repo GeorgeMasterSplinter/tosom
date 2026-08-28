@@ -1,6 +1,6 @@
 /**
  * Tosom — Vipps OAuth Callback Endpoint
- * Handsamer tilbakekalling frå Vipps og opprettar/oppdaterar bruker-session.
+ * Håndterer tilbakekall fra Vipps og oppretter/oppdaterer bruker-session.
  * 
  * STEG 2.1: Fjernet manuell base64-sesjonscookie. Bruker nå NextAuth signIn() 
  * for å utstede signert JWT-token via authjs sin egen mekanisme.
@@ -151,7 +151,7 @@ async function getHandler(request: NextRequest) {
     const email = userInfo.email || userInfo.sub;
     if (!email) {
       return NextResponse.redirect(
-        `${process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || 'https://app.tosom.no'}/login?error=${encodeURIComponent('Ingen e-post mottatt frå Vipps')}`
+        `${process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || 'https://app.tosom.no'}/login?error=${encodeURIComponent('Ingen e-post mottatt fra Vipps')}`
       );
     }
 
@@ -197,7 +197,7 @@ async function getHandler(request: NextRequest) {
       await prisma.auditLog.create({
         data: {
           adminId: user.id,
-          action: 'ADMIN_LOGIN', // eller eigen audit-action for OAuth-registrering
+          action: 'ADMIN_LOGIN', // eller egen audit-action for OAuth-registrering
           metadata: JSON.stringify({ method: 'vipps_oauth', registered: true }),
         },
       });

@@ -99,7 +99,7 @@ export default function JourneyContentEditor() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen" style={{ background: "#0A1A2A" }}>
-        <div style={{ color: "#D4AF37", fontSize: "18px" }}>Lastar inn journey-innhald...</div>
+        <div style={{ color: "#D4AF37", fontSize: "18px" }}>Lastar inn journey-innhold...</div>
       </div>
     );
   }
@@ -136,7 +136,7 @@ export default function JourneyContentEditor() {
       {/* Content list */}
       {!content.length && !error && (
         <div style={{ textAlign: "center", padding: "48px 0", color: "rgba(255,255,255,0.3)" }}>
-          Inget journey-innhald funnet. Køyrd seed-skriptet først.
+          Inget journey-innhold funnet. Køyrd seed-skriptet først.
         </div>
       )}
 

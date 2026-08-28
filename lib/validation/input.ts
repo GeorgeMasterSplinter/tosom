@@ -86,7 +86,7 @@ export function validateField(value: unknown, rule: ValidationRule): string | nu
 }
 
 /**
- * Valider fleire felt
+ * Valider flere felt
  */
 export function validateInput(
   data: Record<string, unknown>,

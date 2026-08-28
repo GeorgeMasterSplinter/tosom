@@ -1,7 +1,7 @@
 /* ═══════════════════════════════════════════
    Tosom AdminStatsCard — Design System 1.1
    Visar systemstatistikk i admin-dashboard.
-   Bruk med: <AdminStatsCard title="Brukarar" value="1,234" trend={+12} />
+   Bruk med: <AdminStatsCard title="Brukere" value="1,234" trend={+12} />
    ═══════════════════════════════════════════ */
 
 'use client';

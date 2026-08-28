@@ -55,7 +55,7 @@ async function postHandler(req: NextRequest) {
       psychometrics,
     } = data;
 
-    // FORSKNINGSMOTOR F-6: Beregn psykometriske skårer frå rå svar (1–5 per item).
+    // FORSKNINGSMOTOR F-6: Beregn psykometriske skårer fra rå svar (1–5 per item).
     // Manglende items behandles som nøytrale i scoring.ts — ingen crash ved partial profil.
     const psychScores = psychometrics ? scoreAll(psychometrics as Record<string, number>) : null;
 
@@ -337,7 +337,7 @@ async function postHandler(req: NextRequest) {
   } catch (error) {
     // BUG 1 DIAGNOSTIKK: Logg Prisma-feilkode og -melding eksplisitt, slik at
     // ein produksjonssvikt er med eitt blikk identifiserbar i Vercel-loggen.
-    // Mest sannsynlege årsak til 500 her: manglande kolonne i DB-en
+    // Mest sannsynlege årsak til 500 her: manglende kolonne i DB-en
     // (P2022) — typisk ved ikke-deployet migrasjon mot produksjonen.
     const prismaCode = (error as { code?: string })?.code;
     const message = error instanceof Error ? error.message : String(error);

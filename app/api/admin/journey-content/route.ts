@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
     const adminUser = castToAdminUser(user)
 
     if (adminUser.role !== 'ADMIN') {
-      return errorResponse("Berre admin kan få tilgang til journey-innhald", 403)
+      return errorResponse("Kun admin kan få tilgang til journey-innhold", 403)
     }
 
     // Hent alle 30 dagar, sortert på day

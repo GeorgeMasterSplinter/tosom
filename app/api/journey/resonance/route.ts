@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
   try {
-    // Auth — brukaren må vere logga inn
+    // Auth — brukaren må være logga inn
     const result = await requireAuth(req);
     if (result instanceof NextResponse) return result;
     const userId = result.user.id;
@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
       orderBy: { createdAt: 'asc' },
     });
 
-    // Grupper per dag (hvis fleire sessionar same dag, ta nyaste)
+    // Grupper per dag (hvis flere sessionar same dag, ta nyaste)
     const dayMap = new Map<number, typeof sessions[0]>();
     for (const s of sessions) {
       if (!dayMap.has(s.day) || s.createdAt > dayMap.get(s.day)!.createdAt) {

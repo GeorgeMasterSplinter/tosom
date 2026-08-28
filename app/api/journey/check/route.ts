@@ -70,7 +70,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       });
     }
 
-    // Hent today sin dagleg innhald frå JourneyDayContent
+    // Hent today sin dagleg innhold frå JourneyDayContent
     let todayContent: TodayContent | null = null;
     if (journeyProgress?.day && journeyProgress.day > 0) {
       const content = await prisma.journeyDayContent.findFirst({
@@ -102,7 +102,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     } else if (journeyProgress.endedAt) {
       message = "Reisa di er fullført. Gratulerer! 🎉";
     } else if (daysRemaining && daysRemaining <= 7) {
-      message = `Berre ${daysRemaining} dag att av reisa di — du er nær målet!`;
+      message = `Kun ${daysRemaining} dag att av reisa di — du er nær målet!`;
     } else if (daysRemaining) {
       message = `Dag ${journeyProgress.day}/30 — ${daysRemaining} dagar att av reisa di.`;
     } else {
@@ -138,4 +138,4 @@ export async function GET(request: Request): Promise<NextResponse> {
   }
 }
 
-// Merknad: For "hent dagleg innhald", bruk GET /api/journey/{day} i staden.
+// Merknad: For "hent dagleg innhold", bruk GET /api/journey/{day} i staden.

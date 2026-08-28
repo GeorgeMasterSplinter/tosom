@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════
-// ToSom Journey Engine – ÉIN kjelde for ALT journey
+// ToSom Journey Engine – ÉN kilde for ALT journey
 // ═══════════════════════════════════════════
 // 
 // Konsoliderer:
@@ -187,7 +187,7 @@ export interface DayConfig {
 /** Totalt antal dagar i journey — ENKELT svar */
 export const JOURNEY_TOTAL_DAYS = 30;
 
-/** Fase-konfigurasjon — 4 faser over 30 dager (frå journeyPhases) */
+/** Fase-konfigurasjon — 4 faser over 30 dager (fra journeyPhases) */
 export const PHASE_CONFIGS: Array<{
   phase: JourneyPhase;
   startDay: number;
@@ -220,7 +220,7 @@ export const PHASE_CONFIGS: Array<{
   },
 ];
 
-/** Theme-progresjon — 5 tema over 30 dagar (frå progression.ts) */
+/** Theme-progresjon — 5 tema over 30 dager (fra progression.ts) */
 export const THEME_RANGES: Array<{ start: number; end: number; theme: Theme }> = [
   { start: 1, end: 5, theme: "intro" },
   { start: 6, end: 12, theme: "trygghet" },
@@ -258,7 +258,7 @@ export function getPhaseOrder(phase: JourneyPhase): number {
   }
 }
 
-/** Map phase order → UI phase name (frå phase.ts) */
+/** Map phase order → UI phase name (fra phase.ts) */
 export function getPhaseName(order: number): string {
   const names = [
     '',
@@ -311,7 +311,7 @@ export function dayToPhase(day: number): JourneyPhase {
 }
 
 // ═══════════════════════════════════════════
-// MILEPÆLS-FUNKSJONAR (frå milestones.ts)
+// MILEPÆLS-FUNKSJONAR (fra milestones.ts)
 // ═══════════════════════════════════════════
 
 export interface Milestone {
@@ -445,7 +445,7 @@ function buildMessages(matchState: MatchState, day: number): SystemMessage[] {
 }
 
 /**
- * Build heile journey-state frå grunnen.
+ * Bygg hele journey-state fra grunnen.
  * Éin funksjon som leverer alt systemet treng.
  */
 export function buildJourneyState(
@@ -489,7 +489,7 @@ export const dummyMatchContext: MatchContext = {
 };
 
 // ═══════════════════════════════════════════
-// USER PROGRESS (frå progression.ts)
+// USER PROGRESS (fra progression.ts)
 // ═══════════════════════════════════════════
 
 function getDefaultProgress(userId: string, matchId: string): UserProgress {
@@ -588,7 +588,7 @@ export function getCompletedDaysOverview(
  * Ingen måling av resonans under reisen. La folk finne ut av det selv.
  * Se docs/tosom-concept-v2-skisse.md for detaljer.
  */
-// RESONANCE MOTOR (frå resonance.ts)
+// RESONANCE MOTOR (fra resonance.ts)
 // ═══════════════════════════════════════════
 
 export function calculateResonance(input: ResonanceInput): ResonanceScores {
@@ -669,11 +669,11 @@ export function getPhaseResonanceBias(phaseOrder: number): {
   description: string;
 } {
   const phases = [
-    { modifier: 0.8, focus: 'Introduksjon — bygger grunnlag', description: 'Resonans er lågare i starten — det er normalt.' },
-    { modifier: 0.9, focus: 'Trygghet — dypnar sambandet', description: 'Resonans aukar når trygghet kjem.' },
-    { modifier: 1.0, focus: 'Sårbarhet — mest autentisk resonans', description: 'Dette er kjernen i resonans — sårlegskap skapar ekte resonans.' },
-    { modifier: 1.1, focus: 'Fremtid — resonans mognar', description: 'Resonans er høg når framtidsteam kjem.' },
-    { modifier: 1.15, focus: 'Djupne — full resonans', description: 'Maksimal resonans — begge er heilt til stades.' },
+    { modifier: 0.8, focus: 'Introduksjon — bygger grunnlag', description: 'Resonansen er lavere i starten — det er normalt.' },
+    { modifier: 0.9, focus: 'Trygghet — utdyper båndet', description: 'Resonansen øker når tryggheten kommer.' },
+    { modifier: 1.0, focus: 'Sårbarhet — mest autentisk resonans', description: 'Dette er kjernen i resonans — sårbarhet skaper ekte resonans.' },
+    { modifier: 1.1, focus: 'Fremtid — resonansen modnes', description: 'Resonansen er høy når fremtidstemaene kommer.' },
+    { modifier: 1.15, focus: 'Dybde — full resonans', description: 'Maksimal resonans — begge er helt til stede.' },
   ];
 
   const idx = Math.min(Math.max(phaseOrder - 1, 0), phases.length - 1);
@@ -703,7 +703,7 @@ export function getResonanceVisual(score: number): {
 
 // ═══════════════════════════════════════════
 /** @deprecated (V2) Warmth-score er ein del av resonans-systemet. Fjerna. Beholdes for bakover-kompatibilitet. */
-// WARMTH MOTOR (frå warmIndicator.ts)
+// WARMTH MOTOR (fra warmIndicator.ts)
 // ═══════════════════════════════════════════
 
 export function calculateWarmScore(inputs: {
@@ -729,28 +729,28 @@ export function calculateWarmScore(inputs: {
   warmth = Math.min(Math.max(warmth, 0), 100);
 
   let level = 'Kald';
-  let description = 'Enno kjølig.';
+  let description = 'Fortsatt kjølig.';
   let color = '#8282FF';
   let glow = '0 0 12px rgba(130,130,255,0.15)';
 
   if (warmth >= 80) {
     level = 'Ekko';
-    description = 'Dykk varme ekkoer — begge er heilt til stades.';
+    description = 'Dype, varme ekkoer — begge er helt til stede.';
     color = '#FFD700';
     glow = '0 0 28px rgba(255,215,0,0.35)';
   } else if (warmth >= 60) {
-    level = 'Glødande';
-    description = 'Gløden i samtalen aukar.';
+    level = 'Glødende';
+    description = 'Gløden i samtalen øker.';
     color = '#FF8C42';
     glow = '0 0 24px rgba(255,140,66,0.3)';
   } else if (warmth >= 40) {
     level = 'Varm';
-    description = 'Varmen kjem sakt og støtt.';
+    description = 'Varmen kommer sakte og støtt.';
     color = '#FFB86C';
     glow = '0 0 20px rgba(255,184,108,0.25)';
   } else if (warmth >= 20) {
-    level = 'Lukten';
-    description = 'Ein svak lukte — det tek tid.';
+    level = 'Lunken';
+    description = 'En svak varme — det tar tid.';
     color = '#FF82C8';
     glow = '0 0 16px rgba(255,130,200,0.2)';
   }
@@ -785,7 +785,7 @@ export function getWarmUI(score: number) {
 }
 
 // ═══════════════════════════════════════════
-// SILENT MOMENTS MOTOR (frå silentMoments.ts)
+// SILENT MOMENTS MOTOR (fra silentMoments.ts)
 // ═══════════════════════════════════════════
 
 export const SILENT_MOMENT_CONFIG: SilentMomentConfig = {
@@ -853,7 +853,7 @@ export function shouldTriggerSilentMoment(
 
 // ═══════════════════════════════════════════
 // DAY TEXTS — 30 dagar med tema og prompts
-// (frå components/journey/journeyEngine.ts)
+// (fra components/journey/journeyEngine.ts)
 // ═══════════════════════════════════════════
 
 const dayData: Record<number, {
@@ -938,13 +938,13 @@ export function resolveTheme(day: number): Theme {
   return getThemeForDay(day);
 }
 
-/** Default current day for demo/use utan argument */
+/** Default current day for demo/bruk uten argument */
 export function getCurrentDay(): number {
   return 1;
 }
 
 // ═══════════════════════════════════════════
-// JOURNEY IMPULSE — daglege prompts (frå getJourneyImpulse.ts)
+// JOURNEY IMPULSE — daglige prompts (fra getJourneyImpulse.ts)
 // ═══════════════════════════════════════════
 
 export function getJourneyImpulse({ day, name }: { day: number; name: string }): string | null {
@@ -985,7 +985,7 @@ export function getJourneyImpulse({ day, name }: { day: number; name: string }):
 }
 
 // ═══════════════════════════════════════════
-// FIRST MESSAGE (frå generateFirstMessage.ts)
+// FIRST MESSAGE (fra generateFirstMessage.ts)
 // ═══════════════════════════════════════════
 
 export function generateFirstMessage({ name, score, explanation }: {

@@ -21,7 +21,7 @@ export async function POST() {
   try {
     const DEV_USER_ID = 'dev-user'
 
-    // 1a. Opprett partner først (må finnes før match kan lagast)
+    // 1a. Opprett partner først (må finnes før match kan opprettes)
     let partner = await prisma.user.findFirst({ where: { id: 'dev-match-target' } })
     if (!partner) {
       partner = await prisma.user.create({

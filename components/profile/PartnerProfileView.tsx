@@ -13,7 +13,7 @@ import Image from 'next/image';
 
 /* PP4 — Props */
 interface PartnerProfileViewProps {
-  /** PP22 — TODO: Koble til ekte partnerdata frå backend seinare */
+  /** PP22 — TODO: Koble til ekte partnerdata fra backend senere */
   profile: PartnerProfile;
   /** PP23 — Koble til journeyState.photosAllowed */
   photosAllowed: boolean;

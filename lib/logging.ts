@@ -1,7 +1,7 @@
 /**
  * ToSom Structured Logging
  * 
- * Brukar konsistent format for alle logglinjer.
+ * Bruker konsistent format for alle logglinjer.
  * Produksjon: JSON. Utvikling: human-readable.
  */
 

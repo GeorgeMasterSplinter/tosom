@@ -9,13 +9,13 @@ export const requestResetSchema = z.object({
 
 export const verifyResetSchema = z.object({
   email: z.string().email("Ugyldig e-postadresse"),
-  token: z.string().min(32, "Token må vere minst 32 teikn"),
+  token: z.string().min(32, "Token må være minst 32 tegn"),
 });
 
 export const resetPasswordSchema = z.object({
   email: z.string().email("Ugyldig e-postadresse"),
-  token: z.string().min(32, "Token må vere minst 32 teikn"),
-  password: z.string().min(8, "Passord må vere minst 8 teikn"),
+  token: z.string().min(32, "Token må være minst 32 tegn"),
+  password: z.string().min(8, "Passord må være minst 8 tegn"),
 });
 
 export type RequestResetInput = z.infer<typeof requestResetSchema>;
@@ -30,7 +30,7 @@ export const setup2FASchema = z.object({
 });
 
 export const verify2FASchema = z.object({
-  token: z.string().min(6, "TOTP-kode må vere minst 6 teikn"),
+  token: z.string().min(6, "TOTP-kode må være minst 6 tegn"),
   backupCode: z.string().optional(),
 });
 

@@ -64,7 +64,7 @@ const FREE_QUOTA_KEY = 'free_users';
  *
  * Tidlegare var dette check-then-create (countFreeQuotaOrders → create)
  * — to samtidige onboardingar ved taket kunne begge seie «4 999 < 5 000»
- * og begge få plass. Noko som skal vere éin grense skal vere éin grense.
+ * og begge få plass. Noe som skal være éin grense skal være éin grense.
  *
  * Mekanismen: éin betinga
  *   UPDATE "Quota" SET "used" = "used" + 1
@@ -74,7 +74,7 @@ const FREE_QUOTA_KEY = 'free_users';
  * WHERE-klausulen → count = 0 → kvota full. Ingen overskriding.
  *
  * @returns Order-enheiten ved suksess, null dersom kvota er full.
- * @throws dersom Order-kreeringa feilar (telleren blir da rolla attende)
+ * @throws dersom Order-kreeringa feilar (telleren blir da rolla tilbake)
  */
 export async function claimFreeQuota(userId: string) {
   const row = await prisma.quota.findUnique({ where: { id: FREE_QUOTA_KEY } });
@@ -90,7 +90,7 @@ export async function claimFreeQuota(userId: string) {
   });
 
   if (result.count === 0) {
-    return null; // grenseplassen vart teken (eller kvota er full)
+    return null; // grenseplassen ble teken (eller kvota er full)
   }
 
   try {

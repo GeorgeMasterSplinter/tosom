@@ -190,7 +190,7 @@ export default function AdminLogsPage() {
               <div><span style={{ color: "rgba(255,255,255,0.4)" }}>ID:</span> {selectedLog.id.substring(0, 12)}...</div>
               <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Oppretta:</span> {new Date(selectedLog.createdAt).toLocaleString("nb-NO")}</div>
               <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Module:</span> {selectedLog.module}</div>
-              <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Brukar:</span> {selectedLog.userId?.substring(0, 12) || "—"}</div>
+              <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Bruker:</span> {selectedLog.userId?.substring(0, 12) || "—"}</div>
             </div>
 
             {parseMetadata(selectedLog.metadata) && typeof parseMetadata(selectedLog.metadata) === "object" && (

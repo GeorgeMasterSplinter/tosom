@@ -67,7 +67,7 @@ export const SelectField: FC<SelectFieldProps> = ({
   const getOptionLabel = (opt: string | { value: string; label: string }) =>
     typeof opt === 'string' ? opt : opt.label;
 
-  // Hitta om noko option er vald
+  // Hitta om noe option er vald
   const hasValue = !!value;
 
   // Lukk dropdown automatisk etter valg (forsøke å unngå flash på mobill)

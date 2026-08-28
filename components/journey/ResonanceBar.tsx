@@ -171,7 +171,7 @@ function Tooltip({
               className="text-[10px]"
               style={{ color: G.textSecondary }}
             >
-              Djupne: {session.depthLevel ?? '?'} / 3
+              Dybde: {session.depthLevel ?? '?'} / 3
             </span>
           </div>
 

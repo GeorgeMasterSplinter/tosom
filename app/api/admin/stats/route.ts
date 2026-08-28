@@ -1,8 +1,8 @@
 /**
  * Tosom Admin Stats API
  * 
- * Hentar sanntidsstatistikk frå databasen for dashboard.
- * Berre tilgjengeleg for admin (krevar admin_token eller session med admin-role).
+ * Hentar sanntidsstatistikk fra databasen for dashboard.
+ * Kun tilgjengeleg for admin (krevar admin_token eller session med admin-role).
  */
 
 import { NextResponse } from 'next/server';
@@ -59,7 +59,7 @@ export async function GET() {
         },
       }),
 
-      // 6. Aktive samtalar (ikke ended)
+      // 6. Aktive samtaler (ikke ended)
       prisma.conversation.count({
         where: {
           endedAt: null,

@@ -2,7 +2,7 @@
  * Tosom — VIPPS Login Side
  * 
  * Placeholder for VIPPS-integrasjon.
- * Brukarar blir no redirecta til /register for vanleg innskriving.
+ * Brukere blir no redirecta til /register for vanleg innskriving.
  */
 
 'use client';

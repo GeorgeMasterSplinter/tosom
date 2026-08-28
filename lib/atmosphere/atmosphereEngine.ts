@@ -313,9 +313,9 @@ export function generateAmbientParticles(count: number = 30): AmbientParticle[] 
 // ─── PROGRESSIV DISCLOSING ─────────────────────────────────
 
 export interface DisclosureState {
-  /** Kva delar er synlege no? */
+  /** Hva delar er synlege no? */
   revealedSections: Set<string>
-  /** Kva delar er skjulte? */
+  /** Hva delar er skjulte? */
   hiddenSections: Set<string>
   /** Progresjon (0-100%) */
   progress: number

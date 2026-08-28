@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
     const result = await requireAuth(req)
     if (result instanceof NextResponse) return result
     const adminUser = castToAdminUser(result.user)
-    if (adminUser.role !== 'ADMIN') return errorResponse("Berre admin kan f\u00e5 tilgang til conversations", 403)
+    if (adminUser.role !== 'ADMIN') return errorResponse("Kun admin kan f\u00e5 tilgang til conversations", 403)
 
     const url = new URL(req.url)
     const queryResult = validateQuery(adminConversationsQuerySchema, Object.fromEntries(url.searchParams.entries()))

@@ -57,7 +57,7 @@ export default function ProfileEditPage() {
               <div>
                 <p className="font-medium mb-1">Profilen er låst</p>
                 <p className="text-amber-300/70 text-xs leading-relaxed">
-                  Du har ein aktiv reise pågåande. Profilen kan ikke redigerast medan du er i dag 1–29.
+                  Du har ein aktiv reise pågåande. Profilen kan ikke redigerast mens du er i dag 1–29.
                   Etter at reisen er fullført (dag 30) opnar låsen seg automatisk.
                 </p>
               </div>

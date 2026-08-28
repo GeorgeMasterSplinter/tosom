@@ -47,8 +47,8 @@ export function BliKjentPanel({ onClose }: BliKjentPanelProps) {
   const [sending, setSending] = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);
 
-  // C-6: kva spørsmål er ALLEREDE spurt i denne samtalen
-  // (metadata.source === 'bli_kjent' — set i send-fløya, C-2)
+  // C-6: hvilke spørsmål som ALLEREDE er spurt i denne samtalen
+  // (metadata.source === 'bli_kjent' — set i send-flyten, C-2)
   const usedQuestions = new Set(
     messages
       .filter((m) => m.metadata?.source === 'bli_kjent')

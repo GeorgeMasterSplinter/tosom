@@ -2,10 +2,10 @@
 /**
  * Tosom — ChatContext (Premium Nordic Gold 2026) 🟡
  * Global state for heile chat-sida — mindre prop-drilling
- * Brukars-ID blir no sendt som prop frå server-komponent.
+ * Brukars-ID blir no sendt som prop fra server-komponent.
  *
  * REAL-TIME: Poller /api/chat/messages hvert 3. sekund for å fange
- * opp nye meldingar frå partneren utan manuell refresh.
+ * opp nye meldingar fra partneren uten manuell refresh.
  */
 
 "use client";
@@ -33,7 +33,7 @@ export interface ChatMessage {
     phase?: string;
     timestamp?: Date | string;
     senderInfo?: { name: string; imageUrl?: string };
-    /** CHAT-POLISH (C-2): kjelde for boble-etikett */
+    /** CHAT-POLISH (C-2): kilde for boble-etikett */
     source?: "bli_kjent" | "oppgave";
   };
 }
@@ -55,7 +55,7 @@ export interface ChatContextValue {
   imageShareAllowed: boolean;
   loading: boolean;
   error: string | null;
-  /** Send-feil (vises ved inputfeltet; polling slettar ikkje denne) */
+  /** Send-feil (vises ved inputfeltet; polling sletter ikke denne) */
   sendError: string | null;
   sessionUserId: string | null;
   sendMessage: (content: string, type?: MessageType, options?: { source?: "bli_kjent" | "oppgave" }) => Promise<boolean>;
@@ -92,9 +92,9 @@ export function ChatProvider({
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  // Send-feil er eigen state: loadMessages (polling) må ikkje tilsidesetje
+  // Send-feil er egen state: loadMessages (polling) må ikke overstyre
   // ein send-feil — tidlegare forsvann feilen seinast etter 3 sekund, og ein
-  // feila send vart fullstendig stille.
+  // feila send ble fullstendig stille.
   const [sendError, setSendError] = useState<string | null>(null);
   const lastMsgIdRef = useRef<string | null>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -198,10 +198,10 @@ export function ChatProvider({
     if (!conversationId) return false;
 
     // ── OPTIMISTISK SEND ─────────────────────────────────────────────
-    // Meldinga vises med ein gong (ikkje vent på API-et). Ved feil
-    // rullast ho tilbake, og feilen visast ved inputfeltet.
+    // Meldingen vises med en gang (ikke vent på API-et). Ved feil
+    // rulles den tilbake, og feilen vises ved inputfeltet.
     const tempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
-    // Polling må ikkje tala temp-meldinga som ein «ny» frå serveren
+    // Polling må ikke telle temp-meldingen som en «ny» fra serveren
     lastMsgIdRef.current = tempId;
     setMessages((prev) => [
       ...prev,
@@ -225,13 +225,13 @@ export function ChatProvider({
         try {
           const errBody = await res.json();
           if (errBody?.error) detail = String(errBody.error);
-        } catch { /* held status-meldinga */ }
+        } catch { /* held status-meldingen */ }
         throw new Error(detail);
       }
       const data = await res.json();
       setSendError(null);
 
-      // Byt ut den optimistiske meldinga med serverens (ekte id + tid)
+      // Byt ut den optimistiske meldingen med serverens (ekte id + tid)
       const serverMsg = data.message || {};
       const newMsgId = serverMsg.id || tempId;
       lastMsgIdRef.current = newMsgId;
@@ -254,8 +254,8 @@ export function ChatProvider({
       return true;
     } catch (e) {
       console.error("Feil ved sending av melding:", e);
-      // Rull tilbake den optimistiske meldinga + vis feilen
-      // (eigen feilstate — polling slettar ikkje denne, så feilen blir synleg)
+      // Rull tilbake den optimistiske meldingen + vis feilen
+      // (egen feilstate — polling sletter ikke denne, så feilen blir synlig)
       setMessages((prev) => prev.filter((m) => m.id !== tempId));
       setSendError(e instanceof Error ? e.message : "Kunne ikke sende melding");
       return false;

@@ -63,7 +63,7 @@ interface ApiHandlerOptions {
 }
 
 /**
- * Hent IP-adresse frå request.
+ * Hent IP-adresse fra request.
  */
 function getClientIp(req: NextRequest): string {
   const forwarded = req.headers.get('x-forwarded-for')
@@ -117,7 +117,7 @@ export async function createApiHandler(req: NextRequest, opts: ApiHandlerOptions
     const rl = handleRateLimit(ip, rateLimit)
     if (!rl.allowed) {
       return NextResponse.json(
-        { error: 'Too many requests. Prøv igjen seinare.' },
+        { error: 'Too many requests. Prøv igjen senere.' },
         { status: 429, headers: getRateLimitHeaders(rl.remaining, rl.resetInMs) }
       )
     }

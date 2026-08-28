@@ -2,7 +2,7 @@
  * ToSom — Admin auth helper
  * 
  * Sikker hjelpefunksjon for å cast requireAuth result til admin-friendly type.
- * Accepterer AuthUser (frå requireAuth) og returnerar simple admin-object.
+ * Accepterer AuthUser (fra requireAuth) og returnerar simple admin-object.
  */
 
 import type { Role } from './roles'
@@ -18,11 +18,11 @@ interface SimpleAdminUser {
 
 /**
  * Cast AuthUser (id/email/role) til SimpleAdminUser.
- * Bruker isAdminRole() for å handsame both lowercase "admin" og uppercase "ADMIN".
+ * Bruker isAdminRole() for å håndtere både lowercase "admin" og uppercase "ADMIN".
  */
 export function castToAdminUser(sessionUser: { id: string; email: string; name?: string | null; image?: string | null; role: string }): SimpleAdminUser {
   if (!sessionUser?.id) {
-    throw new Error('castToAdminUser feila: manglande user.id')
+    throw new Error('castToAdminUser feila: manglende user.id')
   }
 
   return {

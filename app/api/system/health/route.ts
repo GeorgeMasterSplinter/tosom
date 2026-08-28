@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
       },
       pusher: {
         status: process.env.PUSHER_APP_ID ? 'configured' : 'missing',
-        details: process.env.PUSHER_APP_ID ? 'Environment variabel satt' : 'Manglande miljøvariabel',
+        details: process.env.PUSHER_APP_ID ? 'Environment variabel satt' : 'Manglende miljøvariabel',
       },
       uploadthing: {
         status: process.env.UPLOADTHING_TOKEN || process.env.NEXT_PUBLIC_UPLOADTHING_TOKEN ? 'configured' : 'missing',
@@ -87,7 +87,7 @@ export async function GET(request: NextRequest) {
       });
       cronLastRun = lastLog?.createdAt?.toISOString() ?? null;
     } catch {
-      // SystemLog finst kanskje ikke enno
+      // SystemLog finnes kanskje ikke ennå
       cronLastRun = 'ukjent';
     }
 
@@ -169,7 +169,7 @@ function formatUptime(seconds: number): string {
 }
 
 /**
- * Sjekkar NextAuth miljøkonfig utan å importere auth-modulen.
+ * Sjekkar NextAuth miljøkonfig uten å importere auth-modulen.
  * Offentlig endepunkt: rapporterer kun lengde og gyldighet — aldri
  * selve secret-verdien. Speilar secret- og trustHost-logikken i
  * lib/auth/config.ts.

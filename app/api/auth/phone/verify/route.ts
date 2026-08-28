@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
 
     if (!verification) {
       return NextResponse.json(
-        { error: 'Ugyldig eller manglande kode' },
+        { error: 'Ugyldig eller manglende kode' },
         { status: 400 }
       );
     }

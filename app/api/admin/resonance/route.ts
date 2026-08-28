@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
 
     if (adminUser.role !== 'ADMIN') {
       return NextResponse.json(
-        { error: "Berre admin kan få tilgang til resonansdata" },
+        { error: "Kun admin kan få tilgang til resonansdata" },
         { status: 403 }
       );
     }
@@ -68,7 +68,7 @@ export async function GET(req: NextRequest) {
       take: Math.min(limit, 50),
     });
 
-    // Grupper per dag (hvis fleire sessionar same dag)
+    // Grupper per dag (hvis flere sessionar same dag)
     const dayMap = new Map<number, typeof sessions[0]>();
     for (const s of sessions) {
       if (!dayMap.has(s.day) || s.createdAt > dayMap.get(s.day)!.createdAt) {

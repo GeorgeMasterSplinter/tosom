@@ -45,7 +45,7 @@ export async function endJourney(
   }
 
   const { userA, userB } = match;
-  // B8: insights er fjerna frå Match-modellen
+  // B8: insights er fjerna fra Match-modellen
 
   // Find conversation for this match
   const conversation = await prisma.conversation.findUnique({
@@ -59,7 +59,7 @@ export async function endJourney(
   const conversationId = conversation.id;
 
   // Hent imageKeys FØR transaksjonen — Message-radene blir sletta inne i
-  // transaksjonen, så nøklene må vere samla på førehand for å kunne slette
+  // transaksjonen, så nøklene må være samla på førehand for å kunne slette
   // dei tilhøyrande objekta i lagringen etterpå (GDPR art. 17).
   const imageKeys: string[] = (
     await prisma.message.findMany({
@@ -260,7 +260,7 @@ export async function endJourney(
     timeout: 30_000,
   });
 
-  // S-9 + GDPR art. 17: Slett også dei opplaaste BILDE-objekta frå lagringen.
+  // S-9 + GDPR art. 17: Slett også dei opplaaste BILDE-objekta fra lagringen.
   // DB-radene (Message type=image) er allerede borte, men objektet i R2/local
   // ligger ellers igjen som en reell lekkasje. Best-effort: feil her skal ikke
   // blokkere reiseslutt — men logg tydeleg for å fange tapte slettingar.

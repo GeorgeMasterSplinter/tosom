@@ -31,7 +31,7 @@ export async function GET(
     });
 
     if (!conversation) {
-      return NextResponse.json({ error: "Samtalen finst ikke" }, { status: 404 });
+      return NextResponse.json({ error: "Samtalen finnes ikke" }, { status: 404 });
     }
 
     // Verifiser at brukaren er del av conversationen
@@ -59,7 +59,7 @@ export async function GET(
       }),
     ]);
 
-    // Bruk name-felt om tilgjengeleg, elles firstName frå profile (valfritt)
+    // Bruk name-felt om tilgjengeleg, elles firstName fra profile (valfritt)
     const partnerFirstName = (partnerProfile as any)?.firstName || "Din partner";
     const partnerName = partnerUser?.name || partnerFirstName;
     const partnerAge = partnerProfile?.age ?? 25;

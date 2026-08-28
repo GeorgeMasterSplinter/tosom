@@ -49,7 +49,7 @@ export const MagicLinkSchema = z.object({
 
 export const MagicLinkVerifySchema = z.object({
   email: z.string().email('Ugyldig e-postadresse'),
-  token: z.string().min(6, 'Token må vere minst 6 teikn'),
+  token: z.string().min(6, 'Token må være minst 6 tegn'),
 })
 
 export const PhoneSendSchema = z.object({
@@ -58,7 +58,7 @@ export const PhoneSendSchema = z.object({
 
 export const PhoneVerifySchema = z.object({
   phone: z.string().min(8, 'Ugyldig telefonnummer'),
-  code: z.string().min(4, 'Kode må vere minst 4 teikn'),
+  code: z.string().min(4, 'Kode må være minst 4 tegn'),
 })
 
 export const PasswordResetSchema = z.object({
@@ -100,23 +100,23 @@ export const ProfileSetupSchema = z.object({
 // ─── Match-skjema ───
 
 export const MatchAcceptSchema = z.object({
-  matchId: z.string().min(1, 'Match-ID er påkrava'),
+  matchId: z.string().min(1, 'Match-ID er påkrevd'),
 })
 
 export const MatchInsightSchema = z.object({
-  matchId: z.string().min(1, 'Match-ID er påkrava'),
+  matchId: z.string().min(1, 'Match-ID er påkrevd'),
 })
 
 // ─── Journey-skjema ───
 
 export const JourneyReflectSchema = z.object({
-  conversationId: z.string().min(1, 'Konversasjon-ID er påkrava'),
-  reflection: z.string().min(10, 'Refleksjon må vere minst 10 teikn'),
+  conversationId: z.string().min(1, 'Konversasjon-ID er påkrevd'),
+  reflection: z.string().min(10, 'Refleksjon må være minst 10 tegn'),
   day: z.number().min(1).max(30).optional(),
 })
 
 export const JourneyResonanceSchema = z.object({
-  conversationId: z.string().min(1, 'Konversasjon-ID er påkrava'),
+  conversationId: z.string().min(1, 'Konversasjon-ID er påkrevd'),
   emotionalTone: z.enum(['positive', 'neutral', 'mixed', 'deep']).optional(),
   depthLevel: z.number().min(1).max(10).optional(),
   mutualSharing: z.boolean().optional(),
@@ -126,8 +126,8 @@ export const JourneyResonanceSchema = z.object({
 // ─── Chat-skjema ───
 
 export const ChatSendSchema = z.object({
-  conversationId: z.string().min(1, 'Konversasjon-ID er påkrava'),
-  content: z.string().min(1, 'Melding må vere tom').max(5000),
+  conversationId: z.string().min(1, 'Konversasjon-ID er påkrevd'),
+  content: z.string().min(1, 'Melding kan ikke være tom').max(5000),
   type: z.enum(['user', 'system']).optional(),
 })
 
@@ -150,33 +150,33 @@ export const OnboardingProgressSchema = z.object({
 // ─── Admin-skjema ───
 
 export const AdminSetupSchema = z.object({
-  password: z.string().min(8, 'Passord må vere minst 8 teikn'),
+  password: z.string().min(8, 'Passord må være minst 8 tegn'),
   email: z.string().email('Ugyldig e-postadresse').optional(),
 })
 
 export const AdminConversationFreezeSchema = z.object({
-  conversationId: z.string().min(1, 'Konversasjon-ID er påkrava'),
+  conversationId: z.string().min(1, 'Konversasjon-ID er påkrevd'),
 })
 
 export const AdminJourneyCompleteSchema = z.object({
-  journeyId: z.string().min(1, 'Reise-ID er påkrava'),
+  journeyId: z.string().min(1, 'Reise-ID er påkrevd'),
 })
 
 export const AdminJourneyResetSchema = z.object({
-  journeyId: z.string().min(1, 'Reise-ID er påkrava'),
+  journeyId: z.string().min(1, 'Reise-ID er påkrevd'),
 })
 
 export const AdminMatchResetSchema = z.object({
-  matchId: z.string().min(1, 'Match-ID er påkrava'),
+  matchId: z.string().min(1, 'Match-ID er påkrevd'),
 })
 
 export const AdminMatchReviewSchema = z.object({
-  matchId: z.string().min(1, 'Match-ID er påkrava'),
+  matchId: z.string().min(1, 'Match-ID er påkrevd'),
   approved: z.boolean().optional(),
 })
 
 export const AdminMatchUnmatchSchema = z.object({
-  matchId: z.string().min(1, 'Match-ID er påkrava'),
+  matchId: z.string().min(1, 'Match-ID er påkrevd'),
 })
 
 // ─── System-skjema ───
@@ -188,26 +188,26 @@ export const HealthCheckSchema = z.object({
 // ─── AI-skjema ───
 
 export const AIJourneyNextStepSchema = z.object({
-  conversationId: z.string().min(1, 'Konversasjon-ID er påkrava'),
+  conversationId: z.string().min(1, 'Konversasjon-ID er påkrevd'),
   day: z.number().min(1).max(30).optional(),
 })
 
 export const AIProfileRewriteSchema = z.object({
-  bio: z.string().min(10, 'Bio må vere minst 10 teikn'),
-  interests: z.array(z.string()).min(1, 'Minst éin interesse påkrava'),
+  bio: z.string().min(10, 'Bio må være minst 10 tegn'),
+  interests: z.array(z.string()).min(1, 'Minst éin interesse påkrevd'),
   name: z.string().optional(),
 })
 
 export const AIMessageSuggestionsSchema = z.object({
-  conversationId: z.string().min(1, 'Konversasjon-ID er påkrava'),
+  conversationId: z.string().min(1, 'Konversasjon-ID er påkrevd'),
   context: z.string().max(2000).optional(),
 })
 
 export const AIMatchInsightsSchema = z.object({
-  matchId: z.string().min(1, 'Match-ID er påkrava'),
+  matchId: z.string().min(1, 'Match-ID er påkrevd'),
 })
 
 export const AIJourneyGuidanceSchema = z.object({
-  conversationId: z.string().min(1, 'Konversasjon-ID er påkrava'),
+  conversationId: z.string().min(1, 'Konversasjon-ID er påkrevd'),
   phase: z.enum(['EARLY', 'BUILDING_TRUST', 'DEEPER', 'CHECKIN']).optional(),
 })

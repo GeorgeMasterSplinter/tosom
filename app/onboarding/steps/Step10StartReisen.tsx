@@ -2,7 +2,7 @@
  * Tosom — Steg 10: Start reisen (Premium rebuild 2026 — Fase 4)
  * - Bokmål (Nynorsk→Bokmål-konvertering)
  * 
- * Den siste sida av onboarding. Brukar OnboardingSlide-wrapper med:
+ * Den siste sida av onboarding. Bruker OnboardingSlide-wrapper med:
  * - Hjarte-ikon og roleg CTA-melding
  * - PremiumCTAButton med loading-state
  * - Back-knapp som returnerer til Oppsummering (steg 11)

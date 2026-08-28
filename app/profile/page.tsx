@@ -50,7 +50,7 @@ export default function ProfilePage() {
           photoUrl: data.photoUrl || null,
         });
       } else {
-        // Fallback til dummy-data om API-et ikke er implementert enno
+        // Fallback til dummy-data om API-et ikke er implementert ennå
         setProfile({
           identityName: 'Din profil',
           bio: 'Bygger reisen min...',

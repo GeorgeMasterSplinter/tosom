@@ -303,7 +303,7 @@ export default function DesignSystemPage() {
         </div>
 
         {/* Custom GoldButton preview */}
-        <SubsectionTitle description="GlassPanel GoldButton">Gjenbrukbar gull-knapp frå UI-pakken</SubsectionTitle>
+        <SubsectionTitle description="GlassPanel GoldButton">Gjenbrukbar gull-knapp fra UI-pakken</SubsectionTitle>
         <button
           className="inline-flex items-center justify-center px-5 py-3 font-medium rounded-[16px] transition-all duration-300 hover:shadow-[0_0_24px_rgba(212,175,55,0.3)] active:scale-[0.98]"
           style={{
@@ -373,14 +373,14 @@ export default function DesignSystemPage() {
 
         <SubsectionTitle description="System-komponentar">Fra /components/ui/system/</SubsectionTitle>
         <div className="space-y-4 mb-12">
-          <CopyBlock label="ToSomButton" code={`import { ToSomButton } from '@/components/ui/system';\n// <ToSomButton variant="gold" | "secondary">Innhald</ToSomButton>`} />
+          <CopyBlock label="ToSomButton" code={`import { ToSomButton } from '@/components/ui/system';\n// <ToSomButton variant="gold" | "secondary">Innhold</ToSomButton>`} />
           <CopyBlock label="ToSomCard" code={`import { ToSomCard } from '@/components/ui/system';\n// <ToSomCard icon="⭐" title="Tittel">Beskrivelse</ToSomCard>`} />
-          <CopyBlock label="ToSomSection" code={`import { ToSomSection } from '@/components/ui/system';\n// <ToSomSection spotlight="hero" | "cta" | "none">Innhald</ToSomSection>`} />
+          <CopyBlock label="ToSomSection" code={`import { ToSomSection } from '@/components/ui/system';\n// <ToSomSection spotlight="hero" | "cta" | "none">Innhold</ToSomSection>`} />
           <CopyBlock label="ToSomTagline" code={`import { ToSomTagline } from '@/components/ui/system';\n// <ToSomTagline>Ro · Trygghet · Dybde</ToSomTagline>`} />
         </div>
 
         {/* Token-importar */}
-        <SubsectionTitle description="Design token-import">Frå @/config/design-tokens</SubsectionTitle>
+        <SubsectionTitle description="Design token-import">Fra @/config/design-tokens</SubsectionTitle>
         <CopyBlock label="Tokens" code={`import {\n  theme, spacing, radius, blur,\n  typography, motion, colors, shadows,\n} from '@/config/design-tokens';`} />
       </ToSomSection>
 

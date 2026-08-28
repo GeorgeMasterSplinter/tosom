@@ -56,8 +56,8 @@ export function useChatScroll(dependency?: unknown): ChatScrollResult {
   // Siste melding skal ALLTID stå synleg nede, uansett kven som sender
   // (kreist i CHAT-POLISH 2026-08-28). Alt anna skrus opp over.
   //
-  // Fyrste gong lista får innhald: øyeblikks-scroll (landing ved siste
-  // melding utan lang smooth-scroll over historia). Deretter myk scroll
+  // Fyrste gong lista får innhold: øyeblikks-scroll (landing ved siste
+  // melding uten lang smooth-scroll over historia). Deretter myk scroll
   // ved kvar ny melding.
   const hasContentRef = useRef(false);
   useEffect(() => {
@@ -70,7 +70,7 @@ export function useChatScroll(dependency?: unknown): ChatScrollResult {
     const instant = count > 0 && !hasContentRef.current;
     if (count > 0) hasContentRef.current = true;
 
-    // Dobbelt rAF: nytt innhald (fleirlinjet tekst, bilete) må legga seg
+    // Dobbelt rAF: nytt innhold (fleirlinjet tekst, bilete) må legga seg
     // i layouten FØR scrollHeight målast.
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {

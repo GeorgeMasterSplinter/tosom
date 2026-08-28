@@ -218,7 +218,7 @@ export default function PaymentPage() {
         <div className="mt-8 text-center">
           <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.2)' }}>
             Ved å halde fram godtek du vilkår for bruk og personvern.
-            Du har rettleia om å få refusjon innan 14 dagar.
+            Du har rettleia om å få refusjon innen 14 dagar.
           </p>
         </div>
 

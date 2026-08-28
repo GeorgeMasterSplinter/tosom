@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 5. Sjekk om dag er fullført (completedDays skal vere lik noverande day)
+    // 5. Sjekk om dag er fullført (completedDays skal være lik noverande day)
     if (journey.completedDays >= journey.day && journey.day < 30) {
       return NextResponse.json(
         { 

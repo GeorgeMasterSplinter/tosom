@@ -1,6 +1,6 @@
 /**
  * Tosom — Mood Theme Module
- * Éin kjelde for alle mood-tema i chatten.
+ * Éin kilde for alle mood-tema i chatten.
  * Hver mood har fullt tema: container-bg, boblar, input, aksenter.
  */
 
@@ -14,7 +14,7 @@ export interface MoodTheme {
   /** Dominant bakgrunn for heile chat-rommet */
   containerBg: string;
 
-  /** Boble for "me" (eigne meldingar) */
+  /** Boble for "me" (egne meldingar) */
   bubbleMeStart: string;
   bubbleMeEnd: string;
   bubbleMeBorder: string;

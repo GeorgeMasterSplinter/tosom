@@ -69,7 +69,7 @@ export const SettingsCard = forwardRef<HTMLDivElement, SettingsCardProps>(
           </div>
         )}
 
-        {/* Innhald */}
+        {/* Innhold */}
         {children && <div className="mt-4">{children}</div>}
       </div>
     );

@@ -1,7 +1,7 @@
 // lib/matching/scoreRound.ts — F2: Ren scoring-kjerne for matcherunden
 //
-// Utteken frå app/api/cron/matching/route.ts slik at den hetaste delen av
-// appen (O(n²) par-loop) kan testast utan DB, Vercel eller cron.
+// Utteken fra app/api/cron/matching/route.ts slik at den hetaste delen av
+// appen (O(n²) par-loop) kan testast uten DB, Vercel eller cron.
 //
 // Semantikken er identisk med den gamle ruten:
 //   - FIFO-par (i < j), deadline-sjekk på ytste i-loop
@@ -48,9 +48,9 @@ export interface ScoreRoundResult {
   levelCounts: Record<string, number>;
   unmapped: string[];
   scoringErrors: ScoringError[];
-  /** Alle (i, j)-par som vart vurderte. */
+  /** Alle (i, j)-par som ble vurderte. */
   pairsEvaluated: number;
-  /** Kor mange i-iterasjonar som vart fullførte (for S3-observasjon). */
+  /** Kor mange i-iterasjonar som ble fullførte (for S3-observasjon). */
   candidatesScored: number;
   /** True dersom budsjettet treft midt i runden. */
   deadlineHit: boolean;
@@ -86,7 +86,7 @@ export function emptyRejectReasons(): Record<string, number> {
 /**
  * Score alle par i ein kohort. Ren funksjon — ingen DB, ingen I/O.
  *
- * @param candidates  FIFO-rekkefølgje (i < j) — same som ruten las frå DB
+ * @param candidates  FIFO-rekkefølgje (i < j) — same som ruten las fra DB
  * @param features    Prekalkulerte CheapFeatures (same indeks som candidates;
  *                    null der kandidaten manglar profil)
  * @param blockSet    Sperreliste (normalizePair-nøklar med ':' som skiljar)
@@ -118,7 +118,7 @@ export function scoreRound(
       const b = candidates[j];
       pairsEvaluated++;
 
-      // Hopp over utan profil
+      // Hopp over uten profil
       if (!a.profile || !b.profile) {
         rejectReasons['mangler_profil']++;
         continue;

@@ -27,14 +27,14 @@ export async function PATCH(
     const adminUser = castToAdminUser(user)
 
     if (adminUser.role !== 'ADMIN') {
-      return errorResponse("Berre admin kan oppdatere journey-innhald", 403)
+      return errorResponse("Kun admin kan oppdatere journey-innhold", 403)
     }
 
-    // Valider day frå params
+    // Valider day fra params
     const dayStr = await Promise.resolve(params).then(p => p.day)
     const day = parseInt(dayStr)
     if (isNaN(day) || day < 1 || day > 30) {
-      return errorResponse('Ugyldig dag. Må vere mellom 1 og 30.', 400)
+      return errorResponse('Ugyldig dag. Må være mellom 1 og 30.', 400)
     }
 
     // Valider body med Zod

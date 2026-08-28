@@ -22,14 +22,14 @@ export interface PresenceState {
   isOnline: boolean
   /** Sidan hva tid var brukaren sist aktiv? */
   lastSeenAt: Date | null
-  /** Kva gjer brukaren no? */
+  /** Hva gjer brukaren no? */
   activity: ActivityType
   /** Kor i reisa er brukaren? */
   journeyPosition: JourneyPosition | null
 }
 
 export type ActivityType = 
-  | 'idle'           // Ikkje aktiv
+  | 'idle'           // Ikke aktiv
   | 'reading'        // Lesar meldingar
   | 'writing'        // Skriv melding
   | 'reflecting'     // Gjer refleksjon
@@ -44,7 +44,7 @@ export interface JourneyPosition {
   phase: 'EARLY' | 'BUILDING_TRUST' | 'DEEPER' | 'CHECKIN'
   /** Progresjon (0-100%) */
   progress: number
-  /** Dagen som kjem */
+  /** Dagen som kommer */
   nextDay: {
     title: string
     prompt: string
@@ -90,7 +90,7 @@ export interface ResonanceData {
  * Hent presence-state for ein bruker
  */
 export async function getUserPresence(userId: string): Promise<PresenceState> {
-  // I produksjon: Hent frå Redis/Pusher presence
+  // I produksjon: Hent fra Redis/Pusher presence
   // For no: Simulert data basert på siste aktivitet
   
   return {
@@ -111,8 +111,8 @@ export async function getJourneyPosition(userId: string): Promise<JourneyPositio
     phase: ['EARLY', 'BUILDING_TRUST', 'DEEPER', 'CHECKIN'][Math.floor(Math.random() * 4)] as JourneyPosition['phase'],
     progress: Math.floor(Math.random() * 100),
     nextDay: {
-      title: 'Dag ' + (Math.floor(Math.random() * 30) + 2) + ' kjem snart',
-      prompt: 'Kva har du lært om deg sjølv denne veka?',
+      title: 'Dag ' + (Math.floor(Math.random() * 30) + 2) + ' kommer snart',
+      prompt: 'Hva har du lært om deg selv denne veka?',
     },
   }
 }
@@ -160,7 +160,7 @@ export function calculateResonance(
   userAId: string,
   userBId: string
 ): ResonanceData {
-  // I produksjon: Hent frå ResonanceSession i DB
+  // I produksjon: Hent fra ResonanceSession i DB
   const dailyScore = Math.floor(Math.random() * 40) + 60 // 60-100
   const averageScore = Math.floor(Math.random() * 30) + 65 // 65-95
   
@@ -191,7 +191,7 @@ export function shouldSendNudge(
 
   const hoursSinceActivity = (Date.now() - lastActivityAt.getTime()) / (1000 * 60 * 60)
   
-  // Send nudge etter 48 timer utan aktivitet i reise
+  // Send nudge etter 48 timer uten aktivitet i reise
   if (hoursSinceActivity > 48 && journeyDay < 30) {
     return {
       shouldNudge: true,
@@ -205,7 +205,7 @@ export function shouldSendNudge(
 // ─── HEARTBEAT ───────────────────────────────────────────────
 
 /**
- * Oppdater presence-heartbeat (kalles frå frontend)
+ * Oppdater presence-heartbeat (kalles fra frontend)
  */
 export async function updatePresenceHeartbeat(
   userId: string,

@@ -26,7 +26,7 @@ export type PhoneSendInput = z.infer<typeof phoneSendSchema>;
 
 export const phoneVerifySchema = z.object({
   phone: z.string().min(8, 'Telefonnummer er påkrevd'),
-  code: z.string().min(4, 'Kode må vere minst 4 teikn').max(10, 'Kode er for lang'),
+  code: z.string().min(4, 'Kode må være minst 4 tegn').max(10, 'Kode er for lang'),
 });
 
 export type PhoneVerifyInput = z.infer<typeof phoneVerifySchema>;
@@ -73,8 +73,8 @@ export type MatchInsightInput = z.infer<typeof matchInsightSchema>;
    ============================================================ */
 
 export const journeyReflectSchema = z.object({
-  reflection: z.string().min(10, 'Refleksjon må vere minst 10 teikn').optional(),
-  conversationResponse: z.string().min(10, 'Samtalesvar må vere minst 10 teikn').optional(),
+  reflection: z.string().min(10, 'Refleksjon må være minst 10 tegn').optional(),
+  conversationResponse: z.string().min(10, 'Samtalesvar må være minst 10 tegn').optional(),
 }).refine(data => data.reflection || data.conversationResponse, {
   message: 'Antingen reflection eller conversationResponse er påkrevd',
 });

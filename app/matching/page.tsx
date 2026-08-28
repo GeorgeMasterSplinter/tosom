@@ -35,11 +35,11 @@ interface OverviewData {
     totalDays: number;
     phase: string;
   } | null;
-  // BUG 3: Sanne reise-tilstandar frå databasen (dashboard/overview)
+  // BUG 3: Sanne reise-tilstandar fra databasen (dashboard/overview)
   journeyState?: 'IDLE' | 'QUEUED' | 'MATCHED' | 'ON_JOURNEY' | 'COMPLETED';
   onboardingComplete?: boolean;
   matchQueuedAt?: string | null;
-  // Direkte ruting: conversationId finst når samtalen er oppretta
+  // Direkte ruting: conversationId finnes når samtalen er oppretta
   conversation?: {
     conversationId: string;
     partnerName: string;
@@ -221,7 +221,7 @@ export default function MatchingPage() {
             return;
           }
 
-          // QUEUED (og COMPLETED → kan køre seg på nytt): kø-tilstand frå vekeplan
+          // QUEUED (og COMPLETED → kan køre seg på nytt): kø-tilstand fra vekeplan
           const now = new Date();
           const day = now.getDay();
           const hour = now.getHours();
@@ -415,7 +415,7 @@ export default function MatchingPage() {
               <button
                 onClick={() => {
                   // Direkte ruting: når samtalen eksisterer går vi rett inn i
-                  // /chat/[id] i steden for via dashboardet.
+                  // /chat/[id] i stedet for via dashbordet.
                   const convId = overview?.conversation?.conversationId;
                   router.push(convId ? `/chat/${convId}` : '/dashboard');
                 }}
@@ -481,7 +481,7 @@ export default function MatchingPage() {
           </div>
         )}
 
-        {/* ═══ TILSTAND: ONBOARDING IKKJE FULLFØRT (IDLE) ═══ */}
+        {/* ═══ TILSTAND: ONBOARDING IKKE FULLFØRT (IDLE) ═══ */}
         {queueState === 'not_started' && (
           <div className="space-y-8">
             <GlassCard className="text-center py-12 px-8">
@@ -493,7 +493,7 @@ export default function MatchingPage() {
               </h2>
               <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '16px', lineHeight: '1.7' }}>
                 Før du kan starte reisen må vi kjenne deg litt betre.
-                Det tar nokre minutt – så kan du stille deg i køen.
+                Det tar noen minutt – så kan du stille deg i køen.
               </p>
               <button
                 onClick={() => router.push('/onboarding')}

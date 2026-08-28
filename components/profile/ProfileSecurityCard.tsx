@@ -55,7 +55,7 @@ export const ProfileSecurityCard = ({ showDetails = false }: ProfileSecurityCard
             className="text-sm leading-relaxed"
             style={{ color: 'rgba(255, 255, 255, 0.6)' }}
           >
-            Berre din match kan se profilen din. Ingen andre brukere har tilgang.
+            Kun din match kan se profilen din. Ingen andre brukere har tilgang.
           </p>
         </div>
       </div>

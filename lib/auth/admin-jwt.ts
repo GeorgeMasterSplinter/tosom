@@ -85,9 +85,9 @@ export async function signAdminToken(email: string): Promise<string> {
   );
 
   const signature = await crypto.subtle.sign('HMAC', keyMaterial, encoder.encode(input));
-  // FIX: base64url-encod RÅ signaturbytes direkte. Tidlegare gjekk bytesa via
+  // FIX: base64url-encod RÅ signaturbytes direkte. Tidlegare gikk bytesa via
   // latin1-streng → utf8-encoding i base64urlEncode korrupte bytes > 127, og
-  // signaturen vart umogleg å verifisere (admin-API kall feila alltid 401).
+  // signaturen ble umogleg å verifisere (admin-API kall feila alltid 401).
   const signatureB64 = Buffer.from(signature)
     .toString('base64')
     .replace(/\+/g, '-')

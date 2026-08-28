@@ -266,7 +266,7 @@ export async function GET(req: NextRequest) {
       });
 
       // Prekalkuler dealbreaker-features EN GANG per kandidat (O(n)) —
-      // den dyre normaliseringa gjekk tidlegare per PAR (O(n²)).
+      // den dyre normaliseringa gikk tidlegare per PAR (O(n²)).
       const features = candidates.map((c) => (c.profile ? buildCheapFeatures(c.profile) : null));
 
       const scored = scoreRound(candidates, features, blockSet, {

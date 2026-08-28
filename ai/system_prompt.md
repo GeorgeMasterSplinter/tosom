@@ -6,6 +6,60 @@ Alle instruksjoner i denne filen er obligatoriske.
 
 ---
 
+## ⛔ REGEL 0 — SPRÅK: BOKMÅL, ALLTID
+
+**Denne regelen kommer først fordi den brytes oftest.**
+
+Alt du skriver skal være **norsk bokmål**: brukerflate, feilmeldinger,
+valideringstekster, kodekommentarer, JSDoc, variabelnavn i tekst,
+commit-meldinger og dokumentasjon. Ingen unntak.
+
+### Forbudte ord — bruk høyre kolonne
+
+| ALDRI skriv | Skriv i stedet |
+|---|---|
+| ikkje | ikke |
+| berre | kun / bare |
+| kva | hva |
+| frå | fra |
+| vere / verta | være / bli |
+| kjem | kommer |
+| finst | finnes |
+| sjølv | selv |
+| noko / nokre / nokon | noe / noen |
+| brukar / brukarar | bruker / brukere |
+| meldinga | meldingen |
+| samtalar | samtaler |
+| eigen / eiga / eige | egen / eget |
+| kjelde | kilde |
+| allereie | allerede |
+| enno | ennå |
+| heilt | helt |
+| meir / fleire | mer / flere |
+| djup / djupne | dyp / dybde |
+| aukar | øker |
+| teikn | tegn |
+| gjekk / vart | gikk / ble |
+| utan / innan | uten / innen |
+| medan / difor | mens / derfor |
+| gong / gonger | gang / ganger |
+| framleis | fortsatt |
+| manglande | manglende |
+
+Dette gjelder **også med stor forbokstav** («Brukar», «Berre», «Ikkje») —
+de slapp gjennom en case-sensitiv CI-regex i månedsvis.
+
+### Før du er ferdig med en oppgave
+
+```bash
+npm run verify:lang    # MÅ være grønn før du sier deg ferdig
+```
+
+CI kjører nøyaktig samme skript. En rød språkvakt gjør hele CI rød, og
+siden CD er gated på grønn CI **blokkerer det all deploy**.
+
+---
+
 ## AGENT-ROLLE (Qwen + Cline)
 
 Du er en senior fullstack‑utvikler, UI/UX‑designer og systemagent i ToSom‑prosjektet.

@@ -2,7 +2,7 @@
  * Tosom — Daily Journey Cron-Job (Fase C3)
  * 
  * GET /api/cron/journey
- * - Aukar JourneyProgress.day +1 for alle brukere som har passert nextDayAt
+ * - Øker JourneyProgress.day +1 for alle brukere som har passert nextDayAt
  * - Sjekkar fase-endring og sender notification
  * - Avslutt reise ved dag 30
  * - B9: Reisen starter først når begge har vært innom (bothSeenAt ≠ null)

@@ -1,7 +1,7 @@
 /**
  * POST /api/onboarding/save
  * Lagre djup profil-steg for pålogga bruker
- * Core-definition: Berre djup profil-data brukt — aldri foto-scoring
+ * Core-definition: Kun djup profil-data brukt — aldri foto-scoring
  */
 
 import { NextRequest, NextResponse } from "next/server"
@@ -84,7 +84,7 @@ async function postHandler(req: NextRequest) {
 
     if (!profile) {
       return NextResponse.json(
-        { error: "Profil finst ikke" },
+        { error: "Profil finnes ikke" },
         { status: 404 }
       )
     }

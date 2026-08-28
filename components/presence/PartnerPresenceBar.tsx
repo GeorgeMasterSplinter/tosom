@@ -5,7 +5,7 @@
  * 
  * Viser:
  *   - Online/offline status
- *   - Kva part gjer no
+ *   - Hva part gjer no
  *   - Same position i reisa
  *   - Resonans-nivå
  */

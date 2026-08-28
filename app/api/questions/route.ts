@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
  * 
  * Query params:
  * - categoryId: string — hent spørsmål i ein kategori
- * - depth: number — filtrer på djupne (1, 2, 3)
+ * - depth: number — filtrer på dybde (1, 2, 3)
  * - random: boolean — hent tilfeldig spørsmål
  */
 export async function GET(request: Request) {

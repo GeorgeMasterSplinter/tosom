@@ -12,13 +12,13 @@ export const dynamic = 'force-dynamic';
  * GET /api/match
  * 
  * Returner match-status + liste over matcher for innlogga bruker.
- * Ingen params treng — auth kjem frå session.
+ * Ingen params treng — auth kommer fra session.
  */
 export async function GET(request: Request): Promise<Response> {
   try {
     const url = new URL(request.url);
     
-    // Bruk query userId om tilgjengeleg, elles henta frå session
+    // Bruk query userId om tilgjengeleg, elles henta fra session
     let userId = url.searchParams.get("userId");
     if (!userId) {
       const session = await getServerSession();

@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
     const result = await requireAuth(req)
     if (result instanceof NextResponse) return result
     const adminUser = castToAdminUser(result.user)
-    if (adminUser.role !== 'ADMIN') return errorResponse("Berre admin kan få tilgang til matcher", 403)
+    if (adminUser.role !== 'ADMIN') return errorResponse("Kun admin kan få tilgang til matcher", 403)
 
     const url = new URL(req.url)
     const page = Math.min(Math.max(parseInt(url.searchParams.get('page') ?? '') || 1, 1), 100)

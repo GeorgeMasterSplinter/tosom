@@ -26,7 +26,7 @@ function ChatPanel({ onClose }: { onClose?: () => void }) {
     <div className="flex flex-col items-center justify-center h-64 space-y-4">
       <div className="text-5xl">💬</div>
       <h3 className="text-lg font-medium text-[#4A4A4A]">Chat</h3>
-      <p className="text-sm text-[#4A4A4A]/50">Ingen meldinger enno.</p>
+      <p className="text-sm text-[#4A4A4A]/50">Ingen meldinger ennå.</p>
       {onClose && (
         <button
           onClick={onClose}

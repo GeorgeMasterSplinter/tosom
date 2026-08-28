@@ -46,7 +46,7 @@ export function sanitizeText(input: string, options: SanitizeOptions = {}): stri
       .replace(/on\w+=/gi, '')
   }
 
-  // Fjern null bytes og kontrollerade teikn
+  // Fjern null bytes og kontrollerade tegn
   result = result.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
 
   return result.trim()
@@ -100,7 +100,7 @@ export function validateField(value: unknown, rule: ValidationRule): string | nu
 }
 
 /**
- * Valider fleire felt
+ * Valider flere felt
  */
 export function validateInput(data: Record<string, unknown>, rules: ValidationRule[]): ValidationResult {
   const errors: ValidationError[] = []

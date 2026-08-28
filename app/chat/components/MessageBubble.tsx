@@ -62,7 +62,7 @@ export interface MessageData {
     phase?: string;
     timestamp?: Date | string;
     senderInfo?: { name: string; imageUrl?: string };
-    /** CHAT-POLISH (C-2): kjelde for boble-etikett */
+    /** CHAT-POLISH (C-2): kilde for boble-etikett */
     source?: "bli_kjent" | "oppgave";
   };
 }
@@ -259,7 +259,7 @@ function Avatar({ senderInfo }: { senderInfo?: { name: string; imageUrl?: string
 
 /* ═══════════════════════════════════════
    HOVEDKOMPONENT — MESSAGEBUBBLE v2
-   Premium redesigned med fleire nye effektar + FadeIn animasjon
+   Premium redesigned med flere nye effektar + FadeIn animasjon
    ═══════════════════════════════════════ */
 
 export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
@@ -271,7 +271,7 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
   const isMe = sender === "me";
   const isSystem = sender === "system";
   
-  // Stagger-delay basert på indeks (takset — lang historikk må ikkje «vente» usynleg)
+  // Stagger-delay basert på indeks (tak satt — lang historikk må ikke «vente» usynlig)
   const delay = Math.min(index * 50, 400);
 
   // ═══ MILESTONE BUBBLE — milestone-feiring ═══
@@ -283,7 +283,7 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
     );
   }
 
-  // ═══ IMAGE BUBBLE — bilede frå chat ═══
+  // ═══ IMAGE BUBBLE — bilede fra chat ═══
   if (message.type === "image") {
     const imageUrl = metadata?.imageUrl || content;
     return (
@@ -367,7 +367,7 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
     );
   }
 
-  // ═══ BRUKAR-MELDING — Premium bubble v2 (CSS-animasjon; synleg om animasjonen feilar) ═══
+  // ═══ BRUKER-MELDING — Premium bubble v2 (CSS-animasjon; synleg om animasjonen feilar) ═══
   const isLeft = sender === "partner";
   const resonanceGlow = getResonanceGlow(resonanceLevel || (isMe ? 30 : 10));
 
@@ -384,7 +384,7 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
 
       {/* Boblekolonne — maxWidth er % av RALEN (fast brede). Tidlegare låg 85 %
           på ein div INNI denne shrink-to-fit-colonna: prosentet løyst seg mot den
-          allereie smale innhaldsbreidda, og kort ord som «Hei» vart delte i
+          allerede smale innholdsbredden, og korte ord som «Hei» ble delt i
           «H»/«ei». No refererer % til raden — bobla får full ord-brede. */}
       <div
         className={isLeft ? "message-enter-partner" : "message-enter-me"}
@@ -418,7 +418,7 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
               />
             )}
 
-            {/* Kjelde-etikett — kva fløya meldinga kjem frå (CHAT-POLISH C-2) */}
+            {/* Kilde-etikett — hvilken flyt meldingen kommer fra (CHAT-POLISH C-2) */}
             {(isBliKjent || metadata?.source === "bli_kjent") && (
               <div className="flex items-center gap-1.5 mb-2">
                 <div
@@ -553,10 +553,10 @@ export function MessageBubbleStyles() {
       /* ── Pålitelige inn-felt-animasjonar (LIVE-FIX 2026-08-27) ──
          Tidlegare brukte boblane FadeIn (framer-motion useInView) med
          start-verdi opacity:0 — om inView-triggeren aldri fyra (t.d. i
-         produksjon), forblei meldinga usynleg for alltid.
+         produksjon), forblei meldingen usynleg for alltid.
          Her: vanlege CSS-keyframes med fill-mode both — dersom
          animasjonen feilar eller keyframes manglar, er bobla likevel
-         fullt synleg. Ingen JS-avheng heilt. */
+         fullt synleg. Ingen JS-avheng helt. */
       @keyframes msgFadeInUp {
         from { opacity: 0; transform: translateY(10px); }
         to   { opacity: 1; transform: translateY(0); }

@@ -70,10 +70,10 @@ class ChatErrorBoundary extends React.Component<
               </svg>
             </div>
             <p className="text-base font-medium mb-2" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-              Noko gjekk gale
+              Noe gikk galt
             </p>
             <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
-              Vi har logga feilen. Ver vennleg og prøv igjen.
+              Vi har logget feilen. Prøv igjen.
             </p>
           </div>
         </div>

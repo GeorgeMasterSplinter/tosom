@@ -8,11 +8,11 @@ import { z } from 'zod';
 import { getDistancePrefRange } from '@/config/distance-prefs';
 
 /* ============================================================
-   HJELPERE — tolerant input frå frontend (STEG 13.1 FIX)
+   HJELPERE — tolerant input fra frontend (STEG 13.1 FIX)
    Frontend sender '' for ALLE felt brukeren ikke fylte ut
    (OnboardingFlow.tsx initialData), mens Zod .optional() kun
    tolererer undefined. '' på valfrie felt ga derfor 400 på
-   /api/profile/setup kvar gong eit steg vart hoppa over.
+   /api/profile/setup kvar gong eit steg ble hoppa over.
    Blank streng → undefined før validering. Obligatoriske felt
    (fanget klient-side) blir ikke rørt.
    ============================================================ */
@@ -36,8 +36,8 @@ function optStr(max?: number, min = 0, msg?: string) {
 
 export const basicProfileSchema = z
   .object({
-    identityName: z.string().min(2, 'Navn må vere minst 2 tegn').max(50, 'Navn kan vere maks 50 tegn'),
-    age: z.coerce.number().min(21, 'Du må vere minst 21 år').max(99, 'Alder kan ikke vere over 99'),
+    identityName: z.string().min(2, 'Navn må være minst 2 tegn').max(50, 'Navn kan være maks 50 tegn'),
+    age: z.coerce.number().min(21, 'Du må være minst 21 år').max(99, 'Alder kan ikke være over 99'),
     gender: z.string().min(1, 'Velg eit kjønn'),
     seekingGender: z.string().min(1, 'Velg kven du søker'),
     height: z.preprocess(blankToUndefined, z.coerce.number().min(100).max(250).optional()),
@@ -74,9 +74,9 @@ export type BasicProfileInput = z.infer<typeof basicProfileSchema>;
    ============================================================ */
 
 export const personlighetSchema = z.object({
-  selfDesc: z.string().min(10, 'Skriv minst 10 teikn om kven du er').max(500),
-  energyGiver: optStr(300, 10, 'Kva gir deg energi?'),
-  energyDrainer: optStr(300, 10, 'Kva tapper deg for energi?'),
+  selfDesc: z.string().min(10, 'Skriv minst 10 tegn om kven du er').max(500),
+  energyGiver: optStr(300, 10, 'Hva gir deg energi?'),
+  energyDrainer: optStr(300, 10, 'Hva tapper deg for energi?'),
   pressureReact: optStr(300, 10, 'Hvordan reagerer du under press?'),
   quirk: optStr(200, 5, 'Skildre ein quirky eigenskap'),
 });

@@ -86,7 +86,7 @@ async function getHandler(req: NextRequest) {
       });
     }
 
-    // Finn den andre brukaren (ikke sjølv)
+    // Finn den andre brukaren (ikke selv)
     const otherUser = match.userAId === user.id ? match.userB : match.userA;
 
     // Sjekk om vi er i 14-dagers bildefase

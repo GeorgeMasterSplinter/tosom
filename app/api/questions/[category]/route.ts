@@ -44,7 +44,7 @@ export async function GET(
 
     if (!category) {
       return NextResponse.json(
-        { success: false, error: `Kategorien "${categoryName}" finst ikke` },
+        { success: false, error: `Kategorien "${categoryName}" finnes ikke` },
         { status: 404 }
       )
     }

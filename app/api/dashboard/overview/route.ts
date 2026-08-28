@@ -26,7 +26,7 @@ export async function GET(_request: Request) {
 
   try {
     // BUG 3: Eksponer reise-tilstand slik at venterommet kan vise sanne tilstander
-    // (IDLE/QUEUED/MATCHED/…) i staden for å gjette seg fram frå vekeplan.
+    // (IDLE/QUEUED/MATCHED/…) i staden for å gjette seg fram fra vekeplan.
     const me = await prisma.user.findUnique({
       where: { id: userId },
       select: {
@@ -177,7 +177,7 @@ export async function GET(_request: Request) {
     }
 
     // Finn samtale-partnar og siste melding
-    // conversationId skal ALLTID vere til stades når samtalen eksisterer
+    // conversationId skal ALLTID være til stades når samtalen eksisterer
     // (også før første melding), slik at klienten kan route direkte til /chat/[id]
     let convoInfo: any = null;
     if (conversation) {

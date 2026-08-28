@@ -1,6 +1,6 @@
 "use client";
 
-/** NavigationDemo.tsx — full test av navigasjon utan backend
+/** NavigationDemo.tsx — full test av navigasjon uten backend
  *  NS21–NS29 — demo med dummy initialState, knapper for testing, state-logging,
  *  integrasjon med OnboardingFlow og MatchResultView */
 

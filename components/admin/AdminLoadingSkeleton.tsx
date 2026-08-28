@@ -1,7 +1,7 @@
 /**
  * Tosom Admin — Loading Skeleton (gjenbrukbar)
  * 
- * Viser eit ryddig skeleton når data lastar frå API.
+ * Viser eit ryddig skeleton når data lastar fra API.
  */
 
 'use client';
@@ -14,7 +14,7 @@ interface AdminSkeletonProps {
 }
 
 export function AdminSkeleton({ 
-  title = 'Lastar innhald...', 
+  title = 'Lastar innhold...', 
   statsCount = 0, 
   tableRows = 5, 
   tableColumns = 6 

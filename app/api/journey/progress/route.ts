@@ -6,7 +6,7 @@
  * Se docs/tosom-concept-v2-skisse.md for detaljer.
  * 
  * Hent progresjon for reisa — alle dagar, milestones.
- * Core-definition: Viser reise utan gamification.
+ * Core-definition: Viser reise uten gamification.
  */
 
 import { NextRequest, NextResponse } from "next/server";

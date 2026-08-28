@@ -50,18 +50,23 @@
     "match_delay_hours": 24,
     "uses_images": false,
     "uses_surface_features": false,
+    "dimensions": 6,
     "weights": {
       "values": 0.25,
-      "personality": 0.20,
-      "relationshipStyle": 0.15,
+      "attachment": 0.25,
+      "personality": 0.15,
       "communication": 0.15,
-      "futureVision": 0.10,
-      "boundaries": 0.05,
-      "emotionalNeeds": 0.05,
-      "lifeRhythm": 0.03,
-      "maturity": 0.02
+      "emotionRegulation": 0.10,
+      "lifeSituation": 0.10
     },
-    "weights_source": "lib/matching/unifiedScorer.ts:37-47 (summer til 1.00)"
+    "weights_source": "lib/matching/unifiedScorer.ts:59-66 (DIMENSION_WEIGHTS, summerer til 1.00)",
+    "note": "RETTET 2026-08-28: fila oppga tidligere de gamle NI vektene (personality 0.20, relationshipStyle, futureVision, boundaries, emotionalNeeds, lifeRhythm, maturity) med feil linjereferanse. Motoren har hatt SEKS dimensjoner siden FORSKNINGSMOTOR F-8. Enhver agent som lastet memory.json fikk feil fasit.",
+    "instruments": {
+      "values": "PVQ-10",
+      "attachment": "ECR",
+      "personality": "BFI-10",
+      "emotionRegulation": "ERQ-6"
+    }
   },
 
   "journey": {

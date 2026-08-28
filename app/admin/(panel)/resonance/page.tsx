@@ -213,7 +213,7 @@ export default function AdminResonancePage() {
       {/* Input */}
       <div style={{ marginBottom: "32px" }}>
         <label style={{ display: "block", marginBottom: "8px", color: "rgba(255,255,255,0.6)", fontSize: "14px" }}>
-          Brukar-ID
+          Bruker-ID
         </label>
         <div style={{ display: "flex", gap: "8px" }}>
           <input
@@ -271,9 +271,9 @@ export default function AdminResonancePage() {
             {[
               { label: "Totale sessionar", value: data.totalSessions, color: "#D4AF37" },
               { label: "Unike dagar", value: data.uniqueDays, color: "#60A5FA" },
-              { label: "EARLY sessionar", value: `${data.phases.EARLY?.count || 0} (djupne: ${data.phases.EARLY?.avgDepth.toFixed(1) || "0"})`, color: "#34D399" },
-              { label: "BUILDING_TRUST", value: `${data.phases.BUILDING_TRUST?.count || 0} (djupne: ${data.phases.BUILDING_TRUST?.avgDepth.toFixed(1) || "0"})`, color: "#A78BFA" },
-              { label: "DEEPER", value: `${data.phases.DEEPER?.count || 0} (djupne: ${data.phases.DEEPER?.avgDepth.toFixed(1) || "0"})`, color: "#F472B6" },
+              { label: "EARLY sessionar", value: `${data.phases.EARLY?.count || 0} (dybde: ${data.phases.EARLY?.avgDepth.toFixed(1) || "0"})`, color: "#34D399" },
+              { label: "BUILDING_TRUST", value: `${data.phases.BUILDING_TRUST?.count || 0} (dybde: ${data.phases.BUILDING_TRUST?.avgDepth.toFixed(1) || "0"})`, color: "#A78BFA" },
+              { label: "DEEPER", value: `${data.phases.DEEPER?.count || 0} (dybde: ${data.phases.DEEPER?.avgDepth.toFixed(1) || "0"})`, color: "#F472B6" },
             ].map((stat) => (
               <div key={stat.label} style={{ padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}>
                 <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", marginBottom: "4px" }}>{stat.label}</div>
@@ -286,7 +286,7 @@ export default function AdminResonancePage() {
           {chartH > 0 && chartData.length > 1 && (
             <div style={{ marginBottom: "32px" }}>
               <h2 style={{ fontSize: "18px", fontWeight: 600, marginBottom: "16px", color: "#E0E0E0" }}>
-                Resonans-djupne over tid (dag → depthLevel)
+                Resonans-dybde over tid (dag → depthLevel)
               </h2>
               <div style={{ position: "relative", height: chartH + 40, background: "rgba(255,255,255,0.02)", borderRadius: "12px", padding: "16px" }}>
                 {/* X-axis labels */}

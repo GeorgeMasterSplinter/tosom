@@ -427,8 +427,8 @@ export default function Dashboard() {
         setData(json);
 
         // Ingen aktiv match/reise → redirect /matching.
-        // Merk: dag 0 (reise startet, begge har ikkje møtt opp enno) BLIR vist
-        // her — ikkje bounsa til /matching.
+        // Merk: dag 0 (reise startet, begge har ikke møtt opp enda) BLIR vist
+        // her — ikke sendt videre til /matching.
         if (!json.match || !json.journey) {
           router.replace('/matching');
           return;
@@ -477,7 +477,7 @@ export default function Dashboard() {
 
   const { match, journey, conversation } = data;
   const currentDay = journey.day;
-  // Dag 0: reisen er oppretta, men begge har ikkje møtt opp enno
+  // Dag 0: reisen er opprettet, men begge har ikke møtt opp enda
   const isDayZero = currentDay < 1;
   const displayDay = Math.max(1, currentDay);
   const currentPhase = getPhaseForDay(displayDay);
@@ -520,7 +520,7 @@ export default function Dashboard() {
           </button>
           {isDayZero && (
             <p className="text-center text-xs mt-3" style={{ color: 'rgba(255,255,255,0.35)' }}>
-              Dag 1 startar når {match.name} også har vært innom ein gong.
+              Dag 1 starter når {match.name} også har vært innom én gang.
             </p>
           )}
         </div>

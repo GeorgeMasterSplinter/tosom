@@ -19,7 +19,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     const result = await requireAuth(req)
     if (result instanceof NextResponse) return result
     const adminUser = castToAdminUser(result.user)
-    if (adminUser.role !== 'ADMIN') return errorResponse("Berre admin kan få tilgang til match-inspeksjon", 403)
+    if (adminUser.role !== 'ADMIN') return errorResponse("Kun admin kan få tilgang til match-inspeksjon", 403)
 
     const matchId = (await params).id
     if (!isValidObjectId(matchId)) return errorResponse('Ugyldig match ID.', 400)

@@ -79,7 +79,7 @@ export const ResonanceMeter = ({ value, size = 'lg', showLabel = true }: Resonan
         />
       </svg>
 
-      {/* Sentrum-innhald */}
+      {/* Sentrum-innhold */}
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span
           className={`font-bold ${config.fontSize}`}

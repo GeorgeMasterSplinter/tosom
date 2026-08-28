@@ -54,10 +54,10 @@ export const adminUserActionSchema = z.object({
 
 /** JourneyDayContent update body */
 export const journeyDayUpdateSchema = z.object({
-  theme: z.string().min(1, 'Tema kan ikke vere tomt'),
+  theme: z.string().min(1, 'Tema kan ikke være tomt'),
   phase: z.enum(['EARLY', 'BUILDING_TRUST', 'DEEPER', 'CHECKIN']).optional(),
-  reflectionQuestion: z.string().min(1, 'Refleksjonspørsmål kan ikke vere tomt'),
-  conversationPrompt: z.string().min(1, 'Samtaleprompt kan ikke vere tomt'),
+  reflectionQuestion: z.string().min(1, 'Refleksjonspørsmål kan ikke være tomt'),
+  conversationPrompt: z.string().min(1, 'Samtaleprompt kan ikke være tomt'),
   task: z.string().optional(),
   resonanceGoal: z.string().optional(),
 })
@@ -69,12 +69,12 @@ export const journeyDayUpdateSchema = z.object({
 /** Chat send message body */
 export const chatSendMessageSchema = z
   .object({
-    conversationId: z.string().min(1, 'Manglande conversationId'),
-    // content kan vere tom når type=image — da bærer bildet seg sjølv, og
-    // imageKey setjast seinare av /api/chat/image (to-stegs opplastning).
-    content: z.string().trim().max(5000, 'Meldinga er for lang').default(''),
+    conversationId: z.string().min(1, 'Manglende conversationId'),
+    // content kan være tom når type=image — da bærer bildet seg selv, og
+    // imageKey settes senere av /api/chat/image (to-stegs opplastning).
+    content: z.string().trim().max(5000, 'Meldingen er for lang').default(''),
     type: z.enum(['text', 'image', 'user', 'continue_choice']).default('text'),
-    // CHAT-POLISH (C-2): kjelde for boble-etikett — 'bli_kjent' (Bli Kjent-fløya)
+    // CHAT-POLISH (C-2): kilde for boble-etikett — 'bli_kjent' (Bli Kjent-flyten)
     // eller 'oppgave' (dagleg oppgave). Vanlege chat-meldingar er undefined.
     source: z.enum(['bli_kjent', 'oppgave']).optional(),
   })
@@ -83,14 +83,14 @@ export const chatSendMessageSchema = z
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ['content'],
-        message: 'Melding kan ikke vere tom',
+        message: 'Melding kan ikke være tom',
       });
     }
   })
 
 /** Chat messages query params */
 export const chatMessagesQuerySchema = paginationSchema.extend({
-  conversationId: z.string().min(1, 'Manglande conversationId').optional(),
+  conversationId: z.string().min(1, 'Manglende conversationId').optional(),
   before: z.coerce.number().int().positive().optional(),
   after: z.coerce.number().int().positive().optional(),
 })
@@ -101,8 +101,8 @@ export const chatMessagesQuerySchema = paginationSchema.extend({
 
 /** Journey reflect body */
 export const journeyReflectSchema = z.object({
-  conversationId: z.string().min(1, 'Manglande conversationId'),
-  reflection: z.string().min(1, 'Refleksjon kan ikke vere tom').max(5000, 'Refleksjonen er for lang'),
+  conversationId: z.string().min(1, 'Manglende conversationId'),
+  reflection: z.string().min(1, 'Refleksjon kan ikke være tom').max(5000, 'Refleksjonen er for lang'),
 })
 
 /** Journey progress update body */
@@ -117,7 +117,7 @@ export const journeyProgressSchema = z.object({
 
 /** Presence update body */
 export const presenceUpdateSchema = z.object({
-  userId: z.string().min(1, 'Manglande userId'),
+  userId: z.string().min(1, 'Manglende userId'),
   isOnline: z.boolean().optional(),
   isTyping: z.boolean().optional(),
 })

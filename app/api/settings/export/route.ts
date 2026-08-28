@@ -6,10 +6,10 @@
  *
  * Returnerer eit menneskelesbart JSON-uttrekk (norske nøkkelord) med
  * brukarens personopplysningar: konto, profil (inkl. dypprofil),
- * preferansar, reiser, eigne meldingar, varslar og eigne rapportar.
+ * preferansar, reiser, egne meldingar, varslar og egne rapportar.
  *
  * Kun brukarens eige data. Interne ID-ar (cuid) inkluderast aldri —
- * uttrekket skal vere sjølvforklarande ved levering.
+ * uttrekket skal være sjølvforklarande ved levering.
  * Rate-limitet via enkel teller.
  */
 

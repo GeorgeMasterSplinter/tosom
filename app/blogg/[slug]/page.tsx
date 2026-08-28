@@ -7,11 +7,11 @@ import { useParams } from 'next/navigation';
 
 const blogPosts = {
   'kompatibilitet': {
-    title: 'Kvifor kompatibilitet betyr meir enn utseende',
+    title: 'Kvifor kompatibilitet betyr mer enn utseende',
     date: '15. januar 2026',
     readTime: '5 min lesing',
     content: `
-      <p>I eit samfunn der vi konstant blir eksponert for bilder og overflatefokus, er det lett å glemtje hva som betyr noko i ein relasjon.</p>
+      <p>I eit samfunn der vi konstant blir eksponert for bilder og overflatefokus, er det lett å glemtje hva som betyr noe i ein relasjon.</p>
       
       <p>Studier viser at kompatibilitet basert på verdier, livssituasjon og emosjonelle mønstre er langt sterkare prediktorar for varige relasjonar enn utseende.</p>
       
@@ -27,9 +27,9 @@ const blogPosts = {
     content: `
       <p>Psykologar har observert at det tek omtrent 30 dagar for to menneske å bygge verktrueleg tillit og forbindelse.</p>
       
-      <p>Den fyrsteuka handlar om å identifisere hverandre. Den andreuka handlar om sårbarheit. Den tredje uka handlar om djupe samtalar. Og den fjerde uka handlar om felles framtid.</p>
+      <p>Den fyrsteuka handlar om å identifisere hverandre. Den andreuka handlar om sårbarheit. Den tredje uka handlar om djupe samtaler. Og den fjerde uka handlar om felles framtid.</p>
       
-      <p>30 dagar er ikke for lang tid — det er nøyaktig den tida som trengst for to menneske å bli kjende på eit nivå som betyr noko.</p>
+      <p>30 dagar er ikke for lang tid — det er nøyaktig den tida som trengst for to menneske å bli kjende på eit nivå som betyr noe.</p>
       
       <p>Tosoms guiderte reise er designa for å støtte denne prosessen med daglege refleksjonar, samtaletema og oppgåver.</p>
     `,

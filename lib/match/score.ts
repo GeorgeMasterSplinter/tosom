@@ -100,7 +100,7 @@ export function calculateMatchStrength(label: number): {
 } {
   if (label >= 90) return { label: 'Djuk tilkopling', color: '#FFD700', description: 'Ekstraordinær styrke i tilkoppling.' };
   if (label >= 70) return { label: 'Sterk tilkopling', color: '#D4AF37', description: 'Sterk og autentisk tilkopling.' };
-  if (label >= 50) return { label: 'God tilkopling', color: '#FFB86C', description: 'God grunnlag for djup samband.' };
+  if (label >= 50) return { label: 'God tilkopling', color: '#FFB86C', description: 'God grunnlag for dypt bånd.' };
   if (label >= 30) return { label: 'Moder tilkopling', color: '#FF82C8', description: 'Tilkoplinga utviklar seg.' };
   return { label: 'Tidleg tilkopling', color: '#8282FF', description: 'Begynnande tilkopling — det tek tid.' };
 }
@@ -114,7 +114,7 @@ export function calculateFuturePotential(label: number): {
   if (label >= 65) return { label: 'Sterkt potensial', color: '#4DFF88', description: 'Sterk grunnlag for framtidig samband.' };
   if (label >= 45) return { label: 'Godt potensial', color: '#FFB86C', description: 'Godt potensial for vekst.' };
   if (label >= 25) return { label: 'Moder potensial', color: '#FF82C8', description: 'Potensial utviklar seg.' };
-  return { label: 'Tidleg potensial', color: '#8282FF', description: 'Enno tidleg — men lovande.' };
+  return { label: 'Tidleg potensial', color: '#8282FF', description: 'Ennå tidleg — men lovande.' };
 }
 
 export function getMatchVisual(score: number): {

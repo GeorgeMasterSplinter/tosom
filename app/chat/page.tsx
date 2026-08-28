@@ -187,8 +187,8 @@ export default function ChatOverviewPage() {
   };
 
   return (
-    <div className="w-full h-screen flex items-center justify-center" style={{ background: color.bg.primary }}>
-      <div className="w-full max-w-[720px] mx-auto flex flex-col min-h-screen" style={{ paddingTop: "96px", paddingBottom: "96px" }}>
+    <div className="w-full h-full flex items-center justify-center" style={{ background: color.bg.primary }}>
+      <div className="tosom-chat-list-wrap w-full max-w-[720px] mx-auto flex flex-col min-h-full">
         <div className="flex-1 flex flex-col rounded-3xl overflow-hidden" style={{
           background: color.glass.bg,
           border: `1px solid ${color.glass.border}`,

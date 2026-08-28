@@ -339,6 +339,9 @@ function ChatInput({
     <div 
       className="px-4 py-3.5 sm:px-6"
       style={{ 
+        // C-4: safe-area — på telefonar med home-indikator (iPhone) dekkjer
+        // ikkje lenger skjermkanten inputfeltet. env() = 0 på desktop.
+        paddingBottom: 'calc(0.875rem + env(safe-area-inset-bottom))',
         borderTop: `1px solid ${moodTheme.accentMuted}`,
         background: `linear-gradient(0deg, rgba(11,21,32,0.8) 0%, rgba(11,21,32,0.4) 100%)`,
         transition: 'border-color 1.2s ease-in-out',
@@ -501,7 +504,7 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
       <MessageBubbleStyles />
 
       <div
-        className="w-full h-full flex flex-col overflow-hidden relative"
+        className="tosom-chat-card w-full h-full flex flex-col overflow-hidden relative"
         style={{
           background: moodTheme.containerBg,
           transition: 'background 1.2s ease-in-out',

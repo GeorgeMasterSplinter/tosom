@@ -193,6 +193,24 @@ export function ChatProvider({
 
   const sendMessage = useCallback(async (content: string, type: MessageType = "text"): Promise<boolean> => {
     if (!conversationId) return false;
+
+    // ── OPTIMISTISK SEND ─────────────────────────────────────────────
+    // Meldinga vises med ein gong (ikkje vent på API-et). Ved feil
+    // rullast ho tilbake, og feilen visast ved inputfeltet.
+    const tempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    // Polling må ikkje tala temp-meldinga som ein «ny» frå serveren
+    lastMsgIdRef.current = tempId;
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: tempId,
+        sender: "me",
+        type,
+        content,
+        metadata: { timestamp: new Date().toISOString(), senderInfo: partner },
+      },
+    ]);
+
     try {
       const res = await fetch("/api/chat/send", {
         method: "POST",
@@ -210,23 +228,32 @@ export function ChatProvider({
       const data = await res.json();
       setSendError(null);
 
-      // Optimistic update — vis melding umiddelbart
-      const newMsgId = data.message.id || `msg-${Date.now()}`;
+      // Byt ut den optimistiske meldinga med serverens (ekte id + tid)
+      const serverMsg = data.message || {};
+      const newMsgId = serverMsg.id || tempId;
       lastMsgIdRef.current = newMsgId;
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: newMsgId,
-          sender: "me",
-          type,
-          content,
-          metadata: { timestamp: new Date().toISOString(), senderInfo: partner },
-        },
-      ]);
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === tempId
+            ? {
+                id: newMsgId,
+                sender: "me",
+                type,
+                content: serverMsg.content || content,
+                metadata: {
+                  timestamp: serverMsg.createdAt || new Date().toISOString(),
+                  senderInfo: partner,
+                },
+              }
+            : m
+        )
+      );
       return true;
     } catch (e) {
       console.error("Feil ved sending av melding:", e);
-      // EIGEN feilstate — polling slettar ikkje denne, så feilen blir synleg
+      // Rull tilbake den optimistiske meldinga + vis feilen
+      // (eigen feilstate — polling slettar ikkje denne, så feilen blir synleg)
+      setMessages((prev) => prev.filter((m) => m.id !== tempId));
       setSendError(e instanceof Error ? e.message : "Kunne ikke sende melding");
       return false;
     }

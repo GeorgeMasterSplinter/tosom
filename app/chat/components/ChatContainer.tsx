@@ -136,17 +136,13 @@ function MessageList({ partner, journeyDay }: {
   const tSecondary = moodTheme.textSecondary;
   const allMessages = ctxMessages;
 
-  // Scroll-manager
-  const scrollResult = useChatScroll(allMessages.length);
-  const scrollRef = scrollResult.scrollRef;
+  // (Auto-scroll ligg no på wrapperen i ChatContainer — refen må vere på
+  //  den eigentlege overflow-y-auto-beholderen for å fungere)
 
   // SKELETON-LASTING
   if (loading && allMessages.length === 0) {
     return (
-      <div className="flex-1 overflow-y-auto p-6 space-y-4" ref={scrollRef} style={{
-        scrollbarWidth: 'thin',
-        scrollbarColor: `${G.goldMuted} transparent`,
-      }}>
+      <div className="p-6 space-y-4">
         {[1, 2, 3].map((i) => (
           <div key={i} className="rounded-[20px] px-5 py-4 animate-pulse" style={{
             background: G.glassBg,
@@ -162,7 +158,7 @@ function MessageList({ partner, journeyDay }: {
   // EMPTY-STATE
   if (allMessages.length === 0 && !error) {
     return (
-      <div className="flex-1 overflow-y-auto p-6 flex items-center justify-center" ref={scrollRef}>
+      <div className="h-full p-6 flex items-center justify-center">
         <div className="text-center max-w-sm">
           <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${G.goldSoft}, ${G.goldMuted})`, border: `1px solid ${G.goldMuted}` }}>
             <span className="text-2xl">💬</span>
@@ -177,7 +173,7 @@ function MessageList({ partner, journeyDay }: {
   // ERROR-STATE
   if (error && allMessages.length === 0) {
     return (
-      <div className="flex-1 overflow-y-auto p-6 flex items-center justify-center" ref={scrollRef}>
+      <div className="h-full p-6 flex items-center justify-center">
         <div className="text-center rounded-[20px] p-8 max-w-sm" style={{ background: G.glassBg, border: "1px solid rgba(255,77,77,0.15)" }}>
           <p className="text-lg font-medium mb-3" style={{ color: G.dangerRed }}>Kunne ikke laste samtalen</p>
           <p className="text-sm mb-4" style={{ color: tSecondary }}>{error}</p>
@@ -190,11 +186,8 @@ function MessageList({ partner, journeyDay }: {
   // MELDINGAR — premium med warm-glow animasjon + mood-bakgrunn
   return (
     <div
-      ref={scrollRef}
       className="px-6 mood-background"
       style={{
-        scrollbarWidth: 'thin',
-        scrollbarColor: `${G.goldMuted} transparent`,
         backgroundImage: 'none',
         backgroundSize: 'cover',
         transition: 'background-image 1.5s ease-in-out',
@@ -494,6 +487,11 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
   const sessionUserId = ctx.sessionUserId;
   const moodTheme = ctx.moodTheme;
 
+  // Scroll-manager — refen MÅ vere på wrapperen under (den eigentlege
+  // overflow-y-auto-beholderen). Tidlegare hanka hooken på ein indre div
+  // som ikkje kunne scrolle, og nye meldingar gjekk framfor alt.
+  const scrollRef = useChatScroll(ctx.messages.length).scrollRef;
+
   // Partner ID for presence tracking
   const partnerId = partner?.id || null;
 
@@ -549,8 +547,9 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
           </div>
         )}
 
-        {/* MESSAGE LIST — fyller mellom header og input */}
+        {/* MESSAGE LIST — fyller mellom header og input (den eigentlege scroll-beholderen) */}
         <div
+          ref={scrollRef}
           className="flex-1 overflow-y-auto"
           style={{
             scrollbarWidth: 'thin',

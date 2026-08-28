@@ -5,8 +5,9 @@
  * Funksjonar:
  * - scrollToBottom() — glir til botnen
  * - smoothScroll — myk scrolling
- * - autoScroll på ny melding
- * - scrollOnSystemMessage — prioritere systemmeldingar
+ * - autoScroll på ny melding — siste melding står ALLTID synleg nede
+ *   (uansett kven som sender; avgjort 2026-08-28). Fyrste lasting er
+ *   øyeblikks-scroll, så ingen lang animasjon over historia.
  */
 
 import { useRef, useEffect, useCallback } from "react";
@@ -52,20 +53,31 @@ export function useChatScroll(dependency?: unknown): ChatScrollResult {
     scrollToBottom({ behavior: "smooth" });
   }, [scrollToBottom]);
 
-  // Auto-scroll når ny melding kjem — bare om brukaren allerede er ved botnen
+  // Siste melding skal ALLTID stå synleg nede, uansett kven som sender
+  // (kreist i CHAT-POLISH 2026-08-28). Alt anna skrus opp over.
+  //
+  // Fyrste gong lista får innhald: øyeblikks-scroll (landing ved siste
+  // melding utan lang smooth-scroll over historia). Deretter myk scroll
+  // ved kvar ny melding.
+  const hasContentRef = useRef(false);
   useEffect(() => {
     if (dependency === undefined) return;
     
     const el = scrollRef.current;
     if (!el) return;
 
-    // Berre auto-scroll hvis brukaren er nær botnen
-    if (isAtBottom()) {
+    const count = typeof dependency === "number" ? dependency : 0;
+    const instant = count > 0 && !hasContentRef.current;
+    if (count > 0) hasContentRef.current = true;
+
+    // Dobbelt rAF: nytt innhald (fleirlinjet tekst, bilete) må legga seg
+    // i layouten FØR scrollHeight målast.
+    requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        scrollToBottom({ behavior: "smooth" });
+        scrollToBottom({ behavior: instant ? "auto" : "smooth" });
       });
-    }
-  }, [dependency, isAtBottom, scrollToBottom]);
+    });
+  }, [dependency, scrollToBottom]);
 
   return {
     scrollRef,

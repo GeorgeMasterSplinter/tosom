@@ -177,8 +177,29 @@ jobs:
         env:
           DATABASE_URL: ${{ env.DATABASE_URL }}
 
+      # E2E forventer guidede spørsmål i databasen (testen «10 kategorier med
+      # spørsmål-antall»). Seed-skriptet fantes, men ble aldri kjørt i CI —
+      # testen kunne derfor aldri passere.
+      - name: Seed guided questions
+        run: npx tsx prisma/seed-guided-questions.ts || npx ts-node prisma/seed-guided-questions.ts
+        env:
+          DATABASE_URL: ${{ env.DATABASE_URL }}
+        continue-on-error: true
+
+      # E2E-testbrukarane (testA/testB) må ha reell match + samtale + journey
+      # dag 1 — ellers har chat-, match- og journey-testene ingenting å vise.
+      # Skriptet er idempotent og nullstill òg onboarding-brukaren kvar gong.
+      - name: Seed E2E test users
+        run: npx tsx prisma/seed-e2e-users.ts || npx ts-node prisma/seed-e2e-users.ts
+        env:
+          DATABASE_URL: ${{ env.DATABASE_URL }}
+
+      # playwright.config.ts har seks prosjekter som krever chromium, firefox
+      # OG webkit (Mobile Safari). Tidligere installerte CI kun chromium — de
+      # øvrige feilet med «Executable doesn't exist», ikke på grunn av appen.
+      # Det var 56 av 90 feil i den lokale kjøringen 28.08.
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install --with-deps chromium firefox webkit
 
       - name: Build app for E2E
         run: npm run build
@@ -269,6 +290,11 @@ jobs:
           echo "PASS: No AI references found."
 
   # ─── LANGUAGE GUARD (bokmål-only) ───
+  # Kjører SAMME skript som utviklere kjører lokalt (npm run verify:lang).
+  # Tidligere lå ordlisten inline her og var case-sensitiv: «Brukar», «Berre»,
+  # «Ikkje» og «Kva» med stor forbokstav slapp gjennom i månedsvis, og den
+  # lokale vakten brukte en annen, svakere liste. Resultatet var at CI kunne
+  # være «grønn» mens 61 treff lå i koden. Én kilde nå: scripts/verify-language.mjs
   lang-guard:
     name: Language Guard
     runs-on: ubuntu-latest
@@ -276,18 +302,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
       - name: Check no nynorsk words remain
-        run: |
-          echo "Checking for nynorsk words (should be bokmal)..."
-          FOUND=$(grep -rnE '\bikkje\b|\bberre\b|\bkva\b|\bkvarandre\b|\bavslutta\b|\bsjå\b|\bnokon\b|\bkorleis\b|\bpåverka\b|\bmykje\b|\ballereie\b|\bfunnen\b|\bbrukar\b|\bbrukarar\b|\bbrukarane\b|ver vennleg' \
-            app lib components hooks providers 2>/dev/null \
-            | grep -v node_modules || true)
-          if [ -n "$FOUND" ]; then
-            echo "FAIL: Nynorsk words detected (use bokmal):"
-            echo "$FOUND"
-            exit 1
-          fi
-          echo "PASS: No nynorsk references found."
+        run: npm run verify:lang
 
   # ─── CRON CONFIGURATION GUARD (STEG 1.4) ───
   cron-guard:

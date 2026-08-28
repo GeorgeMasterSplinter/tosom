@@ -37,6 +37,13 @@ const TEST_USERS: Record<string, {
     role: 'ADMIN',
     description: 'Admin-testbruker med tilgang til admin-panel',
   },
+  'onboarding': {
+    id: 'e2e.onboarding@tosom.dev',
+    email: 'e2e.onboarding@tosom.dev',
+    name: 'E2E Onboarding',
+    role: 'USER',
+    description: 'E2E testbruker — påbegynt onboarding',
+  },
 };
 
 export async function GET() {

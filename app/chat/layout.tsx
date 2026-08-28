@@ -4,8 +4,8 @@
  *
  * CHAT-POLISH (C-4): responsivt
  *  - 100dvh (dynamisk viewporthøgd) — på mobil legg adresselinja no lenger
- *    ikkje inputfeltet bak seg (h-screen/100vh ignorerer nettleser-kromen).
- *    Fallback: 100vh for nettlesarar utan dvh-støtte.
+ *    ikke inputfeltet bak seg (h-screen/100vh ignorerer nettleser-kromen).
+ *    Fallback: 100vh for nettlesarar uten dvh-støtte.
  *  - Desktop (≥768px): samtalen blir eit sentrert kort i staden for
  *    fullbredd-mørk vegg (samarbeid med .tosom-chat-card på ChatContainer).
  */
@@ -42,12 +42,12 @@ export default function ChatLayout({
           .tosom-chat-list-wrap { padding: 96px; }
         }
       `}</style>
-      <div
+      <main
         className="tosom-chat-layout w-full overflow-hidden"
         style={{ background: "#0B1520" }}
       >
         {children}
-      </div>
+      </main>
     </>
   );
 }

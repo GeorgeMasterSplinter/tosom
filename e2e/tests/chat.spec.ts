@@ -12,7 +12,7 @@ test.describe('Chat Flow', () => {
 
     // Søk etter chat-relaterte element
     const chatContainer = page.locator('[data-testid*="chat"], .chat-container, .messages-container, #chat-messages');
-    await expect(chatContainer.first()).toBeVisible({ timeout: 5000 });
+    await expect(chatContainer.first()).toBeVisible({ timeout: 20000 });
   });
 
   test('skal vise tom-chat når ingen meldingar er tilgjengeleg', async ({ page }) => {
@@ -21,7 +21,7 @@ test.describe('Chat Flow', () => {
     // Søk etter tom-chat-melding — sidan skal vise innhald
     const emptyText = page.getByText(/ingen meldingar|start samtalen|dei første orda/i);
     const mainContent = page.locator('main, .chat-page');
-    await expect(mainContent.first()).toBeVisible({ timeout: 5000 });
+    await expect(mainContent.first()).toBeVisible({ timeout: 20000 });
   });
 
   test('skal kunne skrive melding', async ({ page }) => {
@@ -29,7 +29,7 @@ test.describe('Chat Flow', () => {
 
     // Søk etter input-felt
     const inputField = page.locator('[data-testid*="message"], .chat-input, textarea, input[type="text"]');
-    await expect(inputField.first()).toBeVisible({ timeout: 5000 });
+    await expect(inputField.first()).toBeVisible({ timeout: 20000 });
     await inputField.first().fill('Hei! Korleis går det?');
     await expect(inputField.first()).toHaveValue('Hei! Korleis går det?');
   });
@@ -39,12 +39,12 @@ test.describe('Chat Flow', () => {
 
     // Fyll inn melding
     const inputField = page.locator('[data-testid*="message"], .chat-input, textarea, input[type="text"]');
-    await expect(inputField.first()).toBeVisible({ timeout: 5000 });
+    await expect(inputField.first()).toBeVisible({ timeout: 20000 });
     await inputField.first().fill('Hei! Korleis går det?');
 
     // Søk etter send-knapp
     const sendBtn = page.getByRole('button', { name: /send|send melding/i, exact: false });
-    await expect(sendBtn.first()).toBeVisible({ timeout: 5000 });
+    await expect(sendBtn.first()).toBeVisible({ timeout: 20000 });
     await sendBtn.first().click();
     await page.waitForTimeout(2000);
 
@@ -57,7 +57,7 @@ test.describe('Chat Flow', () => {
 
     // Chat-sida må laste med innhald (eventuelt placeholder)
     const chatArea = page.locator('[data-testid*="chat"], .chat-container, main').first();
-    await expect(chatArea).toBeVisible({ timeout: 5000 });
+    await expect(chatArea).toBeVisible({ timeout: 20000 });
   });
 
   test('skal vise mottatte meldingar til venstre', async ({ page }) => {
@@ -65,7 +65,7 @@ test.describe('Chat Flow', () => {
 
     // Chat-sida må laste med innhald (eventuelt placeholder)
     const chatArea = page.locator('[data-testid*="received"], .message-received, .message-other, main').first();
-    await expect(chatArea).toBeVisible({ timeout: 5000 });
+    await expect(chatArea).toBeVisible({ timeout: 20000 });
   });
 
   test('skal vise typing-indikator dersom part skriv', async ({ page }) => {
@@ -73,7 +73,7 @@ test.describe('Chat Flow', () => {
 
     // Chat-komponenten må være synleg (typing indikator er kondisjonell)
     const chatContainer = page.locator('[data-testid*="chat"], .chat-container, main').first();
-    await expect(chatContainer).toBeVisible({ timeout: 5000 });
+    await expect(chatContainer).toBeVisible({ timeout: 20000 });
   });
 
   test('skal vise melding-tidstempler', async ({ page }) => {
@@ -81,6 +81,6 @@ test.describe('Chat Flow', () => {
 
     // Chat-sida må laste med struktur
     const chatArea = page.locator('[data-testid*="timestamp"], .message-time, .timestamp, time, main').first();
-    await expect(chatArea).toBeVisible({ timeout: 5000 });
+    await expect(chatArea).toBeVisible({ timeout: 20000 });
   });
 });

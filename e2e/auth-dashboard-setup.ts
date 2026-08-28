@@ -40,10 +40,10 @@ async function globalSetup(config: FullConfig) {
     console.warn('[dashboard-auth] Advarsel: /api/dev-login/users responderte ikkje innan 20s');
   }
 
-  // Klikk på dashboard-brukaren spesifikt
-  const dashboardButton = page.locator('button', { hasText: /E2E Dashboard/ });
+  // Klikk på dashboard-brukaren spesifikt (Test A — seeda med match + samtale)
+  const dashboardButton = page.locator('button', { hasText: /Test A/ });
   if (await dashboardButton.count() > 0) {
-    console.log('[dashboard-auth] Funnet E2E Dashboard-brukar, klikkar...');
+    console.log('[dashboard-auth] Funnet Test A-brukar, klikkar...');
     await dashboardButton.click();
 
     // Vent på redirect til dashboard

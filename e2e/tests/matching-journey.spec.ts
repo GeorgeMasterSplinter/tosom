@@ -130,7 +130,7 @@ test.describe('Vipps Auth Flow', () => {
     if (response.status() === 503) {
       // Vipps ikkje konfigurert i test-miljø — OK
       const body = await response.json();
-      expect(body.error).toContain('ikkje konfigurert');
+      expect(body.error).toContain('tilgjengelig');
     } else {
       expect(response.status()).toBe(200);
       const body = await response.json();

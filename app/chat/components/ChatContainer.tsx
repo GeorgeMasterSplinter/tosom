@@ -1,6 +1,6 @@
 /**
  * Tosom — ChatContainer (Premium Nordic Gold 2026) ⭐🟡
- * Heilt ny versjon: roleg, lett og premium.
+ * Helt ny versjon: roleg, lett og premium.
  * Premium bubble-animasjonar + resonance-glow + mood-engine + partner presence.
  * Integrerer ChatHeader og BliKjentPanel.
  *
@@ -136,7 +136,7 @@ function MessageList({ partner, journeyDay }: {
   const tSecondary = moodTheme.textSecondary;
   const allMessages = ctxMessages;
 
-  // (Auto-scroll ligg no på wrapperen i ChatContainer — refen må vere på
+  // (Auto-scroll ligg no på wrapperen i ChatContainer — refen må være på
   //  den eigentlege overflow-y-auto-beholderen for å fungere)
 
   // SKELETON-LASTING
@@ -281,7 +281,7 @@ function ChatInput({
     setSending(true);
     try {
       const ok = await sendMessage(text.trim(), "text");
-      // Tøm inputfeltet berre ved SUKSES — ved feil står meldinga igjen
+      // Tøm inputfeltet kun ved SUKSESS — ved feil står meldingen igjen
       // (kan sendast på nytt) og sendError blir vist over feltet.
       if (ok) {
         setText("");
@@ -340,17 +340,17 @@ function ChatInput({
       className="px-4 py-3.5 sm:px-6"
       style={{ 
         // C-4: safe-area — på telefonar med home-indikator (iPhone) dekkjer
-        // ikkje lenger skjermkanten inputfeltet. env() = 0 på desktop.
+        // ikke lenger skjermkanten inputfeltet. env() = 0 på desktop.
         paddingBottom: 'calc(0.875rem + env(safe-area-inset-bottom))',
         borderTop: `1px solid ${moodTheme.accentMuted}`,
         background: `linear-gradient(0deg, rgba(11,21,32,0.8) 0%, rgba(11,21,32,0.4) 100%)`,
         transition: 'border-color 1.2s ease-in-out',
       }}
     >
-      {/* Send-feil — synleg til neste vellykka send (polling slettar ikkje denne) */}
+      {/* Send-feil — synlig til neste vellykkede send (polling sletter ikke denne) */}
       {sendError && (
         <p className="px-2 pb-2 text-xs" style={{ color: G.dangerRed }} role="alert">
-          ⚠ {sendError} — meldinga er ikkje send, prøv igjen
+          ⚠ {sendError} — meldingen ble ikke sendt, prøv igjen
         </p>
       )}
 
@@ -424,6 +424,7 @@ function ChatInput({
         {/* Send-knapp — Premium gull-gradient sirkel */}
         <button
           onClick={handleSend}
+          aria-label="Send melding"
           disabled={!text.trim() || sending}
           className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-90 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100"
           style={{
@@ -490,9 +491,9 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
   const sessionUserId = ctx.sessionUserId;
   const moodTheme = ctx.moodTheme;
 
-  // Scroll-manager — refen MÅ vere på wrapperen under (den eigentlege
+  // Scroll-manager — refen MÅ være på wrapperen under (den eigentlege
   // overflow-y-auto-beholderen). Tidlegare hanka hooken på ein indre div
-  // som ikkje kunne scrolle, og nye meldingar gjekk framfor alt.
+  // som ikke kunne scrolle, og nye meldinger gikk foran alt.
   const scrollRef = useChatScroll(ctx.messages.length).scrollRef;
 
   // Partner ID for presence tracking
@@ -505,6 +506,7 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
 
       <div
         className="tosom-chat-card w-full h-full flex flex-col overflow-hidden relative"
+        data-testid="chat-container"
         style={{
           background: moodTheme.containerBg,
           transition: 'background 1.2s ease-in-out',
@@ -523,7 +525,7 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
           moodTheme={moodTheme}
         />
 
-        {/* BLI KJENT PANEL — slide-down frå header */}
+        {/* BLI KJENT PANEL — slide-down fra header */}
         {isBliKjentOpen && (
           <div className="relative z-10">
             <BliKjentPanel
@@ -532,7 +534,7 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
           </div>
         )}
 
-        {/* OPPGAVER PANEL — slide-down frå header */}
+        {/* OPPGAVER PANEL — slide-down fra header */}
         {isOppgaverOpen && (
           <div className="relative z-10">
             <OppgaverPanel
@@ -541,7 +543,7 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
           </div>
         )}
 
-        {/* MOODS PANEL — slide-down frå header */}
+        {/* MOODS PANEL — slide-down fra header */}
         {isMoodsOpen && (
           <div className="relative z-10">
             <MoodsPanel

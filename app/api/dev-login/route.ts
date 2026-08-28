@@ -61,6 +61,13 @@ const TEST_USERS: Record<string, {
     role: 'ADMIN',
     description: 'Admin-testbruker med tilgang til admin-panel',
   },
+  'onboarding': {
+    id: 'devuser_onboarding',
+    email: 'e2e.onboarding@tosom.dev',
+    name: 'E2E Onboarding',
+    role: 'USER',
+    description: 'E2E testbruker — påbegynt onboarding (nullstilles av seed-e2e-users)',
+  },
 };
 
 type DevRedirectTarget = 'onboarding' | 'dashboard' | 'journey' | 'chat';
@@ -299,10 +306,23 @@ export async function GET(req: NextRequest) {
 
   // S4 FIX: Opprett verification token og redirect til NextAuth callback
   // Callback-en vil sette session-cookie og redirecte videre
+  //
+  // Viktig: bygg redirect-URLen fra klientens faktiske host (host-header),
+  // IKKE fra req.url. req.url normaliserer hosten til NEXTAUTH_URL
+  // (localhost), mens nettlesaren kan ha navigert via 127.0.0.1 eller en
+  // annen host. Da peker 307'en på en annen origin enn siden, og nettleseren
+  // avslår redirectet (CORS/«Failed to fetch») slik at session-cookieen
+  // aldri settes. host-headeren alltid er den originen klienten faktisk bruker.
+  const host = req.headers.get('host') || new URL(req.url).host;
+  const proto = (req.headers.get('x-forwarded-proto') || 'http')
+    .split(',')[0]
+    .trim();
+  const clientOrigin = `${proto}://${host}`;
+
   try {
     const token = await createDevVerificationToken(testUser);
 
-    const callbackUrl = new URL('/api/auth/callback/email', req.url);
+    const callbackUrl = new URL('/api/auth/callback/email', clientOrigin);
     callbackUrl.searchParams.set('token', token);
     callbackUrl.searchParams.set('callbackUrl', `/${getRedirectTarget(userId, existingProgress)}`);
 
@@ -310,7 +330,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(callbackUrl);
   } catch (err) {
     console.error('[Dev Login] Token creation failed:', err);
-    const loginUrl = new URL('/login', req.url);
+    const loginUrl = new URL('/login', clientOrigin);
     loginUrl.searchParams.set('email', testUser.email);
     return NextResponse.redirect(loginUrl);
   }
@@ -381,7 +401,16 @@ export async function POST(req: NextRequest) {
       redirectUrl = `/${getRedirectTarget(userId, existingProgress)}`;
     }
 
-    const callbackUrl = new URL('/api/auth/callback/email', req.url);
+    // Redirect-URLen bygg frå klientens faktiske host (host-header), sjå
+    // kommentar i GET-hendlaren: req.url peikar på localhost, og ein 307
+    // til annan origin blir avvist av nettlesaren (ingen session-cookie).
+    const host = req.headers.get('host') || new URL(req.url).host;
+    const proto = (req.headers.get('x-forwarded-proto') || 'http')
+      .split(',')[0]
+      .trim();
+    const clientOrigin = `${proto}://${host}`;
+
+    const callbackUrl = new URL('/api/auth/callback/email', clientOrigin);
     callbackUrl.searchParams.set('token', token);
     callbackUrl.searchParams.set('callbackUrl', redirectUrl);
 

@@ -11,6 +11,7 @@
 
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
+import EmailProvider from "next-auth/providers/email"
 import { adapter } from "@/lib/auth/prisma-adapter"
 import { prisma } from "@/lib/prisma"
 import { defaultRole } from "@/lib/auth/roles"
@@ -20,6 +21,26 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter,
 
   providers: [
+    // DEV-ONLY: /api/dev-login lager VerificationToken direkte i DB og
+    // redirecter til /api/auth/callback/email. Uten EmailProvider eksisterer
+    // callback-en ikke, og dev-login (og dermed alle E2E-testene) dør med
+    // error=Configuration. Utrykt når DEV_LOGIN_ENABLED != "true", inkludert
+    // i produksjon (der dev-login dessuten er 404).
+    ...(process.env.DEV_LOGIN_ENABLED === "true"
+      ? [
+          EmailProvider({
+            // Dummy-SMTP: sendVerificationRequest er overridden (tom), så
+            // ingen faktisk tilkobling blir noen gang laget — men v5 krev
+            // likevel eit `server`-felt ved provider-oppdatt.
+            server: "smtp://dev:dev@localhost:25",
+            from: "dev@tosom.local",
+            maxAge: 60 * 60 * 24, // samsvarer med dev-login-tokenets levetid
+            async sendVerificationRequest() {
+              // Medviss tomt: ingen epost sendes — dev-login lager tokenen selv.
+            },
+          }),
+        ]
+      : []),
     CredentialsProvider({
       name: "Email & Passord",
       credentials: {

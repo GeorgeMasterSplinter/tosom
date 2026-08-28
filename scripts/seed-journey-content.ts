@@ -283,7 +283,7 @@ const JOURNEY_CONTENT: DayContentData[] = [
     day: 28,
     phase: 'CHECKIN',
     theme: 'Når du er sint',
-    reflectionQuestion: 'Kva gjer du når du er sint? Gått du i dekning, eller konfronter du?",
+    reflectionQuestion: 'Kva gjer du når du er sint? Gått du i dekning, eller konfronter du?',
     conversationPrompt: 'Fortel om ein gong du var sint — og korlei du håndterte det. Kva lærte deg av den opplevinga?',
     task: 'Del ein måte å handtere sinne på — og spør partneren om den same.',
     resonanceGoal: 'Sinne-håndtering og respekt',

@@ -1,14 +1,14 @@
 {
   "version": "1.0",
   "updatedAt": "2026-08-28",
-  "commit": "9ab7041",
+  "commit": "a10767a",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
-    "tests": "344/345 (40 suiter, 1 skippet)",
+    "tests": "366/367 (43 suiter, 1 skippet)",
     "typecheck": "0 errors",
     "lint": "0 warnings",
     "ciGuards": "6/6 grønne (lang, ai, concept, one-engine, 05:00, cron)",
-    "productionBuild": "verified (2026-08-24, etter F2-skalering + atomisk kvote)"
+    "productionBuild": "verified (2026-08-28, etter CHAT-POLISH-bølgja)"
   },
   "currentPhaseId": "apen-beta-test",
   "blockers": [
@@ -56,6 +56,12 @@
     }
   ],
   "leveranser": [
+    {
+      "dato": "2026-08-28",
+      "id": "CHAT-POLISH",
+      "title": "CHAT-POLISH: chat-UX, kjelde-etikettar, responsivt, dag-0-dashboard, klient-routing (bestilt av George)",
+      "content": "9 leveringar i éin bølge (alle verifiserte: tsc 0, jest 366/367, lint 0, prod-build OK): (1) Boble-brede — korte ord delast ikkje lenger (maxWidth på flex-itemen, ikkje på ein div INNI shrink-to-fit-colonna) + timestamp flytt utanfor bobla. (2) Scroll — siste melding står ALLTID synleg nede uansett kven som sender; fyrste lasting er øyeblikks-scroll, resten myk; scroll-refen flytt til den eigentlege overflow-beholderen (hooken hanka tidlegare på ein div som ikkje kunne scrolle). (3) Ekte optimistisk send — temp-melding vises med ein gong, byttest ut med server-meldinga, rullast tilbake ved feil + input beholdast. (4) Kjelde-etikettar — ny Message.source (fritt tekstfelt, IKKE enum; migrasjon 20260828120000) med «💎 Bli kjent»-/«📋 Oppgave»-badge i bobla; BliKjentPanel/OppgaverPanel sender source med. (5) Mood — ny kontrakttest __tests__/chat-mood-shared.test.ts (6 tester) bevisar delt mood via pollingsruta (A setjer → B ser via /api/chat/messages); statisk diagnose: koden er sound, prod-problemet er sannsynlegvis 3s-pollingsforsinking eller gammalt bundle — live-checkliste i nextAction. (6) Responsivt — 100dvh (fallback 100vh) i chat-layout + safe-area-inset på inputfeltet + desktop-kort (720px, radius 24) for samtalen; samtalelista får 16px padding på mobil i staden for 96px. (7) MoodsPanel — hint: «Stemninga er delt — når du byter, endrar den seg for begge». (8) Dashboard dag-0 — «Dag 0 — starter»-chip i kalendera + hint under CTA («Dag 1 startar når X også har vært innom ein gong»). (9) Preformance — 21 window.location.href erstatta med router.push/replace (login/dev-login/401-reset halde hard-navigasjon MED VILEJE) + loading.tsx på /betaling + BliKjent-panel: «✓ brukt»-merking + telling per kategori for allereie spurde spørsmål. DRIFT (George, FØR push): `npx prisma migrate deploy` mot prod-DB (Message.source) — CI køyrer òg deploy, men manuell fyrst unngår race med Vercel-deployen."
+    },
     {
       "dato": "2026-08-28",
       "id": "CHAT-BUBLE-SYNLIGHET",
@@ -161,7 +167,7 @@
       "/metoder — ikke lenket noe sted"
     ]
   },
-  "nextAction": "Bølge B er DONE (B-1..B-5 agent-arbeid, B-6/B-7 bekreftet). George: B-7 (slipp inn 10→50 testere) + DRIFT: set ADMIN_PASSWORD_HASH i env (node scripts/generate-admin-hash.mjs \"<passord>\") — gammelt ADMIN_PASSWORD virker ikke lenger. Nå: Bølge CHAT-POLISH startet 2026-08-28 (bestilt av George): boble-bredd (kort tekst deles), scroll (siste melding alltid synlig nede), ekte optimistisk send, «Bli Kjent»/«Oppgave»-etikett i boblen, mood-verifisering (prod: virker ikke som den skal — live-diagnose nødvendig), responsivt chat (dvh/desktop-kort), dag-0-polsing på dashboard (variant A: behol «begge skal være innom»), klient-routing i stedenfor full-reload. Prod = main (Vercel auto-deploy verifisert: build 1787869967843 = 28.08 00:33, 1 min etter siste commit).",
+  "nextAction": "CHAT-POLISH-bølgja er DONE (9 leveringar; tsc 0, jest 366/367, lint 0, prod-build OK). NESTE FOR GEORGE: (1) DRIFT FØR push: `DATABASE_URL=\"<prod>\" npx prisma migrate deploy` — legger på Message.source-kolonna (CI deployar òg, men manuell fyrst unngår kort race-vindau der ny kode les kolonn som ikkje finst). (2) Pusha main → Vercel auto-deploy. (3) Live mood-diagnose i prod (to testere, to nettlesarar): A byter mood i MoodsPanel-panelet → B skal sjå fargene bytte seg INNAN ~3 SEKUND; sjekk i B si Network-tabell at GET /api/chat/messages-responsen inneheld feltet «mood». Koden er no kontrakt-testa (chat-mood-shared) — om det framleis ikkje synkar i prod er det polling/nettverksnivå, ikkje logikk. (4) B-7: slipp inn 10→50 testere.",
   "gjenstaarFoerBeta": [
     "Manuell sjekkliste — nå konsolidert i GEORGE.md (steg 2–9, env-liste, kill switches)"
   ],

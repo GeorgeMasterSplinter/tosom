@@ -57,7 +57,7 @@ export function BliKjentPanel({ onClose }: BliKjentPanelProps) {
     if (!selectedQuestion || sending) return;
     setSending(true);
     try {
-      await sendMessage(selectedQuestion, 'text');
+      await sendMessage(selectedQuestion, 'text', { source: 'bli_kjent' });
       setTimeout(() => onClose(), 200);
     } catch (err) {
       console.error('Feil ved sending av spørsmål:', err);

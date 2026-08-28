@@ -76,7 +76,7 @@ async function postHandler(request: Request) {
       );
     }
 
-    const { conversationId, content, type } = validation.data;
+    const { conversationId, content, type, source } = validation.data;
 
     // Map frontend type → Prisma MessageCategory
     const mappedType = mapMessageType(type ?? "text");
@@ -107,6 +107,7 @@ async function postHandler(request: Request) {
         senderId: session.user.id,
         content,
         type: mappedType,
+        ...(source ? { source } : {}),
       },
       include: {
         sender: {

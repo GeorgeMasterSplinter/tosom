@@ -62,6 +62,8 @@ export interface MessageData {
     phase?: string;
     timestamp?: Date | string;
     senderInfo?: { name: string; imageUrl?: string };
+    /** CHAT-POLISH (C-2): kjelde for boble-etikett */
+    source?: "bli_kjent" | "oppgave";
   };
 }
 
@@ -416,8 +418,8 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
               />
             )}
 
-            {/* Bli kjent-badge med glowPulse hover */}
-            {isBliKjent && (
+            {/* Kjelde-etikett — kva fløya meldinga kjem frå (CHAT-POLISH C-2) */}
+            {(isBliKjent || metadata?.source === "bli_kjent") && (
               <div className="flex items-center gap-1.5 mb-2">
                 <div
                   className="px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase transition-all duration-300 hover:animate-glowPulse"
@@ -428,6 +430,20 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
                   }}
                 >
                   💎 Bli kjent
+                </div>
+              </div>
+            )}
+            {metadata?.source === "oppgave" && (
+              <div className="flex items-center gap-1.5 mb-2">
+                <div
+                  className="px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase"
+                  style={{
+                    background: 'rgba(143, 163, 173, 0.15)',
+                    border: '1px solid rgba(143, 163, 173, 0.35)',
+                    color: '#9FB3BD',
+                  }}
+                >
+                  📋 Oppgave
                 </div>
               </div>
             )}

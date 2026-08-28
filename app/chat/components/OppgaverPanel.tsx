@@ -57,7 +57,7 @@ export function OppgaverPanel({ onClose }: OppgaverPanelProps) {
     if (!selectedTask || sending) return;
     setSending(true);
     try {
-      await sendMessage(selectedTask, 'text');
+      await sendMessage(selectedTask, 'text', { source: 'oppgave' });
       setTimeout(() => onClose(), 200);
     } catch (err) {
       console.error('Feil ved sending av oppgave:', err);

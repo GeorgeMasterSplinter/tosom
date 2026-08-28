@@ -33,6 +33,8 @@ export interface ChatMessage {
     phase?: string;
     timestamp?: Date | string;
     senderInfo?: { name: string; imageUrl?: string };
+    /** CHAT-POLISH (C-2): kjelde for boble-etikett */
+    source?: "bli_kjent" | "oppgave";
   };
 }
 
@@ -56,7 +58,7 @@ export interface ChatContextValue {
   /** Send-feil (vises ved inputfeltet; polling slettar ikkje denne) */
   sendError: string | null;
   sessionUserId: string | null;
-  sendMessage: (content: string, type?: MessageType) => Promise<boolean>;
+  sendMessage: (content: string, type?: MessageType, options?: { source?: "bli_kjent" | "oppgave" }) => Promise<boolean>;
   loadMessages: () => Promise<void>;
   /** Aktive mood */
   mood: MoodId;
@@ -150,6 +152,7 @@ export function ChatProvider({
           metadata: {
             timestamp: m.createdAt,
             senderInfo,
+            ...(m.source ? { source: m.source as "bli_kjent" | "oppgave" } : {}),
           },
         };
       });
@@ -191,7 +194,7 @@ export function ChatProvider({
     };
   }, [conversationId, loadMessages]);
 
-  const sendMessage = useCallback(async (content: string, type: MessageType = "text"): Promise<boolean> => {
+  const sendMessage = useCallback(async (content: string, type: MessageType = "text", options?: { source?: "bli_kjent" | "oppgave" }): Promise<boolean> => {
     if (!conversationId) return false;
 
     // ── OPTIMISTISK SEND ─────────────────────────────────────────────
@@ -215,7 +218,7 @@ export function ChatProvider({
       const res = await fetch("/api/chat/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ conversationId, content, type }),
+        body: JSON.stringify({ conversationId, content, type, ...(options?.source ? { source: options.source } : {}) }),
       });
       if (!res.ok) {
         let detail = `Feil ved sending: ${res.status}`;

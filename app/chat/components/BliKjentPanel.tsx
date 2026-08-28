@@ -41,11 +41,21 @@ interface BliKjentPanelProps {
 }
 
 export function BliKjentPanel({ onClose }: BliKjentPanelProps) {
-  const { sendMessage, moodTheme } = useChat();
+  const { sendMessage, moodTheme, messages } = useChat();
   const [selectedCategory, setSelectedCategory] = useState<QuestionCategory | null>(null);
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);
+
+  // C-6: kva spørsmål er ALLEREDE spurt i denne samtalen
+  // (metadata.source === 'bli_kjent' — set i send-fløya, C-2)
+  const usedQuestions = new Set(
+    messages
+      .filter((m) => m.metadata?.source === 'bli_kjent')
+      .map((m) => m.content.trim())
+  );
+  const usedInCategory = (category: QuestionCategory) =>
+    category.questions.filter((q) => usedQuestions.has(q.trim())).length;
 
   // Animer panel-open
   useState(() => {
@@ -158,7 +168,9 @@ export function BliKjentPanel({ onClose }: BliKjentPanelProps) {
                     </div>
                     <div className="text-center">
                       <p className="text-xs font-semibold tracking-wide" style={{ color: G.textPrimary }}>{cat.name}</p>
-                      <p className="text-[10px] mt-0.5 font-medium" style={{ color: G.textSecondary }}>{cat.questions.length} spørsmål</p>
+                      <p className="text-[10px] mt-0.5 font-medium" style={{ color: G.textSecondary }}>
+                        {cat.questions.length} spørsmål{usedInCategory(cat) > 0 ? ` · ✓ ${usedInCategory(cat)} brukt` : ''}
+                      </p>
                     </div>
                   </button>
                 ))}
@@ -169,7 +181,9 @@ export function BliKjentPanel({ onClose }: BliKjentPanelProps) {
           {/* ═══ SPØRSMÅL ═══ */}
           {selectedCategory && (
             <div className="space-y-2.5">
-              {selectedCategory.questions.map((q, i) => (
+              {selectedCategory.questions.map((q, i) => {
+                const isUsed = usedQuestions.has(q.trim());
+                return (
                 <button
                   key={i}
                   onClick={() => setSelectedQuestion(q)}
@@ -179,6 +193,7 @@ export function BliKjentPanel({ onClose }: BliKjentPanelProps) {
                       ? `linear-gradient(135deg, ${moodTheme.accentSoft}, ${moodTheme.accentMuted})`
                       : `linear-gradient(135deg, ${G.glassBg}, ${G.glassBgHover})`,
                     border: `1px solid ${selectedQuestion === q ? moodTheme.accentMuted : G.glassBorder}`,
+                    opacity: isUsed && selectedQuestion !== q ? 0.6 : 1,
                   }}
                 >
                   <p
@@ -186,9 +201,18 @@ export function BliKjentPanel({ onClose }: BliKjentPanelProps) {
                     style={{ color: selectedQuestion === q ? moodTheme.accentLight : 'rgba(255,255,255,0.75)' }}
                   >
                     {q}
+                    {isUsed && (
+                      <span
+                        className="ml-2 text-[9px] font-bold tracking-wider uppercase align-middle"
+                        style={{ color: G.textMuted }}
+                      >
+                        ✓ brukt
+                      </span>
+                    )}
                   </p>
                 </button>
-              ))}
+                );
+              })}
             </div>
           )}
 

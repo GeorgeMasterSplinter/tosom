@@ -1,14 +1,15 @@
 {
   "version": "1.0",
   "updatedAt": "2026-08-28",
-  "commit": "1fcdfd1",
+  "commit": "7310a45",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
     "tests": "366/367 (43 suiter, 1 skippet)",
+    "e2e": "94 passed / 16 fixme-skipped / 0 failed lokalt (5/6 prosjekt; Mobile Safari/webkit krever system-bibliotek — installeres i CI med --with-deps). Dev-login (storageState) fungerer no — alle testar køyrer innlogga",
     "typecheck": "0 errors",
-    "lint": "0 warnings",
-    "ciGuards": "6/6 grønne (lang, ai, concept, one-engine, 05:00, cron) — verifisert lokalt 28.08 etter SPRAK-HYGIENE",
-    "productionBuild": "verified (2026-08-28, etter SPRAK-HYGIENE — npm run build EXIT=0)"
+    "lint": "0 warnings (npx next lint --max-warnings 0)",
+    "ciGuards": "6/6 grønne (lang, ai, concept, one-engine, 05:00, cron) + lang-guard grønn 28.08 etter E2E-bølgja",
+    "productionBuild": "verified (2026-08-28 etter E2E-bølgja — npm run build EXIT=0)"
   },
   "currentPhaseId": "apen-beta-test",
   "blockers": [
@@ -56,6 +57,12 @@
     }
   ],
   "leveranser": [
+    {
+      "dato": "2026-08-28",
+      "id": "E2E-ROTAKKER",
+      "title": "E2E grønn: dev-login-rotfiks (origin + EmailProvider), seed-e2e-users, 8 fixme — og to sanne produkt-buger fanget og retta",
+      "content": "Full e2e-kjøring 28.08 (94/16/0 lokalt) viste at dei «reelle» feilene ikkje var skjøre selektorar — dev-login HADDE ALDRIG FUNGERT, og alle e2e-testane kjørte utan innlogging sidan S4-sikkerheitsfixen. Rotsaker, i tur: (1) 307-redirectet i /api/dev-login peikte mot http://localhost:3000 (frå req.url/NEXTAUTH_URL) medan klienten var på http://127.0.0.1:3000 — annan origin, nettleseren avviser (`Failed to fetch`), ingen session-cookie. Fiksa i både GET- og POST-hendlar: redirect-URLen byggjast no frå klientens eige host-header (x-forwarded-proto for prod-bakende). (2) S4-fixen fjerna EmailProvider frå lib/auth/config.ts, men dev-login redirectar til /api/auth/callback/email → callback finst ikkje → error=Configuration. Fiksa med dev-eksklusiv EmailProvider (aktiv KUN når DEV_LOGIN_ENABLED=true; sendVerificationRequest er tomt — tokenet ligg i DB; prod er uendra, dev-login er der 404). (3) Testdata mangla: testA/testB hadde ingen match/samtale/journey, onboarding-brukar eksisterte ikkje. Nytt idempotent prisma/seed-e2e-users.ts (CI-steg + lokal): match 87 + samtale med 2 meldingar + journey dag 1 for testA/testB, E2E Onboarding-brukar lagt i dev-login-lista og nullstillast kvar runde (ein test fullfører onboarding). Chat-testane fiksa for godt i staden for fixme: data-testid=\"chat-container\", semantisk <main> i chat-layout, aria-label=\"Send melding\" på send-knappen (var òg a11y-feil), cold-compile-timeouts 5s→20s. Vipps-test: assertion oppdatert mot ny 503-melding. Onboarding: 8 av 10 testar er test.fixme() med R-1-referanse (testar input[name=...]-markup som ikkje lenger finst; omskriving mot faktiske komponentar = oppfølgjssak ~3 t); autosave- og draft-testane redda med ny selektor + deterministisk expect.poll (fast timeout flakka på firefox). To sanne produkt-bugar fanga og retta i app/onboarding/OnboardingFlow.tsx: (a) autosave-effekten kjørte ved første mount og kunne overstyre localStorage-draften med tom state dersom init-kalla tok lengre enn debounce-vinduet (400 ms) — hoppast no over ved første render; (b) prefill-floken (brukarar med eksisterande profil) slo over localStorage-fallbacket, slik at felt brukaren akkurat hadde skrive FORSVANT ved reload — prefill fyller no berre tomme felt. I tillegg retta: scripts/seed-journey-content.ts (ulike stilte stroppeteikn = parse-error, skriptet kunne ikkje kjørast), e2e-timeouts, MASTERPLAN v3.0 R-1-seksjonen oppdatert med dei reelle rotsakene. scripts/install-hooks.sh committed (kjør IKKE av agent — installerer pre-push språkvakt i .git/hooks). Verifisert: tsc 0, next lint 0, jest 366, build 0, verify:lang 0, e2e 94/16/0."
+    },
     {
       "dato": "2026-08-28",
       "id": "SIKKERHET-E2E-MASTERPLAN",
@@ -185,7 +192,7 @@
       "/metoder — ikke lenket noe sted"
     ]
   },
-  "nextAction": "SPRAK-HYGIENE + DODKODE-RYDD er DONE. George har kjørt `npm run hooks:install` (pre-push-krok aktiv). GJENSTÅR I RYDDEBØLGEN: (a) E2E grønn i CI (Playwright-suiten feiler i dag), (b) CSRF aktivert (lib/auth/csrf.ts er skrevet, aldri importert), (c) auth på /api/analytics/track + /api/system/latency, (d) dobbeltkall til /api/dashboard/overview — både DashboardProvider (layout) og page.tsx henter samme endepunkt; krever at page.tsx leser fra konteksten (funksjonell endring, ikke rydding), (e) MASTERPLAN v2.0 oppdateres med ny score (78 er utdatert etter B-bølgen, tre chat-bølger og denne ryddingen) + seksjon 'siste ting før feilfri beta og lansering'. NESTE FOR GEORGE: (1) DRIFT FØR push: `DATABASE_URL=\"<prod>\" npx prisma migrate deploy` — legger på Message.source-kolonna (CI deployer òg, men manuell først unngår kort race-vindu der ny kode leser kolonne som ikke finnes). (2) Pusha main → Vercel auto-deploy. (3) Live mood-diagnose i prod (to testere, to nettlesere): A byter mood i MoodsPanel-panelet → B skal se fargene bytte seg INNEN ~3 SEKUND; sjekk i B si Network-tabell at GET /api/chat/messages-responsen inneholder feltet «mood». Koden er nå kontrakt-testa (chat-mood-shared) — om det fortsatt ikke synker i prod er det polling/nettverksnivå, ikke logikk. (4) B-7: slipp inn 10→50 testere.",
+  "nextAction": "E2E-ROTAKKER-bølgja er DONE (4 commits, e2e grønn lokalt, alle verifikasjonar grønne) — push pends på George. NESTE FOR GEORGE: (1) `bash scripts/install-hooks.sh` (ein gong; pre-push språkvakt). (2) Push main → Vercel auto-deploy (CD er no upblokkert: e2e-jobben har alle browserne + seed-steget + retta testar). (3) Live mood-diagnose i prod: to testere, to nettlesere — A byter mood i MoodsPanel-panelet → B skal sjå fargene byte seg INNAFOR ~3 SEKUND; i B si Network-tabell: GET /api/chat/messages-responsen innehelder «mood»-feltet. Kontrakt-testa (chat-mood-shared); om det framleis ikkje synkroniserer er det polling/nettverksnivå, ikkje logikk. (4) Slipp inn 10→50 testere (B-7) og observer: onboarding-fullføring, match-utfordringa («ingen match denne uken» = R-2), chat-mood, Vipps 503-handtering. (5) OPPFØLGJSSAK (~3 t, ikkje blokkerande): skriv om dei 8 test.fixme()-testane i onboarding.spec.ts mot faktiske komponentar med data-testid (R-1 i MASTERPLAN v3.0). GJENSTÅR FRA FØRRE BØLGJE (ikkje blokkerande): CSRF aktivering (lib/auth/csrf.ts er skrive, aldri importert), dobbeltkall til /api/dashboard/overview (DashboardProvider + page.tsx hentar same endepunkt).",
   "gjenstaarFoerBeta": [
     "Manuell sjekkliste — nå konsolidert i GEORGE.md (steg 2–9, env-liste, kill switches)"
   ],

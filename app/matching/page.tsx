@@ -12,6 +12,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { Footer } from '@/components/ui/layout/Footer';
 import { color, typographyToStyle } from '@/config/design-tokens';
 import GlassCard from '@/components/ui/cards/GlassCard';
@@ -138,6 +139,7 @@ function getResonanceLabel(level: string | null | undefined): string {
    ═══════════════════════════════════════ */
 
 export default function MatchingPage() {
+  const router = useRouter();
   const [userName, setUserName] = useState('');
   // DEV: ?state= tvinger visningstilstand umiddelbart (bypass-er redirect)
   const [queueState, setQueueState] = useState<QueueState>(() => {
@@ -288,26 +290,26 @@ export default function MatchingPage() {
       const res = await fetch('/api/journey/queue', { method: 'DELETE' });
       if (!res.ok) {
         // 409: allerede matchet — da er venterommet feil sted å være
-        window.location.href = '/dashboard';
+        router.replace('/dashboard');
         return;
       }
-      window.location.href = '/';
+      router.replace('/');
     } catch {
       setExiting(false);
       setShowExitConfirm(false);
     }
-  }, []);
+  }, [router]);
 
   const handleSkipRound = useCallback(async () => {
     setSkipping(true);
     try {
       await fetch('/api/journey/queue', { method: 'DELETE' });
-      window.location.href = '/';
+      router.replace('/');
     } catch {
       setSkipping(false);
       setShowSkipConfirm(false);
     }
-  }, []);
+  }, [router]);
 
   // BUG 3: «Start reisen» — setter brukaren i match-køen (POST /api/journey/queue).
   // Idempotent på serveren; krev onboardingComplete (409 elles).
@@ -325,7 +327,7 @@ export default function MatchingPage() {
       }
       // 402: betaling krevst → betalingsfløte
       if (res.status === 402) {
-        window.location.href = '/betaling';
+        router.push('/betaling');
         return;
       }
       // 409/429/500: konkret melding i venterommet + prøv igjen
@@ -339,7 +341,7 @@ export default function MatchingPage() {
       setStartError('Nettverksfeil — sjekk internettilkoblingen og prøv igjen.');
       setStarting(false);
     }
-  }, []);
+  }, [router]);
 
   const greeting = getGreeting();
 
@@ -415,7 +417,7 @@ export default function MatchingPage() {
                   // Direkte ruting: når samtalen eksisterer går vi rett inn i
                   // /chat/[id] i steden for via dashboardet.
                   const convId = overview?.conversation?.conversationId;
-                  window.location.href = convId ? `/chat/${convId}` : '/dashboard';
+                  router.push(convId ? `/chat/${convId}` : '/dashboard');
                 }}
                 className="mt-8 px-10 py-4 rounded-2xl font-semibold text-base transition-all duration-300 hover:brightness-110"
                 style={{ background: 'linear-gradient(135deg, #D4AF37, #E8C766)', color: '#0B1520', fontWeight: 600 }}
@@ -468,7 +470,7 @@ export default function MatchingPage() {
                   </p>
                 </div>
                 <button
-                  onClick={() => window.location.href = '/onboarding'}
+                  onClick={() => router.push('/onboarding')}
                   className="shrink-0 px-5 py-3 rounded-2xl font-medium text-sm transition-all duration-300 hover:brightness-110"
                   style={{ background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)', color: '#D4AF37' }}
                 >
@@ -494,7 +496,7 @@ export default function MatchingPage() {
                 Det tar nokre minutt – så kan du stille deg i køen.
               </p>
               <button
-                onClick={() => window.location.href = '/onboarding'}
+                onClick={() => router.push('/onboarding')}
                 className="mt-8 px-10 py-4 rounded-2xl font-semibold text-base transition-all duration-300 hover:brightness-110"
                 style={{ background: 'linear-gradient(135deg, #D4AF37, #E8C766)', color: '#0B1520', fontWeight: 600 }}
               >
@@ -541,7 +543,7 @@ export default function MatchingPage() {
                   </p>
                 </div>
                 <button
-                  onClick={() => window.location.href = '/onboarding'}
+                  onClick={() => router.push('/onboarding')}
                   className="shrink-0 px-5 py-3 rounded-2xl font-medium text-sm transition-all duration-300 hover:brightness-110"
                   style={{ background: 'rgba(212,175,55,0.12)', border: '1px solid rgba(212,175,55,0.3)', color: '#D4AF37' }}
                 >
@@ -644,7 +646,7 @@ export default function MatchingPage() {
                 Jo dypere profilen, jo bedre kan vi matche deg.
               </p>
               <button
-                onClick={() => window.location.href = '/onboarding'}
+                onClick={() => router.push('/onboarding')}
                 className="mt-4 px-6 py-3 rounded-2xl font-medium text-sm transition-all duration-300 hover:brightness-110"
                 style={{ background: 'linear-gradient(135deg, #D4AF37, #E8C766)', color: '#0B1520', fontWeight: 600 }}
               >
@@ -693,7 +695,7 @@ export default function MatchingPage() {
         {/* ═══ SETTINGS — synlig og rolig ═══ */}
         <div className="mt-12 text-center">
           <button
-            onClick={() => window.location.href = '/settings'}
+            onClick={() => router.push('/settings')}
             className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl text-base font-medium transition-all duration-300 hover:brightness-110 hover:scale-[1.02] active:scale-[0.98]"
             style={{
               background: 'rgba(255,255,255,0.05)',

@@ -7,6 +7,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import GlassCard from "@/components/ui/cards/GlassCard";
 
 /* ═══════════════════════════════════════
@@ -566,6 +567,7 @@ function VarslerSection({
    ═══════════════════════════════════════ */
 
 function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchStatus; journeyStatus: JourneyStatus }) {
+  const router = useRouter();
   const [showReport, setShowReport] = useState(false);
   const [showBlock, setShowBlock] = useState(false);
   const [showEndConfirm, setShowEndConfirm] = useState(false);
@@ -643,7 +645,7 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reason: "blocked" }),
       });
-      window.location.href = "/dashboard?ended=safety";
+      router.push("/dashboard?ended=safety");
     } catch {
       console.error("Feil ved blokkering");
       setSending(false);
@@ -658,7 +660,7 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reason: "early_exit" }),
       });
-      window.location.href = "/dashboard?ended=early";
+      router.push("/dashboard?ended=early");
     } catch {
       console.error("Feil ved avslutt reise");
       setSending(false);
@@ -1007,6 +1009,7 @@ function MatchSection({
   matchStatus: MatchStatus;
   journeyStatus: JourneyStatus;
 }) {
+  const router = useRouter();
   const [showEndConfirm, setShowEndConfirm] = useState(false);
   const [ending, setEnding] = useState(false);
 
@@ -1018,7 +1021,7 @@ function MatchSection({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reason: "early_exit" }),
       });
-      window.location.href = "/dashboard?ended=early";
+      router.push("/dashboard?ended=early");
     } catch {
       console.error("Feil ved avslutt reise");
       setEnding(false);
@@ -1033,7 +1036,7 @@ function MatchSection({
         <p style={{ color: THEME.deepGrey, fontSize: "16px", lineHeight: "1.7", marginBottom: "24px" }}>
           Du har ingen aktiv match. Når resonansen har funnet en rytme som svinger med din, mottar du den her.
         </p>
-        <GoldButton onClick={() => window.location.href = "/dashboard"}>Gå til dashboard</GoldButton>
+        <GoldButton onClick={() => router.push("/dashboard")}>Gå til dashboard</GoldButton>
       </GlassCard>
     );
   }
@@ -1057,7 +1060,7 @@ function MatchSection({
       </div>
 
       <div className="flex gap-3 flex-wrap">
-        <GoldButton onClick={() => window.location.href = `/chat/${matchStatus.conversationId}`}>Gå til samtalen</GoldButton>
+        <GoldButton onClick={() => router.push(`/chat/${matchStatus.conversationId}`)}>Gå til samtalen</GoldButton>
         <OutlineGoldButton onClick={() => setShowEndConfirm(true)}>Avslutt reisen</OutlineGoldButton>
       </div>
 

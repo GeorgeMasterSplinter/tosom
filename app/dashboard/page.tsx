@@ -16,6 +16,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { Footer } from '@/components/ui/layout/Footer';
 import { color, typographyToStyle } from '@/config/design-tokens';
 import GlassCard from '@/components/ui/cards/GlassCard';
@@ -390,6 +391,7 @@ function ProfilePrivateSection() {
    ═══════════════════════════════════════ */
 
 export default function Dashboard() {
+  const router = useRouter();
   const [userName, setUserName] = useState('');
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -413,7 +415,7 @@ export default function Dashboard() {
         if (obRes.ok) {
           const ob = await obRes.json();
           if (!ob.onboardingComplete) {
-            window.location.href = '/onboarding';
+            router.replace('/onboarding');
             return;
           }
         }
@@ -428,7 +430,7 @@ export default function Dashboard() {
         // Merk: dag 0 (reise startet, begge har ikkje møtt opp enno) BLIR vist
         // her — ikkje bounsa til /matching.
         if (!json.match || !json.journey) {
-          window.location.href = '/matching';
+          router.replace('/matching');
           return;
         }
 
@@ -441,7 +443,7 @@ export default function Dashboard() {
         }
       } catch {
         // No match or error → go to waiting
-        window.location.href = '/matching';
+        router.replace('/matching');
         return;
       } finally {
         setLoading(false);
@@ -505,7 +507,7 @@ export default function Dashboard() {
         {/* ═══ SAMTALE CTA (direkte ruting inn i chatten) ═══ */}
         <div className="mb-8">
           <button
-            onClick={() => (window.location.href = chatUrl)}
+            onClick={() => router.push(chatUrl)}
             className="w-full flex items-center justify-center gap-2 rounded-2xl py-4 font-medium transition-transform hover:scale-[1.01] active:scale-[0.99]"
             style={{
               background: 'linear-gradient(135deg, rgba(212,175,55,0.95), rgba(176,141,41,0.95))',

@@ -22,8 +22,10 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function BetalingPage() {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [withdrawalWaiver, setWithdrawalWaiver] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
@@ -60,7 +62,7 @@ export default function BetalingPage() {
         throw new Error(data.error || 'Kunne ikke starte reisen');
       }
 
-      window.location.href = '/dashboard';
+      router.push('/dashboard');
     } catch (err) {
       setError((err as Error).message);
       setLoading(false);

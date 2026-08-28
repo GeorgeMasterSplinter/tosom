@@ -7,6 +7,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { OnboardingLayout } from './OnboardingLayout';
 
 import Step1Profile from './steps/Step1Profile';
@@ -279,6 +280,7 @@ interface OnboardingFlowProps {
 }
 
 export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
+  const router = useRouter();
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -546,7 +548,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
             readyForMatch: true,
           });
         }
-        window.location.href = '/matching';
+        router.push('/matching');
         return;
       }
 
@@ -578,13 +580,13 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
       if (!queueRes.ok) {
         // 402: fri kvote brukt → betalingsflyt
         if (queueRes.status === 402) {
-          window.location.href = '/betaling';
+          router.push('/betaling');
           return;
         }
         throw new Error(queueErrorFor(queueRes.status));
       }
 
-      window.location.href = '/matching';
+      router.push('/matching');
     } catch (err) {
       // Behold den konkrete årsaken fra formatSetupError — ikke overskriv
       // den med en generisk tekst. Nettverksfeil har ingen melding å vise,

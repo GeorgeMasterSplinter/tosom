@@ -5,6 +5,8 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { flags, serverFlags } from "@/utils/flags";
+import { getServerSession } from "@/lib/auth/session";
+import { pgCheck } from "@/lib/rate-limit-pg";
 
 export const dynamic = 'force-dynamic';
 
@@ -84,6 +86,19 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ status: "analytics_disabled" }, { status: 403 });
   }
 
+  // Krever innlogging. Ruten var åpen: hvem som helst kunne sende vilkårlig
+  // userId og forurense analysedataene, eller bruke den som en åpen logg-kanal.
+  const session = await getServerSession();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Ikke innlogget" }, { status: 401 });
+  }
+
+  // Rate limiting per bruker — sporing skal aldri kunne flomme loggen.
+  const rl = await pgCheck(`analytics:${session.user.id}`, 120, 60);
+  if (!rl.ok) {
+    return NextResponse.json({ error: "For mange hendelser" }, { status: 429 });
+  }
+
   const { searchParams } = new URL(request.url);
   const event = searchParams.get("event");
   const url = searchParams.get("url") || request.url;
@@ -139,6 +154,17 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   if (!flags.enableAnalytics) {
     return NextResponse.json({ status: "analytics_disabled" }, { status: 403 });
+  }
+
+  // Samme vern som GET: krever innlogging + rate limiting per bruker.
+  const session = await getServerSession();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Ikke innlogget" }, { status: 401 });
+  }
+
+  const rl = await pgCheck(`analytics:${session.user.id}`, 120, 60);
+  if (!rl.ok) {
+    return NextResponse.json({ error: "For mange hendelser" }, { status: 429 });
   }
 
   try {

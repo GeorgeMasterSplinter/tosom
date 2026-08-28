@@ -1,5 +1,7 @@
 
+import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { requireAdmin } from '@/lib/auth/requireAuth'
 
 /**
  * GET /api/system/latency — Detaljert latens-sporing
@@ -7,13 +9,20 @@ import { prisma } from '@/lib/prisma'
  * Utvidet 2026-08-02 (Pakke 3, Steg 3b):
  * - Gjennomsnittlig API-latens (fra PerformanceMetric)
  * - Gjennomsnittlig DB-latens (fra PerformanceMetric)
- * - P95 latens per route (top 5 tregaste rutene)
+ * - P95 latens per route (top 5 tregeste rutene)
  * - Database-ping (real-time)
+ *
+ * KUN ADMIN: responsen lister rutenavn og ytelsestall — et kart over
+ * API-overflaten som ikke skal være offentlig. Middleware dekker
+ * /api/system-prefikset, men rollen må sjekkes her.
  */
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(request: Request): Promise<Response> {
+export async function GET(request: NextRequest): Promise<Response> {
+  const auth = await requireAdmin(request);
+  if (auth instanceof Response) return auth;
+
   try {
     // Real-time DB ping
     const dbStart = Date.now()
@@ -79,7 +88,7 @@ export async function GET(request: Request): Promise<Response> {
         }
       }
     } catch {
-      // PerformanceMetric finst kanskje ikke enno
+      // PerformanceMetric finnes kanskje ikke ennå
     }
 
     const response = {

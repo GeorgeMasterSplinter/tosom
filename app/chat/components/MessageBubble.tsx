@@ -202,13 +202,13 @@ function SystemCard({ children }: { children: React.ReactNode }) {
    TIMESTAMP — Tidløyper v2
    ═══════════════════════════════════════ */
 
-function Timestamp({ value, color }: { value: string; color?: string }) {
+function Timestamp({ value, color, align = "left" }: { value: string; color?: string; align?: "left" | "right" }) {
   try {
     const date = new Date(value);
     if (isNaN(date.getTime())) return null;
     return (
       <p
-        className="text-[10px] mt-1.5 text-right tracking-wide"
+        className={`text-[10px] mt-1.5 tracking-wide ${align === "right" ? "text-right" : "text-left"}`}
         style={{ color: color || G.textMuted }}
       >
         {date.toLocaleTimeString("no", { hour: "2-digit", minute: "2-digit" })}
@@ -377,14 +377,19 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
       }}
       className="flex"
     >
-      <div className={isLeft ? "message-enter-partner" : "message-enter-me"} style={{ animationDelay: `${delay}ms` }}>
-        {/* Avatar for partner */}
-        {isLeft && !isMe && metadata?.senderInfo && <Avatar senderInfo={metadata.senderInfo} />}
+      {/* Avatar for partner — fast brede, utanfor boblekolonna */}
+      {isLeft && !isMe && metadata?.senderInfo && <Avatar senderInfo={metadata.senderInfo} />}
 
-        {/* Bubble-container */}
-        <div style={{ maxWidth: "85%" }}>
-          <div
-            className="px-5 py-[16px] relative overflow-hidden"
+      {/* Boblekolonne — maxWidth er % av RALEN (fast brede). Tidlegare låg 85 %
+          på ein div INNI denne shrink-to-fit-colonna: prosentet løyst seg mot den
+          allereie smale innhaldsbreidda, og kort ord som «Hei» vart delte i
+          «H»/«ei». No refererer % til raden — bobla får full ord-brede. */}
+      <div
+        className={isLeft ? "message-enter-partner" : "message-enter-me"}
+        style={{ animationDelay: `${delay}ms`, maxWidth: "85%" }}
+      >
+        <div
+          className="px-5 py-[16px] relative overflow-hidden"
             style={{
               background: isMe
                 ? `linear-gradient(135deg, ${moodTheme.bubbleMeStart}, ${moodTheme.bubbleMeEnd})`
@@ -440,12 +445,14 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
             >
               {content}
             </p>
+        </div>
 
-            {/* Timestamp */}
-            {metadata?.timestamp && <Timestamp value={String(metadata.timestamp)} color={tMuted} />}
-          </div>
+        {/* Timestamp — utanfor bobla, under, justert mot boblekanten (premium-standard) */}
+        {metadata?.timestamp && (
+          <Timestamp value={String(metadata.timestamp)} color={tMuted} align={isMe ? "right" : "left"} />
+        )}
 
-          {/* Resonance-indikator for "me" med høg resonance */}
+        {/* Resonance-indikator for "me" med høg resonance */}
           {isMe && resonanceLevel && resonanceLevel > 50 && (
             <div 
               className="mt-1 flex items-center justify-end gap-1"
@@ -475,13 +482,12 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
               {metadata.senderInfo.name}
             </p>
           )}
-        </div>
-
-        {/* Tomt rom for symmetri */}
-        {isMe && (
-          <div className="w-8.5 flex-shrink-0 mr-2.5" />
-        )}
       </div>
+
+      {/* Tomt rom for symmetri */}
+      {isMe && (
+        <div className="w-8.5 flex-shrink-0 mr-2.5" />
+      )}
     </div>
   );
 }

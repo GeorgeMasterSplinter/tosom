@@ -1,373 +1,254 @@
 /**
  * E2E-test — Onboarding-flow (13-stegs versjon)
- * Testar at ein ny brukar kan fullføre heile onboarding-flyten utan feil.
+ * Tester at en ny bruker kan fullføre hele onboarding-flyten uten feil.
+ *
+ * R-1 (MASTERPLAN v3.0, 29.08): testene er skrevet mot faktiske komponenter
+ * med data-testid — ingen CSS-klasser, ingen [name=...]-selektorer.
+ * Valideringen i UI-et: CTA-en er deaktivert («Fyll ut alle påkrevde
+ * felt») til stegets påkrevde felt er fylt — det er det testene måler.
+ *
+ * Isolasjon: E2E-brukeren deles mellom testene i en runde og nullstilles
+ * bare per runde (seed-e2e-users). Derfor:
+ *  1. Server-draften slettes før hver test (ellers restaureres steget).
+ *  2. Fullførings-testen kjører sist (den setter onboardingComplete=true).
  */
 
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
+import { resetOnboardingUser } from '../onboarding-reset';
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
 // =====================================================================
-// Hjelpemethodar
+// Hjelpefunksjoner
 // =====================================================================
 
-/** Skriv verdi inn i eit TextAreaField med korrekt markering og focusing */
-async function fillTextArea(page: Parameters<typeof page.locator>[0], label: string, value: string) {
-  // Finn textarea med den gitte label-en (tekst over feltet)
-  const textareas = page.locator('textarea');
-  const labels = page.locator('label');
-  
-  for (let i = 0; i < await labels.count(); i++) {
-    const labelText = await labels.nth(i).textContent() ?? '';
-    if (labelText.includes(label)) {
-      const textarea = textareas.nth(i);
-      await textarea.click();
-      await textarea.fill(value);
-      await expect(textarea).toHaveValue(value);
-      return;
-    }
+const TOTAL_STEPS = 13;
+
+/** Påtaler at vi er på «Steg N av 13» (og på den gitte tittelen). */
+async function expectStep(page: Page, step: number, title?: string) {
+  await expect(page.getByTestId('ob-step-indicator')).toHaveText(
+    `Steg ${step} av ${TOTAL_STEPS}`,
+  );
+  if (title) {
+    await expect(page.getByTestId('ob-step-title')).toHaveText(title);
   }
-  throw new Error(`Fann ikkje textarea med label: ${label}`);
 }
 
-/** Klikkar på ein PremiumButton (gull-knapp) med den gitte teksten */
-async function clickPremiumButton(page: Parameters<typeof page.locator>[0], text: string) {
-  const buttons = page.getByRole('button', { name: new RegExp(text, 'i') });
-  await expect(buttons).toBeVisible();
-  await buttons.first().click();
+/** Klikker stegets CTA (ob-next) — forutsetter at den er aktiv. */
+async function clickNext(page: Page) {
+  const next = page.getByTestId('ob-next');
+  await expect(next).toBeEnabled();
+  await next.click();
 }
 
-/** Klikkar på ein BackButton (tekst med "tilbake") */
-async function clickBackButton(page: Parameters<typeof page.locator>[0]) {
-  const backButtons = page.getByRole('button', { name: /tilbake/i });
-  await expect(backButtons).toBeVisible();
-  await backButtons.first().click();
+/** Steg 1 (Grunnprofil): de påkrevde feltene. */
+async function fillStep1(page: Page) {
+  await page.getByTestId('ob-name').fill('Testbruker');
+  await page.getByTestId('ob-age').fill('30');
+  await page.getByTestId('ob-gender').getByRole('button', { name: /Mann/ }).click();
+  await page.getByTestId('ob-seeking').getByRole('button', { name: /Kvinne/ }).click();
+  await page.getByTestId('ob-city').fill('Oslo');
+  await page.getByTestId('ob-postal').fill('0150');
 }
 
-// =====================================================================
-// TESTAR
-// =====================================================================
+/** Steg 2 (Personlighet & identitet): fire lengdefelt + én quirk. */
+async function fillStep2(page: Page) {
+  await page.getByTestId('ob-self-desc').fill('Jeg er en rolig og balansert person som verdsetter dype samtaler og ærlighet.');
+  await page.getByTestId('ob-energy-giver').fill('Gode samtaler, natur og kreativt arbeid gir meg energi.');
+  await page.getByTestId('ob-energy-drainer').fill('Store folkemengder, konflikt og uvissighet tar fra meg.');
+  await page.getByTestId('ob-pressure-react').fill('Jeg trekker meg tilbake litt til jeg kjenner meg trygg igjen.');
+  await page.getByTestId('ob-quirk').fill('Jeg må alltid ha orden på ting før jeg kan slappe av.');
+}
+
+/** Steg 3 (Livssituasjon): fire valg-gridene + to lengdefelt. */
+async function fillStep3(page: Page) {
+  await page.getByTestId('ob-work-type').getByRole('button', { name: /fulltid/i }).click();
+  await page.getByTestId('ob-housing').getByRole('button', { name: /Leilighet/ }).click();
+  await page.getByTestId('ob-household').getByRole('button', { name: /Jeg alene/ }).click();
+  await page.getByTestId('ob-economy').getByRole('button', { name: /Stabil økonomi/ }).click();
+  await page.getByTestId('ob-responsibilities').fill('Jeg har to barn som bor hos meg helga og hverdags.');
+  await page.getByTestId('ob-daily-routine').fill('Jeg står opp tidlig, drikker kaffe i ro og går en tur før jobben.');
+}
+
+/** Steg 4 (Tilknytning & trygghet): fem lengdefelt. */
+async function fillStep4(page: Page) {
+  await page.getByTestId('ob-safety-need').fill('At noen lytter uten å dømme, og holder det de lover.');
+  await page.getByTestId('ob-insecurity-trigger').fill('Når folk lover noe og holder ikke ordet, mister jeg tryggheten.');
+  await page.getByTestId('ob-sadness-need').fill('En klem og at noen sier det skal bli bra.');
+  await page.getByTestId('ob-stress-need').fill('At noen tar over ansvaret midlertidig, slik at jeg kan puste.');
+  await page.getByTestId('ob-important-boundary').fill('Jeg trenger tid alene etter en tung dag.');
+}
+/** Steg 5 (Kjærlighetsspråk & nærhet): to gridene + tre lengdefelt. */
+async function fillStep5(page: Page) {
+  await page.getByTestId('ob-love-give').getByRole('button', { name: /Ord og ros/ }).click();
+  await page.getByTestId('ob-love-receive').getByRole('button', { name: /Ord og ros/ }).click();
+  await page.getByTestId('ob-closeness-builder').fill('Dype samtaler om noe som betyr mye, der begge er til stede.');
+  await page.getByTestId('ob-distance-creator').fill('Når følelsene mine ikke blir tatt på alvor, trekker jeg meg unna.');
+  await page.getByTestId('ob-small-thing').fill('At noen husker at jeg vil ha kaffe på morgenen uten at jeg ber om det.');
+}
+
+/** Steg 6 (Livsstil & verdier): ett lengdefelt (gridene er valfrie). */
+async function fillStep6(page: Page) {
+  await page.getByTestId('ob-good-everyday').fill('Frokost i ro, en tur ute, og en kveld med dype samtaler med noen jeg bryr meg om.');
+}
+
+/** Steg 7 (Relasjonsstil): to gridene. */
+async function fillStep7(page: Page) {
+  await page.getByTestId('ob-relationship-seeking').getByRole('button', { name: /Dating/ }).click();
+  await page.getByTestId('ob-closeness-need').getByRole('button', { name: /Balansert/ }).click();
+}
+
+/** Steg 8 (Framtid & visjon): fem lengdefelt. */
+async function fillStep8(page: Page) {
+  await page.getByTestId('ob-future-vision').fill('Et rolig liv med dype relasjoner og et hjem der alle føler seg hjemme.');
+  await page.getByTestId('ob-dream-goal').fill('Å bygge et eget hus i naturen sammen med noen jeg elsker.');
+  await page.getByTestId('ob-build-together').fill('En hverdag der vi deler både moro og utfordringer uten å tape oss selv.');
+  await page.getByTestId('ob-experience-alone').fill('Å reise alene til Japan for å lære om meg selv.');
+  await page.getByTestId('ob-experience-together').fill('Å lage mat sammen kveld etter kveld og prate om dagen vi har hatt.');
+}
+
+// Steg 9 (Humor & personlighet): alle felt er valfrie — ingenting å fylle.
+
+/** Steg 10 (Grenser & behov): to gridene + to lengdefelt. */
+async function fillStep10(page: Page) {
+  await page.getByTestId('ob-never-cross').getByRole('button', { name: /Respekt for meg som person/ }).click();
+  await page.getByTestId('ob-understand-partner').getByRole('button', { name: /Jeg lytter aktivt/ }).click();
+  await page.getByTestId('ob-limitations').fill('Jeg trenger aldri å bli møtt med høye stemmer eller skuldret skyld.');
+  await page.getByTestId('ob-partner-must-understand').fill('At jeg trenger tid alene for å bearbeide følelser før jeg kan dele dem.');
+}
+
+/** Steg 11 (Moden nysgjerrighet): fem lengdefelt. */
+async function fillStep11(page: Page) {
+  await page.getByTestId('ob-intimacy-safety').fill('At noen trygger meg med ord før noe dypt skal skje.');
+  await page.getByTestId('ob-comfortable-with').fill('Å dele sårbarhet uten å bli dømt eller kritisert bagefter.');
+  await page.getByTestId('ob-personal-boundary').fill('Jeg trenger tydelige signaler om når ting blir for mye.');
+  await page.getByTestId('ob-nearer-type').fill('Ro og stille samtaler om noe som betyr mye for begge.');
+  await page.getByTestId('ob-needs-time').fill('Tid til å bearbeide følelsene mine alene før jeg deler dem.');
+}
 
 /**
- * TODO: Fikse onboarding-tester når dedikert auth-setup er på plass.
- * Problem: dev-login redirecterer alltid til /dashboard for brukere med onboardingComplete=true.
- * Løsning: Trenger egen auth-flow som navigerer til /onboarding og lagrer storageState derfra.
+ * Fra steg 1 (Grunnprofil) til «Steg N av 13» — fyller påkrevde felt
+ * underveis. Støtter steg 2–4 (de fire stegene med påkrevde felt).
  */
+async function advanceTo(page: Page, step: number) {
+  if (step < 2 || step > 4) {
+    throw new Error(`advanceTo støtter steg 2–4, ikke ${step}`);
+  }
+  const fillers = [fillStep1, fillStep2, fillStep3, fillStep4];
+  for (let current = 1; current < step; current++) {
+    await fillers[current - 1](page);
+    await clickNext(page);
+  }
+  await expectStep(page, step);
+}
+
+// =====================================================================
+// TESTER
+// =====================================================================
+
 test.describe('Onboarding Flow (13-stegs)', () => {
+  // Server-draften deles av E2E-brukeren mellom testene i en runde, og
+  // restaureres (inkludert steg) ved mount. Slettes før hver test slik at
+  // alle testene starter på steg 1.
+  test.beforeEach(async ({ page }) => {
+    const res = await page.request.delete('/api/onboarding/draft');
+    expect(res.ok()).toBe(true);
+  });
 
+  // Onboarding-brukeren deles mellom browser-prosjektene i en runde
+  // (chromium og firefox kjører samme spec). Full-flow-testen fullfører
+  // profilen — neste prosjekt må få en nøytral bruker, ellers pre-fyller
+  // prefill-API-et profilen og validerings-testene måler feil tilstand.
+  // Nullstilles her (kjører en gang pr. prosjekt).
+  test.beforeAll(async () => {
+    await resetOnboardingUser();
+  });
   // -------------------------------------------------------------------------
-  // Steg 0: Visning av onboarding
+  // Steg 1: Visning av onboarding
   // -------------------------------------------------------------------------
-  
-  // E2E-GJELD (28.08, R-1 i MASTERPLAN v3.0): onboarding-redesign fjerna
-  // progressbaren (viser no «Steg X av Y»). Testen testar gammal UI —
-  // skrives om med data-testid i eiga oppfølgjssak.
-  test.fixme('skal vise onboarding med progressbar og steg-tittel', async ({ page }) => {
+
+  test('skal vise onboarding med steg-indikator og steg-tittel', async ({ page }) => {
     await page.goto('/onboarding');
-    
-    // Progress-bar skal vere synleg
-    const progressBar = page.locator('.rounded-full.overflow-hidden');
-    await expect(progressBar).toBeVisible();
-    
-    // Steg-tittel (h1) skal vere synleg
-    const title = page.locator('h1').first();
-    await expect(title).toBeVisible();
-    
-    // Undertydning skal vere synleg
-    const subtitle = page.locator('[style*="color: rgba(212, 175, 55)"]').first();
-    await expect(subtitle).toBeVisible();
+    await expectStep(page, 1, 'Grunnprofil');
   });
 
   // -------------------------------------------------------------------------
-  // Steg 0 (første steg): Grunnprofil
+  // Steg 1 (Grunnprofil): påkrevde felt → videre
   // -------------------------------------------------------------------------
 
-  // E2E-GJELD (28.08, R-1 i MASTERPLAN v3.0): testar gammal markup
-  // (input[name=...]) som ikkje finst i den noverande 13-stegs-flowen —
-  // stega bruker placeholder/label-baserte felt og knapp-grid for val.
-  // Skrives om mot faktiske komponentar (Step1Profile mfl.) i eiga oppfølgjssak.
-  test.fixme('skal kunna fylle ut grunnprofil og gå vidare', async ({ page }) => {
+  test('skal fylle ut grunnprofil og gå videre', async ({ page }) => {
     await page.goto('/onboarding');
-
-    // === Fyll inn navn ===
-    const nameInput = page.locator('input[placeholder="Navn eller kallenavn"]');
-    if (await nameInput.count() > 0) {
-      await nameInput.fill('Testbruker');
-      await expect(nameInput).toHaveValue('Testbruker');
-    }
-
-    // === Fyll inn alder ===
-    const ageInput = page.locator('input[name="age"]');
-    if (await ageInput.count() > 0) {
-      await ageInput.fill('30');
-      await expect(ageInput).toHaveValue('30');
-    }
-
-    // === Vel kjønn ===
-    const genderSelect = page.locator('select[name="gender"]');
-    if (await genderSelect.count() > 0) {
-      await genderSelect.selectOption('mann');
-      await expect(genderSelect).toHaveValue('mann');
-    }
-
-    // === Vel søkjer ===
-    const seekingSelect = page.locator('select[name="seekingGender"]');
-    if (await seekingSelect.count() > 0) {
-      await seekingSelect.selectOption('kvinne');
-      await expect(seekingSelect).toHaveValue('kvinne');
-    }
-
-    // === Klikk "Fortsett" PremiumButton ===
-    const nextBtn = page.getByRole('button', { name: /fortset/i });
-    await expect(nextBtn).toBeVisible();
-    await nextBtn.first().click();
-
-    // Skal flytte til neste steg (Steg 1: Personlighet)
-    await expect(page.locator('[name="selfDesc"]')).toBeVisible({ timeout: 3000 });
+    await fillStep1(page);
+    await clickNext(page);
+    await expectStep(page, 2, 'Personlighet & identitet');
   });
 
   // -------------------------------------------------------------------------
-  // Steg 1: Personlighet & identitet — med validering
+  // Steg 2 (Personlighet): valideringsporten — CTA deaktivert
   // -------------------------------------------------------------------------
 
-    // E2E-GJELD (28.08, R-1 i MASTERPLAN v3.0): testar gammal markup
-  // (input[name=...]) som ikkje finst i den noverande 13-stegs-flowen.
-  // Skrives om mot faktiske komponentar i eiga oppfolgjssak (data-testid-rewrite).
-  test.fixme('skal visa feilmelding ved tom selfDesc', async ({ page }) => {
+  test('skal blokkere framgang ved tom selfDesc (CTA deaktivert)', async ({ page }) => {
     await page.goto('/onboarding');
+    await advanceTo(page, 2);
 
-    // Gå til steg 1 (Personlighet)
-    const nextBtn = page.getByRole('button', { name: /fortset/i });
-    await expect(nextBtn).toBeVisible();
-    await nextBtn.first().click();
+    // Med tomme felt er CTA-en deaktivert med påminnelsesteksten.
+    // (Den røde feilboksen vises ikke — knappen er låst først.)
+    const next = page.getByTestId('ob-next');
+    await expect(next).toBeDisabled();
+    await expect(next).toHaveText('Fyll ut alle påkrevde felt');
 
-    // Vent på steg 1
-    await expect(page.locator('[name="selfDesc"]')).toBeVisible({ timeout: 3000 });
-
-    // Klikk "Fortsett" utan å fylla ut selfDesc (skal visa valideringsfeil)
-    const submitBtn = page.getByRole('button', { name: /fortset/i });
-    await submitBtn.click();
-
-    // Skal visa error-message
-    const errorMsg = page.locator('[style*="rgba(255, 77, 77)"]');
-    await expect(errorMsg).toBeVisible({ timeout: 3000 });
-
-    // Søk etter feilmeldingstekst på norsk bokmål
-    const textContent = await errorMsg.textContent();
-    expect(textContent).toContain('minst 10 tegn');
+    // Fyller påkrevde felt → CTA-en blir aktiv med normalteksten.
+    await fillStep2(page);
+    await expect(next).toBeEnabled();
+    await expect(next).toHaveText('Fortsett til neste steg');
   });
 
-    // E2E-GJELD (28.08, R-1 i MASTERPLAN v3.0): testar gammal markup
-  // (input[name=...]) som ikkje finst i den noverande 13-stegs-flowen.
-  // Skrives om mot faktiske komponentar i eiga oppfolgjssak (data-testid-rewrite).
-  test.fixme('skal kunna gå vidare frå steg 1 med gyldig selfDesc', async ({ page }) => {
+  test('skal gå videre fra steg 2 med gyldig selfDesc', async ({ page }) => {
     await page.goto('/onboarding');
-
-    // Gå til steg 1 (Personlighet)
-    const nextBtn = page.getByRole('button', { name: /fortset/i });
-    await expect(nextBtn).toBeVisible();
-    await nextBtn.first().click();
-
-    // Vent på steg 1
-    await expect(page.locator('[name="selfDesc"]')).toBeVisible({ timeout: 3000 });
-
-    // Fyll inn selfDesc med gyldig verdi (≥10 teikn)
-    const selfDesc = page.locator('textarea[name="selfDesc"]');
-    await selfDesc.fill('Jeg er en rolig person som liker gode samtaler.');
-    await expect(selfDesc).toHaveValue('Jeg er en rolig person som liker gode samtaler.');
-
-    // Klikk "Fortsett"
-    const submitBtn = page.getByRole('button', { name: /fortset/i });
-    await submitBtn.click();
-
-    // Skal flytte til steg 2 (Livssituasjon)
-    await expect(page.locator('[name="workType"]')).toBeVisible({ timeout: 3000 });
+    await advanceTo(page, 2);
+    await fillStep2(page);
+    await clickNext(page);
+    await expectStep(page, 3, 'Livssituasjon');
   });
 
   // -------------------------------------------------------------------------
-  // Steg 2: Livssituasjon — med validering
+  // Steg 3 (Livssituasjon): validering
   // -------------------------------------------------------------------------
 
-    // E2E-GJELD (28.08, R-1 i MASTERPLAN v3.0): testar gammal markup
-  // (input[name=...]) som ikkje finst i den noverande 13-stegs-flowen.
-  // Skrives om mot faktiske komponentar i eiga oppfolgjssak (data-testid-rewrite).
-  test.fixme('skal kunna gå vidare frå steg 2 med gyldig responsibilities', async ({ page }) => {
+  test('skal gå videre fra steg 3 med gyldig responsibilities', async ({ page }) => {
     await page.goto('/onboarding');
-
-    // Gå til steg 1 → steg 2
-    let nextBtn = page.getByRole('button', { name: /fortset/i });
-    await expect(nextBtn).toBeVisible();
-    await nextBtn.first().click();
-
-    // Stig 1 → fyll selfDesc (validering)
-    const selfDesc = page.locator('textarea[name="selfDesc"]');
-    if (await selfDesc.count() > 0) {
-      await selfDesc.fill('Jeg er en rolig person som liker gode samtaler.');
-      nextBtn = page.getByRole('button', { name: /fortset/i });
-      await nextBtn.click();
-    }
-
-    // Skall no vere på steg 2 (Livssituasjon)
-    await expect(page.locator('[name="workType"]')).toBeVisible({ timeout: 3000 });
-
-    // Fyll inn responsibilities (≥10 teikn for validering)
-    const resp = page.locator('textarea[name="responsibilities"]');
-    if (await resp.count() > 0) {
-      await resp.fill('Jeg har to barn som bor hos meg helga og hverda.');
-      await expect(resp).toHaveValue('Jeg har to barn som bor hos meg helga og hverda.');
-    }
-
-    // Klikk "Fortsett"
-    nextBtn = page.getByRole('button', { name: /fortset/i });
-    await nextBtn.click();
-
-    // Skall flytta til steg 3 (Tilknytning)
-    await expect(page.locator('[name="safetyNeed"]')).toBeVisible({ timeout: 3000 });
+    await advanceTo(page, 3);
+    await fillStep3(page);
+    await clickNext(page);
+    await expectStep(page, 4, 'Tilknytning & trygghet');
   });
 
   // -------------------------------------------------------------------------
   // Back-navigasjon
   // -------------------------------------------------------------------------
 
-    // E2E-GJELD (28.08, R-1 i MASTERPLAN v3.0): testar gammal markup
-  // (input[name=...]) som ikkje finst i den noverande 13-stegs-flowen.
-  // Skrives om mot faktiske komponentar i eiga oppfolgjssak (data-testid-rewrite).
-  test.fixme('skal kunna tilbake med BackButton på steg 1', async ({ page }) => {
+  test('skal navigere tilbake med BackButton', async ({ page }) => {
     await page.goto('/onboarding');
+    await advanceTo(page, 3);
+    await fillStep3(page);
+    await clickNext(page);
+    await expectStep(page, 4, 'Tilknytning & trygghet');
 
-    // Gå til steg 1 (Personlighet)
-    let nextBtn = page.getByRole('button', { name: /fortset/i });
-    await expect(nextBtn).toBeVisible();
-    await nextBtn.first().click();
-
-    await expect(page.locator('[name="selfDesc"]')).toBeVisible({ timeout: 3000 });
-
-    // Fyll selfDesc (for å unngå validering)
-    const selfDesc = page.locator('textarea[name="selfDesc"]');
-    if (await selfDesc.count() > 0) {
-      await selfDesc.fill('Jeg er en rolig person som liker gode samtaler.');
-    }
-
-    // Gå vidare til steg 2 og tilbake
-    nextBtn = page.getByRole('button', { name: /fortset/i });
-    await nextBtn.click();
-
-    await expect(page.locator('[name="workType"]')).toBeVisible({ timeout: 3000 });
-
-    // Klikk BackButton
-    const backBtn = page.getByRole('button', { name: /tilbake/i });
-    await expect(backBtn).toBeVisible();
-    await backBtn.click();
-
-    // Skall tilbake til steg 1
-    await expect(page.locator('[name="selfDesc"]')).toBeVisible({ timeout: 3000 });
+    await page.getByTestId('ob-back').click();
+    await expectStep(page, 3, 'Livssituasjon');
   });
 
   // -------------------------------------------------------------------------
-  // Steg 3-12: Gjennomfør heile flyten (komplett flow)
+  // Steg-indikator oppdatering
   // -------------------------------------------------------------------------
 
-    // E2E-GJELD (28.08, R-1 i MASTERPLAN v3.0): testar gammal markup
-  // (input[name=...]) som ikkje finst i den noverande 13-stegs-flowen.
-  // Skrives om mot faktiske komponentar i eiga oppfolgjssak (data-testid-rewrite).
-  test.fixme('skal kunna fullføre heile 13-stegs onboarding-flyten', async ({ page }) => {
+  test('skal oppdatere steg-indikatoren ved stegbytte', async ({ page }) => {
     await page.goto('/onboarding');
-
-    const testData = {
-      // Steg 0: Grunnprofil
-      name: 'Testbruker',
-      age: '30',
-      gender: 'mann',
-      seeking: 'kvinne',
-      
-      // Steg 1: Personlighet
-      selfDesc: 'Jeg er en rolig og balansert person som verdsetter dype samtaler og ærlighet.',
-      energyGiver: 'Gode konversationer, natur, kreativt arbeid.',
-      energyDrainer: 'Store folkemengder, konflikt, uvissighet.',
-      
-      // Steg 2: Livssituasjon
-      responsibilities: 'Jeg har to barn som bor hos meg helga og hverda.',
-    };
-
-    // === STEG 0: Grunnprofil ===
-    await page.goto('/onboarding');
-
-    const nameInput = page.locator('input[placeholder="Navn eller kallenavn"]');
-    if (await nameInput.count() > 0) {
-      await nameInput.fill(testData.name);
-    }
-
-    const ageInput = page.locator('input[name="age"]');
-    if (await ageInput.count() > 0) {
-      await ageInput.fill(testData.age);
-    }
-
-    const genderSelect = page.locator('select[name="gender"]');
-    if (await genderSelect.count() > 0) {
-      await genderSelect.selectOption(testData.gender);
-    }
-
-    const seekingSelect = page.locator('select[name="seekingGender"]');
-    if (await seekingSelect.count() > 0) {
-      await seekingSelect.selectOption(testData.seeking);
-    }
-
-    let nextBtn = page.getByRole('button', { name: /fortset/i });
-    await expect(nextBtn).toBeVisible();
-    await nextBtn.click();
-
-    // === STEG 1: Personlighet & identitet ===
-    await expect(page.locator('[name="selfDesc"]')).toBeVisible({ timeout: 3000 });
-
-    const selfDesc = page.locator('textarea[name="selfDesc"]');
-    if (await selfDesc.count() > 0) {
-      await selfDesc.fill(testData.selfDesc);
-    }
-
-    const energyGiver = page.locator('textarea[name="energyGiver"]');
-    if (await energyGiver.count() > 0) {
-      await energyGiver.fill(testData.energyGiver);
-    }
-
-    nextBtn = page.getByRole('button', { name: /fortset/i });
-    await nextBtn.click();
-
-    // === STEG 2: Livssituasjon ===
-    await expect(page.locator('[name="workType"]')).toBeVisible({ timeout: 3000 });
-
-    const resp = page.locator('textarea[name="responsibilities"]');
-    if (await resp.count() > 0) {
-      await resp.fill(testData.responsibilities);
-    }
-
-    nextBtn = page.getByRole('button', { name: /fortset/i });
-    await nextBtn.click();
-
-    // === STEG 3-12: Fylle alle resterande steg (valfrie felt) ===
-    for (let step = 3; step <= 12; step++) {
-      const url = page.url();
-      
-      // Klikk "Fortsett" på kvart steg
-      nextBtn = page.getByRole('button', { name: /fortset/i });
-      if (await nextBtn.count() > 0) {
-        await nextBtn.click();
-        
-        // Vent på neste side eller redirect
-        await page.waitForTimeout(500);
-      }
-
-      // Sjekk om vi blei redirected til dashboard/matching
-      const currentUrl = page.url();
-      if (currentUrl.includes('/dashboard') || currentUrl.includes('/matching')) {
-        break;
-      }
-    }
-
-    // Final check: Skal ende på enten /dashboard eller /matching
-    const finalUrl = page.url();
-    expect(finalUrl).toMatch(/\/dashboard|\/matching/);
+    await expectStep(page, 1);
+    await fillStep1(page);
+    await clickNext(page);
+    await expectStep(page, 2);
   });
-
   // -------------------------------------------------------------------------
   // Autosave (localStorage)
   // -------------------------------------------------------------------------
@@ -428,22 +309,38 @@ test.describe('Onboarding Flow (13-stegs)', () => {
   });
 
   // -------------------------------------------------------------------------
-  // Progress-bar oppdatering
+  // Hele flyten: alle 13 steg → matching
+  //
+  // KJØRER SISTE: fullfører onboarding for den delte E2E-brukeren
+  // (onboardingComplete=true, profil + kø). Seed-en nullstiller brukeren
+  // før neste runde.
   // -------------------------------------------------------------------------
 
-  // E2E-GJELD (28.08, R-1 i MASTERPLAN v3.0): proentsifra progress-vising
-  // fjerna i redesign (viser no «Steg X av Y»). Skrives om med data-testid.
-  test.fixme('skal visa riktig progress-prosent', async ({ page }) => {
+  test('skal fullføre hele 13-stegs onboarding-flyten', async ({ page }) => {
+    // 13 steg + ~35 felt + to API-kall — gi margin på sakte maskiner.
+    test.setTimeout(180_000);
     await page.goto('/onboarding');
 
-    // Steg 0: skal visa ~8% (1/13)
-    const progressText = page.locator('[style*="color: rgba(255, 255, 255, 0.3)"]');
-    await expect(progressText).toBeVisible();
-    
-    // Søk etter "Du er X% ferdig" på norsk bokmål
-    const firstP = page.locator('p').first();
-    const pText = await firstP.textContent();
-    expect(pText).toContain('%');
-  });
+    const fillers: Array<(p: Page) => Promise<void>> = [
+      fillStep1, fillStep2, fillStep3, fillStep4,
+      fillStep5, fillStep6, fillStep7, fillStep8,
+      async () => {}, // Steg 9 (humor): alle felt er valfrie
+      fillStep10, fillStep11,
+    ];
+    for (let step = 1; step <= 11; step++) {
+      await expectStep(page, step);
+      await fillers[step - 1](page);
+      await clickNext(page);
+    }
 
+    // Steg 12 (Oppsummering): fortsett
+    await expectStep(page, 12, 'Oppsummering');
+    await clickNext(page);
+
+    // Siste steg: «Start reisen» lagrer profilen og stiller brukeren i køen.
+    await expectStep(page, 13, 'Start reisen');
+    await expect(page.getByTestId('ob-next')).toHaveText('Start reisen');
+    await page.getByTestId('ob-next').click();
+    await expect(page).toHaveURL(/\/matching/, { timeout: 20_000 });
+  });
 });

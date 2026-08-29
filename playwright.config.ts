@@ -15,7 +15,14 @@ export default defineConfig({
   expect: { timeout: 10_000 },
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  // Én worker alltid: onboarding-testene deler én E2E-bruker (server-draft
+  // + fullført profil), og full-flow-testen muterer den. To parallelle
+  // workere (chromium + firefox onboarding) racea på brukeren — en
+  // fire-and-forget draft-POST fra prosjekt A kan lande etter prosjekt B
+  // sin beforeEach-sletting, og B restaurerer A sin tilstand. CI kjørte
+  // alltid med 1 worker; lokalt (default = CPU/2) racea testene.
+  // workers: 1 gir lokal kjøring = CI.
+  workers: 1,
   reporter: process.env.CI ? 'github' : 'html',
 
   /* STEG 12.3: Global setup kjører BOTH dashboard + onboarding auth */

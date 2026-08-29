@@ -1,11 +1,11 @@
 {
   "version": "1.0",
-  "updatedAt": "2026-08-28",
-  "commit": "7310a45",
+  "updatedAt": "2026-08-29",
+  "commit": "bab509b",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
     "tests": "366/367 (43 suiter, 1 skippet)",
-    "e2e": "94 passed / 16 fixme-skipped / 0 failed lokalt (5/6 prosjekt; Mobile Safari/webkit krever system-bibliotek — installeres i CI med --with-deps). Dev-login (storageState) fungerer no — alle testar køyrer innlogga",
+    "e2e": "0 fixme att. Onboarding: 20/20 lokalt 29.08 (10 chromium + 10 firefox, inkl. full flow). Dashboard/journey/match: 90/90 frå 28.08-kjøringa (ingen kodeendringar som raknar dei sidan). Totalt 110 passed / 0 failed. 5/6 prosjekt lokalt (Mobile Safari/webkit krever system-bibliotek — installeres i CI med --with-deps). Dev-login (storageState) fungerer — alle testar kjører innlogga. playwright.config: workers: 1 alltid (lokal kjøring = CI) — onboarding-testene deler éin E2E-bruker som full-flow-testen muterer; parallelle workere racea på server-draften",
     "typecheck": "0 errors",
     "lint": "0 warnings (npx next lint --max-warnings 0)",
     "ciGuards": "6/6 grønne (lang, ai, concept, one-engine, 05:00, cron) + lang-guard grønn 28.08 etter E2E-bølgja",
@@ -57,6 +57,12 @@
     }
   ],
   "leveranser": [
+    {
+      "dato": "2026-08-29",
+      "id": "R1-ONBOARDING-E2E",
+      "title": "R-1: dei 8 test.fixme()-testane i onboarding skrivne om til fungerande tester mot data-testid (110/110 E2E-grønt) + éin sann produkt-bug (prefill-race) retta",
+      "content": "Onboarding-komponentane fekk 48 data-testid-er: ob-step-indicator/ob-step-title (OnboardingSlide), ob-next (PremiumCTAButton), ob-back (BackButton), testId-pass-through i OnboardingTextField/OnboardingSelectGrid og 44 felt-testId-er på dei 11 stega med påkrevde felt. onboarding.spec.ts omskrive: 8 test.fixme() → 8 fungerande tester (10 per prosjekt inkl. autosave/draft), ingen fixme att. Kartlegginga avdekka at steg 5–11 òg har validering (e.push, ikkje errors.push — 28.08-grepet fant berre steg 1–4): full-flow-testen fyller ~35 påkrevde felt på alle 13 stega og fullfører onboarding mot e2e.onboarding@tosom.dev (POST /api/profile/setup + /api/journey/queue → /matching). Test-isolasjon — to sanne testmiljø-feil fanget og retta: (a) server-draften delas av E2E-brukeren mellom testene i ein runde og restaurerast (inkludert steg) ved mount → slettast no i beforeEach via DELETE /api/onboarding/draft; (b) full-flow-testen fullfører profilen, og /api/onboarding/prefill pre-fyllte den fullførte profilen for det andre browser-prosjektet (første kjøring: 4 feil på firefox) → ny e2e/onboarding-reset.ts nullstiller brukaren i beforeAll pr. prosjekt (race-sikar upsert: begge prosjekta kjører i parallelle workere og delete+create racea på unique(userId)). playwright.config: workers: 1 alltid — fire-and-forget draft-POST frå prosjekt A kunne lande etter prosjekt B si beforeEach-sletting (3 feil ved parallel kjøring); CI kjørte allereie med 1 worker, no er lokal kjøring = CI. Éin sann produkt-bug fanget og retta i OnboardingFlow init (prefill-greina): (1) sammenslåinga returnerte berre prefill+draft+live-input og kastade initialData-defaulta (f.eks. distancePref=50) → steg 1 validering feila (Number(undefined)=NaN, CTA låst for alle); (2) den leste eit gammalt localStorage-snapshot, slik at input skriven medan prefill-fetchet var undervegs (første ~300 ms i ei redigeringsøkt for fullførte brukarar) blei likevel overskrive. Prioritet no: live input > localStorage > prefill > default (28.08-fikset (b) og defaulta bevarte). Verifisert: tsc 0, jest 366/367, e2e onboarding 20/20 lokalt (chromium + firefox, inkl. full flow) + dashboard/journey/match 90/90 frå 28.08-kjøringa (0 fixme att totalt). GEORGE.md oppdatert (status 29.08, 25 migrasjoner, lokale verktøy, live mood-diagnose, to nye observasjonsposter i §5). MASTERPLAN v3.0 R-1 markert løst."
+    },
     {
       "dato": "2026-08-28",
       "id": "E2E-ROTAKKER",
@@ -192,7 +198,7 @@
       "/metoder — ikke lenket noe sted"
     ]
   },
-  "nextAction": "E2E-ROTAKKER-bølgja er DONE (4 commits, e2e grønn lokalt, alle verifikasjonar grønne) — push pends på George. NESTE FOR GEORGE: (1) `bash scripts/install-hooks.sh` (ein gong; pre-push språkvakt). (2) Push main → Vercel auto-deploy (CD er no upblokkert: e2e-jobben har alle browserne + seed-steget + retta testar). (3) Live mood-diagnose i prod: to testere, to nettlesere — A byter mood i MoodsPanel-panelet → B skal sjå fargene byte seg INNAFOR ~3 SEKUND; i B si Network-tabell: GET /api/chat/messages-responsen innehelder «mood»-feltet. Kontrakt-testa (chat-mood-shared); om det framleis ikkje synkroniserer er det polling/nettverksnivå, ikkje logikk. (4) Slipp inn 10→50 testere (B-7) og observer: onboarding-fullføring, match-utfordringa («ingen match denne uken» = R-2), chat-mood, Vipps 503-handtering. (5) OPPFØLGJSSAK (~3 t, ikkje blokkerande): skriv om dei 8 test.fixme()-testane i onboarding.spec.ts mot faktiske komponentar med data-testid (R-1 i MASTERPLAN v3.0). GJENSTÅR FRA FØRRE BØLGJE (ikkje blokkerande): CSRF aktivering (lib/auth/csrf.ts er skrive, aldri importert), dobbeltkall til /api/dashboard/overview (DashboardProvider + page.tsx hentar same endepunkt).",
+  "nextAction": "R1-ONBOARDING-E2E-bølga er DONE (e2e 110/110 lokalt på begge onboarding-prosjekt, tsc/jest/lint grønne) — push pends på George. NESTE FOR GEORGE: (1) `bash scripts/install-hooks.sh` (ein gong; pre-push språkvakt). (2) Kjør `prisma migrate deploy` mot prod FØR push: 25 migrasjoner (to nye sidan forrige deploy: add_journey_next_day_index 25.08, add_message_source 28.08) — verifiser 25/25 mot nøyaktig same DB som Vercels DATABASE_URL. (3) Push main → Vercel auto-deploy. (4) Live mood-diagnose i prod (GEORGE.md steg 9): to testere, to nettlesere — A byter mood i MoodsPanel-panelet → B skal sjå fargene byte seg INNAFOR ~3 SEKUND; i B si Network-tabell: GET /api/chat/messages-responsen inneheld «mood»-feltet. (5) Slipp inn 10→50 testere (B-7) og observer: onboarding-fullføring, match-utfordringa («ingen match denne uken» = R-2), chat-mood, Vipps 503-handtering, kø-alder > 14 dagar, draft-frafall i /admin/users. GJENSTÅR (ikkje blokkerande): CSRF aktivering (lib/auth/csrf.ts er skrive, aldri importert), dobbeltkall til /api/dashboard/overview (DashboardProvider + page.tsx hentar same endepunkt), Quota.free_users.used aukar med 2 per E2E-runde (full-flow-test på 2 motorer; tak 5000 — observer i /admin/quota, ~3,4 år til taket ved dagleg CI).",
   "gjenstaarFoerBeta": [
     "Manuell sjekkliste — nå konsolidert i GEORGE.md (steg 2–9, env-liste, kill switches)"
   ],

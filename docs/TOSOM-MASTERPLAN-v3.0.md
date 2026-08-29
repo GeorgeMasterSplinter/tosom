@@ -152,7 +152,7 @@ dev-ruter fail-closed i produksjon.
 
 | ID | Risiko | Alvor | Tiltak |
 |---|---|---|---|
-| R-1 | **E2E er ikke en reell kvalitetsport.** 20 chromium-tester feiler fordi de leter etter markup som ikke finnes (`.rounded-full.overflow-hidden`, `<h1>`). Appen fungerer — testene er utdaterte. Men `status`-jobben krever `e2e` grønn, så CI er rød og **CD blokkeres** | 🔴 Kritisk |
+| R-1 | **E2E er ikke en reell kvalitetsport.** 20 chromium-tester feiler fordi de leter etter markup som ikke finnes (`.rounded-full.overflow-hidden`, `<h1>`). Appen fungerer — testene er utdaterte. Men `status`-jobben krever `e2e` grønn, så CI er rød og **CD blokkeres** | ✅ Løst 29.08 (onboarding 20/20 + 90/90 ellers — 0 fixme; se §9 R-1-oppdatering) |
 | R-2 | **Marketplace-problemet.** For få i kø → «ingen match denne uken» gjentatte ganger → opplevelsen kollapser | 🟠 Høy |
 | R-3 | Dobbeltkall til `/api/dashboard/overview` — både `DashboardProvider` og `page.tsx` henter samme endepunkt | 🟡 Middels |
 | R-4 | To flaggsystemer: `utils/flags.ts` (20) og `config/features.ts` (11) | 🟡 Middels |
@@ -211,12 +211,26 @@ alltid stod i «feil», og då sluttar folk å sjå på den. No er ho grønn
 (61 passert + 8 fixme lokalt, heile 6 prosjekt i CI), og dei to produkt-
 bugane som blei fanga, var bugar ingen annan port ville ha fanne.
 
+### R-1-oppdatering (29.08)
+
+Dei 8 `test.fixme()`-testane i onboarding er no skrivne om til fungerande
+tester mot `data-testid` (48 testid-er lagt til i onboarding-komponentane:
+steg-indikator/tittel, CTA (`ob-next`), tilbake (`ob-back`) og 44 felt-
+testId-er på dei 11 stega med påkrevde felt). Full-flow-testen fyller alle
+13 stega, fullfører onboarding mot `e2e.onboarding@tosom.dev` og påtar
+redirect til `/matching`. Test-isolasjon: server-draft slettes før kvar
+test, og `e2e/onboarding-reset.ts` nullstiller E2E-brukeren før kvart
+prosjekt (full-flow-testen fullfører profilen — utan reset ville
+prefill-API-et pre-fylt profilen for neste motor). Resultat: onboarding
+**20/20** (10 chromium + 10 firefox, lokalt 29.08, inkl. full flow);
+dashboard/journey/match 90/90 frå 28.08-kjøringa — 0 fixme att totalt.
+
 ## 10. Siste ting før feilfri beta
 
 | # | Sak | Innsats | Blokkerer? |
 |---|---|---|---|
 | 1 | **Kjør `prisma migrate deploy` mot prod** (`Message.source`) før push | 5 min | 🔴 Ja |
-| 2 | **Fiks eller merk de 20 E2E-testene** — bruk `data-testid` i stedet for CSS-klasser, eller marker som `test.fixme()` til de er skrevet om | 3 t | 🔴 Ja (CI rød = ingen deploy) |
+| 2 | **Fiks eller merk de 20 E2E-testene** — bruk `data-testid` i stedet for CSS-klasser, eller marker som `test.fixme()` til de er skrevet om | ✅ Ført 29.08 (data-testid) | 🔴 Ja (CI rød = ingen deploy) |
 | 3 | Push til main → Vercel auto-deploy | 5 min | 🔴 Ja |
 | 4 | Live mood-diagnose i prod (to testere, to nettlesere, ~3 s forsinkelse) | 20 min | 🟠 Bør |
 | 5 | Slipp inn 10 → 50 testere | — | — |

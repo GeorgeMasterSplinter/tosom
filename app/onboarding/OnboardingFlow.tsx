@@ -302,21 +302,36 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
          if (serverDraft.step > 0) setStep(serverDraft.step);
          return;
        }
-       // 2) Fullførte profiler pre-fylles — men felt brukeren allerede
-       // har skrevet lokalt vinner (uten dette forsvant f.eks. navnet ved
-       // reload for brukere med eksisterende profil, da prefill slo over
-       // localStorage-fallbacket)
+       // 2) Fullførte profiler pre-fylles — men lokal draft og brukerens
+       // levende input vinner. Prioritet: live input > localStorage >
+       // prefill > default.
+       // (28.08: prefill slo over localStorage, og felt forsvant ved
+       // reload for brukere med eksisterende profil. 29.08: sammenslåingen
+       // leste et gammelt localStorage-snapshot, slik at input skrevet
+       // mens prefill-fetchet var undervegs likevel ble overskrevet.)
        if (prefill && prefill.data && Object.keys(prefill.data).length > 0) {
-         const merged: Record<string, unknown> = { ...prefill.data };
-         const localDraft = loadDraft();
-         if (localDraft) {
-           for (const [k, v] of Object.entries(localDraft)) {
-             if (v !== '' && v !== null && v !== undefined) {
+         setData((prev) => {
+           // Base: defaultene fra initialData (f.eks. distancePref=50) —
+           // uten dem validerer steg 1 feil (Number(undefined) = NaN).
+           const merged: ProfileData = { ...initialData, ...prefill.data } as ProfileData;
+           const localDraft = loadDraft();
+           if (localDraft) {
+             for (const [k, v] of Object.entries(localDraft)) {
+               if (v !== '' && v !== null && v !== undefined) {
+                 merged[k] = v;
+               }
+             }
+           }
+           for (const [k, v] of Object.entries(prev)) {
+             const isUserInput =
+               v !== '' && v !== null && v !== undefined &&
+               String(v) !== String(initialData[k] ?? '');
+             if (isUserInput) {
                merged[k] = v;
              }
            }
-         }
-         setData((prev) => ({ ...prev, ...merged }));
+           return merged;
+         });
          if (prefill.step > 0) setStep(prefill.step);
          return;
        }

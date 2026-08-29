@@ -1,18 +1,22 @@
 # GEORGE.md — ToSom i åpen beta: deploy-guide og daglig oversikt
 
 For George. Alt du skal gjere manuelt står her. Alt anna er allerede i koden.
-*Oppretta 24.08.2026. Koden vinn alltid — finnar du avvik, noter det her.*
+*Oppretta 24.08.2026. Sist oppdatert 29.08.2026 (E2E-bølga + MASTERPLAN v3.0). Koden vinn alltid — finnar du avvik, noter det her.*
 
 ---
 
 ## 0. Status i dag
 
 - **Åpen beta er slik det fungerer allerede.** Én dør: `/login` — e-post og passord, kontoen opprettes automatisk. Ingen invitasjoner, ingen koder, ingen e-postverifisering. (Dette er BETA-TEST §3.)
-- **Denne deployen inneholder:**
-  - Fikset kvotetall i admin-panelet: viser nå `0 / 5 000` (ikke hardkodet `10 000`), terskler 80 %/95 % av det reelle taket.
-  - Journey-cron kjører **timevis** i stedet for én gang per dag, med `JOURNEY_BATCH_SIZE` (300 på Vercel = kapasitet for ~7 200 samtidige reiser i stedet for ~100).
-  - Ny indikator i panelet: **«Reiser som venter på fremrykk»** + auto-varsel til e-post når køen heng.
-- **Ingen endringer i produktet sjølvt** — same reise, same matcher, same kvote.
+- **Lanseringsvurdering 28.08: 86/100** (se `docs/TOSOM-MASTERPLAN-v3.0.md`) — åpen beta: 🟢 GO. Helse: `tsc` 0 · `jest` 366/367 · lint 0 · build EXIT=0 · 6/6 CI-vakter · E2E grønn (110 testar, 0 fixme).
+- **Levert siden forrige guide (28–29.08, alt verifisert i kode):**
+  - **E2E-rotfiks:** dev-login hadde aldri fungert (307 pekte mot annen origin) — alle testar kjører no innlogga. Playwright-installasjonen i CI mangla firefox/webkit — no installert.
+  - **R-1 (29.08):** de 8 `test.fixme()`-testene i onboarding er nå fungerende tester mot `data-testid` (48 testid-er). Full-flow-testen fyller alle 13 stegene og fullfører onboarding. Fant og rettet én til produkt-bug undervegs: prefill kunne overskrive input skrevet i de første ~300 ms av en redigeringsøkt.
+  - **Sikkerhetsport:** `/api/analytics/track` (var helt åpen) og `/api/system/latency` (lekket API-landkart) er sikra.
+  - **Chat:** kilde-etikettar («💎 Bli kjent» / «📋 Oppgave»), delt mood mellom begge partar, optimistisk send, responsiv layout.
+  - **Onboarding:** to sanne draft-bugar retta (autosave-race + prefill som slo over lokal draft — verdiar forsvann ved reload).
+  - **Rydding:** 5 294 linjer dødkode fjerna (dødt dashbord-lag, duplikatmoduler). 322 nynorsk-treff fjerna; språkvakta er no reell (case-insensitiv, 60+ ord, same skript i CI og lokalt) med pre-push-krok.
+- **Ingen endringer i konseptet** — same reise, same matcher, same kvote, same invarianter.
 
 ---
 
@@ -21,6 +25,10 @@ For George. Alt du skal gjere manuelt står her. Alt anna er allerede i koden.
 ### Steg 1 — Koden er pusket (agenten har gjort dette)
 - [ ] Verifiser at `origin/main` er oppdatert: `git fetch && git --no-pager log --oneline origin/main -3`
 
+### Steg 1b — Lokale verktøy (ein gong, kun på din maskin)
+- [ ] `bash scripts/install-hooks.sh` — installerer pre-push-kroken som stopper nynorsk **før** main (samme ordliste som CI-vakten).
+- [ ] Kjenner kommandoen: `npm run verify` = språkvakt + `tsc` + `jest` i én kjede (kjør før push).
+
 ### Steg 2 — Neon-database (Frankfurt)
 - [ ] Lag prosjekt på [neon.tech](https://neon.tech) i region **eu-central (Frankfurt)**
 - [ ] Kopier **pooled**-URL-en (den med `pooler`, port 5432) → dette blir `DATABASE_URL`
@@ -28,7 +36,13 @@ For George. Alt du skal gjere manuelt står her. Alt anna er allerede i koden.
   ```bash
   DATABASE_URL="..." npx prisma migrate deploy
   ```
-  (23 migrasjoner. Skal kjøre uten feil.)
+  (25 migrasjoner. Skal kjøre uten feil.)
+
+  > **Oppdatert 29.08:** to nye migrasjoner siden forrige deploy —
+  > `add_journey_next_day_index` (25.08, indekserer timevis journey-cron) og
+  > `add_message_source` (28.08, kilde-etikett på chat-bobler). **Kjør
+  > `migrate deploy` igjen** og verifiser at `migrate status` viser 25/25
+  > mot nøyaktig samme DB som Vercels `DATABASE_URL`.
 
   > **AVVIK notert 25.08:** `DATABASE_URL` i `.env.prod` peikar på ein `db.prisma.io`-DB,
   > ikke ein Neon-Frankfurt-DB. Det var den `db.prisma.io`-DB-en som mangla
@@ -75,6 +89,14 @@ For George. Alt du skal gjere manuelt står her. Alt anna er allerede i koden.
 - [ ] Først **10**, ikke 50 (DRIFTSPLAN: éi uke observasjon før utviding)
 - [ ] Deretter opp mot **50** — taket ditt er mjukt: du bare fortel 50 menneskje
 - [ ] Min. 2 i kø per runde; **partall** gir beste dekningsgrad
+
+**Live mood-diagnose (første tester, ~3 minutt):**
+Kodekontrakten for delt stemning er verifisert i test (`chat-mood-shared`). Dette beviser den i produksjon:
+1. To testere, to nettlesere, i samtale med hverandre.
+2. A byter mood i MoodsPanel-panelet.
+3. B skal se fargene bytte seg **innen ~3 sekunder** (polling).
+4. Kontroll: i B si Network-tabell — responsen fra `GET /api/chat/messages` skal inneholde `mood`-feltet.
+5. Synkroniserer det fortsatt ikke: det er polling/nettverksnivå, ikke logikk — sjekk at B har et ferskt bundle (hard reload).
 
 ---
 
@@ -159,6 +181,8 @@ Endring: Vercel → Settings → Environment Variables → endre → **Redeploy*
 - **«Reiser som venter på fremrykk»** i panelet: `0` = alt fint · `>0` = selvkorrigerer seg innen én time (bekreft at det blir 0 igjen) · `≥100` = raudt — cronen kjører ikke (sjekk Vercel → Cron + Logs). Du får òg e-post-varsel.
 - **Runde-varigheit:** grønt < 30 s · gult 30–50 s · raudt > 50 s. Med 50 testere skal det være under 5 s.
 - **`rejectReasons`** (rundesloggen): `kjonn` og `alder` er **nye** kategoriar (WP1). Hoge tal = filterbug, ikke «vanlege avvisningar».
+- **Kø-alder** (admin-panelet): > 14 dager = noen venter for lenge.
+- **Draft-frafall** (`/admin/users`): mister folk data i onboarding? (Draft-fikset fra 28.08 skal ha lukka dette — høyt frafall = regression.)
 
 ---
 

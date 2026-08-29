@@ -29,6 +29,8 @@ interface OnboardingSelectGridProps {
   maxSelected?: number; // For multi-select (default: 1)
   multiHint?: string; // Egendefinert hint for multi-select (default: "Vel opp til N alternativ")
   accentColor?: string; // Seksjonsfarge (default: OB.section.identity)
+  /** Valfri data-testid for E2E-tester (settes på containeren — optioner scopes med getByRole inne i). */
+  testId?: string;
 }
 
 /**
@@ -48,6 +50,7 @@ export function OnboardingSelectGrid({
   maxSelected = 1,
   multiHint,
   accentColor = OB.section.identity,
+  testId,
 }: OnboardingSelectGridProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
@@ -79,7 +82,7 @@ export function OnboardingSelectGrid({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" data-testid={testId}>
       {/* Label */}
       <label className="block" style={{ color: OB.textSecondary }}>
         <span className="text-[15px] font-medium">{label}</span>

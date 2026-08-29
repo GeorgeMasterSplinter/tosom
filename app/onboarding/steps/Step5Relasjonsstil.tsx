@@ -54,6 +54,7 @@ export default function Step5Relasjonsstil({ data, onChange, onBack, onNext }: P
           columns={2}
           maxSelected={3}
           multiHint="Du kan velge 1–3 typer — unntatt «Åpen & uforpliktende», som velges alene."
+          testId="ob-relationship-seeking"
         />
 
        {/* Næringsbehov — kor mye nærheit du treng */}
@@ -68,6 +69,7 @@ export default function Step5Relasjonsstil({ data, onChange, onBack, onNext }: P
          selectedValue={getValue('closenessNeed', '')}
          onChange={(v) => onChange('closenessNeed', v)}
          columns={1}
+         testId="ob-closeness-need"
        />
 
        {/* Sjølvstende vs. fellesskap — fritt tekstfelt */}

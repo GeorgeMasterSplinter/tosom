@@ -16,6 +16,7 @@ export function BackButton({ onClick }: BackButtonProps) {
   return (
     <button
       onClick={onClick}
+      data-testid="ob-back"
       className="w-full py-5 px-8 rounded-xl font-light tracking-wide
         bg-white/[0.04] border border-white/[0.08]
         text-white/60 hover:text-white/80

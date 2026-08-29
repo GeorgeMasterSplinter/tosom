@@ -188,6 +188,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             mikroguiding="Skriv f.eks. Sofia, Jonas eller Lia"
             maxLength={50}
             minChars={2}
+            testId="ob-name"
           />
 
           <OnboardingTextField
@@ -198,6 +199,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             mikroguiding="Må være minst 21"
             maxLength={3}
             minChars={2}
+            testId="ob-age"
           />
 
           <OnboardingSelectGrid
@@ -212,6 +214,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             selectedValue={val('gender', '')(data)}
             onChange={(v) => onChange('gender', v)}
             accentColor={OB.section.identity}
+            testId="ob-gender"
           />
 
           <OnboardingSelectGrid
@@ -226,6 +229,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             selectedValue={val('seekingGender', '')(data)}
             onChange={(v) => onChange('seekingGender', v)}
             accentColor={OB.section.identity}
+            testId="ob-seeking"
           />
         </div>
       </OnboardingSection>
@@ -248,6 +252,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             mikroguiding="F.eks. Asker, Bergen eller Stavanger"
             maxLength={100}
             minChars={2}
+            testId="ob-city"
           />
 
           <div>
@@ -259,6 +264,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
               mikroguiding="Fire siffer — vi bruker dette for avstand, ikke nøyaktig posisjon"
               maxLength={4}
               minChars={4}
+              testId="ob-postal"
             />
             {postalPlace && (
               <p className="text-[12px] mt-1 ml-1" style={{ color: OB.section.location }}>

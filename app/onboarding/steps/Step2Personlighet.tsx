@@ -128,6 +128,7 @@ export default function Step2Personlighet({ data, onChange, onBack, onNext }: Pr
         minChars={10}
         rows={4}
         multiline
+        testId="ob-self-desc"
       />
 
       {/* Separator */}
@@ -144,6 +145,7 @@ export default function Step2Personlighet({ data, onChange, onBack, onNext }: Pr
           minChars={10}
           rows={3}
           multiline
+          testId="ob-energy-giver"
         />
 
         {/* Separator */}
@@ -160,6 +162,7 @@ export default function Step2Personlighet({ data, onChange, onBack, onNext }: Pr
           minChars={10}
           rows={3}
           multiline
+          testId="ob-energy-drainer"
         />
 
         {/* Separator */}
@@ -176,6 +179,7 @@ export default function Step2Personlighet({ data, onChange, onBack, onNext }: Pr
           minChars={10}
           rows={3}
           multiline
+          testId="ob-pressure-react"
         />
 
         {/* Separator */}
@@ -192,6 +196,7 @@ export default function Step2Personlighet({ data, onChange, onBack, onNext }: Pr
         minChars={5}
         rows={3}
         multiline
+        testId="ob-quirk"
       />
 
       {/* FORSKNINGSMOTOR F-5 — BFI-10 (kortform av Big Five) */}

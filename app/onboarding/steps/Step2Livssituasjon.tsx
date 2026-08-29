@@ -122,6 +122,7 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
         ]}
         selectedValue={getValue('workType', '')}
         onChange={(v) => onChange('workType', v)}
+        testId="ob-work-type"
       />
 
       {/* Separator */}
@@ -143,6 +144,7 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
         ]}
         selectedValue={getValue('housingType', '')}
         onChange={(v) => onChange('housingType', v)}
+        testId="ob-housing"
       />
 
       {/* Separator */}
@@ -159,6 +161,7 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
         ]}
         selectedValue={getValue('householdSize', '')}
         onChange={(v) => onChange('householdSize', v)}
+        testId="ob-household"
       />
 
       {/* Separator */}
@@ -179,6 +182,7 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
         ]}
         selectedValue={getValue('economicStability', '')}
         onChange={(v) => onChange('economicStability', v)}
+        testId="ob-economy"
       />
 
       {/* Separator */}
@@ -198,6 +202,7 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
           minChars={10}
           rows={4}
           multiline
+          testId="ob-responsibilities"
         />
 
         <OnboardingTextField
@@ -210,6 +215,7 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
           minChars={10}
           rows={4}
           multiline
+          testId="ob-daily-routine"
         />
       </div>
 

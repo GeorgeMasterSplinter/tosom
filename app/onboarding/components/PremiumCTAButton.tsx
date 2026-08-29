@@ -48,6 +48,7 @@ export function PremiumCTAButton({
         onMouseEnter={() => !disabled && setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         disabled={disabled || isLoading}
+        data-testid="ob-next"
         className={`
           relative overflow-hidden rounded-2xl font-semibold text-center
           transition-all duration-400 ease-out

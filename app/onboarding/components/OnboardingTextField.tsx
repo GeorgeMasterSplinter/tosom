@@ -21,6 +21,8 @@ interface OnboardingTextFieldProps {
   rows?: number;
   multiline?: boolean;
   showCharCount?: boolean;
+  /** Valfri data-testid for E2E-tester (settes på input/textarea). */
+  testId?: string;
 }
 
 /**
@@ -41,6 +43,7 @@ export function OnboardingTextField({
   rows = 3,
   multiline = false,
   showCharCount = false,
+  testId,
 }: OnboardingTextFieldProps) {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -92,6 +95,7 @@ export function OnboardingTextField({
           rows={rows}
           style={baseInputStyle}
           suppressHydrationWarning
+          data-testid={testId}
         />
       ) : (
         <input
@@ -104,6 +108,7 @@ export function OnboardingTextField({
           maxLength={maxLength + 10}
           style={baseInputStyle}
           suppressHydrationWarning
+          data-testid={testId}
         />
       )}
 

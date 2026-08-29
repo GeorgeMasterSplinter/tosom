@@ -95,6 +95,7 @@ export function OnboardingSlide({
               <span
                 className="text-[11px] uppercase tracking-[0.1em]"
                 style={{ color: OB.textMuted }}
+                data-testid="ob-step-indicator"
               >
                 Steg {slideIndex + 1} av {totalSlides}
               </span>
@@ -107,6 +108,7 @@ export function OnboardingSlide({
                 color: OB.textPrimary,
                 letterSpacing: '-0.02em',
               }}
+              data-testid="ob-step-title"
             >
               {title}
             </h1>

@@ -31,12 +31,12 @@ export default function LoginPage() {
       return;
     }
 
-    // Bestem målretning basert på onboarding-status.
+    // Bestem målretning basert på onboarding-status og reise-tilstand.
     // Hard navigasjon (window.location.href) garanterer at session-cookie
     // settes og påtverkes på nytt — påliteligere enn klient-navigasjon.
     let target = "/dashboard";
     try {
-      const obRes = await fetch("/api/onboarding/progress");
+      const obRes = await fetch("/api/dashboard/overview");
       if (obRes.ok) {
         const ob = await obRes.json();
         if (ob && ob.onboardingComplete === false) {

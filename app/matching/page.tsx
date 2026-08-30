@@ -691,6 +691,23 @@ export default function MatchingPage() {
           </div>
         )}
 
+        {/* ═══ INNSTILLINGER ═══ */}
+        <div className="mt-12 text-center">
+          <button
+            onClick={() => router.push('/settings')}
+            className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl text-base font-medium transition-all duration-300 hover:brightness-110 hover:scale-[1.02] active:scale-[0.98]"
+            style={{
+              background: 'rgba(255,255,255,0.05)',
+              border: '1px solid rgba(255,255,255,0.14)',
+              color: 'rgba(255,255,255,0.6)',
+              boxShadow: '0 2px 12px rgba(0,0,0,0.15)',
+            }}
+          >
+            <span className="text-xl" aria-hidden="true">⚙️</span>
+            Innstillinger
+          </button>
+        </div>
+
         {/* ═══ SKIP ROUND CONFIRM MODAL ═══ */}
         {showSkipConfirm && (
           <div className="fixed inset-0 z-[999] flex items-center justify-center p-6" style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(12px)' }}>

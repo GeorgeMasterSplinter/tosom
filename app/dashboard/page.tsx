@@ -449,8 +449,9 @@ export default function Dashboard() {
           sessionStorage.setItem(revealKey, '1');
         }
       } catch {
-        // No match or error → go to waiting
-        router.replace('/matching');
+        // Ingen redirect her — ville forårsake loop om venterommet
+        // sendte tilbake. Viser feil i stedet.
+        setLoadError('Kunne ikke laste dashboard. Prøv igjen.');
         return;
       } finally {
         setLoading(false);

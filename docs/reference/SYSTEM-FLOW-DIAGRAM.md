@@ -9,6 +9,46 @@
 
 ---
 
+## 0. ToSom-løkken på ett blikk
+
+Den ene løkken. Alt i ToSam dreier seg om disse syv stegene.
+
+```mermaid
+flowchart LR
+    OB["1. ONBOARDING<br/>Bygg din dype profil<br/>(13 steg)"] <--> Q["2. QUEUE<br/>Still deg i kø<br/>Vent til lørdag"]
+    Q --> M["3. MATCHING<br/>Én match<br/>Én reise. Én relasjon."]
+    M --> D["4. DASHBOARD<br/>Se reisen<br/>Dag, fase, resonanse"]
+    D <--> C["5. SAMTALE (CHAT)<br/>Snakk med partner<br/>Guidede spørsmål"]
+    C --> F["6. 4 FASER<br/>EARLY → BUILDING_TRUST<br/>→ DEEPER → CHECKIN"]
+    F --> E["7. 30 DAGER<br/>Fullført<br/>Minnet er ditt"]
+    E -.->|"Ny runde<br/>neste lørdag"| Q
+    E -.->|"Redigér profil"| OB
+```
+
+**Lesingen:**
+
+| # | Steg | Hva som skjer | Hvor |
+|---|------|---------------|------|
+| 1 | **Onboarding** | Brukeren bygger en dyp, privat profil (personlighet, verdier, tilknytning, livssituasjon) | `/onboarding` |
+| 2 | **Queue** | Profilen er ferdig — brukeren stiller seg i kø. Kan redigere profilen når som helst | `/matching` (venterom) |
+| 3 | **Matching** | Natt til lørdag: motoren finner ÉN match (6 dimensjoner, 11 dealbreakers). Ingen valg, ingen feed | `cron/matching` |
+| 4 | **Dashboard** | Brukeren ser reisen: dag, fase, resonanse, kalendar. Hoved-hubben | `/dashboard` |
+| 5 | **Samtale** | Guidet chat mellom to. Bli-kjent-spørsmål, oppgaver, moods. Sanntid via Pusher | `/chat/[id]` |
+| 6 | **4 faser** | EARLY (1–7) → BUILDING_TRUST (8–14) → DEEPER (15–21) → CHECKIN (22–30) | `cron/journey` |
+| 7 | **30 dager** | Reisen er ferdig. «Vi fant hverandre» eller ny runde neste lørdag | `endJourney()` |
+
+**To toveis-piler:**
+- `ONBOARDING ↔ QUEUE` — brukeren kan redigere profilen mellom runder (eller under)
+- `DASHBOARD ↔ CHAT` — brukeren hopper frem og tilbake under reisen
+
+**To returer til slutt:**
+- Til QUEUE (ny runde, samme profil)
+- Til ONBOARDING (justere profilen før neste runde)
+
+> Dette er hele ToSom. Én match. Én reise. Én relasjon.
+
+---
+
 ## 1. Brukerreise — Tilstandsmaskin (journeyState)
 
 Hver bruker har én `journeyState` til enhver tid. Overgangene er strengt styrt av server-side cron og API-ruter.

@@ -215,7 +215,11 @@ export default function MatchingPage() {
 
           // MATCHED/ON_JOURNEY: reisen er i gang — redirect til dashboard.
           // Venterommet er IKKE for brukere med aktiv match.
-          if (journeyState === 'MATCHED' || journeyState === 'ON_JOURNEY') {
+          // KRITISK: Krev at match faktisk finnes i oversikten — ellers
+          // oppstår infinite loop (dashboard redirect-er til /matching
+          // fordi match mangler, /matching redirect-er til /dashboard
+          // fordi journeyState sier MATCHED).
+          if ((journeyState === 'MATCHED' || journeyState === 'ON_JOURNEY') && data.match) {
             router.replace('/dashboard');
             return;
           }

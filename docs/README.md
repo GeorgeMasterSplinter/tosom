@@ -47,7 +47,7 @@ Kort inngangsport. Alt som ligger på toppnivå her **gjelder nå**.
 
 | Mappe | Innhold |
 |-------|---------|
-| [`reference/`](reference/) | Levende oppslagsverk (API-ruter, matching-dimensjoner, match-status, design tokens) |
+| [`reference/`](reference/) | Levende oppslagsverk (API-ruter, matching-dimensjoner, match-status, design tokens, **system-flow-diagram**) |
 | [`concepts/`](concepts/) | Skisserte konsepter — **aldri normativ** |
 | [`archive/`](archive/) | Historikk: `snapshots/` (punkt-in-tid-diagnoser), `ferdig/` (utførte planer), `erstattet/` (utsatte dokumenter) m.m. **Aldri normativ.** |
 

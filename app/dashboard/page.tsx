@@ -395,6 +395,7 @@ export default function Dashboard() {
   const [userName, setUserName] = useState('');
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [showReveal, setShowReveal] = useState(false);
   const revealedRef = useRef(false);
 
@@ -427,9 +428,15 @@ export default function Dashboard() {
         setData(json);
 
         // Ingen aktiv match/reise → redirect /matching.
-        // Merk: dag 0 (reise startet, begge har ikke møtt opp enda) BLIR vist
-        // her — ikke sendt videre til /matching.
+        // MEN: hvis journeyState sier MATCHED/ON_JOURNEY, er dette et
+        // data-innkonsistens problem (journeyState satt men match mangler).
+        // Da redirect-er vi IKKE (ville forårsake loop) — viser feil i stedet.
         if (!json.match || !json.journey) {
+          const js = (json as any).journeyState;
+          if (js === 'MATCHED' || js === 'ON_JOURNEY') {
+            setLoadError('Din reise er registrert, men dataene er ikke klare ennå. Vennligst kontakt support@tosom.no.');
+            return;
+          }
           router.replace('/matching');
           return;
         }
@@ -461,6 +468,24 @@ export default function Dashboard() {
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 rounded-full border-2 animate-spin" style={{ borderColor: 'rgba(212,175,55,0.2)', borderTopColor: '#D4AF37' }} />
           <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '14px' }}>Laster din reise…</p>
+        </div>
+      </div>
+    );
+  }
+
+  /* ═══ LOAD ERROR (data-innkonsistens) ═══ */
+  if (loadError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#0B1520' }}>
+        <div className="text-center max-w-md px-6">
+          <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '16px', lineHeight: '1.6' }}>{loadError}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-6 px-6 py-3 rounded-xl text-sm font-medium"
+            style={{ background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', color: '#D4AF37' }}
+          >
+            Prøv igjen
+          </button>
         </div>
       </div>
     );

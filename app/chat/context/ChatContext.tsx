@@ -12,6 +12,7 @@
 
 import { createContext, useContext, useState, useCallback, useEffect, useRef, ReactNode } from "react";
 import { MoodId, MoodTheme, getMoodTheme, VALID_MOODS, DEFAULT_MOOD } from "@/app/chat/lib/mood";
+import { getPusherClient } from "@/lib/pusher/client";
 
 /* ═══════════════════════════════════════
    TYPES
@@ -181,15 +182,30 @@ export function ChatProvider({
     // Initial load
     loadMessages();
 
-    // Poll every 3 seconds for new messages (real-time oppdatering)
+    // Poll every 3 seconds for new messages (fallback)
     pollRef.current = setInterval(() => {
       loadMessages(true);
     }, 3000);
+
+    // Pusher real-time: abonner på kanalen for denne samtalen.
+    // Pusher gir øyeblikkelig varsling; polling dekker opp ved forbindelsesfeil.
+    const pusher = getPusherClient();
+    const channelName = `conversation-${conversationId}`;
+    let channel: any = null;
+    if (pusher) {
+      channel = pusher.subscribe(channelName);
+      channel.bind('new-message', () => {
+        loadMessages(true);
+      });
+    }
 
     return () => {
       if (pollRef.current) {
         clearInterval(pollRef.current);
         pollRef.current = null;
+      }
+      if (pusher && channel) {
+        pusher.unsubscribe(channelName);
       }
     };
   }, [conversationId, loadMessages]);

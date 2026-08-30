@@ -16,6 +16,7 @@
 import { getPhaseForDay } from '@/lib/journey/engine';
 import { usePresence } from '@/hooks/usePresence';
 import { MoodTheme } from '@/app/chat/lib/mood';
+import { useRouter } from 'next/navigation';
 
 /* ═══════════════════════════════════════
    THEME TOKENS
@@ -107,6 +108,7 @@ export function ChatHeader({
   isMoodsOpen = false,
   moodTheme,
 }: ChatHeaderProps) {
+  const router = useRouter();
   const isMilestone = journeyDay === 10 || journeyDay === 20 || journeyDay === 30;
 
   // Mood-aksent faller tilbake til gull om tema ikke er gitt
@@ -141,6 +143,20 @@ export function ChatHeader({
       />
 
       <div className="flex items-center gap-3 relative z-10">
+        {/* ═══ TILBAKKE ═══ */}
+        <button
+          onClick={() => router.push('/dashboard')}
+          className="flex-shrink-0 flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-medium transition-all duration-300 hover:brightness-110"
+          style={{
+            background: G.glassBg,
+            border: `1px solid ${G.glassBorder}`,
+            color: G.textSecondary,
+          }}
+          aria-label="Tilbake til dashboard"
+        >
+          ← Tilbake
+        </button>
+
         {/* ═══ PARTNER INFO ═══ */}
         <div className="flex-1 min-w-0">
           {/* Navn + alder + avstand + presence */}

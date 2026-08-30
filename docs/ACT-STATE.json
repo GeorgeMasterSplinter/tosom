@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "updatedAt": "2026-08-29",
+  "updatedAt": "2026-08-30",
   "commit": "bab509b",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
@@ -57,6 +57,12 @@
     }
   ],
   "leveranser": [
+    {
+      "dato": "2026-08-30",
+      "id": "CHAT-MATCH-ROUTING-FIX",
+      "title": "Match/Chat-routing fix: venterom redirect, Pusher real-time, tilbakeknapp, venterom-meny ryddet",
+      "content": "1) Venterom (/matching) redirect-er nå brukere med aktiv match (MATCHED/ON_JOURNEY) til /dashboard — de ser aldri venterommet. 2) «Innstillinger»-knappen fjernet fra venterommet (gir forvirring). 3) Pusher koblet inn i chat: send-ruten triggerer new-message-event på kanal conversation-${conversationId}, ChatContext subscribes på samme kanal (polling beholdes som fallback). 4) Tilbakeknapp «← Tilbake» lagt til i ChatHeader (mål: /dashboard). 5) Rapport: docs/CHAT-MATCH-ROUTING-FIX.md. Filer: app/matching/page.tsx, app/chat/components/ChatHeader.tsx, app/api/chat/send/route.ts, app/chat/context/ChatContext.tsx. Verifisert: tsc 0, jest 366/367, verify:lang 0 treff."
+    },
     {
       "dato": "2026-08-29",
       "id": "R1-ONBOARDING-E2E",
@@ -198,7 +204,7 @@
       "/metoder — ikke lenket noe sted"
     ]
   },
-  "nextAction": "R1-ONBOARDING-E2E-bølga er DONE (e2e 110/110 lokalt på begge onboarding-prosjekt, tsc/jest/lint grønne) — push pends på George. NESTE FOR GEORGE: (1) `bash scripts/install-hooks.sh` (ein gong; pre-push språkvakt). (2) Kjør `prisma migrate deploy` mot prod FØR push: 25 migrasjoner (to nye sidan forrige deploy: add_journey_next_day_index 25.08, add_message_source 28.08) — verifiser 25/25 mot nøyaktig same DB som Vercels DATABASE_URL. (3) Push main → Vercel auto-deploy. (4) Live mood-diagnose i prod (GEORGE.md steg 9): to testere, to nettlesere — A byter mood i MoodsPanel-panelet → B skal sjå fargene byte seg INNAFOR ~3 SEKUND; i B si Network-tabell: GET /api/chat/messages-responsen inneheld «mood»-feltet. (5) Slipp inn 10→50 testere (B-7) og observer: onboarding-fullføring, match-utfordringa («ingen match denne uken» = R-2), chat-mood, Vipps 503-handtering, kø-alder > 14 dagar, draft-frafall i /admin/users. GJENSTÅR (ikkje blokkerande): CSRF aktivering (lib/auth/csrf.ts er skrive, aldri importert), dobbeltkall til /api/dashboard/overview (DashboardProvider + page.tsx hentar same endepunkt), Quota.free_users.used aukar med 2 per E2E-runde (full-flow-test på 2 motorer; tak 5000 — observer i /admin/quota, ~3,4 år til taket ved dagleg CI).",
+  "nextAction": "CHAT-MATCH-ROUTING-FIX er DONE (venterom-redirect, Pusher real-time, tilbakeknapp, meny-rydding — tsc/jest/lang grønne). KJØRE NÅ: prisma migrate deploy mot prod + push main → Vercel auto-deploy. NESTE FOR GEORGE: (1) `npx prisma migrate deploy` mot prod (verifiser 25/25). (2) Push main → Vercel deploy. (3) Live-test: logg inn som matchet bruker → skal gå rett til /dashboard (ikke /matching). Logg inn som u-matchet → skal se venterommet. (4) Chat: send melding → partner skal se den i sanntid (Pusher) eller innen 3 s (polling fallback). (5) Slipp inn testere. GJENSTÅR: CSRF aktivering, Vipps Login + Betaling, DPA + DPIA.",
   "gjenstaarFoerBeta": [
     "Manuell sjekkliste — nå konsolidert i GEORGE.md (steg 2–9, env-liste, kill switches)"
   ],

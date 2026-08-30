@@ -122,6 +122,16 @@ async function postHandler(request: Request) {
       },
     });
 
+    // Real-time: trigger Pusher-event til begge deltagere i samtalen.
+    // Feil i Pusher må ikke blokkere sendingen — meldingen er allerede lagret.
+    const { triggerNewMessage } = await import('@/lib/pusher/server');
+    triggerNewMessage(conversationId, {
+      id: message.id,
+      content: message.content,
+      senderId: session.user.id,
+      createdAt: message.createdAt,
+    }).catch(() => { /* Pusher-feil er ikke kritisk — polling dekker opp */ });
+
     return NextResponse.json({ message });
   } catch (error) {
     console.error("POST /api/chat/send error:", error);

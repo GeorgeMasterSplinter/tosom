@@ -213,14 +213,13 @@ export default function MatchingPage() {
             return;
           }
 
-          // MATCHED/ON_JOURNEY: reisen er i gang — redirect til dashboard.
-          // Venterommet er IKKE for brukere med aktiv match.
-          // KRITISK: Krev at match faktisk finnes i oversikten — ellers
-          // oppstår infinite loop (dashboard redirect-er til /matching
-          // fordi match mangler, /matching redirect-er til /dashboard
-          // fordi journeyState sier MATCHED).
+          // MATCHED/ON_JOURNEY: Vis match-kort i venterommet.
+          // Ingen auto-redirect til /dashboard — kun ÉT sider skal
+          // redirect (dashboard → matching) for å forhindre loop.
+          // Brukeren klikker seg selv til dashboard fra match-kortet.
           if ((journeyState === 'MATCHED' || journeyState === 'ON_JOURNEY') && data.match) {
-            router.replace('/dashboard');
+            setOverview(data);
+            setQueueState('matched');
             return;
           }
 

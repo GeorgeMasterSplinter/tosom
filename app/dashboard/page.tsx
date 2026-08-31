@@ -425,6 +425,13 @@ export default function Dashboard() {
         const res = await fetch('/api/dashboard/overview');
         if (!res.ok) throw new Error('No access');
         const json: DashboardData = await res.json();
+        // DEBUG: Fjern etter at loop er fikset
+        console.log('[DASHBOARD DEBUG]', {
+          match: json.match ? 'EXISTS (' + json.match.id + ')' : 'NULL',
+          journey: json.journey ? 'EXISTS' : 'NULL',
+          journeyState: (json as any).journeyState,
+          onboardingComplete: (json as any).onboardingComplete,
+        });
         setData(json);
 
         // Ingen aktiv match/reise → redirect /matching.

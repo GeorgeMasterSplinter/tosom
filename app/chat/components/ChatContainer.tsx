@@ -18,55 +18,6 @@ import { BliKjentPanel } from "@/app/chat/components/BliKjentPanel";
 import { OppgaverPanel } from "@/app/chat/components/OppgaverPanel";
 import { MoodsPanel } from "@/app/chat/components/MoodsPanel";
 import { useChatScroll } from "@/components/chat/useChatScroll";
-import { usePresence } from "@/hooks/usePresence";
-
-/* ═══════════════════════════════════════
-    PRESENCE INDICATOR — Grøn dot + typing
-    ═══════════════════════════════════════ */
-
-function PresenceIndicator({ partnerId, partnerName }: { 
-  partnerId: string | null; 
-  partnerName?: string;
-}) {
-  const { isOnline, isTyping } = usePresence(partnerId);
-  
-  if (!partnerId) return null;
-
-  return (
-    <div className="flex items-center gap-2 ml-3">
-      {/* Online dot */}
-      <div className="relative flex items-center justify-center">
-        <div 
-          className="w-2.5 h-2.5 rounded-full transition-all duration-300"
-          style={{ 
-            background: isOnline ? '#34D399' : '#6B7280',
-            boxShadow: isOnline ? '0 0 8px rgba(52,211,153,0.5)' : 'none',
-          }}
-        />
-        {/* Pulse animation for online */}
-        {isOnline && (
-          <div 
-            className="absolute inset-0 rounded-full animate-ping"
-            style={{ 
-              background: 'rgba(52,211,153,0.3)',
-              animationDuration: '2s',
-            }}
-          />
-        )}
-      </div>
-      
-      {/* Status text */}
-      {(isOnline || isTyping) && (
-        <span 
-          className="text-xs italic transition-all duration-300"
-          style={{ color: isTyping ? '#D4AF37' : 'rgba(255,255,255,0.5)' }}
-        >
-          {isTyping ? 'Skriver...' : isOnline ? 'Online' : ''}
-        </span>
-      )}
-    </div>
-  );
-}
 
 /* ═══════════════════════════════════════
     TYPING INDICATOR — Dobbelt-typing boble
@@ -131,7 +82,7 @@ function MessageList({ partner, journeyDay }: {
   partner?: { name: string; imageUrl?: string; id?: string };
   journeyDay?: number;
 }) {
-  const { messages: ctxMessages, loading, error, moodTheme } = useChat();
+  const { messages: ctxMessages, loading, error, moodTheme, partnerTyping } = useChat();
   const tPrimary = moodTheme.textPrimary;
   const tSecondary = moodTheme.textSecondary;
   const allMessages = ctxMessages;
@@ -196,6 +147,8 @@ function MessageList({ partner, journeyDay }: {
       {allMessages.map((msg) => (
         <MessageBubble key={msg.id} message={msg as any} />
       ))}
+      {/* «Skriver...»-boble mens parten skriver (Pusher-event; polling fallback) */}
+      {partnerTyping && <TypingIndicator />}
     </div>
   );
 }
@@ -221,6 +174,7 @@ function ChatInput({
   const [uploading, setUploading] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastTypingSentRef = useRef(0);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -232,19 +186,23 @@ function ChatInput({
     }
   }, [text]);
 
-  // Typing indicator — send presence update
+  // Typing indicator — signalér skriveaktivitet (throttlad: første tast +
+  // maks 1 gang per 2. s mens man skriver; «stopp» etter 3 s i ro).
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
-    
-    // Signal typing to server
-    if (partnerId) {
-      fetch('/api/presence/update', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ isTyping: true }),
-      }).catch(() => {});
 
-      // Clear previous timeout and set new one
+    if (partnerId) {
+      const now = Date.now();
+      if (now - lastTypingSentRef.current > 2000) {
+        lastTypingSentRef.current = now;
+        fetch('/api/presence/update', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ isTyping: true }),
+        }).catch(() => {});
+      }
+
+      // Nullstill ro-timeouten — etter 3 s stopper vi «Skriver...»
       if (typingTimeoutRef.current) {
         clearTimeout(typingTimeoutRef.current);
       }
@@ -257,6 +215,29 @@ function ChatInput({
       }, 3000);
     }
   };
+
+  // Hjertetikk — «jeg er i chatten». Ved sideåpning, hver 30. s og hver
+  // gang fanen blir synlig igjen. Mangel på tikking = offline (~90 s).
+  useEffect(() => {
+    if (!partnerId) return;
+    const beat = () => {
+      fetch('/api/presence/update', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isOnline: true }),
+      }).catch(() => {});
+    };
+    beat();
+    const iv = setInterval(beat, 30000);
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') beat();
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      clearInterval(iv);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
+  }, [partnerId]);
 
   useEffect(() => {
     return () => {

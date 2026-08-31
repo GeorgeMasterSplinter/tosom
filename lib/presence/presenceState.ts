@@ -1,157 +1,90 @@
 /**
- * ToSom — Presence State (Partner Presence v2026) 🟡⭐
- * In-memory state for tracking user online/typing status.
- * 
- * Pakke: Partner Presence (Steg 1)
- * 
- * Merk: Dette er in-memory, så state mister ved server restart.
- * For production med flere Node-instanser, bruk Redis eller DB.
+ * ToSom — Presence State v2 (DB-basert — Vercel-safe)
+ *
+ * Erstatte in-memory-versjonen (Steg 1): en Map i funksjonsminnet
+ * fungerer ikke på Vercel, der hvert kall har sitt eget isolerte og
+ * kortlevde minne — partens get hente aldri den andres set.
+ *
+ * State ligger nå i User-tabellen:
+ *   - lastSeenAt: hjertetikk fra chatsiden (hver ~30 s) → «Online»
+ *     mens det siste tikket er under 90 s gammalt.
+ *   - typingUntil: mens dette er i fremtid → «Skriver…»
+ *
+ * Alt er best-effort: presence-feil logges og kommer aldri fram til brukeren.
  */
+
+import { prisma } from '@/lib/prisma';
 
 export type PresenceState = {
   userId: string;
   isOnline: boolean;
   isTyping: boolean;
-  lastSeen: number; // timestamp
+  lastSeen: number | null; // ms-tidsstempel
 };
 
-/* ═══════════════════════════════════════
-   IN-MEMORY STORE
-   ═══════════════════════════════════════ */
-
-const presenceMap = new Map<string, PresenceState>();
+/** «Online» mens det siste hjertetikket er innenfor dette vinduet */
+export const ONLINE_WINDOW_MS = 90 * 1000;
+/** Levetid for skrive-flagget (klienten forlenger mens man skriver) */
+export const TYPING_TTL_MS = 5000;
 
 /**
- * Set user as online and update last seen
+ * Hjertetikk — brukeren er i chatten nå.
  */
-export function setOnline(userId: string): void {
-  const existing = presenceMap.get(userId);
-  if (existing) {
-    existing.isOnline = true;
-    existing.lastSeen = Date.now();
-    // Clear typing when going online (typing resets)
-    existing.isTyping = false;
-  } else {
-    presenceMap.set(userId, {
-      userId,
-      isOnline: true,
-      isTyping: false,
-      lastSeen: Date.now(),
-    });
-  }
+export async function setOnline(userId: string): Promise<void> {
+  await prisma.user.update({
+    where: { id: userId },
+    data: { lastSeenAt: new Date() },
+  });
 }
 
 /**
- * Set user as offline
+ * Eksplisitt «offline» finnes ikke: mangel på hjertetikk er
+ * definisjonen på offline (lastSeenAt faller utenfor vinduet).
  */
-export function setOffline(userId: string): void {
-  const existing = presenceMap.get(userId);
-  if (existing) {
-    existing.isOnline = false;
-    existing.lastSeen = Date.now();
-    // Also clear typing when going offline
-    existing.isTyping = false;
-  } else {
-    // Still create a record so we know they were last seen
-    presenceMap.set(userId, {
-      userId,
-      isOnline: false,
-      isTyping: false,
-      lastSeen: Date.now(),
-    });
-  }
+export async function setOffline(_userId: string): Promise<void> {
+  // no-op — se kommentaren over
 }
 
 /**
- * Set user as typing (auto-clears after timeout)
+ * Sett skrive-flagget (utgår etter ttl, forlenges av nye tastetrykk).
  */
-let typingTimeouts = new Map<string, NodeJS.Timeout>();
-
-export function setTyping(userId: string): void {
-  const existing = presenceMap.get(userId);
-  if (existing) {
-    existing.isTyping = true;
-    existing.lastSeen = Date.now();
-  } else {
-    // If user doesn't exist yet, assume they're online and typing
-    presenceMap.set(userId, {
-      userId,
-      isOnline: true,
-      isTyping: true,
-      lastSeen: Date.now(),
-    });
-  }
-
-  // Auto-clear typing after 3 seconds
-  const existingTimeout = typingTimeouts.get(userId);
-  if (existingTimeout) {
-    clearTimeout(existingTimeout);
-  }
-
-  const timeout = setTimeout(() => {
-    clearTyping(userId);
-  }, 3000);
-
-  typingTimeouts.set(userId, timeout);
+export async function setTyping(userId: string, ttlMs: number = TYPING_TTL_MS): Promise<void> {
+  await prisma.user.update({
+    where: { id: userId },
+    data: {
+      lastSeenAt: new Date(),
+      typingUntil: new Date(Date.now() + ttlMs),
+    },
+  });
 }
 
 /**
- * Clear typing status for a user
+ * Rydd skrive-flagget (klienten sender dette etter ~3 s i ro).
  */
-export function clearTyping(userId: string): void {
-  const existing = presenceMap.get(userId);
-  if (existing) {
-    existing.isTyping = false;
-  }
-
-  // Clear timeout
-  const timeout = typingTimeouts.get(userId);
-  if (timeout) {
-    clearTimeout(timeout);
-    typingTimeouts.delete(userId);
-  }
+export async function clearTyping(userId: string): Promise<void> {
+  await prisma.user.update({
+    where: { id: userId },
+    data: { typingUntil: null },
+  });
 }
 
 /**
- * Get presence state for a user
+ * Lese presence for en bruker.
+ * Returnerer undefined hvis brukeren ikke finnes.
  */
-export function getPresence(userId: string): PresenceState | undefined {
-  return presenceMap.get(userId);
-}
+export async function getPresence(userId: string): Promise<PresenceState | undefined> {
+  const row = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { lastSeenAt: true, typingUntil: true },
+  });
+  if (!row) return undefined;
 
-/**
- * Get all presence states (for admin/debug)
- */
-export function getAllPresence(): Map<string, PresenceState> {
-  return new Map(presenceMap);
-}
-
-/**
- * Clean up old entries (run periodically, e.g., every 60s)
- * Removes users who haven't been seen in 5 minutes
- */
-export function cleanupOldEntries(maxAgeMs: number = 5 * 60 * 1000): void {
   const now = Date.now();
-  for (const [userId, state] of presenceMap.entries()) {
-    if (now - state.lastSeen > maxAgeMs) {
-      // If user was online but not seen recently, mark as offline
-      if (state.isOnline) {
-        state.isOnline = false;
-      }
-      // Also clear typing
-      state.isTyping = false;
-    }
-  }
+  const lastSeen = row.lastSeenAt ? row.lastSeenAt.getTime() : null;
+  return {
+    userId,
+    isOnline: lastSeen !== null && now - lastSeen < ONLINE_WINDOW_MS,
+    isTyping: row.typingUntil !== null && row.typingUntil.getTime() > now,
+    lastSeen,
+  };
 }
-
-// Auto-cleanup every 60 seconds
-const cleanupInterval = setInterval(() => {
-  cleanupOldEntries();
-}, 60 * 1000);
-
-// Don't let this keep the process open in development
-if (cleanupInterval.unref) {
-  cleanupInterval.unref();
-}
-
-export default presenceMap;

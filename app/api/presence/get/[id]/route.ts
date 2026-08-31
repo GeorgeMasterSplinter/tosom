@@ -26,7 +26,7 @@ export async function GET(
     }
 
     const { id } = await params;
-    const presence = getPresence(id);
+    const presence = await getPresence(id);
 
     if (!presence) {
       // Ingen state funnet — returner default "offline"

@@ -61,6 +61,8 @@ export interface ChatContextValue {
   sessionUserId: string | null;
   /** Visningsnavn til innlogga bruker (navnet valgt i onboarding) */
   myName: string | null;
+  /** Parten skriv no (Pusher-event + polling-fallback) */
+  partnerTyping: boolean;
   sendMessage: (content: string, type?: MessageType, options?: { source?: "bli_kjent" | "oppgave" }) => Promise<boolean>;
   loadMessages: () => Promise<void>;
   /** Aktive mood */
@@ -107,6 +109,8 @@ export function ChatProvider({
   // Mood-state — DELT mood, server-styrt per samtale. Begge parter deler den;
   // når én bytter, synkroniseres den for begge via polling (og Pusher om aktivert).
   const [mood, setMoodState] = useState<MoodId>(DEFAULT_MOOD);
+  // «Skriver...» for partneren — Pusher-event er kilde, polling er fallback
+  const [partnerTyping, setPartnerTyping] = useState(false);
   const moodRef = useRef<MoodId>(DEFAULT_MOOD);
 
   const setMood = useCallback((newMood: MoodId) => {
@@ -198,10 +202,22 @@ export function ChatProvider({
     const pusher = getPusherClient();
     const channelName = `conversation-${conversationId}`;
     let channel: any = null;
+    let typingTimer: ReturnType<typeof setTimeout> | null = null;
     if (pusher) {
       channel = pusher.subscribe(channelName);
       channel.bind('new-message', () => {
         loadMessages(true);
+      });
+      // Skriveindikator — øyeblikkelig «Skriver...» når partneren skriver
+      channel.bind('typing', (data: any) => {
+        if (data?.senderId === sessionUserId) return;
+        if (data?.isTyping) {
+          setPartnerTyping(true);
+          if (typingTimer) clearTimeout(typingTimer);
+          typingTimer = setTimeout(() => setPartnerTyping(false), 4000);
+        } else {
+          setPartnerTyping(false);
+        }
       });
     }
 
@@ -210,11 +226,12 @@ export function ChatProvider({
         clearInterval(pollRef.current);
         pollRef.current = null;
       }
+      if (typingTimer) clearTimeout(typingTimer);
       if (pusher && channel) {
         pusher.unsubscribe(channelName);
       }
     };
-  }, [conversationId, loadMessages]);
+  }, [conversationId, loadMessages, sessionUserId]);
 
   const sendMessage = useCallback(async (content: string, type: MessageType = "text", options?: { source?: "bli_kjent" | "oppgave" }): Promise<boolean> => {
     if (!conversationId) return false;
@@ -304,6 +321,7 @@ export function ChatProvider({
       sendError,
       sessionUserId: sessionUserId ?? null,
       myName: myName ?? null,
+      partnerTyping,
       sendMessage,
       loadMessages,
       mood,

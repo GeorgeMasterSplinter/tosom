@@ -134,3 +134,42 @@ nettlesarar, og `GET /api/chat/images/[id]` skal returnere signert R2-URL.
   `npx playwright test e2e/tests/chat.spec.ts e2e/tests/match.spec.ts e2e/tests/matching-journey.spec.ts`
 - Live-sjekkliste (to nettlesarar, testA/testB): navn, åpenbaring 1 gang,
   moods i begge retningar, send-linje utan skrolle, bilda etter dag-15-UPDATE.
+
+---
+
+## Bølgje 2 (31.08) — Presence v2 (DB-basert) + rolegare chat-UX
+
+**Problemet:** online-punktet og «Skriver...» var døde i produksjon.
+`lib/presence/presenceState.ts` brukte ein in-memory `Map` — på Vercel har
+kvar funksjonskall eige isolerte og kortlevde minne, så parten sin
+`GET /api/presence/get/[id]` såg aldri den andre si `PATCH`. I tillegg
+sendte ChatInput éin `isTyping:true`-POST per tastetrykk (ingen throttling),
+og Pusher-eventet `typing` (allerede triggera av `/api/chat/typing`) var
+aldri binda på klienten.
+
+**Løysinga:**
+
+| Lag | Endring |
+|---|---|
+| DB | `User.lastSeenAt` + `User.typingUntil` (migrasjon `20260831175820_presence_last_seen_typing`) |
+| `lib/presence/presenceState.ts` | Omskrive til Prisma: `setOnline` = hjartetikk, `setTyping` (TTL 5 s) / `clearTyping`, `getPresence` (online < 90 s). `setOffline` er no-op (mangel på tikking = offline) |
+| `PATCH /api/presence/update` | `isOnline:true` = hjartetikk, `isTyping:true/false` = sett/rydd. `isOnline:false` = no-op |
+| `GET /api/presence/get/[id]` | Les frå DB; ukjend bruker = offline-default |
+| `ChatContext` | Binda Pusher-eventet `typing` → `partnerTyping` (4 s timeout; ignorerar eigne event). Pusher = umiddelbart, polling = fallback |
+| `ChatContainer` (ChatInput) | Hjartetikk: ved sideåpning, kvar 30. s, ved synlighetsskifte. Typing throttla: første tast + maks 1 per 2. s, stopp etter 3 s i ro. Død `PresenceIndicator` fjerna; `TypingIndicator` («Skriver...»-boble) aktiverast via `partnerTyping` |
+| `MessageBubble` | Navn + tid flytta **inni** bobla (éi metalinje, 10px, under teksten). Ytre `Timestamp`-komponent og namnelinjer fjerna |
+| `ChatHeader` | Alder + avstand fjerna (står på match-kortet i dashboard). Online-punkt: 10px med glød + diskret puls (gull medan parten skriver) |
+| Død kode | `lib/presence/presenceEngine.ts` sletta (aldri importert) |
+
+**Semantikk:** «Online» = hjartetikk under 90 s gammalt. «Skriver» =
+`typingUntil` i framtid (settest av klienten, utgår etter 5 s). Alt er
+best-effort: presence-feil swalgarst i klienten og rører ikkje chatten.
+
+**Verifisering:** språkvakt grønn (bokmål), `tsc` 0, jest 383/384 (44 suiter,
+inkl. ny `__tests__/presence-v2.test.ts` med 17 kontrakstester), prod-build OK.
+Prod-DB: CI kjører `prisma migrate deploy` (additiv migrasjon — to nullable
+kolonner; overlap med Vercel-deployen er harmless).
+
+**Live-sjekk (to nettlesarar):** A opnar chatten → B ser grønt punkt + «Online».
+A skriv → B ser «Skriver...» + gullt punkt + boble i bunn av lista,
+forsvinn etter ~4 s. A lukkar fanen → B: punkt blir grått etter ~90 s.

@@ -204,18 +204,11 @@ function SystemCard({ children }: { children: React.ReactNode }) {
    TIMESTAMP — Tidløyper v2
    ═══════════════════════════════════════ */
 
-function Timestamp({ value, color, align = "left" }: { value: string; color?: string; align?: "left" | "right" }) {
+function formatTime(value: string): string | null {
   try {
     const date = new Date(value);
     if (isNaN(date.getTime())) return null;
-    return (
-      <p
-        className={`text-[10px] mt-1.5 tracking-wide ${align === "right" ? "text-right" : "text-left"}`}
-        style={{ color: color || G.textMuted }}
-      >
-        {date.toLocaleTimeString("no", { hour: "2-digit", minute: "2-digit" })}
-      </p>
-    );
+    return date.toLocaleTimeString("no", { hour: "2-digit", minute: "2-digit" });
   } catch {
     return null;
   }
@@ -371,6 +364,12 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
   const isLeft = sender === "partner";
   const resonanceGlow = getResonanceGlow(resonanceLevel || (isMe ? 30 : 10));
 
+  // Metalinjen inne i boblen: hvem (navnet valgt i onboarding) og når
+  const bubbleName = isMe
+    ? (myName ?? undefined)
+    : (sender === "partner" ? metadata?.senderInfo?.name : undefined);
+  const bubbleTime = metadata?.timestamp ? formatTime(String(metadata.timestamp)) : null;
+
   return (
     <div
       style={{
@@ -461,12 +460,20 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
             >
               {content}
             </p>
-        </div>
 
-        {/* Timestamp — utanfor bobla, under, justert mot boblekanten (premium-standard) */}
-        {metadata?.timestamp && (
-          <Timestamp value={String(metadata.timestamp)} color={tMuted} align={isMe ? "right" : "left"} />
-        )}
+            {/* Navn + tid — inne i boblen, en rolig metalinje under teksten:
+                hvem som har skrevet, og når. Ikke noe utenfor boblen. */}
+            {(bubbleName || bubbleTime) && (
+              <p
+                className={`mt-1.5 text-[10px] tracking-wide relative z-10 ${isMe ? "text-right" : "text-left"}`}
+                style={{ color: tMuted }}
+              >
+                {bubbleName}
+                {bubbleName && bubbleTime ? " · " : ""}
+                {bubbleTime}
+              </p>
+            )}
+        </div>
 
         {/* Resonance-indikator for "me" med høg resonance */}
           {isMe && resonanceLevel && resonanceLevel > 50 && (
@@ -489,26 +496,6 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
             </div>
           )}
 
-          {/* Partner-navn (venstre side) */}
-          {!isMe && metadata?.senderInfo && sender === "partner" && (
-            <p
-              className="mt-1.5 ml-2 text-[11px] font-medium tracking-wide"
-              style={{ color: tMuted }}
-            >
-              {metadata.senderInfo.name}
-            </p>
-          )}
-
-          {/* Eget navn (høyre side) — samme rolige behandling som partners
-              navn, slik at det alltid er tydelig hvem som har skrevet. */}
-          {isMe && myName && (
-            <p
-              className="mt-1.5 mr-2 text-[11px] font-medium tracking-wide text-right"
-              style={{ color: tMuted }}
-            >
-              {myName}
-            </p>
-          )}
       </div>
 
       {/* Tomt rom for symmetri */}

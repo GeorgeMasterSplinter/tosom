@@ -4,7 +4,7 @@
   "commit": "bab509b",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
-    "tests": "366/367 (43 suiter, 1 skippet)",
+    "tests": "383/384 (44 suiter, 1 skippet)",
     "e2e": "0 fixme att. Onboarding: 20/20 lokalt 29.08 (10 chromium + 10 firefox, inkl. full flow). Dashboard/journey/match: 90/90 frå 28.08-kjøringa (ingen kodeendringar som raknar dei sidan). Totalt 110 passed / 0 failed. 5/6 prosjekt lokalt (Mobile Safari/webkit krever system-bibliotek — installeres i CI med --with-deps). Dev-login (storageState) fungerer — alle testar kjører innlogga. playwright.config: workers: 1 alltid (lokal kjøring = CI) — onboarding-testene deler éin E2E-bruker som full-flow-testen muterer; parallelle workere racea på server-draften",
     "typecheck": "0 errors",
     "lint": "0 warnings (npx next lint --max-warnings 0)",
@@ -200,6 +200,12 @@
       "id": "F2-3",
       "title": "Geo-koordinatar 100 % (ferdig 10.08)",
       "content": "postalCodes.json: 5 146/5 146 postnummer med sted/lat/lon (git 2c12a0d, dag 10). Ingen null-verdiar att — radius-filteret og avstandskartet dekkjer heile landet."
+    },
+    {
+      "dato": "2026-08-31",
+      "id": "PRESENCE-V2-CHAT-UX",
+      "title": "Presence v2 (DB-basert) + chat-UX: «Skriver...», navn+tid i bobla, ren header",
+      "content": "In-memory presence (Map) fungerte aldri på Vercel (isolert, kortlevd funksjonsminne) — online-punkt og «Skriver...» var døde i prod. Retta med DB-basert presence: User.lastSeenAt (hjertetikk frå chatsida kvar 30. s + ved synlighetsskifte; online < 90 s) og User.typingUntil (throttlet typing-POST: første tast + maks 1 per 2. s; stopp etter 3 s i ro; TTL 5 s). Migrasjon 20260831175820_presence_last_seen_typing (26 totalt; dev + test-DB pålagt lokalt, prod via CI «prisma migrate deploy»). presenceState.ts omskrive til Prisma (same eksportnamn), PATCH/GET-rutene await-e; isOnline:false er no-op. Pusher «typing»-eventet (allereie triggera av chat/typing-ruta) bindast no i ChatContext → partnerTyping (4 s timeout) — umiddelbar «Skriver...», polling er fallback. ChatInput: hjartetikk-effect + throttla typing. UI: navn+tid flytta INNI bobla (éi metalinje, 10px, roleg; Timestamp-komponent + ytre namnelinjer fjerna), chat-header: alder + avstand fjerna (står på match-kortet i dashboard), online-punkt 10px med glød + diskret puls (gull medan parten skriver). Død kode fjerna: PresenceIndicator, presenceEngine.ts. Kontrakstest: __tests__/presence-v2.test.ts (17 tester: DB-motor + begge rutene, Prisma mocka). DRIFT: prod-migrasjon via CI (additiv: to nullable kolonner; overlap-vindauget er harmless — presence-rutene er best-effort og klienten swalgar feil). Verifisert: språkvakt grønn (bokmål), tsc 0, jest 383/384 (44 suiter, 1 skippet), prod-build OK."
     }
   ],
   "verifiedFlow": {

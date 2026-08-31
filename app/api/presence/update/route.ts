@@ -10,7 +10,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
-import { setOnline, setOffline, setTyping, clearTyping, getPresence } from '@/lib/presence/presenceState';
+import { setOnline, setTyping, clearTyping, getPresence } from '@/lib/presence/presenceState';
 import { presenceUpdateSchema, errorResponse } from '@/lib/api-validator';
 
 export async function PATCH(request: NextRequest) {
@@ -41,25 +41,23 @@ export async function PATCH(request: NextRequest) {
 
     const body = validation.data;
 
-    // Oppdater basert på body
-    if (body.isOnline !== undefined) {
-      if (body.isOnline) {
-        setOnline(userId);
-      } else {
-        setOffline(userId);
-      }
+    // Oppdater basert på body (v2: DB-basert presence, best-effort)
+    if (body.isOnline === true) {
+      // Hjartetikk — klienten sender dette ved sideåpning og kvar ~30 s
+      await setOnline(userId);
     }
+    // isOnline: false — inga handling; mangel på hjartetikk = offline
 
     if (body.isTyping !== undefined) {
       if (body.isTyping) {
-        setTyping(userId);
+        await setTyping(userId);
       } else {
-        clearTyping(userId);
+        await clearTyping(userId);
       }
     }
 
     // Returner oppdatert state
-    const presence = getPresence(userId);
+    const presence = await getPresence(userId);
 
     return NextResponse.json({ 
       success: true,

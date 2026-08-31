@@ -15,6 +15,7 @@
 
 import { getPhaseForDay } from '@/lib/journey/engine';
 import { usePresence } from '@/hooks/usePresence';
+import { useChat } from '@/app/chat/context/ChatContext';
 import { MoodTheme } from '@/app/chat/lib/mood';
 import { useRouter } from 'next/navigation';
 
@@ -54,24 +55,45 @@ interface PartnerInfo {
    ═══════════════════════════════════════ */
 
 function PresenceDot({ partnerId, accent, tMuted }: { partnerId?: string | null; accent?: string; tMuted?: string }) {
-  const { isOnline, isTyping } = usePresence(partnerId || null);
+  const { isOnline, isTyping: presenceTyping } = usePresence(partnerId || null);
+  const { partnerTyping } = useChat();
 
   if (!partnerId) return null;
 
+  // «Skriver...»: Pusher-eventet er hovedkilden (med én gang);
+  // polling-flagget dekker opp ved Pusher-feil.
+  const isTyping = presenceTyping || partnerTyping;
+
   return (
     <div className="flex items-center gap-1.5">
-      {/* Online dot */}
-      <div
-        className="w-2 h-2 rounded-full transition-all duration-300"
-        style={{
-          background: isOnline ? '#34D399' : 'rgba(255,255,255,0.2)',
-          boxShadow: isOnline ? '0 0 6px rgba(52,211,153,0.5)' : 'none',
-        }}
-      />
+      {/* Online-punkt — mer synlig: 10px, glød og diskret puls mens online.
+          Gull mens partneren skriver, grøn når online, grå når borte. */}
+      <div className="relative flex items-center justify-center">
+        <div
+          className="w-2.5 h-2.5 rounded-full transition-all duration-300"
+          style={{
+            background: isTyping
+              ? (accent ?? '#D4AF37')
+              : isOnline ? '#34D399' : 'rgba(255,255,255,0.2)',
+            boxShadow: isTyping
+              ? `0 0 10px ${accent ?? 'rgba(212,175,55,0.55)'}`
+              : isOnline ? '0 0 10px rgba(52,211,153,0.7)' : 'none',
+          }}
+        />
+        {isOnline && (
+          <div
+            className="absolute inset-0 rounded-full animate-ping"
+            style={{
+              background: isTyping ? 'rgba(212,175,55,0.25)' : 'rgba(52,211,153,0.3)',
+              animationDuration: '2s',
+            }}
+          />
+        )}
+      </div>
       {/* Typing / Online text */}
       {(isOnline || isTyping) && (
         <span
-          className="text-[10px] italic transition-all duration-300"
+          className="text-[11px] italic transition-all duration-300"
           style={{ color: isTyping ? (accent ?? '#D4AF37') : (tMuted ?? 'rgba(255,255,255,0.4)') }}
         >
           {isTyping ? 'Skriver…' : 'Online'}
@@ -171,18 +193,13 @@ export function ChatHeader({
 
         {/* ═══ PARTNER INFO ═══ */}
         <div className="flex-1 min-w-0">
-          {/* Navn + alder + avstand + presence */}
+          {/* Navn — alder og avstand er fjernet (står på match-kortet i dashboard) */}
           <div className="flex items-center gap-2">
             <h2
               className="text-sm sm:text-base font-medium truncate"
               style={{ color: tPrimary }}
             >
-              {partner?.name || "Din match"}, {partner?.age} år
-              {partner?.distanceKm != null && (
-                <span style={{ color: tSecondary }}>
-                  {' '}· ca. {partner.distanceKm} km
-                </span>
-              )}
+              {partner?.name || "Din match"}
             </h2>
             <PresenceDot partnerId={partner?.id} accent={accent} tMuted={tMuted} />
           </div>

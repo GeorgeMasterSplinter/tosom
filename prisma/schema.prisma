@@ -27,6 +27,11 @@ model User {
   updatedAt           DateTime             @updatedAt
   lastMatchAt         DateTime?
   lockedUntil         DateTime?
+  // PRESENCE (v2, DB-basert — Vercel-safe): online-tilstand og skriveindikator.
+  // lastSeenAt: siste hjartetikk frå chatsida → «Online» medan < 90 s.
+  // typingUntil: medan dette er i framtid → «Skriver…» (settest av klienten).
+  lastSeenAt          DateTime?
+  typingUntil         DateTime?
   // B4.1 — Vilkårssamtykke lagres med tidsstempel og versjon
   termsAcceptedAt     DateTime?
   termsVersion        String?

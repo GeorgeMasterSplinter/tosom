@@ -90,10 +90,10 @@ function PresenceDot({ partnerId, accent, tMuted }: { partnerId?: string | null;
           />
         )}
       </div>
-      {/* Typing / Online text */}
+      {/* Typing / Online text — skjult på smale skjermer (punktet bærer status) */}
       {(isOnline || isTyping) && (
         <span
-          className="text-[11px] italic transition-all duration-300"
+          className="hidden md:inline text-[11px] italic transition-all duration-300"
           style={{ color: isTyping ? (accent ?? '#D4AF37') : (tMuted ?? 'rgba(255,255,255,0.4)') }}
         >
           {isTyping ? 'Skriver…' : 'Online'}
@@ -176,7 +176,7 @@ export function ChatHeader({
         }}
       />
 
-      <div className="flex items-center gap-3 relative z-10">
+      <div className="flex items-center gap-2 md:gap-3 relative z-10">
         {/* ═══ TILBAKKE — kun en pille med pil, uten tekst ═══ */}
         <button
           onClick={() => router.push('/dashboard')}
@@ -235,7 +235,7 @@ export function ChatHeader({
         {/* ═══ BLI KJENT-KNAPP — Premium med subtil pulse (mood-aksent) ═══ */}
         <button
           onClick={onOpenBliKjent}
-          className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all duration-500 group"
+          className="flex-shrink-0 flex items-center justify-center gap-1.5 h-10 w-10 rounded-full text-xs font-semibold tracking-wide transition-all duration-500 group md:w-auto md:px-4 md:py-2.5 md:rounded-xl"
           style={{
             background: isBliKjentOpen
               ? accentGlow
@@ -249,14 +249,14 @@ export function ChatHeader({
           }}
         >
           <span className="text-base transition-transform duration-300 group-hover:rotate-12">📖</span>
-          <span className="hidden sm:inline">Bli kjent</span>
+          <span className="hidden md:inline">Bli kjent</span>
         </button>
 
         {/* ═══ OPPGAVER-KNAPP — Premium med subtil pulse (mood-aksent) ═══ */}
         {onOpenOppgaver && (
           <button
             onClick={onOpenOppgaver}
-            className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all duration-500 group"
+            className="flex-shrink-0 flex items-center justify-center gap-1.5 h-10 w-10 rounded-full text-xs font-semibold tracking-wide transition-all duration-500 group md:w-auto md:px-4 md:py-2.5 md:rounded-xl"
             style={{
               background: isOppgaverOpen
                 ? accentGlow
@@ -270,7 +270,7 @@ export function ChatHeader({
             }}
           >
             <span className="text-base transition-transform duration-300 group-hover:rotate-12">🎲</span>
-            <span className="hidden sm:inline">Oppgaver</span>
+            <span className="hidden md:inline">Oppgaver</span>
           </button>
         )}
 
@@ -278,7 +278,7 @@ export function ChatHeader({
         {onOpenMoods && (
           <button
             onClick={onOpenMoods}
-            className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all duration-500 group"
+            className="flex-shrink-0 flex items-center justify-center gap-1.5 h-10 w-10 rounded-full text-xs font-semibold tracking-wide transition-all duration-500 group md:w-auto md:px-4 md:py-2.5 md:rounded-xl"
             style={{
               background: isMoodsOpen
                 ? accentGlow
@@ -292,7 +292,7 @@ export function ChatHeader({
             }}
           >
             <span className="text-base transition-transform duration-300 group-hover:rotate-12">🎨</span>
-            <span className="hidden sm:inline">Moods</span>
+            <span className="hidden md:inline">Moods</span>
           </button>
         )}
 

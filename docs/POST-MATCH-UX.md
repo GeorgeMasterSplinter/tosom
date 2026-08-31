@@ -173,3 +173,18 @@ kolonner; overlap med Vercel-deployen er harmless).
 **Live-sjekk (to nettlesarar):** A opnar chatten → B ser grønt punkt + «Online».
 A skriv → B ser «Skriver...» + gullt punkt + boble i bunn av lista,
 forsvinn etter ~4 s. A lukkar fanen → B: punkt blir grått etter ~90 s.
+
+## Prod-drift: MIGRASJONAR MÅ PÅLEGGJAS EKSPLISITT (lært 31.08)
+
+CI si `prisma migrate deploy`-steg (ci.yml) bruker **repo-env**
+`DATABASE_URL` som peiker på annan DB enn prod — ei grønn CI-run seier
+IKKJE at prod-DB er migrert. Etter deployen `e550849`
+feila prod (manglande kolonner → innlogging/dashboard/onboarding) til
+migrasjonen vart pålagt manuelt via engangs-ruta
+`/api/db/apply-presence-migration` (sletta etter bruk).
+
+**Prosess fram til permanent fix er på plass:**
+1. Etter kvar ny migrasjon: pålegg ho mot prod før/med ein deploy.
+2. Alternativ permanent fix: legg inn prod-DB-URL som CI-secret og peik
+   eitt `migrate deploy`-steg mot det (eller kjør deploy frå Vercel
+   pre-deploy hook).

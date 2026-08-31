@@ -14,12 +14,10 @@ import GlassCard from '@/components/ui/cards/GlassCard';
 function IconNoImage() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M1 1l22 22" />
-      <path d="M16 16c-3 0-5-3-5-3l1-1" />
-      <path d="M12 12c0 3 2 5 5 5" />
-      <path d="M8 21h12a2 2 0 0 0 2-2v-6" />
-      <path d="M2 9.5A2.5 2.5 0 0 1 4.5 7H21a2 2 0 0 1 2 2v5" />
-      <path d="M12 3l-2 2" />
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+      <circle cx="8.5" cy="8.5" r="1.5" />
+      <path d="M21 15l-5-5L5 21" />
+      <line x1="3" y1="21" x2="21" y2="3" />
     </svg>
   );
 }
@@ -100,8 +98,10 @@ function IconEnd() {
 function IconNew() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 0 0 4.582 9m0 0H9" />
-      <path d="M20 20v-5h-.581m-15.356-2a8.001 8.001 0 0 0 15.356-2m0 0h-5.5" />
+      <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+      <path d="M21 3v5h-5" />
+      <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+      <path d="M8 16H3v5" />
     </svg>
   );
 }
@@ -268,8 +268,10 @@ export default function ReisenPage() {
                 <p
                   style={{
                     ...typographyToStyle('body-lg'),
-                    color: color.text.secondary,
+                    color: color.brand.gold,
                     lineHeight: '1.8',
+                    textAlign: 'center',
+                    fontStyle: 'italic',
                   }}
                 >
                   Dere får rom til å føle, forstå og bli sett for den dere er.

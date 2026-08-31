@@ -182,7 +182,7 @@ export default function LoginPage() {
               margin: 0,
             }}
           >
-            Tosom er i åpen test. Gratis. Vi stresstester systemet — trykk på alt, prøv å knekke det.
+            Tosom er i åpen test. Gratis. Vi tester hele reisen — fra profilen og gjennom hele 30-dagersreisen.
           </p>
           <p
             style={{
@@ -192,8 +192,9 @@ export default function LoginPage() {
               margin: 0,
             }}
           >
-            Test gjerne å rapportere, blokkere og avslutte reisen tidlig. Tilbakemelding:{" "}
+            Funnet du feil eller har du tilbakemeldinger? Send oss gjerne en epost:{" "}
             <span style={{ color: "#D4AF37" }}>support@tosom.no</span>
+            . Takk — vi setter stor pris på det!
           </p>
           <p
             style={{

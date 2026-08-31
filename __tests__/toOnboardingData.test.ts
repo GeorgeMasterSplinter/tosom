@@ -201,3 +201,40 @@ describe('toOnboardingData — defensive utfall', () => {
     expect(toOnboardingData(makeProfile({}), false).complete).toBe(false);
   });
 });
+
+describe('toOnboardingData — livssituasjon (steg 2b) fra lifeSituation-kolonnen', () => {
+  it('pre-fyller alle seks livssituasjonsfelt', () => {
+    const p = makeProfile({
+      lifeSituation: {
+        gender: 'Kvinne', seekingGender: 'Mann', city: 'Bergen',
+        workType: 'anstatt-fulltid,studier',
+        housingType: 'leilighet,hus',
+        householdSize: '2',
+        economicStability: 'stabil,sparing',
+        responsibilities: 'Jeg har to barn som bor hos meg.',
+        dailyRoutine: 'Jeg står opp tidlig og drikker kaffe i ro.',
+      },
+    });
+    const { data } = toOnboardingData(p, true);
+    expect(data.city).toBe('Bergen');
+    // Flervalg (kommaseparert) må round-trippe heilt — grid markerer begge valgte
+    expect(data.workType).toBe('anstatt-fulltid,studier');
+    expect(data.housingType).toBe('leilighet,hus');
+    expect(data.householdSize).toBe('2');
+    expect(data.economicStability).toBe('stabil,sparing');
+    expect(data.responsibilities).toBe('Jeg har to barn som bor hos meg.');
+    expect(data.dailyRoutine).toBe('Jeg står opp tidlig og drikker kaffe i ro.');
+  });
+
+  it('pre-fyller ikke livssituasjonsfelt når kolonnen mangler dem (legacy-profiler)', () => {
+    const p = makeProfile({ lifeSituation: { gender: 'Kvinne', seekingGender: 'Mann', city: 'Bergen' } });
+    const { data } = toOnboardingData(p, true);
+    expect(data.city).toBe('Bergen');
+    expect(data.workType).toBeUndefined();
+    expect(data.housingType).toBeUndefined();
+    expect(data.householdSize).toBeUndefined();
+    expect(data.economicStability).toBeUndefined();
+    expect(data.responsibilities).toBeUndefined();
+    expect(data.dailyRoutine).toBeUndefined();
+  });
+});

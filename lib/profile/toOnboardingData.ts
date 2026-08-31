@@ -4,9 +4,10 @@
 // (redigering av fullførte profiler, kryss-enhets-nystart).
 //
 // Invers til mappingen i /api/profile/setup — HOLD PÅ PÅ HVIS EN AV DEM ENDRES.
-// Felt som onboarding samler inn, men som setup ikke persisterer (f.eks.
-// livssituasjonsgrid, deler av moden-steg) kan ikke pre-fylles og hoppes over
-// bevisst (mangler i databasen, ikke i kartleggingen).
+// Felt som onboarding samler inn, men som setup ikke persisterer (deler av
+// moden-steg) kan ikke pre-fylles og hoppes over bevisst (mangler i
+// databasen, ikke i kartleggingen). Livssituasjon (steg 2b) persisteres
+// nå i lifeSituation-kolonnen og pre-fylles (se nøklene under).
 
 /** Prisma Profile-rad (det subsettet mapperen bruker). */
 export interface ProfileRow {
@@ -69,6 +70,14 @@ export function toOnboardingData(
   put('gender', toStr(ls?.gender));
   put('seekingGender', toStr(ls?.seekingGender));
   put('city', toStr(ls?.city));
+  // Livssituasjon (steg 2b) — additive nøkler i lifeSituation-kolonnen
+  // (setup persisterer disse fra 2026-08-31; tidligere ble de kastet).
+  put('workType', toStr(ls?.workType));
+  put('housingType', toStr(ls?.housingType));
+  put('householdSize', toStr(ls?.householdSize));
+  put('economicStability', toStr(ls?.economicStability));
+  put('responsibilities', toStr(ls?.responsibilities));
+  put('dailyRoutine', toStr(ls?.dailyRoutine));
 
   const lo = profile.lifestyle;
   put('height', toStr(lo?.height));

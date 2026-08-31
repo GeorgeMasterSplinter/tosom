@@ -42,6 +42,7 @@ async function postHandler(req: NextRequest) {
     const {
       basic,
       personlighet,
+      livssituasjon,
       tilknytning,
       kommunikasjon,
       kjaerlighet,
@@ -106,6 +107,13 @@ async function postHandler(req: NextRequest) {
           gender: basic.gender,
           seekingGender: basic.seekingGender,
           city: basic.city,
+          // Livssituasjon (steg 2b) — additive nøkler (var validert men aldri lagret)
+          workType: livssituasjon?.workType,
+          housingType: livssituasjon?.housingType,
+          householdSize: livssituasjon?.householdSize,
+          economicStability: livssituasjon?.economicStability,
+          responsibilities: livssituasjon?.responsibilities,
+          dailyRoutine: livssituasjon?.dailyRoutine,
         },
         lifestyle: {
           height: basic.height ?? undefined, // Zod coerces to number already
@@ -214,6 +222,13 @@ async function postHandler(req: NextRequest) {
           gender: basic.gender,
           seekingGender: basic.seekingGender,
           city: basic.city,
+          // Livssituasjon (steg 2b) — additive nøkler (var validert men aldri lagret)
+          workType: livssituasjon?.workType,
+          housingType: livssituasjon?.housingType,
+          householdSize: livssituasjon?.householdSize,
+          economicStability: livssituasjon?.economicStability,
+          responsibilities: livssituasjon?.responsibilities,
+          dailyRoutine: livssituasjon?.dailyRoutine,
         },
         lifestyle: {
           height: basic.height ?? undefined, // Zod coerces to number already

@@ -372,6 +372,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             ]}
             selectedValue={val('lifestyle', '')(data)}
             onChange={(v) => onChange('lifestyle', v)}
+            maxSelected={2}
             accentColor={OB.section.lifestyle}
           />
 
@@ -388,6 +389,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             ]}
             selectedValue={val('smoking', '')(data)}
             onChange={(v) => onChange('smoking', v)}
+            maxSelected={2}
             accentColor={OB.section.lifestyle}
           />
 
@@ -411,6 +413,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             ]}
             selectedValue={val('religion', '')(data)}
             onChange={(v) => onChange('religion', v)}
+            maxSelected={2}
             accentColor={OB.section.lifestyle}
           />
 
@@ -426,6 +429,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             ]}
             selectedValue={val('children', '')(data)}
             onChange={(v) => onChange('children', v)}
+            maxSelected={2}
             accentColor={OB.section.lifestyle}
           />
 
@@ -440,6 +444,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             ]}
             selectedValue={val('wantChildren', '')(data)}
             onChange={(v) => onChange('wantChildren', v)}
+            maxSelected={2}
             accentColor={OB.section.lifestyle}
           />
         </div>

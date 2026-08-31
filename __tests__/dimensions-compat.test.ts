@@ -156,4 +156,31 @@ describe('scoreLifeSituationCompat', () => {
     const b = { wantChildren: 'ja', smoking: 'nei' };
     expect(scoreLifeSituationCompat(a, b)).toBe(100);
   });
+
+  it('flervalg: full overlap gir 100 (uavhengig av rekkefølge)', () => {
+    const a = { smoking: 'Roker,Snuser' };
+    const b = { smoking: 'Snuser,Roker' };
+    expect(scoreLifeSituationCompat(a, b)).toBe(100);
+  });
+
+  it('flervalg: delvis overlap gir Jaccard-mellomverdi', () => {
+    // a har 2 valg, b har 1 av dem → 1/2 = 50 (religion er den eneste dimensjonen)
+    const a = { religion: 'kristen,katolsk' };
+    const b = { religion: 'katolsk' };
+    expect(scoreLifeSituationCompat(a, b)).toBe(50);
+  });
+
+  it('flervalg: ingen felles valg gir 0', () => {
+    const a = { religion: 'kristen,katolsk' };
+    const b = { religion: 'muslim' };
+    expect(scoreLifeSituationCompat(a, b)).toBe(0);
+  });
+
+  it('flervalg: vekter blanding av fullt og delvis samsvar', () => {
+    // wantChildren (0.4) fullt samsvar + smoking (0.2) halv overlap:
+    // (1.0*0.4 + 0.5*0.2) / 0.6 = 83.33 → 83
+    const a = { wantChildren: 'ja', smoking: 'Roker,Snuser' };
+    const b = { wantChildren: 'ja', smoking: 'Snuser' };
+    expect(scoreLifeSituationCompat(a, b)).toBe(83);
+  });
 });

@@ -68,6 +68,7 @@ export default function Step5Relasjonsstil({ data, onChange, onBack, onNext }: P
          ]}
          selectedValue={getValue('closenessNeed', '')}
          onChange={(v) => onChange('closenessNeed', v)}
+          maxSelected={2}
          columns={1}
          testId="ob-closeness-need"
        />

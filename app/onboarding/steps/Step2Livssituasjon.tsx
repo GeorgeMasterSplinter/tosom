@@ -122,6 +122,7 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
         ]}
         selectedValue={getValue('workType', '')}
         onChange={(v) => onChange('workType', v)}
+        maxSelected={3}
         testId="ob-work-type"
       />
 
@@ -144,6 +145,7 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
         ]}
         selectedValue={getValue('housingType', '')}
         onChange={(v) => onChange('housingType', v)}
+        maxSelected={2}
         testId="ob-housing"
       />
 
@@ -182,6 +184,7 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
         ]}
         selectedValue={getValue('economicStability', '')}
         onChange={(v) => onChange('economicStability', v)}
+        maxSelected={2}
         testId="ob-economy"
       />
 

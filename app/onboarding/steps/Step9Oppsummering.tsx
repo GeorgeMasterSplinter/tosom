@@ -27,6 +27,44 @@ const num = (f: string, fb = 0) => (d: Record<string, unknown>) => {
   return v !== undefined && v !== null ? Number(v) : fb;
 };
 
+/**
+ * Verdi→etikett for flervalgsfelt i oppsummeringen.
+ * Data lagrer rå-verdier (ofte kommaseparert ved flervalg);
+ * uten kartlegging ville «Roker-av-og-til,Snuser» stått rått.
+ */
+const LABELS: Record<string, Record<string, string>> = {
+  lifestyle: { Aktiv: 'Aktiv', Rolig: 'Rolig', Balansert: 'Balansert', Eventyrlysten: 'Eventyrlysten', Hjemmekjær: 'Hjemmekjær' },
+  smoking: { 'Roker-snuser-ikke': 'Røyker/Snuser ikke', 'Roker-av-og-til': 'Røyker av og til', Snuser: 'Snuser', Roker: 'Røyker' },
+  religion: { Kristen: 'Kristen', Katolsk: 'Katolsk', Agnostiker: 'Agnostiker', Ateist: 'Ateist', Muslim: 'Muslim', 'Jehovas-vitne': 'Jehovas vitne', Hindu: 'Hindu', Judedom: 'Jødedom', Buddhist: 'Buddhist', Spirituell: 'Spirituell', Annet: 'Annet' },
+  children: { 'Har-små-barn': 'Har små barn', 'Har-barn': 'Har barn', 'Har-vaksen-barn': 'Har voksne barn', 'Har-ikke-barn': 'Har ikke barn' },
+  wantChildren: { Ja: 'Ja', Usikker: 'Usikker', Nei: 'Nei' },
+  workType: { 'anstatt-fulltid': 'Ansett på fulltid', 'anstatt-deltid': 'Ansett på deltid', 'egen-næring': 'Egen næringsdrivende', studier: 'Studier', frivillig: 'Frivillig arbeid', 'husmor-husmann': 'Husmor / Husmann', pensjonist: 'Pensjonist', permisjon: 'Permisjon', nav: 'Ungdomskontakt / NAV', annet: 'Annet' },
+  housingType: { leilighet: 'Leilighet', hus: 'Hus (eiendom)', 'delt-bo': 'Delt bo', kollektiv: 'Kollektiv', studentbolig: 'Studentbolig', 'foreldres-bo': 'Foreldres bo', annet: 'Annet' },
+  economicStability: { stabil: 'Stabil økonomi', dekker: 'Nøye penninger dekker utgifter', varierer: 'Varierer fra måned til måned', sparing: 'Prioriterer sparing aktivt', stabilitet: 'Fokus på stabilitet, ikke overskudd' },
+  loveGive: { ord: 'Ord og ros', tjenester: 'Gjør ting for andre', tid: 'Kvalitetstid sammen', kjønnlig: 'Fysiske klemmer og berøring', gaver: 'Å gi gaver' },
+  loveReceive: { ord: 'Ord og ros', tjenester: 'Gjør ting for meg', tid: 'Kvalitetstid sammen', kjønnlig: 'Fysiske klemmer og berøring', gaver: 'Å få gaver' },
+  highPriority: { karriere: 'Karriere og mål', familie: 'Familie og nære relasjoner', venner: 'Venner og fellesskap', 'personlig-vekst': 'Personlig vekst og læring', frihet: 'Frihet og selvstendighet', spirituell: 'Spirituell/religiøst livssyn' },
+  lowPriority: { materiell: 'Materielle ting', status: 'Status og anerkjennelse', 'sosial-media': 'Sosialt mediabruk', sport: 'Sport og konkurranse', underholdning: 'Underholdning og kos' },
+  desiredLifestyle: { roleg: 'Rolig og forutsigbart', eventyr: 'Eventyr og endring', balansert: 'Balansen mellom ro og aktivitet', skapende: 'Skapende og kunstnerisk' },
+  undesiredLifestyle: { ensam: 'Alene og isolert', stress: 'Konstant stress', rutine: 'Monoton rutine', 'økonomisk-utrygg': 'Økonomisk utrygghet' },
+  closenessNeed: { 'mye tid sammen hver dag': 'Mye samvær', 'balansert samvær': 'Balansert', 'mye egen rom og autonomi': 'Mye egenrom' },
+  neverCrossBoundary: { respekt: 'Respekt for meg som person', 'tid-aleine': 'Tid alene hver dag', venner: 'Kontakt med venner/familie', selvstende: 'Eget rom og selvstendighet', sandhet: 'Ærlighet og sannferdighet' },
+  relationshipSeeking: { 'dyp vennskap': 'Dyp vennskap', dating: 'Dating', 'langvarig parforhold': 'Langvarig parforhold', 'åpen uforpliktende': 'Åpen & uforpliktende' },
+};
+
+/** Viser (fler)val med lesbare etiketter: «Roker-av-og-til,Snuser» → «Røyker av og til, Snuser». */
+const fmt = (f: string) => (d: Record<string, unknown>) => {
+  const v = d[f];
+  if (v === undefined || v === null || String(v).trim() === '') return '—';
+  const map = LABELS[f];
+  return String(v)
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .map((s) => (map ? map[s] ?? s : s))
+    .join(', ');
+};
+
 export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
   // Helper-funksjon for å gjere felt synlege bare dersom dei har verdi
   const Field = ({ label, value, showIf }: { label: string; value: string; showIf?: boolean }) => {
@@ -73,17 +111,17 @@ export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
           <Field label="Bosted" value={val('city')(data)} />
           <Field label="Høyde" value={getHeight(data) !== '—' ? `${getHeight(data)} cm` : '—'} showIf />
           <Field label="Kroppstype" value={val('bodyType')(data)} showIf />
-          <Field label="Livsstil" value={val('lifestyle')(data)} showIf />
-          <Field label="Røyking/snus" value={val('smoking')(data)} showIf />
-          <Field label="Barn" value={val('children')(data)} showIf />
-          <Field label="Ønsker barn" value={val('wantChildren')(data)} showIf />
+          <Field label="Livsstil" value={fmt('lifestyle')(data)} showIf />
+          <Field label="Røyking/snus" value={fmt('smoking')(data)} showIf />
+          <Field label="Barn" value={fmt('children')(data)} showIf />
+          <Field label="Ønsker barn" value={fmt('wantChildren')(data)} showIf />
         </Section>
 
         {/* Livsstil & verdier */}
         <Section title="Livsstil & verdier">
-          <Field label="Høyeste prioritet" value={val('highPriority')(data)} showIf />
+          <Field label="Høyeste prioritet" value={fmt('highPriority')(data)} showIf />
           <Field label="God hverdag" value={val('goodEveryday')(data)} showIf />
-           <Field label="Ønsket livsstil" value={val('desiredLifestyle')(data)} showIf />
+           <Field label="Ønsket livsstil" value={fmt('desiredLifestyle')(data)} showIf />
         </Section>
 
         {/* Avstand & alder */}
@@ -103,10 +141,10 @@ export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
 
         {/* Livssituasjon */}
         <Section title="Livssituasjon">
-          <Field label="Arbeid" value={val('workType')(data)} showIf />
-          <Field label="Boetype" value={val('housingType')(data)} showIf />
+          <Field label="Arbeid" value={fmt('workType')(data)} showIf />
+          <Field label="Boetype" value={fmt('housingType')(data)} showIf />
           <Field label="Husholdning" value={val('householdSize')(data)} showIf />
-          <Field label="Økonomi" value={val('economicStability')(data)} showIf />
+          <Field label="Økonomi" value={fmt('economicStability')(data)} showIf />
           <Field label="Ansvar" value={val('responsibilities')(data)} showIf />
            <Field label="Hverdagsrutine" value={val('dailyRoutine')(data)} showIf />
         </Section>
@@ -122,8 +160,8 @@ export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
 
         {/* Kjærlighetsspråk */}
         <Section title="Kjærlighetsspråk & nærhet">
-          <Field label="Viser kjærlighet" value={val('loveGive')(data)} showIf />
-          <Field label="Mottar kjærlighet" value={val('loveReceive')(data)} showIf />
+          <Field label="Viser kjærlighet" value={fmt('loveGive')(data)} showIf />
+          <Field label="Mottar kjærlighet" value={fmt('loveReceive')(data)} showIf />
           <Field label="Bygger nærhet" value={val('closenessBuilder')(data)} showIf />
           <Field label="Skaper avstand" value={val('distanceCreator')(data)} showIf />
            <Field label="Liten ting som betyr mye" value={val('smallThing')(data)} showIf />
@@ -131,8 +169,8 @@ export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
 
         {/* Relasjonsstil */}
         <Section title="Relasjonsstil">
-          <Field label="Søker" value={val('relationshipSeeking')(data)} showIf />
-          <Field label="Nærhetsbehov" value={val('closenessNeed')(data)} showIf />
+          <Field label="Søker" value={fmt('relationshipSeeking')(data)} showIf />
+          <Field label="Nærhetsbehov" value={fmt('closenessNeed')(data)} showIf />
            <Field label="Selvstendighet vs fellesskap" value={val('independenceBalance')(data)} showIf />
         </Section>
 
@@ -156,7 +194,7 @@ export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
 
         {/* Grenser */}
         <Section title="Grenser & behov">
-          <Field label="Aldri krysse" value={val('neverCrossBoundary')(data)} showIf />
+          <Field label="Aldri krysse" value={fmt('neverCrossBoundary')(data)} showIf />
            <Field label="Forstå partnerens grenser" value={val('understandPartnersBoundaries')(data)} showIf />
            <Field label="Dine avgrensninger" value={val('limitations')(data)} showIf />
           <Field label="Partner må forstå" value={val('partnerMustUnderstand')(data)} showIf />

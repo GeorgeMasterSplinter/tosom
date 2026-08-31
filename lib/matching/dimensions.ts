@@ -208,10 +208,22 @@ function pickField(profile: Record<string, unknown>, ...keys: string[]): string 
   return null;
 }
 
-/** Kategorisk samsvare: 100 like, 0 ulike, 50 om manglar. */
+/**
+ * Kategorisk samsvar: 100 like, 0 ulike, 50 om mangler.
+ * For flervalg (kommaseparert, f.eks. «kristen,katolsk») beregnes
+ * Jaccard-overlapping: 100 × felles valg / alle unike valg.
+ * Enkelverdi (alle eksisterende profiler) oppfører seg som før.
+ */
 function categoryMatch(a: string | null, b: string | null): number {
   if (!a || !b) return 50;
-  return a === b ? 100 : 0;
+  const sa = new Set(a.split(',').map((s) => s.trim()).filter(Boolean));
+  const sb = new Set(b.split(',').map((s) => s.trim()).filter(Boolean));
+  if (sa.size === 0 || sb.size === 0) return 50;
+  let common = 0;
+  for (const v of sa) if (sb.has(v)) common++;
+  if (common === 0) return 0;
+  const union = sa.size + sb.size - common;
+  return union === 0 ? 50 : Math.round((common / union) * 100);
 }
 
 export function scoreLifeSituationCompat(

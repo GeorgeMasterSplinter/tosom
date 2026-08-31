@@ -31,7 +31,8 @@ export async function GET(req: NextRequest) {
     const where: Record<string, unknown> = {}
     if (moduleFilter) where.module = moduleFilter
     if (levelFilter) where.level = levelFilter
-    if (search) where.OR = [{ message: { contains: search, mode: 'insensitive' } }, { metadata: { contains: search, mode: 'insensitive' } }]
+    // Søk bare i message — Prisma støtter ikke `contains` på Json-felt (metadata).
+    if (search) where.message = { contains: search, mode: 'insensitive' }
 
     const [logs, total] = await Promise.all([
       prisma.systemLog.findMany({ where, skip, take: limit, orderBy: { createdAt: 'desc' }, select: { id: true, level: true, message: true, module: true, metadata: true, createdAt: true } }),

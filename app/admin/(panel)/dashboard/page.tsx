@@ -228,11 +228,16 @@ function SystemStatus({ errorsLast24h }: { errorsLast24h?: number }) {
       .then((res) => res.json())
       .then((data) => {
         if (data?.services) {
+          // Normaliser health-API-statusen (connected/configured/missing/not_in_use/error)
+          // til panelets ok/warning/error-vokabular. Tjenestene er objekter, ikke streng.
           setServices(
-            Object.entries(data.services).map(([name, status]: [string, unknown]) => ({
-              name,
-              status: status === 'ok' ? 'ok' : status === 'error' ? 'error' : 'warning',
-            })),
+            Object.entries(data.services).map(([name, svc]: [string, unknown]) => {
+              const s = (svc as { status?: string } | null)?.status;
+              return {
+                name,
+                status: s === 'connected' || s === 'configured' ? 'ok' : s === 'error' ? 'error' : 'warning',
+              };
+            }),
           );
         } else {
           setServices([

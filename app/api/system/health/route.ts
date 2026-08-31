@@ -53,28 +53,39 @@ export async function GET(request: NextRequest) {
     }
 
     // ─── Service checks (miljøvariabel-validering + der mogleg faktiske sjekkar) ───
+    // critical=true betyr at feil på denne tjenesten gjør hele systemet
+    // utilgjengelig (HTTP 503). De øvrige er valgfrie: mangel vises som
+    // warning i admin-panelet og nedgraderer ikke overall status.
+    const uploadthingOk = Boolean(process.env.UPLOADTHING_TOKEN || process.env.NEXT_PUBLIC_UPLOADTHING_TOKEN);
+    const vippsOk = Boolean(process.env.VIPPS_CLIENT_ID && process.env.VIPPS_CLIENT_SECRET);
     const services = {
-      database: {
-        status: dbStatus,
-        latencyMs: dbLatency,
-        error: dbError,
-      },
-      pusher: {
-        status: process.env.PUSHER_APP_ID ? 'configured' : 'missing',
-        details: process.env.PUSHER_APP_ID ? 'Environment variabel satt' : 'Manglende miljøvariabel',
-      },
-      uploadthing: {
-        status: process.env.UPLOADTHING_TOKEN || process.env.NEXT_PUBLIC_UPLOADTHING_TOKEN ? 'configured' : 'missing',
-        details: 'Token variabel satt',
-      },
-// @
-      openai: {
-        status: process.env.OPENAI_API_KEY ? 'configured' : 'missing',
-        details: 'OpenAI API-key sett',
+    database: {
+    status: dbStatus,
+    latencyMs: dbLatency,
+      error: dbError,
+      critical: true,
+    },
+    pusher: {
+      status: process.env.PUSHER_APP_ID ? 'configured' : 'missing',
+        details: process.env.PUSHER_APP_ID ? 'Environment variabel satt' : 'Manglende miljøvariabel (PUSHER_APP_ID)',
+      critical: false,
+    },
+    uploadthing: {
+      status: uploadthingOk ? 'configured' : 'missing',
+      details: uploadthingOk ? 'Token variabel satt' : 'Manglende miljøvariabel (UPLOADTHING_TOKEN)',
+    critical: false,
+    },
+    openai: {
+        // Ingen AI-integrasjon i koden (kverken `ai` eller `openai` er ei
+        // avhengighet) — rapporterer not_in_use i staden for falsk alarm.
+        status: 'not_in_use',
+        details: 'Ikke brukt i koden',
+        critical: false,
       },
       vipps: {
-        status: (process.env.VIPPS_CLIENT_ID && process.env.VIPPS_CLIENT_SECRET) ? 'configured' : 'missing',
-        details: 'Vipps OAuth variabler sett',
+        status: vippsOk ? 'configured' : 'missing',
+        details: vippsOk ? 'Vipps OAuth variabler sett' : 'Ikke konfigurert (valgfri — betaling er ikke aktivert)',
+        critical: false,
       },
     };
 
@@ -96,13 +107,10 @@ export async function GET(request: NextRequest) {
     // ta ned health-endpoenket. Speilar configen i lib/auth/config.ts.
     const authConfig = checkAuthConfig();
 
-    // Overall status
+    // Overall status: bare kritiske tjenester (database) avgjør 200 vs 503.
+    // Valgfrie tjenester som mangler vises individuelt som warning.
     const criticalServicesOk = dbStatus === 'connected';
-    const allConfigured = Object.values(services).every(
-      (s) => s.status === 'configured' || s.status === 'connected'
-    );
-
-    const overallStatus = !criticalServicesOk ? 'error' : allConfigured ? 'ok' : 'degraded';
+    const overallStatus = criticalServicesOk ? 'ok' : 'error';
 
     const response = {
       status: overallStatus,
@@ -132,12 +140,12 @@ export async function GET(request: NextRequest) {
       app: {
         name: packageJson.name ?? 'tosom',
         environment: process.env.NODE_ENV ?? 'development',
-        port: Number(process.env.PORT) ?? 3000,
+        port: process.env.PORT ? Number(process.env.PORT) : 3000,
       },
     };
 
     return NextResponse.json(response, {
-      status: overallStatus === 'ok' ? 200 : overallStatus === 'degraded' ? 503 : 503,
+      status: overallStatus === 'ok' ? 200 : 503,
     });
   } catch (error) {
     return NextResponse.json(

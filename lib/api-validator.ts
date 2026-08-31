@@ -33,7 +33,7 @@ export const adminUsersQuerySchema = paginationSchema.extend({
 /** Pagination med optional module/level-filter (system logs) */
 export const systemLogsQuerySchema = paginationSchema.extend({
   module: z.string().optional(),
-  level: z.enum(['ERROR', 'WARNING', 'INFO']).optional(),
+  level: z.enum(['ERROR', 'WARN', 'INFO', 'DEBUG']).optional(),
   search: z.string().optional(),
 })
 

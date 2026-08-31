@@ -7,6 +7,7 @@ interface ServiceStatus {
   latencyMs?: number;
   error?: string | null;
   details?: string;
+  critical?: boolean;
 }
 
 interface HealthResponse {
@@ -40,29 +41,45 @@ export default function SystemStatusPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function loadData() {
+    // Health og latency er uavhengige: feil på latency skal ikke skjule health-data.
+    async function loadHealth() {
       try {
-        setLoading(true);
-        const [healthRes, latencyRes] = await Promise.all([
-          fetch('/api/system/health'),
-          fetch('/api/system/latency'),
-        ]);
-
-        if (!healthRes.ok || !latencyRes.ok) {
-          setError('Kunne ikke hente systemdata');
-          return;
+        const healthRes = await fetch('/api/system/health');
+        // 200 = ok, 503 = kritisk feil — begge bodyene har full systemdata.
+        if (healthRes.ok || healthRes.status === 503) {
+          const healthData = await healthRes.json().catch(() => null);
+          if (healthData) {
+            setHealth(healthData);
+            setError(null);
+          } else {
+            setError('Ugyldig respons frå health-API-et');
+          }
+        } else {
+          setError(`Kunne ikke hente systemdata (HTTP ${healthRes.status})`);
         }
-
-        const healthData = await healthRes.json();
-        const latencyData = await latencyRes.json();
-
-        setHealth(healthData);
-        setLatency(latencyData);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Ukjent feil');
       } finally {
         setLoading(false);
       }
+    }
+
+    async function loadLatency() {
+      try {
+        const latencyRes = await fetch('/api/system/latency');
+        if (latencyRes.ok) {
+          const latencyData = await latencyRes.json();
+          setLatency(latencyData);
+        }
+        // Feil her (t.d. 401 med utgått admin-session) skjuler bare latens-seksjonen.
+      } catch {
+        // latens er valgfri data
+      }
+    }
+
+    function loadData() {
+      loadHealth();
+      loadLatency();
     }
 
     loadData();
@@ -71,11 +88,19 @@ export default function SystemStatusPage() {
     return () => clearInterval(interval);
   }, []);
 
+  // Normaliser health-API-statusen til indikator: connected/configured = OK,
+  // missing/not_in_use = warning, error = kritisk.
   const statusIcon = (status: string) => {
     if (status === 'connected' || status === 'configured') return '✅';
-    if (status === 'missing') return '❌';
-    if (status === 'error') return '🔴';
+    if (status === 'missing' || status === 'not_in_use') return '⚠️';
+    if (status === 'error') return '❌';
     return '⚪';
+  };
+
+  const statusLabel = (status: string) => {
+    if (status === 'connected' || status === 'configured') return 'OK';
+    if (status === 'error') return 'Feil';
+    return 'Advarsel';
   };
 
   const overallStatusColor = health?.status === 'ok' ? '#4DFF88' : health?.status === 'degraded' ? '#FFB86C' : '#FF4D4D';
@@ -115,6 +140,21 @@ export default function SystemStatusPage() {
         </div>
       </div>
 
+      {/* Degradert-banner */}
+      {health && health.status !== 'ok' && (
+        <div style={{
+          marginBottom: '24px',
+          padding: '12px 16px',
+          borderRadius: '12px',
+          background: 'rgba(255,184,108,0.1)',
+          border: '1px solid rgba(255,184,108,0.3)',
+          color: '#FFB86C',
+          fontSize: '14px',
+        }}>
+          ⚠️ Systemet er i degradert tilstand — en kritisk tjeneste svarer ikke.
+        </div>
+      )}
+
       {/* Services Grid */}
       <div style={{ marginBottom: '32px' }}>
         <h2 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '16px', color: '#E0E0E0' }}>
@@ -137,7 +177,20 @@ export default function SystemStatusPage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <span style={{ fontSize: '16px' }}>{statusIcon(service.status)}</span>
                 <div>
-                  <div style={{ fontWeight: 500, textTransform: 'capitalize' }}>{name}</div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontWeight: 500, textTransform: 'capitalize' }}>{name}</span>
+                    <span style={{
+                      fontSize: '11px',
+                      fontWeight: 600,
+                      color: service.status === 'connected' || service.status === 'configured'
+                        ? '#4DFF88'
+                        : service.status === 'error'
+                          ? '#FF4D4D'
+                          : '#FFB86C',
+                    }}>
+                      {statusLabel(service.status)}
+                    </span>
+                  </div>
                   <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)' }}>
                     {service.details || service.error || ''}
                   </div>

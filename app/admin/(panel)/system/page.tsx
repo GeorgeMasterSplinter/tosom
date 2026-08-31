@@ -23,6 +23,14 @@ interface SystemLogEntry {
   message: string;
 }
 
+/* ─── Normaliser health-API-status (connected/configured/missing/not_in_use/error)
+    til panelets ok/warning/error-vokabular ─── */
+function normalizeHealthStatus(s: unknown): 'ok' | 'warning' | 'error' {
+  if (s === 'connected' || s === 'configured') return 'ok';
+  if (s === 'error') return 'error';
+  return 'warning'; // missing, not_in_use, ukjent
+}
+
 /* ─── StatusDot — farga status-indikator 🟢🟡🔴 */
 
 function StatusDot({ status }: { status: 'ok' | 'warning' | 'error' }) {
@@ -85,7 +93,7 @@ function SystemRow({ name, status, latency, errors, uptime, lastCheck }: {
             <div
               className="h-full rounded-full"
               style={{
-                width: uptime,
+                width: status === 'ok' ? '100%' : status === 'warning' ? '66%' : '25%',
                 background: status === 'ok' ? '#4ADE80' : status === 'warning' ? '#FBBF24' : '#FF4D4D',
               }}
             />
@@ -138,6 +146,8 @@ export default function AdminSystemPage() {
   const [errors, setErrors] = useState<SystemLogEntry[]>([]);
   const [lastFullCheck, setLastFullCheck] = useState('Laster...');
   const [overallHealth, setOverallHealth] = useState<'ok' | 'warning' | 'error'>('warning');
+  const [dbLatency, setDbLatency] = useState('—');
+  const [systemUptime, setSystemUptime] = useState('—');
   const [loading, setLoading] = useState(true);
 
   // Hent health data fra API
@@ -146,11 +156,20 @@ export default function AdminSystemPage() {
       .then((res) => res.json())
       .then((data) => {
         if (data?.services) {
-          const svcList = Object.entries(data.services).map(([name, status]: [string, any]) => ({
+          // Normaliser tenestetilstanden (connected/configured/missing/not_in_use/error → ok/warning/error)
+          const svcList = Object.entries(data.services).map(([name, svc]: [string, any]) => ({
             name,
-            status: (typeof status === 'string' ? status : (status.status || 'ok')) as 'ok' | 'warning' | 'error',
+            status: normalizeHealthStatus(svc?.status),
           })) as HealthService[];
           setServices(svcList);
+
+          // Ekte DB-latens og oppetid til heatmap-tabellen
+          if (data.services?.database?.latencyMs !== undefined) {
+            setDbLatency(`${data.services.database.latencyMs}ms`);
+          }
+          if (data.system?.uptime) {
+            setSystemUptime(data.system.uptime);
+          }
 
           // Beregn overall health
           const hasError = svcList.some((s) => s.status === 'error');
@@ -175,20 +194,19 @@ export default function AdminSystemPage() {
       })
       .finally(() => setLoading(false));
 
-    // Hent system logs (ekte feil)
+    // Hent system logs (ekte feil). successResponse-format: { success, data, stats, pagination }
     fetch('/api/admin/system-logs?limit=10&level=ERROR')
-      .then((res) => res.json())
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error(`HTTP ${res.status}`))))
       .then((data) => {
-        if (data?.logs) {
-          const errorEntries: SystemLogEntry[] = data.logs
-            .filter((log: any) => log.level === 'ERROR' || log.level === 'WARNING')
-            .map((log: any) => ({
-              time: log.createdAt ? new Date(log.createdAt).toLocaleString('nb-NO') : '—',
-              service: log.module || 'System',
-              message: log.message || 'Ukjent feil',
-            }));
-          setErrors(errorEntries);
-        }
+        const logs: any[] = Array.isArray(data?.data) ? data.data : [];
+        const errorEntries: SystemLogEntry[] = logs
+          .filter((log) => log.level === 'ERROR' || log.level === 'WARN')
+          .map((log) => ({
+            time: log.createdAt ? new Date(log.createdAt).toLocaleString('nb-NO') : '—',
+            service: log.module || 'System',
+            message: log.message || 'Ukjent feil',
+          }));
+        setErrors(errorEntries);
       })
       .catch(() => {
         // Hvis logs API feiler, vis tom liste
@@ -276,9 +294,9 @@ export default function AdminSystemPage() {
                     key={sys.name}
                     name={sys.name}
                     status={sys.status}
-                    latency="—"
+                    latency={sys.name === 'database' ? dbLatency : '—'}
                     errors={errorCounts[sys.name] || 0}
-                    uptime="99.9%"
+                    uptime={systemUptime}
                     lastCheck={lastFullCheck}
                   />
                 ))

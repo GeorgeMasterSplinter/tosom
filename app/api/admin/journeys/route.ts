@@ -24,11 +24,26 @@ export async function GET(req: NextRequest) {
     const limit = parseInt(searchParams.get("limit") || "50");
     const status = searchParams.get("status") || "alle";
     const phase = searchParams.get("phase") || "alle";
+    const search = searchParams.get("search");
 
     const skip = (page - 1) * limit;
 
     // Bygg filter
     const where: any = {};
+
+    if (search) {
+      // Søk etter brukernavn/e-post og filtrer reiser på disse bruker-ID-ene.
+      const matchedUsers = await prisma.user.findMany({
+        where: {
+          OR: [
+            { name: { contains: search, mode: "insensitive" } },
+            { email: { contains: search, mode: "insensitive" } },
+          ],
+        },
+        select: { id: true },
+      });
+      where.userId = { in: matchedUsers.map((u) => u.id) };
+    }
 
     if (status === "active") {
       where.completedAt = null;
@@ -44,14 +59,18 @@ export async function GET(req: NextRequest) {
       where.day = { gte: 16 };
     }
 
-    // Hent journey + bruker-info (separate query for users since relation removed in B4)
-    const journeys = await prisma.journeyProgress.findMany({
-      where,
-      skip,
-      take: limit,
-      orderBy: { startedAt: "desc" },
-    });
-    const total = await prisma.journeyProgress.count({ where });
+    // Hent journeys + sanne totals (status-tellingene skal ikke være bundet til siden)
+    const [journeys, total, activeCount, completedCount] = await Promise.all([
+      prisma.journeyProgress.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { startedAt: "desc" },
+      }),
+      prisma.journeyProgress.count({ where }),
+      prisma.journeyProgress.count({ where: { ...where, completedAt: null } }),
+      prisma.journeyProgress.count({ where: { ...where, completedAt: { not: null } } }),
+    ]);
 
     // Fetch user info for all journeys in batch
     const userIds = [...new Set(journeys.map(j => j.userId))];
@@ -125,6 +144,7 @@ export async function GET(req: NextRequest) {
         total,
         totalPages: Math.ceil(total / limit),
       },
+      counts: { total, active: activeCount, completed: completedCount },
     });
   } catch (error) {
     console.error("Feil i /api/admin/journeys:", error);

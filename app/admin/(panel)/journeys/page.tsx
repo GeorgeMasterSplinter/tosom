@@ -85,7 +85,9 @@ function JourneyRow({ journey }: { journey: JourneyData }) {
 /* ─── Hovedkomponent */
 export default function AdminJourneysPage() {
   const [journeys, setJourneys] = useState<JourneyData[]>([]);
+  const [counts, setCounts] = useState<{ total: number; active: number; completed: number } | null>(null);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('alle');
   const [phaseFilter, setPhaseFilter] = useState('alle');
@@ -97,21 +99,34 @@ export default function AdminJourneysPage() {
 
   const fetchJourneys = async () => {
     setLoading(true);
+    setFetchError(null);
     try {
       const params = new URLSearchParams({ page: String(page), limit: '50', status: statusFilter, phase: phaseFilter });
       if (search) params.set('search', search);
       const res = await fetch(`/api/admin/journeys?${params}`);
       if (res.ok) {
         const json = await res.json();
-        if (json.success && json.data) { setJourneys(json.data); setTotalPages(json.pagination?.totalPages || 1); }
+        if (json.success && json.data) {
+          setJourneys(json.data);
+          setTotalPages(json.pagination?.totalPages || 1);
+          if (json.counts) setCounts(json.counts);
+        }
+      } else if (res.status === 401 || res.status === 403) {
+        setFetchError('Ingen admin-innlogging — logg inn på nytt og prøv igjen.');
+      } else {
+        setFetchError(`Feil ved henting av reiser (HTTP ${res.status}).`);
       }
-    } catch (err) { console.error('Feil ved lasting av reiser:', err); }
+    } catch (err) {
+      console.error('Feil ved lasting av reiser:', err);
+      setFetchError('Kunne ikke nå serveren.');
+    }
     finally { setLoading(false); }
   };
 
-  const totalJ = journeys.length;
-  const activeJ = journeys.filter(j => j.status === 'På reise').length;
-  const completedJ = journeys.filter(j => j.status === 'Ferdig').length;
+  // Totals kommer fra API-et (ikke fra side-lengden) så tallene er riktige uansett paginering.
+  const totalJ = counts?.total ?? journeys.length;
+  const activeJ = counts?.active ?? journeys.filter(j => j.status === 'På reise').length;
+  const completedJ = counts?.completed ?? journeys.filter(j => j.status === 'Ferdig').length;
 
   return (
     <div className="space-y-6">
@@ -123,6 +138,12 @@ export default function AdminJourneysPage() {
       {loading ? (
         <div className="py-12 text-center"><p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>Laster reiser...</p></div>
       ) : (<>
+        {fetchError && (
+          <div className="rounded-xl px-4 py-3 text-sm" style={{ background: 'rgba(255,77,77,0.08)', border: '1px solid rgba(255,77,77,0.25)', color: '#FF4D4D' }}>
+            ⚠️ {fetchError}
+          </div>
+        )}
+
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[{ n: totalJ, c: '#D4AF37', l: 'Totale reiser' }, { n: activeJ, c: '#4ADE80', l: 'Pågående reiser' }, { n: completedJ, c: '#8B5CF6', l: 'Fullførte reiser' }].map((m, i) => (
             <div key={i} className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>

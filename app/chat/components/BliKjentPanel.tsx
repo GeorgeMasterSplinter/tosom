@@ -89,9 +89,11 @@ export function BliKjentPanel({ onClose }: BliKjentPanelProps) {
   return (
     <FadeIn variant="scaleIn" scrollTrigger>
       <div
-        className="overflow-hidden transition-all duration-300 ease-out"
+        className="overflow-hidden transition-all duration-300 ease-out flex flex-col"
         style={{
-          maxHeight: panelOpen ? '480px' : '0px',
+          // Send-linjen ligger under den rullbare listen — panelet
+          // utvides når et spørsmål er valgt slik at linjen alltid er synlig.
+          maxHeight: panelOpen ? (selectedQuestion ? '640px' : '480px') : '0px',
           opacity: panelOpen ? 1 : 0,
           background: `linear-gradient(180deg, ${moodTheme.accentSoft} 0%, rgba(7,13,20,0.97) 100%)`,
           borderTop: `1px solid ${moodTheme.accentMuted}`,
@@ -216,44 +218,54 @@ export function BliKjentPanel({ onClose }: BliKjentPanelProps) {
             </div>
           )}
 
-          {/* ═══ SPØRSMÅL VALGT ═══ */}
-          {selectedQuestion && (
-            <FadeIn variant="fadeInUp" delay={0.1}>
-              <div
-              className="mt-5 p-5 rounded-2xl"
-              style={{
-              background: `linear-gradient(135deg, ${moodTheme.accentSoft}, ${moodTheme.accentMuted})`,
-              border: `1px solid ${moodTheme.accentMuted}`,
-              boxShadow: `0 4px 20px ${moodTheme.accentSoft}`,
-                transition: 'background 1.2s ease, border-color 1.2s ease, box-shadow 1.2s ease',
-                }}
-                >
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-2 h-2 rounded-full" style={{ background: moodTheme.accent, boxShadow: `0 0 8px ${moodTheme.accentMuted}` }} />
-                  <p className="text-xs font-semibold tracking-wide uppercase" style={{ color: moodTheme.accentLight }}>Send til partner?</p>
-                </div>
-                <p className="text-base leading-relaxed mb-4 font-medium italic" style={{ color: G.textPrimary }}>"{selectedQuestion}"</p>
-                <div className="flex gap-2.5">
-                  <button
-                    onClick={handleSendQuestion}
-                    disabled={sending}
-                    className="flex-1 px-4 py-3 rounded-xl text-xs font-bold transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-50"
-                    style={{ background: `linear-gradient(135deg, ${moodTheme.accent}, ${moodTheme.accentLight})`, color: '#0B1520', transition: 'background 1.2s ease' }}
-                  >
-                    {sending ? 'Sender...' : '✨ Send spørsmål'}
-                  </button>
-                  <button
-                    onClick={() => setSelectedQuestion(null)}
-                    className="px-4 py-3 rounded-xl text-xs font-medium transition-all hover:brightness-125 active:scale-[0.98]"
-                    style={{ background: G.glassBg, border: `1px solid ${G.glassBorder}`, color: G.textSecondary }}
-                  >
-                    Avbryt
-                  </button>
-                </div>
-              </div>
-            </FadeIn>
-          )}
         </div>
+
+        {/* ═══ SPØRSMÅL VALGT — fast send-linje i bunn av panelet ═══
+            Vises så fort et spørsmål er valgt, uten at man må skrolle
+            ned i listen. Samme for alle kategorier. */}
+        {selectedQuestion && (
+          <div
+            className="shrink-0 p-4"
+            style={{
+              background: 'rgba(11,21,32,0.85)',
+              backdropFilter: 'blur(16px)',
+              borderTop: `1px solid ${moodTheme.accentMuted}`,
+            }}
+          >
+            <div
+              className="p-4 rounded-2xl"
+              style={{
+                background: `linear-gradient(135deg, ${moodTheme.accentSoft}, ${moodTheme.accentMuted})`,
+                border: `1px solid ${moodTheme.accentMuted}`,
+                boxShadow: `0 4px 20px ${moodTheme.accentSoft}`,
+                transition: 'background 1.2s ease, border-color 1.2s ease, box-shadow 1.2s ease',
+              }}
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-2 h-2 rounded-full" style={{ background: moodTheme.accent, boxShadow: `0 0 8px ${moodTheme.accentMuted}` }} />
+                <p className="text-xs font-semibold tracking-wide uppercase" style={{ color: moodTheme.accentLight }}>Send til partner?</p>
+              </div>
+              <p className="text-base leading-relaxed mb-4 font-medium italic" style={{ color: G.textPrimary }}>"{selectedQuestion}"</p>
+              <div className="flex gap-2.5">
+                <button
+                  onClick={handleSendQuestion}
+                  disabled={sending}
+                  className="flex-1 px-4 py-3 rounded-xl text-xs font-bold transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-50"
+                  style={{ background: `linear-gradient(135deg, ${moodTheme.accent}, ${moodTheme.accentLight})`, color: '#0B1520', transition: 'background 1.2s ease' }}
+                >
+                  {sending ? 'Sender...' : '✨ Send spørsmål'}
+                </button>
+                <button
+                  onClick={() => setSelectedQuestion(null)}
+                  className="px-4 py-3 rounded-xl text-xs font-medium transition-all hover:brightness-125 active:scale-[0.98]"
+                  style={{ background: G.glassBg, border: `1px solid ${G.glassBorder}`, color: G.textSecondary }}
+                >
+                  Avbryt
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         <style jsx>{`
           ::-webkit-scrollbar { width: 6px; }

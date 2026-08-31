@@ -264,7 +264,7 @@ function Avatar({ senderInfo }: { senderInfo?: { name: string; imageUrl?: string
 
 export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
   const { sender, type, content, metadata, resonanceLevel, isMilestone, isBliKjent } = message;
-  const { moodTheme } = useChat();
+  const { moodTheme, myName } = useChat();
   const tPrimary = moodTheme.textPrimary;
   const tSecondary = moodTheme.textSecondary;
   const tMuted = moodTheme.textMuted;
@@ -496,6 +496,17 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
               style={{ color: tMuted }}
             >
               {metadata.senderInfo.name}
+            </p>
+          )}
+
+          {/* Eget navn (høyre side) — samme rolige behandling som partners
+              navn, slik at det alltid er tydelig hvem som har skrevet. */}
+          {isMe && myName && (
+            <p
+              className="mt-1.5 mr-2 text-[11px] font-medium tracking-wide text-right"
+              style={{ color: tMuted }}
+            >
+              {myName}
             </p>
           )}
       </div>

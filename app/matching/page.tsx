@@ -35,6 +35,8 @@ interface OverviewData {
     totalDays: number;
     phase: string;
   } | null;
+  // Visningsnavn til innlogga bruker (navnet valgt i onboarding)
+  myName?: string;
   // BUG 3: Sanne reise-tilstandar fra databasen (dashboard/overview)
   journeyState?: 'IDLE' | 'QUEUED' | 'MATCHED' | 'ON_JOURNEY' | 'COMPLETED';
   onboardingComplete?: boolean;
@@ -192,6 +194,11 @@ export default function MatchingPage() {
         const overviewRes = await fetch('/api/dashboard/overview');
         if (overviewRes.ok) {
           const data: OverviewData = await overviewRes.json();
+
+          // Hilsenen bruker navnet valgt i onboarding — ikke det registrerte navnet
+          if (data.myName && data.myName !== 'Ukjent') {
+            setUserName(data.myName);
+          }
 
           // Har aktiv match → match-kort i venterommet (åpenbaringen).
           // Fra kortet går hun til dashboardet — og derfra til samtalen.

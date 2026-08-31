@@ -42,7 +42,7 @@ export async function GET(
       return NextResponse.json({ error: "Ingen tilgang" }, { status: 403 });
     }
 
-    // Finn partneren — prøv name-felt først, deretter firstName
+    // Finn partneren — navnet valgt i onboarding (identityName) er kilde nr. 1
     const partnerId = isA ? conversation.userBId : conversation.userAId;
     const [partnerUser, partnerProfile, meProfile] = await Promise.all([
       prisma.user.findUnique({
@@ -51,17 +51,19 @@ export async function GET(
       }),
       prisma.profile.findUnique({
         where: { userId: partnerId },
-        select: { age: true, latitude: true, longitude: true },
+        select: { age: true, latitude: true, longitude: true, identityName: true },
       }),
       prisma.profile.findUnique({
         where: { userId: session.user.id },
-        select: { latitude: true, longitude: true },
+        select: { latitude: true, longitude: true, identityName: true },
       }),
     ]);
 
-    // Bruk name-felt om tilgjengeleg, elles firstName fra profile (valfritt)
-    const partnerFirstName = (partnerProfile as any)?.firstName || "Din partner";
-    const partnerName = partnerUser?.name || partnerFirstName;
+    // identityName (valgt i onboarding) → User.name → «Din partner»
+    const partnerName =
+      partnerProfile?.identityName?.trim() || partnerUser?.name?.trim() || "Din partner";
+    const myName =
+      meProfile?.identityName?.trim() || (session.user.name ?? null);
     const partnerAge = partnerProfile?.age ?? 25;
 
     // Beregn avstand hvis begge har koordinater
@@ -86,6 +88,8 @@ export async function GET(
       conversationId: conversation.id,
       partnerId,
       partnerName,
+      // Visningsnavn til innlogga bruker — brukes i chat-boblene
+      myName,
       partnerAge,
       distanceKm,
       imageShareAllowed: conversation.imageShareAllowedAt != null,

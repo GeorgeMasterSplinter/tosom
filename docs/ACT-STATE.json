@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "updatedAt": "2026-08-30",
+  "updatedAt": "2026-08-31",
   "commit": "bab509b",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
@@ -57,6 +57,12 @@
     }
   ],
   "leveranser": [
+    {
+      "dato": "2026-08-31",
+      "id": "POST-MATCH-UX",
+      "title": "Post-match UX: navneløysing (identityName), match-kort/visning, chat-header, spørsmålsflyt, fasegrenser",
+      "content": "1) NAVN (røtetermin): «Ukjent»-navna kom av at onboarding lagrar det valde navnet i profile.identityName medan API-ene las firstName/lastName/User.name. Fiksa i /api/dashboard/overview (displayName-hjelpar: identityName → fornavn+etternavn → User.name → «Ukjent», + nytt myName-felt) og /api/chat/conversation/[id] (identityName-partner + myName). Dashboard, venterom og chat-hilsener bruker no myName. 2) MATCH-KORT: åpenbaring «Din match er her» vises no 1 gang (localStorage i staden for sessionStorage — vart vist på ny ved kvar loggings-/nettlesersesjon); «Deg»-kortet fjerna frå resonanse-kortet; knappen er alltid «💬 Samtale»; reisekalenderen markerer dag 1 medan dag 0, og fasegrensene er samanslått med journey-motoren (1–14/15–21/22–25/26–30 — dashboardet hadde eigne grenser 1–7/8–14/15–21/22–30). 3) CHAT-HEADER: tilbakeknappen er no berre ein pille med pil (←, utan tekst); «Dag X av 30» fjerna — i staden eitt symbol per reisesteg (🌱/🤝/💫/🌙) frå journey-motoren (getPhaseForDay, dag 0 tel som første steg). 4) SPØRSMÅLS-FLYT: BliKjentPanel/OppgaverPanel — send-linja ligg no fast i botnen av panelet så snart spørsmål/oppgave er valgt (panelet utverknar til 640px), uavhengig av kvar i listen det ligg; same for alle kategoriar. 5) BOBLER: rolig navn i begge retningar (eige namn frå konteksten, partners namn via identityName); sender-info i ChatContext fiksa (eige melding hadde partners info ved feile side) + source med i optimistiske meldinger slik at «💎 Bli kjent»/«📋 Oppgave»-merket vises med ein gang (source var allereie returnert frå GET /api/chat/messages som skalart-felt — labels-forsvinning gjekk attende til fravarande optimistisk metadata). 6) MOODS: inga kodeendring — kontrakstest __tests__/chat-mood-shared.test.ts dekkjer begge retningar (A set → B ser same, B bytter → A ser B si), 403 for ikkje-deltakar, ingen overflødig DB-skriving; testane grønne. 7) Bilde-test (dag 15): krev dev-lås opna — UPDATE «Conversation» SET «imageShareAllowedAt» = now() i DEV-DB (sjå rapporten). Rapport: docs/POST-MATCH-UX.md. Filer: app/api/dashboard/overview/route.ts, app/api/chat/conversation/[conversationId]/route.ts, app/api/chat/messages/route.ts, app/dashboard/page.tsx, app/matching/page.tsx, app/chat/components/ChatHeader.tsx, app/chat/components/BliKjentPanel.tsx, app/chat/components/OppgaverPanel.tsx, app/chat/context/ChatContext.tsx, app/chat/[id]/ChatPageClient.tsx, app/chat/components/MessageBubble.tsx. Verifisert: tsc 0, jest 366/367 (43 suiter), verify:lang + verify:api grønne."
+    },
     {
       "dato": "2026-08-30",
       "id": "CHAT-MATCH-ROUTING-FIX",
@@ -204,7 +210,7 @@
       "/metoder — ikke lenket noe sted"
     ]
   },
-  "nextAction": "CHAT-MATCH-ROUTING-FIX er DONE (venterom-redirect, Pusher real-time, tilbakeknapp, meny-rydding — tsc/jest/lang grønne). KJØRE NÅ: prisma migrate deploy mot prod + push main → Vercel auto-deploy. NESTE FOR GEORGE: (1) `npx prisma migrate deploy` mot prod (verifiser 25/25). (2) Push main → Vercel deploy. (3) Live-test: logg inn som matchet bruker → skal gå rett til /dashboard (ikke /matching). Logg inn som u-matchet → skal se venterommet. (4) Chat: send melding → partner skal se den i sanntid (Pusher) eller innen 3 s (polling fallback). (5) Slipp inn testere. GJENSTÅR: CSRF aktivering, Vipps Login + Betaling, DPA + DPIA.",
+  "nextAction": "POST-MATCH-UX er DONE (navneløysing identityName, match-kort 1 gang, knapp «Samtale», reisekalender/fasegrenser samanslått med motoren, chat-header pil + 4 fase-symbol, fast send-linje i BliKjent/Oppgaver, navn i begge bobler, source-etikett med en gang — tsc/jest/lang/api grønne, 366/367). NESTE FOR GEORGE (live-test i to nettlesarar, testA/testB): (1) Navn: begge burde sjå kvarandre sitt valde namn i match-kort, chat-header og bobler (ikkje «Ukjent»). (2) Åpenbaring «Din match er her» vises 1 gang — lukka fanen/ny sesjon, skal ikkje kome att. (3) Moods: begge bytter → same mood for begge (siste skriv vinn). (4) Spørsmål/oppgave: velg frå ulike kategoriar → send-linja i botnen utan skrolle. (5) Bilde: oppnå dag 15 (eller dev-UPDATE imageShareAllowedAt, sjå docs/POST-MATCH-UX.md) → test bilda i begge retningar. (6) Kjøre e2e lokalt: npx playwright test e2e/tests/chat.spec.ts e2e/tests/match.spec.ts e2e/tests/matching-journey.spec.ts. (7) npm run build + push main → Vercel. GJENSTÅR: CSRF aktivering, Vipps Login + Betaling, DPA + DPIA.",
   "gjenstaarFoerBeta": [
     "Manuell sjekkliste — nå konsolidert i GEORGE.md (steg 2–9, env-liste, kill switches)"
   ],

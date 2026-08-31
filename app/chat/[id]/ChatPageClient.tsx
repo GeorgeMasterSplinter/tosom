@@ -22,20 +22,26 @@ interface PartnerInfo {
   distanceKm: number | null;
 }
 
-/** Hent partner-info frå conversation */
-async function fetchPartnerInfo(conversationId: string): Promise<PartnerInfo | null> {
+/** Hent partner-info + mitt visningsnavn frå conversation */
+async function fetchPartnerInfo(
+  conversationId: string
+): Promise<{ partner: PartnerInfo | null; myName: string | null }> {
   try {
     const res = await fetch(`/api/chat/conversation/${conversationId}`);
-    if (!res.ok) return null;
+    if (!res.ok) return { partner: null, myName: null };
     const data = await res.json();
     return {
-      id: data.partnerId || '',
-      name: data.partnerName || 'Din partner',
-      age: data.partnerAge ?? 25,
-      distanceKm: data.distanceKm ?? null,
+      partner: {
+        id: data.partnerId || '',
+        name: data.partnerName || 'Din partner',
+        age: data.partnerAge ?? 25,
+        distanceKm: data.distanceKm ?? null,
+      },
+      // Navnet jeg har valgt i onboarding — vises over mine egne bobler
+      myName: data.myName ?? null,
     };
   } catch {
-    return null;
+    return { partner: null, myName: null };
   }
 }
 
@@ -76,6 +82,7 @@ export default function ChatPage({ params, sessionUserId }: ChatPageProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [partner, setPartner] = useState<PartnerInfo | null>(null);
+  const [myName, setMyName] = useState<string | null>(null);
   const [journeyDay, setJourneyDay] = useState<number>(1);
   const [imageShareAllowed, setImageShareAllowed] = useState<boolean>(false);
 
@@ -86,7 +93,8 @@ export default function ChatPage({ params, sessionUserId }: ChatPageProps) {
           fetchPartnerInfo(conversationId),
           fetchImageShareAllowed(conversationId),
         ]);
-        setPartner(info);
+        setPartner(info.partner);
+        setMyName(info.myName);
         setImageShareAllowed(images);
         // Hent journey-day fallback — ChatProvider har også default 1
         const day = await fetchJourneyDayFallback();
@@ -123,6 +131,7 @@ export default function ChatPage({ params, sessionUserId }: ChatPageProps) {
       journeyDay={journeyDay}
       imageShareAllowed={imageShareAllowed}
       sessionUserId={sessionUserId}
+      myName={myName}
     >
       <ChatContainer
         conversationId={conversationId}

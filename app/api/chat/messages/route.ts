@@ -56,7 +56,11 @@ async function getHandler(request: Request) {
             id: true,
             name: true,
             profile: {
-              select: { photoUrl: true, age: true },
+              // identityName: navnet valgt i onboarding — vises rolig
+              // over chat-boblene, slik at det er tydelig hvem som
+              // har skrevet eller sendt hva. (source medfølger som
+              // skalart felt — «💎 Bli kjent» / «📋 Oppgave»-merket.)
+              select: { photoUrl: true, age: true, identityName: true },
             },
           },
         },

@@ -59,6 +59,8 @@ export interface ChatContextValue {
   /** Send-feil (vises ved inputfeltet; polling sletter ikke denne) */
   sendError: string | null;
   sessionUserId: string | null;
+  /** Visningsnavn til innlogga bruker (navnet valgt i onboarding) */
+  myName: string | null;
   sendMessage: (content: string, type?: MessageType, options?: { source?: "bli_kjent" | "oppgave" }) => Promise<boolean>;
   loadMessages: () => Promise<void>;
   /** Aktive mood */
@@ -81,6 +83,7 @@ export function ChatProvider({
   journeyDay = 1,
   imageShareAllowed = false,
   sessionUserId,
+  myName = null,
   children,
 }: {
   conversationId: string | null;
@@ -88,6 +91,7 @@ export function ChatProvider({
   journeyDay?: number;
   imageShareAllowed?: boolean;
   sessionUserId?: string;
+  myName?: string | null;
   children: ReactNode;
 }) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -141,7 +145,9 @@ export function ChatProvider({
       }
       const converted: ChatMessage[] = (data.messages || []).map((m: any) => {
         const senderInfo = m.sender ? {
-          name: m.sender.name ?? "Bruker",
+          // Navnet valgt i onboarding er kilde — så det er tydelig
+          // hvem som har skrevet, også for egne meldinger.
+          name: m.sender.profile?.identityName || m.sender.name || "Bruker",
           imageUrl: m.sender.profile?.photoUrl ?? undefined,
         } : undefined;
 
@@ -226,7 +232,14 @@ export function ChatProvider({
         sender: "me",
         type,
         content,
-        metadata: { timestamp: new Date().toISOString(), senderInfo: partner },
+        metadata: {
+          timestamp: new Date().toISOString(),
+          // Egen melding — eget navn (partner-info var satt ved feile side).
+          // source medfølger slik at «💎 Bli kjent» / «📋 Oppgave»-merket
+          // vises med en gang, ikke først ved neste lasting.
+          senderInfo: myName ? { name: myName } : undefined,
+          ...(options?.source ? { source: options.source } : {}),
+        },
       },
     ]);
 
@@ -261,7 +274,8 @@ export function ChatProvider({
                 content: serverMsg.content || content,
                 metadata: {
                   timestamp: serverMsg.createdAt || new Date().toISOString(),
-                  senderInfo: partner,
+                  senderInfo: myName ? { name: myName } : undefined,
+                  ...(options?.source ? { source: options.source } : {}),
                 },
               }
             : m
@@ -276,7 +290,7 @@ export function ChatProvider({
       setSendError(e instanceof Error ? e.message : "Kunne ikke sende melding");
       return false;
     }
-  }, [conversationId, partner]);
+  }, [conversationId, myName]);
 
   return (
     <ChatContext.Provider value={{
@@ -289,6 +303,7 @@ export function ChatProvider({
       error,
       sendError,
       sessionUserId: sessionUserId ?? null,
+      myName: myName ?? null,
       sendMessage,
       loadMessages,
       mood,

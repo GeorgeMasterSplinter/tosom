@@ -12,6 +12,27 @@ import { haversineKm } from "@/lib/matching/distance";
 
 export const dynamic = 'force-dynamic';
 
+/**
+ * Løser fram brukeren sitt valgte visningsnavn.
+ * identityName er navnet brukeren selv har valgt i onboarding
+ * («Hva vil du at vi skal kalle deg?») og er kilde nr. 1.
+ * Fallback: fornavn + etternavn, så User.name, så «Ukjent».
+ */
+function displayName(
+  profile:
+    | { identityName?: string | null; firstName?: string | null; lastName?: string | null }
+    | null
+    | undefined,
+  userName?: string | null
+): string {
+  return (
+    profile?.identityName?.trim() ||
+    [profile?.firstName, profile?.lastName].filter(Boolean).join(" ").trim() ||
+    userName?.trim() ||
+    "Ukjent"
+  );
+}
+
 export async function GET(_request: Request) {
   const session = await getServerSession();
 
@@ -33,6 +54,8 @@ export async function GET(_request: Request) {
         journeyState: true,
         onboardingComplete: true,
         matchQueuedAt: true,
+        name: true,
+        profile: { select: { identityName: true } },
       },
     });
 
@@ -168,7 +191,7 @@ export async function GET(_request: Request) {
 
       matchInfo = {
         id: partner.id,
-        name: [partnerProfile?.firstName, partnerProfile?.lastName].filter(Boolean).join(" ") || "Ukjent",
+        name: displayName(partnerProfile, partner.name),
         age: partnerProfile?.age,
         bio: partnerProfile?.bio,
         resonanceLevel: match.resonanceLevel ?? null,
@@ -186,10 +209,7 @@ export async function GET(_request: Request) {
         conversation.userAId === userId ? conversation.userB : conversation.userA;
       convoInfo = {
         conversationId: conversation.id,
-        partnerName:
-          [partner.profile?.firstName, partner.profile?.lastName]
-            .filter(Boolean)
-            .join(" ") || "Ukjent",
+        partnerName: displayName(partner.profile, partner.name),
         lastMessage: msg?.content ?? null,
         time: msg?.createdAt ?? null,
       };
@@ -214,6 +234,9 @@ export async function GET(_request: Request) {
         match: matchInfo,
         conversation: convoInfo,
         journey: journeyInfo,
+        // Visningsnavn til innlogga bruker — navnet valgt i onboarding.
+        // Brukes til hilsenen («God kveld, Anne Sofie») i dashboard og venterom.
+        myName: me ? displayName(me.profile, me.name) : "Ukjent",
         bothJustMet,
         // BUG 3: Sanne reise-tilstandar for venterommet
         journeyState: me?.journeyState ?? "IDLE",

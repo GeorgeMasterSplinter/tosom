@@ -46,17 +46,22 @@ interface DashboardData {
     bothSeenAt: string | null;
   } | null;
   bothJustMet: boolean;
+  myName?: string;
 }
 
 /* ═══════════════════════════════════════
    PHASES
    ═══════════════════════════════════════ */
 
+// Fasegrensene speiler den kanoniske journey-motoren
+// (lib/journey/engine.ts → PHASE_CONFIGS: 1–14 / 15–21 / 22–25 / 26–30).
+// Dashboardet hadde tidligere egne grenser (1–7 / 8–14 / 15–21 / 22–30) —
+// slått sammen med motoren, som driver den faktiske reisen.
 const PHASES = [
-  { key: 'EARLY', name: 'Bryt isen', start: 1, end: 7, color: '#5B9BD5' },
-  { key: 'BUILDING_TRUST', name: 'Bygg tillit', start: 8, end: 14, color: '#D4AF37' },
-  { key: 'DEEPER', name: 'Dypere samtaler', start: 15, end: 21, color: '#4ECDC4' },
-  { key: 'CHECKIN', name: 'Sjekk inn', start: 22, end: 30, color: '#E8875B' },
+  { key: 'EARLY', name: 'Bli kjent', start: 1, end: 14, color: '#5B9BD5' },
+  { key: 'BUILDING_TRUST', name: 'Bygger tillit', start: 15, end: 21, color: '#D4AF37' },
+  { key: 'DEEPER', name: 'Djupere samvær', start: 22, end: 25, color: '#4ECDC4' },
+  { key: 'CHECKIN', name: 'Refleksjon', start: 26, end: 30, color: '#E8875B' },
 ];
 
 function getPhaseForDay(day: number) {
@@ -221,6 +226,11 @@ function MatchRevealModal({
 function JourneyCalendar({ currentDay }: { currentDay: number }) {
   const [hoveredDay, setHoveredDay] = useState<number | null>(null);
 
+  // Tellingen starter når man har blitt matchet. På dag 0 (begge har ikke
+  // vært innom enda) markerer vi startdagen, slik at kalenderen alltid
+  // viser hvilken dag av reisen dere er i.
+  const markedDay = currentDay >= 1 ? currentDay : 1;
+
   return (
     <div>
       {/* Phase labels */}
@@ -248,7 +258,7 @@ function JourneyCalendar({ currentDay }: { currentDay: number }) {
       <div className="grid grid-cols-10 gap-1">
         {Array.from({ length: 30 }, (_, i) => i + 1).map(day => {
           const phase = getPhaseForDay(day);
-          const isCurrent = day === currentDay;
+          const isCurrent = day === markedDay;
           const isPast = day < currentDay;
           const isFuture = day > currentDay;
 
@@ -425,14 +435,12 @@ export default function Dashboard() {
         const res = await fetch('/api/dashboard/overview');
         if (!res.ok) throw new Error('No access');
         const json: DashboardData = await res.json();
-        // DEBUG: Fjern etter at loop er fikset
-        console.log('[DASHBOARD DEBUG]', {
-          match: json.match ? 'EXISTS (' + json.match.id + ')' : 'NULL',
-          journey: json.journey ? 'EXISTS' : 'NULL',
-          journeyState: (json as any).journeyState,
-          onboardingComplete: (json as any).onboardingComplete,
-        });
         setData(json);
+
+        // Hilsenen bruker navnet valgt i onboarding — ikke det registrerte navnet
+        if (json.myName && json.myName !== 'Ukjent') {
+          setUserName(json.myName);
+        }
 
         // Ingen aktiv match/reise → redirect /matching.
         // MEN: hvis journeyState sier MATCHED/ON_JOURNEY, er dette et
@@ -448,12 +456,15 @@ export default function Dashboard() {
           return;
         }
 
-        // Match reveal modal (første gang)
+        // Match reveal modal (én gang pr. match)
+        // localStorage — ikke sessionStorage: «Din match er her» skal vises
+        // kun én gang etter at man har blitt matchet, ikke ved hver ny
+        // loggings-/nettlesersesjon.
         const revealKey = `tosom_revealed_${json.match.id}`;
-        if (!revealedRef.current && !sessionStorage.getItem(revealKey)) {
+        if (!revealedRef.current && !localStorage.getItem(revealKey)) {
           revealedRef.current = true;
           setShowReveal(true);
-          sessionStorage.setItem(revealKey, '1');
+          localStorage.setItem(revealKey, '1');
         }
       } catch {
         // Ingen redirect her — ville forårsake loop om venterommet
@@ -549,7 +560,7 @@ export default function Dashboard() {
               boxShadow: '0 8px 32px rgba(212,175,55,0.15)',
             }}
           >
-            💬 {isDayZero ? 'Møt matchen din' : 'Fortsett samtalen'}
+            💬 Samtale
           </button>
           {isDayZero && (
             <p className="text-center text-xs mt-3" style={{ color: 'rgba(255,255,255,0.35)' }}>
@@ -559,19 +570,10 @@ export default function Dashboard() {
         </div>
 
         {/* ═══ RESONANSE KORT ═══ */}
+        {/* Kun resonanse-nivå + match-info (navn, alder, avstand) — */}
+        {/* «Deg»-kortet er fjernet: kortet handler om matchen, ikke om deg. */}
         <GlassCard className="mb-8">
           <div className="flex items-center justify-center gap-6 py-6">
-            {/* User card */}
-            <div
-              className="flex-1 max-w-[180px] rounded-2xl p-5 text-center"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}
-            >
-              <p className="font-semibold" style={{ color: 'rgba(255,255,255,0.9)', fontSize: '18px' }}>
-                {userName}
-              </p>
-              <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>Deg</p>
-            </div>
-
             {/* Resonance word */}
             <div className="text-center px-4 py-2 rounded-xl" style={{ boxShadow: getResonanceGlow(match.resonanceLevel) }}>
               <p

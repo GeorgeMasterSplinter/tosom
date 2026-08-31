@@ -111,6 +111,18 @@ export function ChatHeader({
   const router = useRouter();
   const isMilestone = journeyDay === 10 || journeyDay === 20 || journeyDay === 30;
 
+  // Ett symbol for hvert av de 4 reisestega. Fasen kommer fra journey-motoren
+  // (getPhaseForDay — samme grenser som driver den faktiske reisen).
+  // Dag 0 (begge har ikke møtt opp enda) telles som første steg.
+  const phase = journeyDay >= 1 ? getPhaseForDay(journeyDay).phase : "EARLY";
+  const PHASE_SYMBOLS: Record<string, { emoji: string; name: string }> = {
+    EARLY: { emoji: "🌱", name: "Bli kjent" },
+    BUILDING_TRUST: { emoji: "🤝", name: "Bygger tillit" },
+    DEEPER: { emoji: "💫", name: "Djupere samvær" },
+    CHECKIN: { emoji: "🌙", name: "Refleksjon" },
+  };
+  const phaseSymbol = PHASE_SYMBOLS[phase] ?? PHASE_SYMBOLS.EARLY;
+
   // Mood-aksent faller tilbake til gull om tema ikke er gitt
   const accent = moodTheme?.accent ?? G.gold;
   const accentLight = moodTheme?.accentLight ?? G.goldLight;
@@ -143,10 +155,10 @@ export function ChatHeader({
       />
 
       <div className="flex items-center gap-3 relative z-10">
-        {/* ═══ TILBAKKE ═══ */}
+        {/* ═══ TILBAKKE — kun en pille med pil, uten tekst ═══ */}
         <button
           onClick={() => router.push('/dashboard')}
-          className="flex-shrink-0 flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-medium transition-all duration-300 hover:brightness-110"
+          className="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-full transition-all duration-300 hover:brightness-110"
           style={{
             background: G.glassBg,
             border: `1px solid ${G.glassBorder}`,
@@ -154,7 +166,7 @@ export function ChatHeader({
           }}
           aria-label="Tilbake til dashboard"
         >
-          ← Tilbake
+          ←
         </button>
 
         {/* ═══ PARTNER INFO ═══ */}
@@ -175,16 +187,17 @@ export function ChatHeader({
             <PresenceDot partnerId={partner?.id} accent={accent} tMuted={tMuted} />
           </div>
 
-          {/* Dag + fase + milestone */}
+          {/* Fase-symbol + milestone — «Dag X av 30» er fjernet;
+              symbolet viser hvilket av de 4 stega dere er i (én kilde:
+              journey-motorens fasegrenser, ikke egne tall her). */}
           <div className="flex items-center gap-1.5 mt-0.5">
             <p
-              className="text-xs font-medium transition-colors duration-500"
+              className="text-sm transition-colors duration-500"
               style={{ color: accent }}
+              aria-label={phaseSymbol.name}
+              title={phaseSymbol.name}
             >
-              Dag {journeyDay} av 30
-              {journeyDay <= 10 && ' · 🌱'}
-              {journeyDay > 10 && journeyDay <= 20 && ' · 🎵'}
-              {journeyDay > 20 && ' · 💫'}
+              {phaseSymbol.emoji}
             </p>
 
             {isMilestone && (

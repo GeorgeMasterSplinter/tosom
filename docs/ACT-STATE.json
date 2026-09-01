@@ -1,15 +1,15 @@
 {
   "version": "1.0",
   "updatedAt": "2026-09-01",
-  "commit": "bab509b",
+  "commit": "1c255c6",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
-    "tests": "389/390 (44 suiter, 1 skippet)",
+    "tests": "397/398 (45 suiter, 1 skippet)",
     "e2e": "0 fixme att. Onboarding: 20/20 lokalt 29.08 (10 chromium + 10 firefox, inkl. full flow). Dashboard/journey/match: 90/90 frå 28.08-kjøringa (ingen kodeendringar som raknar dei sidan). Totalt 110 passed / 0 failed. 5/6 prosjekt lokalt (Mobile Safari/webkit krever system-bibliotek — installeres i CI med --with-deps). Dev-login (storageState) fungerer — alle testar kjører innlogga. playwright.config: workers: 1 alltid (lokal kjøring = CI) — onboarding-testene deler éin E2E-bruker som full-flow-testen muterer; parallelle workere racea på server-draften",
     "typecheck": "0 errors",
     "lint": "0 warnings (npx next lint --max-warnings 0)",
     "ciGuards": "6/6 grønne (lang, ai, concept, one-engine, 05:00, cron) + lang-guard grønn 28.08 etter E2E-bølgja",
-    "productionBuild": "verified (2026-08-28 etter E2E-bølgja — npm run build EXIT=0)"
+    "productionBuild": "verified 2026-09-01 (LANSE-READINESS-runda — npm run build EXIT=0, prod www.tosom.no HTTP 200)"
   },
   "currentPhaseId": "apen-beta-test",
   "blockers": [
@@ -218,6 +218,12 @@
       "id": "OB-FLERV-VENTROM",
       "title": "Onboarding-flervalg på 15 felt + lagring/prefill av livssituasjon (profilredigering fra venterommet)",
       "content": "Brukerønske: flere onboarding-felt skal ta flervalg med egne maks. OnboardingSelectGrid støttet allereie maxSelected (kommaseparert), så endringen var å slå på per grid: Step1 lifestyle («Din hverdag»), smoking, religion, children, wantChildren (2 kvar); Step2 workType (3), housingType (2), economicStability (2); Step4 loveGive/loveReceive (2 av 5); Step5a highPriority (2 av 6), lowPriority (2 av 5), desiredLifestyle (2 av 4), undesiredLifestyle (2 av 4); Step5b closenessNeed (2 av 3); Step8 neverCrossBoundary (2 av 5). Step9-oppsummeringen fekk LABELS-kartlegging + fmt-hjelper slik at «Roker-av-og-til,Snuser» visst som «Røyker av og til, Snuser» (14 felt bytta frå val() til fmt(); relationshipSeeking inkludert). Matching: categoryMatch i lib/matching/dimensions.ts → Jaccard-overlapping for kommaseparerte verdiar (100×felles/union), enkeltverdi oppfører seg heilt som før (4 nye unitest; alle 5 livssituasjonsdimensjonar får det automatisk). VENTEROM-ROD-ÅRSAK: /api/profile/setup validera livssituasjon med Zod, men ruta lesa aldri ut dataa — workType/housingType/householdSize/economicStability/responsibilities/dailyRoutine vart kastade ved lagring og prefill fylte dei ikkje, så profilredigering frå venterommet ikkje var varig. Fikse: setup persisterer no dei 6 felta som additive nøklar i lifeSituation-Json (update+create), og toOnboardingData pre-fyller same 6 (2 nye unitest). Venterommet krevde ingen endring: «Gå til profil»-knappane finst (3 stader i app/matching/page.tsx) → /onboarding pre-fyller → save er upsert → kø-POST er idempotent (allereie QUEUED → 200 utan å forskyve) → brukaren landar attende i køen med oppdatert profil, og neste match-omgang leser den. Ingen DB-migrasjon (Json-kolonner berre); 100 % bakoverkompatibelt med eksisterande enkeltval. Sjekk: verify grønt (389/390, +6 testar), tsc=0, build=0. Til George: prøv onboarding med test-brukar (velg 2–3 i dei nye felta, sjekk oppsummering) og rediger profilen frå venterommet."
+    },
+    {
+      "dato": "2026-09-01",
+      "id": "LANSE-READINESS",
+      "title": "Lanseringsklarheit (utan Vipps): CSRF-vern, DPA/DPIA, uptime-monitor, e-post-vars, drift-script",
+      "content": "1) CSRF: csrfCheck (lib/auth/csrf.ts, flag ENABLE_CSRF_PROTECTION, default AV) lagt inn på 7 skrive-ruter (profile/setup, settings/delete-account, settings/preferences, onboarding/complete, auth/request-reset, chat/send, report) + klient-hjelp csrfFetch (lib/api/csrfClient.ts: csrf_token-cookie SameSite=Lax 24t + X-CSRF-Token-header) på 5 fetch-stader (settings ×4, onboarding, ChatContext, ChatHeader, ImageUpload). 8 nye unit-test (flag på/av, cookie/header-kombinasjonar, API-klient utan cookie). BONUS-FIX: delete-account eksporterte berre DELETE medan frontenden sendte POST → konto-sletting var 405-død; POST-alias lagt til. 2) JUREDISK: docs/legal/DPA.md (behandlartabell Vercel/Neon/Cloudflare/Pusher/Resend/UploadThing/Sentry med regionar, art. 28-mal, signatur-sjekkliste) og docs/legal/DPIA.md (art. 35: 10 risikoar med sannsyn/konsekvens, tiltak per risiko, residual-risikotabell LAV–MIDDELS, databesitterrettigheter, signaturfelt). 3) UPTIME: .github/workflows/uptime-monitor.yml — pinger /api/system/health kvar 5. minutt, 3 forsøk med 15s backoff, Resend-alert-e-post ved vedvarande feil (krev GitHub-secrets RESEND_API_KEY + ALERT_EMAIL_TO). 4) E-POST: alle 6 EMAIL_*/ALERT_EMAIL_TO-variable lagt i Vercel production (vercel env add); Resend-nøkkel verifisert fungerande (API-svar 403 «domain not verified» — ikkje auth-feil). tosom.no har INGEN SPF/DKIM-TXT i det heile (DoH-sjekk) — domenet må leggjast til i Resend + 2 Cloudflare-records før sending i prod. 5) DRIFT-SCRIPT: scripts/launch-1-delete-test-users.mjs (dry run standard, --apply for sletting; søk test1/test2 epost/namn; FK-rekkefølge message→conversation→match→…→user; verifisering etter) + scripts/launch-3-verify-r2.mjs (list/put 1×1-PNG/presignert GET byte-for-byte/slett). Begge blokkerte på Vercel-prod-verdiar (CLI env pull leverer tomme verdiar i v54): DATABASE_URL + R2_* må klissetrast frå Vercel-dashboardet. 6) SENTRY: koden var allereie fullt kobla (instrumentation.ts, withSentryConfig, PII-config) — berre SENTRY_DSN-verdien manglar. Sjekk: tsc=0, jest 397/398 (+8), build=0, språkvakt grønn, prod HTTP 200 (health 0.6s). Til George: (1) klistre DATABASE_URL + R2_* frå Vercel-dashboard, (2) Resend-domene + SPF/DKIM i Cloudflare, (3) GitHub-secrets for uptime-alert, (4) Sentry DSN. Deretter: dry run + --apply (test1/test2), R2-verifisering, og ENABLE_CSRF_PROTECTION=true + redeploy (403-test utan token)."
     }
   ],
   "verifiedFlow": {
@@ -228,14 +234,15 @@
       "/metoder — ikke lenket noe sted"
     ]
   },
-  "nextAction": "POST-MATCH-UX er DONE (navneløysing identityName, match-kort 1 gang, knapp «Samtale», reisekalender/fasegrenser samanslått med motoren, chat-header pil + 4 fase-symbol, fast send-linje i BliKjent/Oppgaver, navn i begge bobler, source-etikett med en gang — tsc/jest/lang/api grønne, 366/367). NESTE FOR GEORGE (live-test i to nettlesarar, testA/testB): (1) Navn: begge burde sjå kvarandre sitt valde namn i match-kort, chat-header og bobler (ikkje «Ukjent»). (2) Åpenbaring «Din match er her» vises 1 gang — lukka fanen/ny sesjon, skal ikkje kome att. (3) Moods: begge bytter → same mood for begge (siste skriv vinn). (4) Spørsmål/oppgave: velg frå ulike kategoriar → send-linja i botnen utan skrolle. (5) Bilde: oppnå dag 15 (eller dev-UPDATE imageShareAllowedAt, sjå docs/POST-MATCH-UX.md) → test bilda i begge retningar. (6) Kjøre e2e lokalt: npx playwright test e2e/tests/chat.spec.ts e2e/tests/match.spec.ts e2e/tests/matching-journey.spec.ts. (7) npm run build + push main → Vercel. GJENSTÅR: CSRF aktivering, Vipps Login + Betaling, DPA + DPIA.",
+  "nextAction": "LANSE-READINESS er kodeferdig og i prod (commit 1c255c6, 01.09). CSRF-flagget er AV (trygt — ruter er no-op til det slås på). NESTE FOR GEORGE (4 steg): (1) Klistre Vercel-prod-verdiane DATABASE_URL + R2_* (5 variablar) → eg køyrer launch-1 dry run + --apply (slett test1/test2) og launch-3 (R2-verifisering). (2) Resend: legg til tosom.no i dashboardet → Cloudflare: TXT SPF «v=spf1 include:spf.resend.com -all» + DKIM-CNAME frå Resend → verified → e2e-test av passord-reset i prod. (3) GitHub-secrets RESEND_API_KEY + ALERT_EMAIL_TO → uptime-alerting live. (4) Sentry DSN → vercel env add SENTRY_DSN production. DERETTER: vercel env add ENABLE_CSRF_PROTECTION=true + redeploy → verifiser 403 på POST utan token i prod. GJENSTÅR: Vipps Login + Betaling, DPA/DPIA advokatgjennomgang + signatur, sletting av test1/test2, e-post-e2e, R2-verifisering, Sentry DSN, CSRF-flagg på.",
   "gjenstaarFoerBeta": [
     "Manuell sjekkliste — nå konsolidert i GEORGE.md (steg 2–9, env-liste, kill switches)"
   ],
   "gjenstaarFoerLansering": [
     "Vipps Login (eneste innlogging)",
     "Vipps Betaling 349 kr",
-    "DPA + DPIA (juridisk før kampanje)",
+    "DPA + DPIA: DOKK KLARE (docs/legal/, 01.09) — advokatgjennomgang + signatur gjenstår; DPA signeres i kvart behandlar-dashboard",
+    "Lanseringsrydding: slett test1/test2 frå prod (script klar), e-post-e2e, R2-verifisering, Sentry DSN, CSRF-flagg på, GitHub-secrets for uptime-alert",
     "Tetthetsbasert radius 30-300 / 50-400 km",
     "Kostnadsplan: Vercel Pro/Fluid, Pusher/Resend betalte tier, R2-lagring"
   ]

@@ -1,8 +1,8 @@
 GEORGE.md — ToSom i åpen beta
 Deploy‑guide, drift, og daglig oversikt  
-Opprettet 24.08.2026 — Sist oppdatert 30.08.2026 (prod‑routing + chat + UploadThing + Cloudflare + Pusher + R2)
+Opprettet 24.08.2026 — Sist oppdatert 01.09.2026 (lanseringsklarhet: CSRF, DPA/DPIA, uptime-monitor, e-post-vars, drift-script)
 
-0. Status i dag (30.08.2026)
+0. Status i dag (01.09.2026)
 🟢 Produksjon kjører: tosom.no → www.tosom.no (Vercel, prod, HTTP 200). Landing, /login, /admin/login fungerer.
 
 🟢 Database: Neon Frankfurt, pooled URL, helsesjekk viser connected (~1000 ms kald start).
@@ -19,7 +19,19 @@ Opprettet 24.08.2026 — Sist oppdatert 30.08.2026 (prod‑routing + chat + Uplo
 
 🟢 Chat: Pusher fungerer etter variabler ble satt — men routing og UI er feil (se §1).
 
-🟡 R2: ikke verifiserbart via health — må bekreftes manuelt (se §3).
+🟡 R2: ikke verifiserbart via health — verifiserings-script er klart (scripts/launch-3-verify-r2.mjs, krever R2_*-verdier).
+
+🟡 E-post: alle 6 EMAIL_*/ALERT-vars er satt i Vercel (01.09) og Resend-nøgelen fungerer — MEN tosom.no er ikke verifisert i Resend (mangler SPF/DKIM). Ingen e-post kan sendes før §5 er utført.
+
+🟡 Testbrukere: test1/test2 er fortsatt i prod-DB. Slettes med scripts/launch-1-delete-test-users.mjs (dry run standard, krever DATABASE_URL).
+
+🟢 CSRF: kode klar på 7 kritiske ruter (profil, settings, chat, report, reset, onboarding) — flagget er AV (ENABLE_CSRF_PROTECTION) og slås på som siste steg.
+
+🟢 Uptime: GitHub Actions monitor pinger /api/system/health hver 5. minutt (krev GitHub-secrets for alert-e-post).
+
+🟢 Juridisk: DPA + DPIA klar i docs/legal/ — trenger advokatgjennomgang og signatur.
+
+🟡 Sentry: koden er fullt koblet — mangler bare SENTRY_DSN-verdien.
 
 🟡 OpenAI: missing — OK i beta (AI kjører fallback).
 
@@ -89,12 +101,13 @@ CRON_SECRET	🟢
 ADMIN_EMAIL	❓
 ADMIN_PASSWORD_HASH	❓
 ADMIN_JWT_SECRET	❓
-EMAIL_SERVER_HOST=smtp.resend.com	❓
-EMAIL_SERVER_PORT=587	❓
-EMAIL_SERVER_USER=resend	❓
-EMAIL_SERVER_PASSWORD=re_...	❓
-EMAIL_FROM=noreplay@tosom.no	❓
-ALERT_EMAIL_TO=<din>	❓
+EMAIL_SERVER_HOST=smtp.resend.com	🟢 (satt 01.09)
+EMAIL_SERVER_PORT=587	🟢 (satt 01.09)
+EMAIL_SERVER_USER=resend	🟢 (satt 01.09)
+EMAIL_SERVER_PASSWORD=re_...	🟢 (satt 01.09)
+EMAIL_FROM=ToSom <no-reply@tosom.no>	🟢 (satt 01.09)
+ALERT_EMAIL_TO=<din>	🟢 (satt 01.09)
+ENABLE_CSRF_PROTECTION=false	🟢 (settes til true som siste steg, etter verifisering)
 PUSHER_APP_ID	🟢
 PUSHER_KEY	🟢
 PUSHER_SECRET	🟢
@@ -137,11 +150,15 @@ Status: nå OK.
 Men chat‑routing må fikses (se §1).
 
 5. Resend (e-post)
-Domenet tosom.no må være verifisert i Resend.
+DOMENET ER IKKE VERIFISERT (sjekket 01.09: tosom.no har ingen SPF/DKIM-records i det hele). Steg:
 
-Avsender: noreplay@tosom.no
+1. Resend-dashboard → Domains → legg til tosom.no
+2. Cloudflare DNS for tosom.no:
+   - TXT: v=spf1 include:spf.resend.com -all
+   - CNAME (DKIM): verdien Resend viser etter at domenet er lagt til
+3. Vent til Resend viser «verified» (1–10 min)
 
-Viderekobling: support@tosom.no → din e-post.
+Nøkkelen fungerer (verifisert 01.09) og alle Vercel-vars er satt — e-post fungerer så snart DOMENET er verifisert. Test: passord-reset i prod → e-post må lande + «email: sent» i admin-systemloggen.
 
 6. Kvoten
 Tak: 5 000 gratis reiser.
@@ -182,7 +199,7 @@ Ikke rør produksjons‑DB direkte
 10. Etter beta (fase 2)
 Vipps Login + betaling
 
-DPA + DPIA
+DPA + DPIA: DOKUMENTENE ER KLARE (docs/legal/, 01.09) — gjenstår advokatgjennomgang + signatur + DPA i hvert behandler-dashboard
 
 Vercel Pro/Fluid
 

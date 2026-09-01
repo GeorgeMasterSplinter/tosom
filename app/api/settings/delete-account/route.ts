@@ -16,6 +16,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from '@/lib/auth/session';
 import { z } from 'zod';
+import { csrfCheck } from '@/lib/auth/csrf';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,6 +26,10 @@ const DeleteSchema = z.object({
 
 export async function DELETE(req: NextRequest) {
   try {
+    // L6: CSRF-vern — konto-sletting er den kritiskaste skrive-aksjonen
+    const csrf = await csrfCheck(req);
+    if (csrf instanceof NextResponse) return csrf;
+
     // 1. Auth
     const session = await getServerSession();
     if (!session?.user?.id) {
@@ -116,3 +121,7 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: 'Kunne ikke slette konto' }, { status: 500 });
   }
 }
+
+// L6: Frontenden sender POST til denne rotet — legg til POST-alias
+// slik at både POST og DELETE fungerer (DELETE er den semantisk rette).
+export const POST = DELETE;

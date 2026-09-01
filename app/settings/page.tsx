@@ -8,6 +8,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { csrfFetch } from "@/lib/api/csrfClient";
 import GlassCard from "@/components/ui/cards/GlassCard";
 
 /* ═══════════════════════════════════════
@@ -612,7 +613,7 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
         return;
       }
 
-      const res = await fetch("/api/report", {
+      const res = await csrfFetch("/api/report", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reportedId: partnerId, matchId: matchStatus.matchId, category: severityToApi(category), description }),
@@ -674,7 +675,7 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
   const handleDelete = async () => {
     if (deleteText !== "SLETT") return;
     try {
-      await fetch("/api/settings/delete-account", { method: "POST" });
+      await csrfFetch("/api/settings/delete-account", { method: "POST" });
       await signOut({ callbackUrl: "/" });
     } catch {
       console.error("Feil ved sletting av konto");
@@ -1172,7 +1173,7 @@ function SlettKontoSection() {
   const handleDelete = async () => {
     if (confirmText !== "SLETT") return;
     try {
-      await fetch("/api/settings/delete-account", { method: "POST" });
+      await csrfFetch("/api/settings/delete-account", { method: "POST" });
       await signOut({ callbackUrl: "/" });
     } catch {
       console.error("Feil ved sletting av konto");
@@ -1338,7 +1339,7 @@ export default function SettingsPage() {
   const savePrefs = useCallback(
     async (newPrefs: Preferences) => {
       try {
-        await fetch("/api/settings/preferences", {
+        await csrfFetch("/api/settings/preferences", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

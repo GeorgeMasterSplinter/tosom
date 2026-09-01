@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { UploadButton } from "@/utils/uploadthing"; // sørg for at denne pathen stemmer
+import { csrfFetch } from "@/lib/api/csrfClient";
 
 export default function ImageUpload({
   onUploaded,
@@ -28,7 +29,7 @@ export default function ImageUpload({
           if (res && res[0]?.url && res[0].url.trim()) {
             onUploaded(res[0].url);
             // Send a chat message with the uploaded image URL
-            fetch("/api/chat/send", {
+            csrfFetch("/api/chat/send", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ imageUrl: res[0].url }),

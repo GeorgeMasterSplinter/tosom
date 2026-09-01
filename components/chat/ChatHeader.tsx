@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { toResonanceLevel, resonanceLabel } from '@/lib/matching/resonanceLevel';
+import { csrfFetch } from '@/lib/api/csrfClient';
 
 interface ChatHeaderProps {
   partnerName: string;
@@ -74,7 +75,7 @@ function ReportModal({ partnerId, matchId, onCancel, onSubmit }: { partnerId: st
     if (!category) return;
     setSending(true);
     try {
-      const res = await fetch('/api/report', {
+      const res = await csrfFetch('/api/report', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reportedId: partnerId, matchId, category, description }),

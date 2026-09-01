@@ -12,6 +12,7 @@
 
 import { createContext, useContext, useState, useCallback, useEffect, useRef, ReactNode } from "react";
 import { MoodId, MoodTheme, getMoodTheme, VALID_MOODS, DEFAULT_MOOD } from "@/app/chat/lib/mood";
+import { csrfFetch } from "@/lib/api/csrfClient";
 import { getPusherClient } from "@/lib/pusher/client";
 
 /* ═══════════════════════════════════════
@@ -261,7 +262,7 @@ export function ChatProvider({
     ]);
 
     try {
-      const res = await fetch("/api/chat/send", {
+      const res = await csrfFetch("/api/chat/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ conversationId, content, type, ...(options?.source ? { source: options.source } : {}) }),

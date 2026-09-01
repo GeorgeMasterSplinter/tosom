@@ -1,0 +1,91 @@
+# ToSom — Uptime-monitor
+#
+# Kjører hvert 5. minutt: pinger https://www.tosom.no/api/system/health.
+# Ved 3 påfølgjende feil (503/timeout/ikke-2xx) sender alert-e-post
+# via Resend (krever GitHub-secrets: RESEND_API_KEY, ALERT_EMAIL_TO).
+#
+# Oppsett (éin gong):
+#   GitHub repo → Settings → Secrets and variables → Actions:
+#     RESEND_API_KEY  = <re_…-nøgelen (samme som EMAIL_SERVER_PASSWORD i Vercel)>
+#     ALERT_EMAIL_TO  = <eier si e-postadresse>
+
+name: Uptime monitor
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Ping health-endepunktet
+        id: ping
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const url = "https://www.tosom.no/api/system/health";
+            let lastError = "";
+            for (let attempt = 1; attempt <= 3; attempt++) {
+              try {
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), 20000);
+                const res = await fetch(url, { signal: controller.signal });
+                clearTimeout(timeout);
+                if (res.ok) {
+                  core.setOutput("ok", "true");
+                  core.setOutput("detail", `200 OK (forsøk ${attempt})`);
+                  return;
+                }
+                lastError = `HTTP ${res.status}`;
+              } catch (err) {
+                lastError = err?.name === "AbortError" ? "timeout (20s)" : String(err?.message || err);
+              }
+              if (attempt < 3) {
+                await new Promise((r) => setTimeout(r, 15000));
+              }
+            }
+            core.setOutput("ok", "false");
+            core.setOutput("detail", lastError);
+
+      - name: Send alert-e-post ved feil
+        if: steps.ping.outputs.ok == 'false'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const detail = "${{ steps.ping.outputs.detail }}";
+            const body = {
+              from: "ToSom <no-reply@tosom.no>",
+              to: ["${{ secrets.ALERT_EMAIL_TO }}"],
+              subject: "🔴 ToSom UPTIME: helse-tjekket feila — " + detail,
+              html: `<p><b>ToSom prod</b> svarte ikke på <code>/api/system/health</code>.</p>
+                     <p>Detaljer: <b>${detail}</b></p>
+                     <p>Tid: ${new Date().toUTCString()}</p>
+                     <p><a href="https://www.tosom.no/api/system/health">Prøv manuelt</a> · <a href="https://dashboard.vercel.com">Vercel</a></p>`,
+            };
+            if (!process.env.RESEND_API_KEY) {
+              core.setFailed("Uptime-feil (" + detail + ") og RESEND_API_KEY-secret mangler — ingen e-post sendt.");
+              return;
+            }
+            const res = await fetch("https://api.resend.com/emails", {
+              method: "POST",
+              headers: {
+                Authorization: "Bearer " + process.env.RESEND_API_KEY,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(body),
+            });
+            if (!res.ok) {
+              const text = await res.text();
+              core.setFailed("Kunne ikke sende alert-e-post: HTTP " + res.status + " " + text);
+            } else {
+              core.warning("Alert sendt: " + detail);
+            }
+
+      - name: Marker workflow som feilet ved nedetid
+        if: steps.ping.outputs.ok == 'false'
+        run: |
+          echo "ToSom nedetid: ${{ steps.ping.outputs.detail }}"
+          exit 1

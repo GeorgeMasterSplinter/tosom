@@ -15,6 +15,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth/requireAuth';
+import { csrfCheck } from '@/lib/auth/csrf';
 import { sendAlert } from '@/lib/observability/alert';
 
 export const dynamic = 'force-dynamic';
@@ -49,6 +50,10 @@ const validCategories: Set<string> = new Set([
  */
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
+    // L6: CSRF-vern
+    const csrf = await csrfCheck(req);
+    if (csrf instanceof NextResponse) return csrf;
+
     // 1. Auth
     const result = await requireAuth(req);
     if (result instanceof NextResponse) {

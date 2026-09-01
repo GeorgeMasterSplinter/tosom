@@ -16,6 +16,7 @@ import { withMetrics } from '@/lib/observability/withMetrics';
 import { scoreAll } from '@/lib/psychometrics/scoring';
 import { INSTRUMENT_SET_VERSION } from '@/lib/psychometrics/instruments';
 import { pgCheck } from '@/lib/rate-limit-pg';
+import { csrfCheck } from '@/lib/auth/csrf';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,6 +26,10 @@ const PROFILE_SETUP_RATE_WINDOW_SEC = 60;
 
 async function postHandler(req: NextRequest) {
   try {
+    // L6: CSRF-vern — profilskrift krev gyldig CSRF-token
+    const csrf = await csrfCheck(req);
+    if (csrf instanceof NextResponse) return csrf;
+
     const body = await req.json();
 
     // O1 FIX: Valider med Zod-skjemaet FØR du skriver til databasen

@@ -5,14 +5,20 @@ import { requestResetSchema } from "@/lib/validation/auth";
 import { pgCheck } from "@/lib/rate-limit-pg";
 import { prisma } from "@/lib/prisma";
 import { storeResetToken, generateResetToken } from "@/lib/auth/reset";
+import { NextRequest, NextResponse } from "next/server";
+import { csrfCheck } from "@/lib/auth/csrf";
 
 /**
  * POST /api/auth/request-reset
  * Sender inn reset-token til brukaren sin e-post.
  */
 export async function POST(
-  request: Request
+  request: NextRequest
 ): Promise<Response> {
+  // L6: CSRF-vern
+  const csrf = await csrfCheck(request);
+  if (csrf instanceof NextResponse) return csrf;
+
   const body = await request.json();
 
   // Zod-validering

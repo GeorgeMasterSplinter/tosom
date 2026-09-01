@@ -8,6 +8,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { csrfFetch } from '@/lib/api/csrfClient';
 import { OnboardingLayout } from './OnboardingLayout';
 
 import Step1Profile from './steps/Step1Profile';
@@ -544,7 +545,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
         psychometrics,
       };
 
-      const profileRes = await fetch('/api/profile/setup', {
+      const profileRes = await csrfFetch('/api/profile/setup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

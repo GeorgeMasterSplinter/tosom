@@ -7,10 +7,15 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "@/lib/auth/session"
 import prisma from "@/lib/prisma"
+import { csrfCheck } from "@/lib/auth/csrf"
 
 export const dynamic = 'force-dynamic'
 
 export async function POST(req: NextRequest) {
+  // L6: CSRF-vern
+  const csrf = await csrfCheck(req)
+  if (csrf instanceof NextResponse) return csrf
+
   const session = await getServerSession()
 
   if (!session?.user?.id) {

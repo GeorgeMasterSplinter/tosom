@@ -9,8 +9,9 @@
  *   "choice"|undefined → "user"
  */
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getServerSession, requireNotBanned } from "@/lib/auth/session";
+import { csrfCheck } from "@/lib/auth/csrf";
 import { withMetrics } from "@/lib/observability/withMetrics";
 import { prisma } from "@/lib/prisma";
 import { chatSendMessageSchema, errorResponse, successResponse } from "@/lib/api-validator";
@@ -42,7 +43,11 @@ function mapMessageType(frontendType: string): "user" | "system" | "continue_cho
   return mapping[frontendType] ?? "user";
 }
 
-async function postHandler(request: Request) {
+async function postHandler(request: NextRequest) {
+  // L6: CSRF-vern
+  const csrf = await csrfCheck(request);
+  if (csrf instanceof NextResponse) return csrf;
+
   const session = await getServerSession();
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Ikke autentisert" }, { status: 401 });

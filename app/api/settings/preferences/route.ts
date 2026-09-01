@@ -8,6 +8,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from '@/lib/auth/session';
+import { csrfCheck } from '@/lib/auth/csrf';
 
 export const dynamic = 'force-dynamic';
 
@@ -53,6 +54,10 @@ export async function GET() {
  */
 export async function POST(req: NextRequest) {
   try {
+    // L6: CSRF-vern
+    const csrf = await csrfCheck(req);
+    if (csrf instanceof NextResponse) return csrf;
+
     const session = await getServerSession();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Ikke autentisert' }, { status: 401 });

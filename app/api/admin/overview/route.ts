@@ -4,7 +4,7 @@
  * GET /api/admin/overview
  * 
  * Étt API-kall for alle 8 statusindikatorer til admin-oversiktssiden.
- * Bruker singleton Prisma (ikke new PrismaClient).
+ * Bruker singleton Prisma fra lib/prisma.ts (ingen egen Prisma-instans).
  */
 
 import { NextRequest, NextResponse } from 'next/server';

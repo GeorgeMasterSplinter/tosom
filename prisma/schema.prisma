@@ -60,48 +60,48 @@ model User {
 
 // ⚠️ TODO: age burde vere required basert på 9-stegs onboarding (ikkje nullable)
 model Profile {
-  id                String          @id @default(cuid())
-  userId            String          @unique
-  firstName         String?
-  lastName          String?
-  age               Int // ⚠️ ENDRA frå optional → required
-  identityName      String?
-  lifeSituation     Json?
-  lifestyle         Json?
-  personality       Json?
-  relationshipStyle String?
-  communication     Json?
-  intimacy          Json?
-  futureVision      Json?
-  boundaries        Json?
-  emotionalNeeds    Json?
-  lifeRhythm        String?
-  maturityLevel     Int?
-  securityLevel     String?
-  photoUrl          String?
-  bio               String?
-  interests         String[]
+  id                  String          @id @default(cuid())
+  userId              String          @unique
+  firstName           String?
+  lastName            String?
+  age                 Int // ⚠️ ENDRA frå optional → required
+  identityName        String?
+  lifeSituation       Json?
+  lifestyle           Json?
+  personality         Json?
+  relationshipStyle   String?
+  communication       Json?
+  intimacy            Json?
+  futureVision        Json?
+  boundaries          Json?
+  emotionalNeeds      Json?
+  lifeRhythm          String?
+  maturityLevel       Int?
+  securityLevel       String?
+  photoUrl            String?
+  bio                 String?
+  interests           String[]
   // B1.3: Avstands-matching — postnummer som kolonne (filterbar), lat/lon utledet ved lagring
-  postalCode        String?
-  latitude          Float?
-  longitude         Float?
-   deepProfileStep   DeepProfileStep @default(IDENTITY)
-   deepProfileData   Json?
-   // Onboarding-utkast ({ step, data }) underveis i onboarding — eget hjem slik at
-   // draft-autosave aldri overskriver deepProfileData (matching-data). Ryddes ved fullføring.
-   onboardingDraft   Json?
-   preferences       Json?
-   matchTags         String[]
-   // FORSKNINGSMOTOR F-3: Psykometriske skårer (additive, ingen eksisterende felt røres)
-   psychometricAnswers   Json?  // Rå svar: { "bfi1": 4, "att_a1": 2, ... }
-   bigFive               Json?  // { openness, conscientiousness, extraversion, agreeableness, neuroticism }
-   attachment            Json?  // { anxiety, avoidance, style }
-   valueProfile          Json?  // { benevolence, security, ... } (PVQ-10)
-   emotionRegulation     Json?  // { reappraisal, suppression } (ERQ-6)
-   psychometricVersion   String? // Versjon av instrumentsettet
-   createdAt         DateTime        @default(now())
-   updatedAt         DateTime        @updatedAt
-   user              User            @relation("UserProfile", fields: [userId], references: [id])
+  postalCode          String?
+  latitude            Float?
+  longitude           Float?
+  deepProfileStep     DeepProfileStep @default(IDENTITY)
+  deepProfileData     Json?
+  // Onboarding-utkast ({ step, data }) underveis i onboarding — eget hjem slik at
+  // draft-autosave aldri overskriver deepProfileData (matching-data). Ryddes ved fullføring.
+  onboardingDraft     Json?
+  preferences         Json?
+  matchTags           String[]
+  // FORSKNINGSMOTOR F-3: Psykometriske skårer (additive, ingen eksisterende felt røres)
+  psychometricAnswers Json? // Rå svar: { "bfi1": 4, "att_a1": 2, ... }
+  bigFive             Json? // { openness, conscientiousness, extraversion, agreeableness, neuroticism }
+  attachment          Json? // { anxiety, avoidance, style }
+  valueProfile        Json? // { benevolence, security, ... } (PVQ-10)
+  emotionRegulation   Json? // { reappraisal, suppression } (ERQ-6)
+  psychometricVersion String? // Versjon av instrumentsettet
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  user                User            @relation("UserProfile", fields: [userId], references: [id])
 
   @@index([userId])
   @@index([deepProfileStep])
@@ -663,10 +663,10 @@ model BetaInvite {
 // STEG S1 — Sperreliste: bruker blokkerer en annen fra påtreffende matching
 model UserBlock {
   id        String   @id @default(cuid())
-  blockerId String   // hvem som blokkerer
-  blockedId String   // hvem som blokkeres (aldri blir matchet med blocker)
-  matchId   String?  // lenke til matchen (historikk, kan være null)
-  reason    String?  // "blocked" | "reported"
+  blockerId String // hvem som blokkerer
+  blockedId String // hvem som blokkeres (aldri blir matchet med blocker)
+  matchId   String? // lenke til matchen (historikk, kan være null)
+  reason    String? // "blocked" | "reported"
   createdAt DateTime @default(now())
 
   @@unique([blockerId, blockedId])
@@ -750,9 +750,9 @@ model JourneyStat {
 // Dag 12 — Delt rate limiting via Postgres.
 // Enkel teller per nøkkel med tidsvindu. Atomisk UPSERT for serverless-sikkerhet.
 model RateLimitCounter {
-  key      String   @id
-  count    Int      @default(0)
-  resetAt  DateTime
+  key       String   @id
+  count     Int      @default(0)
+  resetAt   DateTime
   createdAt DateTime @default(now())
 
   @@index([resetAt])

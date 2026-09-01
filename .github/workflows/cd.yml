@@ -43,6 +43,19 @@ jobs:
       - name: Install Vercel CLI
         run: npm i -g vercel
 
+      # .vercel/ er gitignored → prosjektlenken eksisterer ikke i CI.
+      # vercel pull --yes feiler umiddelbart uten den (rotårsak i CD 23–171:
+      # alle ekte deploy-kjøringer har feilet i dette steget).
+      # Lenken bygges derfor ved kjøring fra org/project-ID i secrets.
+      - name: Link Vercel Project
+        run: |
+          mkdir -p .vercel
+          printf '{\n  "orgId": "%s",\n  "projectId": "%s",\n  "projectName": "tosom"\n}\n' \
+            "$VERCEL_ORG_ID" "$VERCEL_PROJECT_ID" > .vercel/project.json
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
       - name: Pull Vercel Environment Info
         run: vercel pull --yes
         env:
@@ -134,3 +147,22 @@ jobs:
           sleep 60
           echo "Checking health endpoint..."
           curl -f https://tosom.no/api/system/health || echo "Health check pending (may need stabilization time)"
+
+  # ─── DEPLOY GATE (synlig kvalitetsgate) ───
+  # Når CI er rød, hoppes deploy over — og en kjøring der bare jobber er
+  # hoppet over vises som 'success' (se CD 165–168). Dette jobbet gjør slike
+  # kjøringer røde i stedet, slik at «deploy ble hoppet over» er synlig i UI.
+  deploy-gate:
+    name: Deploy Gate
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: always()
+    steps:
+      - name: Verify Deploy Ran
+        run: |
+          RESULT="${{ needs.deploy.result }}"
+          if [ "$RESULT" != "success" ]; then
+            echo "::error::Deploy-jobben ble hoppet over (result: $RESULT) — CI var ikke grønn."
+            exit 1
+          fi
+          echo "Deploy-jobben fullførte med success."

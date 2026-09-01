@@ -30,6 +30,9 @@ jobs:
     environment:
       name: production
       url: https://tosom.no
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -40,42 +43,34 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - name: Install Vercel CLI
-        run: npm i -g vercel
+      - name: Install dependencies
+        run: npm ci
 
-      # .vercel/ er gitignored → prosjektlenken eksisterer ikke i CI.
-      # vercel pull --yes feiler umiddelbart uten den (rotårsak i CD 23–171:
-      # alle ekte deploy-kjøringer har feilet i dette steget).
-      # Lenken bygges derfor ved kjøring fra org/project-ID i secrets.
+      # Vercel OIDC: jobben autentiserer via GitHub OIDC (id-token) i stedet for
+      # legacy VERCEL_TOKEN. Krever at Vercels GitHub App er koblet til repoet og
+      # OIDC er påslått for prosjektet — ellers skriver vercel/link@v1 nøyaktig
+      # hvilken dashboard-lenke som slår det på.
       - name: Link Vercel Project
-        run: |
-          mkdir -p .vercel
-          printf '{\n  "orgId": "%s",\n  "projectId": "%s",\n  "projectName": "tosom"\n}\n' \
-            "$VERCEL_ORG_ID" "$VERCEL_PROJECT_ID" > .vercel/project.json
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        uses: vercel/link@v1
+        with:
+          vercelOrgId: ${{ secrets.VERCEL_ORG_ID }}
+          vercelProjectId: ${{ secrets.VERCEL_PROJECT_ID }}
 
       - name: Pull Vercel Environment Info
-        run: vercel pull --yes
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        uses: vercel/env-pull@v1
 
       - name: Build Project
-        run: vercel build --prod
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        uses: vercel/build@v1
+        with:
+          vercelOrgId: ${{ secrets.VERCEL_ORG_ID }}
+          vercelProjectId: ${{ secrets.VERCEL_PROJECT_ID }}
 
       - name: Deploy Project
-        run: vercel deploy --prebuilt --prod
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        uses: vercel/deploy@v1
+        with:
+          vercelOrgId: ${{ secrets.VERCEL_ORG_ID }}
+          vercelProjectId: ${{ secrets.VERCEL_PROJECT_ID }}
+          prod: true
 
       - name: Deploy Output
         run: |

@@ -6,10 +6,11 @@ Ingen swipe. Ingen feed. Én match innen 24 timer.
 ## Språkprofil
 
 Språket i ToSom er **norsk bokmål** — overalt. Brukerflate, dokumentasjon,
-kodekommentarer og commit-meldinger. Ingen nynorsk, ingen svorsk, ingen slang.
+kodekommentarer, testfiler og commit-meldinger. Ingen nynorsk, ingen svorsk, ingen slang.
 
 Språkmanualen står i [ai/system_prompt.md](ai/system_prompt.md) §2 og er
 oppsummert i [docs/TOSOM-SUPER-MASTERPLAN-v2.0.md](docs/TOSOM-SUPER-MASTERPLAN-v2.0.md) §2.
+Språkvakten (`npm run verify:lang`) blokkerer push og deploy som bryter dette.
 
 ## Kom-i-gang
 

@@ -204,7 +204,7 @@ Pre-flight Check → Godkjenning → Deploy → Healthcheck → Smoke Tests
 
 ---
 
-## 5. POST-LAUNCH STABILISERING (FØRSTE 30 DAGAR)
+## 5. POST-LAUNCH STABILISERING (FØRSTE 30 DAGER)
 
 ### Uker 1–2: Kritisk
 
@@ -249,7 +249,7 @@ Pre-flight Check → Godkjenning → Deploy → Healthcheck → Smoke Tests
 
 ---
 
-## 6. VEKST-PLAN (30–90 DAGAR)
+## 6. VEKST-PLAN (30–90 DAGER)
 
 ### Måned 1: Stabilisering og Innsikt
 - Monitoring: Alle metrikker i sanntid

@@ -6,7 +6,7 @@
 
 ## OPPSUMMERING
 
-Ein full scan av heile prosjektet er utført. Ingen feil er funnen:
+En full scan av heile prosjektet er utført. Ingen feil er funnet:
 
 - ✅ Alle imports peiker til eksisterande filer
 - ✅ Ingen anonyme default exports
@@ -19,7 +19,7 @@ Ein full scan av heile prosjektet er utført. Ingen feil er funnen:
 
 ## SCAN 1: IMPORTS MED FEIL PATHS
 
-**Resultat:** ✅ Ingen funnen. Alle imports i app/ peiker til eksisterande filer.
+**Resultat:** ✅ Ingen funnet. Alle imports i app/ peiker til eksisterande filer.
 
 **75 imports skanna:**
 - OnboardingFlow → OnboardingLayout, steps/*
@@ -32,7 +32,7 @@ Ein full scan av heile prosjektet er utført. Ingen feil er funnen:
 
 ## SCAN 2: EXPORTS AV UNDEFINED VARIABLER
 
-**Resultat:** ✅ Ingen funnen. Alle eksporter er korrekte.
+**Resultat:** ✅ Ingen funnet. Alle eksporter er korrekte.
 
 **Siste anonyme exports fikset:**
 - `aiMobile.tsx`: `const AITools = { ... }; export default AITools`
@@ -71,7 +71,7 @@ useEffect(() => {
 
 ## SCAN 5: SIRKULÆRE IMPORTS
 
-**Resultat:** ✅ Ingen sirkulære imports funnen.
+**Resultat:** ✅ Ingen sirkulære imports funnet.
 
 **OnboardingFlow → steps/* → components/* — ingen tilbake-rettar.**
 
@@ -79,7 +79,7 @@ useEffect(() => {
 
 ## SCAN 6: ANONYME DEFAULT EXPORTS
 
-**Resultat:** ✅ Ingen funnen i heile prosjektet.
+**Resultat:** ✅ Ingen funnet i heile prosjektet.
 
 ```
 Search: export default \{ in *.tsx
@@ -112,7 +112,7 @@ export default function LandingPage() {
 
 ---
 
-## RESTELENDE WARNINGS (ikkje-feil, blokkerer ikkje build)
+## RESTELENDE WARNINGS (ikke-feil, blokkerer ikke build)
 
 | Type | Fil | Mengd |
 |--|-|--|
@@ -121,7 +121,7 @@ export default function LandingPage() {
 | `jsx-a11y/alt-text` | 1 fil | 1 |
 | `no-page-custom-font` | 1 fil | 1 |
 
-Desse kan fikse seinare.
+Desse kan fikse senere.
 
 ---
 
@@ -131,4 +131,4 @@ Lagd i `docs/MODULE-SCAN-FULL.md`.
 
 ---
 
-**Full scan er ferdig — ingen feil. Heile prosjektet byggjer utan feil.**
+**Full scan er ferdig — ingen feil. Heile prosjektet byggjer uten feil.**

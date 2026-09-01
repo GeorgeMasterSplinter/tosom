@@ -151,7 +151,7 @@ export default function AdminConversationsPage() {
         <div style={{ marginBottom: "24px", padding: "20px", borderRadius: "12px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
             <h2 style={{ fontSize: "18px", fontWeight: 600, color: "#D4AF37" }}>
-              Detaljar — {selectedConversation.id.substring(0, 12)}...
+              Detaljer — {selectedConversation.id.substring(0, 12)}...
             </h2>
             <button onClick={() => setSelectedConversation(null)} style={{ background: "none", border: "none", color: "#E0E0E0", cursor: "pointer", fontSize: "18px" }}>✕</button>
           </div>
@@ -161,7 +161,7 @@ export default function AdminConversationsPage() {
             <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Match score:</span> {selectedConversation.match?.score ?? '—'}</div>
             <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Status:</span> {statusBadge(selectedConversation)}</div>
             <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Oppretta:</span> {new Date(selectedConversation.createdAt).toLocaleString('nb-NO')}</div>
-            <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Bilete delt:</span> {selectedConversation.imageShared ? 'Ja' : 'Nei'}</div>
+            <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Bilde delt:</span> {selectedConversation.imageShared ? 'Ja' : 'Nei'}</div>
           </div>
         </div>
       )}
@@ -248,7 +248,7 @@ export default function AdminConversationsPage() {
 
       {/* Footer */}
       <div style={{ marginTop: "32px", padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", fontSize: "13px", color: "rgba(255,255,255,0.4)" }}>
-        💡 Klikk på ein conversation for å se detaljar. Fryst/ås opp-logg vert lagret i SystemLog under modulen <code>admin/conversation-freeze</code> og <code>admin/conversation-unlock</code>.
+        💡 Klikk på en conversation for å se detaljer. Fryst/ås opp-logg vert lagret i SystemLog under modulen <code>admin/conversation-freeze</code> og <code>admin/conversation-unlock</code>.
       </div>
     </div>
   );

@@ -12,7 +12,7 @@ AtmosphereLayer er no integrert i ChatRoom med:
 - **Mood-basert preset** (reagerer på WarmFlow-mood)
 - **Gradient-bakgrunn** med glow
 - **Vignette** for djupde
-- **Partiklar** (berre i celebratory/deep)
+- **Partiklar** (bare i celebratory/deep)
 
 ---
 
@@ -50,7 +50,7 @@ interface AtmosphereLayerProps {
 | calm | vilkår | midnight-gold | Standard |
 
 ### Partiklar
-- **Visast berre** i mood: `celebratory` eller `deep`
+- **Visast bare** i mood: `celebratory` eller `deep`
 - 30 partiklar med tilfeldige posisjonar, storleik, fart
 - Flyt-animasjon med varying duration
 
@@ -84,7 +84,7 @@ return (
       />
     </div>
 
-    {/* ChatRoom-innhald */}
+    {/* ChatRoom-innhold */}
     <div className="relative z-10">
       <ChatRoom ... />
       <PartnerPresenceBar ... />
@@ -128,14 +128,14 @@ const resonance = conv.resonanceScore;
 - gentle → spring-bloom eller forest-green
 - calm → midnight-gold (standard)
 
-### 3. Partiklar visast berre i
+### 3. Partiklar visast bare i
 - celebratory: ✅ partiklar synlege
 - deep: ✅ partiklar synlege
 - warm/gentle/calm: ❌ ingen partiklar
 
 ### 4. Vignette
-- Alltid synleg, gir roleg djupde
-- Ingen interaksjon med brukar (pointer-events-none)
+- Alltid synleg, gir rolig djupde
+- Ingen interaksjon med bruker (pointer-events-none)
 
 ---
 
@@ -153,6 +153,6 @@ const resonance = conv.resonanceScore;
 
 - AtmosphereLayer er **alltid bak** ChatRoom (z-index)
 - `pointer-events-none` på alle atmosphere-element
-- Partiklar berre i **celebratory/deep**
+- Partiklar bare i **celebratory/deep**
 - Mood-endring skjer **mykt** (1000ms transition)
-- Ingen atmosfære-endringar er **påtrengjande**
+- Ingen atmosfære-endringer er **påtrengjande**

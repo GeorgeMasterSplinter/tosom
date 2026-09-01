@@ -45,7 +45,7 @@ const LABELS: Record<string, Record<string, string>> = {
   loveReceive: { ord: 'Ord og ros', tjenester: 'Gjør ting for meg', tid: 'Kvalitetstid sammen', kjønnlig: 'Fysiske klemmer og berøring', gaver: 'Å få gaver' },
   highPriority: { karriere: 'Karriere og mål', familie: 'Familie og nære relasjoner', venner: 'Venner og fellesskap', 'personlig-vekst': 'Personlig vekst og læring', frihet: 'Frihet og selvstendighet', spirituell: 'Spirituell/religiøst livssyn' },
   lowPriority: { materiell: 'Materielle ting', status: 'Status og anerkjennelse', 'sosial-media': 'Sosialt mediabruk', sport: 'Sport og konkurranse', underholdning: 'Underholdning og kos' },
-  desiredLifestyle: { roleg: 'Rolig og forutsigbart', eventyr: 'Eventyr og endring', balansert: 'Balansen mellom ro og aktivitet', skapende: 'Skapende og kunstnerisk' },
+  desiredLifestyle: { rolig: 'Rolig og forutsigbart', eventyr: 'Eventyr og endring', balansert: 'Balansen mellom ro og aktivitet', skapende: 'Skapende og kunstnerisk' },
   undesiredLifestyle: { ensam: 'Alene og isolert', stress: 'Konstant stress', rutine: 'Monoton rutine', 'økonomisk-utrygg': 'Økonomisk utrygghet' },
   closenessNeed: { 'mye tid sammen hver dag': 'Mye samvær', 'balansert samvær': 'Balansert', 'mye egen rom og autonomi': 'Mye egenrom' },
   neverCrossBoundary: { respekt: 'Respekt for meg som person', 'tid-aleine': 'Tid alene hver dag', venner: 'Kontakt med venner/familie', selvstende: 'Eget rom og selvstendighet', sandhet: 'Ærlighet og sannferdighet' },
@@ -66,7 +66,7 @@ const fmt = (f: string) => (d: Record<string, unknown>) => {
 };
 
 export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
-  // Helper-funksjon for å gjere felt synlege bare dersom dei har verdi
+  // Helper-funksjon for å gjøre felt synlege bare dersom de har verdi
   const Field = ({ label, value, showIf }: { label: string; value: string; showIf?: boolean }) => {
     if (showIf && !value) return null;
     return (

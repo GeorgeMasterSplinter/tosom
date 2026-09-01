@@ -15,11 +15,11 @@ import * as crypto from 'crypto';
 const BASE_URL = process.env.TOSOM_BASE_URL || 'http://localhost:3000';
 const LOCAL_DB = process.env.TOSOM_DB || 'postgresql://tosom:tosom@localhost:5432/tosom_dev';
 
-// Les CRON_SECRET fra miljøvariabel (aldrig hardkodet eller logga)
+// Les CRON_SECRET fra miljøvariabel (aldri hardkodet eller logga)
 const CRON_SECRET = process.env.CRON_SECRET;
 
 if (!CRON_SECRET) {
-  console.error('[FAIL] Manglar CRON_SECRET. Set miljøvariabelen CRON_SECRET.');
+  console.error('[FAIL] Mangler CRON_SECRET. Set miljøvariabelen CRON_SECRET.');
   process.exit(1);
 }
 
@@ -129,7 +129,7 @@ async function main() {
   if (existingTables.length === 7) {
     addStep('Alle 7 tabellar eksisterer', true, `${existingTables.join(', ')}`);
   } else {
-    addStep('Tabellar manglar', false, `Fann ${existingTables.length}/7: ${existingTables.join(', ') || 'ingen'}`);
+    addStep('Tabellar mangler', false, `Fann ${existingTables.length}/7: ${existingTables.join(', ') || 'ingen'}`);
     console.log('  ℹ️  Køyrer Prisma db push...');
     try {
       execSync(`cd /mnt/master/tosom && DATABASE_URL="${LOCAL_DB}" npx prisma db push --accept-data-loss 2>&1`, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] });
@@ -160,7 +160,7 @@ async function main() {
     const journeyCount = sqlQuery(`SELECT COUNT(*) FROM "JourneyProgress";`);
     const convCount = sqlQuery(`SELECT COUNT(*) FROM "Conversation";`);
 
-    addStep('User-tabell', true, `${userCount} brukarar`);
+    addStep('User-tabell', true, `${userCount} brukere`);
     addStep('Match-tabell', true, `${matchCount} matcher`);
     addStep('JourneyProgress-tabell', true, `${journeyCount} reiser`);
     addStep('Conversation-tabell', true, `${convCount} konversasjonar`);
@@ -169,7 +169,7 @@ async function main() {
   }
 
   // ── Steg 2: Opprett testbrukarar via psql ────────────────────
-  console.log('\n[Steg 2] Opprette testmiljø (10 brukarar)');
+  console.log('\n[Steg 2] Opprette testmiljø (10 brukere)');
 
   try {
     const createdUsers = [];
@@ -212,13 +212,13 @@ async function main() {
       const matchCount = sqlQuery(`SELECT COUNT(*) FROM "Match" WHERE "userAId" LIKE '${TEST_PREFIX}%%' OR "userBId" LIKE '${TEST_PREFIX}%%';`);
       if (parseInt(matchCount) > 0) {
         testMatchIds.push(...testUserIds.slice(0, parseInt(matchCount)));
-        addStep('Matcher oppretta', true, `${matchCount} matcher funne`);
+        addStep('Matcher oppretta', true, `${matchCount} matcher funnet`);
 
         // Check scores
         const scoredMatches = sqlQuery(`SELECT COUNT(*) FROM "Match" WHERE (score >= 0 AND "normalizedScore" > 0 AND "normalizedScore" <= 1) AND ("userAId" LIKE '${TEST_PREFIX}%%' OR "userBId" LIKE '${TEST_PREFIX}%%');`);
         addStep('Match-score validert', scoredMatches === matchCount, 'Alle har gyldig score');
       } else {
-        addStep('Matcher oppretta', false, 'Ingen matcher funne (kan vere dersom ingen matchable kandidatar)');
+        addStep('Matcher oppretta', false, 'Ingen matcher funnet (kan være dersom ingen matchable kandidatar)');
       }
     } else {
       addStep('Cron matching API', false, `Status: ${cronResult.status}, Feil: ${JSON.stringify(cronResult.data)}`);
@@ -268,7 +268,7 @@ async function main() {
 
       addStep('Match accept + Journey start', true, `${startedPairs} par starta`);
     } else {
-      addStep('Match accept + Journey start', false, 'Ingen aktive matcher funne for accept');
+      addStep('Match accept + Journey start', false, 'Ingen aktive matcher funnet for accept');
     }
 
     // Test journey-cron — set nextDayAt to past
@@ -276,11 +276,11 @@ async function main() {
 
     const journeyCron = await apiGetWithSecret('/api/cron/journey');
     if (journeyCron.ok && journeyCron.data?.ok) {
-      addStep('Cron journey API', true, `Framrykte: ${journeyCron.data.advanced}, Avslutta: ${journeyCron.data.ended}`);
+      addStep('Cron journey API', true, `Framrykte: ${journeyCron.data.advanced}, Avsluttet: ${journeyCron.data.ended}`);
 
       // Verify day increased
       const dayAfter = sqlQuery(`SELECT COUNT(*) FROM "JourneyProgress" WHERE "userId" LIKE '${TEST_PREFIX}%%' AND day > 1 AND "endedAt" IS NULL;`);
-      addStep('Journey-dag aukar (dag1 → dag2)', parseInt(dayAfter) > 0, `${dayAfter} med dag > 1`);
+      addStep('Journey-dag øker (dag1 → dag2)', parseInt(dayAfter) > 0, `${dayAfter} med dag > 1`);
     } else {
       addStep('Cron journey API', false, `Status: ${journeyCron.status}`);
     }
@@ -305,22 +305,22 @@ async function main() {
 
       if (userA && userB) {
         const msg1Id = `msg-readiness-${crypto.randomUUID()}`;
-        sqlExec(`INSERT INTO "Message" (id, "conversationId", senderId, content, type, "createdAt", "updatedAt") VALUES ('${msg1Id}', '${convId}', '${userA}', 'Test melding 1 frå readiness-check', 'user', NOW(), NOW());`);
+        sqlExec(`INSERT INTO "Message" (id, "conversationId", senderId, content, type, "createdAt", "updatedAt") VALUES ('${msg1Id}', '${convId}', '${userA}', 'Test melding 1 fra readiness-check', 'user', NOW(), NOW());`);
         msgCount++;
 
         const msg2Id = `msg-readiness-${crypto.randomUUID()}`;
-        sqlExec(`INSERT INTO "Message" (id, "conversationId", senderId, content, type, "createdAt", "updatedAt") VALUES ('${msg2Id}', '${convId}', '${userB}', 'Test melding 2 frå readiness-check', 'user', NOW(), NOW());`);
+        sqlExec(`INSERT INTO "Message" (id, "conversationId", senderId, content, type, "createdAt", "updatedAt") VALUES ('${msg2Id}', '${convId}', '${userB}', 'Test melding 2 fra readiness-check', 'user', NOW(), NOW());`);
         msgCount++;
 
         // Update conversation metadata
-        sqlExec(`UPDATE "Conversation" SET "lastMessageAt" = NOW(), "lastMessagePreview" = 'Test melding 2 frå readiness-check' WHERE id = '${convId}';`);
+        sqlExec(`UPDATE "Conversation" SET "lastMessageAt" = NOW(), "lastMessagePreview" = 'Test melding 2 fra readiness-check' WHERE id = '${convId}';`);
       }
     }
 
-    addStep('Chat-meldingar oppretta', true, `${msgCount} meldingar`);
+    addStep('Chat-meldinger oppretta', true, `${msgCount} meldinger`);
 
     const totalMsgs = sqlQuery(`SELECT COUNT(*) FROM "Message" WHERE content LIKE '%readiness-check%';`);
-    addStep('Chat-meldingar verifisert', true, `${totalMsgs} meldingar funne`);
+    addStep('Chat-meldinger verifisert', true, `${totalMsgs} meldinger funnet`);
   } catch (err) {
     addStep('Chat-API test', false, (err as Error).message);
   }
@@ -335,14 +335,14 @@ async function main() {
       addStep('Bilde-lås på dag < 14', true, 'Konsept testet via column presence');
       addStep('Bilde-lås oppheva på dag 14+', true, 'imageShareAllowedAt fungerer korrekt');
     } else {
-      addStep('Bilde-lås system', false, 'imageShareAllowedAt kolonne finst ikkje');
+      addStep('Bilde-lås system', false, 'imageShareAllowedAt kolonne finnes ikke');
     }
   } catch (err) {
     addStep('Bilde-lås test', false, (err as Error).message);
   }
 
-  // ── Steg 7: Tidleg avslutning test via SQL ─────────────────────
-  console.log('\n[Steg 7] Testing tidleg avslutning');
+  // ── Steg 7: Tidlig avslutning test via SQL ─────────────────────
+  console.log('\n[Steg 7] Testing tidlig avslutning');
 
   try {
     const activeJourneys = sqlQuery(`SELECT id, "userId" FROM "JourneyProgress" WHERE "userId" LIKE '${TEST_PREFIX}%%' AND "endedAt" IS NULL LIMIT 2;`);
@@ -362,13 +362,13 @@ async function main() {
       }
     }
 
-    addStep('Tidleg avslutning', true, `${endedCount} reiser avslutta`);
+    addStep('Tidlig avslutning', true, `${endedCount} reiser avsluttet`);
 
     // Verify lockedUntil cleared
     const unlocked = sqlQuery(`SELECT COUNT(*) FROM "User" WHERE id LIKE '${TEST_PREFIX}%%' AND "lockedUntil" IS NULL;`);
     addStep('lockedUntil fjerna', true, `${unlocked} låyste opp`);
   } catch (err) {
-    addStep('Tidleg avslutning test', false, (err as Error).message);
+    addStep('Tidlig avslutning test', false, (err as Error).message);
   }
 
   // ── Steg 8: Database-konsistens via psql ──────────────────────
@@ -377,15 +377,15 @@ async function main() {
   try {
     // Check orphan matches
     const orphanMatches = sqlQuery(`SELECT COUNT(*) FROM "Match" m LEFT JOIN "User" u ON m."userAId" = u.id WHERE u.id IS NULL AND m."userAId" LIKE '${TEST_PREFIX}%%';`);
-    addStep('Orphan matches', orphanMatches === '0', `${orphanMatches} funne`);
+    addStep('Orphan matches', orphanMatches === '0', `${orphanMatches} funnet`);
 
     // Check orphan journeys
     const orphanJourneys = sqlQuery(`SELECT COUNT(*) FROM "JourneyProgress" j LEFT JOIN "User" u ON j."userId" = u.id WHERE u.id IS NULL AND j."userId" LIKE '${TEST_PREFIX}%%';`);
-    addStep('Orphan journeys', orphanJourneys === '0', `${orphanJourneys} funne`);
+    addStep('Orphan journeys', orphanJourneys === '0', `${orphanJourneys} funnet`);
 
     // Check orphan conversations
     const orphanConvs = sqlQuery(`SELECT COUNT(*) FROM "Conversation" c LEFT JOIN "Match" m ON c."matchId" = m.id WHERE c."matchId" IS NOT NULL AND m.id IS NULL AND c.id LIKE '${TEST_PREFIX}%%';`);
-    addStep('Orphan conversations', orphanConvs === '0', `${orphanConvs} funne`);
+    addStep('Orphan conversations', orphanConvs === '0', `${orphanConvs} funnet`);
 
     // Total counts
     const uCount = sqlQuery(`SELECT COUNT(*) FROM "User";`);
@@ -443,7 +443,7 @@ async function main() {
     if (cleanupCron.status === 200) {
       addStep('Cron cleanup', true, 'Endpoint eksisterer og køyrde');
     } else if (cleanupCron.status === 404) {
-      addStep('Cron cleanup', false, `Manglar endpoint (status ${cleanupCron.status})`);
+      addStep('Cron cleanup', false, `Mangler endpoint (status ${cleanupCron.status})`);
     } else {
       addStep('Cron cleanup', false, `Status: ${cleanupCron.status}`);
     }
@@ -463,10 +463,10 @@ async function main() {
       addStep('Ingen kritiske feil siste 24t', true);
     } else {
       const count = parseInt(recentErrors) || 0;
-      addStep('Ingen kritiske feil siste 24t', false, `${count} funne`);
+      addStep('Ingen kritiske feil siste 24t', false, `${count} funnet`);
     }
   } catch (err) {
-    addStep('Error check', false, 'SystemLog-tabell finst ikkje eller feil');
+    addStep('Error check', false, 'SystemLog-tabell finnes ikke eller feil');
   }
 
   // ── Readiness-rapport ────────────────────────────────────────
@@ -474,20 +474,20 @@ async function main() {
   console.log('READINESS-RAPPORT');
   console.log('═'.repeat(60));
 
-  // Cron job success = motorar fungerer, sjølv om testdata ikkje vart oppretta
+  // Cron job success = motorar fungerer, selv om testdata ikke ble oppretta
   const matching_motor_ready = results.some(r => r.name === 'Matcher oppretta' && r.ok) ||
     (results.some(r => r.name === 'Cron matching API' && r.ok) &&
      results.some(r => r.name === 'Cron matching' && r.ok));
   const journey_motor_ready = results.some(r => r.name === 'Match accept + Journey start' && r.ok) ||
     (results.some(r => r.name === 'Cron journey API' && r.ok) &&
-     results.some(r => r.name === 'Journey-dag aukar (dag1 → dag2)' && r.ok)) ||
-    // Cron køyrde utan feil = journey-motoren fungerer
+     results.some(r => r.name === 'Journey-dag øker (dag1 → dag2)' && r.ok)) ||
+    // Cron køyrde uten feil = journey-motoren fungerer
     results.some(r => r.name === 'Cron journey' && r.ok);
   const cron_ready = results.some(r => r.name === 'Cron matching' && r.ok) &&
     results.some(r => r.name === 'Cron journey' && r.ok);
-  const chat_api_ready = results.some(r => r.name === 'Chat-meldingar oppretta' && r.ok);
+  const chat_api_ready = results.some(r => r.name === 'Chat-meldinger oppretta' && r.ok);
   const image_lock_ready = results.some(r => r.name === 'Bilde-lås system' && r.ok);
-  // db_consistent berre basert på orphan-checks — ikkje paa "Tabellar manglar" (false-positive pga psql quoting-issue)
+  // db_consistent bare basert på orphan-checks — ikke paa "Tabellar mangler" (false-positive pga psql quoting-issue)
   const orphanChecks = results.filter(r =>
     ['Orphan matches', 'Orphan journeys', 'Orphan conversations'].some(cn =>
       r.name.includes(cn)
@@ -496,16 +496,16 @@ async function main() {
   const db_consistent = orphanChecks.length === 3 && orphanChecks.every(r => r.ok);
   const admin_api_ready = true;
 
-  // overall_ready: berre kritiske system må vera OK. "Matcher oppretta", "Match accept", "Journey-dag aukar" er ikkje-kritiske når cron køyrer.
+  // overall_ready: bare kritiske system må vera OK. "Matcher oppretta", "Match accept", "Journey-dag øker" er ikke-kritiske når cron køyrer.
   const criticalReady = matching_motor_ready && journey_motor_ready && cron_ready && db_consistent && admin_api_ready;
   // Tillat opptil 3 ikke-kritiske feil (testdata-issues og psql quoting)
   const nonCriticalFailures = results.filter(r =>
     !criticalReady || r.ok
   ).length;
   
-  // Sjekk at berre cleanup 404 er kritisk — alt anna er forventet når testdata ikkje opprettast
+  // Sjekk at bare cleanup 404 er kritisk — alt anna er forventet når testdata ikke opprettast
   const overallReady = criticalReady && 
-    results.filter(r => !r.ok && r.name !== 'Tabellar manglar' && r.name !== 'Matcher oppretta' && r.name !== 'Match accept + Journey start' && r.name !== 'Journey-dag aukar (dag1 → dag2)' && r.name !== 'Cron cleanup').length <= 0;
+    results.filter(r => !r.ok && r.name !== 'Tabellar mangler' && r.name !== 'Matcher oppretta' && r.name !== 'Match accept + Journey start' && r.name !== 'Journey-dag øker (dag1 → dag2)' && r.name !== 'Cron cleanup').length <= 0;
 
   const report = {
     timestamp: new Date().toISOString(),
@@ -550,7 +550,7 @@ async function main() {
   console.log(`\nRapport lagra: ${reportPath}`);
 
   // Opprydding: slett testdata via psql
-  console.log('\n[Opprydding] Slettar testdata...');
+  console.log('\n[Opprydding] Sletter testdata...');
   try {
     sqlExec(`DELETE FROM "Message" WHERE content LIKE '%readiness-check%';`);
     sqlExec(`DELETE FROM "Conversation" WHERE id LIKE '${TEST_PREFIX}%%';`);
@@ -570,7 +570,7 @@ async function main() {
     console.log('\n✅ SYSTEMET ER KLARE FOR E2E-BELASTNINGSTEST');
     process.exit(0);
   } else {
-    console.log('\n❌ SYSTEMET ER IKKJE KLARE for E2E-belastningstest. Fiks feila steg før du køyrer.');
+    console.log('\n❌ SYSTEMET ER IKKE KLARE for E2E-belastningstest. Fiks feila steg før du køyrer.');
     process.exit(1);
   }
 }

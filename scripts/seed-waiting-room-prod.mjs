@@ -3,7 +3,7 @@
  *
  * Registrarer to kompatible testbrukarar via offentlege API (autentisering med
  * beta-auto-registrering), fullfører profilen med nøyaktig same payload som
- * OnboardingFlow (/api/profile/setup), set dei i kø (/api/journey/queue) og
+ * OnboardingFlow (/api/profile/setup), set de i kø (/api/journey/queue) og
  * verifiserer journeyState === 'QUEUED' via /api/dashboard/overview.
  *
  * Kjør: node scripts/seed-waiting-room-prod.mjs [BASE_URL]
@@ -13,8 +13,8 @@
 const BASE = process.argv[2] || 'https://www.tosom.no';
 const PASSWORD = 'Tosom-venterom-2026!';
 
-// To kompatible brukarar: motsett kjønn/ønske, same postnummerområde (Oslo),
-// alder innanfor kvarandre sine preferansar — gjer at dealbreakers ikkje blokkerer.
+// To kompatible brukere: motsett kjønn/ønske, same postnummerområde (Oslo),
+// alder innanfor hverandre sine preferansar — gjer at dealbreakers ikke blokkerer.
 const USERS = [
   {
     email: 'kari.venterom.a@tosom.no',
@@ -97,7 +97,7 @@ async function api(path, cookie, init = {}) {
   });
   const text = await res.text();
   let json = null;
-  try { json = JSON.parse(text); } catch { /* ikkje-JSON */ }
+  try { json = JSON.parse(text); } catch { /* ikke-JSON */ }
   return { status: res.status, json, text };
 }
 

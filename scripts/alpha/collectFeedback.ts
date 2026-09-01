@@ -1,7 +1,7 @@
 /**
  * ToSom Alpha-lansering (A-1)
- * Innsamling av brukar-tilbakemeldingar
- * Brukarar kan gi tilbakemelding via terminal eller fil
+ * Innsamling av bruker-tilbakemeldinger
+ * Brukere kan gi tilbakemelding via terminal eller fil
  */
 
 import { PrismaClient } from "@prisma/client"
@@ -40,16 +40,16 @@ async function collectFeedback(): Promise<FeedbackEntry> {
   const email = await askQuestion(rl, "Din e-post: ") || "anon@tosom.no"
 
   console.log("\n--- Onboarding ---")
-  const onboarding = await askQuestion(rl, "Kva tenker du om onboarding-oplevelsen? (1-10, fritekst): ")
+  const onboarding = await askQuestion(rl, "Hva tenker du om onboarding-oplevelsen? (1-10, fritekst): ")
 
   console.log("\n--- Match ---")
-  const match = await askQuestion(rl, "Kva tenker du om match-opplevelsen? (1-10, fritekst): ")
+  const match = await askQuestion(rl, "Hva tenker du om match-opplevelsen? (1-10, fritekst): ")
 
   console.log("\n--- Reise ---")
-  const journey = await askQuestion(rl, "Kva tenker du om reise-opplevelsen? (1-10, fritekst): ")
+  const journey = await askQuestion(rl, "Hva tenker du om reise-opplevelsen? (1-10, fritekst): ")
 
   console.log("\n--- Chat ---")
-  const chat = await askQuestion(rl, "Kva tenker du om chatten? (1-10, fritekst): ")
+  const chat = await askQuestion(rl, "Hva tenker du om chatten? (1-10, fritekst): ")
 
   console.log("\n--- Tone ---")
   const tone = await askQuestion(rl, "Føler du tonen er rolig, varm og trygg? (ja/neit/neutral): ")
@@ -58,16 +58,16 @@ async function collectFeedback(): Promise<FeedbackEntry> {
   const visual = await askQuestion(rl, "Føler du visuell ro og trygghet? (ja/neit/neutral): ")
 
   console.log("\n--- Forslag ---")
-  const suggestions = await askQuestion(rl, "Kva forslag eller tilbakemeldingar har du? (fritekst): ")
+  const suggestions = await askQuestion(rl, "Hva forslag eller tilbakemeldinger har du? (fritekst): ")
 
   console.log("\n--- Overall ---")
-  const overallStr = await askQuestion(rl, "Gjev ToSom ein total score (1-10): ")
+  const overallStr = await askQuestion(rl, "Gir ToSom en total score (1-10): ")
   const overall = parseInt(overallStr) || 5
 
   rl.close()
 
   return {
-    userId: undefined, // kan oppdaterast seinare
+    userId: undefined, // kan oppdaterast senere
     email,
     onboarding: onboarding || "Ingen tilbakemelding",
     match: match || "Ingen tilbakemelding",
@@ -90,7 +90,7 @@ async function saveFeedback(feedback: FeedbackEntry) {
   try {
     existing = JSON.parse(fs.readFileSync(path, "utf8"))
   } catch {
-    // Fil eksisterer enno
+    // Fil eksisterer enda
   }
 
   existing.push(feedback)

@@ -2,13 +2,13 @@
 
 ## 1. Purpose
 
-Etter deploy til produksjon er dei første 6 timene kritiske. Systemet må overvâkast kontinuerleg for å oppdage problem tidleg, sikre at alle komponentar fungerer som forventet, og verifisere at deployen var suksessfull.
+Etter deploy til produksjon er de første 6 timene kritiske. Systemet må overvâkast kontinuerleg for å oppdage problem tidlig, sikre at alle komponentar fungerer som forventet, og verifisere at deployen var suksessfull.
 
 ## 2. Monitoring Window
 
 Total varigheit: 6 timer etter deploy.
 
-Alle sjekkpunkt må vere OK innan 6 timar for å gå vidare til 24-timers overvåking.
+Alle sjekkpunkt må være OK innen 6 timar for å gå vidare til 24-timers overvåking.
 
 ## 3. Checklist (time-based)
 
@@ -35,17 +35,17 @@ Alle sjekkpunkt må vere OK innan 6 timar for å gå vidare til 24-timers overv�
 - **AI-kostnad:** Mål < $50/dag (< $5/time). Alarm ved > 2x forventet.
 - **CPU/memory:** Mål < 70%. Alarm ved > 85% CPU eller > 90% minne.
 - **Rate-limit events:** Mål < 10/dag. Alarm ved > 50 i timen.
-- **Auth-flow:** Login, register og 2FA må fungere utan feil.
+- **Auth-flow:** Login, register og 2FA må fungere uten feil.
 - **Matching-flow:** Match-score og match-listing må returnere resultat.
-- **Messaging-flow:** Send/mottak av meldingar må fungere i sanntid.
+- **Messaging-flow:** Send/mottak av meldinger må fungere i sanntid.
 
 ## 5. Incident Handling
 
 Ved feil under overvåking:
 
 1. **Critical (system nede):** Stop deploy umiddelbart. Følg rollback-prosedyra i deploy/README.md.
-2. **High (error-rate > 5%):** Informer Tech Lead innan 15 min. Analyze logs i /admin/system/errors.
-3. **Medium (latens høg):** Informer Tech Lead innan 1 time. Sjekk DB og AI-provider.
+2. **High (error-rate > 5%):** Informer Tech Lead innen 15 min. Analyze logs i /admin/system/errors.
+3. **Medium (latens høg):** Informer Tech Lead innen 1 time. Sjekk DB og AI-provider.
 4. **Low (advarsel):** Dokumenter og løys neste dag. Ingen umiddelbar handling krevst.
 
 **Rollback-prosedyre:**
@@ -73,4 +73,4 @@ curl https://api.tosom.no/api/system/health
 
 ---
 
-**LAUNCH_APPROVED = false** (set til true etter 24-timers overvåking utan critical/high-feil)
+**LAUNCH_APPROVED = false** (set til true etter 24-timers overvåking uten critical/high-feil)

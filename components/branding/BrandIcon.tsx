@@ -14,7 +14,7 @@ interface BrandIconProps {
   strokeWidth?: number;
 }
 
-/** Ikonkomponent — roleg geometri, outline, 1.75px stroke */
+/** Ikonkomponent — rolig geometri, outline, 1.75px stroke */
 export function BrandIcon({ name, size = 24, className = '', strokeWidth = 1.75 }: BrandIconProps) {
   const c = useBrandColors();
   const pathD = iconPath(name);

@@ -2,14 +2,14 @@
  * ToSom — R2 presigning
  *
  * Verifiserer at R2ImageStorage utsteder presigned URL-er via
- * @aws-sdk/s3-request-presigner (ikkje ein rå/gjettbar URL). S3-clienten
+ * @aws-sdk/s3-request-presigner (ikke ein rå/gjettbar URL). S3-clienten
  * blir mocka slik at ingen nettverk blir rørt.
  */
 
 import { S3Client } from '@aws-sdk/client-s3';
 import { R2ImageStorage } from '@/lib/storage';
 
-// Bygg ein S3Client som ikkje snakkar med nettverket. Presigning er ein
+// Bygg ein S3Client som ikke snakkar med nettverket. Presigning er ein
 // rein lokal berekning (HMAC), så send() blir aldri kalla her.
 function makeR2(bucket = 'tosom-images', ttl = 900): R2ImageStorage {
   const client = new S3Client({
@@ -41,7 +41,7 @@ describe('R2ImageStorage presigning', () => {
 
     expect(url).toContain('https://');
     expect(url).toContain('/tosom-images/conv-1/abc-123.jpg'); // forcePathStyle: nøkkelen i path
-    // AWS SigV4 presigned URL-er inneheld ein signatur.
+    // AWS SigV4 presigned URL-er inneholder ein signatur.
     expect(url.toLowerCase()).toMatch(/(x-amz-signature|x-amz-security-token|signature=)/);
   });
 

@@ -44,7 +44,7 @@ export function getConversation(id: string): Conversation | undefined {
   return conversations.get(id);
 }
 
-/* ------ Hent alle conversations for ein bruker ------ */
+/* ------ Hent alle conversations for en bruker ------ */
 
 export function getUserConversations(userId: string): Conversation[] {
   const result: Conversation[] = [];

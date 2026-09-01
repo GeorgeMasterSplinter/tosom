@@ -28,7 +28,7 @@ export interface ApiError {
 }
 
 /**
- * Opprett eit suksess-svar
+ * Opprett et suksess-svar
  */
 export function successResponse<T>(
   data: T,
@@ -48,7 +48,7 @@ export function successResponse<T>(
 }
 
 /**
- * Opprett eit feil-svar
+ * Opprett et feil-svar
  */
 export function errorResponse(
   message: string,
@@ -69,7 +69,7 @@ export function errorResponse(
 }
 
 /**
- * Opprett eit valideringsfeil-svar
+ * Opprett et valideringsfeil-svar
  */
 export function validationErrorResponse(
   errors: Array<{ field: string; message: string }>,
@@ -91,28 +91,28 @@ export function validationErrorResponse(
 }
 
 /**
- * Opprett eit uautorisert svar
+ * Opprett et uautorisert svar
  */
 export function unauthorizedResponse(traceId?: string): NextResponse<ApiError> {
   return errorResponse('Unauthorized', { statusCode: 401, code: 'UNAUTHORIZED', traceId })
 }
 
 /**
- * Opprett eit ikke autorisert svar
+ * Opprett et ikke autorisert svar
  */
 export function forbiddenResponse(traceId?: string): NextResponse<ApiError> {
   return errorResponse('Forbidden', { statusCode: 403, code: 'FORBIDDEN', traceId })
 }
 
 /**
- * Opprett eit ikke funnet svar
+ * Opprett et ikke funnet svar
  */
 export function notFoundResponse(traceId?: string): NextResponse<ApiError> {
   return errorResponse('Not found', { statusCode: 404, code: 'NOT_FOUND', traceId })
 }
 
 /**
- * Opprett eit rate limit svar
+ * Opprett et rate limit svar
  */
 export function rateLimitResponse(traceId?: string): NextResponse<ApiError> {
   return errorResponse('Rate limit exceeded', { statusCode: 429, code: 'RATE_LIMITED', traceId })

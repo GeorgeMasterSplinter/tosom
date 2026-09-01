@@ -2,10 +2,10 @@
  * GET /api/journey/progress
  * 
  * @deprecated (V2) Resonance-sessions er fjerna — beholdes for bakover-kompatibilitet.
- * V2-prinsipp: Oppgåver er valfrie. Ingen måling av resonans under reisen.
+ * V2-prinsipp: Oppgaver er valfrie. Ingen måling av resonans under reisen.
  * Se docs/tosom-concept-v2-skisse.md for detaljer.
  * 
- * Hent progresjon for reisa — alle dagar, milestones.
+ * Hent progresjon for reisa — alle dager, milestones.
  * Core-definition: Viser reise uten gamification.
  */
 
@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
     }
     const user = result.user;
 
-    // 1b. Sjekk om brukaren er utestengt (STEG 3.2 — sesjons-revokering)
+    // 1b. Sjekk om brukeren er utestengt (STEG 3.2 — sesjons-revokering)
     const bannedCheck = await requireNotBanned(user.id);
     if (bannedCheck) return bannedCheck;
 

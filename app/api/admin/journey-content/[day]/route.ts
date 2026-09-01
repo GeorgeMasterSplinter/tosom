@@ -1,7 +1,7 @@
 /**
  * PATCH /api/admin/journey-content/[day]
  * 
- * Oppdater JourneyDayContent for ein bestemt dag (admin).
+ * Oppdater JourneyDayContent for en bestemt dag (admin).
  * Pakke 4.4.1 — JourneyDayContent Editor
  * Pakke 5.1 — Zod-validering
  */

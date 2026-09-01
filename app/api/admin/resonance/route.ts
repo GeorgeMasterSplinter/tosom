@@ -1,7 +1,7 @@
 /**
  * GET /api/admin/resonance
  * 
- * Hent ResonanceSession for ein bruker (admin).
+ * Hent ResonanceSession for en bruker (admin).
  * Utvidet 2026-08-03 (Pakke 4.2): ResonanceSession Tracking
  * 
  * Query-params:
@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
 
     const limit = parseInt(limitParam || '50');
 
-    // Hent ResonanceSession for brukaren (via Conversation)
+    // Hent ResonanceSession for brukeren (via Conversation)
     const sessions = await prisma.resonanceSession.findMany({
       where: {
         conversation: {

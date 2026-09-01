@@ -58,7 +58,7 @@ docs/
 - `calculateMatchScores(input)` — berekner 5 scores
 - `calculateMatchStrength(label)` — styrke-beskrivelse
 - `calculateFuturePotential(label)` — potensial-beskrivelse
-- `getMatchVisual(score)` — visuelle tilbakemeldingar
+- `getMatchVisual(score)` — visuelle tilbakemeldinger
 
 ### Scores:
 | Score | Forklaring |
@@ -79,7 +79,7 @@ docs/
 ### lib/match/status.ts
 - `getMatchStatus(resonance, warm, phase, days, matched)` — hent status
 - `getMatchLabel(status)` — label
-- `getMatchVisual(status, score)` — visuelle tilbakemeldingar
+- `getMatchVisual(status, score)` — visuelle tilbakemeldinger
 
 ### Statusar:
 | Status | Betingelse | Farge |
@@ -98,13 +98,13 @@ docs/
 ## FASE 18: PROFILUNIVERSET
 
 ### lib/profile/dynamicProfile.ts
-- `updateProfileFromJourney(profile, phase, day, remaining)` — oppdater frå journey
-- `updateProfileFromResonance(profile, score, details)` — oppdater frå resonans
-- `updateProfileFromWarm(profile, score, level)` — oppdater frå varme
+- `updateProfileFromJourney(profile, phase, day, remaining)` — oppdater fra journey
+- `updateProfileFromResonance(profile, score, details)` — oppdater fra resonans
+- `updateProfileFromWarm(profile, score, level)` — oppdater fra varme
 - `getDynamicProfileDisplay(profile)` — visning
 
 ### app/profile/page.tsx
-- Visar eigen profil med dynamiske oppdateringar
+- Viser egen profil med dynamiske oppdateringar
 - Resonans-score
 - Varme-nivå
 - Journey-fase
@@ -115,7 +115,7 @@ docs/
 ## FASE 19: PARTNERPROFIL
 
 ### app/profile/[id]/page.tsx
-- Visar partner-info
+- Viser partner-info
 - Journey-state
 - Match-state
 - Resonans-state
@@ -127,7 +127,7 @@ docs/
 ## FASE 20: JOURNEY-DASHBOARD
 
 ### app/journey/page.tsx
-- Visar heile reisa med:
+- Viser heile reisa med:
   - Fase (med farge)
   - Progresjon (progress bar)
   - Resonans (score + trygghet + dybde + varme)
@@ -143,7 +143,7 @@ docs/
 ### Høgprioritet
 1. Test match-score API med ekte data
 2. Test journey-dashboard med ekte fase-data
-3. Lagre/les profil frå DB
+3. Lagre/les profil fra DB
 
 ### Middelprioritet
 4. Kobla profil-side til `/api/profile/me`

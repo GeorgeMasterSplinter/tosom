@@ -2,7 +2,7 @@
  * ToSom — Session helper (NextAuth v5 compatible)
  *
  * Gir compatiblitet for koden som bruker getServerSession.
- * I v5 bruker vi auth() frå lib/auth/config istadenfor.
+ * I v5 bruker vi auth() fra lib/auth/config istadenfor.
  */
 
 import { auth } from '@/lib/auth/config'
@@ -23,7 +23,7 @@ export async function getSession() {
 
 /**
  * getServerSession — Compatiblitetsfunksjon for eksisterande kode.
- * I v5 er dette bare ein wrapper rundt auth().
+ * I v5 er dette bare en wrapper rundt auth().
  * Tek authOptions som argument for backward compatibility (ignored i v5).
  */
 export async function getServerSession(_authOptions?: any) {
@@ -31,8 +31,8 @@ export async function getServerSession(_authOptions?: any) {
 }
 
 /**
- * requireNotBanned — Sjekk om brukaren er utestengt.
- * Returnerer NextResponse med 403 dersom brukaren har bannedAt satt.
+ * requireNotBanned — Sjekk om brukeren er utestengt.
+ * Returnerer NextResponse med 403 dersom brukeren har bannedAt satt.
  * Importerer NextResponse dynamisk for å unngå sirkulær avhengighet.
  */
 export async function requireNotBanned(userId: string) {

@@ -326,7 +326,7 @@ import { NativeButton } from '@/components/ui/native/Button';
 ## 🚫 Regler Fylgt
 
 - ✅ Ingen inline-styles
-- ✅ Ingen hardkoda fargar (berre tokens via Tailwind)
+- ✅ Ingen hardkoda fargar (bare tokens via Tailwind)
 - ✅ Ingen duplisert kode
 - ✅ Alt modulært og gjenbrukbart
 - ✅ Alt dokumentert i komponentfilen

@@ -2,7 +2,7 @@
  * Tosom — Onboarding steg: Betaling
  * 
  * Ro, trygg betalingsside med Tosom-tone.
- * Visar planar, prisar og gir moglegheit til å velje abonnement.
+ * Viser planer, priser og gir mulighet til å velge abonnement.
  */
 
 'use client';
@@ -30,7 +30,7 @@ const PLANS: Plan[] = [
     features: [
       'Én match per reise',
       '30-dagers guidet reise',
-      'Refleksjoner og oppgåver',
+      'Refleksjoner og oppgaver',
       'Full tilgang til chat',
     ],
     highlighted: false,
@@ -44,7 +44,7 @@ const PLANS: Plan[] = [
       'Alt i månadsvis',
       '3 månader — sparer 30%',
       'Prioritert support',
-      'Tidleg tilgang til nye funksjonar',
+      'Tidlig tilgang til nye funksjonar',
     ],
     highlighted: true,
     badge: 'Mest populær',
@@ -91,7 +91,7 @@ export default function PaymentPage() {
             Vel den som passar deg
           </h1>
           <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
-            Tosom er ein investering i verkelege relasjonar. 
+            Tosom er en investering i verkelege relasjonar. 
             Ingen binding — se opp når du ønskjer det.
           </p>
         </div>
@@ -182,7 +182,7 @@ export default function PaymentPage() {
           </p>
         </div>
 
-        {/* Knappar */}
+        {/* Knapper */}
         <div className="flex gap-4">
           <Link
             href="/betaling"
@@ -217,8 +217,8 @@ export default function PaymentPage() {
         {/* Footer */}
         <div className="mt-8 text-center">
           <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.2)' }}>
-            Ved å halde fram godtek du vilkår for bruk og personvern.
-            Du har rettleia om å få refusjon innen 14 dagar.
+            Ved å holde fram godtek du vilkår for bruk og personvern.
+            Du har rettleien om å få refusjon innen 14 dager.
           </p>
         </div>
 

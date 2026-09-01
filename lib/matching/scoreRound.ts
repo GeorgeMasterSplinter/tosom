@@ -7,7 +7,7 @@
 //   - FIFO-par (i < j), deadline-sjekk på ytste i-loop
 //   - mangler_profil → sperreliste → dealbreakers → unifiedScore → MIN_SCORE
 //   - M-3: én korrupt profil kaster kun PARET, ikke runden
-//     (scoringErrors returnerast; ruten skriv dei same SystemLog-radene)
+//     (scoringErrors returnerast; ruten skriv de same SystemLog-radene)
 //   - M-12: rejectReasons-nøklar og unmapped-lista er uendra
 //
 // Prestasjon (F2): dealbreakers køyrast via prekalkulat CheapFeatures
@@ -34,7 +34,7 @@ export interface ScoredPair {
   level: UnifiedResult['level'];
 }
 
-/** M-3: par der scoring kastet (ruten loggar kvar linje i SystemLog). */
+/** M-3: par der scoring kastet (ruten loggar hver linje i SystemLog). */
 export interface ScoringError {
   userA: string;
   userB: string;
@@ -84,11 +84,11 @@ export function emptyRejectReasons(): Record<string, number> {
 }
 
 /**
- * Score alle par i ein kohort. Ren funksjon — ingen DB, ingen I/O.
+ * Score alle par i en kohort. Ren funksjon — ingen DB, ingen I/O.
  *
  * @param candidates  FIFO-rekkefølgje (i < j) — same som ruten las fra DB
  * @param features    Prekalkulerte CheapFeatures (same indeks som candidates;
- *                    null der kandidaten manglar profil)
+ *                    null der kandidaten mangler profil)
  * @param blockSet    Sperreliste (normalizePair-nøklar med ':' som skiljar)
  * @param opts        deadline (Date.now()-stamp) og MIN_SCORE-termin
  */

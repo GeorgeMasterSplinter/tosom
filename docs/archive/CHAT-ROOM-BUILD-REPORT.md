@@ -13,11 +13,11 @@ tosom/
 ├── app/chat/
 │   ├── page.tsx                    ← Chat List Page (ren)
 │   └── [id]/
-│       └── page.tsx               ← Chat Detail Page (ny, brukar ChatRoom)
+│       └── page.tsx               ← Chat Detail Page (ny, bruker ChatRoom)
 │
 ├── app/api/chat/
 │   ├── messages/
-│   │   └── route.ts              ← GET /api/chat/messages — Hent meldingar
+│   │   └── route.ts              ← GET /api/chat/messages — Hent meldinger
 │   ├── send/
 │   │   └── route.ts              ← POST /api/chat/send — Send melding
 │   ├── conversations/
@@ -52,14 +52,14 @@ tosom/
 
 ---
 
-## 2. SAMMENHENG — KORI KUMMERER ALT SAMAN?
+## 2. SAMMENHENG — KORI KUMMERER ALT SAMMEN?
 
 ### 2.1 Flyt: Chat List → Chat Room
 
 ```
 1. Bruker navigerer til /chat
 2. app/chat/page.tsx lastar:
-   - GET /api/chat/conversations → hentar alle samtalar
+   - GET /api/chat/conversations → hentar alle samtaler
    - Henter session via /api/auth/signin?json=true
 3. Viser liste med glassmorphism-kort
 4. Klikk på samtale → naviger til /chat/[id]
@@ -67,7 +67,7 @@ tosom/
 5. app/chat/[id]/page.tsx lastar:
    - GET /api/chat/conversations/[id] → partner-info
    - Importerer ChatRoom-komponenten
-6. ChatRoom set saman:
+6. ChatRoom set sammen:
    - ChatHeader (partner-info)
    - ChatMessages (via useChatMessages hook)
    - ChatInput (send via useSendMessage hook)
@@ -84,9 +84,9 @@ POST /api/chat/send { conversationId, content }
     ↓
 API svarar med ChatMessage objekt
     ↓
-useChatMessages polling oppdaterer meldingar kvart 5. sekund
+useChatMessages polling oppdaterer meldinger kvart 5. sekund
     ↓
-ChatMessages viser nye meldingar med fadeIn animasjon
+ChatMessages viser nye meldinger med fadeIn animasjon
 ```
 
 ### 2.3 Sanntids-Flow (Pusher)
@@ -98,8 +98,8 @@ Abonnar på:
   - conversation-{conversationId}
   - user-{userId}
     ↓
-Når ny melding kjem:
-  - onNewMessage → refresh() → oppdater meldingar
+Når ny melding kommer:
+  - onNewMessage → refresh() → oppdater meldinger
   - onTyping → vis typing-indikator
 ```
 
@@ -108,7 +108,7 @@ Når ny melding kjem:
 ## 3. KOMPONENT-ARKITEKTUR
 
 ### 3.1 ChatRoom (container)
-- **Ansvar:** Set saman heile chat-vinduet
+- **Ansvar:** Set sammen heile chat-vinduet
 - **Hooks:** useChatMessages, useSendMessage, useChatRealtime
 - **Komponentar:** ChatHeader, ChatMessages, ChatInput
 - **Props:** conversationId, partner, phaseLabel, currentDay, daysRemaining
@@ -118,7 +118,7 @@ Når ny melding kjem:
 - **Props:** partnerName, partnerImage, phaseLabel, currentDay, daysRemaining, online
 
 ### 3.3 ChatMessages (visning)
-- **Ansvar:** Viser alle meldingar med glassmorphism-bubbles
+- **Ansvar:** Viser alle meldinger med glassmorphism-bubbles
 - **Props:** messages, userId, empty, loading, isTyping
 - **Funksjonar:** Auto-scroll, tom-tilstand, typing-indikator
 
@@ -133,8 +133,8 @@ Når ny melding kjem:
 
 | Endpoint | Metode | Ansvar | Brukt av |
 |----------|--------|--------|----------|
-| `/api/chat/conversations` | GET | Hent alle samtalar | app/chat/page.tsx |
-| `/api/chat/messages?conversationId=X` | GET | Hent meldingar | hooks/useChatMessages.ts |
+| `/api/chat/conversations` | GET | Hent alle samtaler | app/chat/page.tsx |
+| `/api/chat/messages?conversationId=X` | GET | Hent meldinger | hooks/useChatMessages.ts |
 | `/api/chat/send` | POST | Send melding | hooks/useSendMessage.ts |
 | `/api/chat/typing` | POST | Typing-indikator | NY! |
 | `/api/chat/starter` | POST | AI starter-melding | app/chat/[id]/page.tsx |
@@ -154,7 +154,7 @@ Når ny melding kjem:
 | `hooks/useSendMessage.ts` | Hook | Send-logikk |
 | `app/api/chat/typing/route.ts` | API | Typing-indikator |
 | `app/chat/page.tsx` | Side | Oppdatert (ren) |
-| `app/chat/[id]/page.tsx` | Side | Oppdatert (brukar ChatRoom) |
+| `app/chat/[id]/page.tsx` | Side | Oppdatert (bruker ChatRoom) |
 
 ---
 
@@ -188,9 +188,9 @@ Når ny melding kjem:
 6. **Oppdater `/api/chat/messages/route.ts`** — Verifiser at den returnerer ChatMessage-format
 
 ### Lavprioritet
-7. **PartnerInfo komponent** — Egen komponent for side-panel med partner-detaljar
+7. **PartnerInfo komponent** — Egen komponent for side-panel med partner-detaljer
 8. **Accept match API** — `/api/chat/accept/route.ts` for match-akseptering
-9. **E2E-testar** — Test heile chat-flowet
+9. **E2E-tester** — Test heile chat-flowet
 
 ---
 
@@ -213,12 +213,12 @@ Alle nye komponentar følgjer ToSom-designsystemet:
 
 ## 9. VERIFIKASJON
 
-### Alt fungerer saman dersom:
+### Alt fungerer sammen dersom:
 - [ ] `GET /api/chat/conversations` returnerer liste med { id, otherUser, lastMessage }
 - [ ] `GET /api/chat/messages?conversationId=X` returnerer ChatMessage[]
 - [ ] `POST /api/chat/send` mottar { conversationId, content } og returnerer ChatMessage
-- [ ] ChatRoom renderar utan feil
+- [ ] ChatRoom renderar uten feil
 - [ ] ChatMessages vises med riktig format
-- [ ] ChatInput sender meldingar
+- [ ] ChatInput sender meldinger
 - [ ] ChatHeader viser partner-info
 - [ ] Navigasjon /chat → /chat/[id] fungerer

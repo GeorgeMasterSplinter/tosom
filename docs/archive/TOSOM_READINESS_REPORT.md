@@ -68,9 +68,9 @@ ToSom har solid fundament og mange funksjoner ferdige, men det mangler integrasj
 | Journey cron | `GET /api/cron/journey` | CRON_SECRET | ✅ Fungerande |
 
 **Matching cron:**
-- Henter alle brukarar med `onboardingComplete=true` + `deepProfileComplete=true`
+- Henter alle brukere med `onboardingComplete=true` + `deepProfileComplete=true`
 - Ingen aktiv match som gjehr
-- Brukar `findBestResonance()` for å finne éin match per 24t
+- Bruker `findBestResonance()` for å finne én match per 24t
 - Oppdaterer `lastMatchAt` etter kvart match
 - Lagar SystemLog entry
 
@@ -81,7 +81,7 @@ ToSom har solid fundament og mange funksjoner ferdige, men det mangler integrasj
 - Oppdaterer phase: EARLY (1–14) → BUILDING_TRUST (15–21) → DEEPER (22–30)
 - Lager JourneyMilestone + notification
 
-**⚠️ Kritisk diskrepans:** `lib/journey/engine.ts` bruker `JOURNEY_TOTAL_DAYS = 35`, men cron og dokumentasjon bruker 30 dagar. Dette må konsistenssattast.
+**⚠️ Kritisk diskrepans:** `lib/journey/engine.ts` bruker `JOURNEY_TOTAL_DAYS = 35`, men cron og dokumentasjon bruker 30 dager. Dette må konsistenssattast.
 
 ### 2.4 Datamodeller (Prisma Schema)
 
@@ -90,12 +90,12 @@ ToSom har solid fundament og mange funksjoner ferdige, men det mangler integrasj
 | Modell | Formål | Status |
 |--------|--------|--------|
 | User | Hovedbrukar med auth/flags | ✅ Fullstendig |
-| Profile | Deep profile JSON (9 dimensjonar) | 🟡 `age` burde vere required |
+| Profile | Deep profile JSON (9 dimensjonar) | 🟡 `age` burde være required |
 | Match | Resonans-match med status | ✅ Fullstendig |
-| Conversation | Chat-rom mellom to brukarar | ✅ Fullstendig |
+| Conversation | Chat-rom mellom to brukere | ✅ Fullstendig |
 | Message | Enkeltmelding i chat | ✅ Fullstendig |
 | JourneyProgress | Dag-fremdrift for reise | 🟡 phase-logikk diskrepans |
-| JourneyStateLog | State-endringar i journey | ✅ Eksisterer, ukjent bruk |
+| JourneyStateLog | State-endringer i journey | ✅ Eksisterer, ukjent bruk |
 | JourneyMilestone | Dag-milepæler | ✅ Eksisterer |
 | ResonanceSession | Kvalitetsmåling per dag | ✅ Eksisterer, ukjent bruk |
 | JourneyDayContent | Dag-tema/spørsmål | ✅ Eksisterer, ukjent oppdatering |
@@ -114,9 +114,9 @@ ToSom har solid fundament og mange funksjoner ferdige, men det mangler integrasj
 | VerificationToken | Auth.js token | ✅ Fullstendig |
 | AIRequestLog | AI-bruk logging | 🟡 Pakke installert, men AI er FORBUDT ifølge regler. Mulig oppussingstrengende. |
 | MatchInsight | Match-forklaringar | ✅ Eksisterer |
-| MatchFeedback | Deprecated | ⚠️ @deprecated, men framleis i schema |
-| MatchHistory | Deprecated | ⚠️ @deprecated, men framleis i schema |
-| MatchQueue | Deprecated | ⚠️ @deprecated, men framleis i schema |
+| MatchFeedback | Deprecated | ⚠️ @deprecated, men fortsatt i schema |
+| MatchHistory | Deprecated | ⚠️ @deprecated, men fortsatt i schema |
+| MatchQueue | Deprecated | ⚠️ @deprecated, men fortsatt i schema |
 | SystemMessage | Systemmeldingar | ✅ Eksisterer |
 
 **⚠️ Deprecated modeller:** MatchFeedback, MatchHistory, MatchQueue — merka med `@deprecated` kommentar. Bør flyttast eller sletta etter test i app/.
@@ -134,8 +134,8 @@ findBestResonance.ts (hovedfunksjon som koordinerer alt)
 **Resonans-scoring (9 dimensjonar):**
 | Dimensjon | Vekt | Skildring |
 |-----------|------|-----------|
-| Verdiane (values) | 25% | Samefall i kjerneverdier frå futureVision |
-| Personlegdom | 20% | Kompatibilitet mellom personlighetstrekk |
+| Verdiane (values) | 25% | Samefall i kjerneverdier fra futureVision |
+| Personlighet | 20% | Kompatibilitet mellom personlighetstrekk |
 | Forholdsstil | 15% | Same eller komplementære relasjonsstilar |
 | Kommnikasjon | 15% | Samefall i kommunikasjonspreferansar |
 | Fremtidsvisjon | 10% | Samefall i livsmål |
@@ -146,7 +146,7 @@ findBestResonance.ts (hovedfunksjon som koordinerer alt)
 **Dealbreakers (umiddelbart nei):**
 - Aldersdiskrepans (>10 år)
 - Kjønns-mismatch (dersen spesifikk preferanse)
-- Banished/deleted brukarar
+- Banished/deleted brukere
 
 **Normalisering:**
 - Hver dimensjon normaliserast til 0–100 skala
@@ -161,29 +161,29 @@ findBestResonance.ts (hovedfunksjon som koordinerer alt)
 - ✅ Sjekkar lastMatchAt 24t-regel
 - ✅ Sjekkar lockedUntil (periodisk lås etter match)
 - ✅ Sjekkar ingen aktiv match
-- ❌ Ingen unit-tester funne i repoet
+- ❌ Ingen unit-tester funnet i repoet
 
 ### 2.6 Journey-motor (Dag-fremdrift, Bilde-lås)
 
 **Sted: `lib/journey/engine.ts` (1080 linjer)**
 
 **Dag-fremdrift:**
-- Totalt: 35 dagar i engine, 30 i cron — **DISKREPANS MÅ KONSISTENSSETTESTES**
+- Totalt: 35 dager i engine, 30 i cron — **DISKREPANS MÅ KONSISTENSSETTESTES**
 - Advance one day per API call eller cron run når `nextDayAt <= now`
 - `completedDays` array spora for progresjon
 - Phase-overgang: EARLY (1–14) → BUILDING_TRUST (15–21) → DEEPER (22–30) → CHECKIN (dag 31+)
 
-**Bilde-lås (Fase 1 — 14 dagar utan bilder):**
+**Bilde-lås (Fase 1 — 14 dager uten bilder):**
 - `Conversation.imageShareAllowedAt` = null i fase 1
 - Automatisk lås-opphøyr ved dag 14: `imageShareAllowedAt = journey.startedAt + 14d`
-- `Conversation.imageShared` boolean når første bilete delast
+- `Conversation.imageShared` boolean når første bilde delast
 
 **Faser:**
-| Fase | Dagar | Tema |
+| Fase | Dager | Tema |
 |------|-------|------|
 | EARLY | 1–14 | Trygghet, introduksjon, overflatefri dybde |
 | BUILDING_TRUST | 15–21 | Samarbeid, tillit, kommunikasjon |
-| DEEPER | 22–30 | Sårbarheit, nærheit, framtidige visjoner |
+| DEEPER | 22–30 | Sårbarheit, nærhet, framtidige visjoner |
 | CHECKIN | 31+ | Refleksjon, evaluerig, neste steg |
 
 **Cron vs API:**
@@ -198,7 +198,7 @@ findBestResonance.ts (hovedfunksjon som koordinerer alt)
 - ✅ `lastMessageAt` oppdaterast ved ny melding (`updateConversationMetadata`)
 - ✅ `lastMessagePreview` (første 100 tegn)
 - ✅ `unreadCountA` / `unreadCountB` per bruker — incrementeres via `incrementUnread`
-- ✅ Reset når meldingar blir sett av mottakar
+- ✅ Reset når meldinger blir sett av mottakar
 
 **Message-flow:**
 - Opprett: `createMessage()` — enfold Prisma-create med sender-relation
@@ -209,11 +209,11 @@ findBestResonance.ts (hovedfunksjon som koordinerer alt)
 - QuestionCategory + GuidedQuestion modeller eksisterer
 - Kategorier: Trygghet, Verdier, Livsstil, Personlighet, Relasjonsstil, Kommnikasjon, Fremtid, Sårbarheit, Nærhet, Felles reise
 - 15–20 spørsmål per kategori (ifølge spesifikasjonen)
-- ⚠️ Ingen ruter funne for å hente guidede spørsmål via API
+- ⚠️ Ingen ruter funnet for å hente guidede spørsmål via API
 
 **Image-handling:**
 - `Message.type = 'image'` eksisterer
-- `Conversation.imageShareAllowedAt` kontroller når bilete kan delast
+- `Conversation.imageShareAllowedAt` kontroller når bilde kan delast
 - UploadThing konfigurert for fil-lagring
 
 ### 2.8 Bilde-lås (Dag 14)
@@ -285,8 +285,8 @@ if (!user.onboardingComplete || !user.deepProfileComplete) {
 - 🟡 2FA eksisterer i schema men delvis implementert
 
 **Autorisering:**
-- ⚠️ Ingen middleware funksjon funne for å beskytte admin-ruter
-- Admin ruter har ingen synlig RBAC-check i route-filene (må vere inne i route-implementasjonen)
+- ⚠️ Ingen middleware funksjon funnet for å beskytte admin-ruter
+- Admin ruter har ingen synlig RBAC-check i route-filene (må være inne i route-implementasjonen)
 
 **Data-sikkerheit:**
 - ✅ `bcryptjs` for passord-hashing
@@ -297,11 +297,11 @@ if (!user.onboardingComplete || !user.deepProfileComplete) {
 
 | Område | Problem | Vurdering |
 |--------|---------|-----------|
-| Journey dagar | engine.ts: 35 vs cron: 30 | 🔴 Kritisk — må konsistenssattast |
-| MessageCategory enum | `continue_choice` i enum, men ingen API-rute funne | 🟡 Ukjent funksjonalitet |
-| AIRequestLog modell | AI-funksjoner FORBUDT ifølge ToSom-regler | 🟡 Modell bør fjernast frå schema |
+| Journey dager | engine.ts: 35 vs cron: 30 | 🔴 Kritisk — må konsistenssattast |
+| MessageCategory enum | `continue_choice` i enum, men ingen API-rute funnet | 🟡 Ukjent funksjonalitet |
+| AIRequestLog modell | AI-funksjoner FORBUDT ifølge ToSom-regler | 🟡 Modell bør fjernast fra schema |
 | Deprecated modeller | MatchFeedback/MatchHistory/MatchQueue | 🟡 Bør slettast etter test |
-| JourneyPhase CHECKIN | I enum, men cron brukar berre 3 faser | 🟡 CHECKIN aldri brukt i cron |
+| JourneyPhase CHECKIN | I enum, men cron bruker bare 3 faser | 🟡 CHECKIN aldri brukt i cron |
 
 ### 2.13 Feilhåndtering
 
@@ -311,8 +311,8 @@ if (!user.onboardingComplete || !user.deepProfileComplete) {
 - ✅ Begge: error logging til SystemLog
 
 **API-ruter (generelt):**
-- 🟡 Variabel feilhåndtering — nokre ruter har basic try/catch, andre manglar det
-- ❌ Ingen sentral feil-fanger middleware funne
+- 🟡 Variabel feilhåndtering — noen ruter har basic try/catch, andre mangler det
+- ❌ Ingen sentral feil-fanger middleware funnet
 
 ### 2.14 SystemLog (siste 24t)
 
@@ -331,12 +331,12 @@ if (!user.onboardingComplete || !user.deepProfileComplete) {
 |-----------|--------|
 | Playwright | ✅ Installert (`@playwright/test: 1.62.0`) |
 | playwright.config.ts | ✅ Eksisterer i root |
-| e2e/ mappe | ⚠️ Ukjent innhald (ikke verifisert) |
-| e2e-report.json | ❌ Ikkje funne i repoet |
-| e2e-report-500.json | ❌ Ikke funne i repoet |
-| test-results/ | ⚠️ Eksisterer men ukjent innhald |
+| e2e/ mappe | ⚠️ Ukjent innhold (ikke verifisert) |
+| e2e-report.json | ❌ Ikke funnet i repoet |
+| e2e-report-500.json | ❌ Ikke funnet i repoet |
+| test-results/ | ⚠️ Eksisterer men ukjent innhold |
 
-**⚠️ Ingen testrapporter funnet.** Playwright er konfigurert, men det er ikkje bevis for at E2E-tester har kjørt nyleg med faktiske datasett.
+**⚠️ Ingen testrapporter funnet.** Playwright er konfigurert, men det er ikke bevis for at E2E-tester har kjørt nyleg med faktiske datasett.
 
 ### 2.16 Infrastruktur (DB, Server, Latency)
 
@@ -346,7 +346,7 @@ if (!user.onboardingComplete || !user.deepProfileComplete) {
 | Server: Vercel | ✅ `vercel.json` eksisterer |
 | Caching: `dynamic = 'force-dynamic'` | ✅ Brukt på cron og dynamiske ruter |
 | Revalidate: 0 | ✅ Korrekt konfigurert |
-| Latency-måling | 🟡 PerformanceMetric modell + PerfMetric enum eksisterer, men ikkje verifisert i bruk |
+| Latency-måling | 🟡 PerformanceMetric modell + PerfMetric enum eksisterer, men ikke verifisert i bruk |
 
 ### 2.17 Miljøkonfigurasjon
 
@@ -355,21 +355,21 @@ if (!user.onboardingComplete || !user.deepProfileComplete) {
 | `DATABASE_URL` | Prisma, auth adapter | ✅ Kritisk |
 | `CRON_SECRET` | Cron-ruter | ✅ Autentisering for cron |
 | `NEXTAUTH_SECRET` | Auth.js | ✅ Nodvendig |
-| `NEXTAUTH_URL` | Auth.js callback URLs | ⚠️ Må vere korrekt satt |
+| `NEXTAUTH_URL` | Auth.js callback URLs | ⚠️ Må være korrekt satt |
 | `UPLOADTHING_TOKEN` | UploadThing | ⚠️ Ukjent status |
 | `STRIPE_SECRET_KEY` | Stripe | ⚠️ Ukjent implementasjon |
 | `SUPABASE_URL/KEY` | Supabase client | ⚠️ Ukjent bruk |
 | `PUSHER_APP_KEY/SECRET` | Pusher realtime | ⚠️ Ukjent status |
 | `NODEREMAILER_*` | E-post sending | ⚠️ Maildev for testing |
 
-**⚠️ .env vs .env.local:** Ingen av filene er i repoet (bra — de burde vere i `.gitignore`). Men det finst ingen `.env.example` eller `.env.template` som dokumentasjon for kva variablar som trengs.
+**⚠️ .env vs .env.local:** Ingen av filene er i repoet (bra — de burde være i `.gitignore`). Men det finnes ingen `.env.example` eller `.env.template` som dokumentasjon for hva variablar som trengs.
 
 ### 2.18 Realistisk testdatasett (deepProfileData)
 
 **Status:** ⚠️ Ukjent
 
 - `Profile.deepProfileData: Json?` eksisterer i schema
-- Prisma-seeding er **ikkje verifisert** — ingen seed-data eller seed-skript funne i `prisma/` mappa
+- Prisma-seeding er **ikke verifisert** — ingen seed-data eller seed-skript funnet i `prisma/` mappa
 - For produksjonsklarheit må det opprettast realistiske testbrukarar med fulle deepProfile-data
 
 ---
@@ -378,11 +378,11 @@ if (!user.onboardingComplete || !user.deepProfileComplete) {
 
 | # | Problem | Impact | Fixed-in |
 |---|---------|--------|----------|
-| C1 | **Journey-diskrepans: engine.ts bruker 35 dagar, cron bruker 30** | 🔴brukarar vil oppleva inkonsistent journey-fase | Umiddelbart |
-| C2 | **Ingen E2E-testrapporter funnet** | ⚠️ Kan ikkje verifisera funksjonalitet med faktiske data | Før lansering |
+| C1 | **Journey-diskrepans: engine.ts bruker 35 dager, cron bruker 30** | 🔴brukere vil oppleva inkonsistent journey-fase | Umiddelbart |
+| C2 | **Ingen E2E-testrapporter funnet** | ⚠️ Kan ikke verifisera funksjonalitet med faktiske data | Før lansering |
 | C3 | **Deprecated modeller i schema (MatchFeedback, MatchHistory, MatchQueue)** | 🔴 Schema-stabilitet, potensielle migreringsproblem | Før lansering |
 | C4 | **AIRequestLog modell eksisterer — men AI er FORBUDT ifølge ToSom-regler** | 🔴 Regelbrudd mot Core System Rule §3.7 | Umiddelbart |
-| C5 | **Ingen .env.example/template for miljøvariablar** | ⚠️ Deploy-risiko utan dokumentasjon av required env vars | Før lansering |
+| C5 | **Ingen .env.example/template for miljøvariablar** | ⚠️ Deploy-risiko uten dokumentasjon av required env vars | Før lansering |
 
 ---
 
@@ -390,14 +390,14 @@ if (!user.onboardingComplete || !user.deepProfileComplete) {
 
 | # | Problem | Impact | Fixed-in |
 |---|---------|--------|----------|
-| V1 | `Profile.age` er nullable — burde vere required etter 9-stegs onboarding | ⚠️ Dataintegritet | Nær framtid |
-| V2 | Guidede spørsmål: QuestionCategory + GuidedQuestion modellar eksisterer, men ingen API-rute for å hente dei | ⚠️ Chat kan ikkje bruke guidede spørsmål | Nær framtid |
+| V1 | `Profile.age` er nullable — burde være required etter 9-stegs onboarding | ⚠️ Dataintegritet | Nær framtid |
+| V2 | Guidede spørsmål: QuestionCategory + GuidedQuestion modellar eksisterer, men ingen API-rute for å hente de | ⚠️ Chat kan ikke bruke guidede spørsmål | Nær framtid |
 | V3 | JourneyPhase CHECKIN i enum, men aldri brukt i cron-logikk | 🟡 Utnyttet enum-verdi | Framtidig |
-| V4 | Stripe installert, men `/api/payment/` manglar eller er ufullstendig | ⚠️ Ingen betalingsfunksjonalitet verifisert | Før lansering |
-| V5 | 2FA i schema, men delvis implementert | 🟡 Manglar full autentiseringsdybde | Framtidig |
+| V4 | Stripe installert, men `/api/payment/` mangler eller er ufullstendig | ⚠️ Ingen betalingsfunksjonalitet verifisert | Før lansering |
+| V5 | 2FA i schema, men delvis implementert | 🟡 Mangler full autentiseringsdybde | Framtidig |
 | V6 | Noe MessageCategory enum-verdi (`continue_choice`) har ingen oppdatert API-implementasjon | 🟡 Ukjent funksjonalitet | Før lansering |
 | V7 | Ingen sentral feilhåndtering middleware i Next.js app | 🟡 Variabel error-respons | Framtidig |
-| V8 | `age` field er nullable i Profile — må vere required basert på onboarding | ⚠️ Schema-validator-mismatch | Nær framtid |
+| V8 | `age` field er nullable i Profile — må være required basert på onboarding | ⚠️ Schema-validator-mismatch | Nær framtid |
 
 ---
 
@@ -405,12 +405,12 @@ if (!user.onboardingComplete || !user.deepProfileComplete) {
 
 | # | Problem | Impact | Fixed-in |
 |---|---------|--------|----------|
-| M1 | `lastMessageAt` metadata oppdaterast ikkje konsistent på tvers av chat API-ruter | 🟡 Kan gi forelda data i UI | Nær framtid |
-| M2 | UnreadCount management har ingen eksplisit API-rute for reset | 🟡 Berre inni getMessages | Framtidig |
-| M3 | `Conversation.frozenAt`/`frozenBy` eksisterer, men ingen UI for å tine opp | 🟡 Admin-frys utan UI-opplås | Framtidig |
-| M4 | `SystemMessage` modell eksisterer, men ingen API-rute funnen for å lage/lese dei | 🟡 Utnyttet systemmeldingar | Framtidig |
-| M5 | `ResonanceSession` måler kvalitet per dag, men ingen UI for dette | 🟡 Data eksisterer utan presentasjon | Framtidig |
-| M6 | `JourneyDayContent` har tema/spørsmål per dag, men cron ikkje les frå denne tabellen | 🟡 Cron genererer dynamisk i staden for å bruke content-tabell | Framtidig |
+| M1 | `lastMessageAt` metadata oppdaterast ikke konsistent på tvers av chat API-ruter | 🟡 Kan gi forelda data i UI | Nær framtid |
+| M2 | UnreadCount management har ingen eksplisit API-rute for reset | 🟡 Bare inni getMessages | Framtidig |
+| M3 | `Conversation.frozenAt`/`frozenBy` eksisterer, men ingen UI for å tine opp | 🟡 Admin-frys uten UI-opplås | Framtidig |
+| M4 | `SystemMessage` modell eksisterer, men ingen API-rute funnet for å lage/lese de | 🟡 Utnyttet systemmeldingar | Framtidig |
+| M5 | `ResonanceSession` måler kvalitet per dag, men ingen UI for dette | 🟡 Data eksisterer uten presentasjon | Framtidig |
+| M6 | `JourneyDayContent` har tema/spørsmål per dag, men cron ikke les fra denne tabellen | 🟡 Cron genererer dynamisk i staden for å bruke content-tabell | Framtidig |
 
 ---
 
@@ -418,12 +418,12 @@ if (!user.onboardingComplete || !user.deepProfileComplete) {
 
 | # | Problem | Impact |
 |---|---------|--------|
-| T1 | `Profile` modellen manglar `@@index([securityLevel])` — kan gjere søk langsammare | Lav |
+| T1 | `Profile` modellen mangler `@@index([securityLevel])` — kan gjøre søk langsammare | Lav |
 | T2 | `Match.score` og `Match.normalizedScore` begge indeksert — duplikat-indeksing | Lav |
 | T3 | Ingen `User.updatedAt`-indeks (men har `@@index([updatedAt])`?) | Lav |
 | T4 | Fargepalett i koden er konsistent med ToSom Blue + Nordic Gold — bra | Bekreftet ✅ |
 | T5 | Tailwind v4 tokens er i bruk — moderne og korrekt konfiguert | Bekreftet ✅ |
-| T6 | `next.config.js` har ingen synlige custom headers eller rewrites (utenom standard) | Kan vere OK for MVP |
+| T6 | `next.config.js` har ingen synlige custom headers eller rewrites (utenom standard) | Kan være OK for MVP |
 
 ---
 
@@ -433,9 +433,9 @@ if (!user.onboardingComplete || !user.deepProfileComplete) {
 
 1. **Løyse journey-diskrepans** — Enslig kilde for `JOURNEY_TOTAL_DAYS` (anbefalt: 30 i begge stader)
 2. **Slett eller arkiver deprecated modeller** — MatchFeedback, MatchHistory, MatchQueue (test først i app/)
-3. **Fjern AIRequestLog frå schema** — AI er forbode ifølge ToSom Core System Rule §3.7
+3. **Fjern AIRequestLog fra schema** — AI er forbode ifølge ToSom Core System Rule §3.7
 4. **Opprett `.env.example`** — Dokumenter alle required miljøvariablar
-5. **Kjørr ein E2E-test med realistiske data** — Seed database med 10–20 testbrukarar
+5. **Kjørr en E2E-test med realistiske data** — Seed database med 10–20 testbrukarar
 
 ### Prioritet 2: Nær framtid (før beta)
 
@@ -448,7 +448,7 @@ if (!user.onboardingComplete || !user.deepProfileComplete) {
 ### Prioritet 3: Framtidig (etter lansering)
 
 11. **Implementer full 2FA** — Backup codes, QR-code setup flow
-12. **Bygg Conversation unlock-UI for admin** — `frozenAt` + `frozenBy` utan motstykk i UI
+12. **Bygg Conversation unlock-UI for admin** — `frozenAt` + `frozenBy` uten motstykk i UI
 13. **Bruk JourneyDayContent tabell i cron** — I staden for dynamisk generering
 14. **Bygg ResonanceSession UI** — Presentér kvalitetsmåling i dashboard/journey
 15. **Tilsett SystemMessage API** — Administrer systemmeldingar via admin panel
@@ -462,7 +462,7 @@ if (!user.onboardingComplete || !user.deepProfileComplete) {
 |---------|--------|
 | Journey-diskrepans: konsistenssett dag 30 | ⏳ Ikje starta |
 | Slett deprecated modeller (etter test) | ⏳ Ikje starta |
-| Fjern AIRequestLog frå schema | ⏳ Ikje starta |
+| Fjern AIRequestLog fra schema | ⏳ Ikje starta |
 | Opprett `.env.example` | ⏳ Ikje starta |
 
 ### Fase 2: Data & Testing (Uke 2–3)
@@ -470,7 +470,7 @@ if (!user.onboardingComplete || !user.deepProfileComplete) {
 |---------|--------|
 | Database seed med realistiske testbrukarar | ⏳ Ikje starta |
 | Kjør E2E-tester (Playwright) | ⏳ Ikje starta |
-| Fix eventuelle feil frå E2E | ⏳ Ikje starta |
+| Fix eventuelle feil fra E2E | ⏳ Ikje starta |
 
 ### Fase 3: API-konsistens (Uke 3–4)
 | Oppgåve | Status |
@@ -491,17 +491,17 @@ if (!user.onboardingComplete || !user.deepProfileComplete) {
 ### Fase 5: Lansering (Uke 5–6)
 | Oppgåve | Status |
 |---------|--------|
-| Beta-test med faktiske brukarar | ⏳ Ikje starta |
-| Fix kritiske issues frå beta | ⏳ Ikje starta |
+| Beta-test med faktiske brukere | ⏳ Ikje starta |
+| Fix kritiske issues fra beta | ⏳ Ikje starta |
 | Offisiell lansering | ⏳ Ikje starta |
 
 ---
 
 ## 9. KONKLUSJON: ER TOSOM LANSERINGSKLAR?
 
-### **Nei — ikkje i dag.**
+### **Nei — ikke i dag.**
 
-ToSom har eit **mykje solid fundament**:
+ToSom har et **mye solid fundament**:
 - ✅ Komplett database-skjema (29 modeller)
 - ✅ Fungerande matching-motor med resonans-scoring
 - ✅ Cron-jobber for matching og journey
@@ -509,15 +509,15 @@ ToSom har eit **mykje solid fundament**:
 - ✅ Fagleg strukturert kodebase
 
 Men det mangel på:
-- ❌ Konsistens i journey-dagar (30 vs 35)
+- ❌ Konsistens i journey-dager (30 vs 35)
 - ❌ E2E-testrapport som verifiserer funksjonalitet
 - ❌ Deprecated-modellar og forbode AI-logikk i schema
 - ❌ Miljøkonfigurasjonsdokumentasjon (.env.example)
 - ❌ Guidede spørsmål API (chat-funksjon er ufullstendig)
-- ❌ Bilete-lås implementasjon i frontend
+- ❌ Bilde-lås implementasjon i frontend
 
 ### Anbefalt: **3–4 veker med fokusert arbeid** for å nå Prioritet 1 og 2.
-Etter det bør ToSom vere ~80% lanseringsklar for lukka beta-test.
+Etter det bør ToSom være ~80% lanseringsklar for lukka beta-test.
 
 ---
 

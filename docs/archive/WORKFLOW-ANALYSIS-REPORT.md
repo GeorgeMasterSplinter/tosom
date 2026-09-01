@@ -24,18 +24,18 @@
 ## 1. OPPSUMMERING
 
 ### Positivt — ingen kritiske funn:
-- Ingen ekte Git-konfliktmarkørar (`<<<<`, `>>>>`) funne i kodebasen
+- Ingen ekte Git-konfliktmarkørar (`<<<<`, `>>>>`) funnet i kodebasen
 - Ingen dupliserte prosjektmapper (`tosom-copy`, etc.)
-- Ingen `.tmp`, `.save`, eller `autosave`-filer funne
+- Ingen `.tmp`, `.save`, eller `autosave`-filer funnet
 - pages/ mappa er tom (unntatt README.md) — ingen app/pages-routing-konflikt
-- `.env.local` er korrekt ekskludert frå Git via `.gitignore`
+- `.env.local` er korrekt ekskludert fra Git via `.gitignore`
 
-### Problem funne:
-1. **30+ deleted files med uoppdaterte importar** — mange API-ruter og onboarding-komponenter er sletta fra Git-historikken, men det finst ingen referansar tilbake til dei (ren)
-2. **Uteåkte filer utan filending** — `components/match/MatchCard` (utan `.tsx`) og fleire i `components/ui/` (`m`, `platformComponents`, `empty`, `pwa`, `desktop`, `c`)
+### Problem funnet:
+1. **30+ deleted files med uoppdaterte importar** — mange API-ruter og onboarding-komponenter er sletta fra Git-historikken, men det finnes ingen referansar tilbake til de (ren)
+2. **Uteåkte filer uten filending** — `components/match/MatchCard` (uten `.tsx`) og flere i `components/ui/` (`m`, `platformComponents`, `empty`, `pwa`, `desktop`, `c`)
 3. **Dobbelt `/vilkar` og `/vilkår`-ruter** — begge eksisterer som separate sider med innhold
 4. **Halvmåka Git-status** — 25+ modified, 120+ deleted (untracked deletion), 30+ untracked nye filer
-5. **`.env` ligg på rot** — sjølv om den er i `.gitignore`, burde den vere `/.env.local`
+5. **`.env` ligg på rot** — selv om den er i `.gitignore`, burde den være `/.env.local`
 6. **367MB .next/cache/** — gammal cache som kan ryddast
 
 ---
@@ -53,7 +53,7 @@
 | React | ^18.2.0 | ✅ |
 
 ### Observasjonar:
-- Ingen `package-lock.json` — men `pnpm-lock.yaml` er ikkje funne heller. Sjekk kva som faktisk versjonkontrollerast for dependency-resolusjon.
+- Ingen `package-lock.json` — men `pnpm-lock.yaml` er ikke funnet heller. Sjekk hva som faktisk versjonkontrollerast for dependency-resolusjon.
 - Yarn 1.x er legacy. Vurder å gå til npm eller pnpm (med oppdatert Node-versjon).
 
 ### Diskbruk:
@@ -83,21 +83,21 @@
 | Untracked (??) | ~35 filer | Nye komponentar, dokumentasjon, migreringar |
 
 ### Merknad:
-Statusen viser ein **stor refaktorering pågående** — gamle API-ruter og onboarding-komponentar er sletta (`D`), nye filer er lagt til (`??`), og eksisterande filer er endra (`M`). Dette er normal utviklingsrot, men bør kommitterast i mindre chunkar for å unngå tap.
+Statusen viser en **stor refaktorering pågående** — gamle API-ruter og onboarding-komponentar er sletta (`D`), nye filer er lagt til (`??`), og eksisterande filer er endra (`M`). Dette er normal utviklingsrot, men bør kommitterast i mindre chunkar for å unngå tap.
 
 ---
 
 ## 4. FILKONFLIKTAR OG DUPLIKATAR
 
-### ✅ Ingen ekte konflikter funne:
+### ✅ Ingen ekte konflikter funnet:
 - Ingen git-conflict-markerar (`<<<<`, `======`, `>>>>`) i aktive filer
 - Ingen `.orig` eller backup-filer
 
-### ⚠️ Filer utan filending (dette er eit problem):
+### ⚠️ Filer uten filending (dette er et problem):
 
 | Sti | Type | Merknad |
 |-----|------|---------|
-| `components/match/MatchCard` | JavaScript | Manglar `.tsx` — Next.js kan ikkje importera som component ✅ |
+| `components/match/MatchCard` | JavaScript | Mangler `.tsx` — Next.js kan ikke importera som component ✅ |
 | `components/ui/m` | JavaScript | Ukjent format — moglegvis komponent-snutt |
 | `components/ui/platformComponents` | JavaScript | Samstundes |
 | `components/ui/empty` | JavaScript | Samstundes |
@@ -105,14 +105,14 @@ Statusen viser ein **stor refaktorering pågående** — gamle API-ruter og onbo
 | `components/ui/desktop` | JavaScript | Samstundes |
 | `components/ui/c` | JavaScript | Samstundes |
 
-**Anbefaling:** Gje desse filene korrekte `.tsx`-endingar. Dersom dei er eksport-buntler, bør dei kallast `index.tsx`.
+**Anbefaling:** Gi desse filene korrekte `.tsx`-endingar. Dersom de er eksport-buntler, bør de kallast `index.tsx`.
 
 ### ⚠️ Duplicat-ruter:
 | Rute 1 | Rute 2 | Status |
 |--------|--------|--------|
 | `/app/vilkar/page.tsx` | `/app/vilkår/page.tsx` | **Begge eksisterer** — potensielt SEO-problem og forvirring |
 
-**Anbefaling:** Behald berre `/vilkår/page.tsx` (korrekt utforskra) og fjern `vilkar/`. Legg til 301-redirect frå `/vilkar` → `/vilkår`.
+**Anbefaling:** Behald bare `/vilkår/page.tsx` (korrekt utforskra) og fjern `vilkar/`. Legg til 301-redirect fra `/vilkar` → `/vilkår`.
 
 ---
 
@@ -126,7 +126,7 @@ Statusen viser ein **stor refaktorering pågående** — gamle API-ruter og onbo
 
 ### ⚠️ Merknadar:
 1. **`.next/` cache = 367MB** — innestår `343MB/cache/`. Denne burde ryddast ved deploy for å unngå gamle build-festar i routa.
-2. **`app/vilkar` og `app/vilkår`** — to separate ruter med samme semantikk kan gi SEO-problem (duplicat-innhald).
+2. **`app/vilkar` og `app/vilkår`** — to separate ruter med samme semantikk kan gi SEO-problem (duplicat-innhold).
 
 ---
 
@@ -137,7 +137,7 @@ Statusen viser ein **stor refaktorering pågående** — gamle API-ruter og onbo
 - Ingen `.save` eller `autosave`-filer  
 - Ingen `*~` (backup)-filer
 - Ingen `.bak`-filer
-- Ingenting i `.gitignore` som burde vere tracka
+- Ingenting i `.gitignore` som burde være tracka
 
 ---
 
@@ -151,21 +151,21 @@ Statusen viser ein **stor refaktorering pågående** — gamle API-ruter og onbo
 **Ingen full disk eller fragmentasjon.** ✅
 
 ### Prosjektstruktur: ✅ Rensig
-- Berre éin `tosom/` mappa i `/mnt/master/`
-- Ingen gamle prosjektmappear, node_modules-ar eller byggar funne
+- Bare én `tosom/` mappa i `/mnt/master/`
+- Ingen gamle prosjektmappear, node_modules-ar eller byggar funnet
 
 ---
 
 ## 8. SSH-RELATERTE OBSERVASJONAR
 
-### Viktig — dette kan ikkje analyserast automatisert:
+### Viktig — dette kan ikke analyserast automatisert:
 SSH-relaterte problem (VSCode Remote disconnects, halvvegs fil-lagring, latency) krev manuell gransking:
 
-| Problem | Kva å sjekke manuelt |
+| Problem | Hva å sjekke manuelt |
 |---------|----------------------|
 | VSCode Remote disconnects | `Help → Toggle Developer Tools → Console` i VSCode |
-| Halbvegs fil-lagring ved disconnect | Sjekk om det finst `.save`-filer (allereie gjort — ingen funne) ✅ |
-| Autosave skapar duplikatar | VSCode Settings → `files.autoSave` bør vere `"afterDelay"` ✅ |
+| Halbvegs fil-lagring ved disconnect | Sjekk om det finnes `.save`-filer (allerede gjort — ingen funnet) ✅ |
+| Autosave skaper duplikatar | VSCode Settings → `files.autoSave` bør være `"afterDelay"` ✅ |
 | Fil-system latency | `time ls -la > /dev/null` 100x → beregn gjennomsnitt |
 
 **Ingen automasjon-funn peiker på SSH-problem.** Men med Mastersplinter+laptop-konfigurasjon er det viktig at:
@@ -180,15 +180,15 @@ SSH-relaterte problem (VSCode Remote disconnects, halvvegs fil-lagring, latency)
 ### Høg prioritet:
 | Nummer | Tiltak | Effekt |
 |--------|--------|--------|
-| 1 | Kommitter dei 25+ modified filene i mindre, logiske commits | Unngår tap av jobb |
-| 2 | Gje filer utan ending `.tsx`-ending (`components/ui/m/index.tsx` etc.) | Fastset importsystemet |
+| 1 | Kommitter de 25+ modified filene i mindre, logiske commits | Unngår tap av jobb |
+| 2 | Gi filer uten ending `.tsx`-ending (`components/ui/m/index.tsx` etc.) | Fastset importsystemet |
 | 3 | Fjern `app/vilkar/page.tsx` og legg til redirect til `/vilkår` | SEO + konsistens |
 | 4 | `rm -rf .next && npx next build` for å friske opp build | Unngår gamle build-feil |
 
 ### Middels prioritet:
 | Nummer | Tiltak | Effekt |
 |--------|--------|--------|
-| 5 | Git-pushe dei uncommitted endringane | Tryggleik mot data-tap |
+| 5 | Git-pushe de uncommitted endringane | Tryggleik mot data-tap |
 | 6 | Rydd opp deleted filer i Git (`git add -A && git commit`) | Ren historikk |
 | 7 | Oppdater `.env` → `/.env.local` (samanhens) | Konsistens |
 
@@ -209,7 +209,7 @@ Kun Mastersplinter skal bygge og deploye. Laptop berred redigere.
 
 #### 2. **Git-flow prosedyre:**
 ```bash
-# Før du starta ein jobb:
+# Før du starta en jobb:
 git stash       # sikkerheit
 # ... jobb ...
 git add .
@@ -220,12 +220,12 @@ git push        # alltid push etter commit
 #### 3. **Bygg-prosedyre:**
 ```bash
 # Aldri bygg lokalt (laptop)
-# På Mastersplinter berre:
+# På Mastersplinter bare:
 cd /mnt/master/tosom && npx next build
 ```
 
 #### 4. **.gitignore verifisering:**
-Følgjande filer burde IKKJE vere tracka:
+Følgjande filer burde IKKE være tracka:
 - `.env`, `.env.local`, `.env.production` ✅ (ekskludert)
 - `node_modules/` ✅ (ekskludert implicit)
 - `.next/` ✅ (ekskludert)
@@ -250,14 +250,14 @@ På laptop, sett i VSCode `settings.json`:
 |----------|--------|---------|
 | Disk/plass | ✅ Bra | 373GB ledig |
 | Miljøversjonar | ✅ Bra | Node 22, Next 15, TS 6.0 |
-| Git-struktur | ⚠️ Moderat rot | Mange uncommitted endringar |
-| Duplikatar | ⚠️ Fleire funn | Fil utan ending, `/vilkar`/`/vilkår` |
+| Git-struktur | ⚠️ Moderat rot | Mange uncommitted endringer |
+| Duplikatar | ⚠️ Flere funn | Fil uten ending, `/vilkar`/`/vilkår` |
 | Bygg-konflikter | ✅ Ingen | .next er einingar (367MB) |
 | SSH-problem | ❓ Ukjent | Krev manuell gransking |
-| tmp/backup filer | ✅ Reinsig | Ingen funne |
+| tmp/backup filer | ✅ Reinsig | Ingen funnet |
 | Prosjektstruktur | ✅ Reinsig | Éin tosom-mappe |
 
-**Verdict:** Prosjektet er i moderat uorden — ingen kritiske problem, men mange uncommitted endringar og nokre filekonvensjons-brudd som bør rettas opp før neste deploy.
+**Verdict:** Prosjektet er i moderat uorden — ingen kritiske problem, men mange uncommitted endringer og noen filekonvensjons-brudd som bør rettas opp før neste deploy.
 
 ---
 

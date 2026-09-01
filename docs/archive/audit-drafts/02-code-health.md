@@ -257,13 +257,13 @@ Excluded from "dead" (expected to have no frontend caller by design): `api/cron/
 ## Full TODO/FIXME List
 
 1. `components/system/SystemMessageBox.tsx:6` — `TODO: Her kan vi vise flere meldinger dynamisk senere.`
-2. `components/profile/UserProfileView.tsx:18` — `UP32 — TODO: Koble til ekte brukerdata frå backend seinare`
+2. `components/profile/UserProfileView.tsx:18` — `UP32 — TODO: Koble til ekte brukerdata fra backend senere`
 3. `components/profile/UserProfileView.tsx:20` — `UP32 — TODO: Lagre profilendringar i database`
 4. `components/profile/PartnerProfileView.tsx:7` — `PP22 — TODO-kommentar for backend-kobling`
-5. `components/profile/PartnerProfileView.tsx:16` — `PP22 — TODO: Koble til ekte partnerdata frå backend seinare`
-6. `app/chat/components/ChatContainer.tsx:654` — `senderId={undefined} // TODO: Hent frå session/context`
+5. `components/profile/PartnerProfileView.tsx:16` — `PP22 — TODO: Koble til ekte partnerdata fra backend senere`
+6. `app/chat/components/ChatContainer.tsx:654` — `senderId={undefined} // TODO: Hent fra session/context`
 7. `app/api/payment/webhook/route.ts:44` — `TODO: Oppdater subscription-status i databasen når Prisma-modell finnes`
-8. `lib/chat/chatFlow.ts:3` — `TODO: matchContext og journeyState skal komme frå backend seinare.`
+8. `lib/chat/chatFlow.ts:3` — `TODO: matchContext og journeyState skal komme fra backend senere.`
 9. `lib/system/systemMessages.ts:3` — `TODO: Her kan vi senere koble til AI-generering av meldinger.`
 10. `lib/system/systemMessages.ts:4` — `TODO: Her kan vi hente meldinger fra en konfigurasjonsfil eller CMS.`
 11. `lib/matching/feedback.ts:14` — `TODO: implementer lagring av feedback til DB`

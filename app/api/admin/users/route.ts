@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
       ]
     }
 
-    // B4 — journey fjerna frå User (match-scoped nå), matchesA/matchesB lesast separat
+    // B4 — journey fjerna fra User (match-scoped nå), matchesA/matchesB lesast separat
     const [usersRaw, total] = await Promise.all([
       prisma.user.findMany({ where, skip, take: limit, orderBy: { createdAt: 'desc' }, select: { id: true, email: true, name: true, role: true, verified: true, bannedAt: true, deletedAt: true, onboardingStep: true, onboardingComplete: true, deepProfileComplete: true, journeyState: true, lastMatchAt: true, lockedUntil: true, createdAt: true } }),
       prisma.user.count({ where }),

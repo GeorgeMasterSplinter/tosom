@@ -123,7 +123,7 @@ export const UniversalMenu = () => {
             ))}
           </nav>
 
-          {/* Høyre: CTA-knappar */}
+          {/* Høyre: CTA-knapper */}
           <div className="hidden md:flex items-center gap-4">
             <Link
               href="/login"
@@ -196,7 +196,7 @@ export const UniversalMenu = () => {
             </svg>
           </button>
 
-          {/* Mobil meny (slide-in frå høgre) */}
+          {/* Mobil meny (slide-in fra høyre) */}
           {menuOpen && (
             <div className="md:hidden fixed top-[64px] right-0 z-50 menu-slide-in">
               <nav className="space-y-6" style={{ width: '280px', padding: '32px 24px' }}>

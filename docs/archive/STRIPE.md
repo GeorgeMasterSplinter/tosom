@@ -7,7 +7,7 @@
 
 ## OVERSIKT
 
-ToSom brukar Stripe for betalingshandsaming:
+ToSom bruker Stripe for betalingshandsaming:
 - **Test-mode** for utvikling
 - **Webhooks** for event-handsaming
 - **Checkout** for abonnement
@@ -105,4 +105,4 @@ Sjekk test-kort og API-nøkle
 
 - Alltid test-mode i utvikling
 - Aldri eksponer STRIPE_SECRET_KEY
-- Webhook må vere HTTPS i produksjon
+- Webhook må være HTTPS i produksjon

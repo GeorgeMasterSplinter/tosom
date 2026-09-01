@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /**
  * ToSom — MoodsPanel (Premium Nordic 2026)
- * Slide-down-panel for å velje/byte mood.
+ * Slide-down-panel for å velge/byte mood.
  * Same stil som BliKjentPanel / OppgaverPanel.
- * Ved klikk bytts mood umiddelbart (live-preview) — panel held opne
- * slik at brukaren kan prøve dei ulike mood-ane.
+ * Ved klikk bytts mood umiddelbart (live-preview) — panel holder opne
+ * slik at brukeren kan prøve de ulike mood-ane.
  */
 
 "use client";

@@ -53,9 +53,9 @@ const WeeklyDigestV2: React.FC<WeeklyDigestV2Props> = ({
   className = '',
 }) => {
   const statCards = [
-    { label: 'Meldingar', value: stats.messages || 0, icon: statIcons.messages, color: 'gold' },
+    { label: 'Meldinger', value: stats.messages || 0, icon: statIcons.messages, color: 'gold' },
     { label: 'Matches', value: stats.matches || 0, icon: statIcons.matches, color: 'pink' },
-    { label: 'Timar saman', value: stats.timeTogether || 0, icon: statIcons.timeTogether, color: 'teal' },
+    { label: 'Timar sammen', value: stats.timeTogether || 0, icon: statIcons.timeTogether, color: 'teal' },
     { label: 'Dype samtal', value: stats.deepConversations || 0, icon: statIcons.deepConversations, color: 'purple' },
     { label: 'Isbrytarar', value: stats.icebreakers || 0, icon: statIcons.icebreakers, color: 'gold' },
     { label: 'Milstreper', value: stats.milestones || 0, icon: statIcons.milestones, color: 'pink' },

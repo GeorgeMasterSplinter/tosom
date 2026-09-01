@@ -20,7 +20,7 @@ export interface ValidationError {
 }
 
 /**
- * Valider eit felt
+ * Valider et felt
  */
 export function validateField(value: unknown, rule: ValidationRule): string | null {
   if (rule.required && (value === undefined || value === null || value === '')) {

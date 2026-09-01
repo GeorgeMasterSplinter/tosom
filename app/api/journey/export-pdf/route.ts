@@ -18,7 +18,7 @@ import { requireAuth } from '@/lib/auth/requireAuth';
 export const dynamic = 'force-dynamic';
 
 function escapeHtml(s: string): string {
-  // Entiteter bygges frå kodepunkter slik at kilde ikke avhengig av literal '&'
+  // Entiteter bygges fra kodepunkter slik at kilde ikke avhengig av literal '&'
   // (unngår at et tekst-/format-lag decoder entitetene bort).
   const AMP = String.fromCharCode(38); // &
   return s

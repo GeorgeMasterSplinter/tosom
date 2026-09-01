@@ -6,7 +6,7 @@
 
 ## PROBLEM
 
-Steg 9 (Oppsummering) var ein rå debug-side som viste backend-keys:
+Steg 9 (Oppsummering) var en rå debug-side som viste backend-keys:
 `identityNameGeorge, age36, nexttrue, osv.`
 
 ---
@@ -20,7 +20,7 @@ Steg 9 (Oppsummering) var ein rå debug-side som viste backend-keys:
 
 ### Lagt til premium seksjonsstruktur
 
-| Seksjon | Innhald |
+| Seksjon | Innhold |
 |--|-----|
 | Grunnprofil | Navn, Alder, Kjønn, Søker, Bosted, Høyde, Kroppstype, Livsstil, Røyking/snus, Barn, Ønsker barn |
 | Livsstil & verdier | Hva prioriterer du? / God hverdag |
@@ -68,7 +68,7 @@ Steg 9 (Oppsummering) var ein rå debug-side som viste backend-keys:
 </section>
 ```
 
-### Knappar nederst
+### Knapper nederst
 
 ```tsx
 <div className="space-y-4 mt-10">
@@ -85,7 +85,7 @@ Steg 9 (Oppsummering) var ein rå debug-side som viste backend-keys:
 
 | Fil | Endring |
 |-----|---|
-| `Step9Oppsummering.tsx` | Full redesign — frå debug-side til premium oppsummering |
+| `Step9Oppsummering.tsx` | Full redesign — fra debug-side til premium oppsummering |
 
 ---
 
@@ -146,7 +146,7 @@ Steg 9 (Oppsummering) var ein rå debug-side som viste backend-keys:
 ## TESTLISTE
 
 - [ ] Sjekk at alle felt viser korrekt tekst
-- [ ] Sjekk at tomme felt ikkje visast (Sek 2-5)
+- [ ] Sjekk at tomme felt ikke visast (Sek 2-5)
 - [ ] Sjekk at gull-fargar er korrekte
 - [ ] Sjekk at knappene fungerer
 - [ ] Sjekk at layout er responsiv

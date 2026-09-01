@@ -50,7 +50,7 @@ const { data } = await supabase.storage
 1. Opprett Supabase-prosjekt
 2. Opprett buckets: profiles, assets
 3. Kopier URL og keys
-4. Test upload med bilete
+4. Test upload med bilde
 
 ---
 

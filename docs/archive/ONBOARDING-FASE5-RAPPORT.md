@@ -6,15 +6,15 @@
 
 ## OPPSUMMERING
 
-Fase 5 introduserer **ein felles premium-knappestil** for heile onboarding-flowen.
-Ingen grå knappar, ingen duplikat-stilar, ingen inline-knappestilar i stega.
+Fase 5 introduserer **en felles premium-knappestil** for heile onboarding-flowen.
+Ingen grå knapper, ingen duplikat-stilar, ingen inline-knappestilar i stega.
 
 ---
 
 ## OPPRETTEDE KOMPONENTAR
 
 ### 1. PremiumButton (`components/onboarding/PremiumButton.tsx`)
-**Formål:** Ein gull-gradient-knapp for alle "Fortsett"/"Start reisen"-handlinger.
+**Formål:** En gull-gradient-knapp for alle "Fortsett"/"Start reisen"-handlinger.
 
 **Props:**
 - `onClick?: () => void`
@@ -33,7 +33,7 @@ Ingen grå knappar, ingen duplikat-stilar, ingen inline-knappestilar i stega.
 - Hover: translateY(-1px) + scale(1.005) + box-shadow
 
 ### 2. BackButton (`components/onboarding/BackButton.tsx`)
-**Formål:** Ein tydeleg "Tilbake"-knapp med gull-outline.
+**Formål:** En tydeleg "Tilbake"-knapp med gull-outline.
 
 **Props:**
 - `onClick: () => void`
@@ -53,9 +53,9 @@ Ingen grå knappar, ingen duplikat-stilar, ingen inline-knappestilar i stega.
 ## OPPDATTE FILER
 
 ### 1. OnboardingLayout.tsx
-- **Fjerna:** Alle interne knappar
+- **Fjerna:** Alle interne knapper
 - **Legt til:** `renderButtons?: () => ReactNode` prop
-- **Endra:** Knappar no rendera av kvart steg komponent
+- **Endra:** Knapper no rendera av kvart steg komponent
 
 ### 2. OnboardingFlow.tsx
 - **Legg til:** Import av PremiumButton og BackButton
@@ -89,7 +89,7 @@ import { PremiumButton, BackButton } from '@/components/onboarding';
 ```
 
 ### Steg 3-8
-Ingen knappar no — desse stega arvar navigasjon frå OnboardingLayout.
+Ingen knapper no — desse stega arvar navigasjon fra OnboardingLayout.
 
 ### Steg 9 (Step9Oppsummering.tsx)
 ```tsx
@@ -115,8 +115,8 @@ For å fullføre Fase 5 må desse filene oppdaterast:
 | Fil | Endring |
 |-----|---|
 | `Step1Profile.tsx` | Fjern inline-knapp, bruk PremiumButton + BackButton |
-| `Step2Personlighet.tsx` | Fjern inline-knappar, bruk PremiumButton + BackButton |
-| `Step9Oppsummering.tsx` | Fjern inline-knappar, bruk PremiumButton + BackButton |
+| `Step2Personlighet.tsx` | Fjern inline-knapper, bruk PremiumButton + BackButton |
+| `Step9Oppsummering.tsx` | Fjern inline-knapper, bruk PremiumButton + BackButton |
 | `Step10StartReisen.tsx` | Fjern inline-knapp, bruk PremiumButton |
 
 ---
@@ -136,7 +136,7 @@ For å fullføre Fase 5 må desse filene oppdaterast:
 2. Oppdater Step2Personlighet.tsx
 3. Oppdater Step9Oppsummering.tsx
 4. Oppdater Step10StartReisen.tsx
-5. Test at alle knappar ser like ut
+5. Test at alle knapper ser like ut
 
 ---
 
@@ -182,6 +182,6 @@ boxShadow: 0 4px 12px rgba(212,175,55,0.15)
 Fase 5 har oppretta:
 1. **PremiumButton** — gull-gradient med loading/disabled
 2. **BackButton** — mørk glassmorphism med gull-outline
-3. **OnboardingLayout** med `renderButtons` — knappar rendera av stega
+3. **OnboardingLayout** med `renderButtons` — knapper rendera av stega
 
 Infrastrukturen er **ferdig**. Stega må no oppdaterast til å bruke desse komponentane.

@@ -20,7 +20,7 @@
 5. [Router-konfliktanalyse](#5-router-konfliktanalyse)
 6. [Modulanalyse](#6-modulanalyse)
 7. [API-analyse](#7-api-analyse)
-8. [Teknisk gjeld](#8-teknisk-gjeld)
+8. [Teknisk gjelder](#8-teknisk-gjelder)
 9. [Ryddeliste](#9-ryddeliste)
 10. [Forbedringsliste](#10-forbedringsliste)
 11. [Anbefalt roadmap](#11-anbefalt-roadmap)
@@ -357,7 +357,7 @@ Uploadthing → S3/CloudFront → Images
 | `app/personvern/page.tsx` | Personvern side | ACTIVE |
 | `app/vilkar/page.tsx` | Vilkår side | ACTIVE |
 | `app/vilkår/page.tsx` | Vilkår side (DUPLIKAT?) | ACTIVE |
-| `docs/6A-KVIFOR-SIDE.md` | Design spec | DOKS |
+| `docs/6A-HVORFOR-SIDE.md` | Design spec | DOKS |
 | `docs/6B-SLIK-SIDE.md` | Design spec | DOKS |
 | `docs/6C-REISEN-SIDE.md` | Design spec | DOKS |
 | `docs/6D-KONTAKT-SIDE.md` | Design spec | DOKS |
@@ -537,7 +537,7 @@ Uploadthing → S3/CloudFront → Images
 
 **Problemer:**
 - Super-login kan brukes som backdoor
-- Demo mode manglar rate limiting
+- Demo mode mangler rate limiting
 
 ### 6.9 Auth-modul
 
@@ -669,7 +669,7 @@ Uploadthing → S3/CloudFront → Images
 
 ---
 
-## 8. TEKNISK GjELD
+## 8. TEKNISK GELDER
 
 ### 8.1 Halvferdig funksjonalitet
 
@@ -1111,8 +1111,8 @@ Uploadthing → S3/CloudFront → Images
 | 6 | Session med roller | ✅ | `session.user.role` i JWT + session callbacks |
 | 7 | Admin auth helper | ✅ | `lib/admin/requireAuth.ts` |
 | 8 | Sikre /admin i middleware | ✅ | Admin sjekk, role-basert |
-| 9 | Session-bypass fjerna | ✅ | Berre `next-auth.session.token` |
-| 10 | Dashboard til v5 | ✅ | `auth()` frå v5 |
+| 9 | Session-bypass fjerna | ✅ | Bare `next-auth.session.token` |
+| 10 | Dashboard til v5 | ✅ | `auth()` fra v5 |
 
 ### 13.2 Roller
 
@@ -1139,7 +1139,7 @@ Uploadthing → S3/CloudFront → Images
 | Endring | Detaljer |
 |---------|---|
 | Admin RBAC i middleware | `role === 'admin'` for /admin |
-| Session-bypass fjerna | Berre `next-auth.session.token` |
+| Session-bypass fjerna | Bare `next-auth.session.token` |
 | /api/admin i protected | Krev innlogging + admin |
 | requireAdminAuth | Full admin-auth helper |
 
@@ -1228,10 +1228,10 @@ createApiHandler({
 
 | Problem | Prioritet |
 |--|-|
-| Mang API-ruter bruker ikkje createApiHandler | HØY |
-| Mang API-ruter har ikkje Zod-validering | HØY |
-| Mange API-ruter har ikkje auth | HØY |
-| Admin-ruter (27) manglar auth-check | HØY |
+| Mang API-ruter bruker ikke createApiHandler | HØY |
+| Mang API-ruter har ikke Zod-validering | HØY |
+| Mange API-ruter har ikke auth | HØY |
+| Admin-ruter (27) mangler auth-check | HØY |
 
 ---
 
@@ -1277,7 +1277,7 @@ createApiHandler({
 - `generateJourneyContext(journeyState)` → JourneyContext
 - `generateProfileSuggestions(profile)` → ProfileSuggestions
 
-**Fallback:** Dersom AI_API_KEY ikkje er sett → template-basert output
+**Fallback:** Dersom AI_API_KEY ikke er sett → template-basert output
 
 ### 15.4 Premium-modell
 
@@ -1285,7 +1285,7 @@ createApiHandler({
 |------|--|-|
 | Matchar/dag | 1 | 3 |
 | AI-insights | ❌ | ✅ |
-| Reise-length | 30 dagar | 60 dagar |
+| Reise-length | 30 dager | 60 dager |
 | Profil-forslag | ❌ | ✅ |
 | Resonansmåling | ❌ | ✅ |
 

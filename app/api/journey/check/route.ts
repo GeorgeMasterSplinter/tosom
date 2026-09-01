@@ -42,7 +42,7 @@ export async function GET(request: Request): Promise<NextResponse> {
 
     const userId = session.user.id;
 
-    // Hent journeyProgress for brukaren
+    // Hent journeyProgress for brukeren
     const journeyProgress = await prisma.journeyProgress.findFirst({
       where: { userId },
       select: {
@@ -70,7 +70,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       });
     }
 
-    // Hent today sin dagleg innhold frå JourneyDayContent
+    // Hent today sin dagleg innhold fra JourneyDayContent
     let todayContent: TodayContent | null = null;
     if (journeyProgress?.day && journeyProgress.day > 0) {
       const content = await prisma.journeyDayContent.findFirst({
@@ -80,7 +80,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       if (content) todayContent = content;
     }
 
-    // Rekn ut dagar att (30 dagers reise)
+    // Rekn ut dager att (30 dagers reise)
     let daysRemaining: number | null = null;
     if (journeyProgress?.startedAt) {
       const totalDays = 30;
@@ -90,21 +90,21 @@ export async function GET(request: Request): Promise<NextResponse> {
       daysRemaining = Math.max(0, totalDays - elapsed);
     }
 
-    // Kan brukaren fullføre reisa?
+    // Kan brukeren fullføre reisa?
     const canComplete = journeyProgress ? (journeyProgress.day >= 30 || daysRemaining === 0 || isActive) : false;
 
     // Melding basert på status
     let message: string;
     if (!journeyProgress || !isActive) {
-      message = "Du har ingen pågående reise. Vent på ein match eller fullfør onboarding.";
+      message = "Du har ingen pågående reise. Vent på en match eller fullfør onboarding.";
     } else if (journeyProgress.pausedAt) {
-      message = `Reisa di er pausa. Dag ${journeyProgress.day}/30 — du kan halde fram når du vil.`;
+      message = `Reisa di er pausa. Dag ${journeyProgress.day}/30 — du kan holde fram når du vil.`;
     } else if (journeyProgress.endedAt) {
       message = "Reisa di er fullført. Gratulerer! 🎉";
     } else if (daysRemaining && daysRemaining <= 7) {
       message = `Kun ${daysRemaining} dag att av reisa di — du er nær målet!`;
     } else if (daysRemaining) {
-      message = `Dag ${journeyProgress.day}/30 — ${daysRemaining} dagar att av reisa di.`;
+      message = `Dag ${journeyProgress.day}/30 — ${daysRemaining} dager att av reisa di.`;
     } else {
       message = "Reisa di er i gang.";
     }

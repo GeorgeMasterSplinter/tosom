@@ -1,7 +1,7 @@
 # ToSom Pre-Flight Check
 
 ## Formål
-Dokumentet skal fyllest ut manuelt før ToSom settest i produksjon. Kvar linje må ha status OK eller FEIL.
+Dokumentet skal fyllest ut manuelt før ToSom settest i produksjon. Hver linje må ha status OK eller FEIL.
 
 ---
 
@@ -13,7 +13,7 @@ Dokumentet skal fyllest ut manuelt før ToSom settest i produksjon. Kvar linje m
 | Sist oppdatert | 08.06.2026 |
 | Godkjent av | George Iulian Stanica |
 
-**Må vere true før du gjer vidare.**
+**Må være true før du gjer vidare.**
 
 ---
 
@@ -24,7 +24,7 @@ Dokumentet skal fyllest ut manuelt før ToSom settest i produksjon. Kvar linje m
 | Dagleg backup kjører | OK | |
 | Dagleg backup verifisert (filstorleik > 0) | OK | |
 | Restore testet manuelt | OK | |
-| retention-policy korrekt (30 dagar) | OK | |
+| retention-policy korrekt (30 dager) | OK | |
 | dbBackup.sh testet | OK | |
 | dbRestore.sh testet | OK | |
 
@@ -45,7 +45,7 @@ Dokumentet skal fyllest ut manuelt før ToSom settest i produksjon. Kvar linje m
 | TLS versjon >= 1.2 | FEIL | |
 | Security headers (CSP, X-Frame, etc.) | FEIL | |
 | SSH-tilgang til server | FEIL | ssh root@prod-server.tosom.no |
-| SSH-tilgang testar | FEIL | ls /opt/tosom |
+| SSH-tilgang tester | FEIL | ls /opt/tosom |
 | Environment variablar i secrets-manager | FEIL | |
 | prod-config.json lasta inn | FEIL | |
 
@@ -83,7 +83,7 @@ Dokumentet skal fyllest ut manuelt før ToSom settest i produksjon. Kvar linje m
 | tosom.no peiker på prod-IP | FEIL | nslookup tosom.no |
 | api.tosom.no peiker på prod-IP | FEIL | nslookup api.tosom.no |
 | SSL-sertifikat gyldig | FEIL | openssl s_client -connect tosom.no:443 |
-| SSL-sertifikat ikkje utgår | FEIL | < 30 dagar att |
+| SSL-sertifikat ikke utgår | FEIL | < 30 dager att |
 | Auto-renewal aktiv | FEIL | letsencrypt eller liknande |
 | DNS-propagering fullført | FEIL | dig tosom.no |
 
@@ -94,11 +94,11 @@ Dokumentet skal fyllest ut manuelt før ToSom settest i produksjon. Kvar linje m
 | Komponent | Status | Merknad |
 |--|--|--|
 | SSH tilgang (root) | OK | ssh root@prod-server.tosom.no |
-| SSH tilgang (tosom-brukar) | OK | ssh tosom@prod-server.tosom.no |
+| SSH tilgang (tosom-bruker) | OK | ssh tosom@prod-server.tosom.no |
 | Docker kan køyrast | OK | docker run hello-world |
 | Ports 3000 og 443 opne | OK | curl https://api.tosom.no:3000 |
 | Firewall reglar aktive | OK | ufw status eller liknande |
-| DB-tilgang frå server | OK | psql -h prod-db -U tosom_prod |
+| DB-tilgang fra server | OK | psql -h prod-db -U tosom_prod |
 | Diskrom > 20% ledig | OK | df -h |
 | Minne > 20% ledig | OK | free -h |
 | CPU-load < 50% | OK | uptime eller top |
@@ -114,7 +114,7 @@ Dokumentet skal fyllest ut manuelt før ToSom settest i produksjon. Kvar linje m
 | Admin dashboard fungerer | OK / FEIL | curl + admin token mot system/overview |
 | Observability viser data | OK / FEIL | curl + admin token mot metrics |
 | Security dashboard viser data | OK / FEIL | curl + admin token mot security/overview |
-| AI-endepunkt krev auth (401) | OK / FEIL | curl utan token mot AI-endepunkt |
+| AI-endepunkt krev auth (401) | OK / FEIL | curl uten token mot AI-endepunkt |
 | QuickCheck.ts alle OK | OK / FEIL | npx tsx scripts/monitoring/quickCheck.ts |
 
 ---
@@ -136,7 +136,7 @@ Dokumentet skal fyllest ut manuelt før ToSom settest i produksjon. Kvar linje m
 
 **PRE_FLIGHT_OK = false**
 
-Må vere true for å starte deploy. Alle komponentar over må vere "OK" før deploy kan startast.
+Må være true for å starte deploy. Alle komponentar over må være "OK" før deploy kan startast.
 
 ---
 

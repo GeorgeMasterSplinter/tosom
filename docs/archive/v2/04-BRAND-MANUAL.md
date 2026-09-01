@@ -106,7 +106,7 @@ ToSom skal alltid kommunisere:
 ### 4.3 Språkregler (forkortet — se system_prompt.md for full versjon)
 
 **Bruk alltid:** du/dere, forhold/relasjon, reise/utvikling, trygg/tydelig/ærlig
-**Unngå:** nynorsk-ord (me→vi, dykk→dere, kva→hva, ein→en, ikkje→ikke)
+**Unngå:** nynorsk-ord (me→vi, dykk→dere, hva→hva, en→en, ikke→ikke)
 
 ### 4.4 Forbudte formuleringer
 - "AI anbefaler…"

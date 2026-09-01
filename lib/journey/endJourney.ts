@@ -60,7 +60,7 @@ export async function endJourney(
 
   // Hent imageKeys FØR transaksjonen — Message-radene blir sletta inne i
   // transaksjonen, så nøklene må være samla på førehand for å kunne slette
-  // dei tilhøyrande objekta i lagringen etterpå (GDPR art. 17).
+  // de tilhøyrande objekta i lagringen etterpå (GDPR art. 17).
   const imageKeys: string[] = (
     await prisma.message.findMany({
       where: { conversationId, imageKey: { not: null } },
@@ -260,7 +260,7 @@ export async function endJourney(
     timeout: 30_000,
   });
 
-  // S-9 + GDPR art. 17: Slett også dei opplaaste BILDE-objekta fra lagringen.
+  // S-9 + GDPR art. 17: Slett også de opplaaste BILDE-objekta fra lagringen.
   // DB-radene (Message type=image) er allerede borte, men objektet i R2/local
   // ligger ellers igjen som en reell lekkasje. Best-effort: feil her skal ikke
   // blokkere reiseslutt — men logg tydeleg for å fange tapte slettingar.

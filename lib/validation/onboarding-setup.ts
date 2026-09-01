@@ -12,7 +12,7 @@ import { getDistancePrefRange } from '@/config/distance-prefs';
    Frontend sender '' for ALLE felt brukeren ikke fylte ut
    (OnboardingFlow.tsx initialData), mens Zod .optional() kun
    tolererer undefined. '' på valfrie felt ga derfor 400 på
-   /api/profile/setup kvar gong eit steg ble hoppa over.
+   /api/profile/setup hver gong et steg ble hoppa over.
    Blank streng → undefined før validering. Obligatoriske felt
    (fanget klient-side) blir ikke rørt.
    ============================================================ */
@@ -38,8 +38,8 @@ export const basicProfileSchema = z
   .object({
     identityName: z.string().min(2, 'Navn må være minst 2 tegn').max(50, 'Navn kan være maks 50 tegn'),
     age: z.coerce.number().min(21, 'Du må være minst 21 år').max(99, 'Alder kan ikke være over 99'),
-    gender: z.string().min(1, 'Velg eit kjønn'),
-    seekingGender: z.string().min(1, 'Velg kven du søker'),
+    gender: z.string().min(1, 'Velg et kjønn'),
+    seekingGender: z.string().min(1, 'Velg hvem du søker'),
     height: z.preprocess(blankToUndefined, z.coerce.number().min(100).max(250).optional()),
     bodyType: optStr(),
     lifestyle: optStr(),
@@ -74,11 +74,11 @@ export type BasicProfileInput = z.infer<typeof basicProfileSchema>;
    ============================================================ */
 
 export const personlighetSchema = z.object({
-  selfDesc: z.string().min(10, 'Skriv minst 10 tegn om kven du er').max(500),
+  selfDesc: z.string().min(10, 'Skriv minst 10 tegn om hvem du er').max(500),
   energyGiver: optStr(300, 10, 'Hva gir deg energi?'),
   energyDrainer: optStr(300, 10, 'Hva tapper deg for energi?'),
   pressureReact: optStr(300, 10, 'Hvordan reagerer du under press?'),
-  quirk: optStr(200, 5, 'Skildre ein quirky eigenskap'),
+  quirk: optStr(200, 5, 'Skildre en quirky eigenskap'),
 });
 
 export type PersonlighetInput = z.infer<typeof personlighetSchema>;
@@ -127,7 +127,7 @@ export const kjærlighetsspråkSchema = z.object({
 export type KjærlighetsspråkInput = z.infer<typeof kjærlighetsspråkSchema>;
 
 /* ============================================================
-   LIVSSTIL & VERDIAR (Steg 5a)
+   LIVSSTIL & VERDIER (Steg 5a)
    ============================================================ */
 
 export const livsstilSchema = z.object({

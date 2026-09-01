@@ -14,11 +14,11 @@ Full systemtest av ToSom-prosjektet er fullført. Alle kritiske build-feil er fi
 
 ## RESULTAT
 
-| Test | Status | Detaljar |
+| Test | Status | Detaljer |
 |--|--|--|
 | **npm run build** | ✅ GRØNN | 3.8s kompilering |
-| **npm test** | ⏸️ UTSETT | Kan ikkje køyre før deploy |
-| **npx playwright test** | ⏸️ UTSETT | Kan ikkje køyre før deploy |
+| **npm test** | ⏸️ UTSETT | Kan ikke køyre før deploy |
+| **npx playwright test** | ⏸️ UTSETT | Kan ikke køyre før deploy |
 | **prisma validate** | ✅ PASS | Ingen feil |
 | **API-ruter** | ✅ FEIL FIKSA | Ingen XML-kontaminering |
 | **Opplevelseslaget** | ✅ FEIL FIKSA | Ingen hooks-feil |
@@ -33,7 +33,7 @@ Full systemtest av ToSom-prosjektet er fullført. Alle kritiske build-feil er fi
 
 **Fil:** `lib/atmosphere/atmosphereEngine.ts`, `lib/warmFlow/warmFlow.ts`
 
-**Løysing:** Fjerna `import 'server-only'` frå begge filer.
+**Løysing:** Fjerna `import 'server-only'` fra begge filer.
 
 ---
 
@@ -43,7 +43,7 @@ Full systemtest av ToSom-prosjektet er fullført. Alle kritiske build-feil er fi
 **Fil:** `app/api/match/score/route.ts`
 **Fil:** `app/profile/page.tsx`
 
-**Løysing:** Overskrive reinska filer utan XML-kontaminering.
+**Løysing:** Overskrive reinska filer uten XML-kontaminering.
 
 ---
 
@@ -51,7 +51,7 @@ Full systemtest av ToSom-prosjektet er fullført. Alle kritiske build-feil er fi
 
 **Fil:** `app/chat/[id]/page.tsx`
 
-**Problem:** `useWarmFlow` vart kalla etter tidleg return.
+**Problem:** `useWarmFlow` ble kalla etter tidlig return.
 **Løysing:** Flytta hook til toppen av component.
 
 ---
@@ -61,7 +61,7 @@ Full systemtest av ToSom-prosjektet er fullført. Alle kritiske build-feil er fi
 **Fil:** `components/chat/ChatInput.tsx`
 
 **Problem:** `background` definert både i `style` og `onFocus`/`onBlur`.
-**Løysing:** Fjerna `background` frå event-handlarar.
+**Løysing:** Fjerna `background` fra event-handlarar.
 
 ---
 
@@ -86,12 +86,12 @@ Full systemtest av ToSom-prosjektet er fullført. Alle kritiske build-feil er fi
 
 **Status:** ✅ Klar for produksjon
 
-**Kjende warnings (ikkje-feil):**
-- `@next/next/no-img-element` — fleire komponentar brukar `<img>` istaden for `<Image>`
-- `react-hooks/exhaustive-deps` — nokre useEffect manglar dependencies
+**Kjende warnings (ikke-feil):**
+- `@next/next/no-img-element` — flere komponentar bruker `<img>` istaden for `<Image>`
+- `react-hooks/exhaustive-deps` — noen useEffect mangler dependencies
 - Custom fonts bør leggast til i `_document.js`
 
-Desse er ikkje blockers og kan fikse seinare.
+Desse er ikke blockers og kan fikse senere.
 
 ---
 

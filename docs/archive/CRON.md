@@ -28,12 +28,12 @@ app/api/cron/
 **Køyr:** `GET /api/cron/matching?secret=<CRON_SECRET>`
 
 **Funksjonar:**
-1. Finn brukarar utan aktiv match
-2. Kjør matching-engine (`findBestResonance`) for kvar brukar
+1. Finn brukere uten aktiv match
+2. Kjør matching-engine (`findBestResonance`) for hver bruker
 3. Opprett match med score og explanation
 4. Oppdater lastMatchAt (24t-regel)
 
-**Tidspunkt:** Vercel cron kjører kvar dag kl. 05:00 CET
+**Tidspunkt:** Vercel cron kjører hver dag kl. 05:00 CET
 
 ---
 
@@ -44,10 +44,10 @@ app/api/cron/
 **Funksjonar:**
 1. Hent aktive journeys
 2. Oppdater phase (EARLY → BUILDING_TRUST → DEEPER → CHECKIN)
-3. Generer dagleg innhald (refleksjon, prompt, oppgåve)
+3. Generer dagleg innhold (refleksjon, prompt, oppgåve)
 4. Update resonance
 
-**Tidspunkt:** Vercel cron kjører kvar dag kl. 07:00 CET
+**Tidspunkt:** Vercel cron kjører hver dag kl. 07:00 CET
 
 ---
 
@@ -92,13 +92,13 @@ curl 'http://localhost:3000/api/cron/journey?secret=din-cron-secret'
 
 ### "Ugyldig secret"
 - Bruk korrekt `?secret=` parameter ved manuell testing
-- I produksjon kjører Vercel cron automatisk utan manual kall
+- I produksjon kjører Vercel cron automatisk uten manual kall
 
 ---
 
 ## HUSK
 
-- Cron må vere autentisert (CRON_SECRET)
+- Cron må være autentisert (CRON_SECRET)
 - Ingen user-facing feilmeldingar
 - Rate limit på cron-kallar
-- Matching berre éin gong per 24t per brukar
+- Matching bare éin gong per 24t per bruker

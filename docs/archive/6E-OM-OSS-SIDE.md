@@ -6,13 +6,13 @@
 - **Bygg:** ✅ SUKSESS (1.32 kB, static)
 
 ## Oppsummering
-Oppretta undersida "Om oss" med team og verdiar.
+Oppretta undersida "Om oss" med team og verdier.
 
 ## Struktur
 1. **Hero** — "Om ToSom" med kort introduksjon
-2. **Våre verdiar** — 4 verdiar (Ro, Verdighet, Forskning, Privatliv)
+2. **Våre verdier** — 4 verdier (Ro, Verdighet, Forskning, Privatliv)
 3. **Teamet** — ToSom-teamet
-4. **CTA** — "Vil du vere ein del av det?"
+4. **CTA** — "Vil du være en del av det?"
 5. **Footer**
 
 ## Testing

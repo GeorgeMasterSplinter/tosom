@@ -128,7 +128,7 @@ export default function ChatRoom({
     fetchSession();
   }, [fetchSession]);
 
-  // Meldingar
+  // Meldinger
   const { messages, loading, error, refresh } = useChatMessages(conversationId, state.userId);
 
   // Send melding

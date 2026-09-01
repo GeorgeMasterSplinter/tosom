@@ -2,10 +2,10 @@
  * ToSom — Setup Chat Test Data
  * 
  * Lagar alt som trengst for å teste chat med ekte data:
- *   1. To brukarar (testA@test.com, testB@test.com)
- *   2. Éin match mellom dei
+ *   1. To brukere (testA@test.com, testB@test.com)
+ *   2. Éin match mellom de
  *   3. Éin conversation
- *   4. Fleire meldingar i conversationen
+ *   4. Flere meldinger i conversationen
  *   5. JourneyProgress for begge
  * 
  * Bruk: npx ts-node scripts/chat/setup-test-data.ts
@@ -32,7 +32,7 @@ function log(section: string, message: string) {
 async function setup() {
   log("START", "Setter opp chat test-data...");
 
-  // ─── 1. OPPRETT BRUKARAR ───────────────────────────────────────────
+  // ─── 1. OPPRETT BRUKERE ───────────────────────────────────────────
 
   const emailA = "test-a@tosom.com";
   const emailB = "test-b@tosom.com";
@@ -54,16 +54,16 @@ async function setup() {
             firstName: "Test",
             lastName: "A",
             age: 28,
-            bio: "Roleg og naturglad.",
+            bio: "Rolig og naturglad.",
             interests: ["vandring", "bøker", "natur"],
-            matchTags: ["roleg", "dyp", "naturliv"],
+            matchTags: ["rolig", "dyp", "naturliv"],
           },
         },
       },
     });
-    log("BRUKAR A", `Oppretta ${emailA} (id: ${userA.id})`);
+    log("BRUKER A", `Oppretta ${emailA} (id: ${userA.id})`);
   } else {
-    log("BRUKAR A", `Finnes allereie: ${emailA} (id: ${userA.id})`);
+    log("BRUKER A", `Finnes allerede: ${emailA} (id: ${userA.id})`);
   }
 
   if (!userB) {
@@ -81,15 +81,15 @@ async function setup() {
             lastName: "B",
             age: 26,
             bio: "Nysgjerrig og empatisk.",
-            interests: ["musikk", "kaffe", "samtalar"],
+            interests: ["musikk", "kaffe", "samtaler"],
             matchTags: ["empati", "åpen", "reflekterande"],
           },
         },
       },
     });
-    log("BRUKAR B", `Oppretta ${emailB} (id: ${userB.id})`);
+    log("BRUKER B", `Oppretta ${emailB} (id: ${userB.id})`);
   } else {
-    log("BRUKAR B", `Finnes allereie: ${emailB} (id: ${userB.id})`);
+    log("BRUKER B", `Finnes allerede: ${emailB} (id: ${userB.id})`);
   }
 
   // ─── 2. SLETT GAMMAL MATCH/CONVERSATION (valfritt) ──────────────────
@@ -104,7 +104,7 @@ async function setup() {
   });
 
   if (existingMatch) {
-    // Slett meldingar først
+    // Slett meldinger først
     await prisma.message.deleteMany({ where: { conversationId: existingMatch.id } });
     await prisma.conversation.deleteMany({ where: { matchId: existingMatch.id } });
     await prisma.match.delete({ where: { id: existingMatch.id } });
@@ -146,7 +146,7 @@ async function setup() {
 
   log("CONVERSATION", `Oppretta (id: ${conversation.id})`);
 
-  // ─── 5. OPPRETT MELDINGAR ──────────────────────────────────────────
+  // ─── 5. OPPRETT MELDINGER ──────────────────────────────────────────
 
   const now = Date.now();
   const hour = 3600000;
@@ -177,9 +177,9 @@ async function setup() {
     })
   );
 
-  log("MELDINGAR", `Oppretta ${createdMessages.length} meldingar`);
+  log("MELDINGER", `Oppretta ${createdMessages.length} meldinger`);
 
-  // ─── 6. OPPRETT JOURNEY PROGRESS FOR BRUKAR A ─────────────────────
+  // ─── 6. OPPRETT JOURNEY PROGRESS FOR BRUKER A ─────────────────────
 
   let journey = await prisma.journeyProgress.findUnique({ where: { userId: userAId } });
   if (!journey) {
@@ -193,7 +193,7 @@ async function setup() {
     });
     log("JOURNEY A", `Oppretta — dag ${journey.day} av 30`);
   } else {
-    log("JOURNEY A", `Finnes allereie — dag ${journey.day}`);
+    log("JOURNEY A", `Finnes allerede — dag ${journey.day}`);
   }
 
   // ─── OPPSUMMERING ──────────────────────────────────────────────────
@@ -203,18 +203,18 @@ ${C.bold}═══════════════════════�
 ${C.bold}  ✅ CHAT TEST DATA KLAR!${C.reset}
 ${C.dim}═══════════════════════════════════════${C.reset}
 
-  Brukar A: ${C.gold}${userA.email}${C.reset} (id: ${userA.id})
-  Brukar B: ${C.gold}${userB.email}${C.reset} (id: ${userB.id})
+  Bruker A: ${C.gold}${userA.email}${C.reset} (id: ${userA.id})
+  Bruker B: ${C.gold}${userB.email}${C.reset} (id: ${userB.id})
   
   Match:    ${C.gold}${match.id}${C.reset} (score: ${match.score}%)
   Convers.: ${C.gold}${conversation.id}${C.reset}
-  Meldingar: ${createdMessages.length}
+  Meldinger: ${createdMessages.length}
 
   For å teste chat:
     1. Logg inn som ${userA.email}
     2. Gå til /dashboard eller /match
     3. Aksepter matchen → redirect til /chat/${conversation.id}
-    4. Sjå meldingane!
+    4. Se meldingane!
 
 ${C.bold}═══════════════════════════════════════${C.reset}
   `);

@@ -1,6 +1,6 @@
 // lib/matching/dimensions.ts — FORSKNINGSMOTOR F-7
 //
-// Éin funksjon per dimensjon. Alle returnerer 0–100 (høgare = dypare resonans).
+// Éin funksjon per dimensjon. Alle returnerer 0–100 (høgare = dypere resonans).
 // Reglane kommer fra FORSKNINGSMOTOR-v1.0.md §8 (Kompatibilitetsreglene).
 //
 // Likhet er ikke alltid bra — reglene er bevisst asymmetriske.
@@ -88,7 +88,7 @@ export function scorePersonalityCompat(
   const openDiff = Math.abs(a.openness - b.openness);
   const openness = clamp(100 - openDiff * 20, 0, 100);
 
-  // Vektet gjennomsnitt (jamn vekt på dei 5 trekk).
+  // Vektet gjennomsnitt (jamn vekt på de 5 trekk).
   return Math.round(
     (neuroticism + agreeableness + conscientiousness + extraversion + openness) / 5
   );
@@ -180,12 +180,12 @@ export function scoreCommunicationCompat(
 /* ─────────────────────────────────────────────────────────────
    LIVSSITUASJON (vekt 0,10)
    Praktisk kompatibilitet. Tolter data fra Profilen defensivt —
-   manglar data gir nøytral 50.
+   mangler data gir nøytral 50.
    ───────────────────────────────────────────────────────────── */
 
 /**
- * Trekk eit felt fra ei profil som kan være Prisma-Json, Objekt, eller flate.
- * Sjekkar flere mogelege stadar sidan forma varierar mellom engine.ts og cron.
+ * Trekk et felt fra ei profil som kan være Prisma-Json, Objekt, eller flate.
+ * Sjekkar flere mulige stadar sidan forma varierar mellom engine.ts og cron.
  */
 function pickField(profile: Record<string, unknown>, ...keys: string[]): string | null {
   for (const k of keys) {

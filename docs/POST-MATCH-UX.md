@@ -40,7 +40,7 @@ match-kort, chat-header og hilsener.
 - **Reisekalender markerer dag 1 på dag 0** — «Tellingen starter når man har
   blitt matchet»; før var ingen dag markert før begge hadde vært innom.
 - **Fasegrenser samanslått med motoren:** dashboardet hadde egne grenser
-  (1–7 / 8–14 / 15–21 / 22–30) medan `lib/journey/engine.ts`
+  (1–7 / 8–14 / 15–21 / 22–30) mens `lib/journey/engine.ts`
   (PHASE_CONFIGS — kjelder for cron, milestones og oppgave-utvelging) bruker
   1–14 / 15–21 / 22–25 / 26–30. Koden vinn: dashboardet bruker no motorens
   grenser og fasenamn (Bli kjent / Bygger tillit / Djupere samvær / Refleksjon).
@@ -50,34 +50,34 @@ match-kort, chat-header og hilsener.
 ## 3. Chat-header
 
 - Tilbakeknappen: pille med kun pil (←), `aria-label` bevart.
-- «Dag X av 30» fjerna — i staden **eitt symbol per reisesteg**:
+- «Dag X av 30» fjerna — i staden **ett symbol per reisesteg**:
   🌱 Bli kjent · 🤝 Bygger tillit · 💫 Djupere samvær · 🌙 Refleksjon.
-  Fasen kjem frå `getPhaseForDay()` (motoren), ikkje lausaste tall i headeren;
+  Fasen kommer fra `getPhaseForDay()` (motoren), ikke lausaste tall i headeren;
   dag 0 tel som første steg.
 
 ## 4. Spørsmål/oppgave — utsending
 
 `BliKjentPanel.tsx` og `OppgaverPanel.tsx`:
 
-- «Send til partner?»-boksen flytta **frå inni den rullbare lista til fast i
-  botnen av panelet** — vises så snart eit spørsmål/én oppgave er valgt,
-  uavhengig av kvar i lista det ligg. Panelet utverknar 480px → 640px medan
+- «Send til partner?»-boksen flytta **fra inni den rullbare lista til fast i
+  botnen av panelet** — vises så snart et spørsmål/én oppgave er valgt,
+  uavhengig av hver i lista det ligg. Panelet utverknar 480px → 640px mens
   boksen er synleg (same behandling for alle kategoriar).
 - Innhaldet i boksen er uendra (spørsmålstekst, ✨ Send / 🎲 Send, Avbryt).
 
-## 5. Bobler — kjelde-etikett («💎 Bli kjent» / «📋 Oppgave»)
+## 5. Bobler — kilde-etikett («💎 Bli kjent» / «📋 Oppgave»)
 
-**Hva var feil:** `source` blei allereie lagra i DB og returnert frå
+**Hva var feil:** `source` blei allerede lagra i DB og returnert fra
 `GET /api/chat/messages` (skalart-felt på Message — heile rekka vert returnert
 uten select). Etiketten forsvann likevel fordi:
 
-1. Optimistisk melding (eigen, straks etter send) mangla `source` i metadata.
-2. Polling-dedupen (`lastMsgIdRef`) tidleg-returra, så lista aldri gjekk
-   attende mot serveren for å hente feltet før neste sidebesøk.
+1. Optimistisk melding (egen, straks etter send) mangla `source` i metadata.
+2. Polling-dedupen (`lastMsgIdRef`) tidlig-returra, så lista aldri gikk
+   tilbake mot serveren for å hente feltet før neste sidebesøk.
 
 **Fiksa:** `ChatContext.tsx` set `source` i metadata både på den optimistiske
 meldingen og når server-svaret byttast inn → etiketten vises med en gang for
-sender og vises ved lasting for mottakar (var allereie dekt av server-responsen).
+sender og vises ved lasting for mottakar (var allerede dekt av server-responsen).
 
 ## 6. Moods (verifisert — ingen kodeendring)
 
@@ -85,15 +85,15 @@ sender og vises ved lasting for mottakar (var allereie dekt av server-responsen)
 
 - A set mood → B ser **same** mood ved neste polling
 - B bytter mood → A ser B sin (motretning — begge kan bytte, siste skriv vinn)
-- Ikkje-deltakar → 403, ikkje-delt → 400, ingen overflødig DB-skriving
+- Ikke-deltakar → 403, ikke-delt → 400, ingen overflødig DB-skriving
 
 Delt-mood-oppførselen er altså testa i begge retningar. Om du likevel så
-ulike moods for dei to, var det sannsynlegvis polling-tid (3 s) eller
+ulike moods for de to, var det sannsynlegvis polling-tid (3 s) eller
 mood-pulse-modusen — verifiser live i to nettlesarar (testA/testB).
 
 ## 7. Bilde-deling (lås for dag 15)
 
-Bildeknappen er låst til `journeyDay >= 15` (designval, ikkje bug). For å
+Bildeknappen er låst til `journeyDay >= 15` (designval, ikke bug). For å
 teste R2-flyten før dag 15 i **dev** (aldri mot prod):
 
 ```bash
@@ -105,7 +105,7 @@ WHERE "id" = '<conversationId>';
 SQL
 ```
 
-Deretter: send bilete i begge retningar → skal sjåast som bobsler i begge
+Deretter: send bilde i begge retninger → skal ses som bobbler i begge
 nettlesarar, og `GET /api/chat/images/[id]` skal returnere signert R2-URL.
 
 ## Endra filer (11)
@@ -122,7 +122,7 @@ nettlesarar, og `GET /api/chat/images/[id]` skal returnere signert R2-URL.
 | `app/chat/components/OppgaverPanel.tsx` | fast send-linje |
 | `app/chat/context/ChatContext.tsx` | `myName`, sender-navn, `source` i optimistisk melding |
 | `app/chat/[id]/ChatPageClient.tsx` | henter + rår `myName` til provider |
-| `app/chat/components/MessageBubble.tsx` | eigen namnlinje (høyre) |
+| `app/chat/components/MessageBubble.tsx` | egen namnlinje (høyre) |
 
 ## Verifisering
 
@@ -133,17 +133,17 @@ nettlesarar, og `GET /api/chat/images/[id]` skal returnere signert R2-URL.
 - E2E (krev lokal dev-server + dev-login): kjør
   `npx playwright test e2e/tests/chat.spec.ts e2e/tests/match.spec.ts e2e/tests/matching-journey.spec.ts`
 - Live-sjekkliste (to nettlesarar, testA/testB): navn, åpenbaring 1 gang,
-  moods i begge retningar, send-linje utan skrolle, bilda etter dag-15-UPDATE.
+  moods i begge retningar, send-linje uten skrolle, bilda etter dag-15-UPDATE.
 
 ---
 
 ## Bølgje 2 (31.08) — Presence v2 (DB-basert) + rolegare chat-UX
 
 **Problemet:** online-punktet og «Skriver...» var døde i produksjon.
-`lib/presence/presenceState.ts` brukte ein in-memory `Map` — på Vercel har
-kvar funksjonskall eige isolerte og kortlevde minne, så parten sin
+`lib/presence/presenceState.ts` brukte en in-memory `Map` — på Vercel har
+hver funksjonskall eige isolerte og kortlevde minne, så parten sin
 `GET /api/presence/get/[id]` såg aldri den andre si `PATCH`. I tillegg
-sendte ChatInput éin `isTyping:true`-POST per tastetrykk (ingen throttling),
+sendte ChatInput én `isTyping:true`-POST per tastetrykk (ingen throttling),
 og Pusher-eventet `typing` (allerede triggera av `/api/chat/typing`) var
 aldri binda på klienten.
 
@@ -154,16 +154,16 @@ aldri binda på klienten.
 | DB | `User.lastSeenAt` + `User.typingUntil` (migrasjon `20260831175820_presence_last_seen_typing`) |
 | `lib/presence/presenceState.ts` | Omskrive til Prisma: `setOnline` = hjartetikk, `setTyping` (TTL 5 s) / `clearTyping`, `getPresence` (online < 90 s). `setOffline` er no-op (mangel på tikking = offline) |
 | `PATCH /api/presence/update` | `isOnline:true` = hjartetikk, `isTyping:true/false` = sett/rydd. `isOnline:false` = no-op |
-| `GET /api/presence/get/[id]` | Les frå DB; ukjend bruker = offline-default |
-| `ChatContext` | Binda Pusher-eventet `typing` → `partnerTyping` (4 s timeout; ignorerar eigne event). Pusher = umiddelbart, polling = fallback |
-| `ChatContainer` (ChatInput) | Hjartetikk: ved sideåpning, kvar 30. s, ved synlighetsskifte. Typing throttla: første tast + maks 1 per 2. s, stopp etter 3 s i ro. Død `PresenceIndicator` fjerna; `TypingIndicator` («Skriver...»-boble) aktiverast via `partnerTyping` |
+| `GET /api/presence/get/[id]` | Les fra DB; ukjend bruker = offline-default |
+| `ChatContext` | Binda Pusher-eventet `typing` → `partnerTyping` (4 s timeout; ignorerar egne event). Pusher = umiddelbart, polling = fallback |
+| `ChatContainer` (ChatInput) | Hjartetikk: ved sideåpning, hver 30. s, ved synlighetsskifte. Typing throttla: første tast + maks 1 per 2. s, stopp etter 3 s i ro. Død `PresenceIndicator` fjerna; `TypingIndicator` («Skriver...»-boble) aktiverast via `partnerTyping` |
 | `MessageBubble` | Navn + tid flytta **inni** bobla (éi metalinje, 10px, under teksten). Ytre `Timestamp`-komponent og namnelinjer fjerna |
-| `ChatHeader` | Alder + avstand fjerna (står på match-kortet i dashboard). Online-punkt: 10px med glød + diskret puls (gull medan parten skriver) |
+| `ChatHeader` | Alder + avstand fjerna (står på match-kortet i dashboard). Online-punkt: 10px med glød + diskret puls (gull mens parten skriver) |
 | Død kode | `lib/presence/presenceEngine.ts` sletta (aldri importert) |
 
 **Semantikk:** «Online» = hjartetikk under 90 s gammalt. «Skriver» =
 `typingUntil` i framtid (settest av klienten, utgår etter 5 s). Alt er
-best-effort: presence-feil swalgarst i klienten og rører ikkje chatten.
+best-effort: presence-feil swalgarst i klienten og rører ikke chatten.
 
 **Verifisering:** språkvakt grønn (bokmål), `tsc` 0, jest 383/384 (44 suiter,
 inkl. ny `__tests__/presence-v2.test.ts` med 17 kontrakstester), prod-build OK.
@@ -178,13 +178,13 @@ forsvinn etter ~4 s. A lukkar fanen → B: punkt blir grått etter ~90 s.
 
 CI si `prisma migrate deploy`-steg (ci.yml) bruker **repo-env**
 `DATABASE_URL` som peiker på annan DB enn prod — ei grønn CI-run seier
-IKKJE at prod-DB er migrert. Etter deployen `e550849`
-feila prod (manglande kolonner → innlogging/dashboard/onboarding) til
-migrasjonen vart pålagt manuelt via engangs-ruta
+IKKE at prod-DB er migrert. Etter deployen `e550849`
+feila prod (manglende kolonner → innlogging/dashboard/onboarding) til
+migrasjonen ble pålagt manuelt via engangs-ruta
 `/api/db/apply-presence-migration` (sletta etter bruk).
 
 **Prosess fram til permanent fix er på plass:**
-1. Etter kvar ny migrasjon: pålegg ho mot prod før/med ein deploy.
+1. Etter hver ny migrasjon: pålegg ho mot prod før/med en deploy.
 2. Alternativ permanent fix: legg inn prod-DB-URL som CI-secret og peik
-   eitt `migrate deploy`-steg mot det (eller kjør deploy frå Vercel
+   ett `migrate deploy`-steg mot det (eller kjør deploy fra Vercel
    pre-deploy hook).

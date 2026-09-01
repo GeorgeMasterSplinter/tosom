@@ -227,7 +227,7 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
         Svarene dine hjelper oss å finne noen som passer din hverdagsrytme.
       </p>
 
-      {/* Knappar — Back + CTA */}
+      {/* Knapper — Back + CTA */}
       <div className="mt-8 space-y-4">
         <BackButton onClick={onBack} />
         <PremiumCTAButton

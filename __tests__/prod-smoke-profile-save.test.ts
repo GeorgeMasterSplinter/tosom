@@ -4,13 +4,13 @@
  * Bevisar slutt-til-slutt at Bug 1 (500 ved onboarding-lagring) er borte i
  * produksjon — køyrer den reelle rute-hendleren mot produksjons-DB-en med
  * nøyaktig det payloadet OnboardingFlow sender. Opprettar éin midlertidig
- * brukar og ryddar opp i afterAll (rører ingen anna data).
+ * bruker og ryddar opp i afterAll (rører ingen anna data).
  *
- * SIKKER: slåast berre på eksplisitt, og neikir å køyre mot lokal DB:
+ * SIKKER: slåast bare på eksplisitt, og neikir å køyre mot lokal DB:
  *   DATABASE_URL=$(grep '^DATABASE_URL=' .env.prod | cut -d'"' -f2) \
  *   TOSOM_SMOKE_PROD=1 npx jest prod-smoke --runInBand
  *
- * Utan TOSOM_SMOKE_PROD=1 blir testen hoppa over (normale `npm test`-kjøringar).
+ * Uten TOSOM_SMOKE_PROD=1 blir testen hoppa over (normale `npm test`-kjøringar).
  */
 
 const SMOKE_ACTIVE = process.env.TOSOM_SMOKE_PROD === '1';
@@ -57,7 +57,7 @@ describeProd('PROD-SMOKE: POST /api/profile/setup (Bug 1-verifisering)', () => {
   });
 
   afterAll(async () => {
-    // Rydd opp: profil, metrik-k-logs frå denne køyren, og brukaren sjølv.
+    // Rydd opp: profil, metrik-k-logs frå denne køyren, og brukaren selv.
     try {
       await prisma.profile.deleteMany({ where: { userId } });
       await prisma.systemLog.deleteMany({
@@ -69,12 +69,12 @@ describeProd('PROD-SMOKE: POST /api/profile/setup (Bug 1-verifisering)', () => {
     }
     const usersAfter = await prisma.user.count();
     // eslint-disable-next-line no-console
-    console.log(`[prod-smoke] Brukarar før/etter: ${usersBefore}/${usersAfter} (må vere like)`);
+    console.log(`[prod-smoke] Brukere før/etter: ${usersBefore}/${usersAfter} (må være like)`);
     await prisma.$disconnect();
   });
 
   // Nøyaktig produksjonspayload (frå OnboardingFlow / seed-skriptet):
-  // age som streng, berre 5 BFI-items, Oslo 0150.
+  // age som streng, bare 5 BFI-items, Oslo 0150.
   const prodBody = {
     basic: {
       identityName: 'Kari Solberg',

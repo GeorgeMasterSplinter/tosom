@@ -59,8 +59,8 @@
 
 | Token | Verdi | Bruk |
 |-------|-------|------|
-| `--ts-radius-sm` | `8px` | Små knappar |
-| `--ts-radius-md` | `12px` | Knappar, inputs |
+| `--ts-radius-sm` | `8px` | Små knapper |
+| `--ts-radius-md` | `12px` | Knapper, inputs |
 | `--ts-radius-lg` | `16px` | Kort border-radius |
 | `--ts-radius-xl` | `20px` | Store kort, panel |
 | `--ts-radius-2xl` | `24px` | Modal, glass panel |
@@ -129,7 +129,7 @@ box-shadow: var(--ts-shadow-lg);
 
 ## 4. Standard komponent-stil
 
-### Knappar (Buttons)
+### Knapper (Buttons)
 
 ```css
 padding: 12px 20px;
@@ -163,14 +163,14 @@ background: var(--ts-glass-bg);
 
 ---
 
-## 5. Kva skal unngå
+## 5. Hva skal unngå
 
 ### Inline random px-verdier
 
 Desse skal erstattast med token:
 
 ```css
-/* IKKJE: */
+/* IKKE: */
 padding: 17px;
 border-radius: 18px;
 font-size: 22px;
@@ -190,14 +190,14 @@ gap: var(--ts-spacing-sm);        /* 8px */
 1. **Brukk token for alt** — ingen inline px-verdier i komponentar
 2. **Enheitleg font-size:** Brukk `heading-xl`, `heading-l`, `heading-m`, `body`, `small`
 3. **Enheitleg spacing:** Brukk `spacing-lg` (24px), `spacing-xl` (32px), `spacing-2xl` (48px)
-4. **Enheitleg radius:** Brukk `ts-lg` (16px) for kort, `ts-md` (12px) for knappar
+4. **Enheitleg radius:** Brukk `ts-lg` (16px) for kort, `ts-md` (12px) for knapper
 5. **Enheitleg glassmorphism:** Brukk `.ts-glass` eller `.ts-glass-strong`
 
 ---
 
 ## 7. Filreferanse
 
-| Fil | Innhald |
+| Fil | Innhold |
 |-----|---------|
 | `styles/globals.css` | CSS-variablar + utility-klassar |
 | `tailwind.config.js` | Tailwind-extending med tokens |

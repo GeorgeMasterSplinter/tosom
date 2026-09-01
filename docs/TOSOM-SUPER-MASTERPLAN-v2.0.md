@@ -19,7 +19,7 @@ Hver seksjon er merket:
 
 Konseptet er ikke endret i dette dokumentet. Det er beskrevet, verifisert og målt mot koden.
 
-**Hva endret seg fra v1.0:** Ingen konseptendringer. Alle blokkere (B-1…B-7) er lukket, avvikene A-1…A-4 er rettet (M-1…M-6), teknisk gjeld G-1…G-5 er ryddet, matching-motoren fikk to nye bidireksjonelle dealbreakere (kjønn og alder, WP1), og onboarding fikk isolert draft-lagring med prefill (WP2). Se §18 for endringshistorikk.
+**Hva endret seg fra v1.0:** Ingen konseptendringer. Alle blokkere (B-1…B-7) er lukket, avvikene A-1…A-4 er rettet (M-1…M-6), teknisk gjelder G-1…G-5 er ryddet, matching-motoren fikk to nye bidireksjonelle dealbreakere (kjønn og alder, WP1), og onboarding fikk isolert draft-lagring med prefill (WP2). Se §18 for endringshistorikk.
 
 ---
 
@@ -59,7 +59,7 @@ Aldersgrensen (21+, invariant I-14) håndheves i `config/legal.ts` (`MIN_AGE = 2
 Tokens i `config/design-tokens.ts` og `tailwind.config.js`. Glassmorphism gjennomgående i `components/ui/`.
 
 ### 🔴 AVVIK — mindre
-Kodekommentarer inneholder nynorsk-former («berre», «kjelde», «frå», «einaste») i deler av `lib/matching/`, `config/matching.ts` og `lib/journey/engine.ts`. Regelen ble utvidet 2026-08-24 (bokmål overalt, se `ACT-PIPELINE` §5.5). Rydd ved neste berøring av filen — ikke en egen oppgave.
+Kodekommentarer inneholder nynorsk-former («bare», «kilde», «fra», «einaste») i deler av `lib/matching/`, `config/matching.ts` og `lib/journey/engine.ts`. Regelen ble utvidet 2026-08-24 (bokmål overalt, se `ACT-PIPELINE` §5.5). Rydd ved neste berøring av filen — ikke en egen oppgave.
 
 ---
 
@@ -379,7 +379,7 @@ Avvikene fra PLATTFORMDIAGNOSE v2.0 er rettet via MATCHING-TUNING:
 | A-3 | To resonansterskler | ✅ M-1 — `resonanceLevel` er kanonisk, `unifiedScorer` importerer |
 | A-4 | Permanent sperreliste | ✅ M-4 — differensiert: permanent kun ved `blocked`/`early_exit` |
 
-Teknisk gjeld G-1 (døde motorer), G-2 (kø-ventil), G-3 (`ai/memory.json`), G-4 (rate-limit), G-5 (dokumentasjon) er ryddet. Levende tilstand: **`ACT-STATE.json`**.
+Teknisk gjelder G-1 (døde motorer), G-2 (kø-ventil), G-3 (`ai/memory.json`), G-4 (rate-limit), G-5 (dokumentasjon) er ryddet. Levende tilstand: **`ACT-STATE.json`**.
 
 ## 15. Rekkefølge — hva som gjenstår
 

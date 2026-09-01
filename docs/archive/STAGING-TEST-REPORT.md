@@ -8,7 +8,7 @@
 
 ## OVERSIKT
 
-Dette dokumentet inneheld guide for å setje opp og teste ToSom staging-miljøet, samt testrapport etter staging-deploy.
+Dette dokumentet inneholder guide for å sette opp og teste ToSom staging-miljøet, samt testrapport etter staging-deploy.
 
 ---
 
@@ -21,7 +21,7 @@ Dette dokumentet inneheld guide for å setje opp og teste ToSom staging-miljøet
 3. Namn: `staging`
 4. Preview URL: `https://staging.tosom.vercel.app`
 
-### Environment Variables (kopier frå production, med staging-verdiar)
+### Environment Variables (kopier fra production, med staging-verdier)
 
 | Variable | Verdi | Merknad |
 |---|---|--|
@@ -114,10 +114,10 @@ curl -X POST https://staging.tosom.vercel.app/api/auth/login
 | Identity-fase | ⏳ | |
 | Livssituasjon | ⏳ | |
 | Livsstil | ⏳ | |
-| Personlegdom | ⏳ | |
+| Personlighet | ⏳ | |
 | Relasjonsstil | ⏳ | |
 | Kommunikasjon | ⏳ | |
-| Intimitet & nærheit | ⏳ | |
+| Intimitet & nærhet | ⏳ | |
 | Framtidsønsker | ⏳ | |
 | Oppsummering | ⏳ | |
 | Stepper fungerer | ⏳ | |
@@ -139,7 +139,7 @@ curl -X POST https://staging.tosom.vercel.app/api/auth/login
 | Journey startar | ⏳ | |
 | Dag 1 tema | ⏳ | |
 | Refleksjonsspørsmål | ⏳ | |
-| Oppgåver | ⏳ | |
+| Oppgaver | ⏳ | |
 | Resonans måling | ⏳ | |
 | Progresjon | ⏳ | |
 
@@ -179,7 +179,7 @@ curl -X POST https://staging.tosom.vercel.app/api/auth/login
 | Seksjon | Status | Merknad |
 |---|---|--|
 | System helse | ⏳ | |
-| Brukar-innsikt | ⏳ | |
+| Bruker-innsikt | ⏳ | |
 | Moderering | ⏳ | |
 | Freeze user | ⏳ | |
 | Unfreeze user | ⏳ | |
@@ -192,13 +192,13 @@ curl -X POST https://staging.tosom.vercel.app/api/auth/login
 
 ### Funn
 
-| # | Kva | Kvar | Alvor | Fikse status |
+| # | Hva | Hver | Alvor | Fikse status |
 |---|---|---|---|---|
 | 1 | — | — | — | — |
 
 ### Observasjonar
 
-| # | Kva | Kvar | Prioritet |
+| # | Hva | Hver | Prioritet |
 |---|---|---|---|
 | 1 | — | — | — |
 
@@ -212,8 +212,8 @@ curl -X POST https://staging.tosom.vercel.app/api/auth/login
 - [ ] Matching fungerer
 - [ ] Journey-fase oppdaterer
 - [ ] Chat realtids-funksjonell
-- [ ] AI-knappar returnerer forslag
-- [ ] Admin dashboard visar data
+- [ ] AI-knapper returnerer forslag
+- [ ] Admin dashboard viser data
 
 ### Teknisk
 
@@ -250,7 +250,7 @@ curl -X POST https://staging.tosom.vercel.app/api/auth/login
 
 ## NESTE STEG ETTER STAGING
 
-### Om alt testar grønt
+### Om alt tester grønt
 
 1. Opprett main branch deploy
 2. Kopier environment variablar til production
@@ -258,7 +258,7 @@ curl -X POST https://staging.tosom.vercel.app/api/auth/login
 4. Aktiver cron-jobbar
 5. Deploy til produksjon
 
-### Om det finst feil
+### Om det finnes feil
 
 1. Logg alle feil i "Funn"-tabellen
 2. Fiks i staging først
@@ -289,4 +289,4 @@ git push origin main
 **Dato:** 30. juni 2026
 **Status:** 🟡 KLAR FOR STAGING DEPLOY
 
-**Neste steg:** Følg oppgåve 1-4 ovanfor for å setje opp og teste staging.
+**Neste steg:** Følg oppgåve 1-4 ovanfor for å sette opp og teste staging.

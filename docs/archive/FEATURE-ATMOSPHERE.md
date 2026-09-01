@@ -2,7 +2,7 @@
 
 **Oppdatert:** 30. juni 2026
 **Versjon:** 1.0
-**Status:** 🟡 Backend-logikk ferdig, frontend-komponent manglar
+**Status:** 🟡 Backend-logikk ferdig, frontend-komponent mangler
 
 ---
 
@@ -11,7 +11,7 @@
 Atmosphere Layer forsterkar kjensla av reisa med:
 - **10 ambient preset** (midnight-gold, dawn-blue, etc.)
 - **Mood-basert fargepalett** med sesong-overriding
-- **Progressiv disclosing** (innhald avsløyst gradvis)
+- **Progressiv disclosing** (innhold avsløyst gradvis)
 - **Ambient particles** (flytande partiklar i bakgrunn)
 - **Gentle haptic feedback** (valfritt)
 - **Seasonal theming** (sesong-basert teming)
@@ -49,11 +49,11 @@ Sesongen override glow-farga automatisk.
 
 ## FARGEPALLAR (10)
 
-Kvar preset har eigen full fargepalett:
+Hver preset har egen full fargepalett:
 - Bakgrunn (primær + sekundær)
 - Overflate (glassmorphism)
 - Kantar
-- Hovud- og sekundærtekst
+- Hoved- og sekundærtekst
 - Gull-aksent + hover
 - Glowing
 

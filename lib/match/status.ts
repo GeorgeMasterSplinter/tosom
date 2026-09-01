@@ -31,12 +31,12 @@ export function updateProfileFromResonance(profile: Partial<DynamicProfileData>,
   if (resonanceScore >= 80) { resonanceHighlight = 'Djuk resonans'; tags = ['Djuk resonans', 'Høg trygghet']; }
   else if (resonanceScore >= 60) { resonanceHighlight = 'Sterk resonans'; tags = ['Sterk resonans', 'God trygghet']; }
   else if (resonanceScore >= 40) { resonanceHighlight = 'Moder resonans'; tags = ['Moder resonans']; }
-  else { resonanceHighlight = 'Tidleg resonans'; tags = ['Tidleg resonans']; }
+  else { resonanceHighlight = 'Tidlig resonans'; tags = ['Tidlig resonans']; }
   return { ...profile, resonanceHighlight, tags: [...(profile.tags || []), ...tags], matchScore: resonanceScore, lastUpdated: new Date().toISOString() };
 }
 
 export function updateProfileFromWarm(profile: Partial<DynamicProfileData>, warmScore: number, warmLevel: string): Partial<DynamicProfileData> {
-  const warmthLabels: Record<string, string> = { 'Kald': 'Ennå kjølig', 'Lukten': 'Ein svak lukte', 'Varm': 'Varmen kommer', 'Glødande': 'Gløden øker', 'Ekko': 'Varmen ekkoer' };
+  const warmthLabels: Record<string, string> = { 'Kald': 'Ennå kjølig', 'Lukten': 'En svak lukte', 'Varm': 'Varmen kommer', 'Glødande': 'Gløden øker', 'Ekko': 'Varmen ekkoer' };
   return { ...profile, warmthLevel: warmLevel, resonanceHighlight: warmthLabels[warmLevel] || 'Utviklar seg', lastUpdated: new Date().toISOString() };
 }
 

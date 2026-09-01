@@ -4,7 +4,7 @@
  * Chat føles levande og varm med:
  *   - Message bubble-animasjonar
  *   - Typing pulse
- *   - Resonance-glow på meldingar
+ *   - Resonance-glow på meldinger
  *   - Progressiv tekst-avdekking
  *   - Mood-basert chat-miljø
  * 
@@ -165,7 +165,7 @@ export function determineChatMood(conversationContext: {
   const hoursSinceLastMessage = (Date.now() - conversationContext.lastMessageTime.getTime()) / (1000 * 60 * 60)
   const journeyPhase = conversationContext.journeyPhase
 
-  // Glede: mange meldingar raskt etter hvarandre
+  // Glede: mange meldinger raskt etter hvarandre
   if (conversationContext.messageCount > 20 && hoursSinceLastMessage < 1) {
     return 'joyful'
   }
@@ -181,7 +181,7 @@ export function determineChatMood(conversationContext: {
     return 'warm'
   }
 
-  // Mild: tidleg i reisa
+  // Mild: tidlig i reisa
   if (journeyPhase === 'EARLY' || conversationContext.messageCount < 10) {
     return 'gentle'
   }

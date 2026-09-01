@@ -31,14 +31,14 @@ Premium Chat Animations er integrert med tre nye komponentar:
 
 | Funksjon | Beskrivelse |
 |--|--|
-| **Bubble-animasjon** | 5 typar (pop-in, slide-fade, warm-glow, soft-land, breathe-in) |
+| **Bubble-animasjon** | 5 typer (pop-in, slide-fade, warm-glow, soft-land, breathe-in) |
 | **Resonance-glow** | Gull-glød når resonanceScore >= 70 |
-| **Progressiv avdekking** | 15ms per teikn for nye meldingar |
+| **Progressiv avdekking** | 15ms per tegn for nye meldinger |
 | **Mood-basert farge** | Reagerer på WarmFlow-mood |
 
 ### Animation Types
 
-| Type | Varighet | Easing | Kva |
+| Type | Varighet | Easing | Hva |
 |--|--|--|--|
 | pop-in | 400ms | Spring | Rask, energisk |
 | slide-fade | 500ms | Smooth | Glid + fade |
@@ -57,7 +57,7 @@ Premium Chat Animations er integrert med tre nye komponentar:
 ### Progressiv avdekking
 
 ```tsx
-// 15ms per teikn
+// 15ms per tegn
 const duration = text.length * 15;
 // requestAnimationFrame basert
 ```
@@ -87,7 +87,7 @@ const duration = text.length * 15;
 ### Partikkel-animasjon
 
 ```tsx
-// Kvar partikkel har fase-forskyving
+// Hver partikkel har fase-forskyving
 const phaseOffset = (pulsePhase + (i * 33)) % 100;
 const opacity = 0.3 + (phaseOffset / 100) * 0.5;
 const scale = 0.8 + (phaseOffset / 100) * 0.4;
@@ -102,7 +102,7 @@ const scale = 0.8 + (phaseOffset / 100) * 0.4;
 | Funksjon | Beskrivelse |
 |--|--|
 | **Smooth scroll** | `scrollBehavior: 'smooth'` |
-| **Auto-scroll** | Til botnen når ny melding kjem |
+| **Auto-scroll** | Til botnen når ny melding kommer |
 | **Staggered fade-in** | 80ms mellom kvart bubble |
 | **Tom-chat** | Tom-melding med varm tekst |
 
@@ -143,7 +143,7 @@ function ChatRoom() {
 
 ## TESTSCENAR
 
-### 1. Nye meldingar fade-in
+### 1. Nye meldinger fade-in
 - ✅ Staggered fade-in med 80ms forsinkelse
 - ✅ Bubble-animasjon (warm-glow som standard)
 
@@ -167,7 +167,7 @@ function ChatRoom() {
 | Bubble fade-in | opacity + translateY | 400-800ms |
 | Bubble stagger | delay | 80ms per element |
 | Resonance-glow | boxShadow | 300ms transition |
-| Progressiv tekst | requestAnimationFrame | 15ms/teikn |
+| Progressiv tekst | requestAnimationFrame | 15ms/tegn |
 | Typing-partiklar | opacity + scale | 1200ms pulse |
 | Scroll | scrollIntoView | smooth |
 
@@ -177,6 +177,6 @@ function ChatRoom() {
 
 - Alle animasjonar er **rolige og varme**
 - Ingen skarpe overgangar
-- Progressiv avdekking berre for **nye** meldingar
-- Resonance-glow er **subtil** (ikkje overveldande)
-- Typing-indikator er **ikkje-påkrevjande**
+- Progressiv avdekking bare for **nye** meldinger
+- Resonance-glow er **subtil** (ikke overveldande)
+- Typing-indikator er **ikke-påkrevjande**

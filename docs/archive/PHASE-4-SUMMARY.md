@@ -16,7 +16,7 @@
 | Modellbruk i kode | ✅ | Grep i repo utført |
 | Lag PRISMA-MODEL-ANALYSIS | ✅ | `docs/PRISMA-MODEL-ANALYSIS.md` |
 | Merk deprecated | ✅ | 6 modeller merka @deprecated |
-| Målstruktur | ✅ | ~15 modeller (frå 32) |
+| Målstruktur | ✅ | ~15 modeller (fra 32) |
 
 ### 6 modeller markert DEPRECATED
 
@@ -39,7 +39,7 @@ User (auth)
 ├── JourneyProgress (reise)
 │   └── JourneyMilestone (milepæler)
 ├── Conversation (chat)
-│   └── Message (meldingar)
+│   └── Message (meldinger)
 ├── JourneyStep (steg)
 ├── Notification (notifikasjonar)
 ├── AuditLog (admin)
@@ -129,7 +129,7 @@ User (auth)
 
 | Problem | Prioritet | Løysing |
 |--|-|---|
-| 6 modeller merka deprecated, ikkje sletta | MEDIE | Fjern i Phase 5 |
+| 6 modeller merka deprecated, ikke sletta | MEDIE | Fjern i Phase 5 |
 | ~180 komponentar i 25+ directory | MEDIE | Rydd i Phase 5 |
 | 10 duplikat-komponentar | MEDIE | Merge/slett i Phase 5 |
 | 14 eksperimentelle komponentar | MEDIE | Flytt til branch i Phase 5 |

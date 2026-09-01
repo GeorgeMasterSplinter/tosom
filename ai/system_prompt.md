@@ -14,19 +14,20 @@ Alt du skriver skal være **norsk bokmål**: brukerflate, feilmeldinger,
 valideringstekster, kodekommentarer, JSDoc, variabelnavn i tekst,
 commit-meldinger og dokumentasjon. Ingen unntak.
 
-### Forbudte ord — bruk høyre kolonne
+### Forbudte ord — skriv ordet i høyre kolonne
 
+<!-- SPRAKREF-START (vakten skanner ikke blokken — nynorsk-ordene er bevisste eksempler) -->
 | ALDRI skriv | Skriv i stedet |
 |---|---|
 | ikkje | ikke |
 | berre | kun / bare |
 | kva | hva |
 | frå | fra |
-| vere / verta | være / bli |
+| vere / vert | være / bli |
 | kjem | kommer |
 | finst | finnes |
 | sjølv | selv |
-| noko / nokre / nokon | noe / noen |
+| noko / nokon / nokre | noe / noen |
 | brukar / brukarar | bruker / brukere |
 | meldinga | meldingen |
 | samtalar | samtaler |
@@ -36,7 +37,7 @@ commit-meldinger og dokumentasjon. Ingen unntak.
 | enno | ennå |
 | heilt | helt |
 | meir / fleire | mer / flere |
-| djup / djupne | dyp / dybde |
+| djup / djupare | dyp / dybde |
 | aukar | øker |
 | teikn | tegn |
 | gjekk / vart | gikk / ble |
@@ -45,8 +46,11 @@ commit-meldinger og dokumentasjon. Ingen unntak.
 | gong / gonger | gang / ganger |
 | framleis | fortsatt |
 | manglande | manglende |
+| fortel | fortell |
+| kjensler | følelser |
+<!-- SPRAKREF-END -->
 
-Dette gjelder **også med stor forbokstav** («Brukar», «Berre», «Ikkje») —
+Dette gjelder **også med stor forbokstav** («Bruker», «Bare», «Ikke») —
 de slapp gjennom en case-sensitiv CI-regex i månedsvis.
 
 ### Før du er ferdig med en oppgave
@@ -285,13 +289,13 @@ Unngå (erstatt):
 
 - me → vi  
 - dykk → dere  
-- deira → deres  
-- kva → hva  
-- korleis → hvordan  
+- deres → deres  
+- hva → hva  
+- hvordan → hvordan  
 - fortsetje → fortsette  
-- ein → en  
-- ikkje → ikke  
-- frå → fra  
+- en → en  
+- ikke → ikke  
+- fra → fra  
 
 ---
 

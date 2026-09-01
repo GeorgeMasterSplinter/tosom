@@ -78,7 +78,7 @@ export async function GET(request: Request) {
       where: { userId: session.user.id },
     });
 
-    // Finn match-partnar (den andre brukaren)
+    // Finn match-partnar (den andre brukeren)
     let matchInfo: MatchInfo | null = null;
     if (match) {
       const partner =
@@ -168,13 +168,13 @@ export const dynamic = 'force-dynamic';
 function getPhaseDescription(phase: string): string {
   switch (phase) {
     case "EARLY":
-      return "Del med matchen din en personleg erfaring som har formet deg. Det skaper nærheit og trygghet.";
+      return "Del med matchen din en personlig erfaring som har formet deg. Det skaper nærhet og trygghet.";
     case "BUILDING_TRUST":
-      return "Fortel om ein tid du overvinner ei utfordring. Det viser sårbarheit og styrke.";
+      return "Fortell om en gang du overvinner en utfordring. Det viser sårbarhet og styrke.";
     case "DEEPER":
-      return "Del ein verdi eller overtydning du har gjennom livet. Det avslører kven du er.";
+      return "Del en verdi eller overbevisning du har gjennom livet. Det avslører hvem du er.";
     case "CHECKIN":
-      return "Reflekter over hvordan reisen deres har påvirket hverandre. Det skaper dypare binding.";
+      return "Reflekter over hvordan reisen deres har påvirket hverandre. Det skaper dypere binding.";
     default:
       return "";
   }

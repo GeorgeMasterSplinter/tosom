@@ -1,7 +1,7 @@
 /**
  * GET /api/journey/resonance
  * 
- * Hent ResonanceSession for den autentifiserte brukaren.
+ * Hent ResonanceSession for den autentifiserte brukeren.
  * Pakke 6.3 — Resonance Graf (Steg 2)
  */
 
@@ -13,12 +13,12 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
   try {
-    // Auth — brukaren må være logga inn
+    // Auth — brukeren må være logga inn
     const result = await requireAuth(req);
     if (result instanceof NextResponse) return result;
     const userId = result.user.id;
 
-    // Hent ResonanceSession for brukaren sin conversation
+    // Hent ResonanceSession for brukeren sin conversation
     const sessions = await prisma.resonanceSession.findMany({
       where: {
         conversation: {

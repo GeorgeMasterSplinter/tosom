@@ -278,7 +278,7 @@ Punkt 6 (Design-tokens)    Punkt 8 (Blueprint)    (uavhengige)
 
 | # | Punkt | Manuell QA nødvendig? | Hva testes manuelt |
 |---|-------|----------------------|-------------------|
-| 1 | Admin JWT | ✅ JA | Logg inn som admin → sjekk at cookie er signert JWT (ikkje "valid"). Slett cookie → forventes redirect til /admin/login |
+| 1 | Admin JWT | ✅ JA | Logg inn som admin → sjekk at cookie er signert JWT (ikke "valid"). Slett cookie → forventes redirect til /admin/login |
 | 2 | Dev-login | ❌ NEI | Kan automatiseres med IP-mocking |
 | 3 | Profile validering | ✅ JA | Manuell input-testing: sende tomme felter, ekstra lange strings, emoji i JSON-felter, nullverdier |
 | 4 | Scoring konsolidering | ✅ JA | Sammenligne match-resultat for samme par før/etter konsolidering. Sjekke at tier-bestemmelse (deepResonance/moderate) er konsistent |

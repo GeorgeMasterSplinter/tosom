@@ -2,7 +2,7 @@
 
 **Oppdatert:** 30. juni 2026
 **Versjon:** 1.0
-**Status:** 🟡 Backend-logikk ferdig, frontend-komponent manglar
+**Status:** 🟡 Backend-logikk ferdig, frontend-komponent mangler
 
 ---
 
@@ -10,16 +10,16 @@
 
 Premium Chat Animations gir chat følelsel levande og varm med:
 - **5 bubble-animasjonar** (pop-in, slide-fade, warm-glow, soft-land, breathe-in)
-- **Resonance-glow** på meldingar basert på resonans-nivå
+- **Resonance-glow** på meldinger basert på resonans-nivå
 - **Typing-indikator** med pulserande partiklar
-- **Progressiv tekst-avdekking** (teikn-for-teikn)
+- **Progressiv tekst-avdekking** (tegn-for-tegn)
 - **Mood-basert chat-miljø** (5 moodar)
 
 ---
 
-## BUBBLE-ANIMASJONAR (5 typar)
+## BUBBLE-ANIMASJONAR (5 typer)
 
-| Type | Varighet | Easing | Kva |
+| Type | Varighet | Easing | Hva |
 |--|--|--|--|
 | **pop-in** | 400ms | Spring (1.56) | Rask, energisk |
 | **slide-fade** | 500ms | Smooth | Glid + fade |
@@ -31,7 +31,7 @@ Premium Chat Animations gir chat følelsel levande og varm med:
 
 ## MOODAR (5 stemningar)
 
-| Mood | Kva | Glow |
+| Mood | Hva | Glow |
 |--|--|--|
 | **calm** | Standard | Gull (15%) |
 | **warm** | Intim samtale | Gull-lys (25%) |
@@ -62,7 +62,7 @@ Basert på resonans-nivå (0-100):
 
 ## PROGRESSIV AVDEKKING
 
-- 15ms per teikn
+- 15ms per tegn
 - Simulert skriving
 - Kan slåast av
 
@@ -88,7 +88,7 @@ function ChatRoom({ resonanceLevel, mood }) {
 
   return (
     <div style={{ background: config.environment.background }}>
-      {/* Meldingar med resonance-glow */}
+      {/* Meldinger med resonance-glow */}
       {/* Bubble-animasjonar */}
       {/* Typing-indikator */}
     </div>
@@ -102,5 +102,5 @@ function ChatRoom({ resonanceLevel, mood }) {
 
 - Alle animasjonar **rolige og varme**
 - Resonance-glow **subtil**
-- Typing-indikator **ikkje-påkrevjande**
+- Typing-indikator **ikke-påkrevjande**
 - Progressiv avdekking **valfritt**

@@ -57,7 +57,7 @@ export default function Step5Relasjonsstil({ data, onChange, onBack, onNext }: P
           testId="ob-relationship-seeking"
         />
 
-       {/* Næringsbehov — kor mye nærheit du treng */}
+       {/* Næringsbehov — kor mye nærhet du treng */}
        <OnboardingSelectGrid
          label="Hvor mye nærhet trenger du i en relasjon? *"
          mikroguiding="Tenk på din naturlige rytme — ingen riktig eller feil svar her."

@@ -11,7 +11,7 @@ Disse sidene er første versjon av produkt-dokumentasjonen for eksterne besøken
 
 | Side       | Beskrivelse                               |
 |------------|-------------------------------------------|
-| `/kvifor`  | Hvorfor velge ToSom — 3 nøkkelargument   |
+| `/hvorfor`  | Hvorfor velge ToSom — 3 nøkkelargument   |
 | `/slik`    | Slik fungerer det — 4 steg                |
 | `/reisen`  | Guidet 30-dagers reise — 4 faser          |
 | `/priser`  | Priser — placeholder (beta)               |
@@ -19,7 +19,7 @@ Disse sidene er første versjon av produkt-dokumentasjonen for eksterne besøken
 ### Lenker
 
 Footer-lenker peker til:
-- `#why` → `/kvifor`
+- `#why` → `/hvorfor`
 - `#how` → `/slik`
 - `#journey` → `/reisen`
 - `#pricing` → `/priser`
@@ -34,6 +34,6 @@ Footer-lenker peker til:
 ## Språk
 
 Alle tekster er på bokmål, med unntak av tagline:
-> "Ein rolig, privat plattform for ekte relasjonar."
+> "En rolig, privat plattform for ekte relasjonar."
 
 Se [language-guidelines.md](language-guidelines.md) for full språkprofil.

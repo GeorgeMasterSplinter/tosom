@@ -1,6 +1,6 @@
-// PartnerProfile — typar og dummy-data
+// PartnerProfile — typer og dummy-data
 // PP2 — definer PartnerProfile-type
-// PP3 — lag dummy-profil med namn, alder, bio, verdiar, interesser, bilde-URLer
+// PP3 — lag dummy-profil med namn, alder, bio, verdier, interesser, bilde-URLer
 
 /* PP2 — Definer PartnerProfile-type */
 export interface PartnerProfile {
@@ -19,7 +19,7 @@ export const dummyProfile: PartnerProfile = {
   id: "demo-partner",
   name: "Person A",
   age: 29,
-  bio: "Eg trivst best i naturen og med gode samtal. Trur på at det kjemke skjer når to menneske er ærlege mot hvarandre.",
+  bio: "Eg trives best i naturen og med gode samtal. Trur på at det kjemke skjer når to menneske er ærlege mot hvarandre.",
   values: ["Ærlegheit", "Nyskaping", "Trygghet", "Vekst", "Djupde"],
   interests: ["Friluftsliv", "Musikk", "Lesing", "Fotografi", "Matlaging"],
   photos: [

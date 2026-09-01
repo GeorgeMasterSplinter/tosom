@@ -181,7 +181,7 @@ function JourneyReflection({ phase, resonanceScore, day }) {
 
   return (
     <div>
-      <div className="reflection-text">{reflection || 'Klikk "AI-refleksjon" for å få eit forslag...'}</div>
+      <div className="reflection-text">{reflection || 'Klikk "AI-refleksjon" for å få et forslag...'}</div>
       
       {/* AI-knapp */}
       <AISuggestButton
@@ -196,7 +196,7 @@ function JourneyReflection({ phase, resonanceScore, day }) {
 
 ---
 
-## AI- FEATURES (allereie eksisterande)
+## AI- FEATURES (allerede eksisterande)
 
 ### lib/ai-features/aiFeatures.ts
 
@@ -205,7 +205,7 @@ function JourneyReflection({ phase, resonanceScore, day }) {
 | `generateConversationSuggestion()` | Context-aware samtaleforslag |
 | `generateReflectionPrompt()` | Dagleg refleksjon (8 tema) |
 | `generateTask()` | Oppgåve-generering |
-| `generateResonanceInsight()` | Forklarer kvifor match fungerte |
+| `generateResonanceInsight()` | Forklarer hvorfor match fungerte |
 | `generateProfileEnhancement()` | Bio-forslag og profil-tips |
 | `generateConversationHelp()` | Tone-matching og djupde-guiding |
 | `getAllAIFeatures()` | Heil AI-pakke |
@@ -214,12 +214,12 @@ function JourneyReflection({ phase, resonanceScore, day }) {
 
 ## TESTSCENAR
 
-### 1. Chat: forslag dukkar opp i inputfeltet
+### 1. Chat: forslag dukker opp i inputfeltet
 - ✅ Klikk "✨ Foreslå"
 - ✅ AI-genererer samtaleforslag basert på fase
 - ✅ Teksten blir lagt til i input-feltet
 
-### 2. Profil: tekst blir varmare og meir naturleg
+### 2. Profil: tekst blir varmare og mer naturleg
 - ✅ Klikk "✨ Forbedre tekst"
 - ✅ AI-genererer 3 bio-variasjonar
 - ✅ Beste forslaget blir valt
@@ -262,10 +262,10 @@ cursor: not-allowed
 
 ## HUSK
 
-- Alle AI-knappar bruker **AISuggestButton**
+- Alle AI-knapper bruker **AISuggestButton**
 - AI er **alltid valfritt**
 - Ingen push-notifikasjonar for AI
-- Alle forslag er **forslag**, ikkje krav
-- AI-knappar har **glassmorphism** og **warmFlow-glow**
+- Alle forslag er **forslag**, ikke krav
+- AI-knapper har **glassmorphism** og **warmFlow-glow**
 - Loading-state med **spinner**
 - Disabled-state med **opacity 50%**

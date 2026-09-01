@@ -93,9 +93,9 @@ async function postHandler(req: NextRequest) {
     // Ukjent postnummer / postboks-kode uten geometri → null (håndteres i B1.4).
     const geo = lookupPostalCode(basic.postalCode);
 
-    // BUG 1 ROBUSTHET: Dei tre skrivingane (profil-upsert, draft-rydding,
+    // BUG 1 ROBUSTHET: De tre skrivingane (profil-upsert, draft-rydding,
     // user-flagg) ligg i éin atomisk transaksjon — all-eller-ingenting.
-    // Tidlegare kunne ein feil midt i sekvensen la att delvis tilstand
+    // Tidlegare kunne en feil midt i sekvensen la att delvis tilstand
     // (f.eks. profil lagret, men onboardingComplete ikke satt).
     await prisma.$transaction(async (tx) => {
     // Mapper til Profile-modellen (validering allerede gjort — data er trygt)
@@ -356,7 +356,7 @@ async function postHandler(req: NextRequest) {
     });
   } catch (error) {
     // BUG 1 DIAGNOSTIKK: Logg Prisma-feilkode og -melding eksplisitt, slik at
-    // ein produksjonssvikt er med eitt blikk identifiserbar i Vercel-loggen.
+    // en produksjonssvikt er med ett blikk identifiserbar i Vercel-loggen.
     // Mest sannsynlege årsak til 500 her: manglende kolonne i DB-en
     // (P2022) — typisk ved ikke-deployet migrasjon mot produksjonen.
     const prismaCode = (error as { code?: string })?.code;
@@ -366,7 +366,7 @@ async function postHandler(req: NextRequest) {
     );
     if (prismaCode === 'P2022' || message.includes('does not exist')) {
       console.error(
-        '[profile/setup] Kolonne manglar i databasen. Kjør `prisma migrate deploy` mot produksjons-DB-en og verifiser at alle migrasjonar (inkl. add_psychometrics og add_onboarding_draft) er applied.'
+        '[profile/setup] Kolonne mangler i databasen. Kjør `prisma migrate deploy` mot produksjons-DB-en og verifiser at alle migrasjonar (inkl. add_psychometrics og add_onboarding_draft) er applied.'
       );
     }
     return NextResponse.json(

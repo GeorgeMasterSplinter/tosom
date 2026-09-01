@@ -221,7 +221,7 @@ export default function Step2Personlighet({ data, onChange, onBack, onNext }: Pr
         Det er ingen rette eller gale svar. Svarene dine hjelper oss å forstå deg bedre.
       </p>
 
-      {/* Knappar — Back + CTA */}
+      {/* Knapper — Back + CTA */}
       <div className="mt-8 space-y-4">
         <BackButton onClick={onBack} />
         <PremiumCTAButton

@@ -211,7 +211,7 @@ export default function MatchingPage() {
           // Bestem kø-tilstand
           // BUG 3: Bruk SANNE reise-tilstander fra databasen, ikke ukeplan-gjetning.
           // Tidligere viste venterommet «Du er i kø» for ALLE innloggede brukere,
-          // uansett om dei faktisk stod i køen.
+          // uansett om de faktisk stod i køen.
           const journeyState = data.journeyState ?? 'IDLE';
 
           // IDLE: ikke i køen. Vis «Start reisen» (eller fullfør onboarding først).
@@ -289,7 +289,7 @@ export default function MatchingPage() {
   }, [queueState]);
 
   // BUG 4 FIX: «Meld deg ut» i venterommet = forlate KØEN, ikke avslutte reise.
-  // Den gamle koden kalte POST /api/journey/exit, som avsluttar ein AKTIV reise
+  // Den gamle koden kalte POST /api/journey/exit, som avsluttar en AKTIV reise
   // (matchede brukere) og svarer 404 «Ingen aktiv reise funnet» for en køende
   // bruker — knappen gjorde altså ingenting. DELETE /api/journey/queue set
   // journeyState tilbake til IDLE, som er rett semantikk her.
@@ -320,7 +320,7 @@ export default function MatchingPage() {
     }
   }, [router]);
 
-  // BUG 3: «Start reisen» — setter brukaren i match-køen (POST /api/journey/queue).
+  // BUG 3: «Start reisen» — setter brukeren i match-køen (POST /api/journey/queue).
   // Idempotent på serveren; krev onboardingComplete (409 elles).
   // Feil vises i venterommet (ikke sile hop til /onboarding) — brukeren kan
   // prøve igjen uten å miste plassen sin.
@@ -475,7 +475,7 @@ export default function MatchingPage() {
                     Oppdater profil for betre match
                   </p>
                   <p className="mt-1" style={{ color: 'rgba(255,255,255,0.4)', fontSize: '14px' }}>
-                    Jo dypare profilen, jo betre kan vi matche deg.
+                    Jo dypere profilen, jo betre kan vi matche deg.
                   </p>
                 </div>
                 <button

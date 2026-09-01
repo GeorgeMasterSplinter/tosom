@@ -22,7 +22,7 @@ export interface ErrorMeta {
 }
 
 /**
- * Logg ein feil til både console og database.
+ * Logg en feil til både console og database.
  */
 export async function trackError(
   error: unknown,
@@ -63,7 +63,7 @@ export async function trackError(
 }
 
 /**
- * Logg ein varsel (ikke feil).
+ * Logg en varsel (ikke feil).
  */
 export async function trackWarn(
   message: string,
@@ -99,7 +99,7 @@ export async function trackWarn(
 }
 
 /**
- * Logg ein info-event.
+ * Logg en info-event.
  */
 export async function trackInfo(
   message: string,

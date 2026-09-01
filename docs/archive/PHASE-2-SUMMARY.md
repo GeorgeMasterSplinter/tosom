@@ -19,12 +19,12 @@
 
 ### ⚠️ Kjente begrensninger
 
-- Mange API-ruter bruker en `getServerSession`-import frå `next-auth` som ikkje finst i v5.
-- `lib/auth/session.ts` inneheld ein shim for `getServerSession`, men mange filer importerer direkte frå `next-auth` istadenfor.
-- Dashboard-sida er oppdatert til `auth()` frå v5.
+- Mange API-ruter bruker en `getServerSession`-import fra `next-auth` som ikke finnes i v5.
+- `lib/auth/session.ts` inneholder en shim for `getServerSession`, men mange filer importerer direkte fra `next-auth` istadenfor.
+- Dashboard-sida er oppdatert til `auth()` fra v5.
 
 **Anbefaling:**  
-Oppdater alle API-ruter til å bruke `auth()` frå `@/lib/auth/config` istadenfor `getServerSession` frå `next-auth`.
+Oppdater alle API-ruter til å bruke `auth()` fra `@/lib/auth/config` istadenfor `getServerSession` fra `next-auth`.
 
 ---
 
@@ -66,7 +66,7 @@ requireSupport(user)             // kast error
 | Endring | Fil |
 |---------|-----|
 | Admin sjekk i middleware | `middleware.ts` — sjekkar `role === 'admin'` |
-| Session-bypass fjerna | `middleware.ts` — berre `next-auth.session.token` |
+| Session-bypass fjerna | `middleware.ts` — bare `next-auth.session.token` |
 | `/api/admin` i protected prefixes | `middleware.ts` |
 | requireAdminAuth helper | `lib/admin/requireAuth.ts` |
 
@@ -85,8 +85,8 @@ requireSupport(user)             // kast error
 
 ### ⚠️ Anbefaling
 
-Mange API-ruter har ikkje ennå kalla `requireAdminAuth()`.  
-Oppdatér kvar enkelt fil til å kalle dette funksjonen.
+Mange API-ruter har ikke ennå kalla `requireAdminAuth()`.  
+Oppdatér hver enkelt fil til å kalle dette funksjonen.
 
 ---
 
@@ -106,10 +106,10 @@ Oppdatér kvar enkelt fil til å kalle dette funksjonen.
 
 | Problem | Prioritet | Løysing |
 |---------|-----|-------|
-| Mange API-ruter har `getServerSession` frå `next-auth` | HØY | Oppdater til `auth()` frå `@/lib/auth/config` |
+| Mange API-ruter har `getServerSession` fra `next-auth` | HØY | Oppdater til `auth()` fra `@/lib/auth/config` |
 | `next-auth` v5-beta kan ha breaking changes | HØY | Vent på stabil versjon |
-| Session-cookies er ikkje oppdatert | MEDIE | Oppdater cookie-namn dersom nødvendig |
-| Admin-login-side har ikkje RBAC | MEDIE | Oppdater `app/admin/login/page.tsx` |
+| Session-cookies er ikke oppdatert | MEDIE | Oppdater cookie-namn dersom nødvendig |
+| Admin-login-side har ikke RBAC | MEDIE | Oppdater `app/admin/login/page.tsx` |
 
 ---
 

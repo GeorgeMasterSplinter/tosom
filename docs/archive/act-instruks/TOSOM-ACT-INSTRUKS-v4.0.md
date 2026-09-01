@@ -73,7 +73,7 @@
 16. **Rollback ved rødt.** Feiler en sjekk og du ikke kan fikse innenfor SAMME steg → kjør rollback-kommandoen, sett `deviations`, spør bruker. ALDRI la rødt stå udokumentert.
 17. **Ingen nye avhengigheter** uten at steget uttrykkelig angir det.
 18. **Ingen test som reimplementerer logikken den tester.** ACT v3 STEG 3.3 laget `simulateRequireAuth()` og testet sin egen stub. 77 grønne tester, ~30 reelle. Test reell kode eller reelle endepunkter.
-19. **Alle brukervendte strenger på bokmål.** Ingen nynorskformer (`ikkje`, `korleis`, `brukar`, `allereie`, `no` for «nå»). `lang-guard` fanger ikke alt — du er ansvarlig.
+19. **Alle brukervendte strenger på bokmål.** Ingen nynorskformer (`ikke`, `hvordan`, `bruker`, `allerede`, `no` for «nå»). `lang-guard` fanger ikke alt — du er ansvarlig.
 20. **05:00 nevnes aldri i brukervendt tekst.** Det er en driftsdetalj, ikke et løfte. Brukeren får «i løpet av 24 timer».
 
 ---
@@ -835,10 +835,10 @@ export async function endJourney(
 
 Legg til `onDelete: Cascade` på `Message → Conversation` og `JourneyMilestone → JourneyProgress` **kun som sikkerhetsnett** mot foreldreløse rader. Den vanlige veien går alltid gjennom `endJourney()`.
 
-Koble `app/api/journey/exit/route.ts` til funksjonen. **Rett nynorsken samtidig** (regel 19): «Ingen aktiv reise funnen» → «Ingen aktiv reise funnet», «Reisen er allereie avsluttet» → «Reisen er allerede avsluttet».
+Koble `app/api/journey/exit/route.ts` til funksjonen. **Rett nynorsken samtidig** (regel 19): «Ingen aktiv reise funnet» → «Ingen aktiv reise funnet», «Reisen er allerede avsluttet» → «Reisen er allerede avsluttet».
 
 - **Sjekk 1 (tsc):** `npx tsc --noEmit`
-- **Sjekk 2 (grep):** `grep -rn "allereie\|funnen\|brukar" app/api/journey/` → **0 treff**
+- **Sjekk 2 (grep):** `grep -rn "allerede\|funnet\|bruker" app/api/journey/` → **0 treff**
 - **Sjekk 3 (build):** `npm run build`
 - **Sjekk 4 (FUNKSJONELT):** Opprett en testreise med minst 5 meldinger og 2 milepæler. Kjør `endJourney()`. Deretter:
   ```sql
@@ -1276,7 +1276,7 @@ concept-guard:
 
 Legg jobben til i `needs:` for `status`-jobben (linje ~313) slik at den faktisk blokkerer.
 
-Utvid samtidig `lang-guard` med ordene som slapp gjennom: `allereie`, `funnen`, `brukar`, `ikkje`, `korleis`, `ver vennleg`.
+Utvid samtidig `lang-guard` med ordene som slapp gjennom: `allerede`, `funnet`, `bruker`, `ikke`, `hvordan`, `vær vennlig`.
 
 - **Sjekk 1 (tsc):** `npx tsc --noEmit`
 - **Sjekk 2 (grep):** `grep -n "concept-guard" .github/workflows/ci.yml`
@@ -1593,13 +1593,13 @@ Skjelettene skal bruke kanoniske tokens fra `config/design-tokens.ts` (se D3) og
 
 - Ved stegbytte (`goToStep`, eller hvor navigasjonen håndteres): `POST /api/onboarding/draft` med gjeldende svar og stegnummer. Debounce, og **ikke-blokkerende** — feiler lagringen, skal brukeren likevel komme videre. Logg til Sentry.
 - Ved oppstart: `GET /api/onboarding/draft`. Finnes utkast → gjenopprett svar og posisjon. localStorage beholdes som hurtigbuffer, men serveren er sannheten.
-- Rett samtidig nynorsken (regel 19): linje ~399 «Brukar» → «Bruker», linje ~424 «Ver vennleg å prøv igjen» → «Vennligst prøv igjen».
+- Rett samtidig nynorsken (regel 19): linje ~399 «Bruker» → «Bruker», linje ~424 «Vær vennlig å prøv igjen» → «Vennligst prøv igjen».
 
 - **Sjekk 1 (tsc):** `npx tsc --noEmit`
 - **Sjekk 2 (grep):**
   ```bash
   grep -c "onboarding/draft" app/onboarding/OnboardingFlow.tsx   # → ≥ 2 (GET + POST)
-  grep -rn "brukar\|ver vennleg" app/onboarding/                  # → 0
+  grep -rn "bruker\|vær vennlig" app/onboarding/                  # → 0
   ```
 - **Sjekk 3 (build):** `npm run build`
 - **Sjekk 4 (FUNKSJONELT):** Fyll ut steg 1–5. Tøm localStorage. Last siden på nytt →

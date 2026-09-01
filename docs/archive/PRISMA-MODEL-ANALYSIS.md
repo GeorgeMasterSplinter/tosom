@@ -10,35 +10,35 @@
 
 | Domenear | Modell | Status | Bruk i kode |
 |-----|-----|-|----|
-| Auth | User | AKTIV | Mykje brukt |
+| Auth | User | AKTIV | Mye brukt |
 | Auth | Account | AKTIV | NextAuth |
 | Auth | Session | AKTIV | NextAuth |
 | Auth | VerificationToken | AKTIV | NextAuth |
-| Profile | Profile | AKTIV | Mykje brukt |
-| Profile | MagicLinkToken | DELVIS | Berre schema |
-| Profile | PhoneVerification | DELVIS | Berre schema |
-| Matching | Match | AKTIV | Mykje brukt |
-| Matching | MatchHistory | DELVIS | Schema + nokre API |
+| Profile | Profile | AKTIV | Mye brukt |
+| Profile | MagicLinkToken | DELVIS | Bare schema |
+| Profile | PhoneVerification | DELVIS | Bare schema |
+| Matching | Match | AKTIV | Mye brukt |
+| Matching | MatchHistory | DELVIS | Schema + noen API |
 | Matching | MatchQueue | EKSPERIMENTELL | Schema + cron |
 | Matching | MatchFeedback | EKSPERIMENTELL | Schema |
 | Matching | MatchInsight | AKTIV | AI API |
-| Journey | JourneyProgress | AKTIV | Mykje brukt |
-| Journey | JourneyMilestone | AKTIV | Mykje brukt |
-| Journey | JourneyStep | AKTIV | Mykje brukt |
+| Journey | JourneyProgress | AKTIV | Mye brukt |
+| Journey | JourneyMilestone | AKTIV | Mye brukt |
+| Journey | JourneyStep | AKTIV | Mye brukt |
 | Journey | JourneyDayContent | DELVIS | Schema + seed |
-| Chat | Conversation | AKTIV | Mykje brukt |
-| Chat | Message | AKTIV | Mykje brukt |
-| Chat | ResonanceSession | DELVIS | Nokre API |
-| Admin | Notification | AKTIV | Nokre API |
+| Chat | Conversation | AKTIV | Mye brukt |
+| Chat | Message | AKTIV | Mye brukt |
+| Chat | ResonanceSession | DELVIS | Noen API |
+| Admin | Notification | AKTIV | Noen API |
 | Admin | PasswordResetToken | AKTIV | Auth API |
 | Admin | TwoFactorSecret | DELVIS | Schema + admin |
-| Admin | AuditLog | DELVIS | Nokre API |
+| Admin | AuditLog | DELVIS | Noen API |
 | System | SystemMessage | EKSPERIMENTELL | Schema |
-| System | SystemLog | DELVIS | Nokre API |
+| System | SystemLog | DELVIS | Noen API |
 | System | RateLimitLog | EKSPERIMENTELL | Schema |
-| System | PerformanceMetric | DELVIS | Nokre API |
+| System | PerformanceMetric | DELVIS | Noen API |
 | System | RouteHit | EKSPERIMENTELL | Schema |
-| System | AIRequestLog | DELVIS | Nokre API |
+| System | AIRequestLog | DELVIS | Noen API |
 
 ---
 
@@ -49,7 +49,7 @@
 #### 1. User
 - **Bruk:** Hovudbrukar-modell
 - **Felt:** id, email, password, phone, role, bannedAt, etc.
-- **Relasjonar:** 15+ relasjonar — meir enn nødvendig
+- **Relasjonar:** 15+ relasjonar — mer enn nødvendig
 - **Status:** AKTIV — men kan forenlast
 
 #### 2. Profile
@@ -58,7 +58,7 @@
 - **Status:** AKTIV — god struktur
 
 #### 3. Match
-- **Bruk:** Matching mellom to brukarar
+- **Bruk:** Matching mellom to brukere
 - **Felt:** status, score, normalizedScore, explanation, etc.
 - **Status:** AKTIV — men mange felt ubrukte
 
@@ -67,7 +67,7 @@
 - **Status:** AKTIV — brukt i `/api/ai/match-insights`
 
 #### 5. JourneyProgress
-- **Bruk:** 30-dagers reise for kvar brukar
+- **Bruk:** 30-dagers reise for hver bruker
 - **Status:** AKTIV — god struktur
 
 #### 6. JourneyMilestone
@@ -79,20 +79,20 @@
 - **Status:** AKTIV — brukt
 
 #### 8. Conversation
-- **Bruk:** Chat mellom to brukarar
+- **Bruk:** Chat mellom to brukere
 - **Status:** AKTIV — god struktur
 
 #### 9. Message
-- **Bruk:** Meldingar i chat
+- **Bruk:** Meldinger i chat
 - **Status:** AKTIV — god struktur
 
 #### 10. JourneyDayContent
-- **Bruk:** Dagens innhald (1-30)
+- **Bruk:** Dagens innhold (1-30)
 - **Status:** DELVIS — schema + seed-data
 
 #### 11. Notification
-- **Bruk:** Notifikasjonar for brukarar
-- **Status:** AKTIV — brukt i nokre API
+- **Bruk:** Notifikasjonar for brukere
+- **Status:** AKTIV — brukt i noen API
 
 #### 12. PasswordResetToken
 - **Bruk:** Passord-tilbakestilling
@@ -100,7 +100,7 @@
 
 ---
 
-### 🟡 DELVIS AKTIV (schema + nokre API)
+### 🟡 DELVIS AKTIV (schema + noen API)
 
 #### 13. ResonanceSession
 - **Bruk:** Resonansmåling per dag
@@ -108,7 +108,7 @@
 
 #### 14. MagicLinkToken
 - **Bruk:** Magic link-auth
-- **Status:** DELVIS — schema + nokre auth-ruter
+- **Status:** DELVIS — schema + noen auth-ruter
 - **Anbefaling:** Kan erstattast av NextAuth VerificationToken
 
 #### 15. PhoneVerification
@@ -123,22 +123,22 @@
 
 #### 17. AuditLog
 - **Bruk:** Admin-auditing
-- **Status:** DELVIS — nokre API-er bruker det
+- **Status:** DELVIS — noen API-er bruker det
 - **Anbefaling:** Behold for admin
 
 #### 18. SystemLog
 - **Bruk:** Systemlogg
-- **Status:** DELVIS — nokre API-er bruker det
+- **Status:** DELVIS — noen API-er bruker det
 - **Anbefaling:** Behold, men kan forenlast
 
 #### 19. PerformanceMetric
 - **Bruk:** API-latensmåling
-- **Status:** DELVIS — nokre API-er bruker det
+- **Status:** DELVIS — noen API-er bruker det
 - **Anbefaling:** Behold så lenje det gir verdi
 
 #### 20. AIRequestLog
 - **Bruk:** AI-request-tracking
-- **Status:** DELVIS — nokre API-er bruker det
+- **Status:** DELVIS — noen API-er bruker det
 - **Anbefaling:** Behold for quota-tracking
 
 ---
@@ -152,16 +152,16 @@
 
 #### 22. MatchQueue
 - **Bruk:** Match-cooldown
-- **Status:** EKSPERIMENTELL — cron-jobben kjører ikkje
+- **Status:** EKSPERIMENTELL — cron-jobben kjører ikke
 - **Anbefaling:** MERGE_INTO User (lastMatchAt + lockedUntil)
 
 #### 23. MatchFeedback
 - **Bruk:** Match-rating
 - **Status:** EKSPERIMENTELL — UI har det, men ingen API
-- **Anbefaling:** REMOVE — ikkje i ToSom-konseptet
+- **Anbefaling:** REMOVE — ikke i ToSom-konseptet
 
 #### 24. SystemMessage
-- **Bruk:** System-wide meldingar
+- **Bruk:** System-wide meldinger
 - **Status:** EKSPERIMENTELL — schema definerer, men ingen bruk
 - **Anbefaling:** REMOVE — kan erstattast av db-table eller config
 
@@ -176,8 +176,8 @@
 - **Anbefaling:** REMOVE — kan erstattast av analytics
 
 #### 27. JourneyDayContent
-- **Bruk:** Dagens innhald (1-30 tema)
-- **Status:** DELVIS — seed-data kan vere hardkoda
+- **Bruk:** Dagens innhold (1-30 tema)
+- **Status:** DELVIS — seed-data kan være hardkoda
 - **Anbefaling:** Behold som seed-data istadenfor database
 
 ---
@@ -255,7 +255,7 @@ User (auth + profile-data)
 │   ├── JourneyMilestone (milepæler)
 │   └── ResonanceSession (dagleg resonans)
 ├── Conversation (chat)
-│   └── Message (meldingar)
+│   └── Message (meldinger)
 ├── JourneyStep (konversasjon-steig)
 ├── Notification (notifikasjonar)
 ├── AuditLog (admin)
@@ -268,7 +268,7 @@ User (auth + profile-data)
 └── SystemLog (system)
 ```
 
-**Totalt: ~15 modeller** (frå 32)
+**Totalt: ~15 modeller** (fra 32)
 
 **Fjerna:**
 - MatchHistory (merge)
@@ -295,7 +295,7 @@ User (auth + profile-data)
 | EKSPERIMENTELL | MatchHistory, MatchQueue, MatchFeedback, SystemMessage, RateLimitLog, RouteHit | 6 |
 | **Totalt** | | **26** (fjerna 6 enum = 32 total) |
 
-**Mål:** ~15 modeller (frå 26+ enum)
+**Mål:** ~15 modeller (fra 26+ enum)
 
 **Deprecated for fjerning:** 6 modeller
 **Merge:** 3 modeller

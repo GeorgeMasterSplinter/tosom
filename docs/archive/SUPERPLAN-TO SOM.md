@@ -39,7 +39,7 @@ Første Load JS shared by all    102 kB
 Totalt side-størrelser: ~45 kB
 
 Landing page:    4.68 kB
-/kvifor:         4.78 kB
+/hvorfor:         4.78 kB
 /slik:           2.35 kB
 /reisen:         2.34 kB
 /kontakt:        (inkludert)
@@ -93,21 +93,21 @@ Landing page:    4.68 kB
 
 ### FASE 6: Undersider (6 stk)
 
-#### 6A: Kvifor ToSom (/kvifor)
+#### 6A: Hvorfor ToSom (/hvorfor)
 - ✅ 4.78 kB, statisk
-- ✅ Seksjonar: Hero, "ikkje ein datingapp", "kvifor eksisterer", "leverer", "rolegheit", CTA
+- ✅ Seksjonar: Hero, "ikke ein datingapp", "hvorfor eksisterer", "leverer", "rolegheit", CTA
 - ✅ 6 + 3 + 6 + 3 GlassCard-kort
 - ✅ Ambient glød (gull)
 
 #### 6B: Slik fungerer det (/slik)
 - ✅ 2.35 kB, statisk
-- ✅ Seksjonar: Hero, "Fem steg", "Kva gjer annerleis", CTA
+- ✅ Seksjonar: Hero, "Fem steg", "Hva gjer annerleis", CTA
 - ✅ 5 steg med tall, tittel, beskrivelse, detalj
 - ✅ 4 GlassCard-kort
 
 #### 6C: Reisen (/reisen)
 - ✅ 2.34 kB, statisk
-- ✅ Seksjonar: Hero, "tre fasar", "kvar dag", "etter 30 dagar", CTA
+- ✅ Seksjonar: Hero, "tre fasar", "kvar dag", "etter 30 dager", CTA
 - ✅ 3 fase-kort med tema-badgear (gull/blå)
 - ✅ 4 daglege element
 - ✅ 3 etter-moglegheiter
@@ -120,8 +120,8 @@ Landing page:    4.68 kB
 
 #### 6E: Om oss (/om-oss)
 - ✅ 1.32 kB, statisk
-- ✅ Seksjonar: Hero, "verdiar", "teamet", CTA
-- ✅ 4 verdiar (Ro, Verdighet, Forskning, Privatliv)
+- ✅ Seksjonar: Hero, "verdier", "teamet", CTA
+- ✅ 4 verdier (Ro, Verdighet, Forskning, Privatliv)
 - ✅ 1 team-medlem
 
 #### 6F: Personvern (/personvern)
@@ -142,7 +142,7 @@ Landing page:    4.68 kB
 - ✅ 1.93 kB, dynamisk
 - ✅ 3 artiklar: kompatibilitet, reisetemaer, rolegheit
 - ✅ Back-link til /blogg
-- ✅ "ikkje funnen"-side for ukjende slugar
+- ✅ "ikke funnet"-side for ukjende slugar
 - ✅ 3 min, 4 min, 5 min lestid
 
 ---
@@ -207,11 +207,11 @@ Landing page:    4.68 kB
 - **Kan gjøres parallelt:** Ja, med 9B
 
 ### 9B: Match-visning-side (/match)
-- **Mål:** Vis éin match med detaljar
+- **Mål:** Vis én match med detaljer
 - **Deloppgaver:**
   1. Match-card komponent
-  2. Accept/Decline-knappar
-  3. Låse-mekanikk (30 dagar)
+  2. Accept/Decline-knapper
+  3. Låse-mekanikk (30 dager)
 - **Prioritet:** MUST HAVE
 - **Avhengigheter:** 9A
 - **Kan gjøres parallelt:** Nei, etter 9A
@@ -376,7 +376,7 @@ FASE 12 (Prod-kvalitet)
 - FASE 12B: Performance
 - FASE 12C: SEO
 
-### NICE TO HAVE (kan gjerast seinare)
+### NICE TO HAVE (kan gjerast senere)
 - FASE 8C: Telefon-bekreftelse
 - FASE 8D: Betalings-side
 - FASE 11: UI-konsistens
@@ -411,12 +411,12 @@ FASE 12 (Prod-kvalitet)
 
 ### Landing page:
 - ✅ Komplett redesign (4.68 kB)
-- ✅ 7 seksjonar med roleg, varm tone
+- ✅ 7 seksjonar med rolig, varm tone
 - ✅ Mørk blå gradient-bakgrunn
 - ✅ Ambient glød-effektar
 
 ### Undersider (6 stk):
-- ✅ Kvifor ToSom (4.78 kB)
+- ✅ Hvorfor ToSom (4.78 kB)
 - ✅ Slik fungerer det (2.35 kB)
 - ✅ Reisen (2.34 kB)
 - ✅ Kontakt (inkludert)

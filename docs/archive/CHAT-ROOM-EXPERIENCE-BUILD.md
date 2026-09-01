@@ -51,12 +51,12 @@ Header-puls når partner er online:
 - Opacity 0.3 → 0.6
 ```
 
-### 4. Smooth scroll ved nye meldingar
+### 4. Smooth scroll ved nye meldinger
 **Fil:** `components/chat/ChatMessages.tsx`
 
 ```
 Avansert scroll med debounce:
-- Berre scroll når messages.length endrar seg
+- Bare scroll når messages.length endrar seg
 - 50ms delay for animasjon
 - scrollIntoView({ behavior: 'smooth', block: 'end', force: true })
 ```
@@ -120,7 +120,7 @@ Viser resonans-prosent med hjarte-ikon:
 ```tsx
 function SilentMoment({ phaseOrder }: { phaseOrder: number }) {
   const moments = [
-    'Ta deg tid. Det viktigaste kjem ikkje av seg sjølv.',
+    'Ta deg tid. Det viktigaste kommer ikke av seg selv.',
     'Stille øyeblikk er der vi vokser mest.',
     'I ro finn vi svarene.',
     'Pust. Du er trygg her.',
@@ -145,21 +145,21 @@ Viser meningsfulle quotes etter 30 sekund inaktivitet (fase 3+):
 3 → Fremtid: rosa (#FF82C8)
 ```
 
-Med warm-indikator (fargar som aukar med fase).
+Med warm-indikator (fargar som øker med fase).
 
 ---
 
 ## FASE 9 — JOURNEY-INTEGRASJON
 
-### Fase-basert UI-endringar
+### Fase-basert UI-endringer
 
 | Fase | Namn | UI-endring |
 |------|------|------|
 | 1 | Introduksjon | Rogle, gull-aksent, standard bobler |
 | 2 | Trygghet | Grønt badge, gull-border, trygghets-indikator |
-| 3 | Sårbarhet | Fiolette detaljar, "stille øyeblikk", varmare bobler |
+| 3 | Sårbarhet | Fiolette detaljer, "stille øyeblikk", varmare bobler |
 | 4 | Fremtid | Rosa aksentar, større input, val-indikator |
-| 5 | Djupne | Full varm palett, meir glow, aktiv resonans |
+| 5 | Dybden | Full varm palett, mer glow, aktiv resonans |
 
 ### ChatRoom Props (journey-integrasjon)
 ```typescript
@@ -219,7 +219,7 @@ app/chat/
 
 ---
 
-## MICRO-INTERACTION DETALJAR
+## MICRO-INTERACTION DETALJER
 
 ### Animasjonar
 ```css
@@ -263,7 +263,7 @@ app/chat/
 1. **Trygghet først** — isSafe badge alltid synleg
 2. **Resonans som motivasjon** — prosent alltid tilgjengeleg
 3. **Stille øyeblikk** — kun i fase 3+ (ikke stressande)
-4. **Fase-badge** — viser progresjon utan press
+4. **Fase-badge** — viser progresjon uten press
 
 ---
 
@@ -275,8 +275,8 @@ app/chat/
 → <ChatRoom phaseOrder={conv.phaseOrder} />
 → ChatHeader fase-badge        → farge-basert på phaseOrder
 → ChatMessages bobler          → warm-farge basert på phaseOrder
-→ ChatInput size               → større input frå fase 4
-→ SilentMoment                 → vis frå fase 3+
+→ ChatInput size               → større input fra fase 4
+→ SilentMoment                 → vis fra fase 3+
 ```
 
 ---

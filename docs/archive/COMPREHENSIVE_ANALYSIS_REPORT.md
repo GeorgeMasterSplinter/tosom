@@ -8,12 +8,12 @@
 
 ## SAMMENDRAG
 
-ToSom-prosjektet har eit **sterkt fundament** — matching-algoritmen er forskningsbasert, designspesifikasjonen er klar, admin-systemet er velstrukturert. Men prosjektet lider av fire kritiske problem som blokkerer produksjonsrekning:
+ToSom-prosjektet har et **sterkt fundament** — matching-algoritmen er forskningsbasert, designspesifikasjonen er klar, admin-systemet er velstrukturert. Men prosjektet lider av fire kritiske problem som blokkerer produksjonsrekning:
 
 1. **Routing-forvirring** — pages/ vs app/ (LØYST: pages/ er deprecated)
 2. **Database-forvirring** — tre konkurrerande journey-modellar  
 3. **API-dublikasjon** — 70+ endepunkt fordelt på to directory
-4. **Produktmanglar** — chat, journey, betaling manglar frontend-visning
+4. **Produktmanglar** — chat, journey, betaling mangler frontend-visning
 
 ---
 
@@ -24,20 +24,20 @@ ToSom-prosjektet har eit **sterkt fundament** — matching-algoritmen er forskni
 | Modell | Kodebruk | Status | Aksjon |
 |--------|----------|--------|--------|
 | `JourneyProgress` | **15+ API-ruter** | ✅ AKTIV | BEHOLD som hovudmodell |
-| `ConversationJourney` | **0 filer i app/** | ❌ DEAD | SLETT frå schema |
-| `JourneyStep` | **0 filer i app/** (berre blueprint) | ❌ DEAD | SLETT frå schema |
+| `ConversationJourney` | **0 filer i app/** | ❌ DEAD | SLETT fra schema |
+| `JourneyStep` | **0 filer i app/** (bare blueprint) | ❌ DEAD | SLETT fra schema |
 
 ### 2. Andre døde/modellar med usikker status
 
 | Modell | Brukt? | Aksjon |
 |--------|--------|--------|
-| `JourneyDayContent` | Berre seed-journey.ts | ✅ BEHOLD (seed) |
+| `JourneyDayContent` | Bare seed-journey.ts | ✅ BEHOLD (seed) |
 | `MatchFeedback` | Schema-referanse, ingen app/ bruk | ⚠️ SLETT eller test først |
 | `MatchHistory` | Schema-referanse, ingen app/ bruk | ⚠️ SLETT eller test først |
 | `MatchQueue` | Schema-referanse, ingen app/ bruk | ⚠️ SLETT eller test først |
 | `SystemMessage` | SystemMessages.ts (types/kart) | ✅ BEHOLD (systemmeldingar) |
 | `PerformanceMetric` | lib/system/perf.ts, admin/observability | ✅ BEHOLD (observability) |
-| `AIRequestLog` | Schema-definert, ai/ API-ruter brukar det | ⚠️ TEST og verifiser |
+| `AIRequestLog` | Schema-definert, ai/ API-ruter bruker det | ⚠️ TEST og verifiser |
 | `RouteHit` | Ingen app/ bruk | ❌ SLETT |
 | `RateLimitLog` | Ingen app/ bruk | ❌ SLETT |
 
@@ -50,10 +50,10 @@ ToSom-prosjektet har eit **sterkt fundament** — matching-algoritmen er forskni
 1. `findBestMatchFor()` — brukt av `/api/match` POST  
 2. `findBestResonance()` — brukt av `/api/cron/matching`  
 
-**Konsekvens:** Inkonseptente match-resultat fordi dei bruker ulik logikk.
+**Konsekvens:** Inkonseptente match-resultat fordi de bruker ulik logikk.
 
 ### Løysing:
-- Vel berre `findBestMatchFor()` som standard
+- Vel bare `findBestMatchFor()` som standard
 - Oppdater cron-jobben til å bruke same funksjon
 - Merk `findBestResonance()` som `@deprecated`
 
@@ -65,9 +65,9 @@ ToSom-prosjektet har eit **sterkt fundament** — matching-algoritmen er forskni
 | Endepunkt | Formål | Status |
 |-----------|--------|--------|
 | `/api/cron/matching` | Dagleg matching | ✅ Implementert |
-| `/api/cron/journey` | Dagleg journey-progresjon | ⚠️ Implementert men ikkje konfigurert |
+| `/api/cron/journey` | Dagleg journey-progresjon | ⚠️ Implementert men ikke konfigurert |
 
-### Manglar:
+### Mangler:
 - Ingen Vercel cron konfigurasjon (vercel.json har ingen crons)
 - Ingen GitHub Actions cron
 - Ingen ekstern cron-server oppsett
@@ -82,17 +82,17 @@ ToSom-prosjektet har eit **sterkt fundament** — matching-algoritmen er forskni
 ## DEL 4: DESIGNSYSTEM
 
 ### Fargear og Design Tokens
-- ✅ `config/design-tokens.ts` eksisterer med korrekte verdiar
-- ❌ Mange sider brukar hardcoded fargar i staden for tokens
+- ✅ `config/design-tokens.ts` eksisterer med korrekte verdier
+- ❌ Mange sider bruker hardcoded fargar i staden for tokens
 
 ### Komponentkonsistens
 | Kategori | Status | Kommentar |
 |----------|--------|-----------|
-| Buttons | ⚠️ Fleire variantar | Ingen standard komponentbibliotek |
+| Buttons | ⚠️ Flere variantar | Ingen standard komponentbibliotek |
 | Cards | ❌ Verskjellige implementasjonar | GlassCard, Card, ingen standard |
-| Inputs | ❌ Ingen design-system inputs | Kvart input har eigen stil |
+| Inputs | ❌ Ingen design-system inputs | Kvart input har egen stil |
 | Modals | ❌ Verskjellige modal-ar | Inga standard dialog-komponent |
-| Progress | ❌ Kvar side har egen progress-bar | Ingen standard komponent |
+| Progress | ❌ Hver side har egen progress-bar | Ingen standard komponent |
 
 ---
 
@@ -102,8 +102,8 @@ ToSom-prosjektet har eit **sterkt fundament** — matching-algoritmen er forskni
 
 #### 1.1 Rydd database-schema ✅ FULLFØRT
 
-**SLETTA frå schema.prisma:**
-- `ConversationJourney` — 0 app/ bruk, berre migrasjonsscript
+**SLETTA fra schema.prisma:**
+- `ConversationJourney` — 0 app/ bruk, bare migrasjonsscript
 - `JourneyStep` — 0 app/ bruk, flytt til JourneyProgress
 - `RouteHit` — ingen bruk
 - `RateLimitLog` — ingen bruk
@@ -115,10 +115,10 @@ ToSom-prosjektet har eit **sterkt fundament** — matching-algoritmen er forskni
 - `PerformanceMetric` ✅ — observability bruker det
 - `AIRequestLog` ✅ — ai/ API-ruter bruker det
 
-**MARKERT som @deprecated (ikkje sletta):**
-- `MatchFeedback` ⚠️ — merk for seinare fjerning etter test
-- `MatchHistory` ⚠️ — merk for seinare fjerning etter test
-- `MatchQueue` ⚠️   — merk for seinare fjerning etter test
+**MARKERT som @deprecated (ikke sletta):**
+- `MatchFeedback` ⚠️ — merk for senere fjerning etter test
+- `MatchHistory` ⚠️ — merk for senere fjerning etter test
+- `MatchQueue` ⚠️   — merk for senere fjerning etter test
 
 #### 1.2 Flytt getJourneyStatus() ✅ FULLFØRT
 ```typescript
@@ -160,9 +160,9 @@ export function findBestResonance(...) { ... }
 #### 2.1 Chat-visning for match-par
 ```typescript
 // app/chat/[conversationId]/page.tsx
-// - Meldings-liste frå Message[]
+// - Meldings-liste fra Message[]
 // - Pusher-realtime oppdateringar
-// - Guided spørsmål frå QuestionCategory
+// - Guided spørsmål fra QuestionCategory
 // - Typing-indikator + Read-receipt
 // - Bildedeling etter dag 14
 ```
@@ -171,9 +171,9 @@ export function findBestResonance(...) { ... }
 ```typescript
 // app/journey/[conversationId]/page.tsx
 // - Dag 1-30 visning
-// - Dagens oppgåve frå JourneyProgress
+// - Dagens oppgåve fra JourneyProgress
 // - Resonans-skjerming
-// - SystemMessage-visning + Refleksjonar
+// - SystemMessage-visning + Refleksjoner
 ```
 
 #### 2.3 Dashboard-reisevisning
@@ -181,7 +181,7 @@ export function findBestResonance(...) { ... }
 // Dashboard-komponent som viser:
 // - Neste match-runde-tidspunkt
 // - Pågåande reise-dag (JourneyProgress.day)  
-// - Resonans-nivå frå siste samtale
+// - Resonans-nivå fra siste samtale
 // - Hurtigtilgang til chat
 ```
 
@@ -216,7 +216,7 @@ export function findBestResonance(...) { ... }
 #### 3.3 Database-optimalisering
 ```sql
 -- Index JSON-felt: profile.lifestyle, profile.personality
--- Rydd ubrukne modellar frå schema + migrations
+-- Rydd ubrukne modellar fra schema + migrations
 ```
 
 ---
@@ -225,18 +225,18 @@ export function findBestResonance(...) { ... }
 
 | Område | Status | Prioritet |
 |--------|--------|-----------|
-| Routing | ✅ app/ som einheits-kjelde | LØYST |
+| Routing | ✅ app/ som einheits-kilde | LØYST |
 | Database | ❌ Triple-modell-forvirring | 🔴 KRAV |
 | Frontend | ⚠️ 70% ferdig, fragmentert | 🟡 Høg |
 | Backend/API | ⚠️ Omfattande, nok duplikat | 🟡 Høg |
 | Match-system | ❌ To funksjonar, inkonsistent | 🔴 KRAV |
 | Journey | ❌ Tre modellar | 🔴 KRAV |
-| Chat | ✅ Backend OK, ❌ frontend manglar | 🟡 Middels |
+| Chat | ✅ Backend OK, ❌ frontend mangler | 🟡 Middels |
 | Admin | ✅ Velstrukturert | ✅ God |
-| Autentisering | ⚠️ Vipps token-refresh manglar | 🟡 Middels |
+| Autentisering | ⚠️ Vipps token-refresh mangler | 🟡 Middels |
 | Betaling | ⚠️ Backend klar, frontend tom | 🟡 Middels |
-| Cron | ❌ Implementert, ikkje konfigurert | 🔴 KRAV |
-| Designsystem | ⚠️ Tokens OK, komponentar manglar | 🟡 Middels |
+| Cron | ❌ Implementert, ikke konfigurert | 🔴 KRAV |
+| Designsystem | ⚠️ Tokens OK, komponentar mangler | 🟡 Middels |
 
 ---
 
@@ -244,7 +244,7 @@ export function findBestResonance(...) { ... }
 
 **Rekkjefølgje:** Fase 1 → Fase 2 → Fase 3  
 
-**Grunnlag:** Utan å stable fundamentet først (Fase 1) vil alle vidare endringar skape fleire problem enn dei løys.
+**Grunnlag:** Uten å stable fundamentet først (Fase 1) vil alle vidare endringer skape flere problem enn de løys.
 
 **Målstatus etter Fase 1:**
 - ✅ Éin journey-modell: JourneyProgress  

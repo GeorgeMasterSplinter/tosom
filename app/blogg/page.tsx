@@ -63,7 +63,7 @@ const articles = [
     lesetid: '4 min',
     kategori: 'Tid og nærhet',
     tittel: 'Hvorfor 30 dager er den perfekte tidsrammen',
-    excerpt: 'Psykologer har lenge observert at det ofte tar rundt 30 dager for to menneske å bygge ekte tillit og ein stabil forbindelse.',
+    excerpt: 'Psykologer har lenge observert at det ofte tar rundt 30 dager for to menneske å bygge ekte tillit og en stabil forbindelse.',
     reference: 'Reisner, A. & McAndrew, C. (2022). The Psychology of Time in Relationship Formation. Journal of Social and Personal Relationships, 39(4), 890–912.',
     icon: <IconTime />,
   },

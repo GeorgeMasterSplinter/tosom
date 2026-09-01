@@ -7,11 +7,11 @@
 
 ## OVERSIKT
 
-ToSom har ein AI-provider-abstraksjon i `lib/ai/provider` som gir:
+ToSom har en AI-provider-abstraksjon i `lib/ai/provider` som gir:
 
 - **Einhetlig interface** for AI-operasjonar
 - **OpenAI-integrasjon** som primary provider
-- **Graceful degradation** til fallback-verdier når API-nøkle manglar
+- **Graceful degradation** til fallback-verdier når API-nøkle mangler
 - **Match insights**, **journey context**, og **profil-forslag**
 
 ---
@@ -71,10 +71,10 @@ OPENAI_BASE_URL=https://api.openai.com/v1
 
 ## FALLBACK-MEKANISME
 
-Når AI_API_KEY manglar eller API feilar:
+Når AI_API_KEY mangler eller API feilar:
 - Returnerer **håndskrivne fallback-verdier**
 - Ingen feil kastas
-- Brukarar ser aldri AI-feil
+- Brukere ser aldri AI-feil
 
 ---
 
@@ -108,7 +108,7 @@ Når AI_API_KEY manglar eller API feilar:
 Set AI_API_KEY i miljøvariablane
 
 ### API-feil
-Provider fell automatisk tilbake til håndskrivne verdiar
+Provider fell automatisk tilbake til håndskrivne verdier
 
 ---
 
@@ -116,4 +116,4 @@ Provider fell automatisk tilbake til håndskrivne verdiar
 
 - AI-bruk er **alltid valfritt** for sluttbrukar
 - Fallback-verdier er **alltid kvalifiserte**
-- Ingen AI-feil nå brukarar
+- Ingen AI-feil nå brukere

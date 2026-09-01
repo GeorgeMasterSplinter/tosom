@@ -549,7 +549,7 @@ Flyttet til v7, med kartlegging før sletting.
 
 ## 8.2 Språkvakten
 
-`npm run verify:lang` gir exit 0 og fanger tolv nynorske ordformer med ordgrenser. Ordgrensene er nødvendige: uten dem gir «selvkjemt» falske treff på «kjem».
+`npm run verify:lang` gir exit 0 og fanger tolv nynorske ordformer med ordgrenser. Ordgrensene er nødvendige: uten dem gir «selvkjemt» falske treff på «kommer».
 
 **Begrensning:** vakten dekker kun `.tsx`. Nynorsk i `.ts`-filer — som strenger i API-ruter, `lib/` eller `config/` — fanges ikke.
 

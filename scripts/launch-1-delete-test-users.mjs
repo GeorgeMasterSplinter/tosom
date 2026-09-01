@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * ToSom lansering — Steg 1: Slett testbrukarar frå PRODUKSJON.
+ * ToSom lansering — Steg 1: Slett testbrukarar fra PRODUKSJON.
  *
  * Bruk:
  *   DATABASE_URL="postgres://..." node scripts/launch-1-delete-test-users.mjs          # DRY RUN (standard)
@@ -8,7 +8,7 @@
  *
  * Sikkerheit:
  * - Dry run er standard. --apply krevs for faktisk sletting.
- * - Søket treff berre brukarar med epost/namn som inneheld test1 eller test2.
+ * - Søket treff bare brukere med epost/namn som inneholder test1 eller test2.
  */
 
 import { PrismaClient } from '@prisma/client';
@@ -16,7 +16,7 @@ import { PrismaClient } from '@prisma/client';
 const APPLY = process.argv.includes('--apply');
 const url = process.env.DATABASE_URL;
 if (!url) {
-  console.error('FEIL: DATABASE_URL manglar. Eksempel:\n  DATABASE_URL="postgres://..." node scripts/launch-1-delete-test-users.mjs');
+  console.error('FEIL: DATABASE_URL mangler. Eksempel:\n  DATABASE_URL="postgres://..." node scripts/launch-1-delete-test-users.mjs');
   process.exit(1);
 }
 
@@ -35,11 +35,11 @@ async function main() {
   });
 
   if (users.length === 0) {
-    console.log('Ingen testbrukarar funne — inga sletting nødvendig.');
+    console.log('Ingen testbrukarar funnet — inga sletting nødvendig.');
     return;
   }
 
-  console.log(`Funne ${users.length} testbrukar(ar):`);
+  console.log(`Funnet ${users.length} testbrukar(ar):`);
   for (const u of users) {
     console.log(`  - ${u.id}  ${u.email}  ${u.name || ''}  (oppretta ${u.createdAt.toISOString().slice(0, 10)})`);
   }
@@ -104,7 +104,7 @@ async function main() {
     await rm('twoFactorSecret', { userId: uid });
     await rm('profile', { userId: uid });
     const del = await prisma.user.delete({ where: { id: uid } });
-    console.log(`  Brukar ${del.email} sletta. ✅`);
+    console.log(`  Bruker ${del.email} sletta. ✅`);
   }
 
   // Verifisering
@@ -112,7 +112,7 @@ async function main() {
   const remainingMatches = await prisma.match.count();
   const remainingJourney = await prisma.journeyProgress.count();
   console.log('\n=== VERIFISERING ===');
-  console.log('Attverande brukarar:', remaining.map((u) => u.email).join(', ') || '(ingen)');
+  console.log('Attverande brukere:', remaining.map((u) => u.email).join(', ') || '(ingen)');
   console.log('Attverande matchar:', remainingMatches);
   console.log('Attverande journeyProgress:', remainingJourney);
   console.log('FERDIG.');

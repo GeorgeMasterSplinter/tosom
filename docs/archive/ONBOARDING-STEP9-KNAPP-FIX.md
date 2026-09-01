@@ -8,7 +8,7 @@
 
 Steg 9 (Oppsummering) sine knapper (BackButton og PremiumButton) fungerte ikke fordi:
 1. OnboardingFlow.tsx mangla `step` og `goToStep` props i case 8
-2. Step9Oppsummering.tsx mottok ikkje desse propene
+2. Step9Oppsummering.tsx mottok ikke desse propene
 
 ---
 
@@ -100,6 +100,6 @@ hover:bg-white/20 transition-all duration-300
 
 ## OPPSUMMERING
 
-**Problem:** Steg 9 mangla `step` og `goToStep` props, så knappene kunne ikkje navigere.
+**Problem:** Steg 9 mangla `step` og `goToStep` props, så knappene kunne ikke navigere.
 **Løysing:** La til props i OnboardingFlow.tsx case 8 og oppdaterte Step9Oppsummering.tsx interface.
 **Resultat:** Navigasjon fungerer no på Steg 9.

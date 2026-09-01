@@ -12,7 +12,7 @@ OnboardingFlow.tsx brukte `document.createElement` og `document.head.appendChild
 ReferenceError: document is not defined
 ```
 
-ved server-side rendering (SSR) i Next.js, fordi `document` berre eksisterer på klientsida.
+ved server-side rendering (SSR) i Next.js, fordi `document` bare eksisterer på klientsida.
 
 ---
 
@@ -51,9 +51,9 @@ useEffect(() => {
 
 ---
 
-## NYCKEL-ENDRINGAR
+## NYCKEL-ENDRINGER
 
-1. **Flytta inn i useEffect** — berre køyrd på klientsida
+1. **Flytta inn i useEffect** — bare køyrd på klientsida
 2. **Cleanup-funksjon** — fjern style-element ved unmount
 3. **Ingen andre document/window bruk** — alt er inne i useEffect
 
@@ -69,7 +69,7 @@ useEffect(() => {
 
 ## SSR-REGEL
 
-All bruk av `document`, `window`, `localStorage`, osv. **må** vere inne i:
+All bruk av `document`, `window`, `localStorage`, osv. **må** være inne i:
 - `useEffect` (React)
 - Client-only funksjonar
 - `'use client'` directive med forsiktig bruk

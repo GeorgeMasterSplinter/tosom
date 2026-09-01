@@ -38,7 +38,7 @@ async function collectMetrics(): Promise<AlphaMetrics> {
   const activeJourneys = await prisma.journeyProgress.count()
 
   // Kritiske feil-sjekk
-  // 1. Dobbelt-match (sjekk om nokon har >1 aktiv match)
+  // 1. Dobbelt-match (sjekk om noen har >1 aktiv match)
   const doubleMatches = await prisma.$queryRaw<any[]>`
     SELECT user_a_id, COUNT(*) as cnt
     FROM "Match"
@@ -47,7 +47,7 @@ async function collectMetrics(): Promise<AlphaMetrics> {
     HAVING COUNT(*) > 1
   `
   if (doubleMatches.length > 0) {
-    warnings.push(`⚠️ Dobbelt-match oppdaga: ${doubleMatches.length} brukarar med >1 aktiv match`)
+    warnings.push(`⚠️ Dobbelt-match oppdaga: ${doubleMatches.length} brukere med >1 aktiv match`)
   }
 
   // 2. nextDayAt-feil (sjekk om nextDayAt er i fortida)
@@ -61,7 +61,7 @@ async function collectMetrics(): Promise<AlphaMetrics> {
     warnings.push(`⚠️ ${expiredJourneys} reiser med expired nextDayAt`)
   }
 
-  // 3. imageShareAllowedAt-feil (sjekk om image er delt før 14 dagar)
+  // 3. imageShareAllowedAt-feil (sjekk om image er delt før 14 dager)
   const earlyImageShares = await prisma.conversation.count({
     where: {
       imageShared: true,
@@ -69,10 +69,10 @@ async function collectMetrics(): Promise<AlphaMetrics> {
     },
   })
   if (earlyImageShares > 0) {
-    warnings.push(`⚠️ ${earlyImageShares} konversasjonar med tidleg bildedeling`)
+    warnings.push(`⚠️ ${earlyImageShares} konversasjonar med tidlig bildedeling`)
   }
 
-  // 4. Manglande systemmeldingar
+  // 4. Manglende systemmeldingar
   const journeysWithoutMessages = await prisma.$queryRaw<any[]>`
     SELECT jp.user_id
     FROM "JourneyProgress" jp
@@ -83,13 +83,13 @@ async function collectMetrics(): Promise<AlphaMetrics> {
     HAVING COUNT(m.id) = 0
   `
   if (journeysWithoutMessages.length > 0) {
-    warnings.push(`⚠️ ${journeysWithoutMessages.length} brukarar utan systemmeldingar i reise`)
+    warnings.push(`⚠️ ${journeysWithoutMessages.length} brukere uten systemmeldingar i reise`)
   }
 
-  // 5. Auth-feil (sjekk om det er mange banned/deleted brukarar)
+  // 5. Auth-feil (sjekk om det er mange banned/deleted brukere)
   const bannedUsers = await prisma.user.count({ where: { bannedAt: { not: null } } })
   if (bannedUsers > 0) {
-    warnings.push(`⚠️ ${bannedUsers} brukarar er bana`)
+    warnings.push(`⚠️ ${bannedUsers} brukere er bana`)
   }
 
   // 6. Systemfeil (sjekk SystemLog for errors)
@@ -123,7 +123,7 @@ async function main() {
 
   // Skriv ut rapport
   console.log("=== Alpha-metrikk ===")
-  console.log(`Brukarar:       ${metrics.totalUsers} total / ${metrics.onboardedUsers} onboardet / ${metrics.activeUsers} aktiv`)
+  console.log(`Brukere:       ${metrics.totalUsers} total / ${metrics.onboardedUsers} onboardet / ${metrics.activeUsers} aktiv`)
   console.log(`Matches:        ${metrics.totalMatches}`)
   console.log(`Aktive reiser:  ${metrics.activeJourneys}`)
   console.log(`Feil (24t):     ${metrics.errorCount}`)

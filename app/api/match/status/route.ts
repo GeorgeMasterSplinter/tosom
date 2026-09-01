@@ -1,7 +1,7 @@
 /**
  * GET /api/match/status
  *
- * Hent match-status for ein bruker.
+ * Hent match-status for en bruker.
  * B8: Fjerna acceptance-fields; status er no 'active' | 'ended' | 'expired'.
  */
 
@@ -21,7 +21,7 @@ async function getHandler(req: NextRequest) {
     }
     const user = result.user;
 
-    // 2. Finn aktiv match for brukaren
+    // 2. Finn aktiv match for brukeren
     const match = await prisma.match.findFirst({
       where: {
         OR: [
@@ -86,7 +86,7 @@ async function getHandler(req: NextRequest) {
       });
     }
 
-    // Finn den andre brukaren (ikke selv)
+    // Finn den andre brukeren (ikke selv)
     const otherUser = match.userAId === user.id ? match.userB : match.userA;
 
     // Sjekk om vi er i 14-dagers bildefase

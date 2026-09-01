@@ -1,6 +1,6 @@
 // app/api/match/check/route.ts — POST /api/match/check
 // Returner match-status for innlogga bruker uten å opprette ny match.
-// Brukast av frontend for å vise om brukaren har ein aktiv/ventande match.
+// Brukast av frontend for å vise om brukeren har en aktiv/ventande match.
 
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
@@ -64,7 +64,7 @@ export async function POST(request: Request): Promise<NextResponse> {
       );
     }
 
-    // Hent neste match for brukaren (bare nyaste)
+    // Hent neste match for brukeren (bare nyaste)
     const latestMatch = await prisma.match.findFirst({
       where: {
         OR: [{ userAId: userId }, { userBId: userId }],
@@ -103,7 +103,7 @@ export async function POST(request: Request): Promise<NextResponse> {
         });
         if (convo) result.conversationId = convo.id;
         
-        // Rekn ut dagar att fra journeyProgress
+        // Rekn ut dager att fra journeyProgress
         const jp = await prisma.journeyProgress.findFirst({
           where: { userId },
           select: { day: true, startedAt: true },

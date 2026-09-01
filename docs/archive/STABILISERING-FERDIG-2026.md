@@ -16,7 +16,7 @@ Stabiliseringsfasen for ToSom er no **fullført** med alle 13 oppgåvene.
 
 ### OPPGAVE 1: DEV-LOGIN ✅
 
-| Kategori | Detaljar |
+| Kategori | Detaljer |
 |--|--|
 | **Fil** | `app/api/dev-login/route.ts` |
 | **Frontend** | `app/dev-login/page.tsx` |
@@ -25,7 +25,7 @@ Stabiliseringsfasen for ToSom er no **fullført** med alle 13 oppgåvene.
 
 ### OPPGAVE 2: TEST-DATABASE ✅
 
-| Kategori | Detaljar |
+| Kategori | Detaljer |
 |--|--|
 | **Fil** | `.env.test` |
 | **Docker** | `docker-compose.test.yml` |
@@ -34,14 +34,14 @@ Stabiliseringsfasen for ToSom er no **fullført** med alle 13 oppgåvene.
 
 ### OPPGAVE 3: MODEL CLEANUP ✅
 
-| Kategori | Detaljar |
+| Kategori | Detaljer |
 |--|--|
 | **Dokumentasjon** | `docs/MODEL-CLEANUP.md` |
-| **Funne** | 6 deprecated-modellar analyserte |
+| **Funnet** | 6 deprecated-modellar analyserte |
 
 ### OPPGAVE 4: CI/CD PIPELINE ✅
 
-| Kategori | Detaljar |
+| Kategori | Detaljer |
 |--|--|
 | **CI-fil** | `.github/workflows/ci.yml` |
 | **CD-fil** | `.github/workflows/cd.yml` |
@@ -49,61 +49,61 @@ Stabiliseringsfasen for ToSom er no **fullført** med alle 13 oppgåvene.
 
 ### OPPGAVE 5: E2E-TESTING ✅
 
-| Kategori | Detaljar |
+| Kategori | Detaljer |
 |--|--|
 | **Config** | `playwright.config.ts` |
 | **Fixtures** | `e2e/fixtures/test-users.ts` |
-| **Testar** | 3 test-filer (20 testar totalt) |
+| **Tester** | 3 test-filer (20 tester totalt) |
 | **Dokumentasjon** | `docs/E2E-TESTS.md` |
 
 ### OPPGAVE 6: SEED-SYSTEM ✅
 
-| Kategori | Detaljar |
+| Kategori | Detaljer |
 |--|--|
 | **Fil** | `prisma/seeds/seed.ts` |
 | **Dokumentasjon** | `docs/SEED.md` |
-| **Moduser** | 3 (basic: 3 brukarar, test: 10, full: 20 + match + journey) |
+| **Moduser** | 3 (basic: 3 brukere, test: 10, full: 20 + match + journey) |
 
 ### OPPGAVE 7: AI-PROVIDER ✅
 
-| Kategori | Detaljar |
+| Kategori | Detaljer |
 |--|--|
-| **Fil** | `lib/ai/provider` (allereie eksisterande) |
+| **Fil** | `lib/ai/provider` (allerede eksisterande) |
 | **Dokumentasjon** | `docs/AI-PROVIDER.md` |
 
 ### OPPGAVE 8: STRIPE-INTEGRASJON ✅
 
-| Kategori | Detaljar |
+| Kategori | Detaljer |
 |--|--|
 | **Dokumentasjon** | `docs/STRIPE.md` |
 
 ### OPPGAVE 9: PUSHER-INTEGRASJON ✅
 
-| Kategori | Detaljar |
+| Kategori | Detaljer |
 |--|--|
 | **Dokumentasjon** | `docs/PUSHER.md` |
 
 ### OPPGAVE 10: CRON-JOBBER ✅
 
-| Kategori | Detaljar |
+| Kategori | Detaljer |
 |--|--|
 | **Dokumentasjon** | `docs/CRON.md` |
 
 ### OPPGAVE 11: UPLOADTHING ✅
 
-| Kategori | Detaljar |
+| Kategori | Detaljer |
 |--|--|
 | **Dokumentasjon** | `docs/UPLOAD.md` |
 
 ### OPPGAVE 12: SUPABASE ✅
 
-| Kategori | Detaljar |
+| Kategori | Detaljer |
 |--|--|
 | **Dokumentasjon** | `docs/SUPABASE.md` |
 
 ### OPPGAVE 13: BACKUPS ✅
 
-| Kategori | Detaljar |
+| Kategori | Detaljer |
 |--|--|
 | **Dokumentasjon** | `docs/BACKUPS.md` |
 
@@ -146,9 +146,9 @@ Stabiliseringsfasen for ToSom er no **fullført** med alle 13 oppgåvene.
 | `docs/CI-CD.md` | CI/CD dokumentasjon |
 | `playwright.config.ts` | Playwright konfigurasjon |
 | `e2e/fixtures/test-users.ts` | E2E test fixtures |
-| `e2e/tests/onboarding.spec.ts` | Onboarding E2E-testar |
-| `e2e/tests/match.spec.ts` | Match E2E-testar |
-| `e2e/tests/chat.spec.ts` | Chat E2E-testar |
+| `e2e/tests/onboarding.spec.ts` | Onboarding E2E-tester |
+| `e2e/tests/match.spec.ts` | Match E2E-tester |
+| `e2e/tests/chat.spec.ts` | Chat E2E-tester |
 | `docs/E2E-TESTS.md` | E2E-test dokumentasjon |
 | `prisma/seeds/seed.ts` | Seed-script |
 | `docs/SEED.md` | Seed dokumentasjon |
@@ -184,7 +184,7 @@ Stabiliseringsfasen for ToSom er no **fullført** med alle 13 oppgåvene.
 ## KRITISKE PUNKTER Å MÅTAE
 
 1. **Test CI/CD pipeline** — Push til main og bekreft auto-deploy
-2. **Test E2E-testar** — `npx playwright test`
+2. **Test E2E-tester** — `npx playwright test`
 3. **Test seed** — `npx ts-node prisma/seeds/seed.ts full`
 4. **Test dev-login** — Gå til `/dev-login` (krav: DEV_LOGIN_ENABLED=true)
 5. **Opprett Stripe-konto** og fyll inn STRIPE_SECRET_KEY

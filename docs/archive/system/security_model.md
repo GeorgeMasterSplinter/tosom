@@ -346,7 +346,7 @@ PRIORITET 3 (MEDIUM — etter prod):
 ├── SV-009: miljø-gate på dev-login UI
 └── SV-010: Rate-limiting på login
 
-PRIORITET 4 (LOW — teknisk gjeld):
+PRIORITET 4 (LOW — teknisk gjelder):
 ├── SV-011: Verifiser CSRF-beskyttelse
 └── SV-012: Implementer eller fjern SUPPORT-rollen
 ```

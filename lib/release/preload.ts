@@ -17,12 +17,12 @@ type Preloadable =
 
 const registered = new Set<Preloadable>();
 
-/** Marker ein komponent som preloada */
+/** Marker en komponent som preloada */
 export function markPreloaded(name: Preloadable): void {
   registered.add(name);
 }
 
-/** Sjekk om ein komponent er preloada */
+/** Sjekk om en komponent er preloada */
 export function isPreloaded(name: Preloadable): boolean {
   return registered.has(name);
 }

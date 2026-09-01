@@ -14,9 +14,9 @@ Dokumentet beskriver lanseringsplanen for ToSom-produksjon. Det inkluderer dato,
 
 ## 3. Trafikkforventingar
 
-| Periode | Forventa brukarar | API-kall/dag | Merknad |
+| Periode | Forventa brukere | API-kall/dag | Merknad |
 |--|--|--|--|
-| Dato 0-1 | 10-50 | < 1000 | Lansering, tidlege brukarar |
+| Dato 0-1 | 10-50 | < 1000 | Lansering, tidlege brukere |
 | Dato 2-7 | 50-200 | < 5000 | Fierdare innkomst |
 | Dato 8-30 | 200-1000 | < 20000 | Stabilisering |
 | Dato 31+ | 1000+ | < 50000 | Normal drift |
@@ -25,10 +25,10 @@ Dokumentet beskriver lanseringsplanen for ToSom-produksjon. Det inkluderer dato,
 
 ### Fyrste 72 timer (kritisk periode)
 - **Kontinuerleg:** Observability-dashboard /admin/observability/metrics
-- **Kvar 30 min:** Healthcheck + quickCheck.ts dei fyrste 6 timene
-- **Kvar time:** Security-dashboard /admin/security/overview
-- **Kvar 6 time:** AI-kostnad (billing dashboard)
-- **Kvar dag:** Backup-verifisering
+- **Hver 30 min:** Healthcheck + quickCheck.ts de fyrste 6 timene
+- **Hver time:** Security-dashboard /admin/security/overview
+- **Hver 6 time:** AI-kostnad (billing dashboard)
+- **Hver dag:** Backup-verifisering
 
 ### Alarm-nivå
 | Nivå | Krav | Respons |
@@ -36,14 +36,14 @@ Dokumentet beskriver lanseringsplanen for ToSom-produksjon. Det inkluderer dato,
 | Critical | System nede eller data tap | Umiddelbart (< 5 min) |
 | High | Error-rate > 5% eller AI-kvota tom | Innen 15 min |
 | Medium | Latens > 2x mål | Innen 1 time |
-| Low | Advarsel (avvik utan feil) | Neste dag |
+| Low | Advarsel (avvik uten feil) | Neste dag |
 
 ## 5. Fallback-plan
 
 ### Ved alvorleg deploy-feil (system nede > 30 min)
 1. Koyr rollback: `bash scripts/deploy/rollback.sh`
 2. Verifiser healthcheck
-3. Send varsel til brukarar (system message)
+3. Send varsel til brukere (system message)
 4. Dokumenter incident
 
 ### Ved AI-feil
@@ -54,8 +54,8 @@ Dokumentet beskriver lanseringsplanen for ToSom-produksjon. Det inkluderer dato,
 
 ### Ved DB-feil
 1. Failover til standby-DB (dersom konfigurert)
-2. Eller restore fra backup (sjå /deploy/backup.md)
-3. Send varsel til brukarar
+2. Eller restore fra backup (se /deploy/backup.md)
+3. Send varsel til brukere
 4. Dokumenter incident
 
 ### Ved sikkerheitsbrotsm
@@ -69,15 +69,15 @@ Dokumentet beskriver lanseringsplanen for ToSom-produksjon. Det inkluderer dato,
 ### Internt
 | Kanal | Målgruppe | Frekvens |
 |--|--|--|
-| Slack (#tosom-deploy) | Utviklarsteam | Kontinuerleg dei fyrste 72 timene |
+| Slack (#tosom-deploy) | Utviklarsteam | Kontinuerleg de fyrste 72 timene |
 | Email | Leadership | Dager 1, 3, 7 etter deploy |
 
 ### Eksternt
 | Kanal | Målgruppe | Tilfelle |
 |--|--|--|
-| Status-side | Alle brukarar | Systemdruft eller vedlikehald |
-| Email | Alle brukarar | Ved lengre avbrot (> 1 time) |
-| App-notifikasjon | Aktive brukarar | Ved vedlikehald |
+| Status-side | Alle brukere | Systemdruft eller vedlikehald |
+| Email | Alle brukere | Ved lengre avbrot (> 1 time) |
+| App-notifikasjon | Aktive brukere | Ved vedlikehald |
 
 ## 7. Første patch-runde (72 timer etter launch)
 
@@ -99,7 +99,7 @@ Dokumentet beskriver lanseringsplanen for ToSom-produksjon. Det inkluderer dato,
 
 ## 8. Launch-checkliste
 
-- [ ] READINESS_FOR_PROD = true (sjå /docs/readiness-gate.md)
+- [ ] READINESS_FOR_PROD = true (se /docs/readiness-gate.md)
 - [ ] Backup testet og fungerande
 - [ ] Deploy testet i staging/pre-prod
 - [ ] Smoke tests OK mot pre-prod
@@ -115,7 +115,7 @@ Dokumentet beskriver lanseringsplanen for ToSom-produksjon. Det inkluderer dato,
 | Felt | Verdi |
 |--|--|
 | LAUNCH_APPROVED | false |
-| Launch-fase | Ikkje starta |
+| Launch-fase | Ikke starta |
 | Lansert | |
 | Etter-lans evaluering | |
 

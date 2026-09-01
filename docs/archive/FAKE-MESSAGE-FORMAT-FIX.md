@@ -7,23 +7,23 @@
 
 ## Problem
 
-Fake match oppretta ingen startmelding i samtalen. Chat-samtalen blei tom, og brukaren kunne ikkje sjå nokon meldingar.
+Fake match oppretta ingen startmelding i samtalen. Chat-samtalen blei tom, og brukeren kunne ikke se noen meldinger.
 
 ## Rotårsak
 
-`createFakeMatch.ts` oppretta berre ein `conversation`-post, men ingen `message`-post. Utan meldingar i databasen viser chat UI tom state med "Det er tomt her — men det blir ikkje det."
+`createFakeMatch.ts` oppretta bare en `conversation`-post, men ingen `message`-post. Uten meldinger i databasen viser chat UI tom state med "Det er tomt her — men det blir ikke det."
 
 ## Løysing
 
-Laegde til ein startmelding i `createFakeMatch.ts` rett etter oppretting av conversation:
+Laegde til en startmelding i `createFakeMatch.ts` rett etter oppretting av conversation:
 
 ```typescript
-// Opprett første melding frå userA
+// Opprett første melding fra userA
 await prisma.message.create({
   data: {
     conversationId: convo.id,
     senderId: userA.id,
-    content: "Hei! Dette er ein test-samtale 😊",
+    content: "Hei! Dette er en test-samtale 😊",
     type: "user",
   },
 });
@@ -33,7 +33,7 @@ await prisma.message.create({
 
 Prisma schema (line 353-371) definerer Message-modellen med:
 
-- `content` — ikkje `text` (skilnad! Schemaet bruker `content`)
+- `content` — ikke `text` (skilnad! Schemaet bruker `content`)
 - `type` — MessageCategory enum (`user`, `system`, `continue_choice`, `image`)
 - `state` — MessageState enum (`SENT`, `DELIVERED`, `READ`, `DELETED`)
 - `senderId` — referanse til User
@@ -54,5 +54,5 @@ Prisma schema (line 353-371) definerer Message-modellen med:
 1. Gå til `/api/dev-login?userId=test-user-1` (slett cookies først)
 2. Fullfør onboarding til steg 10
 3. Klikk "Start reisen"
-4. Bekreft at chat viser startmeldinga "Hei! Dette er ein test-samtale 😊"
+4. Bekreft at chat viser startmeldinga "Hei! Dette er en test-samtale 😊"
 5. Bekreft at ingen spinner er synleg

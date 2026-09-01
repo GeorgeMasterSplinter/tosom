@@ -24,27 +24,27 @@
 
 ## RETTEDE ORD (Nynorsk → Bokmål)
 
-### Generelle rettingar (gjelder på tvers av fleire filer)
+### Generelle rettingar (gjelder på tvers av flere filer)
 
 | Nynorsk (før) | Bokmål (etter) |
 |---------------|----------------|
-| vere | være |
+| være | være |
 | søkjer | søker |
-| roleg | rolig |
-| ein | en |
+| rolig | rolig |
+| en | en |
 | kjennes | føles |
 | vennleg | vennligst |
-| dei | de |
+| de | de |
 | felta | feltene |
-| berre | bare |
+| bare | bare |
 | brukte | brukes |
 | bygga | bygge |
 | finna | finne |
-| nokon | noen |
+| noen | noen |
 | møta | møte |
 | din | din |
 | bety | betyr |
-| kva | hva |
+| hva | hva |
 | kor | hvordan |
 | kjenna | føle |
 | der | der |
@@ -52,45 +52,45 @@
 | er | er |
 | tilstede | til stede |
 | høre | høre |
-| setje | sette |
+| sette | sette |
 | klem | klem |
 | same | samme |
 | fram | fram |
 | drøymar | drømmer |
-| sjølv | selv |
-| seg sjølv | seg selv |
-| noko | noe |
+| selv | selv |
+| seg selv | seg selv |
+| noe | noe |
 | må | må |
 | får | får |
-| utan | uten |
+| uten | uten |
 | alle | alle |
 | har | har |
 | rom | rom |
 | vara | være |
 | meg | meg |
 | seg | seg |
-| ikkje | ikke |
+| ikke | ikke |
 | akkurat | akkurat |
 | no | nå |
 | skal | skal |
 | har | har |
 | vald | valgt |
 | bort | bort |
-| frå | fra |
+| fra | fra |
 | se | se |
 | drøm | drøm |
 | jobbar | jobber |
 | nå | nå |
-| seinare | seinere |
-| eit | et |
-| eigen | eget |
+| senere | seinere |
+| et | et |
+| egen | eget |
 | der | der |
 | arbeide | arbeide |
 | fritt | fritt |
-| nokon | noen |
+| noen | noen |
 | skape | skape |
-| saman | sammen |
-| ein | en |
+| sammen | sammen |
+| en | en |
 | base | base |
 | felles | felles |
 | liv | liv |
@@ -103,7 +103,7 @@
 | verkeleg | virkelig |
 | pare | par |
 | lage | lage |
-| heim | hjem |
+| hjem | hjem |
 | verden | verden |
 | rundt | rundt |
 | bygge | bygge |
@@ -123,14 +123,14 @@
 | spesiell | spesiell |
 | egenskap | egenskap |
 | kanskje | kanskje |
-| berre | bare |
+| bare | bare |
 | nære | nære |
 | venner | venner |
 | raste | raste |
 | fakta | fakta |
 | på | på |
 | elsker | elsker |
-| sjølv | selv |
+| selv | selv |
 | litt | litt |
 | skammfullt | skammfullt |
 | helga | helga |
@@ -144,14 +144,14 @@
 | nysgjerrig | nysgjerrig |
 | vise | vise |
 | omsorg | omsorg |
-| eigen | egen |
+| egen | egen |
 | måte | måte |
 | partneren | partneren |
 | finne | finne |
 | mest | mest |
 | morsamt | morsomt |
 | med | med |
-| kva | hva |
+| hva | hva |
 | er | er |
 | noe | noe |
 | kanskje | kanskje |
@@ -164,7 +164,7 @@
 | alltid | alltid |
 | finn | finner |
 | på | på |
-| eigne | egne |
+| egne | egne |
 | ord | ord |
 | uttrykk | uttrykk |
 | detaljene | detaljene |
@@ -188,7 +188,7 @@
 | deg | deg |
 | tar | tar |
 | det | det |
-| roleg | rolig |
+| rolig | rolig |
 | ingen | ingen |
 | presser | presser |
 | hjelper | hjelper |
@@ -204,9 +204,9 @@
 | høre | høre |
 | greit | greit |
 | å | å |
-| vere | være |
+| være | være |
 | seg | seg |
-| sjølv | selv |
+| selv | selv |
 | grense | grense |
 | du | du |
 | alltid | alltid |
@@ -215,7 +215,7 @@
 | om | om |
 | viktig | viktig |
 | ha | ha |
-| kvar | hver |
+| hver | hver |
 | dag | dag |
 | at | at |
 | jeg | jeg |
@@ -224,7 +224,7 @@
 | for | for |
 | være | være |
 | meg | meg |
-| sjølv | selv |
+| selv | selv |
 | slags | slags |
 | nærhet | nærhet |
 | føles | føles |
@@ -285,12 +285,12 @@
 ## FORBEDRA TEKSTER
 
 ### Steg 1 (Grunnprofil)
-- **Error-melding:** `Ver vennleg` → `Vennligst`
-- **Feilmelding:** `Du må vere 23+` → `Du må være 23+`
+- **Error-melding:** `Vær vennlig` → `Vennligst`
+- **Feilmelding:** `Du må være 23+` → `Du må være 23+`
 - **Feilmelding:** `Kjønn du søkjer` → `Kjønn du søker`
-- **Header:** `roleg` → `rolig`, `ein måte` → `en måte`, `kjennes` → `føles`
+- **Header:** `rolig` → `rolig`, `en måte` → `en måte`, `kjennes` → `føles`
 - **Tittel farge:** `text-yellow-300` → `#D4AF37` (for å følgje ui-spec)
-- **Trust tekst:** `blir berre brukte til å bygga` → `brukes kun til å bygge`
+- **Trust tekst:** `blir bare brukte til å bygga` → `brukes kun til å bygge`
 
 ### Steg 2 (Personlighet)
 - **Placeholder:** `uvissheit` → `uvissighet`
@@ -304,52 +304,52 @@
 - **Label:** `stresset` → `belastningen er stor`
 - **ExampleText:** `når eg treng` → `når jeg trenger`
 - **ExampleText:** `bli kjent med` → `bli sett og hørt`
-- **ExampleText:** `meg sjølv` → `meg selv`
-- **ExampleText:** `utan å måtte` → `uten å måtte`
-- **Trust tekst:** `nokon` → `noen`, `møte` → `møte`
+- **ExampleText:** `meg selv` → `meg selv`
+- **ExampleText:** `uten å måtte` → `uten å måtte`
+- **Trust tekst:** `noen` → `noen`, `møte` → `møte`
 
 ### Steg 4 (Kjærlighetsspråk)
 - **Label:** `nær` → `nærhet`
 - **Label:** `ønsker` → `ønsker`
 - **ExampleText:** `gjera små ting` → `gjøre små ting`, `vera` → `være`
 - **ExampleText:** `høyra` → `høre`, `sette` → `setter`, `få` → `få`
-- **ExampleText:** `de` → `dere`, `saman` → `sammen`
-- **ExampleText:** `eg føler` → `jeg føler`, `ikkje` → `ikke`
-- **ExampleText:** `ei melding` → `en melding`, `berre` → `bare`, `sjå` → `se`, `tenkjer` → `tenker`
+- **ExampleText:** `de` → `dere`, `sammen` → `sammen`
+- **ExampleText:** `eg føler` → `jeg føler`, `ikke` → `ikke`
+- **ExampleText:** `ei melding` → `en melding`, `bare` → `bare`, `se` → `se`, `tenkjer` → `tenker`
 - **Trust tekst:** `finna` → `finne`, `møte` → `møte`
 
 ### Steg 5 (Livsstil)
 - **Label:** `prioriteringslista di` → `prioriteringslista di` (ufendra — bokmål toler begge delar)
-- **Placeholder:** `innhald` → `innhold`
+- **Placeholder:** `innhold` → `innhold`
 - **ExampleText:** `Familiene` → `Familien`
 - **Label:** `akkurat no` → `akkurat nå`
-- **Placeholder:** `Kva har du valt` → `Hva har du valgt`
+- **Placeholder:** `Hva har du valt` → `Hva har du valgt`
 - **ExampleText:** `Sosial mediе` → `Sosial media`, `relasjonar` → `relasjoner`
-- **Placeholder:** `ein ideell` → `en ideell`, `frå` → `fra`
-- **ExampleText:** `Våkne` → `Våkne`, `utan` → `uten`, `noko` → `noe`
+- **Placeholder:** `en ideell` → `en ideell`, `fra` → `fra`
+- **ExampleText:** `Våkne` → `Våkne`, `uten` → `uten`, `noe` → `noe`
 - **Label:** `drømmer` → `drømmer`
-- **Placeholder:** `Kva` → `Hva`, `leva` → `leve`
+- **Placeholder:** `Hva` → `Hva`, `leva` → `leve`
 - **ExampleText:** `kvardagen` → `hverdagen`, `relasjonar` → `relasjoner`, `vekst` → `vekst`
 - **Label:** `ønsker deg` → `ønsker`
-- **Placeholder:** `Kva ønsker` → `Hva ønsker`, `oppleva` → `oppleve`
+- **Placeholder:** `Hva ønsker` → `Hva ønsker`, `oppleva` → `oppleve`
 - **ExampleText:** `Speling` → `Spill`, `overfladiske` → `overfladiske`
-- **Trust tekst:** `finna` → `finne`, `trivst` → `trives`, `kvar` → `hver`
+- **Trust tekst:** `finna` → `finne`, `trives` → `trives`, `hver` → `hver`
 
 ### Steg 6 (Framtid)
 - **Label:** `framtid` → `framtid`
 - **Label:** `drøm` → `drøm`
 - **Label:** `byggja` → `bygge`
 - **Label:** `oppleve` → `oppleve`
-- **ExampleText:** `Ein roleg` → `En rolig`, `tilværelse` → `tilværelse`, `relasjonar` → `relasjoner`
+- **ExampleText:** `En rolig` → `En rolig`, `tilværelse` → `tilværelse`, `relasjonar` → `relasjoner`
 - **Label:** `jobbar` → `jobber`
-- **ExampleText:** `eit eigen` → `et eget`, `arbeida` → `arbeide`
-- **Label:** `byggja` → `bygge`, `saman` → `sammen`
-- **ExampleText:** `ein trygg` → `en trygg`, `erfaringar` → `erfaringer`, `meining` → `mening`
+- **ExampleText:** `et egen` → `et eget`, `arbeida` → `arbeide`
+- **Label:** `byggja` → `bygge`, `sammen` → `sammen`
+- **ExampleText:** `en trygg` → `en trygg`, `erfaringar` → `erfaringer`, `meining` → `mening`
 - **Label:** `oppleve` → `oppleve`, `alene` → `alene`
 - **ExampleText:** `reise` → `reise`, `utfordra` → `utfordre`, `inni` → `inni`
-- **Label:** `oppleve` → `oppleve`, `saman` → `sammen`
-- **ExampleText:** `laga` → `lage`, `eit heim` → `et hjem`, `oppleve` → `oppleve`
-- **Trust tekst:** `veien` → `veien`, `kva` → `hva`, `passer` → `passer`
+- **Label:** `oppleve` → `oppleve`, `sammen` → `sammen`
+- **ExampleText:** `laga` → `lage`, `et hjem` → `et hjem`, `oppleve` → `oppleve`
+- **Trust tekst:** `veien` → `veien`, `hva` → `hva`, `passer` → `passer`
 
 ### Steg 7 (Humor)
 - **Label:** `rar vane` → `spesiell vane`
@@ -359,11 +359,11 @@
 - **ExampleText:** `Reality-tv` → `Reality-TV`
 - **Label:** `autentisk` → `autentisk`
 - **Placeholder:** `mest «deg»` → `mest «deg»`
-- **ExampleText:** `vera` → `være`, `vera` → `være`, `vise` → `vise`, `eigen` → `egen`
+- **ExampleText:** `vera` → `være`, `vera` → `være`, `vise` → `vise`, `egen` → `egen`
 - **Label:** `partneren din` → `partneren din`
 - **Label:** `morsamt` → `morsomt`
 - **Placeholder:** `rart` → `rart`, `elskar` → `elsker`
-- **ExampleText:** ` finn på` → `finner på`, `eigne` → `egne`
+- **ExampleText:** ` finn på` → `finner på`, `egne` → `egne`
 - **Trust tekst:** `Desse` → `Desse`, `gjer` → `gjør`
 
 ### Steg 8 (Moden nysgjerrighet)
@@ -373,8 +373,8 @@
 - **Label:** `naturlig` → `naturlig`
 - **Label:** `føler` → `føler`
 - **ExampleText:** `pressar` → `presser`
-- **ExampleText:** `greit` → `greit`, `vere` → `være`
-- **ExampleText:** `har` → `har`, `vere` → `være`
+- **ExampleText:** `greit` → `greit`, `være` → `være`
+- **ExampleText:** `har` → `har`, `være` → `være`
 - **ExampleText:** `Føles` → `Føles`, `emosjonell` → `emosjonell`
 - **ExampleText:** `føler` → `føler`, `trenger` → `trenger`
 - **ExampleText:** `stole` → `stole`, `vise` → `vise`, `verkar` → `virker`
@@ -386,18 +386,18 @@
 - **Knapp:** `Fortsett` → `Fortsett` (ufendra)
 
 ### Steg 10 (Start reisen)
-- **Tekst:** `éin match` → `én match`
+- **Tekst:** `én match` → `én match`
 - **Tekst:** `startar` → `starter`, `endre` → `endre`, `svarene` → `svarene`
 
 ---
 
 ## IKKE ENDRA
 
-- Ingen layout-endringar
-- Ingen spacing-endringar
-- Ingen funksjonalitets-endringar
-- Ingen props-endringar
-- Ingen state-flow-endringar
+- Ingen layout-endringer
+- Ingen spacing-endringer
+- Ingen funksjonalitets-endringer
+- Ingen props-endringer
+- Ingen state-flow-endringer
 - Premium-knappestil uendra
 
 ---

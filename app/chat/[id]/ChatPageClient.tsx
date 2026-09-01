@@ -22,7 +22,7 @@ interface PartnerInfo {
   distanceKm: number | null;
 }
 
-/** Hent partner-info + mitt visningsnavn frå conversation */
+/** Hent partner-info + mitt visningsnavn fra conversation */
 async function fetchPartnerInfo(
   conversationId: string
 ): Promise<{ partner: PartnerInfo | null; myName: string | null }> {

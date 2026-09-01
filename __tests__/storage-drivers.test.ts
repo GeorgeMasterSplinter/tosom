@@ -42,7 +42,7 @@ describe('assertSafeImageKey', () => {
     expect(() => assertSafeImageKey('a/b/c.jpg')).toThrow();
   });
 
-  it('avviser manglande utviding', () => {
+  it('avviser manglende utviding', () => {
     expect(() => assertSafeImageKey('conv-1/noext')).toThrow();
   });
 
@@ -78,7 +78,7 @@ describe('MemoryImageStorage', () => {
     expect(u1).not.toBe(u2);
   });
 
-  it('getSignedUrl kaster for objekt som ikkje finst', async () => {
+  it('getSignedUrl kaster for objekt som ikke finnes', async () => {
     await expect(s.getSignedUrl('conv-1/missing.jpg')).rejects.toThrow();
   });
 
@@ -86,7 +86,7 @@ describe('MemoryImageStorage', () => {
     await s.putImage(KEY, BUF, { contentType: 'image/jpeg' });
     await s.deleteImage(KEY);
     expect(await s.exists(KEY)).toBe(false);
-    await s.deleteImage(KEY); // ikkje feil
+    await s.deleteImage(KEY); // ikke feil
     expect(await s.exists(KEY)).toBe(false);
   });
 });
@@ -122,7 +122,7 @@ describe('LocalImageStorage', () => {
     expect((await fs.stat(abs).catch(() => null)) == null).toBe(true);
   });
 
-  it('getSignedUrl kaster når fila ikkje finst', async () => {
+  it('getSignedUrl kaster når fila ikke finnes', async () => {
     await expect(s.getSignedUrl(KEY)).rejects.toThrow();
   });
 });
@@ -139,7 +139,7 @@ describe('factory (getImageStorage)', () => {
     process.env = { ...OLD };
   });
 
-  it('auto utan R2-nøklar → local driver', () => {
+  it('auto uten R2-nøklar → local driver', () => {
     delete process.env.STORAGE_DRIVER;
     delete process.env.R2_ACCOUNT_ID;
     const s = getImageStorage();
@@ -152,7 +152,7 @@ describe('factory (getImageStorage)', () => {
     expect(s.driver).toBe('memory');
   });
 
-  it('STORAGE_DRIVER=r2 utan nøklar → kaster', () => {
+  it('STORAGE_DRIVER=r2 uten nøklar → kaster', () => {
     process.env.STORAGE_DRIVER = 'r2';
     delete process.env.R2_ACCOUNT_ID;
     expect(() => getImageStorage()).toThrow(/R2-nøkler mangler/);

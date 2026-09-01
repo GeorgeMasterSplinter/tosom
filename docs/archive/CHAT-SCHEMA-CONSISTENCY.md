@@ -6,7 +6,7 @@
 
 ## OPPSUMMERING
 
-Schemaet er allereie perfekt konsistent. Ein har analysert alle relaterte modellar og felter, og det finst ingen datatypemismatch mellom Message.senderId, Conversation.userAId, og User.id.
+Schemaet er allerede perfekt konsistent. En har analysert alle relaterte modellar og felter, og det finnes ingen datatypemismatch mellom Message.senderId, Conversation.userAId, og User.id.
 
 ---
 
@@ -80,13 +80,13 @@ model Message {
 - ✅ Ingen mismatch mellom Message.senderId og Conversation.userAId/userBId
 - ✅ Ingen migrering trengst
 - ✅ Ingen endring i Prisma-modellar er nødvendig
-- ✅ Chat-routing-feilen du opplevde ikkje skyldes datatypar
+- ✅ Chat-routing-feilen du opplevde ikke skyldes datatypar
 
 ---
 
 ## NESTE STEG
 
-Sidan schema er konsistent og fake match fungerer, bør neste sjekk vere:
+Sidan schema er konsistent og fake match fungerer, bør neste sjekk være:
 
 1. **Step10StartReisen → handleStart → window.location.href** (verifiser routing)
 2. **Konverter fake match til riktig userId** (i staden for hardcoded userAId=1)

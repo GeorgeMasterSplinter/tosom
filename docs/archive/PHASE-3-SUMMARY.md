@@ -104,7 +104,7 @@ if (!result.success) {
 ### 429-respons
 ```typescript
 return NextResponse.json(
-  { error: 'Too many requests. Prøv igjen seinare.' },
+  { error: 'Too many requests. Prøv igjen senere.' },
   { status: 429, headers: getRateLimitHeaders(remaining, resetInMs) }
 )
 ```
@@ -140,7 +140,7 @@ export async function POST(req: NextRequest) {
 ### Pipeline
 1. **IP-hent** → x-forwarded-for, x-real-ip
 2. **Rate limiting** → checkRateLimit med headers
-3. **Auth** → `auth()` frå v5
+3. **Auth** → `auth()` fra v5
 4. **RBAC** → hasAnyAllowedRole
 5. **Zod-validering** → validateBody
 6. **Handler** → din logikk
@@ -165,11 +165,11 @@ export async function POST(req: NextRequest) {
 
 | Problem | Prioritet | Løysing |
 |--|-|-----|
-| Mang API-ruter bruker ikkje createApiHandler | HØY | Migrer gradvis |
-| Mang API-ruter har ikkje Zod-validering | HØY | Lag skjema for kvar rute |
-| Mange API-ruter har ikkje auth | HØY | Legg auth: true |
+| Mang API-ruter bruker ikke createApiHandler | HØY | Migrer gradvis |
+| Mang API-ruter har ikke Zod-validering | HØY | Lag skjema for hver rute |
+| Mange API-ruter har ikke auth | HØY | Legg auth: true |
 | Legacy auth-filer eksisterer | MEDIE | fjern auth-options.ts, options.ts, adminAuthGuard.ts |
-| Admin-ruter (27) manglar auth-check | HØY | Oppdater kvar fil |
+| Admin-ruter (27) mangler auth-check | HØY | Oppdater hver fil |
 
 ---
 

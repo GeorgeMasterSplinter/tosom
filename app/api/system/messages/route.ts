@@ -14,7 +14,7 @@ export const dynamic = 'force-dynamic';
  * GET /api/system/messages
  * 
  * Query params:
- *   unreadOnly: boolean (optional) — bare returner ulesse meldingar
+ *   unreadOnly: boolean (optional) — bare returner ulesse meldinger
  * 
  * Response:
  * {
@@ -40,7 +40,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     const url = new URL(request.url);
     const unreadOnly = url.searchParams.get("unreadOnly") === "true";
 
-    // Hent notifikasjonar for brukaren
+    // Hent notifikasjonar for brukeren
     const notifications = await prisma.notification.findMany({
       where: {
         userId,
@@ -55,10 +55,10 @@ export async function GET(request: Request): Promise<NextResponse> {
         readAt: true,
         createdAt: true,
       },
-      take: 20, // maks 20 meldingar per hending
+      take: 20, // maks 20 meldinger per hending
     });
 
-    // Hent systemmeldingar frå SystemMessage-tabellen (globale meldingar)
+    // Hent systemmeldingar fra SystemMessage-tabellen (globale meldinger)
     const systemMessages = await prisma.systemMessage.findMany({
       orderBy: { createdAt: "desc" },
       select: {
@@ -101,7 +101,7 @@ export async function GET(request: Request): Promise<NextResponse> {
 }
 
 /**
- * POST /api/system/messages/mark-read — mark ein notifikasjon som lese
+ * POST /api/system/messages/mark-read — mark en notifikasjon som lese
  */
 export async function POST(request: Request): Promise<NextResponse> {
   try {

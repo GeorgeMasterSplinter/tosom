@@ -256,7 +256,7 @@ const presenceMap = new Map<string, {
 | Server-restart | In-memory presenceMap mistes. Nye tilstander settes ved neste polling/update. |
 | Network-flakiness | Polling (3s) fungerer selv om Pusher er nede. |
 
-**⚠️ MERKE:** Presence-state er **ikkje-persistent**. Ved server-restart mister alle tilstander. For produksjon bør Redis/DB brukes.
+**⚠️ MERKE:** Presence-state er **ikke-persistent**. Ved server-restart mister alle tilstander. For produksjon bør Redis/DB brukes.
 
 ---
 

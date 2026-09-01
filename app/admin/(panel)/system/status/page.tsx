@@ -52,7 +52,7 @@ export default function SystemStatusPage() {
             setHealth(healthData);
             setError(null);
           } else {
-            setError('Ugyldig respons frå health-API-et');
+            setError('Ugyldig respons fra health-API-et');
           }
         } else {
           setError(`Kunne ikke hente systemdata (HTTP ${healthRes.status})`);

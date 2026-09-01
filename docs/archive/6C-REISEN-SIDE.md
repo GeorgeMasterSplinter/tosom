@@ -11,17 +11,17 @@ Oppretta undersida "Reisen" som forklarer den guiderte 30-dagers reisa mellom to
 ## Struktur
 
 ### Seksjonar
-1. **Hero** — "30 dagar som endrar alt" med mørk blå gradient-bakgrunn
+1. **Hero** — "30 dager som endrar alt" med mørk blå gradient-bakgrunn
 2. **"Reisa består av tre fasar"** — 3 fasar (dag 1–14, dag 15–21, dag 22–30) med tema-badgear
-3. **"Kva skjer kvar dag?"** — 4 element (refleksjonsspørsmål, samtaletema, små oppgåver, resonansmåling)
-4. **"Kva skjer etter 30 dagar?"** — 3 val (fortsetje, avslutte, ny reise)
-5. **CTA** — "Berre éin match. Men éin som faktisk passar." → /onboarding
+3. **"Hva skjer hver dag?"** — 4 element (refleksjonsspørsmål, samtaletema, små oppgaver, resonansmåling)
+4. **"Hva skjer etter 30 dager?"** — 3 val (fortsetje, avslutte, ny reise)
+5. **CTA** — "Bare én match. Men én som faktisk passar." → /onboarding
 6. **Footer** — standard Footer-komponent
 
 ### Reise-fasar
-1. **Dag 1–14** — Uten bilder, bygg tryggleik (Hvem er du egent?, Verdiar som binder, Kommunikasjon og nærheit)
-2. **Dag 15–21** — Med bilder, djupe samtalar (Sårbarheit, Frykt og styrke, Intimitet og romantikk)
-3. **Dag 22–30** — Felles reise, verktrueleg nærheit (Felles mål, Konflikt og løysing, Framtid og drømmer)
+1. **Dag 1–14** — Uten bilder, bygg tryggleik (Hvem er du egent?, Verdier som binder, Kommunikasjon og nærhet)
+2. **Dag 15–21** — Med bilder, dype samtaler (Sårbarheit, Frykt og styrke, Intimitet og romantikk)
+3. **Dag 22–30** — Felles reise, verktrueleg nærhet (Felles mål, Konflikt og løysing, Framtid og drømmer)
 
 ### Design
 - Mørk blå gradient-bakgrunn (#162032 → #0F1923 → #0B1520)
@@ -32,9 +32,9 @@ Oppretta undersida "Reisen" som forklarer den guiderte 30-dagers reisa mellom to
 - Rolig, varm, moden tone
 
 ### Teknologi
-- Bruk av `typographyToStyle()` frå design-tokens
+- Bruk av `typographyToStyle()` fra design-tokens
 - Bruk av `color`, `spacing`, `radius`, `shadow` tokens
-- GlassCard-hjelp komponent med inline styles frå tokens
+- GlassCard-hjelp komponent med inline styles fra tokens
 - Ambient glød-effektar (gull)
 - Fase-fargar (gold/blue) for badgear og element
 

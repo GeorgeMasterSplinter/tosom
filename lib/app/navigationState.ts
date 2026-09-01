@@ -26,7 +26,7 @@ export interface ModalEntry {
   props?: Record<string, any>;
 }
 
-/* ── NS5: Hjelp — standard modalProps for ulike typar ── */
+/* ── NS5: Hjelp — standard modalProps for ulike typer ── */
 function modalDefaultProps(type: ModalType): Record<string, any> {
   switch (type) {
     case "partner_profile":
@@ -44,7 +44,7 @@ function modalDefaultProps(type: ModalType): Record<string, any> {
 
 /* ── NS4: navigationAPI ── */
 
-/** Gå til ein rute */
+/** Gå til en rute */
 export function goTo(
   state: NavigationState,
   route: NavigationRoute,
@@ -109,4 +109,4 @@ export function shouldForceOnboarding(): boolean {
 }
 
 /* ── NS10: Ingen backend ── */
-// Denne fila inneheld bare UI-tilstand. Ingen API-kall eller DB-operasjonar.
+// Denne fila inneholder bare UI-tilstand. Ingen API-kall eller DB-operasjonar.

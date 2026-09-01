@@ -18,7 +18,7 @@ export async function GET() {
   if (denied) return denied;
 
   try {
-    // Hentar alle statistikk i eitt omgang for å unngå N+1-spørringar
+    // Hentar alle statistikk i ett omgang for å unngå N+1-spørringar
     const [
       totalUsers,
       activeMatches,
@@ -50,7 +50,7 @@ export async function GET() {
         );
       }),
 
-      // 5. Nye registrasjonar dei siste 7 dagane
+      // 5. Nye registrasjonar de siste 7 dagane
       prisma.user.count({
         where: {
           createdAt: {
@@ -66,7 +66,7 @@ export async function GET() {
         },
       }),
 
-      // 7. Systemstatus — feil i dei siste 24 timane
+      // 7. Systemstatus — feil i de siste 24 timane
       prisma.systemLog.count({
         where: {
           level: 'ERROR',

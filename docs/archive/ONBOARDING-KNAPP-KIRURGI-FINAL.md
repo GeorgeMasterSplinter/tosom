@@ -1,13 +1,13 @@
 # ToSom Onboarding — Full Knapp-Kirurgi (Final Rapport)
 **Dato:** 30. juni 2026
-**Status:** FULLFØRT — Alle steg har konsistente premium-knappar
+**Status:** FULLFØRT — Alle steg har konsistente premium-knapper
 
 ---
 
 ## OPPSUMMERING
 
-Alle 10 onboarding-steg har no **ein felles knappestil** med PremiumButton og BackButton.
-Ingen grå knappar, ingen duplikatar, ingen layout-knappar.
+Alle 10 onboarding-steg har no **en felles knappestil** med PremiumButton og BackButton.
+Ingen grå knapper, ingen duplikatar, ingen layout-knapper.
 
 ---
 
@@ -15,11 +15,11 @@ Ingen grå knappar, ingen duplikatar, ingen layout-knappar.
 
 | Fil | Endring |
 |-----|---|
-| `OnboardingLayout.tsx` | **Fjerna alle knappar** — berre progressbar, header, children |
+| `OnboardingLayout.tsx` | **Fjerna alle knapper** — bare progressbar, header, children |
 | `OnboardingFlow.tsx` | **Fjerna import** av PremiumButton + BackButton |
 | `PremiumButton.tsx` | **Ny** — gull-gradient knapp |
 | `BackButton.tsx` | **Ny** — Tilbake-knapp |
-| `Step1Profile.tsx` | **Oppdatert** — PremiumButton berre |
+| `Step1Profile.tsx` | **Oppdatert** — PremiumButton bare |
 | `Step2Personlighet.tsx` | **Oppdatert** — PremiumButton + BackButton |
 | `Step3Tilknytning.tsx` | Ingen endring (arvar Layout) |
 | `Step4Kjærlighetsspråk.tsx` | Ingen endring (arvar Layout) |
@@ -68,14 +68,14 @@ hover:bg-white/20 transition-all duration-300
 
 ---
 
-## AVFJARDE KNAPPAR
+## AVFJARDE KNAPPER
 
-| Fil | Knappar fjerna |
+| Fil | Knapper fjerna |
 |-----|---|
-| OnboardingLayout.tsx | 1+ knappar (heile footer fjerna) |
+| OnboardingLayout.tsx | 1+ knapper (heile footer fjerna) |
 | Step1Profile.tsx | 1 inline-knapp |
-| Step2Personlighet.tsx | 2 knappar (Tilbake + Fortsett) |
-| Step9Oppsummering.tsx | 2 knappar (Tilbake + Fortsett) |
+| Step2Personlighet.tsx | 2 knapper (Tilbake + Fortsett) |
+| Step9Oppsummering.tsx | 2 knapper (Tilbake + Fortsett) |
 | Step10StartReisen.tsx | 1 knapp + loading-knapp |
 
 ---
@@ -98,7 +98,7 @@ hover:bg-white/20 transition-all duration-300
 ## STEG-BESKRIVELSE
 
 ### Steg 1 (Grunnprofil)
-- Berre **PremiumButton** ("Fortsett til neste steg")
+- Bare **PremiumButton** ("Fortsett til neste steg")
 - Ingen Tilbake-knapp (første steg)
 
 ### Steg 2 (Personlighet)
@@ -119,11 +119,11 @@ hover:bg-white/20 transition-all duration-300
 ## BEKREFTelse
 
 ✅ Alle 10 steg har konsistent knappesats  
-✅ Ingen gamle/grå knappar att  
-✅ Ingen knappar i OnboardingLayout  
+✅ Ingen gamle/grå knapper att  
+✅ Ingen knapper i OnboardingLayout  
 ✅ PremiumButton og BackButton brukt på alle relevante steg  
 ✅ Konsistent spacing (`space-y-4 mt-10`) på alle steg  
-✅ Ingen duplikat-knappar  
+✅ Ingen duplikat-knapper  
 ✅ Loading-state på Steg 10  
 ✅ Premium-stil (gull-gradient, hover, disabled)  
 
@@ -140,7 +140,7 @@ hover:bg-white/20 transition-all duration-300
 
 ## NESTE STEG (valfritt)
 
-1. Test at alle knappar ser like ut
+1. Test at alle knapper ser like ut
 2. Test navigasjon på alle steg
 3. Legg til `loading`-spinner i PremiumButton
 4. Legg til `disabled`-state på BackButton (valfritt)

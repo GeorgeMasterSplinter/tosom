@@ -31,7 +31,7 @@ const STORAGE_KEY = 'tosom_onboarding_draft';
 
 /**
  * Profil-datastruktur for heile 13-stegs onboarding.
- * Alle felt er valfrie — brukaren kan hoppe over spørsmål.
+ * Alle felt er valfrie — brukeren kan hoppe over spørsmål.
  */
 interface ProfileData extends Record<string, unknown> {
   // Steg 1: Grunnprofil
@@ -353,7 +353,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
 
   useEffect(() => {
     // Hopp over fyrste kørsel: ved mount er data endå tomme (draft-
-    // restaureringa hentar asynkront). Uten dette kan ein tom draft
+    // restaureringa hentar asynkront). Uten dette kan en tom draft
     // overstyre localStorage dersom server-kalla tek lengre enn debounce-vinduet.
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -388,7 +388,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     setFadeKey((k) => k + 1);
   }, []);
 
-  // === Navigasjon (definert tidleg for å unngå reference-feil) ===
+  // === Navigasjon (definert tidlig for å unngå reference-feil) ===
   const handleNext = () => goToStep(step + 1);
   const handleBack = () => { if (step > 0) goToStep(step - 1); };
 

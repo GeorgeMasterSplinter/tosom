@@ -2,13 +2,13 @@
 
 **Oppdatert:** 30. juni 2026
 **Versjon:** 1.0
-**Status:** 🟡 Backend-logikk ferdig, frontend-komponent manglar
+**Status:** 🟡 Backend-logikk ferdig, frontend-komponent mangler
 
 ---
 
 ## OVERSIKT
 
-Analytics gir innsyn i reise-progresjon, resonans-mønster, match-kvalitet, og brukar-adferd — alltid roleg og utan stress.
+Analytics gir innsyn i reise-progresjon, resonans-mønster, match-kvalitet, og bruker-adferd — alltid rolig og uten stress.
 
 ---
 
@@ -16,7 +16,7 @@ Analytics gir innsyn i reise-progresjon, resonans-mønster, match-kvalitet, og b
 
 ### 1. Journey Analytics
 - Progresjon i % med fase-indikator
-- Dagleg aktivitet (meldingar, refleksjonar, oppgåver)
+- Dagleg aktivitet (meldinger, refleksjoner, oppgaver)
 - Fase-fordeling
 - Milestones (6 stk: dag 1, 3, 7, 14, 21, 30)
 
@@ -29,9 +29,9 @@ Analytics gir innsyn i reise-progresjon, resonans-mønster, match-kvalitet, og b
 ### 3. Match-kvalitet
 - Score-fordeling (excellent/good/moderate/low)
 - Resonans-nivå-fordeling (deep/strong/moderate/gentle)
-- Samanlikning med snitt (percentil)
+- Sammenligning med snitt (percentil)
 
-### 4. Brukar-innsikt
+### 4. Bruker-innsikt
 - Tempo (slow/steady/fast)
 - Kommunikationsmønster (balanced/initiator/reactive/reserved)
 - Aktivitetshøgepunkt
@@ -50,7 +50,7 @@ Analytics gir innsyn i reise-progresjon, resonans-mønster, match-kvalitet, og b
 |--|--|--|
 | 1 | Reise starta! | ✅ |
 | 3 | Første steg | ✅ |
-| 7 | Ein veke | ⏳ |
+| 7 | En veke | ⏳ |
 | 14 | Halvvegs bilder | ⏳ |
 | 21 | Tre kvartvegar | ⏳ |
 | 30 | Reise fullført! | ⏳ |
@@ -59,12 +59,12 @@ Analytics gir innsyn i reise-progresjon, resonans-mønster, match-kvalitet, og b
 
 ## RESONANS-MØNSTER
 
-| Mønster | Kva | Kva betyr |
+| Mønster | Hva | Hva betyr |
 |--|--|--|
 | **steady-growth** | Steadleg vekst | Positiv utvikling |
 | **wave-like** | Bølgjer | Normal variasjon |
 | **spike-plateau** | Spikes og plateaus | Intensive periodar |
-| **gradual-deepening** | Gradvert fordjuping | Dypare kopling |
+| **gradual-deepening** | Gradvert fordjuping | Dypere kopling |
 | **random** | Tilfeldig | Ingen klar trend |
 
 ---
@@ -74,8 +74,8 @@ Analytics gir innsyn i reise-progresjon, resonans-mønster, match-kvalitet, og b
 | Aktivitet | Korrelasjon | Betydning |
 |--|--|--|
 | Meldingsfart | 0.65 | Raskare svar → høgare resonans |
-| Refleksjonar | 0.78 | Sterkast påverknad |
-| Oppgåver | 0.45 | Moderat påverknad |
+| Refleksjoner | 0.78 | Sterkest påvirkning |
+| Oppgaver | 0.45 | Moderat påvirkning |
 
 ---
 
@@ -101,7 +101,7 @@ function AnalyticsPanel({ journeyData, resonanceData }) {
       {/* Progresjon */}
       {/* Resonans-trend */}
       {/* Milestones */}
-      {/* Brukar-innsikt */}
+      {/* Bruker-innsikt */}
     </div>
   )
 }
@@ -111,16 +111,16 @@ function AnalyticsPanel({ journeyData, resonanceData }) {
 
 ## DESIGNPRINSIPP
 
-1. **Aldri dømande** — tal er informasjon, ikkje dom
-2. **Aldri pressande** — brukaren kan velje å ikkje sjå
-3. **Alltid nyskapande** — innsikt som hjelper, ikkje stressar
-4. **Alltid roleg** — ingen varsele, ingen påminningar
+1. **Aldri dømande** — tal er informasjon, ikke dom
+2. **Aldri pressande** — brukeren kan velge å ikke se
+3. **Alltid nyskapande** — innsikt som hjelper, ikke stressar
+4. **Alltid rolig** — ingen varsele, ingen påminningar
 
 ---
 
 ## HUSK
 
-- Analytics er **valfritt** for brukarar
+- Analytics er **valfritt** for brukere
 - Ingen push-notifikasjonar for analytics
-- Tal skal **hjelle**, ikkje skape angst
+- Tal skal **hjelle**, ikke skape angst
 - Alle funksjonar kan slås av

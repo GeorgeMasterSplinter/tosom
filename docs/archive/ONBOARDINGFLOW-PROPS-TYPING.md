@@ -1,12 +1,12 @@
 # ToSom — OnboardingFlow props-typing
 **Dato:** 30. juni 2026
-**Status:** Ingen endring trengst — typene er allereie korrekte
+**Status:** Ingen endring trengst — typene er allerede korrekte
 
 ---
 
 ## OPPSUMMERING
 
-OnboardingFlow.tsx sin `ProfileData`-type er allereie kompatibel med step-komponentane sine `Record<string, unknown>`-typar fordi `ProfileData extends Record<string, unknown>` automatisk i TypeScript.
+OnboardingFlow.tsx sin `ProfileData`-type er allerede kompatibel med step-komponentane sine `Record<string, unknown>`-typer fordi `ProfileData extends Record<string, unknown>` automatisk i TypeScript.
 
 ---
 
@@ -80,4 +80,4 @@ Lagd i `docs/ONBOARDINGFLOW-PROPS-TYPING.md`.
 
 ---
 
-**Typene er allereie korrekte — ingen endring trengst.**
+**Typene er allerede korrekte — ingen endring trengst.**

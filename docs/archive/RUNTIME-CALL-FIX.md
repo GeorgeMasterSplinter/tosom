@@ -14,9 +14,9 @@ Etter å ha fikset alle anonymous default exports i components/, er prosjektet n
 
 ### Anonymous Default Exports → Named Exports
 
-**Problem:** Next.js sin Webpack-loader har problem med anonyme default exports som `export default { ... }`. Dette fører til runtime-feil fordi modulen ikkje blir registrert korrekt i bundle.
+**Problem:** Next.js sin Webpack-loader har problem med anonyme default exports som `export default { ... }`. Dette fører til runtime-feil fordi modulen ikke blir registrert korrekt i bundle.
 
-**Løysing:** Opprett ein variabel og exportera som default.
+**Løysing:** Opprett en variabel og exportera som default.
 
 **Før:**
 ```tsx
@@ -42,7 +42,7 @@ export default AITools;
 ## SJEKKER UTFØRT
 
 ### 1. Anonymous default exports i app/
-✅ Ingen funnen i page.tsx-filer.
+✅ Ingen funnet i page.tsx-filer.
 
 ### 2. Anonymous default exports i components/
 ✅ Fiksa 3 filer:
@@ -57,7 +57,7 @@ export default AITools;
 ✅ Alle imports i app/ peiker til eksisterande filer.
 
 ### 5. Sirkulære imports
-✅ Ingen sirkulære imports funnen i OnboardingFlow- eller Step-komponentane.
+✅ Ingen sirkulære imports funnet i OnboardingFlow- eller Step-komponentane.
 
 ### 6. app/page.tsx
 ✅ Har `export default function LandingPage()` — korrekt.
@@ -76,7 +76,7 @@ export default AITools;
 
 ---
 
-## RESTELENDE WARNINGS (ikkje-feil, blokkerer ikkje build)
+## RESTELENDE WARNINGS (ikke-feil, blokkerer ikke build)
 
 | Type | Fil | Mengd |
 |--|-|--|
@@ -85,15 +85,15 @@ export default AITools;
 | `jsx-a11y/alt-text` | 1 fil | 1 advarsel |
 | `no-page-custom-font` | 1 fil | 1 advarsel |
 
-Desse kan fikse seinare.
+Desse kan fikse senere.
 
 ---
 
 ## NESTE STEG (valfritt)
 
-1. **Test onboarding flow** — full flow frå Steg 1 til 10
+1. **Test onboarding flow** — full flow fra Steg 1 til 10
 2. **Test fake match** — "Start reisen" → chat
-3. **Fiks ESLint-warnings** (valfritt — ikkje blokkerande)
+3. **Fiks ESLint-warnings** (valfritt — ikke blokkerande)
 
 ---
 

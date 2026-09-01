@@ -5,7 +5,7 @@
  * Design:
  * - Premium glass-panel med backdrop-blur
  * - Fase-fargar: grønn (dag 1-10), gull (dag 11-20), lila (dag 21-30)
- * - Kvar seksjon har eget ikon og typografi
+ * - Hver seksjon har eget ikon og typografi
  * - Fade-in animasjon ved lasting
  * 
  * Data kommer fra `GET /api/journey/today`:

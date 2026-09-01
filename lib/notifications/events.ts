@@ -5,7 +5,7 @@ export async function eventMatchCreated(matchId: string, userId: string): Promis
   await dispatchEvent(
     NotificationType.MATCH,
     userId,
-    'Du har eit nytt match!',
+    'Du har et nytt match!',
     { matchId },
   )
 }

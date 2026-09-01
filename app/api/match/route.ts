@@ -1,5 +1,5 @@
 // app/api/match/route.ts — GET /api/match (B7: POST fjernet)
-// GET → list eksisterande matcher for brukaren
+// GET → list eksisterande matcher for brukeren
 // POST er FJERNET (STEG B7) — Tosom kobler, godtar ikke.
 
 import prisma from "@/lib/prisma";

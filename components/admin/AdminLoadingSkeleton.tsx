@@ -1,7 +1,7 @@
 /**
  * Tosom Admin — Loading Skeleton (gjenbrukbar)
  * 
- * Viser eit ryddig skeleton når data lastar fra API.
+ * Viser et ryddig skeleton når data lastar fra API.
  */
 
 'use client';

@@ -11,7 +11,7 @@
 ```bash
 npm run lint
 ```
-- Sjekk at det er ingen errors (berre eksisterande warnings er OK)
+- Sjekk at det er ingen errors (bare eksisterande warnings er OK)
 
 ### 2. Bygg lokalt
 ```bash
@@ -25,10 +25,10 @@ npm run dev
 ```
 - Test `/`, `/login`, `/onboarding`, `/dashboard` lokalt
 
-### 4. Commit endringar
+### 4. Commit endringer
 ```bash
 git add -A
-git commit -m "Kort beskrivelse av endringar"
+git commit -m "Kort beskrivelse av endringer"
 ```
 
 ### 5. Push til main
@@ -37,11 +37,11 @@ git push origin main
 ```
 
 ### 6. Vent på Vercel deploy
-- Vercel auto-deplar frå main-branch
+- Vercel auto-deplar fra main-branch
 - Sjekk Vercel dashboard: https://vercel.com/GeorgeMasterSplinter/tosom
 - Vent på at build blir green (✅)
 
-### 7. Kjøre smoke-testar på prod
+### 7. Kjøre smoke-tester på prod
 ```bash
 curl -s -o /dev/null -w "%{http_code}" https://tosom.no
 curl -s -o /dev/null -w "%{http_code}" https://tosom.no/login
@@ -71,7 +71,7 @@ git push origin main
 
 ## Environment variables (Vercel)
 
-Desse må vere set i Vercel dashboard:
+Desse må være set i Vercel dashboard:
 
 | Variabel | Verdi |
 |----------|---|----|

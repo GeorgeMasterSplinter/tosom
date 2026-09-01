@@ -35,7 +35,7 @@
 
 ### Premium-flow
 
-1. Brukar klikkar "Oppgrader til Premium"
+1. Bruker klikkar "Oppgrader til Premium"
 2. Kallar `POST /api/payment/create-checkout-session`
 3. Stripe checkout opna
 4. Etter betaling → webhook oppdaterer subscription
@@ -103,7 +103,7 @@
 
 ### Fallback
 
-Dersom `AI_API_KEY` ikkje er sett:
+Dersom `AI_API_KEY` ikke er sett:
 - Returnerer template-basert insight
 - Ingen eksterne kall
 - Ingen feil
@@ -159,10 +159,10 @@ Dersom `AI_API_KEY` ikkje er sett:
 ### Kjernefunksjonar
 
 1. **Onboarding** → 10-trinns dyptprofil
-2. **Resonans-matching** → éin match per 24t
+2. **Resonans-matching** → én match per 24t
 3. **30-dagers reise** → guidet par-reise
-4. **Guida chat** → daglege refleksjonar/oppgåver
-5. **Premium** → fleire matchar + AI-insights
+4. **Guida chat** → daglege refleksjoner/oppgaver
+5. **Premium** → flere matchar + AI-insights
 
 ### Premium-funksjonar
 
@@ -170,7 +170,7 @@ Dersom `AI_API_KEY` ikkje er sett:
 |------|--|-|
 | Matchar/dag | 1 | 3 |
 | AI-insights | ❌ | ✅ |
-| Reise-length | 30 dagar | 60 dagar |
+| Reise-length | 30 dager | 60 dager |
 | Profil-forslag | ❌ | ✅ |
 | Resonansmåling | ❌ | ✅ |
 
@@ -180,13 +180,13 @@ Dersom `AI_API_KEY` ikkje er sett:
 
 ### Konsept
 
-ToSom er ein **roleg, privat relasjonsplattform** for vaksne (23+).
+ToSom er en **rolig, privat relasjonsplattform** for vaksne (23+).
 
 Kjerneverdier:
 - Éin match per 24 time
 - Ingen swipe, ingen feed
 - Guidet 30-dagers reise
-- Djupe samtalar, ikkje chat
+- Dype samtaler, ikke chat
 - Nordisk design (mørk, gull, glass)
 
 ### Teknisk

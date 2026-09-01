@@ -2,10 +2,10 @@
  * ToSom — GET /api/chat/image/[messageId]
  *
  * Verifiserer tilgangskontrollen på side-ruta som utsteder signerte URL-er:
- *   - 401 utan session
+ *   - 401 uten session
  *   - 404 ukjend melding
- *   - 403 for ikkje-deltakar
- *   - 404 for melding utan bilde
+ *   - 403 for ikke-deltakar
+ *   - 404 for melding uten bilde
  *   - 307 redirect til signert URL for gyldig deltakar
  */
 
@@ -58,7 +58,7 @@ describe('GET /api/chat/image/[messageId]', () => {
     storage.putImage('conv-1/abc.jpg', Buffer.from('x'), { contentType: 'image/jpeg' });
   });
 
-  it('401 utan session', async () => {
+  it('401 uten session', async () => {
     session.mockResolvedValue(null);
     const res = await GET(makeRequest('msg-1'), params('msg-1'));
     expect(res.status).toBe(401);
@@ -70,7 +70,7 @@ describe('GET /api/chat/image/[messageId]', () => {
     expect(res.status).toBe(404);
   });
 
-  it('403 for ikkje-deltakar', async () => {
+  it('403 for ikke-deltakar', async () => {
     messageFindUnique.mockResolvedValue({
       id: 'msg-1',
       type: 'image',
@@ -81,7 +81,7 @@ describe('GET /api/chat/image/[messageId]', () => {
     expect(res.status).toBe(403);
   });
 
-  it('404 for melding utan bilde (type=user)', async () => {
+  it('404 for melding uten bilde (type=user)', async () => {
     messageFindUnique.mockResolvedValue({
       id: 'msg-1',
       type: 'user',

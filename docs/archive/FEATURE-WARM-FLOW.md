@@ -2,14 +2,14 @@
 
 **Oppdatert:** 30. juni 2026
 **Versjon:** 1.0
-**Status:** 🟡 Backend-logikk ferdig, frontend-komponent manglar
+**Status:** 🟡 Backend-logikk ferdig, frontend-komponent mangler
 
 ---
 
 ## OVERSIKT
 
 Warm Flow gir varme, rolige overgangar mellom skjer i ToSom:
-- **Side-transisjon animasjonar** (5 typar)
+- **Side-transisjon animasjonar** (5 typer)
 - **Warm loading states** med tekst
 - **Gentle page transitions** per rute
 - **Mood-basert fargeendring** (5 moodar)
@@ -28,7 +28,7 @@ lib/warmFlow/
 
 ## MOODAR (5 stemningar)
 
-| Mood | Kva | Farge | Emoji |
+| Mood | Hva | Farge | Emoji |
 |--|--|--|--|
 | **Calm** | Standard | Gull (#D4AF37) | — |
 | **Warm** | Match/melding | Gull-lys (#E8C766) | 🔥 |
@@ -38,9 +38,9 @@ lib/warmFlow/
 
 ---
 
-## TRANSISJON-TYPAR (5 typar)
+## TRANSISJON-TYPER (5 typer)
 
-| Type | Varighet | Kva |
+| Type | Varighet | Hva |
 |--|--|--|
 | **fade** | 500ms | Enkel fade |
 | **slide-up** | 600ms | Glid opp |
@@ -126,7 +126,7 @@ function AnimatedPage({ children, route }) {
 
 ## DESIGNPRINSIPP
 
-1. **Alltid roleg** — ingen raske eller skarpe overgangar
+1. **Alltid rolig** — ingen raske eller skarpe overgangar
 2. **Alltid varm** — gull- og blåtonar
 3. **Alltid myk** — ease-in-out timing
 4. **Aldri påtrengjande** — subtile animasjonar
@@ -145,7 +145,7 @@ function AnimatedPage({ children, route }) {
 
 ## HUSK
 
-- Transisjonar må vere **under 1 sekund**
+- Transisjonar må være **under 1 sekund**
 - Mood-endring må **puste** (ikke hoppe)
 - Ingen animasjonar på svære apparat
 - Alltid fallback til CSS transitions

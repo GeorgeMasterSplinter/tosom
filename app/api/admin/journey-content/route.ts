@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
       return errorResponse("Kun admin kan få tilgang til journey-innhold", 403)
     }
 
-    // Hent alle 30 dagar, sortert på day
+    // Hent alle 30 dager, sortert på day
     const content = await prisma.journeyDayContent.findMany({
       orderBy: { day: 'asc' },
     })

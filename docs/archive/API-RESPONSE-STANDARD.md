@@ -32,9 +32,9 @@ return NextResponse.json({
 |---------|------------------------------------------------------|
 | 200     | Suksess (alltid med `{ success: true, data: ... }`) |
 | 400     | Ugyldig input/query parameters                       |
-| 401     | Manglande/ugyldig autentisering                      |
-| 403     | Autentisert men manglar autorisasjon                 |
-| 404     | Ressurs ikkje funnen                                 |
+| 401     | Manglende/ugyldig autentisering                      |
+| 403     | Autentisert men mangler autorisasjon                 |
+| 404     | Ressurs ikke funnet                                 |
 | 409     | Konflikt (t.d. duplicate, låst resurs)              |
 | 410     | Ressurs utgått                                       |
 | 500     | Intern serverfeil                                    |
@@ -45,10 +45,10 @@ return NextResponse.json({
 
 | Code                | Brukes til                                  |
 |---------------------|---------------------------------------------|
-| `INVALID_INPUT`    | Manglande eller feil format input           |
-| `UNAUTHORIZED`     | Manglande session/Token                     |
-| `FORBIDDEN`        | Manglar rolle/rettar                        |
-| `NOT_FOUND`        | Ressurs ikkje funnen                        |
+| `INVALID_INPUT`    | Manglende eller feil format input           |
+| `UNAUTHORIZED`     | Manglende session/Token                     |
+| `FORBIDDEN`        | Mangler rolle/rettar                        |
+| `NOT_FOUND`        | Ressurs ikke funnet                        |
 | `CONFLICT`         | Duoplikat eller konflikt med eksisterande   |
 | `GONE`             | Ressurs utgått                              |
 | `INTERNAL_ERROR`   | Uventa serverfeil                           |
@@ -73,9 +73,9 @@ return NextResponse.json({
   code: 'INVALID_INPUT',
 }, { status: 400 });
 
-// Error — manglande config
+// Error — manglende config
 return NextResponse.json({
-  error: 'Vipps er ikkje konfigurert',
+  error: 'Vipps er ikke konfigurert',
   code: 'INTERNAL_ERROR',
 }, { status: 503 });
 ```
@@ -105,13 +105,13 @@ return NextResponse.json({
   },
 }, { status: 200 });
 
-// Error — manglande userId
+// Error — manglende userId
 return NextResponse.json({
   error: 'Missing userId',
   code: 'INVALID_INPUT',
 }, { status: 400 });
 
-// Error — ikkje autentisert
+// Error — ikke autentisert
 return NextResponse.json({
   error: 'Unauthorized',
   code: 'UNAUTHORIZED',
@@ -151,9 +151,9 @@ return NextResponse.json({
   },
 }, { status: 200 });
 
-// Error — ingen reise funnen
+// Error — ingen reise funnet
 return NextResponse.json({
-  error: 'Ingen aktiv reise funnen',
+  error: 'Ingen aktiv reise funnet',
   code: 'NOT_FOUND',
 }, { status: 404 });
 ```
@@ -169,7 +169,7 @@ return NextResponse.json({
   data: { userId: 'xxx', message: 'Profil fullført!' },
 }, { status: 200 });
 
-// Error — identityName manglar
+// Error — identityName mangler
 return NextResponse.json({
   error: 'identityName er påkrevd',
   code: 'INVALID_INPUT',
@@ -187,7 +187,7 @@ return NextResponse.json({
   data: { message: 'Onboarding fullført — du kan no få din fyrste match' },
 }, { status: 200 });
 
-// Error — ikkje alle steg fylte
+// Error — ikke alle steg fylte
 return NextResponse.json({
   error: 'Alle djup profil-steg må vera fylte før onboarding kan fullførast',
   code: 'INVALID_INPUT',
@@ -208,12 +208,12 @@ return NextResponse.json({
 // Success — hent resonans (ingen data)
 return NextResponse.json({
   success: true,
-  data: { scores: null, message: 'Ingen resonans-data funnen.' },
+  data: { scores: null, message: 'Ingen resonans-data funnet.' },
 }, { status: 200 });
 
-// Error — manglar conversationId
+// Error — mangler conversationId
 return NextResponse.json({
-  error: 'Manglar conversationId',
+  error: 'Mangler conversationId',
   code: 'INVALID_INPUT',
 }, { status: 400 });
 ```
@@ -229,13 +229,13 @@ return NextResponse.json({
   data: { ok: true },
 }, { status: 200 });
 
-// Error — ikkje admin
+// Error — ikke admin
 return NextResponse.json({
   error: 'Forbidden',
   code: 'FORBIDDEN',
 }, { status: 403 });
 
-// Error — user ikkje funnen
+// Error — user ikke funnet
 return NextResponse.json({
   error: 'User not found',
   code: 'NOT_FOUND',
@@ -255,7 +255,7 @@ return NextResponse.json({
 
 // Error — webhook feil
 return NextResponse.json({
-  error: 'Kunne ikkje opprette betalingssesjon',
+  error: 'Kunne ikke opprette betalingssesjon',
   code: 'INTERNAL_ERROR',
 }, { status: 500 });
 ```
@@ -286,26 +286,26 @@ return NextResponse.json({
 
 ### ✅ GJER ALLTID
 
-1. Bruk `NextResponse.json()` — ikkje `new Response(JSON.stringify(...))`
+1. Bruk `NextResponse.json()` — ikke `new Response(JSON.stringify(...))`
 2. Success-responsar har alltid `{ success: true, data: { ... } }`
 3. Error-responsar har alltid `{ error: '...', code: '...' }`
 4. Status-koder er semantisk korrekte (401 for auth, 403 for autorisasjon, etc.)
 5. Bruk standard error codes: `INVALID_INPUT`, `UNAUTHORIZED`, `FORBIDDEN`, `NOT_FOUND`, `CONFLICT`, `GONE`, `INTERNAL_ERROR`
 
-### ✗ GJER IKKJE
+### ✗ GJER IKKE
 
-1. Ikkje bland `{ ok: true }` med `{ success: true, data: ... }`
-2. Ikkje returner flat JSON utan `data`-wrap ved suksess
-3. Ikkje manglande `code` på error-responsar
-4. Ikkje bruk ulike format for same type av respons
-5. Ikkje nytt `new Response(JSON.stringify(...))` når `NextResponse.json()` er tilgjengeleg
+1. Ikke bland `{ ok: true }` med `{ success: true, data: ... }`
+2. Ikke returner flat JSON uten `data`-wrap ved suksess
+3. Ikke manglende `code` på error-responsar
+4. Ikke bruk ulike format for same type av respons
+5. Ikke nytt `new Response(JSON.stringify(...))` når `NextResponse.json()` er tilgjengeleg
 
 ---
 
 ## MIGRERINGSGUIDE
 
 ### Fase 1 — CORE-domene (match, journey, profile, auth)
-- Oppdater success-responsar frå `{ ok: true }` eller `{ success: true, ... }` til `{ success: true, data: { ... } }`
+- Oppdater success-responsar fra `{ ok: true }` eller `{ success: true, ... }` til `{ success: true, data: { ... } }`
 - Legg til `code` på alle error-responsar
 - Konverter `new Response(JSON.stringify(...))` til `NextResponse.json()`
 
@@ -335,7 +335,7 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
-    // 1. Auth-sjekk (vanlege brukarar)
+    // 1. Auth-sjekk (vanlege brukere)
     const auth = await requireAuth(req);
     if (auth instanceof NextResponse) return auth;
     
@@ -359,7 +359,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error('RouteName POST-feil:', err);
     return NextResponse.json({
-      error: 'Kunne ikkje utføre operasjonen',
+      error: 'Kunne ikke utføre operasjonen',
       code: 'INTERNAL_ERROR',
     }, { status: 500 });
   }
@@ -378,11 +378,11 @@ CSRF-beskyttelse er kontrollert av `ENABLE_CSRF_PROTECTION=true` i `.env`.
 | Miljø        | csrfCheck() oppfører seg                            |
 |--------------|-----------------------------------------------------|
 | Development  | Alltid { ok: true } — ingen validering             |
-| Production   | Krev gyldig X-CSRF-Token header + cookie-samanlikning |
+| Production   | Krev gyldig X-CSRF-Token header + cookie-sammenligning |
 
 ### Client-side bruk
 ```javascript
-// Hent CSRF-token (gjer ein gong per session)
+// Hent CSRF-token (gjer en gong per session)
 const response = await fetch('/api/csrf/token');
 const token = response.headers.get('x-csrf-token');
 

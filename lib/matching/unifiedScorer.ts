@@ -4,7 +4,7 @@
 // bruker denne motoren. Ingen duplisering, ingen inkonsistens.
 //
 // FORSKNINGSMOTOR F-8: Ni dimensjoner → seks, med vektene fra §7.
-// Kvar dimensjon bruker psykometriske skårer når begge profiler har dei;
+// Hver dimensjon bruker psykometriske skårer når begge profiler har de;
 // ellers faller vi tilbake til dagens ordoverlapp. Ingen bruker blir uten score.
 //
 // Dimensjoner (6): values, attachment, personality, communication,
@@ -16,7 +16,7 @@ import { ProfileData } from "./types";
 import { ResonanceLevel } from "@prisma/client";
 // M-1: Én kilde for resonansterskler — nivået kommer fra toResonanceLevel (kanonisk 80/65/50/40).
 import { toResonanceLevel } from "./resonanceLevel";
-// FORSKNINGSMOTOR F-7: ein funksjon per dimensjon.
+// FORSKNINGSMOTOR F-7: en funksjon per dimensjon.
 import {
   scoreAttachmentCompat,
   scorePersonalityCompat,
@@ -165,7 +165,7 @@ function dimLifeSituation(a: P, b: P): number {
   return scoreLifeSituationCompat(a as unknown as Record<string, unknown>, b as unknown as Record<string, unknown>);
 }
 
-/* ---------- PSYCH-READERS (defensive — manglar data gir null) ---------- */
+/* ---------- PSYCH-READERS (defensive — mangler data gir null) ---------- */
 
 function readBigFive(p: P): BigFiveScores | null {
   const bf = p.bigFive as Record<string, unknown> | null | undefined;
@@ -303,7 +303,7 @@ function clamp(n: number, min: number, max: number): number {
 
 /**
  * calculateTotalScore — wrapper for backwards-kompatibilitet med engine.ts.
- * Returnerer resultat i [0,1] skala (gamle format) med dei 5 sub-scorerne.
+ * Returnerer resultat i [0,1] skala (gamle format) med de 5 sub-scorerne.
  * @deprecated Bruk unifiedScore() direkte for [0-100] skala.
  */
 export function calculateTotalScore(
@@ -316,7 +316,7 @@ export function calculateTotalScore(
 } {
   const result = unifiedScore(queryProfile, candidateProfile);
 
-  // Kartlegg 6 nye dimensjoner til dei 5 legacy sub-scorerne.
+  // Kartlegg 6 nye dimensjoner til de 5 legacy sub-scorerne.
   return {
     breakdown: {
       base:      result.score / 100,

@@ -10,7 +10,7 @@ Oppretta undersida "Personvern" med seks områder om databehandling og brukarret
 
 ## Struktur
 1. **Hero** — "Personvern" med kort introduksjon
-2. **Kva vi gjer med dine data** — 6 områder (samlar, kvifor, lagra, rettigheter, cookies, delen)
+2. **Hva vi gjer med dine data** — 6 områder (samlar, hvorfor, lagra, rettigheter, cookies, delen)
 3. **Dine rettigheter** — 6 rettigheter (innsyn, retting, sletting, begrensning, dataportsabilitet, samtykke)
 4. **Kontak** — privat@tosom.no
 5. **Footer**
@@ -23,7 +23,7 @@ Oppretta undersida "Personvern" med seks områder om databehandling og brukarret
 
 ## FASE 6 STATUS
 Alle 6 undersider er no FULLFØRTE og dokumenterte:
-- ✅ 6A: Kvifor ToSom (/kvifor)
+- ✅ 6A: Hvorfor ToSom (/hvorfor)
 - ✅ 6B: Slik fungerer det (/slik)
 - ✅ 6C: Reisen (/reisen)
 - ✅ 6D: Kontakt (/kontakt)

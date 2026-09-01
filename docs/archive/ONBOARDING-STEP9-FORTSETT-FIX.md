@@ -46,7 +46,7 @@ case 8:
 
 ### 3. handleNext (OnboardingFlow.tsx)
 
-Sikra at `handleNext` gjer berre:
+Sikra at `handleNext` gjer bare:
 ```tsx
 const handleNext = () => goToStep(step + 1);
 ```

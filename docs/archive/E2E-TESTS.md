@@ -7,10 +7,10 @@
 
 ## OVERSIKT
 
-ToSom har no ein full E2E-testpakke med Playwright som testar dei tre viktigaste flowane:
-1. **Onboarding** — Brukar kan opprette profil
-2. **Match** — Brukar kan motta og akseptere match
-3. **Chat** — Brukar kan sende og motta meldingar
+ToSom har no en full E2E-testpakke med Playwright som tester de tre viktigaste flowane:
+1. **Onboarding** — Bruker kan opprette profil
+2. **Match** — Bruker kan motta og akseptere match
+3. **Chat** — Bruker kan sende og motta meldinger
 
 ---
 
@@ -31,13 +31,13 @@ npx playwright install chromium
 
 ### Lokal kjøring
 ```bash
-# Kjør alle testar
+# Kjør alle tester
 npx playwright test
 
-# Kjør ein spesifikk test
+# Kjør en spesifikk test
 npx playwright test e2e/tests/onboarding.spec.ts
 
-# Kjør i headed mode (sjå testen live)
+# Kjør i headed mode (se testen live)
 npx playwright test --headed
 
 # Køy i debug modus
@@ -50,7 +50,7 @@ npx playwright test --debug
 docker-compose -f docker-compose.test.yml up -d
 npx playwright test
 
-# Uten test-database (berre UI-testar)
+# Uten test-database (bare UI-tester)
 npx playwright test
 ```
 
@@ -63,9 +63,9 @@ e2e/
 ├── fixtures/
 │   └── test-users.ts      # Testbrukarar og helper-funksjonar
 ├── tests/
-│   ├── onboarding.spec.ts  # Onboarding-flow testar
-│   ├── match.spec.ts       # Match-flow testar
-│   └── chat.spec.ts        # Chat-flow testar
+│   ├── onboarding.spec.ts  # Onboarding-flow tester
+│   ├── match.spec.ts       # Match-flow tester
+│   └── chat.spec.ts        # Chat-flow tester
 ├── videos/                 # Test-video (generert automatisk)
 └── screenshots/            # Test-skjermbilete (generert automatisk)
 ```
@@ -84,17 +84,17 @@ e2e/
 
 ## TESTAR-OVERSIKT
 
-### Onboarding-testar (6 testar)
+### Onboarding-tester (6 tester)
 | Test | Beskrivelse |
 |------|----|-----|
-| Vise onboarding | Ny brukar ser onboarding-side |
+| Vise onboarding | Ny bruker ser onboarding-side |
 | Starte onboarding | Kan logge inn via dev-login |
 | Steg-indikator | Ser steg-framsteg |
 | Fylle ut profil | Kan skrive namn og info |
 | Navigere steg | Kan gå mellom steg |
 | Feilmelding | Ser feil ved ugyldig inndata |
 
-### Match-testar (6 testar)
+### Match-tester (6 tester)
 | Test | Beskrivelse |
 |------|----|----|
 | Match-status | Ser match-status på dashboard |
@@ -104,19 +104,19 @@ e2e/
 | Avise match | Kan avise match |
 | Akseptere match | Kan akseptere match |
 
-### Chat-testar (8 testar)
+### Chat-tester (8 tester)
 | Test | Beskrivelse |
 |------|----|----|
 | Vise chat | Ser chat-side |
 | Tom-chat | Ser tom-chat-melding |
 | Skrive melding | Kan skrive i input |
 | Send melding | Kan sende melding |
-| Eigne meldingar | Ser eigne meldingar til høgre |
-| Mottatte meldingar | Ser mottatte meldingar til venstre |
+| Egne meldinger | Ser egne meldinger til høyre |
+| Mottatte meldinger | Ser mottatte meldinger til venstre |
 | Typing-indikator | Ser typing-indikator |
 | Tidstempler | Ser melding-tid |
 
-**Totalt: 20 testar**
+**Totalt: 20 tester**
 
 ---
 
@@ -165,20 +165,20 @@ Testane kjører automatisk i GitHub Actions ved PR og push:
 3 **Bruk waitForURL etter redirect**
 4. **Bruk expect().toBeVisible() for synlege element**
 5. **Bruk expect().toHaveValue() for input-felt**
-6. **Alltid cleanup mellom testar**
+6. **Alltid cleanup mellom tester**
 
 ---
 
 ## EKSEMPEL-PARA
 
 ```bash
-# Køy ein test med video
+# Køy en test med video
 npx playwright test onboarding --project=chromium --debug
 
 # Export test-report
 npx playwright show-report
 
-# Kjøy alle testar i parallel
+# Kjøy alle tester i parallel
 npx playwright test --workers=4
 ```
 
@@ -187,5 +187,5 @@ npx playwright test --workers=4
 ## HUSK
 
 - Testane krev at appen kjør på localhost:3000
-- Dev-login må vere aktivert (DEV_LOGIN_ENABLED=true)
-- Test-database må vere oppsett for full funksjonalitet
+- Dev-login må være aktivert (DEV_LOGIN_ENABLED=true)
+- Test-database må være oppsett for full funksjonalitet

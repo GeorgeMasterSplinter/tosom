@@ -4,9 +4,9 @@
  * GET /api/settings/export
  * GDPR art. 15 (tilgang) og art. 20 (dataportabilitet).
  *
- * Returnerer eit menneskelesbart JSON-uttrekk (norske nøkkelord) med
+ * Returnerer et menneskelesbart JSON-uttrekk (norske nøkkelord) med
  * brukarens personopplysningar: konto, profil (inkl. dypprofil),
- * preferansar, reiser, egne meldingar, varslar og egne rapportar.
+ * preferansar, reiser, egne meldinger, varslar og egne rapportar.
  *
  * Kun brukarens eige data. Interne ID-ar (cuid) inkluderast aldri —
  * uttrekket skal være sjølvforklarande ved levering.

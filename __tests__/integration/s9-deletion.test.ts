@@ -9,8 +9,8 @@
  *      lekkasjevei). Testen kjører mot local-driver mot ein isolert tempdir,
  *      slik at vi kan verifisere at fila faktisk er borte frå disken.
  *
- * (Oppdatert: bildet knyttest no til meldinga via imageKey og slettast per
- * nøkkel via lib/storage — ikkje lenger som mappe-rydding i public/.)
+ * (Oppdatert: bildet knyttest no til meldingen via imageKey og slettast per
+ * nøkkel via lib/storage — ikke lenger som mappe-rydding i public/.)
  */
 
 import path from 'path';
@@ -33,7 +33,7 @@ describe('S-9: endJourney(found_each_other) — fullstendig sletting', () => {
   beforeAll(async () => {
     // Isoler storage til ein tempdir for denne testen.
     storageDir = await fs.mkdtemp(path.join(os.tmpdir(), 'tosom-s9-'));
-    // Setje env FØR endJourney kallar getImageStorage() (singleton).
+    // Sette env FØR endJourney kallar getImageStorage() (singleton).
     process.env.STORAGE_DRIVER = 'local';
     process.env.STORAGE_LOCAL_DIR = storageDir;
     _resetImageStorageForTesting();
@@ -73,7 +73,7 @@ describe('S-9: endJourney(found_each_other) — fullstendig sletting', () => {
     await db.journeyProgress.create({ data: { userId: userA.id, matchId: match.id, day: 30 } });
     await db.journeyProgress.create({ data: { userId: userB.id, matchId: match.id, day: 30 } });
 
-    // Meldingar: to tekst + ein bilde-melding KNYTT TIL ETT OBJEKT I LAGRINGA
+    // Meldinger: to tekst + ein bilde-melding KNYTT TIL ETT OBJEKT I LAGRINGA
     await db.message.create({ data: { conversationId: conversation.id, senderId: userA.id, content: 'Hei!' } });
     await db.message.create({ data: { conversationId: conversation.id, senderId: userB.id, content: 'Heisann!' } });
     await db.message.create({

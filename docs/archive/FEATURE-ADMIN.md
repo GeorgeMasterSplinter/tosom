@@ -2,14 +2,14 @@
 
 **Oppdatert:** 30. juni 2026
 **Versjon:** 1.0
-**Status:** 🟡 Backend-logikk ferdig, frontend-komponent manglar
+**Status:** 🟡 Backend-logikk ferdig, frontend-komponent mangler
 
 ---
 
 ## OVERSIKT
 
-Admin system gir eit komplett dashboard for å overvåke og styre ToSom:
-- **Brukar-oversikt** med filter og detaljar
+Admin system gir et komplett dashboard for å overvåke og styre ToSom:
+- **Bruker-oversikt** med filter og detaljer
 - **Journey-oversikt** med resonans-sporing
 - **Match-oversikt** med scoring
 - **System-health** med uptime og latency
@@ -32,7 +32,7 @@ lib/admin/
 | Rute | Formål |
 |--|--|
 | `/admin` | Dashboard |
-| `/admin/users` | Brukar-oversikt |
+| `/admin/users` | Bruker-oversikt |
 | `/admin/journeys` | Journey-oversikt |
 | `/admin/matches` | Match-oversikt |
 | `/admin/analytics` | Analytics |
@@ -45,8 +45,8 @@ lib/admin/
 
 | Stat | Beskrivelse |
 |--|--|
-| Total users | Alle registrerte brukarar |
-| Active users | Aktive siste 7 dagar |
+| Total users | Alle registrerte brukere |
+| Active users | Aktive siste 7 dager |
 | Active journeys | Pågående reiser |
 | Daily matches | Dagelege match |
 | Average resonance | Snitt-resonans |
@@ -88,7 +88,7 @@ function AdminDashboard() {
     <div>
       {/* Stats kort */}
       {/* Health indikator */}
-      {/* Brukar-liste */}
+      {/* Bruker-liste */}
       {/* Journey-liste */}
     </div>
   )
@@ -99,13 +99,13 @@ function AdminDashboard() {
 
 ## AUTENTISERING
 
-Berre brukarar med `role: 'ADMIN'` kan aksesere admin-ruter.
+Bare brukere med `role: 'ADMIN'` kan aksesere admin-ruter.
 
 ---
 
 ## HUSK
 
-- Admin panel er **ikkje for offentlege brukarar**
+- Admin panel er **ikke for offentlege brukere**
 - Alle handlingar blir logga
 - Moderering krev grunn
-- System health skal vere **healthy** til alle tider
+- System health skal være **healthy** til alle tider

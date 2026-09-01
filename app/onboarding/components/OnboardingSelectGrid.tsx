@@ -36,7 +36,7 @@ interface OnboardingSelectGridProps {
 /**
  * Premium select-grid med subtil fargeidentitet:
  * - Grid-layout (responsive, 2–4 kolonnar)
- * - Kvar option er ein glass-kort med hover-effekt
+ * - Hver option er en glass-kort med hover-effekt
  * - Ikon i dempet fargetone
  * - Vald-state: subtil farge-border + flat checkmark
  */

@@ -65,7 +65,7 @@ app/api/chat/
 ├── conversations/
 │   └── route.ts               ← Hent konversasjonar (GET)
 └── starter/
-    └── route.ts               ← AI starter-meldingar
+    └── route.ts               ← AI starter-meldinger
 ```
 
 ### 1.6 app/api/* (chat-relaterte)
@@ -111,8 +111,8 @@ components/
 
 ### 1.10 Components i subdirs (relaterte)
 ```
-components/dashboard/           ← Dashboard-skap (eksisterte ikkje)
-components/match/               ← Match-komponentar (eksisterte ikkje)
+components/dashboard/           ← Dashboard-skap (eksisterte ikke)
+components/match/               ← Match-komponentar (eksisterte ikke)
 components/conversation/
 ├── ContinueChoice.tsx
 ├── ConversationView.tsx
@@ -127,23 +127,23 @@ components/conversation/
 
 ## 2. FILER SOM MANGELER
 
-### 2.1 Manglande hooks
+### 2.1 Manglende hooks
 - `hooks/useSendMessage.ts` — Skal ha send-logikk (fra spesifikasjonen)
 - `hooks/useChatRoom.ts` — Sentral chat room state management
 - `hooks/useChatTyping.ts` — typing-logikk separat
 
-### 2.2 Manglande API-ruter
+### 2.2 Manglende API-ruter
 - `app/api/chat/typing/route.ts` — Typing-indikator endpoint
 - `app/api/chat/accept/route.ts` — Accept match endpoint
 
-### 2.3 Manglande komponentar
+### 2.3 Manglende komponentar
 - `components/chat/ChatRoom.tsx` — Hoved chat room container
 - `components/chat/ChatMessages.tsx` — Meldings-liste
 - `components/chat/ChatInput.tsx` — Input komponent
 - `components/chat/PartnerInfo.tsx` — Partner-info panel
 
-### 2.4 Manglande database
-- `prisma/schema.prisma` — Schema manglar (verifisert)
+### 2.4 Manglende database
+- `prisma/schema.prisma` — Schema mangler (verifisert)
 
 ---
 
@@ -209,10 +209,10 @@ components/conversation/
 |------|-----------|-------------|
 | `/chat` | `app/chat/page.tsx` | ✅ |
 | `/chat/[id]` | `app/chat/[id]/page.tsx` | ✅ |
-| `/dashboard` | (eksisterer ikkje i app/) | ❌ |
+| `/dashboard` | (eksisterer ikke i app/) | ❌ |
 | `/conversation/[id]` | `app/api/conversation/[id]/route.ts` | Legacy |
 
-### 6.2 API-kallar frå frontend
+### 6.2 API-kallar fra frontend
 | Endpoint | Metoder | Brukt av | Status |
 |----------|---------|----------|--------|
 | `/api/chat/conversations` | GET | `app/chat/page.tsx` | ✅ |
@@ -292,13 +292,13 @@ model Message {
 ## 9. HOOKS ANALYSE
 
 ### useChatMessages.ts
-- **Hva:** Henter meldingar for ei conversation via REST
+- **Hva:** Henter meldinger for ei conversation via REST
 - **Hvordan:** GET `/api/chat/messages?conversationId=X`
 - **Polling:** Kvart 5. sekund
 - **Status:** ✅ Brukt i `app/chat/[id]/page.tsx`
 
 ### useChatRealtime.ts
-- **Hva:** Pusher-sanntid for nye meldingar, conversation updates, typing
+- **Hva:** Pusher-sanntid for nye meldinger, conversation updates, typing
 - **Kanalar:** `conversation-{id}`, `user-{userId}`
 - **Event:** `new-message`, `conversation-updated`, `typing`
 - **Status:** ✅ Brukt i begge chat-pages
@@ -319,12 +319,12 @@ model Message {
 - 2 hooks (useChatMessages, useChatRealtime)
 - 1 server action (createFakeMatch)
 
-### Manglar
+### Mangler
 - Clean ChatRoom-komponentar (ChatRoom, ChatHeader, ChatMessages, ChatInput)
 - useSendMessage hook
 - Typing API-rute
 - prisma/schema.prisma
-- middleware.ts (bekreftet ikkje eksisterer)
+- middleware.ts (bekreftet ikke eksisterer)
 
 ### Treng rydding
 - Dublikate ChatList, ChatWindow i rot

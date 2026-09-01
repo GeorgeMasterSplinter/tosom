@@ -7,7 +7,7 @@
  * SECURITY: Låst bak ADMIN_SETUP_TOKEN + NODE_ENV-sjekk (timing-safe).
  * Kun tilgjengelig i non-production miljø med korrekt token via Authorization-header.
  * 
- * Bruk: Kall ein gong etter deploy eller reset (kun dev/staging).
+ * Bruk: Kall en gong etter deploy eller reset (kun dev/staging).
  */
 
 import { NextResponse } from 'next/server';

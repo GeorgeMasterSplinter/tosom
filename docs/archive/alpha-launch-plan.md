@@ -6,14 +6,14 @@
 |-------------|---------------------------------------------------|
 | Versjon     | A-1                                                |
 | Dato        | $(date +%Y-%m-%d)                                 |
-| Omfang      | 5–20 brukarar                                      |
+| Omfang      | 5–20 brukere                                      |
 | Mål         | Observasjon, feilfangst, trygghet, stabilitet     |
 | Ingenting    | Ingen nye funksjoner, ingen markedsføring          |
 
 ## 2. Forutsetninger
 
 ```bash
-# 1. Database (ren, utan testdata)
+# 1. Database (ren, uten testdata)
 export DATABASE_URL="postgresql://tosom_alpha:password@localhost:5432/tosom_alpha"
 
 # 2. Miljøvariabler
@@ -27,7 +27,7 @@ export ENABLE_AUDIT_LOG=true
 export ADMIN_EMAIL="admin@tosom.no"
 export ADMIN_PASSWORD="AlphaTosom2026!"
 
-# 4. Demo-brukarar
+# 4. Demo-brukere
 export DEMO_USERS=10
 export DEMO_PASSWORD="DemoTosom2026!"
 ```
@@ -43,7 +43,7 @@ bash scripts/alpha/alpha-launch.sh
 npm run dev -p 3000
 ```
 
-## 4. Tilgjengelege sider for brukarar
+## 4. Tilgjengelege sider for brukere
 
 | Side        | URL           | Funksjon                           |
 |-------------|---------------|-----------------------------------|
@@ -56,25 +56,25 @@ npm run dev -p 3000
 
 ## 5. Testscenarioer
 
-### Scenario 1: Onboarding (alle brukarar)
-- [ ] Brukar går gjennom all 11 steg
+### Scenario 1: Onboarding (alle brukere)
+- [ ] Bruker går gjennom all 11 steg
 - [ ] Alle valideringar fungerer
-- [ ] Progresjon lagast korrekt
+- [ ] Progresjon lages korrekt
 - [ } Ingen feil i konsollen
 
 ### Scenario 2: Første match
-- [ ] Brukar får én match etter 24t
+- [ ] Bruker får én match etter 24t
 - [ ] Match viser resonans-nivå
 - [ ] Ingen dobbelt-match
 
 ### Scenario 3: Reise-start
-- [ ] Dag 1-innhald lastast korrekt
+- [ ] Dag 1-innhold lastast korrekt
 - [ ] Refleksjonsspørsmål visast
-- [ ] Oppgåver er tilgjengelege
+- [ ] Oppgaver er tilgjengelege
 - [ ] Systemmeldingar fungerer
 
 ### Scenario 4: Chat
-- [ ] Meldingar sendast/mottakst
+- [ ] Meldinger sendast/mottakst
 - [ ] Systemmeldingar visast
 - [ ] Ingen feil ved samtidig bruk
 
@@ -85,12 +85,12 @@ npm run dev -p 3000
 npx tsx scripts/alpha/alphaMonitor.ts
 ```
 
-### Innsamling av feedback (etter kvar sesjon)
+### Innsamling av feedback (etter hver sesjon)
 ```bash
 npx tsx scripts/alpha/collectFeedback.ts
 ```
 
-### Loggar å sjå på
+### Loggar å se på
 ```bash
 # Feil i produksjon
 grep "ERROR" /var/log/tosom.log | tail -50
@@ -101,11 +101,11 @@ grep "status 5[0-9][0-9]" /var/log/tosom.log | tail -50
 ```
 
 ### Kritiske mønstre å observere
-- [ ] Dobbelt-match (brukar med >1 aktiv match)
+- [ ] Dobbelt-match (bruker med >1 aktiv match)
 - [ ] nextDayAt-feil (expired reiser)
-- [ ] imageShareAllowedAt-feil (tidleg bildedeling)
-- [ ] Manglande systemmeldingar i reise
-- [ ] Auth-feil (banned/deleted brukarar)
+- [ ] imageShareAllowedAt-feil (tidlig bildedeling)
+- [ ] Manglende systemmeldingar i reise
+- [ ] Auth-feil (banned/deleted brukere)
 
 ## 7. Stabilisering-reglar
 
@@ -115,26 +115,26 @@ Kun følgjande feil skal rettast under A-1:
 |---------------|----------|
 | Krasj          | Server/ frontend krasjar |
 | Matchmotor     | Feil i 24t-regel, 30d-lås, resonans |
-| Reise          | Feil i dag 1-30-innhald, refleksjon, oppgåve |
-| Chat           | Meldingar fungerer ikkje |
-| Auth           | Innlogging/utlogging fungerer ikkje |
+| Reise          | Feil i dag 1-30-innhold, refleksjon, oppgåve |
+| Chat           | Meldinger fungerer ikke |
+| Auth           | Innlogging/utlogging fungerer ikke |
 
 **IKKE legg til:**
 - Nye funksjonar
-- UI-endringar som ikkje er feilretting
-- Gamle features som ikkje var del av A-1
+- UI-endringer som ikke er feilretting
+- Gamle features som ikke var del av A-1
 
 ## 8. Feedback-skjema
 
-For kvar brukar, fyll ut:
+For hver bruker, fyll ut:
 
 ```json
 {
-  "email": "brukar@eksempel.no",
-  "onboarding": "Kva tenker du om onboarding?",
-  "match": "Kva tenker du om match?",
-  "journey": "Kva tenker du om reise?",
-  "chat": "Kva tenker du om chat?",
+  "email": "bruker@eksempel.no",
+  "onboarding": "Hva tenker du om onboarding?",
+  "match": "Hva tenker du om match?",
+  "journey": "Hva tenker du om reise?",
+  "chat": "Hva tenker du om chat?",
   "tone": "Rolan, varm, trygg? (ja/neit/neutral)",
   "visual": "Visuell ro? (ja/neit/neutral)",
   "suggestions": "Forslag:",
@@ -147,13 +147,13 @@ For kvar brukar, fyll ut:
 ### Sjekkliste
 - [ ] Alle testscenarioer gjennomførte
 - [ ] Alle feil logga
-- [ ] Feedback samla frå alle brukarar
+- [ ] Feedback samla fra alle brukere
 - [ ] Kritiske feil retta
 - [ ] Systemet stabil
 
 ### Deliverables
 - `/tmp/alpha-metrics.json` — System-metrikk
-- `/tmp/alpha-feedback.json` — Brukar-feedback
+- `/tmp/alpha-feedback.json` — Bruker-feedback
 - `docs/alpha-a1-complete.md` — Denne rapporten
 
 ---

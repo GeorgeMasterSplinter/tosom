@@ -17,7 +17,7 @@
 8. [Statuskartlegging — Dev-login og testflyt](#8-statuskartlegging--dev-login-og-testflyt)
 9. [Statuskartlegging — Landing pages og branding](#9-statuskartlegging--landing-pages-og-branding)
 10. [Statuskartlegging — Docker og deployment](#10-statuskartlegging--docker-og-deployment)
-11. [Kritiske punkt og teknisk gjeld](#11-kritiske-punkt-og-teknisk-gjeld)
+11. [Kritiske punkt og teknisk gjelder](#11-kritiske-punkt-og-teknisk-gjelder)
 12. [Roadmap — Nivå 1: Kritisk](#12-roadmap--nivå-1-kritisk)
 13. [Roadmap — Nivå 2: Viktig](#13-roadmap--nivå-2-viktig)
 14. [Roadmap — Nivå 3: Premium](#14-roadmap--nivå-3-premium)
@@ -495,7 +495,7 @@ ToSom-prosjektet har **svært omfattende infrastruktur** bygget opp gjennom fler
 
 ---
 
-## 11. KRITISKE PUNKTER OG TEKNISK GJELD
+## 11. KRITISKE PUNKTER OG TEKNISK GJELDER
 
 ### 🔴 KRITISK — Må fikses umiddelbart
 
@@ -520,7 +520,7 @@ ToSom-prosjektet har **svært omfattende infrastruktur** bygget opp gjennom fler
 | V7 | **Supabase integration ubrukt** | lib/supabase.ts | Uten behov men forvirrende |
 | V8 | **Database backups ikke konfigurert** | deploy/docker-compose.prod.yml | Ingen backup-strategi |
 
-### 🟡 TEKNISK GJELD — Code Quality
+### 🟡 TEKNISK GJELDER — Code Quality
 
 | Nr | Problem | Sted | Påvirkning |
 |----|---------|------|------------|
@@ -611,7 +611,7 @@ ToSom-prosjektet har **svært omfattende infrastruktur** bygget opp gjennom fler
 
 ### Prioritet 2.1: Full Journey-integrasjon
 
-**Mål:** Hele reisen frå onboarding til 30-dagers avslutning
+**Mål:** Hele reisen fra onboarding til 30-dagers avslutning
 
 | Oppgave | Anslått tid | Blokkert av |
 |---------|-------------|-------------|
@@ -627,7 +627,7 @@ ToSom-prosjektet har **svært omfattende infrastruktur** bygget opp gjennom fler
 
 ### Prioritet 2.2: Partner Presence Engine
 
-**Mål:** Kjenne kvar part er i reisa, og vise det på ein varm måte
+**Mål:** Kjenne hver part er i reisa, og vise det på en varm måte
 
 | Oppgave | Anslått tid | Blokkert av |
 |---------|-------------|-------------|
@@ -641,7 +641,7 @@ ToSom-prosjektet har **svært omfattende infrastruktur** bygget opp gjennom fler
 
 ### Prioritet 2.3: Warm Flow
 
-**Mål:** Termisk opplevelse — overgangen mellom skjer er varm, ikkje kal
+**Mål:** Termisk opplevelse — overgangen mellom skjer er varm, ikke kal
 
 | Oppgave | Anslått tid | Blokkert av |
 |---------|-------------|-------------|
@@ -655,12 +655,12 @@ ToSom-prosjektet har **svært omfattende infrastruktur** bygget opp gjennom fler
 
 ### Prioritet 2.4: Admin System
 
-**Mål:** Admin kan styre brukarar og system
+**Mål:** Admin kan styre brukere og system
 
 | Oppgave | Anslått tid | Blokkert av |
 |---------|-------------|-------------|
 | Admin dashboard UI | 8 timer | Ingen |
-| Brukar-administrasjon | 6 timer | API |
+| Bruker-administrasjon | 6 timer | API |
 | System-observability | 4 timer | logging |
 | AI-inspect og manual override | 6 timer | AI |
 | Security monitor | 4 timer | security |
@@ -695,7 +695,7 @@ ToSom-prosjektet har **svært omfattende infrastruktur** bygget opp gjennom fler
 |---------|-------------|-------------|
 | Message bubble animations | 6 timer | framer-motion |
 | Typing pulse | 3 timer | WebSocket |
-| Resonance glow på meldingar | 6 timer | framer-motion |
+| Resonance glow på meldinger | 6 timer | framer-motion |
 | Progressiv tekst-avdekking | 4 timer | framer-motion |
 | Mood-basert chat-miljø | 8 timer | design-system |
 
@@ -703,7 +703,7 @@ ToSom-prosjektet har **svært omfattende infrastruktur** bygget opp gjennom fler
 
 ### Prioritet 3.3: AI-Powered Features
 
-**Mål:** AI som støttar utan å dominere
+**Mål:** AI som støttar uten å dominere
 
 | Oppgave | Anslått tid | Blokkert av |
 |---------|-------------|-------------|
@@ -717,7 +717,7 @@ ToSom-prosjektet har **svært omfattende infrastruktur** bygget opp gjennom fler
 
 ### Prioritet 3.4: Analytics og Innsikt
 
-**Mål:** Innsikt som hjelper brukarar
+**Mål:** Innsikt som hjelper brukere
 
 | Oppgave | Anslått tid | Blokkert av |
 |---------|-------------|-------------|
@@ -725,7 +725,7 @@ ToSom-prosjektet har **svært omfattende infrastruktur** bygget opp gjennom fler
 | Journey progresjon chart | 4 timer | Ingen |
 | Match historikk visualisering | 6 timer | match API |
 | Relasjons-statistikk | 8 timer | database |
-| Export rapport for brukar | 4 timer | PDF library |
+| Export rapport for bruker | 4 timer | PDF library |
 
 **Total:** ~28 timer
 

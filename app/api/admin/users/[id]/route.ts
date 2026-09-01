@@ -1,7 +1,7 @@
 /**
  * PATCH /api/admin/users/[id]
  * 
- * Modereringshandlingar på ein bruker (admin).
+ * Modereringshandlingar på en bruker (admin).
  * Pakke 4.4.3 — User Flags & Moderation Tools
  * Pakke 5.1 — Zod-validering
  * 

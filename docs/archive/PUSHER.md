@@ -7,8 +7,8 @@
 
 ## OVERSIKT
 
-ToSom brukar Pusher for realtime-funksjonar:
-- **Chat-meldingar** (realtime)
+ToSom bruker Pusher for realtime-funksjonar:
+- **Chat-meldinger** (realtime)
 - **Typing-indikator**
 - **Presence** (online status)
 - **Match-notifikasjonar**
@@ -41,9 +41,9 @@ lib/pusher/
 
 | Channel | Formål |
 |--|--|
-| `private-tosom-{userId}` | Private meldingar |
+| `private-tosom-{userId}` | Private meldinger |
 | `presence-journey-{journeyId}` | Journey status |
-| `chat-{conversationId}` | Chat-meldingar |
+| `chat-{conversationId}` | Chat-meldinger |
 
 ---
 

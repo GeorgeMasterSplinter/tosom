@@ -53,7 +53,7 @@ export interface MessageData {
   resonanceLevel?: number; // 0–100, for resonance-glow
   isMilestone?: boolean; // milestone-melding
   isBliKjent?: boolean; // Bli kjent-spørsmål
-  bliKjentCategory?: string; // kategori-ID (personlighet, verdiar, osv.)
+  bliKjentCategory?: string; // kategori-ID (personlighet, verdier, osv.)
   metadata?: {
     imageUrl?: string;
     taskTitle?: string;
@@ -164,7 +164,7 @@ function MilestoneBubble({ message }: { message: MessageData }) {
             className="text-sm font-medium"
             style={{ color: G.textPrimary }}
           >
-            {message.content || 'Ein ny fase byrjar...'}
+            {message.content || 'En ny fase byrjar...'}
           </p>
         </div>
       </div>
@@ -290,7 +290,7 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
         >
           <img
             src={imageUrl}
-            alt="Bilete"
+            alt="Bilde"
             className="w-full h-auto block"
             style={{ borderRadius: '16px' }}
             loading="lazy"
@@ -344,7 +344,7 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
               </div>
             </div>
 
-            {/* Choices (knappar under system-melding) */}
+            {/* Choices (knapper under system-melding) */}
             {metadata?.choices && metadata.choices.length > 0 && (
               <div className="flex gap-3 mt-5 flex-wrap">
                 {metadata.choices.map((choice) => (
@@ -382,7 +382,7 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
       {isLeft && !isMe && metadata?.senderInfo && <Avatar senderInfo={metadata.senderInfo} />}
 
       {/* Boblekolonne — maxWidth er % av RALEN (fast brede). Tidlegare låg 85 %
-          på ein div INNI denne shrink-to-fit-colonna: prosentet løyst seg mot den
+          på en div INNI denne shrink-to-fit-colonna: prosentet løyst seg mot den
           allerede smale innholdsbredden, og korte ord som «Hei» ble delt i
           «H»/«ei». No refererer % til raden — bobla får full ord-brede. */}
       <div
@@ -553,7 +553,7 @@ export function MessageBubbleStyles() {
          start-verdi opacity:0 — om inView-triggeren aldri fyra (t.d. i
          produksjon), forblei meldingen usynleg for alltid.
          Her: vanlege CSS-keyframes med fill-mode both — dersom
-         animasjonen feilar eller keyframes manglar, er bobla likevel
+         animasjonen feilar eller keyframes mangler, er bobla likevel
          fullt synleg. Ingen JS-avheng helt. */
       @keyframes msgFadeInUp {
         from { opacity: 0; transform: translateY(10px); }

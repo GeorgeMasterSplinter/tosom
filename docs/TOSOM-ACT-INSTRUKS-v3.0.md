@@ -176,11 +176,11 @@ npx next lint --max-warnings 0
 **Ved auth-endring:** `admin-authorization` · `cron-auth` · `middleware-cookie-salt`
 **Ved kvote-endring:** `free-quota-claim` · `free-quota-release` · `free-quota-threshold`
 
-**Simuler CI-språkvakten før push:**
+**Språkvakt før push (bokmål overalt — ingen nynorsk):**
 ```bash
-grep -rnE '\bikkje\b|\bberre\b|\bkva\b|\bnokon\b|\bbrukar\b|\bbrukarar\b' \
-  app lib components hooks providers | grep -v node_modules
-# Tom output = grønn
+npm run verify:lang
+# «ingen nynorsk-treff» = grønn. Ordliste: scripts/verify-language.mjs.
+# CI kjører samme skript (jobben lang-guard); rød vakt = blokkert deploy.
 ```
 
 ---

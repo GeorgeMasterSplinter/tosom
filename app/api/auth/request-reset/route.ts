@@ -10,7 +10,7 @@ import { csrfCheck } from "@/lib/auth/csrf";
 
 /**
  * POST /api/auth/request-reset
- * Sender inn reset-token til brukaren sin e-post.
+ * Sender inn reset-token til brukeren sin e-post.
  */
 export async function POST(
   request: NextRequest
@@ -39,7 +39,7 @@ export async function POST(
     return new Response(JSON.stringify({ error: "For mange forsøk. Vent ei time før du prøver igjen." }), { status: 429, headers: { "Content-Type": "application/json" } });
   }
 
-  // Finn brukaren
+  // Finn brukeren
   const user = await prisma.user.findUnique({
     where: { email },
   });

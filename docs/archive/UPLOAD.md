@@ -7,9 +7,9 @@
 
 ## OVERSIKT
 
-ToSom brukar Uploadthing for fil-opplasting:
-- **Profilbilete** (éi foto-url per brukar)
-- **Bilede-sharing** etter 14 dagar i reise
+ToSom bruker Uploadthing for fil-opplasting:
+- **Profilbilete** (éi foto-url per bruker)
+- **Bilede-sharing** etter 14 dager i reise
 - **Max filstorleik:** 5MB
 - **MIME-types:** image/jpeg, image/png, image/webp
 
@@ -41,10 +41,10 @@ app/api/uploadthing/
 import { uploadServer } from '@/lib/uploadthing'
 
 const result = await uploadServer(['/profile'])
-// result[0].url → bilete-url
+// result[0].url → bilde-url
 ```
 
-### Bilede-sharing (etter 14 dagar)
+### Bilede-sharing (etter 14 dager)
 - Phase 1 (dag 1-14): Ingen bilede
 - Phase 2 (dag 15+): Bilede tillatne
 - Conversation.imageShareAllowedAt styrer tilgang
@@ -56,7 +56,7 @@ const result = await uploadServer(['/profile'])
 1. Opprett Uploadthing-konto
 2. Kopier SECRET og APP_ID
 3. Opprett router i app/api/uploadthing/core.ts
-4. Test med bilete < 5MB
+4. Test med bilde < 5MB
 
 ---
 
@@ -69,6 +69,6 @@ Sjekk filstorleik og MIME-type
 
 ## HUSK
 
-- Max 1 bilete per profil
-- Bilda er private (berre eigar ser)
-- Bilede-sharing erstatt av AI-genererte bilete (valfritt)
+- Max 1 bilde per profil
+- Bilda er private (bare eigar ser)
+- Bilede-sharing erstatt av AI-genererte bilde (valfritt)

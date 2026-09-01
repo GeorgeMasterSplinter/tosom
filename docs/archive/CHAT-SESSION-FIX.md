@@ -7,16 +7,16 @@
 
 ## Problem
 
-Når ein brukar startar reisen via fake match, får dei:
+Når en bruker startar reisen via fake match, får de:
 
-1. **"Lastar samtale..."** spinner som aldri forsvinn (401-feil frå `/api/chat/messages`)
-2. **404-feil** frå server action ved opprettelse av fake match
+1. **"Lastar samtale..."** spinner som aldri forsvinn (401-feil fra `/api/chat/messages`)
+2. **404-feil** fra server action ved opprettelse av fake match
 
 ## Rotårsak
 
 1. Ingen session blei oppretta for userA når fake match blei laga
-2. Middleware beskytta ikkje `/api/chat`-ruter
-3. `useChatMessages` returnerte ikkje `loading=false` ved 401-feil
+2. Middleware beskytta ikke `/api/chat`-ruter
+3. `useChatMessages` returnerte ikke `loading=false` ved 401-feil
 
 ---
 
@@ -75,9 +75,9 @@ await prisma.account.upsert({
 });
 ```
 
-### 2. `app/api/chat/messages/route.ts` — Bruk `auth()` frå next-auth
+### 2. `app/api/chat/messages/route.ts` — Bruk `auth()` fra next-auth
 
-Bytte frå `getServerSession()` til `auth()` frå `@/lib/auth/config`:
+Bytte fra `getServerSession()` til `auth()` fra `@/lib/auth/config`:
 
 ```typescript
 import { auth } from '@/lib/auth/config';
@@ -88,7 +88,7 @@ if (!session?.user?.id) {
 }
 ```
 
-Gjeld for både GET og POST endpoints.
+Gjelder for både GET og POST endpoints.
 
 ### 3. `middleware.ts` — Beskytt `/api/chat`
 
@@ -123,8 +123,8 @@ if (res.status === 401) {
 1. Gå til `/dev-login` eller `/api/dev-login?userId=test-user-1`
 2. Fullfør onboarding til steg 10
 3. Klikk "Start reisen"
-4. Bekreft at chat-samtalen lastar utan spinner
-5. Bekreft at meldingar blir viste korrekt
+4. Bekreft at chat-samtalen lastar uten spinner
+5. Bekreft at meldinger blir viste korrekt
 
 ---
 
@@ -142,6 +142,6 @@ if (res.status === 401) {
 
 ## Merknader
 
-- Session er berre gyldig i 24 timar (dev-kun)
-- Account brukar `credentials`-provider for NextAuth adapter
-- For produksjon bør ein bruke ekte magic link eller OAuth
+- Session er bare gyldig i 24 timar (dev-kun)
+- Account bruker `credentials`-provider for NextAuth adapter
+- For produksjon bør en bruke ekte magic link eller OAuth

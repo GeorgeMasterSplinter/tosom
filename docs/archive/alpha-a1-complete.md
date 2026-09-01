@@ -6,7 +6,7 @@
 |-------------|--------------------------------|
 | Versjon     | A-1                            |
 | Dato        | 2026-06-20                     |
-| Omfang      | 5–20 brukarar                  |
+| Omfang      | 5–20 brukere                  |
 | Status      | ✅ KLAR FOR LANSERING           |
 | Mål         | Observasjon, feilfangst, trygghet, stabilitet |
 
@@ -19,8 +19,8 @@
 - [x] Debug-logger deaktivert (`LOG_LEVEL=warn`)
 
 ### 2. Brukarutvelgelse
-- [x] Demo-brukar script oppretta (`scripts/alpha/createDemoUsers.ts`)
-- [x] Konfigurert for 5–20 brukarar
+- [x] Demo-bruker script oppretta (`scripts/alpha/createDemoUsers.ts`)
+- [x] Konfigurert for 5–20 brukere
 - [x] Kun nødvendige sider tilgjengelege:
   - `/signup`
   - `/login`
@@ -40,7 +40,7 @@
   - Dobbel-match deteksjon
   - nextDayAt-feil deteksjon
   - imageShareAllowedAt-feil deteksjon
-  - Manglande systemmeldingar deteksjon
+  - Manglende systemmeldingar deteksjon
   - Auth-feil deteksjon
   - System health-rapport
 - [x] Feedback-script (`scripts/alpha/collectFeedback.ts`)
@@ -66,11 +66,11 @@
 ### Skript
 | Fil                                    | Funksjon                     |
 |----------------------------------------|------------------------------|
-| `scripts/alpha/alpha-launch.sh`        | Hovud-lanseringsscript       |
+| `scripts/alpha/alpha-launch.sh`        | Hoved-lanseringsscript       |
 | `scripts/alpha/createAdmin.ts`         | Admin-konto oppretting       |
-| `scripts/alpha/createDemoUsers.ts`     | Demo-brukar oppretting       |
+| `scripts/alpha/createDemoUsers.ts`     | Demo-bruker oppretting       |
 | `scripts/alpha/alphaMonitor.ts`        | System-observasjon           |
-| `scripts/alpha/collectFeedback.ts`     | Brukar-feedback innsamling   |
+| `scripts/alpha/collectFeedback.ts`     | Bruker-feedback innsamling   |
 
 ### Dokumentasjon
 | Fil                                  | Funksjon                  |
@@ -83,7 +83,7 @@
 |------------------|---------------------------|
 | `.env.alpha`     | Alpha-miljøvariabler      |
 | `/tmp/alpha-metrics.json` | System-metrikk |
-| `/tmp/alpha-feedback.json` | Brukar-feedback |
+| `/tmp/alpha-feedback.json` | Bruker-feedback |
 
 ## 📈 Forventede metrikk
 
@@ -92,7 +92,7 @@
 - p95-latens: < 2000ms
 - Ingen HTTP 500-feil
 
-### Brukar-erfarening
+### Bruker-erfarening
 - Onboarding: Fullført > 80%
 - Match-opplevelse: positiv > 70%
 - Reise-opplevelse: rolig/trygg > 80%
@@ -124,19 +124,19 @@ npm run dev -p 3000
 # Kvart 30. minutt
 npx tsx scripts/alpha/alphaMonitor.ts
 
-# Etter kvar sesjon
+# Etter hver sesjon
 npx tsx scripts/alpha/collectFeedback.ts
 ```
 
 ## ⚠️ Viktig
 
 ### Under A-1:
-- ✅ Observer utan å gripe inn
+- ✅ Observer uten å gripe inn
 - ✅ Logg alle feil
 - ✅ Samle feedback
 - ✅ Rett KUN kritiske feil
 - ❌ IKKE legg til nye funksjonar
-- ❌ IKKE gjør UI-endringar
+- ❌ IKKE gjør UI-endringer
 - ❌ IKKE marknadsfør
 
 ### Kritiske feil som må rettast:
@@ -148,7 +148,7 @@ npx tsx scripts/alpha/collectFeedback.ts
 
 ## 📝 Feedback-samling
 
-### Sjekkliste for kvar brukar
+### Sjekkliste for hver bruker
 - [ ] Gikk gjennom onboarding
 - [ ] Fekk første match
 - [ ] Starta reisen
@@ -158,7 +158,7 @@ npx tsx scripts/alpha/collectFeedback.ts
 ### Feedback-skjema
 ```json
 {
-  "email": "brukar@eksempel.no",
+  "email": "bruker@eksempel.no",
   "onboarding": "...",
   "match": "...",
   "journey": "...",
@@ -181,7 +181,7 @@ npx tsx scripts/alpha/collectFeedback.ts
 
 ### Versjon: A-1
 ### Status: ✅ KLAR FOR LANSERING
-### Næste steg: Start alpha-test med 5-20 brukarar
+### Næste steg: Start alpha-test med 5-20 brukere
 
 ---
 

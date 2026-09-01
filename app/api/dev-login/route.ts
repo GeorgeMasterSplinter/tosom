@@ -401,8 +401,8 @@ export async function POST(req: NextRequest) {
       redirectUrl = `/${getRedirectTarget(userId, existingProgress)}`;
     }
 
-    // Redirect-URLen bygg frå klientens faktiske host (host-header), sjå
-    // kommentar i GET-hendlaren: req.url peikar på localhost, og ein 307
+    // Redirect-URLen bygg fra klientens faktiske host (host-header), se
+    // kommentar i GET-hendlaren: req.url peikar på localhost, og en 307
     // til annan origin blir avvist av nettlesaren (ingen session-cookie).
     const host = req.headers.get('host') || new URL(req.url).host;
     const proto = (req.headers.get('x-forwarded-proto') || 'http')

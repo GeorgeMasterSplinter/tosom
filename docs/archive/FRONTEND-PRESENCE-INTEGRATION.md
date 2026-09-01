@@ -79,8 +79,8 @@ Plassert **under** `<ChatRoom />` med omslutande div for riktig positioning.
 ## NESTE STEG
 
 1. **Kople til ekte presence-API** — erstatt Math.random med `/api/presence/conversation/:id`
-2. **Live-updates via Pusher** — websocket for sanntids-endringar
-3. **Test med to brukarar** — verifiser at begge ser korrekt status
+2. **Live-updates via Pusher** — websocket for sanntids-endringer
+3. **Test med to brukere** — verifiser at begge ser korrekt status
 
 ---
 

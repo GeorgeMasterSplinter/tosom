@@ -5,13 +5,13 @@
 
 ## 1. Oversikt
 
-ToSom har **tre** Journey-relaterte modeller som alle har med 30-dagers reisen å gjere:
+ToSom har **tre** Journey-relaterte modeller som alle har med 30-dagers reisen å gjøre:
 
 | Modell | Formål | Nivå |
 |--------|--------|------|
 | `JourneyProgress` | Brukerens overordna 30-dagers reise (phase, day, completedDays) | **Per bruker** |
-| `JourneyStep` | Ein spesifikk dag i ein spesifikk konversasjon | **Per konversasjon** |
-| `JourneyDayContent` | Seed-data for tema (1-30 dagar) | **Konfigurasjon** |
+| `JourneyStep` | En spesifikk dag i en spesifikk konversasjon | **Per konversasjon** |
+| `JourneyDayContent` | Seed-data for tema (1-30 dager) | **Konfigurasjon** |
 
 ## 2. JourneyProgress (sanning for progresjon)
 
@@ -42,7 +42,7 @@ model JourneyProgress {
 - `lib/dashboard/data.ts` — dashboard-visning av progress
 - Admin-panel — oversikt
 
-**Dette er "sanning"** for kor langt brukaren har kommen i reisen.
+**Dette er "sanning"** for kor langt brukeren har kommen i reisen.
 
 ## 3. JourneyStep (konversasjon-spesifikk)
 
@@ -62,10 +62,10 @@ model JourneyStep {
 ```
 
 **Brukt av:**
-- `lib/dashboard/data.ts` — `getJourneyStatus(conversationId)` (berre les)
-- Systemet opprettar ein JourneyStep når ei ny konversasjon startar
+- `lib/dashboard/data.ts` — `getJourneyStatus(conversationId)` (bare les)
+- Systemet opprettar en JourneyStep når ei ny konversasjon startar
 
-**Dette er "detalj"** for kvar spesifikk reise/konversasjon.
+**Dette er "detalj"** for hver spesifikk reise/konversasjon.
 
 ## 4. JourneyDayContent (seed-data)
 
@@ -84,8 +84,8 @@ model JourneyDayContent {
 ```
 
 **Brukt av:**
-- Berre seed-data (ingen direkte kodebruk)
-- Kan erstattast med hardkoda data i ein JSON-fil
+- Bare seed-data (ingen direkte kodebruk)
+- Kan erstattast med hardkoda data i en JSON-fil
 
 ## 5. Samanheng mellom modellene
 
@@ -98,8 +98,8 @@ Når dag skiftar → Oppdater JourneyProgress.day++
     ↓
 Systemet les JourneyStep for å finne tema/oppgåve for dag X
     ↓
-Dersom JourneyDayContent finst: bruk theme frå seed-data
-Dersom ikkje: bruk hardkoda tema (day 1-30)
+Dersom JourneyDayContent finnes: bruk theme fra seed-data
+Dersom ikke: bruk hardkoda tema (day 1-30)
 ```
 
 ## 6. Konklisjon
@@ -107,15 +107,15 @@ Dersom ikkje: bruk hardkoda tema (day 1-30)
 **Ingen modellbehov.** Men følgjande bør dokumenterast for framtida:
 
 1. **JourneyProgress er "sanning"** — den representerer brukerens totale framgang
-2. **JourneyStep er "detaljer"** — ein per konversasjon med same match
+2. **JourneyStep er "detaljer"** — en per konversasjon med same match
 3. **JourneyDayContent er valfritt** — seed-data kan erstattast med hardkoda JSON
 
 ## 7. Anbefaling for Fase A
 
 - ✅ Hold alle tre modellene i schema.prisma
 - ✅ Oppdater docs/tosom-blueprint.md med denne avklaringa
-- ⚠️ Vær obs på at `continueA` og `continueB` ligg på `JourneyProgress`, ikkje `JourneyStep`
+- ⚠️ Vær obs på at `continueA` og `continueB` ligg på `JourneyProgress`, ikke `JourneyStep`
 
 ## 8. Bekreftelse
 
-Ved å lese denne dokumentasjonen har eg forstått skilnaden mellom JourneyProgress og JourneyStep, og veit kven som er "sanning" i kvar kontekst.
+Ved å lese denne dokumentasjonen har eg forstått skilnaden mellom JourneyProgress og JourneyStep, og veit hvem som er "sanning" i hver kontekst.

@@ -6,7 +6,7 @@
 
 ## OPPSUMMERING
 
-Lagde ein fake match-server action som lager ein dummy-bruker og conversation, så brukaren blir omdirigert til chat-sida etter å ha trykt "Start reisen".
+Lagde en fake match-server action som lager en dummy-bruker og conversation, så brukeren blir omdirigert til chat-sida etter å ha trykt "Start reisen".
 
 ---
 
@@ -21,7 +21,7 @@ Lagde ein fake match-server action som lager ein dummy-bruker og conversation, s
 | Fil | Endring |
 |-----|-|
 | `Step10StartReisen.tsx` | La til `handleStart` med `createFakeMatch` import |
-| `OnboardingFlow.tsx` | Fjerna `onNext` prop frå Steg 10 |
+| `OnboardingFlow.tsx` | Fjerna `onNext` prop fra Steg 10 |
 
 ---
 
@@ -33,7 +33,7 @@ Lagde ein fake match-server action som lager ein dummy-bruker og conversation, s
 import prisma from "@/lib/prisma";
 
 export async function createFakeMatch() {
-  // Opprett dummy-bruker om ikkje eksisterer
+  // Opprett dummy-bruker om ikke eksisterer
   const [userB] = await prisma.user.upsert({
     where: { id: 999 },
     update: {},
@@ -136,7 +136,7 @@ Steg 10 → "Start reisen" → createFakeMatch() → /chat/{convoId}
 - [ ] Fullfør onboarding til Steg 10
 - [ ] Trykk "Start reisen"
 - [ ] Sjekk at fake match blir oppretta i databasen
-- [ ] Sjekk at brukaren blir omdirigert til /chat/{convoId}
+- [ ] Sjekk at brukeren blir omdirigert til /chat/{convoId}
 - [ ] Sjekk at chat-sida visast korrekt
 
 ---

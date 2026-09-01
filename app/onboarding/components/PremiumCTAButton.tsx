@@ -1,11 +1,11 @@
 /**
  * Tosom — PremiumCTAButton (Call-to-Action Button)
  * 
- * Stor, roleg CTA-knapp med:
+ * Stor, rolig CTA-knapp med:
  * - Gull-gradient hover-effekt
  * - 48px høg (minimum)
  * - Shadow-increment på hover
- * - "Start reisen din"-type knappar
+ * - "Start reisen din"-type knapper
  */
 
 'use client';
@@ -42,7 +42,7 @@ export function PremiumCTAButton({
 
   return (
     <div className={`flex items-center justify-center gap-4 ${fullWidth ? 'w-full' : ''}`}>
-      {/* Hovud CTA */}
+      {/* Hoved CTA */}
       <button
         onClick={onClick}
         onMouseEnter={() => !disabled && setIsHovered(true)}

@@ -7,7 +7,7 @@
 ## PROBLEM
 
 Steg 7 (HumorPersonlighet) og Steg 8 (ModenNysgjerrighet) mangla PremiumButton og BackButton.
-Komponentane mottok heller ikkje propar (step, goToStep, onNext).
+Komponentane mottok heller ikke propar (step, goToStep, onNext).
 
 ---
 
@@ -36,7 +36,7 @@ case 7:
 - `BackButton` import
 - Knappeseksjon nederst
 
-**Knappar:**
+**Knapper:**
 ```tsx
 <div className="space-y-4 mt-10">
   <BackButton onClick={() => goToStep(step - 1)} />
@@ -47,7 +47,7 @@ case 7:
 ```
 
 ### 3. Step8ModenNysgjerrighet.tsx (Oppdatert)
-Same endringar som Steg 7.
+Same endringer som Steg 7.
 
 ---
 
@@ -91,6 +91,6 @@ hover:bg-white/20 transition-all duration-300
 
 ## OPPSUMMERING
 
-**Problem:** Steg 7 og 8 mangla knapp-propar og knappar.
+**Problem:** Steg 7 og 8 mangla knapp-propar og knapper.
 **Løysing:** La til propar (step, goToStep, onNext) og PremiumButton + BackButton.
 **Resultat:** Navigasjon fungerer no på Steg 7 og 8.

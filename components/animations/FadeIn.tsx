@@ -46,7 +46,7 @@ function useReducedMotion(): boolean {
 }
 
 /* ═══════════════════════════════════════
-   ANIMATION VARIANTS — Roleg, nordisk, premium
+   ANIMATION VARIANTS — Rolig, nordisk, premium
    ═══════════════════════════════════════ */
 
 const variants = {
@@ -120,11 +120,11 @@ export interface FadeInProps extends Omit<MotionProps, "animate" | "initial" | "
   variant?: keyof typeof variants;
   /** Delay i millisekund før animasjon startar */
   delay?: number;
-  /** Delay for children (stagger) — brukt når children er ein array */
+  /** Delay for children (stagger) — brukt når children er en array */
   staggerChildren?: number;
   /** Om elementet skal animere bare når det er synleg i viewport */
   scrollTrigger?: boolean;
-  /** Once-triggert: animér bare ein gong */
+  /** Once-triggert: animér bare en gong */
   once?: boolean;
   /** Animasjonstid i sekund (overskriver variant-standard) */
   duration?: number;

@@ -19,7 +19,7 @@ Nivå 2: Betalt / aktiv profil → Matching, reise, chat
 
 ### Tilgjengelege sider:
 - `/` — Landing page
-- `/kvifor` — Hvorfor ToSom
+- `/hvorfor` — Hvorfor ToSom
 - `/slik` — Slik fungerer det
 - `/reisen` — Guidet 30-dagers reise
 - `/priser` — Priser (beta)
@@ -27,7 +27,7 @@ Nivå 2: Betalt / aktiv profil → Matching, reise, chat
 - `/login` — Innlogging med magic link
 
 ### Beskriving:
-Kven som helst kan besøke desse sidene utan å logge inn. Dette er marknadsføring og informasjon om plattformen.
+Hvem som helst kan besøke desse sidene uten å logge inn. Dette er marknadsføring og informasjon om plattformen.
 
 ---
 
@@ -37,13 +37,13 @@ Kven som helst kan besøke desse sidene utan å logge inn. Dette er marknadsfør
 - Gyldig session (next-auth cookie eller tosom_session cookie)
 
 ### Tilgjengelege sider:
-- `/dashboard` — Brukar-dashboard
+- `/dashboard` — Bruker-dashboard
 - `/onboarding/*` — Profil-onboarding
 - `/profile/*` — Profil-redigering
 - `/questions` — Spørreskjema
 
 ### Beskriving:
-Når ein bruker er innlogga, kan dei.fullføre grunnprofilen sin. Dei har ennå ikkje full tilgang til matching eller reise.
+Når en bruker er innlogga, kan de.fullføre grunnprofilen sin. De har ennå ikke full tilgang til matching eller reise.
 
 ---
 
@@ -60,11 +60,11 @@ Når ein bruker er innlogga, kan dei.fullføre grunnprofilen sin. Dei har ennå 
 - `/chat/*` — Samtale-rom
 
 ### Beskriving:
-Når ein bruker har betalt og profilen er fullført, får dei tilgang til_matching, reise, og chat.
+Når en bruker har betalt og profilen er fullført, får de tilgang til_matching, reise, og chat.
 
 ### TODO-kommentar for implementering:
 ```typescript
-// TODO: Sjekk om brukaren har betalt / aktiv profil
+// TODO: Sjekk om brukeren har betalt / aktiv profil
 // if (!user.hasPaid || !user.profileComplete) {
 //   return NextResponse.redirect(new URL('/betaling', req.url));
 // }
@@ -76,7 +76,7 @@ Når ein bruker har betalt og profilen er fullført, får dei tilgang til_matchi
 
 ### Krev:
 - Gyldig session (nivå 1)
-- Brukar har `ADMIN` rolle
+- Bruker har `ADMIN` rolle
 
 ### Tilgjengelege sider:
 - `/admin/*` — Admin-panel
@@ -88,7 +88,7 @@ Når ein bruker har betalt og profilen er fullført, får dei tilgang til_matchi
 ### Middleware-basert vern:
 - `middleware.ts` styrer redirect basert på nivå
 - Uinnloggede → redirect til `/login` med `callbackUrl`
-- Innloggede utan betaling → kan bruke nivå 1-sider
+- Innloggede uten betaling → kan bruke nivå 1-sider
 
 ### API-basert vern:
 - `lib/auth/requireAuth.ts` — Verifiser session/token
@@ -98,8 +98,8 @@ Når ein bruker har betalt og profilen er fullført, får dei tilgang til_matchi
 
 ## Test-scenario
 
-1. **Inkognito-test:** Prøv å gå til `/dashboard` utan innlogging → bør redirect til `/login`
-2. **Innlogget-test:** Logg inn → kan nå `/dashboard` men ikkje `/matching`
+1. **Inkognito-test:** Prøv å gå til `/dashboard` uten innlogging → bør redirect til `/login`
+2. **Innlogget-test:** Logg inn → kan nå `/dashboard` men ikke `/matching`
 3. **Betalt-test:** Når betaling er implementert → kan nå alle sider
 
 ---

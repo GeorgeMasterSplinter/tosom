@@ -8,7 +8,7 @@
 - [x] Git status: 262 files changed, +5108/-15026
 
 ### Ny/Fornyede Filer
-- [x] `app/chat/components/ChatContainer.tsx` — V2 rebuild (roleg/lett/premium)
+- [x] `app/chat/components/ChatContainer.tsx` — V2 rebuild (rolig/lett/premium)
 - [x] `app/chat/components/MessageBubble.tsx` — Unified renderer
 - [x] `app/chat/context/ChatContext.tsx` — Global state
 - [x] `app/chat/page.tsx` — Rot-side med empty-state
@@ -16,8 +16,8 @@
 - [x] `app/onboarding/components/OnboardingSlide.tsx` — max-w-2xl standardisert
 - [x] `styles/globals.css` — bubblePop + fade-in animasjonar
 
-### Viktige Endringar
-- [x] Chat V2: lysare bakgrunn, minimal header, luftige meldingar, transparent input
+### Viktige Endringer
+- [x] Chat V2: lysare bakgrunn, minimal header, luftige meldinger, transparent input
 - [x] Onboarding breidd: max-w-2xl (672px) same som Settings
 - [x] Fjernede obsolete filer (chat/api/chat/*, conversation/*, onboarding/steps/*)
 
@@ -32,7 +32,7 @@ git commit -m "feat: chat V2 rebuild, onboarding breidd standardisert, deploy-pr
 git push origin main
 ```
 
-### Steg 2: Environment Variables (må setjast på Vercel)
+### Steg 2: Environment Variables (må settes på Vercel)
 ```
 DATABASE_URL=postgresql://...
 NEXTAUTH_SECRET=your-secret-here
@@ -45,8 +45,8 @@ REDIS_URL=redis://...
 
 ### Steg 3: Vercel Deploy
 1. Gå til https://vercel.com/dashboard
-2. Import repo (dersom ikkje allereie importert)
-3. Environment variables → legg til alle .env.prod verdiar
+2. Import repo (dersom ikke allerede importert)
+3. Environment variables → legg til alle .env.prod verdier
 4. Deploy — skal byggje automatisk
 
 ---
@@ -57,13 +57,13 @@ REDIS_URL=redis://...
 - [ ] Onboarding-flow: alle 10 steg fungerer
 - [ ] Settings-side: alle seksjonar synlege
 - [ ] Dashboard: match-cards og statistikk
-- [ ] Chat: vis layout (chat er ikkje heilt klar ennå)
+- [ ] Chat: vis layout (chat er ikke helt klar ennå)
 
 ### Desktop-sjekk
 - [ ] Onboarding-slide breidd: 672px max-w ✅
 - [ ] Settings breidd: same som onboarding ✅
 - [ ] Dashboard: responsive cards ✅
-- [ ] Admin: tilgjengeleg for admin-brukarar
+- [ ] Admin: tilgjengeleg for admin-brukere
 
 ### API-sjekk
 - [ ] /api/auth/* — login fungerer
@@ -84,7 +84,7 @@ REDIS_URL=redis://...
 ### Ukjente/Utsettte Problem
 - [ ] Chat: `app/chat/page.tsx` fungerer med mock-data (dev-mode)
 - [ ] Chat: Echte conversations krev funksjonelle API-endpoint
-- [ ] Chat: Bilde-deling etter 14 dagar ikkje implementert ennå
+- [ ] Chat: Bilde-deling etter 14 dager ikke implementert ennå
 
 ---
 
@@ -103,10 +103,10 @@ REDIS_URL=redis://...
 
 ## 🟡 Status Chat
 
-**Chat er IKKE heilt klar for production ennå.** Men:
+**Chat er IKKE helt klar for production ennå.** Men:
 - Mock-data fungerer med `/chat/dev-conversation`
-- Layout og design er premium og roleg
+- Layout og design er premium og rolig
 - Echte API-endpoint (`/api/chat/messages`, `/api/chat/send`) eksisterer
 - DB-DB-kommunikasjon må testast med ekte data
 
-**Anbefaling:** Deploy allereie, men sett `chat` til "under utvikling" i UIet.
+**Anbefaling:** Deploy allerede, men sett `chat` til "under utvikling" i UIet.

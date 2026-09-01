@@ -256,7 +256,7 @@ grep -c "EARLY\|BUILDING_TRUST\|journeyDay <= " \
 Nynorskrester:
 
 ```bash
-grep -rn "sjølv\|kjem\|fjernar\|Samtalar\|djupare\|verktruelege" \
+grep -rn "selv\|kommer\|fjernar\|Samtaler\|dypere\|verktruelege" \
   components/journey/JourneySection.tsx app/blogg/ app/chat/
 ```
 
@@ -456,7 +456,7 @@ test -f app/global-error.tsx && echo "finnes"
 grep -c "use client" app/global-error.tsx           # 1
 grep -c "<html" app/global-error.tsx                # 1
 grep -c "onRequestError" instrumentation.ts         # 1
-grep -rn "Oops\|beklager!\|ikkje" app/global-error.tsx   # 0 treff
+grep -rn "Oops\|beklager!\|ikke" app/global-error.tsx   # 0 treff
 npx tsc --noEmit
 npm run build
 ```
@@ -934,11 +934,11 @@ refactor(journey): én sannhetskilde for fasedefinisjonen
 **Filanker:**
 ```
 components/journey/JourneySection.tsx:46
-  5: { theme: 'Stille stunder', question: 'Hvor føler du deg mest deg selv — når er du helt deg sjølv?' }
+  5: { theme: 'Stille stunder', question: 'Hvor føler du deg mest deg selv — når er du helt deg selv?' }
 
 app/blogg/[slug]/page.tsx:46
-  «Når du fjernar alt støyen, kjem det ekte tilbake. Folk blir seg sjølve.
-   Samtalar blir djupare. Forbinder blir verktruelege.»
+  «Når du fjernar alt støyen, kommer det ekte tilbake. Folk blir seg selve.
+   Samtaler blir dypere. Forbinder blir verktruelege.»
 
 app/chat/[id]/ChatPageClient.tsx:39      kommentar, ikke synlig
 config/matching.ts:2-3                   kommentar, ikke synlig
@@ -950,7 +950,7 @@ deploy/backup.md                         dokumentasjon
 
 **Del A — `JourneySection.tsx:46`.**
 
-Setningen blander målform i samme setning: «deg selv» og «deg sjølv». Rett til konsekvent bokmål. Behold spørsmålets rytme — dette er dagsimpulsen for dag 5, tekst brukeren møter i et sårbart øyeblikk. Unngå å gjøre den lengre.
+Setningen blander målform i samme setning: «deg selv» og «deg selv». Rett til konsekvent bokmål. Behold spørsmålets rytme — dette er dagsimpulsen for dag 5, tekst brukeren møter i et sårbart øyeblikk. Unngå å gjøre den lengre.
 
 **Del B — `app/blogg/[slug]/page.tsx:46`.**
 
@@ -971,8 +971,8 @@ Kontroller om denne teksten vises til bruker. Gjør den det, rett den. Er den ku
 Opprett `scripts/verify-language.mjs`. Krav:
 
 1. Søk i `app/` og `components/`, kun `.tsx`
-2. Ordliste med **ordgrenser**: `ikkje`, `korleis`, `sjølv`, `sjølve`, `kjem`, `finst`, `fjernar`, `Samtalar`, `djupare`, `eine`, `kjelda`, `nokon`
-3. Ordgrenser er avgjørende — uten dem gir «selv**kjem**t» falske treff
+2. Ordliste med **ordgrenser**: `ikke`, `hvordan`, `selv`, `selve`, `kommer`, `finnes`, `fjernar`, `Samtaler`, `dypere`, `eine`, `kilden`, `noen`
+3. Ordgrenser er avgjørende — uten dem gir «selv**kommer**t» falske treff
 4. Skriv ut fil, linjenummer og treffet
 5. `process.exit(1)` ved treff
 
@@ -988,7 +988,7 @@ npm run verify:lang         # exit 0
 echo "exit=$?"
 
 grep -rn "verktruelege" app/ components/                          # 0 treff
-grep -n "sjølv" components/journey/JourneySection.tsx             # 0 treff
+grep -n "selv" components/journey/JourneySection.tsx             # 0 treff
 grep -rn "deg selv" components/journey/JourneySection.tsx         # >= 1
 npx tsc --noEmit
 npm run build

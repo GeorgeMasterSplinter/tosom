@@ -84,7 +84,7 @@ export const Footer: FC<FooterProps> = ({
       />
 
       <div className="mx-auto max-w-6xl px-6 lg:px-8 relative z-10">
-        {/* Hovud-innhold — 3 kolonner på desktop, vertikal på mobil */}
+        {/* Hoved-innhold — 3 kolonner på desktop, vertikal på mobil */}
         {/* Top-divider */}
         <div
           className="mx-auto"
@@ -95,7 +95,7 @@ export const Footer: FC<FooterProps> = ({
           }}
         />
 
-        {/* Hovud-innhold — 3 kolonner på desktop, vertikal på mobil, økt kolonne-avstand */}
+        {/* Hoved-innhold — 3 kolonner på desktop, vertikal på mobil, økt kolonne-avstand */}
         <div
           className="grid grid-cols-1 gap-14 ph:grid-cols-2 ph:gap-10 md:grid-cols-3 md:gap-20"
           style={{

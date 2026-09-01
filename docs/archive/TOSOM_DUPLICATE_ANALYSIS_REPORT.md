@@ -353,23 +353,23 @@ Ingen filer importerer denne direkte
 
 | Fil | Eksempel |
 |-----|----------|
-| `scorer.ts` | "Hovudscorer-funksjonar", "dei 5 dimensjonane" |
-| `engine.ts` | "Hovudfunksjon", "Vekt dei", "dei med" |
-| `explainer.ts` | "Genererer lesbare forklaringar", "Gjev ei komplett" |
+| `scorer.ts` | "Hovudscorer-funksjonar", "de 5 dimensjonane" |
+| `engine.ts` | "Hovudfunksjon", "Vekt de", "de med" |
+| `explainer.ts` | "Genererer lesbare forklaringar", "Gir ei komplett" |
 | `ranking.ts` | "sortering og deduplisering" |
 | `normalizer.ts` | "normaliserast til" |
 | `dealbreaker.ts` | "Modenheits-gap" |
-| `types.ts` | "dei 5 dimensjonane", "normalisert til" |
-| `weightConfig.ts` | "den eine sanne kjelda" |
+| `types.ts` | "de 5 dimensjonane", "normalisert til" |
+| `weightConfig.ts` | "den eine sanne kilden" |
 
 ### 10.2 API-ruter (APP/api)
 **Hovedspråk: Bokmål/Bland**
 
 | Fil | Eksempel |
 |-----|----------|
-| `api/match/route.ts` | "brukaren", "matcha" (nynorsk) |
-| `api/matching/route.ts` | "Ikke autentisert" (bokmål), "Kunne ikkje hente" (nynorsk) |
-| `api/match/new/route.ts` | "Brukar ikkje funnen" (nynorsk/bokmål-blanding) |
+| `api/match/route.ts` | "brukeren", "matcha" (nynorsk) |
+| `api/matching/route.ts` | "Ikke autentisert" (bokmål), "Kunne ikke hente" (nynorsk) |
+| `api/match/new/route.ts` | "Bruker ikke funnet" (nynorsk/bokmål-blanding) |
 
 ### 10.3 Komponenter (COMPONENTS)
 **Hovedspråk: Bokmål**

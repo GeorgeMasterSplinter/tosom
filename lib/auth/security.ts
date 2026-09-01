@@ -2,7 +2,7 @@
  * ToSom Auth Security
  * 
  * Sikkerheitslag for autentisering og autorisasjon.
- * Bruker getServerSession (NextAuth) sidan det ikke eksisterer ein Session model i Prisma.
+ * Bruker getServerSession (NextAuth) sidan det ikke eksisterer en Session model i Prisma.
  */
 
 import { getServerSession } from '@/lib/auth/session'
@@ -10,7 +10,7 @@ import { logWarn } from '@/lib/system/log'
 import { Role } from '@prisma/client'
 
 /**
- * Verifiser at ein bruker er authentisert via NextAuth session.
+ * Verifiser at en bruker er authentisert via NextAuth session.
  * Returnerar null dersom ikke innlogga.
  */
 export async function verifySession(): Promise<{ userId: string; role: Role } | null> {
@@ -67,7 +67,7 @@ export async function detectSessionAnomaly(
 }
 
 /**
- * Generer eit hash av IP-adresse
+ * Generer et hash av IP-adresse
  */
 export function hashIp(ip: string): string {
   let hash = 0
@@ -80,7 +80,7 @@ export function hashIp(ip: string): string {
 }
 
 /**
- * Generer eit hash av user agent
+ * Generer et hash av user agent
  */
 export function hashUserAgent(ua: string): string {
   let hash = 0

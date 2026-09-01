@@ -155,7 +155,7 @@ const MyEmptyState = EmptyStateFactory('noChats')
 | Sunrise | Soloppgang |
 | Butterfly | Sommarfar |
 | Tree | Tre |
-| Home | Heim |
+| Home | Hjem |
 | Hands | Hender |
 
 **4 størrelser:** sm (24), md (40), lg (56), xl (72)

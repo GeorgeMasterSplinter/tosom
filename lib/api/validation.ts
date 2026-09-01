@@ -9,7 +9,7 @@ import { z } from 'zod'
 // ─── Felles hjelpefunksjonar ───
 
 /**
- * Valider body med eit Zod-skjema.
+ * Valider body med et Zod-skjema.
  */
 export function validateBody<T extends z.ZodTypeAny>(
   schema: T,
@@ -23,7 +23,7 @@ export function validateBody<T extends z.ZodTypeAny>(
 }
 
 /**
- * Valider query med eit Zod-skjema.
+ * Valider query med et Zod-skjema.
  */
 export function validateQuery<T extends z.ZodTypeAny>(
   schema: T,

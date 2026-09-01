@@ -68,7 +68,7 @@ Avvisningene teller i `rejectReasons` i matcherunden (`app/api/cron/matching/rej
 > matcherunden (`match.round.score_median`, `match.round.level`), slik at tersklene kan
 > kalibreres på ny etter beta. Invariant I-12 holder: brukeren ser alltid ord, aldri tall.
 
-## Hva resonans IKKJE er
+## Hva resonans IKKE er
 
 Resonans er en veiviser, ikke en fasit. Den er ikke kjærlighet, ikke en diagnose, og ikke
 en garanti for at to personer passer sammen. For det komplette grunnlaget, se

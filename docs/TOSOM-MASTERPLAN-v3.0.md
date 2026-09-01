@@ -165,65 +165,65 @@ kun manglende nettlesere lokalt (CI installerte kun chromium mens
 konfigurasjonen krever seks prosjekter på tre motorer). Rettet i denne
 bølgen, sammen med manglende seeding av guidede spørsmål.
 
-Ved dypdykk 28.08 viste dei «reelle» feilene seg å vere nokon heilt annan
+Ved dypdykk 28.08 viste de «reelle» feilene seg å være noen helt annan
 sak enn utdaterte selektorar. Rotsakene, i tur:
 
-1. **Dev-login har aldri fungert** — og alle e2e-testane har kjørte utan
+1. **Dev-login har aldri fungert** — og alle e2e-testane har kjørte uten
    innlogging sidan S4-sikkerheitsfixen. To lag:
-   - 307-redirectet peikte mot `localhost` (frå `req.url`/NEXTAUTH_URL)
-     medan klienten var på `127.0.0.1` → annan origin → nettleseren
+   - 307-redirectet peikte mot `localhost` (fra `req.url`/NEXTAUTH_URL)
+     mens klienten var på `127.0.0.1` → annan origin → nettleseren
      avslår (`Failed to fetch`) → ingen session-cookie. Fiksa i både GET-
-     og POST-hendlar: URL byggjast no frå klientens eige `host`-header.
-   - S4-fixen fjerna EmailProvider frå NextAuth-config, men dev-login
-     redirectar til `/api/auth/callback/email` → callback-én finst ikkje →
+     og POST-hendlar: URL byggjast no fra klientens eige `host`-header.
+   - S4-fixen fjerna EmailProvider fra NextAuth-config, men dev-login
+     redirectar til `/api/auth/callback/email` → callback-én finnes ikke →
      `error=Configuration`. Fiksa med dev-eksklusiv EmailProvider
      (aktiv kun når `DEV_LOGIN_ENABLED=true`; prod er uendra og dev-login
      er der 404).
 2. **Testbrukarar og seed-data mangla i dev-DB.** testA/testB hadde ingen
-   match/samtale, og onboarding-brukar eksisterte ikkje i det heile.
+   match/samtale, og onboarding-bruker eksisterte ikke i det heile.
    Nytt idempotent seed-skript (`prisma/seed-e2e-users.ts`) køyrer i CI og
    lokalt: match + samtale + journey dag 1 for testA/testB, og
-   onboarding-brukaren nullstillast kvar runde (ein test fullfører
-   onboarding — utan nullstilling ville neste runde vorte redirecta).
+   onboarding-brukeren nullstillast hver runde (en test fullfører
+   onboarding — uten nullstilling ville neste runde vorte redirecta).
 
-Det som var gjenværande etter dei fixa var sanne utdaterte testar, og dei
+Det som var gjenværande etter de fixa var sanne utdaterte tester, og de
 er handtera slik:
 
-- **Chat (8 testar):** fiksa for godt — la til `data-testid="chat-container"`,
+- **Chat (8 tester):** fiksa for godt — la til `data-testid="chat-container"`,
   semantisk `<main>` i chat-layout og `aria-label="Send melding"` på
-  send-knappen (var òg ein a11y-feil: knappen hadde berre eit «➤»-glyf).
+  send-knappen (var òg en a11y-feil: knappen hadde bare et «➤»-glyf).
 - **Vipps (1 test):** assertion var utdatert mot ny 503-melding — oppdatert.
-- **Onboarding (8 av 10 testar):** `test.fixme()` med referanse til R-1.
-  Dei testar markup (`input[name=...]`) som ikkje lenger finst i den
-  13-stegs-flowen. Sann omskriving mot faktiske komponentar = eiga
+- **Onboarding (8 av 10 tester):** `test.fixme()` med referanse til R-1.
+  De tester markup (`input[name=...]`) som ikke lenger finnes i den
+  13-stegs-flowen. Sann omskriving mot faktiske komponentar = egen
   oppfølgjssak (~3 t).
-- **Onboarding (2 av 10 testar):** autosave og draft-restaurering redda
+- **Onboarding (2 av 10 tester):** autosave og draft-restaurering redda
   med éin linje (ny selektor) — og fanga to sanne produkt-bugar undervegs:
   - Autosave kjørte ved første mount og kunne overstyre localStorage-draften
     med tom state dersom init-kalla tok lengre enn debounce-vinduet (400 ms).
     Hoppast no over ved første render.
-  - Prefill-floken (brukarar med eksisterande profil) slo over
-    localStorage-fallbacket, slik at felt brukaren akkurat hadde skrive
-    **forsvann ved reload**. Prefill fyller no berre tomme felt.
+  - Prefill-floken (brukere med eksisterande profil) slo over
+    localStorage-fallbacket, slik at felt brukeren akkurat hadde skrive
+    **forsvann ved reload**. Prefill fyller no bare tomme felt.
 
-Konsekvensen av den opphavlege tilstanden var reell: E2E var ein port som
-alltid stod i «feil», og då sluttar folk å sjå på den. No er ho grønn
-(61 passert + 8 fixme lokalt, heile 6 prosjekt i CI), og dei to produkt-
+Konsekvensen av den opphavlege tilstanden var reell: E2E var en port som
+alltid stod i «feil», og då sluttar folk å se på den. No er ho grønn
+(61 passert + 8 fixme lokalt, heile 6 prosjekt i CI), og de to produkt-
 bugane som blei fanga, var bugar ingen annan port ville ha fanne.
 
 ### R-1-oppdatering (29.08)
 
-Dei 8 `test.fixme()`-testane i onboarding er no skrivne om til fungerande
+De 8 `test.fixme()`-testane i onboarding er no skrivne om til fungerande
 tester mot `data-testid` (48 testid-er lagt til i onboarding-komponentane:
 steg-indikator/tittel, CTA (`ob-next`), tilbake (`ob-back`) og 44 felt-
-testId-er på dei 11 stega med påkrevde felt). Full-flow-testen fyller alle
+testId-er på de 11 stega med påkrevde felt). Full-flow-testen fyller alle
 13 stega, fullfører onboarding mot `e2e.onboarding@tosom.dev` og påtar
-redirect til `/matching`. Test-isolasjon: server-draft slettes før kvar
+redirect til `/matching`. Test-isolasjon: server-draft slettes før hver
 test, og `e2e/onboarding-reset.ts` nullstiller E2E-brukeren før kvart
-prosjekt (full-flow-testen fullfører profilen — utan reset ville
+prosjekt (full-flow-testen fullfører profilen — uten reset ville
 prefill-API-et pre-fylt profilen for neste motor). Resultat: onboarding
 **20/20** (10 chromium + 10 firefox, lokalt 29.08, inkl. full flow);
-dashboard/journey/match 90/90 frå 28.08-kjøringa — 0 fixme att totalt.
+dashboard/journey/match 90/90 fra 28.08-kjøringa — 0 fixme att totalt.
 
 ## 10. Siste ting før feilfri beta
 

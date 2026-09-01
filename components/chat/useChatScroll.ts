@@ -6,7 +6,7 @@
  * - scrollToBottom() — glir til botnen
  * - smoothScroll — myk scrolling
  * - autoScroll på ny melding — siste melding står ALLTID synleg nede
- *   (uansett kven som sender; avgjort 2026-08-28). Fyrste lasting er
+ *   (uansett hvem som sender; avgjort 2026-08-28). Fyrste lasting er
  *   øyeblikks-scroll, så ingen lang animasjon over historia.
  */
 
@@ -30,7 +30,7 @@ export interface ChatScrollResult {
 export function useChatScroll(dependency?: unknown): ChatScrollResult {
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Sjå om brukaren er ved botnen
+  // Se om brukeren er ved botnen
   const isAtBottom = useCallback(() => {
     const el = scrollRef.current;
     if (!el) return true; // Tom chat → antar ved botnen
@@ -38,7 +38,7 @@ export function useChatScroll(dependency?: unknown): ChatScrollResult {
     return el.scrollHeight - el.scrollTop - el.clientHeight < tolerance;
   }, []);
 
-  // glir til botnen — rask (for nye meldingar)
+  // glir til botnen — rask (for nye meldinger)
   const scrollToBottom = useCallback((options?: { behavior?: ScrollBehavior }) => {
     const el = scrollRef.current;
     if (!el) return;
@@ -53,12 +53,12 @@ export function useChatScroll(dependency?: unknown): ChatScrollResult {
     scrollToBottom({ behavior: "smooth" });
   }, [scrollToBottom]);
 
-  // Siste melding skal ALLTID stå synleg nede, uansett kven som sender
+  // Siste melding skal ALLTID stå synleg nede, uansett hvem som sender
   // (kreist i CHAT-POLISH 2026-08-28). Alt anna skrus opp over.
   //
   // Fyrste gong lista får innhold: øyeblikks-scroll (landing ved siste
   // melding uten lang smooth-scroll over historia). Deretter myk scroll
-  // ved kvar ny melding.
+  // ved hver ny melding.
   const hasContentRef = useRef(false);
   useEffect(() => {
     if (dependency === undefined) return;
@@ -70,7 +70,7 @@ export function useChatScroll(dependency?: unknown): ChatScrollResult {
     const instant = count > 0 && !hasContentRef.current;
     if (count > 0) hasContentRef.current = true;
 
-    // Dobbelt rAF: nytt innhold (fleirlinjet tekst, bilete) må legga seg
+    // Dobbelt rAF: nytt innhold (fleirlinjet tekst, bilde) må legga seg
     // i layouten FØR scrollHeight målast.
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {

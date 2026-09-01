@@ -382,14 +382,14 @@ Kjør matching-jobb for alle kvalifiserte brukere.
 **Canonical ruter (2026-08-02 oppdatert):**
 | Metode | Rute | Formål |
 |--------|------|--------|
-| GET | `/api/journey/today` | Hent dagens innhald |
+| GET | `/api/journey/today` | Hent dagens innhold |
 | GET | `/api/journey/progress` | Hent progresjon |
 | POST | `/api/journey/progress` | Advance til neste dag |
 | POST | `/api/journey/reflect` | Lag refleksjon |
 | GET | `/api/journey/resonance` | Hent resonansdata |
 | GET | `/api/journey/check` | Sjekk om reise er låst |
 | POST | `/api/journey/exit` | Avslutt reise |
-| GET | `/api/journey/[conversationId]` | Hent journey state per conversation (GET berre) |
+| GET | `/api/journey/[conversationId]` | Hent journey state per conversation (GET bare) |
 
 **Fjernede ruter (2026-08-02):**
 - ~~`POST /api/journey/conversations/[conversationId]`~~ — fjerna, bruk `GET /api/journey/[conversationId]`
@@ -1058,7 +1058,7 @@ Performance metrics.
 ---
 
 ### GET /api/admin/resonance
-Hent ResonanceSession for ein bruker (admin). Utvidet 2026-08-03.
+Hent ResonanceSession for en bruker (admin). Utvidet 2026-08-03.
 
 **Auth:** Admin required
 
@@ -1248,14 +1248,14 @@ Hent GuidedQuestionar per kategori. Kan filtrere på depth, limit og random.
   "success": true,
   "category": { "id": "cat_xxx", "name": "Trygghet", "color": "#D4AF37" },
   "questions": [
-    { "id": "q_123", "content": "Kva betyr trygghet for deg?", "depthLevel": 1, "order": 1 },
-    { "id": "q_124", "content": "Kva er det som gjer at du føler deg trygg?", "depthLevel": 1, "order": 2 }
+    { "id": "q_123", "content": "Hva betyr trygghet for deg?", "depthLevel": 1, "order": 1 },
+    { "id": "q_124", "content": "Hva er det som gjer at du føler deg trygg?", "depthLevel": 1, "order": 2 }
   ]
 }
 ```
 
 **Eksempel-kall:**
-- `GET /api/questions/trygghet?depth=2&limit=3` — 3 djupne-spørsmål frå Trygghet
+- `GET /api/questions/trygghet?depth=2&limit=3` — 3 dybden-spørsmål fra Trygghet
 - `GET /api/questions/kommunikasjon?random=true` — tilfeldig rekkefølgje
 
 ---
@@ -1281,10 +1281,10 @@ Analytics event.
 
 ---
 
-*API-dokumentasjon oppdatert ved kvar endring i endepunkter.*  
+*API-dokumentasjon oppdatert ved hver endring i endepunkter.*  
 *Versjon: 2.2 — Oppdatert 2026-08-03 (Pakke 4.2: ResonanceSession Tracking)*
 
 ---
 
-*Dette dokumentet oppdaterast ved kvar større endring i plattformen.*
+*Dette dokumentet oppdaterast ved hver større endring i plattformen.*
 *Versjon: 1.0 — Opprettet 2026-08-02*

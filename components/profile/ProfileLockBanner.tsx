@@ -14,7 +14,7 @@ interface ProfileLockBannerProps {
   partnerName?: string;
   /** Dagen de er på (f.eks. 7 av 30) */
   currentDay?: number;
-  /** Totalt antal dagar i reise */
+  /** Totalt antal dager i reise */
   totalDays?: number;
 }
 

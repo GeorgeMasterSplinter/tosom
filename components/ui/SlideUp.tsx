@@ -1,4 +1,4 @@
-// components/ui/SlideUp.tsx — Animerer frå botn med spring-easing
+// components/ui/SlideUp.tsx — Animerer fra botn med spring-easing
 'use client';
 
 import { useState, useEffect, useRef } from 'react';

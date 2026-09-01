@@ -17,10 +17,10 @@ async function main() {
     return;
   }
 
-  console.log(`📊 Funne ${journeys.length} JourneyProgress-rader som skal migrerast.`);
+  console.log(`📊 Funnet ${journeys.length} JourneyProgress-rader som skal migrerast.`);
 
   for (const jp of journeys) {
-    // Finn conversation knytt til denne brukaren
+    // Finn conversation knytt til denne brukeren
     const conversations = await prisma.conversation.findMany({
       where: {
         OR: [
@@ -31,13 +31,13 @@ async function main() {
     });
 
     for (const conv of conversations) {
-      // Sjekk om ConversationJourney allereie eksisterer
+      // Sjekk om ConversationJourney allerede eksisterer
       const existing = await prisma.conversationJourney.findUnique({
         where: { conversationId: conv.id },
       });
 
       if (existing) {
-        console.log(`  ⏭️  Conversation ${conv.id} har allereie ConversationJourney — hoppar over`);
+        console.log(`  ⏭️  Conversation ${conv.id} har allerede ConversationJourney — hoppar over`);
         continue;
       }
 

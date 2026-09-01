@@ -3,7 +3,7 @@
 /** UserProfileDemo — test UserProfileView uten dashboard
  *  UP21 — opprett demo-komponent
  *  UP22 — dummy userProfile
- *  UP23–UP24 — knappar for open/lukk modal + logg endringar
+ *  UP23–UP24 — knapper for open/lukk modal + logg endringer
  *  UP25–UP28 — test av readyForMatch, chips, bilder, bio
  *  UP29 — bokmål, varmt, rolig, kort
  *  UP30 — ingen nye features */
@@ -20,7 +20,7 @@ export default function UserProfileDemo() {
   const handleOpen = () => setVisible(true);
   const handleClose = () => setVisible(false);
 
-  /* UP24 — Logg endringar */
+  /* UP24 — Logg endringer */
   const handleUpdate = (updated: UserProfile) => {
     console.log("Updated profile:", updated);
     setProfile(updated);

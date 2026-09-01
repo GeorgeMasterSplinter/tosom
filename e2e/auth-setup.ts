@@ -1,6 +1,6 @@
 /**
  * Playwright globalSetup for ToSom E2E-testar
- * Loggar inn som test-brukar via /dev-login og lagrar storageState
+ * Loggar inn som test-bruker via /dev-login og lagrar storageState
  * Denne filen køyrer EINASTEIN before alle test-projekt.
  */
 import { chromium, FullConfig } from '@playwright/test';
@@ -36,7 +36,7 @@ async function globalSetup(config: FullConfig) {
     timeout: 15000,
   });
 
-  // Vent på at brukar-lista lastar (max 15s)
+  // Vent på at bruker-lista lastar (max 15s)
   try {
     await page.waitForResponse(
       res => 
@@ -44,9 +44,9 @@ async function globalSetup(config: FullConfig) {
         res.status() === 200, 
       { timeout: 15000 }
     );
-    console.log('[auth-setup] Brukar-lista lasta OK');
+    console.log('[auth-setup] Bruker-lista lasta OK');
   } catch (err) {
-    console.warn('[auth-setup] Advarsel: /api/dev-login/users responderte ikkje innan 15s', err);
+    console.warn('[auth-setup] Advarsel: /api/dev-login/users responderte ikke innen 15s', err);
   }
 
   // Klikk på fyrste login-knapp
@@ -54,7 +54,7 @@ async function globalSetup(config: FullConfig) {
   const buttonCount = await loginButtons.count();
   
   if (buttonCount > 0) {
-    console.log(`[auth-setup] Finn ${buttonCount} login-knappar, klikkar fyrste...`);
+    console.log(`[auth-setup] Finn ${buttonCount} login-knapper, klikkar fyrste...`);
     await loginButtons.first().click();
     
     // Vent på redirect til dashboard eller onboarding
@@ -65,7 +65,7 @@ async function globalSetup(config: FullConfig) {
       console.warn('[auth-setup] Advarsel: redirect tok lenger tid enn 15s');
     }
   } else {
-    console.error('[auth-setup] FEIL: Ingen login-knappar funnen! Sjekk at DEV_LOGIN_ENABLED=true i .env.local');
+    console.error('[auth-setup] FEIL: Ingen login-knapper funnet! Sjekk at DEV_LOGIN_ENABLED=true i .env.local');
     // Fortset likevel — test kan ha annan auth-mekanisme
   }
 

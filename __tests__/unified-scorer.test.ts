@@ -91,7 +91,7 @@ describe('unifiedScore (F-8: 6 dimensjoner)', () => {
     const bigFive = { openness: 3, conscientiousness: 3, extraversion: 3, agreeableness: 3, neuroticism: 3 };
 
     it('bruker psykometriske skårer når begge har dei (attachment)', () => {
-      // Trygg+trygg skal gi 100 på attachment — ikkje fallback-relasjonsstil.
+      // Trygg+trygg skal gi 100 på attachment — ikke fallback-relasjonsstil.
       const a = makeProfile({ attachment: { anxiety: 2, avoidance: 2, style: 'secure' } });
       const b = makeProfile({ attachment: { anxiety: 2, avoidance: 2, style: 'secure' } });
       expect(unifiedScore(a, b).breakdown.attachment).toBe(100);
@@ -103,12 +103,12 @@ describe('unifiedScore (F-8: 6 dimensjoner)', () => {
       expect(unifiedScore(a, b).breakdown.attachment).toBe(25);
     });
 
-    it('faller tilbake til ordoverlapp når ein profil manglar skårer', () => {
-      // A har bigFive, B ikkje → personality faller til ordoverlapp (ikkje BFI-matrise).
+    it('faller tilbake til ordoverlapp når ein profil mangler skårer', () => {
+      // A har bigFive, B ikke → personality faller til ordoverlapp (ikke BFI-matrise).
       const a = makeProfile({ bigFive, personality: { traits: ['open', 'calm'] } });
       const b = makeProfile({ personality: { traits: ['open', 'calm'] } });
       const r = unifiedScore(a, b);
-      // Identiske ord → 100 via ordoverlapp (fallback), ikkje BFI-kompatibilitet.
+      // Identiske ord → 100 via ordoverlapp (fallback), ikke BFI-kompatibilitet.
       expect(r.breakdown.personality).toBe(100);
     });
 
@@ -127,7 +127,7 @@ describe('unifiedScore (F-8: 6 dimensjoner)', () => {
     });
   });
 
-  // M-1: Én kilde for resonansterskler. Nivået kjem frå toResonanceLevel
+  // M-1: Én kilde for resonansterskler. Nivået kommer frå toResonanceLevel
   // (kanonisk 80/65/50/40).
   describe('M-1: resonansnivå frå toResonanceLevel (kanonisk 80/65/50/40)', () => {
     it('unifiedScore().level er alltid = toResonanceLevel(score) (én kilde)', () => {

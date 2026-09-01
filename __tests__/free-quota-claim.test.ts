@@ -1,13 +1,13 @@
 /**
  * F2-2: Atomisk gratiskvote-claim (claimFreeQuota)
  *
- * Tidlegare var kvotegrensa check-then-create (count Order → create):
- * to samtidige onboardingar ved taket kunne begge seie «4 999 < 5 000»
- * og begge få plass. Noko som skal vere éin grense skal vere éin grense.
+ * Tidligere var kvotegrensa check-then-create (count Order → create):
+ * to samtidige onboardinger ved taket kunne begge si «4 999 < 5 000»
+ * og begge få plass. Noen som skal være én grense skal være én grense.
  *
- * claimFreeQuota gjer éin betinga UPDATE ... SET used = used+1
- * WHERE used < cap — Prisma mockane under låser kvit-avstandinga:
- * count=1 vinn plass, count=0 tyder at plassen var teken.
+ * claimFreeQuota gjør én betinget UPDATE ... SET used = used+1
+ * WHERE used < cap — Prisma-mockene under låser kvit-avstanden:
+ * count=1 vinner plassen, count=0 betyr at plassen var tatt.
  */
 
 jest.mock('@/lib/prisma', () => {
@@ -45,7 +45,7 @@ describe('claimFreeQuota — atomisk kvote-claim', () => {
     jest.clearAllMocks();
   });
 
-  it('vinn grenseplassen ved taket: count=1 → order blir laga', async () => {
+  it('vinner grenseplassen ved taket: count=1 → order blir laget', async () => {
     mockQuotaRow(FREE_QUOTA_LIMIT - 1); // siste frie plass
     mockedPrisma.quota.updateMany.mockResolvedValue({ count: 1 });
     const fakeOrder = { id: 'ord_1', userId: 'u1', freeQuota: true, status: 'PAID' };
@@ -54,7 +54,7 @@ describe('claimFreeQuota — atomisk kvote-claim', () => {
     const result = await claimFreeQuota('u1');
 
     expect(result).toBe(fakeOrder);
-    // Betinga increment mot kvoteraden
+    // Betinget increment mot kvoteraden
     expect(mockedPrisma.quota.updateMany).toHaveBeenCalledWith({
       where: { id: 'free_users', used: { lt: FREE_QUOTA_LIMIT } },
       data: { used: { increment: 1 } },
@@ -72,7 +72,7 @@ describe('claimFreeQuota — atomisk kvote-claim', () => {
     expect(mockedPrisma.order.create).not.toHaveBeenCalled();
   });
 
-  it('roller telleren attende dersom order-kreeringa feilar', async () => {
+  it('ruller telleren tilbake dersom order-oppretting feiler', async () => {
     mockQuotaRow(0);
     mockedPrisma.quota.updateMany
       .mockResolvedValueOnce({ count: 1 }) // claim-en
@@ -82,22 +82,22 @@ describe('claimFreeQuota — atomisk kvote-claim', () => {
     await expect(claimFreeQuota('u3')).rejects.toThrow('db ned');
 
     expect(mockedPrisma.quota.updateMany).toHaveBeenCalledTimes(2);
-    // Rollback: decrement (ikkje betinga — plassen er vår no)
+    // Rollback: decrement (ikke betinget — plassen er vår nå)
     expect(mockedPrisma.quota.updateMany).toHaveBeenLastCalledWith({
       where: { id: 'free_users' },
       data: { used: { decrement: 1 } },
     });
   });
 
-  it('kastar dersom kvote-raden mangler (migreringa ikkje kjørd)', async () => {
+  it('kaster dersom kvote-rad mangler (migrasjonen ikke kjørt)', async () => {
     mockedPrisma.quota.findUnique.mockResolvedValue(null);
 
-    await expect(claimFreeQuota('u4')).rejects.toThrow(/Quota-rad manglar/);
+    await expect(claimFreeQuota('u4')).rejects.toThrow(/Quota-rad mangler/);
     expect(mockedPrisma.quota.updateMany).not.toHaveBeenCalled();
     expect(mockedPrisma.order.create).not.toHaveBeenCalled();
   });
 
-  it('FREE_QUOTA_LIMIT er det same tallet vilkårene lover', async () => {
+  it('FREE_QUOTA_LIMIT er det samme tallet vilkårene lover', async () => {
     expect(FREE_QUOTA_LIMIT).toBe(5000);
   });
 });

@@ -2,7 +2,7 @@
  * Tosom — Presence Get API (Partner Presence v2026) 🟡⭐
  * 
  * GET /api/presence/get/[id]
- * Returnerer presence state for ein spesifikk bruker.
+ * Returnerer presence state for en spesifikk bruker.
  * Krev auth via session.
  */
 

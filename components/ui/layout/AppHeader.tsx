@@ -220,7 +220,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ hideOn = false }) => {
             ))}
           </nav>
 
-          {/* Høyre: CTA-knappar */}
+          {/* Høyre: CTA-knapper */}
           <div className="hidden md:flex items-center gap-4">
             {/* Logg inn (sekundær) */}
             <Link
@@ -295,7 +295,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ hideOn = false }) => {
             </svg>
           </button>
 
-          {/* Mobil meny (slide-in frå høgre) */}
+          {/* Mobil meny (slide-in fra høyre) */}
           {menuOpen && (
             <div
               className="md:hidden fixed top-[64px] right-0 z-50 menu-slide-in"

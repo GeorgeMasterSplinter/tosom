@@ -8,15 +8,15 @@
 ## DEL 1 — 401-FEIL
 
 ### Problem
-401-feilen oppstår når brukaren ikkje er autentisert. `useChatMessages` håndterer dette ved å avslutte polling (line 46-49).
+401-feilen oppstår når brukeren ikke er autentisert. `useChatMessages` håndterer dette ved å avslutte polling (line 46-49).
 
 ### Løysing
 - Prisma schema: `senderId`, `userAId`, `userBId` er allerede `String` (matcher `User.id`)
-- API-en sjekker `session?.user?.id` og returnerer 401 dersom manglar
-- Bruk: `useChatMessages` håndterer 401 ved å avslutte polling utan error
+- API-en sjekker `session?.user?.id` og returnerer 401 dersom mangler
+- Bruk: `useChatMessages` håndterer 401 ved å avslutte polling uten error
 
 ### Merknad
-401 er **forventa oppførsel** — ikkje ein feil. Dersom ein ikkje er logga inn skal ikkje meldingar lastast.
+401 er **forventa oppførsel** — ikke en feil. Dersom en ikke er logga inn skal ikke meldinger lastast.
 
 ---
 
@@ -35,7 +35,7 @@
 
 ### ChatInput.tsx
 - `sticky bottom-0` — alltid synleg nedst
-- Parent har ikkje `overflow-hidden`
+- Parent har ikke `overflow-hidden`
 
 ### ChatHeader.tsx
 - `sticky top-0` — alltid synleg øvst
@@ -45,13 +45,13 @@
 
 ## DEL 3 — SPRÅK TIL BOKMÅL
 
-### Endringar:
+### Endringer:
 | Før (dialekt) | Etter (bokmål) |
 |--------------|--------------|
-| ikkje | ikke |
+| ikke | ikke |
 | sei | si |
 | att | igjen |
-| Det er tomt her — men det blir ikkje det. | Det er tomt her — men det blir ikke det. |
+| Det er tomt her — men det blir ikke det. | Det er tomt her — men det blir ikke det. |
 | Bare sei hei. | Bare si hei. |
 | Dag X/30 – Y att | Dag X/30 – Y igjen |
 
@@ -73,5 +73,5 @@
 
 1. Test på mobil (iOS/Android)
 2. Test på desktop (1920x1080)
-3. Verifiser at chat fungerer utan 401-feil
+3. Verifiser at chat fungerer uten 401-feil
 4. Test at input-felt er klikkbart på mobil

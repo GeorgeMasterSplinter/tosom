@@ -36,7 +36,7 @@ export function getTestUserByEmail(email: string): TestUser | undefined {
 }
 
 // Oppskrift på fake profil-data for test-brukerne
-// Desse blir genererte automatisk når brukaren fullfører onboarding
+// Desse blir genererte automatisk når brukeren fullfører onboarding
 export const TEST_PROFILE_OVERRIDES = {
   'test-user-1': {
     firstName: 'Astrid',
@@ -54,7 +54,7 @@ export const TEST_PROFILE_OVERRIDES = {
     // Intimitet
     intimacyPreferences: { pace: 'gradual', expression: 'verbalt og handling' },
     // Framtidsønsker
-    futureGoals: ['bygge heim', 'reise', 'personleg utvikling'],
+    futureGoals: ['bygge hjem', 'reise', 'personleg utvikling'],
     // Grenser
     boundaries: ['treng tid å seg selv', 'verdsætter ærlighet'],
     // Emosjonelle behov
@@ -65,7 +65,7 @@ export const TEST_PROFILE_OVERRIDES = {
     maturityLevel: 7,
     securityLevel: 'high',
     // Bio
-    bio: 'Eg er ein roleg og dyp person som verdier ekte forbindelse. Natur og kreativitet gir meg energi.',
+    bio: 'Eg er en rolig og dyp person som verdier ekte forbindelse. Natur og kreativitet gir meg energi.',
     // Interesser
     interests: ['natur', 'litteratur', 'kreativitet', 'refleksjon', 'reising'],
     // Match-tags
@@ -98,7 +98,7 @@ export const TEST_PROFILE_OVERRIDES = {
     maturityLevel: 8,
     securityLevel: 'high',
     // Bio
-    bio: 'Eg er ein tenkande og reflektert mann som verdier ærlighet og vekst. Familiefamilie og natur betyr mye for meg.',
+    bio: 'Eg er en tenkande og reflektert mann som verdier ærlighet og vekst. Familiefamilie og natur betyr mye for meg.',
     // Interesser
     interests: ['natur', 'filosofi', 'reising', 'bøker', 'refleksjon'],
     // Match-tags

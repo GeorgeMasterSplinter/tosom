@@ -5,7 +5,7 @@
  * Brukars-ID blir no sendt som prop fra server-komponent.
  *
  * REAL-TIME: Poller /api/chat/messages hvert 3. sekund for å fange
- * opp nye meldingar fra partneren uten manuell refresh.
+ * opp nye meldinger fra partneren uten manuell refresh.
  */
 
 "use client";
@@ -101,7 +101,7 @@ export function ChatProvider({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   // Send-feil er egen state: loadMessages (polling) må ikke overstyre
-  // ein send-feil — tidlegare forsvann feilen seinast etter 3 sekund, og ein
+  // en send-feil — tidlegare forsvann feilen seinast etter 3 sekund, og en
   // feila send ble fullstendig stille.
   const [sendError, setSendError] = useState<string | null>(null);
   const lastMsgIdRef = useRef<string | null>(null);
@@ -176,8 +176,8 @@ export function ChatProvider({
 
       setMessages(converted);
     } catch (e) {
-      console.error("Feil ved lasting av meldingar:", e);
-      if (!isPolling) setError(e instanceof Error ? e.message : "Kunne ikke laste meldingar");
+      console.error("Feil ved lasting av meldinger:", e);
+      if (!isPolling) setError(e instanceof Error ? e.message : "Kunne ikke laste meldinger");
     } finally {
       if (!isPolling) setLoading(false);
     }
@@ -272,7 +272,7 @@ export function ChatProvider({
         try {
           const errBody = await res.json();
           if (errBody?.error) detail = String(errBody.error);
-        } catch { /* held status-meldingen */ }
+        } catch { /* holder status-meldingen */ }
         throw new Error(detail);
       }
       const data = await res.json();

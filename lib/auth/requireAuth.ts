@@ -69,7 +69,7 @@ export async function requireAuth(
 }
 
 /**
- * requireAdmin — Krever at brukaren har ADMIN rolle
+ * requireAdmin — Krever at brukeren har ADMIN rolle
  */
 export async function requireAdmin(
   req?: NextRequest

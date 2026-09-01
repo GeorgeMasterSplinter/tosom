@@ -1,11 +1,11 @@
 /**
- * ToSom — Seed Admin-brukarar for Testing
+ * ToSom — Seed Admin-brukere for Testing
  * 
- * Opprettar 4 admin-brukarar brukt for utvikling og testing.
+ * Opprettar 4 admin-brukere brukt for utvikling og testing.
  * 
  * Bruk: npx ts-node scripts/super-users-seed.ts
  * 
- * Brukarar (alltid test1234):
+ * Brukere (alltid test1234):
  *   super1@tosom.test / test1234
  *   super2@tosom.test / test1234
  *   super3@tosom.test / test1234
@@ -24,12 +24,12 @@ const SUPER_USERS = [
 ];
 
 async function main() {
-  console.log('\n[SEED] Opprettar admin-brukarar...');
+  console.log('\n[SEED] Opprettar admin-brukere...');
 
   for (const user of SUPER_USERS) {
     const emailLower = user.email.toLowerCase();
 
-    // Finn eksisterande brukar
+    // Finn eksisterande bruker
     const existing = await prisma.user.findFirst({
       where: { email: emailLower },
     });
@@ -64,7 +64,7 @@ async function main() {
     }
   }
 
-  console.log('\n[SEED] Admin-brukarar klare!\n');
+  console.log('\n[SEED] Admin-brukere klare!\n');
   console.log('Innloggingsdetaljar:');
   for (const user of SUPER_USERS) {
     console.log(`  E-post: ${user.email} | Passord: ${user.password}`);

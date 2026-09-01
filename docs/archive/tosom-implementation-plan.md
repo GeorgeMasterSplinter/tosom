@@ -1,5 +1,5 @@
 # ToSom Implementeringsplan
-## Frå dagens tilsom.no → definert ToSom
+## Fra dagens tilsom.no → definert ToSom
 
 *Dette dokumentet er den operative handsaminga av tosom-core-definition.md (grunnloven) og den grunnlagde analysen.*
 
@@ -7,17 +7,17 @@
 
 ## DEL 1: KONSEKVENSAR AV CORE DEFINITION (GRUNNLOVEN)
 
-### Ufråskrívelge prinsipper (frå tosom-core-definition.md)
+### Ufråskrívelge prinsipper (fra tosom-core-definition.md)
 
-1. **ToSom er ikkje ein datingapp** — aldri swiping, feed, markedsplass eller gamification
-2. **Berre to menneske** — éi aktiv reise om gangen
+1. **ToSom er ikke en datingapp** — aldri swiping, feed, markedsplass eller gamification
+2. **Bare to menneske** — éi aktiv reise om gangen
 3. **Ro og varme** — aldri stress, press eller pushy
 4. **Privat profil** — aldri offentleg
-5. **Éin match per 24 timer** — beste kompatibilitet, ingen valg mellom fleire
+5. **Éin match per 24 timer** — beste kompatibilitet, ingen valg mellom flere
 6. **30-dagers låst relasjon** — når begge aksepterer
-7. **14 dagar utan bilder** — bygger emosjonell forbindelse først
-8. **Guidet 30-dagers reise** — dagleg refleksjon, tema, oppgåver, resonans
-9. **Resonans framfor score** — samanfallande kjensler, ikkje numerisk poeng
+7. **14 dager uten bilder** — bygger emosjonell forbindelse først
+8. **Guidet 30-dagers reise** — dagleg refleksjon, tema, oppgaver, resonans
+9. **Resonans framfor score** — samanfallande følelser, ikke numerisk poeng
 10. **Mild guiding** — aldri påtrengjande
 
 ---
@@ -144,24 +144,24 @@ model ResonanceSession {
 #### 1.5 Ny JourneyDayContent-seed
 
 ```prisma
-// seed.ts — 30 dagar med innhald
+// seed.ts — 30 dager med innhold
 const journeyContent = [
   // Fase 1: Introduksjon (dag 1-5)
-  { day: 1, phase: "EARLY", theme: "Velkomen", reflectionQuestion: "Kva førte deg hit?", conversationPrompt: "Fortel kort om kven du er", task: null, resonanceGoal: "åpne deg" },
-  { day: 2, phase: "EARLY", theme: "Livssituasjon", reflectionQuestion: "Kor ser du deg om éin månad?", conversationPrompt: "Kva er viktigast i kvardagen din?", task: "Del ein vanleg dag", resonanceGoal: "trygghet" },
+  { day: 1, phase: "EARLY", theme: "Velkommen", reflectionQuestion: "Hva førte deg hit?", conversationPrompt: "Fortell kort om hvem du er", task: null, resonanceGoal: "åpne deg" },
+  { day: 2, phase: "EARLY", theme: "Livssituasjon", reflectionQuestion: "Kor ser du deg om én månad?", conversationPrompt: "Hva er viktigast i kvardagen din?", task: "Del en vanleg dag", resonanceGoal: "trygghet" },
   // ... (full liste i vedlegg)
   
   // Fase 2: Trygghet (dag 6-14)
-  // Fase 3: Dypare samtalar (dag 15-25)
+  // Fase 3: Dypere samtaler (dag 15-25)
   // Fase 4: Felles reise (dag 26-30)
 ];
 ```
 
-#### Oppgåver uke 1:
+#### Oppgaver uke 1:
 - [ ] Opprett Prisma-migrering `add_deep_profile_schema`
 - [ ] Oppdater `prisma/schema.prisma` med alle nye modellar og felt
-- [ ] Opprett `prisma/seed.ts` med 30 dagar journey-innhald
-- [ ] Test at Prisma client genererer nye typar
+- [ ] Opprett `prisma/seed.ts` med 30 dager journey-innhold
+- [ ] Test at Prisma client genererer nye typer
 - [ ] Opprett database-migrering
 
 ---
@@ -175,12 +175,12 @@ const journeyContent = [
 ```
 components/onboarding/
 ├── OnboardingWizard.tsx        // Hoved-komponent, steg-navigasjon
-├── StegLivssituasjon.tsx       // Steg 1: jobb, bustad, økonomi
+├── StegLivssituasjon.tsx       // Steg 1: jobb, bosted, økonomi
 ├── StegKjerner.tsx             // Steg 2: verdier (vel 6-10)
 ├── StegPersonlighet.tsx        // Steg 3: personality traits
 ├── StegRelasjonsstil.tsx       // Steg 4: relasjonspreferanse
 ├── StegKommunikasjon.tsx       // Steg 5: kommunikasjonsstil
-├── StegIntimitet.tsx           // Steg 6: intimitet & nærheit (modent)
+├── StegIntimitet.tsx           // Steg 6: intimitet & nærhet (modent)
 ├── StegFramtid.tsx             // Steg 7: framtidsonsker
 ├── StegGrenser.tsx             // Steg 8: grenser & behov
 ├── StegLivsrytme.tsx           // Steg 9: livsrytme
@@ -228,12 +228,12 @@ app/api/onboarding/
 
 #### 2.4 Design-reglar for onboarding
 - Mørk bakgrunn med glass-panel
-- Gull-aksentar berre på aktivt steg
-- Progress-linje: tynn, roleg, ikkje gamification
+- Gull-aksentar bare på aktivt steg
+- Progress-linje: tynn, rolig, ikke gamification
 - Ingen "achievements" eller "badges"
 - Språk: varm, oppmuntande, aldri pressande
 
-#### Oppgåver uke 2:
+#### Oppgaver uke 2:
 - [ ] Bygg `OnboardingWizard.tsx` med steg-navigasjon
 - [ ] Bygg alle 10 steg-komponentar
 - [ ] Bygg API-endepunkt for lagring
@@ -243,9 +243,9 @@ app/api/onboarding/
 
 ---
 
-### UKA 3: Match-system — 24t + 30d-lås + utan bilder
+### UKA 3: Match-system — 24t + 30d-lås + uten bilder
 
-**Mål:** Implementer dei tre kjerneaigenskapane i matching
+**Mål:** Implementer de tre kjerneaigenskapane i matching
 
 #### 3.1 Ny matching-algoritme (resonans-basert)
 
@@ -253,13 +253,13 @@ app/api/onboarding/
 // lib/matching/resonanceScore.ts
 
 interface ResonanceInput {
-  a: Profile;  // berre djup profil-data
+  a: Profile;  // bare djup profil-data
   b: Profile;
 }
 
 interface ResonanceResult {
   resonanceLevel: "deep" | "strong" | "moderate" | "gentle";
-  resonanceScore: number;       // 0-100 (ikkje "match score")
+  resonanceScore: number;       // 0-100 (ikke "match score")
   compatibilityBreakdown: {
     values: number;              // kjern-verdi-kompatibilitet
     personality: number;         // personlegdomskompatibilitet
@@ -272,8 +272,8 @@ interface ResonanceResult {
 
 export function calculateResonance(input: ResonanceInput): ResonanceResult {
   // Inga foto-basert scoring!
-  // Berre djup profil-data
-  // Resonans = samanfallande kjensler, ikkje numerisk score
+  // Bare djup profil-data
+  // Resonans = samanfallande følelser, ikke numerisk score
 }
 ```
 
@@ -282,15 +282,15 @@ export function calculateResonance(input: ResonanceInput): ResonanceResult {
 ```typescript
 export const MATCH_WEIGHTS = {
   values:        0.30,        // kjernejverdier (høgast)
-  personality:   0.25,        // personlegdom
+  personality:   0.25,        // personlighet
   communication: 0.20,        // kommunikasjonspreferanse
   futureAlignment: 0.15,      // framtid-justering
   emotionalPatterns: 0.10,    // emosjonelle mønster
 };
 
 export const MATCH_INTERVAL = 24 * 60 * 60 * 1000;  // 24 timer
-export const LOCK_DURATION = 30 * 24 * 60 * 60 * 1000;  // 30 dagar
-export const PHOTO_FREE_DAYS = 14;  // 14 dagar utan bilder
+export const LOCK_DURATION = 30 * 24 * 60 * 60 * 1000;  // 30 dager
+export const PHOTO_FREE_DAYS = 14;  // 14 dager uten bilder
 ```
 
 #### 3.3 Ny findBestResonanceFor.ts
@@ -299,10 +299,10 @@ export const PHOTO_FREE_DAYS = 14;  // 14 dagar utan bilder
 // lib/matching/findBestResonanceFor.ts
 
 export async function findBestResonanceFor(userId: string): Promise<{ matchUserId: string; result: ResonanceResult } | null> {
-  // 1. Sjekk lastMatchAt — berre tillat etter 24t
-  // 2. Sjekk lockedUntil — ingen matcher medan låst
+  // 1. Sjekk lastMatchAt — bare tillat etter 24t
+  // 2. Sjekk lockedUntil — ingen matcher mens låst
   // 3. Finn alle kvalifiserte kandidatar (onboardingComplete + deepProfileComplete)
-  // 4. Rekn resonans for kvar kandidat
+  // 4. Rekn resonans for hver kandidat
   // 5. Returner høgaste resonans
   // 6. INGA foto-basert scoring
 }
@@ -313,8 +313,8 @@ export async function findBestResonanceFor(userId: string): Promise<{ matchUserI
 ```
 app/api/match/
 ├── resonate/route.ts      // Ny: finn beste resonans (istadenfor /match)
-├── accept/route.ts        // Ny: brukar aksepterer match
-├── decline/route.ts       // Ny: brukar avslar (sjeldan)
+├── accept/route.ts        // Ny: bruker aksepterer match
+├── decline/route.ts       // Ny: bruker avslar (sjeldan)
 └── status/route.ts        // Ny: vis match-status, låse-status, neste match
 ```
 
@@ -325,13 +325,13 @@ app/api/match/
 // Kyrer dagleg via Vercel Cron eller liknande
 
 export async function dailyMatchCleanup() {
-  // 1. Lås opp brukarar etter 30d
+  // 1. Lås opp brukere etter 30d
   // 2. Rydd opp i eksploderte matcher
   // 3. Oppdater matchQueue-status
 }
 ```
 
-#### Oppgåver uke 3:
+#### Oppgaver uke 3:
 - [ ] Bygg `calculateResonance`-algoritmen
 - [ ] Bygg `findBestResonanceFor`
 - [ ] Bygg `POST /api/match/resonate` med 24t/30d-enforcing
@@ -346,7 +346,7 @@ export async function dailyMatchCleanup() {
 
 ### UKA 4-5: 14-dagers bilde-fase + Resonans-måling
 
-**Mål:** Ingen bilder dei første 14 dagane + emosjonell resonansmåling
+**Mål:** Ingen bilder de første 14 dagane + emosjonell resonansmåling
 
 #### 4.1 Bilde-fase-enforcing
 
@@ -376,7 +376,7 @@ async function canSharePhotos(conversationId: string): Promise<boolean> {
 
 ```
 app/api/journey/
-├── today/route.ts        // Henta dagens innhald og refleksjon
+├── today/route.ts        // Henta dagens innhold og refleksjon
 ├── reflect/route.ts      // Lag refleksjon
 ├── resonance/route.ts    // Henta resonans for dagen
 ├── depth/route.ts        // Måle resonans (AI-hjelp)
@@ -400,23 +400,23 @@ interface ResonanceAnalysis {
 export function analyzeResonance(messages: Message[]): ResonanceAnalysis {
   // AI-basert analyse av samtale
   // Måle emosjonell tone, djupde, gjensidig deling, sårbarhet
-  // Inga numerisk "score" — berre kvalitative mål
+  // Inga numerisk "score" — bare kvalitative mål
 }
 ```
 
-#### Oppgåver uke 4-5:
+#### Oppgaver uke 4-5:
 - [ ] Implementer bilde-fase-enforcing i chat
 - [ ] UI: skjul bilde-knapp før dag 15
 - [ ] UI: "Del bilder når du er klar"-melding
 - [ ] Bygg resonance-analysis
 - [ ] Bygg ResonanceSession API
-- [ ] UI: Resonans-kurve (myk, ikkje tall)
+- [ ] UI: Resonans-kurve (myk, ikke tall)
 - [ ] Test 14-dagers bilde-fase
 - [ ] Test resonansmåling
 
 ---
 
-### UKA 6-7: 30-dagers reise med dagleg innhald
+### UKA 6-7: 30-dagers reise med dagleg innhold
 
 **Mål:** Full guidet 30-dagers reise
 
@@ -424,21 +424,21 @@ export function analyzeResonance(messages: Message[]): ResonanceAnalysis {
 
 ```
 components/journey/
-├── JourneyTimeline.tsx     // 30 dagar som myk kurve
+├── JourneyTimeline.tsx     // 30 dager som myk kurve
 ├── JourneyDayCard.tsx      // Einskild dag med tema, refleksjon, oppgåve
 ├── ReflectionCard.tsx      // Vis refleksjon
 ├── TaskCard.tsx            // Dagleg oppgåve
 ├── ResonanceCurve.tsx      // Resonans over tid (myk kurve)
-└── PhaseIndicator.tsx      // Vis kva fase ein er i
+└── PhaseIndicator.tsx      // Vis hva fase en er i
 ```
 
 #### 5.2 Journey UI-side
 
 ```
 app/journey/
-├── page.tsx                // Hovud-reisevisning
+├── page.tsx                // Hoved-reisevisning
 ├── day/[dayId]/page.tsx    // Einskild dag
-├── reflection/page.tsx     // Alle refleksjonar
+├── reflection/page.tsx     // Alle refleksjoner
 └── overview/page.tsx       // Oversikt over heile reisen
 ```
 
@@ -455,19 +455,19 @@ export function getDayContent(day: number): {
   systemMessage?: string;
   resonanceGoal: string;
 } {
-  // Hentar frå seed-data eller database
+  // Hentar fra seed-data eller database
   // Fase 1 (dag 1-14): Introduksjon → Trygghet → Åpne deg
-  // Fase 2 (dag 15-30): Dypare samtalar → Sårbarhet → Felles reise
+  // Fase 2 (dag 15-30): Dypere samtaler → Sårbarhet → Felles reise
 }
 ```
 
-#### Oppgåver uke 6-7:
+#### Oppgaver uke 6-7:
 - [ ] Bygg JourneyTimeline
 - [ ] Bygg JourneyDayCard
 - [ ] Bygg ReflectionCard
 - [ ] Bygg TaskCard
 - [ ] Bygg ResonanceCurve
-- [ ] Seed 30 dagar med innhald
+- [ ] Seed 30 dager med innhold
 - [ ] Test full reise-flow
 
 ---
@@ -480,9 +480,9 @@ export function getDayContent(day: number): {
 
 ```
 app/dashboard/
-├── page.tsx                  // Hovud-side
+├── page.tsx                  // Hoved-side
 ├── components/
-│   ├── ResonanceOverview.tsx // Din resonans (ikkje score!)
+│   ├── ResonanceOverview.tsx // Din resonans (ikke score!)
 │   ├── JourneyStatus.tsx     // Din reise — dag X av 30
 │   ├── NextMatchTimer.tsx    // Neste match om X timer
 │   ├── DailyGuidance.tsx     // Dagens refleksjon/oppgåve
@@ -496,7 +496,7 @@ app/dashboard/
 - ❌ "Finn match"-knapp
 - ❌ "Resonansmåler" med numerisk score
 
-#### Oppgåver uke 8:
+#### Oppgaver uke 8:
 - [ ] Bygg ResonanceOverview
 - [ ] Bygg JourneyStatus
 - [ ] Bygg NextMatchTimer
@@ -545,8 +545,8 @@ components/DashboardMatchStatus.tsx    ✅ Endre til ResonanceStatus
 
 ```
 components/chat/
-├── GuidedChat.tsx         // Hovud-chat med guiding
-├── ChatBubble.tsx         // Varma bobler (ikkje gamified)
+├── GuidedChat.tsx         // Hoved-chat med guiding
+├── ChatBubble.tsx         // Varma bobler (ikke gamified)
 ├── SystemGuide.tsx        // Systemmeldingar som veiledning
 ├── DailyReflection.tsx    // "Dagens refleksjon" knapp
 ├── DailyTask.tsx          // "Dagens oppgåve" kort
@@ -555,10 +555,10 @@ components/chat/
 
 #### 8.2 Chat design etter ui-spec.md
 - Bakgrunn: `#0B0E11`
-- Mottatte meldingar: glass-panel
-- Eigne meldingar: gull-aksent (svakt)
+- Mottatte meldinger: glass-panel
+- Egne meldinger: gull-aksent (svakt)
 - Input: glassmorphism med gull-focus
-- Systemguide: roleg, ikkje intrusive
+- Systemguide: rolig, ikke intrusive
 
 ---
 
@@ -584,8 +584,8 @@ styles/globals.css — oppdater med:
 app/landing/
 ├── page.tsx
 ├── components/
-│   ├── Hero.tsx            // "Ein roleg måte å møte nokon på"
-│   ├── HowItWorks.tsx      // Privat profil → éin match → reise
+│   ├── Hero.tsx            // "En rolig måte å møte noen på"
+│   ├── HowItWorks.tsx      // Privat profil → én match → reise
 │   ├── WhyToSom.tsx        // Ingen swipe, ingen feed, ingen press
 │   ├── StartCTA.tsx        // "Start din reise"
 │   └── FAQ.tsx             // Vanlege spørsmål
@@ -599,15 +599,15 @@ app/landing/
 
 #### 10.1 Privatisme
 - ❌ Alle offentlege profilar fjerna
-- ✅ Berre matcha partnarar kan sjå profil
+- ✅ Bare matcha partnarar kan se profil
 - ✅ Ingen profil-embedding på offentlege sider
 - ✅ CORS og auth på alle API-endepunkt
 
 #### 10.2 Testing
-- E2E-testar for match-flow
-- Database-migrering-testar
+- E2E-tester for match-flow
+- Database-migrering-tester
 - Sikkerheitsreview på auth
-- Performance-testar på matching
+- Performance-tester på matching
 
 ---
 
@@ -624,20 +624,20 @@ app/landing/
 
 ---
 
-## DEL 3: KVA SOM MÅ BYGGAST FØRST (Prioritert liste)
+## DEL 3: HVA SOM MÅ BYGGAST FØRST (Prioritert liste)
 
-### Kritysk — ingen funksjonar utan dette:
+### Kritysk — ingen funksjonar uten dette:
 
 1. **Ny Profile-modell** med 10+ dimensjonar (Prisma-migrering)
 2. **User.lastMatchAt + User.lockedUntil** (match-enforcing)
 3. **Onboarding Wizard** med 10 steg
-4. **calculateResonance** (ny matching utan foto)
+4. **calculateResonance** (ny matching uten foto)
 5. **findBestResonanceFor** med 24t/30d-enforcing
 6. **POST /api/match/resonate** (ny match-API)
 7. **POST /api/match/accept** (begge må akseptere)
 8. **Conversation.imageShareAllowedAt** (14-dagers bilde-fase)
 9. **ResonanceSession-modell** (resonans-måling)
-10. **30 dagar journey-innhald** (seed)
+10. **30 dager journey-innhold** (seed)
 
 ### Viktig — etter kritisk:
 
@@ -650,7 +650,7 @@ app/landing/
 
 ---
 
-## DEL 4: KVA SOM MÅ RYDDAST (Full liste)
+## DEL 4: HVA SOM MÅ RYDDAST (Full liste)
 
 ### Komponentar:
 - [ ] `components/MatchPopup.tsx` — gamification
@@ -675,19 +675,19 @@ app/landing/
 
 ---
 
-## DEL 5: KVA SOM MÅ DESIGNAST (Full liste)
+## DEL 5: HVA SOM MÅ DESIGNAST (Full liste)
 
 ### Komponent-design:
 1. **OnboardingWizard** — 10 steg, mørk + gull, myk fade-in
-2. **Match Aksept-side** — varm, roleg, "Dere to er matchet"
+2. **Match Aksept-side** — varm, rolig, "Dere to er matchet"
 3. **Dashboard "Ditt rom"** — resonans, reise, neste match
-4. **JourneyTimeline** — 30 dagar som myk kurve, gull-punkt
-5. **ResonanceCurve** — emosjonell utvikling (ikkje score!)
+4. **JourneyTimeline** — 30 dager som myk kurve, gull-punkt
+5. **ResonanceCurve** — emosjonell utvikling (ikke score!)
 6. **ReflectionCard** — dagleg refleksjon med mjuk bakgrunn
 7. **TaskCard** — dagleg oppgåve med mild guiding
 8. **GuidedChat** — varm, systemguide, resonans-visning
-9. **NextMatchTimer** — "Neste match om X timer" (ikkje stress!)
-10. **Landing Page** — "Kva er ToSom", "Slik fungerer det", "Kvifor ToSom"
+9. **NextMatchTimer** — "Neste match om X timer" (ikke stress!)
+10. **Landing Page** — "Hva er ToSom", "Slik fungerer det", "Hvorfor ToSom"
 
 ---
 
@@ -698,15 +698,15 @@ app/landing/
 - [ ] User.lastMatchAt + lockedUntil
 - [ ] Conversation.imageShareAllowedAt + phase1Complete
 - [ ] ResonanceSession-modell
-- [ ] JourneyDayContent-seed (30 dagar)
+- [ ] JourneyDayContent-seed (30 dager)
 - [ ] ProfileDimension for kategori
 
 ### API-endepunkt:
 - [ ] `POST /api/match/resonate` — finn beste resonans (24t-enforcing)
-- [ ] `POST /api/match/accept` — brukar aksepterer
-- [ ] `POST /api/match/decline` — brukar avslar
+- [ ] `POST /api/match/accept` — bruker aksepterer
+- [ ] `POST /api/match/decline` — bruker avslar
 - [ ] `GET /api/match/status` — vis status, lås, neste match
-- [ ] `GET /api/journey/today` — dagens innhald
+- [ ] `GET /api/journey/today` — dagens innhold
 - [ ] `POST /api/journey/reflect` — lag refleksjon
 - [ ] `GET /api/journey/resonance` — dagleg resonans
 - [ ] `POST /api/journey/depth` — AI-analyse
@@ -766,13 +766,13 @@ app/landing/
 ### Arbeidsprinsipp:
 1. **Følg core definition alltid** — aldri kompromiss
 2. **Bygg database først** — schema er fasit
-3. **Backend før frontend** — data først, UI seinare
-4. **Test kvart steg** — ikkje vent til slutten
+3. **Backend før frontend** — data først, UI senere
+4. **Test kvart steg** — ikke vent til slutten
 5. **Rydd mens du bygg** — fjern gamification undervegs
 6. **Skriv varm tekst** — aldri kommando, aldri stress
-7. **Design roleg** — mørk + gull, glassmorphism, myk
+7. **Design rolig** — mørk + gull, glassmorphism, myk
 
-### Arbeidssekvens for kvar arbeidsblokk:
+### Arbeidssekvens for hver arbeidsblokk:
 ```
 1. Les core definition for den aktuelle blocken
 2. Skriv Prisma-migrering (dersom database-endring)
@@ -813,7 +813,7 @@ npm start
 - Djup onboarding
 - Ingen offentlege sider endå
 
-**Merknad:** Eksisterande profiler blir automatisk "halvfylte". Brukarar må fullføra djup profil for å få match.
+**Merknad:** Eksisterande profiler blir automatisk "halvfylte". Brukere må fullføra djup profil for å få match.
 
 ### Fase B: Kjerneaigenskapar (Uke 3-7)
 - 24t/30d-enforcing
@@ -821,7 +821,7 @@ npm start
 - 14-dagers bilde-fase
 - 30-dagers reise
 
-**Merknad:** Eksisterande matcher/bilder blir flytta til "fase 1". Ingen endring for eksisterande brukarar.
+**Merknad:** Eksisterande matcher/bilder blir flytta til "fase 1". Ingen endring for eksisterande brukere.
 
 ### Fase C: Refinement (Uke 8-11)
 - Dashboard-rydding
@@ -839,28 +839,28 @@ npm start
 
 ---
 
-## VEDLEGG A: 30 Dagers Journey-innhald (Oppsummering)
+## VEDLEGG A: 30 Dagers Journey-innhold (Oppsummering)
 
 ### Fase 1: Introduksjon (Dag 1-5)
-- Dag 1: Velkomen — "Kva førte deg hit?"
-- Dag 2: Livssituasjon — "Kva er viktigast i kvardagen?"
-- Dag 3: Verdier — "Kva kan du ikkje leve utan?"
+- Dag 1: Velkommen — "Hva førte deg hit?"
+- Dag 2: Livssituasjon — "Hva er viktigast i kvardagen?"
+- Dag 3: Verdier — "Hva kan du ikke leve uten?"
 - Dag 4: Kommunikasjon — "Kommuniserer du best gjennom ord eller handling?"
-- Dag 5: Personlegdom — "Kva seier om deg at du er deg?"
+- Dag 5: Personlighet — "Hva seier om deg at du er deg?"
 
 ### Fase 2: Trygghet (Dag 6-14)
 - Dag 6-14: Bygg trygghet gjennom gradvis sjølvdaking
-- Refleksjonar om emosjonell trygghet
-- Oppgåver: "Del ein svakheit", "Spør om noko du alltid vil visst"
+- Refleksjoner om emosjonell trygghet
+- Oppgaver: "Del en svakheit", "Spør om noe du alltid vil visst"
 
-### Fase 3: Dypare samtalar (Dag 15-25)
+### Fase 3: Dypere samtaler (Dag 15-25)
 - Dag 15: Bilder blir tillatne (valfritt)
 - Dag 16-25: Djupere tema — sårbarhet, livsval, drøm
-- Oppgåver: "Fortel om det hardeste du har opplevd", "Kva vil du bli hugsa for?"
+- Oppgaver: "Fortell om det hardeste du har opplevd", "Hva vil du bli hugsa for?"
 
 ### Fase 4: Felles reise (Dag 26-30)
-- Dag 26-29: Samanbyggje — "Kva vil du bygga saman?"
-- Dag 30: Refleksjon over reisen — "Kva har endra seg?"
+- Dag 26-29: Samanbyggje — "Hva vil du bygga sammen?"
+- Dag 30: Refleksjon over reisen — "Hva har endra seg?"
 
 ---
 
@@ -891,5 +891,5 @@ export const PERSONALITY_TRAITS = [
 ---
 
 *Dette dokumentet er den operative handsaminga.*
-*Alle endringar må følgje tosom-core-definition.md.*
+*Alle endringer må følgje tosom-core-definition.md.*
 *Sist oppdatert: Juni 2026*

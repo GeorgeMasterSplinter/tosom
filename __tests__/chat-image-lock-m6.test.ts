@@ -2,12 +2,12 @@
  * ToSom — M-6: Bilde-lås håndheves server-side
  *
  * Verifiserer at POST /api/chat/image nekter opplasting før journey-dag >= 15
- * (kanonisk isPhotosAllowed) og slipper gjennom etter. Utan denne sjekken
+ * (kanonisk isPhotosAllowed) og slipper gjennom etter. Uten denne sjekken
  * kunne klienten laste opp bilder før låsen var opphøyet.
  *
  * (Oppdatert: ruten bruker no lib/storage og knytter bildet til ein
  * Message-rad ved imageKey. M-6-låsen kjører FØR meldingsvalidering, så 423-
- * testa er uendra; suksess-fløya krev no ein gyldig messageId.)
+ * testa er uendra; suksess-fløten krev no ein gyldig messageId.)
  */
 
 import { NextRequest } from 'next/server';
@@ -28,7 +28,7 @@ jest.mock('@/lib/prisma', () => ({
 }));
 
 // Oppbevar dei reelle funksjonane (buildImageKey/assertSafeImageKey),
-// mock berre getImageStorage.
+// mock bare getImageStorage.
 jest.mock('@/lib/storage', () => {
   const actual = jest.requireActual('@/lib/storage');
   return {
@@ -117,7 +117,7 @@ describe('M-6: bilde-lås server-side i /api/chat/image', () => {
     // imageUrl peker på side-ruta, aldri en direkte filsti.
     expect(body.imageUrl).toBe('/api/chat/image/msg-1');
     expect(body.imageUrl).not.toContain('/uploads/');
-    // imageKey ble knyttet til meldinga.
+    // imageKey ble knyttet til meldingen.
     expect(messageUpdate).toHaveBeenCalledWith(
       expect.objectContaining({ where: { id: 'msg-1' } })
     );

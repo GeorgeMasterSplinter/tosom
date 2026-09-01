@@ -1,7 +1,7 @@
 /**
  * Tosom — OnboardingSlide (Premium Slide Component)
  *
- * Ein slide-per-komponent med subtil fargeidentitet pr. seksjon,
+ * En slide-per-komponent med subtil fargeidentitet pr. seksjon,
  * fade-in animasjon, og dempet glass-design som speiler dashboard.
  */
 

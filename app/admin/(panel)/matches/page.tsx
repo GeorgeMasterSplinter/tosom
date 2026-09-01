@@ -170,7 +170,7 @@ export default function AdminMatchesPage() {
                     <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.6)" }}>{u.name || u.email}</div>
                     <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)", marginBottom: "4px" }}>{u.email}</div>
                     {u.journey ? (
-                      <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)" }}>Journey: Dag {u.journey.day} ({u.journey.phase}) · {u.journey.completedDays} dagar fullførte</div>
+                      <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)" }}>Journey: Dag {u.journey.day} ({u.journey.phase}) · {u.journey.completedDays} dager fullførte</div>
                     ) : <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)" }}>Ingen journey</div>}
                   </div>
                 ))}
@@ -194,7 +194,7 @@ export default function AdminMatchesPage() {
                   <div style={{ fontSize: "13px", fontWeight: 600, color: "#D4AF37", marginBottom: "8px" }}>💬 Conversation</div>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: "8px", fontSize: "12px" }}>
                     <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Status:</span> {inspectorData.conversation.frozenAt ? "🔴 Fryst" : inspectorData.conversation.endedAt ? "⚫ Endeleg" : "🟢 Aktiv"}</div>
-                    <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Meldingar:</span> {inspectorData.conversation.messageCount}</div>
+                    <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Meldinger:</span> {inspectorData.conversation.messageCount}</div>
                     <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Resonans-sesjonar:</span> {inspectorData.conversation.totalResonanceSessions}</div>
                   </div>
                 </div>
@@ -240,7 +240,7 @@ export default function AdminMatchesPage() {
 
       {/* Footer */}
       <div style={{ marginTop: "32px", padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", fontSize: "13px", color: "rgba(255,255,255,0.4)" }}>
-        💡 Klikk på ein match for å se full inspeksjon med score, resonans, journey, conversation og insight-data.
+        💡 Klikk på en match for å se full inspeksjon med score, resonans, journey, conversation og insight-data.
       </div>
     </div>
   );

@@ -14,7 +14,7 @@ Etter å ha fikset alle TypeScript-feil i OnboardingFlow og step-komponentar, er
 
 ### 1. TypeScript-feil: ProfileData → Record<string, unknown>
 
-**Problem:** `ProfileData` var ikkje assignable til `Record<string, unknown>` fordi det manglede ein index signature.
+**Problem:** `ProfileData` var ikke assignable til `Record<string, unknown>` fordi det manglede en index signature.
 
 **Løysing:**
 ```tsx
@@ -25,9 +25,9 @@ interface ProfileData { ... }
 interface ProfileData extends Record<string, unknown> { ... }
 ```
 
-### 2. TypeScript-feil: onNext ikkje i OnboardingLayoutProps
+### 2. TypeScript-feil: onNext ikke i OnboardingLayoutProps
 
-**Problem:** `OnboardingLayout` fekk `onNext`, `onBack`, `showNext`, `nextLabel`, og `disabledNext` props som ikkje eksisterer i interface.
+**Problem:** `OnboardingLayout` fekk `onNext`, `onBack`, `showNext`, `nextLabel`, og `disabledNext` props som ikke eksisterer i interface.
 
 **Løysing:**
 ```tsx
@@ -53,11 +53,11 @@ interface ProfileData extends Record<string, unknown> { ... }
 >
 ```
 
-**Merk:** Knappar blir rendra av kvar enkelt step-komponent.
+**Merk:** Knapper blir rendra av hver enkelt step-komponent.
 
 ### 3. TypeScript-feil: SelectField onChange target-feil
 
-**Problem:** `SelectField` sin `onChange` mottar ein string-verdi, ikkje ein event.
+**Problem:** `SelectField` sin `onChange` mottar en string-verdi, ikke en event.
 
 **Løysing:**
 ```tsx
@@ -96,9 +96,9 @@ Route (app)                        Size  First Load JS
 
 ---
 
-## RESTELENDE WARNINGS (ikkje-feil)
+## RESTELENDE WARNINGS (ikke-feil)
 
-Desse er ESLint-warnings som ikkje blokkerer build:
+Desse er ESLint-warnings som ikke blokkerer build:
 
 | Type | Fil | Mengd |
 |--|-|--|
@@ -108,7 +108,7 @@ Desse er ESLint-warnings som ikkje blokkerer build:
 | `jsx-a11y/alt-text` | 1 fil | 1 advarsel |
 | `no-page-custom-font` | 1 fil | 1 advarsel |
 
-Desse kan fikse seinare — dei påverkar ikkje bygget.
+Desse kan fikse senere — de påverkar ikke bygget.
 
 ---
 
@@ -116,17 +116,17 @@ Desse kan fikse seinare — dei påverkar ikkje bygget.
 
 | Fil | Endring |
 |-|--|
-| `OnboardingFlow.tsx` | `ProfileData extends Record<string, unknown>` + fjerna onNext/onBack frå Layout |
-| `Step1ProfileAndMatching.tsx` | `SelectField` onChange frå `(e) => e.target.value` → `(v) => v` |
+| `OnboardingFlow.tsx` | `ProfileData extends Record<string, unknown>` + fjerna onNext/onBack fra Layout |
+| `Step1ProfileAndMatching.tsx` | `SelectField` onChange fra `(e) => e.target.value` → `(v) => v` |
 | `Step1Profile.tsx` | La til comment om type assertion |
 
 ---
 
 ## NESTE STEG (valfritt)
 
-1. **Test onboarding flow** — full flow frå Steg 1 til 10
+1. **Test onboarding flow** — full flow fra Steg 1 til 10
 2. **Test fake match** — "Start reisen" → chat
-3. **Fiks ESLint-warnings** (valfritt — ikkje blokkerande)
+3. **Fiks ESLint-warnings** (valfritt — ikke blokkerande)
 
 ---
 

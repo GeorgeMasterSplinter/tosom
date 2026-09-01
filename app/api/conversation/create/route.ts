@@ -1,8 +1,8 @@
 /**
  * POST /api/conversation/create
  * 
- * Opprett ein ny conversation for ein match.
- * Brukes når brukaren trykker "Start samtale" på matching/[id].
+ * Opprett en ny conversation for en match.
+ * Brukes når brukeren trykker "Start samtale" på matching/[id].
  * 
  * Input: { matchId: string }
  * Output: { conversationId: string, success: boolean }
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 4. Sjekk at brukaren er involvert i matchen
+    // 4. Sjekk at brukeren er involvert i matchen
     if (match.userAId !== user.id && match.userBId !== user.id) {
       return NextResponse.json(
         { error: "Du er ikke involvert i denne matchen" },

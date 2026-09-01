@@ -15,7 +15,7 @@ Fullført:
 
 Krav:
 - Alle env-variablar er dokumenterte og listas opp med krav
-- HTTPS og HSTS er spesifisert med korrekte verdiar
+- HTTPS og HSTS er spesifisert med korrekte verdier
 - Sikkerheitsheaders er definerte
 
 ---
@@ -31,8 +31,8 @@ Fullført:
 
 Krav:
 - Dagleg backup kl. 03:00 CET
-- Ukentleg full backup kvardag kl. 02:00
-- Retention: 7 dagar dagleg, 30 dagar ukentleg
+- Ukentleg full backup hverdag kl. 02:00
+- Retention: 7 dager dagleg, 30 dager ukentleg
 - Restore-prosess dokumentert steg-for-steg
 
 ---
@@ -114,7 +114,7 @@ Krav:
 
 ## 8. Neste steg
 
-- Ingen ny funksjonalitet er lagt til — berre drift, deploy og dokumentasjon
+- Ingen ny funksjonalitet er lagt til — bare drift, deploy og dokumentasjon
 - Alle filer er klare for review
 - **VENT PÅ GODKJENNING før faktisk deploy**
 - Når godkjent: følg launch-checklist.md og deploy-prosess i deploy/README.md

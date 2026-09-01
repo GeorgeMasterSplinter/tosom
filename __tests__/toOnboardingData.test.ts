@@ -217,7 +217,7 @@ describe('toOnboardingData — livssituasjon (steg 2b) fra lifeSituation-kolonne
     });
     const { data } = toOnboardingData(p, true);
     expect(data.city).toBe('Bergen');
-    // Flervalg (kommaseparert) må round-trippe heilt — grid markerer begge valgte
+    // Flervalg (kommaseparert) må round-trippe helt — grid markerer begge valgte
     expect(data.workType).toBe('anstatt-fulltid,studier');
     expect(data.housingType).toBe('leilighet,hus');
     expect(data.householdSize).toBe('2');

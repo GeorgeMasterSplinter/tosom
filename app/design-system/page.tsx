@@ -118,7 +118,7 @@ export default function DesignSystemPage() {
           ════════════════════════════════════ */}
       <ToSomSection spotlight="none">
         <SectionTitle>Radius Audit</SectionTitle>
-        <SubsectionTitle description="radius-verdiar med live visning">Alle radius-variantar</SubsectionTitle>
+        <SubsectionTitle description="radius-verdier med live visning">Alle radius-variantar</SubsectionTitle>
         <div className="flex flex-wrap gap-8 items-end mb-12">
           {Object.entries(radius).map(([key, value]) => (
             <div key={key} className="flex flex-col items-center gap-3">
@@ -231,7 +231,7 @@ export default function DesignSystemPage() {
             <p className="text-[18px] leading-relaxed mb-2" style={{ color: 'rgba(255,255,255,0.8)' }}>
               Body — 18px med line-height 1.7. Dette er standardbruket for brødtekst i heile appen.
             </p>
-            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>Bruk: Brødtekst, dialogar, chat-meldingar</p>
+            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>Bruk: Brødtekst, dialogar, chat-meldinger</p>
           </div>
 
           {/* Microcopy */}
@@ -395,7 +395,7 @@ export default function DesignSystemPage() {
             <h4 className="font-semibold mb-3" style={{ color: '#D4AF37' }}>📐 Radius</h4>
             <ul className="space-y-1 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
               <li>Kort: 20px (rounded-2xl)</li>
-              <li>Knappar: 16px</li>
+              <li>Knapper: 16px</li>
               <li>Inputs: 12px</li>
               <li>Avatarar: full (50%)</li>
             </ul>

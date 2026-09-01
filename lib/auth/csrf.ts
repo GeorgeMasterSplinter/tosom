@@ -9,7 +9,7 @@
  *   
  *   export async function POST(req: NextRequest) {
  *     const check = await csrfCheck(req);
- *     if (check instanceof NextResponse) return check; // feil → returner tidleg
+ *     if (check instanceof NextResponse) return check; // feil → returner tidlig
  *     // proceed...
  *   }
  */
@@ -19,7 +19,7 @@ import { serverFlags } from '@/utils/flags';
 
 /**
  * CSRF-token generering.
- * Kun brukt av klientar som treng å hente eit token før dei sender ein POST-request.
+ * Kun brukt av klientar som treng å hente et token før de sender en POST-request.
  */
 export function generateCsrfToken(): string {
   return crypto.randomUUID();
@@ -41,23 +41,23 @@ export async function verifyCsrfToken(req: NextRequest): Promise<{ ok: true; _ne
     return { ok: true };
   }
 
-  // Hent token frå header
+  // Hent token fra header
   const token = req.headers.get('x-csrf-token') || req.headers.get('x-csrf-token');
   
   if (!token) {
     return NextResponse.json(
-      { error: 'CSRF-token manglar', code: 'CSRF_MISSING' },
+      { error: 'CSRF-token mangler', code: 'CSRF_MISSING' },
       { status: 403 }
     );
   }
 
-  // Hent token frå cookie (sett av klienten tidlegare)
+  // Hent token fra cookie (sett av klienten tidlegare)
   const cookieToken = req.cookies.get('csrf_token')?.value;
   
-  // Dersom det ikke finnes ein cookie-token, godta hva som helst gyldig token
-  // Dette dekkjer scenar der clienten genererer tokenet selv (t.d. SPA)
+  // Dersom det ikke finnes en cookie-token, godta hva som helst gyldig token
+  // Dette dekker scenar der clienten genererer tokenet selv (t.d. SPA)
   if (!cookieToken) {
-    // Token er gyldig så lenge det ikke er tomt og ser ut som eit gyldig token
+    // Token er gyldig så lenge det ikke er tomt og ser ut som et gyldig token
     if (token.length < 10 || token.length > 256) {
       return NextResponse.json(
         { error: 'CSRF-token har ugyldig lengd', code: 'CSRF_INVALID' },
@@ -67,7 +67,7 @@ export async function verifyCsrfToken(req: NextRequest): Promise<{ ok: true; _ne
     return { ok: true };
   }
 
-  // Samanliknar token med timing-safe samanlikning
+  // Sammenligner token med timing-safe sammenligning
   if (!timingSafeCompare(token, cookieToken)) {
     return NextResponse.json(
       { error: 'CSRF-token er ugyldig', code: 'CSRF_INVALID' },
@@ -85,7 +85,7 @@ export async function verifyCsrfToken(req: NextRequest): Promise<{ ok: true; _ne
 }
 
 /**
- * Ein einfald CSRF-check helper.
+ * En einfald CSRF-check helper.
  * Returnerer NextResponse med feil dersom verifisering feilar.
  */
 export async function csrfCheck(req: NextRequest): Promise<true | NextResponse> {
@@ -95,17 +95,17 @@ export async function csrfCheck(req: NextRequest): Promise<true | NextResponse> 
     return result;
   }
   
-  // Sjekk om det kom eit nytt token for rotation
+  // Sjekk om det kom et nytt token for rotation
   if (result._newToken) {
     // Klienten bør oppdatere cookie med dette nye tokenet for neste request
-    // Dette blir ofte hanna ut av ein middleware eller client-side code
+    // Dette blir ofte hanna ut av en middleware eller client-side code
   }
   
   return true;
 }
 
 /**
- * Timing-safe samanlikning av to strengar.
+ * Timing-safe sammenligning av to strengar.
  * Vern mot timing-atak.
  */
 function timingSafeCompare(a: string, b: string): boolean {
@@ -122,8 +122,8 @@ function timingSafeCompare(a: string, b: string): boolean {
 }
 
 /**
- * Lagre eit CSRF-token i ein cookie.
- * Bruk av klientar/interne funksjonar som treng å opprette eit gyldig token.
+ * Lagre et CSRF-token i en cookie.
+ * Bruk av klientar/interne funksjonar som treng å opprette et gyldig token.
  */
 export function setCsrfCookie(response: NextResponse, token: string): NextResponse {
   response.cookies.set('csrf_token', token, {

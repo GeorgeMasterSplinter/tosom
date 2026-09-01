@@ -62,11 +62,11 @@ Runner: `npx playwright test` (config: `playwright.config.ts`). **These are NOT 
 
 **e2e/tests/chat.spec.ts** — `describe('Chat Flow')`, 8 tests, all soft/conditional assertions (`if (await x.count() > 0)`):
   - skal vise chat-side etter match-aksept
-  - skal vise tom-chat når ingen meldingar er tilgjengeleg
+  - skal vise tom-chat når ingen meldinger er tilgjengeleg
   - skal kunne skrive melding
   - skal kunne sende melding
-  - skal vise eigne meldingar til høgre
-  - skal vise mottatte meldingar til venstre
+  - skal vise egne meldinger til høyre
+  - skal vise mottatte meldinger til venstre
   - skal vise typing-indikator dersom part skriv
   - skal vise melding-tidstempler
 
@@ -79,12 +79,12 @@ Runner: `npx playwright test` (config: `playwright.config.ts`). **These are NOT 
   - skal kunne akseptere match
 
 **e2e/tests/matching-journey.spec.ts** — 5 describe blocks, 15 tests, mixed page/API request tests:
-  - `describe('Matching Flow')`: skal vise dashboard med ResonanceMeter etter match; skal vise QuickActions-knappar; skal blokkere ny match med låst-brukar (API `POST /api/match`, only asserts status 200-499)
-  - `describe('Journey Flow')`: skal vise Journey-side med progress-tracker og dag-innhald; skal vise PremiumJourneyDayView med refleksjon og oppgåve; skal vise ImageShareLockBanner dersom imageShareAllowedAt ikkje passert
-  - `describe('Premium UI')`: skal ha AmbientGlow-effekt på dashboard og journey; skal ha glassmorphism på alle cards; skal ha gull-gradient-knappar på CTA-element (all effectively no-op — pass regardless of DOM state via `toBeGreaterThanOrEqual(0)`)
-  - `describe('Admin Flow')`: skal autentisere admin og vise dashboard (only checks login form conditionally visible); skal vise brukar-liste med ekte data frå /api/admin/users (accepts 200/401/403); skal blokkere ikkje-admin frå /admin/users (accepts almost any outcome)
+  - `describe('Matching Flow')`: skal vise dashboard med ResonanceMeter etter match; skal vise QuickActions-knapper; skal blokkere ny match med låst-bruker (API `POST /api/match`, only asserts status 200-499)
+  - `describe('Journey Flow')`: skal vise Journey-side med progress-tracker og dag-innhold; skal vise PremiumJourneyDayView med refleksjon og oppgåve; skal vise ImageShareLockBanner dersom imageShareAllowedAt ikke passert
+  - `describe('Premium UI')`: skal ha AmbientGlow-effekt på dashboard og journey; skal ha glassmorphism på alle cards; skal ha gull-gradient-knapper på CTA-element (all effectively no-op — pass regardless of DOM state via `toBeGreaterThanOrEqual(0)`)
+  - `describe('Admin Flow')`: skal autentisere admin og vise dashboard (only checks login form conditionally visible); skal vise bruker-liste med ekte data fra /api/admin/users (accepts 200/401/403); skal blokkere ikke-admin fra /admin/users (accepts almost any outcome)
   - `describe('Vipps Auth Flow')`: skal initiere Vipps-autorisasjon og motta authorizeUrl; skal returnere authorizeUrl med korrekt state
-  - `describe('Guidede Spørsmål API')`: skal returnere 10 kategorier med spørsmål-antall; skal returnere spørsmål i ein kategori
+  - `describe('Guidede Spørsmål API')`: skal returnere 10 kategorier med spørsmål-antall; skal returnere spørsmål i en kategori
 
   Note: This file imports `{ test, expect } from '@playwright/test'` directly (NOT the fixture in `e2e/fixtures/test-users.ts`), and defines its own `BASE_URL` from `process.env.NEXT_PUBLIC_APP_URL`. It runs unauthenticated by default relative to the fixture-based specs (it relies on whatever `storageState` the Playwright *project* injects, not a fixture).
 
@@ -92,8 +92,8 @@ Runner: `npx playwright test` (config: `playwright.config.ts`). **These are NOT 
   - skal vise onboarding med progressbar og steg-tittel
   - skal kunna fylle ut grunnprofil og gå vidare
   - skal visa feilmelding ved tom selfDesc
-  - skal kunna gå vidare frå steg 1 med gyldig selfDesc
-  - skal kunna gå vidare frå steg 2 med gyldig responsibilities
+  - skal kunna gå vidare fra steg 1 med gyldig selfDesc
+  - skal kunna gå vidare fra steg 2 med gyldig responsibilities
   - skal kunna tilbake med BackButton på steg 1
   - skal kunna fullføre heile 13-stegs onboarding-flyten
   - skal autosave inndata til localStorage

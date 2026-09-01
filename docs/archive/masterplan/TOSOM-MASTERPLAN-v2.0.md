@@ -606,7 +606,7 @@ Begge er *kompileringsmessig* korrekte. Begge er *funksjonelt* ødeleggende. Beg
 - Rate limiting in-memory → verdiløs på serverless (hver instans egen teller)
 - `ADMIN_JWT_SECRET` kaster på module-scope; finnes bare i gitignorert `.env.local`
 
-**Den dyreste mangelen er ikke et hull — det er blindheten.** FUNN 2 har trolig vart siden ACT-fasen uten at noen visste. Uten alarmer gjentar det seg.
+**Den dyreste mangelen er ikke et hull — det er blindheten.** FUNN 2 har trolig ble siden ACT-fasen uten at noen visste. Uten alarmer gjentar det seg.
 
 ### Matching- og journey-kvalitet — 40 %
 

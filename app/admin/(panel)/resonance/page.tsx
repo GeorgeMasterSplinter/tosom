@@ -260,7 +260,7 @@ export default function AdminResonancePage() {
 
       {!data && !error && !loading && (
         <div style={{ textAlign: "center", padding: "48px 0", color: "rgba(255,255,255,0.3)" }}>
-          Skriv inn ein bruker-ID for å se resonansdata
+          Skriv inn en bruker-ID for å se resonansdata
         </div>
       )}
 
@@ -270,7 +270,7 @@ export default function AdminResonancePage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "12px", marginBottom: "32px" }}>
             {[
               { label: "Totale sessionar", value: data.totalSessions, color: "#D4AF37" },
-              { label: "Unike dagar", value: data.uniqueDays, color: "#60A5FA" },
+              { label: "Unike dager", value: data.uniqueDays, color: "#60A5FA" },
               { label: "EARLY sessionar", value: `${data.phases.EARLY?.count || 0} (dybde: ${data.phases.EARLY?.avgDepth.toFixed(1) || "0"})`, color: "#34D399" },
               { label: "BUILDING_TRUST", value: `${data.phases.BUILDING_TRUST?.count || 0} (dybde: ${data.phases.BUILDING_TRUST?.avgDepth.toFixed(1) || "0"})`, color: "#A78BFA" },
               { label: "DEEPER", value: `${data.phases.DEEPER?.count || 0} (dybde: ${data.phases.DEEPER?.avgDepth.toFixed(1) || "0"})`, color: "#F472B6" },

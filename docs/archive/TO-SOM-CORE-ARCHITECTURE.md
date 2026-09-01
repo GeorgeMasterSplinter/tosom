@@ -6,7 +6,7 @@
 
 ## 📐 OVERBLICK
 
-ToSom v2 er ein konsolidert, enkelt-domenearkitektur der **kvart domene har EITT aktivt system**.
+ToSom v2 er en konsolidert, enkelt-domenearkitektur der **kvart domene har ETT aktivt system**.
 All duplikat, legacy og broken-kode er fjerna. Systemet bygger på ToSom sin grunnleggjande filosofi:
 
 > Éi match. Éin reise. Éin relasjon. — Ingen swiping, ingen feed, ingen jag.
@@ -40,14 +40,14 @@ All duplikat, legacy og broken-kode er fjerna. Systemet bygger på ToSom sin gru
 |-----|------|--------|
 | 0 | Grunnprofil | Navn, alder, kjønn, søk |
 | 1 | Personlighet | Energie, drivkraft, stress |
-| 2 | Livssituasjon | Arbeid, bustad, ansvar |
+| 2 | Livssituasjon | Arbeid, bosted, ansvar |
 | 3 | Tilknytning | Trygghetsbehov, utløysar |
-| 4 | Kjærleiksspråk | Kva viser/mottar kjærleik |
+| 4 | Kjærleiksspråk | Hva viser/mottar kjærlighet |
 | 5 | Livsstil & verdier | Prioritetar, preferansar |
 | 5b | Relasjonsstil | Korleie søker relasjon |
 | 6 | Framtid & visjon | Mål, drømmar |
-| 7 | Humor & personlighet | Det som gjer ein unik |
-| 8 | Grenser & behov | Kva er ikkje negotierbart |
+| 7 | Humor & personlighet | Det som gjer en unik |
+| 8 | Grenser & behov | Hva er ikke negotierbart |
 | 8b | Moden nysgjerrighet | Intimitet, trygghet |
 | 9 | Oppsummering | Se over det delte |
 | 12 | Start reisen | CTA → profil + match |
@@ -74,7 +74,7 @@ POST /api/profile/setup (onboarding fullført)
   → Redirect → /matching?userId=xxx
       → Viser MatchCard + MatchExplanation
   → Klikk "Aksepter" → POST /api/match/accept
-      → Låser brukar i 30 dagar
+      → Låser bruker i 30 dager
       → Opnar conversation
   → Redirect → /dashboard (eller direkte til chat)
 ```
@@ -99,11 +99,11 @@ POST /api/profile/setup (onboarding fullført)
 | **Dashboard komponentar** | `components/dashboard/DashboardMatchBanner.tsx`, `DashboardMatchStatus.tsx`, `DashboardSkeleton.tsx` |
 | **Data-henting** | `lib/dashboard/data.ts` (Prisma-spørjingar) |
 
-**Inneheld:**
+**Inneholder:**
 - Velkomst med personleg greeting ("God dag/dag/natt, [navn]")
 - Aktiv match-banner (Resonans-score + partner-info)
 - Samtalekort for aktiv chat
-- Innsiktsseksjon med daglege refleksjonar
+- Innsiktsseksjon med daglege refleksjoner
 - Profilstatus (fullført/incomplett)
 
 ---
@@ -119,10 +119,10 @@ POST /api/profile/setup (onboarding fullført)
 | **API-ruter** | `GET /api/journey/today`, `GET /api/journey/progress`, `POST /api/journey/reflection` |
 
 **Faser:**
-| Fase | Dagar | Merk |
+| Fase | Dager | Merk |
 |------|-------|------|
-| Fase 1 | 1-14 | Bygger trygghet utan bilder |
-| Fase 2 | 15-30 | Guided samtalar med resonansmåling |
+| Fase 1 | 1-14 | Bygger trygghet uten bilder |
+| Fase 2 | 15-30 | Guided samtaler med resonansmåling |
 
 **Dagleg innehåll:**
 - Tema/refleksjonsspørsmål
@@ -159,7 +159,7 @@ MATCH akseptert
 | Fase | Merk |
 |------|------|
 | EARLY | Bygger grunnleggjande trygghet |
-| BUILDING_TRUST | Djupare spørsmål |
+| BUILDING_TRUST | Dypere spørsmål |
 | DEEPER | Sårbarhet og intensjon |
 | CHECKIN | Resonans-refleksjon |
 
@@ -178,7 +178,7 @@ MATCH akseptert
 
 **Admin seksjonar:**
 - Oversikt (dashboard stats)
-- Brukarar
+- Brukere
 - Matching
 - Reise & Samtale
 - System
@@ -186,7 +186,7 @@ MATCH akseptert
 
 ---
 
-## 🚫 SLETTEDE SYSTEM (ikkje lenger del av kjernen)
+## 🚫 SLETTEDE SYSTEM (ikke lenger del av kjernen)
 
 ### Onboarding Legacy
 ```
@@ -195,7 +195,7 @@ app/onboarding/1/ through app/onboarding/5/  — Gamle dedicate steg-sider
 
 ### Chat BROKEN/DUPLIKAT
 ```
-app/chat/page.tsx              — BROKEN (manglande API)
+app/chat/page.tsx              — BROKEN (manglende API)
 components/chat/ChatWindow.tsx — LEGACY (erstatta av ChatRoom)
 components/chat/ChatList.tsx   — LEGACY (er i dashboard)
 app/api/chat/                  — Tom mappe (ingen API-ruter eksisterer)
@@ -219,9 +219,9 @@ app/admin/dashboard/page.tsx   — Duplikat med mock data (erstatta av admin/pag
 | Rute | Metode | Formål |
 |------|--------|--------|
 | `/api/profile/setup` | POST | Lagre heile onboarding-profilen |
-| `/api/match` | POST/GET | Hent/spor éi match for brukar |
-| `/api/match/accept` | POST | Aksepter match → lås i 30 dagar |
-| `/api/journey/today` | GET | Hent dagens journey-innhald |
+| `/api/match` | POST/GET | Hent/spor éi match for bruker |
+| `/api/match/accept` | POST | Aksepter match → lås i 30 dager |
+| `/api/journey/today` | GET | Hent dagens journey-innhold |
 | `/api/journey/progress` | GET | Hent heil progresjon for aktiv reise |
 | `/api/journey/reflection` | POST | Lagre dagleg refleksjon |
 | `/api/admin/auth/*` | Various | Admin-innlogging og autorisasjon |
@@ -245,11 +245,11 @@ POST /api/profile/setup
 POST /api/match { userId }
   │
   ▼
-/matching ───────▶ Vis éi match (frå AI-backend)
+/matching ───────▶ Vis éi match (fra AI-backend)
   │                    Match forklaring + resonans
   │
   ▼
-Aksepter → POST /api/match/accept → Lås i 30 dagar
+Aksepter → POST /api/match/accept → Lås i 30 dager
   │
   ▼
 /dashboard ───────▶ Rolig oversikt over relasjon
@@ -264,7 +264,7 @@ Aksepter → POST /api/match/accept → Lås i 30 dagar
   │                    WarmFlow UI basert på mood
   │
   ▼
-/30-dagar ├── Fortset → /chat (vidare)
+/30-dager ├── Fortset → /chat (vidare)
           ├── Avslut → /dashboard → ny match
 ```
 
@@ -337,12 +337,12 @@ tosom/
 
 ---
 
-## 🚫 FORBUDDE MØNSTRE (ikkje tillatne)
+## 🚫 FORBUDDE MØNSTRE (ikke tillatne)
 
 - ❌ Swipe-logikk eller uendelege profiler
 - ❌ Feed / "finn flest mulig" -økonomi
 - ❌ Gamification-poeng eller badges
-- ❌ AI-genererte meldinger (berre guidede spørsmål)
+- ❌ AI-genererte meldinger (bare guidede spørsmål)
 - ❌ Multiple aktive matcher
 - ❌ Direkte bilde-dele i fase 1 (før dag 14)
 - ❌ Mock data i produksjon

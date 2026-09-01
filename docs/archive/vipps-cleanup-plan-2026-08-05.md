@@ -15,7 +15,7 @@ To identiske VIPPS OAuth-stier eksisterer:
 | `/api/auth/vipps/authorize` | `app/api/auth/vipps/authorize/route.ts` | `app/api/auth/vipps/callback/route.ts` | ✅ JA (E2E tests) | KANONISK |
 | `/api/auth/oauth/vipps/authorize` | `app/api/auth/oauth/vipps/authorize/route.ts` | `app/api/auth/oauth/vipps/callback/route.ts` | ❌ NEI | DUBLETT — til sletting |
 
-**Viktig:** Begge authorize-rutene peker sin `redirectUri` til `/api/auth/vipps/callback`, ikke `/api/auth/oauth/vipps/callback`. Dette betyr at `/oauth/vipps/authorize`-rutens callback ALDRIG blir kalt.
+**Viktig:** Begge authorize-rutene peker sin `redirectUri` til `/api/auth/vipps/callback`, ikke `/api/auth/oauth/vipps/callback`. Dette betyr at `/oauth/vipps/authorize`-rutens callback ALDRI blir kalt.
 
 ---
 

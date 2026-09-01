@@ -17,7 +17,7 @@ ToSom Chat Room er no bygd på produktnivå med:
 - ✅ sanntidsoppdatering via useChatRealtime + Pusher
 - ✅ typing-indikator
 - ✅ error boundary
-- ✅ fallback for manglande partner/konversasjon
+- ✅ fallback for manglende partner/konversasjon
 - ✅ premium loading-states
 
 ---
@@ -33,7 +33,7 @@ tosom/
 │
 ├── app/api/chat/
 │   ├── messages/
-│   │   └── route.ts              ✅ GET – hent meldingar
+│   │   └── route.ts              ✅ GET – hent meldinger
 │   ├── send/
 │   │   └── route.ts              ✅ POST – send melding
 │   ├── conversations/
@@ -46,9 +46,9 @@ tosom/
 │       └── route.ts              ✅ POST – typing-indikator (NY)
 │
 ├── components/chat/
-│   ├── ChatRoom.tsx              ✅ NY – hovud-container (error boundary)
+│   ├── ChatRoom.tsx              ✅ NY – hoved-container (error boundary)
 │   ├── ChatHeader.tsx            ✅ NY – partner-info + fase + resonans
-│   ├── ChatMessages.tsx          ✅ NY – meldingar (glassmorphism)
+│   ├── ChatMessages.tsx          ✅ NY – meldinger (glassmorphism)
 │   ├── ChatInput.tsx             ✅ NY – input + typing-events
 │   ├── ChatList.tsx              ← eksisterer
 │   ├── ChatView.tsx              ← eksisterer
@@ -75,7 +75,7 @@ tosom/
 components/chat/ChatRoom.tsx
 
 Ansvar:
-- Set saman heile chat-vinduet
+- Set sammen heile chat-vinduet
 - Error boundary for feilhanning
 - Sanntidsoppdatering via Pusher
 - Typing-state management
@@ -118,12 +118,12 @@ Props:
 components/chat/ChatMessages.tsx
 
 Ansvar:
-- Fade-in animasjon på alle meldingar
-- Glassmorphism-bobler (gull for eigen, glass for motpart)
-- Avsender venstre/høgre
+- Fade-in animasjon på alle meldinger
+- Glassmorphism-bobler (gull for egen, glass for motpart)
+- Avsender venstre/høyre
 - Auto-scroll til bunn
 - Ro lig spacing
-- Gull-detaljar på eigen-bobler
+- Gull-detaljer på egen-bobler
 - Gruppering etter dag med dato-divider
 - Typing-indikator (trey dots)
 - Tom tilstand med resonans-visualisering
@@ -165,7 +165,7 @@ Props:
 
 ## HOOK-ARKITEKTUR
 
-### useChatMessages (meldingar)
+### useChatMessages (meldinger)
 ```typescript
 import { useChatMessages } from '@/hooks/useChatMessages';
 
@@ -178,7 +178,7 @@ Funksjonar:
 - GET /api/chat/messages?conversationId=X
 - Poll kvart 3. sekund
 - setLoading(false) når klar
-- Handter 401 (ikkje logga inn)
+- Handter 401 (ikke logga inn)
 - Handter feil med error-state
 - Refresh callback for Pusher-sanntid
 ```
@@ -211,7 +211,7 @@ const { init, stop } = useChatRealtime({
 });
 
 Funksjonar:
-- Pusher sanntid for nye meldingar
+- Pusher sanntid for nye meldinger
 - Pusher sanntid for typing
 - channel: conversation-{id} + user-{userId}
 - Event: new-message + typing
@@ -223,9 +223,9 @@ Funksjonar:
 
 | Endpoint | Metode | Ansvar | Brukt av |
 |------|--------|--------|-|
-| `/api/chat/conversations` | GET | Hent alle samtalar | app/chat/page.tsx |
+| `/api/chat/conversations` | GET | Hent alle samtaler | app/chat/page.tsx |
 | `/api/chat/conversations/[id]` | GET | Hent partner-info | app/chat/[id]/page.tsx |
-| `/api/chat/messages?conversationId=X` | GET | Hent meldingar | hooks/useChatMessages.ts |
+| `/api/chat/messages?conversationId=X` | GET | Hent meldinger | hooks/useChatMessages.ts |
 | `/api/chat/send` | POST | Send melding | hooks/useSendMessage.ts |
 | `/api/chat/typing` | POST | Typing-indikator | components/chat/ChatInput.tsx |
 | `/api/chat/starter` | POST | AI starter-melding | (valfritt) |
@@ -249,9 +249,9 @@ Funksjonar:
    → Fallback til dummy-data ved feil
    → Render <ChatRoom />
 
-3. ChatRoom set saman alt
+3. ChatRoom set sammen alt
    → ChatHeader (partner, fase, resonans)
-   → ChatMessages (meldingar med glassmorphism)
+   → ChatMessages (meldinger med glassmorphism)
    → ChatInput (input + typing-events)
 
 4. Melding-Flow:
@@ -262,12 +262,12 @@ Funksjonar:
    → POST /api/chat/send { conversationId, content }
    → API svarar med ChatMessage
    → useChatMessages refresh (3s polling)
-   → ChatMessages visar ny melding med fade-in
+   → ChatMessages viser ny melding med fade-in
    → onTypingEnd → POST /api/chat/typing { isTyping: false }
 
 5. Sanntids-oppdatering:
    → useChatRealtime abonnar på conversation-{id}
-   → Ny melding kjem via Pusher
+   → Ny melding kommer via Pusher
    → onNewMessage → refresh()
    → ChatMessages oppdaterer
    → Auto-scroll til bunn
@@ -282,12 +282,12 @@ Funksjonar:
 - Fanger alle React-feil i chat-vinduet
 - Viser fallback-ui med feilmelding
 
-### Fallback for Manglande Partner
+### Fallback for Manglende Partner
 - app/chat/[id]/page.tsx har fallback til dummy-data
 - partner: { name: 'Din match', age: 26, image: null }
 - conversation: { phaseLabel: 'Fase 1', currentDay: 1, daysRemaining: 30 }
 
-### Fallback for Manglande Conversation
+### Fallback for Manglende Conversation
 - Samme fallback som partner
 - Ingen blokkerande feil – chat visast likevel
 
@@ -299,7 +299,7 @@ Funksjonar:
 
 ### 401-handtering
 - useChatMessages: setter loading(false) ved 401
-- useSendMessage: set error "Du er ikkje logga inn"
+- useSendMessage: set error "Du er ikke logga inn"
 - app/chat/page.tsx: redirectar til /login ved 401
 
 ---
@@ -309,12 +309,12 @@ Funksjonar:
 | Regel | Status | Detalj |
 |-------|--------|--------|
 | Mørk base `#0B0E11` | ✅ | Alle sider, headers, modals |
-| Gull-aksent `#D4AF37` | ✅ | Knappar, borders, ikon |
+| Gull-aksent `#D4AF37` | ✅ | Knapper, borders, ikon |
 | Glassmorphism | ✅ | backdrop-filter blur(12-20px) |
 | Runde hjørner | ✅ | 12-18px på alle element |
 | Rolge animasjonar | ✅ | fade-in, slide-up, pulse |
-| Warm tone | ✅ | "Skriv ei melding…" ikkje "Skriv" |
-| Ingen gamification | ✅ | Ingen poeng, badges (utan resonans) |
+| Warm tone | ✅ | "Skriv ei melding…" ikke "Skriv" |
+| Ingen gamification | ✅ | Ingen poeng, badges (uten resonans) |
 | Ingen swipe/feed | ✅ | Kun éi samtale om gongen |
 
 ---
@@ -327,12 +327,12 @@ Funksjonar:
 - [ ] `GET /api/chat/messages?conversationId=X` returnerer ChatMessage[]
 - [ ] `POST /api/chat/send` sender og returnerer ChatMessage
 - [ ] `POST /api/chat/typing` mottar og returnerer success
-- [ ] ChatRoom renderar utan React-feil
+- [ ] ChatRoom renderar uten React-feil
 - [ ] ChatMessages vises med fade-in animasjon
 - [ ] ChatInput sender melding
 - [ ] ChatHeader viser partner + fase + resonans
 - [ ] Navigasjon /chat → /chat/[id] fungerer
-- [ ] Fallback-data visast ved manglande API
+- [ ] Fallback-data visast ved manglende API
 - [ ] Error boundary fanger feil
 - [ ] Loading-state ser premium ut
 - [ ] Auto-scroll fungerer
@@ -353,6 +353,6 @@ Funksjonar:
 7. Oppdater `/api/chat/conversations/[id]/route.ts` (trengs for partner-info)
 
 ### Lavprioritet
-8. E2E-testar for heile chat-flowet
-9. Bilde-fase etter 14 dagar
+8. E2E-tester for heile chat-flowet
+9. Bilde-fase etter 14 dager
 10. Resonans-berekning

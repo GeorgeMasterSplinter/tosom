@@ -268,10 +268,10 @@ Anslagene var gode. Justeringene er små og skyldes funn som krever kodelesing, 
 
 | Tekst | Sted |
 |---|---|
-| «Ingen aktiv reise funnen» | `app/api/journey/exit/route.ts` |
-| «Reisen er allereie avsluttet» | `app/api/journey/exit/route.ts` |
-| «Ver vennleg å prøv igjen» | `app/onboarding/OnboardingFlow.tsx:424` |
-| «Brukar» | `app/onboarding/OnboardingFlow.tsx:399` |
+| «Ingen aktiv reise funnet» | `app/api/journey/exit/route.ts` |
+| «Reisen er allerede avsluttet» | `app/api/journey/exit/route.ts` |
+| «Vær vennlig å prøv igjen» | `app/onboarding/OnboardingFlow.tsx:424` |
+| «Bruker» | `app/onboarding/OnboardingFlow.tsx:399` |
 | «Start reisen din no.» | `components/app/AppShell.tsx:89` |
 
 CI-jobben `lang-guard` finnes. Den fanger ikke disse.
@@ -571,7 +571,7 @@ Steg 1–4 er additive og kan kjøres mot produksjon uten nedetid. Steg 5–8 er
 | `WaitingForMatch.tsx:128-129` | «...beregnet i morgen kl. 05:00» | «Du får din match i løpet av 24 timer» |
 | Tynn kø *(ny)* | — | «Vi venter til vi har nok mennesker til å finne en god match til deg» |
 | Matchet, ikke startet *(ny)* | — | «Reisen deres begynner når dere begge har vært innom» |
-| `journey/exit` — nynorsk | «Reisen er allereie avsluttet» | «Reisen er allerede avsluttet» |
+| `journey/exit` — nynorsk | «Reisen er allerede avsluttet» | «Reisen er allerede avsluttet» |
 | Avslutt-bekreftelse *(ny)* | — | «Dette sletter samtalen for dere begge. Det kan ikke angres» |
 
 Klokkeslettet 05:00 skal **aldri** vises til bruker. Det er en driftsdetalj, ikke et løfte.

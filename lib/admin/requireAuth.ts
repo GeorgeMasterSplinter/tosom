@@ -104,18 +104,18 @@ export async function requireAdminAuth(req: Request): Promise<
 }
 
 // ─── Re-exports for backward compatibility ───
-// Filet som importerer `requireAdmin` frå lib/admin/requireAuth:
+// Filet som importerer `requireAdmin` fra lib/admin/requireAuth:
 import { requireAdmin as requireAdminFromRbac } from '@/lib/auth/rbac'
 
 /**
- * requireAdmin — Krever at brukaren har ADMIN rolle (re-export)
+ * requireAdmin — Krever at brukeren har ADMIN rolle (re-export)
  */
 export function requireAdmin(user: AuthenticatedUser | null | undefined): void {
   requireAdminFromRbac(user)
 }
 
 /**
- * Quick-check: er brukaren admin?
+ * Quick-check: er brukeren admin?
  */
 export function isUserAdmin(req: Request): boolean {
   const sessionData = getSessionData(req)

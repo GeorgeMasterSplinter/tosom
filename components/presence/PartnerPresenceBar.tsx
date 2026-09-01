@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * PartnerPresenceBar — Varm, roleg presence-indikator
+ * PartnerPresenceBar — Varm, rolig presence-indikator
  * 
  * Viser:
  *   - Online/offline status

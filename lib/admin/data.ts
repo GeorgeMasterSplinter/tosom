@@ -7,7 +7,7 @@
 
 import { prisma } from '@/lib/prisma';
 
-/* ====== Typar ====== */
+/* ====== Typer ====== */
 
 export interface AdminUser {
   id: string; email: string; role: string; verified: boolean; banned: boolean;

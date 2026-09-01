@@ -1,6 +1,6 @@
 GEORGE.md — ToSom i åpen beta
 Deploy‑guide, drift, og daglig oversikt  
-Opprettet 24.08.2026 — Sist oppdatert 01.09.2026 (lanseringsklarhet: CSRF, DPA/DPIA, uptime-monitor, e-post-vars, drift-script)
+Opprettet 24.08.2026 — Sist oppdatert 02.09.2026 (bokmål-kampanje: full konvertering, utvidet språkvakt, §12)
 
 0. Status i dag (01.09.2026)
 🟢 Produksjon kjører: tosom.no → www.tosom.no (Vercel, prod, HTTP 200). Landing, /login, /admin/login fungerer.
@@ -217,3 +217,13 @@ Ikke juster terskler
 Ikke åpne for hundrevis av brukere før fase 2
 
 Ikke aktiver DEV_LOGIN_ENABLED i prod
+
+12. Språk: bokmål — alltid
+Alt i repoet er norsk bokmål: brukerflate, dokumentasjon, kodekommentarer,
+testfiler, e2e-tester og commit-meldinger. Ingen nynorsk, ingen svorsk.
+
+Språkvakt: `npm run verify:lang` (scripts/verify-language.mjs) — MÅ være grønn
+før push. CI kjører samme skript (jobben `lang-guard`); rød vakt = rød CI =
+blokkert deploy.
+
+Ordliste og regler: ai/system_prompt.md (REGEL 0 + §2 Språkmanual) og README §Språkprofil.

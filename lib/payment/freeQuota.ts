@@ -81,7 +81,7 @@ export async function claimFreeQuota(userId: string) {
   if (!row) {
     // Skulle ikke skje: migrasjonen seeder raden. Feil skal høres — ikke
     // tyst gjennomslag ved ukjend teller.
-    throw new Error(`Quota-rad manglar (${FREE_QUOTA_KEY}) — køyr migreringa`);
+    throw new Error(`Quota-rad mangler (${FREE_QUOTA_KEY}) — køyr migreringa`);
   }
 
   const result = await prisma.quota.updateMany({

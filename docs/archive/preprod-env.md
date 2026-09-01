@@ -1,7 +1,7 @@
 # Pre‑prod Environment Setup
 
 ## Formål
-Pre‑prod er eit eige miljø som speilar produksjon, men utan ekte brukarar eller ekte data. Det blir brukt til kvalitetssikring, testing og verifikasjon før deploy til produksjon.
+Pre‑prod er et eige miljø som speilar produksjon, men uten ekte brukere eller ekte data. Det blir brukt til kvalitetssikring, testing og verifikasjon før deploy til produksjon.
 
 ## Miljøvariablar
 
@@ -9,7 +9,7 @@ Kryss alle nødvendige miljøvariablar:
 
 | Variabel | Verdi | Merknad |
 |------ ----|-----|-----|
-| DATABASE_URL | postgresql://... | Eiga pre‑prod DB — aldri same som prod |
+| DATABASE_URL | postgresql://... | Egen pre‑prod DB — aldri same som prod |
 | NEXTAUTH_SECRET | tilfeldig streng | Unik for pre‑prod |
 | NEXTAUTH_URL | https://preprod.tosom.no | Pre‑prod frontend URL |
 | AI_API_KEY | dummy eller begrenset | Aldri prod‑AI‑nøklar |
@@ -20,7 +20,7 @@ Kryss alle nødvendige miljøvariablar:
 | FRONTEND_BASE_URL | https://preprod.tosom.no | Pre‑prod frontend URL |
 | PORT | 3000 | Standard port |
 
-**Viktig:** Del aldri DB med produksjon. All data i pre‑prod er testdata og kan sletast kva som helst.
+**Viktig:** Del aldri DB med produksjon. All data i pre‑prod er testdata og kan sletast hva som helst.
 
 ## Deploy‑prosess
 
@@ -63,10 +63,10 @@ Før readiness‑gate skal desse testane køyrast mot pre‑prod:
 
 ## Sikkerheit
 
-- Ingen ekte brukarar — pre‑prod er berre for testing
+- Ingen ekte brukere — pre‑prod er bare for testing
 - Ingen ekte AI‑nøklar — bruk dummy-nøklar eller nøklar med låg kvote
-- Ingen sensitiv data — all data kan sletast kva som helst
-- Logging skal vere aktivert — sjå til at SystemLog fyller med WARN og ERROR
+- Ingen sensitiv data — all data kan sletast hva som helst
+- Logging skal være aktivert — se til at SystemLog fyller med WARN og ERROR
 
 ## Status
 

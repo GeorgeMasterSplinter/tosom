@@ -1,7 +1,7 @@
 /**
  * ToSom — Felles API-handler
  *
- * Gir ein standardisert måte å behandle API-ruter med:
+ * Gir en standardisert måte å behandle API-ruter med:
  * - auth (valgfritt)
  * - RBAC (valgfritt)
  * - Zod-validering (valgfritt)
@@ -95,7 +95,7 @@ async function getSession(): Promise<{
 }
 
 /**
- * Opprett ein standardisert API-handler.
+ * Opprett en standardisert API-handler.
  *
  * Tar req som første argument for å unngå globalThis-mutering.
  */

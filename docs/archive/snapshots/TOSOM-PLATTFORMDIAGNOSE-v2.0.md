@@ -156,7 +156,7 @@ Alle historiske par sperres **for alltid**. Ingen tidsvindu. I en liten beta-koh
 
 ---
 
-## 3. Teknisk gjeld
+## 3. Teknisk gjelder
 
 ### 🟡 G-1 — Fire døde motorer
 Ingen kaller disse. De gir falsk trygghet ved lesing:

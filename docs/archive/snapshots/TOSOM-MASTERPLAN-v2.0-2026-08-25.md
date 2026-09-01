@@ -204,7 +204,7 @@ korrekt. Onboarding bruker prioriteringen server-draft > prefill >
 localStorage, og rydder draften først **etter** vellykket innsending (WP2).
 
 **Rettet 25.08:** brukervendte feilmeldinger i `/api/onboarding/complete` var
-skrevet i nynorsk («Umagalet», «Profil finst ikke», «må vera fylte»), og
+skrevet i nynorsk («Umagalet», «Profil finnes ikke», «må vera fylte»), og
 `requireAdmin` svarte «Aðgang nei — admin bare». Begge er nå bokmål (A6, A7).
 
 ### 🔴 Aldersverifisering — juridisk avvik

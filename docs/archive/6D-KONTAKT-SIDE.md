@@ -18,7 +18,7 @@ Oppretta undersida "Kontakt" med kontaktformular og vanlege spørsmål.
 ## Design
 - Mørk blå gradient-bakgrunn
 - Glassmorphism-kort med gull-aksentar
-- Kontakt-skjema med inline styles frå tokens
+- Kontakt-skjema med inline styles fra tokens
 - FAQ-seksjon med GlassCard-kort
 - Typography: heading-lg, heading-md, heading-sm, body-lg, body-sm
 

@@ -6,7 +6,7 @@
 
 ## PROBLEM
 
-“Fortsett til neste steg”-knappen på Steg 2 (Personlighet) navigerte ikkje vidare.
+“Fortsett til neste steg”-knappen på Steg 2 (Personlighet) navigerte ikke vidare.
 
 ### Rotårsak
 
@@ -18,9 +18,9 @@ I `Step2Personlighet.tsx` hadde PremiumButton knappen:
 </PremiumButton>
 ```
 
-Dette berre lagrar data, men kallar **ikkje** `onNext` som går til neste steg.
+Dette bare lagrar data, men kallar **ikke** `onNext` som går til neste steg.
 
-I tillegg mottok Steg 2 **ingen `onNext` prop** frå OnboardingFlow.
+I tillegg mottok Steg 2 **ingen `onNext` prop** fra OnboardingFlow.
 
 ---
 
@@ -40,7 +40,7 @@ interface Props {
 
 **Oppdatert PremiumButton onClick:**
 ```tsx
-<PremiumButton onClick={onNext}>  <!-- Ikkje lenger onChange('next', true) -->
+<PremiumButton onClick={onNext}>  <!-- Ikke lenger onChange('next', true) -->
   Fortsett til neste steg
 </PremiumButton>
 ```

@@ -11,7 +11,7 @@ const journeys = new Map<string, JourneyData>();
 const DEFAULT_STEPS: JourneyStep[] = [
   { id: "step1", title: "Start reisen", description: "Del noe enkelt om dagen din." },
   { id: "step2", title: "Litt dypere", description: "Hva er noe du ser frem til denne uken?" },
-  { id: "step3", title: "Felles refleksjon", description: "Hva gjer at du trivst i samtaler med andre?" },
+  { id: "step3", title: "Felles refleksjon", description: "Hva gjer at du trives i samtaler med andre?" },
 ];
 
 export function initJourney(conversationId: string): JourneyData {

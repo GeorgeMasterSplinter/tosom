@@ -5,16 +5,16 @@
 
 ## Oversikt
 
-ToSom har tre nivå av tilgang. Desse nivåa styrer kva sider ein bruker kan nå.
+ToSom har tre nivå av tilgang. Desse nivåa styrer hva sider en bruker kan nå.
 
 ---
 
 ## Nivå 0: Uinnlogget (Public)
 
-Kven som helst kan besøke:
+Hvem som helst kan besøke:
 
 - `/` — Landing page
-- `/kvifor` — Hvorfor velje ToSom
+- `/hvorfor` — Hvorfor velge ToSom
 - `/slik` — Slik fungerer det
 - `/reisen` — Guidet 30-dagers reise
 - `/priser` — Priser (beta)
@@ -27,9 +27,9 @@ Desse sidene krev ingen innlogging.
 
 ## Nivå 1: Innlogget
 
-Ein bruker som har logga inn via magic link kan nå:
+En bruker som har logga inn via magic link kan nå:
 
-- `/dashboard` — Brukar-dashboard
+- `/dashboard` — Bruker-dashboard
 - `/onboarding/*` — Profil-onboarding
 - `/profile/*` — Profil-redigering
 - `/questions` — Spørreskjema
@@ -40,9 +40,9 @@ Ein bruker som har logga inn via magic link kan nå:
 
 ---
 
-## Nivå 2: Betalt / Full profil (TODO: ikkje implementert ennå)
+## Nivå 2: Betalt / Full profil (TODO: ikke implementert ennå)
 
-Ein bruker med betalt abonnement kan også nå:
+En bruker med betalt abonnement kan også nå:
 
 - `/matching` — Resonans-matching
 - `/journey/*` — Guidet 30-dagers reise
@@ -89,10 +89,10 @@ Ein bruker med betalt abonnement kan også nå:
 ## Test-scenario
 
 ### 1. Inkognito-test
-Gå til `/dashboard` utan å vere innlogga → bør redirect til `/login`
+Gå til `/dashboard` uten å være innlogga → bør redirect til `/login`
 
 ### 2. Innlogget-test
-Logg inn → kan nå `/dashboard` men ikkje `/matching`
+Logg inn → kan nå `/dashboard` men ikke `/matching`
 
 ### 3. Betalt-test (framtidig)
 Når betaling er implementert → kan nå alle sider

@@ -171,7 +171,7 @@ grep -n "Bildefdeling" app/vilkår/page.tsx
 grep -n "Rapporteer" components/chat/ChatHeader.tsx
 ```
 
-3. Skriv alle funne linjenumre til `verifiedAnchors` i state-filen.
+3. Skriv alle funnet linjenumre til `verifiedAnchors` i state-filen.
 
 4. **Finner du ikke en tekst, stopp og rapporter.** Det kan bety at v10 endret tekst i strid med sin egen tekstvakt.
 

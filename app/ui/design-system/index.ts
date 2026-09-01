@@ -1,7 +1,7 @@
 /**
  * Tosom Design System — Index (barrel export)
  * 
- * Import alt design system frå éin plass
+ * Import alt design system fra éin plass
  */
 
 // Tokens

@@ -2,15 +2,15 @@
 
 ## Hva er ToSom
 
-ToSom er ein roleg, privat og kunnskapsbasert relasjonsplattform for vaksne som ønskjer ekte forbindelse.
+ToSom er en rolig, privat og kunnskapsbasert relasjonsplattform for vaksne som ønskjer ekte forbindelse.
 Ingen swipe. Opne profiler. Ingen jag. Ingen overflatefokus.
-Berre to menneske som møtest på ein trygg, moden måte.
+Bare to menneske som møtest på en trygg, moden måte.
 
 Plattformen bygger på tre grunnpilar:
 
 1. Privat profil
 2. Kunnskapsbasert matching
-3. Ein guidet 30-dagers reise mellom to personar
+3. En guidet 30-dagers reise mellom to personar
 
 Dette er ToSom sitt DNA.
 
@@ -18,14 +18,14 @@ Dette er ToSom sitt DNA.
 
 ## 1. Privat profil
 
-Brukaren lagar ei djup, privat profil som aldri er offentlig.
-Berre ToSom sin match-motor får tilgang.
+Brukeren lagar ei djup, privat profil som aldri er offentlig.
+Bare ToSom sin match-motor får tilgang.
 
-Profilen inneheld:
+Profilen inneholder:
 
 - Livssituasjon
 - Verdier
-- Personlegdom
+- Personlighet
 - Relasjonsstil
 - Kommunikasjonspreferansar
 - Framtidsønsker
@@ -34,7 +34,7 @@ Profilen inneheld:
 - Livsrytme
 - Modenheit og trygghet
 
-Ingen andre brukarar kan sjå profilen.
+Ingen andre brukere kan se profilen.
 
 ---
 
@@ -49,7 +49,7 @@ ToSom matcher IKKE basert på:
 ToSom matcher basert på:
 
 - Kompatibilitet
-- Verdiar
+- Verdier
 - Livssituasjon
 - Emosjonelle mønster
 - Relasjonsstil
@@ -59,19 +59,19 @@ ToSom matcher basert på:
 
 ### Match-reglar
 
-- **Kun éin match per 24 timar**
-  - Match-motoren køyrer éin gong i døgnet
-  - Brukaren får kun éin match
-  - Dette er den beste kompatibiliteten for brukaren
-  - Ingen valg mellom fleire
+- **Kun én match per 24 timar**
+  - Match-motoren køyrer én gong i døgnet
+  - Brukeren får kun én match
+  - Dette er den beste kompatibiliteten for brukeren
+  - Ingen valg mellom flere
   - Ingen stress
   - Ingen samganglikning
 
 ### Match-låsing
 
-Når du får ein match og begge aksepterer:
+Når du får en match og begge aksepterer:
 
-- Dere låsast saman i 30 dagar
+- Dere låsast sammen i 30 dager
 - Ingen nye matcher i perioden
 - Dette skaper fokus og ro
 
@@ -79,22 +79,22 @@ Når du får ein match og begge aksepterer:
 
 ## 3. 30-dagers reise
 
-Når to personar matcher, startar ein guidet reise:
+Når to personar matcher, startar en guidet reise:
 
-### Fase 1 — 14 dagar utan bilder
+### Fase 1 — 14 dager uten bilder
 
-- Anbefalt, ikkje obligatorisk
+- Anbefalt, ikke obligatorisk
 - Bygger trygghet
 - Bygger emosjonell forbindelse
 - Fjernar overflatefokus
 
-### Fase 2 — 30 dagar med guiding
+### Fase 2 — 30 dager med guiding
 
-Kvar dag får paret:
+Hver dag får paret:
 
 - Refleksjonsspørsmål
 - Samtaletema
-- Små oppgåver
+- Små oppgaver
 - Innsikt
 - Guiding
 - Resonansmåling
@@ -105,11 +105,11 @@ Reisen er strukturert i tema:
 1. Introduksjon
 2. Trygghet
 3. Opne deg
-4. Dypare samtalar
+4. Dypere samtaler
 5. Sårbarhet
 6. Felles reise
 
-Etter 30 dagar:
+Etter 30 dager:
 
 - Paret kan fortsetje
 - Paret kan avslutte
@@ -119,22 +119,22 @@ Etter 30 dagar:
 
 ## Hvordan ToSom presenterast til verda (Landing Page-struktur)
 
-### A) Kva er ToSom
+### A) Hva er ToSom
 
-Ein roleg, privat plattform for ekte relasjonar.
+En rolig, privat plattform for ekte relasjonar.
 
-### B) Korleis fungerer det
+### B) Hvordan fungerer det
 
-1. Du lagar ein privat profil
-2. ToSom matcher deg basert på kunnskap, ikkje bilder
-3. Du får éin match kvar 24. time
+1. Du lagar en privat profil
+2. ToSom matcher deg basert på kunnskap, ikke bilder
+3. Du får én match hver 24. time
 4. Dere aksepterer
-5. Dere går inn i eit privat rom
+5. Dere går inn i et privat rom
 6. Dere startar ei guidet 30-dagers reise
-7. Etter 14 dagar kan dere dele bilder (valfritt)
-8. Etter 30 dagar vel du veien framover
+7. Etter 14 dager kan dere dele bilder (valfritt)
+8. Etter 30 dager vel du veien framover
 
-### C) Kvifor ToSom
+### C) Hvorfor ToSom
 
 - Ingen swipe
 - Ingen overflate
@@ -143,11 +143,11 @@ Ein roleg, privat plattform for ekte relasjonar.
 - Ingen konkurranse
 - Ingen støy
 
-Berre to menneske som møtest i ro.
+Bare to menneske som møtest i ro.
 
 ---
 
-## Hvordan brukaren startar
+## Hvordan brukeren startar
 
 ### 1. Opprett konto
 
@@ -162,10 +162,10 @@ Stegvis prosess:
 1. Identitet
 2. Livssituasjon
 3. Livsstil
-4. Personlegdom
+4. Personlighet
 5. Relasjonsstil
 6. Kommunikasjon
-7. Intimitet & nærheit (moden)
+7. Intimitet & nærhet (moden)
 8. Framtidsønsker
 9. Oppsummering
 
@@ -180,21 +180,21 @@ Stegvis prosess:
 
 - Éin match per 24 timar
 - Den beste kompatibiliteten
-- Aksepter → lås i 30 dagar
+- Aksepter → lås i 30 dager
 
 ### 5. Privat rom (chat)
 
 - Guiding
 - Spørsmål
-- Refleksjonar
-- Oppgåver
+- Refleksjoner
+- Oppgaver
 - Progresjon
 
 ### 6. Reise
 
 - Dagelege tema
 - Dagelege spørsmål
-- Dagelege refleksjonar
+- Dagelege refleksjoner
 - Resonansmåling
 - Progresjon
 
@@ -206,10 +206,10 @@ Stegvis prosess:
 - Varm
 - Moden
 - Trygg
-- Ikkje pushy
-- Ikkje masete
-- Ikkje overflatisk
-- Ikkje "dating-app-språk"
+- Ikke pushy
+- Ikke masete
+- Ikke overflatisk
+- Ikke "dating-app-språk"
 - Ingen gamification
 - Ingen jag
 - Ingen press
@@ -218,11 +218,11 @@ Stegvis prosess:
 
 ## Oppsummering
 
-ToSom er ein roleg, privat, kunnskapsbasert relasjonsplattform der to menneske møtest gjennom:
+ToSom er en rolig, privat, kunnskapsbasert relasjonsplattform der to menneske møtest gjennom:
 
 - Privat profil
 - Éin match per 24 timar
-- 14 dagar utan bilder
+- 14 dager uten bilder
 - Ei guidet 30-dagers reise
 - Fokus på trygghet, dypde og modenhet
 

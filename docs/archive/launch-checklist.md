@@ -1,14 +1,14 @@
 # ToSom Launch Sjekkliste
 
 ## Formål
-Den endelege sjekklista som må vere ferdig utført før ToSom kan lanserast til produksjon.
+Den endelege sjekklista som må være ferdig utført før ToSom kan lanserast til produksjon.
 
 ---
 
 ## Pre-Launch Krav
 
 ### Readiness og Godkjenning
-- [ ] READINESS_FOR_PROD = true (sjå /docs/readiness-gate.md)
+- [ ] READINESS_FOR_PROD = true (se /docs/readiness-gate.md)
 - [ ] Alle komponentar i readiness-gate er OK:
   - Pre-prod: OK/FAIL
   - Smoke tests: OK/FAIL
@@ -19,7 +19,7 @@ Den endelege sjekklista som må vere ferdig utført før ToSom kan lanserast til
   - Security: OK/FAIL
 
 ### Miljø og Konfigurasjon
-- [ ] Prod-miljo er oppsett (sjå /docs/prod-env.md)
+- [ ] Prod-miljo er oppsett (se /docs/prod-env.md)
 - [ ] Alle miljøvariablar er sette i secrets-manager
 - [ ] DATABASE_URL peiker på produksjons-DB
 - [ ] NEXTAUTH_SECRET er unik og trygg
@@ -32,14 +32,14 @@ Den endelege sjekklista som må vere ferdig utført før ToSom kan lanserast til
 - [ ] Backup-korrekt konfigurert (/deploy/backup.md)
 - [ ] Dagleg backup kjører automatisk
 - [ ] Restore testet manuelt
-- [ ] retention-policy er sett til 30 dagar
+- [ ] retention-policy er sett til 30 dager
 - [ ] backup/restore skript er testet
 
 ### Deploy Test
 - [ ] Deploy testet i staging/pre-prod
 - [ ] Docker-image bygg fungerer
-- [ ] Container startar utan feil
-- [ ] Migreringar køyrer utan feil
+- [ ] Container startar uten feil
+- [ ] Migreringar køyrer uten feil
 - [ ] Healthcheck returnerer 200
 
 ### Testing

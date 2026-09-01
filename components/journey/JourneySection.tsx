@@ -54,7 +54,7 @@ function getDayGuide(day: number): { theme: string; question: string; note?: str
     11: { theme: 'Konflikter og forskjeller', question: 'Hvordan håndterer du det når dere er uenige? Hva trenger du av partneren da?' },
     12: { theme: 'Å vise følelser', question: 'Hvordan viser du noe du brenner for — eller holder du det inne til først noen stoler på deg?' },
     13: { theme: 'Drømmer og visjoner', question: 'Hvis alt kunne blitt som du ville — hva hadde da vært annerledes om 5 år?' },
-    14: { theme: 'Fysisk tiltrukning', question: 'Hva tenker du om fysisk nærhet i et nytt forhold?', note: '💛 Dette er eit naturlig sted å vise bilder dersom dere ønsker det. Helt greit å vente — eller ikke vise noe i det hele tatt.' },
+    14: { theme: 'Fysisk tiltrukning', question: 'Hva tenker du om fysisk nærhet i et nytt forhold?', note: '💛 Dette er et naturlig sted å vise bilder dersom dere ønsker det. Helt greit å vente — eller ikke vise noe i det hele tatt.' },
 
     // Dybde-fasen (dag 15-23)
     15: { theme: 'Å stole', question: 'Hva trenger du for virkelig å stole på noen? Kan tillit bygges raskt, eller må den vokse?' },

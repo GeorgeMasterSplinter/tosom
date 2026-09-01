@@ -10,12 +10,12 @@
 // (>=80/>=60/>=40) i unifiedScorer.ts er fjerna.
 //
 // FORSKNINGSMOTOR F-9: DESSE TERSKLERNE MÅ ETTERPRØVES ETTER BETA.
-// De er kalibrerte for ordoverlapp-fordelingen. Med dei 6 skåra,
+// De er kalibrerte for ordoverlapp-fordelingen. Med de 6 skåra,
 // forskningsbaserte dimensjonane (F-7/F-8) vil scorefordelinga skifte,
 // og tersklene kan bli for straume eller for strenge. Fordelinga logges
 // no via recordMetric i matcherunden (match.round.score_median / .level)
 // slik at vi kan kalibrere tersklene på ny grunnlag i data.
-// Invariant I-12 held: brukaren ser alltid ORD, aldri tall.
+// Invariant I-12 holder: brukeren ser alltid ORD, aldri tall.
 
 import { ResonanceLevel } from "@prisma/client";
 

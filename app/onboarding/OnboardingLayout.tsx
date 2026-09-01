@@ -155,7 +155,7 @@ export const OnboardingLayout: FC<OnboardingLayoutProps> = ({
             boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
           }}>
             <p className="text-sm font-medium mb-1" style={{ color: '#FF4D4D' }}>
-              ✕ Det blei ein feil
+              ✕ Det blei en feil
             </p>
             <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
               {error}

@@ -11,7 +11,7 @@
 Admin-UI er bygget med:
 - **Eksisterande admin-dashboard** (`app/admin/dashboard/page.tsx`) med mock-data
 - **AdminCard-komponent** (`components/admin/AdminCard.tsx`) med glassmorphism og warmFlow-glow
-- **3 seksjonar**: System-status, Brukar-innsikt, Moderering
+- **3 seksjonar**: System-status, Bruker-innsikt, Moderering
 
 ---
 
@@ -23,20 +23,20 @@ Admin-UI er bygget med:
 
 ---
 
-## ADMIN-DASHBOARD (allereie eksisterande)
+## ADMIN-DASHBOARD (allerede eksisterande)
 
 ### app/admin/dashboard/page.tsx
 
-| Seksjon | Innhald |
+| Seksjon | Innhold |
 |--|--|
 | **Header** | "ToSom Admin" + system-status-indikator |
-| **4 MetricCards** | Total brukarar, Aktive matcher, Aktive reiser, Meldingar (24h) |
+| **4 MetricCards** | Total brukere, Aktive matcher, Aktive reiser, Meldinger (24h) |
 | **Reise-progress** | Gjennomsnitt 64% med progresjonsbar |
 | **System helse** | API feil-rate, DB latency, Cron-jobbar, AI-quota, Vercel deploy |
-| **Siste aktivitet** | Nye brukarar, Nye matcher, Fullførte reiser, Rapporter |
+| **Siste aktivitet** | Nye brukere, Nye matcher, Fullførte reiser, Rapporter |
 | **Quick links** | Alle admin-ruter |
 
-### Admin-ruter (allereie eksisterande)
+### Admin-ruter (allerede eksisterande)
 
 | Rute | Formål |
 |--|--|
@@ -76,7 +76,7 @@ Admin-UI er bygget med:
 |--|--|
 | **Hover-glow** | Box-shadow endrar seg ved hover |
 | **Status-indikator** | Grøn/gul/rød indikator |
-| **WarmFlow-glow** | Reagerer på status eller eigen farge |
+| **WarmFlow-glow** | Reagerer på status eller egen farge |
 | **Hover-animasjon** | translateY + scale |
 | **Klikk-bar** | cursor-pointer ved onClick |
 
@@ -93,25 +93,25 @@ Admin-UI er bygget med:
 
 ## INTEGRASJON MED ADMIN-MOTOR
 
-### adminSystem.ts (allereie eksisterande)
+### adminSystem.ts (allerede eksisterande)
 
 | Funksjon | Beskrivelse |
 |--|--|
 | `getAdminDashboard()` | Helt dashboard-data |
 | `getAdminStats()` | Statistikk |
 | `getSystemHealth()` | System helse |
-| `getAdminUsers()` | Brukar-oversikt |
+| `getAdminUsers()` | Bruker-oversikt |
 | `getAdminJourneys()` | Journey-oversikt |
 | `moderateUser()` | Moderering |
 
-### analyticsEngine.ts (allereie eksisterande)
+### analyticsEngine.ts (allerede eksisterande)
 
 | Funksjon | Beskrivelse |
 |--|--|
 | `calculateJourneyAnalytics()` | Reise-analytics |
 | `calculateResonanceAnalytics()` | Resonans-analyse |
 | `calculateMatchQualityAnalytics()` | Match-kvalitet |
-| `calculateUserInsights()` | Brukar-innsikt |
+| `calculateUserInsights()` | Bruker-innsikt |
 | `generateAnalyticsReport()` | Heil rapport |
 
 ---
@@ -141,7 +141,7 @@ async function AdminPage() {
         <AdminCard title="Cron Jobs" value={`${dashboard.stats.activeJourneys}/8`} icon="⚙️" />
       </div>
 
-      {/* Brukar-innsikt */}
+      {/* Bruker-innsikt */}
       <div className="grid grid-cols-4 gap-4">
         <AdminCard title="Active Users" value={dashboard.stats.activeUsers} icon="👥" />
         <AdminCard title="Matches Today" value={dashboard.stats.dailyMatches} icon="💫" />
@@ -206,7 +206,7 @@ function AdminPage() {
     <div className="relative">
       <AtmosphereLayer mood="calm" phase="EARLY" />
       <div className="relative z-10">
-        {/* Admin-innhald */}
+        {/* Admin-innhold */}
       </div>
     </div>
   );
@@ -235,8 +235,8 @@ function AdminPage() {
 
 ## HUSK
 
-- Admin-UI er **ikkje for offentlege brukarar**
+- Admin-UI er **ikke for offentlege brukere**
 - Alle kort bruker **glassmorphism**
-- Glow endrar seg **berre ved hover**
+- Glow endrar seg **bare ved hover**
 - Status-indikator er **alltid synleg**
 - Ingen animasjonar er **påtrengjande**

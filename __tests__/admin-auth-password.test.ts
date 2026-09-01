@@ -58,7 +58,7 @@ describe('B-5: lib/admin-hash — scrypt-hash, timing-safe, feiler lukka', () =>
   });
 
   it('galt hash-format → false (feiler lukka)', () => {
-    expect(verifyAdminPassword('noe', 'ikkje-validt')).toBe(false);
+    expect(verifyAdminPassword('noe', 'ikke-validt')).toBe(false);
     expect(verifyAdminPassword('noe', ':')).toBe(false);
     expect(verifyAdminPassword('noe', ':deadbeef')).toBe(false);
     expect(verifyAdminPassword('noe', 'aa:for-kort-hash')).toBe(false);

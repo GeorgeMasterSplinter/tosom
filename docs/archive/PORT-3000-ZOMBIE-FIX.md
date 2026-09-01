@@ -7,7 +7,7 @@
 
 ## Problem
 
-Port 3000 var blokkert av ein zombie-prosess som hindra Next.js dev-server i å starte.
+Port 3000 var blokkert av en zombie-prosess som hindra Next.js dev-server i å starte.
 
 ```
 LISTEN 0      511                              *:3000             *:*    users:(("next-server (v1",pid=764693,fd=24))
@@ -15,7 +15,7 @@ LISTEN 0      511                              *:3000             *:*    users:(
 
 ## Rotårsak
 
-Fleire `npm run dev`-prosesser blei starta utan å bli korrekt stoppa. Dei blei att som zombie-prosessar som heldt på porten.
+Flere `npm run dev`-prosesser blei starta uten å bli korrekt stoppa. De blei att som zombie-prosessar som holdt på porten.
 
 ## Løysing
 

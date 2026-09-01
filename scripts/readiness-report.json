@@ -3,7 +3,7 @@
   "base_url": "http://localhost:3000",
   "checks": [
     {
-      "name": "Tabellar manglar",
+      "name": "Tabellar mangler",
       "ok": false,
       "details": "Fann 1/7: ERROR: Command failed: PGPASSWORD=tosom psql -h localhost -U tosom -d tosom_dev -t -A -c \"SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_name IN ('User', 'Profile', \\\"Match\\\", \\\"Conversation\\\", \\\"Message\\\", \\\"JourneyProgress\\\", \\\"SystemLog\\\") ORDER BY table_name;\" 2>&1"
     },
@@ -20,7 +20,7 @@
     {
       "name": "User-tabell",
       "ok": true,
-      "details": "7 brukarar"
+      "details": "7 brukere"
     },
     {
       "name": "Match-tabell",
@@ -55,20 +55,20 @@
     {
       "name": "Matcher oppretta",
       "ok": false,
-      "details": "Ingen matcher funne (kan vere dersom ingen matchable kandidatar)"
+      "details": "Ingen matcher funnet (kan være dersom ingen matchable kandidatar)"
     },
     {
       "name": "Match accept + Journey start",
       "ok": false,
-      "details": "Ingen aktive matcher funne for accept"
+      "details": "Ingen aktive matcher funnet for accept"
     },
     {
       "name": "Cron journey API",
       "ok": true,
-      "details": "Framrykte: 0, Avslutta: 0"
+      "details": "Framrykte: 0, Avsluttet: 0"
     },
     {
-      "name": "Journey-dag aukar (dag1 → dag2)",
+      "name": "Journey-dag øker (dag1 → dag2)",
       "ok": false,
       "details": "0 med dag > 1"
     },
@@ -80,7 +80,7 @@
     {
       "name": "Chat-meldingar verifisert",
       "ok": true,
-      "details": "0 meldingar funne"
+      "details": "0 meldingar funnet"
     },
     {
       "name": "Bilde-lås system",
@@ -100,7 +100,7 @@
     {
       "name": "Tidleg avslutning",
       "ok": true,
-      "details": "0 reiser avslutta"
+      "details": "0 reiser avsluttet"
     },
     {
       "name": "lockedUntil fjerna",
@@ -110,17 +110,17 @@
     {
       "name": "Orphan matches",
       "ok": true,
-      "details": "0 funne"
+      "details": "0 funnet"
     },
     {
       "name": "Orphan journeys",
       "ok": true,
-      "details": "0 funne"
+      "details": "0 funnet"
     },
     {
       "name": "Orphan conversations",
       "ok": true,
-      "details": "0 funne"
+      "details": "0 funnet"
     },
     {
       "name": "Totalle tabellradar",
@@ -160,17 +160,17 @@
     {
       "name": "Cron matching",
       "ok": true,
-      "details": "OK: {\"ok\":true,\"processed\":13,\"created\":0,\"duration\":\"20ms\",\"message\":\"Prosessert 13 brukarar, oppretta 0 nye matcher\"}"
+      "details": "OK: {\"ok\":true,\"processed\":13,\"created\":0,\"duration\":\"20ms\",\"message\":\"Prosessert 13 brukere, oppretta 0 nye matcher\"}"
     },
     {
       "name": "Cron journey",
       "ok": true,
-      "details": "OK: {\"ok\":true,\"processed\":0,\"advanced\":0,\"ended\":0,\"duration\":\"2ms\",\"message\":\"Prosessert 0 brukarar — 0 framrykte, 0 avslutta\"}"
+      "details": "OK: {\"ok\":true,\"processed\":0,\"advanced\":0,\"ended\":0,\"duration\":\"2ms\",\"message\":\"Prosessert 0 brukere — 0 framrykte, 0 avsluttet\"}"
     },
     {
       "name": "Cron cleanup",
       "ok": false,
-      "details": "Manglar endpoint (status 404)"
+      "details": "Mangler endpoint (status 404)"
     },
     {
       "name": "Cron-jobber test",

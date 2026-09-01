@@ -128,7 +128,7 @@ Verifiser etter hvert steg: `npx tsc --noEmit` og `npx jest --ci`.
 | 15 | Sett `DATABASE_URL` i Vercel | App kobler til |
 | 16 | Verifiser pooler-tilkobling | Pooled endpoint i bruk |
 
-**Ingen datamigrering nødvendig.** Det finnes ingen ekte brukere ennå — dette er en ren nyoppsetting. Det er en fordel: vi starter rent, uten arvet gjeld.
+**Ingen datamigrering nødvendig.** Det finnes ingen ekte brukere ennå — dette er en ren nyoppsetting. Det er en fordel: vi starter rent, uten arvet gjelder.
 
 ### Fase 3 — Deploy og verifiser **[G+A]**
 

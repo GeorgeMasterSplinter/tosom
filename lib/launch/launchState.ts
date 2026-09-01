@@ -44,16 +44,16 @@ export function nextStep(state: LaunchState): LaunchState {
   return { ...state, currentStep: next };
 }
 
-/** Setje melding */
+/** Sette melding */
 export function setMessage(state: LaunchState, msg: string): LaunchState {
   return { ...state, message: msg };
 }
 
-/** Setje progress (0–100) */
+/** Sette progress (0–100) */
 export function setProgress(state: LaunchState, value: number): LaunchState {
   const clamped = Math.max(0, Math.min(100, value));
   return { ...state, progress: clamped };
 }
 
 /* ── LF10: Ingen backend ── */
-// Denne fila inneheld bare UI-tilstand. Ingen API-kall eller DB-operasjonar.
+// Denne fila inneholder bare UI-tilstand. Ingen API-kall eller DB-operasjonar.

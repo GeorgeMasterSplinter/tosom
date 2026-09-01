@@ -53,7 +53,7 @@ export function sanitizeText(input: string, options: SanitizeOptions = {}): stri
 }
 
 /**
- * Valider eit enkelt felt
+ * Valider et enkelt felt
  */
 export function validateField(value: unknown, rule: ValidationRule): string | null {
   if (rule.required && (value === undefined || value === null || value === '')) {
@@ -115,7 +115,7 @@ export function validateInput(data: Record<string, unknown>, rules: ValidationRu
 }
 
 /**
- * Sanitér alle string-verdiar i eit object
+ * Sanitér alle string-verdier i et object
  */
 export function sanitizeInput(data: Record<string, unknown>): Record<string, unknown> {
   const result: Record<string, unknown> = {}

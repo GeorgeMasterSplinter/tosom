@@ -20,7 +20,7 @@ OnboardingFlow.tsx er oppdatert med propar (step, goToStep, onNext).
 | `Step5LivsstilVerdier.tsx` | ⚠️ Må valideres (write feila) |
 | `Step6FramtidVisjon.tsx` | ⚠️ Må valideres (write feila) |
 | `Step7HumorPersonlighet.tsx` | ⚠️ Må valideres (write feila) |
-| `Step8ModenNysgjerrighet.tsx` | ⚠️ Har feil innhald (Step5 innhald) |
+| `Step8ModenNysgjerrighet.tsx` | ⚠️ Har feil innhold (Step5 innhold) |
 | `OnboardingFlow.tsx` | ✅ Oppdatert med propar (step, goToStep, onNext) |
 
 ---
@@ -68,7 +68,7 @@ hover:bg-white/20 transition-all duration-300
 
 ---
 
-## ÅPNIE OPPGÅVER
+## ÅPNIE OPPGAVER
 
 1. ✅ Steg 3 (Tilknytning) — fullført
 2. ✅ Steg 4 (Kjærlighetsspråk) — fullført
@@ -82,6 +82,6 @@ hover:bg-white/20 transition-all duration-300
 
 ## NESTE STEG
 
-1. Valider at alle steg 5-8 har rett innhald
+1. Valider at alle steg 5-8 har rett innhold
 2. Test at navigasjon fungerer på alle steg
 3. Kjør TypeScript-kompiler for å sjekke for feil

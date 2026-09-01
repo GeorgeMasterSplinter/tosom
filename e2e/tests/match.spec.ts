@@ -1,6 +1,6 @@
 /**
  * E2E-test — Match-flow
- * Testar at ein brukar kan motta og akseptere ein match
+ * Testar at ein bruker kan motta og akseptere ein match
  */
 
 import { test, expect } from '../fixtures/test-users';
@@ -10,7 +10,7 @@ test.describe('Match Flow', () => {
     // Gå til dashboard
     await page.goto('/dashboard');
 
-    // Dashboard må laste med innhald
+    // Dashboard må laste med innhold
     const mainContent = page.locator('main, .dashboard').first();
     await expect(mainContent).toBeVisible({ timeout: 5000 });
   });
@@ -18,7 +18,7 @@ test.describe('Match Flow', () => {
   test('skal vise "Vent på match" når ingen match er tilgjengeleg', async ({ page }) => {
     await page.goto('/dashboard');
 
-    // Dashboard med innhald skal være synlig (kan inneholde ventemelding eller annet)
+    // Dashboard med innhold skal være synlig (kan inneholde ventemelding eller annet)
     const mainContent = page.locator('main, .dashboard').first();
     await expect(mainContent).toBeVisible({ timeout: 5000 });
   });
@@ -34,7 +34,7 @@ test.describe('Match Flow', () => {
   test('skal vise match-explanation dersom match er tilgjengeleg', async ({ page }) => {
     await page.goto('/dashboard');
 
-    // Dashboard med match-relatert innhald skal laste
+    // Dashboard med match-relatert innhold skal laste
     const mainContent = page.locator('main, .dashboard').first();
     await expect(mainContent).toBeVisible({ timeout: 5000 });
   });

@@ -6,7 +6,7 @@
  *   1. A setjer mood (PATCH /api/chat/mood)
  *   2. B ser SAME mood via GET /api/chat/messages (synk-vegen for 3s-pollinga)
  *   3. B bytter mood → A ser B si mood (motretning)
- *   4. Ikkje-deltakar → 403; ugyldig mood → 400
+ *   4. Ikke-deltakar → 403; ugyldig mood → 400
  *   5. Same mood igjen → ingen overflødig DB-skriving
  *
  * Prisma er mocka med IN-MEMORY-tilstand, så begge rutene i same test ser
@@ -112,7 +112,7 @@ describe('C-3: delt mood (én mood per samtale, begge parter deler)', () => {
     const seenByBob = await moodSeenBy('bob', 'conv-1');
     expect(seenByBob).toBe('deep');
 
-    // ... og Alice sjølv ser same mood (ikkje to ulike)
+    // ... og Alice selv ser same mood (ikke to ulike)
     const seenByAlice = await moodSeenBy('alice', 'conv-1');
     expect(seenByAlice).toBe('deep');
   });
@@ -123,7 +123,7 @@ describe('C-3: delt mood (én mood per samtale, begge parter deler)', () => {
     expect(seenByAlice).toBe('dreamy');
   });
 
-  it('Ikkje-deltakar → 403 og mood endrast ikkje', async () => {
+  it('Ikke-deltakar → 403 og mood endrast ikke', async () => {
     const res = await setMood(patchRequest('mallory', { conversationId: 'conv-1', mood: 'playful' }));
     expect(res.status).toBe(403);
     expect(rows[0].mood).toBe(DEFAULT_MOOD);
@@ -141,7 +141,7 @@ describe('C-3: delt mood (én mood per samtale, begge parter deler)', () => {
     expect(convUpdate).not.toHaveBeenCalled();
   });
 
-  it('Pusher-broadcast er best-effort — nedlegging av Pusher blokkerer ikkje', async () => {
+  it('Pusher-broadcast er best-effort — nedlegging av Pusher blokkerer ikke', async () => {
     pusherMood.mockRejectedValueOnce(new Error('Pusher nede'));
     const res = await setMood(patchRequest('alice', { conversationId: 'conv-1', mood: 'cozy' }));
     expect(res.status).toBe(200);

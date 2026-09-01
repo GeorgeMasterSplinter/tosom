@@ -114,7 +114,7 @@ export async function GET(req: NextRequest) {
 
       for (const journey of eligibleJourneys) {
         try {
-          // Sjekk om brukaren har ein match (for å bekrefte reise er gyldig)
+          // Sjekk om brukeren har en match (for å bekrefte reise er gyldig)
           const activeMatch = await prisma.match.findFirst({
             where: {
               OR: [

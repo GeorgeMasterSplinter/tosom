@@ -1,6 +1,6 @@
 # ToSom — Roadmap (v2026)
 
-Denne filen gir ei prioriterert oversikt over hva som er ferdig, hva som manglar, og hva som bør gjerast neste.
+Denne filen gir ei prioriterert oversikt over hva som er ferdig, hva som mangler, og hva som bør gjerast neste.
 
 ---
 
@@ -27,21 +27,21 @@ Denne filen gir ei prioriterert oversikt over hva som er ferdig, hva som manglar
 **Status**: Både App Router (`app/`) og Pages Router (`pages/`) eksisterer samtidig.
 **Antall filer i pages/**: ~80+ (sider + API-ruter)
 **Handling**:
-- [ ] Identifiser kva for sider som finst i både `app/` OG `pages/`
-- [ ] Flyt eller slett alle API-ruter frå `pages/api/`
+- [ ] Identifiser hva for sider som finnes i både `app/` OG `pages/`
+- [ ] Flyt eller slett alle API-ruter fra `pages/api/`
 - [ ] Oppdater all internal routing til å bruke App Router
 - [ ] Slett `pages/` mappen når alt er flytta
 
 ### 1.2 Fjerne Deprecated Database-modeller ✅ FULLFØRT 2026-08-02
 **Status**: MatchFeedback, MatchHistory, MatchQueue + QueueStatus enum er **fjerna**.
-- [x] Søke gjennom heile kodebase etter referanser — ingen funnen
-- [x] Fjerne frå Prisma schema (MatchFeedback, MatchHistory, MatchQueue, QueueStatus)
+- [x] Søke gjennom heile kodebase etter referanser — ingen funnet
+- [x] Fjerne fra Prisma schema (MatchFeedback, MatchHistory, MatchQueue, QueueStatus)
 - [x] Fjerne relasjonar i User og Match-modellar
 - [x] Kjøre `prisma generate` — suksessfull
 
 ### 1.3 Blueprint vs Schema-konflikt ✅ FULLFØRT 2026-08-02
 **Status**: `tosom-blueprint.md` er **oppdatert til v2.0** — synkronisert med dagens Prisma schema og core-dokumentasjon.
-- [x] Vurdere om Journey-data skal vere på User eller Conversation-nivå → User-basert (faktisk schema)
+- [x] Vurdere om Journey-data skal være på User eller Conversation-nivå → User-basert (faktisk schema)
 - [x] Oppdatere blueprint til å reflektere faktisk schema (v2.0 skrive)
 - [x] Flytt blueprint til `/docs/core/TOSOM_BLUEPRINT.md` som offisiell dokumentasjon
 - [x] Merkt v1-fjerna: Journey på Conversation, JourneyStep, MatchQueue, 35-dagers reise
@@ -51,7 +51,7 @@ Denne filen gir ei prioriterert oversikt over hva som er ferdig, hva som manglar
 ## PAKKE 2 — VALIDERING OG FIX (FASE 3) 🟡 MIDLDERPRIORITERT
 
 ### 2.1 Journey Validering ✅ FULLFØRT 2026-08-02
-**Status**: Alle journey-endepunkt oppdatert til 30 dagar. `JOURNEY_TOTAL_DAYS = 30` i engine.ts er source of truth.
+**Status**: Alle journey-endepunkt oppdatert til 30 dager. `JOURNEY_TOTAL_DAYS = 30` i engine.ts er source of truth.
 - [x] Oppdatere `lib/journey/engine.ts` — JOURNEY_TOTAL_DAYS=30, faser (EARLY/BUILDING_TRUST/DEEPER)
 - [x] Oppdatere `lib/match/journeySync.ts` — TOTAL_DAYS=30
 - [x] Oppdatere cron-jobb-logikk i dokumentasjon
@@ -59,7 +59,7 @@ Denne filen gir ei prioriterert oversikt over hva som er ferdig, hva som manglar
 
 ### 2.2 Dobbelte API-ruter ✅ FULLFØRT 2026-08-02
 **Status**: Duplikat-ruter identifisert og fjerna.
-- [x] Kartlagt alle journey/ruter — funnen duplikat
+- [x] Kartlagt alle journey/ruter — funnet duplikat
 - [x] Canonical ruter valde (se TOSOM_API_OVERVIEW.md)
 - [x] Fjerna `/api/journey/conversations/[conversationId]/route.ts` (duplikat GET)
 - [x] Fjerna POST-metoden i `/api/journey/[conversationId]/route.ts` (overlap med advance)
@@ -94,7 +94,7 @@ Denne filen gir ei prioriterert oversikt over hva som er ferdig, hva som manglar
 - [x] Top 5 tregaste ruter per 24t
 - [x] DB-latens og API-latens gj.snitt + P95
 - [x] Oppretta `lib/errorTracker.ts` for konsistent error-logging til console + SystemLog
-- [x] Oppretta `app/admin/system/status/page.tsx` — fin system-status-side (auto-oppdaterer kvar 30s)
+- [x] Oppretta `app/admin/system/status/page.tsx` — fin system-status-side (auto-oppdaterer hver 30s)
 
 ---
 
@@ -117,16 +117,16 @@ Denne filen gir ei prioriterert oversikt over hva som er ferdig, hva som manglar
 - [x] `GET /api/admin/resonance?userId=xxx` — Admin API med fase-statistikk
 - [x] `app/admin/resonance/page.tsx` — Admin-side med chart, session-liste, phase-stats
 - [x] Dokumentasjon oppdatert (TOSOM_API_OVERVIEW.md)
-- [ ] Bruker-resonans-side (valfritt — kan gjerast seinare)
-- [ ] JourneyView-oppdatering med resonans-vise (valfritt — kan gjerast seinare)
+- [ ] Bruker-resonans-side (valfritt — kan gjerast senere)
+- [ ] JourneyView-oppdatering med resonans-vise (valfritt — kan gjerast senere)
 
 ### 4.3 JourneyDayContent Integrasjon ✅ FULLFØRT 2026-08-03
-**Status**: JourneyDayContent-integrasjon er no fullført — database-henta innhald med fallback til hardkoda.
-- [x] Oppdatert `/api/journey/today/route.ts` — hent frå JourneyDayContent, fallback til hardkoda
+**Status**: JourneyDayContent-integrasjon er no fullført — database-henta innhold med fallback til hardkoda.
+- [x] Oppdatert `/api/journey/today/route.ts` — hent fra JourneyDayContent, fallback til hardkoda
 - [x] `GET /api/journey/today` returnerer no `source: "database"` eller `"fallback"` + ekstra felt (theme, reflectionQuestion, resonanceGoal)
-- [x] Oppretta `scripts/seed-journey-content.ts` — 30 dagar med tema, refleksjonspørsmål og samtaleprompt
+- [x] Oppretta `scripts/seed-journey-content.ts` — 30 dager med tema, refleksjonspørsmål og samtaleprompt
 - [ ] Seed køyrd i produksjons-databasen (når DB er tilgjengeleg)
-- [ ] Admin-edit-side for JourneyDayContent (valfritt — kan gjerast seinare)
+- [ ] Admin-edit-side for JourneyDayContent (valfritt — kan gjerast senere)
 
 ---
 
@@ -140,8 +140,8 @@ Denne filen gir ei prioriterert oversikt over hva som er ferdig, hva som manglar
 ### 4.4 Admin Panel Forbedringer ✅ FULLFØRT 2026-08-03
 
 #### 4.4.1 JourneyDayContent Editor ✅ FULLFØRT
-- [x] `GET /api/admin/journey-content` — Hent alle 30 dagar
-- [x] `PATCH /api/admin/journey-content/[day]` — Oppdater ein dag
+- [x] `GET /api/admin/journey-content` — Hent alle 30 dager
+- [x] `PATCH /api/admin/journey-content/[day]` — Oppdater en dag
 - [x] `app/admin/journey-content/page.tsx` — Admin-side med tabell, editor-modal, fase-fargar
 - [x] Full redigerbar: tema, refleksjonsspørsmål, samtaleprompt, oppgåve, resonansmål
 
@@ -152,10 +152,10 @@ Denne filen gir ei prioriterert oversikt over hva som er ferdig, hva som manglar
 - [x] `app/admin/conversations/page.tsx` — Admin-side med tabell, freeze/unlock-knapp, status-badge (🟢/🔴), detalj-panel
 
 #### 4.4.3 User Flags & Moderation Tools ✅ FULLFØRT 2026-08-03
-- [x] `GET /api/admin/users` — Hent brukarar med pagination + role/filter
+- [x] `GET /api/admin/users` — Hent brukere med pagination + role/filter
 - [x] `PATCH /api/admin/users/[id]` — Unified action-endpoint med 5 handlingar: flag, unflag, reset-onboarding, reset-journey, force-match-end
-- [x] SystemLog-logging for kvar handling (module: admin/user-flag, user-unflag, user-reset-*, user-force-match-end)
-- [x] `app/admin/users/page.tsx` — Admin-side med tabell, filter, detalj-panel, bekreft-dialog, action-knappar (Flag/Bann, Unflag, Reset Onboarding, Reset Journey, Force Match End)
+- [x] SystemLog-logging for hver handling (module: admin/user-flag, user-unflag, user-reset-*, user-force-match-end)
+- [x] `app/admin/users/page.tsx` — Admin-side med tabell, filter, detalj-panel, bekreft-dialog, action-knapper (Flag/Bann, Unflag, Reset Onboarding, Reset Journey, Force Match End)
 
 #### 4.4.4 Match Inspector ✅ FULLFØRT 2026-08-03
 - [x] `GET /api/admin/matches` — Hent matcher med pagination + status-filter
@@ -164,7 +164,7 @@ Denne filen gir ei prioriterert oversikt over hva som er ferdig, hva som manglar
 
 #### 4.4.5 System Logs Viewer ✅ FULLFØRT 2026-08-03
 - [x] `GET /api/admin/system-logs` — Hent systemlogg med pagination + module/level/search-filter
-- [x] `app/admin/logs/page.tsx` — Admin-side med stats (errors/warnings/info), filter, detalj-panel for kvar logg
+- [x] `app/admin/logs/page.tsx` — Admin-side med stats (errors/warnings/info), filter, detalj-panel for hver logg
 
 ---
 
@@ -180,22 +180,22 @@ Denne filen gir ei prioriterert oversikt over hva som er ferdig, hva som manglar
 
 ### 5.2 TypeScript Strict Mode ✅ FULLFØRT 2026-08-03
 
-**Status**: Backend og alle admin API-ruter er no **100% strict-sikre**. 0 TypeScript-feil att. Alle oppgåver fullførte!
+**Status**: Backend og alle admin API-ruter er no **100% strict-sikre**. 0 TypeScript-feil att. Alle oppgaver fullførte!
 
-| Kategori | Status | Detaljar |
+| Kategori | Status | Detaljer |
 |----------|--------|----------|
 | DEL 1: null→string | ✅ FULLFØRT | ~12 admin-ruter oppdaterte: `rawUser.name ?? ''` |
 | DEL 2a: chat/freeze.ts | ✅ FULLFØRT | 'admin' → 'ADMIN' (2 stader) |
 | DEL 2b: journey/reflect | ✅ FULLFØRT | user var deklarert i function scope |
-| DEL 2c: resonance/route | ✅ FULLFØRT | fase-typar fiksa (berre 'EARLY' brukt) |
+| DEL 2c: resonance/route | ✅ FULLFØRT | fase-typer fiksa (bare 'EARLY' brukt) |
 | DEL 2d: notifications | ✅ FULLFØRT | getNotifications → listNotifications |
 | DEL 3: .next rebuild | ✅ FULLFØRT | `rm -rf .next` kjørd |
 
 **Core-system oppdaterte:**
 - [x] tsconfig.json — `strict: true`, `noImplicitAny: false` (gradvis oppstart)
 - [x] lib/auth/roles.ts — Role enum oppdatert til 'USER'|'ADMIN'|'SUPPORT' + isAdminRole() helper
-- [x] lib/auth/admin-auth.ts — castToAdminUser brukar isAdminRole() for lowercase/uppercase compat
-- [x] lib/auth/rbac.ts — Alle role-samanlikninga brukar isAdminRole() og uppercase strings
+- [x] lib/auth/admin-auth.ts — castToAdminUser bruker isAdminRole() for lowercase/uppercase compat
+- [x] lib/auth/rbac.ts — Alle role-samanlikninga bruker isAdminRole() og uppercase strings
 - [x] prisma/schema.prisma — Role enum synkronisert med SUPPORT
 - [x] lib/api-validator.ts — ZodError.errors → issues (Zod v3+ compat)
 - [x] lib/errorTracker.ts — Explicit route/userId type-annotation
@@ -221,7 +221,7 @@ Denne filen gir ei prioriterert oversikt over hva som er ferdig, hva som manglar
 **TypeScript-feil etter 5.2:**
 - **Backend API**: 0 feil ✅
 - **Frontend komponentar**: ~25 feil (planlagd til Pakke 6.x — valfritt)
-- **Totalt TypeScript-feil**: ~25 (alle frontend, ikkje kritisk for drift)
+- **Totalt TypeScript-feil**: ~25 (alle frontend, ikke kritisk for drift)
 
 ---
 
@@ -256,11 +256,11 @@ Denne filen gir ei prioriterert oversikt over hva som er ferdig, hva som manglar
 | 4 | Funksjonsutvikling | 🟢 Normal | FULLFØRT (alle underoppgåver) |
 | 5.1 | Zod API Validation | ✅ Ferdig | FULLFØRT 2026-08-03 |
 | 5.2 | TypeScript Strict Mode | ✅ Ferdig | FULLFØRT 2026-08-03 — **0 FEIL BACKEND!** |
-| 6.x | Premium UI + Frontend | 🟢 Valfritt | Planlagd til seinare |
+| 6.x | Premium UI + Frontend | 🟢 Valfritt | Planlagd til senere |
 
 **Pakke 5.2: TypeScript Strict Mode — ALLE UNDEROPPGÅVER FULLFØRETE** ✅
 
 ---
 
-*Dette dokumentet oppdaterast ved kvar større endring i plattformen.*
+*Dette dokumentet oppdaterast ved hver større endring i plattformen.*
 *Versjon: 1.0 — Oppretta 2026-08-02 | Sist oppdatert: 2026-08-03 (Pakke 5.2 FULLFØRT)*

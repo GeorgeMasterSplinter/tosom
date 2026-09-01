@@ -211,7 +211,7 @@ export function PremiumJourneyDayView({ content }: { content: DayContentProps })
       margin: '0 auto',
       animation: 'fadeIn 500ms ease-out',
     }}>
-      {/* Dag-hovud */}
+      {/* Dag-hoved */}
       <div style={{ textAlign: 'center', marginBottom: '32px' }}>
         <div style={{
           fontSize: '60px',

@@ -3,7 +3,7 @@
 
 const renderTimings: Map<string, number> = new Map();
 
-/** Mål kor lang tid det tek å rendera ein komponent */
+/** Mål kor lang tid det tek å rendera en komponent */
 export function measureRenderTime(componentName: string, durationMs: number): void {
   renderTimings.set(componentName, durationMs);
 }
@@ -26,7 +26,7 @@ export function clearRenderTimings(): void {
   renderTimings.clear();
 }
 
-/** Hent timing for ein komponent */
+/** Hent timing for en komponent */
 export function getRenderTime(name: string): number | undefined {
   return renderTimings.get(name);
 }

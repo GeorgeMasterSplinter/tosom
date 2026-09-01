@@ -24,28 +24,28 @@
 
 ## 1. OVERBLIKK
 
-ToSom sin onboarding er ein **13-stegs prosess** delt inn i **3 hovudfaser**:
+ToSom sin onboarding er en **13-stegs prosess** delt inn i **3 hovudfaser**:
 
 | Fase | Steg | Tittel | Formål |
 |------|------|--------|--------|
 | **FASE 1 — Identitet** | Steg 1 | Grunnprofil | Navn, alder, kjønn, bosted, radius |
 | | Steg 2a | Personlighet & identitet | Selvpresentasjon, energi, pressrespons |
-| | Steg 2b | Livssituasjon | Kvardagsliv, jobb, bustad |
+| | Steg 2b | Livssituasjon | Kvardagsliv, jobb, bosted |
 | **FASE 2 — Personlighet** | Steg 3 | Tilknytning & trygghet | Trygghetsbehov, usikkerheitsutløysar |
-| | Steg 4 | Kjærleiksspråk & nærhet | Vis/resta kjærleik, næringsbyggjar |
-| | Steg 5a | Livsstil & verdiar | Prioriteringar, kvardagsmønster |
+| | Steg 4 | Kjærleiksspråk & nærhet | Vis/resta kjærlighet, næringsbyggjar |
+| | Steg 5a | Livsstil & verdier | Prioriteringar, kvardagsmønster |
 | | Steg 5b | Relasjonsstil | Sjølvstende vs fellesskap |
 | | Steg 6 | Framtid & visjon | Drømmer, felles mål |
-| | Steg 7 | Humor & personlighet | Lekke detaljar, quirky habits |
-| **FASE 3 — Relasjon** | Steg 8a | Grenser | Vern, forståing, begrensingar |
+| | Steg 7 | Humor & personlighet | Lekke detaljer, quirky habits |
+| **FASE 3 — Relasjon** | Steg 8a | Grenser | Vern, forståelse, begrensninger |
 | | Steg 8b | Moden nysgjerrighet | Intimitet, trygghet i nærleik |
 | | Steg 9/11 | Oppsummering | Oversikt over alt (kan endre) |
 | | Steg 10/12 | Start reisen | CTA → matching → dashboard |
 
 **Totalt antal felter:** ~70+ datafelt lagrast i Profile-modelen  
 **Autosave:** Ja, med debounce på 400ms + localStorage  
-**Validering:** Klient-side (minste-teikn-grenser) + Zod-schemas  
-**Navigasjon:** Next/Back knappar + fade-transition mellom stega
+**Validering:** Klient-side (minste-tegn-grenser) + Zod-schemas  
+**Navigasjon:** Next/Back knapper + fade-transition mellom stega
 
 ---
 
@@ -74,12 +74,12 @@ app/onboarding/
     ├── Step2Livssituasjon.tsx  → Livssituasjon (6 felt)
     ├── Step3Tilknytning.tsx    → Tilknytning & trygghet (5 felt)
     ├── Step4Kjærlighetsspråk.tsx → Kjærleiksspråk (valg-side)
-    ├── Step5LivsstilVerdier.tsx → Livsstil & verdiar (prioritering)
+    ├── Step5LivsstilVerdier.tsx → Livsstil & verdier (prioritering)
     ├── Step5Relasjonsstil.tsx  → Relasjonsstil (søking + balanse)
     ├── Step6FramtidVisjon.tsx  → Framtid & visjon (drøm + felles mål)
-    ├── Step7HumorPersonlighet.tsx → Humor & personlighet (lekke detaljar)
-    ├── Step8Grenser.tsx        → Grenser (vern + forståing)
-    ├── Step8ModenNysgjerrighet.tsx → Moden nysgjerrighet (intimitet/spørrsmål)
+    ├── Step7HumorPersonlighet.tsx → Humor & personlighet (lekke detaljer)
+    ├── Step8Grenser.tsx        → Grenser (vern + forståelse)
+    ├── Step8ModenNysgjerrighet.tsx → Moden nysgjerrighet (intimitet/spørsmål)
     ├── Step9Oppsummering.tsx   → Oppsummering (oversikt over alt)
     └── Step10StartReisen.tsx   → CTA + matching-trigger
 ```
@@ -90,7 +90,7 @@ app/onboarding/
 components/onboarding/
 ├── PremiumButton.tsx           → Gull-gradient knappe med hover/shadow
 ├── BackButton.tsx              → Tilbake-knapp (minimalistisk)
-└── [fleire...]                → Delte komponentar
+└── [flere...]                → Delte komponentar
 ```
 
 ### UI-komponentar (`components/ui/`)
@@ -155,7 +155,7 @@ prisma/schema.prisma
 
 ## 3. STEG-FOR-STEG OVERSIKT (1–13)
 
-### FASE 1 — IDENTITET (Kven er du?)
+### FASE 1 — IDENTITET (Hvem er du?)
 
 #### Steg 1: Grunnprofil (`Step1Profile.tsx`)
 
@@ -165,11 +165,11 @@ prisma/schema.prisma
 **Felt:**
 | Felt | Type | Required | Min-størrelse | Validering |
 |------|------|----------|---------------|------------|
-| identityName | tekst | Ja | 2 teikn | Navn eller kallenavn |
+| identityName | tekst | Ja | 2 tegn | Navn eller kallenavn |
 | age | tal | Ja | ≥23 | ToSom er for vaksne |
 | gender | select | Ja | - | Mann/Kvinne/Annet |
 | seekingGender | select | Ja | - | Mann/Kvinne/Åpen |
-| city | tekst | Ja | 1 teikn | Kva by du bur i |
+| city | tekst | Ja | 1 tegn | Hva by du bur i |
 | distancePref | slider | Ja | 1–300 km | Maks avstand med gull thumb |
 | minAge | tal | Ja | ≥23 | Minste alder |
 | maxAge | tal | Ja | >minAge | Maksimal alder |
@@ -194,24 +194,24 @@ prisma/schema.prisma
 
 #### Steg 2a: Personlighet & identitet (`Step2Personlighet.tsx`)
 
-**Formål:** personlegheitstrekk (fritekstfelt — ikkje ein Big Five-skala). Merk: ombygd til ein reell BFI-10-skala i FORSKNINGSMOTOR F-5.  
+**Formål:** personlegheitstrekk (fritekstfelt — ikke en Big Five-skala). Merk: ombygd til en reell BFI-10-skala i FORSKNINGSMOTOR F-5.  
 **UI-layout:** Single page, max-w-3xl, space-y-8/10  
 **Komponentar:** TextAreaField, PremiumButton, BackButton  
-**Felt (alle textarea ≥10 teikn):**
-| Felt | Min-teikn | Beskriving |
+**Felt (alle textarea ≥10 tegn):**
+| Felt | Min-tegn | Beskriving |
 |------|-----------|------------|
-| selfDesc | 10 | Kven du er |
-| energyGiver | 10 | Kva som gir energi |
-| energyDrainer | 10 | Kva som tapper energi |
-| pressureReact | 10 | Korleis du reagerer under press |
-| quirk | 5 | Egenskap du ler av sjølv |
+| selfDesc | 10 | Hvem du er |
+| energyGiver | 10 | Hva som gir energi |
+| energyDrainer | 10 | Hva som tapper energi |
+| pressureReact | 10 | Hvordan du reagerer under press |
+| quirk | 5 | Egenskap du ler av selv |
 | bestSelf | - | Ditt beste jeg |
 | energy | - | Energinivå |
-| drains | - | Kva tapper deg |
+| drains | - | Hva tapper deg |
 | pressure | - | Press-hantering |
 | habits | - | Vane-mønster |
 
-**Validering:** Alle felt ≥10 teikn (quirk ≥5). Feil-liste med felt-namn + melding.  
+**Validering:** Alle felt ≥10 tegn (quirk ≥5). Feil-liste med felt-namn + melding.  
 **API-kall:** Ingen — autosave til localStorage  
 **Navigasjon:** Back → Steg 1, Next → Steg 2b
 
@@ -223,56 +223,56 @@ prisma/schema.prisma
 **Felt:**
 | Felt | Type | Validering |
 |------|------|------------|
-| workType | select/tekst | Kva du jobbar med |
+| workType | select/tekst | Hva du jobbar med |
 | housingType | select | Bustadtype |
 | householdSize | select | Hushaldningsstorleik |
 | economicStability | select | Økonomisk stabilitet |
-| responsibilities | textarea ≥10 tegn | Oppgåver og ansvar |
-| dailyRoutine | textarea ≥10 teikn | Kvardagsrutinar |
+| responsibilities | textarea ≥10 tegn | Oppgaver og ansvar |
+| dailyRoutine | textarea ≥10 tegn | Kvardagsrutinar |
 
 **Design:** Sama glass-card-stil som Steg 2a
 
 ---
 
-### FASE 2 — PERSONLIGHET (Korleis er du?)
+### FASE 2 — PERSONLIGHET (Hvordan er du?)
 
 #### Steg 3: Tilknytning & trygghet (`Step3Tilknytning.tsx`)
 
 **Formål:** tilknytningsmønster og trygghetsbehov  
-**Felt (tekstarea, ≥10 teikn):**
+**Felt (tekstarea, ≥10 tegn):**
 | Felt | Beskriving |
 |------|------------|
-| safetyNeed | Kva gjer deg trygg |
-| insecurityTrigger | Kva utløyser usikkerheit |
-| sadnessNeed | Kva du treng når du er ledsen |
-| stressNeed | Kva du treng under stress |
-| importantBoundary | Kva grenser som er viktige |
+| safetyNeed | Hva gjer deg trygg |
+| insecurityTrigger | Hva utløyser usikkerheit |
+| sadnessNeed | Hva du treng når du er ledsen |
+| stressNeed | Hva du treng under stress |
+| importantBoundary | Hva grenser som er viktige |
 
 ---
 
 #### Steg 4: Kjærleiksspråk & nærhet (`Step4Kjærlighetsspråk.tsx`)
 
-**Formål:** korleis du viser og mottar kjærleik  
+**Formål:** hvordan du viser og mottar kjærlighet  
 **Felt (val-side, ikke fragmentert):**
 | Felt | Type | Beskriving |
 |------|------|------------|
-| loveGive | select | Korleis du viser kjærleik |
-| loveReceive | select | Korleis du ønskjer kjærleik |
-| closenessBuilder | textarea ≥10 tegn | Kva byggjer nærhet |
-| distanceCreator | textarea ≥10 tegn | Kva skaper avstand |
-| smallThing | textarea ≥10 teikn | Det små tinga som betyr mykje |
+| loveGive | select | Hvordan du viser kjærlighet |
+| loveReceive | select | Hvordan du ønskjer kjærlighet |
+| closenessBuilder | textarea ≥10 tegn | Hva byggjer nærhet |
+| distanceCreator | textarea ≥10 tegn | Hva skaper avstand |
+| smallThing | textarea ≥10 tegn | Det små tingen som betyr mye |
 
 ---
 
-#### Steg 5a: Livsstil & verdiar (`Step5LivsstilVerdier.tsx`)
+#### Steg 5a: Livsstil & verdier (`Step5LivsstilVerdier.tsx`)
 
 **Formål:** prioriteringar og kvardagsmønster  
 **Felt:**
 | Felt | Type | Beskriving |
 |------|------|------------|
-| highPriority | val | Kva som er viktigast no |
-| lowPriority | val | Kva som er mindre viktig |
-| goodEveryday | textarea ≥10 tegn | God kvardag |
+| highPriority | val | Hva som er viktigast no |
+| lowPriority | val | Hva som er mindre viktig |
+| goodEveryday | textarea ≥10 tegn | God hverdag |
 | desiredLifestyle | val | Ønskt livsstil |
 | undesiredLifestyle | val | Uønskt livsstil |
 
@@ -280,12 +280,12 @@ prisma/schema.prisma
 
 #### Steg 5b: Relasjonsstil (`Step5Relasjonsstil.tsx`)
 
-**Formål:** korleis du søker relasjon  
+**Formål:** hvordan du søker relasjon  
 **Felt:**
 | Felt | Beskriving |
 |------|------------|
-| relationshipSeeking | Kva type relasjon du søker |
-| closenessNeed | Kor mykje nærheit du treng |
+| relationshipSeeking | Hva type relasjon du søker |
+| closenessNeed | Kor mye nærhet du treng |
 | independenceBalance | Balanse mellom sjølvstende og fellesskap |
 
 ---
@@ -293,14 +293,14 @@ prisma/schema.prisma
 #### Steg 6: Framtid & visjon (`Step6FramtidVisjon.tsx`)
 
 **Formål:** drømmer og felles mål  
-**Felt (textarea ≥10 teikn):**
+**Felt (textarea ≥10 tegn):**
 | Felt | Beskriving |
 |------|------------|
 | futureVision | Din framtidvisjon |
 | dreamGoal | Din største drøm |
-| buildTogether | Kva du kan bygge saman |
+| buildTogether | Hva du kan bygge sammen |
 | experienceAlone | Opplevelser åleine |
-| experienceTogether | Opplevelser saman |
+| experienceTogether | Opplevelser sammen |
 
 ---
 
@@ -308,17 +308,17 @@ prisma/schema.prisma
 
 **Formål:** de små detaljane som gjer deg til deg  
 **Felt (textarea):**
-| Felt | Min-teikn | Beskriving |
+| Felt | Min-tegn | Beskriving |
 |------|-----------|------------|
-| laughterTrigger | - | Kva får deg til å le |
+| laughterTrigger | - | Hva får deg til å le |
 | quirkyHabit | 5 | Quirky vaner |
 | guiltyPleasure | 10 | Skyldig glede |
 | totallyYou | 10 | "Det er helt deg" |
-| partnerWouldLaugh | - | Kva partneren din ville le av |
+| partnerWouldLaugh | - | Hva partneren din ville le av |
 
 ---
 
-### FASE 3 — RELASJON (Kven søker du?)
+### FASE 3 — RELASJON (Hvem søker du?)
 
 #### Steg 8a: Grenser (`Step8Grenser.tsx`)
 
@@ -326,10 +326,10 @@ prisma/schema.prisma
 **Felt:**
 | Felt | Beskriving |
 |------|------------|
-| neverCrossBoundary | Kva du aldri vil krysse |
-| understandPartnersBoundaries | Korleis du forstår partnar sine grenser |
+| neverCrossBoundary | Hva du aldri vil krysse |
+| understandPartnersBoundaries | Hvordan du forstår partnar sine grenser |
 | limitations | Dine avgrensingar |
-| partnerMustUnderstand | Kva partnar må forstå |
+| partnerMustUnderstand | Hva partnar må forstå |
 
 ---
 
@@ -339,18 +339,18 @@ prisma/schema.prisma
 **Felt (refleksjon):**
 | Felt | Beskriving |
 |------|------------|
-| intimacySafety | Kva gjer intimitet trygg |
-| comfortableWith | Kva du er komfortabel med |
+| intimacySafety | Hva gjer intimitet trygg |
+| comfortableWith | Hva du er komfortabel med |
 | boundary | Din grense |
-| nearerType | Kva type nærheit du søker |
-| needsTime | Kor mykje tid du treng |
+| nearerType | Hva type nærhet du søker |
+| needsTime | Kor mye tid du treng |
 
 ---
 
 #### Steg 9/11: Oppsummering (`Step9Oppsummering.tsx`)
 
-**Formål:** roleg, trygg oversikt over alt  
-**Innhald:** Alle felt vist i gruppert visning (kan endre)  
+**Formål:** rolig, trygg oversikt over alt  
+**Innhold:** Alle felt vist i gruppert visning (kan endre)  
 **Design:** Premium-card med gull-rammer, stor typografi  
 **CTA:** "Gå tilbake og endre" / "Fullfør onboarding"
 
@@ -362,7 +362,7 @@ prisma/schema.prisma
 **CTA:** "Start reisen din" (stor gull-gradient knappe)  
 **API-kall:**
 1. `POST /api/profile/setup` med heile `ProfileData` payload
-2. `POST /api/match` med userId frå step 1
+2. `POST /api/match` med userId fra step 1
 3. Redirect til `/dashboard` eller `/matching?userId=xxx`
 
 **Loading-state:** "Sparar..." + spinner (gull-farge)
@@ -395,7 +395,7 @@ model User {
 }
 ```
 
-**Påverka felt under onboarding:**
+**Påkrevet felt under onboarding:**
 | Felt | Verdi ved fullføring | API-kall |
 |------|----------------------|----------|
 | `onboardingStep` | 10 | `/api/profile/setup` |
@@ -414,7 +414,7 @@ model Profile {
   lastName          String?
   age               Int             // REQUIRED
   identityName      String?
-  lifeSituation     Json?           // Steg 2b (jobb, bustad, etc.)
+  lifeSituation     Json?           // Steg 2b (jobb, bosted, etc.)
   lifestyle         Json?           // Steg 5a (prioriteringar)
   personality       Json?           // Steg 2a (Big Five)
   communication     Json?           // Steg 4 (samanlikningsfelt)
@@ -438,7 +438,7 @@ model Profile {
 }
 ```
 
-**Payload-mapping frå `/api/profile/setup`:**
+**Payload-mapping fra `/api/profile/setup`:**
 
 ```typescript
 {
@@ -458,7 +458,7 @@ model Profile {
 }
 ```
 
-**Merk:** Dette er ein **flat payload** som backend mappar til Profile-modellen sine nestede JSON-felt.
+**Merk:** Dette er en **flat payload** som backend mappar til Profile-modellen sine nestede JSON-felt.
 
 ---
 
@@ -480,7 +480,7 @@ model JourneyProgress {
 }
 ```
 
-**Påverka etter onboarding:** Opprett automatisk ved `POST /api/match` med default-verdiar.
+**Påkrevet etter onboarding:** Opprett automatisk ved `POST /api/match` med default-verdier.
 
 ---
 
@@ -488,7 +488,7 @@ model JourneyProgress {
 
 ### POST `/api/profile/setup`
 
-**Formål:** Hovud-API for onboarding-fullføring  
+**Formål:** Hoved-API for onboarding-fullføring  
 **Metode:** POST  
 **Content-Type:** application/json  
 **Input (body):** Heile `ProfileData` payload med basic + personlighet + livssituasjon + tilknytning + kommunikasjon + kjaerlighet + livsstil + relasjonsStil + fremtid + humor + grenser + moden + preferanser
@@ -513,7 +513,7 @@ await prisma.user.update({
 ```
 
 **Validering:** Ingen Zod-validering her — frontend validerer alt  
-**Feilhåndtering:** 401 (ikkje innlogga), 500 (server-feil)
+**Feilhåndtering:** 401 (ikke innlogga), 500 (server-feil)
 
 ---
 
@@ -538,7 +538,7 @@ await prisma.user.update({
 
 ### GET `/api/onboarding/progress`
 
-**Formål:** Sjekke progresjon (kven steg er på?)  
+**Formål:** Sjekke progresjon (hvem steg er på?)  
 **Metode:** GET  
 **Auth:** getServerSession()  
 **Utdata:** `{ step: number, totalSteps: number, completed: boolean }`
@@ -596,7 +596,7 @@ interface ProfileData extends Record<string, unknown> {
   // Steg 4: Kjærleiksspråk
   loveGive, loveReceive, closenessBuilder, distanceCreator, smallThing
   
-  // Steg 5a: Livsstil & verdiar
+  // Steg 5a: Livsstil & verdier
   highPriority, lowPriority, goodEveryday, desiredLifestyle, undesiredLifestyle
   
   // Steg 5b: Relasjonsstil
@@ -673,10 +673,10 @@ function loadDraft(): Partial<ProfileData> {
 | Eigenskap | Verdi |
 |-----------|-------|
 | Språk | Bokmål (Noreg) |
-| Tone | Varm, roleg, trygg, moden |
+| Tone | Varm, rolig, trygg, moden |
 | Personvern | "Svarene dine blir kun brukt til å bygge profilen din" |
 | Guiding | Steg-spesifikk tekst med empatisk tone |
-| Feilmeldingar | Klare, vennlege, ikkje-dømande |
+| Feilmeldingar | Klare, vennlege, ikke-dømande |
 
 **Eksempel på guiding-tekstar:**
 - Steg 0: "Dette er starten på reisen din. Vi holder det enkelt."
@@ -696,7 +696,7 @@ function loadDraft(): Partial<ProfileData> {
 | Trust-text | "Svarene dine brukes kun til å bygge profilen din og finne en god match." | rgba(255,255,255,0.35) |
 | Autosave | "Sparar..." (spinner) | rgba(212,175,55,0.6) |
 | Required-felt | "*" markert ved label | - |
-| Example-text | Placeholder med exempel-verdiar | rgba(255,255,255,0.4) |
+| Example-text | Placeholder med exempel-verdier | rgba(255,255,255,0.4) |
 
 ---
 
@@ -706,7 +706,7 @@ function loadDraft(): Partial<ProfileData> {
 |---------|-------|------|
 | Primær bakgrunn | `#0B1520` (ToSom Blue) | Heile sidan |
 | Sekundær bakgrunn | `rgba(255,255,255,0.05)` (glassmorphism) | Card-bakgrunn |
-| Gull-aksent | `#D4AF37` (Nordic Gold) | Knappar, headings, focus |
+| Gull-aksent | `#D4AF37` (Nordic Gold) | Knapper, headings, focus |
 | Gull-hover | `#E8C766` | Knapp-hover gradient |
 | Tekst primary | `#FFFFFF` | Overskrifter |
 | Tekst secondary | `rgba(255,255,255,0.7)` | Body-tekst |
@@ -764,7 +764,7 @@ function loadDraft(): Partial<ProfileData> {
 
 1. **Glassmorphism** — `backdrop-filter: blur(20px)` + `bg: rgba(255,255,255,0.05)`
 2. **Spotlight-overlay** — `absolute inset-0 bg-white/5 blur-3xl opacity-[0.06]`
-3. **Gull-gradient knappar** med hover-shadow-increment
+3. **Gull-gradient knapper** med hover-shadow-increment
 4. **Fade-in animasjonar** — step transitions med `animation: fadeIn 0.3s ease-out`
 5. **Autosave-indikator** — gull-spinner + "Sparar..." tekst
 6. **Subtil border-highlight** — `border: 1px solid rgba(255,255,255,0.1)`
@@ -776,14 +776,14 @@ function loadDraft(): Partial<ProfileData> {
 - ✅ **Steg-spesifikke guidings-textar** som set kontekst for kvart stege
 - ✅ **Varm tone** som kjenneteikner ToSom sin identitet
 - ✅ **Ro og trygghet** kommunisert gjennom text ("fortsett i ditt eget tempo")
-- ✅ **Privacy-fokus** med trust-text nederst på kvar side
+- ✅ **Privacy-fokus** med trust-text nederst på hver side
 
 ### Svakheter i guiding
 
-- ⚠️ **Inga visuell progresjon-indikasjon** på kvart stege-side (berre progressbar øvst)
-- ⚠️ **Inga mikroguiding** inside kvart felt (kva er forventet svaret?)
-- ⚠️ **Inga kontekstuelle tips** som kan hjelpe usikre brukarar
-- ⚠️ **Inga "hopp over"-moglegheit** på obligatoriske felter
+- ⚠️ **Inga visuell progresjon-indikasjon** på kvart stege-side (bare progressbar øvst)
+- ⚠️ **Inga mikroguiding** inside kvart felt (hva er forventet svaret?)
+- ⚠️ **Inga kontekstuelle tips** som kan hjelpe usikre brukere
+- ⚠️ **Inga "hopp over"-mulighet** på obligatoriske felter
 
 ---
 
@@ -817,22 +817,22 @@ glassVariant('default' | 'gold' | 'blue', 'soft' | 'medium' | 'strong')
 |----------|--------|---------|
 | **Struktur** | 13-stegs med tydelege faser | Identitet → Personlighet → Relasjon |
 | **Autosave** | localStorage + debounce (400ms) | Uten dataprosessering ved nettverksbrudd |
-| **Validering** | Klient-side på alle felt | Minste-teikn-grenser for tekstfelt |
+| **Validering** | Klient-side på alle felt | Minste-tegn-grenser for tekstfelt |
 | **Design** | Premium glassmorphism | Konsistent med ToSom-designet |
 | **Navigasjon** | Back/Next med fade-transitions | Smooth UX mellom stega |
-| **API-struktur** | Éin POST /api/profile/setup som mottar heile payload | Efficient (berre 1 nettverkskall) |
+| **API-struktur** | Éin POST /api/profile/setup som mottar heile payload | Efficient (bare 1 nettverkskall) |
 | **Database-mapping** | Alle felt mappar til Profile-modellen sin JSON-felt | Flexibel skjema for framtida |
 
 ### Svakheter
 
-| Kategori | Svakeleik | Påverknad |
+| Kategori | Svakhet | Påvirkning |
 |----------|-----------|-----------|
-| **UX** | 13 steg kan opplevast som lang | Brukarar kan gje opp tidleg |
-| **Validering** | Berre klient-side (ingen Zod på setup/) | Ingen backup-validering ved client-side failure |
-| **Guiding** | Inga mikroguiding per felt | Brukarar er usikre på kva dei skal skrive |
-| **Progress** | Ingen visuell progresjon per steg | "Kor mykje att?"-spørsmålet |
-| **Live vs lokal** | Kan ikkje verifisere live-versjonen (ingen skjermbilde) | Manglande kvalitetskontroll |
-| **Responsive** | Nokre komponentar har fixed-width layout | Mobile kan ha issue med breidd |
+| **UX** | 13 steg kan oppleves som lang | Brukere kan gi opp tidlig |
+| **Validering** | Bare klient-side (ingen Zod på setup/) | Ingen backup-validering ved client-side failure |
+| **Guiding** | Inga mikroguiding per felt | Brukere er usikre på hva de skal skrive |
+| **Progress** | Ingen visuell progresjon per steg | "Kor mye att?"-spørsmålet |
+| **Live vs lokal** | Kan ikke verifisere live-versjonen (ingen skjermbilde) | Manglende kvalitetskontroll |
+| **Responsive** | Noen komponentar har fixed-width layout | Mobile kan ha issue med breidd |
 
 ---
 
@@ -840,22 +840,22 @@ glassVariant('default' | 'gold' | 'blue', 'soft' | 'medium' | 'strong')
 
 ### Høg prioritet (kritisk for UX)
 
-1. **Legg til mikroguiding per felt** — Kva er forventet svar? (eks: "Kalla du deg kalla Sofia, Jonas eller Lia")
+1. **Legg til mikroguiding per felt** — Hva er forventet svar? (eks: "Kalla du deg kalla Sofia, Jonas eller Lia")
 2. **Validering i backend** — Legg Zod-validering på `/api/profile/setup` med alle 70+ felt
 3. **Progresjons-indikasjon per steg** — Kor mange felt er utfylte? ("4/6 felt utfylte")
-4. **Skip-moglegheit** for valgfrie felter (livsstil-preferanse)
+4. **Skip-mulighet** for valgfrie felter (livsstil-preferanse)
 
 ### Medium prioritet (konsistens)
 
-5. **Standardiser textarea-min-størrelse** — Nokre har 10 teikn, nokre har 5, nokre har ingen min-grense
+5. **Standardiser textarea-min-størrelse** — Noen har 10 tegn, noen har 5, noen har ingen min-grense
 6. **Responsive-layout-test** — Test breidd på mobil (<375px width)
 7. **Error-message konsistens** — Nokor feilmeldingar er korte, andre lange
 
 ### Lav prioritet (premium-polish)
 
-8. **Legg til animasjonar** for nye felt som dukkar opp (fade-in)
-9. **Tooltip-hjelp** for komplekse felt (kva betyr "moden nysgjerrighet"?)
-10. **Prefill-moglegheit** frå eksisterande profil (for tilbakekjømande brukarar)
+8. **Legg til animasjonar** for nye felt som dukker opp (fade-in)
+9. **Tooltip-hjelp** for komplekse felt (hva betyr "moden nysgjerrighet"?)
+10. **Prefill-mulighet** fra eksisterande profil (for tilbakekjømande brukere)
 
 ---
 
@@ -864,20 +864,20 @@ glassVariant('default' | 'gold' | 'blue', 'soft' | 'medium' | 'strong')
 ### Overordna struktur (13 steg → 3 hovudfaser)
 
 ```
-FASE 1 — IDENTITET (Kven er du?)
+FASE 1 — IDENTITET (Hvem er du?)
 ├── Steg 1: Navn + alder + kjønn + bosted (Sociaal identitet)
 ├── Steg 2: Livssituasjon (Hverdagsliv, jobb, studium)
 └── Steg 3: Kroppstype + stil + energi (Slideshow-side)
 
-FASE 2 — PERSONLIGHET (Korleis er du?)
+FASE 2 — PERSONLIGHET (Hvordan er du?)
 ├── Steg 4: Personlighetstrekk (kortform av Big Five / BFI-10)
 ├── Steg 5: Verdier (PVQ-10)
 ├── Steg 6: Livsstil (søvn, sosialt, tempo)
-└── Steg 7: Interesser (valg-side, ikkje blandet)
+└── Steg 7: Interesser (valg-side, ikke blandet)
 
-FASE 3 — RELASJON (Kven søker du?)
+FASE 3 — RELASJON (Hvem søker du?)
 ├── Steg 8: Relasjonspreferanser (tempo, dybde, kommunikasjon)
-├── Steg 9: Grenser (korleis ser du på grenser?)
+├── Steg 9: Grenser (hvordan ser du på grenser?)
 ├── Steg 10: Moden nysgjerrighet (refleksjonsspørrsmål)
 ├── Steg 11: Oppsummering (premium, rolig, trygg)
 └── Steg 12: Fullfør onboarding (CTA → matching)
@@ -888,22 +888,22 @@ FASE 3 — RELASJON (Kven søker du?)
 | Element | Verdier |
 |---------|---------|
 | **Spacing** | Base: 32–48px; Mobil: 24–32px; Desktop: 48–64px |
-| **Radius** | Alle kort: 20px; Alle knappar: 16px; Alle inputfelt: 16px |
+| **Radius** | Alle kort: 20px; Alle knapper: 16px; Alle inputfelt: 16px |
 | **Shadow** | Premium: `0 8px 32px rgba(0,0,0,0.25)` |
 | **Farger** | ToSom Blue (#0B1520), Nordic Gold (#D4AF37/CTA), Soft White (#FFFFFF/tekst), Deep Grey (rgba(255,255,255,0.65)/sekundær) |
 | **Typografi** | Overskrift: 36–42px; Seksjonstittel: 24–28px; Brødtekst: 18–20px; Microcopy: 16px |
 
 ### Interaksjonsreglar
 
-- ✅ Alle slides på éin side
-- ✅ Alle val på éin side
-- ✅ Alle tekstfelt på éin side
-- ❌ Ingen blanding av typar
+- ✅ Alle slides på én side
+- ✅ Alle val på én side
+- ✅ Alle tekstfelt på én side
+- ❌ Ingen blanding av typer
 - ❌ Ingen fragmentering
 - ❌ Ingen "ikke oppgitt"-felt
-- Alt skal vere roleg, stort, premium
+- Alt skal være rolig, stort, premium
 
-### Forskningsbaserte tema + spørrsmål
+### Forskningsbaserte tema + spørsmål
 
 #### Fase 1 — Identitet
 
@@ -924,7 +924,7 @@ FASE 3 — RELASJON (Kven søker du?)
 
 **Steg 4: Personlighetstrekk (kortform av Big Five / BFI-10)**
 - Tema: Psykologisk profil
-- Forskning: Big Five er forskningsbasert for personlegdom-matching (kortforma BFI-10)
+- Forskning: Big Five er forskningsbasert for personlighet-matching (kortforma BFI-10)
 - Guiding: "Dette er forskningsbasert. Ta det rolig."
 
 **Steg 5: Verdier (3–5 kjerneverdier)**
@@ -942,7 +942,7 @@ FASE 3 — RELASJON (Kven søker du?)
 #### Fase 3 — Relasjon
 
 **Steg 8: Relasjonspreferanser**
-- Tema: Kven du søker
+- Tema: Hvem du søker
 - Guiding: "Dette er ikke krav — det er preferanser."
 
 **Steg 9: Grenser**
@@ -950,8 +950,8 @@ FASE 3 — RELASJON (Kven søker du?)
 - Guiding: "Grenser skaper trygghet."
 
 **Steg 10: Moden nysgjerrighet (refleksjon)**
-- Tema: Korleis ser du på nærheit?
-- Guiding: "Dette er eit roleg øyeblikk for deg."
+- Tema: Hvordan ser du på nærhet?
+- Guiding: "Dette er et rolig øyeblikk for deg."
 
 **Steg 11: Oppsummering (premium, rolig, trygg)**
 - Tema: Oversikt over alt du har delt
@@ -967,7 +967,7 @@ FASE 3 — RELASJON (Kven søker du?)
 
 ### Fase A: Dokumentasjon (no — PLAN MODE)
 - ✅ Denne dokumentasjonen er fullført
-- ✅ Allereie kartlagt: alle 13 steg, API-ruter, database-mapping, UX, design-system
+- ✅ Allerede kartlagt: alle 13 steg, API-ruter, database-mapping, UX, design-system
 
 ### Fase B: ACT-bygging (etter toggle til ACT mode)
 1. Bygg komponentbibliotek for onboarding (radius, spacing, typografi, shadow)
@@ -975,8 +975,8 @@ FASE 3 — RELASJON (Kven søker du?)
 3. Legg til backend-validering på `/api/profile/setup` med Zod
 4. Lag ny layout med 32–48px spacing og premium design (130% zoom)
 5. Bygg slideshow-side for livsstil/valg-felt
-6. Oppdater oppsummering med roleg, stor, trygg visning
-7. Fullfør alle endringar med validasjon mot denne rapporten
+6. Oppdater oppsummering med rolig, stor, trygg visning
+7. Fullfør alle endringer med validasjon mot denne rapporten
 
 ---
 

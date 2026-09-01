@@ -1,7 +1,7 @@
 # ToSom Observability & Security Sanity Check
 
 ## Formål
-Dette dokumentet beskriv korleis ein verifiserer at observability- og sikkerheitslagene fungerer korrekt i pre-prod før lansering til produksjon. Det skal gje ein rask og strukturert oversikt over status for system-overvaking og sikkerheitsmekanismar.
+Dette dokumentet beskriv hvordan en verifiserer at observability- og sikkerheitslagene fungerer korrekt i pre-prod før lansering til produksjon. Det skal gi en rask og strukturert oversikt over status for system-overvaking og sikkerheitsmekanismar.
 
 ---
 
@@ -17,37 +17,37 @@ Dette dokumentet beskriv korleis ein verifiserer at observability- og sikkerheit
 
 ### Verifisering av Metrics
 
-Frå `/api/admin/observability/metrics` skal desse felta vere til stades:
+Fra `/api/admin/observability/metrics` skal desse felta være til stades:
 
 | Felt | Krav | Merknad |
 |------|----|-----|
-| `metrics.perEndpoint` | Til stades, ikkje tom | Latens per endpoint (p50/p90/p95/p99) |
-| `metrics.ai` | Til stades (kan vere null) | AI-statistikk (kall, latency, feilrate) |
+| `metrics.perEndpoint` | Til stades, ikke tom | Latens per endpoint (p50/p90/p95/p99) |
+| `metrics.ai` | Til stades (kan være null) | AI-statistikk (kall, latency, feilrate) |
 | `metrics.performance` | Til stades | Total system-ytelse |
 | `metrics.errorRate` | Til stades | Feilrate i prosent |
 | `metrics.dbLatency` | Til stades | DB-latens i ms |
 
 ### Verifisering av Heatmap
 
-Frå `/api/admin/observability/heatmap` skal desse felta vere til stades:
+Fra `/api/admin/observability/heatmap` skal desse felta være til stades:
 
 | Felt | Krav | Merknad |
 |------|----|-----|
-| `routes` | Til stades, ikkje tom | Array med route-slug og frekvens |
-| Top routes | Minste eitt entry | Skall vere API-ruter som /api/ai/*, /api/messages/*, /api/match/* |
+| `routes` | Til stades, ikke tom | Array med route-slug og frekvens |
+| Top routes | Minste ett entry | Skall være API-ruter som /api/ai/*, /api/messages/*, /api/match/* |
 
 ### Verifisering av Traces
 
-Frå `/api/admin/observability/traces` skal desse felta vere til stades:
+Fra `/api/admin/observability/traces` skal desse felta være til stades:
 
 | Felt | Krav | Merknad |
 |------|----|-----|
-| `traces` | Til stades, ikkje tom | Array med trace-objekt |
-| kvar trace.traceId | Til stades, unik | Skal følge heile request-kjeden |
-| kvar trace.endpoint | Til stades | Endpoint som vart kalla |
-| kvar trace.latency | Til stades | Latens i ms |
-| kvar trace.statusCode | Til stades | HTTP-statuskode |
-| kvar trace.createdAt | Til stades | Timestamp |
+| `traces` | Til stades, ikke tom | Array med trace-objekt |
+| hver trace.traceId | Til stades, unik | Skal følge heile request-kjeden |
+| hver trace.endpoint | Til stades | Endpoint som ble kalla |
+| hver trace.latency | Til stades | Latens i ms |
+| hver trace.statusCode | Til stades | HTTP-statuskode |
+| hver trace.createdAt | Til stades | Timestamp |
 
 ### Manuell test av observability
 
@@ -70,19 +70,19 @@ Frå `/api/admin/observability/traces` skal desse felta vere til stades:
    curl https://api-preprod.tosom.no/api/system/latency
    ```
 
-2. Sjekk at kallane dukkar opp i:
+2. Sjekk at kallane dukker opp i:
    - **Heatmap** — ruter skal ha auka frekvens
-   - **Traces** — nye trace-objekt skal vere til stades med gyldige traceId
+   - **Traces** — nye trace-objekt skal være til stades med gyldige traceId
    - **Metrics** — latency og error-rate skal oppdaterast
 
 ### Spesifikke krav
 
-- **traceId** skal følge heile request-kjeden — samanlikn traceId frå request headers med den i trace-loggen
-- **API heatmap** skal vise trafikk frå smoke-tester, load-tester og AI-testar
-- **Latency-metrics** skal oppdaterast (p50/p90/p95/p99) — data skal vere fersk (ikkje stale)
-- **Error-rate** skal visast korrekt — feil frå load-testar skal synast her
-- **DB-latency** skal visast korrekt — skal vere < 50ms i pre-prod
-- **RouteHit-modellen** skal fyllast med data — kvar API-kall skal opprette ein RouteHit-entry
+- **traceId** skal følge heile request-kjeden — sammenlign traceId fra request headers med den i trace-loggen
+- **API heatmap** skal vise trafikk fra smoke-tester, load-tester og AI-tester
+- **Latency-metrics** skal oppdaterast (p50/p90/p95/p99) — data skal være fersk (ikke stale)
+- **Error-rate** skal visast korrekt — feil fra load-tester skal synast her
+- **DB-latency** skal visast korrekt — skal være < 50ms i pre-prod
+- **RouteHit-modellen** skal fyllast med data — hver API-kall skal opprette en RouteHit-entry
 
 ---
 
@@ -96,35 +96,35 @@ Frå `/api/admin/observability/traces` skal desse felta vere til stades:
 
 ### Verifisering av Security Overview
 
-Frå `/api/admin/security/overview` skal desse felta vere til stades:
+Fra `/api/admin/security/overview` skal desse felta være til stades:
 
 | Felt | Krav | Merknad |
 |------|----|-----|
 | `failedLogins.total` | Til stades | Totalt antal mislukka innloggingar |
-| `failedLogins.byIp` | Til stades (kan vere tom) | Gruppering etter IP |
-| `failedLogins.byEmail` | Til stades (kan vere tom) | Gruppering etter e-post |
+| `failedLogins.byIp` | Til stades (kan være tom) | Gruppering etter IP |
+| `failedLogins.byEmail` | Til stades (kan være tom) | Gruppering etter e-post |
 | `rateLimits.total` | Til stades | Totalt antal rate-limit |
 | `rateLimits.byRoute` | Til stades | Gruppering etter endpoint |
-| `rateLimits.byUser` | Til stades | Gruppering etter brukar |
+| `rateLimits.byUser` | Til stades | Gruppering etter bruker |
 | `sessions.totalActive` | Til stades | Antal aktive session |
 | `sessions.recentLogins` | Til stades | Nylege innloggingar |
-| `sessions.suspiciousLogins` | Til stades | Miste eitt skal vere > 0 (simulert) |
+| `sessions.suspiciousLogins` | Til stades | Miste ett skal være > 0 (simulert) |
 | `audit.totalActions` | Til stades | Totalt antal admin-handlingar |
 | `audit.byAction` | Til stades | Gruppering etter handlingstype |
-| `audit.topAdmins` | Til stades | Top admin-brukarar |
-| `audit.suspiciousActions` | Til stades | Miste eitt skal vere > 0 (simulert) |
+| `audit.topAdmins` | Til stades | Top admin-brukere |
+| `audit.suspiciousActions` | Til stades | Miste ett skal være > 0 (simulert) |
 
 ### Sikkerheitsmekanismer som skal bekreftast
 
 #### 1. Session Fingerprinting
-- **ipHash** blir generert og lagret ved kvar innlogging
-- **userAgentHash** blir generert og lagret ved kvar innlogging
+- **ipHash** blir generert og lagret ved hver innlogging
+- **userAgentHash** blir generert og lagret ved hver innlogging
 - Mismatch mellom original og lagret hash gir **401 Unauthorized**
 - Test: Bytt IP eller User-Agent → skal få 401
 
 #### 2. Brute-force-beskyttelse
 - Simuler **5 feil passord-kall** mot login-endepunktet
-- Etter 5 feil skal brukaren bli blokkert i eit tidsrom
+- Etter 5 feil skal brukeren bli blokkert i et tidsrom
 - Fjerde eller femte kall skal returnere **429 Too Many Requests**
 - Sjekk at loggar blir oppretta med module `security/bruteforce`
 
@@ -132,7 +132,7 @@ Frå `/api/admin/security/overview` skal desse felta vere til stades:
 - E-postadresser blir maskerte i loggar: `j***n@example.com`
 - Telefonnummer blir maskerte: `+47*** **** 1234`
 - Tokens og nøklar blir maskerte: `[REDACTED]`
-- Test: Kall login-endepunkt med e-post og sjekk at `SystemLog.metadata` ikkje inneheld sensitiv data
+- Test: Kall login-endepunkt med e-post og sjekk at `SystemLog.metadata` ikke inneholder sensitiv data
 
 #### 4. Security headers
 Verifiser at desse HTTP-response headerne er aktive:
@@ -141,7 +141,7 @@ Verifiser at desse HTTP-response headerne er aktive:
 |------|-----------|-----|
 | `X-Frame-Options` | `DENY` | Forhindre clickjacking |
 | `X-Content-Type-Options` | `nosniff` | Forhindre MIME-type-sniffing |
-| `Content-Security-Policy` | `default-src 'self'; ...` | Begrens kva ressursar som kan lastast |
+| `Content-Security-Policy` | `default-src 'self'; ...` | Begrens hva ressursar som kan lastast |
 | `X-XSS-Protection` | `1; mode=block` | XSS-beskyttelse |
 | `Strict-Transport-Security` | `max-age=31536000; ...` | Tving HTTPS |
 | `Permissions-Policy` | `camera=(), microphone=(), ...` | Begrens tilgang til device-funksjonar |
@@ -171,7 +171,7 @@ curl -I https://api-preprod.tosom.no/api/system/health
 | Security headers | OK / FAIL | |
 
 ### Krav for godkjenning
-Alle komponentar må vere "OK" for at sjekken skal godkjennast.
+Alle komponentar må være "OK" for at sjekken skal godkjennast.
 
 ---
 
@@ -187,28 +187,28 @@ Alle komponentar må vere "OK" for at sjekken skal godkjennast.
 Set `OBSERVABILITY_SECURITY_OK` til `true` når:
 - Alle komponentar over har status "OK"
 - Ingen critical eller high-priority feil er rapportert
-- Smoke-tester og load-testar er grøne
+- Smoke-tester og load-tester er grøne
 
 ---
 
 ## Feilsøking
 
 ### Ingen data i observability-dashboard
-- Sjekk at smoke-tester og load-testar er køyrde
+- Sjekk at smoke-tester og load-tester er køyrde
 - Verifiser at PerformanceMetric og RouteHit-modellar er oppretta
-- Vent 2–3 minutt etter siste kall (kan vere oppsummerings-intervall)
+- Vent 2–3 minutt etter siste kall (kan være oppsummerings-intervall)
 
 ### Ingen data i security-dashboard
 - Sjekk at det har skjedd mislukka innloggingar eller rate-limit
 - Verifiser at AuditLog og SystemLog-modellar er oppretta
 - Simuler test-scenario (feil passord, mange kall)
 
-### traceId manglar i traces
+### traceId mangler i traces
 - Verifiser at trace-middleware er aktivert
 - Sjekk at `traceId` blir sendt i request headers
 - Verifiser at PerformanceMetric blir oppretta med gyldig traceId
 
-### Security headers manglar
+### Security headers mangler
 - Verifiser at `middleware/securityHeaders.ts` er lasta inn
 - Sjekk at `NEXTAUTH_URL` og `NODE_ENV` er korrekte
-- Test med `curl -I` for å sjå response headers
+- Test med `curl -I` for å se response headers

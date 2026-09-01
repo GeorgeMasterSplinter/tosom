@@ -1,6 +1,6 @@
 /**
  * Tosom — ChatContainer (Premium Nordic Gold 2026) ⭐🟡
- * Helt ny versjon: roleg, lett og premium.
+ * Helt ny versjon: rolig, lett og premium.
  * Premium bubble-animasjonar + resonance-glow + mood-engine + partner presence.
  * Integrerer ChatHeader og BliKjentPanel.
  *
@@ -115,7 +115,7 @@ function MessageList({ partner, journeyDay }: {
             <span className="text-2xl">💬</span>
           </div>
           <p className="text-lg font-medium mb-2" style={{ color: tPrimary }}>Start reisen med en varm melding</p>
-          <p className="text-sm" style={{ color: tSecondary }}>Dei beste relasjonane byrjar med eit lite steg.</p>
+          <p className="text-sm" style={{ color: tSecondary }}>De beste relasjonane byrjar med et lite steg.</p>
         </div>
       </div>
     );
@@ -134,7 +134,7 @@ function MessageList({ partner, journeyDay }: {
     );
   }
 
-  // MELDINGAR — premium med warm-glow animasjon + mood-bakgrunn
+  // MELDINGER — premium med warm-glow animasjon + mood-bakgrunn
   return (
     <div
       className="px-6 mood-background"
@@ -300,14 +300,14 @@ function ChatInput({
 
       if (!res.ok) {
         const err = await res.json();
-        console.error('Bilete-opplasting feila:', err);
+        console.error('Bilde-opplasting feila:', err);
         return;
       }
 
       const data = await res.json();
       await sendMessage(data.imageUrl, "image");
     } catch (error) {
-      console.error('Bilete-opplasting feil:', error);
+      console.error('Bilde-opplasting feil:', error);
     } finally {
       setUploading(false);
       if (fileInputRef.current) {
@@ -320,7 +320,7 @@ function ChatInput({
     <div 
       className="px-4 py-3.5 sm:px-6"
       style={{ 
-        // C-4: safe-area — på telefonar med home-indikator (iPhone) dekkjer
+        // C-4: safe-area — på telefonar med home-indikator (iPhone) dekker
         // ikke lenger skjermkanten inputfeltet. env() = 0 på desktop.
         paddingBottom: 'calc(0.875rem + env(safe-area-inset-bottom))',
         borderTop: `1px solid ${moodTheme.accentMuted}`,
@@ -473,7 +473,7 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
   const moodTheme = ctx.moodTheme;
 
   // Scroll-manager — refen MÅ være på wrapperen under (den eigentlege
-  // overflow-y-auto-beholderen). Tidlegare hanka hooken på ein indre div
+  // overflow-y-auto-beholderen). Tidlegare hanka hooken på en indre div
   // som ikke kunne scrolle, og nye meldinger gikk foran alt.
   const scrollRef = useChatScroll(ctx.messages.length).scrollRef;
 
@@ -493,7 +493,7 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
           transition: 'background 1.2s ease-in-out',
         }}
       >
-        {/* HEADER — navn + alder + avstand + dag + 3 panel-knappar */}
+        {/* HEADER — navn + alder + avstand + dag + 3 panel-knapper */}
         <ChatHeader
           partner={partner}
           journeyDay={journeyDay}

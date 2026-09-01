@@ -90,7 +90,7 @@
 18. **Rollback ved rødt.** Kan du ikke fikse innenfor samme steg → rollback, dokumenter, spør bruker.
 19. **Ingen nye avhengigheter** uten at steget angir det.
 20. **Ingen test som reimplementerer logikken den tester.**
-21. **Alle brukervendte strenger på bokmål.** Ingen `ikkje`, `korleis`, `brukar`, `allereie`, `funnen`, `bur`, `no` for «nå».
+21. **Alle brukervendte strenger på bokmål.** Ingen `ikke`, `hvordan`, `bruker`, `allerede`, `funnet`, `bur`, `no` for «nå».
 22. **05:00 nevnes aldri i brukervendt tekst.**
 
 ---
@@ -648,7 +648,7 @@ Loggfør hver gang en bryter stopper noe — ellers blir stillheten mystisk.
         exit 1
       fi
   ```
-- Utvid `lang-guard` med: `allereie`, `funnen`, `brukar`, `ikkje`, `korleis`, `ver vennleg`, `bur du`.
+- Utvid `lang-guard` med: `allerede`, `funnet`, `bruker`, `ikke`, `hvordan`, `vær vennlig`, `bur du`.
 
 - **Sjekk 1:** `npx tsc --noEmit` → 0
 - **Sjekk 2:**
@@ -963,7 +963,7 @@ model Profile {
 
 > ⚠️ **ACT v3 STEG 5.3 mislyktes her.** Deviation: *«sed korrupterer 485-linjers React-komponent gjentatt»*. **Bruk ikke `sed`.** Les hele filen, gjør målrettede redigeringer, kjør `npx tsc --noEmit` etter hver.
 
-**Patch-skisse:** `POST` ved stegbytte (debounced, ikke-blokkerende — feiler lagringen skal brukeren likevel komme videre; logg til Sentry). `GET` ved oppstart → gjenopprett svar og posisjon. `localStorage` som hurtigbuffer, serveren er sannheten. Rett samtidig «Brukar» (`:399`) og «Ver vennleg å prøv igjen» (`:424`).
+**Patch-skisse:** `POST` ved stegbytte (debounced, ikke-blokkerende — feiler lagringen skal brukeren likevel komme videre; logg til Sentry). `GET` ved oppstart → gjenopprett svar og posisjon. `localStorage` som hurtigbuffer, serveren er sannheten. Rett samtidig «Bruker» (`:399`) og «Vær vennlig å prøv igjen» (`:424`).
 
 - **Sjekk 2:** `grep -c "onboarding/draft" app/onboarding/OnboardingFlow.tsx` → **≥ 2**
 - **Sjekk 4:** Fyll steg 1–5. **Tøm localStorage.** Last på nytt → svar og posisjon gjenopprettet fra serveren. Verifiser utkastraden i DB.
@@ -1046,12 +1046,12 @@ Dette begrenser ikke hva folk gjør. Møtes de fysisk dag 3 og slutter å bruke 
 | Før avslutning | «Dette sletter samtalen for dere begge. Det kan ikke angres.» |
 | Bilder | «Fra dag 15 kan dere dele bilder.» *(koden er kanon)* |
 
-Fjern all nynorsk: `allereie`, `funnen`, `brukar`, `ikkje`, `korleis`, `ver vennleg`, `bur`.
+Fjern all nynorsk: `allerede`, `funnet`, `bruker`, `ikke`, `hvordan`, `vær vennlig`, `bur`.
 
 - **Sjekk 2:**
   ```bash
   grep -rn "05:00" app/ components/ --include=*.tsx | grep -v admin | wc -l   # → 0
-  grep -rniE "allereie|funnen|brukar|ikkje|korleis|ver vennleg" app/ components/ lib/ | wc -l  # → 0
+  grep -rniE "allerede|funnet|bruker|ikke|hvordan|vær vennlig" app/ components/ lib/ | wc -l  # → 0
   ```
 - **Sjekk 4:** Hver tilstand vises med riktig tekst. `lang-guard` grønn.
 - **Sjekk 5:** I-9. Ingen driftsdetalj lekker.

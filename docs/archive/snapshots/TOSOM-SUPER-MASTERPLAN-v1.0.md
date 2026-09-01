@@ -57,7 +57,7 @@ Aldersgrensen håndheves i `components/AgeRequirement.tsx` og onboarding-valider
 Tokens i `config/design-tokens.ts` og `tailwind.config.js`. Glassmorphism gjennomgående i `components/ui/`.
 
 ### 🔴 AVVIK — mindre
-Kodekommentarer inneholder nynorsk-former («berre», «kjelde», «frå», «einaste») i bl.a. `lib/matching/resonanceLevel.ts`, `config/matching.ts`, `lib/journey/engine.ts`. Flere commit-meldinger er også nynorsk. **Bokmål gjelder overalt**, også utenfor brukerflaten. Rydd ved neste berøring av filen — ikke en egen oppgave.
+Kodekommentarer inneholder nynorsk-former («bare», «kilde», «fra», «einaste») i bl.a. `lib/matching/resonanceLevel.ts`, `config/matching.ts`, `lib/journey/engine.ts`. Flere commit-meldinger er også nynorsk. **Bokmål gjelder overalt**, også utenfor brukerflaten. Rydd ved neste berøring av filen — ikke en egen oppgave.
 
 ---
 

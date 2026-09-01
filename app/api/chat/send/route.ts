@@ -53,7 +53,7 @@ async function postHandler(request: NextRequest) {
     return NextResponse.json({ error: "Ikke autentisert" }, { status: 401 });
   }
 
-  // Sjekk om brukaren er utestengt (STEG 3.2 — sesjons-revokering)
+  // Sjekk om brukeren er utestengt (STEG 3.2 — sesjons-revokering)
   const bannedCheck = await requireNotBanned(session.user.id);
   if (bannedCheck) return bannedCheck;
 
@@ -86,7 +86,7 @@ async function postHandler(request: NextRequest) {
     // Map frontend type → Prisma MessageCategory
     const mappedType = mapMessageType(type ?? "text");
 
-    // Verifiser at brukaren er del av denne conversationen
+    // Verifiser at brukeren er del av denne conversationen
     const conversation = await prisma.conversation.findFirst({
       where: {
         id: conversationId,

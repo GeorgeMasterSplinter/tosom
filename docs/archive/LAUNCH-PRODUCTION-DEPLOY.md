@@ -8,7 +8,7 @@
 
 ## OVERSIKT
 
-Dette dokumentet inneheld steg-for-steg guide for å setje opp og deploye ToSom til produksjon med domenet `tosom.no`.
+Dette dokumentet inneholder steg-for-steg guide for å sette opp og deploye ToSom til produksjon med domenet `tosom.no`.
 
 ---
 
@@ -94,7 +94,7 @@ npx prisma db pull
 2. Klikk "Add Product"
 3. Namn: `ToSom Premium`
 4. Beskriving: `1 måned med ToSom — dik dybde, varme og resonans`
-5. Prisar (kroner):
+5. Priser (kroner):
    | Periode | Pris |
    |---|---|
    | Månadleg | kr 99 |
@@ -159,7 +159,7 @@ Path: /api/cron/daily
 Secret: ${CRON_SECRET}
 ```
 
-**Formål:** Daily match-generering og daglege oppgåver
+**Formål:** Daily match-generering og daglege oppgaver
 
 ### /api/cron/cleanup
 
@@ -196,7 +196,7 @@ vercel env ls production
 # Database tilkopling
 npx prisma migrate status
 
-# Alle testar grøne
+# Alle tester grøne
 npm test
 ```
 
@@ -207,7 +207,7 @@ git checkout main
 git pull origin main
 git status
 
-# Commit alle endringar
+# Commit alle endringer
 git add .
 git commit -m "Release: ToSom v1.0 — produksjonsdeploy"
 git push origin main
@@ -269,12 +269,12 @@ curl https://tosom.no/chat
 | Admin | ⏳ | /admin/dashboard |
 | Stripe | ⏳ | Test-kjøp |
 | Pusher | ⏳ | Presence oppdaterer |
-| AI-knappar | ⏳ | Foreslår svar |
+| AI-knapper | ⏳ | Foreslår svar |
 | WarmFlow | ⏳ | Mood endrar |
 | Atmosphere | ⏳ | Bakgrunn animert |
 | Cron | ⏳ | Jobbar køyrer |
 | SSL | ⏳ | HTTPS aktiv |
-| Analytics | ⏳ | Vercel visar data |
+| Analytics | ⏳ | Vercel viser data |
 
 ---
 
@@ -333,7 +333,7 @@ npx pusher-channels-mqtt --app_id=X --key=X --secret=X --cluster=eu
 
 - [ ] Oppdater dependencies
 - [ ] Review security
-- [ ] Analyze brukar-innsikt
+- [ ] Analyze bruker-innsikt
 - [ ] Sjekk Stripe rapportar
 
 ---
@@ -349,7 +349,7 @@ npx pusher-channels-mqtt --app_id=X --key=X --secret=X --cluster=eu
 | Dokumentasjon | 60+ |
 | Environment variablar | 17 |
 | Cron-jobbar | 3 |
-| Stripe planar | 3 |
+| Stripe planer | 3 |
 
 ---
 
@@ -401,7 +401,7 @@ npx pusher-channels-mqtt --app_id=X --key=X --secret=X --cluster=eu
 - [ ] Admin dashboard fungerer
 - [ ] Stripe test-kjøp gjennomført
 - [ ] Realtime chat fungerer
-- [ ] AI-knappar fungerer
+- [ ] AI-knapper fungerer
 - [ ] Cron-jobbar køyrer
 
 ---
@@ -409,4 +409,4 @@ npx pusher-channels-mqtt --app_id=X --key=X --secret=X --cluster=eu
 **Dato:** 30. juni 2026
 **Status:** 🟡 KLAR FOR PRODUKSJONSDEPLOY
 
-**Neste steg:** Følg oppgåve 1-6 ovanfor for å setje opp og deploye til tosom.no
+**Neste steg:** Følg oppgåve 1-6 ovanfor for å sette opp og deploye til tosom.no

@@ -8,7 +8,7 @@ AI Quota-testen verifiserer at:
 - AIRequestLog blir fylt med data
 - Observability viser AI-kall
 
-## Kva som blir testa
+## Hva som blir testa
 
 ### 1. Normal-kall
 - `/api/ai/message-suggestions` — 200 OK
@@ -28,7 +28,7 @@ AI Quota-testen verifiserer at:
 ### 4. Verifisering
 - `/api/admin/ai/logs` → 200 med AIRequestLog-data
 
-## Korleis køyre scriptet
+## Hvordan køyre scriptet
 
 ### Lokal (med AI_API_KEY)
 ```bash
@@ -44,7 +44,7 @@ AI_ADMIN_TOKEN=admin-token \
 npx tsx scripts/ai/aiQuotaTest.ts
 ```
 
-### Utan AI-key (berre feilhandtering)
+### Uten AI-key (bare feilhandtering)
 ```bash
 AI_TEST_BASE_URL=https://api-preprod.tosom.no npx tsx scripts/ai/aiQuotaTest.ts
 ```
@@ -53,7 +53,7 @@ AI_TEST_BASE_URL=https://api-preprod.tosom.no npx tsx scripts/ai/aiQuotaTest.ts
 
 ### Grønt lys — ALT PASS
 ```
-Alle AI-testar bestått! ✓
+Alle AI-tester bestått! ✓
 ```
 - Alle normal-kall returnerer 200
 - Rate-limit triggar
@@ -62,7 +62,7 @@ Alle AI-testar bestått! ✓
 
 ### Gult lys — WARN
 ```
-rate-limit ikkje trigga — kan vere ok dersom kvoten er høg
+rate-limit ikke trigga — kan være ok dersom kvoten er høg
 ```
 - Rate-limit er konfigurert med høg kvote
 - Test OK, men sjekk rate-limit-konfigurasjon
@@ -75,18 +75,18 @@ Failed tests:
 - Critical problem med AI-kalla
 - Sjekk server-loggar
 
-## Vanlege feil og korleis løyse dei
+## Vanlege feil og hvordan løyse de
 
 | Feil | Årsak | Løysing |
 |------|-----|---|
 | `Expected 200, got 500` | Backend-feil | Sjekk server-loggar |
-| `Expected 200, got 401` | Manglande API-key | Sett AI_API_KEY |
-| `Connection refused` | Server køyrer ikkje | Start serveren |
+| `Expected 200, got 401` | Manglende API-key | Sett AI_API_KEY |
+| `Connection refused` | Server køyrer ikke | Start serveren |
 | `timeout` | AI-provider seint | Sjekk AI-key og kvote |
-| `Rate-limit ikkje trigga` | Høg kvote | OK — sjekk rate-limit-konfig |
+| `Rate-limit ikke trigga` | Høg kvote | OK — sjekk rate-limit-konfig |
 | `DNS resolution failed` | Ugyldig URL | Sjekk AI_TEST_BASE_URL |
 
-## Korleis sjå AIRequestLog i admin
+## Hvordan se AIRequestLog i admin
 
 Gå til `/admin/ai/logs` i browseren. Eller kall API-et direkte:
 
@@ -111,7 +111,7 @@ Svar:
 }
 ```
 
-## Korleis sjå AI-kall i observability
+## Hvordan se AI-kall i observability
 
 Gå til `/admin/observability/metrics` og sjekke:
 

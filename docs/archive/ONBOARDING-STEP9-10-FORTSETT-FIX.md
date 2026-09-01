@@ -8,7 +8,7 @@
 
 "Fortsett til neste steg"-knappane på Steg 9 (Oppsummering) og Steg 10 (Start reisen) fungerte ikke fordi:
 1. Steg 10 brukte `onStart={handleStartReisen}` og `saving={saving}` i staden for `onNext`
-2. Steg 10 mottok ikkje `step` og `goToStep` props
+2. Steg 10 mottok ikke `step` og `goToStep` props
 
 ---
 
@@ -82,7 +82,7 @@ Steg 9 → onNext → handleNext → goToStep(9) → Steg 10
 Steg 10 → onNext → handleNext → goToStep(10) → (ingen case 10 → null)
 ```
 
-**Merk:** Steg 10 sine knappar navigerer ikkje til ein ny side, dei starter matching-prosessene.
+**Merk:** Steg 10 sine knapper navigerer ikke til en ny side, de starter matching-prosessene.
 
 ---
 
@@ -91,7 +91,7 @@ Steg 10 → onNext → handleNext → goToStep(10) → (ingen case 10 → null)
 | Fil | Endring |
 |-----|---|
 | `OnboardingFlow.tsx` | Endra case 9 til å bruke `step`, `goToStep`, `onNext`, `loading` |
-| `Step9Oppsummering.tsx` | Ingen endring (allereie korrekt) |
+| `Step9Oppsummering.tsx` | Ingen endring (allerede korrekt) |
 | `Step10StartReisen.tsx` | Byttt `onStart` → `onNext`, la til `step` og `goToStep` |
 
 ---
@@ -126,6 +126,6 @@ hover:bg-white/20 transition-all duration-300
 
 ## OPPSUMMERING
 
-**Problem:** Steg 10 brukte `onStart` og `saving` props, og mottok ikkje `step`/`goToStep`.
+**Problem:** Steg 10 brukte `onStart` og `saving` props, og mottok ikke `step`/`goToStep`.
 **Løysing:** Bytta til `onNext` og `loading` props, la til `step` og `goToStep`.
 **Resultat:** Navigasjon fungerer no på Steg 9 og 10.

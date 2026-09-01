@@ -40,7 +40,7 @@
 
 ### Auth Routes (app/api/auth/*)
 
-| Route | Metode | Auth | Role | Input-validering | Status | Kalla frå |
+| Route | Metode | Auth | Role | Input-validering | Status | Kalla fra |
 |-------|--------|------|------|-----------------|--------|-----------|
 | `/api/auth/[...nextauth]` | GET/POST | ✅ NextAuth | - | NextAuth | ✅ Aktiv | UI-komponentar |
 | `/api/auth/magic-link` | POST | ❌ (public) | - | Nei | ✅ Aktiv | UI-login-side |
@@ -55,7 +55,7 @@
 
 ### Match Routes (app/api/match/*)
 
-| Route | Metode | Auth | Role | Input-validering | Status | Kalla frå |
+| Route | Metode | Auth | Role | Input-validering | Status | Kalla fra |
 |-------|--------|------|------|-----------------|--------|-----------|
 | `/api/match` | GET/POST | ✅ getServerSession | User | Ja (Zod: matchCreateSchema) | ✅ Aktiv | Dashboard, matching-side |
 | `/api/match/accept` | POST | ❌ **MANGEL** | - | Ja (Zod: matchAcceptSchema) | ✅ Aktiv | Matching-side |
@@ -65,7 +65,7 @@
 
 ### Journey Routes (app/api/journey/*)
 
-| Route | Metode | Auth | Role | Input-validering | Status | Kalla frå |
+| Route | Metode | Auth | Role | Input-validering | Status | Kalla fra |
 |-------|--------|------|------|-----------------|--------|-----------|
 | `/api/journey/[conversationId]` | GET | ✅ getServerSession | User | Nei | ✅ Aktiv | Journey-komponentar |
 | `/api/journey/conversations/[conversationId]` | GET | ✅ getServerSession | User | Nei | ✅ Aktiv | **Ny mapping** (duplikat over) |
@@ -77,14 +77,14 @@
 
 ### Profile Routes (app/api/profile/*)
 
-| Route | Metode | Auth | Role | Input-validering | Status | Kalla frå |
+| Route | Metode | Auth | Role | Input-validering | Status | Kalla fra |
 |-------|--------|------|------|-----------------|--------|-----------|
 | `/api/profile` | GET | ✅ getServerSession | User | Nei | ✅ Aktiv | Profile-visning |
 | `/api/profile/setup` | POST | ✅ getServerSession | User | Ja (Zod: profileSetupSchema) | ✅ Aktiv | Profile-edit-side |
 
 ### Onboarding Routes (app/api/onboarding/*)
 
-| Route | Metode | Auth | Role | Input-validering | Status | Kalla frå |
+| Route | Metode | Auth | Role | Input-validering | Status | Kalla fra |
 |-------|--------|------|------|-----------------|--------|-----------|
 | `/api/onboarding/save` | POST | ✅ getServerSession | User | Ja (Zod: onboardingSaveSchema) | ✅ Aktiv | Onboarding-step |
 | `/api/onboarding/progress` | GET | ❌ **MANGEL** | - | Nei | ✅ Aktiv | Progress-tracking |
@@ -93,23 +93,23 @@
 
 ### Conversation Routes (app/api/conversation/*)
 
-| Route | Metode | Auth | Role | Input-validering | Status | Kalla frå |
+| Route | Metode | Auth | Role | Input-validering | Status | Kalla fra |
 |-------|--------|------|------|-----------------|--------|-----------|
 | `/api/conversation/create` | POST | ✅ requireAuth | User | Ja (Zod: conversationCreateSchema) | ✅ Aktiv | `/matching/[id]/page.tsx` |
 
 ### Chat Routes (app/api/chat/*)
 
-**Ingen chat-ruter funnen i /app/api/chat/. Chat-funksjonaliteten er implementert direkte i app/chat/ eller via server actions.**
+**Ingen chat-ruter funnet i /app/api/chat/. Chat-funksjonaliteten er implementert direkte i app/chat/ eller via server actions.**
 
 ### Questions Routes (app/api/questions/*)
 
-| Route | Metode | Auth | Role | Input-validering | Status | Kalla frå |
+| Route | Metode | Auth | Role | Input-validering | Status | Kalla fra |
 |-------|--------|------|------|-----------------|--------|-----------|
-| `/api/questions` | GET | ❌ **MANGEL** | - | Ja (Zod: questionsQuerySchema) | ✅ Aktiv | UI-question-komponentar, e2e-testar |
+| `/api/questions` | GET | ❌ **MANGEL** | - | Ja (Zod: questionsQuerySchema) | ✅ Aktiv | UI-question-komponentar, e2e-tester |
 
 ### Relationship Routes (app/api/relationship/*)
 
-| Route | Metode | Auth | Role | Input-validering | Status | Kalla frå |
+| Route | Metode | Auth | Role | Input-validering | Status | Kalla fra |
 |-------|--------|------|------|-----------------|--------|-----------|
 | `/api/relationship/memories` | GET/POST | ❌ **MANGEL** | - | Ja (Zod: relationshipMemoriesSchema) | ✅ Aktiv | Memories.tsx, MemoryLane.tsx |
 | `/api/relationship/milestones` | GET/POST | ❌ **MANGEL** | - | Ja (Zod: relationshipMilestonesSchema) | ✅ Aktiv | MilestoneCard.tsx |
@@ -118,7 +118,7 @@
 
 ### AI Routes (app/api/ai/*)
 
-| Route | Metode | Auth | Role | Input-validering | Status | Kalla frå |
+| Route | Metode | Auth | Role | Input-validering | Status | Kalla fra |
 |-------|--------|------|------|-----------------|--------|-----------|
 | `/api/ai/journey-guidance` | POST | ✅ getServerSession | User | Nei | ✅ Aktiv | Journey UI |
 | `/api/ai/journey/next-step` | POST | ❌ **MANGEL** | - | Nei | ⚠️ Ukjent | **Ikke sjekka** |
@@ -128,7 +128,7 @@
 
 ### Admin Routes (app/api/admin/*)
 
-| Route | Metode | Auth | Role | Input-validering | Status | Kalla frå |
+| Route | Metode | Auth | Role | Input-validering | Status | Kalla fra |
 |-------|--------|------|------|-----------------|--------|-----------|
 | `/api/admin/auth` | POST | ❌ (public login) | - | Nei | ✅ Aktiv | Admin-login-side |
 | `/api/admin/setup` | POST | ✅ getServerSession | - | Ja (Zod) | ⚠️ Feil (Prisma-typefeil) | Setup-wizard |
@@ -150,9 +150,9 @@
 
 ### Admin System-Ruter (app/api/admin/system/*)
 
-**MERK:** Dette domenet er overlap med admin/observability/. Vurder å slå saman.
+**MERK:** Dette domenet er overlap med admin/observability/. Vurder å slå sammen.
 
-| Route | Metode | Auth | Role | Input-validering | Status | Kalla frå |
+| Route | Metode | Auth | Role | Input-validering | Status | Kalla fra |
 |-------|--------|------|------|-----------------|--------|-----------|
 | `/api/admin/system/errors` | GET | ❌ **MANGEL** | - | Nei | ⚠️ Ukjent | **Ubruk?** |
 | `/api/admin/system/logs` | GET | ❌ **MANGEL** | - | Nei | ⚠️ Ukjent | **Ubruk?** |
@@ -162,48 +162,48 @@
 
 ### Payment Routes (app/api/payment/*)
 
-| Route | Metode | Auth | Role | Input-validering | Status | Kalla frå |
+| Route | Metode | Auth | Role | Input-validering | Status | Kalla fra |
 |-------|--------|------|------|-----------------|--------|-----------|
 | `/api/payment/create-checkout-session` | POST | ✅ getServerSession | User | Ja (Zod: createCheckoutSessionSchema) | ✅ Aktiv | Betalings-side |
 | `/api/payment/webhook` | POST | ❌ (Stripe signature check) | - | Nei | ✅ Aktiv | Stripe webhook |
 
 ### System Routes (app/api/system/*)
 
-| Route | Metode | Auth | Role | Input-validering | Status | Kalla frå |
+| Route | Metode | Auth | Role | Input-validering | Status | Kalla fra |
 |-------|--------|------|------|-----------------|--------|-----------|
 | `/api/system/health` | GET | ❌ **MANGEL** (public health) | - | Nei | ✅ Aktiv | External monitoring |
 | `/api/system/latency` | GET | ❌ **MANGEL** | - | Nei | ✅ Aktiv | **Ubruk?** |
 
 ### Analytics Routes (app/api/analytics/*)
 
-| Route | Metode | Auth | Role | Input-validering | Status | Kalla frå |
+| Route | Metode | Auth | Role | Input-validering | Status | Kalla fra |
 |-------|--------|------|------|-----------------|--------|-----------|
 | `/api/analytics/track` | POST | ❌ **MANGEL** | - | Nei | ✅ Aktiv | Analytics-client SDK |
 
 ### Cron Routes (app/api/cron/*)
 
-| Route | Metode | Auth | Role | Input-validering | Status | Kalla frå |
+| Route | Metode | Auth | Role | Input-validering | Status | Kalla fra |
 |-------|--------|------|------|-----------------|--------|-----------|
 | `/api/cron/journey` | GET | ❌ (cron auth via header) | - | Nei | ✅ Aktiv | Vercel cron / external scheduler |
 | `/api/cron/matching` | GET | ❌ **MANGEL** | - | Nei | ✅ Aktiv | Cron-matching-jobb |
 
 ### Dashboard Routes (app/api/dashboard/*)
 
-| Route | Metode | Auth | Role | Input-validering | Status | Kalla frå |
+| Route | Metode | Auth | Role | Input-validering | Status | Kalla fra |
 |-------|--------|------|------|-----------------|--------|-----------|
 | `/api/dashboard/overview` | GET | ✅ getServerSession | User | Nei | ✅ Aktiv | Dashboard-side |
 | `/api/dashboard` | GET/POST | ❌ **MANGEL** | - | Nei | ⚠️ Ukjent | **Ubruk?** |
 
 ### Dev Routes (app/api/dev/*)
 
-| Route | Metode | Auth | Role | Input-validering | Status | Kalla frå |
+| Route | Metode | Auth | Role | Input-validering | Status | Kalla fra |
 |-------|--------|------|------|-----------------|--------|-----------|
 | `/api/dev-login` | GET/POST | ❌ (dev-only) | - | Nei | ✅ Aktiv | Dev-login-side |
 | `/api/dev/setup` | POST | ❌ **MANGEL** | - | Ja (Zod) | ✅ Aktiv | Dev-setup-verktøy |
 
 ### Notifications Routes (app/api/notifications/*)
 
-| Route | Metode | Auth | Role | Input-validering | Status | Kalla frå |
+| Route | Metode | Auth | Role | Input-validering | Status | Kalla fra |
 |-------|--------|------|------|-----------------|--------|-----------|
 | `/api/notifications` | GET | ❌ **MANGEL** | - | Nei | ✅ Aktiv | Notification-komponentar |
 | `/api/notifications/[id]/read` | POST | ❌ **MANGEL** | - | Nei | ✅ Aktiv | Mark-as-read-funksjonalitet |
@@ -241,30 +241,30 @@ PUBLIC ROUTES (should be public):
 /cron/journey                     ✅ Cron auth via header
 
 NEEDS AUTH:
-/api/match/accept                 ❌ Manglar auth-sjekk!
-/api/match/insight                ❌ Manglar auth-sjekk!
-/api/match/status                 ❌ Manglar auth-sjekk!
-/api/journey/progress             ❌ Manglar auth-sjekk!
-/api/journey/progress/advance     ❌ Manglar auth-sjekk!
-/api/journey/reflect              ❌ Manglar auth-sjekk!
-/api/journey/today                ❌ Manglar auth-sjekk!
-/api/onboarding/progress          ❌ Manglar auth-sjekk!
-/api/onboarding/deep-profile      ❌ Manglar auth-sjekk!
-/api/questions                    ❌ Manglar auth-sjekk!
-/api/relationship/memories        ❌ Manglar auth-sjekk!
-/api/relationship/milestones      ❌ Manglar auth-sjekk!
-/api/relationship/timeline        ❌ Manglar auth-sjekk!
-/api/relationship/digest          ❌ Manglar auth-sjekk!
-/api/ai/journey/next-step         ❌ Manglar auth-sjekk!
-/api/admin/system/errors          ❌ Manglar auth-sjekk!
-/api/admin/system/logs            ❌ Manglar auth-sjekk!
-/api/admin/system/overview        ❌ Manglar auth-sjekk!
-/api/admin/system/rate-limits     ❌ Manglar auth-sjekk!
-/api/admin/system/realtime        ❌ Manglar auth-sjekk!
-/api/admin/journey/[id]/reset     ❌ Manglar requireAdmin!
-/api/notifications                ❌ Manglar auth-sjekk!
-/api/notifications/[id]/read      ❌ Manglar auth-sjekk!
-/api/system/latency               ❌ Manglar auth-sjekk! (kan vere public)
+/api/match/accept                 ❌ Mangler auth-sjekk!
+/api/match/insight                ❌ Mangler auth-sjekk!
+/api/match/status                 ❌ Mangler auth-sjekk!
+/api/journey/progress             ❌ Mangler auth-sjekk!
+/api/journey/progress/advance     ❌ Mangler auth-sjekk!
+/api/journey/reflect              ❌ Mangler auth-sjekk!
+/api/journey/today                ❌ Mangler auth-sjekk!
+/api/onboarding/progress          ❌ Mangler auth-sjekk!
+/api/onboarding/deep-profile      ❌ Mangler auth-sjekk!
+/api/questions                    ❌ Mangler auth-sjekk!
+/api/relationship/memories        ❌ Mangler auth-sjekk!
+/api/relationship/milestones      ❌ Mangler auth-sjekk!
+/api/relationship/timeline        ❌ Mangler auth-sjekk!
+/api/relationship/digest          ❌ Mangler auth-sjekk!
+/api/ai/journey/next-step         ❌ Mangler auth-sjekk!
+/api/admin/system/errors          ❌ Mangler auth-sjekk!
+/api/admin/system/logs            ❌ Mangler auth-sjekk!
+/api/admin/system/overview        ❌ Mangler auth-sjekk!
+/api/admin/system/rate-limits     ❌ Mangler auth-sjekk!
+/api/admin/system/realtime        ❌ Mangler auth-sjekk!
+/api/admin/journey/[id]/reset     ❌ Mangler requireAdmin!
+/api/notifications                ❌ Mangler auth-sjekk!
+/api/notifications/[id]/read      ❌ Mangler auth-sjekk!
+/api/system/latency               ❌ Mangler auth-sjekk! (kan være public)
 /api/analytics/track              ⚠️ Public tracking (akseptabelt)
 /api/payment/webhook              ✅ Stripe signature verification
 /api/dashboard                    ❌ Ukjent status
@@ -325,10 +325,10 @@ Schemas er definert i **lib/validation/api.ts**:
 | `relationshipTimelineSchema` | relationship/timeline |
 | `adminJourneyCompleteSchema` | admin/journey/[id]/complete |
 | `adminMatchResetSchema` | admin/matches/[id]/reset |
-| + fleire admin-schemas | - |
+| + flere admin-schemas | - |
 
 ### ❌ Uten input-validering (~30 ruter)
-Dei fleste GET-ruter og enkelte POST-rutar manglar Zod-validering.
+De fleste GET-ruter og enkelte POST-rutar mangler Zod-validering.
 
 ---
 
@@ -343,11 +343,11 @@ Dei fleste GET-ruter og enkelte POST-rutar manglar Zod-validering.
 { error: 'Feilmelding', code: 'ERROR_CODE' }
 ```
 
-### ❌ Ikkje-standardisert (~45 ruter)
-Mange ruter bruker framleis:
+### ❌ Ikke-standardisert (~45 ruter)
+Mange ruter bruker fortsatt:
 - `new Response(JSON.stringify(...))` i staden for `NextResponse.json()`
 - `{ ok: true, ... }` i staden for `{ success: true, data: { ... } }`
-- Manglande `code` på error-responsar
+- Manglende `code` på error-responsar
 
 Standardisert i **docs/API-RESPONSE-STANDARD.md**
 
@@ -372,8 +372,8 @@ Standardisert i **docs/API-RESPONSE-STANDARD.md**
 - **Utfordra til:** Alle POST-ruter treng csrfCheck-kall
 
 ### Rate Limiting
-- Status: Delvis implementert (cron-jobbar har eigen rate-limit)
-- Manglar for: Public endpoints som `/api/auth/magic-link`, `/api/auth/phone/send`
+- Status: Delvis implementert (cron-jobbar har egen rate-limit)
+- Mangler for: Public endpoints som `/api/auth/magic-link`, `/api/auth/phone/send`
 
 ---
 
@@ -397,7 +397,7 @@ app/api/
 │   └── users                  # ✅ Med auth + role
 ├── ai/                        # AI features (5 ruter)
 │   ├── journey-guidance       # ✅ Med auth
-│   ├── journey/next-step      # ❌ Manglar auth
+│   ├── journey/next-step      # ❌ Mangler auth
 │   ├── match-insights         # ✅ Med auth
 │   ├── message-suggestions    # ✅ Med auth
 │   └── profile/rewrite        # ✅ Med feature-flag
@@ -413,29 +413,29 @@ app/api/
 ├── conversation/create        # ✅ Med auth
 ├── cron/                      # Cron job endpoints (2 ruter)
 │   ├── journey                # ✅ Cron-auth via header
-│   └── matching               # ⚠️ Manglar auth-header sjekk
+│   └── matching               # ⚠️ Mangler auth-header sjekk
 ├── dashboard/*                # ✅ Med auth (2 ruter)
 ├── dev-login                  # ✅ Dev-only
-├── dev/setup                  # ⚠️ Utan auth-sjekk
+├── dev/setup                  # ⚠️ Uten auth-sjekk
 ├── journey/                   # Journey API (7 ruter)
 │   ├── [conversationId]       # ✅ Med auth (gamle mapping)
 │   ├── conversations/[id]     # ✅ Ny mapping (duplikat)
-│   ├── progress               # ❌ Manglar auth
-│   ├── progress/advance       # ❌ Manglar auth
-│   ├── reflect                # ❌ Manglar auth
+│   ├── progress               # ❌ Mangler auth
+│   ├── progress/advance       # ❌ Mangler auth
+│   ├── reflect                # ❌ Mangler auth
 │   ├── resonance              # ✅ Med auth
-│   └── today                  # ❌ Manglar auth
+│   └── today                  # ❌ Mangler auth
 ├── match/                     # Match API (5 ruter)
-│   ├── accept                 # ❌ Manglar auth!
-│   ├── insight                # ❌ Manglar auth!
+│   ├── accept                 # ❌ Mangler auth!
+│   ├── insight                # ❌ Mangler auth!
 │   ├── route.ts               # ✅ Med auth
 │   ├── score                  # ✅ Med auth + Zod (ny)
-│   └── status                 # ❌ Manglar auth!
-├── notifications/*            # ❌ Manglar auth (2 ruter)
+│   └── status                 # ❌ Mangler auth!
+├── notifications/*            # ❌ Mangler auth (2 ruter)
 ├── onboarding/                # Onboarding API (4 ruter)
 │   ├── complete               # ✅ Med auth
-│   ├── deep-profile           # ❌ Manglar auth
-│   ├── progress               # ❌ Manglar auth
+│   ├── deep-profile           # ❌ Mangler auth
+│   ├── progress               # ❌ Mangler auth
 │   └── save                   # ✅ Med auth + Zod
 ├── payment/                   # Payment API (2 ruter)
 │   ├── create-checkout-session # ✅ Med auth + Zod
@@ -443,8 +443,8 @@ app/api/
 ├── profile/                   # Profile API (2 ruter)
 │   ├── route.ts               # ✅ Med auth
 │   └── setup                  # ✅ Med auth + Zod
-├── questions                  # ❌ Manglar auth
-├── relationship/*             # ❌ Manglar auth (4 ruter)
+├── questions                  # ❌ Mangler auth
+├── relationship/*             # ❌ Mangler auth (4 ruter)
 ├── system/                    # System API (2 ruter)
 │   ├── health                 # ✅ Public health check
 │   └── latency                # ⚠️ Ukjent bruk
@@ -454,18 +454,18 @@ app/api/
 
 ## 9. UBUKTE RUTER
 
-Ruter som **ikkje** blir kalla frå UI, cron eller andre API-ruter:
+Ruter som **ikke** blir kalla fra UI, cron eller andre API-ruter:
 
 | Route | Moglege årsak | Aksjon |
 |-------|---------------|--------|
-| `/api/admin/system/errors` | Ukjent/kall frå UI som ikkje er funnen | ✅ Slett eller flytt til deprecated |
-| `/api/admin/system/logs` | Ukjent/kall frå UI som ikkje er funnen | ✅ Slett eller flytt til deprecated |
-| `/api/admin/system/overview` | Ukjent/kall frå UI som ikkje er funnen | ✅ Slett eller flytt til deprecated |
-| `/api/admin/system/rate-limits` | Ukjent/kall frå UI som ikkje er funnen | ✅ Slett eller flytt til deprecated |
-| `/api/admin/system/realtime` | Ukjent/kall frå UI som ikkje er funnen | ✅ Slett eller flytt til deprecated |
-| `/api/dashboard` (utan subpath) | Manglar funksjonalitet | ✅ Slett |
-| `/api/dev/setup` | Dev-verktøy (ikkje prod) | ⚠️ Behald i .gitignore / slett i prod |
-| `/api/ai/journey/next-step` | Ukjent/kall frå UI | ⚠️ Verifiser kall før sletting |
+| `/api/admin/system/errors` | Ukjent/kall fra UI som ikke er funnet | ✅ Slett eller flytt til deprecated |
+| `/api/admin/system/logs` | Ukjent/kall fra UI som ikke er funnet | ✅ Slett eller flytt til deprecated |
+| `/api/admin/system/overview` | Ukjent/kall fra UI som ikke er funnet | ✅ Slett eller flytt til deprecated |
+| `/api/admin/system/rate-limits` | Ukjent/kall fra UI som ikke er funnet | ✅ Slett eller flytt til deprecated |
+| `/api/admin/system/realtime` | Ukjent/kall fra UI som ikke er funnet | ✅ Slett eller flytt til deprecated |
+| `/api/dashboard` (uten subpath) | Mangler funksjonalitet | ✅ Slett |
+| `/api/dev/setup` | Dev-verktøy (ikke prod) | ⚠️ Behald i .gitignore / slett i prod |
+| `/api/ai/journey/next-step` | Ukjent/kall fra UI | ⚠️ Verifiser kall før sletting |
 
 ---
 
@@ -489,14 +489,14 @@ Ruter som **ikkje** blir kalla frå UI, cron eller andre API-ruter:
 5. **Slett deprecated**: `/api/auth/vipps/*`
 
 ### Medium prioritet (konsistens)
-6. **Standardiser responsformat** på alle ~45 ikkje-standardiserte ruter
+6. **Standardiser responsformat** på alle ~45 ikke-standardiserte ruter
 7. **Flytt cron/matching til header-auth** (same som cron/journey)
 8. **Legg til Zod-validering** på GET-ruter med query parameters
 9. **Duplikat fjerning**: `/api/journey/[conversationId]` og `/api/journey/conversations/[conversationId]`
 
 ### Lav prioritet (optimalisering)
-10. **Sett `dynamic = 'error'`** på `/api/system/health` (kan vere static)
-11. **Slå saman admin/system** med admin/observability eller slett om ubruk
+10. **Sett `dynamic = 'error'`** på `/api/system/health` (kan være static)
+11. **Slå sammen admin/system** med admin/observability eller slett om ubruk
 12. **CSRF-beskyttelse** til alle POST-ruter som treng det
 
 ---
@@ -506,13 +506,13 @@ Ruter som **ikkje** blir kalla frå UI, cron eller andre API-ruter:
 ### Før (problema)
 ```
 ❌ 35+ filer med export const dynamic INNI funksjon
-❌ match/score utan Zod-validering
-❌ match/score og journey/resonance utan auth-sjekk
-❌ admin/journey/[id]/complete utan requireAdmin
-❌ vipps/* utan /oauth/ mapping
+❌ match/score uten Zod-validering
+❌ match/score og journey/resonance uten auth-sjekk
+❌ admin/journey/[id]/complete uten requireAdmin
+❌ vipps/* uten /oauth/ mapping
 ❌ [id] i staden for semantiske namn ([conversationId], [userId])
-❌ ~45 ruter utan standardisert responsformat
-❌ ~17 ruter utan auth-sjekk
+❌ ~45 ruter uten standardisert responsformat
+❌ ~17 ruter uten auth-sjekk
 ```
 
 ### Etter (løysing)

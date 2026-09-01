@@ -330,7 +330,7 @@ fetch('/api/chat/starter', {
      → Redirect til /dashboard
 
 3. Landing på /dashboard
-   - Ingen matcher ennå ("Du har ingen aktive matcher enno")
+   - Ingen matcher ennå ("Du har ingen aktive matcher enda")
    - Ingen samtaler ennå
    - Profilstatus: Onboarding: ⬜, Dyp profil: ⬜
    - CTA: "Fullfør profilen din" → /onboarding

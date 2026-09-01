@@ -6,7 +6,7 @@
  *
  * F2: Flytta fra app/api/cron/matching/rejectReason.ts til lib/matching —
  * scoreRound-kjernen (lib) trengje funksjonen. Gamle importar verkar via
- * re-export frå den gamle staden.
+ * re-export fra den gamle staden.
  */
 
 export function mapRejectReason(reason: string | undefined): string {

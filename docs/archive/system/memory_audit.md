@@ -11,7 +11,7 @@
 |--------------------|----------------|--------|
 | `journey.phases_enum` | `enum JourneyPhase` | ✅ Stemmmer |
 | `onboarding.enum_steps` (10 values) | `enum DeepProfileStep` (10 values) | ✅ Stemmer |
-| `onboarding.steps: 9` | Djupe profil har **10** enum-verdier | ⚠️ UENIGHET |
+| `onboarding.steps: 9` | Dype profil har **10** enum-verdier | ⚠️ UENIGHET |
 | `matching.weights` | `config/matching.ts` / `lib/matching/weightConfig.ts` | ✅ Stemmer |
 | `matching.match_delay_hours: 24` | `config/matching.ts: MATCH_DELAY_HOURS = 24` | ✅ Stemmer |
 | `journey.length_days: 30` | Journey engine (30 dager) | ✅ Stemmer |

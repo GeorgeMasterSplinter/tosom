@@ -1,4 +1,4 @@
-# FASE 6A — Side: "Kvifor ToSom" (/kvifor)
+# FASE 6A — Side: "Hvorfor ToSom" (/hvorfor)
 
 ## Status
 - **Fase:** 6A
@@ -6,17 +6,17 @@
 - **Bygg:** ✅ SUKSESS (4.78 kB, static)
 
 ## Oppsummering
-Oppretta undersida "Kvifor ToSom" som forklarer kvifå ToSom er annerledes enn vanlege datingplattformer.
+Oppretta undersida "Hvorfor ToSom" som forklarer kvifå ToSom er annerledes enn vanlege datingplattformer.
 
 ## Struktur
 
 ### Seksjonar
-1. **Hero** — "Kvifor velje ToSom?" med mørk blå gradient-bakgrunn
-2. **"ToSom er ikkje ein datingapp"** — 6 punkt (ingen swipe, feed, markedsplass, gamification, åpne profiler, konkurranse)
-3. **"Det er kvifor ToSom eksisterer"** — 3 grunnar (datingkultur brotten, overflatefokus øydeleggjer djupde, menneske treng tryggleik)
+1. **Hero** — "Hvorfor velge ToSom?" med mørk blå gradient-bakgrunn
+2. **"ToSom er ikke en datingapp"** — 6 punkt (ingen swipe, feed, markedsplass, gamification, åpne profiler, konkurranse)
+3. **"Det er hvorfor ToSom eksisterer"** — 3 grunnar (datingkultur brotten, overflatefokus øydeleggjer djupde, menneske treng tryggleik)
 4. **"Det ToSom leverer"** — 6 punkt (éin match, guidet reise, privat profil, resonans-matching, djupde/modenheit, null stress)
-5. **"Kvifor vi valde rolegheit"** — 3 forskningsbaserte punkt (attachment-teori, overflate vs. djupde, kvalitet over kvantitet)
-6. **CTA** — "Første steg er ein privat profil" → /onboarding
+5. **"Hvorfor vi valde rolegheit"** — 3 forskningsbaserte punkt (attachment-teori, overflate vs. djupde, kvalitet over kvantitet)
+6. **CTA** — "Første steg er en privat profil" → /onboarding
 7. **Footer** — standard Footer-komponent
 
 ### Design
@@ -27,9 +27,9 @@ Oppretta undersida "Kvifor ToSom" som forklarer kvifå ToSom er annerledes enn v
 - Rolig, varm, moden tone
 
 ### Teknologi
-- Bruk av `typographyToStyle()` frå design-tokens
+- Bruk av `typographyToStyle()` fra design-tokens
 - Bruk av `color`, `spacing`, `radius`, `shadow` tokens
-- GlassCard-hjelp komponent med inline styles frå tokens
+- GlassCard-hjelp komponent med inline styles fra tokens
 - Ambient glød-effektar
 
 ### Tone-of-voice

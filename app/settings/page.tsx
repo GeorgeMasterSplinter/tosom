@@ -1219,7 +1219,7 @@ function SlettKontoSection() {
 }
 
 /* ═══════════════════════════════════════
-   HOVUD-KOMONENT — SETTINGS PAGE
+   HOVED-KOMONENT — SETTINGS PAGE
    ═══════════════════════════════════════ */
 
 const DEFAULT_PREFS: Preferences = {

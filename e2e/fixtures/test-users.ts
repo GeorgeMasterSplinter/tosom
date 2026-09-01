@@ -49,7 +49,7 @@ export const test = base.extend<{
         throw new Error(`Ukjend testbrukar: ${userId}`);
       }
 
-      // Gå til dev-login og velg brukar
+      // Gå til dev-login og velg bruker
       await page.goto('/dev-login');
       await page.getByRole('button', { name: new RegExp(user.name, 'i') }).click();
 

@@ -1,12 +1,12 @@
 # ToSom Load Testing
 
 ## Formål
-Load-testar simulera moderat trykk mot ToSom for å oppdage:
-- Latensproblem før dei påverkar brukarar
+Load-tester simulera moderat trykk mot ToSom for å oppdage:
+- Latensproblem før de påverkar brukere
 - Høge feilrate under last
 - Stabilitetsproblem i pre-prod eller produksjon
 
-## Korleis køyre scriptet
+## Hvordan køyre scriptet
 
 ### Lokal (localhost)
 ```bash
@@ -35,7 +35,7 @@ LOAD_CONCURRENCY=5 LOAD_REQUESTS=20 npx tsx scripts/load/basicLoadTest.ts
 | `LOAD_BASE_URL` | Base URL til server | `http://localhost:3000` | Nei |
 | `LOAD_CONCURRENCY` | Samtidige worker | `20` | Nei |
 | `LOAD_REQUESTS` | Request per worker | `50` | Nei |
-| `LOAD_USER_TOKEN` | Dummy brukar-token | `dummy-user-token` | Nei |
+| `LOAD_USER_TOKEN` | Dummy bruker-token | `dummy-user-token` | Nei |
 | `LOAD_ADMIN_TOKEN` | Dummy admin-token | `dummy-admin-token` | Nei |
 
 ## Totalt tal på request
@@ -67,18 +67,18 @@ Total = CONCURRENCY × REQUESTS (t.d. 20 × 50 = **1000 request**)
 
 ## Vanlege feil og årsaker
 
-| Feil | Mogleg årsak | Korleis løysa |
+| Feil | Mogleg årsak | Hvordan løysa |
 |------|--|---|
-| `Connection refused` | Server køyrer ikkje | Start serveren først |
+| `Connection refused` | Server køyrer ikke | Start serveren først |
 | `timeout` | DB seint, minne fullt, CPU-mangel | Sjekk serverressursar og DB |
 | `401 Unauthorized` | Feil eller utgått token | Oppdater LOAD_USER_TOKEN/LOAD_ADMIN_TOKEN |
-| `403 Forbidden` | Admin ikkje autorisert | Sjekk admin-rolla |
+| `403 Forbidden` | Admin ikke autorisert | Sjekk admin-rolla |
 | `429 Too Many Requests` | Rate-limit trigga | Senk LOAD_CONCURRENCY |
 | `500 Internal Server Error` | Backend-bug | Sjekk server-loggar |
 | `DNS resolution failed` | Ugyldig URL | Sjekk LOAD_BASE_URL |
 | `ERR_TLS_CERT_ALTNAME_INVALID` | SSL-problem | Test med localhost først |
 
-## Korleis tolke resultatene
+## Hvordan tolke resultatene
 
 ### Grønt lys — ALT PASS
 ```
@@ -87,20 +87,20 @@ Total = CONCURRENCY × REQUESTS (t.d. 20 × 50 = **1000 request**)
 - Systemet tål lasten
 - Klar for vidare test eller deploy
 
-### Gult lys — nokon p95 over 2000ms men error-rate < 5%
+### Gult lys — noen p95 over 2000ms men error-rate < 5%
 ```
   endpoint              p50   p90   p95   p99 worst errors  result
 ------------------------------------------------------------
   Admin System Overview 120ms  800ms 3500ms 4200ms 4800ms      0    WARN
 ```
-- Akseptabelt men ikkje optimalt
+- Akseptabelt men ikke optimalt
 - Sjekk DB-spørringar og AI-respons
 
 ### Raudt lys — FAIL
 ```
   RESULT: 1 endpoint(s) FAILED, error-rate 12.3%
 ```
-- Critical problem — ikkje klar for deploy
+- Critical problem — ikke klar for deploy
 - Sjekk loggar: `npx tsx lib/system/logQuery.ts --module <module>`
 - Senk LOAD_CONCURRENCY for å isolere problemet
 
@@ -114,7 +114,7 @@ Total = CONCURRENCY × REQUESTS (t.d. 20 × 50 = **1000 request**)
 | p99 | Top 1% verste response |
 | worst | Verste einsele response i testen |
 
-**Merk:** p95 er den viktigaste metrikk. Hvis p95 er godkjent men p99 er høg, betyr det at nokre få request var tregere enn normalt — sjekk om det er timeout eller nettverksproblem.
+**Merk:** p95 er den viktigaste metrikk. Hvis p95 er godkjent men p99 er høg, betyr det at noen få request var tregere enn normalt — sjekk om det er timeout eller nettverksproblem.
 
 ## Automatisk køyring i CI/CD
 
@@ -132,5 +132,5 @@ npx tsx scripts/load/basicLoadTest.ts || exit 1
 
 1. **Start med låg last:** `LOAD_CONCURRENCY=5 LOAD_REQUESTS=10`
 2. **Auka gradvis:** 10, 20, 30, 50
-3. **Isoler endpoint:** Test kvart endpoint einzelt ved å kommentere ut dei andre
-4. **Samanlikn med baseline:** Lagre resultat og samanlikn etter endringar
+3. **Isoler endpoint:** Test kvart endpoint einzelt ved å kommentere ut de andre
+4. **Sammenlign med baseline:** Lagre resultat og sammenlign etter endringer

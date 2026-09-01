@@ -212,7 +212,7 @@ export default function ProfileEditForm({
         </div>
       </section>
 
-      {/* Knappar */}
+      {/* Knapper */}
       <div className="space-y-3 pt-4">
         <button
           type="submit"

@@ -105,10 +105,10 @@ export default function NavigationDemo() {
       {/* Testknappar (NS23–NS29) */}
       <div className="w-full max-w-3xl mt-6 space-y-4">
 
-        {/* NS23 — Rut-knappar */}
+        {/* NS23 — Rut-knapper */}
         <div>
           <h3 className="text-xs font-medium text-[#4A4A4A]/50 mb-2">
-            NS23 — Rout-knappar
+            NS23 — Rout-knapper
           </h3>
           <div className="flex flex-wrap gap-2">
             <NavButton label="🌿 Onboarding" onClick={() => handleGoTo("onboarding")} />
@@ -120,17 +120,17 @@ export default function NavigationDemo() {
           </div>
         </div>
 
-        {/* NS25 — Modal-knappar */}
+        {/* NS25 — Modal-knapper */}
         <div>
           <h3 className="text-xs font-medium text-[#4A4A4A]/50 mb-2">
-            NS25 — Modal-knappar
+            NS25 — Modal-knapper
           </h3>
           <div className="flex flex-wrap gap-2">
             <NavButton label="↑ Info-modal" onClick={() => handleOpenModal("info", { title: "Info", message: "Dette er en test-modal." })} />
             <NavButton label="↑ Bekreft-modal" onClick={() =>
               handleOpenModal("confirm", {
                 title: "Bekreft",
-                message: "Er du sikker på at du vil halde fram?",
+                message: "Er du sikker på at du vil holde fram?",
                 onConfirm: () => console.log("[NavigationDemo] ✓ Bekrefta!"),
                 onClose: handleCloseModal,
               })

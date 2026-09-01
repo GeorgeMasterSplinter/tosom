@@ -58,9 +58,9 @@ Infrastrukturen er på plass og ubrukt på landing:
 
 Vi trenger nesten ikke bygge nytt. Vi trenger å **ta i bruk** det som ligger der, og legge til én ting: et motiv.
 
-## 3. Teknisk gjeld funnet underveis
+## 3. Teknisk gjelder funnet underveis
 
-| ID | Gjeld |
+| ID | Gjelder |
 |---|---|
 | G-L1 | `components/atmosphere/` — helt død, null importer |
 | G-L2 | `components/launch/` — helt død, null importer |

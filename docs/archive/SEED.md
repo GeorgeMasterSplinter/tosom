@@ -7,52 +7,52 @@
 
 ## OVERSIKT
 
-ToSom har eit seed-system som oppretter realistiske testdata for utvikling og testing.
+ToSom har et seed-system som oppretter realistiske testdata for utvikling og testing.
 
 ---
 
 ## BRUK
 
-### Basic seed (3 brukarar)
+### Basic seed (3 brukere)
 ```bash
 npx ts-node prisma/seeds/seed.ts
 ```
 
-### Test-seed (10 brukarar)
+### Test-seed (10 brukere)
 ```bash
 npx ts-node prisma/seeds/seed.ts test
 ```
 
-### Full-seed (20 brukarar + match + journey)
+### Full-seed (20 brukere + match + journey)
 ```bash
 npx ts-node prisma/seeds/seed.ts full
 ```
 
 ---
 
-## KVA BLIRD
+## HVA BLIRD
 
 | Data | Beskrivelse |
 |--|--|
-| **Brukarar** | Brukar + profil med full djup profil |
+| **Brukere** | Bruker + profil med full djup profil |
 | **Profiler** | 10+ dimensjonar (verdier, livssituasjon, kommunikasjon, intimitet, etc.) |
-| **Matches** | Ein aktiv match med scoring og explanation |
-| **Conversations** | Ein conversation knytt til matchen |
-| **Journeys** | Ein journey med milestones |
+| **Matches** | En aktiv match med scoring og explanation |
+| **Conversations** | En conversation knytt til matchen |
+| **Journeys** | En journey med milestones |
 
 ---
 
 ## PROFIL-DATA
 
-Kvar profil inneheld:
+Hver profil inneholder:
 
 | Dimensjon | Data |
 |--|--|
 | Basis | namn, alder, identitet |
-| Livssituasjon | jobb, bustad, økonomi |
+| Livssituasjon | jobb, bosted, økonomi |
 | Livsstil | aktivitetar, sosial preferanse |
-| Personlegdom | eigenskapar, styrkar, natur |
-| Relasjonsstil | korleie ein søker relasjon |
+| Personlighet | eigenskapar, styrkar, natur |
+| Relasjonsstil | korleie en søker relasjon |
 | Kommunikasjon | stil, djupde, konflikt |
 | Intimitet | tilnærming, kjærleiksspråk |
 | Framtid | mål, dealbreakers |
@@ -78,12 +78,12 @@ npm install bcryptjs
 ```
 🌱 ToSom Seed — mode: full
 
-🌱 Seedar 20 brukarar...
+🌱 Seedar 20 brukere...
   ✅ Erik Hansen (test1@tosom.no) — alder: 34
   ✅ Ingrid Olsen (test2@tosom.no) — alder: 28
   ...
 
-🌱 Totalt: 20 brukarar oppretta
+🌱 Totalt: 20 brukere oppretta
 
   ✅ Match: Erik Hansen ↔ Ingrid Olsen
   ✅ Conversation oppretta
@@ -114,4 +114,4 @@ Bruk seed med same email — den oppretter opp (upsert)
 
 - Seed skriv IKKE over produksjonsdata
 - Bruk `prisma db push --schema prisma/schema.prisma` først
-- Seed bruker `upsert` — trygt å køre fleire gonger
+- Seed bruker `upsert` — trygt å køre flere ganger

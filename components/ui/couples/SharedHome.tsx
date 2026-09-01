@@ -77,7 +77,7 @@ const SharedHome: React.FC<SharedHomeProps> = ({
           <div>
             <h3 className="text-base font-semibold text-ts-primary">Dere to</h3>
             <p className="text-sm text-ts-text-subtle">
-              {daysTogether !== undefined ? `${daysTogether} dagar saman` : 'Dekk delar heimen'}
+              {daysTogether !== undefined ? `${daysTogether} dager sammen` : 'Dekk delar heimen'}
             </p>
           </div>
           <span className="text-2xl ml-auto">{moodData.emoji}</span>

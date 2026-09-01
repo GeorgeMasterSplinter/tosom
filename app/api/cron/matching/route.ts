@@ -429,7 +429,7 @@ export async function GET(req: NextRequest) {
       // FORSKNINGSMOTOR F-9: logg score-/nivåfordeling som metrikk (ikke-blokkerande).
       // Resonanstersklene (80/65/50/40) er kalibrerte for ordoverlapp; skårede
       // instrument gir annan fordeling. Vi skal ettersjå fordelinga etter beta og
-      // kalibrere tersklene på nytt dersom trengst (invariant I-12 held: brukaren ser ord).
+      // kalibrere tersklene på nytt dersom trengst (invariant I-12 holder: brukeren ser ord).
       recordMetric('match.round.score_median', scoreDistribution.median, 'points', { source: 'psych_or_overlap' });
       recordMetric('match.round.score_min', scoreDistribution.min, 'points');
       recordMetric('match.round.score_max', scoreDistribution.max, 'points');

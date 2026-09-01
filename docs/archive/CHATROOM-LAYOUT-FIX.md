@@ -8,10 +8,10 @@
 ## PROBLEM
 
 1. Sida zooma ut på mobile/deskop
-2. Input-feltet var ikkje klikkbart
+2. Input-feltet var ikke klikkbart
 3. Header dekka messages
 4. Messages pressa input ut av viewport
-5. Heile chat-rommet hadde ingen max-width og var ikkje sentrert
+5. Heile chat-rommet hadde ingen max-width og var ikke sentrert
 
 ---
 
@@ -34,24 +34,24 @@
 **Forklaring:**
 - `max-w-[480px]` — avgjer maksimal bredde, forhindrar at chaten blir for brei
 - `mx-auto` — sentrerer containeren horisontalt
-- `h-[100dvh]` — brukar dynamic viewport height som tek omsyn til mobile browser toolbars
+- `h-[100dvh]` — bruker dynamic viewport height som tek omsyn til mobile browser toolbars
 - `flex flex-col` — header/messages/input blir pila vertikalt
 - `bg-[#0B0E11]` — mørk bakgrunn (ToSom standard)
 
 ### 2. ChatMessages.tsx — Container
 
-**Allereie korrekt:**
+**Allerede korrekt:**
 ```tsx
 <div className="flex-1 overflow-y-auto px-4 md:px-6 py-6" style={{ scrollBehavior: 'smooth' }}>
 ```
 
 - `flex-1` — tek all ledig plass mellom header og input
 - `overflow-y-auto` — tillat scrolling når messages er for lange
-- Ingen fixed heights — brukar flex-basert høgd
+- Ingen fixed heights — bruker flex-basert høgd
 
 ### 3. ChatInput.tsx — Input-container
 
-**Allereie korrekt:**
+**Allerede korrekt:**
 ```tsx
 <div className="px-4 py-4 md:py-5 border-t" style={{
   background: 'rgba(11, 14, 17, 0.95)',
@@ -60,12 +60,12 @@
 }}>
 ```
 
-- Ikkje `overflow-hidden` — tillat input å vere klikkbart
+- Ikke `overflow-hidden` — tillat input å være klikkbart
 - Sticky-bottom oppnådd via parent `flex flex-col` — input blir automatisk nedst
 
 ### 4. ChatHeader.tsx — Overlay
 
-**Allereie korrekt:**
+**Allerede korrekt:**
 ```tsx
 // Puls-animasjon når partner er aktiv
 {online && (
@@ -76,8 +76,8 @@
 )}
 ```
 
-- `pointer-events-none` — forhindrar at overlay dekker innhald under
-- `absolute inset-0` — dekker heile header, men er ikkje interaktiv
+- `pointer-events-none` — forhindrar at overlay dekker innhold under
+- `absolute inset-0` — dekker heile header, men er ikke interaktiv
 
 ### 5. app/chat/[id]/page.tsx — Parent
 
@@ -94,8 +94,8 @@
 | Problem | Før | Etter |
 |---------|-----|-----|
 | Zoom ut | `h-screen` zooma | `h-[100dvh]` stabil |
-| Input ikkje klikkbart | `overflow-hidden` | Ingen overflow |
-| Header dekkjer | Ingen pointer-events | `pointer-events-none` |
+| Input ikke klikkbart | `overflow-hidden` | Ingen overflow |
+| Header dekker | Ingen pointer-events | `pointer-events-none` |
 | Messages pressar input | Fixed heights | `flex-1 overflow-y-auto` |
 | Ingen sentrering | Heile breidda | `max-w-[480px] mx-auto` |
 
@@ -134,21 +134,21 @@
 
 ## TESTLISTE
 
-### ✅ Skal vere løyst:
+### ✅ Skal være løyst:
 - [x] Chat er sentrert med max 480px bredde
 - [x] Input-felt er klikkbart
-- [x] Header dekkjer ikkje messages
+- [x] Header dekker ikke messages
 - [x] Messages scrolle uavhengig av input
 - [x] Input alltid synleg nedst
-- [x] Ikkje zoom på mobile
+- [x] Ikke zoom på mobile
 
 ### 🔧 Test manuelt:
 1. Open `/chat/[id]`
 2. Test på desktop (Chrome DevTools: 375px bredde)
 3. Test på mobile (Safari/Chrome)
-4. Skriv meldingar — scroll ned automatisk?
-5. Klikk input — keyboard kjem?
-6. Header synleg utan overlap?
+4. Skriv meldinger — scroll ned automatisk?
+5. Klikk input — keyboard kommer?
+6. Header synleg uten overlap?
 
 ---
 

@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
  * GET /api/questions
  * 
  * Query params:
- * - categoryId: string — hent spørsmål i ein kategori
+ * - categoryId: string — hent spørsmål i en kategori
  * - depth: number — filtrer på dybde (1, 2, 3)
  * - random: boolean — hent tilfeldig spørsmål
  */
@@ -62,7 +62,7 @@ export async function GET(request: Request) {
       });
     }
 
-    // Spørsmål i ein kategori
+    // Spørsmål i en kategori
     if (categoryId) {
       const where: any = { categoryId };
       if (depth > 0) where.depthLevel = depth;

@@ -8,7 +8,7 @@
 
 ## OVERSIKT
 
-Heile opplevelseslaget er no bunde saman i ChatRoom via:
+Heile opplevelseslaget er no bunde sammen i ChatRoom via:
 - **ChatExperienceContext** — samanheng som binder alle lag
 - **Dataflow** — Presence → WarmFlow → Atmosphere → Animations → AI
 - **Testscenar** — validering av kjede
@@ -214,13 +214,13 @@ function AISuggestButton() {
 | WarmFlow | mood: 'warm', glow: rgba(232,199,102,0.25) |
 | Atmosphere | preset: 'golden-hour', ambient: 0.8 |
 | Animations | glow: 0.85, partiklar: mange |
-| AI | tone: 'intim', forslag: varme meldingar |
+| AI | tone: 'intim', forslag: varme meldinger |
 
 **Visuell effekt:**
-- ✅ Gull-glød på meldingar
+- ✅ Gull-glød på meldinger
 - ✅ Varm bakgrunn med golden-hour preset
 - ✅ Mange partiklar
-- ✅ AI foreslår varme, intime meldingar
+- ✅ AI foreslår varme, intime meldinger
 
 ---
 
@@ -239,13 +239,13 @@ function AISuggestButton() {
 | WarmFlow | mood: 'gentle', glow: rgba(136,216,176,0.20) |
 | Atmosphere | preset: 'forest-green', ambient: 0.3 |
 | Animations | glow: 0.3, partiklar: få |
-| AI | tone: 'støttande', forslag: enkle meldingar |
+| AI | tone: 'støttande', forslag: enkle meldinger |
 
 **Visuell effekt:**
 - ✅ Grøn glød
 - ✅ Mild bakgrunn
 - ✅ Få partiklar
-- ✅ AI foreslår støttande, enkle meldingar
+- ✅ AI foreslår støttande, enkle meldinger
 
 ---
 
@@ -282,7 +282,7 @@ function AISuggestButton() {
 - [x] WarmFlow-endring → Atmosphere-endring
 - [x] Atmosphere-endring → Animations-endring
 - [x] WarmFlow-endring → AI-endring
-- [x] Alle komponentar les frå ChatExperienceContext
+- [x] Alle komponentar les fra ChatExperienceContext
 - [x] Ingen direkte imports mellom lag
 - [x] Alle dataflow-steg er testet
 

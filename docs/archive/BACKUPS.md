@@ -10,7 +10,7 @@
 ToSom har backup-system for produksjonsdatabasen:
 - **Automatiske daglege backups**
 - **Manuell restore-funksjon**
-- **Backup-retensjon:** 30 dagar
+- **Backup-retensjon:** 30 dager
 
 ---
 
@@ -20,7 +20,7 @@ ToSom har backup-system for produksjonsdatabasen:
 # Backup-konfig
 BACKUP_ENABLED=true
 BACKUP_RETENTION_DAYS=30
-BACKUP_SCHEDULE="0 2 * * *"  # 02:00 kvar natt
+BACKUP_SCHEDULE="0 2 * * *"  # 02:00 hver natt
 
 # Database
 DATABASE_URL=postgresql://...
@@ -78,7 +78,7 @@ Kør backup-script manuelt
 
 ## HUSK
 
-- Test restore kvar månad
+- Test restore hver månad
 - Encrypt backups i lagring
-- Ikkje lagre backups i same maskin
+- Ikke lagre backups i same maskin
 - Notifiser admin ved backup-feil

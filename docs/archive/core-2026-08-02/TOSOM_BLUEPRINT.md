@@ -6,9 +6,9 @@ Versjon 2.0 — synkronisert med dagens ToSom (2026-08-02)
 ## 1) DATAMODELL (PRISMA) — SANNHETEN
 
 **Kjernemodellar:**
-- `User` — brukarar, rolle, onboarding-status, verifikasjon
+- `User` — brukere, rolle, onboarding-status, verifikasjon
 - `Profile` — dyp profil (verdier, livssituasjon, personlighet, etc.)
-- `Match` — resonans-match mellom to brukarar
+- `Match` — resonans-match mellom to brukere
 - `Conversation` — privat samtalerom mellom matchede par
 - `Message` — enkelte meldinger i en conversation
 - `JourneyProgress` — 30-dagers reise progresjon per bruker
@@ -241,9 +241,9 @@ model Message {
 
 ---
 
-## 7) JOURNEY-MODELLEN — USER-BASERT, 30 DAGAR
+## 7) JOURNEY-MODELLEN — USER-BASERT, 30 DAGER
 
-**Dette er den viktigaste endringa frå v1. JourneyProgress er på User, ikkje Conversation.**
+**Dette er den viktigaste endringa fra v1. JourneyProgress er på User, ikke Conversation.**
 
 ```prisma
 model JourneyProgress {
@@ -268,7 +268,7 @@ model JourneyProgress {
 }
 ```
 
-**Kritisk:** `journey.userAId` og `journey.userBId` finst **ikkje**. Bruk `conversation.userAId` og `conversation.userBId`.
+**Kritisk:** `journey.userAId` og `journey.userBId` finnes **ikke**. Bruk `conversation.userAId` og `conversation.userBId`.
 
 ---
 
@@ -293,19 +293,19 @@ model JourneyDayContent {
 
 ---
 
-## 9) FASAR OVER 30 DAGAR
+## 9) FASAR OVER 30 DAGER
 
-| Fase | Dagar | Beskrivelse | Bilder? |
+| Fase | Dager | Beskrivelse | Bilder? |
 |------|-------|-------------|---------|
 | **EARLY** | 1–14 | Bli kjent, lette spørsmål | ❌ Nei |
-| **BUILDING_TRUST** | 15–21 | Tillit bygges, meir personleg | ✅ Ja (frå dag 15) |
-| **DEEPER** | 22–30 | Djuop samtalar, verdier | ✅ Ja |
+| **BUILDING_TRUST** | 15–21 | Tillit bygges, mer personleg | ✅ Ja (fra dag 15) |
+| **DEEPER** | 22–30 | Djuop samtaler, verdier | ✅ Ja |
 
 **CHECKIN-fase er fjerna.** Journey sluttar på dag 30 med DEEPER.
 
 ---
 
-## 10) MILEPÆLAR (30 dagar)
+## 10) MILEPÆLAR (30 dager)
 
 | Dag | Hending |
 |-----|---------|
@@ -377,7 +377,7 @@ enum AIFeature { journeyGuidance, matchInsights, messageSuggestions, profileRewr
 
 ---
 
-## 14) HVA SOM IKKE FINST (ALDRI BRUK DETTE)
+## 14) HVA SOM IKKE FINNES (ALDRI BRUK DETTE)
 
 ### Fjernede modeller (2026-08-02):
 - ~~`MatchFeedback`~~ — fjerna
@@ -385,13 +385,13 @@ enum AIFeature { journeyGuidance, matchInsights, messageSuggestions, profileRewr
 - ~~`MatchQueue`~~ — fjerna
 - ~~`QueueStatus`~~ — enum fjerna
 
-### Feil felt som ikkje finst:
-- `journey.userAId` — Journey er på User, ikkje Conversation
+### Feil felt som ikke finnes:
+- `journey.userAId` — Journey er på User, ikke Conversation
 - `journey.userBId` —同上
 - `journey.progressDay` — Bruk `day` i JourneyProgress
-- `conversation.journeyStep` — FINST IKKJE (fjerna)
-- `conversation.journeyProgress` — FINST IKKJE (fjerna)
-- `ConversationJourney` — modell finst ikkje
+- `conversation.journeyStep` — FINNES IKKE (fjerna)
+- `conversation.journeyProgress` — FINNES IKKE (fjerna)
+- `ConversationJourney` — modell finnes ikke
 
 ---
 
@@ -443,7 +443,7 @@ Meldinger hentast via `Message`-modellen:
 message.findMany({ where: { conversationId }, orderBy: { createdAt: "asc" } })
 ```
 
-**Bilder:** Tillatt frå dag 15 (`journeyProgress.day >= 15`).
+**Bilder:** Tillatt fra dag 15 (`journeyProgress.day >= 15`).
 
 ---
 
@@ -488,10 +488,10 @@ Lagrar i `Profile.deepProfileData` JSON og `Profile.deepProfileStep`.
 ### Journey:
 | Metode | Rute | Formål |
 |--------|------|--------|
-| GET | `/api/journey/today` | Hent dagens innhald |
+| GET | `/api/journey/today` | Hent dagens innhold |
 | POST/GET | `/api/journey/progress` | Hent/advance progresjon |
 | POST | `/api/journey/reflect` | Lag refleksjon |
-| GET | `/api/journey/[conversationId]` | Hent journey state (GET berre) |
+| GET | `/api/journey/[conversationId]` | Hent journey state (GET bare) |
 
 ### Chat:
 | Metode | Rute | Formål |
@@ -510,10 +510,10 @@ Lagrar i `Profile.deepProfileData` JSON og `Profile.deepProfileStep`.
 ## 21) VIDARE ARBEID (OBLIGATORISK STRATEGI)
 
 1. Når du jobbar med journey: Bruk `JourneyProgress` på **User-nivå** (`userId`).
-2. Når du jobbar med brukarar i ein journey: Bruk `conversation.userAId` og `conversation.userBId`.
+2. Når du jobbar med brukere i en journey: Bruk `conversation.userAId` og `conversation.userBId`.
 3. Når du ser mismatch mellom kode og schema: **Schema er fasit**.
-4. Alltid sjekk mot denne blueprinten før du endrar noko.
-5. Journey varer i **30 dagar**, ikkje 35.
+4. Alltid sjekk mot denne blueprinten før du endrar noe.
+5. Journey varer i **30 dager**, ikke 35.
 6. Fase-config: EARLY=1-14, BUILDING_TRUST=15-21, DEEPER=22-30.
 
 ---

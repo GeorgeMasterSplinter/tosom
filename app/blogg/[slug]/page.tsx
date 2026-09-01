@@ -7,39 +7,39 @@ import { useParams } from 'next/navigation';
 
 const blogPosts = {
   'kompatibilitet': {
-    title: 'Kvifor kompatibilitet betyr mer enn utseende',
+    title: 'Hvorfor kompatibilitet betyr mer enn utseende',
     date: '15. januar 2026',
     readTime: '5 min lesing',
     content: `
-      <p>I eit samfunn der vi konstant blir eksponert for bilder og overflatefokus, er det lett å glemtje hva som betyr noe i ein relasjon.</p>
+      <p>I et samfunn der vi konstant blir eksponert for bilder og overflatefokus, er det lett å glemtje hva som betyr noe i en relasjon.</p>
       
       <p>Studier viser at kompatibilitet basert på verdier, livssituasjon og emosjonelle mønstre er langt sterkare prediktorar for varige relasjonar enn utseende.</p>
       
       <p>Tosom vel å fokusere på det som skaper varig forbindelse. Når to menneske møter hverandre på et dypere plan, blir overflateikke det første — det blir det siste.</p>
       
-      <p>Vår match-motor måler kompatibilitet gjennom resonans — hvordan to menneske føles saman, ikke hvordan dei ser ut.</p>
+      <p>Vår match-motor måler kompatibilitet gjennom resonans — hvordan to menneske føles sammen, ikke hvordan de ser ut.</p>
     `,
   },
   'reisetemaer': {
-    title: 'Kvifor 30 dagar er den perfekte tidsrammen',
+    title: 'Hvorfor 30 dager er den perfekte tidsrammen',
     date: '10. januar 2026',
     readTime: '4 min lesing',
     content: `
-      <p>Psykologar har observert at det tek omtrent 30 dagar for to menneske å bygge verktrueleg tillit og forbindelse.</p>
+      <p>Psykologar har observert at det tek omtrent 30 dager for to menneske å bygge verktrueleg tillit og forbindelse.</p>
       
-      <p>Den fyrsteuka handlar om å identifisere hverandre. Den andreuka handlar om sårbarheit. Den tredje uka handlar om djupe samtaler. Og den fjerde uka handlar om felles framtid.</p>
+      <p>Den fyrsteuka handlar om å identifisere hverandre. Den andreuka handlar om sårbarheit. Den tredje uka handlar om dype samtaler. Og den fjerde uka handlar om felles framtid.</p>
       
-      <p>30 dagar er ikke for lang tid — det er nøyaktig den tida som trengst for to menneske å bli kjende på eit nivå som betyr noe.</p>
+      <p>30 dager er ikke for lang tid — det er nøyaktig den tida som trengst for to menneske å bli kjende på et nivå som betyr noe.</p>
       
-      <p>Tosoms guiderte reise er designa for å støtte denne prosessen med daglege refleksjonar, samtaletema og oppgåver.</p>
+      <p>Tosoms guiderte reise er designa for å støtte denne prosessen med daglege refleksjoner, samtaletema og oppgaver.</p>
     `,
   },
   'rolegheit': {
-    title: 'Kvifor rolegheit er vår viktigaste funksjon',
+    title: 'Hvorfor rolegheit er vår viktigaste funksjon',
     date: '5. januar 2026',
     readTime: '3 min lesing',
     content: `
-      <p>I ein verd der datingapper konstant konkurrerer om oppmerksomheita di med push-notifikasjonar og gamification, valde Tosom ein annan veg.</p>
+      <p>I en verd der datingapper konstant konkurrerer om oppmerksomheita di med push-notifikasjonar og gamification, valde Tosom en annan veg.</p>
       
       <p>Vi trur at rolegheit er den viktigaste funksjonen på heile plattformen. Ingen swipe. Ingen feed. Ingen press.</p>
       

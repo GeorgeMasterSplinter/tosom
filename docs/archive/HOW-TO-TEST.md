@@ -8,7 +8,7 @@
 ## Test-sjekkliste
 
 ### 1. Landing page (/)
-- [ ] Sida lastar utan errors
+- [ ] Sida lastar uten errors
 - [ ] Hero-tekst synleg (overskrift + undertekst)
 - [ ] CTA-knapp "Opprett konto" fungerer
 - [ ] Sekundær-knapp "Logg inn" fungerar
@@ -18,7 +18,7 @@
 - [ ] Animasjonar fungerer (ingen feil i konsollen)
 
 ### 2. Login (/login)
-- [ ] Sida lastar utan errors
+- [ ] Sida lastar uten errors
 - [ ] E-post-input fungerer
 - [ ] "Send magic link"-knapp fungerer
 - [ ] Bekreftelsesmelding synleg etter innsending
@@ -32,15 +32,15 @@
 - [ ] Fullfør-knapp fungerar → redirect til /dashboard
 
 ### 4. Matching (/matching)
-- [ ] Sida lastar utan errors
+- [ ] Sida lastar uten errors
 - [ ] Match-kort synleg med resonans-data
 - [ ] "Aksepter" / "Avvis" knapp fungerer
 - [ ] Ved aksept: redirect til /journey/[journeyId]
-- [ ] Ingen nye matcher etter aksept (låst i 30 dagar)
+- [ ] Ingen nye matcher etter aksept (låst i 30 dager)
 
 ### 5. Dashboard (/dashboard)
-- [ ] Sida lastar utan errors
-- [ ] Brukar-info synleg
+- [ ] Sida lastar uten errors
+- [ ] Bruker-info synleg
 - [ ] Match-status synleg (aktiv/reise pågår)
 - [ ] Hurtigtilgang til reise og chat
 - [ ] Profilstatus synleg (under arbeid / fullført)
@@ -53,13 +53,13 @@
 - [ ] Framdriftsvisning (dag 1/30)
 
 ### 7. Chat (/chat/[id])
-- [ ] Meldingar lastar
+- [ ] Meldinger lastar
 - [ ] Send melding fungerer
 - [ ] Guidede spørsmål synleg ved behov
-- [ ] Bildefase etter 14 dagar fungerer
+- [ ] Bildefase etter 14 dager fungerer
 
 ### 8. Admin (/admin) — Kun admin
-- [ ] Redirect til /dashboard for ikkje-admin
+- [ ] Redirect til /dashboard for ikke-admin
 - [ ] Admin-panel fungerer
 
 ---
@@ -71,7 +71,7 @@
 2. Fullfør onboarding → /dashboard
 3. Vent på match (eller bruk demo-mode)
 4. Aksepter match → /journey/[id]
-5. Test daglege oppgåver og chat
+5. Test daglege oppgaver og chat
 
 ### Returning user flow
 1. Gå til /login
@@ -82,7 +82,7 @@
 ### Mobile flow
 1. Opne i Chrome DevTools (mobile emulator)
 2. Test alle stega over på mobil-størrelse
-3. Sjekk at CTA-knappar er full bredde
+3. Sjekk at CTA-knapper er full bredde
 4. Sjekk at timeline er horisontal scroll med snap
 
 ---

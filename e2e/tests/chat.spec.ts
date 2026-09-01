@@ -1,6 +1,6 @@
 /**
  * E2E-test — Chat-flow
- * Testar at ein brukar kan sende og motta meldingar i chat
+ * Testar at ein bruker kan sende og motta meldinger i chat
  */
 
 import { test, expect } from '../fixtures/test-users';
@@ -15,11 +15,11 @@ test.describe('Chat Flow', () => {
     await expect(chatContainer.first()).toBeVisible({ timeout: 20000 });
   });
 
-  test('skal vise tom-chat når ingen meldingar er tilgjengeleg', async ({ page }) => {
+  test('skal vise tom-chat når ingen meldinger er tilgjengeleg', async ({ page }) => {
     await page.goto('/chat');
 
-    // Søk etter tom-chat-melding — sidan skal vise innhald
-    const emptyText = page.getByText(/ingen meldingar|start samtalen|dei første orda/i);
+    // Søk etter tom-chat-melding — sidan skal vise innhold
+    const emptyText = page.getByText(/ingen meldinger|start samtalen|dei første orda/i);
     const mainContent = page.locator('main, .chat-page');
     await expect(mainContent.first()).toBeVisible({ timeout: 20000 });
   });
@@ -30,8 +30,8 @@ test.describe('Chat Flow', () => {
     // Søk etter input-felt
     const inputField = page.locator('[data-testid*="message"], .chat-input, textarea, input[type="text"]');
     await expect(inputField.first()).toBeVisible({ timeout: 20000 });
-    await inputField.first().fill('Hei! Korleis går det?');
-    await expect(inputField.first()).toHaveValue('Hei! Korleis går det?');
+    await inputField.first().fill('Hei! Hvordan går det?');
+    await expect(inputField.first()).toHaveValue('Hei! Hvordan går det?');
   });
 
   test('skal kunne sende melding', async ({ page }) => {
@@ -40,7 +40,7 @@ test.describe('Chat Flow', () => {
     // Fyll inn melding
     const inputField = page.locator('[data-testid*="message"], .chat-input, textarea, input[type="text"]');
     await expect(inputField.first()).toBeVisible({ timeout: 20000 });
-    await inputField.first().fill('Hei! Korleis går det?');
+    await inputField.first().fill('Hei! Hvordan går det?');
 
     // Søk etter send-knapp
     const sendBtn = page.getByRole('button', { name: /send|send melding/i, exact: false });
@@ -48,22 +48,22 @@ test.describe('Chat Flow', () => {
     await sendBtn.first().click();
     await page.waitForTimeout(2000);
 
-    // Input skal vere tom etter sending
+    // Input skal være tom etter sending
     await expect(inputField.first()).toHaveValue('');
   });
 
-  test('skal vise eigne meldingar til høgre', async ({ page }) => {
+  test('skal vise egne meldinger til høyre', async ({ page }) => {
     await page.goto('/chat');
 
-    // Chat-sida må laste med innhald (eventuelt placeholder)
+    // Chat-sida må laste med innhold (eventuelt placeholder)
     const chatArea = page.locator('[data-testid*="chat"], .chat-container, main').first();
     await expect(chatArea).toBeVisible({ timeout: 20000 });
   });
 
-  test('skal vise mottatte meldingar til venstre', async ({ page }) => {
+  test('skal vise mottatte meldinger til venstre', async ({ page }) => {
     await page.goto('/chat');
 
-    // Chat-sida må laste med innhald (eventuelt placeholder)
+    // Chat-sida må laste med innhold (eventuelt placeholder)
     const chatArea = page.locator('[data-testid*="received"], .message-received, .message-other, main').first();
     await expect(chatArea).toBeVisible({ timeout: 20000 });
   });

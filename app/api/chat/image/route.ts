@@ -26,7 +26,7 @@ const CHAT_IMAGE_RATE_WINDOW_SEC = 60;
 // Maks filstorleik: 5 MB
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
-// Accepterte bilete-typar
+// Accepterte bilde-typer
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
 // Utvidingar map
@@ -83,10 +83,10 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: 'Ingen fil funnet' }, { status: 400 });
     }
 
-    // Valider bilete-type
+    // Valider bilde-type
     if (!ALLOWED_TYPES.includes(file.type)) {
       return NextResponse.json(
-        { error: 'Ugyldig bilete-type. Kun JPG, PNG og WebP er tillatne.' },
+        { error: 'Ugyldig bilde-type. Kun JPG, PNG og WebP er tillatne.' },
         { status: 400 }
       );
     }
@@ -207,7 +207,7 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
   } catch (error) {
     console.error('[chat/image] Feil ved opplastning:', error);
     return NextResponse.json(
-      { error: 'Kunne ikke lagre bilete', details: (error as Error).message },
+      { error: 'Kunne ikke lagre bilde', details: (error as Error).message },
       { status: 500 }
     );
   }

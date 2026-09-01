@@ -31,7 +31,7 @@
 ### 1.4 Feilplasserte filer (fjerna)
 | Fil | Årsak |
 |-----|-------|
-| `app/chat/[id]/components/QuestionModal.tsx` | Burde vore i `components/chat/`, ikkje i [id]/components/ |
+| `app/chat/[id]/components/QuestionModal.tsx` | Burde vore i `components/chat/`, ikke i [id]/components/ |
 
 ---
 
@@ -49,7 +49,7 @@ app/api/chat/
 ├── image-permission/route.ts  ← Bilde-rettigheter
 ├── messages/route.ts          ← Hent meldinger
 ├── conversations/route.ts     ← Hent konversasjonar
-└── starter/route.ts           ← AI starter-meldingar
+└── starter/route.ts           ← AI starter-meldinger
 
 hooks/
 ├── useChatMessages.ts         ← Meldinger hook
@@ -122,4 +122,4 @@ app/actions/
 2. Opprett 1 ny hook: useSendMessage
 3. Opprett 1 ny API-rute: typing
 4. Oppdater 2 pages med ren struktur
-5. Test at alt fungerer saman
+5. Test at alt fungerer sammen

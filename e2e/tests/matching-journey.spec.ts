@@ -14,7 +14,7 @@ test.describe('Matching Flow', () => {
     await expect(mainContent).toBeVisible({ timeout: 5000 });
   });
 
-  test('skal vise QuickActions-knappar', async ({ page }) => {
+  test('skal vise QuickActions-knapper', async ({ page }) => {
     await page.goto('/dashboard');
 
     // Dashboard skal laste med CTA-elementer
@@ -22,24 +22,24 @@ test.describe('Matching Flow', () => {
     await expect(mainContent).toBeVisible({ timeout: 5000 });
   });
 
-  test('skal blokkere ny match med låst-brukar', async ({ request }) => {
+  test('skal blokkere ny match med låst-bruker', async ({ request }) => {
     // Test at POST /api/match returnerer gyldig statuskode
     const response = await request.post(`${BASE_URL}/api/match`, {
       data: { userId: 'test-user-id' },
     });
 
-    // Alle statuskoder er OK - vi testar berre at endepunktet responderer
+    // Alle statuskoder er OK - vi testar bare at endepunktet responderer
     expect(response.status()).toBeGreaterThanOrEqual(200);
     expect(response.status()).toBeLessThan(500);
   });
 });
 
 test.describe('Journey Flow', () => {
-  test('skal vise Journey-side med progress-tracker og dag-innhald', async ({ page }) => {
-    // /dashboard inneheld journey-innhald — ikkje ein eigen /journey-rute
+  test('skal vise Journey-side med progress-tracker og dag-innhold', async ({ page }) => {
+    // /dashboard inneholder journey-innhold — ikke en egen /journey-rute
     await page.goto('/dashboard');
 
-    // Dashboard-sidemed journey-komponentar skal vere synleg
+    // Dashboard-sidemed journey-komponentar skal være synleg
     const content = page.locator('main').first();
     await expect(content).toBeVisible({ timeout: 5000 });
   });
@@ -52,7 +52,7 @@ test.describe('Journey Flow', () => {
     await expect(mainContent).toBeVisible({ timeout: 5000 });
   });
 
-  test('skal vise ImageShareLockBanner dersom imageShareAllowedAt ikkje passert', async ({ page }) => {
+  test('skal vise ImageShareLockBanner dersom imageShareAllowedAt ikke passert', async ({ page }) => {
     await page.goto('/dashboard');
 
     // Dashboard må laste (banner er kondisjonelt basert på journey dag)
@@ -78,7 +78,7 @@ test.describe('Premium UI', () => {
     await expect(mainContent).toBeVisible({ timeout: 5000 });
   });
 
-  test('skal ha gull-gradient-knappar på CTA-element', async ({ page }) => {
+  test('skal ha gull-gradient-knapper på CTA-element', async ({ page }) => {
     await page.goto('/dashboard');
 
     // Dashboard må laste med knapp-elementer
@@ -96,11 +96,11 @@ test.describe('Admin Flow', () => {
     await expect(pageContent).toBeVisible({ timeout: 5000 });
   });
 
-  test('skal vise brukar-liste med ekte data frå /api/admin/users', async ({ request }) => {
+  test('skal vise bruker-liste med ekte data frå /api/admin/users', async ({ request }) => {
     // API-test av echete databasedata
     const response = await request.get(`${BASE_URL}/api/admin/users`);
 
-    // Skal returnere 401/403 dersom ikkje autentisert
+    // Skal returnere 401/403 dersom ikke autentisert
     expect([200, 401, 403]).toContain(response.status());
 
     if (response.status() === 200) {
@@ -110,8 +110,8 @@ test.describe('Admin Flow', () => {
     }
   });
 
-  test('skal blokkere ikkje-admin frå /admin/users', async ({ request }) => {
-    // Som vanleg user (ikkje admin) skal få 403
+  test('skal blokkere ikke-admin frå /admin/users', async ({ request }) => {
+    // Som vanleg user (ikke admin) skal få 403
     const response = await request.get(`${BASE_URL}/api/admin/users`);
 
     if (response.status() === 200) {
@@ -128,7 +128,7 @@ test.describe('Vipps Auth Flow', () => {
     const response = await request.get(`${BASE_URL}/api/auth/vipps/authorize`);
 
     if (response.status() === 503) {
-      // Vipps ikkje konfigurert i test-miljø — OK
+      // Vipps ikke konfigurert i test-miljø — OK
       const body = await response.json();
       expect(body.error).toContain('tilgjengelig');
     } else {
@@ -149,7 +149,7 @@ test.describe('Vipps Auth Flow', () => {
         expect(body.state.length).toBeGreaterThan(10);
       }
     } catch {
-      // Fail silently dersom Vipps ikkje er konfigurert
+      // Fail silently dersom Vipps ikke er konfigurert
     }
   });
 });

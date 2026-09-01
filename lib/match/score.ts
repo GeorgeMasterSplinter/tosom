@@ -20,9 +20,9 @@ export interface MatchScoreInput {
   resonanceScore: number;     // 0-100
   warmScore: number;          // 0-100
   phaseOrder: number;         // 1-5
-  daysTogether: number;       // dagar saman
-  messageCount: number;       // antal meldingar
-  sharedValues: number;       // 0-100 (delte verdiar)
+  daysTogether: number;       // dager sammen
+  messageCount: number;       // antal meldinger
+  sharedValues: number;       // 0-100 (delte verdier)
   communicationStyle: number; // 0-100 (kommunikasjons-stil match)
   lifeStage: number;          // 0-100 (livsfase-kompatibilitet)
   reflectionMatch: number;    // 0-100 (refleksjons-match)
@@ -102,7 +102,7 @@ export function calculateMatchStrength(label: number): {
   if (label >= 70) return { label: 'Sterk tilkopling', color: '#D4AF37', description: 'Sterk og autentisk tilkopling.' };
   if (label >= 50) return { label: 'God tilkopling', color: '#FFB86C', description: 'God grunnlag for dypt bånd.' };
   if (label >= 30) return { label: 'Moder tilkopling', color: '#FF82C8', description: 'Tilkoplinga utviklar seg.' };
-  return { label: 'Tidleg tilkopling', color: '#8282FF', description: 'Begynnande tilkopling — det tek tid.' };
+  return { label: 'Tidlig tilkopling', color: '#8282FF', description: 'Begynnande tilkopling — det tek tid.' };
 }
 
 export function calculateFuturePotential(label: number): {
@@ -114,7 +114,7 @@ export function calculateFuturePotential(label: number): {
   if (label >= 65) return { label: 'Sterkt potensial', color: '#4DFF88', description: 'Sterk grunnlag for framtidig samband.' };
   if (label >= 45) return { label: 'Godt potensial', color: '#FFB86C', description: 'Godt potensial for vekst.' };
   if (label >= 25) return { label: 'Moder potensial', color: '#FF82C8', description: 'Potensial utviklar seg.' };
-  return { label: 'Tidleg potensial', color: '#8282FF', description: 'Ennå tidleg — men lovande.' };
+  return { label: 'Tidlig potensial', color: '#8282FF', description: 'Ennå tidlig — men lovande.' };
 }
 
 export function getMatchVisual(score: number): {
@@ -133,7 +133,7 @@ export function getMatchVisual(score: number): {
     return { color: '#FFB86C', gradient: 'linear-gradient(135deg, #FFB86C, #FF82C8)', label: 'Moder match', glow: '0 0 20px rgba(255,184,108,0.25)' };
   }
   if (score >= 20) {
-    return { color: '#FF82C8', gradient: 'linear-gradient(135deg, #FF82C8, #B48CFF)', label: 'Tidleg match', glow: '0 0 16px rgba(255,130,200,0.2)' };
+    return { color: '#FF82C8', gradient: 'linear-gradient(135deg, #FF82C8, #B48CFF)', label: 'Tidlig match', glow: '0 0 16px rgba(255,130,200,0.2)' };
   }
   return { color: '#8282FF', gradient: 'linear-gradient(135deg, #8282FF, #4D8CFF)', label: 'Utviklar seg', glow: '0 0 12px rgba(130,130,255,0.15)' };
 }

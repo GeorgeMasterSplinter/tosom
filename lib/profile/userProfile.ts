@@ -1,6 +1,6 @@
-// UserProfile — typar og dummy-data
+// UserProfile — typer og dummy-data
 // UP2 — definer UserProfile-type
-// UP3 — lag dummy-profil med namn, alder, bio, verdiar, interesser, bilde-URLer
+// UP3 — lag dummy-profil med namn, alder, bio, verdier, interesser, bilde-URLer
 
 /* UP2 — Definer UserProfile-type */
 export interface UserProfile {
@@ -19,7 +19,7 @@ export const dummyUserProfile: UserProfile = {
   id: "me-demo",
   name: "Deg",
   age: 30,
-  bio: "Eg er opptatt av djupe samtaler og meningsfulle møte. Trur på ro, ærlegheit og å være til stades.",
+  bio: "Eg er opptatt av dype samtaler og meningsfulle møte. Trur på ro, ærlegheit og å være til stades.",
   values: ["Ærlegheit", "Trygghet", "Vekst", "Nyskaping", "Empati"],
   interests: ["Friluftsliv", "Musikk", "Lesing", "Fotografi", "Matlaging"],
   photos: [

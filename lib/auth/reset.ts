@@ -2,7 +2,7 @@ import { randomBytes, scryptSync, timingSafeEqual } from "crypto";
 import { prisma } from "@/lib/prisma";
 
 /**
- * Generer ein 32-byte (64 hex) reset token.
+ * Generer en 32-byte (64 hex) reset token.
  */
 export function generateResetToken(): string {
   return randomBytes(32).toString("hex");
@@ -27,7 +27,7 @@ export function verifyToken(token: string, storedHash: string): boolean {
 }
 
 /**
- * Lagre ein ny reset-token for ein user.
+ * Lagre en ny reset-token for en user.
  * Fjernar gamle tokens først.
  */
 export async function storeResetToken(userId: string, token: string, expiresAt: Date) {
@@ -84,7 +84,7 @@ export async function consumeResetToken(userId: string): Promise<boolean> {
 }
 
 /**
- * Sjekk om ein user har ein gyldig (ikke-brukt) token.
+ * Sjekk om en user har en gyldig (ikke-brukt) token.
  */
 export async function hasValidResetToken(userId: string): Promise<boolean> {
   const count = await prisma.passwordResetToken.count({

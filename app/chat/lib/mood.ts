@@ -14,7 +14,7 @@ export interface MoodTheme {
   /** Dominant bakgrunn for heile chat-rommet */
   containerBg: string;
 
-  /** Boble for "me" (egne meldingar) */
+  /** Boble for "me" (egne meldinger) */
   bubbleMeStart: string;
   bubbleMeEnd: string;
   bubbleMeBorder: string;

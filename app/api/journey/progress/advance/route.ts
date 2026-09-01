@@ -1,4 +1,4 @@
-/** @deprecated (V2) Oppgåver er valfrie — ikke pliktige lenger. */
+/** @deprecated (V2) Oppgaver er valfrie — ikke pliktige lenger. */
 /**
  * POST /api/journey/progress/advance
  * 
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     }
     const user = result.user;
 
-    // 2. Finn aktiv journey for brukaren
+    // 2. Finn aktiv journey for brukeren
     const journey = await prisma.journeyProgress.findFirst({
       where: { userId: user.id },
       select: {
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
 
     if (!journey) {
       return NextResponse.json(
-        { error: "Ingen aktiv reise funnet. Start ein match for å starte reise.", noJourney: true },
+        { error: "Ingen aktiv reise funnet. Start en match for å starte reise.", noJourney: true },
         { status: 404 }
       );
     }

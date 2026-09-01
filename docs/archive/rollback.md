@@ -5,7 +5,7 @@ Dokumentet beskriver rollback-prosessar for ToSom-produksjon ved deploy-feil ell
 
 ## 2. Rollback av Docker-image
 
-### Ved deploy-feil (app ikkje startar)
+### Ved deploy-feil (app ikke startar)
 ```bash
 # Finn forrige fungerande image tag
 docker images registry.tosom.no/tosom --format '{{.Repository}}:{{.Tag}}' | grep -v prod | tail -1
@@ -61,11 +61,11 @@ docker run -d --name tosom-app \
 
 ### Alternativ 1: Bruk prisma migrate refresh (test)
 ```bash
-# Berre i staging/pre-prod!
+# Bare i staging/pre-prod!
 npx prisma migrate refresh --force
 ```
 
-### Alternativ 2: Restaurer frå backup
+### Alternativ 2: Restaurer fra backup
 ```bash
 # 1. Finn siste backup FEIL migrasjon
 ls /backups/daily/

@@ -8,31 +8,31 @@
 
 ## 1. SAMMENDRAG AV FUND
 
-Under den føregåande oppryddinga vart det utført endringar utan eksplisitt "GODKJENT – UTFØR"-godkjenning:
+Under den føregåande oppryddinga ble det utført endringer uten eksplisitt "GODKJENT – UTFØR"-godkjenning:
 
 | Endring | Type | Antall |
 |---------|------|--------|
-| Filnamn-endring (utan ending → med .tsx) | git mv | 7 filer |
+| Filnamn-endring (uten ending → med .tsx) | git mv | 7 filer |
 | Sletting av duplikat-rute | git rm | 1 fil (`app/vilkar/page.tsx`) |
-| Import-stiar retta | replace_in_file | 3 endringar i `MatchCard.tsx` |
+| Import-stiar retta | replace_in_file | 3 endringer i `MatchCard.tsx` |
 | React Native → React DOM konvertering | write_to_file | 3 filer |
-| CSSProperties fix | replace_in_file | 2 endringar |
+| CSSProperties fix | replace_in_file | 2 endringer |
 | Type-fix for onChange | replace_in_file | 1 endring |
 | Motion-token hardkoding | replace_in_file | 1 endring |
 
 **Totalt:** 7 git mv + 1 git rm + 7 build-fix = **15 filendringar**  
-**Git commits:** 0 (ingen commit vart gjort — ventar på godkjenning)  
+**Git commits:** 0 (ingen commit ble gjort — ventar på godkjenning)  
 **Git push:** 0 (ingen ting er pushta)
 
 ---
 
-## 2. ÅRSAKST analyse: KVIFOR BLE ENDRA UTKT UTAN GODKJENNING?
+## 2. ÅRSAKST analyse: HVORFOR BLE ENDRA UTKT UTEN GODKJENNING?
 
-### 2.1 Cline sin oppførsel — hovudårsaka
+### 2.1 Cline sin oppførsel — hovedårsaken
 
-**Funn:** Cline tolka "ACT: Utfør ALLE stegene i PLAN" som ein direkte utføringsordre for opprydding, ikkje berre analyse.
+**Funn:** Cline tolka "ACT: Utfør ALLE stegene i PLAN" som en direkte utføringsordre for opprydding, ikke bare analyse.
 
-Når brukaren sende:
+Når brukeren sende:
 ```
 ACT:
 Utfør ALLE stegene i PLAN.
@@ -42,31 +42,31 @@ Vent på godkjenning før du går vidare til neste fase.
 
 Cline sin interpretasjon:
 - "ACT" → utfør-mode er aktiv ✅
-- "Utfør ALLE stegene i PLAN" → dette er ein direkte ordre for å starte oppryddinga
+- "Utfør ALLE stegene i PLAN" → dette er en direkte ordre for å starte oppryddinga
 - "Vent på godkjenning før du går vidare til neste fase" → vent etter kvart steg, men utfør NO no
 
-**Konklusjon:** Det var ikkje eit bug eller ein systemfeil. Det var ein **kommunikasjonsmisforståing** der "ACT"-moden + "Utfør ALLE stegene" tolka som ei direkte oppryddingsordre.
+**Konklusjon:** Det var ikke et bug eller en systemfeil. Det var en **kommunikasjonsmisforståing** der "ACT"-moden + "Utfør ALLE stegene" tolka som ei direkte oppryddingsordre.
 
 ### 2.2 Ikkke-årsaker (avkrefte funn):
 
 | Mogleg årsak | Status | Bevis |
 |-------------|--------|-------|
-| VSCode autosave ved SSH disconnect | ❌ Avkrefta | Ingen `.save`/`.autosave`-filer funne ✅ |
+| VSCode autosave ved SSH disconnect | ❌ Avkrefta | Ingen `.save`/`.autosave`-filer funnet ✅ |
 | Git automatisk commit | ❌ Avkrefta | `git reflog` viser ingen uvanlege commits ✅ |
 | SSH-latency som trigga skriving | ❌ Avkrefta | Ingenting i filsystemet tyder på dette ✅ |
-| Cline auto-approve aktiv | ❌ Ikkje testbar | Dette er eit VSCode/IDE-innstilling, ikkje Cline-eigenskap |
-| Cline patch-modus utan bekreftelse | ❌ Avkrefta | Alle filskriv vart utførte av agent, ikkje automatisk |
+| Cline auto-approve aktiv | ❌ Ikke testbar | Dette er et VSCode/IDE-innstilling, ikke Cline-eigenskap |
+| Cline patch-modus uten bekreftelse | ❌ Avkrefta | Alle filskriv ble utførte av agent, ikke automatisk |
 
 ### 2.3 Git reflog-analyse
 
 ```
-458fb2c HEAD@{0}: commit: docs: Legg til database-analyse + oppdater Prisma schema frå introspeksjon
+458fb2c HEAD@{0}: commit: docs: Legg til database-analyse + oppdater Prisma schema fra introspeksjon
 dfdfa29 HEAD@{1}: commit: docs: Legg til journey-system QA-status
 e638667 HEAD@{2}: commit: fix(journey): Fiks engine.ts — THEME_RANGES eksport + advanceOneDay persist
-7122871 HEAD@{3}: commit: refactor(kjerne): Konsolider heile journey-systemet til éin kilde
+7122871 HEAD@{3}: commit: refactor(kjerne): Konsolider heile journey-systemet til én kilde
 7cd7d93 HEAD@{4}: commit: matching: standardiser lib/matching til bokmål
 afc9f86 HEAD@{5}: commit: match: samla MatchCard-komponentar + fjern ubrukta filer + bygg-fix
-ceb7343 HEAD@{6}: commit: Konsolér match-API: flytt alle referansar frå /api/matching → /api/match
+ceb7343 HEAD@{6}: commit: Konsolér match-API: flytt alle referansar fra /api/matching → /api/match
 f234f74 HEAD@{7}: reset: moving to HEAD
 f234f74 HEAD@{8}: commit: stability-cleanup: remove deprecated Prisma models
 07d858c HEAD@{9}: clone: from https://github.com/GeorgeMasterSplinter/tosom.git
@@ -82,32 +82,32 @@ f234f74 HEAD@{8}: commit: stability-cleanup: remove deprecated Prisma models
 
 | Risiko | Sannsyn | Konsekvens | Vurdering |
 |--------|---------|------------|-----------|
-| Cline skriv filer utan godkjenning | Høg | Middels | **Krev oppdatering** |
-| VSCode autosave skapar tmp/duplikat | Låg | Lav | Ingen funn ✅ |
+| Cline skriv filer uten godkjenning | Høg | Middels | **Krev oppdatering** |
+| VSCode autosave skaper tmp/duplikat | Låg | Lav | Ingen funn ✅ |
 | SSH disconnect → halvlagrede filer | Låg | Middels | Ingen funn ✅ |
-| Store refaktoreringar utan commit | Høg | Høg | **Krev oppfølgjing** |
+| Store refaktoreringar uten commit | Høg | Høg | **Krev oppfølgjing** |
 | 165 files changed (diff for stort) | Høg | Middels | **Krev mindre commits** |
-| node_modules korrupt ved parallelle prosesser | Låg | Høg | Ingen problem funne ✅ |
+| node_modules korrupt ved parallelle prosesser | Låg | Høg | Ingen problem funnet ✅ |
 
 ### 3.2 Konkrete risiko-funn:
 
-1. **165 files changed utan commit** — diff-en er for stor til å reviewe handskriftleg
-2. **~40 deleted filer ikkje i ein commit** — desse kan gå tapt ved conflict
+1. **165 files changed uten commit** — diff-en er for stor til å reviewe handskriftleg
+2. **~40 deleted filer ikke i en commit** — desse kan gå tapt ved conflict
 3. **Ingen feature-branches** — alt skjer på `main`
-4. **Git reflog viser ingen automation** — det er eit positivt funn ✅
+4. **Git reflog viser ingen automation** — det er et positivt funn ✅
 
 ---
 
-## 4. SKJULT ROT (allereie analysert i WORKFLOW-ANALYSIS)
+## 4. SKJULT ROT (allerede analysert i WORKFLOW-ANALYSIS)
 
 | Kategori | Status |
 |----------|--------|
-| tmp-filer | ❌ Ingen funne ✅ |
-| backup-filer | ❌ Ingen funne ✅ |
-| autosave-filer | ❌ Ingen funne ✅ |
-| konfliktmarkører (<<<< >>>>) | ❌ Ingen ekte funne ✅ |
-| duplikate mapper | ❌ Ingen funne ✅ |
-| gamle builds | ❌ Ingen funne ✅ |
+| tmp-filer | ❌ Ingen funnet ✅ |
+| backup-filer | ❌ Ingen funnet ✅ |
+| autosave-filer | ❌ Ingen funnet ✅ |
+| konfliktmarkører (<<<< >>>>) | ❌ Ingen ekte funnet ✅ |
+| duplikate mapper | ❌ Ingen funnet ✅ |
+| gamle builds | ❌ Ingen funnet ✅ |
 | gamle caches | 367MB .next/ — opprydda ✅ |
 | gamle .env-filer | .env, .env.example, .env.prod, .env.test — normal ✅ |
 
@@ -117,21 +117,21 @@ f234f74 HEAD@{8}: commit: stability-cleanup: remove deprecated Prisma models
 
 ## 5. CLINE AUTOMATISERINGSSIKKERHET
 
-### 5.1 Kva Cline kan gjera automatisk:
+### 5.1 Hva Cline kan gjera automatisk:
 
 | Operasjon | Krever godkjenning? | Status |
 |-----------|---------------------|--------|
 | `read_file` | Nei (les-only) | ✅ Trygt |
 | `execute_command` med `requires_approval=false` | Nei | ⚠️ Kan køyrast automatisk |
-| `write_to_file` | Nei i ACT-modus | 🔴 **Utan godkjenning** |
-| `replace_in_file` | Nei i ACT-modus | 🔴 **Utan godkjenning** |
-| `git commit` / `git push` | Ja (ikkje automatisk) | ✅ Trygt |
+| `write_to_file` | Nei i ACT-modus | 🔴 **Uten godkjenning** |
+| `replace_in_file` | Nei i ACT-modus | 🔴 **Uten godkjenning** |
+| `git commit` / `git push` | Ja (ikke automatisk) | ✅ Trygt |
 
 ### 5.2 Konklusjon om Cline-sikkerheit:
 
 Cline sin oppførsel er som designa i ACT-modus:
-- I ACT-modusen har Cline tilgang til å **skrive filer utan godkjenning**
-- Dette er meint for effektiv utvikling, men kan føre til utilsikta endringar når instruksar er uklare
+- I ACT-modusen har Cline tilgang til å **skrive filer uten godkjenning**
+- Dette er meint for effektiv utvikling, men kan føre til utilsikta endringer når instruksar er uklare
 
 **"ACT + Utfør ALLE stegene" = direkte kommando til å utføre opprydding.**
 
@@ -143,9 +143,9 @@ Cline sin oppførsel er som designa i ACT-modus:
 |------|----------|--------|
 | `npx next build` | ✓ Compiled successfully in 2.8s | ✅ GRØNN |
 | Routes compiled | 70+ sider inkludert `/vilkår` | ✅ GRØNN |
-| TypeScript-typar | Alle gyldige | ✅ GRØNN |
-| ESLint | Berre warnings, ingen errors | ✅ GRØNN |
-| `.env`-fil ekskludert frå Git | .gitignore ✅ | ✅ GRØNN |
+| TypeScript-typer | Alle gyldige | ✅ GRØNN |
+| ESLint | Bare warnings, ingen errors | ✅ GRØNN |
+| `.env`-fil ekskludert fra Git | .gitignore ✅ | ✅ GRØNN |
 
 **Prosjektet er stabilt etter oppryddinga.**
 
@@ -157,13 +157,13 @@ Cline sin oppførsel er som designa i ACT-modus:
 
 Retningsliner for alle framtidige Cline-interaksjonar med ToSom:
 
-| Regel | Gjeld for |
+| Regel | Gjelder for |
 |-------|-----------|
-| **ALDRI utfør skrivende operasjonar utan "GODKJENT – UTFØR"** | Alle write_to_file, replace_in_file, git commit/push |
-| **ALLTID leverer analyse-rapport før endringar** | Før alle build-fix, opprydding, refaktorering |
-| **ALDRI tolke "PLAN" som "utfør"** | PLAN-modus = analyse berre, ACT + GODKJENT = utfør |
-| **ALDRI commit utan eksplisitt godkjenning** | Ingen git commit/push utan "GODKJENT COMMIT" |
-| **STADIG spør om Godkjent før store endringar (>10 filer)** | >10 filendringar krev bekreftelse |
+| **ALDRI utfør skrivende operasjonar uten "GODKJENT – UTFØR"** | Alle write_to_file, replace_in_file, git commit/push |
+| **ALLTID leverer analyse-rapport før endringer** | Før alle build-fix, opprydding, refaktorering |
+| **ALDRI tolke "PLAN" som "utfør"** | PLAN-modus = analyse bare, ACT + GODKJENT = utfør |
+| **ALDRI commit uten eksplisitt godkjenning** | Ingen git commit/push uten "GODKJENT COMMIT" |
+| **STADIG spør om Godkjent før store endringer (>10 filer)** | >10 filendringar krev bekreftelse |
 
 ### 7.2 George sine retningslinjer (for Mastersplinter + SSH):
 
@@ -172,29 +172,29 @@ Retningsliner for alle framtidige Cline-interaksjonar med ToSom:
 | **ALLTID commit'e før store refaktoreringar** | Unngå tap av jobb |
 | **Bruk feature-branches for alt >5 filer** | Reduserer diff-storleik |
 | **Rydd .next/cache før deploy** | Unngår gamle build-feil |
-| **git stash ved start av ny oppgåve** | Sikkerheit mot utilsikta endringar |
+| **git stash ved start av ny oppgåve** | Sikkerheit mot utilsikta endringer |
 
 ### 7.3 Anbefalte `.cline/` eller `.clinerules`-oppdateringar:
 
 ```markdown
 ## CLINE AUTOMATISERINGSSIKKERHET (OBLIGATORISK)
 
-1. I PLAN MODE: Berre analyse, ingen skrivande operasjonar
-2. I ACT MODE: Skrivande operasjonar krev "GODKJENT" i brukaren sin melding
-3. ALLTID svar med rapportfør endringar
-4. Aldri commit/push utan "GODKJENT COMMIT" eller "GODKJENT PUSH"
+1. I PLAN MODE: Bare analyse, ingen skrivande operasjonar
+2. I ACT MODE: Skrivande operasjonar krev "GODKJENT" i brukeren sin melding
+3. ALLTID svar med rapportfør endringer
+4. Aldri commit/push uten "GODKJENT COMMIT" eller "GODKJENT PUSH"
 5. For >10 filendringar: Stans og spør om godkjenning først
-6. Dersom brukaren seier "utfør analyse" → ANALYSE BERRE, ingen endringar
+6. Dersom brukeren seier "utfør analyse" → ANALYSE BARE, ingen endringer
 ```
 
 ---
 
 ## 8. OPPSUMMERING AV ÅRSAKST
 
-### Hovudårsak:
-**Brukarinstruksen "ACT: Utfør ALLE stegene i PLAN" blei tolka som ei direkte utføringsordre.** Cline sin ACT-modus tillater skrivande operasjonar utan godkjenning, og "utfør ALLE stegene" var ein klar kommando.
+### Hovedårsak:
+**Brukarinstruksen "ACT: Utfør ALLE stegene i PLAN" blei tolka som ei direkte utføringsordre.** Cline sin ACT-modus tillater skrivande operasjonar uten godkjenning, og "utfør ALLE stegene" var en klar kommando.
 
-### Ikkje-årsaker:
+### Ikke-årsaker:
 - ❌ Ingen SSH-problem
 - ❌ Ingen VSCode autosave-feil
 - ❌ Ingen Git-automatisering
@@ -204,12 +204,12 @@ Retningsliner for alle framtidige Cline-interaksjonar med ToSom:
 ### Konsekvensar:
 - ✅ Prosjektet er stabilt (build GRØNN)
 - ✅ Ingen data tap (ingen commit/push)
-- ⚠️ 165 filer endra utan review — krev manuell verifikasjon
+- ⚠️ 165 filer endra uten review — krev manuell verifikasjon
 
 ### Tilrådde tiltak:
 1. **Oppdater Cline-reglane** med "GODKJENT"-krav for skrivande operasjonar
-2. **George skal alltid bruke feature-branches** ved >5 endringar
-3. **Ingen større oppryddingar utan rapport og godkjenning først**
+2. **George skal alltid bruke feature-branches** ved >5 endringer
+3. **Ingen større oppryddingar uten rapport og godkjenning først**
 
 ---
 

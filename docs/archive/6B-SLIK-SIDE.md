@@ -13,16 +13,16 @@ Oppretta undersida "Slik fungerer det" som forklarer den steg-vise prosessen på
 ### Seksjonar
 1. **Hero** — "Slik fungerer det" med mørk blå gradient-bakgrunn
 2. **"Fem steg til connexion"** — 5 steg med tall, tittel, beskrivelse og detalj
-3. **"Kva gjer ToSom annerleis?"** — 4 punkter (éin match, ingen bilder fyrst, guidet reise, ingen swipe)
+3. **"Hva gjer ToSom annerleis?"** — 4 punkter (éin match, ingen bilder fyrst, guidet reise, ingen swipe)
 4. **CTA** — "Klar til å starte?" → /onboarding
 5. **Footer** — standard Footer-komponent
 
 ### Steg
 1. Opprett din private profil
 2. Få éin match basert på kunnskap
-3. Dere aksepterer og låser saman
+3. Dere aksepterer og låser sammen
 4. Gjennom ei guidet 30-dagers reise
-5. Etter 30 dagar velji dere vidare
+5. Etter 30 dager velji dere vidare
 
 ### Design
 - Mørk blå gradient-bakgrunn (#162032 → #0F1923 → #0B1520)
@@ -33,9 +33,9 @@ Oppretta undersida "Slik fungerer det" som forklarer den steg-vise prosessen på
 - Rolig, varm, moden tone
 
 ### Teknologi
-- Bruk av `typographyToStyle()` frå design-tokens
+- Bruk av `typographyToStyle()` fra design-tokens
 - Bruk av `color`, `spacing`, `radius`, `shadow` tokens
-- GlassCard-hjelp komponent med inline styles frå tokens
+- GlassCard-hjelp komponent med inline styles fra tokens
 - Ambient glød-effektar (blå)
 
 ### Tone-of-voice

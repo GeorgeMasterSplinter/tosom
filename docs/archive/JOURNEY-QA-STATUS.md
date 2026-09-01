@@ -8,7 +8,7 @@
 
 ## Samla QA-rapport
 
-### Phase 1: Build + Prisma + QA-testar
+### Phase 1: Build + Prisma + QA-tester
 | Sjekk | Resultat | Status |
 |-------|----------|--------|
 | tsc | 0 feil | ✅ PASS |
@@ -58,9 +58,9 @@
 ## Konklusjon
 
 Journey-systemet er **merkeleg stabilt** med:
-- Éin kjelde for ALT journey (`lib/journey/engine.ts`)
+- Éin kilde for ALT journey (`lib/journey/engine.ts`)
 - Alle API-ruter integrerer korrekt
-- Alle komponentar importerer frå engine.ts (ikkje legacy)
-- 52/52 testar PASS
+- Alle komponentar importerer fra engine.ts (ikke legacy)
+- 52/52 tester PASS
 
 Systemet er **klare for vidareutvikling**.

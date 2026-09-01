@@ -297,7 +297,7 @@ export default function JourneyContentEditor() {
                   fontSize: "14px",
                 }}
               >
-                {saving ? "Lagrar..." : "Lagre endringar"}
+                {saving ? "Lagrar..." : "Lagre endringer"}
               </button>
               <button
                 onClick={cancelEdit}
@@ -366,7 +366,7 @@ export default function JourneyContentEditor() {
 
       {/* Footer */}
       <div style={{ marginTop: "32px", padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", fontSize: "13px", color: "rgba(255,255,255,0.4)" }}>
-        💡 Klikk på ein dag for å redigere innhaldet. Endringar vert lagra direkte i databasen og verkar umiddelbart i API-et <code>/api/journey/today</code>.
+        💡 Klikk på en dag for å redigere innhaldet. Endringer vert lagra direkte i databasen og verkar umiddelbart i API-et <code>/api/journey/today</code>.
       </div>
     </div>
   );

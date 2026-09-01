@@ -8,7 +8,7 @@
 
 Smart Header er no oppdatert med **premium-effekter** som gjer han mindre forstyrjande på heile plattformen:
 - **Adaptive Presence** — opacity og blur endrar seg ved scroll
-- **Soft Shadow Fade** — shadow berre i Normal Mode, ingen i Focus Mode
+- **Soft Shadow Fade** — shadow bare i Normal Mode, ingen i Focus Mode
 - **Dynamic Blur Strength** — blur endrar seg basert på scroll-positur
 
 ---
@@ -98,7 +98,7 @@ const headerClass = `
 
 ---
 
-## SHRINK-MODE (frå før)
+## SHRINK-MODE (fra før)
 
 | Element | Normal Mode | Focus Mode |
 |---------|-----|----|
@@ -123,6 +123,6 @@ Uendra — vissame lenker som før:
 ## NESTE STEG (valfritt)
 
 1. Test adaptive presence i browser
-2. Test at shadow berre visast i Normal Mode
+2. Test at shadow bare visast i Normal Mode
 3. Test at blur endrar seg korrekt ved scroll
-4. Vurder om opacity-verdiar treng justering
+4. Vurder om opacity-verdier treng justering

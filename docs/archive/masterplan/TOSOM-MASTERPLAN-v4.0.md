@@ -532,7 +532,7 @@ Tre kategorinavn er nynorske:
 
 ```
 «Samfunn & Tilhøyre»            → «Samfunn og tilhørighet»
-«Personlegdom & Selvkjennskap»  → «Personlighet og selvinnsikt»
+«Personlighet & Selvkjennskap»  → «Personlighet og selvinnsikt»
 «Oppleving & Nysgjerrigheit»    → «Opplevelser og nysgjerrighet»
 ```
 
@@ -569,7 +569,7 @@ Med `depthLevel` 1–3 bør hver kategori ha ~4 av hver: lett inngang, middels, 
 | **Postnummer** i samme steg som by |
 | **«Ut av køen»** så lenge `journeyState = QUEUED` |
 | **«Bekreft profilen din»** ved reise nr. 2 — forhåndsutfylt, ikke blankt |
-| Nynorsk: «Brukar» (`:399`), «Ver vennleg å prøv igjen» (`:424`) |
+| Nynorsk: «Bruker» (`:399`), «Vær vennlig å prøv igjen» (`:424`) |
 
 ---
 

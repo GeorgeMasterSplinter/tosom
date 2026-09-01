@@ -1,5 +1,5 @@
 // app/api/auth/test-login/route.ts — POST /api/auth/test-login
-// Authentiser ein test-bruker med passord og opprett session via NextAuth
+// Authentiser en test-bruker med passord og opprett session via NextAuth
 
 import { NextRequest, NextResponse } from 'next/server';
 import { TEST_USERS } from '@/lib/auth/test-users';
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     if (!email || !password) {
       return NextResponse.json(
-        { success: false, error: 'Manglar e-post eller passord' },
+        { success: false, error: 'Mangler e-post eller passord' },
         { status: 400 }
       );
     }

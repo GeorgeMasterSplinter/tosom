@@ -37,7 +37,7 @@ export async function PUT(request: Request) {
     );
   }
 
-  // Sjekk om brukaren har ein aktiv journey — blokker profil-endring
+  // Sjekk om brukeren har en aktiv journey — blokker profil-endring
   const journey = await prisma.journeyProgress.findFirst({
     where: { userId: session.user.id },
   });

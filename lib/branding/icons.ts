@@ -1,7 +1,7 @@
 /** ToSom-ikonsett
  *  BR4 — Definer ikonstil
  *
- *  Outline-stil, 1.75px stroke, runde hjørner, roleg geometri.
+ *  Outline-stil, 1.75px stroke, runde hjørner, rolig geometri.
  *  SVG-ikon som eksporterer viewBox-baserte symbol. */
 
 export type IconName = 'heart' | 'chat' | 'leaf' | 'user' | 'search' | 'bell' | 'settings' | 'check' | 'x' | 'arrow-right' | 'arrow-left' | 'star' | 'shield' | 'camera' | 'map' | 'calendar';

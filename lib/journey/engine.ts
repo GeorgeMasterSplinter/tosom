@@ -23,7 +23,7 @@
 import { JourneyPhase } from "@prisma/client";
 import type { SystemMessage, SystemEvent } from "../system/systemMessages";
 
-/* ---------- JourneyState — éin interface for heile systemet ---------- */
+/* ---------- JourneyState — én interface for heile systemet ---------- */
 
 export interface JourneyState {
   currentDay: number;
@@ -48,7 +48,7 @@ export interface JourneyTask {
   phase: JourneyPhase;
 }
 
-/* ---------- MatchState — éin interface for match-flow ---------- */
+/* ---------- MatchState — én interface for match-flow ---------- */
 
 export type MatchState =
   | "ready_for_match"
@@ -181,10 +181,10 @@ export interface DayConfig {
 }
 
 // ═══════════════════════════════════════════
-// KONSTANTAR — éin kilde for alt
+// KONSTANTAR — én kilde for alt
 // ═══════════════════════════════════════════
 
-/** Totalt antal dagar i journey — ENKELT svar */
+/** Totalt antal dager i journey — ENKELT svar */
 export const JOURNEY_TOTAL_DAYS = 30;
 
 /** Fase-konfigurasjon — 4 faser over 30 dager (fra journeyPhases) */
@@ -386,13 +386,13 @@ export function getMilestoneDays(): number[] {
 }
 
 // ═══════════════════════════════════════════
-// BUILD JOURNEY STATE — éin kilde for heile systemet
+// BUILD JOURNEY STATE — én kilde for heile systemet
 // ═══════════════════════════════════════════
 
 function buildMessages(matchState: MatchState, day: number): SystemMessage[] {
   const raw: SystemMessage[] = [];
 
-  /* Milepæls-meldingar */
+  /* Milepæls-meldinger */
   if (matchState === "in_journey") {
     const milestone = getMilestoneForDay(day);
     if (milestone) {
@@ -400,7 +400,7 @@ function buildMessages(matchState: MatchState, day: number): SystemMessage[] {
     }
   }
 
-  /* Phasedeklarasjon — bilete-status */
+  /* Phasedeklarasjon — bilde-status */
   const photosAllowed = isPhotosAllowed(day);
   if (photosAllowed) {
     raw.push({
@@ -698,11 +698,11 @@ export function getResonanceVisual(score: number): {
   if (score >= 20) {
     return { color: '#FF82C8', label: 'Moder resonans', glow: '0 0 12px rgba(255, 130, 200, 0.15)', intensity: 0.4 };
   }
-  return { color: '#8282FF', label: 'Tidleg resonans', glow: '0 0 8px rgba(130, 130, 255, 0.1)', intensity: 0.2 };
+  return { color: '#8282FF', label: 'Tidlig resonans', glow: '0 0 8px rgba(130, 130, 255, 0.1)', intensity: 0.2 };
 }
 
 // ═══════════════════════════════════════════
-/** @deprecated (V2) Warmth-score er ein del av resonans-systemet. Fjerna. Beholdes for bakover-kompatibilitet. */
+/** @deprecated (V2) Warmth-score er en del av resonans-systemet. Fjerna. Beholdes for bakover-kompatibilitet. */
 // WARMTH MOTOR (fra warmIndicator.ts)
 // ═══════════════════════════════════════════
 
@@ -792,7 +792,7 @@ export const SILENT_MOMENT_CONFIG: SilentMomentConfig = {
   inactivityThreshold: 30000,
   displayDuration: 8000,
   minMessages: 3,
-/** @deprecated (V2) Silent moments er ein del av resonans-systemet. Fjerna. Beholdes for bakover-kompatibilitet. */
+/** @deprecated (V2) Silent moments er en del av resonans-systemet. Fjerna. Beholdes for bakover-kompatibilitet. */
   minPhaseOrder: 3,
   cooldownMs: 300000,
 };
@@ -852,7 +852,7 @@ export function shouldTriggerSilentMoment(
 }
 
 // ═══════════════════════════════════════════
-// DAY TEXTS — 30 dagar med tema og prompts
+// DAY TEXTS — 30 dager med tema og prompts
 // (fra components/journey/journeyEngine.ts)
 // ═══════════════════════════════════════════
 
@@ -877,7 +877,7 @@ const dayData: Record<number, {
   12: { title: "Halvvegs", focus: "Halvveis i trygghetsdelen.", reflectionPrompt: "Hva har endret syn underveis?", microInsight: "Å endre sinn er styrke, ikke svikt.", progressionHint: "Nå går vi inn i fordypningen." },
   13: { title: "Fordypning", focus: "Dykk dypere inn i deg selv.", reflectionPrompt: "Hva føler du har vært viktigst hittil?", microInsight: "Fordypning krever tid – og vilje til å bli værende.", progressionHint: "Vi tar det dypere i morgen." },
   14: { title: "Sjølinnsikt", focus: "Innsikt i egne mønster.", reflectionPrompt: "Hvilke mønster gjentar du med deg selv?", microInsight: "Å se mønsteret er første steg til endring.", progressionHint: "I morgen handler det om å bryte mønsteret." },
-  15: { title: "Kjensler", focus: "Gi rom for hva du føler.", reflectionPrompt: "Hvilke kjensler har dukket opp hos deg?", microInsight: "Kjensler er meldinger – ikke instruksjoner.", progressionHint: "Vi tar videre med rolighet." },
+  15: { title: "Følelser", focus: "Gi rom for hva du føler.", reflectionPrompt: "Hvilke følelser har dukket opp hos deg?", microInsight: "Følelser er meldinger – ikke instruksjoner.", progressionHint: "Vi tar videre med rolighet." },
   16: { title: "Sårbarhet", focus: "Tør å være sårbar.", reflectionPrompt: "Hva gjør deg sårbar, og hvorfor er det viktig?", microInsight: "Sårbarhet er like modig som det er vakkert.", progressionHint: "I morgen utforsker vi tillit." },
   17: { title: "Tillit", focus: "Bygge og forstå tillit.", reflectionPrompt: "Hva trenger du for å bygge tillit?", microInsight: "Tillit bygges i øyeblikk, ikke i ord.", progressionHint: "Vi går dypere inn i det samme rommet." },
   18: { title: "Egna styrker", focus: "Kjenne igjen styrkene dine.", reflectionPrompt: "Hva er de sterkeste sidene dine?", microInsight: "Styrker er ofte det vi ikke ser selv.", progressionHint: "I morgen handler det om aksept." },

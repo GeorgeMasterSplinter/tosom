@@ -1,10 +1,10 @@
 /**
  * ToSom AI Quota & Error Handling Test
  *
- * Testar alle AI-endepunkt i pre-prod:
+ * Tester alle AI-endepunkt i pre-prod:
  * - Normal respons
  * - Rate-limit funksjon
- * - Feilhandtering (manglande API-key, ugyldig payload, ugyldig token)
+ * - Feilhandtering (manglende API-key, ugyldig payload, ugyldig token)
  * - MatchingAIRequestLog blir fylt
  * - Observability viser AI-kall
  *
@@ -79,7 +79,7 @@ async function main() {
   console.log(`  ToSom AI Quota Tests — ${new Date().toISOString()}`)
   console.log('='.repeat(60))
   console.log(`  BASE_URL:   ${baseUrl}`)
-  console.log(`  AI_API_KEY: ${aiApiKey ? 'sett' : 'ikkje sett'}`)
+  console.log(`  AI_API_KEY: ${aiApiKey ? 'sett' : 'ikke sett'}`)
   console.log('='.repeat(60))
 
   // =====================
@@ -177,8 +177,8 @@ async function main() {
     }
 
     if (!rateLimitTriggered) {
-      console.log('  ! Rate-limit ikkje trigga — kan vere ok dersom kvoten er høg')
-      results.push({ testCase: 'rate-limit triggered', status: 'WARN', statusCode: 0, latency: 0, errorType: 'rate-limit', message: 'Rate-limit ikkje trigga' })
+      console.log('  ! Rate-limit ikke trigga — kan være ok dersom kvoten er høg')
+      results.push({ testCase: 'rate-limit triggered', status: 'WARN', statusCode: 0, latency: 0, errorType: 'rate-limit', message: 'Rate-limit ikke trigga' })
     } else {
       console.log('  ✓ Rate-limit trigga minst éin gong')
       results.push({ testCase: 'rate-limit triggered', status: 'PASS', statusCode: 429, latency: 0, errorType: 'rate-limit', message: 'Trigga' })
@@ -279,10 +279,10 @@ async function main() {
     process.exit(1)
   }
 
-  console.log('\nAlle AI-testar bestått! ✓')
+  console.log('\nAlle AI-tester bestått! ✓')
   console.log('\nNeste steg:')
-  console.log('  1. Sjå AI-kall i /admin/ai/logs')
-  console.log('  2. Sjå AI-statistikk i /admin/observability/metrics')
+  console.log('  1. Se AI-kall i /admin/ai/logs')
+  console.log('  2. Se AI-statistikk i /admin/observability/metrics')
   console.log('\nexit(0)')
   process.exit(0)
 }

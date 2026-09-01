@@ -362,7 +362,7 @@ export const DEFAULT_HAPTIC: HapticConfig = {
 // ─── HOVEDFUNKSJONAR ──────────────────────────────────────
 
 /**
- * Hent heile atmospheresystemet for ein bruker
+ * Hent heile atmospheresystemet for en bruker
  */
 export function getAtmosphereSystem(
   preset: AtmospherePreset = 'midnight-gold',

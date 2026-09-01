@@ -8,7 +8,7 @@
 
 ## OVERSIKT
 
-Dette dokumentet inneheld steg-for-steg guide for å setje opp ToSom-produksjonsmiljøet:
+Dette dokumentet inneholder steg-for-steg guide for å sette opp ToSom-produksjonsmiljøet:
 1. Vercel-prosjekt
 2. Environment Secrets
 3. Supabase-database
@@ -71,8 +71,8 @@ I Vercel → Settings → Environment Variables:
 ### .env.production (skal IKKE committe)
 
 ```bash
-# Kopier frå Vercel environment variables
-# .env.production skal vere lokalt, ikkje i repoet
+# Kopier fra Vercel environment variables
+# .env.production skal være lokalt, ikke i repoet
 ```
 
 ### .env.example (skal committe)
@@ -235,7 +235,7 @@ URL: https://tosom.vercel.app/api/cron/daily
 Header: x-vercel-signature: ${CRON_SECRET}
 ```
 
-**Formål:** Daily match-generering og daglege oppgåver
+**Formål:** Daily match-generering og daglege oppgaver
 
 ### /api/cron/cleanup
 
@@ -312,7 +312,7 @@ Header: x-vercel-signature: ${CRON_SECRET}
 - [ ] SSL sertifikat aktivert
 - [ ] First test-kjøp gjennomført
 - [ ] Realtime chat fungerer
-- [ ] AI-knappar funksjonelle
+- [ ] AI-knapper funksjonelle
 - [ ] Admin dashboard tilgjengeleg
 - [ ] Onboarding-flow test
 - [ ] Journey-fase test
@@ -339,7 +339,7 @@ Header: x-vercel-signature: ${CRON_SECRET}
 
 ### Før deploy
 
-- [ ] `.env.production` ikkje committe
+- [ ] `.env.production` ikke committe
 - [ ] Alle secrets i Vercel
 - [ ] Database migrerte
 - [ ] Test-knopar i Stripe
@@ -416,7 +416,7 @@ npx pusher-channels-mqtt --app_id=X --key=X --secret=X --cluster=eu
 
 - [ ] Oppdater dependencies
 - [ ] Review security
-- [ ] Analyze brukar-innsikt
+- [ ] Analyze bruker-innsikt
 
 ---
 
@@ -435,4 +435,4 @@ npx pusher-channels-mqtt --app_id=X --key=X --secret=X --cluster=eu
 **Dato:** 30. juni 2026
 **Status:** 🟡 KLAR FOR PRODUKSJONSOPPSETT
 
-**Neste steg:** Follow oppgavene 1-8 ovanfor for å setje opp fullt produksjonsmiljø.
+**Neste steg:** Follow oppgavene 1-8 ovanfor for å sette opp fullt produksjonsmiljø.

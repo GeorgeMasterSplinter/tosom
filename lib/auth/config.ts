@@ -31,7 +31,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           EmailProvider({
             // Dummy-SMTP: sendVerificationRequest er overridden (tom), så
             // ingen faktisk tilkobling blir noen gang laget — men v5 krev
-            // likevel eit `server`-felt ved provider-oppdatt.
+            // likevel et `server`-felt ved provider-oppdatt.
             server: "smtp://dev:dev@localhost:25",
             from: "dev@tosom.local",
             maxAge: 60 * 60 * 24, // samsvarer med dev-login-tokenets levetid

@@ -3,7 +3,7 @@
  * - Bokmål (Nynorsk→Bokmål-konvertering)
  * 
  * Den siste sida av onboarding. Bruker OnboardingSlide-wrapper med:
- * - Hjarte-ikon og roleg CTA-melding
+ * - Hjarte-ikon og rolig CTA-melding
  * - PremiumCTAButton med loading-state
  * - Back-knapp som returnerer til Oppsummering (steg 11)
  */

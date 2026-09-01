@@ -32,7 +32,7 @@ export default function ChatMessages({
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const prevMsgCountRef = useRef(0);
 
-  // Smooth scroll ved nye meldingar
+  // Smooth scroll ved nye meldinger
   const scrollToBottom = useCallback(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
@@ -61,7 +61,7 @@ export default function ChatMessages({
             }}
           />
           <p style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: '14px' }}>
-            Lastar meldingar...
+            Lastar meldinger...
           </p>
         </div>
       </div>
@@ -135,7 +135,7 @@ export default function ChatMessages({
     );
   }
 
-  // Grupper meldingar etter dag for tidslinje
+  // Grupper meldinger etter dag for tidslinje
   let lastDate = '';
   const groups: { date: string; messages: ChatMessage[] }[] = [];
   let currentGroup: { date: string; messages: ChatMessage[] } | null = null;
@@ -180,7 +180,7 @@ export default function ChatMessages({
               </div>
             )}
 
-            {/* Meldingar */}
+            {/* Meldinger */}
             {group.messages.map((msg, mi) => {
               const isMine = msg.senderId === userId;
               const senderName = msg.sender?.profile?.identityName || 'Ukjent';

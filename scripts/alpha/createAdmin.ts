@@ -20,7 +20,7 @@ interface Input {
 async function main(input: Input) {
   console.log(`[A-1] Opprettar admin-konto: ${input.email}`)
 
-  // Sjekk om allereie eksisterer
+  // Sjekk om allerede eksisterer
   const existing = await prisma.user.findUnique({
     where: { email: input.email },
   })

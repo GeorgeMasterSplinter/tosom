@@ -1,6 +1,6 @@
 import { generateCsrfToken } from "./csrf";
 
-/** Bygg ein minimal NextRequest-mock med headers og cookies */
+/** Bygg en minimal NextRequest-mock med headers og cookies */
 function fakeReq({
   headers = {},
   cookies = {},
@@ -20,7 +20,7 @@ function fakeReq({
 }
 
 /**
- * serverFlags verdistast ved modul-import, så kvar test som endrar
+ * serverFlags verdistast ved modul-import, så hver test som endrar
  * ENABLE_CSRF_PROTECTION må resette modulane og hente csrf på nytt.
  */
 async function loadCsrf() {

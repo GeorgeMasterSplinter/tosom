@@ -90,11 +90,11 @@ describe('cheapSjekkAll ≡ sjekkAlleDealbreakers(A,B) ?? (B,A)', () => {
     // Preferanser/tags
     ['dealbreaker smoking', mkProfile({ preferences: { dealbreakers: ['smoking'] } })],
     ['tag smoking', mkProfile({ matchTags: ['smoking', 'natur'] })],
-    ['dealbrekker utan overlap', mkProfile({ preferences: { dealbreakers: ['gambling'] } })],
+    ['dealbrekker uten overlap', mkProfile({ preferences: { dealbreakers: ['gambling'] } })],
     // Grenser
     ['grense no_alcohol (excludes)', mkProfile({ boundaries: { excludes: ['no_alcohol'] } })],
     ['grense no_alcohol (includes)', mkProfile({ boundaries: { includes: ['no_alcohol'] } })],
-    ['grenser utan overlap', mkProfile({ boundaries: { excludes: ['vegan'] }, matchTags: [] })],
+    ['grenser uten overlap', mkProfile({ boundaries: { excludes: ['vegan'] }, matchTags: [] })],
     // Radius
     ['Oslo sentrum, pref 10km', mkProfile({ latitude: 59.9139, longitude: 10.7522, distancePref: 10 })],
     ['Bærum, pref 10km', mkProfile({ latitude: 59.9410, longitude: 10.7137, distancePref: 10 })],
@@ -122,11 +122,11 @@ describe('cheapSjekkAll ≡ sjekkAlleDealbreakers(A,B) ?? (B,A)', () => {
         checked++;
       }
     }
-    // Matrisa må faktisk vere stor nok til at testet betyr noko
+    // Matrisa må faktisk være stor nok til at testet betyr noe
     expect(checked).toBeGreaterThanOrEqual(400);
   });
 
-  test('matrisa dekkjer kvar avvisningskategori (M-12-nøklar)', () => {
+  test('matrisa dekker kvar avvisningskategori (M-12-nøklar)', () => {
     const features = matrix.map(([, p]) => buildCheapFeatures(p));
     const keys = new Set<string>();
     for (let i = 0; i < matrix.length; i++) {
@@ -307,7 +307,7 @@ describe('scoreRound (ren kjerne)', () => {
       { id: 'b', profile: mkProfile({ userId: 'b' }) },
     ];
     const features = cands.map((c) => buildCheapFeatures(c.profile!));
-    // Max mogleg score er 100 → terminal 101 avviser alt som ikkje er dealbreaka
+    // Max mogleg score er 100 → terminal 101 avviser alt som ikke er dealbreaka
     const r = scoreRound(cands, features, new Set(), { deadline: farFuture, minScore: 101 });
     expect(r.pairs).toHaveLength(0);
     expect(r.rejectReasons['score_under_termin']).toBe(1);

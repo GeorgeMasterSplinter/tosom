@@ -2,7 +2,7 @@
 
 **Oppdatert:** 30. juni 2026
 **Versjon:** 1.0
-**Status:** 🟡 Backend-logikk ferdig, frontend-komponent manglar
+**Status:** 🟡 Backend-logikk ferdig, frontend-komponent mangler
 
 ---
 
@@ -12,7 +12,7 @@ AI-Powered Features gir AI-støtte som forsterkar opplevelsen — aldri erstatte
 - **Samtaleforslag** (context-aware, fase-spesifikk)
 - **Refleksjonsgenerering** (dagleg, 8 tema)
 - **Oppgåve-generering** (tilpassa reise-fase)
-- **Resonance-insight** (forklarar kvifor match fungerte)
+- **Resonance-insight** (forklarar hvorfor match fungerte)
 - **Profil-forbetting** (AI-genererte forslag)
 - **Samtalehjælp** (tone-matching, djupde-guiding)
 
@@ -23,27 +23,27 @@ AI-Powered Features gir AI-støtte som forsterkar opplevelsen — aldri erstatte
 ### EARLY-fase
 | Forslag | Type | Djupde | Varmee |
 |--|--|--|--|
-| "Kva er noko du aldri har fortald nokon?" | vulnerability | 6 | 8 |
-| "Korleis ser du din beste versjon om 5 år?" | future-vision | 7 | 7 |
-| "Kva var det første du la merke til om meg?" | open-ended | 4 | 9 |
+| "Hva er noe du aldri har fortald noen?" | vulnerability | 6 | 8 |
+| "Hvordan ser du din beste versjon om 5 år?" | future-vision | 7 | 7 |
+| "Hva var det første du la merke til om meg?" | open-ended | 4 | 9 |
 
 ### BUILDING_TRUST-fase
 | Forslag | Type | Djupde | Varmee |
 |--|--|--|--|
-| "Kva har overraska deg mest om deg sjølv?" | reflection | 8 | 8 |
-| "Kva har du lært gjennom samtalen?" | growth | 7 | 8 |
+| "Hva har overraska deg mest om deg selv?" | reflection | 8 | 8 |
+| "Hva har du lært gjennom samtalen?" | growth | 7 | 8 |
 
 ### DEEPER-fase
 | Forslag | Type | Djupde | Varmee |
 |--|--|--|--|
-| "Kva fryktar du å miste?" | fear | 9 | 7 |
-| "Korleis har oppveksta di forma kjærlighet?" | connection | 9 | 7 |
+| "Hva fryktar du å miste?" | fear | 9 | 7 |
+| "Hvordan har oppveksta di forma kjærlighet?" | connection | 9 | 7 |
 
 ### CHECKIN-fase
 | Forslag | Type | Djupde | Varmee |
 |--|--|--|--|
-| "Kva har lært deg om kva du treng?" | purpose | 8 | 8 |
-| "Kva vil du ta med og kva vil du endre?" | growth | 8 | 8 |
+| "Hva har lært deg om hva du treng?" | purpose | 8 | 8 |
+| "Hva vil du ta med og hva vil du endre?" | growth | 8 | 8 |
 
 ---
 
@@ -51,18 +51,18 @@ AI-Powered Features gir AI-støtte som forsterkar opplevelsen — aldri erstatte
 
 | Tema | Beskrivelse | Eksempel |
 |--|--|--|
-| **gratitude** | Takksemd | "Kva er tre ting du er takksam for?" |
-| **growth** | Vekst | "Korleis har du endra deg?" |
-| **connection** | Kopling | "Korleis kjenner du at du er sett?" |
+| **gratitude** | Takksemd | "Hva er tre ting du er takksam for?" |
+| **growth** | Vekst | "Hvordan har du endra deg?" |
+| **connection** | Kopling | "Hvordan kjenner du at du er sett?" |
 | **trust** | Tillit | "Kvordan byggjer du tillit?" |
-| **hope** | Håp | "Kva drøm har du gjeve opp?" |
-| **intimacy** | Intimitet | "Korleis definerer du intimitet?" |
-| **fear** | Frykt | "Kva fryktar du å miste?" |
-| **purpose** | Meining | "Kvifor er du her?" |
+| **hope** | Håp | "Hva drøm har du gjeve opp?" |
+| **intimacy** | Intimitet | "Hvordan definerer du intimitet?" |
+| **fear** | Frykt | "Hva fryktar du å miste?" |
+| **purpose** | Meining | "Hvorfor er du her?" |
 
 ---
 
-## OPPGAVE-TYPAR (fase-spesifikk)
+## OPPGAVE-TYPER (fase-spesifikk)
 
 ### EARLY
 - **appreciation** (5 min) - Verdsettingsmelding
@@ -93,13 +93,13 @@ AI-Powered Features gir AI-støtte som forsterkar opplevelsen — aldri erstatte
 ### Score >= 60 (Good)
 - **Faktor:** God grunnlag, komplementære eigenskapar, delte interesse
 - **Styrke:** Komplementær dynamikk, læringspotensial
-- **Ut:** Meir samtykke, bygge forståing
+- **Ut:** Mer samtykke, bygge forståelse
 - **Framtid:** Potensial for meiningfulle opplevingar
 
 ### Score < 60 (Moderate)
-- **Faktor:** Komplementær men ulik, moglegheit for vekst
+- **Faktor:** Komplementær men ulik, mulighet for vekst
 - **Styrke:** Ulike perspektiv kan berike
-- **Ut:** Krev meir arbeid og tålmod
+- **Ut:** Krev mer arbeid og tålmod
 
 ---
 
@@ -108,9 +108,9 @@ AI-Powered Features gir AI-støtte som forsterkar opplevelsen — aldri erstatte
 ### Bio-forslag (3 tone)
 | Tone | Forslag |
 |--|--|
-| **rolig** | "Ein roleg sjel som set pris på rolege øyeblikk." |
+| **rolig** | "En rolig sjel som set pris på rolege øyeblikk." |
 | **lekende** | "Alltid klar for ny oppleving — men villig til å sitje stille." |
-| **moden** | "Søker noko ekte og varig. Triv i ro og dybde." |
+| **moden** | "Søker noe ekte og varig. Triv i ro og dybde." |
 
 ### Styrke-analyse
 - Djup profil
@@ -122,20 +122,20 @@ AI-Powered Features gir AI-støtte som forsterkar opplevelsen — aldri erstatte
 ## SAMTALEHJÆLP
 
 ### Tone Advice (basert på resonans)
-- **>= 70:** "Energien er høg — held fram med varme og sårbarheit."
+- **>= 70:** "Energien er høg — holder fram med varme og sårbarheit."
 - **>= 50:** "Energien er stabil — prøv å dypp djuare."
 - **< 50:** "Energien er låg — start med lettkje oppning."
 
 ### Power Phrases
 - "Eg har tenkt på det du sa..."
-- "Det du nemnde, fekk meg til å sjå..."
+- "Det du nemnde, fekk meg til å se..."
 - "Eg er usikker på, men eg vil prøve..."
-- "Kva trur du om...?"
+- "Hva trur du om...?"
 
-### Dødarar (kva ikkje seie)
-- Ikkje start med eks-partnarar
-- Ikkje fokuser berre på deg sjølv
-- Ikkje bruk for mange ja/spørsmål-knappar
+### Dødarar (hva ikke seie)
+- Ikke start med eks-partnarar
+- Ikke fokuser bare på deg selv
+- Ikke bruk for mange ja/spørsmål-knapper
 
 ---
 
@@ -179,9 +179,9 @@ function AIHelpPanel({ phase, resonance, profile }) {
 ## DESIGNPRINSIPP
 
 1. **Aldri erstatte** — AI hjelper, aldri erstatter
-2. **Aldri pressande** — brukaren vel kva dei ser
-3. **Aldri dømande** — alt er forslag, ikkje krav
-4. **Alltid varm** — tone og djupde er alltid roleg
+2. **Aldri pressande** — brukeren vel hva de ser
+3. **Aldri dømande** — alt er forslag, ikke krav
+4. **Alltid varm** — tone og djupde er alltid rolig
 
 ---
 
@@ -190,4 +190,4 @@ function AIHelpPanel({ phase, resonance, profile }) {
 - AI-forslag er **alltid valfritt**
 - Ingen push-notifikasjonar for AI-forslag
 - Alltid **menneskeleg først**
-- AI er ein **verktøy**, ikkje ein løysing
+- AI er en **verktøy**, ikke en løysing

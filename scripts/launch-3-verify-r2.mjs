@@ -7,13 +7,13 @@
  *   R2_BUCKET=... R2_REGION=... node scripts/launch-3-verify-r2.mjs
  *
  * Gjer fire ting:
- *   1. Lister eksisterande objekt i bucketen (prod-chat-bilde bør vere her)
- *   2. Last opp eit 1x1 test-PNG
+ *   1. Lister eksisterande objekt i bucketen (prod-chat-bilde bør være her)
+ *   2. Last opp et 1x1 test-PNG
  *   3. Hentar det att via presignert URL (samme mekanisme som prod-bruken)
- *   4. Slettar test-objektet
+ *   4. Sletter test-objektet
  *
- * Dersom 1–3 lykkast, er R2 live og bilder overlever Vercel-deploy
- * (data ligg i R2, ikkje i det flyktige Vercel-filsystemet).
+ * Dersom 1–3 lykkes, er R2 live og bilder overlever Vercel-deploy
+ * (data ligg i R2, ikke i det flyktige Vercel-filsystemet).
  */
 
 import { S3Client, ListObjectsV2Command, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
@@ -23,8 +23,8 @@ const env = process.env;
 const required = ['R2_ACCOUNT_ID', 'R2_ACCESS_KEY_ID', 'R2_SECRET_ACCESS_KEY', 'R2_BUCKET', 'R2_REGION'];
 const missing = required.filter((k) => !env[k]);
 if (missing.length) {
-  console.error('FEIL: manglar miljøvariablar:', missing.join(', '));
-  console.error('Hent dei frå Vercel (Settings → Environment Variables → Production) og kjør på nytt.');
+  console.error('FEIL: mangler miljøvariablar:', missing.join(', '));
+  console.error('Hent de fra Vercel (Settings → Environment Variables → Production) og kjør på nytt.');
   process.exit(1);
 }
 

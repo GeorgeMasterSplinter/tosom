@@ -51,7 +51,7 @@ Alle fire runder i SUPER-MASTERPLAN §15 er gjennomført: blokkere, PDF-eksport,
 
 Avvikene A-1 (bildesperre), A-2 (CHECKIN uoppnåelig), A-3 (to resonansterskler) og A-4 (permanent sperreliste) er håndtert gjennom M-items i `MATCHING-TUNING-PLAN-v1.0.md`.
 
-Teknisk gjeld G-1, G-2, G-3 og G-5 er ryddet: døde motorer fjernet, kø-ventil fjernet, `memory.json` rettet, dokumentasjon restrukturert.
+Teknisk gjelder G-1, G-2, G-3 og G-5 er ryddet: døde motorer fjernet, kø-ventil fjernet, `memory.json` rettet, dokumentasjon restrukturert.
 
 ## 3. Gjenstår før første invitasjon
 

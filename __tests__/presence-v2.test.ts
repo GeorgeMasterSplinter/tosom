@@ -10,9 +10,9 @@
  *   - «Online»  = lastSeenAt innanfor ONLINE_WINDOW_MS (hjartetikk kvar ~30 s)
  *   - «Skriver» = typingUntil i framtid
  *   - PATCH /api/presence/update: isOnline:true = hjartetikk,
- *     isTyping:true/false = sett/rydd skrive-flagget, 401 utan sesjon,
+ *     isTyping:true/false = sett/rydd skrive-flagget, 401 uten sesjon,
  *     400 ved ugyldig body. isOnline:false = no-op.
- *   - GET /api/presence/get/[id]: les status, ukjend brukar = offline-default.
+ *   - GET /api/presence/get/[id]: les status, ukjend bruker = offline-default.
  */
 
 jest.mock('@/lib/auth/session', () => ({
@@ -77,7 +77,7 @@ describe('Presence v2 — presenceState (DB-motor)', () => {
     expect((await getPresence('u1'))?.isOnline).toBe(false);
   });
 
-  it('typingUntil i framtid → isTyping (sjølv utan friskt hjartetikk)', async () => {
+  it('typingUntil i framtid → isTyping (selv uten friskt hjartetikk)', async () => {
     mockedPrisma.user.findUnique.mockResolvedValue({
       lastSeenAt: null,
       typingUntil: new Date(Date.now() + 2000),
@@ -87,7 +87,7 @@ describe('Presence v2 — presenceState (DB-motor)', () => {
     expect(p?.isOnline).toBe(false);
   });
 
-  it('typingUntil utgått → ikkje skrive', async () => {
+  it('typingUntil utgått → ikke skrive', async () => {
     mockedPrisma.user.findUnique.mockResolvedValue({
       lastSeenAt: new Date(Date.now() - 1000),
       typingUntil: new Date(Date.now() - 1000),
@@ -95,12 +95,12 @@ describe('Presence v2 — presenceState (DB-motor)', () => {
     expect((await getPresence('u1'))?.isTyping).toBe(false);
   });
 
-  it('ukjend brukar → undefined', async () => {
+  it('ukjend bruker → undefined', async () => {
     mockedPrisma.user.findUnique.mockResolvedValue(null);
     expect(await getPresence('ikkje_der')).toBeUndefined();
   });
 
-  it('setOnline skriv berre lastSeenAt (hjartetikk)', async () => {
+  it('setOnline skriv bare lastSeenAt (hjartetikk)', async () => {
     mockedPrisma.user.update.mockResolvedValue({});
     await setOnline('u1');
     const arg = mockedPrisma.user.update.mock.calls[0][0];
@@ -132,7 +132,7 @@ describe('PATCH /api/presence/update (v2)', () => {
     mockedPrisma.user.findUnique.mockResolvedValue({ lastSeenAt: null, typingUntil: null });
   });
 
-  it('ikkje autentisert → 401', async () => {
+  it('ikke autentisert → 401', async () => {
     mockedSession.mockResolvedValue(null);
     const res = await PATCH(updateRequest({ isOnline: true }));
     expect(res.status).toBe(401);
@@ -145,7 +145,7 @@ describe('PATCH /api/presence/update (v2)', () => {
     expect(res.status).toBe(400);
   });
 
-  it('hjelartetikk (isOnline: true) → éin lastSeenAt-skriving, ikkje typing', async () => {
+  it('hjelartetikk (isOnline: true) → éin lastSeenAt-skriving, ikke typing', async () => {
     mockLogged();
     const res = await PATCH(updateRequest({ isOnline: true }));
     expect(res.status).toBe(200);
@@ -188,7 +188,7 @@ describe('GET /api/presence/get/[id] (v2)', () => {
     );
   }
 
-  it('ikkje autentisert → 401', async () => {
+  it('ikke autentisert → 401', async () => {
     mockedSession.mockResolvedValue(null);
     const res = await getRequest('u2');
     expect(res.status).toBe(401);
@@ -208,7 +208,7 @@ describe('GET /api/presence/get/[id] (v2)', () => {
     expect(body.isTyping).toBe(true);
   });
 
-  it('ukjend brukar → offline-default (ikkje feil)', async () => {
+  it('ukjend bruker → offline-default (ikke feil)', async () => {
     mockLogged();
     mockedPrisma.user.findUnique.mockResolvedValue(null);
     const res = await getRequest('ukjend');

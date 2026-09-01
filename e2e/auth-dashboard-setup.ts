@@ -1,7 +1,7 @@
 /**
  * Playwright globalSetup for ToSom E2E-testar - DASHBOARD-bruker
  * Loggar inn som e2e.dashboard@tosom.no (onboardingComplete=true)
- * Denne filen køyrer berre for dashboard/journey/chat/match-testar.
+ * Denne filen køyrer bare for dashboard/journey/chat/match-testar.
  */
 import { chromium, FullConfig } from '@playwright/test';
 import fs from 'fs';
@@ -29,21 +29,21 @@ async function globalSetup(config: FullConfig) {
     timeout: 30000,
   });
 
-  // Vent på at brukar-lista lastar
+  // Vent på at bruker-lista lastar
   try {
     await page.waitForResponse(
       res => res.url().includes('/api/dev-login/users') && res.status() === 200,
       { timeout: 20000 }
     );
-    console.log('[dashboard-auth] Brukar-lista lasta OK');
+    console.log('[dashboard-auth] Bruker-lista lasta OK');
   } catch (err) {
-    console.warn('[dashboard-auth] Advarsel: /api/dev-login/users responderte ikkje innan 20s');
+    console.warn('[dashboard-auth] Advarsel: /api/dev-login/users responderte ikke innen 20s');
   }
 
   // Klikk på dashboard-brukaren spesifikt (Test A — seeda med match + samtale)
   const dashboardButton = page.locator('button', { hasText: /Test A/ });
   if (await dashboardButton.count() > 0) {
-    console.log('[dashboard-auth] Funnet Test A-brukar, klikkar...');
+    console.log('[dashboard-auth] Funnet Test A-bruker, klikkar...');
     await dashboardButton.click();
 
     // Vent på redirect til dashboard
@@ -57,10 +57,10 @@ async function globalSetup(config: FullConfig) {
     // Fallback: klikk fyrste knapp
     const loginButtons = page.locator('button', { hasText: /Logg inn som/ });
     if (await loginButtons.count() > 0) {
-      console.warn('[dashboard-auth] E2E Dashboard-brukar ikkje funnen, brukar fyrste...');
+      console.warn('[dashboard-auth] E2E Dashboard-bruker ikke funnet, bruker fyrste...');
       await loginButtons.first().click();
     } else {
-      console.error('[dashboard-auth] FEIL: Ingen login-knappar!');
+      console.error('[dashboard-auth] FEIL: Ingen login-knapper!');
     }
   }
 

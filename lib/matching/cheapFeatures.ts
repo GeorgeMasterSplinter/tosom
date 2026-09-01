@@ -27,10 +27,10 @@ import {
   securityLevelToNum,
 } from './dealbreaker';
 
-/** Prekalkulerte felt per kandidat — alt som dei dyre sjekkane treng. */
+/** Prekalkulerte felt per kandidat — alt som de dyre sjekkane treng. */
 export interface CheapFeatures {
   userId: string;
-  // 1. Kjønn (reason treng raude strengene + normaliserte verdiar)
+  // 1. Kjønn (reason treng raude strengene + normaliserte verdier)
   genderRaw: string | null;
   genderNorm: 'man' | 'kvinne' | 'annen' | null;
   seekingRaw: string | null;
@@ -60,7 +60,7 @@ export interface CheapFeatures {
 }
 
 /**
- * Bygg prekalkulatene ein gong per kandidat (O(n) i heile runden,
+ * Bygg prekalkulatene en gong per kandidat (O(n) i heile runden,
  * ikke O(n²) per par).
  */
 export function buildCheapFeatures(profile: ProfileData): CheapFeatures {

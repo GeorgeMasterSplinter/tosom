@@ -1,35 +1,35 @@
 # Fase 20 — Analyse + Plan for ToSom (v20)
 
-Dette er ein helhetleg analyse og plan for ToSom-plattformen.
+Dette er en helhetleg analyse og plan for ToSom-plattformen.
 
 ## Status: Alle system analysert
 
 ### A — Kodebase (grunnmur) ✅
-- **A1:** API-ruter allereie i app/api/ ✅
+- **A1:** API-ruter allerede i app/api/ ✅
 - **A2:** Deprecated Prisma-modeller fjerna ✅
   - MatchHistory → Match.scoringBreakdown JSON ✅
   - MatchQueue → User.lastMatchAt + lockedUntil ✅
-  - MatchFeedback → Remove (ikkje ToSom-konsept) ✅
-  - RateLimitLog/RouteHit/SystemMessage → BEHOLD (enno brukte i lib/system/) ✅
+  - MatchFeedback → Remove (ikke ToSom-konsept) ✅
+  - RateLimitLog/RouteHit/SystemMessage → BEHOLD (enda brukte i lib/system/) ✅
 - **A3:** Journey-modellen klargjort ✅
 - **A4:** App Router standard ✅
 
 ### B — Matching-stabilisering ✅
 - **B1:** Schema validert: lastMatchAt + lockedUntil på User ✅
-- **B2:** lastMatchAt + lockedUntil allereie korrekt implementerte ✅
+- **B2:** lastMatchAt + lockedUntil allerede korrekt implementerte ✅
   - prisma/schema.prisma: indeks på begge ✅
   - app/api/match/accept/route.ts: setter lockedUntil ved aksept ✅
   - app/api/dashboard/overview/route.ts: les lockedUntil ✅
   - lib/matching/findBestResonance.ts: sjekker begge ✅
 - **B3:** Cron-jobben oppdatert til bruk findBestResonance ✅
   - Fjerna forenkla scoring i cron-jobben ✅
-  - Bruker full resonans-berekning frå lib/matching/resonanceScore.ts ✅
+  - Bruker full resonans-berekning fra lib/matching/resonanceScore.ts ✅
 
 ### C — Journey (under analysis)
 - **C1:** JourneyPhase: EARLY → BUILDING_TRUST → DEEPER → CHECKIN ✅ (definiert)
 - **C2:** JourneyDayContent: 30 rader eksisterer ✅ (men må verifisere innehald)
 - **C3:** JourneyProgress.fase-felt: ingen eksperte fase-felt ✅
-- **C4:** Journey-komponentar: fleire komponentar eksisterer ✅
+- **C4:** Journey-komponentar: flere komponentar eksisterer ✅
 
 ### D — Chat (under analysis)
 - **D1:** Chat-kategorier: 8–10 kategorier definert ✅
@@ -39,7 +39,7 @@ Dette er ein helhetleg analyse og plan for ToSom-plattformen.
 ### E — Onboarding (under analysis)
 - **E1:** DeepProfileStep: 10 steg definert ✅
 - **E2:** Profil-felt: 10+ dimensjonar i schema ✅
-- **E3:** Onboarding-komponentar: fleire komponentar eksisterer ✅
+- **E3:** Onboarding-komponentar: flere komponentar eksisterer ✅
 
 ### F — Produksjon (under analysis)
 - **F1:** Vercel deploy: vercel.json + Docker eksisterer ✅
@@ -53,34 +53,34 @@ Dette er ein helhetleg analyse og plan for ToSom-plattformen.
 
 ## Kritisk risiko identifisert
 
-### R1: `findBestResonance` returnerer `dimensions` ikkje som objekt
-Resultatet har `match.resonanceScore`, `match.depthLevel`, `match.mutualSharing`, `match.vulnerability`, `match.resonanceLevel` — men **ikkje** `match.dimensions.base/resonance/semantic/intimacy/future`.
+### R1: `findBestResonance` returnerer `dimensions` ikke som objekt
+Resultatet har `match.resonanceScore`, `match.depthLevel`, `match.mutualSharing`, `match.vulnerability`, `match.resonanceLevel` — men **ikke** `match.dimensions.base/resonance/semantic/intimacy/future`.
 
-Dette betyr at cron-jobben vil skrive `{base: 0, resonance: 0, ...}` som standard verdiar.
+Dette betyr at cron-jobben vil skrive `{base: 0, resonance: 0, ...}` som standard verdier.
 
-**Løysing:** Anten endre cron-jobben til å bruke felta direkte frå `result.match`, ELLER endre `ResonanceResult`-typen til å inkludere ein `dimensions`-struktur.
+**Løysing:** Anten endre cron-jobben til å bruke felta direkte fra `result.match`, ELLER endre `ResonanceResult`-typen til å inkludere en `dimensions`-struktur.
 
 ### R2: ResonanceResult.dimensions-mismatch
 Icron-jobben skriv eg:
 ```typescript
 explanation: { base, resonance, semantic, intimacy, future }
 ```
-Men `ResonanceResult` har ikkje denne strukturen — det har `resonanceScore`, `depthLevel`, `mutualSharing`, `vulnerability`, `resonanceLevel`.
+Men `ResonanceResult` har ikke denne strukturen — det har `resonanceScore`, `depthLevel`, `mutualSharing`, `vulnerability`, `resonanceLevel`.
 
 **Dette må fikast før cron-jobben kan køyre.**
 
 ## Neste steg: Fikse ResonanceResult-mapping i cron-jobben
 
-Cron-jobben må bruke felta direkte frå ResonanceResult:
+Cron-jobben må bruke felta direkte fra ResonanceResult:
 - `score` → `result.match.resonanceScore`
-- `explanation` → bygg fra result.match.felt (ikkje dimensions)
+- `explanation` → bygg fra result.match.felt (ikke dimensions)
 - `scoringBreakdown` → `result.match`-felt direkte
 
 ## Konklusjon for Fase 20-analyse
 
 - Kodebase: **Stabil** ✅
 - Matching: **Kritisk feil i cron-jobb-mapping** ⚠️
-- Journey: **Uanalysert innhald** 📋
+- Journey: **Uanalysert innhold** 📋
 - Chat: **Uanalysert** 📋
 - Onboarding: **Delvis analysert** 📋
 - Produksjon: **Uanalysert** 📋

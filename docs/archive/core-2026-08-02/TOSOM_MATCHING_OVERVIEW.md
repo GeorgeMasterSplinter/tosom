@@ -497,7 +497,7 @@ export async function handleMatchAccept(userId, matchId) {
 
 ### Kritisk: Deprecated modeller
 ```prisma
-// ⚠️  @deprecated — Test i app/ før sletting frå schema
+// ⚠️  @deprecated — Test i app/ før sletting fra schema
 model MatchFeedback { ... }   // Vurder fjerning
 model MatchHistory { ... }    // Vurder fjerning  
 model MatchQueue { ... }      // Vurder fjerning

@@ -7,7 +7,7 @@
 ## PROBLEM
 
 Steg 6 (FramtidVisjon) mangla PremiumButton og BackButton.
-Komponenten mottok heller ikkje propar (step, goToStep, onNext).
+Komponenten mottok heller ikke propar (step, goToStep, onNext).
 
 ---
 
@@ -46,7 +46,7 @@ import Step6FramtidVisjon from './steps/Step6FramtidVisjon';
 - `BackButton` import
 - Knappeseksjon nederst
 
-**Knappar:**
+**Knapper:**
 ```tsx
 <div className="space-y-4 mt-10">
   <BackButton onClick={() => goToStep(step - 1)} />
@@ -95,6 +95,6 @@ hover:bg-white/20 transition-all duration-300
 
 ## OPPSUMMERING
 
-**Problem:** Steg 6 mangla knapp-propar og knappar.
+**Problem:** Steg 6 mangla knapp-propar og knapper.
 **Løysing:** La til propar (step, goToStep, onNext) og PremiumButton + BackButton.
 **Resultat:** Navigasjon fungerer no på Steg 6.

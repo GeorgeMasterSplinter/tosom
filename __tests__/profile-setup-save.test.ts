@@ -1,9 +1,9 @@
 /**
  * ToSom — Bug 1: POST /api/profile/setup mot EKT DATABASE (ingen prisma-mock).
  *
- * Tidlegare testar (profile-setup-geo-b12) mocka prisma heilt bort, så den
+ * Tidlegare testar (profile-setup-geo-b12) mocka prisma helt bort, så den
  * faktiske DB-skrivinga (upsert create/update-greiner + DbNull-rydding +
- * user-flagg) vart aldri kørt. Denne testen køyrer den reelle rute-hendleren
+ * user-flagg) ble aldri kørt. Denne testen køyrer den reelle rute-hendleren
  * mot ein ekte Postgres med eit fullstendig, realistisk payload (inkl. alle
  * 44 psykometriske items → scoreAll) og verifiserer slutt-tilstanden i DB-en.
  *
@@ -158,7 +158,7 @@ describe('POST /api/profile/setup — EKT DB (bug 1 repro/regressjon)', () => {
     const url = (process.env.DATABASE_URL || '').replace(/:[^:@]+@/, ':***@');
     // eslint-disable-next-line no-console
     console.log('[profile-setup-save] DATABASE_URL =', url);
-    // Opprett ein reell brukar i DB-en (FK-mål for profile.upsert).
+    // Opprett ein reell bruker i DB-en (FK-mål for profile.upsert).
     const user = await prisma.user.create({
       data: { id: `save-${suffix}`, email: `save${suffix}@test.local`, name: 'Save Test' },
     });
@@ -170,7 +170,7 @@ describe('POST /api/profile/setup — EKT DB (bug 1 repro/regressjon)', () => {
     // Rydd opp i same DB (self-contained — rører ingen annan data).
     try {
       await prisma.profile.deleteMany({ where: { userId } });
-      // Berre metrikkk-logs FRÅ denne køyren (withMetrics skrivar via prisma)
+      // Bare metrikkk-logs FRÅ denne køyren (withMetrics skrivar via prisma)
       await prisma.systemLog.deleteMany({
         where: { module: 'metric', createdAt: { gte: runStart } },
       });
@@ -181,7 +181,7 @@ describe('POST /api/profile/setup — EKT DB (bug 1 repro/regressjon)', () => {
     await prisma.$disconnect();
   });
 
-  it('SKENARIO A — ny brukar (create-gren): 200 + profil + flagg i DB', async () => {
+  it('SKENARIO A — ny bruker (create-gren): 200 + profil + flagg i DB', async () => {
     const res = await POST(request(fullBody()));
     const json = await res.json();
 
@@ -205,8 +205,8 @@ describe('POST /api/profile/setup — EKT DB (bug 1 repro/regressjon)', () => {
     expect(user!.onboardingStep).toBe(10);
   });
 
-  it('SKENARIO B — brukar med draft (update-gren): 200 + draft rydda + data oppdatert', async () => {
-    // Simulér draft-autosave: profilen finst med onboardingDraft sett.
+  it('SKENARIO B — bruker med draft (update-gren): 200 + draft rydda + data oppdatert', async () => {
+    // Simulér draft-autosave: profilen finnes med onboardingDraft sett.
     await prisma.profile.update({
       where: { userId },
       data: { onboardingDraft: { step: 12, data: { identityName: 'Gammalt' } } },
@@ -220,7 +220,7 @@ describe('POST /api/profile/setup — EKT DB (bug 1 repro/regressjon)', () => {
     expect(profile!.identityName).toBe('Reprobruker');
   });
 
-  it('SKENARIO C — ugyldig payload (tulle-tekst i alder): 400 med detaljar, ikkje 500', async () => {
+  it('SKENARIO C — ugyldig payload (tulle-tekst i alder): 400 med detaljer, ikke 500', async () => {
     const body = fullBody();
     (body.basic as Record<string, unknown>).age = 'trettiti';
     const res = await POST(request(body));
@@ -232,8 +232,8 @@ describe('POST /api/profile/setup — EKT DB (bug 1 repro/regressjon)', () => {
 
   // DETTE ER NØYAKTIGT det OnboardingFlow/seed-skriptet sender i produksjon:
   //  - age som STRENG
-  //  - berre 5 psykometriske items (bfi1/3/5/7/9) — ikkje alle 44
-  //  - kommunikasjon-med calmingHelp/trigger/trustBuilder (ikkje kjærlighetsspråk-nøkler)
+  //  - bare 5 psykometriske items (bfi1/3/5/7/9) — ikke alle 44
+  //  - kommunikasjon-med calmingHelp/trigger/trustBuilder (ikke kjærlighetsspråk-nøkler)
   //  - Oslo 0150
   it('SKENARIO D — NØYAKTIG produksjonspayload: 200 (bevis: kode er korrekt)', async () => {
     const prodBody = {
@@ -279,7 +279,7 @@ describe('POST /api/profile/setup — EKT DB (bug 1 repro/regressjon)', () => {
     expect(profile!.identityName).toBe('Kari Solberg');
     expect(profile!.age).toBe(32); // strengen '32' ble coerced
     expect(profile!.postalCode).toBe('0150');
-    // Psykometri med berre 5 items — alle skårer må vere endlege tal (ikkje NaN)
+    // Psykometri med bare 5 items — alle skårer må være endlege tal (ikke NaN)
     const bigFive = profile!.bigFive as Record<string, number>;
     expect(bigFive).toBeDefined();
     Object.values(bigFive).forEach((v) => {

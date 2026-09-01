@@ -75,7 +75,7 @@ export const chatSendMessageSchema = z
     content: z.string().trim().max(5000, 'Meldingen er for lang').default(''),
     type: z.enum(['text', 'image', 'user', 'continue_choice']).default('text'),
     // CHAT-POLISH (C-2): kilde for boble-etikett — 'bli_kjent' (Bli Kjent-flyten)
-    // eller 'oppgave' (dagleg oppgave). Vanlege chat-meldingar er undefined.
+    // eller 'oppgave' (dagleg oppgave). Vanlege chat-meldinger er undefined.
     source: z.enum(['bli_kjent', 'oppgave']).optional(),
   })
   .superRefine((data, ctx) => {
@@ -127,7 +127,7 @@ export const presenceUpdateSchema = z.object({
 // ═══════════════════════════════════════════════════════════
 
 /**
- * Pars og valider query-params mot eit Zod-schema.
+ * Pars og valider query-params mot et Zod-schema.
  * Returnerer NextResponse med feilmelding dersom validering feilar.
  */
 export function validateQuery<T>(
@@ -148,7 +148,7 @@ export function validateQuery<T>(
 }
 
 /**
- * Pars og valider request body mot eit Zod-schema.
+ * Pars og valider request body mot et Zod-schema.
  * Returnerer NextResponse med feilmelding dersom validering feilar.
  */
 export async function validateBody<T>(
@@ -200,7 +200,7 @@ export function successResponse(data: Record<string, unknown>, status = 200): Re
 }
 
 /**
- * Valider at ein ID er eit gyldig MongoDB ObjectId-format (24 hex chars).
+ * Valider at en ID er et gyldig MongoDB ObjectId-format (24 hex chars).
  */
 export function isValidObjectId(id: string): boolean {
   return /^[a-f0-9]{24}$/.test(id)

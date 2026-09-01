@@ -5,19 +5,19 @@
 
 ## PROBLEM
 
-`app/api/chat/conversations/[id]/route.ts` inneheldde **heile rapporten** frå ein tidlegare write-to_file-operasjon. Ingen kode var att — berre markdown/rapport-innhald.
+`app/api/chat/conversations/[id]/route.ts` inneheldde **heile rapporten** fra en tidlegare write-to_file-operasjon. Ingen kode var att — bare markdown/rapport-innhold.
 
 Dette ville føre til:
 - TypeScript-feil (loose text, backticks, bullet points)
 - Build-feil
-- API-rute som ikkje fungerer
+- API-rute som ikke fungerer
 
 ## LØYSING
 
 Skrive heile fila på nytt med gyldig TypeScript/Next.js-kode.
 
 ### Behaldt funksjonalitet:
-- GET handler: hent samtale-info med partner og meldingar
+- GET handler: hent samtale-info med partner og meldinger
 - POST handler: markRead og freeze handlingar
 - Auth-sjekk med `auth()`
 - Conversation-sjekk med userAId/userBId

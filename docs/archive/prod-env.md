@@ -38,16 +38,16 @@ Dette dokumentet beskriver produksjonsmiljøet for ToSom. Det inneholder alle mi
 | `API_BASE_URL` | `https://api.tosom.no` | Produksjons-API URL |
 | `FRONTEND_BASE_URL` | `https://tosom.no` | Produksjons-frontend URL |
 | `PORT` | `3000` | Standard port |
-| `NODE_TLS_REJECT_UNAUTHORIZED` | `0` | Berre ved behov for interne cert |
+| `NODE_TLS_REJECT_UNAUTHORIZED` | `0` | Bare ved behov for interne cert |
 
 ---
 
 ## 3. Sikkerheitskrav
 
 ### Database
-- Ekte produksjons-DB (ikkje pre-prod eller lokal)
+- Ekte produksjons-DB (ikke pre-prod eller lokal)
 - Kryptert med TDE eller volum-encrypting
-- Tilgang berre frå app-server IP
+- Tilgang bare fra app-server IP
 - Daglege automasjonar backups
 
 ### AI-nøklar
@@ -74,7 +74,7 @@ Dette dokumentet beskriver produksjonsmiljøet for ToSom. Det inneholder alle mi
 | PerformanceMetric | `info` | All metrikk samlad |
 | RateLimitHit | `info` | All rate-limit hendingar |
 | AuditLog | `info` | All admin-handlinger |
-| Auth log | `warn` | Berre feil og advarsler |
+| Auth log | `warn` | Bare feil og advarsler |
 
 ---
 
@@ -93,7 +93,7 @@ Dette dokumentet beskriver produksjonsmiljøet for ToSom. Det inneholder alle mi
 
 ### HTTPS
 - TLS 1.2 eller høgare
-- Sertifikat frå gyldig CA (Let's Encrypt eller kommersiell)
+- Sertifikat fra gyldig CA (Let's Encrypt eller kommersiell)
 - Automatisk rotasjon
 
 ### HSTS
@@ -118,7 +118,7 @@ Dette dokumentet beskriver produksjonsmiljøet for ToSom. Det inneholder alle mi
 
 ### Sjekkliste før deploy
 - [ ] Alle miljøvariablar er sette i secrets-manager
-- [ ] Database er produksjons-DB (ikkje test)
+- [ ] Database er produksjons-DB (ikke test)
 - [ ] AI-nøkkel er ekte med høg kvote
 - [ ] HTTPS er aktiv med gyldig sertifikat
 - [ ] HSTS er konfigurert med max-age >= 31536000

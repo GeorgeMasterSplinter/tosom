@@ -51,7 +51,7 @@ Fase 4 fokuserte på **premium UX-polering** — ingen strukturelle endringer, i
 **Implementering:**
 - Progressbar-høyde: 1.5px
 - Padding: px-8 py-8 (konsistent)
-- Space-y mellom seksjonar: uendra (allereie konsistent)
+- Space-y mellom seksjonar: uendra (allerede konsistent)
 
 **Filer oppdatert:**
 - `OnboardingLayout.tsx` — progressbar h-1.5
@@ -83,7 +83,7 @@ Fase 4 fokuserte på **premium UX-polering** — ingen strukturelle endringer, i
 
 - Ingen nye steg eller komponenter
 - Ingen redesign av eksisterende steg
-- Ingen layout-endringar (bortsett progressbar)
+- Ingen layout-endringer (bortsett progressbar)
 - Ingen funksjonsendringar
 - Ingen nye dependencies
 
@@ -99,7 +99,7 @@ Fase 4 fokuserte på **premium UX-polering** — ingen strukturelle endringer, i
 
 ---
 
-## TEKNI SKK DETALJAR
+## TEKNI SKK DETALJER
 
 ### Autosave
 ```typescript
@@ -164,7 +164,7 @@ const progressPercent = Math.round(((step + 1) / 10) * 100);
 
 ## OPPSUMMERING
 
-Fase 4 la til **5 premium UX-forbedringer** som samlet setter toSom på eit nytt nivå:
+Fase 4 la til **5 premium UX-forbedringer** som samlet setter toSom på et nytt nivå:
 
 1. **Autosave** — null data-tap
 2. **Progress** — rolig guiding

@@ -1,4 +1,4 @@
-// components/journey/PremiumJourneyProgressTracker.tsx — Viser 30 dagar som grid med gull-farge for utfylte dagar
+// components/journey/PremiumJourneyProgressTracker.tsx — Viser 30 dager som grid med gull-farge for utfylte dager
 'use client';
 
 import { useState } from 'react';

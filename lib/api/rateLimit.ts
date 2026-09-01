@@ -24,7 +24,7 @@ const STRICT_LIMITS = {
 }
 
 /**
- * Sjekk og oppdater rate limit for ein key.
+ * Sjekk og oppdater rate limit for en key.
  */
 export function checkRateLimit(
   key: string,

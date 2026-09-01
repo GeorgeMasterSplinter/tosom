@@ -8,7 +8,7 @@
 const TRACE_HEADER = 'x-trace-id'
 
 export function createTraceId(): string {
-  // Generer ein unik traceId med crypto
+  // Generer en unik traceId med crypto
   const bytes = new Uint8Array(10)
   crypto.getRandomValues(bytes)
   const base32 = 'abcdefghijklmnopqrstuv'

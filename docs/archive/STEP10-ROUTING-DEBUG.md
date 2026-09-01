@@ -6,12 +6,12 @@
 
 ## PROBLEM
 
-`createFakeMatch()` brukte `userAId: 1` (Number), men `User.id` er ein String cuid. Dette betyr at:
+`createFakeMatch()` brukte `userAId: 1` (Number), men `User.id` er en String cuid. Dette betyr at:
 
-1. **userAId: 1** peiker til ingen eksisterande brukar
-2. **Conversation** blir oppretta med ein ugyldig referanse
-3. **convoId** kan vere undefined eller feil
-4. **Routing** `/chat/${convoId}` feiler fordi convoId ikkje matcher
+1. **userAId: 1** peiker til ingen eksisterande bruker
+2. **Conversation** blir oppretta med en ugyldig referanse
+3. **convoId** kan være undefined eller feil
+4. **Routing** `/chat/${convoId}` feiler fordi convoId ikke matcher
 
 ---
 
@@ -55,7 +55,7 @@ if (!userA) {
   userA = created;
 }
 
-// Opprett dummy-brukar (userB)
+// Opprett dummy-bruker (userB)
 let userB = await prisma.user.upsert({
   where: { id: "999" }, // String — korrekt!
   ...
@@ -116,7 +116,7 @@ Steg 10 → "Start reisen" → handleStart()
 
 ## DEBUG-VERIFISERING
 
-### Sjekk 1: convoId er ikkje undefined
+### Sjekk 1: convoId er ikke undefined
 ```tsx
 const convoId = await createFakeMatch();
 console.log("FAKE MATCH ID:", convoId);
@@ -141,8 +141,8 @@ app/chat/[id]/page.tsx ✅
 | Fil | Endring |
 |-|--|
 | `createFakeMatch.ts` | userAId/userBId no String cuid |
-| `Step10StartReisen.tsx` | Allereie korrekt |
-| `OnboardingFlow.tsx` | Allereie korrekt |
+| `Step10StartReisen.tsx` | Allerede korrekt |
+| `OnboardingFlow.tsx` | Allerede korrekt |
 
 ---
 
@@ -151,7 +151,7 @@ app/chat/[id]/page.tsx ✅
 - [ ] Fullfør onboarding til Steg 10
 - [ ] Trykk "Start reisen"
 - [ ] Sjekk console: "FAKE MATCH CREATED: { userAId: '1', userBId: '999', convoId: 'clx...' }"
-- [ ] Sjekk at brukaren blir omdirigert til /chat/{convoId}
+- [ ] Sjekk at brukeren blir omdirigert til /chat/{convoId}
 - [ ] Sjekk at chat-sida visast korrekt med meldingane
 
 ---

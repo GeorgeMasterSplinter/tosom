@@ -43,7 +43,7 @@ export async function PATCH(request: NextRequest) {
 
     // Oppdater basert på body (v2: DB-basert presence, best-effort)
     if (body.isOnline === true) {
-      // Hjartetikk — klienten sender dette ved sideåpning og kvar ~30 s
+      // Hjartetikk — klienten sender dette ved sideåpning og hver ~30 s
       await setOnline(userId);
     }
     // isOnline: false — inga handling; mangel på hjartetikk = offline

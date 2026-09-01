@@ -296,7 +296,7 @@ export function ChatHeader({
           </button>
         )}
 
-        {/* Pulse-animasjon for Bli kjent, Oppgaver og Moods knappar */}
+        {/* Pulse-animasjon for Bli kjent, Oppgaver og Moods knapper */}
         <style jsx>{`
           @keyframes bli-kjent-pulse {
             0%, 100% {

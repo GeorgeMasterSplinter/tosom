@@ -1,9 +1,9 @@
 # ToSom Smoke Tests
 
 ## Formål
-Smoke tests verifiserer at alle kritiske endepunkt i ToSom fungerer rett etter deploy. Dei køyrast automatisk eller manuelt for å oppdage feil tidleg.
+Smoke tests verifiserer at alle kritiske endepunkt i ToSom fungerer rett etter deploy. De køyrast automatisk eller manuelt for å oppdage feil tidlig.
 
-## Korleis køyre scriptet
+## Hvordan køyre scriptet
 
 ### Lokal (localhost)
 ```bash
@@ -45,17 +45,17 @@ npx tsx scripts/smoke/smokeTest.ts
 ## Kriterier for godkjent resultat
 
 - **Alle endepunkt skal returnere forventa statuskode** (200 eller 401 som spesifisert)
-- **Latens skal vere under 1000ms** for alle endepunkt
+- **Latens skal være under 1000ms** for alle endepunkt
 - **Ingen HTTP 500-feil**
 - **Ingen timeout** (over 10 sekund)
 
-## Vanlege feil og korleis løysa dei
+## Vanlege feil og hvordan løysa de
 
 | Feil | Årsak | Løysing |
 |------|-------|------|
-| `Connection refused` | Serveren køyrer ikkje | Start serveren først |
+| `Connection refused` | Serveren køyrer ikke | Start serveren først |
 | `timeout` | Serveren svarar for seint | Sjekk DB-tilkopling og minne |
-| `401 Unauthorized` | Manglande eller feil admin token | Sjekk at SMOKE_ADMIN_TOKEN er gyldig |
+| `401 Unauthorized` | Manglende eller feil admin token | Sjekk at SMOKE_ADMIN_TOKEN er gyldig |
 | `500 Internal Server Error` | Backend feil | Sjekk loggar med `logs/query` |
 | `DNS resolution failed` | Ugyldig URL | Sjekk SMOKE_BASE_URL |
 | `ERR_TLS_CERT_ALTNAME_INVALID` | Ugyldig SSL-sertifikat | Bruk `NODE_TLS_REJECT_UNAUTHORIZED=0` |
@@ -74,13 +74,13 @@ npx tsx scripts/smoke/smokeTest.ts || exit 1
 ### Ingen resultat blir vist
 Sjekk at serveren har starte ferdig. Vent 10 sekund etter deploy før køyring.
 
-### Alle testar feil
+### Alle tester feil
 Sjekk at:
 - Serveren køyrer på rett port
 - CORS er konfigurert korrekt
-- Admin-token er gyldig og ikkje utgått
+- Admin-token er gyldig og ikke utgått
 
-###个别 testar feil
+###个别 tester feil
 Sjekk loggar for det spesifikke endepunktet med:
 ```bash
 npx tsx lib/system/logQuery.ts --module system

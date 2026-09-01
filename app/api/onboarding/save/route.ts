@@ -64,7 +64,7 @@ async function postHandler(req: NextRequest) {
 
     if (!step || !data) {
       return NextResponse.json(
-        { error: "Manglar 'step' eller 'data'" },
+        { error: "Mangler 'step' eller 'data'" },
         { status: 400 }
       )
     }

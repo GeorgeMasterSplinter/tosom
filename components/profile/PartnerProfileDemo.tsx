@@ -3,7 +3,7 @@
 /** PartnerProfileDemo — test PartnerProfileView uten dashboard
  *  PP11 — opprett demo-komponent
  *  PP12 — dummy journeyState (currentDay: 12, photosAllowed: false)
- *  PP13–PP14 — knappar for fasebytte og open/lukk modal
+ *  PP13–PP14 — knapper for fasebytte og open/lukk modal
  *  PP15 — koble dummy-profil
  *  PP16 — vis kompatibilitet
  *  PP19 — bokmål, varmt, rolig, kort
@@ -33,7 +33,7 @@ export default function PartnerProfileDemo() {
         {visible ? "Skjul partnerprofil" : "Vis partnerprofil"}
       </button>
 
-      {/* PP13 — Fasebytte-knappar */}
+      {/* PP13 — Fasebytte-knapper */}
       {visible && (
         <div className="mt-4 bg-white/60 rounded-xl p-3 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-2">
           <p className="text-xs font-medium text-[#4A4A4A]">Demo-kontroll</p>

@@ -1,7 +1,7 @@
 /* ═══════════════════════════════════════════
    Tosom ProfileSecurityCard — Design System 1.1
    Viser at profilen er privat og trygg.
-   Bruk i profile-sider for å trygge brukaren.
+   Bruk i profile-sider for å trygge brukeren.
    ═══════════════════════════════════════════ */
 
 'use client';
@@ -60,7 +60,7 @@ export const ProfileSecurityCard = ({ showDetails = false }: ProfileSecurityCard
         </div>
       </div>
 
-      {/* Detaljar */}
+      {/* Detaljer */}
       {showDetails && (
         <div
           className="mt-4 pt-4 border-t animate-fadeIn"
@@ -69,7 +69,7 @@ export const ProfileSecurityCard = ({ showDetails = false }: ProfileSecurityCard
           <ul className="space-y-2">
             {[
               'Profildata er kryptert og lagra sikkert',
-              'Bilete delast først etter 14 dagar',
+              'Bilde delast først etter 14 dager',
               'Du kan når som helst slette profilen din',
               'Ingen deling med tredjepart',
             ].map((item, i) => (

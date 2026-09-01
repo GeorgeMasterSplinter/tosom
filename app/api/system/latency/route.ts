@@ -29,7 +29,7 @@ export async function GET(request: NextRequest): Promise<Response> {
     await prisma.$queryRaw`SELECT 1`
     const currentDbLatency = Date.now() - dbStart
 
-    // Hent PerformanceMetrics for dei siste 24 timene
+    // Hent PerformanceMetrics for de siste 24 timene
     const since = new Date(Date.now() - 24 * 60 * 60 * 1000)
     
     let apiLatencyStats: { avgValueMs: number; p95ValueMs: number } = { avgValueMs: 0, p95ValueMs: 0 }

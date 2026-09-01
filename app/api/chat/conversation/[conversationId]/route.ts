@@ -34,7 +34,7 @@ export async function GET(
       return NextResponse.json({ error: "Samtalen finnes ikke" }, { status: 404 });
     }
 
-    // Verifiser at brukaren er del av conversationen
+    // Verifiser at brukeren er del av conversationen
     const isA = conversation.userAId === session.user.id;
     const isB = conversation.userBId === session.user.id;
 

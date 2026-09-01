@@ -1,7 +1,7 @@
 /**
  * Playwright globalSetup for ToSom E2E-testar - ONBOARDING-bruker
  * Loggar inn som e2e.onboarding@tosom.no (onboardingComplete=false)
- * Denne filen køyrer berre for onboarding-testar.
+ * Denne filen køyrer bare for onboarding-testar.
  */
 import { chromium, FullConfig } from '@playwright/test';
 import fs from 'fs';
@@ -29,21 +29,21 @@ async function globalSetup(config: FullConfig) {
     timeout: 30000,
   });
 
-  // Vent på at brukar-lista lastar
+  // Vent på at bruker-lista lastar
   try {
     await page.waitForResponse(
       res => res.url().includes('/api/dev-login/users') && res.status() === 200,
       { timeout: 20000 }
     );
-    console.log('[onboarding-auth] Brukar-lista lasta OK');
+    console.log('[onboarding-auth] Bruker-lista lasta OK');
   } catch (err) {
-    console.warn('[onboarding-auth] Advarsel: /api/dev-login/users responderte ikkje innan 20s');
+    console.warn('[onboarding-auth] Advarsel: /api/dev-login/users responderte ikke innen 20s');
   }
 
   // Klikk på onboarding-brukaren spesifikt
   const onboardingButton = page.locator('button', { hasText: /E2E Onboarding/ });
   if (await onboardingButton.count() > 0) {
-    console.log('[onboarding-auth] Funnet E2E Onboarding-brukar, klikkar...');
+    console.log('[onboarding-auth] Funnet E2E Onboarding-bruker, klikkar...');
     await onboardingButton.click();
 
     // Vent på redirect til onboarding
@@ -58,10 +58,10 @@ async function globalSetup(config: FullConfig) {
     // Fallback: klikk fyrste knapp
     const loginButtons = page.locator('button', { hasText: /Logg inn som/ });
     if (await loginButtons.count() > 0) {
-      console.warn('[onboarding-auth] E2E Onboarding-brukar ikkje funnen, brukar fyrste...');
+      console.warn('[onboarding-auth] E2E Onboarding-bruker ikke funnet, bruker fyrste...');
       await loginButtons.first().click();
     } else {
-      console.error('[onboarding-auth] FEIL: Ingen login-knappar!');
+      console.error('[onboarding-auth] FEIL: Ingen login-knapper!');
     }
   }
 

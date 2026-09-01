@@ -41,13 +41,13 @@ export const useWarmFlow = () => useContext(WarmFlowContext);
 ### Mood-berekning
 ```tsx
 function calculateChatMood(phase: string, resonanceScore: number): MoodType {
-  // Milestone (høg resonans + tidleg fase)
+  // Milestone (høg resonans + tidlig fase)
   if (resonanceScore >= 85 && phase === 'EARLY') return 'celebratory';
   // Dyp samtale
   if (phase === 'DEEPER' && resonanceScore >= 60) return 'deep';
   // Varm kveldstemning
   if (isNightTime && resonanceScore >= 50) return 'warm';
-  // Tidleg i reisa
+  // Tidlig i reisa
   if (phase === 'EARLY') return resonanceScore >= 70 ? 'warm' : 'gentle';
   // Standard
   return 'calm';
@@ -81,15 +81,15 @@ borderTop: `1px solid ${colors.glow}`;
 
 ---
 
-## MOOD-ENDRINGAR
+## MOOD-ENDRINGER
 
 | Tilstand | Mood | Farge |
 |--|--|--|
-| Tidleg + høg resonans | celebratory | Gull-lys (#FFD700) |
+| Tidlig + høg resonans | celebratory | Gull-lys (#FFD700) |
 | DEEPER + resonans >= 60 | deep | Blå (#A8D8EA) |
 | Kveld + resonans >= 50 | warm | Gull-lys (#E8C766) |
-| Tidleg + resonans >= 70 | warm | Gull-lys (#E8C766) |
-| Tidleg + resonans < 70 | gentle | Grøn (#88D8B0) |
+| Tidlig + resonans >= 70 | warm | Gull-lys (#E8C766) |
+| Tidlig + resonans < 70 | gentle | Grøn (#88D8B0) |
 | BUILDING_TRUST + >= 65 | warm | Gull-lys (#E8C766) |
 | Annan | calm | Standard gull (#D4AF37) |
 
@@ -104,7 +104,7 @@ borderTop: `1px solid ${colors.glow}`;
 - CHECKIN → depend on resonance
 
 ### 2. Mood endrar seg ved resonance-nivå
-- >= 85 + tidleg fase → celebratory
+- >= 85 + tidlig fase → celebratory
 - >= 60 + DEEPER → deep
 - >= 70 + EARLY → warm
 
@@ -139,7 +139,7 @@ function ChatBubble({ message }) {
 
 ## NESTE STEG
 
-1. **Kople til ekte data** — hent phase og resonance frå conversation-API
+1. **Kople til ekte data** — hent phase og resonance fra conversation-API
 2. **Legg til overgang-animasjonar** — farger bør transitione mykt
 3. **Test med ulike scenario** — alle kombinasjonar av fase + resonans + tid
 
@@ -150,4 +150,4 @@ function ChatBubble({ message }) {
 - Alle fargeendringar skjer **mykt** (duration-1000)
 - Ingen skarpe overgangar
 - Alle moodar er **rolige og varme**
-- Mood er **ikkje påtrengjande** — berre bakgrunnseffekt
+- Mood er **ikke påtrengjande** — bare bakgrunnseffekt

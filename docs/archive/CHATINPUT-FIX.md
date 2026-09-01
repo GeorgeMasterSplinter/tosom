@@ -7,7 +7,7 @@
 
 ## PROBLEM
 
-`components/chat/ChatInput.tsx` inneheldt **heile rapporten** frå den tidlegare oppgåva:
+`components/chat/ChatInput.tsx` inneheldt **heile rapporten** fra den tidlegare oppgåva:
 
 ```
 # ChatRoom Intro-integrasjon — Rapport
@@ -26,8 +26,8 @@
 ...
 ```
 
-Dette gjorde at fila **ikkje var gyldig TypeScript/React** og ville føre til:
-- TypeScript-feil (`#` er ikkje gyldig TypeScript)
+Dette gjorde at fila **ikke var gyldig TypeScript/React** og ville føre til:
+- TypeScript-feil (`#` er ikke gyldig TypeScript)
 - React-feil (loose text outside JSX)
 - Byrging feilar
 
@@ -96,7 +96,7 @@ import React, { useRef, useEffect, useCallback } from 'react';
 - Alle parentesar lukka
 - Alle kurvarlukar lukka
 - Alle semikolon på plass
-- Gyldige TypeScript-typar
+- Gyldige TypeScript-typer
 
 ---
 

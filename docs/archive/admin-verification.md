@@ -9,17 +9,17 @@ Dokumentet beskriv ei fullstendig verifikasjonsrunde for admin-panelet i pre-pro
 
 ### Test
 1. Logg inn som admin på pre-prod via `/api/admin/auth/login`
-2. Mottok ein `adminToken` (Bearer token)
-3. Verifiser at token inneheld gyldig `sub` og `role: 'admin'`
+2. Mottok en `adminToken` (Bearer token)
+3. Verifiser at token inneholder gyldig `sub` og `role: 'admin'`
 
 ### Sjekkliste
 - [ ] Admin login returnerer 200 med gyldig token
-- [ ] Token inneheld `role: 'admin'`
+- [ ] Token inneholder `role: 'admin'`
 - [ ] Session fingerprinting fungerer:
   - `ipHash` blir generert og lagret
   - `userAgentHash` blir generert og lagret
   - Mismatch gir 401 Unauthorized
-- [ ] Vanlege brukarar ikkje får admin token
+- [ ] Vanlege brukere ikke får admin token
 
 ---
 
@@ -36,15 +36,15 @@ Dokumentet beskriv ei fullstendig verifikasjonsrunde for admin-panelet i pre-pro
 
 ### Data som skal verifiserast
 
-Frå `/api/admin/system/overview`:
+Fra `/api/admin/system/overview`:
 - `totalRequests` — totalt antal API-kall
 - `errorRate` — feilrate i prosent
-- `dbLatency` — DB-latens i ms (skal vere < 50ms)
-- `recentErrors` — liste over dei 10 siste feila
+- `dbLatency` — DB-latens i ms (skal være < 50ms)
+- `recentErrors` — liste over de 10 siste feila
 
-Frå `/api/admin/system/errors`:
+Fra `/api/admin/system/errors`:
 - `errors` — array med feilobjekt
-- kvar feil har: `message`, `module`, `level`, `createdAt`
+- hver feil har: `message`, `module`, `level`, `createdAt`
 
 ### Sjekkliste
 - [ ] System overview returnerer 200
@@ -69,23 +69,23 @@ Frå `/api/admin/system/errors`:
 
 ### Data som skal verifiserast
 
-Frå `/api/admin/observability/metrics`:
+Fra `/api/admin/observability/metrics`:
 - `metrics.perEndpoint` — latens per endpoint (p50/p90/p95/p99)
 - `metrics.ai` — AI-statistikk (kall, latency, feilrate)
 - `metrics.performance` — total system ytelse
 
-Frå `/api/admin/observability/heatmap`:
+Fra `/api/admin/observability/heatmap`:
 - `routes` — array med route-slug og frekvens
-- Top routes skal vere: `/api/ai/*`, `/api/messages/*`, `/api/match/*`
+- Top routes skal være: `/api/ai/*`, `/api/messages/*`, `/api/match/*`
 
-Frå `/api/admin/observability/traces`:
+Fra `/api/admin/observability/traces`:
 - `traces` — array med trace-objekt
-- kvar trace har: `traceId`, `endpoint`, `latency`, `statusCode`, `createdAt`
+- hver trace har: `traceId`, `endpoint`, `latency`, `statusCode`, `createdAt`
 
 ### Sjekkliste
 - [ ] Metrics returnerer data per endpoint
-- [ ] traceId følger request (samanlikn med request headers)
-- [ ] API heatmap viser trafikk på minste eitt endpoint
+- [ ] traceId følger request (sammenlign med request headers)
+- [ ] API heatmap viser trafikk på minste ett endpoint
 - [ ] Latency metrics oppdaterer seg (ikke stale data)
 - [ ] AI-statistikk blir vist
 - [ ] Traces viser gyldige entry
@@ -102,7 +102,7 @@ Frå `/api/admin/observability/traces`:
 
 ### Data som skal verifiserast
 
-Frå `/api/admin/security/overview`:
+Fra `/api/admin/security/overview`:
 - `failedLogins` — { total, byIp, byEmail }
 - `rateLimits` — { total, byRoute, byUser }
 - `sessions` — { totalActive, recentLogins, suspiciousLogins }
@@ -130,22 +130,22 @@ Frå `/api/admin/security/overview`:
 
 - `totalLogs` — totalt antal AI-requestar
 - `recentRequests` — array med AI-kall
-- Kvar request har:
-  - `userId` — brukar ID
+- Hver request har:
+  - `userId` — bruker ID
   - `endpoint` — AI-endepunkt (message-suggestions, profile-rewrite, etc.)
   - `status` — statuskode (200, 429, 400, etc.)
   - `latencyMs` — latens i ms
   - `tokensIn` — antal input tokens (om tilgjengeleg)
   - `tokensOut` — antal output tokens (om tilgjengeleg)
-  - `model` — AI-modell som vart brukt
+  - `model` — AI-modell som ble brukt
   - `success` — boolean
   - `createdAt` — timestamp
 
 ### Sjekkliste
 - [ ] AI-logs returnerer 200
 - [ ] totalLogs > 0 (etter aiQuotaTest)
-- [ | Kvar request har alle felta over
-- [ | Data inneheld kall frå aiQuotaTest (userId: 'test')
+- [ | Hver request har alle felta over
+- [ | Data inneholder kall fra aiQuotaTest (userId: 'test')
 - [ | Latency, tokens, model, success er korrekte
 
 ---
@@ -160,13 +160,13 @@ Frå `/api/admin/security/overview`:
 | Unfreeze conversation | `POST /api/admin/conversations/:id/unfreeze` | Setj conversation status til 'active' |
 | Delete message | `DELETE /api/admin/messages/:id` | Marker melding som sletta |
 | Mark notification read | `POST /api/admin/notifications/:id/read` | Setj notification status til 'read' |
-| System message dispatch | `POST /api/admin/system-messages` | Send systemmelding til brukar |
+| System message dispatch | `POST /api/admin/system-messages` | Send systemmelding til bruker |
 
 ### Verifisering
 
-Etter kvar handling:
+Etter hver handling:
 - [ ] Endpoint returnerer 200
-- [ ] AuditLog får ein ny entry med:
+- [ ] AuditLog får en ny entry med:
   - `adminId` — ID på admin som utførte handlinga
   - `action` — handlingstyp (e.g., 'CONVERSATION_FREEZE')
   - `targetId` — ID på målet (conversation/message/notification)
@@ -179,7 +179,7 @@ Etter kvar handling:
 - [ ] Delete message fungerer
 - [ ] Mark notification read fungerer
 - [ ] System message dispatch fungerer
-- [ ] AuditLog får entry for kvar handling
+- [ ] AuditLog får entry for hver handling
 
 ---
 
@@ -195,7 +195,7 @@ Etter kvar handling:
 | Admin actions | OK / FAIL | |
 
 ### Krav for godkjenning
-Alle komponentar må vere "OK" for at admin-verifikasjonen skal godkjennast.
+Alle komponentar må være "OK" for at admin-verifikasjonen skal godkjennast.
 
 ---
 
@@ -223,8 +223,8 @@ Set `ADMIN_VERIFIED` til `true` når:
 - Sjekk at DB-migrasjonar er køyrde
 
 ### 401 Unauthorized på admin-endepunkt
-- Verifiser at admin-token er gyldig og ikkje utgått
-- Sjekk at admin-rolla er 'admin' (ikkje 'user')
+- Verifiser at admin-token er gyldig og ikke utgått
+- Sjekk at admin-rolla er 'admin' (ikke 'user')
 
 ### 500 Internal Server Error
 - Sjekk server-loggar

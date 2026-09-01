@@ -6,7 +6,7 @@
  *  - 100dvh (dynamisk viewporthøgd) — på mobil legg adresselinja no lenger
  *    ikke inputfeltet bak seg (h-screen/100vh ignorerer nettleser-kromen).
  *    Fallback: 100vh for nettlesarar uten dvh-støtte.
- *  - Desktop (≥768px): samtalen blir eit sentrert kort i staden for
+ *  - Desktop (≥768px): samtalen blir et sentrert kort i staden for
  *    fullbredd-mørk vegg (samarbeid med .tosom-chat-card på ChatContainer).
  */
 

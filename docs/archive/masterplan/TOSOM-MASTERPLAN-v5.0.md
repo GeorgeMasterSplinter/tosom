@@ -911,19 +911,19 @@ Tre forekomster gjenstår i grensesnittfiler:
 
 | Fil | Linje | Tekst | Synlig |
 |---|---|---|---|
-| `app/blogg/[slug]/page.tsx` | 46 | «Når du **fjernar** alt støyen, **kjem** det ekte tilbake … **Samtalar** blir **djupare**. Forbinder blir **verktruelege**.» | **Ja** |
-| `components/journey/JourneySection.tsx` | 46 | «Hvor føler du deg mest deg selv — når er du helt deg **sjølv**?» | **Ja** |
-| `app/chat/[id]/ChatPageClient.tsx` | 39 | Kommentar: «**sjølve** journeyDay **kjem** frå ChatProvider» | Nei |
+| `app/blogg/[slug]/page.tsx` | 46 | «Når du **fjernar** alt støyen, **kommer** det ekte tilbake … **Samtaler** blir **dypere**. Forbinder blir **verktruelege**.» | **Ja** |
+| `components/journey/JourneySection.tsx` | 46 | «Hvor føler du deg mest deg selv — når er du helt deg **selv**?» | **Ja** |
+| `app/chat/[id]/ChatPageClient.tsx` | 39 | Kommentar: «**selve** journeyDay **kommer** fra ChatProvider» | Nei |
 
 I tillegg finnes nynorsk i kommentarer og dokumentasjon:
 
-- `config/matching.ts:2-3` — «Vekter er **no** den **eine** sanne **kjelda**», «Dette filen er **ein** tynn wrapper»
+- `config/matching.ts:2-3` — «Vekter er **no** den **eine** sanne **kilden**», «Dette filen er **en** tynn wrapper»
 - `deploy/backup.md` — «Lagrer alle **tabellar** og data», «Full backup inkludert **migreringar**»
-- `lib/journey/engine.ts:803` — «Maksimal resonans **finst** i **stillheten**»
+- `lib/journey/engine.ts:803` — «Maksimal resonans **finnes** i **stillheten**»
 
 **De to alvorligste:**
 
-`JourneySection.tsx:46` blander målform i **samme setning**: «deg selv» og «deg sjølv». Dette er dagsimpulsen for dag 5 — tekst brukeren møter i et sårbart øyeblikk.
+`JourneySection.tsx:46` blander målform i **samme setning**: «deg selv» og «deg selv». Dette er dagsimpulsen for dag 5 — tekst brukeren møter i et sårbart øyeblikk.
 
 `blogg/[slug]/page.tsx:46` inneholder ordet **«verktruelege»**, som ikke finnes på noe norsk. Setningen er dessuten grammatisk brutt: «Forbinder blir verktruelege.»
 
@@ -1172,7 +1172,7 @@ Kanonisk: `lib/journey/engine.ts:191-221` — EARLY 1–14, BUILDING_TRUST 15–
 
 En bruker på dag 12 kan se «Bli kjent» i chat-toppen, én fase i tidslinjen og en annen på dashbordet. Endres fasegrensene ett sted, endres de ikke de fem andre.
 
-Dette er teknisk gjeld som allerede har materialisert seg som en inkonsistens brukeren kan se.
+Dette er teknisk gjelder som allerede har materialisert seg som en inkonsistens brukeren kan se.
 
 ---
 
@@ -1692,7 +1692,7 @@ Nettlesere: Chrome, Safari, Firefox, Edge.
 
 | Kontroll | Metode |
 |---|---|
-| Ingen nynorsk i brukersynlig tekst | `grep -rn "ikkje\|korleis\|sjølv\|kjem\|finst"` |
+| Ingen nynorsk i brukersynlig tekst | `grep -rn "ikke\|hvordan\|selv\|kommer\|finnes"` |
 | Ingen resonans som tall | Manuell gjennomgang |
 | Alle 144 spørsmål lesbare i UI | Gjennomgang per kategori |
 | Vilkår beskriver koblingsmodellen | Lesning |

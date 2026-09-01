@@ -7,12 +7,12 @@
 
 ## Hva er ToSom
 
-ToSom er ein roleg, privat og kunnskapsbasert relasjonsplattform for vaksne som ønskjer ekte forbindelse. Ingen swipe. Opne profiler. Ingen jag. Ingen overflatefokus. Berre to menneske som møtest på ein trygg, moden måte.
+ToSom er en rolig, privat og kunnskapsbasert relasjonsplattform for vaksne som ønskjer ekte forbindelse. Ingen swipe. Opne profiler. Ingen jag. Ingen overflatefokus. Bare to menneske som møtest på en trygg, moden måte.
 
 Plattformen bygger på tre grunnpilar:
 1. Privat profil
 2. Kunnskapsbasert matching
-3. Ein guidet 30-dagers reise mellom to personar
+3. En guidet 30-dagers reise mellom to personar
 
 ---
 
@@ -21,11 +21,11 @@ Plattformen bygger på tre grunnpilar:
 ### STEG 1: Opprett konto (2 sekund)
 - **Vipps OAuth-login** (einaste metode)
 - Ingen passord, ingen komplisert setup
-- Når platformen er klar for lansering → første 5000 brukarar får gratis innlogging
+- Når platformen er klar for lansering → første 5000 brukere får gratis innlogging
 - Deretter Vipps betaling (349 NOK per periode)
 
 ### STEG 2: Dyp profilbygging (~15 minutt)
-Brukar fyller ut ~75 felt i 13 steg (alt privat, ingen andre ser profilen):
+Bruker fyller ut ~75 felt i 13 steg (alt privat, ingen andre ser profilen):
 Identitet → Livssituasjon → Personlighet → Tilknytning → Kjærlighetsspråk → Livsstil+Verdier → Framtidsvisjon → Humor → Grenser → Modenhet → Oppsummering
 
 ### STEG 3: Vent på match (≤24 timar)
@@ -33,33 +33,33 @@ Identitet → Livssituasjon → Personlighet → Tilknytning → Kjærlighetsspr
 - Ingen valg, ingen swipe, ingen liste
 - Ved aksept → **låst i 30 dager**, ingen nye matcher
 
-### STEG 4: Privat chat-rom (30 dagar)
+### STEG 4: Privat chat-rom (30 dager)
 - Åpen fri chat mellom to personar
-- Mood-farger (ChatMoodBadge) — finnest allereie!
-- Blikjent-spørsmål som tips når samtalen er stille >10 min (finntst allereie!)
+- Mood-farger (ChatMoodBadge) — finnest allerede!
+- Blikjent-spørsmål som tips når samtalen er stille >10 min (finntst allerede!)
 - Ingen AI-svar, ingen GuidedQuestions-tvinging, ingen resonansmåling
 
-### STEG 5: Journey — Daglege tema (30 dagar)
-- Dagleg tema + refleksjonsprompt (FRIVILLIG, ikkje pliktige svar)
-- Milepæler som feiringer (dag 3/7/10/14/21/28/30), ikkje obligatoriske oppgåver
-- Bilder tillat frå dag 15
+### STEG 5: Journey — Daglege tema (30 dager)
+- Dagleg tema + refleksjonsprompt (FRIVILLIG, ikke pliktige svar)
+- Milepæler som feiringer (dag 3/7/10/14/21/28/30), ikke obligatoriske oppgaver
+- Bilder tillat fra dag 15
 
-### STEG 6: Etter 30 dagar
-- Paret kan velje å fortsetje eller avslutte
+### STEG 6: Etter 30 dager
+- Paret kan velge å fortsetje eller avslutte
 - Frivillig avslutning, ingen tvang
 - Ved ønske om ny match → tilbake til steg 3
 
 ---
 
-## Funksjoner vi BEHOLDER (eksisterer allereie)
+## Funksjoner vi BEHOLDER (eksisterer allerede)
 
 | Funksjon | Fil/sted | Status |
 |----------|---------|--------|
 | **Vipps OAuth** | `app/api/auth/vipps/*` (authorize + callback) | ✅ Bruk som login og betaling |
-| **Mood-farger** | `components/ui/moodTag.tsx` (ChatMoodBadge, MoodGrid, MoodHistory) | ✅ Bruk som den er — endre ikkje! |
+| **Mood-farger** | `components/ui/moodTag.tsx` (ChatMoodBadge, MoodGrid, MoodHistory) | ✅ Bruk som den er — endre ikke! |
 | **GuidedQuestions/Blikjent-spørsmål** | `scripts/seed-questions.ts` (150 spørsmål, 10 kategorier) + API-ruter | ✅ Vis som stil-tips når samtalen er stille — bruk som den er! |
-| **Match-motor** | `lib/matching/unifiedScorer.ts` (9 dimensjoner, éin motor) | ✅ Fikses (sikkerhet/stabilitet ferdig) |
-| **Journey 30 dager** | `lib/journey/engine.ts` (3 faser: EARLY, BUILDING_TRUST, DEEPER) | ✅ Forenkle til frivillige oppgåver |
+| **Match-motor** | `lib/matching/unifiedScorer.ts` (9 dimensjoner, én motor) | ✅ Fikses (sikkerhet/stabilitet ferdig) |
+| **Journey 30 dager** | `lib/journey/engine.ts` (3 faser: EARLY, BUILDING_TRUST, DEEPER) | ✅ Forenkle til frivillige oppgaver |
 
 ---
 
@@ -67,12 +67,12 @@ Identitet → Livssituasjon → Personlighet → Tilknytning → Kjærlighetsspr
 
 | Funksjon | Hvorfor fjernes |
 |----------|----------------|
-| **Magic Link** | Skal berre vere Vipps OAuth (både login + betaling) |
-| **Stripe-integrasjon** | Skal berre vere Vipps betalinger seinare |
-| **Resonansmåling i chat** | Falsk presisjon — når paret matcher godt → er dei kompatibele. Resten er kommunikasjon mellom to folk. |
-| **AI-svar-forslag** | Bryter den menneskelige kontakten. ToSom skal føles ekte, ikkje AI-støttet. |
-| **MatchInsight AI** | Ikkje nødvendig — brukarane ser profil-data direkte |
-| **JourneyCoach AI-prompt** | Ikkje nødvendig |
+| **Magic Link** | Skal bare være Vipps OAuth (både login + betaling) |
+| **Stripe-integrasjon** | Skal bare være Vipps betalinger senere |
+| **Resonansmåling i chat** | Falsk presisjon — når paret matcher godt → er de kompatibele. Resten er kommunikasjon mellom to folk. |
+| **AI-svar-forslag** | Bryter den menneskelige kontakten. ToSom skal føles ekte, ikke AI-støttet. |
+| **MatchInsight AI** | Ikke nødvendig — brukerne ser profil-data direkte |
+| **JourneyCoach AI-prompt** | Ikke nødvendig |
 
 ---
 
@@ -80,7 +80,7 @@ Identitet → Livssituasjon → Personlighet → Tilknytning → Kjærlighetsspr
 
 1. **Enkelheit over kompleksitet** — færre funksjoner, betre oppleving
 2. **Menneske før teknologi** — ingen AI-chat, ingen AI-coach, ingen AI-partner
-3. **Privat og trygg** — djup profil, éin match, 30-dagers reise
+3. **Privat og trygg** — djup profil, én match, 30-dagers reise
 4. **La folk finne ut av det selv** — matching er nok. Resten er kommunikasjon mellom to personar.
 
 ---
@@ -89,11 +89,11 @@ Identitet → Livssituasjon → Personlighet → Tilknytning → Kjærlighetsspr
 
 | Område | V1 (noverande) | V2 (forenkla) |
 |--------|----------------|---------------|
-| **Login** | Magic Link + Vipps | Berre Vipps OAuth |
-| **Betaling** | Stripe | Berre Vipps (349 NOK, kjem seinare) |
+| **Login** | Magic Link + Vipps | Bare Vipps OAuth |
+| **Betaling** | Stripe | Bare Vipps (349 NOK, kommer senere) |
 | **Chat** | Åpen + AI-forslag + GuidedQuestions | Åpen + Mood-farger (eksisterer) + Blikjent-tips (eksisterer) |
-| **Resonansmåling** | Per melding i chat | Fjerna — ikkje nødvendig |
-| **Journey** | Daglege pliktige oppgåver | Dagleg tema + refleksjon (frivillig) |
+| **Resonansmåling** | Per melding i chat | Fjerna — ikke nødvendig |
+| **Journey** | Daglege pliktige oppgaver | Dagleg tema + refleksjon (frivillig) |
 
 ---
 
@@ -101,9 +101,9 @@ Identitet → Livssituasjon → Personlighet → Tilknytning → Kjærlighetsspr
 
 1. [ ] Fjerne Magic Link login-ruter (`/api/auth/magic-link/*`)
 2. [ ] Fjerne Stripe-integrasjon
-3. [ ] Fjerne Resonansmåling frå message-handling
+3. [ ] Fjerne Resonansmåling fra message-handling
 4. [ ] Fjerne AI-svar-forslag i chat (`/api/ai/message-suggestions/`)
-5. [ ] Forenkle Journey til frivillige oppgåver
+5. [ ] Forenkle Journey til frivillige oppgaver
 6. [ ] Verifisere at Mood + Blikjent fungerer korrekt i chat
 
 ---

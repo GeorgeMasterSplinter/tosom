@@ -6,8 +6,8 @@
 
 ## OPPSUMMERING
 
-`app/chat/[id]/page.tsx` eksisterer allereie som ei fullverdig chat-side med:
-- Pusher-sanntid for nye meldingar
+`app/chat/[id]/page.tsx` eksisterer allerede som ei fullverdig chat-side med:
+- Pusher-sanntid for nye meldinger
 - Typing-indikator
 - AI-chatstarter
 - Glassmorphism + gull UI
@@ -20,7 +20,7 @@
 
 | Fil | Beskrivning |
 |-----|-|
-| `app/chat/[id]/page.tsx` | Fullverdig chat-side med sanntid, meldingar, AI-starter |
+| `app/chat/[id]/page.tsx` | Fullverdig chat-side med sanntid, meldinger, AI-starter |
 
 ---
 
@@ -28,11 +28,11 @@
 
 | Funksjon | Beskrivning |
 |--|-|
-| `useChatMessages` | Hentar meldingar fra /api/chat/messages |
-| `useChatRealtime` | Pusher-sanntid for nye meldingar |
+| `useChatMessages` | Hentar meldinger fra /api/chat/messages |
+| `useChatRealtime` | Pusher-sanntid for nye meldinger |
 | `useTypingIndicator` | Typing-indikator for motpart |
 | `sendMessage` | Send melding via /api/chat/messages |
-| `fetchStarters` | Hentar AI-chatstarter frå /api/chat/starter |
+| `fetchStarters` | Hentar AI-chatstarter fra /api/chat/starter |
 | `sendStarterMessage` | Send AI-starter som melding |
 
 ---
@@ -69,7 +69,7 @@ model Message {
 | Rute | Beskrivning |
 |--|-|
 | `/chat` | Chat-oversikt |
-| `/chat/[id]` | Ein samtale |
+| `/chat/[id]` | En samtale |
 | `/api/chat/messages` | Meldings-API |
 | `/api/chat/starter` | AI-chatstarter |
 
@@ -80,7 +80,7 @@ model Message {
 | Element | Verdi |
 |--|-|
 | Bakgrunn | `#0B0E11` |
-| Eigen bubble | `rgba(212, 175, 55, 0.12)` |
+| Egen bubble | `rgba(212, 175, 55, 0.12)` |
 | Motpart bubble | `rgba(255, 255, 255, 0.06)` |
 | Border | `rgba(255, 255, 255, 0.1)` |
 | Gold | `#D4AF37` |

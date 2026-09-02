@@ -1,6 +1,6 @@
 GEORGE.md — ToSom i åpen beta
 Deploy‑guide, drift, og daglig oversikt  
-Opprettet 24.08.2026 — Sist oppdatert 02.09.2026 (bokmål-kampanje: full konvertering, utvidet språkvakt, §12)
+Opprettet 24.08.2026 — Sist oppdatert 02.09.2026 (ACT 1.2 sikkerhetsbølge commit-ert+pushet: CSRF/tryParse/prod-env/try-catch, F-111-02 Fase 1; CD deploy-gate fikset be66067)
 
 0. Status i dag (01.09.2026)
 🟢 Produksjon kjører: tosom.no → www.tosom.no (Vercel, prod, HTTP 200). Landing, /login, /admin/login fungerer.
@@ -143,7 +143,7 @@ Token: Read/Write
 
 Variabler: R2_* + STORAGE_DRIVER=r2
 
-Uten R2 → bilder lagres lokalt og slettes ved hver deploy.
+Uten R2 → bilder lagres lokalt og slettes ved hver deploy. ⚠️ F-133-01 (02.09): R2_* er nå STARTUP-PAKREVDE i prod — mangler de, starter appen ikke (validateEnv kaster i instrumentation.ts). Må settes i Vercel FØR neste prod-deploy (ellers blokkeres deployen).
 
 4. Pusher (realtime chat)
 Status: nå OK.  

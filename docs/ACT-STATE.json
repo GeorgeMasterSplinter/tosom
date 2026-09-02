@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "updatedAt": "2026-09-02",
-  "commit": "0defe6c",
+  "commit": "be66067",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
     "tests": "409/410 (47 suiter, 1 skippet)",
@@ -252,6 +252,12 @@
   },
   "leveranser": [
     {
+      "dato": "2026-09-02",
+      "id": "ACT1.2-DELIVERY",
+      "title": "ACT 1.2 sikkerhetsbølge commit-ert + pushet (4 commits) + CD deploy-gate fikset",
+      "content": "Den ucommitede ACT 1.2-bølgen verifisert (tsc 0, jest 409/410 (47 suiter, 1 skippet), next lint 0, verify:lang 0) og pushet til origin/main. Commits: 95cb21a (F-117-02 CSRF no-cookie-bypass lukket + regression-test; F-111-01 tryParseJsonBody på 12 ruter; F-133-01 PROD-gated env-validering; try/catch+trackError på 4 admin/dev-login-ruter; +2 testfiler +2 dok), ed6a076 (F-115-01 fullført: try/catch+trackError på request-reset, match/breakdown, relationship/digest — alle 7 handlerne), 75cc903 (F-111-02 Fase 1: 25 døde Zod-skjema fjernet fra lib/api/validation.ts; beholdt validateBody/validateQuery/tryParseJsonBody; reelle rute-skjema bor i lib/validation/*), be66067 (CD deploy-gate: skipped → ::warning:: + exit 0 i stedet for feil; failure→rød, success→grønn). OPERASJONELL MERK (F-133-01): appen feiler ved oppstart i prod hvis CRON_SECRET/PUSHER_*/R2_*/EMAIL_*/ALERT_EMAIL_TO mangler som runtime-vars i Vercel — R2_* fortsatt ⚠️ uverifisert, må settes FØR neste prod-deploy. GJENSTÅR: F-111-02 Fase 2/3 (forsterke createApiHandler med pgCheck+requireAuth + migrere ruter, påventer godkjenning); F-131-01 rotasjon (George); SENTRY_DSN; Resend-domene (SPF/DKIM); Vercel-token."
+    },
+    {
       "dato": "2026-09-01",
       "id": "ACT1.1",
       "title": "PRE-LAUNCH AUDIT — Full sikkerhetskartlegging (§1.1/1.2/1.3)",
@@ -464,7 +470,7 @@
       "/metoder — ikke lenket noe sted"
     ]
   },
-  "nextAction": "ACT 1.2 (F-131-01): kartlegging + rotasjonsplan + git-historikk-runbook FERDIG (docs/ACT-1.2-F131-SECRET-ROTATION-RUNBOOK.md). GJENNOMFØRT: git-historikk-omskrivning HOPPET OVER (avgjort 2026-09-01: repo PRIVAT — rotasjon er nok). BLOKKERT: rotasjon i Vercel (runbook §3) krever George (leverandør-tilgang). NESTE (George): kjør runbook avsnitt 3. RETTA: ACT 1.2 F-117-02 (HØY) CSRF-fallback-hull lukket (no-cookie → 403; 8 tester + tsc + verify:lang). (ACT 1.2B: ACT-STATE.json normalisert til bokmål — FERDIG.) FORTSETT: LANSE-READINESS er kodeferdig og i prod (commit 1c255c6, 01.09). CSRF-flagget er AV (trygt — ruter er no-op til det slås på). NESTE FOR GEORGE (4 steg): (1) Klistre Vercel-prod-verdiene DATABASE_URL + R2_* (5 variabler) → jeg køyrer launch-1 dry run + --apply (slett test1/test2) og launch-3 (R2-verifisering). (2) Resend: legg til tosom.no i dashboardet → Cloudflare: TXT SPF «v=spf1 include:spf.resend.com -all» + DKIM-CNAME fra Resend → verified → e2e-test av passord-reset i prod. (3) GitHub-secrets RESEND_API_KEY + ALERT_EMAIL_TO → uptime-alerting live. (4) Sentry DSN → vercel env add SENTRY_DSN production. DERETTER: vercel env add ENABLE_CSRF_PROTECTION=true + redeploy → verifiser 403 på POST uten token i prod. GJENSTÅR: Vipps Login + Betaling, DPA/DPIA advokatgjennomgang + signatur, sletting av test1/test2, e-post-e2e, R2-verifisering, Sentry DSN, CSRF-flagg på.",
+  "nextAction": "AKTUALISERT 02.09 (commit-ert+pushet): ACT 1.2 sikkerhetsbølge leveret — 95cb21a (F-117-02 CSRF, F-111-01 tryParse, F-133-01 prod-env, try/catch på 4 ruter), ed6a076 (F-115-01 fullført), 75cc903 (F-111-02 Fase 1: døde Zod-skjema fjernet), be66067 (CD deploy-gate: skipped→warning). GJENSTÅR 1.2: F-111-02 Fase 2/3 (påventer godkjenning). F-133-01: R2_*/CRON/PUSHER/EMAIL/ALERT er startup-påkrevd i prod — R2_* fortsatt ⚠️, settes i Vercel FØR neste deploy. GJENSTÅR (George): F-131-01 rotasjon, SENTRY_DSN, Resend-domene, Vercel-token. (Tidligere) ACT 1.2 (F-131-01): kartlegging + rotasjonsplan + git-historikk-runbook FERDIG (docs/ACT-1.2-F131-SECRET-ROTATION-RUNBOOK.md). GJENNOMFØRT: git-historikk-omskrivning HOPPET OVER (avgjort 2026-09-01: repo PRIVAT — rotasjon er nok). BLOKKERT: rotasjon i Vercel (runbook §3) krever George (leverandør-tilgang). NESTE (George): kjør runbook avsnitt 3. RETTA: ACT 1.2 F-117-02 (HØY) CSRF-fallback-hull lukket (no-cookie → 403; 8 tester + tsc + verify:lang). (ACT 1.2B: ACT-STATE.json normalisert til bokmål — FERDIG.) FORTSETT: LANSE-READINESS er kodeferdig og i prod (commit 1c255c6, 01.09). CSRF-flagget er AV (trygt — ruter er no-op til det slås på). NESTE FOR GEORGE (4 steg): (1) Klistre Vercel-prod-verdiene DATABASE_URL + R2_* (5 variabler) → jeg køyrer launch-1 dry run + --apply (slett test1/test2) og launch-3 (R2-verifisering). (2) Resend: legg til tosom.no i dashboardet → Cloudflare: TXT SPF «v=spf1 include:spf.resend.com -all» + DKIM-CNAME fra Resend → verified → e2e-test av passord-reset i prod. (3) GitHub-secrets RESEND_API_KEY + ALERT_EMAIL_TO → uptime-alerting live. (4) Sentry DSN → vercel env add SENTRY_DSN production. DERETTER: vercel env add ENABLE_CSRF_PROTECTION=true + redeploy → verifiser 403 på POST uten token i prod. GJENSTÅR: Vipps Login + Betaling, DPA/DPIA advokatgjennomgang + signatur, sletting av test1/test2, e-post-e2e, R2-verifisering, Sentry DSN, CSRF-flagg på.",
   "gjenstaarFoerBeta": [
     "Manuell sjekkliste — nå konsolidert i GEORGE.md (steg 2–9, env-liste, kill switches)"
   ],

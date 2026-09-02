@@ -149,9 +149,11 @@ jobs:
           curl -f https://tosom.no/api/system/health || echo "Health check pending (may need stabilization time)"
 
   # ─── DEPLOY GATE (synlig kvalitetsgate) ───
-  # Når CI er rød, hoppes deploy over — og en kjøring der bare jobber er
-  # hoppet over vises som 'success' (se CD 165–168). Dette jobbet gjør slike
-  # kjøringer røde i stedet, slik at «deploy ble hoppet over» er synlig i UI.
+  # Gjør deploy-statusen synlig i CD-kjøringen:
+  #   failure  → gate feiler (rød): ekte deploy-feil.
+  #   skipped  → warning (gul) + grønn kjøring: CI var ikke grønn, deploy hoppes
+  #              bevisst over (IKKE en deploy-feil — CI-rødt er selve signalet).
+  #   success  → grønn: deploy OK.
   deploy-gate:
     name: Deploy Gate
     runs-on: ubuntu-latest
@@ -161,8 +163,12 @@ jobs:
       - name: Verify Deploy Ran
         run: |
           RESULT="${{ needs.deploy.result }}"
-          if [ "$RESULT" != "success" ]; then
-            echo "::error::Deploy-jobben ble hoppet over (result: $RESULT) — CI var ikke grønn."
+          if [ "$RESULT" = "failure" ]; then
+            echo "::error::Deploy-jobben feilet."
             exit 1
+          fi
+          if [ "$RESULT" = "skipped" ]; then
+            echo "::warning::Deploy-jobben ble hoppet over — CI var ikke grønn."
+            exit 0
           fi
           echo "Deploy-jobben fullførte med success."

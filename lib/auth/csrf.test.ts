@@ -113,17 +113,19 @@ describe("verifyCsrfToken / csrfCheck med flag ENABLE_CSRF_PROTECTION", () => {
     }))).toBe(true);
   });
 
-  it("skal godkjenne header-token uten cookie (API-klienter)", async () => {
+  it("skal avvise med 403 når header-token kommer uten csrf-cookie (F-117-02: ingen cookie = ingen referanse)", async () => {
     process.env.ENABLE_CSRF_PROTECTION = "true";
     const { verifyCsrfToken } = await loadCsrf();
 
+    // Et token med gyldig lengde uten cookie må ikke lenger slippes gjennom —
+    // det var bypass-hullet (F-117-02).
     const v = (await verifyCsrfToken(
       fakeReq({ headers: { "x-csrf-token": "api-token-123456789" } })
-    )) as { ok?: boolean; status?: number };
-    expect(v.ok).toBe(true);
+    )) as { status: number };
+    expect(v.status).toBe(403);
   });
 
-  it("skal avvise header-token uten cookie om lengden er ugyldig", async () => {
+  it("skal avvise med 403 når csrf-cookie mangler (korte/ugyldige token)", async () => {
     process.env.ENABLE_CSRF_PROTECTION = "true";
     const { verifyCsrfToken } = await loadCsrf();
 

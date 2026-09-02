@@ -6,6 +6,7 @@
  */
 
 import { NextResponse } from 'next/server';
+import { trackError } from '@/lib/errorTracker';
 
 const DEV_LOGIN_ENABLED = process.env.DEV_LOGIN_ENABLED === 'true';
 
@@ -47,28 +48,33 @@ const TEST_USERS: Record<string, {
 };
 
 export async function GET() {
-  // Fail-closed i produksjon (uavhengig av DEV_LOGIN_ENABLED-flagget)
-  if (process.env.NODE_ENV === 'production') {
-    return NextResponse.json(
-      { error: 'Not found' },
-      { status: 404 }
-    );
+  try {
+    // Fail-closed i produksjon (uavhengig av DEV_LOGIN_ENABLED-flagget)
+    if (process.env.NODE_ENV === 'production') {
+      return NextResponse.json(
+        { error: 'Not found' },
+        { status: 404 }
+      );
+    }
+
+    if (!DEV_LOGIN_ENABLED) {
+      return NextResponse.json(
+        { error: 'Dev-login er ikke aktivert.' },
+        { status: 503 }
+      );
+    }
+
+    const users = Object.entries(TEST_USERS).map(([key, u]) => ({
+      id: key,
+      name: u.name,
+      email: u.email,
+      role: u.role,
+      description: u.description,
+    }));
+
+    return NextResponse.json({ users });
+  } catch (error) {
+    await trackError(error, 'api/dev-login/users');
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
-
-  if (!DEV_LOGIN_ENABLED) {
-    return NextResponse.json(
-      { error: 'Dev-login er ikke aktivert.' },
-      { status: 503 }
-    );
-  }
-
-  const users = Object.entries(TEST_USERS).map(([key, u]) => ({
-    id: key,
-    name: u.name,
-    email: u.email,
-    role: u.role,
-    description: u.description,
-  }));
-
-  return NextResponse.json({ users });
 }

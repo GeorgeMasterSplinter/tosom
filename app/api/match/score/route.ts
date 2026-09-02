@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { calculateMatchScores, calculateMatchStrength, calculateFuturePotential, getMatchVisual } from '@/lib/match/score';
 import { requireAuth } from '@/lib/auth/requireAuth';
 import { matchScoreSchema, validateWithZod } from '@/lib/validation/api';
+import { tryParseJsonBody } from '@/lib/api/validation';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,7 +20,11 @@ export async function POST(req: NextRequest) {
     }
 
     // Input-validering
-    const validated = validateWithZod(matchScoreSchema, await req.json());
+    const rawBody = await tryParseJsonBody(req);
+    if (!rawBody) {
+      return NextResponse.json({ error: 'Ugyldig body' }, { status: 400 });
+    }
+    const validated = validateWithZod(matchScoreSchema, rawBody);
     if ('error' in validated) {
       return NextResponse.json({ error: validated.error, code: validated.code }, { status: 400 });
     }

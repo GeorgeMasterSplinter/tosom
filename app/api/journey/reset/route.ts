@@ -9,6 +9,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth/session";
 import prisma from "@/lib/prisma";
+import { tryParseJsonBody } from "@/lib/api/validation";
 
 export async function POST(req: Request) {
   try {
@@ -21,7 +22,10 @@ export async function POST(req: Request) {
     }
 
     const userId = session.user.id;
-    const body = await req.json();
+    const body = await tryParseJsonBody(req);
+    if (!body) {
+      return NextResponse.json({ error: "Ugyldig body" }, { status: 400 });
+    }
     const choice: "complete" | "loop_back" = body.choice || "complete";
 
     // Finn aktiv match

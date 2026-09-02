@@ -12,6 +12,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { checkAuthRateLimit } from '@/lib/rate-limit';
+import { tryParseJsonBody } from '@/lib/api/validation';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,7 +23,10 @@ export async function POST(req: NextRequest) {
       || req.headers.get('x-real-ip') 
       || undefined;
 
-    const body = await req.json();
+    const body = await tryParseJsonBody(req);
+    if (!body) {
+      return NextResponse.json({ error: 'Ugyldig body' }, { status: 400 });
+    }
     const phone = (body.phone as string)?.trim();
     const termsAccepted = body.termsAccepted === true; // B4.1: Vilkår må aksepteres
 

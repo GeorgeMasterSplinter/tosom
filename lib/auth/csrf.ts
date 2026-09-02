@@ -51,20 +51,18 @@ export async function verifyCsrfToken(req: NextRequest): Promise<{ ok: true; _ne
     );
   }
 
-  // Hent token fra cookie (sett av klienten tidlegare)
+  // Hent token fra cookie (sett av klienten tidligere)
   const cookieToken = req.cookies.get('csrf_token')?.value;
-  
-  // Dersom det ikke finnes en cookie-token, godta hva som helst gyldig token
-  // Dette dekker scenar der clienten genererer tokenet selv (t.d. SPA)
+
+  // Double-submit-cookie: header-tokenet må stemme med cookie-tokenet.
+  // Uten en cookie finnes det ingen referanse å validere mot, så et
+  // vilkårlig header-token ville gitt full CSRF-bypass (F-117-02).
+  // Avvis derfor når cookie-tokenet mangler.
   if (!cookieToken) {
-    // Token er gyldig så lenge det ikke er tomt og ser ut som et gyldig token
-    if (token.length < 10 || token.length > 256) {
-      return NextResponse.json(
-        { error: 'CSRF-token har ugyldig lengd', code: 'CSRF_INVALID' },
-        { status: 403 }
-      );
-    }
-    return { ok: true };
+    return NextResponse.json(
+      { error: 'CSRF-cookie mangler', code: 'CSRF_MISSING' },
+      { status: 403 }
+    );
   }
 
   // Sammenligner token med timing-safe sammenligning

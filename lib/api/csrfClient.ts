@@ -10,8 +10,7 @@
  * - `csrfFetch()` er en tynn wrapper rundt `fetch` som legger til
  *   `X-CSRF-Token`-headeren på hver kall.
  * - Serveren (`lib/auth/csrf.ts` → `csrfCheck`) godkjenner bare skrivekall
- *   når header og cookie stemmer (eller når cookie ikke finnes og
- *   tokenet har gyldig lengde — for API-klienter uten cookie-støtte).
+ *   når header og cookie stemmer (avviser med 403 når cookie-tokenet mangler).
  *
  * Hvorfor dette beskytter: en angripende nettside kan ikke sende egne
  * HTTP-headers (CORS-preflight krever tillatelse), og SameSite=Lax-cookien

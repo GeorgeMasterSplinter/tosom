@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth/requireAuth';
 import { endJourney } from '@/lib/journey/endJourney';
+import { tryParseJsonBody } from '@/lib/api/validation';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,7 +29,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const user = result.user;
 
     // 2. Hent og valider data
-    const body = await req.json();
+    const body = await tryParseJsonBody(req);
+    if (!body) {
+      return NextResponse.json({ error: 'Ugyldig body' }, { status: 400 });
+    }
     const { reason } = body as { reason?: string };
 
     // 3. Finn aktiv journey for brukeren

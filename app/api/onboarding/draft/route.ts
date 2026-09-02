@@ -25,6 +25,7 @@ import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from '@/lib/auth/session';
 import { pgCheck } from '@/lib/rate-limit-pg';
+import { tryParseJsonBody } from '@/lib/api/validation';
 
 export const dynamic = 'force-dynamic';
 
@@ -63,7 +64,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const body = await req.json();
+    const body = await tryParseJsonBody(req);
+    if (!body) {
+      return NextResponse.json({ error: 'Ugyldig body' }, { status: 400 });
+    }
     const rawStep = body?.step;
     const rawData = body?.data;
 

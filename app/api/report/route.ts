@@ -17,6 +17,7 @@ import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth/requireAuth';
 import { csrfCheck } from '@/lib/auth/csrf';
 import { sendAlert } from '@/lib/observability/alert';
+import { tryParseJsonBody } from '@/lib/api/validation';
 
 export const dynamic = 'force-dynamic';
 
@@ -70,7 +71,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
 
     // 3. Parse body
-    const body = await req.json();
+    const body = await tryParseJsonBody(req);
+    if (!body) {
+      return NextResponse.json({ error: 'Ugyldig body' }, { status: 400 });
+    }
     const { reportedId, matchId, category, description } = body as {
       reportedId?: string;
       matchId?: string;
@@ -224,7 +228,10 @@ export async function PATCH(req: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: 'Krever admin' }, { status: 403 });
     }
 
-    const body = await req.json();
+    const body = await tryParseJsonBody(req);
+    if (!body) {
+      return NextResponse.json({ error: 'Ugyldig body' }, { status: 400 });
+    }
     const { reportId, status } = body as { reportId?: string; status?: string };
 
     if (!reportId || !status) {

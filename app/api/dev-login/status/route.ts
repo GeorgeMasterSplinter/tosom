@@ -6,6 +6,7 @@
  */
 
 import { NextResponse } from 'next/server';
+import { trackError } from '@/lib/errorTracker';
 
 const DEV_LOGIN_ENABLED = process.env.DEV_LOGIN_ENABLED === 'true';
 
@@ -40,17 +41,22 @@ const TEST_USERS: Record<string, {
 };
 
 export async function GET() {
-  // Fail-closed i produksjon
-  if (process.env.NODE_ENV === 'production') {
-    return NextResponse.json(
-      { error: 'Not found' },
-      { status: 404 }
-    );
-  }
+  try {
+    // Fail-closed i produksjon
+    if (process.env.NODE_ENV === 'production') {
+      return NextResponse.json(
+        { error: 'Not found' },
+        { status: 404 }
+      );
+    }
 
-  return NextResponse.json({
-    enabled: DEV_LOGIN_ENABLED,
-    availableUsers: Object.keys(TEST_USERS),
-    usage: 'GET /api/dev-login?userId=xxx eller POST /api/dev-login { userId: "xxx" }',
-  });
+    return NextResponse.json({
+      enabled: DEV_LOGIN_ENABLED,
+      availableUsers: Object.keys(TEST_USERS),
+      usage: 'GET /api/dev-login?userId=xxx eller POST /api/dev-login { userId: "xxx" }',
+    });
+  } catch (error) {
+    await trackError(error, 'api/dev-login/status');
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
 }

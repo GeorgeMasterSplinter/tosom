@@ -19,6 +19,26 @@ const REQUIRED_VARS: EnvVar[] = [
   { value: process.env.ADMIN_JWT_SECRET, required: true, description: 'Admin JWT secret key (sikkerheitskritisk)' },
 ]
 
+// F-133-01 (S-ENV): prod-kritiske variabler appen er avhengig av i produksjon,
+// men som kan mangle i dev/CI/build. Valideres kun når NODE_ENV === 'production'
+// (Node-runtime avslutter via process.exit i instrumentation.ts, Edge logger).
+// Mål: fange en "halvdød" prod-oppstart (manglende Pusher/R2/e-post/cron) ved
+// oppstart, i stedet for at en tilfeldig rute feiler senere.
+const PROD_REQUIRED_VARS: EnvVar[] = [
+  { value: process.env.CRON_SECRET, required: true, description: 'CRON_SECRET (cron-auth)' },
+  { value: process.env.PUSHER_APP_ID, required: true, description: 'PUSHER_APP_ID (Pusher realtid)' },
+  { value: process.env.PUSHER_KEY, required: true, description: 'PUSHER_KEY (Pusher realtid)' },
+  { value: process.env.PUSHER_SECRET, required: true, description: 'PUSHER_SECRET (Pusher realtid)' },
+  { value: process.env.R2_ACCOUNT_ID, required: true, description: 'R2_ACCOUNT_ID (bildeoppbevaring)' },
+  { value: process.env.R2_ACCESS_KEY_ID, required: true, description: 'R2_ACCESS_KEY_ID (bildeoppbevaring)' },
+  { value: process.env.R2_SECRET_ACCESS_KEY, required: true, description: 'R2_SECRET_ACCESS_KEY (bildeoppbevaring)' },
+  { value: process.env.R2_BUCKET, required: true, description: 'R2_BUCKET (bildeoppbevaring)' },
+  { value: process.env.EMAIL_SERVER_HOST, required: true, description: 'EMAIL_SERVER_HOST (SMTP/Resend)' },
+  { value: process.env.EMAIL_SERVER_USER, required: true, description: 'EMAIL_SERVER_USER (SMTP/Resend)' },
+  { value: process.env.EMAIL_SERVER_PASSWORD, required: true, description: 'EMAIL_SERVER_PASSWORD (SMTP/Resend)' },
+  { value: process.env.ALERT_EMAIL_TO, required: true, description: 'ALERT_EMAIL_TO (uptime-alert)' },
+]
+
 const OPTIONAL_VARS: EnvVar[] = [
   { value: process.env.AI_API_KEY, required: false, description: 'AI provider API key' },
   { value: process.env.AI_MODEL, required: false, description: 'AI model name' },
@@ -29,10 +49,24 @@ const OPTIONAL_VARS: EnvVar[] = [
 
 export function validateEnv(): void {
   const missing: string[] = []
+  const isProd = process.env.NODE_ENV === 'production'
 
   for (const envVar of REQUIRED_VARS) {
     if (!envVar.value) {
       missing.push(envVar.description)
+    }
+  }
+
+  // Prod-kritiske variabler: påkrevd kun i produksjon (fail i Node, log i Edge).
+  // I dev/CI/build er de bare advarsler, slik at lokal utvikling og build ikke
+  // blokkeres av prod-spesifikke verdier.
+  for (const envVar of PROD_REQUIRED_VARS) {
+    if (!envVar.value) {
+      if (isProd) {
+        missing.push(envVar.description)
+      } else {
+        console.warn(`[env] Prod-kritisk variabel ikke satt (dev): ${envVar.description}`)
+      }
     }
   }
 

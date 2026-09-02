@@ -211,3 +211,29 @@ export const AIJourneyGuidanceSchema = z.object({
   conversationId: z.string().min(1, 'Konversasjon-ID er påkrevd'),
   phase: z.enum(['EARLY', 'BUILDING_TRUST', 'DEEPER', 'CHECKIN']).optional(),
 })
+
+// ─── Trygt body-parse (F-111-01 core) ───
+
+/**
+ * tryParseJsonBody — trygt JSON-body parse for API-ruter.
+ *
+ * Returnerer det parserte objektet (samme `any` som `req.json()` gir), eller
+ * `null` hvis body ikke er gyldig JSON eller ikke et flatt objekt
+ * (array/primitive/NULL). Kaster aldri — ruten kan returnere 400 ved `null`
+ * i stedet for at rå `req.json()` kaster og ender som 500 (malformed-JSON-holet
+ * i F-111-01).
+ *
+ * Returtypen `any` er med vilje: rutene har tidligere fått `any` fra
+ * `req.json()`, så dette holder den eksisterende typehåndteringen — ingen
+ * endring av eksisterende kode, bare feilsikring mot ugyldig body.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function tryParseJsonBody(req: { json: () => Promise<unknown> }): Promise<any> {
+  try {
+    const data: unknown = await req.json()
+    if (data === null || typeof data !== 'object' || Array.isArray(data)) return null
+    return data
+  } catch {
+    return null
+  }
+}

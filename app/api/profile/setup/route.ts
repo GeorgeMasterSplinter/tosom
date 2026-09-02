@@ -17,6 +17,7 @@ import { scoreAll } from '@/lib/psychometrics/scoring';
 import { INSTRUMENT_SET_VERSION } from '@/lib/psychometrics/instruments';
 import { pgCheck } from '@/lib/rate-limit-pg';
 import { csrfCheck } from '@/lib/auth/csrf';
+import { tryParseJsonBody } from '@/lib/api/validation';
 
 export const dynamic = 'force-dynamic';
 
@@ -30,7 +31,10 @@ async function postHandler(req: NextRequest) {
     const csrf = await csrfCheck(req);
     if (csrf instanceof NextResponse) return csrf;
 
-    const body = await req.json();
+    const body = await tryParseJsonBody(req);
+    if (!body) {
+      return NextResponse.json({ error: 'Ugyldig body' }, { status: 400 });
+    }
 
     // O1 FIX: Valider med Zod-skjemaet FØR du skriver til databasen
     const validation = validateOnboarding(body);

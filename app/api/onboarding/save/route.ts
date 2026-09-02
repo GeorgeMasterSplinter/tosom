@@ -11,6 +11,7 @@ import { recordEvent } from "@/lib/observability/metric"
 import prisma from "@/lib/prisma"
 import { DeepProfileStep } from "@prisma/client"
 import { pgCheck } from "@/lib/rate-limit-pg"
+import { tryParseJsonBody } from "@/lib/api/validation"
 
 export const dynamic = 'force-dynamic'
 
@@ -55,7 +56,10 @@ async function postHandler(req: NextRequest) {
   }
 
   try {
-    const body = await req.json()
+    const body = await tryParseJsonBody(req)
+    if (!body) {
+      return NextResponse.json({ error: "Ugyldig body" }, { status: 400 })
+    }
 
     const { step, data } = body as {
       step: DeepProfileStep | string

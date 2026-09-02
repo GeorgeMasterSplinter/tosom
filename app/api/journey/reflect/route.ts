@@ -9,6 +9,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth/requireAuth";
+import { tryParseJsonBody } from "@/lib/api/validation";
 
 export const dynamic = 'force-dynamic';
 
@@ -22,7 +23,10 @@ export async function POST(req: NextRequest) {
     const user = result.user;
 
     // 2. Hent body
-    const body = await req.json();
+    const body = await tryParseJsonBody(req);
+    if (!body) {
+      return NextResponse.json({ error: "Ugyldig body" }, { status: 400 });
+    }
     const { reflection, conversationResponse } = body as {
       reflection?: string;
       conversationResponse?: string;

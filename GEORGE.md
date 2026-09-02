@@ -1,6 +1,6 @@
 GEORGE.md — ToSom i åpen beta
 Deploy‑guide, drift, og daglig oversikt  
-Opprettet 24.08.2026 — Sist oppdatert 02.09.2026 (ACT 1.2 sikkerhetsbølge commit-ert+pushet: CSRF/tryParse/prod-env/try-catch, F-111-02 Fase 1; CD deploy-gate fikset be66067)
+Opprettet 24.08.2026 — Sist oppdatert 02.09.2026 (CI/CD verifisert på fc4224f: CI grønn 12/12, CD-rødt årsak=Vercel-token i 'vercel pull', nå fikset med nye kredensialer + secrets bekreftet; deploy-gate be66067 valideres)
 
 0. Status i dag (01.09.2026)
 🟢 Produksjon kjører: tosom.no → www.tosom.no (Vercel, prod, HTTP 200). Landing, /login, /admin/login fungerer.
@@ -195,6 +195,8 @@ Diagnose: Vercel Logs, Sentry, /admin/logs, health
 Rett i repo → ny deploy
 
 Ikke rør produksjons‑DB direkte
+
+CD-deploy til Vercel (GitHub Actions): krever VERCEL_TOKEN + VERCEL_ORG_ID + VERCEL_PROJECT_ID i GitHub Secrets, og tokenet må ha tilgang til prosjektet. 02.09: CD feilet i «vercel pull --yes» («Could not retrieve Project Settings») fordi Vercel-tokenet var ugyldig — fikset med nytt token (API-test bekreftet tilgang til prosjektet «tosom»). Deploy Gate (be66067) viser rødt for ekte deploy-feil, gul warning for bevisst hoppet over (CI-rødt).
 
 10. Etter beta (fase 2)
 Vipps Login + betaling

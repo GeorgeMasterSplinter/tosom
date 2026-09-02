@@ -79,7 +79,8 @@
         "linje": "0 ruter",
         "grep": "grep -rlnE 'lib/api/handler' app/api | wc -l -> 0",
         "alvor": "MEDIUM",
-        "for": "Standard-wrapperen (IP→rateLimit→auth→RBAC→schema→handler) brukes av 0 ruter; hver rute har eget vern → inkonsistens."
+        "for": "Standard-wrapperen (IP→rateLimit→auth→RBAC→schema→handler) brukes av 0 ruter; hver rute har eget vern → inkonsistens.",
+        "status": "Fase 1 RETTA (2026-09-02): de 25 døde, ubrukte Zod-skjemaene i lib/api/validation.ts (MagicLink/Phone/Profile/Match/Journey/Onboarding/Admin/System/AI) fjernet — ingen rute/handler refererte dem, og de ga et feilaktig inntrykk av Zod-dekning. Beholdt: validateBody + validateQuery (generic-hjelp) + tryParseJsonBody (11 ruter). Reelle rute-skjema bor i lib/validation/*. Fase 2 (forsterke createApiHandler med pgCheck+requireAuth) og Fase 3 (migrere ruter) PÅVENTER godkjenning — wrapperen bruker i dag in-memory checkRateLimit + auth() som ikke matcher rutenes pgCheck + requireAuth. Verif: tsc 0, jest 409/410, lint 0, verify:lang 0."
       },
       {
         "id": "F-113-01",

@@ -106,7 +106,8 @@
         "linje": "7 handler",
         "grep": "grep -rl 'export async function' app/api → for each: grep -q 'catch' (0 treff)",
         "alvor": "MEDIUM",
-        "for": "7 av 103 route-handler mangler try/catch; request-reset (publik) kaster unhandled ved ugyldig body (request.json() linje 22) → rå 500 uten trackError/Sentry. dev-login-ruter er prod-gated."
+        "for": "7 av 103 route-handler mangler try/catch; request-reset (publik) kaster unhandled ved ugyldig body (request.json() linje 22) → rå 500 uten trackError/Sentry. dev-login-ruter er prod-gated.",
+        "status": "RETTA (ACT 1.2, 2026-09-02): alle 7 handlerne har nå try/catch + trackError → 500 i stedet for unhandled/rå 500. 4 admin/dev-login-ruter fikset i 95cb21a; 3 gjenstående (auth/request-reset, match/breakdown, relationship/digest) fikset i dette commit-et. auth/request-reset bruker i tillegg tryParseJsonBody (F-111-01) slik at ugyldig JSON svarer 400. Verif: tsc 0, jest 409/410 (47 suiter, 1 skippet), lint 0, verify:lang 0."
       },
       {
         "id": "F-116-01",

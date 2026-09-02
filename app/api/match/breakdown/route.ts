@@ -17,6 +17,7 @@ import { requireAuth } from "@/lib/auth/requireAuth";
 import { prisma } from "@/lib/prisma";
 import { unifiedScore, UnifiedResult } from "@/lib/matching/unifiedScorer";
 import { ProfileData } from "@/lib/matching/types";
+import { trackError } from "@/lib/errorTracker";
 
 export const dynamic = "force-dynamic";
 
@@ -109,53 +110,58 @@ function toProfileData(profile: {
 }
 
 export async function GET(req: NextRequest) {
-  const result = await requireAuth(req);
-  if (result instanceof NextResponse) return result;
-  const userId = result.user.id;
+  try {
+    const result = await requireAuth(req);
+    if (result instanceof NextResponse) return result;
+    const userId = result.user.id;
 
-  const targetUserId = req.nextUrl.searchParams.get("targetUserId");
-  if (!targetUserId) {
-    return NextResponse.json({ error: "targetUserId mangler" }, { status: 400 });
+    const targetUserId = req.nextUrl.searchParams.get("targetUserId");
+    if (!targetUserId) {
+      return NextResponse.json({ error: "targetUserId mangler" }, { status: 400 });
+    }
+
+    // Verifiser at brukeren faktisk er koblet til targetUserId
+    const match = await prisma.match.findUnique({
+      where: {
+        userAId_userBId:
+          userId <= targetUserId
+            ? { userAId: userId, userBId: targetUserId }
+            : { userAId: targetUserId, userBId: userId },
+      },
+      select: { id: true },
+    });
+
+    if (!match) {
+      return NextResponse.json(
+        { error: "Du er ikke koblet til denne personen" },
+        { status: 403 }
+      );
+    }
+
+    // Hent begge profilmene
+    const [myProfile, targetProfile] = await Promise.all([
+      prisma.profile.findUnique({ where: { userId } }),
+      prisma.profile.findUnique({ where: { userId: targetUserId } }),
+    ]);
+
+    if (!myProfile || !targetProfile) {
+      return NextResponse.json(
+        { error: "Profil mangler" },
+        { status: 404 }
+      );
+    }
+
+    // Kjør unified scoring
+    const myData = toProfileData(myProfile);
+    const targetData = toProfileData(targetProfile);
+    const scoreResult = unifiedScore(myData, targetData);
+
+    // Mapp 9→5 dimensjoner i 0-100 skala
+    const response = mapToFiveDimensions(scoreResult);
+
+    return NextResponse.json(response);
+  } catch (error) {
+    await trackError(error, "api/match/breakdown");
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
-
-  // Verifiser at brukeren faktisk er koblet til targetUserId
-  const match = await prisma.match.findUnique({
-    where: {
-      userAId_userBId:
-        userId <= targetUserId
-          ? { userAId: userId, userBId: targetUserId }
-          : { userAId: targetUserId, userBId: userId },
-    },
-    select: { id: true },
-  });
-
-  if (!match) {
-    return NextResponse.json(
-      { error: "Du er ikke koblet til denne personen" },
-      { status: 403 }
-    );
-  }
-
-  // Hent begge profilmene
-  const [myProfile, targetProfile] = await Promise.all([
-    prisma.profile.findUnique({ where: { userId } }),
-    prisma.profile.findUnique({ where: { userId: targetUserId } }),
-  ]);
-
-  if (!myProfile || !targetProfile) {
-    return NextResponse.json(
-      { error: "Profil mangler" },
-      { status: 404 }
-    );
-  }
-
-  // Kjør unified scoring
-  const myData = toProfileData(myProfile);
-  const targetData = toProfileData(targetProfile);
-  const scoreResult = unifiedScore(myData, targetData);
-
-  // Mapp 9→5 dimensjoner i 0-100 skala
-  const response = mapToFiveDimensions(scoreResult);
-
-  return NextResponse.json(response);
 }

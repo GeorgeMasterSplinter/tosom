@@ -1,8 +1,8 @@
 GEORGE.md — ToSom i åpen beta
 Deploy‑guide, drift, og daglig oversikt  
-Opprettet 24.08.2026 — Sist oppdatert 02.09.2026 (CD: deploy NÅ VERIFISERT GRØNN — team-scoped Vercel-token fungerer, production-deploy tosom-4qem53lih READY; rotårsak: forrige token var prosjekt-scoped uten team-adgang; deploy-gate be66067 valideres)
+Opprettet 24.08.2026 — Sist oppdatert 03.09.2026 (LANSE-READINESS nesten komplett: R2 aktiv i prod, GitHub-secrets + SENTRY_DSN satt, CSRF aktivert+verifisert (POST=403), uptime-monitor verifisert, CD grønn (team-scoped token). Gjenstår: SPF/DKIM, slett test1/test2, chat-routing, admin-secrets, Vipps)
 
-0. Status i dag (01.09.2026)
+0. Status i dag (03.09.2026)
 🟢 Produksjon kjører: tosom.no → www.tosom.no (Vercel, prod, HTTP 200). Landing, /login, /admin/login fungerer.
 
 🟢 Database: Neon Frankfurt, pooled URL, helsesjekk viser connected (~1000 ms kald start).
@@ -19,25 +19,25 @@ Opprettet 24.08.2026 — Sist oppdatert 02.09.2026 (CD: deploy NÅ VERIFISERT GR
 
 🟢 Chat: Pusher fungerer etter variabler ble satt — men routing og UI er feil (se §1).
 
-🟡 R2: ikke verifiserbart via health — verifiserings-script er klart (scripts/launch-3-verify-r2.mjs, krever R2_*-verdier).
+🟢 R2: AKTIV I PROD (03.09). Alle R2_* + STORAGE_DRIVER=r2 satt i Vercel Production; ny prod-deploy; app starter (validateEnv OK). Bilder lagres i tosom-images og slettes ikke lenger ved deploy.
 
-🟡 E-post: alle 6 EMAIL_*/ALERT-vars er satt i Vercel (01.09) og Resend-nøgelen fungerer — MEN tosom.no er ikke verifisert i Resend (mangler SPF/DKIM). Ingen e-post kan sendes før §5 er utført.
+🟡 E-post: RESEND_API_KEY + ALERT_EMAIL_TO satt; uptime-varsel mottatt 03.09 (Resend leverer). MEN tosom.no mangler fortsatt SPF/DKIM i Resend/Cloudflare (§5) — verifisert senderdomene (passord-reset) krever dette.
 
 🟡 Testbrukere: test1/test2 er fortsatt i prod-DB. Slettes med scripts/launch-1-delete-test-users.mjs (dry run standard, krever DATABASE_URL).
 
-🟢 CSRF: kode klar på 7 kritiske ruter (profil, settings, chat, report, reset, onboarding) — flagget er AV (ENABLE_CSRF_PROTECTION) og slås på som siste steg.
+🟢 CSRF: AKTIVERT + VERIFISERT (03.09). ENABLE_CSRF_PROTECTION=true satt i Vercel + ny prod-deploy. 7 skrive-ruter (profile/setup, settings/preferences, settings/delete-account, onboarding/complete, auth/request-reset, chat/send, report) kaller csrfCheck (double-submit-cookie). Live-test 03.09: POST /api/settings/preferences = 403 CSRF_MISSING, POST /api/report = 403 CSRF_MISSING (uten csrf_token-cookie + X-CSRF-Token-header). (GET /api/system/health = 200; POST = 405 — health er GET-only, ikke en CSRF-rute.)
 
-🟢 Uptime: GitHub Actions monitor pinger /api/system/health hver 5. minutt (krev GitHub-secrets for alert-e-post).
+🟢 Uptime: VERIFISERT (03.09). GitHub Actions kjøringer grønne; alert-e-post mottatt via Resend (RESEND_API_KEY + ALERT_EMAIL_TO satt). Cron + monitor komplett.
 
 🟢 Juridisk: DPA + DPIA klar i docs/legal/ — trenger advokatgjennomgang og signatur.
 
-🟡 Sentry: koden er fullt koblet — mangler bare SENTRY_DSN-verdien.
+🟢 Sentry: AKTIVT (03.09). SENTRY_DSN satt i Vercel; feillogging koblet (instrumentation.ts + withSentryConfig).
 
 🟡 OpenAI: missing — OK i beta (AI kjører fallback).
 
 🟡 Vipps: missing — OK (fase 2).
 
-🟢 Admin: /admin/login fungerer, kvote vises.
+🟡 Admin: /admin/login fungerer, kvote vises — MEN ADMIN_PASSWORD_HASH / ADMIN_JWT_SECRET / ADMIN_EMAIL må settes før bred beta (se §2).
 
 🟢 Kill switches: fungerer (MAINTENANCE_MODE, MATCHING_ENABLED, etc).
 
@@ -107,19 +107,20 @@ EMAIL_SERVER_USER=resend	🟢 (satt 01.09)
 EMAIL_SERVER_PASSWORD=re_...	🟢 (satt 01.09)
 EMAIL_FROM=ToSom <no-reply@tosom.no>	🟢 (satt 01.09)
 ALERT_EMAIL_TO=<din>	🟢 (satt 01.09)
-ENABLE_CSRF_PROTECTION=false	🟢 (settes til true som siste steg, etter verifisering)
+ENABLE_CSRF_PROTECTION=true	🟢 (AKTIVERT + verifisert 03.09)
 PUSHER_APP_ID	🟢
 PUSHER_KEY	🟢
 PUSHER_SECRET	🟢
 PUSHER_CLUSTER=eu	🟢
 NEXT_PUBLIC_PUSHER_KEY	🟢
 NEXT_PUBLIC_PUSHER_CLUSTER=eu	🟢
-STORAGE_DRIVER=r2	⚠️
-R2_ACCOUNT_ID	⚠️
-R2_ACCESS_KEY_ID	⚠️
-R2_SECRET_ACCESS_KEY	⚠️
-R2_BUCKET=tosom-images	⚠️
-R2_REGION=eu-central-1	⚠️
+STORAGE_DRIVER=r2	🟢 (satt 03.09)
+R2_ACCOUNT_ID	🟢 (satt 03.09)
+R2_ACCESS_KEY_ID	🟢 (satt 03.09)
+R2_SECRET_ACCESS_KEY	🟢 (satt 03.09)
+R2_BUCKET=tosom-images	🟢 (satt 03.09)
+R2_REGION=eu-central-1	🟢 (satt 03.09)
+SENTRY_DSN	🟢 (satt 03.09)
 BETA_INVITE_MODE=false	🟢
 JOURNEY_BATCH_SIZE=300	🟢
 
@@ -143,7 +144,7 @@ Token: Read/Write
 
 Variabler: R2_* + STORAGE_DRIVER=r2
 
-Uten R2 → bilder lagres lokalt og slettes ved hver deploy. ⚠️ F-133-01 (02.09): R2_* er nå STARTUP-PAKREVDE i prod — mangler de, starter appen ikke (validateEnv kaster i instrumentation.ts). Må settes i Vercel FØR neste prod-deploy (ellers blokkeres deployen).
+Uten R2 → bilder lagres lokalt og slettes ved hver deploy. 🟢 (03.09): R2_* + STORAGE_DRIVER=r2 er satt i Vercel Production — prod-deploy OK, app starter (validateEnv passer), R2 aktiv. F-133-01-krav (R2_* startup-påkrevd) er nå oppfylt.
 
 4. Pusher (realtime chat)
 Status: nå OK.  
@@ -158,7 +159,7 @@ DOMENET ER IKKE VERIFISERT (sjekket 01.09: tosom.no har ingen SPF/DKIM-records i
    - CNAME (DKIM): verdien Resend viser etter at domenet er lagt til
 3. Vent til Resend viser «verified» (1–10 min)
 
-Nøkkelen fungerer (verifisert 01.09) og alle Vercel-vars er satt — e-post fungerer så snart DOMENET er verifisert. Test: passord-reset i prod → e-post må lande + «email: sent» i admin-systemloggen.
+Nøkkelen fungerer og alle Vercel-vars er satt; uptime-varsel mottatt 03.09 (RESEND_API_KEY + ALERT_EMAIL_TO). E-post fungerer så snart DOMENET er verifisert (SPF/DKIM). Test: passord-reset i prod → e-post må lande + «email: sent» i admin-systemloggen.
 
 6. Kvoten
 Tak: 5 000 gratis reiser.

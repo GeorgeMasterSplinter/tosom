@@ -186,7 +186,7 @@ sequenceDiagram
 
     par Real-time (Pusher)
         API->>P: triggerNewMessage(conversationId, msg)
-        P->>B: new-message (kanal: conversation-{id})
+        P->>B: new-message (kanal: private-conversation-{id})
         B->>B: loadMessages(true), dedup via lastMsgIdRef
     and Fallback (Polling 3 s)
         B->>API: GET /api/chat/messages?after={lastId}
@@ -200,7 +200,7 @@ sequenceDiagram
 
 | Kanal | Events | Bruk |
 |-------|--------|------|
-| `conversation-{id}` | `new-message`, `typing`, `mood-changed` | Chat real-time |
+| `private-conversation-{id}` (PRIVATE) | `new-message`, `typing`, `mood-changed` | Chat real-time (auth via /api/pusher/auth) |
 | `user-{id}` | `conversation-updated` | Dashboard varsling |
 
 **Filer:** `lib/pusher/client.ts` (frontend) · `lib/pusher/server.ts` (backend)
@@ -257,7 +257,7 @@ flowchart TB
     end
 
     subgraph Realtime
-        PUSHER["**Pusher** (EU-cluster)<br/>conversation-{id}, user-{id}"]
+        PUSHER["**Pusher** (EU-cluster)<br/>private-conversation-{id}, user-{id}"]
     end
 
     subgraph Epost

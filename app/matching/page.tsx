@@ -200,11 +200,11 @@ export default function MatchingPage() {
             setUserName(data.myName);
           }
 
-          // Har aktiv match → match-kort i venterommet (åpenbaringen).
-          // Fra kortet går hun til dashboardet — og derfra til samtalen.
+          // Har aktiv match → /dashboard (GEORGE §1.1: matchede brukere skal
+          // aldri se venterommet). «Din match er her»-åpenbaringen ligger på
+          // dashboardet (localStorage, vises én gang per match).
           if (data.match && data.journey && data.journey.day > 0) {
-            setOverview(data);
-            setQueueState('matched');
+            router.replace('/dashboard');
             return;
           }
 

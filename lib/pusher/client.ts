@@ -16,6 +16,9 @@ export function getPusherClient(): any {
       {
         cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER || 'eu',
         forceTLS: true,
+        // Private-kanaler (private-conversation-*) krever auth: pusher-js
+        // POST-er socket_id + channel_name hit og forventer { auth: key:sig }.
+        authEndpoint: '/api/pusher/auth',
       }
     );
   }

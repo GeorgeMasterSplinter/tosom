@@ -1,6 +1,6 @@
 GEORGE.md — ToSom i åpen beta
 Deploy‑guide, drift, og daglig oversikt  
-Opprettet 24.08.2026 — Sist oppdatert 03.09.2026 (LANSE-READINESS nesten komplett: R2 aktiv i prod, GitHub-secrets + SENTRY_DSN satt, CSRF aktivert+verifisert (POST=403), uptime-monitor verifisert, CD grønn (team-scoped token). Gjenstår: SPF/DKIM, slett test1/test2, chat-routing, admin-secrets, Vipps)
+Opprettet 24.08.2026 — Sist oppdatert 03.09.2026 (LANSE-READINESS nesten komplett: R2 aktiv i prod, GitHub-secrets + SENTRY_DSN satt, CSRF aktivert+verifisert (POST=403), uptime-monitor verifisert, CD grønn (team-scoped token), chat-routing FIXET (private Pusher-kanal + /api/pusher/auth, venterom redirect). Gjenstår: SPF/DKIM, slett test1/test2 (dry-run klar), admin-secrets, Vipps)
 
 0. Status i dag (03.09.2026)
 🟢 Produksjon kjører: tosom.no → www.tosom.no (Vercel, prod, HTTP 200). Landing, /login, /admin/login fungerer.
@@ -17,13 +17,13 @@ Opprettet 24.08.2026 — Sist oppdatert 03.09.2026 (LANSE-READINESS nesten kompl
 
 🟢 Cloudflare: domenet aktivert, proxy + SSL/TLS OK.
 
-🟢 Chat: Pusher fungerer etter variabler ble satt — men routing og UI er feil (se §1).
+🟢 Chat: FIXET 03.09 — private Pusher-kanal (private-conversation-${conversationId}) + ny auth-rute (/api/pusher/auth, HMAC-signert kun for samtale-deltakere); venterom redirect-er matchede til /dashboard. (Se §1.) Krever ny prod-deploy + testere-test.
 
 🟢 R2: AKTIV I PROD (03.09). Alle R2_* + STORAGE_DRIVER=r2 satt i Vercel Production; ny prod-deploy; app starter (validateEnv OK). Bilder lagres i tosom-images og slettes ikke lenger ved deploy.
 
 🟡 E-post: RESEND_API_KEY + ALERT_EMAIL_TO satt; uptime-varsel mottatt 03.09 (Resend leverer). MEN tosom.no mangler fortsatt SPF/DKIM i Resend/Cloudflare (§5) — verifisert senderdomene (passord-reset) krever dette.
 
-🟡 Testbrukere: test1/test2 er fortsatt i prod-DB. Slettes med scripts/launch-1-delete-test-users.mjs (dry run standard, krever DATABASE_URL).
+🟡 Testbrukere: test1/test2 er fortsatt i prod-DB. DRY RUN 03.09: 2 brukere funnet (test1@tosom.no + test2@tosom.no, hver 47 meldinger/1 match/2 reports) — safe å slette; kjør med --apply for faktisk sletting (krever DATABASE_URL).
 
 🟢 CSRF: AKTIVERT + VERIFISERT (03.09). ENABLE_CSRF_PROTECTION=true satt i Vercel + ny prod-deploy. 7 skrive-ruter (profile/setup, settings/preferences, settings/delete-account, onboarding/complete, auth/request-reset, chat/send, report) kaller csrfCheck (double-submit-cookie). Live-test 03.09: POST /api/settings/preferences = 403 CSRF_MISSING, POST /api/report = 403 CSRF_MISSING (uten csrf_token-cookie + X-CSRF-Token-header). (GET /api/system/health = 200; POST = 405 — health er GET-only, ikke en CSRF-rute.)
 
@@ -47,8 +47,8 @@ curl -s https://www.tosom.no/api/system/health
 → degraded = manglende optional variabler (OpenAI/Vipps)
 → error = database nede
 
-1. Kritiske avvik (routing + chat) — må fikses før testere
-1.1 Brukere med match havner i venterommet
+1. Kritiske avvik (routing + chat) — FIXET 03.09 (tsc 0, build OK, chat+pusher-tests grønne); krever ny prod-deploy + testere-test
+1.1 Brukere med match havner i venterommet — ✅ FIXET (app/matching/page.tsx redirect-er matchede til /dashboard)
 Feil: etter login sendes begge parter til /venterom, selv om de har en aktiv match.
 
 Riktig oppførsel:
@@ -57,21 +57,21 @@ Har match → /dashboard
 
 Har ikke match → /venterom
 
-1.2 Venterommet viser feil meny
+1.2 Venterommet viser feil meny — ✅ VERIFISERT (UniversalMenu HIDDEN_ROUTES inkluderer /matching)
 Feil: venterommet viser “Logg inn”, “Start reisen”, osv.
 
 Riktig:
 
 Venterommet skal kun vise “Du venter på match”.
 
-1.3 Tilbakeknapp fra chat går til venterommet
+1.3 Tilbakeknapp fra chat går til venterommet — ✅ VERIFISERT (ChatHeader går til /dashboard)
 Feil: router.push("/venterom").
 
 Riktig:
 
 router.push("/dashboard").
 
-1.4 Chat kobler ikke til Pusher
+1.4 Chat kobler ikke til Pusher — ✅ FIXET (private-kanal + /api/pusher/auth)
 Feil: kanalnavn mismatch eller feil conversationId.
 
 Riktig:
@@ -80,7 +80,7 @@ Kanal: private-conversation-${conversationId}
 
 Event: "new-message"
 
-1.5 Meldinger leveres ikke
+1.5 Meldinger leveres ikke — ✅ VERIFISERT (send triggerer Pusher + returnerer { message } + 3s-polling)
 Feil: API returnerer feil shape eller trigger ikke Pusher.
 
 Riktig:

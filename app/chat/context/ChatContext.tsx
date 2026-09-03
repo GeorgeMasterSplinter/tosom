@@ -201,7 +201,9 @@ export function ChatProvider({
     // Pusher real-time: abonner på kanalen for denne samtalen.
     // Pusher gir øyeblikkelig varsling; polling dekker opp ved forbindelsesfeil.
     const pusher = getPusherClient();
-    const channelName = `conversation-${conversationId}`;
+    // PRIVATE kanal — pusher-js henter auth-token fra /api/pusher/auth
+    // (signert kun til samtale-deltakere). Polling (3s) er fallback.
+    const channelName = `private-conversation-${conversationId}`;
     let channel: any = null;
     let typingTimer: ReturnType<typeof setTimeout> | null = null;
     if (pusher) {

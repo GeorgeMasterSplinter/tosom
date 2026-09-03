@@ -37,17 +37,17 @@ export function useChatRealtime(options: UseChatRealtimeOptions) {
     if (!pusherRef.current && typeof window !== 'undefined') {
       const key = process.env.NEXT_PUBLIC_PUSHER_KEY || '';
       const cluster = process.env.NEXT_PUBLIC_PUSHER_CLUSTER || 'eu';
-      pusherRef.current = new Pusher(key, { cluster });
+      pusherRef.current = new Pusher(key, { cluster, authEndpoint: '/api/pusher/auth' });
     }
 
     const pusher = pusherRef.current;
     if (!pusher) return;
 
-    // Abonner på samtale-kanal
+    // Abonner på samtale-kanal (private — auth via /api/pusher/auth)
     if (conversationChannelRef.current) {
-      pusher.unsubscribe(`conversation-${conversationId}`);
+      pusher.unsubscribe(`private-conversation-${conversationId}`);
     }
-    conversationChannelRef.current = pusher.subscribe(`conversation-${conversationId}`);
+    conversationChannelRef.current = pusher.subscribe(`private-conversation-${conversationId}`);
 
     // Abonner på user-kanal
     if (userChannelRef.current) {
@@ -79,11 +79,13 @@ export function useChatRealtime(options: UseChatRealtimeOptions) {
   const stop = useCallback(() => {
     const pusher = pusherRef.current;
     if (pusher) {
+      // Kanal-objektets .name er ALLEREDE det fulle kanal-navnet
+      // (private-conversation-… / user-…) — ikke prepender prefiks.
       if (conversationChannelRef.current) {
-        pusher.unsubscribe(`conversation-${conversationChannelRef.current.channelName}`);
+        pusher.unsubscribe(conversationChannelRef.current.name);
       }
       if (userChannelRef.current) {
-        pusher.unsubscribe(`user-${userChannelRef.current.channelName}`);
+        pusher.unsubscribe(userChannelRef.current.name);
       }
       pusher.disconnect();
       pusherRef.current = null;

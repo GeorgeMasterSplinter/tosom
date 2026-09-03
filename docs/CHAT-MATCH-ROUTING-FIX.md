@@ -36,7 +36,7 @@ DEL 4 (meldings-shape) og DEL 6 (dashboard-journey) var allerede korrekte — in
 
 ### `app/chat/context/ChatContext.tsx`
 
-- **Pusher subscribe:** I `useEffect` der polling settes opp, abonneres nå også på Pusher-kanalen `conversation-${conversationId}`. Ved `new-message`-event lastes meldinger umiddelbart. Polling beholdes som fallback (dedup via `lastMsgIdRef`).
+- **Pusher subscribe:** I `useEffect` der polling settes opp, abonneres nå også på Pusher-kanalen `private-conversation-${conversationId}` (private — auth via /api/pusher/auth). Ved `new-message`-event lastes meldinger umiddelbart. Polling beholdes som fallback (dedup via `lastMsgIdRef`).
 - **Cleanup:** `pusher.unsubscribe(channelName)` ved unmount.
 
 ---
@@ -61,12 +61,12 @@ Bruker UEN match:
 
 ## 4. Pusher-kobling
 
-**Kanal-navn:** `conversation-${conversationId}`
+**Kanal-navn:** `private-conversation-${conversationId}` (PRIVATE — pusher-js henter auth-token fra /api/pusher/auth)
 
 **Fløte:**
 1. Bruker A sender melding → `POST /api/chat/send`
 2. Server: `prisma.message.create()` → `triggerNewMessage(conversationId, message)`
-3. Pusher sender `new-message`-event på `conversation-${conversationId}`
+3. Pusher sender `new-message`-event på `private-conversation-${conversationId}`
 4. Bruker B (i chat): Pusher `channel.bind('new-message')` → `loadMessages(true)` (dedup-sjekk)
 5. Fallback: polling hvert 3 s (om Pusher-tilkoblingen er borte)
 
@@ -88,6 +88,30 @@ jest --ci --silent:  366 passed, 1 skipped (43 suiter)
 - **Dashboard:** viser journey korrekt, redirect til `/matching` uten match
 - **Meldings-API:** shape `{ id, content, senderId, createdAt, sender: {...} }` er korrekt
 - **Venterom-tilstander:** `in_queue`, `locked`, `no_match`, `start`, `not_started` beholdes
-- **Pusher-konfig-filer:** `lib/pusher/client.ts` og `lib/pusher/server.ts` uendret
+- **Pusher-konfig-filer:** (oppdatert 03.09 — private-kanal + authEndpoint; se §7)
 - **Polling:** beholdes som fallback
 - **Ingen nye avhengigheter**
+
+---
+
+## 7. Oppfølging 03.09 — private Pusher-kanal + venterom-redirect
+
+Denne fixen brukte en **public** Pusher-kanal (`conversation-${conversationId}`). 03.09 ble den
+migrert til en **private** kanal for å lukke et IDOR-hull: på en public kanal kunne hvem som helst
+med en `conversationId` abonnere og lese meldingene i sanntid (REST-rutene var IDOR-sjekket, men
+live-kanalen var det ikke).
+
+**Endringer:**
+- `lib/pusher/server.ts`: `triggerNewMessage`/`triggerTyping`/`triggerMoodChange` triggerer nå på
+  `private-conversation-${conversationId}`. (`user-${userId}` beholdt — kun dashboard-varsling uten innhold.)
+- `app/chat/context/ChatContext.tsx` + `hooks/useChatRealtime.ts`: abonnerer på
+  `private-conversation-${conversationId}`; pusher-js henter auth-token via `authEndpoint`.
+- `lib/pusher/client.ts`: `authEndpoint: '/api/pusher/auth'` i klient-konfigen.
+- **NY** `app/api/pusher/auth/route.ts`: signerer private-kanalen (HMAC-SHA256 med `PUSHER_SECRET`)
+  KUN for innloggede samtale-deltakere (401 uten sesjon/Pusher-konfig, 403 for ikke-deltaker).
+- `app/matching/page.tsx`: venterom redirect-er matchede brukere til `/dashboard` (§1.1) i stedet for
+  å vise et matched-kort.
+- Bonus: `useChatRealtime.stop()` fikset (double-prefix på unsubscribe → bruker kanal-navnet direkte).
+
+**Test:** `__tests__/pusher-auth-private-channel.test.ts` (6 tests). **Verifisert:** tsc 0, `next build` EXIT=0,
+jest chat 32/32 + pusher-auth 6/6. Krever ny prod-deploy + testere-test.

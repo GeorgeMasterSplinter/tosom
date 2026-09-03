@@ -21,9 +21,14 @@ export function getPusherServer(): Pusher {
   return pusherInstance;
 }
 
+// Sanntids-chat-kanalen er en PRIVATE Pusher-kanal (`private-conversation-*`):
+// pusher-js må hente en signert auth-token fra /api/pusher/auth før den kan
+// abonnere. Signeringen (HMAC-SHA256 med PUSHER_SECRET) utstedes KUN til
+// innloggede samtale-deltakere — slik at uautoriserte ikke kan lytte på
+// samtale-innhold. (user-* kanalen er kun dashboard-varsling uten innhold.)
 export async function triggerNewMessage(conversationId: string, message: Record<string, unknown>) {
   const pusher = getPusherServer();
-  await pusher.trigger(`conversation-${conversationId}`, 'new-message', message);
+  await pusher.trigger(`private-conversation-${conversationId}`, 'new-message', message);
 }
 
 export async function triggerConversationUpdated(userId: string, conversationId: string) {
@@ -33,10 +38,10 @@ export async function triggerConversationUpdated(userId: string, conversationId:
 
 export async function triggerTyping(conversationId: string, senderId: string, isTyping: boolean) {
   const pusher = getPusherServer();
-  await pusher.trigger(`conversation-${conversationId}`, 'typing', { senderId, isTyping });
+  await pusher.trigger(`private-conversation-${conversationId}`, 'typing', { senderId, isTyping });
 }
 
 export async function triggerMoodChange(conversationId: string, senderId: string, mood: string) {
   const pusher = getPusherServer();
-  await pusher.trigger(`conversation-${conversationId}`, 'mood-changed', { senderId, mood });
+  await pusher.trigger(`private-conversation-${conversationId}`, 'mood-changed', { senderId, mood });
 }

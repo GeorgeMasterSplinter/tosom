@@ -75,6 +75,19 @@ export function GamesPanel({ onClose }: { onClose: () => void }) {
 
   const resetGame = useCallback(() => { setActiveGame(null); setError(null); }, []);
 
+  const cancelGame = useCallback(async () => {
+    if (!activeGame) return;
+    try {
+      await csrfFetch("/api/game/cancel", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId: activeGame.sessionId }),
+      });
+      setActiveGame(null);
+      setError(null);
+    } catch { setError("Kunne ikke avbryte."); }
+  }, [activeGame]);
+
   if (!activeGame) {
     return (
       <div className="px-6 py-5 space-y-4">
@@ -107,6 +120,9 @@ export function GamesPanel({ onClose }: { onClose: () => void }) {
       )}
       {activeGame.status === "COMPLETED" && (
         <button onClick={resetGame} className="w-full py-2.5 rounded-xl text-sm font-medium" style={{ background: color.ambient.gold.soft, border: `1px solid ${color.border.gold}`, color: color.brand.gold }}>Spill igjen</button>
+      )}
+      {activeGame.status === "ACTIVE" && (
+        <button onClick={cancelGame} className="w-full py-2 rounded-xl text-xs" style={{ color: color.text.muted }}>Avbryt spill</button>
       )}
     </div>
   );

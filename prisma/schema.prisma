@@ -787,8 +787,6 @@ model GameSession {
 
   conversation Conversation @relation(fields: [conversationId], references: [id])
 
-  // Én AKTIV økt per type per samtale. Når status → COMPLETED kan nytt startes.
-  @@unique([conversationId, type, status])
   @@index([conversationId])
   @@index([status])
 }

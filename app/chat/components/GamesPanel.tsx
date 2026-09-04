@@ -43,6 +43,28 @@ export function GamesPanel({ onClose }: { onClose: () => void }) {
     });
   }, [gameEvent]);
 
+  // Initial load: hente eksisterende aktive spill ved panel-åpning
+  useEffect(() => {
+    if (!conversationId) return;
+    let cancelled = false;
+    fetch(`/api/game/active?conversationId=${conversationId}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (cancelled || !data?.games?.length) return;
+        const g = data.games[0];
+        setActiveGame({
+          sessionId: g.id,
+          type: g.type,
+          state: g.state,
+          turn: g.turn,
+          winner: g.winner,
+          status: "ACTIVE",
+        });
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [conversationId]);
+
   const startGame = useCallback(async (type: "TTT" | "RPS") => {
     if (!conversationId) return;
     setLoading(true); setError(null);

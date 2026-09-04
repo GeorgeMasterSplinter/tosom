@@ -70,15 +70,18 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Én aktiv økt per type per samtale
+  // Én aktiv økt per type per samtale — idempotent: join eksisterende
   const existing = await prisma.gameSession.findFirst({
     where: { conversationId, type, status: "ACTIVE" },
   });
   if (existing) {
-    return NextResponse.json(
-      { error: "Et spill av denne typen er allerede aktivt" },
-      { status: 409 },
-    );
+    // Returner eksisterende spill (join)
+    return NextResponse.json({
+      success: true,
+      sessionId: existing.id,
+      state: existing.state,
+      turn: existing.turn,
+    });
   }
 
   // Initial state

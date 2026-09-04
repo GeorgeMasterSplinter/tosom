@@ -38,11 +38,14 @@ describe('POST /api/game/start', () => {
     expect(res.status).toBe(403);
   });
 
-  it('409 — spill allerede aktivt', async () => {
+  it('200 — idempotent: join eksisterende aktivt spill', async () => {
     mockPrisma.conversation.findFirst.mockResolvedValue({ id: 'c1', userAId: 'userA', userBId: 'userB' });
-    mockPrisma.gameSession.findFirst.mockResolvedValue({ id: 'ex' });
+    mockPrisma.gameSession.findFirst.mockResolvedValue({ id: 'ex', state: { board: ['X','','O','','','','','','',''] }, turn: 'userB' });
     const res = await startGame(json({ conversationId: 'c1', type: 'TTT' }));
-    expect(res.status).toBe(409);
+    expect(res.status).toBe(200);
+    const data = await res.json();
+    expect(data.success).toBe(true);
+    expect(data.sessionId).toBe('ex');
   });
 
   it('200 — starter nytt TTT', async () => {

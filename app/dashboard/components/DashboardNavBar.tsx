@@ -23,19 +23,8 @@ export const DashboardNavBar: FC = () => {
       {/* Logo */}
       <ToSomLogo href="/dashboard" showTagline={false} />
 
-      {/* Høyre side: 2 knapper */}
+      {/* Høyre side: 1 knapp */}
       <div className="flex items-center gap-3">
-        <Link
-          href="/chat"
-          className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all duration-300 hover:brightness-110"
-          style={{
-            background: `linear-gradient(135deg, ${G.goldSoft}, ${G.goldMuted})`,
-            border: `1px solid ${G.goldBorder}`,
-            color: G.gold,
-          }}
-        >
-          💬 Samtale
-        </Link>
         <Link
           href="/settings"
           className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all duration-300"

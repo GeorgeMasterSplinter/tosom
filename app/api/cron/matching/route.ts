@@ -61,20 +61,21 @@ export async function GET(req: NextRequest) {
   const startedAt = Date.now();
   const deadline = startedAt + TIME_BUDGET_MS;
 
-  // Auth
-  const expectedSecret = process.env.CRON_SECRET;
-  if (!expectedSecret) {
-    return NextResponse.json({ error: 'Cron miskonfigurt' }, { status: 500 });
-  }
-
-  const authHeader = req.headers.get('authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
-  const providedSecret = authHeader.slice(7);
-  if (!safeCompare(providedSecret, expectedSecret)) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  // Auth: Vercel Cron (x-vercel-cron header) eller Bearer token (manuell admin)
+  const isVercelCron = req.headers.get('x-vercel-cron') === 'true';
+  if (!isVercelCron) {
+    const expectedSecret = process.env.CRON_SECRET;
+    if (!expectedSecret) {
+      return NextResponse.json({ error: 'Cron miskonfigurt' }, { status: 500 });
+    }
+    const authHeader = req.headers.get('authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    const providedSecret = authHeader.slice(7);
+    if (!safeCompare(providedSecret, expectedSecret)) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
   }
 
   // B0.6 — Kill switch: MATCHING_ENABLED=false stanser runden uten å røre køen

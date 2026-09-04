@@ -47,20 +47,21 @@ const JOURNEY_BATCH_SIZE = Math.max(1, parseInt(process.env.JOURNEY_BATCH_SIZE ?
 export async function GET(req: NextRequest) {
   const startedAt = Date.now();
 
-  // Valider cron-secret via Authorization-header (ikke query-param) med timing-safe sammenligning
-  const expectedSecret = process.env.CRON_SECRET;
-  if (!expectedSecret) {
-    return NextResponse.json({ error: 'Cron miskonfigurt' }, { status: 500 });
-  }
-
-  const authHeader = req.headers.get('authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
-  const providedSecret = authHeader.slice(7);
-  if (!safeCompare(providedSecret, expectedSecret)) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  // Auth: Vercel Cron (x-vercel-cron header) eller Bearer token (manuell)
+  const isVercelCron = req.headers.get('x-vercel-cron') === 'true';
+  if (!isVercelCron) {
+    const expectedSecret = process.env.CRON_SECRET;
+    if (!expectedSecret) {
+      return NextResponse.json({ error: 'Cron miskonfigurt' }, { status: 500 });
+    }
+    const authHeader = req.headers.get('authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    const providedSecret = authHeader.slice(7);
+    if (!safeCompare(providedSecret, expectedSecret)) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
   }
 
   let lockAcquired = false;

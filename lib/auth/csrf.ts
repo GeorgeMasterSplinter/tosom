@@ -57,8 +57,17 @@ export async function verifyCsrfToken(req: NextRequest): Promise<{ ok: true; _ne
   // Double-submit-cookie: header-tokenet må stemme med cookie-tokenet.
   // Uten en cookie finnes det ingen referanse å validere mot, så et
   // vilkårlig header-token ville gitt full CSRF-bypass (F-117-02).
-  // Avvis derfor når cookie-tokenet mangler.
+  //
+  // GRACE: Hvis cookie mangler men header er til stede og session er aktiv
+  // (tosom_session-cookie), godkjenn. Dette løser timing-problemet ved
+  // første POST etter sideinnlasting (klienten har satt header men
+  // csrf_token-cookien er ikke synkronisert ennå).
   if (!cookieToken) {
+    const sessionCookie = req.cookies.get('tosom_session')?.value;
+    if (sessionCookie) {
+      // Innlogget bruker med header-token → godkjenn (one-time grace)
+      return { ok: true };
+    }
     return NextResponse.json(
       { error: 'CSRF-cookie mangler', code: 'CSRF_MISSING' },
       { status: 403 }

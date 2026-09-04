@@ -11,6 +11,7 @@
 
 import Image from 'next/image';
 import { useState, useRef, useEffect } from "react";
+import { color } from "@/config/design-tokens";
 import { useChat } from "@/app/chat/context/ChatContext";
 import { MessageBubble, MessageBubbleStyles } from "@/app/chat/components/MessageBubble";
 import { ChatHeader } from "@/app/chat/components/ChatHeader";
@@ -564,13 +565,40 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
           <MessageList partner={partner} journeyDay={journeyDay} />
         </div>
 
-        {/* CHAT INPUT — helt nederst i kanten */}
-        <ChatInput
-          imageShareAllowed={imageShareAllowed}
-          conversationId={conversationId}
-          senderId={sessionUserId ?? undefined}
-          partnerId={partnerId}
-        />
+        {/* DAG 30 — Reisen er fullført. Vis valg i stedet for input. */}
+        {journeyDay >= 30 ? (
+          <div className="shrink-0 border-t px-4 py-6" style={{ borderColor: color.glass.border, background: color.bg.surface }}>
+            <div className="max-w-md mx-auto text-center space-y-4">
+              <p className="text-sm" style={{ color: color.text.primary }}>
+                Reisen er fullført. 30 dager sammen.
+              </p>
+              <div className="space-y-3">
+                <a
+                  href="/reisen/avslutning?choice=found"
+                  className="block w-full py-3 rounded-xl text-sm font-medium"
+                  style={{ background: color.ambient.gold.soft, border: `1px solid ${color.border.gold}`, color: color.brand.gold }}
+                >
+                  ♥  Vi fant hverandre
+                </a>
+                <a
+                  href="/reisen/avslutning?choice=new"
+                  className="block w-full py-3 rounded-xl text-sm font-medium"
+                  style={{ background: color.glass.bg, border: `1px solid ${color.glass.border}`, color: color.text.primary }}
+                >
+                  ↻  Start ny reise
+                </a>
+              </div>
+            </div>
+          </div>
+        ) : (
+          /* CHAT INPUT — helt nederst i kanten */
+          <ChatInput
+            imageShareAllowed={imageShareAllowed}
+            conversationId={conversationId}
+            senderId={sessionUserId ?? undefined}
+            partnerId={partnerId}
+          />
+        )}
       </div>
     </>
   );

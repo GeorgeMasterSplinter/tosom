@@ -8,7 +8,7 @@
 "use client";
 
 import { useState } from "react";
-import { color, glass } from "@/config/design-tokens";
+import { color } from "@/config/design-tokens";
 import type { RPSChoice, RPSState } from "@/lib/games/rps";
 
 interface RockPaperScissorsProps {
@@ -59,7 +59,7 @@ export function RockPaperScissors({
       {complete && (
         <div
           className="flex justify-center items-center gap-6 mb-4 py-3 rounded-xl"
-          style={{ background: glass.bg, border: `1px solid ${glass.border}` }}
+          style={{ background: color.glass.bg, border: `1px solid ${color.glass.border}` }}
         >
           <div className="text-center">
             <span className="text-3xl">{getEmoji(myChoice)}</span>
@@ -96,9 +96,9 @@ export function RockPaperScissors({
                   background: isMine
                     ? color.ambient.gold.medium
                     : hovered === value && canClick
-                      ? glass.bgHover
-                      : glass.bg,
-                  border: `1px solid ${isMine ? color.border.gold : glass.border}`,
+                      ? color.glass["bg-hover"]
+                      : color.glass.bg,
+                  border: `1px solid ${isMine ? color.border.gold : color.glass.border}`,
                   cursor: canClick ? "pointer" : "default",
                   opacity: isMine ? 1 : canClick ? 1 : 0.4,
                 }}

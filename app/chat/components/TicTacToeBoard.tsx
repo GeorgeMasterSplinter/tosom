@@ -8,7 +8,7 @@
 "use client";
 
 import { useState } from "react";
-import { color, glass } from "@/config/design-tokens";
+import { color } from "@/config/design-tokens";
 
 interface TicTacToeBoardProps {
   board: (string | null)[];
@@ -56,8 +56,8 @@ export function TicTacToeBoard({
       <div
         className="grid grid-cols-3 gap-1.5 rounded-2xl p-2"
         style={{
-          background: glass.bg,
-          border: `1px solid ${glass.border}`,
+          background: color.glass.bg,
+          border: `1px solid ${color.glass.border}`,
         }}
       >
         {board.map((cell, i) => {
@@ -80,9 +80,9 @@ export function TicTacToeBoard({
                 background: isWinCell
                   ? color.ambient.gold.medium
                   : hovered === i && canClick
-                    ? glass.bgHover
+                    ? color.glass["bg-hover"]
                     : "transparent",
-                border: `1px solid ${isWinCell ? color.border.gold : glass.border}`,
+                border: `1px solid ${isWinCell ? color.border.gold : color.glass.border}`,
                 cursor: canClick ? "pointer" : "default",
                 opacity: cell ? 1 : canClick ? 0.9 : 0.4,
               }}

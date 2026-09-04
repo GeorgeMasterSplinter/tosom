@@ -6,7 +6,7 @@
 
 import { useState, useCallback } from "react";
 import { useChat } from "@/app/chat/context/ChatContext";
-import { color, glass } from "@/config/design-tokens";
+import { color } from "@/config/design-tokens";
 import { TicTacToeBoard } from "./TicTacToeBoard";
 import { RockPaperScissors } from "./RockPaperScissors";
 import type { TTTState } from "@/lib/games/ticTacToe";
@@ -70,8 +70,8 @@ export function GamesPanel({ onClose }: { onClose: () => void }) {
         </div>
         {error && <p className="text-xs" style={{ color: color.status.error }}>{error}</p>}
         <div className="flex gap-3">
-          <button onClick={() => startGame("TTT")} disabled={loading} className="flex-1 py-3 rounded-xl text-sm font-medium" style={{ background: glass.bg, border: `1px solid ${glass.border}`, color: color.text.primary }}>Tic-Tac-Toe</button>
-          <button onClick={() => startGame("RPS")} disabled={loading} className="flex-1 py-3 rounded-xl text-sm font-medium" style={{ background: glass.bg, border: `1px solid ${glass.border}`, color: color.text.primary }}>Stein-Saks-Papir</button>
+          <button onClick={() => startGame("TTT")} disabled={loading} className="flex-1 py-3 rounded-xl text-sm font-medium" style={{ background: color.glass.bg, border: `1px solid ${color.glass.border}`, color: color.text.primary }}>Tic-Tac-Toe</button>
+          <button onClick={() => startGame("RPS")} disabled={loading} className="flex-1 py-3 rounded-xl text-sm font-medium" style={{ background: color.glass.bg, border: `1px solid ${color.glass.border}`, color: color.text.primary }}>Stein-Saks-Papir</button>
         </div>
         <p className="text-xs" style={{ color: color.text.muted }}>Lavterskel spill for å bryte isen. Ingen poeng, ingen press.</p>
       </div>

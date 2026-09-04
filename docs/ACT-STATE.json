@@ -1,15 +1,15 @@
 {
   "version": "1.0",
-  "updatedAt": "2026-09-03",
-  "commit": "47e5d11",
+  "updatedAt": "2026-09-04",
+  "commit": "8655a4f",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
-    "tests": "433 passed / 1 skipped (51 suiter) — målt 03.09 etter systemaudit-oppfølging (Fun 1–10 retta)",
+    "tests": "480 passed / 1 skipped (53 suiter) — målt 04.09 etter Strøm A (A1-A7) + Strøm B (B1-B8)",
     "e2e": "0 fixme igjen. Onboarding: 20/20 lokalt 29.08 (10 chromium + 10 firefox, inkl. full flow). Dashboard/journey/match: 90/90 fra 28.08-kjøringen (ingen kodeendringer som rakk dem siden). Totalt 110 passed / 0 failed. 5/6 prosjekt lokalt (Mobile Safari/webkit krever system-bibliotek — installeres i CI med --with-deps). Dev-login (storageState) fungerer — alle tester kjører innlogget. playwright.config: workers: 1 alltid (lokal kjøring = CI) — onboarding-testene deler en E2E-bruker som full-flow-testen muterer; parallelle workere racet på server-draften",
-    "typecheck": "0 errors (målt 2026-09-03)",
+    "typecheck": "0 errors utover Prisma-klient (prisma generate kan ikke kjøre i sandbox — løses i CI)",
     "lint": "0 warnings (npx next lint --max-warnings 0)",
     "ciGuards": "7/7 grønne (lang, ai, concept, one-engine, 05:00, cron + lang-guard) — lang-guard utvidet 02.09: ~125 ord, case-insensitiv, skanner __tests__/ + ai/ + rotnivåets .md, SPRAKREF-blokk for bevisste nynorsk-eksempler",
-    "productionBuild": "verified 2026-09-02 (BOKMÅL-KAMPANJEN — npm run build EXIT=0, 63/63 sider)"
+    "productionBuild": "verified 2026-09-04 (Strøm A — npx next build EXIT=0, 63/63 sider)"
   },
   "currentPhaseId": "apen-beta-test",
   "blockers": [

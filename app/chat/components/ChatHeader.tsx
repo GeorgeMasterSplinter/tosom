@@ -116,6 +116,8 @@ interface ChatHeaderProps {
   isOppgaverOpen?: boolean;
   onOpenMoods?: () => void;
   isMoodsOpen?: boolean;
+  onOpenGames?: () => void;
+  isGamesOpen?: boolean;
   moodTheme?: MoodTheme;
 }
 
@@ -128,6 +130,8 @@ export function ChatHeader({
   isOppgaverOpen = false,
   onOpenMoods,
   isMoodsOpen = false,
+  onOpenGames,
+  isGamesOpen = false,
   moodTheme,
 }: ChatHeaderProps) {
   const router = useRouter();
@@ -293,6 +297,28 @@ export function ChatHeader({
           >
             <span className="text-base transition-transform duration-300 group-hover:rotate-12">🎨</span>
             <span className="hidden md:inline">Moods</span>
+          </button>
+        )}
+
+        {/* ═══ SPILL-KNAPP — Premium med subtil pulse (mood-aksent) ═══ */}
+        {onOpenGames && (
+          <button
+            onClick={onOpenGames}
+            className="flex-shrink-0 flex items-center justify-center gap-1.5 h-10 w-10 rounded-full text-xs font-semibold tracking-wide transition-all duration-500 group md:w-auto md:px-4 md:py-2.5 md:rounded-xl"
+            style={{
+              background: isGamesOpen
+                ? accentGlow
+                : `linear-gradient(135deg, ${accentSoft}, ${accentMuted})`,
+              border: `1px solid ${isGamesOpen ? accentMuted : accentBorder}`,
+              color: isGamesOpen ? accentLight : accent,
+              boxShadow: isGamesOpen
+                ? `0 0 24px ${accentGlow}, 0 0 8px ${accentMuted}`
+                : undefined,
+              animation: !isGamesOpen ? 'games-pulse 4.5s ease-in-out infinite' : 'none',
+            }}
+          >
+            <span className="text-base transition-transform duration-300 group-hover:rotate-12">♟</span>
+            <span className="hidden md:inline">Spill</span>
           </button>
         )}
 

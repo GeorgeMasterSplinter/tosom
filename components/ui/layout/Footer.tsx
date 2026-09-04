@@ -105,18 +105,18 @@ export const Footer: FC<FooterProps> = ({
         >
           {/* Kolonne 1: Produkt */}
            <div>
-             <h4
+             <h2
                className="text-[10px] uppercase tracking-[0.2em] font-semibold mb-5"
                style={{ color: 'rgba(212,175,55,0.55)' }}
              >
                Produkt
-             </h4>
+             </h2>
              <ul className="space-y-[7px]">
                {produktLinks.map((link) => (
                  <li key={link.href}>
                    <Link
                      href={link.href}
-                     className="text-base transition-all duration-300 ease-out"
+                     className="text-base transition-all duration-300 ease-out min-h-[48px] flex items-center"
                      style={{ color: 'rgba(255,255,255,0.85)', lineHeight: '1.75' }}
                     onMouseEnter={(e) => {
                       (e.target as HTMLElement).style.color = '#D4AF37';
@@ -137,18 +137,18 @@ export const Footer: FC<FooterProps> = ({
 
            {/* Kolonne 2: Regler */}
            <div>
-             <h4
+             <h2
                className="text-[10px] uppercase tracking-[0.2em] font-semibold mb-5"
                style={{ color: 'rgba(212,175,55,0.55)' }}
              >
                Regler
-             </h4>
+             </h2>
              <ul className="space-y-[7px]">
                {reglerLinks.map((link) => (
                  <li key={link.href}>
                    <Link
                      href={link.href}
-                     className="text-base transition-all duration-300 ease-out"
+                     className="text-base transition-all duration-300 ease-out min-h-[48px] flex items-center"
                      style={{ color: 'rgba(255,255,255,0.85)', lineHeight: '1.75' }}
                     onMouseEnter={(e) => {
                       (e.target as HTMLElement).style.color = '#D4AF37';
@@ -169,18 +169,18 @@ export const Footer: FC<FooterProps> = ({
 
            {/* Kolonne 3: Om Tosom */}
            <div>
-             <h4
+             <h2
                className="text-[10px] uppercase tracking-[0.2em] font-semibold mb-5"
                style={{ color: 'rgba(212,175,55,0.55)' }}
              >
                Om Tosom
-             </h4>
+             </h2>
              <ul className="space-y-[7px]">
                {omLinks.map((link) => (
                  <li key={link.href}>
                    <Link
                      href={link.href}
-                     className="text-base transition-all duration-300 ease-out"
+                     className="text-base transition-all duration-300 ease-out min-h-[48px] flex items-center"
                      style={{ color: 'rgba(255,255,255,0.85)', lineHeight: '1.75' }}
                     onMouseEnter={(e) => {
                       (e.target as HTMLElement).style.color = '#D4AF37';

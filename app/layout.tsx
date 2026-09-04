@@ -5,10 +5,41 @@ import { UniversalMenu } from '@/components/layout/UniversalMenu';
 import { ContentWrapper } from '@/components/layout/ContentWrapper';
 import { SentryErrorBoundary } from "@/components/system/SentryErrorBoundary";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { COMPANY } from "@/config/legal";
+
+const BESKRIVELSE =
+  "Tosom er en rolig, privat plattform for ekte relasjoner. Én match innen 24 timer, én guidet 30-dagers reise, og et trygt sted å bli kjent. For voksne 21+.";
+
+const JSONLD_ORGANIZATION = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: COMPANY.name,
+  url: "https://tosom.no",
+  email: COMPANY.email,
+  ...(COMPANY.orgNumber ? { identifier: COMPANY.orgNumber } : {}),
+  address: {
+    "@type": "PostalAddress",
+    addressCountry: "NO",
+    ...(COMPANY.address ? { streetAddress: COMPANY.address } : {}),
+  },
+};
+
+const JSONLD_WEBSITE = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Tosom",
+  url: "https://tosom.no",
+  description: BESKRIVELSE,
+  inLanguage: "no",
+};
 
 export const metadata = {
+  metadataBase: new URL("https://tosom.no"),
   title: "Tosom — En rolig plass for ekte møter",
-  description: "Tosom er en rolig, moden plattform for ekte relasjoner og guidede reiser for par.",
+  description: BESKRIVELSE,
+  alternates: {
+    canonical: "/",
+  },
   keywords: ["dating", "par", "relasjoner", "norsk", "premium"],
   authors: [{ name: "Tosom Team" }],
   creator: "Tosom",
@@ -19,14 +50,14 @@ export const metadata = {
   },
   openGraph: {
     title: "Tosom — En rolig plass for ekte møter",
-    description: "Tosom er en rolig, moden plattform for ekte relasjoner og guidede reiser for par.",
+    description: BESKRIVELSE,
     type: "website",
-    url: "https://tosom.no",
+    url: "/",
     siteName: "Tosom",
     locale: "no_NO",
     images: [
       {
-        url: "https://tosom.no/og-image.png",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "Tosom — Ekte møter",
@@ -36,8 +67,8 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Tosom — En rolig plass for ekte møter",
-    description: "Tosom er en rolig, moden plattform for ekte relasjoner og guidede reiser for par.",
-    images: ["https://tosom.no/og-image.png"],
+    description: BESKRIVELSE,
+    images: ["/og-image.png"],
   },
   verification: {
     google: "google-site-verification",
@@ -60,6 +91,14 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <meta name="theme-color" content="#0A0F1F" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(JSONLD_ORGANIZATION) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(JSONLD_WEBSITE) }}
+        />
       </head>
       <body className="bg-[linear-gradient(180deg,#0B1520,#121E2E,#0B1520)] text-[var(--ts-text-primary)] antialiased relative">
         {/* Global ambient glow — Deep Blue */}

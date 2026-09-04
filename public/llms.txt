@@ -1,0 +1,37 @@
+# ToSom
+
+Tosom er en rolig, privat plattform for ekte relasjoner. For voksne (21+).
+
+## Hva er ToSom
+
+Én match. Én reise. Én relasjon.
+
+ToSom hjelper to mennesker til å møtes på en trygg, moden og strukturert måte.
+Ingen swipe. Ingen feed. Ingen overflate.
+
+## Slik fungerer det
+
+1. **Onboarding** — Du bygger en dyp, veiledet profil basert på forskning:
+   verdier, relasjonsstil, personlighet, emosjonell regulering.
+2. **Matching** — Når profilen er klar, mottar du én match innen 24 timer,
+   valgt basert på resonans — ikke tilfeldighet.
+3. **Reisen** — Paret går på en guidet 30-dagers reise med refleksjoner,
+   oppgaver og samtalehjelp. Bilder låst til dag 15.
+
+## Verdifundament
+
+- Privat — profilen din ses aldri av andre enn matchen
+- Forskningsbasert — PVQ-10, ECR, BFI-10, ERQ-6
+- Ro og trygghet — ingen stress, ingen press, ingen gamification
+- Nordisk design — rolig, premium, med dybde
+
+## Sider
+
+- [Hvorfor Tosom](https://tosom.no/hvorfor)
+- [Slik fungerer det](https://tosom.no/slik-fungerer-det)
+- [Metoder vi bruker](https://tosom.no/metoder)
+- [Reisen](https://tosom.no/reisen)
+- [Priser](https://tosom.no/priser)
+- [Personvern](https://tosom.no/personvern)
+- [Vilkår](https://tosom.no/vilkar)
+- [Trygghet](https://tosom.no/trygghet)

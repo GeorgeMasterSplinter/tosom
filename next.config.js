@@ -81,6 +81,16 @@ const nextConfig = {
             key: "Referrer-Policy",
             value: "strict-origin-when-cross-origin",
           },
+          // ToSom bruker verken kamera, mikrofon eller geolokasjon — slår dem av
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
+          },
+          // Trygghet ved komprimerte svar (Vercel/CDN)
+          {
+            key: "Vary",
+            value: "Accept-Encoding",
+          },
           // HSTS (production only)
           {
             key: "Strict-Transport-Security",

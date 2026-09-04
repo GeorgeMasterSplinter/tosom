@@ -41,6 +41,8 @@ Kort inngangsport. Alt som ligger på toppnivå her **gjelder nå**.
 | **[ACT-PIPELINE-v1.0.md](ACT-PIPELINE-v1.0.md)** | Arbeidssyklus, patch-regler, invarianter, verifisering. **Hvordan** vi jobber. |
 | **[TOSOM-ACT-INSTRUKS-v3.0.md](TOSOM-ACT-INSTRUKS-v3.0.md)** | Launch Edition: **hva** som gjenstår. Bølge A (utført), B (dag 1–30), C (dag 31–60) med atomiske steg og patch-skisser. |
 | **[ACT-STATE.json](ACT-STATE.json)** | **Eneste levende tilstandsfil.** Må oppdateres i samme commit som den siste koden i en oppgave. |
+| **[Gjennomføring.md](Gjennomføring.md)** | **Utførelsesinstruks for Qwen i ACT-modus** (04.09): 20 patcher i to strømmer — A: nettstedsfunn fra `NeedAttention.md`, B: spill i chat fra `Games.md`. Én fil per patch, verifisering mellom hver. |
+| **[Games.md](Games.md)** | Spill i ToSom Chat — Tic-Tac-Toe og Stein-Saks-Papir som isbrytere. Panel-basert (ikke chat-bobler). Postgres (ikke Redis). Godkjent av George 04.09. |
 | **[AUDIT-PLAN.md](AUDIT-PLAN.md)** | Arbeidsramme for oppfølgingen etter systemauditen 03.09.2026: lesekilder, patch-sekvenser for de 10 funnene, verifisering, dokumentasjon og overlevering. |
 
 ---

@@ -163,6 +163,7 @@ model Conversation {
   stateLogs           JourneyStateLog[]
   messages            Message[]
   resonanceSessions   ResonanceSession[]
+  gameSessions        GameSession[]
 
   @@index([userAId, userBId])
   @@index([matchId])
@@ -756,4 +757,38 @@ model RateLimitCounter {
   createdAt DateTime @default(now())
 
   @@index([resetAt])
+}
+
+// ─── Spill i chat (Strøm B) ───
+// Lavterskel minispill som isbrytere. Ingen poeng, ingen serier, ingen gamification.
+// Én aktiv økt per spilltype per samtale. Serveren er alltid fasit.
+
+enum GameType {
+  TTT
+  RPS
+}
+
+enum GameStatus {
+  ACTIVE
+  COMPLETED
+}
+
+model GameSession {
+  id             String     @id @default(cuid())
+  conversationId String
+  type           GameType
+  state          Json // TTT: { board, turn }; RPS: { choiceA, choiceB }
+  turn           String? // userId — kun TTT; null for RPS (samtidig)
+  winner         String? // userId | null (uavgjort)
+  status         GameStatus @default(ACTIVE)
+  startedBy      String // userId
+  createdAt      DateTime   @default(now())
+  completedAt    DateTime?
+
+  conversation Conversation @relation(fields: [conversationId], references: [id])
+
+  // Én AKTIV økt per type per samtale. Når status → COMPLETED kan nytt startes.
+  @@unique([conversationId, type, status])
+  @@index([conversationId])
+  @@index([status])
 }

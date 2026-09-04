@@ -156,7 +156,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ hideOn = false }) => {
             {showBack && (
               <button
                 onClick={() => window.history.back()}
-                className="back-btn w-10 h-10 flex items-center justify-center rounded-xl"
+                className="back-btn w-12 h-12 flex items-center justify-center rounded-xl"
                 style={{
                   color: 'rgba(255,255,255,0.70)',
                   background: 'rgba(255,255,255,0.04)',
@@ -173,7 +173,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ hideOn = false }) => {
 
             {/* Logo + AgeBadge */}
             <div className="flex items-center gap-2">
-              <Link href="/" className="flex-shrink-0 mt-2 logo-link">
+              <Link href="/" className="flex-shrink-0 mt-2 logo-link min-w-[48px] min-h-[48px] flex items-center">
                 <Logo size="xl" colorVariant="gold" />
               </Link>
               <div className="hidden md:block">
@@ -188,10 +188,9 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ hideOn = false }) => {
               <Link
                 key={item.href}
                 href={item.href}
-                className="relative text-base font-medium transition-all duration-200 ease-out"
+                className="relative py-3 text-base font-medium transition-all duration-200 ease-out"
                 style={{
                   color: isActive(item.href) ? color.brand.gold : 'rgba(255,255,255,0.60)',
-                  paddingBottom: '8px',
                 }}
                 onMouseEnter={(e) => {
                   if (!isActive(item.href)) {
@@ -225,7 +224,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ hideOn = false }) => {
             {/* Logg inn (sekundær) */}
             <Link
               href="/login"
-              className="h-[40px] px-6 flex items-center justify-center rounded-[10px] text-sm font-medium transition-all duration-200 ease-out"
+              className="h-[48px] px-6 flex items-center justify-center rounded-[10px] text-sm font-medium transition-all duration-200 ease-out"
               style={{
                 background: 'rgba(255,255,255,0.04)',
                 backdropFilter: 'blur(10px)',
@@ -250,7 +249,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ hideOn = false }) => {
             {/* Opprett konto (primær) */}
             <Link
               href="/onboarding/start"
-              className="h-[40px] px-6 flex items-center justify-center rounded-[10px] text-sm font-semibold transition-all duration-200 ease-out"
+              className="h-[48px] px-6 flex items-center justify-center rounded-[10px] text-sm font-semibold transition-all duration-200 ease-out"
               style={{
                 background: 'linear-gradient(135deg, rgba(212,175,55,0.92) 0%, rgba(232,194,122,0.92) 100%)',
                 color: '#0A0F1A',
@@ -340,7 +339,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ hideOn = false }) => {
                 <div className="flex flex-col gap-3 pt-6" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
                   <Link
                     href="/login"
-                    className="h-[44px] px-6 flex items-center justify-center rounded-[10px] text-sm font-medium transition-all duration-200 ease-out"
+                    className="h-[48px] px-6 flex items-center justify-center rounded-[10px] text-sm font-medium transition-all duration-200 ease-out"
                     style={{
                       background: 'rgba(255,255,255,0.04)',
                       color: 'rgba(255,255,255,0.90)',
@@ -352,7 +351,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ hideOn = false }) => {
                   </Link>
                   <Link
                     href="/onboarding/start"
-                    className="h-[44px] px-6 flex items-center justify-center rounded-[10px] text-sm font-semibold transition-all duration-200 ease-out"
+                    className="h-[48px] px-6 flex items-center justify-center rounded-[10px] text-sm font-semibold transition-all duration-200 ease-out"
                     style={{
                       background: 'linear-gradient(135deg, rgba(212,175,55,0.92) 0%, rgba(232,194,122,0.92) 100%)',
                       color: '#0A0F1A',

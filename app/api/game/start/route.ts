@@ -15,6 +15,7 @@ import { csrfCheck } from "@/lib/auth/csrf";
 import { pgCheck } from "@/lib/rate-limit-pg";
 import { createGame as createTTT } from "@/lib/games/ticTacToe";
 import { createGame as createRPS } from "@/lib/games/rps";
+import { triggerGameUpdate } from "@/lib/pusher/server";
 
 export const dynamic = "force-dynamic";
 
@@ -93,6 +94,19 @@ export async function POST(req: NextRequest) {
       startedBy: userId,
     },
   });
+
+  // Pusher (best-effort)
+  try {
+    await triggerGameUpdate(conversationId, {
+      sessionId: game.id,
+      type,
+      state,
+      status: "ACTIVE",
+      turn: game.turn,
+    });
+  } catch {
+    // Pusher-feil blokkerer aldri spillet
+  }
 
   return NextResponse.json({
     success: true,

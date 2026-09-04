@@ -64,6 +64,8 @@ export interface ChatContextValue {
   myName: string | null;
   /** Parten skriv no (Pusher-event + polling-fallback) */
   partnerTyping: boolean;
+  /** Seneste spill-oppdatering fra Pusher */
+  gameEvent: { sessionId: string; type: string; state: unknown; status: string; winner?: string | null; turn?: string | null } | null;
   sendMessage: (content: string, type?: MessageType, options?: { source?: "bli_kjent" | "oppgave" }) => Promise<boolean>;
   loadMessages: () => Promise<void>;
   /** Aktive mood */
@@ -113,6 +115,8 @@ export function ChatProvider({
   // «Skriver...» for partneren — Pusher-event er kilde, polling er fallback
   const [partnerTyping, setPartnerTyping] = useState(false);
   const moodRef = useRef<MoodId>(DEFAULT_MOOD);
+  // Spill-oppdatering fra Pusher (best-effort)
+  const [gameEvent, setGameEvent] = useState<{ sessionId: string; type: string; state: unknown; status: string; winner?: string | null; turn?: string | null } | null>(null);
 
   const setMood = useCallback((newMood: MoodId) => {
     if (!conversationId) return;
@@ -222,6 +226,10 @@ export function ChatProvider({
           setPartnerTyping(false);
         }
       });
+      // Spill-oppdatering — sanntidssynk til begge parter
+      channel.bind('game-updated', (data: any) => {
+        if (data) setGameEvent(data);
+      });
     }
 
     return () => {
@@ -325,6 +333,7 @@ export function ChatProvider({
       sessionUserId: sessionUserId ?? null,
       myName: myName ?? null,
       partnerTyping,
+      gameEvent,
       sendMessage,
       loadMessages,
       mood,

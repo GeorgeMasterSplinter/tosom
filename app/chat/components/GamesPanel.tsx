@@ -4,7 +4,7 @@
  */
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { csrfFetch } from "@/lib/api/csrfClient";
 import { useChat } from "@/app/chat/context/ChatContext";
 import { color } from "@/config/design-tokens";
@@ -23,12 +23,25 @@ interface GameInfo {
 }
 
 export function GamesPanel({ onClose }: { onClose: () => void }) {
-  const { conversationId, sessionUserId, partner } = useChat();
+  const { conversationId, sessionUserId, partner, gameEvent } = useChat();
   const [activeGame, setActiveGame] = useState<GameInfo | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const myPlayer: "A" | "B" = sessionUserId === partner?.id ? "B" : "A";
+
+  // Sanntidssynk: når partner starter/spiller, oppdater lokal state automatisk
+  useEffect(() => {
+    if (!gameEvent) return;
+    setActiveGame({
+      sessionId: gameEvent.sessionId,
+      type: gameEvent.type as "TTT" | "RPS",
+      state: gameEvent.state,
+      turn: gameEvent.turn ?? null,
+      winner: gameEvent.winner ?? null,
+      status: gameEvent.status as "ACTIVE" | "COMPLETED",
+    });
+  }, [gameEvent]);
 
   const startGame = useCallback(async (type: "TTT" | "RPS") => {
     if (!conversationId) return;

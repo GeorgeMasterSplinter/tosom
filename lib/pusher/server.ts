@@ -40,3 +40,11 @@ export async function triggerMoodChange(conversationId: string, senderId: string
   const pusher = getPusherServer();
   await pusher.trigger(`private-conversation-${conversationId}`, 'mood-changed', { senderId, mood });
 }
+
+export async function triggerGameUpdate(
+  conversationId: string,
+  payload: { sessionId: string; type: string; state: unknown; status: string; winner?: string | null; turn?: string | null },
+) {
+  const pusher = getPusherServer();
+  await pusher.trigger(`private-conversation-${conversationId}`, 'game-updated', payload);
+}

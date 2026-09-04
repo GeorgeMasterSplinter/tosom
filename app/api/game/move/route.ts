@@ -17,6 +17,7 @@ import { csrfCheck } from "@/lib/auth/csrf";
 import { pgCheck } from "@/lib/rate-limit-pg";
 import { makeMove, isGameOver, type TTTState } from "@/lib/games/ticTacToe";
 import { submitChoice, isComplete, type RPSState } from "@/lib/games/rps";
+import { triggerGameUpdate } from "@/lib/pusher/server";
 
 export const dynamic = "force-dynamic";
 
@@ -91,6 +92,18 @@ export async function POST(req: NextRequest) {
         },
       });
 
+      // Pusher (best-effort)
+      try {
+        await triggerGameUpdate(game.conversation.id, {
+          sessionId,
+          type: game.type,
+          state: newState,
+          status: gameOver ? "COMPLETED" : "ACTIVE",
+          winner: newState.winner,
+          turn: gameOver ? null : game.conversation.userAId === userId ? game.conversation.userBId : game.conversation.userAId,
+        });
+      } catch { /* Pusher-feil blokkerer aldri */ }
+
       return NextResponse.json({
         success: true,
         state: newState,
@@ -123,6 +136,17 @@ export async function POST(req: NextRequest) {
           completedAt: complete ? new Date() : undefined,
         },
       });
+
+      // Pusher (best-effort)
+      try {
+        await triggerGameUpdate(game.conversation.id, {
+          sessionId,
+          type: game.type,
+          state: newState,
+          status: complete ? "COMPLETED" : "ACTIVE",
+          winner: newState.winner,
+        });
+      } catch { /* Pusher-feil blokkerer aldri */ }
 
       return NextResponse.json({
         success: true,

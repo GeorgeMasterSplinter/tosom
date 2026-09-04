@@ -469,10 +469,16 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
   const [isMoodsOpen, setIsMoodsOpen] = useState(false);
   const [isGamesOpen, setIsGamesOpen] = useState(false);
 
-  // Hent sessionUserId + mood fra ChatContext
+  // Hent sessionUserId + mood + gameEvent fra ChatContext
   const ctx = useChat();
   const sessionUserId = ctx.sessionUserId;
   const moodTheme = ctx.moodTheme;
+  const gameEvent = ctx.gameEvent;
+
+  // Auto-åpne spill-panelet når partner starter/spiller
+  useEffect(() => {
+    if (gameEvent) setIsGamesOpen(true);
+  }, [gameEvent]);
 
   // Scroll-manager — refen MÅ være på wrapperen under (den eigentlege
   // overflow-y-auto-beholderen). Tidlegare hanka hooken på en indre div

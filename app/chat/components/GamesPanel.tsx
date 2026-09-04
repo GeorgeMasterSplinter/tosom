@@ -22,12 +22,12 @@ interface GameInfo {
 }
 
 export function GamesPanel({ onClose }: { onClose: () => void }) {
-  const { conversationId, senderId, partnerId } = useChat();
+  const { conversationId, sessionUserId, partner } = useChat();
   const [activeGame, setActiveGame] = useState<GameInfo | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const myPlayer: "A" | "B" = senderId === partnerId ? "B" : "A";
+  const myPlayer: "A" | "B" = sessionUserId === partner?.id ? "B" : "A";
 
   const startGame = useCallback(async (type: "TTT" | "RPS") => {
     if (!conversationId) return;

@@ -16,6 +16,17 @@ function sanitizeUrlEnv(value) {
 const NEXTAUTH_URL = sanitizeUrlEnv(process.env.NEXTAUTH_URL);
 const NEXTAUTH_URL_INTERNAL = sanitizeUrlEnv(process.env.NEXTAUTH_URL_INTERNAL);
 
+// CSP script-src (systemaudit 03.09, funn 9): 'unsafe-eval' kun i DEV.
+// Next.js dev-runtime (webpack eval-devtool / HMR / React-dev) krever unsafe-eval;
+// prod (Vercel) kjører uten. E2E kjører `npm run dev` (dev-modus) og trenger
+// unsafe-eval for at klient-JS (f.eks. /dev-login) skal kjøre — uten det får
+// e2e 0 cookies og alle auth-baserte tester feiler. Prod-behardningen (fjerning
+// av unsafe-eval) beholdes uendret for produksjon.
+const CSP_SCRIPT_SRC =
+  process.env.NODE_ENV === 'development'
+    ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' *.stripe.com stripe.com"
+    : "script-src 'self' 'unsafe-inline' *.stripe.com stripe.com";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Hardening: inline rensede verdier slik at også klient/modulinit-kode får ren URL
@@ -77,15 +88,17 @@ const nextConfig = {
           },
           // Content-Security-Policy (STEG 4.4)
           // Allows: self, Stripe checkout, Vipps auth, Pusher WS, uploadthing images, S3/Railway storage
-          // systemaudit 03.09 (funn 9): fjernet unsafe-eval fra script-src og
-          // dev-domener (picsum.photos, placehold.co) fra img-src. script-src
-          // beholder 'unsafe-inline' (Next.js App Router injecter inline
-          // flight-data-skript; fjerning krever nonce-system + browserverifisering).
+          // systemaudit 03.09 (funn 9): fjernet dev-domener (picsum.photos,
+          // placehold.co) fra img-src. script-src kjører UTEN 'unsafe-eval' i
+          // PROD, men med den i DEV (CSP_SCRIPT_SRC) — Next.js dev-runtime og
+          // e2e (npm run dev) krever den. script-src beholder 'unsafe-inline'
+          // (Next.js App Router injecter inline flight-data-skript; fjerning
+          // krever nonce-system + browserverifisering — post-beta).
           {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' *.stripe.com stripe.com",
+              CSP_SCRIPT_SRC,
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob: *.uploadthing.com uploadthing.com *.s3.amazonaws.com tosom-storage.up.railway.app",
               "media-src 'self'",

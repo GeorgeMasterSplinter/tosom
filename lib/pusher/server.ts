@@ -31,11 +31,6 @@ export async function triggerNewMessage(conversationId: string, message: Record<
   await pusher.trigger(`private-conversation-${conversationId}`, 'new-message', message);
 }
 
-export async function triggerConversationUpdated(userId: string, conversationId: string) {
-  const pusher = getPusherServer();
-  await pusher.trigger(`user-${userId}`, 'conversation-updated', { conversationId });
-}
-
 export async function triggerTyping(conversationId: string, senderId: string, isTyping: boolean) {
   const pusher = getPusherServer();
   await pusher.trigger(`private-conversation-${conversationId}`, 'typing', { senderId, isTyping });

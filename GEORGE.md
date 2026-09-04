@@ -1,6 +1,6 @@
 GEORGE.md — ToSom i åpen beta
 Deploy‑guide, drift, og daglig oversikt  
-Opprettet 24.08.2026 — Sist oppdatert 03.09.2026 (LANSE-READINESS nesten komplett: R2 aktiv i prod, GitHub-secrets + SENTRY_DSN satt, CSRF aktivert+verifisert (POST=403), uptime-monitor verifisert, CD grønn (team-scoped token), chat-routing FIXET (private Pusher-kanal + /api/pusher/auth, venterom redirect). Gjenstår: SPF/DKIM, slett test1/test2 (dry-run klar), admin-secrets, Vipps)
+Opprettet 24.08.2026 — Sist oppdatert 03.09.2026 (LANSE-READINESS nesten komplett: R2 aktiv i prod, GitHub-secrets + SENTRY_DSN satt, CSRF aktivert+verifisert (POST=403), uptime-monitor verifisert, CD grønn (team-scoped token), chat-routing FIXET (private Pusher-kanal + /api/pusher/auth, venterom redirect), systemauditts funn 1–10 RETTA (admin-signatur, PII, gate, health, CSRF-journey, død-kode, CD-port, CSP, refleksjon) + 3 nye tester. Gjenstår: SPF/DKIM, slett test1/test2 (dry-run klar), admin-secrets, Vipps, automatisér prisma-migrasjoner mot prod (sak 7))
 
 0. Status i dag (03.09.2026)
 🟢 Produksjon kjører: tosom.no → www.tosom.no (Vercel, prod, HTTP 200). Landing, /login, /admin/login fungerer.
@@ -25,13 +25,15 @@ Opprettet 24.08.2026 — Sist oppdatert 03.09.2026 (LANSE-READINESS nesten kompl
 
 🟡 Testbrukere: test1/test2 er fortsatt i prod-DB. DRY RUN 03.09: 2 brukere funnet (test1@tosom.no + test2@tosom.no, hver 47 meldinger/1 match/2 reports) — safe å slette; kjør med --apply for faktisk sletting (krever DATABASE_URL).
 
-🟢 CSRF: AKTIVERT + VERIFISERT (03.09). ENABLE_CSRF_PROTECTION=true satt i Vercel + ny prod-deploy. 7 skrive-ruter (profile/setup, settings/preferences, settings/delete-account, onboarding/complete, auth/request-reset, chat/send, report) kaller csrfCheck (double-submit-cookie). Live-test 03.09: POST /api/settings/preferences = 403 CSRF_MISSING, POST /api/report = 403 CSRF_MISSING (uten csrf_token-cookie + X-CSRF-Token-header). (GET /api/system/health = 200; POST = 405 — health er GET-only, ikke en CSRF-rute.)
+🟢 CSRF: AKTIVERT + VERIFISERT (03.09). ENABLE_CSRF_PROTECTION=true satt i Vercel + ny prod-deploy. 10 skrive-ruter (profile/setup, settings/preferences, settings/delete-account, onboarding/complete, auth/request-reset, chat/send, report, + journey queue/reset/exit) kaller csrfCheck (double-submit-cookie). Live-test 03.09: POST /api/settings/preferences = 403 CSRF_MISSING, POST /api/report = 403 CSRF_MISSING (uten csrf_token-cookie + X-CSRF-Token-header). (GET /api/system/health = 200; POST = 405 — health er GET-only, ikke en CSRF-rute.)
 
 🟢 Uptime: VERIFISERT (03.09). GitHub Actions kjøringer grønne; alert-e-post mottatt via Resend (RESEND_API_KEY + ALERT_EMAIL_TO satt). Cron + monitor komplett.
 
 🟢 Juridisk: DPA + DPIA klar i docs/legal/ — trenger advokatgjennomgang og signatur.
 
 🟢 Sentry: AKTIVT (03.09). SENTRY_DSN satt i Vercel; feillogging koblet (instrumentation.ts + withSentryConfig).
+
+🟢 Sikkerhetsfunn (systemaudit 03.09): FUNN 1–10 RETTA 03.09 — (1) admin-ruter full HMAC-SHA256 + test admin-jwt-signature (10). (2) PII (reset-token/SMS-kode) fjernet fra logg. (3) invitasjonsgate: villedende flagg betaInviteMode + død gate-rute fjernet (besluttet åpen dør i beta, B-2). (4) /api/system/health admin-gated + test health-public-surface. (5) CSRF utvidet til journey queue/reset/exit + frontend csrfFetch + test csrf-client-coverage (6). (6) død ChatRoom.tsx + useSendMessage.ts fjernet. (7) død triggerConversationUpdated (public user-*) fjernet. (8) CD: ci-gate-jobb, deploy needs: ci-gate. (9) CSP: unsafe-eval + dev-domener fjernet, dummy-bilder → data-URI. (10) foreldet journey/reflect (userAId-bug) fjernet. Verifisert: tsc 0, jest 433 passed, lang grønn. SAK 7 (George): automatiser prisma migrate deploy mot prod i CD (i dag manuell). (Se ACT-PIPELINE §16.)
 
 🟡 OpenAI: missing — OK i beta (AI kjører fallback).
 
@@ -121,7 +123,6 @@ R2_SECRET_ACCESS_KEY	🟢 (satt 03.09)
 R2_BUCKET=tosom-images	🟢 (satt 03.09)
 R2_REGION=eu-central-1	🟢 (satt 03.09)
 SENTRY_DSN	🟢 (satt 03.09)
-BETA_INVITE_MODE=false	🟢
 JOURNEY_BATCH_SIZE=300	🟢
 
 
@@ -197,7 +198,7 @@ Rett i repo → ny deploy
 
 Ikke rør produksjons‑DB direkte
 
-CD-deploy til Vercel (GitHub Actions): krever VERCEL_TOKEN + VERCEL_ORG_ID + VERCEL_PROJECT_ID i GitHub Secrets, og tokenet må ha tilgang til prosjektet. 02.09: CD-deploy VERIFISERT GRØNN. Forrige rotårsak: VERCEL_TOKEN (vcp_) var prosjekt-scoped — leste prosjektet, men hadde ikke team-adgang (GET /v2/teams = 403 team_unauthorized), så «vercel pull --yes» feilet («Could not retrieve Project Settings»). FIX (gjennomført): satte et Vercel-token med TEAM-scope + read-write (til team_RJ0... / prosjekt «tosom») — verifisert: vercel pull OK lokalt, production-deploy tosom-4qem53lih READY, prod-health 200. Husk: tokenet MÅ ha team-adgang, ikke kun prosjekt-adgang. Deploy Gate (be66067) viser rødt for ekte deploy-feil, gul warning for bevisst hoppet over (CI-rødt).
+CD-deploy til Vercel (GitHub Actions): krever VERCEL_TOKEN + VERCEL_ORG_ID + VERCEL_PROJECT_ID i GitHub Secrets, og tokenet må ha tilgang til prosjektet. 02.09: CD-deploy VERIFISERT GRØNN. Forrige rotårsak: VERCEL_TOKEN (vcp_) var prosjekt-scoped — leste prosjektet, men hadde ikke team-adgang (GET /v2/teams = 403 team_unauthorized), så «vercel pull --yes» feilet («Could not retrieve Project Settings»). FIX (gjennomført): satte et Vercel-token med TEAM-scope + read-write (til team_RJ0... / prosjekt «tosom») — verifisert: vercel pull OK lokalt, production-deploy tosom-4qem53lih READY, prod-health 200. Husk: tokenet MÅ ha team-adgang, ikke kun prosjekt-adgang. Deploy Gate (be66067) viser rødt for ekte deploy-feil, gul warning for bevisst hoppet over (CI-rødt). 03.09 (funn 8): ny ci-gate-jobb i cd.yml — manuell deploy (workflow_dispatch) kjører nå grønn lint/tsc/lang/jest FØR deploy (deploy needs: ci-gate), så porten kan ikke lenger omgås manuelt. SAK 7 (migrasjoner): prisma migrate deploy er fortsatt MANUELL (deploy/DEPLOYMENT-CHECKLIST.md) — bør automatiseres i CD mot prod-DB (krever prod DATABASE_URL-secret + rekkefølge FØR vercel deploy); George-eier.
 
 10. Etter beta (fase 2)
 Vipps Login + betaling

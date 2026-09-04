@@ -3,6 +3,9 @@ import { prisma } from '@/lib/prisma';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import os from 'os';
+import { auth } from '@/lib/auth/config';
+import { isAdminRole } from '@/lib/auth/roles';
+import { verifyAdminTokenFromRequest } from '@/lib/auth/admin-jwt';
 
 /**
  * GET /api/system/health — Detaljert health check med service-kjekk
@@ -112,37 +115,50 @@ export async function GET(request: NextRequest) {
     const criticalServicesOk = dbStatus === 'connected';
     const overallStatus = criticalServicesOk ? 'ok' : 'error';
 
-    const response = {
-      status: overallStatus,
-      timestamp: new Date().toISOString(),
-      version: packageJson.version ?? '0.0.0',
-      system: {
-        uptime: uptimeFormatted,
-        uptimeSeconds: Math.round(uptimeSeconds),
-        memory: {
-          usedMB: ramUsedMB,
-          totalMB: ramTotalMB,
-          usagePercent: ramUsagePercent,
-        },
-        cpu: {
-          load1m: loadAvg[0],
-          load5m: loadAvg[1],
-          load15m: loadAvg[2],
-        },
-        nodeVersion,
-        nextVersion,
-      },
-      services,
-      auth: authConfig,
-      cron: {
-        lastRun: cronLastRun,
-      },
-      app: {
-        name: packageJson.name ?? 'tosom',
-        environment: process.env.NODE_ENV ?? 'development',
-        port: process.env.PORT ? Number(process.env.PORT) : 3000,
-      },
-    };
+    // Sikkerhet (systemaudit 03.09, funn 4): dette er et OFFENTLIG endepunkt.
+    // Detaljer (Node/Next-versjon, RAM, CPU, NEXTAUTH_URL, secretLength,
+    // NODE_ENV, port) må aldri lekkes offentlig. Uptime-monitor og CD leser kun
+    // HTTP-status + `status`; kun admin-panelet leser detaljene. Bare en
+    // verifisert admin (signert admin_token ELLER admin-session) får full detalj.
+    const detailed = await hasAdminAccess(request);
+
+    const response = detailed
+      ? {
+          status: overallStatus,
+          timestamp: new Date().toISOString(),
+          version: packageJson.version ?? '0.0.0',
+          system: {
+            uptime: uptimeFormatted,
+            uptimeSeconds: Math.round(uptimeSeconds),
+            memory: {
+              usedMB: ramUsedMB,
+              totalMB: ramTotalMB,
+              usagePercent: ramUsagePercent,
+            },
+            cpu: {
+              load1m: loadAvg[0],
+              load5m: loadAvg[1],
+              load15m: loadAvg[2],
+            },
+            nodeVersion,
+            nextVersion,
+          },
+          services,
+          auth: authConfig,
+          cron: {
+            lastRun: cronLastRun,
+          },
+          app: {
+            name: packageJson.name ?? 'tosom',
+            environment: process.env.NODE_ENV ?? 'development',
+            port: process.env.PORT ? Number(process.env.PORT) : 3000,
+          },
+        }
+      : {
+          // Minimalt offentlig svar — kun status + tid.
+          status: overallStatus,
+          timestamp: new Date().toISOString(),
+        };
 
     return NextResponse.json(response, {
       status: overallStatus === 'ok' ? 200 : 503,
@@ -160,6 +176,29 @@ export async function GET(request: NextRequest) {
 }
 
 // ─── Helpers ───
+
+/**
+ * hasAdminAccess — myk admin-sjekk for helse-endepunktet.
+ * Returnerer true for en verifisert admin (signert admin_token ELLER
+ * NextAuth-session med ADMIN-rolle). Feiler aldri (gir false) — en auth-feil
+ * skal ikke ta ned et health-endepunkt.
+ */
+async function hasAdminAccess(request: NextRequest): Promise<boolean> {
+  // 1) Signert admin_token (HMAC-SHA256)
+  try {
+    const adminPayload = await verifyAdminTokenFromRequest(request);
+    if (adminPayload) return true;
+  } catch {
+    /* fortsett til session-sjekk */
+  }
+  // 2) NextAuth-session med ADMIN-rolle
+  try {
+    const session = await auth();
+    return Boolean(session?.user?.id && isAdminRole((session.user as any).role));
+  } catch {
+    return false;
+  }
+}
 
 function formatUptime(seconds: number): string {
   const days = Math.floor(seconds / 86400);

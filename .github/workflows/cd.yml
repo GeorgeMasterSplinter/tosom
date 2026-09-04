@@ -18,12 +18,88 @@ env:
   NODE_VERSION: '20'
 
 jobs:
+  # ─── PRE-DEPLOY CI GATE (funn 8, systemaudit 03.09) ───
+  # Manuell trigger (workflow_dispatch) omgikk tidligere kvalitetsporten:
+  # «if: workflow_dispatch || ci_green» short-circuiterer til true, så en
+  # manuell deploy kunne kjøre selv med rød/ikke-kjørt CI. Nå må en MANUELL
+  # deploy kjøre de sentrale quality-checkene (lint + tsc + lang + jest), og
+  # de må gå grønn — deploy er avhengig av denne via «needs: ci-gate». For
+  # automatisk trigger (workflow_run) er CI allerede grønn (conclusion-filtret),
+  # så gate-jobben er en no-op (undgår dobbelt CI).
+  ci-gate:
+    name: Pre-Deploy CI Gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Auto-trigger — CI kjørte allerede (deploy gates på conclusion)
+        if: github.event_name == 'workflow_run'
+        run: echo "Auto-trigger (workflow_run) — deploy er gattet på CI-conclusion, ingen gjenkjøring."
+      - name: Checkout (manuell trigger)
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/checkout@v4
+      - name: Setup Node.js (manuell trigger)
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - name: Install deps (manuell trigger)
+        if: github.event_name == 'workflow_dispatch'
+        run: npm ci
+      - name: Prisma generate (manuell trigger)
+        if: github.event_name == 'workflow_dispatch'
+        run: npx prisma generate
+      - name: ESLint (manuell trigger)
+        if: github.event_name == 'workflow_dispatch'
+        run: npx next lint --max-warnings 0
+      - name: Type check (manuell trigger)
+        if: github.event_name == 'workflow_dispatch'
+        run: npx tsc --noEmit
+      - name: Language invariant (manuell trigger)
+        if: github.event_name == 'workflow_dispatch'
+        run: npm run verify:lang
+      - name: Unit tests (manuell trigger)
+        if: github.event_name == 'workflow_dispatch'
+        run: npx jest --ci --silent
+
+  # ─── DB MIGRATIONS (prod) — sak 7, systemaudit 03.09 ───
+  # Prisma-migrasjoner til prod-DB kjører FØR Vercel-deploy, slik at schemat er
+  # klart når ny kode går live. Idempotent — prisma migrate deploy legger kun på
+  # ventende migrasjoner. Gated på samme måte som deploy: automatisk (workflow_run)
+  # kun ved grønn CI, manuell (workflow_dispatch) kun ved grønn ci-gate. Krever
+  # secrets.DATABASE_URL (prod, lagt inn 03.09). deploy er nå needs: db-migrate.
+  db-migrate:
+    name: Apply DB Migrations (prod)
+    runs-on: ubuntu-latest
+    needs: ci-gate
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    environment:
+      name: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - name: Install deps
+        run: npm ci
+      - name: Prisma generate
+        run: npx prisma generate
+      - name: Apply pending migrations
+        run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
   # ─── DEPLOY TO VERCEL ───
   deploy:
     name: Deploy to Vercel
     runs-on: ubuntu-latest
-    # Manuell kjøring (workflow_dispatch) slipper gjennom; automatisk kjøring
-    # krever at CI-kjøringen som utløste denne faktisk var grønn.
+    needs: [ci-gate, db-migrate]
+    # Automatisk trigger (workflow_run) krever grønn CI (conclusion). Manuell
+    # trigger (workflow_dispatch) krever at ci-gate kjørte grønn (needs).
     if: >-
       github.event_name == 'workflow_dispatch' ||
       github.event.workflow_run.conclusion == 'success'

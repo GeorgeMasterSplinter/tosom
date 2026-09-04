@@ -23,6 +23,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { csrfFetch } from '@/lib/api/csrfClient';
 
 export default function BetalingPage() {
   const router = useRouter();
@@ -48,7 +49,7 @@ export default function BetalingPage() {
     try {
       // B4.3: Gratismodus — Vipps-nøkler kommer om ~2 uker
       // Inntil da: send brukeren direkte til kø
-      const res = await fetch('/api/journey/queue', {
+      const res = await csrfFetch('/api/journey/queue', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -17,6 +17,7 @@ import { Footer } from '@/components/ui/layout/Footer';
 import { color, typographyToStyle } from '@/config/design-tokens';
 import GlassCard from '@/components/ui/cards/GlassCard';
 import { PulsingOrb } from '@/components/ui/feedback/PulsingOrb';
+import { csrfFetch } from '@/lib/api/csrfClient';
 
 /* ═══════════════════════════════════════
    TYPES
@@ -296,7 +297,7 @@ export default function MatchingPage() {
   const handleExit = useCallback(async () => {
     setExiting(true);
     try {
-      const res = await fetch('/api/journey/queue', { method: 'DELETE' });
+      const res = await csrfFetch('/api/journey/queue', { method: 'DELETE' });
       if (!res.ok) {
         // 409: allerede matchet — da er venterommet feil sted å være
         router.replace('/dashboard');
@@ -312,7 +313,7 @@ export default function MatchingPage() {
   const handleSkipRound = useCallback(async () => {
     setSkipping(true);
     try {
-      await fetch('/api/journey/queue', { method: 'DELETE' });
+      await csrfFetch('/api/journey/queue', { method: 'DELETE' });
       router.replace('/');
     } catch {
       setSkipping(false);
@@ -328,7 +329,7 @@ export default function MatchingPage() {
     setStarting(true);
     setStartError(null);
     try {
-      const res = await fetch('/api/journey/queue', { method: 'POST' });
+      const res = await csrfFetch('/api/journey/queue', { method: 'POST' });
       if (res.ok) {
         // Nå i køen — last om for å vise kø-tilstanden
         window.location.reload();

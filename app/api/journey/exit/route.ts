@@ -5,6 +5,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth/requireAuth';
+import { csrfCheck } from '@/lib/auth/csrf';
 import { endJourney } from '@/lib/journey/endJourney';
 import { tryParseJsonBody } from '@/lib/api/validation';
 
@@ -21,6 +22,10 @@ export const dynamic = 'force-dynamic';
  */
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
+    // CSRF (systemaudit 03.09, funn 5) — destruktiv rute (endJourney sletter alt)
+    const csrf = await csrfCheck(req);
+    if (csrf instanceof NextResponse) return csrf;
+
     // 1. Auth
     const result = await requireAuth(req);
     if (result instanceof NextResponse) {

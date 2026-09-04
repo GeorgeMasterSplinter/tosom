@@ -46,17 +46,6 @@ export const features = {
   })(),
 
   /**
-   * BETA_INVITE_MODE — Lukket beta: kun inviterte e-poster får magic link sendt.
-   * Default: PÅ (beta). Sett BETA_INVITE_MODE=false når betaan er open.
-   * (Invitasjonsport — BETA-ACCESS §3.)
-   */
-  betaInviteMode: ((): boolean => {
-    if (process.env.BETA_INVITE_MODE === 'false') return false;
-    // Default på i produksjon (lukket beta), av i dev/test (så dev kan logge inn fritt)
-    return process.env.NODE_ENV === 'production';
-  })(),
-
-  /**
    * MAINTENANCE_MODE — Viser app/maintenance flaten.
    */
   maintenanceMode: process.env.MAINTENANCE_MODE === 'true' ? true : false,
@@ -102,9 +91,6 @@ export const isRegistrationEnabled = (): boolean => features.enableRegistration;
 
 /** Sjekk om vedlikeholdsmodus er på */
 export const isMaintenanceMode = (): boolean => features.maintenanceMode;
-
-/** Sjekk om lukket beta (invitasjonsport) er aktiv */
-export const isBetaInviteMode = (): boolean => features.betaInviteMode;
 
 /**
  * S-10: Sjekk om oppbevaringskron (retention) er aktiv.

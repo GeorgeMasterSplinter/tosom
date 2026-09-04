@@ -63,7 +63,8 @@ export async function POST(
 
     // I produksjon: send e-post med token-lenkje
     // t.d. /reset-password?email=${email}&token=${token}
-    console.log(`[PASSWORD RESET] Token for ${email}: ${token}`);
+    // IKKE logge token eller e-post — det er PII (systemaudit 03.09, funn 2).
+    console.log('[PASSWORD RESET] Reset-token generert og lagret');
 
     return new Response(JSON.stringify({
       ok: true,

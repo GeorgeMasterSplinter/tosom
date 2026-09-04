@@ -641,7 +641,7 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
   const handleBlock = async () => {
     setSending(true);
     try {
-      await fetch("/api/journey/exit", {
+      await csrfFetch("/api/journey/exit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reason: "blocked" }),
@@ -656,7 +656,7 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
   const handleEndJourney = async () => {
     setSending(true);
     try {
-      await fetch("/api/journey/exit", {
+      await csrfFetch("/api/journey/exit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reason: "early_exit" }),
@@ -1017,7 +1017,7 @@ function MatchSection({
   const handleEndJourney = async () => {
     setEnding(true);
     try {
-      await fetch("/api/journey/exit", {
+      await csrfFetch("/api/journey/exit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reason: "early_exit" }),

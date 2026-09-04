@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAdminCookie } from '@/lib/auth/admin-jwt';
+import { verifyAdminTokenFromRequest } from '@/lib/auth/admin-jwt';
 import { trackError } from '@/lib/errorTracker';
 
 export async function GET(req: NextRequest) {
   try {
-    const payload = verifyAdminCookie(req);
+    const payload = await verifyAdminTokenFromRequest(req);
 
     return NextResponse.json({ authenticated: !!payload });
   } catch (error) {

@@ -13,6 +13,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { radius, color, typography } from '@/config/design-tokens';
 import { PulsingOrb } from '@/components/ui/feedback/PulsingOrb';
+import { csrfFetch } from '@/lib/api/csrfClient';
 
 /* ====== Glass Animasjon (importert fra delt komponent) ====== */
 
@@ -31,7 +32,7 @@ export function WaitingForMatch({ userName }: { userName: string }) {
   const handleLeaveQueue = async () => {
     setLeavingQueue(true);
     try {
-      const res = await fetch('/api/journey/queue', { method: 'DELETE' });
+      const res = await csrfFetch('/api/journey/queue', { method: 'DELETE' });
       if (res.ok) {
         router.refresh();
       } else {
@@ -51,7 +52,7 @@ export function WaitingForMatch({ userName }: { userName: string }) {
   const handleAngerett = async () => {
     setLeavingJourney(true);
     try {
-      const res = await fetch('/api/journey/exit', {
+      const res = await csrfFetch('/api/journey/exit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reason: 'angrerett' }),

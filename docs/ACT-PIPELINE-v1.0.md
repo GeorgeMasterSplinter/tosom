@@ -292,6 +292,12 @@ Slutt: alle grønne.
 
 ### Alltid
 ```bash
+npm run verify      # språkvakt + tsc --noEmit + jest --ci --silent i én
+```
+
+De tre stegene kan også kjøres hver for seg når du trenger å isolere et rødt steg:
+```bash
+npm run verify:lang
 npx tsc --noEmit
 npx jest --ci --silent
 ```
@@ -303,7 +309,11 @@ npx jest --ci --silent
 `__tests__/journey-engine.test.ts` · `journey-queue-exit-b8.test.ts`
 
 ### Ved auth-endring
-`__tests__/admin-authorization.test.ts` · `cron-auth.test.ts`
+`__tests__/admin-authorization.test.ts` · `cron-auth.test.ts` · `middleware-cookie-salt.test.ts` · `pusher-auth-private-channel.test.ts`
+
+Auditen 03.09 fant at admin-testene sjekker at funksjoner *eksisterer*, ikke at
+de *nekter*. Ved endring i admin-auth: verifiser at et usignert token faktisk
+avvises — ikke bare at guarden er importert.
 
 ### Før beta
 `npm run build` grønn · full loop i staging · gjenopprettet backup
@@ -393,7 +403,37 @@ Ett nei → stopp.
 
 ---
 
-## 16. Til slutt
+## 16. Auditlogg
+
+Åpne funn fra systemauditen **03.09.2026** (commit `47e5d11`).
+Oppfølgingen styres av [`AUDIT-PLAN.md`](AUDIT-PLAN.md).
+
+Les denne listen før du begynner på en oppgave i et berørt område — så
+gjenoppdager du ikke noe som allerede er kjent.
+
+| # | Funn | Risiko | Status |
+|---|------|--------|--------|
+| 1 | `verifyAdminCookie()` verifiserer ikke signatur, men er eneste vern i middleware og i `admin/analytics` + `admin/session` | Høy | Retta 03.09 — begge rutene bruker `verifyAdminTokenFromRequest` (async HMAC) + test `admin-jwt-signature` |
+| 2 | Reset-token og SMS-kode logges i klartekst med e-post/telefon | Høy | Retta 03.09 — PII fjernet fra begge logglinjer |
+| 3 | Invitasjonsporten håndheves ikke — `CredentialsProvider` auto-registrerer fritt | Høy | Retta 03.09 — villedende flagg `betaInviteMode` + død gate-rute (`/api/beta/invite/request`) fjernet; besluttet åpen dør i beta (B-2) |
+| 4 | `/api/system/health` er offentlig og lekker versjon, RAM, URL og secret-lengde | Medium | Retta 03.09 — admin-gated detail (publikum: kun status+timestamp) + test `health-public-surface` |
+| 5 | CSRF dekker 7 av 52 skriveruter — destruktive journey-ruter er udekket | Medium | Retta 03.09 — `csrfCheck` på queue/reset/exit + frontend konvertert til `csrfFetch` + test `csrf-client-coverage` |
+| 6 | `useSendMessage` bruker `fetch` mot CSRF-rute; komponenten er død, men ladd | Medium | Retta 03.09 — død kode fjernet (`components/chat/ChatRoom.tsx` + `hooks/useSendMessage.ts`); ingen referanser |
+| 7 | `triggerConversationUpdated` sender til offentlig kanal `user-*` | Medium | Retta 03.09 — død `triggerConversationUpdated` (public `user-*`) fjernet; frontend abonnerer kun på `private-conversation-*` |
+| 8 | CD-porten kan omgås med `workflow_dispatch` uten grønn CI | Medium | Retta 03.09 — `ci-gate`-jobb; `deploy` `needs: ci-gate` (manuell trigger må kjøre grønn lint/tsc/lang/jest) |
+| 9 | CSP tillater `unsafe-inline` og `unsafe-eval`; dev-domener i `img-src` | Medium | Retta 03.09 — `unsafe-eval` + dev-domener fjernet; dummy-bilder → data-URI (script-src `unsafe-inline` beholdes — krever nonce-system) |
+| 10 | `journey/reflect` slår opp med `userAId` — treffer aldri `userB` | Lav | Retta 03.09 — foreldet `journey/reflect` (deprecated, ingen kaller, userAId-bug) fjernet |
+
+**Blindsoner i testene:** ingen test binder frontend til CSRF-krav, ingen
+XSS-test på chat, ingen test på helse-endepunktets offentlige overflate.
+Usignert admin-token dekkes nå av `__tests__/admin-jwt-signature.test.ts`
+(avviser forgedd token på krypto- og route-nivå).
+
+**Ikke rør under beta:** matchevekter, terskler, journey-kadens (DI-2).
+
+---
+
+## 17. Til slutt
 
 Tosom handler om to mennesker som prøver å finne hverandre på en trygg måte.
 

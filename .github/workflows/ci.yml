@@ -132,9 +132,6 @@ jobs:
         run: npm test
         env:
           DATABASE_URL: ${{ env.DATABASE_URL }}
-          # .env.test (tracked) peker TEST_DATABASE_URL mot localhost:5433 (lokal
-          # dev via docker-compose.test.yml) — next/jest laster fila og integrasjons-
-          # testene ville da feile i CI. Eksplisitt = postgres-service (5432).
           TEST_DATABASE_URL: ${{ env.DATABASE_URL }}
           NEXTAUTH_SECRET: ${{ env.NEXTAUTH_SECRET }}
           NEXTAUTH_URL: ${{ env.NEXTAUTH_URL }}
@@ -181,27 +178,17 @@ jobs:
         env:
           DATABASE_URL: ${{ env.DATABASE_URL }}
 
-      # E2E forventer guidede spørsmål i databasen (testen «10 kategorier med
-      # spørsmål-antall»). Seed-skriptet fantes, men ble aldri kjørt i CI —
-      # testen kunne derfor aldri passere.
       - name: Seed guided questions
         run: npx tsx prisma/seed-guided-questions.ts || npx ts-node prisma/seed-guided-questions.ts
         env:
           DATABASE_URL: ${{ env.DATABASE_URL }}
         continue-on-error: true
 
-      # E2E-testbrukarane (testA/testB) må ha reell match + samtale + journey
-      # dag 1 — ellers har chat-, match- og journey-testene ingenting å vise.
-      # Skriptet er idempotent og nullstill òg onboarding-brukaren kvar gong.
       - name: Seed E2E test users
         run: npx tsx prisma/seed-e2e-users.ts || npx ts-node prisma/seed-e2e-users.ts
         env:
           DATABASE_URL: ${{ env.DATABASE_URL }}
 
-      # playwright.config.ts har seks prosjekter som krever chromium, firefox
-      # OG webkit (Mobile Safari). Tidligere installerte CI kun chromium — de
-      # øvrige feilet med «Executable doesn't exist», ikke på grunn av appen.
-      # Det var 56 av 90 feil i den lokale kjøringen 28.08.
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium firefox webkit
 
@@ -294,11 +281,6 @@ jobs:
           echo "PASS: No AI references found."
 
   # ─── LANGUAGE GUARD (bokmål-only) ───
-  # Kjører SAMME skript som utviklere kjører lokalt (npm run verify:lang).
-  # Tidligere lå ordlisten inline her og var case-sensitiv: «Brukar», «Berre»,
-  # «Ikkje» og «Kva» med stor forbokstav slapp gjennom i månedsvis, og den
-  # lokale vakten brukte en annen, svakere liste. Resultatet var at CI kunne
-  # være «grønn» mens 61 treff lå i koden. Én kilde nå: scripts/verify-language.mjs
   lang-guard:
     name: Language Guard
     runs-on: ubuntu-latest

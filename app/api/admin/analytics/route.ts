@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { verifyAdminCookie } from '@/lib/auth/admin-jwt';
+import { verifyAdminTokenFromRequest } from '@/lib/auth/admin-jwt';
 
 interface DailyCounts {
   signups: number[];
@@ -58,7 +58,7 @@ async function getDailySeries(days: number): Promise<DailyCounts> {
 export async function GET(req: NextRequest) {
   try {
     // Check admin auth
-    const adminPayload = verifyAdminCookie(req);
+    const adminPayload = await verifyAdminTokenFromRequest(req);
     if (!adminPayload) {
       return NextResponse.json({ error: 'Uautorisert' }, { status: 403 });
     }

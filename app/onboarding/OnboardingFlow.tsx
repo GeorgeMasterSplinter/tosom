@@ -608,7 +608,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
       // Sjekk svaret fra køen: feil vises på dette steg (med mulighet til
       // å prøve igjen), ikke slettes. Profilen er allerede lagret, så retry
       // bruker samme data — det går ingenting tapt.
-      const queueRes = await fetch('/api/journey/queue', {
+      const queueRes = await csrfFetch('/api/journey/queue', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       });

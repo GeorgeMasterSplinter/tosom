@@ -73,7 +73,7 @@ export default function UserProfileView({
         // Dummy "fjerne" — vis ikke
         photos[idx] = "";
       } else {
-        photos[idx] = `https://placehold.co/400x500/e2e8f0/94a3b8?text=Bilde+${idx + 1}`;
+        photos[idx] = "data:image/svg+xml,%3Csvg%20xmlns='http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width='400'%20height='500'%3E%3Crect%20width='400'%20height='500'%20fill='%23e2e8f0'%2F%3E%3C%2Fsvg%3E";
       }
       return { ...prev, photos };
     });
@@ -84,7 +84,7 @@ export default function UserProfileView({
       const nextIdx = prev.photos.length + 1;
       return {
         ...prev,
-        photos: [...prev.photos, `https://placehold.co/400x500/f1f5f9/94a3b8?text=Bilde+${nextIdx}`],
+        photos: [...prev.photos, "data:image/svg+xml,%3Csvg%20xmlns='http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width='400'%20height='500'%3E%3Crect%20width='400'%20height='500'%20fill='%23e2e8f0'%2F%3E%3C%2Fsvg%3E"],
       };
     });
   };

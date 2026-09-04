@@ -6,13 +6,18 @@
  * Sletter chat, markerer match som completed, og resetter journey.
  */
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth/session";
 import prisma from "@/lib/prisma";
 import { tryParseJsonBody } from "@/lib/api/validation";
+import { csrfCheck } from "@/lib/auth/csrf";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
+    // CSRF (systemaudit 03.09, funn 5) — destruktiv rute (sletter chat + resetter reise)
+    const csrf = await csrfCheck(req);
+    if (csrf instanceof NextResponse) return csrf;
+
     const session = await getServerSession();
     if (!session?.user?.id) {
       return NextResponse.json(

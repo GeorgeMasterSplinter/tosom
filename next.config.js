@@ -77,13 +77,17 @@ const nextConfig = {
           },
           // Content-Security-Policy (STEG 4.4)
           // Allows: self, Stripe checkout, Vipps auth, Pusher WS, uploadthing images, S3/Railway storage
+          // systemaudit 03.09 (funn 9): fjernet unsafe-eval fra script-src og
+          // dev-domener (picsum.photos, placehold.co) fra img-src. script-src
+          // beholder 'unsafe-inline' (Next.js App Router injecter inline
+          // flight-data-skript; fjerning krever nonce-system + browserverifisering).
           {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline' *.stripe.com stripe.com",
+              "script-src 'self' 'unsafe-inline' *.stripe.com stripe.com",
               "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: blob: *.uploadthing.com uploadthing.com *.s3.amazonaws.com tosom-storage.up.railway.app picsum.photos placehold.co",
+              "img-src 'self' data: blob: *.uploadthing.com uploadthing.com *.s3.amazonaws.com tosom-storage.up.railway.app",
               "media-src 'self'",
               "font-src 'self' fonts.gstatic.com",
               "connect-src 'self' api.stripe.com auth.vipps.no vipps.no *.pusher.com *.pubnub.com wss://*.pusher.io wss://*.pusher.com *.ingest.sentry.io *.sentry.io",

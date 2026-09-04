@@ -104,7 +104,8 @@ export async function POST(req: NextRequest) {
     });
 
     // Placeholder: Send SMS (erstatt med Twilio/Infobip/sendgrid når klar)
-    console.log(`[SMS-KODE til ${phone}]: ${code}`);
+    // IKKE logge telefon eller kode — det er PII (systemaudit 03.09, funn 2).
+    console.log('[SMS-KODE] Verifiseringskode generert og lagret');
 
     return NextResponse.json({
       ok: true,

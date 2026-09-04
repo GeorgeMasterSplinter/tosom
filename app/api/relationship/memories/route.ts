@@ -75,14 +75,14 @@ export async function GET(request: NextRequest) {
   const demoMemories: Memory[] = [
     {
       conversationId,
-      imageUrl: "https://picsum.photos/400/300?random=1",
+      imageUrl: "data:image/svg+xml,%3Csvg%20xmlns='http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width='400'%20height='300'%3E%3Crect%20width='400'%20height='300'%20fill='%23dbeafe'%2F%3E%3C%2Fsvg%3E",
       note: "Vår første felles middag",
       date: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
       tags: ["middag", "første"],
     },
     {
       conversationId,
-      imageUrl: "https://picsum.photos/400/300?random=2",
+      imageUrl: "data:image/svg+xml,%3Csvg%20xmlns='http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width='400'%20height='300'%3E%3Crect%20width='400'%20height='300'%20fill='%23bfdbfe'%2F%3E%3C%2Fsvg%3E",
       note: "Badesol på kveldstid",
       date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
       tags: ["bade", "solskin"],

@@ -23,6 +23,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth/requireAuth';
+import { csrfCheck } from '@/lib/auth/csrf';
 import { withMetrics } from '@/lib/observability/withMetrics';
 import { recordEvent } from '@/lib/observability/metric';
 import { isPaymentsEnabled } from '@/config/features';
@@ -41,6 +42,10 @@ async function postHandler(req: NextRequest) {
   let claimedOrderId: string | null = null;
 
   try {
+    // CSRF (systemaudit 03.09, funn 5) — skrive-rute (setter i kø)
+    const csrf = await csrfCheck(req);
+    if (csrf instanceof NextResponse) return csrf;
+
     // 1. Auth (AuthUser gir oss id + email + role)
     const result = await requireAuth(req);
     if (result instanceof NextResponse) {
@@ -219,6 +224,10 @@ async function postHandler(req: NextRequest) {
  */
 async function deleteHandler(req: NextRequest) {
   try {
+    // CSRF (systemaudit 03.09, funn 5) — skrive-rute (forlater kø)
+    const csrf = await csrfCheck(req);
+    if (csrf instanceof NextResponse) return csrf;
+
     const result = await requireAuth(req);
     if (result instanceof NextResponse) {
       return result;

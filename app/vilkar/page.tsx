@@ -88,7 +88,7 @@ const clauses: Clause[] = [
     id: '6',
     title: 'Konto og innlogging',
     paragraphs: [
-      'Du oppretter konto med Vipps. Kontoen er personlig, og du kan bare ha én.',
+      'Du oppretter konto med e-post og passord i beta. Ved lansering innføres innlogging med Vipps. Kontoen er personlig, og du kan bare ha én.',
       'Du er ansvarlig for aktiviteten på kontoen din. Mistenker du at noen andre har fått tilgang, skal du si fra til oss.',
       'Du kan ikke overdra kontoen til andre, og du kan ikke opptre på vegne av noen andre.',
     ],

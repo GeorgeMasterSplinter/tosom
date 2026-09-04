@@ -140,9 +140,9 @@ export default function ChatHeader({
 
     try {
       if (confirmAction === 'end') {
-        await fetch('/api/journey/exit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reason: 'early_exit' }) });
+        await csrfFetch('/api/journey/exit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reason: 'early_exit' }) });
       } else if (confirmAction === 'block') {
-        await fetch('/api/journey/exit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reason: 'blocked' }) });
+        await csrfFetch('/api/journey/exit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reason: 'blocked' }) });
       }
       router.push('/dashboard?ended=safety');
     } catch {

@@ -14,6 +14,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { color, typography } from '@/config/design-tokens';
+import { csrfFetch } from '@/lib/api/csrfClient';
 
 /* ====== Icons ====== */
 
@@ -247,7 +248,7 @@ export default function AvslutningSide() {
 
     try {
       // B10: Begge bruker samme outcome — forskjellen er kun redirect etterpå
-      const res = await fetch('/api/journey/exit', {
+      const res = await csrfFetch('/api/journey/exit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reason: selected === 2 ? 'ny_reise' : 'found_each_other' }),

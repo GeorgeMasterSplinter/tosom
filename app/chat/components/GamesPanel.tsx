@@ -5,6 +5,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { csrfFetch } from "@/lib/api/csrfClient";
 import { useChat } from "@/app/chat/context/ChatContext";
 import { color } from "@/config/design-tokens";
 import { TicTacToeBoard } from "./TicTacToeBoard";
@@ -33,7 +34,7 @@ export function GamesPanel({ onClose }: { onClose: () => void }) {
     if (!conversationId) return;
     setLoading(true); setError(null);
     try {
-      const res = await fetch("/api/game/start", {
+      const res = await csrfFetch("/api/game/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ conversationId, type }),
@@ -47,7 +48,7 @@ export function GamesPanel({ onClose }: { onClose: () => void }) {
   const makeMove = useCallback(async (payload: { cell?: number; choice?: string }) => {
     if (!activeGame) return;
     try {
-      const res = await fetch("/api/game/move", {
+      const res = await csrfFetch("/api/game/move", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sessionId: activeGame.sessionId, ...payload }),

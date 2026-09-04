@@ -317,8 +317,8 @@ export function ChatHeader({
               animation: !isGamesOpen ? 'games-pulse 4.5s ease-in-out infinite' : 'none',
             }}
           >
-            <span className="text-base transition-transform duration-300 group-hover:rotate-12">♟</span>
-            <span className="hidden md:inline">Spill</span>
+            <span className="text-base transition-transform duration-300 group-hover:rotate-12">🪨</span>
+            <span className="hidden md:inline">Hvem starter?</span>
           </button>
         )}
 

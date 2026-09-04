@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
 
       // Pusher (best-effort)
       try {
-        await triggerGameUpdate(game.conversation.id, {
+        await triggerGameUpdate(game.conversationId, {
           sessionId,
           type: game.type,
           state: newState,
@@ -139,7 +139,7 @@ export async function POST(req: NextRequest) {
 
       // Pusher (best-effort)
       try {
-        await triggerGameUpdate(game.conversation.id, {
+        await triggerGameUpdate(game.conversationId, {
           sessionId,
           type: game.type,
           state: newState,

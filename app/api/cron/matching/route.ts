@@ -351,10 +351,13 @@ export async function GET(req: NextRequest) {
             });
 
             // 3. JourneyProgress × 2N (createMany)
+            // Reisen starter umiddelbart på match: day 1, klokka går.
+            const journeyStart = new Date();
+            const journeyNextDay = new Date(journeyStart.getTime() + 24 * 60 * 60 * 1000);
             await tx.journeyProgress.createMany({
               data: batchMatches.flatMap(({ id, pair }) => [
-                { userId: pair.userIdA, matchId: id, phase: 'EARLY', day: 0, bothSeenAt: null },
-                { userId: pair.userIdB, matchId: id, phase: 'EARLY', day: 0, bothSeenAt: null },
+                { userId: pair.userIdA, matchId: id, phase: 'EARLY', day: 1, bothSeenAt: journeyStart, nextDayAt: journeyNextDay },
+                { userId: pair.userIdB, matchId: id, phase: 'EARLY', day: 1, bothSeenAt: journeyStart, nextDayAt: journeyNextDay },
               ]),
             });
 

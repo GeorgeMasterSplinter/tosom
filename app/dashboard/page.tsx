@@ -305,7 +305,7 @@ function JourneyCalendar({ currentDay }: { currentDay: number }) {
    ═══════════════════════════════════════ */
 
 const MILESTONES: Array<{ day: number; label: string; description: string }> = [
-  { day: 1, label: 'Reisen starter', description: 'Dag 1 begynner når dere begge har vært innom. Si hei til hverandre.' },
+  { day: 1, label: 'Reisen starter', description: 'Dag 1. Si hei til hverandre.' },
   { day: 5, label: 'Første oppgave', description: 'Del en liten ting fra dagen din. Noe enkelt, noe ærlig.' },
   { day: 10, label: 'Bygg tillit', description: 'Nå kan dere dele mer. Hva gjør at du føler deg trygg i en samtale?' },
   { day: 15, label: 'Bilder åpnes', description: 'Fra dag 15 kan dere dele bilder med hverandre. Grunnlaget er lagt.' },
@@ -543,7 +543,7 @@ export default function Dashboard() {
           </h1>
           <p className="mt-1 text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
             {isDayZero
-              ? 'Reisen starter når dere begge har vært innom.'
+              ? 'Reisen er på vei.'
               : `Dere er på dag ${currentDay} av ${journey.totalDays}. ${currentPhase.name}.`}
           </p>
         </div>
@@ -564,7 +564,7 @@ export default function Dashboard() {
           </button>
           {isDayZero && (
             <p className="text-center text-xs mt-3" style={{ color: 'rgba(255,255,255,0.35)' }}>
-              Dag 1 starter når {match.name} også har vært innom én gang.
+              Reisen starter like etter.
             </p>
           )}
         </div>
@@ -635,7 +635,7 @@ export default function Dashboard() {
                 Reisen starter
               </p>
               <p className="mt-2 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                Dag 1 begynner når dere begge har vært innom. Si hei til hverandre i samtalen.
+                Dag 1. Si hei til hverandre i samtalen.
               </p>
             </div>
           ) : (

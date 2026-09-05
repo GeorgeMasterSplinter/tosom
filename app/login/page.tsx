@@ -164,44 +164,85 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/* Beta-infotekst */}
+        {/* Beta-invitasjon */}
         <div
-          className="w-full mt-8 space-y-2"
+          className="w-full mt-8 space-y-3"
           style={{
             background: "rgba(212,175,55,0.04)",
             border: "1px solid rgba(212,175,55,0.12)",
             borderRadius: "16px",
-            padding: "20px",
+            padding: "24px",
           }}
         >
           <p
             style={{
               fontSize: "15px",
-              lineHeight: "1.7",
-              color: "rgba(255,255,255,0.6)",
+              lineHeight: "1.8",
+              color: "rgba(255,255,255,0.7)",
               margin: 0,
+              fontWeight: 600,
             }}
           >
-            Tosom er i åpen test. Gratis. Vi tester hele reisen — fra profilen og gjennom hele 30-dagersreisen.
+            Hei!
           </p>
           <p
             style={{
               fontSize: "15px",
-              lineHeight: "1.7",
+              lineHeight: "1.8",
               color: "rgba(255,255,255,0.6)",
               margin: 0,
             }}
           >
-            Funnet du feil eller har du tilbakemeldinger? Send oss gjerne en epost:{" "}
+            Tosom — et rolig datingkonsept for oss som vil være ferdig med sveipe-maraton og kaos.
+          </p>
+          <p
+            style={{
+              fontSize: "15px",
+              lineHeight: "1.8",
+              color: "rgba(255,255,255,0.6)",
+              margin: 0,
+            }}
+          >
+            Vi trenger noen som kan teste beta-versjonen. Det er null seriøst, og du kan lage en fake bruker som heter “Knut 47”, “PrinsessePizza” eller “Gulrotmannen”.
+          </p>
+          <p
+            style={{
+              fontSize: "15px",
+              lineHeight: "1.8",
+              color: "rgba(255,255,255,0.6)",
+              margin: 0,
+            }}
+          >
+            Du får en match, kan teste chatten, trykke rundt og se hva som skjer.
+          </p>
+          <p
+            style={{
+              fontSize: "15px",
+              lineHeight: "1.8",
+              color: "rgba(255,255,255,0.6)",
+              margin: 0,
+            }}
+          >
+            Det vi trenger er små tilbakemeldinger: hva føles bra, hva er rart, hva burde endres.
+          </p>
+          <p
+            style={{
+              fontSize: "15px",
+              lineHeight: "1.8",
+              color: "rgba(255,255,255,0.6)",
+              margin: 0,
+            }}
+          >
+            Takk hvis du vil være med og ha det litt gøy! Send til{' '}
             <span style={{ color: "#D4AF37" }}>support@tosom.no</span>
-            . Takk — vi setter stor pris på det!
+            .
           </p>
           <p
             style={{
               fontSize: "14px",
               lineHeight: "1.7",
               color: "rgba(255,255,255,0.4)",
-              margin: 0,
+              margin: "8px 0 0 0",
             }}
           >
             Tosom er for voksne over 21 år.

@@ -18,7 +18,6 @@ import { ChatHeader } from "@/app/chat/components/ChatHeader";
 import { BliKjentPanel } from "@/app/chat/components/BliKjentPanel";
 import { OppgaverPanel } from "@/app/chat/components/OppgaverPanel";
 import { MoodsPanel } from "@/app/chat/components/MoodsPanel";
-import { GamesPanel } from "@/app/chat/components/GamesPanel";
 import { useChatScroll } from "@/components/chat/useChatScroll";
 
 /* ═══════════════════════════════════════
@@ -468,18 +467,11 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
   const [isBliKjentOpen, setIsBliKjentOpen] = useState(false);
   const [isOppgaverOpen, setIsOppgaverOpen] = useState(false);
   const [isMoodsOpen, setIsMoodsOpen] = useState(false);
-  const [isGamesOpen, setIsGamesOpen] = useState(false);
 
-  // Hent sessionUserId + mood + gameEvent fra ChatContext
+  // Hent sessionUserId + mood fra ChatContext
   const ctx = useChat();
   const sessionUserId = ctx.sessionUserId;
   const moodTheme = ctx.moodTheme;
-  const gameEvent = ctx.gameEvent;
-
-  // Auto-åpne spill-panelet når partner starter/spiller
-  useEffect(() => {
-    if (gameEvent) setIsGamesOpen(true);
-  }, [gameEvent]);
 
   // Scroll-manager — refen MÅ være på wrapperen under (den eigentlege
   // overflow-y-auto-beholderen). Tidlegare hanka hooken på en indre div
@@ -506,14 +498,12 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
         <ChatHeader
           partner={partner}
           journeyDay={journeyDay}
-          onOpenBliKjent={() => { setIsBliKjentOpen(prev => !prev); setIsOppgaverOpen(false); setIsMoodsOpen(false); setIsGamesOpen(false); }}
+          onOpenBliKjent={() => { setIsBliKjentOpen(prev => !prev); setIsOppgaverOpen(false); setIsMoodsOpen(false); }}
           isBliKjentOpen={isBliKjentOpen}
-          onOpenOppgaver={() => { setIsOppgaverOpen(prev => !prev); setIsBliKjentOpen(false); setIsMoodsOpen(false); setIsGamesOpen(false); }}
+          onOpenOppgaver={() => { setIsOppgaverOpen(prev => !prev); setIsBliKjentOpen(false); setIsMoodsOpen(false); }}
           isOppgaverOpen={isOppgaverOpen}
-          onOpenMoods={() => { setIsMoodsOpen(prev => !prev); setIsBliKjentOpen(false); setIsOppgaverOpen(false); setIsGamesOpen(false); }}
+          onOpenMoods={() => { setIsMoodsOpen(prev => !prev); setIsBliKjentOpen(false); setIsOppgaverOpen(false); }}
           isMoodsOpen={isMoodsOpen}
-          onOpenGames={() => { setIsGamesOpen(prev => !prev); setIsBliKjentOpen(false); setIsOppgaverOpen(false); setIsMoodsOpen(false); }}
-          isGamesOpen={isGamesOpen}
           moodTheme={moodTheme}
         />
 
@@ -540,15 +530,6 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
           <div className="relative z-10">
             <MoodsPanel
               onClose={() => setIsMoodsOpen(false)}
-            />
-          </div>
-        )}
-
-        {/* GAMES PANEL — slide-down fra header */}
-        {isGamesOpen && (
-          <div className="relative z-10">
-            <GamesPanel
-              onClose={() => setIsGamesOpen(false)}
             />
           </div>
         )}

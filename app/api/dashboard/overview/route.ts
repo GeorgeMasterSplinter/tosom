@@ -229,6 +229,16 @@ export async function GET(_request: Request) {
       };
     }
 
+    // Match reveal: sjekk om det finnes ulest MATCH-notifikasjon
+    let unreadMatch = false;
+    if (match) {
+      const unreadNotif = await prisma.notification.findFirst({
+        where: { userId, type: 'MATCH', readAt: null },
+        select: { id: true },
+      });
+      unreadMatch = unreadNotif != null;
+    }
+
     return new Response(
       JSON.stringify({
         match: matchInfo,
@@ -242,6 +252,7 @@ export async function GET(_request: Request) {
         journeyState: me?.journeyState ?? "IDLE",
         onboardingComplete: me?.onboardingComplete ?? false,
         matchQueuedAt: me?.matchQueuedAt ? me.matchQueuedAt.toISOString() : null,
+        unreadMatch,
       }),
       { status: 200, headers: { "Content-Type": "application/json" } }
     );

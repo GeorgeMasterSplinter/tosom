@@ -456,15 +456,15 @@ export default function Dashboard() {
           return;
         }
 
-        // Match reveal modal (én gang pr. match)
-        // localStorage — ikke sessionStorage: «Din match er her» skal vises
-        // kun én gang etter at man har blitt matchet, ikke ved hver ny
-        // loggings-/nettlesersesjon.
-        const revealKey = `tosom_revealed_${json.match.id}`;
-        if (!revealedRef.current && !localStorage.getItem(revealKey)) {
-          revealedRef.current = true;
-          setShowReveal(true);
-          localStorage.setItem(revealKey, '1');
+        // Match reveal modal (én gang pr. match — DB-basert via Notification)
+        // unreadMatch kommer fra overview API: finnes ulest MATCH-notifikasjon?
+        if (!revealedRef.current && json.match) {
+          if ((json as any).unreadMatch) {
+            revealedRef.current = true;
+            setShowReveal(true);
+            // Marker MATCH-notifikasjonen som lest (fire-and-forget)
+            fetch('/api/system/mark-read', { method: 'POST' }).catch(() => {});
+          }
         }
       } catch {
         // Ingen redirect her — ville forårsake loop om venterommet

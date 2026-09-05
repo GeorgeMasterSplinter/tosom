@@ -349,7 +349,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
               { value: 'Slank', label: 'Slank', icon: '🏃' },
               { value: 'Gjennomsnittlig', label: 'Gjennomsnittlig', icon: '🧍' },
               { value: 'Atletisk', label: 'Atletisk', icon: '💪' },
-              { value: 'Kraftig', label: 'Kraftig', icon: '🏔️' },
+              { value: 'Kraftig', label: 'Kraftig', icon: '🏋️' },
               { value: 'Myk', label: 'Myk', icon: '🌸' },
             ]}
             selectedValue={val('bodyType', '')(data)}

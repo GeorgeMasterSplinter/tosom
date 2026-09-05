@@ -125,6 +125,13 @@ export function GamesPanel({ onClose }: { onClose: () => void }) {
   }
 
   // Aktivt / fullført spill
+  useEffect(() => {
+    if (game?.status === "COMPLETED") {
+      const timer = setTimeout(() => onClose(), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [game?.status, onClose]);
+
   return (
     <div className="px-6 py-5 space-y-3">
       <div className="flex items-center justify-between">
@@ -138,16 +145,6 @@ export function GamesPanel({ onClose }: { onClose: () => void }) {
         onChoice={(c) => makeMove(c)}
         disabled={game.status === "COMPLETED"}
       />
-      {game.status === "COMPLETED" && (
-        <button onClick={resetGame} className="w-full py-2.5 rounded-xl text-sm font-medium" style={{ background: color.ambient.gold.soft, border: `1px solid ${color.border.gold}`, color: color.brand.gold }}>
-          Prøv igjen
-        </button>
-      )}
-      {game.status === "ACTIVE" && (
-        <button onClick={cancelGame} className="w-full py-2 rounded-xl text-xs" style={{ color: color.text.muted }}>
-          Avbryt
-        </button>
-      )}
     </div>
   );
 }

@@ -72,7 +72,12 @@ export function submitChoice(
   // Løs når begge har sendt
   let winner: RPSPlayer | 'draw' | null = null;
   if (choiceA !== null && choiceB !== null) {
-    winner = resolve(choiceA, choiceB);
+    const result = resolve(choiceA, choiceB);
+    if (result === 'draw') {
+      // Liké: reset — ny runde, spillet fortsetter
+      return { choiceA: null, choiceB: null, winner: null };
+    }
+    winner = result;
   }
 
   return { choiceA, choiceB, winner };

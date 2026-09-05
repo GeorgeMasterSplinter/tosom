@@ -24,16 +24,14 @@ export default function ChatLayout({
         @supports (height: 100dvh) {
           .tosom-chat-layout { height: 100dvh; }
         }
-        /* Desktop: samtalen som sentrert kort (kun /chat/[id] sidene) */
+        /* Samtalen fyller hele skjermen — kant til kant på alle størrelser */
+        .tosom-chat-card {
+          width: 100%;
+          height: 100%;
+        }
         @media (min-width: 768px) {
           .tosom-chat-card {
-            max-width: 720px;
-            margin: 24px auto;
-            height: calc(100% - 48px);
-            border-radius: 24px;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35);
+            height: calc(100% - 0px);
           }
         }
         /* Samtalelista: lite padding på mobil, luftig på desktop */

@@ -201,8 +201,17 @@ describe('Stein-Saks-Papir motor', () => {
           let state = createRPS();
           state = submitChoice(state, 'A', a);
           state = submitChoice(state, 'B', b);
-          expect(state.winner).toBe(expected[`${a}-${b}`]);
-          expect(isComplete(state)).toBe(true);
+          const exp = expected[`${a}-${b}`];
+          if (exp === 'draw') {
+            // Liké: state resettes, spillet fortsetter
+            expect(state.winner).toBeNull();
+            expect(state.choiceA).toBeNull();
+            expect(state.choiceB).toBeNull();
+            expect(isComplete(state)).toBe(false);
+          } else {
+            expect(state.winner).toBe(exp);
+            expect(isComplete(state)).toBe(true);
+          }
         });
       }
     }

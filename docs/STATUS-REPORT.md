@@ -1,6 +1,6 @@
 # ToSom — Offisiell Statusrapport
 
-**Dato:** September 2025  
+**Dato:** September 2026 
 **Versjon:** 1.0  
 **Status:** 🟡 BETA (klar for 30–50 brukere)
 

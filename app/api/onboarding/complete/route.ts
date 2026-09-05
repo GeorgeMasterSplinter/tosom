@@ -8,6 +8,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "@/lib/auth/session"
 import prisma from "@/lib/prisma"
 import { csrfCheck } from "@/lib/auth/csrf"
+import { sendWelcomeEmail } from "@/lib/email"
 
 export const dynamic = 'force-dynamic'
 
@@ -76,11 +77,14 @@ export async function POST(req: NextRequest) {
     })
 
     await prisma.profile.update({
-      where: { userId: session.user.id },
-      data: {
-        deepProfileStep: "SUMMARY" as any,
-      },
-     })
+    where: { userId: session.user.id },
+    data: {
+    deepProfileStep: "SUMMARY" as any,
+    },
+    })
+
+    // Send velkomst-e-post (best-effort — skal aldri blokkere)
+    sendWelcomeEmail(user.email, user.profile?.identityName || user.name || undefined).catch(() => {})
 
     return NextResponse.json({
       success: true,

@@ -151,3 +151,72 @@ Ro, varme og én reise av gangen.
     `,
   });
 }
+/**
+ * Send velkomst-e-post ved registrering.
+ * Enkelt, varmt, ingen CTA — de er allerede inne.
+ */
+export async function sendWelcomeEmail(
+  userEmail: string,
+  userName?: string
+): Promise<EmailResult> {
+  const name = userName || 'hei';
+
+  return sendEmail({
+    to: userEmail,
+    subject: 'Velkommen til ToSom',
+    text: `Hei ${name},\n\nVelkommen til ToSom.\n\nHer er det ingen bilder, ingen navn og ingen overflatelighet. Bare ord, tid og én reise av gangen — 30 dager.\n\nNår systemet finner en passende person for deg, vil du få en e-post. Da starter reisen.\n\nTa deg tid til å svare ærligt på spørsmålene. Det er det som gir de beste koblingene.\n\nRo, varme og én reise av gangen.\n\n— ToSom`,
+    html: `
+      <div style="font-family: Inter, -apple-system, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px; background: #0A1A2A; color: #ffffff; border-radius: 16px;">
+        <h1 style="font-size: 24px; font-weight: 600; color: #D4AF37; margin-bottom: 16px;">Velkommen til ToSom</h1>
+        <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">Hei ${name},</p>
+        <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">
+          Her er det ingen bilder, ingen navn og ingen overflatelighet. Bare ord, tid og én reise av gangen — 30 dager.
+        </p>
+        <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">
+          Når systemet finner en passende person for deg, vil du få en e-post. Da starter reisen.
+        </p>
+        <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">
+          Ta deg tid til å svare ærligt på spørsmålene. Det er det som gir de beste koblingene.
+        </p>
+        <p style="font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.5); margin-top: 32px;">
+          Ro, varme og én reise av gangen.<br />— ToSom
+        </p>
+      </div>
+    `,
+  });
+}
+
+/**
+ * Send bekreftelse ved kontosletting.
+ * Siste ord fra ToSom.
+ */
+export async function sendDeletionConfirmationEmail(
+  userEmail: string,
+  userName?: string
+): Promise<EmailResult> {
+  const name = userName || 'hei';
+
+  return sendEmail({
+    to: userEmail,
+    subject: 'Din ToSom-konto er slettet',
+    text: `Hei ${name},\n\nDin ToSom-konto og all data er nå permanent slettet.\n\nIngen samtalinger, ingen bilder, ingen spørsmålssvar — alt er borte. Vi har ikke lagret noe.\n\nHvis du noen gang ønsker å komme tilbake, kan du registrere deg på nytt.\n\nHa det godt.\n\n— ToSom`,
+    html: `
+      <div style="font-family: Inter, -apple-system, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px; background: #0A1A2A; color: #ffffff; border-radius: 16px;">
+        <h1 style="font-size: 24px; font-weight: 600; color: #D4AF37; margin-bottom: 16px;">Kontoen er slettet</h1>
+        <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">Hei ${name},</p>
+        <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">
+          Din ToSom-konto og all data er nå permanent slettet. Ingen samtalinger, ingen bilder, ingen spørsmålssvar — alt er borte.
+        </p>
+        <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">
+          Hvis du noen gang ønsker å komme tilbake, kan du registrere deg på nytt.
+        </p>
+        <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 24px; font-weight: 500;">
+          Ha det godt.
+        </p>
+        <p style="font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.5); margin-top: 32px;">
+          Ro, varme og én reise av gangen.<br />— ToSom
+        </p>
+      </div>
+    `,
+  });
+}

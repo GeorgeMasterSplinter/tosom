@@ -17,6 +17,7 @@ import { prisma } from '@/lib/prisma';
 import { getServerSession } from '@/lib/auth/session';
 import { z } from 'zod';
 import { csrfCheck } from '@/lib/auth/csrf';
+import { sendDeletionConfirmationEmail } from '@/lib/email';
 
 export const dynamic = 'force-dynamic';
 
@@ -53,6 +54,14 @@ export async function DELETE(req: NextRequest) {
     }
 
     const userId = session.user.id;
+
+    // Lagre e-post + navn FØR sletting (trengs for bekreftelse)
+    const userRecord = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { email: true, name: true },
+    });
+    const userEmail = userRecord?.email || '';
+    const userName = userRecord?.name || undefined;
 
     // 3. Finn aktiv reise og kall endJourney først
     const activeJourney = await prisma.journeyProgress.findFirst({
@@ -114,6 +123,11 @@ export async function DELETE(req: NextRequest) {
     });
 
     console.log(`[delete-account] Bruker ${userId} slettet fullstendig`);
+
+    // Send sletting-bekreftelse (best-effort — skal aldri blokkere)
+    if (userEmail) {
+      sendDeletionConfirmationEmail(userEmail, userName).catch(() => {});
+    }
 
     return NextResponse.json({ success: true, message: 'Konto og alle data slettet' });
   } catch (error) {

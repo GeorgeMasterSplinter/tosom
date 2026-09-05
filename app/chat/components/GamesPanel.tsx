@@ -100,6 +100,14 @@ export function GamesPanel({ onClose }: { onClose: () => void }) {
     } catch { setError("Kunne ikke avbryte."); }
   }, [game]);
 
+  // Auto-close ved fullført spill (må være før conditional return)
+  useEffect(() => {
+    if (game?.status === "COMPLETED") {
+      const timer = setTimeout(() => onClose(), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [game?.status, onClose]);
+
   // Ingen aktivt spill — vis start
   if (!game) {
     return (
@@ -125,13 +133,6 @@ export function GamesPanel({ onClose }: { onClose: () => void }) {
   }
 
   // Aktivt / fullført spill
-  useEffect(() => {
-    if (game?.status === "COMPLETED") {
-      const timer = setTimeout(() => onClose(), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [game?.status, onClose]);
-
   return (
     <div className="px-6 py-5 space-y-3">
       <div className="flex items-center justify-between">

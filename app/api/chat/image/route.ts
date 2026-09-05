@@ -121,6 +121,14 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
       );
     }
 
+    // Reisen fullført (dag 30) — samtalen er lukket, ingen flere bilder.
+    if (conversation.endedAt) {
+      return NextResponse.json(
+        { error: 'Reisen er fullført. Samtalen er avsluttet.' },
+        { status: 403 }
+      );
+    }
+
     // M-6: Bilde-lås håndheves server-side på journey-dag (kanonisk isPhotosAllowed: dag >= 15).
     // Denne sjekken kjører FØR opplastning, slik at ingen bilde når lagringen før låsen er opphøyet.
     if (conversation.matchId) {

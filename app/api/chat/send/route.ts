@@ -104,6 +104,14 @@ async function postHandler(request: NextRequest) {
       );
     }
 
+    // Reisen fullført (dag 30) — samtalen er lukket.
+    if (conversation.endedAt) {
+      return NextResponse.json(
+        { error: "Reisen er fullført. Samtalen er avsluttet." },
+        { status: 403 }
+      );
+    }
+
     // Opprett melding med mappa type (bruk crypto.randomUUID i stedet for Date.now()+Math.random)
     const message = await prisma.message.create({
       data: {

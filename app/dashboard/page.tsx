@@ -521,8 +521,6 @@ export default function Dashboard() {
 
   const { match, journey, conversation } = data;
   const currentDay = journey.day;
-  // Dag 0: reisen er opprettet, men begge har ikke møtt opp enda
-  const isDayZero = currentDay < 1;
   const displayDay = Math.max(1, currentDay);
   const currentPhase = getPhaseForDay(displayDay);
   const resonanceLabel = getResonanceLabel(match.resonanceLevel);
@@ -542,9 +540,7 @@ export default function Dashboard() {
             {getGreeting()}, {userName}
           </h1>
           <p className="mt-1 text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
-            {isDayZero
-              ? 'Reisen er på vei.'
-              : `Dere er på dag ${currentDay} av ${journey.totalDays}. ${currentPhase.name}.`}
+            Dere er på dag {displayDay} av {journey.totalDays}. {currentPhase.name}.
           </p>
         </div>
 
@@ -562,40 +558,30 @@ export default function Dashboard() {
           >
             💬 Samtale
           </button>
-          {isDayZero && (
-            <p className="text-center text-xs mt-3" style={{ color: 'rgba(255,255,255,0.35)' }}>
-              Reisen starter like etter.
-            </p>
-          )}
         </div>
 
-        {/* ═══ RESONANSE KORT ═══ */}
-        {/* Kun resonanse-nivå + match-info (navn, alder, avstand) — */}
-        {/* «Deg»-kortet er fjernet: kortet handler om matchen, ikke om deg. */}
+        {/* ═══ PROFIL KORT + RESONANS ═══ */}
         <GlassCard className="mb-8">
-          <div className="flex items-center justify-center gap-6 py-6">
-            {/* Resonance word */}
-            <div className="text-center px-4 py-2 rounded-xl" style={{ boxShadow: getResonanceGlow(match.resonanceLevel) }}>
-              <p
-                className="font-semibold tracking-wide"
-                style={{ color: '#D4AF37', fontSize: '16px' }}
-              >
-                {resonanceLabel}
-              </p>
-            </div>
-
-            {/* Partner card */}
+          <div className="flex flex-col items-center py-6 gap-4">
+            {/* Partner card — sentret i midten */}
             <div
-              className="flex-1 max-w-[180px] rounded-2xl p-5 text-center"
+              className="w-full max-w-[220px] rounded-2xl p-5 text-center"
               style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.2)' }}
             >
-              <p className="font-semibold" style={{ color: 'rgba(255,255,255,0.9)', fontSize: '18px' }}>
+              <p className="font-semibold" style={{ color: 'rgba(255,255,255,0.9)', fontSize: '20px' }}>
                 {match.name}
               </p>
               {match.age && <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>{match.age} år</p>}
               {match.distanceKm != null && (
                 <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>ca. {match.distanceKm} km</p>
               )}
+            </div>
+
+            {/* Resonans — under profil-kortet */}
+            <div className="text-center px-4 py-1.5 rounded-full" style={{ boxShadow: getResonanceGlow(match.resonanceLevel) }}>
+              <p className="font-medium tracking-wide text-xs" style={{ color: '#D4AF37' }}>
+                {resonanceLabel}
+              </p>
             </div>
           </div>
         </GlassCard>
@@ -608,11 +594,9 @@ export default function Dashboard() {
             </h2>
             <span
               className="px-3 py-1 rounded-full text-xs font-medium"
-              style={isDayZero
-                ? { background: 'rgba(212,175,55,0.08)', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.25)' }
-                : { background: `${currentPhase.color}15`, color: currentPhase.color, border: `1px solid ${currentPhase.color}30` }}
+              style={{ background: `${currentPhase.color}15`, color: currentPhase.color, border: `1px solid ${currentPhase.color}30` }}
             >
-              {isDayZero ? 'Dag 0 — starter' : currentPhase.name}
+              {currentPhase.name}
             </span>
           </div>
           <JourneyCalendar currentDay={currentDay} />
@@ -623,24 +607,7 @@ export default function Dashboard() {
           <h2 className="font-semibold text-lg mb-4" style={{ color: 'rgba(255,255,255,0.8)' }}>
             Milepæler
           </h2>
-          {isDayZero ? (
-            <div
-              className="rounded-2xl p-5"
-              style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.2)' }}
-            >
-              <p className="text-xs font-medium uppercase tracking-wider mb-2" style={{ color: '#D4AF37' }}>
-                Neste
-              </p>
-              <p className="font-semibold" style={{ color: 'rgba(255,255,255,0.9)', fontSize: '16px' }}>
-                Reisen starter
-              </p>
-              <p className="mt-2 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                Dag 1. Si hei til hverandre i samtalen.
-              </p>
-            </div>
-          ) : (
-            <Milestones currentDay={currentDay} />
-          )}
+          <Milestones currentDay={displayDay} />
         </GlassCard>
 
         {/* ═══ PROFIL PRIVAT ═══ */}

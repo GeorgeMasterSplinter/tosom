@@ -116,13 +116,16 @@ export function ChatProvider({
 
   const setMood = useCallback((newMood: MoodId) => {
     if (!conversationId) return;
-    // Optimistisk: skift temaet lokalt umiddelbart, så bekräftes av server/polling.
-    moodRef.current = newMood;
-    setMoodState(newMood);
     fetch("/api/chat/mood", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ conversationId, mood: newMood }),
+    }).then((res) => {
+      if (res.ok) {
+        // Server bekreftet — nå oppdater lokal state (polling vil synke partner)
+        moodRef.current = newMood;
+        setMoodState(newMood);
+      }
     }).catch(() => {
       /* Feil ved mood-bytte — polling resynkroniserer fra serveren */
     });

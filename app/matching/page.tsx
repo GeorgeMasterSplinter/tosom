@@ -245,8 +245,22 @@ export default function MatchingPage() {
             setQueueState('locked');
           }
           // Etter lørdag 06:00 uten match: ingen match denne runden
+          // MEN: bare hvis brukeren faktisk var i køen da rundet kjørte.
+          // Hvis matchQueuedAt er ETTER i dag kl 06:00 → brukeren gikk
+          // nylig i køen og skal se «i kø» (venterom), ikke «no match».
           else if (day === 6 && hour >= 6 && !data.match) {
-            setQueueState('no_match');
+            const queuedAt = data.matchQueuedAt ? new Date(data.matchQueuedAt) : null;
+            // I dag kl 06:00 (den tidspunktet rundet er ferdig)
+            const roundEnd = new Date(now);
+            roundEnd.setHours(6, 0, 0, 0);
+
+            if (queuedAt && queuedAt >= roundEnd) {
+              // Brukeren gikk i køen ETTER at rundet var ferdig → vent til neste runde
+              setQueueState('in_queue');
+            } else {
+              // Var i køen da rundet kjørte, men fikk ikke match
+              setQueueState('no_match');
+            }
           }
           // Mandag–fredag: i kø
           else {
@@ -670,7 +684,7 @@ export default function MatchingPage() {
                 Vente på neste runde
               </p>
               <p className="mt-2" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '15px', lineHeight: '1.6' }}>
-                Du er fortsatt i venterommet. Neste mulighet er fredag.
+                Du er fortsatt i venterommet. Neste mulighet er lørdag.
               </p>
               <div className="mt-4 px-5 py-3 rounded-2xl inline-block" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.15)' }}>
                 <p className="text-2xl font-bold tabular-nums" style={{ color: '#D4AF37' }}>

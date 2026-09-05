@@ -84,11 +84,23 @@ export async function POST(req: NextRequest) {
     })
 
     // Send velkomst-e-post (best-effort — skal aldri blokkere)
-    sendWelcomeEmail(user.email, user.profile?.identityName || user.name || undefined).catch(() => {})
+    let emailStatus = 'not_sent';
+    try {
+      const emailResult = await sendWelcomeEmail(
+        user.email,
+        user.profile?.identityName || user.name || undefined
+      );
+      emailStatus = emailResult.success ? 'sent' : `failed: ${emailResult.error}`;
+      console.log(`[onboarding] Velkomst-e-post til ${user.email}: ${emailStatus}`);
+    } catch (emailErr) {
+      emailStatus = `error: ${emailErr instanceof Error ? emailErr.message : String(emailErr)}`;
+      console.error(`[onboarding] Velkomst-e-post feilet for ${user.email}:`, emailErr);
+    }
 
     return NextResponse.json({
       success: true,
       message: "Profilen er fullført — nå kan du starte reisen.",
+      emailStatus,
     })
   } catch (error) {
     console.error("Onboarding complete error:", error)

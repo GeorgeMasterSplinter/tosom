@@ -46,7 +46,8 @@ const reglerLinks = [
 const omLinks = [
   { label: 'Om oss', href: '/om-oss' },
   { label: 'Kontakt', href: '/kontakt' },
-  { label: 'Blogg', href: '/blogg' },
+  { label: 'FAQ', href: '/faq' },
+  { label: 'Tilgjengelighet', href: '/tilgjengelighet' },
 ];
 
 /* ========================

@@ -93,6 +93,27 @@ export async function GET(req: NextRequest) {
     }
 
     try {
+      // SELF-HEAL: Fikse strandede reiser (dag 0, begge aldri innom) → dag 1
+      // Kjører hvert time — første gang etter deploy flytter alle "stuck" reiser
+      const stranded = await prisma.journeyProgress.updateMany({
+        where: {
+          day: 0,
+          endedAt: null,
+          pausedAt: null,
+          bothSeenAt: null,
+        },
+        data: {
+          day: 1,
+          phase: 'EARLY' as any,
+          bothSeenAt: new Date(),
+          nextDayAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        },
+      });
+      if (stranded.count > 0) {
+        console.log(`[journey-cron] Self-heal: ${stranded.count} reiser flyttet fra dag 0 → dag 1`);
+        recordEvent('journey.self_heal', { count: String(stranded.count) });
+      }
+
       // B9: Hent aktive reiser der begge har vært innom og det er tid for ny dag
       const eligibleWhere = {
         endedAt: null,       // ikke fullført
@@ -173,6 +194,21 @@ export async function GET(req: NextRequest) {
               nextDayAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // lås neste dag i 24t
             },
           });
+
+          // Dag 15: Lås opp bildedeling i samtalen
+          if (newDay >= 15) {
+            const conv = await prisma.conversation.findFirst({
+              where: { matchId: activeMatch.id },
+              select: { id: true, imageShareAllowedAt: true },
+            });
+            if (conv && !conv.imageShareAllowedAt) {
+              await prisma.conversation.update({
+                where: { id: conv.id },
+                data: { imageShareAllowedAt: new Date() },
+              });
+              recordEvent('journey.image_unlocked', { day: String(newDay) });
+            }
+          }
 
           // OBSERVABILITY O-8: reisen nådde ny dag
           recordMetric('journey.day.reached', newDay, 'count', { phase: newPhase });

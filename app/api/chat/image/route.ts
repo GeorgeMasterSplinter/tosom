@@ -104,7 +104,7 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
     // Sjekk at brukeren er deltaker i konversasjonen
     const conversation = await prisma.conversation.findUnique({
       where: { id: conversationId },
-      select: { userAId: true, userBId: true, matchId: true },
+      select: { userAId: true, userBId: true, matchId: true, endedAt: true },
     });
 
     if (!conversation) {

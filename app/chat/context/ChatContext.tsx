@@ -132,6 +132,11 @@ export function ChatProvider({
     setError(null);
     try {
       const res = await fetch(`/api/chat/messages?conversationId=${conversationId}`);
+      if (res.status === 401) {
+        // Sesjon utløpt — redirect til login
+        window.location.href = '/login';
+        return;
+      }
       if (!res.ok) {
         throw new Error(`Feil: ${res.status}`);
       }

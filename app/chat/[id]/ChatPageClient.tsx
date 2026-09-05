@@ -28,6 +28,10 @@ async function fetchPartnerInfo(
 ): Promise<{ partner: PartnerInfo | null; myName: string | null }> {
   try {
     const res = await fetch(`/api/chat/conversation/${conversationId}`);
+    if (res.status === 401) {
+      window.location.href = '/login';
+      return { partner: null, myName: null };
+    }
     if (!res.ok) return { partner: null, myName: null };
     const data = await res.json();
     return {

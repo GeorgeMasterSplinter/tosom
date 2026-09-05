@@ -393,17 +393,17 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
           className="px-5 py-[16px] relative overflow-hidden"
             style={{
               background: isMe
-                ? `linear-gradient(135deg, ${moodTheme.bubbleMeStart}, ${moodTheme.bubbleMeEnd})`
-                : `linear-gradient(135deg, ${moodTheme.bubblePartnerBg}, rgba(255,255,255,0.02))`,
+                ? `linear-gradient(135deg, ${moodTheme.bubblePartnerBg}, rgba(255,255,255,0.02))`
+                : `linear-gradient(135deg, ${moodTheme.bubbleMeStart}, ${moodTheme.bubbleMeEnd})`,
               border: isMe
-                ? `1px solid ${moodTheme.bubbleMeBorder}`
-                : `1px solid ${moodTheme.bubblePartnerBorder}`,
+                ? `1px solid ${moodTheme.bubblePartnerBorder}`
+                : `1px solid ${moodTheme.bubbleMeBorder}`,
               borderRadius: isMe
                 ? "20px 20px 6px 20px"
                 : "20px 20px 20px 6px",
               boxShadow: isMe
-                ? resonanceGlow.boxShadow
-                : '0 4px 16px rgba(0,0,0,0.2)',
+                ? '0 4px 16px rgba(0,0,0,0.2)'
+                : resonanceGlow.boxShadow,
               transition: 'background 1.2s ease-in-out, border-color 1.2s ease-in-out',
             }}
           >

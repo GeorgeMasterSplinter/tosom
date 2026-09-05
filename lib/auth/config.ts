@@ -104,11 +104,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
   callbacks: {
     async jwt({ token, user }) {
-      // Legg role og sub i token ved første login
+      // Legg role, sub og createdAt i token ved første login
       if (user) {
         const role: string = (user as any).role ?? 'user'
         token.role = defaultRole(role)
         token.sub = (user as any).id
+        token.createdAt = (user as any).createdAt || (user as any).createdAt?.toISOString?.() || null
 
         // Dev‑bruker får alltid rollen "dev"
         if ((user as any).id === 'dev-user' || (user as any).id === '1') {
@@ -122,6 +123,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (session.user) {
         session.user.id = token.sub!
         ;(session.user as any).role = (token.role as string) || 'user'
+        ;(session.user as any).createdAt = (token.createdAt as string) || null
       }
       return session
     },

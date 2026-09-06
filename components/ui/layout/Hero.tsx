@@ -219,7 +219,7 @@ export const Hero: FC<HeroProps> = ({
                 Tosom er i lukket beta.{' '}
                 <Link
                   href="/slik-fungerer-det"
-                  className="underline underline-offset-4 transition-colors hover:text-white/80"
+                  className="underline underline-offset-4 transition-colors hover:text-white/80 inline-block px-2 py-2 -my-2 -mx-1"
                   style={{ color: 'rgba(255,255,255,0.72)', textDecorationColor: 'rgba(212,175,55,0.4)' }}
                 >
                   Les mer

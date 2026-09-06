@@ -107,7 +107,7 @@ export const Footer: FC<FooterProps> = ({
           {/* Kolonne 1: Produkt */}
            <div>
              <h2
-               className="text-[10px] uppercase tracking-[0.2em] font-semibold mb-5"
+               className="text-xs uppercase tracking-[0.2em] font-semibold mb-5"
                style={{ color: 'rgba(212,175,55,0.55)' }}
              >
                Produkt
@@ -139,7 +139,7 @@ export const Footer: FC<FooterProps> = ({
            {/* Kolonne 2: Regler */}
            <div>
              <h2
-               className="text-[10px] uppercase tracking-[0.2em] font-semibold mb-5"
+               className="text-xs uppercase tracking-[0.2em] font-semibold mb-5"
                style={{ color: 'rgba(212,175,55,0.55)' }}
              >
                Regler
@@ -171,7 +171,7 @@ export const Footer: FC<FooterProps> = ({
            {/* Kolonne 3: Om Tosom */}
            <div>
              <h2
-               className="text-[10px] uppercase tracking-[0.2em] font-semibold mb-5"
+               className="text-xs uppercase tracking-[0.2em] font-semibold mb-5"
                style={{ color: 'rgba(212,175,55,0.55)' }}
              >
                Om Tosom

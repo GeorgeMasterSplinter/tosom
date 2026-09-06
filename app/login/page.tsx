@@ -193,7 +193,7 @@ export default function LoginPage() {
               margin: 0,
             }}
           >
-            Tosom — et rolig datingkonsept for oss som vil være ferdig med sveipe-maraton og kaos.
+            Tosom er et rolig datingkonsept for voksne over 21 år som vil være ferdig med sveipe‑maraton og kaos. Vi er nå i beta‑fasen og ønsker noen hyggelige testbrukere som kan hjelpe oss litt.
           </p>
           <p
             style={{
@@ -203,7 +203,7 @@ export default function LoginPage() {
               margin: 0,
             }}
           >
-            Vi trenger noen som kan teste beta-versjonen. Det er null seriøst, og du kan lage en fake bruker som heter “Knut 47”, “PrinsessePizza” eller “Gulrotmannen”.
+            Det er helt uforpliktende og bare for moro — du kan til og med lage en fake bruker som heter "Knut 47", "PrinsessePizza" eller "Gulrotmannen" hvis du vil. Du får en match, kan teste chatten, trykke rundt og se hvordan ting fungerer.
           </p>
           <p
             style={{
@@ -213,7 +213,34 @@ export default function LoginPage() {
               margin: 0,
             }}
           >
-            Du får en match, kan teste chatten, trykke rundt og se hva som skjer.
+            Vi jobber aktivt med å forbedre Tosom i realtime, så si gjerne ifra med én gang du oppdager noe:
+          </p>
+          <ul
+            style={{
+              fontSize: "15px",
+              lineHeight: "1.8",
+              color: "rgba(255,255,255,0.6)",
+              margin: 0,
+              paddingLeft: "20px",
+            }}
+          >
+            <li>hva føles bra</li>
+            <li>hva er rart</li>
+            <li>hva burde endres</li>
+            <li>hva som ikke gir mening</li>
+            <li>eller ting du synes er morsomme, rare eller uventede</li>
+          </ul>
+          <p
+            style={{
+              fontSize: "15px",
+              lineHeight: "1.8",
+              color: "rgba(255,255,255,0.6)",
+              margin: 0,
+            }}
+          >
+            Alle tilbakemeldinger er velkomne — store som små.
+            Send melding til{' '}
+            <span style={{ color: "#D4AF37" }}>support@tosom.no</span>.
           </p>
           <p
             style={{
@@ -223,30 +250,9 @@ export default function LoginPage() {
               margin: 0,
             }}
           >
-            Det vi trenger er små tilbakemeldinger: hva føles bra, hva er rart, hva burde endres.
+            Takk for at du hjelper oss å gjøre Tosom bedre, og forhåpentligvis har det litt gøy samtidig.
           </p>
-          <p
-            style={{
-              fontSize: "15px",
-              lineHeight: "1.8",
-              color: "rgba(255,255,255,0.6)",
-              margin: 0,
-            }}
-          >
-            Takk hvis du vil være med og ha det litt gøy! Send til{' '}
-            <span style={{ color: "#D4AF37" }}>support@tosom.no</span>
-            .
-          </p>
-          <p
-            style={{
-              fontSize: "14px",
-              lineHeight: "1.7",
-              color: "rgba(255,255,255,0.4)",
-              margin: "8px 0 0 0",
-            }}
-          >
-            Tosom er for voksne over 21 år.
-          </p>
+        </div>
         </div>
 
         {/* Error */}

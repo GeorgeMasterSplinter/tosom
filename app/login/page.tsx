@@ -253,7 +253,6 @@ export default function LoginPage() {
             Takk for at du hjelper oss å gjøre Tosom bedre, og forhåpentligvis har det litt gøy samtidig.
           </p>
         </div>
-        </div>
 
         {/* Error */}
         {status === "error" && (

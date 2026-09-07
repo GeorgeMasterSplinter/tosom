@@ -18,6 +18,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Footer } from '@/components/ui/layout/Footer';
+import { InstallPrompt } from '@/components/pwa/InstallPrompt';
 import { color, typographyToStyle } from '@/config/design-tokens';
 import GlassCard from '@/components/ui/cards/GlassCard';
 
@@ -626,6 +627,8 @@ export default function Dashboard() {
           onClose={handleCloseReveal}
         />
       )}
+
+      <InstallPrompt />
 
       <Footer />
     </main>

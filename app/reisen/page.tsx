@@ -564,7 +564,7 @@ export default function ReisenPage() {
               color: color.text.secondary,
             }}
           >
-            Lag profilen din i ditt eget tempo og møt noen som passer deg — på ordentlig.
+            Lag profilen din i ditt eget tempo og møt noen som passer deg.
           </p>
 
           <div className="flex flex-col items-center gap-4 pt-4 w-full max-w-md mx-auto">

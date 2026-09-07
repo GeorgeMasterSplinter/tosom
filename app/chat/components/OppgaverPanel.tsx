@@ -41,11 +41,18 @@ interface OppgaverPanelProps {
 }
 
 export function OppgaverPanel({ onClose }: OppgaverPanelProps) {
-  const { sendMessage, moodTheme } = useChat();
+  const { sendMessage, moodTheme, messages } = useChat();
   const [selectedCategory, setSelectedCategory] = useState<TaskCategory | null>(null);
   const [selectedTask, setSelectedTask] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);
+
+  // Hvilke oppgaver som ALLEREDE er sendt i denne samtalen
+  const usedTasks = new Set(
+    messages
+      .filter((m) => m.metadata?.source === 'oppgave')
+      .map((m) => m.content.trim())
+  );
 
   // Animer panel-open
   useEffect(() => {
@@ -171,11 +178,13 @@ export function OppgaverPanel({ onClose }: OppgaverPanelProps) {
           {/* ═══ OPPGAVER ═══ */}
           {selectedCategory && (
             <div className="space-y-2.5">
-              {selectedCategory.tasks.map((t, i) => (
+              {selectedCategory.tasks.map((t, i) => {
+                const isUsed = usedTasks.has(t.trim());
+                return (
                 <button
-                  key={i}
+                  key={t}
                   onClick={() => setSelectedTask(t)}
-                  className={`w-full text-left p-4 rounded-xl transition-all duration-200 ${selectedTask === t ? 'scale-[1.01]' : 'hover:scale-[1.005]'}`}
+                  className="w-full text-left p-3.5 rounded-xl transition-all hover:scale-[1.01] active:scale-[0.98]"
                   style={{
                     background: selectedTask === t
                       ? `linear-gradient(135deg, ${moodTheme.accentSoft}, ${moodTheme.accentMuted})`
@@ -188,9 +197,18 @@ export function OppgaverPanel({ onClose }: OppgaverPanelProps) {
                     style={{ color: selectedTask === t ? moodTheme.accentLight : 'rgba(255,255,255,0.75)' }}
                   >
                     {t}
+                    {isUsed && (
+                      <span
+                        className="ml-2 text-[9px] font-bold tracking-wider uppercase align-middle"
+                        style={{ color: G.textMuted }}
+                      >
+                        ✓ brukt
+                      </span>
+                    )}
                   </p>
                 </button>
-              ))}
+                );
+              })}
             </div>
           )}
 

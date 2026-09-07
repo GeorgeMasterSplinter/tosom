@@ -219,7 +219,7 @@ export function ChatHeader({
 
             {isMilestone && (
               <span
-                className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold flex-shrink-0 transition-colors duration-500"
+                className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-semibold flex-shrink-0 transition-colors duration-500"
                 style={{
                   background: `linear-gradient(135deg, ${accent}, ${accentLight})`,
                   color: '#0B1520',

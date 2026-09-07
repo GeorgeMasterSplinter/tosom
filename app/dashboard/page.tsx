@@ -244,10 +244,10 @@ function JourneyCalendar({ currentDay }: { currentDay: number }) {
               border: currentDay >= phase.start && currentDay <= phase.end ? `1px solid ${phase.color}40` : '1px solid transparent',
             }}
           >
-            <p className="text-[10px] font-medium truncate px-1" style={{ color: phase.color }}>
+            <p className="text-xs font-medium truncate px-1" style={{ color: phase.color }}>
               {phase.name}
             </p>
-            <p className="text-[9px]" style={{ color: 'rgba(255,255,255,0.3)' }}>
+            <p className="text-[11px]" style={{ color: 'rgba(255,255,255,0.3)' }}>
               dag {phase.start}–{phase.end}
             </p>
           </div>
@@ -267,7 +267,7 @@ function JourneyCalendar({ currentDay }: { currentDay: number }) {
               key={day}
               onMouseEnter={() => setHoveredDay(day)}
               onMouseLeave={() => setHoveredDay(null)}
-              className="aspect-square rounded-md flex items-center justify-center text-[10px] transition-all duration-200 cursor-default"
+              className="aspect-square rounded-md flex items-center justify-center text-xs transition-all duration-200 cursor-default"
               style={{
                 background: isCurrent
                   ? `${phase.color}30`

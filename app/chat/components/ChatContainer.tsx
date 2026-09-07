@@ -374,7 +374,7 @@ function ChatInput({
           <span className="text-sm">📷</span>
           {!imageShareAllowed && (
             <span
-              className="absolute -bottom-0.5 -right-0.5 text-[10px] flex items-center justify-center w-4 h-4 rounded-full"
+              className="absolute -bottom-0.5 -right-0.5 text-xs flex items-center justify-center w-4 h-4 rounded-full"
               style={{ background: 'rgba(11,21,32,0.9)', border: '1px solid rgba(255,255,255,0.1)' }}
             >
               🔒
@@ -434,7 +434,7 @@ function ChatInput({
 
       {/* Mikro-copy under input */}
       <p 
-        className="text-[10px] text-center mt-2 tracking-wide"
+        className="text-xs text-center mt-2 tracking-wide"
         style={{ color: moodTheme.textMuted }}
       >
         Trykk Enter for å sende · Shift+Enter for ny linje

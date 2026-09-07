@@ -170,7 +170,7 @@ export function BliKjentPanel({ onClose }: BliKjentPanelProps) {
                     </div>
                     <div className="text-center">
                       <p className="text-xs font-semibold tracking-wide" style={{ color: G.textPrimary }}>{cat.name}</p>
-                      <p className="text-[10px] mt-0.5 font-medium" style={{ color: G.textSecondary }}>
+                      <p className="text-xs mt-0.5 font-medium" style={{ color: G.textSecondary }}>
                         {cat.questions.length} spørsmål{usedInCategory(cat) > 0 ? ` · ✓ ${usedInCategory(cat)} brukt` : ''}
                       </p>
                     </div>
@@ -205,7 +205,7 @@ export function BliKjentPanel({ onClose }: BliKjentPanelProps) {
                     {q}
                     {isUsed && (
                       <span
-                        className="ml-2 text-[9px] font-bold tracking-wider uppercase align-middle"
+                        className="ml-2 text-[11px] font-bold tracking-wider uppercase align-middle"
                         style={{ color: G.textMuted }}
                       >
                         ✓ brukt

@@ -421,7 +421,7 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
             {(isBliKjent || metadata?.source === "bli_kjent") && (
               <div className="flex items-center gap-1.5 mb-2">
                 <div
-                  className="px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase transition-all duration-300 hover:animate-glowPulse"
+                  className="px-2 py-0.5 rounded-full text-[11px] font-bold tracking-wider uppercase transition-all duration-300 hover:animate-glowPulse"
                   style={{
                     background: 'rgba(212, 175, 55, 0.15)',
                     border: '1px solid rgba(212, 175, 55, 0.3)',
@@ -435,7 +435,7 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
             {metadata?.source === "oppgave" && (
               <div className="flex items-center gap-1.5 mb-2">
                 <div
-                  className="px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase"
+                  className="px-2 py-0.5 rounded-full text-[11px] font-bold tracking-wider uppercase"
                   style={{
                     background: 'rgba(143, 163, 173, 0.15)',
                     border: '1px solid rgba(143, 163, 173, 0.35)',
@@ -465,7 +465,7 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
                 hvem som har skrevet, og når. Ikke noe utenfor boblen. */}
             {(bubbleName || bubbleTime) && (
               <p
-                className={`mt-1.5 text-[10px] tracking-wide relative z-10 ${isMe ? "text-right" : "text-left"}`}
+                className={`mt-1.5 text-xs tracking-wide relative z-10 ${isMe ? "text-right" : "text-left"}`}
                 style={{ color: tMuted }}
               >
                 {bubbleName}
@@ -488,7 +488,7 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
                 }}
               />
               <span 
-                className="text-[9px] font-medium tracking-wider uppercase"
+                className="text-[11px] font-medium tracking-wider uppercase"
                 style={{ color: tMuted }}
               >
                 Resonans

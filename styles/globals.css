@@ -1329,7 +1329,7 @@ textarea.ts-input { resize: vertical; min-height: 100px; }
   padding-right: env(safe-area-inset-right);
 }
 
-/* Trykkflater ≥ 44x44 px (WCAG 2.5.5) */
+/* Trykkflater >= 44x44 px (WCAG 2.5.5) */
 button, a[role="button"], [tabindex="0"] {
   min-height: 44px;
   min-width: 44px;
@@ -1375,4 +1375,65 @@ html, body {
 @keyframes ts-cta-breath {
   0%, 100% { box-shadow: 0 0 34px rgba(212,175,55,0.24); }
   50%      { box-shadow: 0 0 52px rgba(212,175,55,0.38); }
+}
+
+/* ═══════════════════════════════════════════
+   Mobile UX — iOS/Android Optimizations
+   ═══════════════════════════════════════════ */
+
+/* Fjern 300ms tap-delay + dobbeltklikk-zoom (iOS/Android) */
+* {
+  touch-action: manipulation;
+}
+
+/* iOS: Fjern hvit tap-highlight blink */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* iOS/Android: Skarp tekst-rendering */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* iOS: 100vh fix — URL-bar kollaps */
+:root {
+  --app-height: 100dvh;
+}
+
+
+/* iOS: Momentum-scrolling i scrollable containers */
+.overflow-y-auto,
+.overflow-auto {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Touch feedback — umiddelbar trykk-state (< 100ms) */
+button:active,
+a:active,
+[role="button"]:active {
+  opacity: 0.85;
+  transform: scale(0.98);
+  transition: none;
+}
+
+/* Safe area utilities for iPhone notch/Dynamic Island */
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.px-safe {
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+
+/* Input fields — iOS font-size < 16px auto-zooms, so keep at 16px min */
+input,
+textarea,
+select {
+  font-size: 16px;
 }

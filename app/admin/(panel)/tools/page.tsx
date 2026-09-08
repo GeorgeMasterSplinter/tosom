@@ -140,6 +140,14 @@ export default function AdminToolsPage() {
   const [error, setError] = useState<string | null>(null);
   const [matchRunning, setMatchRunning] = useState(false);
   const [matchResult, setMatchResult] = useState<string | null>(null);
+  const [timelineEmail, setTimelineEmail] = useState('');
+  const [timelineDay, setTimelineDay] = useState(15);
+  const [timelineLoading, setTimelineLoading] = useState(false);
+  const [timelineResult, setTimelineResult] = useState<string | null>(null);
+  const [emailTest, setEmailTest] = useState('');
+  const [emailLoading, setEmailLoading] = useState(false);
+  const [emailResult, setEmailResult] = useState<string | null>(null);
+  const [cronRuns, setCronRuns] = useState<any[] | null>(null);
 
   const fetchLogs = useCallback(() => {
     setError(null);
@@ -157,6 +165,79 @@ export default function AdminToolsPage() {
   }, [fetchLogs]);
 
   /** B-3: Kjør matcherunde manuelt */
+  const runTimeline = async () => {
+    if (!timelineEmail || timelineLoading) return;
+    setTimelineLoading(true);
+    setTimelineResult(null);
+    try {
+      // Find user by email
+      const userRes = await fetch(`/api/admin/users?search=${encodeURIComponent(timelineEmail)}`);
+      const userData = await userRes.json();
+      const user = userData.data?.find((u: any) => u.email === timelineEmail) || userData.data?.[0];
+      if (!user?.id) {
+        setTimelineResult('Feil: Bruker ikke funnet');
+        return;
+      }
+      const res = await fetch('/api/admin/journeys/timeline', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user.id, targetDay: timelineDay }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setTimelineResult(`OK: ${timelineEmail} -> Dag ${data.journey.day} (${data.journey.phase})`);
+      } else {
+        setTimelineResult(`Feil: ${data.error}`);
+      }
+    } catch (e) {
+      setTimelineResult('Feil: ' + (e instanceof Error ? e.message : 'Ukjent'));
+    } finally {
+      setTimelineLoading(false);
+    }
+  };
+
+  const sendTestEmail = async () => {
+    if (!emailTest || emailLoading) return;
+    setEmailLoading(true);
+    setEmailResult(null);
+    try {
+      const userRes = await fetch(`/api/admin/users?search=${encodeURIComponent(emailTest)}`);
+      const userData = await userRes.json();
+      const user = userData.data?.find((u: any) => u.email === emailTest) || userData.data?.[0];
+      if (!user?.id) {
+        setEmailResult('Feil: Bruker ikke funnet');
+        return;
+      }
+      const res = await fetch('/api/admin/email/test', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user.id }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setEmailResult(`OK: Epost sendt til ${data.email}`);
+      } else {
+        setEmailResult(`Feil: ${data.error || data.status}`);
+      }
+    } catch (e) {
+      setEmailResult('Feil: ' + (e instanceof Error ? e.message : 'Ukjent'));
+    } finally {
+      setEmailLoading(false);
+    }
+  };
+
+  const loadCronRuns = useCallback(async () => {
+    try {
+      const res = await fetch('/api/admin/cron/status');
+      if (res.ok) {
+        const data = await res.json();
+        setCronRuns(data.runs || []);
+      }
+    } catch {}
+  }, []);
+
+  useEffect(() => { loadCronRuns(); }, [loadCronRuns]);
+
   const runMatching = async () => {
     setMatchRunning(true);
     setMatchResult(null);
@@ -208,18 +289,88 @@ export default function AdminToolsPage() {
           Verktøy
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-          <ToolButton
-            title="Opprett testbruker"
-            description="Lag ny bruker med testdata"
-          />
-          <ToolButton
-            title="Reset match"
-            description="Nullstill ei eksisterende match"
-          />
-          <ToolButton
-            title="Reset journey"
-            description="Start reise på nytt (dag 1/30)"
-          />
+          {/* Journey Time Machine */}
+          <div
+            className="p-4 rounded-xl"
+            style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.15)' }}
+          >
+            <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#D4AF37' }}>
+              Journey Time Machine
+            </p>
+            <p className="text-xs mb-3" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              Sett en brukers reise til en spesifikk dag (1–30)
+            </p>
+            <div className="flex gap-2">
+              <input
+                type="email"
+                value={timelineEmail}
+                onChange={(e) => setTimelineEmail(e.target.value)}
+                placeholder="bruker@tosom.no"
+                className="flex-1 px-3 py-2 rounded-lg text-xs bg-transparent outline-none min-w-0"
+                style={{ border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.8)' }}
+              />
+              <input
+                type="number"
+                min={1}
+                max={30}
+                value={timelineDay}
+                onChange={(e) => setTimelineDay(parseInt(e.target.value) || 1)}
+                className="w-14 px-2 py-2 rounded-lg text-xs bg-transparent outline-none text-center"
+                style={{ border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.8)' }}
+              />
+              <button
+                onClick={runTimeline}
+                disabled={!timelineEmail || timelineLoading}
+                className="px-3 py-2 rounded-lg text-xs font-semibold transition-all disabled:opacity-40 shrink-0"
+                style={{ background: 'linear-gradient(135deg, #D4AF37, #E8C766)', color: '#0B1520' }}
+              >
+                {timelineLoading ? '…' : 'Sett dag'}
+              </button>
+            </div>
+            {timelineResult && (
+              <p className="text-xs mt-2" style={{ color: timelineResult.startsWith('OK') ? '#4ADE80' : '#FF4D4D' }}>
+                {timelineResult}
+              </p>
+            )}
+          </div>
+
+          {/* Send Test Email */}
+          <div
+            className="p-4 rounded-xl"
+            style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.15)' }}
+          >
+            <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#D4AF37' }}>
+              Send Test Epost
+            </p>
+            <p className="text-xs mb-3" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              Verifiser SMTP — sender velkommen-epost til valgt bruker
+            </p>
+            <div className="flex gap-2">
+              <input
+                type="email"
+                value={emailTest}
+                onChange={(e) => setEmailTest(e.target.value)}
+                placeholder="bruker@tosom.no"
+                className="flex-1 px-3 py-2 rounded-lg text-xs bg-transparent outline-none min-w-0"
+                style={{ border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.8)' }}
+              />
+              <button
+                onClick={sendTestEmail}
+                disabled={!emailTest || emailLoading}
+                className="px-3 py-2 rounded-lg text-xs font-semibold transition-all disabled:opacity-40 shrink-0"
+                style={{ background: 'linear-gradient(135deg, #D4AF37, #E8C766)', color: '#0B1520' }}
+              >
+                {emailLoading ? 'Sender…' : 'Send'}
+              </button>
+            </div>
+            {emailResult && (
+              <p className="text-xs mt-2" style={{ color: emailResult.startsWith('OK') ? '#4ADE80' : '#FF4D4D' }}>
+                {emailResult}
+              </p>
+            )}
+          </div>
+
+          {/* Run Matching */}
           <ToolButton
             title="Kjør matching manuelt"
             description="Trigg matcherunden nå (i stedet for lørdag natt)"
@@ -227,14 +378,37 @@ export default function AdminToolsPage() {
             loading={matchRunning}
             onClick={runMatching}
           />
-          <ToolButton
-            title="Generer testdata"
-            description="Lag random matcher og reiser"
-          />
-          <ToolButton
-            title="Debug-panel"
-            description="Vis interne systemvariabler"
-          />
+
+          {/* Cron Run Status */}
+          <div
+            className="p-4 rounded-xl"
+            style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}
+          >
+            <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: 'rgba(255,255,255,0.5)' }}>
+              Cron Runs — siste 5
+            </p>
+            {cronRuns === null && <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>Henter…</p>}
+            {cronRuns !== null && cronRuns.length === 0 && (
+              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>Ingen cron runs logget ennå.</p>
+            )}
+            {cronRuns !== null && cronRuns.length > 0 && (
+              <div className="space-y-1.5">
+                {cronRuns.slice(0, 5).map((run: any) => (
+                  <div key={run.id} className="flex items-center gap-2 text-xs">
+                    <span
+                      className="w-1.5 h-1.5 rounded-full shrink-0"
+                      style={{ background: run.level === 'ERROR' ? '#FF4D4D' : run.level === 'WARN' ? '#FBBF24' : '#4ADE80' }}
+                    />
+                    <span className="font-mono" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                      {new Date(run.createdAt).toLocaleString('nb-NO', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                    <span style={{ color: 'rgba(255,255,255,0.4)' }}>{run.module}</span>
+                    <span className="truncate flex-1" style={{ color: 'rgba(255,255,255,0.3)' }}>{run.message}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

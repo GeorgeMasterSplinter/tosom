@@ -238,7 +238,7 @@ export default function LoginPage() {
               margin: 0,
             }}
           >
-            Alle tilbakemeldinger er velkomne — store som små.
+            Alle tilbakemeldinger er velkommen — store som små.
             Send melding til{' '}
             <span style={{ color: "#D4AF37" }}>support@tosom.no</span>.
           </p>

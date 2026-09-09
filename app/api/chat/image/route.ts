@@ -196,14 +196,13 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
     const storage = getImageStorage();
     await storage.putImage(key, buffer, { contentType: file.type });
 
-    // Knytt nøkkelen til meldingen.
+    // Knytt nøkkelen til meldingen + sett content til imageUrl
+    // (MessageBubble leser content som imageUrl for type=image).
+    const imageUrl = `/api/chat/image/${messageId}`;
     await prisma.message.update({
       where: { id: messageId },
-      data: { imageKey: key },
+      data: { imageKey: key, content: imageUrl },
     });
-
-    // Returnerer URL-en til side-ruta — aldri en direkte filsti.
-    const imageUrl = `/api/chat/image/${messageId}`;
 
     return NextResponse.json({
       success: true,

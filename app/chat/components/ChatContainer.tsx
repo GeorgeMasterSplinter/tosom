@@ -285,28 +285,51 @@ function ChatInput({
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file || !conversationId || !senderId) return;
+    if (!file || !conversationId) return;
 
     setUploading(true);
     try {
+      // STEG 1: Opprett melding (type=image) via chat/send — får tilbake messageId
+      const { csrfFetch } = await import('@/lib/api/csrfClient');
+      const sendRes = await csrfFetch('/api/chat/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ conversationId, content: '', type: 'image' }),
+      });
+
+      if (!sendRes.ok) {
+        const err = await sendRes.json();
+        console.error('Melding-opprettelse feila:', err);
+        return;
+      }
+
+      const sendData = await sendRes.json();
+      const messageId = sendData.message?.id;
+      if (!messageId) {
+        console.error('Ingen messageId fra send');
+        return;
+      }
+
+      // STEG 2: Last opp bildet til /api/chat/image med messageId
       const formData = new FormData();
       formData.append('file', file);
       formData.append('conversationId', conversationId);
-      formData.append('senderId', senderId);
+      formData.append('messageId', messageId);
 
-      const res = await fetch('/api/chat/image', {
+      const imgRes = await fetch('/api/chat/image', {
         method: 'POST',
         body: formData,
       });
 
-      if (!res.ok) {
-        const err = await res.json();
+      if (!imgRes.ok) {
+        const err = await imgRes.json();
         console.error('Bilde-opplasting feila:', err);
+        // Rull tilbake meldingen (fjern optimistisk) — sender selv ved neste poll
         return;
       }
 
-      const data = await res.json();
-      await sendMessage(data.imageUrl, "image");
+      // Bildet er nå knyttet til meldingen. Content oppdateres i DB,
+      // og neste poll/Pusher-lastning vil vise bildet korrekt.
     } catch (error) {
       console.error('Bilde-opplasting feil:', error);
     } finally {

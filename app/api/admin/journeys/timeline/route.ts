@@ -33,8 +33,8 @@ export async function POST(req: NextRequest) {
     const { phase } = getPhaseForDay(day);
 
     // Collect journeys to update
-    let journeys = [];
-    let names = [];
+    let journeys: any[] = [];
+    let names: string[] = [];
 
     if (matchId) {
       // Find both users in the match
@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Update each journey
-    const results = [];
+    const results: any[] = [];
     for (const journey of journeys) {
       const updated = await prisma.journeyProgress.update({
         where: { id: journey.id },

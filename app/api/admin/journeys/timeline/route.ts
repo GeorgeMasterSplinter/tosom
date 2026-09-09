@@ -121,6 +121,25 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    // Dag 15+: Lås opp bildedeling i samtalen (samme logikk som cron)
+    if (day >= 15) {
+      for (const result of results) {
+        const journey = journeys.find((j: any) => j.userId === result.userId);
+        if (journey) {
+          const conv = await prisma.conversation.findFirst({
+            where: { matchId: journey.matchId },
+            select: { id: true, imageShareAllowedAt: true },
+          });
+          if (conv && !conv.imageShareAllowedAt) {
+            await prisma.conversation.update({
+              where: { id: conv.id },
+              data: { imageShareAllowedAt: now },
+            });
+          }
+        }
+      }
+    }
+
     return NextResponse.json({
       success: true,
       names,

@@ -140,7 +140,8 @@ export default function AdminToolsPage() {
   const [error, setError] = useState<string | null>(null);
   const [matchRunning, setMatchRunning] = useState(false);
   const [matchResult, setMatchResult] = useState<string | null>(null);
-  const [timelineEmail, setTimelineEmail] = useState('');
+  const [matches, setMatches] = useState<any[]>([]);
+  const [selectedMatch, setSelectedMatch] = useState('');
   const [timelineDay, setTimelineDay] = useState(15);
   const [timelineLoading, setTimelineLoading] = useState(false);
   const [timelineResult, setTimelineResult] = useState<string | null>(null);
@@ -164,28 +165,37 @@ export default function AdminToolsPage() {
     fetchLogs();
   }, [fetchLogs]);
 
-  /** B-3: Kjør matcherunde manuelt */
+  /** Last aktive matcher for Time Machine */
+  const loadMatches = useCallback(async () => {
+    try {
+      const res = await fetch('/api/admin/matches?status=active&limit=20');
+      if (res.ok) {
+        const data = await res.json();
+        const list = data.data || data.matches || [];
+        setMatches(list.map((m: any) => ({
+          id: m.id,
+          label: `${m.userA?.name || m.userA?.email || 'A'} ↔ ${m.userB?.name || m.userB?.email || 'B'}`,
+        })));
+      }
+    } catch {}
+  }, []);
+
+  useEffect(() => { loadMatches(); }, [loadMatches]);
+
   const runTimeline = async () => {
-    if (!timelineEmail || timelineLoading) return;
+    if (!selectedMatch || timelineLoading) return;
     setTimelineLoading(true);
     setTimelineResult(null);
     try {
-      // Find user by email
-      const userRes = await fetch(`/api/admin/users?search=${encodeURIComponent(timelineEmail)}`);
-      const userData = await userRes.json();
-      const user = userData.data?.find((u: any) => u.email === timelineEmail) || userData.data?.[0];
-      if (!user?.id) {
-        setTimelineResult('Feil: Bruker ikke funnet');
-        return;
-      }
       const res = await fetch('/api/admin/journeys/timeline', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: user.id, targetDay: timelineDay }),
+        body: JSON.stringify({ matchId: selectedMatch, targetDay: timelineDay }),
       });
       const data = await res.json();
       if (data.success) {
-        setTimelineResult(`OK: ${timelineEmail} -> Dag ${data.journey.day} (${data.journey.phase})`);
+        const names = data.names?.join(' + ') || '';
+        setTimelineResult(`OK: ${names} -> Dag ${timelineDay}`);
       } else {
         setTimelineResult(`Feil: ${data.error}`);
       }
@@ -298,33 +308,36 @@ export default function AdminToolsPage() {
               Journey Time Machine
             </p>
             <p className="text-xs mb-3" style={{ color: 'rgba(255,255,255,0.4)' }}>
-              Sett en brukers reise til en spesifikk dag (1–30)
+              Sett begge i en match til spesifikk dag (1–30)
             </p>
+            <select
+              value={selectedMatch}
+              onChange={(e) => setSelectedMatch(e.target.value)}
+              className="w-full px-3 py-2 rounded-lg text-xs mb-2 outline-none cursor-pointer"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.8)' }}
+            >
+              <option value="" style={{ background: '#0A1A2A' }}>Velg match…</option>
+              {matches.map((m) => (
+                <option key={m.id} value={m.id} style={{ background: '#0A1A2A' }}>{m.label}</option>
+              ))}
+            </select>
             <div className="flex gap-2">
-              <input
-                type="email"
-                value={timelineEmail}
-                onChange={(e) => setTimelineEmail(e.target.value)}
-                placeholder="bruker@tosom.no"
-                className="flex-1 px-3 py-2 rounded-lg text-xs bg-transparent outline-none min-w-0"
-                style={{ border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.8)' }}
-              />
               <input
                 type="number"
                 min={1}
                 max={30}
                 value={timelineDay}
                 onChange={(e) => setTimelineDay(parseInt(e.target.value) || 1)}
-                className="w-14 px-2 py-2 rounded-lg text-xs bg-transparent outline-none text-center"
+                className="w-16 px-2 py-2 rounded-lg text-xs bg-transparent outline-none text-center"
                 style={{ border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.8)' }}
               />
               <button
                 onClick={runTimeline}
-                disabled={!timelineEmail || timelineLoading}
-                className="px-3 py-2 rounded-lg text-xs font-semibold transition-all disabled:opacity-40 shrink-0"
+                disabled={!selectedMatch || timelineLoading}
+                className="flex-1 px-3 py-2 rounded-lg text-xs font-semibold transition-all disabled:opacity-40"
                 style={{ background: 'linear-gradient(135deg, #D4AF37, #E8C766)', color: '#0B1520' }}
               >
-                {timelineLoading ? '…' : 'Sett dag'}
+                {timelineLoading ? '…' : `Sett begge -> Dag ${timelineDay}`}
               </button>
             </div>
             {timelineResult && (

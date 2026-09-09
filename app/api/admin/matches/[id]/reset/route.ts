@@ -1,14 +1,15 @@
+import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-import { adminAuthGuard } from "@/lib/auth/adminAuthGuard";
+import { requireAdmin } from "@/lib/auth/requireAuth";
 export const dynamic = 'force-dynamic';
 
 export async function POST(
   request: Request,
   context: { params: Promise<{ id: string }> }
 ): Promise<Response> {
-  const auth = await adminAuthGuard();
-  if (auth) return auth;
+  const auth = await requireAdmin(request as any);
+  if (auth instanceof NextResponse) return auth;
 
   const { id } = await context.params;
 

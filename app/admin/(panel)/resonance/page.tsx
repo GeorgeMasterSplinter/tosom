@@ -32,7 +32,7 @@ interface MatchingRoundsData {
 /* ─── B5.4: MatchingRoundsPanel — scorefordeling og runde-historikk ─── */
 function MatchingRoundsPanel() {
   const [data, setData] = useState<MatchingRoundsData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetch('/api/admin/matching-rounds')
@@ -139,7 +139,7 @@ interface ResonanceData {
 }
 
 export default function AdminResonancePage() {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState<ResonanceData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [userId, setUserId] = useState("");

@@ -5,17 +5,17 @@
  * Kun tilgjengeleg for admin (krevar admin_token eller session med admin-role).
  */
 
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { adminAuthGuard } from '@/lib/auth/adminAuthGuard';
+import { requireAdmin } from '@/lib/auth/requireAuth';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   // B-4 FIX: Bruk kanonisk admin-guard (session + admin-role) — erstatter lokal
   // isAdmin() som sjekket kun at en cookie eksisterte (privilegie-eskalering).
-  const denied = await adminAuthGuard();
-  if (denied) return denied;
+  const auth = await requireAdmin(req);
+  if (auth instanceof NextResponse) return auth;
 
   try {
     // Hentar alle statistikk i ett omgang for å unngå N+1-spørringar

@@ -1,4 +1,5 @@
-import { adminAuthGuard } from "@/lib/auth/adminAuthGuard";
+import { NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/auth/requireAuth";
 import { getConversationMetadata } from "@/lib/admin/conversation";
 import prisma from "@/lib/prisma";
 export const dynamic = 'force-dynamic';
@@ -13,8 +14,8 @@ export async function GET(
   request: Request,
   context: { params: Promise<{ id: string }> }
 ): Promise<Response> {
-  const auth = await adminAuthGuard();
-  if (auth) return auth;
+  const auth = await requireAdmin(request as any);
+  if (auth instanceof NextResponse) return auth;
 
   try {
     const { id } = await context.params;

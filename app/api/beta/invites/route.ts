@@ -9,13 +9,13 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { adminAuthGuard } from '@/lib/auth/adminAuthGuard';
+import { requireAdmin } from '@/lib/auth/requireAuth';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
-  const denied = await adminAuthGuard();
-  if (denied) return denied;
+export async function GET(req: NextRequest) {
+  const auth = await requireAdmin(req);
+  if (auth instanceof NextResponse) return auth;
 
   try {
     const invites = await prisma.betaInvite.findMany({
@@ -29,8 +29,8 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const denied = await adminAuthGuard();
-  if (denied) return denied;
+  const auth = await requireAdmin(req);
+  if (auth instanceof NextResponse) return auth;
 
   try {
     const body = await req.json().catch(() => ({}));

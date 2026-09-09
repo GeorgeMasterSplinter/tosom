@@ -8,16 +8,14 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { adminAuthGuard } from "@/lib/auth/adminAuthGuard";
+import { requireAdmin } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
   try {
-    // B-4 FIX: Bruk kanonisk admin-guard (session + admin-role) — erstatter lokal
-    // isAdmin() som sjekket kun at en cookie eksisterte (privilegie-eskalering).
-    const denied = await adminAuthGuard();
-    if (denied) return denied;
+    const auth = await requireAdmin(req);
+    if (auth instanceof NextResponse) return auth;
 
     const { searchParams } = new URL(req.url);
     const page = parseInt(searchParams.get("page") || "1");

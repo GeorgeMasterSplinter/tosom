@@ -97,7 +97,9 @@ const nextConfig = {
             value: "max-age=31536000; includeSubDomains; preload",
           },
           // Content-Security-Policy (STEG 4.4)
-          // Allows: self, Stripe checkout, Vipps auth, Pusher WS, uploadthing images, S3/Railway storage
+          // Allows: self, Stripe checkout, Vipps auth, Pusher WS, uploadthing images,
+          // S3/Railway storage (legacy) + Cloudflare R2 (chat images: /api/chat/image
+          // 307-redirect-er til presigned URL på {acct}.r2.cloudflarestorage.com).
           // systemaudit 03.09 (funn 9): fjernet dev-domener (picsum.photos,
           // placehold.co) fra img-src. script-src kjører UTEN 'unsafe-eval' i
           // PROD, men med den i DEV (CSP_SCRIPT_SRC) — Next.js dev-runtime og
@@ -110,7 +112,7 @@ const nextConfig = {
               "default-src 'self'",
               CSP_SCRIPT_SRC,
               "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: blob: *.uploadthing.com uploadthing.com *.s3.amazonaws.com tosom-storage.up.railway.app",
+              "img-src 'self' data: blob: *.uploadthing.com uploadthing.com *.s3.amazonaws.com tosom-storage.up.railway.app *.r2.cloudflarestorage.com",
               "media-src 'self'",
               "font-src 'self' fonts.gstatic.com",
               "connect-src 'self' api.stripe.com auth.vipps.no vipps.no *.pusher.com *.pubnub.com wss://*.pusher.io wss://*.pusher.com *.ingest.sentry.io *.sentry.io",

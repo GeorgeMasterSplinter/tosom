@@ -1,12 +1,12 @@
 /**
  * ToSom — GET /api/chat/image/[messageId]
  *
- * Verifiserer tilgangskontrollen på side-ruta som utsteder signerte URL-er:
+ * Verifiserer tilgangskontrollen på side-ruta som proxy-er bildet tilbake:
  *   - 401 uten session
  *   - 404 ukjend melding
- *   - 403 for ikke-deltakar
+ *   - 403 for ikke-deltaker
  *   - 404 for melding uten bilde
- *   - 307 redirect til signert URL for gyldig deltakar
+ *   - 200 med bilde-innhold (proxy) for gyldig deltaker
  */
 
 import { NextRequest } from 'next/server';
@@ -92,7 +92,7 @@ describe('GET /api/chat/image/[messageId]', () => {
     expect(res.status).toBe(404);
   });
 
-  it('307 redirect til signert URL for gyldig deltakar', async () => {
+  it('200 med bilde-innhold (proxy) for gyldig deltaker', async () => {
     messageFindUnique.mockResolvedValue({
       id: 'msg-1',
       type: 'image',
@@ -100,10 +100,12 @@ describe('GET /api/chat/image/[messageId]', () => {
       conversation: { userAId: 'user-a', userBId: 'user-b' },
     });
     const res = await GET(makeRequest('msg-1'), params('msg-1'));
-    expect(res.status).toBe(307);
-    const location = res.headers.get('location');
-    expect(location).toContain('memory://');
-    // Aldri ein rå /uploads/ sti.
-    expect(location).not.toContain('/uploads/');
+    expect(res.status).toBe(200);
+    // Proxy: bildet skal komme tilbake som binær buffer — IKKE som redirect.
+    expect(res.headers.get('location')).toBeNull();
+    expect(res.headers.get('content-type')).toBe('image/jpeg');
+    expect(res.headers.get('content-length')).toBe(String(Buffer.from('x').length));
+    const body = Buffer.from(await res.arrayBuffer());
+    expect(body.equals(Buffer.from('x'))).toBe(true);
   });
 });

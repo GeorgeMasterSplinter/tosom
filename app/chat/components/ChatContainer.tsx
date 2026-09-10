@@ -328,7 +328,10 @@ function ChatInput({
       if (!imgRes.ok) {
         const err = await imgRes.json();
         console.error('Bilde-opplasting feila:', err);
-        setImageError(err?.error || 'Opplasting feilet — prøv igjen');
+        // Vis den egentlige årsaken (err.details) i tillegg til den generiske
+        // meldingen — uten den ser vi ikke f.eks. om R2-nøkkelen feiler i prod.
+        const base = err?.error || 'Opplasting feilet — prøv igjen';
+        setImageError(err?.details ? `${base} (${err.details})` : base);
         return;
       }
 

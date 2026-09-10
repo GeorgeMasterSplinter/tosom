@@ -1,12 +1,13 @@
 // app/api/chat/image/[messageId]/route.ts — GET /api/chat/image/{messageId}
 //
-// Utsteder en signert URL til et bilde som er knyttet til en Message-rad.
-// Tilgangskontroll: kun deltakere i konversjonen kan motta URL-en. Aldri en
-// offentlig sti eksponeres — URL-en er presignet med kort levetid
-// (IMAGE_URL_TTL_SECONDS, standard 900).
+// Proxyer bildet direkte fra objektlagringen (R2/local) tilbake til klienten.
+// Tilgangskontroll: kun deltakere i konversjonen kan hente bildet.
 //
-// Responderer med 307-redirect slik at eksisterende <img src> i klienten
-// bare trenger å peke på denne ruten.
+// Vi PROXY-er (i stedet for 307-redirect til presigned URL) fordi:
+//   1. Unngår CSP-avhengighet (bildet kommer fra 'self', ingen cross-origin).
+//   2. Fungerer med alle storage-drivere (R2, local, memory).
+//   3. Unngår presigned URL-løpetid (900s) — bildet er alltid tilgjengelig.
+//   4. Vercel serverless: ingen fil-system-avhengighet mellom invokasjoner.
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
@@ -62,18 +63,22 @@ export async function GET(
       );
     }
 
-    // 5. Utsted signert URL (kort levetid).
+    // 5. Hent bildet direkte fra lagringen og send det tilbake.
     const storage = getImageStorage();
-    const url = await storage.getSignedUrl(message.imageKey);
+    const { buffer, contentType } = await storage.getImage(message.imageKey);
 
-    // 307 redirect — bevarer methoden, men for GET er dette likt 302.
-    // Vi bruker 307 for å dokumentere at det er en permanent redirect til en
-    // presigned-URL, ikke en cacheable redirect.
-    return NextResponse.redirect(url, { status: 307 });
+    return new NextResponse(buffer, {
+      status: 200,
+      headers: {
+        'Content-Type': contentType,
+        'Content-Length': String(buffer.length),
+        'Cache-Control': 'private, max-age=3600', // 1 time browser-cache (session-gated)
+      },
+    });
   } catch (error) {
-    console.error('[chat/image/[messageId]] Feil:', error);
+    console.error('[chat/image/[messageId]] Feil ved henting av bilde:', error);
     return NextResponse.json(
-      { error: 'Kunne ikke hente bilde' },
+      { error: 'Kunne ikke hente bilde', details: (error as Error).message },
       { status: 500 }
     );
   }

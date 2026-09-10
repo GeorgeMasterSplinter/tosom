@@ -36,6 +36,15 @@ export class MemoryImageStorage implements ImageStorage {
     return `memory://${encoded}?token=${token}`;
   }
 
+  async getImage(key: string): Promise<{ buffer: Buffer; contentType: string }> {
+    const safeKey = assertSafeImageKey(key);
+    const obj = this.store.get(safeKey);
+    if (!obj) {
+      throw new Error(`[memory] Objekt finnes ikke: ${safeKey}`);
+    }
+    return { buffer: obj.buffer, contentType: obj.contentType };
+  }
+
   async deleteImage(key: string): Promise<void> {
     const safeKey = assertSafeImageKey(key);
     // Idempotent: fjern uansett om den finnes.

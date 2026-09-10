@@ -169,10 +169,11 @@ function ChatInput({
   senderId?: string;
   partnerId?: string | null;
 }) {
-  const { sendMessage, moodTheme, sendError } = useChat();
+  const { sendMessage, moodTheme, sendError, loadMessages } = useChat();
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [imageError, setImageError] = useState<string | null>(null);
   const [isFocused, setIsFocused] = useState(false);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastTypingSentRef = useRef(0);
@@ -287,6 +288,7 @@ function ChatInput({
     const file = e.target.files?.[0];
     if (!file || !conversationId) return;
 
+    setImageError(null);
     setUploading(true);
     try {
       // STEG 1: Opprett melding (type=image) via chat/send — får tilbake messageId
@@ -300,6 +302,7 @@ function ChatInput({
       if (!sendRes.ok) {
         const err = await sendRes.json();
         console.error('Melding-opprettelse feila:', err);
+        setImageError(err?.error || 'Kunne ikke opprette melding');
         return;
       }
 
@@ -307,6 +310,7 @@ function ChatInput({
       const messageId = sendData.message?.id;
       if (!messageId) {
         console.error('Ingen messageId fra send');
+        setImageError('Melding mangler ID — prøv igjen');
         return;
       }
 
@@ -324,14 +328,16 @@ function ChatInput({
       if (!imgRes.ok) {
         const err = await imgRes.json();
         console.error('Bilde-opplasting feila:', err);
-        // Rull tilbake meldingen (fjern optimistisk) — sender selv ved neste poll
+        setImageError(err?.error || 'Opplasting feilet — prøv igjen');
         return;
       }
 
-      // Bildet er nå knyttet til meldingen. Content oppdateres i DB,
-      // og neste poll/Pusher-lastning vil vise bildet korrekt.
+      // Bildet er knyttet til meldingen. Last inn oppdaterte meldinger
+      // med en gang (ikke vent på neste 3s-poll).
+      await loadMessages();
     } catch (error) {
       console.error('Bilde-opplasting feil:', error);
+      setImageError('Noe gikk gale under opplastning. Prøv igjen.');
     } finally {
       setUploading(false);
       if (fileInputRef.current) {
@@ -356,6 +362,13 @@ function ChatInput({
       {sendError && (
         <p className="px-2 pb-2 text-xs" style={{ color: G.dangerRed }} role="alert">
           ⚠ {sendError} — meldingen ble ikke sendt, prøv igjen
+        </p>
+      )}
+
+      {/* Bilde-feil — vises ved mislykket opplastning */}
+      {imageError && (
+        <p className="px-2 pb-2 text-xs" style={{ color: G.dangerRed }} role="alert">
+          ⚠ {imageError}
         </p>
       )}
 

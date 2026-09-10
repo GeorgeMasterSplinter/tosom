@@ -54,6 +54,25 @@ export class LocalImageStorage implements ImageStorage {
     return pathToFileUrl(filePath);
   }
 
+  async getImage(key: string): Promise<{ buffer: Buffer; contentType: string }> {
+    const filePath = this.resolvePath(key);
+    const s = await stat(filePath).catch(() => null);
+    if (!s) {
+      throw new Error(`[local] Fil finnes ikke: ${key}`);
+    }
+    const buffer = await readFile(filePath);
+    // Bestem MIME-type fra filutvidelse
+    const ext = path.extname(filePath).toLowerCase();
+    const mimeMap: Record<string, string> = {
+      '.jpg': 'image/jpeg',
+      '.jpeg': 'image/jpeg',
+      '.png': 'image/png',
+      '.webp': 'image/webp',
+    };
+    const contentType = mimeMap[ext] ?? 'application/octet-stream';
+    return { buffer, contentType };
+  }
+
   async deleteImage(key: string): Promise<void> {
     const filePath = this.resolvePath(key);
     // Idempotent: fjern uansett om filen finnes.

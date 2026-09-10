@@ -105,6 +105,7 @@ export function ChatProvider({
   // feila send ble fullstendig stille.
   const [sendError, setSendError] = useState<string | null>(null);
   const lastMsgIdRef = useRef<string | null>(null);
+  const lastFingerprintRef = useRef<string | null>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Mood — PER-BRUKER. Hver person velger sin egen farge/stemning.
@@ -163,10 +164,18 @@ export function ChatProvider({
         };
       });
 
-      // Dedup: hopp over oppdatering hvis ingen nye meldinger
-      const newLastId = converted.length > 0 ? converted[converted.length - 1].id : null;
-      if (isPolling && newLastId === lastMsgIdRef.current) return;
-      lastMsgIdRef.current = newLastId;
+      // Dedup: hopp over oppdatering hvis INGEN meldinger har endret seg.
+      // Tidlig: bare lastMsgIdRef (ID av siste melding). Dette glemte
+      // in-place-oppdateringer (f.eks. bilde-melding som går fra content=''
+      // til content='/api/chat/image/{id}' uten at siste ID endres).
+      // Nå: sammenlign både antall meldinger + siste ID + siste meldings
+      // content (som endres når bilde-opplasting ferdigstilles).
+      const lastMsg = converted.length > 0 ? converted[converted.length - 1] : null;
+      const fingerprint = converted.length + ':' + (lastMsg?.id ?? '') + ':' + (lastMsg?.content ?? '').slice(0, 64);
+      if (isPolling && fingerprint === lastFingerprintRef.current) return;
+      lastFingerprintRef.current = fingerprint;
+      // Hold lastMsgIdRef for bakoverkompatibilitet (sendMessage bruker den)
+      lastMsgIdRef.current = lastMsg?.id ?? null;
 
       setMessages(converted);
     } catch (e) {
@@ -183,6 +192,7 @@ export function ChatProvider({
 
     // Reset dedup-ref når conversation byttes
     lastMsgIdRef.current = null;
+    lastFingerprintRef.current = null;
 
     // Initial load
     loadMessages();

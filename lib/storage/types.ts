@@ -39,6 +39,14 @@ export interface ImageStorage {
    */
   getSignedUrl(key: string, ttlSeconds?: number): Promise<string>;
 
+  /**
+   * Henter bildets binære innhold + MIME-type direkte fra lagringen.
+   * Brukes av proxy-ruten (GET /api/chat/image/{id}) som streamer bildet
+   * tilbake til klienten — unngår cross-origin redirect + CSP-avhengighet.
+   * Kaster Error hvis objektet ikke finnes.
+   */
+  getImage(key: string): Promise<{ buffer: Buffer; contentType: string }>;
+
   /** Sletter objektet. Idempotent — feiler ikke hvis objektet ikke finnes. */
   deleteImage(key: string): Promise<void>;
 

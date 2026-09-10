@@ -13,6 +13,7 @@
 "use client";
 
 import { useChat } from "@/app/chat/context/ChatContext";
+import { useState } from "react";
 
 /* ═══════════════════════════════════════
    THEME TOKENS — PREMIUM GLASS V2
@@ -251,6 +252,72 @@ function Avatar({ senderInfo }: { senderInfo?: { name: string; imageUrl?: string
 }
 
 /* ═══════════════════════════════════════
+   IMAGE BUBBLE — Robust image with loading/error states
+   ═══════════════════════════════════════ */
+
+function ImageBubble({ src, isMe, alt }: { src: string; isMe: boolean; alt: string }) {
+  const [status, setStatus] = useState<"loading" | "loaded" | "error">("loading");
+  const [retryKey, setRetryKey] = useState(0);
+
+  if (status === "error") {
+    return (
+      <div
+        className="rounded-2xl px-4 py-3 flex items-center gap-2 cursor-pointer"
+        style={{ background: G.glassBg, border: `1px solid ${G.glassBorder}`, maxWidth: "200px" }}
+        onClick={() => { setStatus("loading"); setRetryKey(k => k + 1); }}
+        title="Prøv igjen"
+      >
+        <span className="text-lg">🖼️</span>
+        <div>
+          <p className="text-xs font-medium" style={{ color: G.textSecondary }}>Bilde kunne ikke lastes</p>
+          <p className="text-[11px]" style={{ color: G.textMuted }}>Trykk for å prøve igjen</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className="rounded-2xl overflow-hidden relative max-w-[280px]"
+      style={{ borderRadius: "16px", minWidth: "60px", minHeight: "40px" }}
+    >
+      {status === "loading" && (
+        <div
+          className="absolute inset-0 flex items-center justify-center"
+          style={{ background: G.glassBg }}
+        >
+          <span className="text-xl opacity-60" style={{ animation: "spin 1s linear infinite" }}>⏳</span>
+        </div>
+      )}
+      <img
+        key={retryKey}
+        src={src}
+        alt={alt}
+        className="w-full h-auto block"
+        style={{ borderRadius: "16px", opacity: status === "loaded" ? 1 : 0 }}
+        loading="lazy"
+        onLoad={() => setStatus("loaded")}
+        onError={() => setStatus("error")}
+      />
+      {/* Overlay-glow */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          borderRadius: "16px",
+          boxShadow: `inset 0 0 20px ${isMe ? G.goldSoft : "transparent"}`,
+        }}
+      />
+      <style jsx>{`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════
    HOVEDKOMPONENT — MESSAGEBUBBLE v2
    Premium redesigned med flere nye effektar + FadeIn animasjon
    ═══════════════════════════════════════ */
@@ -279,35 +346,35 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
   // ═══ IMAGE BUBBLE — bilede fra chat ═══
   if (message.type === "image") {
     const imageUrl = metadata?.imageUrl || content;
+    // Hvis content er tom (opplasting pågår / feilet), vis en placeholder.
+    if (!imageUrl) {
+      return (
+        <div
+          className={`flex ${sender === "me" ? "justify-end" : "justify-start"} py-3 px-6 ${sender === "me" ? "message-enter-me" : "message-enter-partner"}`}
+          style={{ animationDelay: `${delay}ms` }}
+        >
+          <div
+            className="rounded-2xl px-4 py-3 flex items-center gap-2"
+            style={{ background: G.glassBg, border: `1px solid ${G.glassBorder}` }}
+          >
+            <span className="text-lg">📷</span>
+            <span className="text-sm" style={{ color: G.textMuted }}>
+              Sender bilde…
+            </span>
+          </div>
+        </div>
+      );
+    }
     return (
       <div
         className={`flex ${sender === "me" ? "justify-end" : "justify-start"} py-3 px-6 ${sender === "me" ? "message-enter-me" : "message-enter-partner"}`}
         style={{ animationDelay: `${delay}ms` }}
       >
-        <div
-          className="rounded-2xl overflow-hidden relative max-w-[280px]"
-          style={{ borderRadius: '16px' }}
-        >
-          <img
-            src={imageUrl}
-            alt="Bilde"
-            className="w-full h-auto block"
-            style={{ borderRadius: '16px' }}
-            loading="lazy"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.style.display = 'none';
-            }}
-          />
-          {/* Overlay-glow */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              borderRadius: '16px',
-              boxShadow: `inset 0 0 20px ${sender === "me" ? G.goldSoft : 'transparent'}`,
-            }}
-          />
-        </div>
+        <ImageBubble
+          src={imageUrl}
+          isMe={sender === "me"}
+          alt="Bilde"
+        />
       </div>
     );
   }

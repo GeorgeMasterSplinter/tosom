@@ -91,6 +91,36 @@ export class R2ImageStorage implements ImageStorage {
     return getSignedUrl(this.client, command, { expiresIn: ttlSeconds ?? this.ttlSeconds });
   }
 
+  async getImage(key: string): Promise<{ buffer: Buffer; contentType: string }> {
+    const safeKey = assertSafeImageKey(key);
+    const command = new GetObjectCommand({
+      Bucket: this.bucket,
+      Key: safeKey,
+    });
+    const response = await this.client.send(command);
+
+    // S3/R2 GetObject returns Body as a Stream (Node.js Readable) or ArrayBuffer.
+    let buffer: Buffer;
+    if (response.Body instanceof Uint8Array) {
+      buffer = Buffer.from(response.Body);
+    } else if (response.Body && typeof (response.Body as any).toArrayBuffer === 'function') {
+      const ab = await (response.Body as any).toArrayBuffer();
+      buffer = Buffer.from(ab);
+    } else if (response.Body) {
+      // Node.js stream
+      const chunks: Uint8Array[] = [];
+      for await (const chunk of response.Body as any) {
+        chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
+      }
+      buffer = Buffer.concat(chunks);
+    } else {
+      throw new Error(`[r2] GetObject returnerte tomt Body for key: ${safeKey}`);
+    }
+
+    const contentType = response.ContentType ?? 'application/octet-stream';
+    return { buffer, contentType };
+  }
+
   async deleteImage(key: string): Promise<void> {
     const safeKey = assertSafeImageKey(key);
     // Idempotent: DeleteObject på R2 feiler ikke hvis objektet ikke finnes.

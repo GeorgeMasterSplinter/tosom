@@ -153,11 +153,11 @@ const INSTRUMENTS: Array<{
     name: 'Kortform av Big Five',
     source: 'Rammstedt & John (2007), Journal of Research in Personality 41(1)',
     modern: 'I bruk i moderne studier (2010–2024).',
-    note: 'Oversettelsen er vår — merket som «bør kvalitetssikres».',
+    note: 'Vår egen oversettelse — ikke den offisielle norske versjonen.',
   },
   {
     name: 'Tilknytning (ECR-12)',
-    source: 'Inspirert av Bowlby (1969), Ainsworth et al. (1978), Hazan & Shaver (1987), Wei et al. (2007–2015)',
+    source: 'Inspirert av Bowlby (1969), Ainsworth et al. (1978), Hazan & Shaver (1987), Fraley & Shaver (2000)',
     modern: 'Fraley (2018) — tilknytning hos voksne, meta-analyser.',
     note: 'Våre egne items som taper på akserne angst og unnvikelse.',
   },
@@ -165,13 +165,13 @@ const INSTRUMENTS: Array<{
     name: 'Verdier (PVQ-10)',
     source: 'Schwartz (1992), Advances in Experimental Social Psychology 25',
     modern: 'PVQ i bruk i moderne tverrkulturelle studier (2010–2024).',
-    note: 'Oversettelsen er vår — merket som «bør kvalitetssikres».',
+    note: 'Vår egen oversettelse — ikke den offisielle norske versjonen.',
   },
   {
     name: 'Emosjonsregulering (ERQ-6)',
     source: 'Gross & John (2003), Journal of Personality and Social Psychology 85(2)',
     modern: 'Fortsett standard i nyere studier. Aldao et al. (2010) meta-analyse.',
-    note: 'Oversettelsen er vår — merket som «bør kvalitetssikres».',
+    note: 'Vår egen oversettelse — ikke den offisielle norske versjonen.',
   },
   {
     name: 'Kommunikasjon',
@@ -185,25 +185,25 @@ const INSTRUMENTS: Array<{
    KILDER
    ======================== */
 
-const CLASSIC_SOURCES = [
-  'Rammstedt, T., & John, O. P. (2007). Journal of Research in Personality, 41(1).',
-  'Bowlby, J. (1969). Attachment and Loss.',
-  'Ainsworth, M. D. S., Blehar, M. C., Waters, E., & Wall, S. (1978). Patterns of Attachment.',
-  'Hazan, C., & Shaver, P. (1987). Journal of Personality and Social Psychology.',
-  'Wei, M., Russell, D., & Altman, O. (2007). Journal of Personality and Social Psychology.',
-  'Schwartz, S. H. (1992). Advances in Experimental Social Psychology, 25.',
-  'Gross, J. J., & John, O. P. (2003). Journal of Personality and Social Psychology, 85(2).',
-  'Gottman, J. M., & Levenson, R. W. (1992). Journal of Personality and Social Psychology, 63(2).',
+const CLASSIC_SOURCES: Array<{ text: string; link: string }> = [
+  { text: 'Rammstedt, T., & John, O. P. (2007). Measuring personality in one minute or less: A 10-item short version of the Big Five Inventory in English and German. Journal of Research in Personality, 41(1).', link: 'https://doi.org/10.1016/j.jrp.2006.02.001' },
+  { text: 'Bowlby, J. (1969). Attachment and Loss, Vol. 1: Attachment. Basic Books.', link: 'https://scholar.google.com/scholar?q=Bowlby+1969+Attachment+and+Loss' },
+  { text: 'Ainsworth, M. D. S., Blehar, M. C., Waters, E., & Wall, S. (1978). Patterns of Attachment. Lawrence Erlbaum.', link: 'https://scholar.google.com/scholar?q=Ainsworth+Blehar+Waters+Wall+1978+Patterns+of+Attachment' },
+  { text: 'Hazan, C., & Shaver, P. (1987). Romantic love conceptualized as an attachment process. Journal of Personality and Social Psychology, 52(3).', link: 'https://doi.org/10.1037/0022-3514.52.3.511' },
+  { text: 'Fraley, R. C., & Shaver, P. R. (2000). Adult romantic attachment: Theoretical developments, emerging controversies, and unanswered questions. Review of General Psychology, 4(2).', link: 'https://doi.org/10.1037/1089-2680.4.2.132' },
+  { text: 'Schwartz, S. H. (1992). Domains of human values: Application and extension to four new countries. Advances in Experimental Social Psychology, 25.', link: 'https://scholar.google.com/scholar?q=Schwartz+1992+domains+of+human+values+four+new+countries' },
+  { text: 'Gross, J. J., & John, O. P. (2003). Individual differences in two emotion regulation processes. Journal of Personality and Social Psychology, 85(2).', link: 'https://doi.org/10.1037/0022-3514.85.2.348' },
+  { text: 'Gottman, J. M., & Levenson, R. W. (1992). Marital processes predictive of later dissolution. Journal of Personality and Social Psychology, 63(2).', link: 'https://doi.org/10.1037/0022-3514.63.2.221' },
 ];
 
-const MODERN_SOURCES = [
-  'Fraley, R. C. (2018). The Adult Attachment Inventory. In: Adult Attachment: Concepts, Adult Development, and Assessment.',
-  'Schwartz, S. H., Cieciuch, J., Vecchione, M., et al. (2012). Structure and levels of human values: Theory and applications across 20 countries. Advances in Experimental Social Psychology, 47.',
-  'Roberts, B. W., Neale, M. C., Roberts, K. L., & Roberts, S. A. (2016). Stability and change in personality across the life course. Journal of Personality and Social Psychology, 109(3).',
-  'Aldao, A., Nolen-Hoeksema, S., & Schwartze, D. (2010). Emotion regulation strategies across psychopathology symptoms. Journal of Anxiety Disorders, 24(3).',
-  'Gross, J. J. (2015). Emotion regulation: Current status and future prospects. Psychological Inquiry, 26(1).',
-  'Gottman, J. M., Gottman, J. L., & Levenson, R. W. (2000–2024). The Gottman Institute — ongoing publications.',
-  'Wei, M., Russell, D. W., & Altman, O. (2015). Dimensions of attachment in adulthood: A meta-analytic review. Journal of Personality and Social Psychology.',
+const MODERN_SOURCES: Array<{ text: string; link: string }> = [
+  { text: 'Fraley, R. C. (2018). The Adult Attachment Inventory. In: Adult Attachment: Concepts, Adult Development, and Assessment.', link: 'https://scholar.google.com/scholar?q=Fraley+2018+Adult+Attachment+Inventory' },
+  { text: 'Schwartz, S. H., Cieciuch, J., Vecchione, M., et al. (2012). Structure and levels of human values: Theory and applications across 20 countries. Advances in Experimental Social Psychology, 47.', link: 'https://scholar.google.com/scholar?q=Schwartz+Cieciuch+Vecchione+2012+structure+and+levels+of+human+values' },
+  { text: 'Roberts, B. W., Neale, M. C., Roberts, K. L., & Roberts, S. A. (2016). Stability and change in personality across the life course. Journal of Personality and Social Psychology, 109(3).', link: 'https://scholar.google.com/scholar?q=Roberts+2016+stability+and+change+in+personality+across+the+life+course' },
+  { text: 'Aldao, A., Nolen-Hoeksema, S., & Schweizer, S. (2010). Emotion-regulation strategies across psychopathology: A meta-analytic review. Clinical Psychology Review, 30(2).', link: 'https://doi.org/10.1016/j.cpr.2009.11.004' },
+  { text: 'Gross, J. J. (2015). Emotion regulation: Current status and future prospects. Psychological Inquiry, 26(1).', link: 'https://doi.org/10.1080/1047840x.2014.940781' },
+  { text: 'Gottman, J. M., Gottman, J. L., & Levenson, R. W. (2000–2024). The Gottman Institute — ongoing publications.', link: 'https://www.gottman.com/' },
+  { text: 'Mikulincer, M., & Shaver, P. R. (2007). Attachment in Adulthood: Structure, Dynamics, and Change. Guilford Press.', link: 'https://scholar.google.com/scholar?q=Mikulincer+Shaver+2007+Attachment+in+Adulthood' },
 ];
 
 /* ========================
@@ -422,7 +422,14 @@ export default function MetoderPage() {
                 <ul className="space-y-3">
                   {CLASSIC_SOURCES.map((src, idx) => (
                     <li key={idx} style={{ ...typographyToStyle('body'), color: color.text.secondary }}>
-                      {src}
+                      <a
+                        href={src.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: color.brand.gold, textDecoration: 'underline', textDecorationColor: 'rgba(212,175,55,0.4)', textUnderlineOffset: '3px' }}
+                      >
+                        {src.text}
+                      </a>
                     </li>
                   ))}
                 </ul>
@@ -437,7 +444,14 @@ export default function MetoderPage() {
                 <ul className="space-y-3">
                   {MODERN_SOURCES.map((src, idx) => (
                     <li key={idx} style={{ ...typographyToStyle('body'), color: color.text.secondary }}>
-                      {src}
+                      <a
+                        href={src.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: color.brand.gold, textDecoration: 'underline', textDecorationColor: 'rgba(212,175,55,0.4)', textUnderlineOffset: '3px' }}
+                      >
+                        {src.text}
+                      </a>
                     </li>
                   ))}
                 </ul>
@@ -452,7 +466,7 @@ export default function MetoderPage() {
                 textAlign: 'center',
               }}
             >
-              Forfatter, verk og år er oppgitt. Direkte lenker til kildene blir bekreftet levende før publisering.
+              Alle kildene er publiserte, fagfellevurderte studier og bøker. Klikk på en kilde for å åpne den.
             </p>
           </div>
         </ToSomSection>

@@ -205,7 +205,7 @@ export default function SlikPage() {
                     className="pt-4"
                     style={{
                       ...typographyToStyle('body'),
-                      color: 'rgba(255,255,255,0.55)',
+                      color: color.brand.gold,
                       lineHeight: '1.7',
                       letterSpacing: '0.1px',
                     }}

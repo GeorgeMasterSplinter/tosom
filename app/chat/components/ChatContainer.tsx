@@ -285,57 +285,90 @@ function ChatInput({
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !conversationId) return;
+    const selected = Array.from(e.target.files ?? []);
+    if (!selected.length || !conversationId) return;
+
+    // Øvre grense for antall bilder per send (lav verdi for å unngå rate-limit
+    // og store laster). Flere enn dette avvises med en tydelig melding.
+    const MAX_IMAGES = 5;
+    const files = selected.slice(0, MAX_IMAGES);
+    if (selected.length > MAX_IMAGES) {
+      setImageError(`Du kan sende opptil ${MAX_IMAGES} bilder om gangen.`);
+      return;
+    }
+
+    // Klient-sjekk før vi rører nettverket: type + størrelse (samme regler som
+    // serveren i /api/chat/image). Gir rask og tydelig tilbakemelding.
+    const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB — samsvarer med serveren
+    for (const f of files) {
+      if (!ALLOWED_TYPES.includes(f.type)) {
+        setImageError('Ugyldig bilde-type. Kun JPG, PNG og WebP er tillatne.');
+        return;
+      }
+      if (f.size > MAX_FILE_SIZE) {
+        setImageError('Bildet er for stort. Maks 5 MB.');
+        return;
+      }
+    }
 
     setImageError(null);
     setUploading(true);
     try {
-      // STEG 1: Opprett melding (type=image) via chat/send — får tilbake messageId
       const { csrfFetch } = await import('@/lib/api/csrfClient');
-      const sendRes = await csrfFetch('/api/chat/send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ conversationId, content: '', type: 'image' }),
-      });
 
-      if (!sendRes.ok) {
-        const err = await sendRes.json();
-        console.error('Melding-opprettelse feila:', err);
-        setImageError(err?.error || 'Kunne ikke opprette melding');
-        return;
+      // Hvert valgte bilde blir sin egen melding (STEG 1: opprett, STEG 2: last opp).
+      for (const file of files) {
+        // STEG 1: Opprett melding (type=image) via chat/send — får tilbake messageId
+        const sendRes = await csrfFetch('/api/chat/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ conversationId, content: '', type: 'image' }),
+        });
+
+        if (!sendRes.ok) {
+          const err = await sendRes.json().catch(() => ({}));
+          console.error('Melding-opprettelse feila:', err);
+          setImageError(err?.error || 'Kunne ikke opprette melding');
+          return;
+        }
+
+        const sendData = await sendRes.json();
+        const messageId = sendData.message?.id;
+        if (!messageId) {
+          console.error('Ingen messageId fra send');
+          setImageError('Melding mangler ID — prøv igjen');
+          return;
+        }
+
+        // STEG 2: Last opp bildet til /api/chat/image med messageId
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('conversationId', conversationId);
+        formData.append('messageId', messageId);
+
+        const imgRes = await fetch('/api/chat/image', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!imgRes.ok) {
+          // Responsen kan være ikke-JSON (f.eks. 413 «for stor kropp» fra Vercel) —
+          // da kaster .json(). Fanges her slik at vi får en tydelig melding.
+          const err = await imgRes.json().catch(() => ({}));
+          console.error('Bilde-opplasting feila:', err, imgRes.status);
+          let base = err?.error || 'Opplasting feilet — prøv igjen';
+          if (imgRes.status === 413) {
+            base = 'Bildet er for stort. Prøv et mindre bilde.';
+          }
+          // Vis den egentlige årsaken (err.details) i tillegg til den generiske
+          // meldingen — uten den ser vi ikke f.eks. om R2-nøkkelen feiler i prod.
+          setImageError(err?.details ? `${base} (${err.details})` : base);
+          return;
+        }
       }
 
-      const sendData = await sendRes.json();
-      const messageId = sendData.message?.id;
-      if (!messageId) {
-        console.error('Ingen messageId fra send');
-        setImageError('Melding mangler ID — prøv igjen');
-        return;
-      }
-
-      // STEG 2: Last opp bildet til /api/chat/image med messageId
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('conversationId', conversationId);
-      formData.append('messageId', messageId);
-
-      const imgRes = await fetch('/api/chat/image', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!imgRes.ok) {
-        const err = await imgRes.json();
-        console.error('Bilde-opplasting feila:', err);
-        // Vis den egentlige årsaken (err.details) i tillegg til den generiske
-        // meldingen — uten den ser vi ikke f.eks. om R2-nøkkelen feiler i prod.
-        const base = err?.error || 'Opplasting feilet — prøv igjen';
-        setImageError(err?.details ? `${base} (${err.details})` : base);
-        return;
-      }
-
-      // Bildet er knyttet til meldingen. Last inn oppdaterte meldinger
+      // Alle bildene er knyttet til sine meldinger. Last inn oppdaterte meldinger
       // med en gang (ikke vent på neste 3s-poll).
       await loadMessages();
     } catch (error) {
@@ -394,6 +427,7 @@ function ChatInput({
           ref={fileInputRef}
           type="file"
           accept="image/jpeg,image/png,image/webp"
+          multiple
           onChange={handleImageUpload}
           className="hidden"
         />

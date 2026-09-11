@@ -13,7 +13,8 @@
 "use client";
 
 import { useChat } from "@/app/chat/context/ChatContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 /* ═══════════════════════════════════════
    THEME TOKENS — PREMIUM GLASS V2
@@ -258,6 +259,23 @@ function Avatar({ senderInfo }: { senderInfo?: { name: string; imageUrl?: string
 function ImageBubble({ src, isMe, alt }: { src: string; isMe: boolean; alt: string }) {
   const [status, setStatus] = useState<"loading" | "loaded" | "error">("loading");
   const [retryKey, setRetryKey] = useState(0);
+  const [lightbox, setLightbox] = useState(false);
+
+  // Lightbox renderes via portal til body, slik at foreldres transform-animasjon
+  // ikke påvirker fixed-posisjonen. ESC lukker; scroll låses mens den er åpen.
+  useEffect(() => {
+    if (!lightbox) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setLightbox(false);
+    };
+    window.addEventListener("keydown", onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [lightbox]);
 
   if (status === "error") {
     return (
@@ -277,9 +295,12 @@ function ImageBubble({ src, isMe, alt }: { src: string; isMe: boolean; alt: stri
   }
 
   return (
+    <>
     <div
-      className="rounded-2xl overflow-hidden relative max-w-[280px]"
+      className="rounded-2xl overflow-hidden relative max-w-[280px] cursor-pointer"
       style={{ borderRadius: "16px", minWidth: "60px", minHeight: "40px" }}
+      onClick={status === "loaded" ? () => setLightbox(true) : undefined}
+      title={status === "loaded" ? "Trykk for å forstørre" : undefined}
     >
       {status === "loading" && (
         <div
@@ -314,6 +335,37 @@ function ImageBubble({ src, isMe, alt }: { src: string; isMe: boolean; alt: stri
         }
       `}</style>
     </div>
+
+    {lightbox &&
+      createPortal(
+        <div
+          className="fixed inset-0 flex items-center justify-center p-4"
+          style={{ background: "rgba(0,0,0,0.88)", backdropFilter: "blur(6px)", zIndex: 9999 }}
+          onClick={() => setLightbox(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-label={alt}
+        >
+          <button
+            type="button"
+            aria-label="Lukk bildet"
+            onClick={(e) => { e.stopPropagation(); setLightbox(false); }}
+            className="absolute flex items-center justify-center rounded-full"
+            style={{ top: "1rem", right: "1rem", width: "2.5rem", height: "2.5rem", background: "rgba(255,255,255,0.14)", color: "#fff", fontSize: "1.15rem", zIndex: 20 }}
+          >
+            ✕
+          </button>
+          <img
+            src={src}
+            alt={alt}
+            onClick={(e) => e.stopPropagation()}
+            className="rounded-lg shadow-2xl"
+            style={{ maxWidth: "100%", maxHeight: "90vh", objectFit: "contain" }}
+          />
+        </div>,
+        document.body
+      )}
+    </>
   );
 }
 

@@ -9,11 +9,11 @@ import { typographyToStyle } from '@/config/design-tokens';
 const FAQS = [
   {
     q: 'Hva er ToSom egentlig?',
-    a: 'ToSom er en 30-dagers samtale mellom to mennesker som ikke kjenner hverandre. Ingen bilder, ingen navn, ingen alder — bare ord. Dere blir koblet basert på 240 dype spørsmål som avdekker hvem dere egentlig er. Det hele er anonymt, varmt og i eget tempo.',
+    a: 'ToSom er en 30-dagers samtale mellom to mennesker som ikke kjenner hverandre. Ingen bilder, ingen navn, ingen alder — bare ord. Dere blir koblet basert på de seks dimensjonene vi ser på. Det hele er anonymt, varmt og i eget tempo.',
   },
   {
     q: 'Hvordan fungerer matching?',
-    a: 'Du svarer på spørsmål i 12 kategorier — personlighet, forhold, kommunikasjon, næhet, følelser, trygghet, lek, barndom, verdier, fremtid, hverdag og modus. Systemet sammenligner dere og finner den personen som passer best. Matching kjører hver lørdag. Når du får en match, får du en e-post.',
+    a: 'Vi sammenligner dere på seks dimensjoner — verdier, tilknytning, personlighet, kommunikasjon, emosjonsregulering og livssituasjon. Systemet finner den personen som passer best. Matching kjører hver lørdag, og du får en e-post når det er klart.',
   },
   {
     q: 'Hva skjer i de 30 dagene?',
@@ -25,7 +25,7 @@ const FAQS = [
   },
   {
     q: 'Hva skjer etter dag 30?',
-    a: 'To valg. «Vi fant hverandre» — da slettes alt. Alle samtalinger, bilder, spørsmålssvar — alt forsvinner permanent. Bare en følelse gjenstår. Eller «Start ny reise» — dere slettes, og begge kommer tilbake i køen for en ny match. Ingen hard fele. Bare videre.',
+    a: 'To valg. «Vi fant hverandre» — da slettes alt. Alle samtaler, bilder, spørsmål og svar — alt forsvinner permanent. Bare en følelse gjenstår. Eller «Start ny reise» — dere slettes, og begge kommer tilbake i køen for en ny match. Ingen hard landing. Bare videre.',
   },
   {
     q: 'Hva koster ToSom?',
@@ -88,7 +88,7 @@ export default function FaqPage() {
             Ofte stilte spørsmål
           </h1>
           <p className="mt-2" style={{ ...typographyToStyle('body-lg'), color: 'rgba(255,255,255,0.4)' }}>
-            Alt du lurer på, svart på rolig og ærligt.
+            Alt du lurer på, svart på en rolig og ærlig måte.
           </p>
         </ToSomSection>
 

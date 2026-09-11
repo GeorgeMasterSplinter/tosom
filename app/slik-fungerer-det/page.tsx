@@ -151,7 +151,7 @@ export default function SlikPage() {
               lineHeight: '1.8',
             }}
           >
-            En rolig og trygg prosess som hjelper deg å møte én person, valgt med omtanke. Ingen stress. Ingen sveiping. Bare kvalitet.
+            En rolig og trygg prosess som hjelper deg å møte én person, valgt med omtanke. Ingen stress. Ingen sveiping. Bare ro.
           </p>
         </ToSomSection>
 

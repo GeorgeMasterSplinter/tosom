@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { Footer } from '@/components/ui/layout/Footer';
 import { ToSomSection, ToSomButton } from '@/components/ui/system';
-import { AgeBadge } from '@/components/ui/age-badge/AgeBadge';
 import { color, typographyToStyle } from '@/config/design-tokens';
 import GlassCard from '@/components/ui/cards/GlassCard';
 
@@ -569,7 +568,6 @@ export default function ReisenPage() {
 
           <div className="flex flex-col items-center gap-4 pt-4 w-full max-w-md mx-auto">
             <div className="flex items-center gap-2">
-              <AgeBadge />
               <span
                 style={{
                   ...typographyToStyle('body-sm'),

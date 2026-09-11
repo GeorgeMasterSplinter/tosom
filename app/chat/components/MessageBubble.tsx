@@ -13,7 +13,7 @@
 "use client";
 
 import { useChat } from "@/app/chat/context/ChatContext";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 
 /* ═══════════════════════════════════════
@@ -256,17 +256,68 @@ function Avatar({ senderInfo }: { senderInfo?: { name: string; imageUrl?: string
    IMAGE BUBBLE — Robust image with loading/error states
    ═══════════════════════════════════════ */
 
-function ImageBubble({ src, isMe, alt }: { src: string; isMe: boolean; alt: string }) {
+function ImageBubble({
+  src,
+  isMe,
+  alt,
+  gallery,
+  initialIndex,
+}: {
+  src: string;
+  isMe: boolean;
+  alt: string;
+  gallery: string[];
+  initialIndex: number;
+}) {
   const [status, setStatus] = useState<"loading" | "loaded" | "error">("loading");
   const [retryKey, setRetryKey] = useState(0);
   const [lightbox, setLightbox] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(initialIndex);
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
+  const swipedRef = useRef(false);
+
+  // Galleri: alle bildene i samtalen (i rekkefølge). Faller tilbake til kun
+  // dette bildet hvis galleriet er tomt, slik at index alltid er gyldig.
+  const images = gallery.length > 0 ? gallery : [src];
+  const canNav = images.length > 1;
+  const activeSrc = images[Math.max(0, Math.min(activeIndex, images.length - 1))];
+  const goNext = () => setActiveIndex((i) => (i + 1) % images.length);
+  const goPrev = () => setActiveIndex((i) => (i - 1 + images.length) % images.length);
+
+  // Sveip: horisontalt drag over overlayet navigerer frem/tilbake. Tap (uten
+  // bevegelse) lukker fortsatt — swipedRef sikrer at en sveip ikke lukker.
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const start = touchStart.current;
+    touchStart.current = null;
+    if (!start) return;
+    const dx = e.changedTouches[0].clientX - start.x;
+    const dy = e.changedTouches[0].clientY - start.y;
+    if (canNav && Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+      swipedRef.current = true;
+      if (dx < 0) goNext();
+      else goPrev();
+    }
+  };
+  const onOverlayClick = () => {
+    if (swipedRef.current) {
+      swipedRef.current = false;
+      return;
+    }
+    setLightbox(false);
+  };
 
   // Lightbox renderes via portal til body, slik at foreldres transform-animasjon
-  // ikke påvirker fixed-posisjonen. ESC lukker; scroll låses mens den er åpen.
+  // ikke påvirker fixed-posisjonen. ESC lukker, ←/→ navigerer, scroll låses.
   useEffect(() => {
     if (!lightbox) return;
+    const len = images.length;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setLightbox(false);
+      else if (e.key === "ArrowRight" && len > 1) setActiveIndex((i) => (i + 1) % len);
+      else if (e.key === "ArrowLeft" && len > 1) setActiveIndex((i) => (i - 1 + len) % len);
     };
     window.addEventListener("keydown", onKey);
     const prevOverflow = document.body.style.overflow;
@@ -275,7 +326,7 @@ function ImageBubble({ src, isMe, alt }: { src: string; isMe: boolean; alt: stri
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = prevOverflow;
     };
-  }, [lightbox]);
+  }, [lightbox, images.length]);
 
   if (status === "error") {
     return (
@@ -299,7 +350,14 @@ function ImageBubble({ src, isMe, alt }: { src: string; isMe: boolean; alt: stri
     <div
       className="rounded-2xl overflow-hidden relative max-w-[280px] cursor-pointer"
       style={{ borderRadius: "16px", minWidth: "60px", minHeight: "40px" }}
-      onClick={status === "loaded" ? () => setLightbox(true) : undefined}
+      onClick={
+        status === "loaded"
+          ? () => {
+              setActiveIndex(initialIndex);
+              setLightbox(true);
+            }
+          : undefined
+      }
       title={status === "loaded" ? "Trykk for å forstørre" : undefined}
     >
       {status === "loading" && (
@@ -341,7 +399,9 @@ function ImageBubble({ src, isMe, alt }: { src: string; isMe: boolean; alt: stri
         <div
           className="fixed inset-0 flex items-center justify-center p-4"
           style={{ background: "rgba(0,0,0,0.88)", backdropFilter: "blur(6px)", zIndex: 9999 }}
-          onClick={() => setLightbox(false)}
+          onClick={onOverlayClick}
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
           role="dialog"
           aria-modal="true"
           aria-label={alt}
@@ -355,13 +415,47 @@ function ImageBubble({ src, isMe, alt }: { src: string; isMe: boolean; alt: stri
           >
             ✕
           </button>
+
+          {canNav && (
+            <button
+              type="button"
+              aria-label="Forrige bilde"
+              onClick={(e) => { e.stopPropagation(); goPrev(); }}
+              className="absolute flex items-center justify-center rounded-full"
+              style={{ left: "0.75rem", top: "50%", transform: "translateY(-50%)", width: "2.75rem", height: "2.75rem", background: "rgba(255,255,255,0.14)", color: "#fff", fontSize: "2rem", lineHeight: 1, zIndex: 20 }}
+            >
+              ‹
+            </button>
+          )}
+
           <img
-            src={src}
+            src={activeSrc}
             alt={alt}
             onClick={(e) => e.stopPropagation()}
             className="rounded-lg shadow-2xl"
             style={{ maxWidth: "100%", maxHeight: "90vh", objectFit: "contain" }}
           />
+
+          {canNav && (
+            <button
+              type="button"
+              aria-label="Neste bilde"
+              onClick={(e) => { e.stopPropagation(); goNext(); }}
+              className="absolute flex items-center justify-center rounded-full"
+              style={{ right: "0.75rem", top: "50%", transform: "translateY(-50%)", width: "2.75rem", height: "2.75rem", background: "rgba(255,255,255,0.14)", color: "#fff", fontSize: "2rem", lineHeight: 1, zIndex: 20 }}
+            >
+              ›
+            </button>
+          )}
+
+          {canNav && (
+            <div
+              aria-hidden="true"
+              style={{ position: "absolute", bottom: "1rem", left: "50%", transform: "translateX(-50%)", color: "rgba(255,255,255,0.85)", fontSize: "0.85rem" }}
+            >
+              {Math.max(0, Math.min(activeIndex, images.length - 1)) + 1} / {images.length}
+            </div>
+          )}
         </div>,
         document.body
       )}
@@ -376,7 +470,7 @@ function ImageBubble({ src, isMe, alt }: { src: string; isMe: boolean; alt: stri
 
 export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
   const { sender, type, content, metadata, resonanceLevel, isMilestone, isBliKjent } = message;
-  const { moodTheme, myName } = useChat();
+  const { moodTheme, myName, messages } = useChat();
   const tPrimary = moodTheme.textPrimary;
   const tSecondary = moodTheme.textSecondary;
   const tMuted = moodTheme.textMuted;
@@ -417,6 +511,12 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
         </div>
       );
     }
+    // Alle bildene i samtalen, i senderekkefølge — lightboxen lar seg navigere
+    // gjennom disse (sveip / piler). Beregnes fra meldingene i context.
+    const gallery = messages
+      .filter((m) => m.type === "image" && (m.metadata?.imageUrl || m.content))
+      .map((m) => m.metadata?.imageUrl || m.content) as string[];
+    const initialIndex = Math.max(0, gallery.indexOf(imageUrl));
     return (
       <div
         className={`flex ${sender === "me" ? "justify-end" : "justify-start"} py-3 px-6 ${sender === "me" ? "message-enter-me" : "message-enter-partner"}`}
@@ -426,6 +526,8 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
           src={imageUrl}
           isMe={sender === "me"}
           alt="Bilde"
+          gallery={gallery}
+          initialIndex={initialIndex}
         />
       </div>
     );

@@ -10,7 +10,10 @@
  *   R2_ACCESS_KEY_ID
  *   R2_SECRET_ACCESS_KEY
  *   R2_BUCKET
- *   R2_REGION            (standard: eu-central-1 — EU/EØS, masterplan §7)
+ *   R2_REGION            (valgfritt; standard 'auto'). R2 krever en R2-region
+ *                        (auto/wnam/enam/weur/eeur/apac/oc); AWS-regioner
+ *                        (f.eks. 'eu-central-1') avvises. Ugyldige verdier
+ *                        normaliseres til 'auto'.
  *   R2_ENDPOINT          (valgfritt override; standard: https://{accountId}.r2.cloudflarestorage.com)
  *   IMAGE_URL_TTL_SECONDS (standard: 900 = 15 min)
  */
@@ -25,6 +28,36 @@ import {
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { ImageStorage, PutImageOptions, assertSafeImageKey } from './types';
+
+// Cloudflare R2 godkjenner bare disse region-kodene i S3-API-et (de inngår i
+// SigV4-signaturen). AWS-regioner som 'eu-central-1' er IKKE gyldige og
+// avvises server-side med 500. 'auto' er alltid gyldig og er den anbefalte
+// verdien (jf. https://developers.cloudflare.com/r2/api/s3/api/).
+export const VALID_R2_REGIONS = new Set([
+  'auto',
+  'wnam',
+  'enam',
+  'weur',
+  'eeur',
+  'apac',
+  'oc',
+  // Aliaser som R2 mapper til 'auto':
+  'us-east-1',
+]);
+
+/** Normaliserer en R2-region; ugyldige/avvikende verdier blir 'auto'. */
+export function resolveR2Region(region: string | undefined): string {
+  if (region && VALID_R2_REGIONS.has(region)) {
+    return region;
+  }
+  if (region) {
+    console.warn(
+      `[storage/r2] Ugyldig R2_REGION '${region}' — R2 godkjenner bare ` +
+        `auto/wnam/enam/weur/eeur/apac/oc. Faller tilbake på 'auto'.`
+    );
+  }
+  return 'auto';
+}
 
 export interface R2ImageStorageOptions {
   accountId: string;
@@ -55,7 +88,7 @@ export class R2ImageStorage implements ImageStorage {
       return;
     }
 
-    const region = options.region ?? 'eu-central-1';
+    const region = resolveR2Region(options.region);
     const endpoint =
       options.endpoint ?? `https://${options.accountId}.r2.cloudflarestorage.com`;
 

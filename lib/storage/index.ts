@@ -54,7 +54,7 @@ export function getImageStorage(): ImageStorage {
       accessKeyId: process.env.R2_ACCESS_KEY_ID!,
       secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
       bucket: process.env.R2_BUCKET!,
-      region: process.env.R2_REGION ?? 'eu-central-1',
+      region: process.env.R2_REGION ?? 'auto',
       endpoint: process.env.R2_ENDPOINT,
       ttlSeconds: ttl,
     });

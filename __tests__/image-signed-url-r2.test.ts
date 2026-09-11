@@ -8,12 +8,13 @@
 
 import { S3Client } from '@aws-sdk/client-s3';
 import { R2ImageStorage } from '@/lib/storage';
+import { resolveR2Region } from '@/lib/storage/r2';
 
 // Bygg ein S3Client som ikke snakkar med nettverket. Presigning er ein
 // rein lokal berekning (HMAC), så send() blir aldri kalla her.
 function makeR2(bucket = 'tosom-images', ttl = 900): R2ImageStorage {
   const client = new S3Client({
-    region: 'eu-central-1',
+    region: 'auto',
     endpoint: 'https://acct.r2.cloudflarestorage.com',
     forcePathStyle: true,
     credentials: {
@@ -55,5 +56,25 @@ describe('R2ImageStorage presigning', () => {
   it('avviser ulovleg nøkkel (path-traversal) før presigning', async () => {
     const s = makeR2();
     await expect(s.getSignedUrl('../escape.jpg')).rejects.toThrow();
+  });
+});
+
+describe('resolveR2Region', () => {
+  it('returnerer "auto" når region mangler', () => {
+    expect(resolveR2Region(undefined)).toBe('auto');
+  });
+
+  it('returnerer uendra en gyldig R2-region', () => {
+    expect(resolveR2Region('auto')).toBe('auto');
+    expect(resolveR2Region('weur')).toBe('weur');
+    expect(resolveR2Region('apac')).toBe('apac');
+  });
+
+  it('returnerer uendra "us-east-1" (alias til auto)', () => {
+    expect(resolveR2Region('us-east-1')).toBe('us-east-1');
+  });
+
+  it('normaliserer AWS-region "eu-central-1" til "auto"', () => {
+    expect(resolveR2Region('eu-central-1')).toBe('auto');
   });
 });

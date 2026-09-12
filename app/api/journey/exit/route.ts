@@ -52,15 +52,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // Sjekk om journey er allerede avsluttet
-    if (journey.endedAt || journey.completedAt) {
-      return NextResponse.json(
-        { error: 'Reisen er allerede avsluttet' },
-        { status: 409 }
-      );
-    }
-
-    // Hent den tilknyttede matchen
+    // Hent den tilknyttede matchen. Dette er den reelle "allerede løst"-sjekken:
+    // endedAt/completedAt kan være satt når reisen nådde dag 30, men valget
+    // (funnet hverandre / ny reise) må fortsatt kunne gjøres mens matchen er aktiv.
+    // Når endJourney har kjørt, er matchen borte → 409 (idempotent).
     const activeMatch = await prisma.match.findFirst({
       where: {
         OR: [
@@ -73,15 +68,24 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     if (!activeMatch) {
       return NextResponse.json(
-        { error: 'Ingen aktiv match funnet' },
-        { status: 404 }
+        { error: 'Reisen er allerede avsluttet eller allerede håndtert' },
+        { status: 409 }
       );
     }
 
     // STEG S1: Blokkering lager en permanent sperreliste-oppføring FØR sletting.
     // (Sperrelisten overlever endJourney-sletting — match history og blocks beholdes.)
+    // Map reason → endJourney-outcome:
+    //   found_each_other → full kontosletting (begge) — "Vi fant hverandre"
+    //   ny_reise         → reset til IDLE, behold profil (ny onboarding) — "Start ny reise"
+    //   blocked          → sperreliste + reset til IDLE
+    //   (rest)           → tidlig avslutning (reset til IDLE)
     const isBlocked = reason === 'blocked';
-    const outcome = isBlocked ? 'blocked' : 'early_exit';
+    let outcome: 'blocked' | 'early_exit' | 'found_each_other' | 'new_journey';
+    if (isBlocked) outcome = 'blocked';
+    else if (reason === 'found_each_other') outcome = 'found_each_other';
+    else if (reason === 'ny_reise' || reason === 'new_journey') outcome = 'new_journey';
+    else outcome = 'early_exit';
 
     if (isBlocked) {
       const partnerId = activeMatch.userAId === user.id ? activeMatch.userBId : activeMatch.userAId;
@@ -100,20 +104,37 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     // 4. Kall endJourney() — verifisert sletting
     const { deleted } = await endJourney(activeMatch.id, outcome);
 
+    // Ny reise: lås opp onboarding for den handlingen brukeren slik at profilen
+    // kan brukes om via prefill (de justerer, skriver ikke på nytt). Kontoen
+    // bevares — bare journey-dataet er nullstilt (endJourney).
+    if (outcome === 'new_journey') {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { onboardingComplete: false, onboardingStep: 1 },
+      });
+    }
+
     // 5. Logg avslutning
-    console.log(`[journey/exit] Bruker ${user.id} ${isBlocked ? 'blokkerte' : 'avsluttet'} reise dag ${journey.day}/30`, {
+    console.log(`[journey/exit] Bruker ${user.id} ${outcome === 'blocked' ? 'blokkerte' : 'avsluttet'} reise dag ${journey.day}/30 (outcome=${outcome})`, {
       matchId: activeMatch.id,
       day: journey.day,
       reason,
+      outcome,
       deleted,
     });
 
     return NextResponse.json({
       success: true,
-      message: isBlocked
-        ? 'Reisen ble avsluttet og brukeren blokkeres permanent.'
-        : `Reisen din ble avsluttet. Du nådde dag ${journey.day} av 30.`,
-      nextStep: 'Du kan starte en ny reise når du vil.',
+      outcome,
+      message:
+        outcome === 'blocked'
+          ? 'Reisen ble avsluttet og brukeren blokkeres permanent.'
+          : outcome === 'found_each_other'
+            ? 'Reisen er fullført. Begge kontoene er slettet.'
+            : outcome === 'new_journey'
+              ? 'Reisen er avsluttet. Du sendes tilbake til onboarding.'
+              : `Reisen din ble avsluttet. Du nådde dag ${journey.day} av 30.`,
+      nextStep: outcome === 'new_journey' ? 'onboarding' : 'Du kan starte en ny reise når du vil.',
       deleted,
     });
 

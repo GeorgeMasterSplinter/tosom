@@ -29,7 +29,7 @@ function normalizePair(aId: string, bId: string): { userAId: string; userBId: st
 
 export async function endJourney(
   matchId: string,
-  outcome: 'completed' | 'early_exit' | 'blocked' | 'expired' | 'found_each_other' | 'new_journey',
+  outcome: 'completed' | 'early_exit' | 'blocked' | 'expired' | 'found_each_other' | 'new_journey' | 'no_action',
 ): Promise<{ deleted: Record<string, number> }> {
   // Fetch match with full relations
   const match = await prisma.match.findUnique({
@@ -221,9 +221,10 @@ export async function endJourney(
     });
 
     // 11. B4.5: Utfallet bestemmer hva som skjer med kontoene
-    // - found_each_other: SLETT begge kontoer permanent (behold MatchHistory + Report + AuditLog)
+    // - found_each_other / no_action: SLETT begge kontoer permanent (behold MatchHistory + Report + AuditLog)
+    //   (no_action = reisen fullførte 30 dager, ingen handlet innen 24 t → auto-sletting)
     // - new_journey / andre: Reset til IDLE (kontoen lever videre)
-    if (outcome === 'found_each_other') {
+    if (outcome === 'found_each_other' || outcome === 'no_action') {
       // Full kontosletting — brukeren har funnet hverandre utenfor ToSom
       // Behold: MatchHistory (to ID-er), Report (må overleve), AuditLog (admin-handlinger)
       for (const user of [userA, userB]) {

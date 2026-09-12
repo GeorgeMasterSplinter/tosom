@@ -18,6 +18,7 @@ import { sendAlert } from '@/lib/observability/alert'; // B5.6
 import { getPhaseForDay } from '@/lib/journey/engine'; // ST3.1
 import { runRetention } from '@/lib/privacy/retention'; // S-10
 import { recordMetric, recordEvent } from '@/lib/observability/metric'; // O-3
+import { endJourney } from '@/lib/journey/endJourney'; // B-D: no-action auto-sletting
 import {
   thresholdQueueSize,
   thresholdRoundDuration,
@@ -305,6 +306,51 @@ export async function GET(req: NextRequest) {
           console.error(`[cron/journey] Feil ved utløp for match ${match.id}:`, expiryError);
           errors.push(`expired match ${match.id}: ${(expiryError as Error).message}`);
         }
+      }
+
+      // B-D: AUTO-SLETTING — reiser som fullførte dag 30, men ingen har handlet.
+      // Når reisen når dag 30 setter cronen endedAt (se over) — dette skjer ~24 t
+      // etter at dag 30 ble nådd (journey må passere nextDayAt). Når endedAt er satt
+      // OG matchen fortsatt er 'active', har verken bruker trykket "Vi fant hverandre"
+      // eller "Start ny reise" → slett begge kontoene (data skal ikke ligge uvoktet).
+      // Det gir ~24 t gransetid fra dag 30. Løste matcher (deleted via endJourney) hoppes over.
+      let noActionDeleted = 0;
+      try {
+        const day30EndedJourneys = await prisma.journeyProgress.findMany({
+          where: {
+            day: { gte: 30 },
+            endedAt: { not: null }, // reisen er markert slutt (dag 30 nådd)
+          },
+          select: { id: true, matchId: true },
+          take: 50,
+        });
+
+        const handledMatchIds = new Set<string>();
+        for (const jp of day30EndedJourneys) {
+          if (!jp.matchId || handledMatchIds.has(jp.matchId)) continue;
+          handledMatchIds.add(jp.matchId);
+          try {
+            const m = await prisma.match.findUnique({
+              where: { id: jp.matchId },
+              select: { id: true, status: true },
+            });
+            // Kun om matchen fortsatt er aktiv = ingen har handlet
+            if (m?.status !== 'active') continue;
+            await endJourney(jp.matchId, 'no_action');
+            noActionDeleted++;
+            recordEvent('journey.no_action_deleted', { matchId: jp.matchId });
+            console.log(`[cron/journey] Auto-sletting: match ${jp.matchId} (dag 30 fullført, ingen handling)`);
+          } catch (noActionError) {
+            console.error(`[cron/journey] Feil ved auto-sletting for match ${jp.matchId}:`, noActionError);
+            errors.push(`no_action match ${jp.matchId}: ${(noActionError as Error).message}`);
+          }
+        }
+        if (noActionDeleted > 0) {
+          console.log(`[cron/journey] Auto-sletting: ${noActionDeleted} reiser (dag 30, ingen handling)`);
+        }
+      } catch (day30Error) {
+        console.error('[cron/journey] Feil ved dag-30 auto-sletting:', day30Error);
+        errors.push(`day30 no_action: ${(day30Error as Error).message}`);
       }
 
       // B2.5 — STILLHETSDETEKSJON

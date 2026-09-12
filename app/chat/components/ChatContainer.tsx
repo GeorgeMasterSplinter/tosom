@@ -10,7 +10,7 @@
 "use client";
 
 import Image from 'next/image';
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, Fragment } from "react";
 import { color } from "@/config/design-tokens";
 import { useChat } from "@/app/chat/context/ChatContext";
 import { MessageBubble, MessageBubbleStyles } from "@/app/chat/components/MessageBubble";
@@ -74,6 +74,41 @@ const G = {
   textMuted: "rgba(255,255,255,0.35)",
   dangerRed: "#FF4D4D",
 };
+
+/* ═══════════════════════════════════════
+   DATE SEPARATOR — dag-skiljar i samtalen
+   ═══════════════════════════════════════ */
+
+// Returner kalenderdag (toDateString) for et tidspunkt, eller null om det ikke er gyldig.
+function toDayKey(value?: Date | string): string | null {
+  if (!value) return null;
+  const d = new Date(value);
+  return isNaN(d.getTime()) ? null : d.toDateString();
+}
+
+function DateSeparator({ createdAt }: { createdAt: Date | string }) {
+  const date = new Date(createdAt);
+  if (isNaN(date.getTime())) return null;
+  const label = date.toLocaleDateString("no", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  });
+  return (
+    <div className="flex items-center justify-center my-4">
+      <span
+        className="text-[11px] uppercase tracking-[0.12em] px-3 py-1 rounded-full"
+        style={{
+          color: G.textMuted,
+          background: G.glassBg,
+          border: `1px solid ${G.glassBorder}`,
+        }}
+      >
+        {label}
+      </span>
+    </div>
+  );
+}
 
 /* ═══════════════════════════════════════
    MESSAGE LIST — PREMIUM MED ANIMASJONAR
@@ -145,9 +180,19 @@ function MessageList({ partner, journeyDay }: {
         transition: 'background-image 1.5s ease-in-out',
       }}
     >
-      {allMessages.map((msg) => (
-        <MessageBubble key={msg.id} message={msg as any} />
-      ))}
+      {allMessages.map((msg, idx) => {
+        // Vis en dag-skiljer når kalenderdagen endres (30-dagers reise)
+        const ts = msg.metadata?.timestamp;
+        const dayKey = toDayKey(ts);
+        const prevKey = idx > 0 ? toDayKey(allMessages[idx - 1].metadata?.timestamp) : null;
+        const showSeparator = dayKey !== null && dayKey !== prevKey;
+        return (
+          <Fragment key={msg.id}>
+            {showSeparator && ts && <DateSeparator createdAt={ts} />}
+            <MessageBubble message={msg as any} />
+          </Fragment>
+        );
+      })}
       {/* «Skriver...»-boble mens parten skriver (Pusher-event; polling fallback) */}
       {partnerTyping && <TypingIndicator />}
     </div>

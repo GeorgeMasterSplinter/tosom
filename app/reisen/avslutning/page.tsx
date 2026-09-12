@@ -4,10 +4,10 @@
  * Tosom — Avslutnings-side (2 valg)
  *
  * Vises etter 30-dagers reise. Brukeren får 2 valg:
- * 1. "Vi fant hverandre" — `endJourney('completed')` → takkeside → IDLE
- * 2. "Start ny reise" — `endJourney('completed')` → betaling → profil → kø → IDLE
+ * 1. "Vi fant hverandre" — `found_each_other` → begge kontoer slettes → lokal takkeside
+ * 2. "Start ny reise" — `ny_reise` → beholdt profil → ny onboarding (prefylt)
  *
- * B10: Begge kaller endJourney(). Forskjellen er kun hvor brukeren sendes etterpå.
+ * Begge kaller /api/journey/exit som mapper reason → endJourney-outcome.
  * Bekreftelsesdialog er påkrevd med ordrett tekst fra konseptet.
  */
 
@@ -198,6 +198,9 @@ export default function AvslutningSide() {
   const [selected, setSelected] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [journeyDay, setJourneyDay] = useState<number | null>(null);
+  // "Vi fant hverandre" — begge kontoer er slettet, så vis lokal takkeside
+  // (kan ikke navigere til en beskyttet side etter kontosletting).
+  const [finishedTogether, setFinishedTogether] = useState(false);
 
   // Sjekk om dag 30 er nådd ved side-lasting
   useEffect(() => {
@@ -234,7 +237,9 @@ export default function AvslutningSide() {
     window.open('/api/journey/export-pdf', '_blank', 'noopener,width=800,height=1000');
   };
 
-  // B10: Begge valg kaller endJourney() med outcome 'completed'
+  // Begge valg kaller /api/journey/exit med riktig reason:
+  //   "Vi fant hverandre" (1) → found_each_other → begge kontoer slettes
+  //   "Start ny reise"    (2) → ny_reise         → beholdt profil, ny onboarding
   const confirmChoice = async () => {
     if (!selected) return;
 
@@ -247,7 +252,6 @@ export default function AvslutningSide() {
     setLoading(true);
 
     try {
-      // B10: Begge bruker samme outcome — forskjellen er kun redirect etterpå
       const res = await csrfFetch('/api/journey/exit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -255,14 +259,14 @@ export default function AvslutningSide() {
       });
 
       if (res.ok) {
-        const data = await res.json();
-        // B10: Valg 1 → takkeside; Valg 2 → tilbake til dashboard for ny reise
         if (selected === 1) {
-          // "Vi fant hverandre" — takkeside (kan redirecte til /reisen/takk når den finnes)
-          router.push('/dashboard?ended=together');
+          // "Vi fant hverandre" — begge kontoer er nå SLETTET. Sesjonen er borte,
+          // så vi viser en lokal takkeside i stedet for å navigere til en beskyttet side.
+          setFinishedTogether(true);
         } else {
-          // "Ny reise" → tilbake til dashboard, brukeren kan starte ny reise
-          router.push('/dashboard?ended=new_journey');
+          // "Start ny reise" — profilen er beholdt og onboarding låst opp.
+          // Gå til onboarding (prefylt fra profilen — de justerer, skriver ikke på nytt).
+          router.push('/onboarding');
         }
       }
     } catch (err) {
@@ -273,6 +277,50 @@ export default function AvslutningSide() {
     setShowPdfOffer(false);
     setLoading(false);
   };
+
+  // "Vi fant hverandre" — begge kontoer er slettet, så vi kan ikke navigere til en
+  // beskyttet side (sesjonen er borte). Vis en lokal takkeside i stedet.
+  if (finishedTogether) {
+    return (
+      <main className="relative min-h-screen overflow-hidden">
+        <div
+          className="fixed inset-0 pointer-events-none"
+          style={{ background: 'linear-gradient(180deg, #0B1520 0%, #121E2E 40%, #0B1520 100%)' }}
+        />
+        <div
+          className="absolute top-16 left-1/2 -translate-x-1/2 w-[700px] h-[500px] pointer-events-none opacity-15"
+          style={{ background: 'radial-gradient(ellipse at 50% 40%, rgba(212,175,55,0.08), transparent 65%)' }}
+        />
+        <div className="relative z-10 w-full max-w-[540px] mx-auto px-6 py-24 flex flex-col items-center text-center">
+          <div className="mb-8">
+            <IconHeart />
+          </div>
+          <h1
+            style={{
+              fontSize: '40px',
+              fontWeight: 300,
+              color: '#D4AF37',
+              letterSpacing: '-0.02em',
+              lineHeight: '1.15',
+              margin: 0,
+            }}
+          >
+            Lykke til! 💛
+          </h1>
+          <p
+            style={{
+              fontSize: '18px',
+              lineHeight: '1.7',
+              color: 'rgba(255, 255, 255, 0.55)',
+              margin: '20px 0 0',
+            }}
+          >
+            Tusen takk for 30 dager med åpenhet. ToSom sletter nå kontoene deres — minnet er deres.
+          </p>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="relative min-h-screen overflow-hidden">
@@ -365,7 +413,7 @@ export default function AvslutningSide() {
         <ConfirmModal
           title="Vi fant hverandre?"
           message="Dere møtes utenom Tosom. Lykke til!"
-          warningText="Dette sletter samtalen for dere begge. Det kan ikke angres."
+          warningText="Dette sletter samtalen OG begge kontoene deres permanent. Det kan ikke angres."
           confirmText={loading ? "Behandler..." : "Ja, det var noe 💛"}
           onCancel={() => setSelected(null)}
           onConfirm={confirmChoice}

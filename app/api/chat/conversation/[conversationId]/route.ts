@@ -86,6 +86,8 @@ export async function GET(
 
     return NextResponse.json({
       conversationId: conversation.id,
+      // Bruker-id til den innloggte — ChatPageClient bruker den som sessionUserId
+      userId: session.user.id,
       partnerId,
       partnerName,
       // Visningsnavn til innlogga bruker — brukes i chat-boblene

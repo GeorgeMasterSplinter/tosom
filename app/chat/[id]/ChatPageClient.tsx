@@ -22,17 +22,17 @@ interface PartnerInfo {
   distanceKm: number | null;
 }
 
-/** Hent partner-info + mitt visningsnavn fra conversation */
+/** Hent partner-info + mitt visningsnavn + min bruker-id fra conversation */
 async function fetchPartnerInfo(
   conversationId: string
-): Promise<{ partner: PartnerInfo | null; myName: string | null }> {
+): Promise<{ partner: PartnerInfo | null; myName: string | null; userId: string | null }> {
   try {
     const res = await fetch(`/api/chat/conversation/${conversationId}`);
     if (res.status === 401) {
       window.location.href = '/login';
-      return { partner: null, myName: null };
+      return { partner: null, myName: null, userId: null };
     }
-    if (!res.ok) return { partner: null, myName: null };
+    if (!res.ok) return { partner: null, myName: null, userId: null };
     const data = await res.json();
     return {
       partner: {
@@ -43,9 +43,11 @@ async function fetchPartnerInfo(
       },
       // Navnet jeg har valgt i onboarding — vises over mine egne bobler
       myName: data.myName ?? null,
+      // Min bruker-id fra det autentiserte API-kallet — brukes som sessionUserId
+      userId: data.userId ?? null,
     };
   } catch {
-    return { partner: null, myName: null };
+    return { partner: null, myName: null, userId: null };
   }
 }
 
@@ -76,10 +78,9 @@ async function fetchImageShareAllowed(conversationId: string): Promise<boolean> 
 
 interface ChatPageProps {
   params: Promise<ChatPageParams>;
-  sessionUserId: string;
 }
 
-export default function ChatPage({ params, sessionUserId }: ChatPageProps) {
+export default function ChatPage({ params }: ChatPageProps) {
   const resolvedParams = use(params);
   const conversationId = resolvedParams.id;
 
@@ -87,6 +88,9 @@ export default function ChatPage({ params, sessionUserId }: ChatPageProps) {
   const [error, setError] = useState<string | null>(null);
   const [partner, setPartner] = useState<PartnerInfo | null>(null);
   const [myName, setMyName] = useState<string | null>(null);
+  // Bruker-id hentes i klienten (fra GET /api/chat/conversation) — ikke fra RSC,
+  // fordi next-auth auth() ikke leser session-cookien pålitelig i en server-komponent.
+  const [sessionUserId, setSessionUserId] = useState<string | null>(null);
   const [journeyDay, setJourneyDay] = useState<number>(1);
   const [imageShareAllowed, setImageShareAllowed] = useState<boolean>(false);
 
@@ -99,6 +103,7 @@ export default function ChatPage({ params, sessionUserId }: ChatPageProps) {
         ]);
         setPartner(info.partner);
         setMyName(info.myName);
+        setSessionUserId(info.userId);
         setImageShareAllowed(images);
         // Hent journey-day fallback — ChatProvider har også default 1
         const day = await fetchJourneyDayFallback();
@@ -134,7 +139,7 @@ export default function ChatPage({ params, sessionUserId }: ChatPageProps) {
       partner={partnerData}
       journeyDay={journeyDay}
       imageShareAllowed={imageShareAllowed}
-      sessionUserId={sessionUserId}
+      sessionUserId={sessionUserId ?? undefined}
       myName={myName}
     >
       <ChatContainer

@@ -44,17 +44,6 @@ function IconJourney() {
   );
 }
 
-function IconCalendar() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-      <line x1="16" y1="2" x2="16" y2="6" />
-      <line x1="8" y1="2" x2="8" y2="6" />
-      <line x1="3" y1="10" x2="21" y2="10" />
-    </svg>
-  );
-}
-
 /* ========================
    SEKSJONER
    ======================== */
@@ -96,17 +85,6 @@ const tipsSections: Array<{
       'Ikke rus. Strukturen er ment å gi deg og den andre rom.',
       'Bruk oppgavene som samtalestoff — de er skrevet for å få dere i gang.',
       'Vær proaktiv, men gi plass.',
-    ],
-  },
-  {
-    icon: <IconCalendar />,
-    title: 'Konkrete råd: dates og tidspunkt',
-    intro: 'Når dere har blitt kjent, gjør dere det enkelt for hverandre.',
-    points: [
-      'Foreslå konkret: en dag, en tid og et sted — ikke «når det passer».',
-      'Planlegg 2–3 korte, lavterskel-treff utover ukene (kaffe eller en tur først), ikke én stor begivenhet.',
-      'Gjør det enkelt: lite forpliktelse, kjent sted, en tid som passer begge.',
-      'Sett av en mild sjekk inn (f.eks. etter to uker) for å se hvordan det føles.',
     ],
   },
 ];

@@ -199,8 +199,20 @@ export const UniversalMenu = () => {
 
           {/* Mobil meny (slide-in fra høyre) */}
           {menuOpen && (
-            <div className="md:hidden fixed top-[64px] right-0 z-50 menu-slide-in">
-              <nav className="space-y-6" style={{ width: '280px', padding: '32px 24px' }}>
+            <div
+              className="md:hidden fixed top-[64px] right-0 z-50 menu-slide-in"
+              style={{
+                width: '280px',
+                background: 'rgba(10,15,26,0.95)',
+                backdropFilter: 'blur(24px) saturate(150%)',
+                borderBottom: '1px solid rgba(255,255,255,0.06)',
+                borderLeft: '1px solid rgba(255,255,255,0.06)',
+                borderRadius: '0 0 0 16px',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+                padding: '32px 24px',
+              }}
+            >
+              <nav className="space-y-6">
                 {navItems.map((item) => (
                   <Link
                     key={item.href}

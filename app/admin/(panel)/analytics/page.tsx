@@ -257,6 +257,126 @@ function MetricsPanel() {
   );
 }
 
+/* ─── Kjønn og ventekø ─── */
+interface GenderCounts { man: number; kvinne: number; annen: number; ukjent: number; total: number; }
+interface WeeklyGender { weekStart: string; man: number; kvinne: number; annen: number; ukjent: number; total: number; }
+interface GenderQueueData {
+  registered: GenderCounts;
+  weekly: WeeklyGender[];
+  queueNow: GenderCounts;
+  queueNeverMatched: GenderCounts;
+  journeyStates: Record<string, number>;
+}
+
+const GENDER_LABELS: Record<keyof Omit<GenderCounts, 'total'>, string> = {
+  man: 'Menn',
+  kvinne: 'Kvinner',
+  annen: 'Annet',
+  ukjent: 'Ukjent',
+};
+const GENDER_COLORS: Record<keyof Omit<GenderCounts, 'total'>, string> = {
+  man: '#8B5CF6',
+  kvinne: '#D4AF37',
+  annen: '#4ADE80',
+  ukjent: 'rgba(255,255,255,0.4)',
+};
+
+/* Ukentlig: grupperte stolper per uke (mann/kvinne) */
+function WeeklyGenderBars({ data }: { data: WeeklyGender[] }) {
+  const weeks = data.slice(-12);
+  const max = Math.max(...weeks.flatMap((w) => [w.man, w.kvinne]), 1);
+  return (
+    <div>
+      <div className="flex items-center gap-4 mb-2 text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
+        <span className="flex items-center gap-1"><span style={{ width: 10, height: 10, borderRadius: 2, background: GENDER_COLORS.man, display: 'inline-block' }} /> Menn</span>
+        <span className="flex items-center gap-1"><span style={{ width: 10, height: 10, borderRadius: 2, background: GENDER_COLORS.kvinne, display: 'inline-block' }} /> Kvinner</span>
+      </div>
+      <div className="flex items-end gap-1.5 h-28">
+        {weeks.map((w) => (
+          <div key={w.weekStart} className="flex-1 flex flex-col items-center gap-1" title={`${w.weekStart.slice(0, 10)}: ${w.man} menn, ${w.kvinne} kvinner`}>
+            <div className="w-full flex items-end justify-center gap-0.5 h-20">
+              <div className="flex-1 rounded-t" style={{ height: `${(w.man / max) * 100}%`, minHeight: w.man > 0 ? '4px' : '0', background: GENDER_COLORS.man }} />
+              <div className="flex-1 rounded-t" style={{ height: `${(w.kvinne / max) * 100}%`, minHeight: w.kvinne > 0 ? '4px' : '0', background: GENDER_COLORS.kvinne }} />
+            </div>
+            <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.3)' }}>{w.weekStart.slice(5, 10)}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* Fire kjønn-kort for en samlet tall-sat */
+function GenderCards({ title, data, accent }: { title: string; data: GenderCounts; accent?: string }) {
+  return (
+    <div>
+      <h4 className="text-xs font-semibold mb-2 tracking-wide" style={{ color: 'rgba(255,255,255,0.5)' }}>
+        {title} <span style={{ color: accent || '#D4AF37' }}>· {data.total} totalt</span>
+      </h4>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {(Object.keys(GENDER_LABELS) as (keyof Omit<GenderCounts, 'total'>)[]).map((g) => (
+          <div key={g} className="rounded-xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}>
+            <div className="text-xl font-bold" style={{ color: GENDER_COLORS[g] }}>{data[g]}</div>
+            <div className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>{GENDER_LABELS[g]}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function GenderQueuePanel() {
+  const [data, setData] = useState<GenderQueueData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/admin/gender-queue')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => { if (d && d.success) setData(d); })
+      .catch(() => null)
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="rounded-2xl p-5 animate-pulse" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+        <div className="h-4 w-40 mb-4 rounded bg-white/5" />
+        <div className="h-28 rounded-xl bg-white/5" />
+      </div>
+    );
+  }
+
+  if (!data) {
+    return (
+      <div className="rounded-2xl p-5" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+        <h3 className="text-sm font-semibold mb-3 tracking-wide" style={{ color: 'rgba(255,255,255,0.6)' }}>KJØNN OG VENTEKØ</h3>
+        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>Kunne ikke laste kjønn- og ventekø-statistikk.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="rounded-2xl p-5 space-y-6" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+      <h3 className="text-sm font-semibold tracking-wide" style={{ color: 'rgba(255,255,255,0.6)' }}>KJØNN OG VENTEKØ</h3>
+
+      {/* Total kjønnfordeling */}
+      <GenderCards title="TOTALE REGISTRERTE PER KJØNN" data={data.registered} />
+
+      {/* Ukentlig */}
+      <div>
+        <h4 className="text-xs font-semibold mb-3 tracking-wide" style={{ color: 'rgba(255,255,255,0.5)' }}>NYE REGISTRERINGER PER UKE (siste 12 uker)</h4>
+        <WeeklyGenderBars data={data.weekly} />
+      </div>
+
+      {/* Ventekø nå og aldri matcha */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <GenderCards title="VENTEKØ NÅ" data={data.queueNow} accent="#FBBF24" />
+        <GenderCards title="SITTER I VENTEKØ UTEN MATCH" data={data.queueNeverMatched} accent="#F87171" />
+      </div>
+    </div>
+  );
+}
+
 /* ─── Hovedkomponent 📊 */
 export default function AdminAnalyticsPage() {
   const [timeFilter, setTimeFilter] = useState('30');
@@ -326,6 +446,9 @@ export default function AdminAnalyticsPage() {
           </div>
         </div>
       </div>
+
+      {/* Kjønn og ventekø */}
+      <GenderQueuePanel />
 
       {/* B5.3: Reisestatistikk fra JourneyStat */}
       <JourneyStatPanel stats={journeyStats} />

@@ -1,8 +1,8 @@
 /**
  * Tosom Admin Stats API
  * 
- * Hentar sanntidsstatistikk fra databasen for dashboard.
- * Kun tilgjengeleg for admin (krevar admin_token eller session med admin-role).
+ * Henter sanntidsstatistikk fra databasen for dashboard.
+ * Kun tilgjengelig for admin (krever admin_token eller session med admin-role).
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
   if (auth instanceof NextResponse) return auth;
 
   try {
-    // Hentar alle statistikk i ett omgang for å unngå N+1-spørringar
+    // Henter all statistikk i ett omgang for å unngå N+1-spørringer
     const [
       totalUsers,
       activeMatches,
@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
         );
       }),
 
-      // 5. Nye registrasjonar de siste 7 dagane
+      // 5. Nye registreringer de siste 7 dagene
       prisma.user.count({
         where: {
           createdAt: {
@@ -66,7 +66,7 @@ export async function GET(req: NextRequest) {
         },
       }),
 
-      // 7. Systemstatus — feil i de siste 24 timane
+      // 7. Systemstatus — feil i de siste 24 timer
       prisma.systemLog.count({
         where: {
           level: 'ERROR',
@@ -77,7 +77,7 @@ export async function GET(req: NextRequest) {
       }),
     ]);
 
-    // Hentar nyaste 5 brukerne
+    // Henter de 5 nyeste brukerne
     const recentUsers = await prisma.user.findMany({
       take: 5,
       orderBy: { createdAt: 'desc' },
@@ -92,13 +92,13 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    // Hentar fasefordeling for pågående reiser
+    // Henter fasefordeling for pågående reiser
     const journeyPhases = await prisma.journeyProgress.groupBy({
       by: ['phase'],
       _count: true,
     });
 
-    // Hentar system-oppsummering (senaste logg)
+    // Henter system-oppsummering (senaste logg)
     const latestSystemLog = await prisma.systemLog.findFirst({
       orderBy: { createdAt: 'desc' },
       select: { level: true, message: true, module: true, createdAt: true },

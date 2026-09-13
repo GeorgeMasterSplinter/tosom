@@ -52,8 +52,9 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ hideOn = false }) => {
   const navItems = [
     { label: 'Hvorfor Tosom', href: '/hvorfor' },
     { label: 'Slik fungerer det', href: '/slik-fungerer-det' },
-    { label: 'Reisen', href: '/reisen' },
-    { label: 'Priser', href: '/priser' },
+    { label: 'Metoder', href: '/metoder' },
+    { label: 'Trygghet', href: '/trygghet' },
+    { label: 'Tips', href: '/tips' },
   ];
 
   const isActive = (href: string) => pathname?.startsWith(href) ?? false;

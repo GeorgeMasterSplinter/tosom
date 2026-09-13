@@ -33,6 +33,7 @@ const produktLinks = [
   { label: 'Metoder vi bruker', href: '/metoder' },
   { label: 'Reisen', href: '/reisen' },
   { label: 'Priser', href: '/priser' },
+  { label: 'Tips', href: '/tips' },
 ];
 
 const reglerLinks = [

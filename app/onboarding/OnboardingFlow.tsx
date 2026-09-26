@@ -10,6 +10,10 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { csrfFetch } from '@/lib/api/csrfClient';
 import { OnboardingLayout } from './OnboardingLayout';
+import {
+  validateOnboardingStep,
+  firstIncompleteOnboardingStep,
+} from '@/lib/validation/onboarding-steps';
 
 import Step1Profile from './steps/Step1Profile';
 import Step2Personlighet from './steps/Step2Personlighet';
@@ -227,6 +231,22 @@ const FIELD_LABELS: Record<string, string> = {
   'personlighet.selfDesc': 'Om deg selv',
 };
 
+// Kort etikett per obligatorisk onboarding-felt — brukt av den sentrale
+// steg-valideringen (handleNext) og pre-flighten (handleStartReisen).
+// Nøkkelene er uten seksjonsprefiks, som i onboarding-steps.ts-validereren.
+const STEP_FIELD_LABELS: Record<string, string> = {
+  identityName: 'navnet ditt',
+  age: 'alderen din',
+  gender: 'kjønnet',
+  seekingGender: 'hvem du søker',
+  city: 'hvor du bor',
+  postalCode: 'postnummeret',
+  distancePref: 'maks avstand',
+  agePrefMin: 'minste alder',
+  agePrefMax: 'høyeste alder',
+  selfDesc: 'en kort tekst om deg selv',
+};
+
 /**
  * Gjør serverens feilsvar om til noe brukeren faktisk kan handle på.
  * Ved 400 lister vi felt og årsak, slik at hun vet hva som må rettes
@@ -285,6 +305,9 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Sted for steg-valideringsfeil (vises på steget som mangler felt) —
+  // holdt separat fra `error` (lagre/kø-feil, vises på siste steg).
+  const [stepError, setStepError] = useState<string | null>(null);
    // Flytt localStorage-henting til useEffect for å unngå HydrationMismatch
    // SSR ser alltid tomme felt — klientet hentar lagrede data etter mount
    const [data, setData] = useState<ProfileData>(() => ({ ...initialData }));
@@ -368,6 +391,12 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     return () => { if (saveTimerRef.current) clearTimeout(saveTimerRef.current); };
   }, [data]);
 
+  // Tilstand steg-valideringsfeilen når profilen endres — brukeren fyller ut
+  // det manglende feltet og feilen forsvinner umiddelbart.
+  useEffect(() => {
+    setStepError(null);
+  }, [data]);
+
   // B2.2: Server-side autosave ved stegbytte (ikke-blokkerende)
   useEffect(() => {
     if (step > 0) {
@@ -389,7 +418,22 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
   }, []);
 
   // === Navigasjon (definert tidlig for å unngå reference-feil) ===
-  const handleNext = () => goToStep(step + 1);
+  // Sentral gate: man kan ikke avansere før stegets obligatoriske felt er fylt
+  // ut (speiler backend-skjemaet). De per-steg-gatene (Step1Profile m.fl.) er
+  // like strenge eller strenkere, så dette er et no-op ved normal klikk-navigasjon
+  // — men dekker også hopp via goToStep/prefill, slik at ingen kan nå et senere
+  // steg med en ufullstendig profil (og dermed ingen «mangler»-feil på slutten).
+  const handleNext = () => {
+    const { errors } = validateOnboardingStep(step, data);
+    if (errors.length > 0) {
+      const first = errors[0];
+      const label = STEP_FIELD_LABELS[first.field] ?? first.field;
+      setStepError(`Fyll ut ${label} før du går videre.`);
+      return;
+    }
+    setStepError(null);
+    goToStep(step + 1);
+  };
   const handleBack = () => { if (step > 0) goToStep(step - 1); };
 
   // === Steg-titlar og intro-tekstar (bokmål-korrekt) ===
@@ -465,6 +509,18 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
   const handleStartReisen = async () => {
     setSaving(true);
     setError(null);
+    // PRE-FLIGHT: aldri prøv å lagre en ufullstendig profil. Hvis noe mangler
+    // hopper vi rett til det steget som mangler felt, i stedet for å la serveren
+    // avvise med 400 på siste steg («noe mangler i profilen din»).
+    const missing = firstIncompleteOnboardingStep(data);
+    if (missing) {
+      setSaving(false);
+      const first = missing.errors[0];
+      const label = STEP_FIELD_LABELS[first.field] ?? first.field;
+      setStepError(`Du mangler ${label} — fyll det ut på dette steget.`);
+      goToStep(missing.step);
+      return;
+    }
     try {
       // FORSKNINGSMOTOR F-6: Samle de 44 rå skalasvarene (1–5) etter item-id.
       // Kun verdier som faktisk er tall sendes — ubesvarte items utelates
@@ -635,9 +691,6 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     }
   };
 
-  // Vis feilmelding på siste steg
-  const showErrorOnLastStep = error && step === 12;
-
   const currentStepData = stepsMeta[step];
   const isLastStep = step === 12;
   const isFirstStep = step === 0;
@@ -661,8 +714,9 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     };
   }, []);
 
-  // Pass error til layout for vising på siste steg
-  const layoutError = step === 12 && error ? error : null;
+  // Feil til layout: lagre/kø-feil (`error`) vises på siste steg, mens
+  // steg-valideringsfeil (`stepError`) vises på steget som faktisk mangler felt.
+  const layoutError = (step === 12 && error ? error : null) || stepError;
 
   return (
     <OnboardingLayout

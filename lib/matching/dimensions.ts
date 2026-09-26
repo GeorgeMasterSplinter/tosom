@@ -193,8 +193,9 @@ function pickField(profile: Record<string, unknown>, ...keys: string[]): string 
       return (profile[k] as string).toLowerCase().trim();
     }
   }
-  // Sjekk inni lifestyle / lifeSituation Json-objekt
-  for (const container of ['lifestyle', 'lifeSituation', 'basic']) {
+  // Sjekk inni lifestyle / lifeSituation / basic / deepProfileData Json-objekt
+  // (religion ligger i deepProfileData — uten dette ble vekt 0,10 aldri lest).
+  for (const container of ['lifestyle', 'lifeSituation', 'basic', 'deepProfileData']) {
     const c = profile[container];
     if (c && typeof c === 'object') {
       for (const k of keys) {

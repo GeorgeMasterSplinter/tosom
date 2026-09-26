@@ -183,4 +183,15 @@ describe('scoreLifeSituationCompat', () => {
     const b = { wantChildren: 'ja', smoking: 'Snuser' };
     expect(scoreLifeSituationCompat(a, b)).toBe(83);
   });
+
+  it('leser religion fra deepProfileData (produksjonsformen), ikke bare toppnivå', () => {
+    // Kalibreringsbug: religion ligger i deepProfileData, som pickField ikke
+    // leste tidligere. Samme religion → fullt samsvar (100), ulik religion → 0.
+    // Før fikset var begge tilfellene «mangler data» = nøytralt 50.
+    const a = { deepProfileData: { religion: 'kristen' } };
+    const same = { deepProfileData: { religion: 'kristen' } };
+    const diff = { deepProfileData: { religion: 'muslim' } };
+    expect(scoreLifeSituationCompat(a, same)).toBe(100);
+    expect(scoreLifeSituationCompat(a, diff)).toBe(0);
+  });
 });

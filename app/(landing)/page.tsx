@@ -64,6 +64,17 @@ function IconDepth() {
   );
 }
 
+/** Bildene — sirkel med sol og fjell (foto-motiv) */
+function IconPhotos() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="9" />
+      <circle cx="9.5" cy="9.5" r="1.3" />
+      <path d="M5.5 15.5l3.4-3 2.4 2.3 3-3 4.2 4.2" />
+    </svg>
+  );
+}
+
 /** Resonans-skille — motivet i miniatyr */
 function ResonanceDivider() {
   return (
@@ -106,6 +117,11 @@ const steps = [
     icon: <IconDepth />,
     title: 'Bygget for dybde',
     content: 'Samtaler, spørsmål og små oppgaver som hjelper dere å komme nærmere. Mindre overflate. Mer mening.',
+  },
+  {
+    icon: <IconPhotos />,
+    title: 'Bilder etter 14 dager',
+    content: 'Trygghet før utseende. Bildene åpnes først etter 14 dager — da kjenner dere hverandre som mennesker, ikke som profiler. Ordene først, bildet etter.',
   },
 ];
 
@@ -228,7 +244,7 @@ export default function LandingPage() {
                     gold
                     glow={step.featured}
                     interactive
-                    className={`space-y-4 h-full ${step.featured ? 'lg:col-span-2' : ''}`}
+                    className="space-y-4 h-full"
                   >
                     <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
                       {step.icon}

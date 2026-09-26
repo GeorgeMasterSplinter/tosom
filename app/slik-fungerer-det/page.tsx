@@ -46,6 +46,16 @@ function IconRoom() {
   );
 }
 
+function IconPhotos() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+      <circle cx="8.5" cy="8.5" r="1.5" />
+      <path d="M21 15l-5-5L5 21" />
+    </svg>
+  );
+}
+
 /* ========================
    STEG-DATA
    ======================== */
@@ -215,6 +225,51 @@ export default function SlikPage() {
                 )}
               </GlassCard>
             ))}
+            {/* ===== BILDER EFTER 14 DAGER (highlight) ===== */}
+            <div className="md:col-span-2 mt-6">
+              <div className="mx-auto max-w-3xl">
+                <GlassCard padding="xl" gold glow className="text-center space-y-5">
+                  <div className="flex justify-center">
+                    <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                      <IconPhotos />
+                    </div>
+                  </div>
+                  <h3
+                    style={{
+                      ...typographyToStyle('heading-md'),
+                      color: color.brand.gold,
+                    }}
+                  >
+                    Bilder kommer etter 14 dager
+                  </h3>
+                  <p
+                    className="mx-auto max-w-xl"
+                    style={{
+                      ...typographyToStyle('body-lg'),
+                      color: color.text.secondary,
+                      lineHeight: '1.8',
+                    }}
+                  >
+                    Trygghet før utseende. Bildene åpnes først etter 14 dager — da har dere lært å kjenne hverandre som mennesker, ikke som profiler. Ordene først, bildet etter.
+                  </p>
+                  <div className="mx-auto max-w-md grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2">
+                    {['14 dager uten bilder', 'fokus på personen og meningen', 'bildene åpnes ved dag 15', 'bygger tillit før utseende'].map((point, pIdx) => (
+                      <p
+                        key={pIdx}
+                        style={{
+                          ...typographyToStyle('body'),
+                          color: color.text.secondary,
+                          lineHeight: '1.6',
+                        }}
+                      >
+                        <span className="text-[#D4AF37] mr-2">✦</span>
+                        {point}
+                      </p>
+                    ))}
+                  </div>
+                </GlassCard>
+              </div>
+            </div>
           </div>
         </ToSomSection>
 

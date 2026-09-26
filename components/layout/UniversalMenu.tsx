@@ -19,6 +19,7 @@ import { color } from '@/config/design-tokens';
 const navItems = [
   { label: 'Hvorfor Tosom', href: '/hvorfor' },
   { label: 'Slik fungerer det', href: '/slik-fungerer-det' },
+  { label: 'Reisen', href: '/reisen' },
   { label: 'Metoder', href: '/metoder' },
   { label: 'Trygghet', href: '/trygghet' },
   { label: 'Tips', href: '/tips' },
@@ -87,7 +88,7 @@ export const UniversalMenu = () => {
           </Link>
 
           {/* Midten: Meny (desktop) */}
-          <nav className="hidden lg:flex items-center gap-10">
+          <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -174,7 +175,7 @@ export const UniversalMenu = () => {
 
           {/* Mobil meny-knapp */}
           <button
-            className="md:hidden w-12 h-12 flex items-center justify-center rounded-xl transition-all duration-200 ease-out"
+            className="lg:hidden w-12 h-12 flex items-center justify-center rounded-xl transition-all duration-200 ease-out"
             style={{
               color: '#E8C27A',
               background: menuOpen ? 'rgba(212,175,55,0.12)' : 'rgba(255,255,255,0.03)',
@@ -200,7 +201,7 @@ export const UniversalMenu = () => {
           {/* Mobil meny (slide-in fra høyre) */}
           {menuOpen && (
             <div
-              className="md:hidden fixed top-[64px] right-0 z-50 menu-slide-in"
+              className="lg:hidden fixed top-[64px] right-0 z-50 menu-slide-in"
               style={{
                 width: '280px',
                 background: 'rgba(10,15,26,0.95)',

@@ -13,19 +13,16 @@
 /**
  * Selskapet bak Tosom.
  *
- * `orgNumber` og `address` står som null inntil registreringen i
- * Enhetsregisteret er bekreftet. Så lenge de er null, utelates de
- * fra vilkårene og personvernerklæringen — vi skriver heller mindre
- * enn å vise en plassholder på en juridisk bindende side.
- *
- * Når nummeret foreligger: fyll inn begge feltene. Tekstene tar dem
- * i bruk automatisk gjennom hjelperne nedenfor.
+ * `orgNumber` er bekreftet fra Enhetsregisteret. `address` står som
+ * null inntil forretningsadressen er bekreftet; så lenge den er null,
+ * utelates den fra vilkårene og personvernerklæringen. Hjelperne
+ * nedenfor tar begge feltene i bruk automatisk når de er fylt.
  */
 export const COMPANY = {
   name: 'Tosom AS',
-  /** Settes inn når registreringen i Enhetsregisteret er bekreftet. */
-  orgNumber: null as string | null,
-  /** Settes inn sammen med organisasjonsnummeret. */
+  /** Bekreftet fra Enhetsregisteret. */
+  orgNumber: '938 413 231',
+  /** Settes inn når forretningsadressen er bekreftet. */
   address: null as string | null,
   email: 'support@tosom.no',
   country: 'Norge',
@@ -33,38 +30,36 @@ export const COMPANY = {
 
 /** Er selskapsopplysningene bekreftet og klare til å vises? */
 export function hasCompanyDetails(): boolean {
-  return Boolean(COMPANY.orgNumber && COMPANY.address);
+  return Boolean(COMPANY.orgNumber);
 }
 
 /**
  * Identifiserer avtaleparten i løpende tekst.
  *
- * Med opplysninger:  «Tosom AS, organisasjonsnummer 123 456 789,
+ * Med opplysninger:  «Tosom AS, organisasjonsnummer 938 413 231,
  *                     med forretningsadresse Storgata 1, Oslo»
- * Uten opplysninger: «Tosom AS»
+ * Uten opplysninger: «Tosom AS, organisasjonsnummer 938 413 231»
  */
 export function companyIdentification(): string {
-  if (hasCompanyDetails()) {
-    return `${COMPANY.name}, organisasjonsnummer ${COMPANY.orgNumber}, med forretningsadresse ${COMPANY.address}`;
-  }
-  return COMPANY.name;
+  const org = COMPANY.orgNumber ? `, organisasjonsnummer ${COMPANY.orgNumber}` : '';
+  const address = COMPANY.address ? `, med forretningsadresse ${COMPANY.address}` : '';
+  return `${COMPANY.name}${org}${address}`;
 }
 
 /** Bunnlinje på vilkår og personvernerklæring. */
 export function companyFooterLine(): string {
-  if (hasCompanyDetails()) {
-    return `${COMPANY.name} · Organisasjonsnummer ${COMPANY.orgNumber} · ${COMPANY.address}`;
-  }
-  return `${COMPANY.name} · ${COMPANY.country}`;
+  const org = COMPANY.orgNumber ? ` · Organisasjonsnummer ${COMPANY.orgNumber}` : '';
+  const address = COMPANY.address ? ` · ${COMPANY.address}` : '';
+  return `${COMPANY.name}${org}${address || ` · ${COMPANY.country}`}`;
 }
 
 /** Gjeldende versjon av vilkårene. Lagres på bruker ved aksept. */
-export const TERMS_VERSION = '2026-08-25';
-export const TERMS_UPDATED = '25. august 2026';
+export const TERMS_VERSION = '2026-10-01';
+export const TERMS_UPDATED = '1. oktober 2026';
 
 /** Gjeldende versjon av personvernerklæringen. */
-export const PRIVACY_VERSION = '2026-08-21';
-export const PRIVACY_UPDATED = '21. august 2026';
+export const PRIVACY_VERSION = '2026-10-01';
+export const PRIVACY_UPDATED = '1. oktober 2026';
 
 /**
  * Aldersgrense. Invariant I-14.
@@ -79,16 +74,15 @@ export const MIN_AGE = 21;
 /**
  * Prismodell.
  *
- * Under beta er tjenesten vederlagsfri, og ingen pris vises i grensesnittet.
- * Tallene her beskriver modellen som trer i kraft ved åpen lansering,
- * samtidig som betalingsvei aktiveres.
+ * De første 5 000 reisene er gratis, deretter én gangssum per reise via Vipps.
+ * Betalingsveien aktiveres via config/features.ts (PAYMENTS_ENABLED).
  */
 export const PRICING = {
   /** Er betaling aktiv? Følger config/features.ts — se den for kill switch. */
   active: false,
   /** Pris per reise i kroner, betalt én gang. */
   journeyPrice: 349,
-  /** Antall brukere som får reisen gratis ved lansering. */
+  /** Antall reiser som er gratis. */
   freeUserCap: 5000,
   currency: 'NOK',
 } as const;

@@ -296,7 +296,7 @@ export default function PriserPage() {
                 color: color.text.primary,
               }}
             >
-              Gratis i lukket beta
+              Én reise, én pris
             </h2>
 
             <GlassCard
@@ -311,7 +311,7 @@ export default function PriserPage() {
                   color: color.brand.gold,
                 }}
               >
-                Gratis
+                349 kr
               </div>
 
               <p
@@ -321,7 +321,7 @@ export default function PriserPage() {
                   lineHeight: '1.8',
                 }}
               >
-                Tosom er i lukket beta. Reisen er gratis for deg som er invitert, og det kreves ingen betaling.
+                Per reise, betalt én gang med Vipps. Ingen abonnement, ingen løpende kostnader.
               </p>
 
               <p
@@ -331,7 +331,7 @@ export default function PriserPage() {
                   lineHeight: '1.7',
                 }}
               >
-                Når Tosom åpner for alle, blir reisen gratis for de første 5 000 brukerne. Deretter koster én reise 349 kroner, betalt én gang. Vi varsler i god tid før dette trer i kraft.
+                De første 5 000 reiser er gratis.
               </p>
 
             </GlassCard>

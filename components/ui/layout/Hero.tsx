@@ -202,7 +202,7 @@ export const Hero: FC<HeroProps> = ({
             </p>
           </div>
 
-          {/* 3. Beta-notis — under løftet, rolig og kort */}
+          {/* 3. Trust-notis — under løftet, rolig og kort */}
           <div className="mt-14 flex justify-center">
             <div
               className="inline-flex items-center gap-3 rounded-full px-5 py-2.5"
@@ -216,7 +216,7 @@ export const Hero: FC<HeroProps> = ({
                 className="text-[13px]"
                 style={{ color: 'rgba(255,255,255,0.58)', letterSpacing: '0.15px' }}
               >
-                Tosom er i lukket beta.{' '}
+                Én kobling om gangen — 30 dager sammen.{' '}
                 <Link
                   href="/slik-fungerer-det"
                   className="underline underline-offset-4 transition-colors hover:text-white/80 inline-block px-2 py-2 -my-2 -mx-1"

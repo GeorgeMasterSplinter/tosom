@@ -1,17 +1,14 @@
 /**
  * Tosom — Start reisen (B4.2)
  *
- * BETA: Reisen er gratis for alle inviterte. Ingen betaling skjer her.
- * Betalingsvei er ikke implementert (config/features.ts kaster ved
- * PAYMENTS_ENABLED=true). Derfor vises ingen pris på denne siden.
- *
- * Ved lansering: første 5 000 gratis, deretter 349 kr per reise.
- * Prisinformasjon settes inn igjen samtidig som betaling aktiveres.
+ * Prismodell: de første 5 000 reisene er gratis. Betalingsveien er Vipps og
+ * aktiveres via config/features.ts (PAYMENTS_ENABLED); inntil da sendes reisen
+ * direkte til kø uten belastning.
  *
  * B4.2: Samtykket om oppstart lagres som withdrawalWaiverAt. Teksten oppfyller
  * kravet i angrerettloven § 22 om uttrykkelig forhåndssamtykke og erkjennelse
- * av at angreretten faller bort. Under beta er tjenesten vederlagsfri, så
- * bestemmelsen har ingen økonomisk virkning ennå.
+ * av at angreretten faller bort. Innefor det gratisleiet har bestemmelsen
+ * ingen økonomisk virkning.
  *
  * Grensen går ved koblingen, ikke ved en dato — se config/legal.ts REFUND.
  */
@@ -47,8 +44,8 @@ export default function BetalingPage() {
 
     setLoading(true);
     try {
-      // B4.3: Gratismodus — Vipps-nøkler kommer om ~2 uker
-      // Inntil da: send brukeren direkte til kø
+      // Betalingsveien (Vipps) aktiveres via config/features.ts. Inntil da sendes
+      // reisen direkte til kø uten belastning.
       const res = await csrfFetch('/api/journey/queue', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -86,7 +83,7 @@ export default function BetalingPage() {
             Klar til å starte reisen?
           </h1>
           <p className="text-lg" style={{ color: 'rgba(255,255,255,0.5)', lineHeight: '1.6' }}>
-            Tosom er i lukket beta. Reisen er gratis for deg som er invitert.
+            De første 5 000 reiser er gratis. Deretter koster én reise 349 kroner, betalt én gang med Vipps.
           </p>
         </div>
 
@@ -105,7 +102,7 @@ export default function BetalingPage() {
               Én reise
             </h2>
             <p className="text-xl font-semibold" style={{ color: '#D4AF37' }}>
-              Gratis i beta
+              Gratis
             </p>
           </div>
           <ul className="space-y-3">
@@ -212,7 +209,7 @@ export default function BetalingPage() {
           </button>
 
           <p className="mt-6 text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>
-            Ingen betaling under beta. Du blir varslet i god tid før dette endrer seg.
+            Du blir aldri belastet uten at du godkjenner det på forhånd.
           </p>
 
         </div>

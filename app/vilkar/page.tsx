@@ -72,7 +72,7 @@ const clauses: Clause[] = [
       'Vi kan ikke garantere at du får en kobling i en bestemt runde. Det avhenger av hvem andre som står i kø.',
       'Vi kan ikke garantere at koblingen fører til kontakt, vennskap eller forhold.',
       'Vi kan ikke garantere at den andre personen svarer, eller at samtalen fortsetter.',
-      'Vi gjør ingen bakgrunnssjekk av brukere utover den selvrapporterte alderen i betaperioden.',
+      'Vi gjør ingen bakgrunnssjekk av brukere utover den selvrapporterte alderen.',
       'Vi kan ikke garantere at plattformen alltid er tilgjengelig uten avbrudd.',
     ],
   },
@@ -80,7 +80,7 @@ const clauses: Clause[] = [
     id: '5',
     title: `Aldersgrense — ${MIN_AGE} år`,
     paragraphs: [
-      `Du må ha fylt ${MIN_AGE} år for å bruke Tosom. Aldersverifisering vil bli innført ved lansering. I beta er alderen selvrapportert, og brukere bekrefter at de er ${MIN_AGE} år eller eldre.`,
+      `Du må ha fylt ${MIN_AGE} år for å bruke Tosom. Alderen er selvrapportert, og du bekrefter at du er ${MIN_AGE} år eller eldre.`,
       `Oppdager vi at en bruker er under ${MIN_AGE} år, stenges kontoen umiddelbart og alle opplysninger slettes.`,
     ],
   },
@@ -88,7 +88,7 @@ const clauses: Clause[] = [
     id: '6',
     title: 'Konto og innlogging',
     paragraphs: [
-      'Du oppretter konto med e-post og passord i beta. Ved lansering innføres innlogging med Vipps. Kontoen er personlig, og du kan bare ha én.',
+      'Du oppretter konto med e-post og passord, eller med Vipps. Kontoen er personlig, og du kan bare ha én.',
       'Du er ansvarlig for aktiviteten på kontoen din. Mistenker du at noen andre har fått tilgang, skal du si fra til oss.',
       'Du kan ikke overdra kontoen til andre, og du kan ikke opptre på vegne av noen andre.',
     ],
@@ -177,16 +177,15 @@ const clauses: Clause[] = [
     id: '14',
     title: 'Pris og betaling',
     paragraphs: [
-      'Tosom er i lukket beta. I denne perioden er tjenesten gratis for inviterte brukere, og det kreves ingen betaling.',
-      `Når Tosom åpner for alle, blir reisen gratis for de første ${PRICING.freeUserCap.toLocaleString('nb-NO')} brukerne. Deretter koster én reise ${PRICING.journeyPrice} kroner, betalt én gang. Det er ingen abonnement og ingen løpende kostnader.`,
-      'Vi varsler i god tid før prismodellen trer i kraft. Du blir aldri belastet uten at du har godkjent det på forhånd.',
+      `De første ${PRICING.freeUserCap.toLocaleString('nb-NO')} reiser er gratis. Deretter koster én reise ${PRICING.journeyPrice} kroner, betalt én gang med Vipps. Det er ingen abonnement og ingen løpende kostnader.`,
+      'Du blir aldri belastet uten at du har godkjent det på forhånd.',
     ],
   },
   {
     id: '15',
     title: 'Angrerett og refusjon',
     paragraphs: [
-      'Så lenge tjenesten er gratis, har dette punktet ingen økonomisk betydning. Det gjelder fra betaling innføres.',
+      'Så lenge reisen er gratis, har dette punktet ingen økonomisk betydning. Det gjelder når reisen betales.',
       'Norsk lov gir deg som forbruker angrerett på digitale tjenester. Retten faller bort når leveringen har begynt, forutsatt at du på forhånd har samtykket til det og forstått hva det innebærer. Du blir bedt om begge deler før du betaler.',
       'Grensen går ved koblingen:',
     ],

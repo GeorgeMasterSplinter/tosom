@@ -164,7 +164,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/* Beta-invitasjon */}
+        {/* Hvorfor Vipps */}
         <div
           className="w-full mt-8 space-y-3"
           style={{
@@ -183,7 +183,7 @@ export default function LoginPage() {
               fontWeight: 600,
             }}
           >
-            Hei!
+            Hvorfor Vipps?
           </p>
           <p
             style={{
@@ -193,48 +193,7 @@ export default function LoginPage() {
               margin: 0,
             }}
           >
-            Tosom er et rolig datingkonsept for voksne over 21 år. Nå inviterer vi Gjøkeredet/Spydspiss/IPDE til å teste og gi faglige innspill på opplevelsen, tryggheten og flyten i plattformen.
-          </p>
-          <p
-            style={{
-              fontSize: "15px",
-              lineHeight: "1.8",
-              color: "rgba(255,255,255,0.6)",
-              margin: 0,
-            }}
-          >
-            Du kan lage en helt vanlig bruker eller en tullete testprofil hvis du vil. Poenget er bare å kjenne på hvordan reisen fungerer, hvordan chatten oppleves, og om strukturen gir mening.
-          </p>
-          <p
-            style={{
-              fontSize: "15px",
-              lineHeight: "1.8",
-              color: "rgba(255,255,255,0.6)",
-              margin: 0,
-            }}
-          >
-            Gi gjerne beskjed hvis du ser noe som kan forbedres — enten faglig, teknisk eller bare noe som føles rart eller utydelig.
-          </p>
-          <p
-            style={{
-              fontSize: "15px",
-              lineHeight: "1.8",
-              color: "rgba(255,255,255,0.6)",
-              margin: 0,
-            }}
-          >
-            Send innspill til{' '}
-            <span style={{ color: "#D4AF37" }}>support@tosom.no</span>.
-          </p>
-          <p
-            style={{
-              fontSize: "15px",
-              lineHeight: "1.8",
-              color: "rgba(255,255,255,0.6)",
-              margin: 0,
-            }}
-          >
-            Takk for at du tar en titt og deler erfaringene dine.
+            Vipps er den vanligste måten å logge seg inn og betale på i Norge. Du trenger ikke huske nytt passord, og alt skjer trygt og raskt i appen din.
           </p>
         </div>
 

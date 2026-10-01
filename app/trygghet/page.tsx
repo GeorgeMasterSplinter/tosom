@@ -6,7 +6,7 @@
  * Beskriver rutinene som faktisk finnes i koden:
  * rapportering (POST /api/report), blokkering (UserBlock),
  * utestengelse (User.bannedAt), frysing (Conversation.frozenAt),
- * aldersgrense (selvrapportert i beta) og bildesperre til dag 15.
+ * aldersgrense (selvrapportert) og bildesperre til dag 15.
  *
  * Ingenting her lover mer enn plattformen kan holde.
  * Se docs/JURIDISK-GRUNNLAG-v1.0.md §3 for kartleggingen.
@@ -43,9 +43,9 @@ const sections: Section[] = [
     id: '2',
     title: 'Hvem som slipper inn',
     paragraphs: [
-      `I betaperioden lager du konto med e-post og passord, og bekrefter selv at du er minst ${MIN_AGE} år. Aldersverifisering gjennom Vipps og BankID innføres ved lansering.`,
+      `Du lager konto med e-post og passord, eller med Vipps, og bekrefter selv at du er minst ${MIN_AGE} år.`,
       `Aldersgrensen er ${MIN_AGE} år. Én person kan bare ha én konto.`,
-      'Vi gjør ikke bakgrunnssjekk. I betaperioden bekrefter alderen seg selv — vi vet ikke mer enn det, og vi later ikke som noe annet.',
+      'Vi gjør ikke bakgrunnssjekk. Alderen bekreftes selv — vi vet ikke mer enn det, og vi later ikke som noe annet.',
     ],
   },
   {

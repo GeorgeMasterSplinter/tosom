@@ -1,9 +1,8 @@
 import { redirect } from 'next/navigation';
 
 /**
- * BETA: Registreringssiden selger Vipps-innlogging som ikke finnes ennå.
- * All registrering skjer via /login (e-post + passord med auto-registrering).
- * Når Vipps-innlogging er på plass, bygges denne siden opp igjen.
+ * Registrering skjer via /login (e-post, passord eller Vipps med
+ * auto-registrering). Denne ruten returer til /login.
  */
 export default function RegisterPage() {
   redirect('/login');

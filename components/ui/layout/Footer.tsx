@@ -13,6 +13,7 @@ import Link from 'next/link';
 import { LogoWordmark } from '@/components/branding/LogoVariants';
 import { ToSomTagline } from '@/components/ui/system';
 import { color } from '@/config/design-tokens';
+import { COMPANY } from '@/config/legal';
 
 /* ========================
    PROPS
@@ -56,7 +57,7 @@ const omLinks = [
     ======================== */
 
 export const Footer: FC<FooterProps> = ({
-  companyName = 'Tosom',
+  companyName = COMPANY.name,
   year = new Date().getFullYear(),
 }) => {
   return (
@@ -239,7 +240,7 @@ export const Footer: FC<FooterProps> = ({
             className="text-xs md:text-sm"
             style={{ color: 'rgba(255,255,255,0.50)', lineHeight: '1.75' }}
           >
-            &copy; {year} {companyName}. Alle retter reservert.
+            &copy; {year} {companyName} · Org.nr. {COMPANY.orgNumber}. Alle retter reservert.
           </p>
           <p
             className="text-xs md:text-sm mt-2 sm:mt-0"

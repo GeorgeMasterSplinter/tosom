@@ -29,7 +29,7 @@ const FAQS = [
   },
   {
     q: 'Hva koster ToSom?',
-    a: 'I beta er det gratis. Når vi lanserer, blir det en engangsbetaling per 30-dagers reise. Ingen abonnement. Ingen skjulte kostnader. Du betaler for reisen, ikke for å være der.',
+    a: 'De første 5 000 reiser er gratis. Deretter én engangsbetaling per 30-dagers reise, betalt med Vipps. Ingen abonnement. Ingen skjulte kostnader. Du betaler for reisen, ikke for å være der.',
   },
   {
     q: 'Hvor er dataene mine?',

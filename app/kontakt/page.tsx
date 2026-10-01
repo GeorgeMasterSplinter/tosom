@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Footer } from '@/components/ui/layout/Footer';
 import { ToSomSection, ToSomCard, ToSomButton } from '@/components/ui/system';
 import { color, typographyToStyle } from '@/config/design-tokens';
+import { COMPANY } from '@/config/legal';
 import GlassCard from '@/components/ui/cards/GlassCard';
 
 /* ========================
@@ -230,6 +231,16 @@ export default function KontaktPage() {
                 </p>
               </GlassCard>
             </div>
+
+            <p
+              className="mt-10 text-center"
+              style={{
+                ...typographyToStyle('body-sm'),
+                color: color.text.muted,
+              }}
+            >
+              {COMPANY.name} · Org.nr. {COMPANY.orgNumber}
+            </p>
           </div>
         </ToSomSection>
 

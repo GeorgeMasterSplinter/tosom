@@ -15,7 +15,7 @@
 
 import { FC, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { LogoAnimated } from '@/components/branding/LogoVariants';
+import { LogoAnimated, ResonanceMark } from '@/components/branding/LogoVariants';
 import { ToSomSection } from '@/components/ui/system';
 import { ResonanceField } from '@/components/brand/ResonanceField';
 
@@ -158,8 +158,12 @@ export const Hero: FC<HeroProps> = ({
       <div className="mx-auto max-w-6xl px-6 lg:px-8 relative z-20" style={{ paddingTop: `${heroSpacing.paddingTop}px`, paddingBottom: `${heroSpacing.paddingBottom}px` }}>
         <div className="max-w-3xl mx-auto text-center">
 
-          {/* 1. Logo — merkevaren først */}
-          <div className="flex justify-center mb-12">
+          {/* 1. Resonansmerket over merkevaren */}
+          <div className="flex flex-col items-center mb-12">
+            <ResonanceMark
+              size={72}
+              className="mb-6 animate-ts-fade-in [animation-duration:600ms]"
+            />
             <LogoAnimated />
           </div>
 

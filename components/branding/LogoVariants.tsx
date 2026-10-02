@@ -228,6 +228,52 @@ export const LogoAnimated: FC<LogoAnimatedProps> = ({ className = '' }) => {
 };
 
 /* ========================
+   RESONANCE MARK (resonansmerket)
+   ======================== */
+
+export interface ResonanceMarkProps {
+  /** Bredde i px — høyden følger automatisk (~10:7). */
+  size?: number;
+  strokeWidth?: number;
+  /** Strekkfarge. Standard: ToSom-gull. */
+  color?: string;
+  className?: string;
+  style?: CSSProperties;
+}
+
+/**
+ * Resonansmerket — signaturmotivet: to sirkler som møter hverandre.
+ * Gull (#D4AF37), 1.5px linje, ingen fyll. Brukes som logo-merke over
+ * wordmarken, som seksjonsskilje og som dekorativt motiv.
+ */
+export const ResonanceMark: FC<ResonanceMarkProps> = ({
+  size = 64,
+  strokeWidth = 1.5,
+  color: strokeColor = color.brand.gold,
+  className = '',
+  style,
+}) => {
+  return (
+    <svg
+      width={size}
+      height={Math.round(size * 0.7)}
+      viewBox="2 5 20 14"
+      fill="none"
+      stroke={strokeColor}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      style={style}
+      aria-hidden="true"
+    >
+      <circle cx="9" cy="12" r="6" />
+      <circle cx="15" cy="12" r="6" />
+    </svg>
+  );
+};
+
+/* ========================
    CONVENIENCE GROUP
    ======================== */
 
@@ -237,6 +283,7 @@ export const LogoVariants = {
   Wordmark: LogoWordmark,
   Stacked: LogoStacked,
   Animated: LogoAnimated,
+  ResonanceMark: ResonanceMark,
 };
 
 /* ========================

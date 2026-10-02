@@ -6,6 +6,7 @@ import { ToSomSection, ToSomButton } from '@/components/ui/system';
 import { color, typographyToStyle } from '@/config/design-tokens';
 import GlassCard from '@/components/ui/cards/GlassCard';
 import { Reveal } from '@/components/motion/Reveal';
+import { ResonanceMark } from '@/components/branding/LogoVariants';
 
 /* ========================
    Ikoner — bygget på resonans-motivet
@@ -158,15 +159,18 @@ export default function LandingPage() {
         >
           <div className="mx-auto max-w-5xl">
             <Reveal direction="up" delay={0}>
-            <h2
-              className="text-center mb-6"
-              style={{
-                ...typographyToStyle('heading-lg'),
-                color: color.text.primary,
-              }}
-            >
-              Slik fungerer det
-            </h2>
+            <div className="flex flex-col items-center">
+              <ResonanceMark size={48} className="mb-4" />
+              <h2
+                className="text-center mb-6"
+                style={{
+                  ...typographyToStyle('heading-lg'),
+                  color: color.text.primary,
+                }}
+              >
+                Slik fungerer det
+              </h2>
+            </div>
             </Reveal>
 
             <Reveal direction="up" delay={120}>

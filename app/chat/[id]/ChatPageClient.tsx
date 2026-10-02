@@ -22,17 +22,17 @@ interface PartnerInfo {
   distanceKm: number | null;
 }
 
-/** Hent partner-info + mitt visningsnavn + min bruker-id fra conversation */
+/** Hent partner-info + mitt visningsnavn + min bruker-id + dela reisedag fra conversation */
 async function fetchPartnerInfo(
   conversationId: string
-): Promise<{ partner: PartnerInfo | null; myName: string | null; userId: string | null }> {
+): Promise<{ partner: PartnerInfo | null; myName: string | null; userId: string | null; journeyDay: number }> {
   try {
     const res = await fetch(`/api/chat/conversation/${conversationId}`);
     if (res.status === 401) {
       window.location.href = '/login';
-      return { partner: null, myName: null, userId: null };
+      return { partner: null, myName: null, userId: null, journeyDay: 1 };
     }
-    if (!res.ok) return { partner: null, myName: null, userId: null };
+    if (!res.ok) return { partner: null, myName: null, userId: null, journeyDay: 1 };
     const data = await res.json();
     return {
       partner: {
@@ -45,22 +45,12 @@ async function fetchPartnerInfo(
       myName: data.myName ?? null,
       // Min bruker-id fra det autentiserte API-kallet — brukes som sessionUserId
       userId: data.userId ?? null,
+      // Dela reisedag for samtalen (max av begge partene) — sikrer at begge ser
+      // samme status, inkludert slutt-tilstanden ved dag 30.
+      journeyDay: data.journeyDay ?? 1,
     };
   } catch {
-    return { partner: null, myName: null, userId: null };
-  }
-}
-
-// Journey-day blir henta via session — ikke treng conversationId
-// Denne funksjonen er bare for fallback, faktiske journeyDay kommer fra ChatProvider
-async function fetchJourneyDayFallback(): Promise<number> {
-  try {
-    const res = await fetch(`/api/journey/progress`);
-    if (!res.ok) return 1;
-    const data = await res.json();
-    return data.journey?.day ?? 1;
-  } catch {
-    return 1;
+    return { partner: null, myName: null, userId: null, journeyDay: 1 };
   }
 }
 
@@ -105,9 +95,8 @@ export default function ChatPage({ params }: ChatPageProps) {
         setMyName(info.myName);
         setSessionUserId(info.userId);
         setImageShareAllowed(images);
-        // Hent journey-day fallback — ChatProvider har også default 1
-        const day = await fetchJourneyDayFallback();
-        setJourneyDay(day);
+        // Dela reisedag fra conversation-API-et (max av begge partene)
+        setJourneyDay(info.journeyDay);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Ukjent feil');
       } finally {

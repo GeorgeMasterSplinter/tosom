@@ -214,11 +214,14 @@ export const LogoAnimated: FC<LogoAnimatedProps> = ({ className = '' }) => {
           size="3xl"
           colorVariant="gold"
         />
-        <span
-          className="mt-3 text-[10px] font-medium tracking-[0.35em] uppercase text-[var(--ts-gold)] opacity-35 animate-ts-fade-in [animation-duration:600ms] [animation-delay:350ms]"
-        >
-          Made in Norway
-        </span>
+        <div className="mt-3 flex flex-col items-center gap-1 animate-ts-fade-in [animation-duration:600ms] [animation-delay:350ms]">
+          <span className="text-[10px] font-medium tracking-[0.35em] uppercase text-[var(--ts-gold)] opacity-35">
+            Utviklet i Norge
+          </span>
+          <span className="text-[10px] font-medium tracking-[0.35em] uppercase text-[var(--ts-gold)] opacity-35">
+            Bygget for ekte relasjoner
+          </span>
+        </div>
       </div>
     </div>
   );

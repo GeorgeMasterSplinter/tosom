@@ -21,8 +21,9 @@ const navItems = [
   { label: 'Slik fungerer det', href: '/slik-fungerer-det' },
   { label: 'Reisen', href: '/reisen' },
   { label: 'Metoder', href: '/metoder' },
-  { label: 'Trygghet', href: '/trygghet' },
   { label: 'Tips', href: '/tips' },
+  { label: 'Priser', href: '/priser' },
+  { label: 'Trygghet', href: '/trygghet' },
 ];
 
 const isActive = (href: string, pathname: string | null) => pathname?.startsWith(href) ?? false;

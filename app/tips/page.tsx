@@ -53,18 +53,8 @@ const tipsSections: Array<{
   title: string;
   intro: string;
   points: string[];
+  goldPoints?: number[];
 }> = [
-  {
-    icon: <IconProfile />,
-    title: 'En ærlig, konkret profil',
-    intro: 'Profilen er det matchingen bygger på. Jo mer ærlig og konkret du er, jo bedre passer den du blir matchet med.',
-    points: [
-      "Svar ærlig — ikke «flott». Det er de reelle svarene som gir en match som faktisk passer.",
-      'Fyll inn de praktiske feltene (barn, røyking, tro, livsstil). Tomt felt gir nøytral poeng.',
-      'Hold «om deg» kort og konkret — en liten detalj forteller mer enn en lang generalisering.',
-      'Oppdater profilen din når livet endrer seg.',
-    ],
-  },
   {
     icon: <IconMatch />,
     title: 'Øk sjansen for en god match',
@@ -81,10 +71,22 @@ const tipsSections: Array<{
     title: 'Bruk reisen — rolig og kreativt',
     intro: 'De 30 dagene er en struktur for trygghet, ikke en øvelse i å imponere.',
     points: [
-      'Gjør de daglige små oppgavene med mening — de er laget for å bygge resonans.',
-      'Ikke rus. Strukturen er ment å gi deg og den andre rom.',
+      'Gjør de daglige små oppgavene med mening — de er laget for å bygge resonans, ikke rus',
+      'Strukturen er ment å gi deg og den andre rom.',
       'Bruk oppgavene som samtalestoff — de er skrevet for å få dere i gang.',
       'Vær proaktiv, men gi plass.',
+    ],
+    goldPoints: [3],
+  },
+  {
+    icon: <IconProfile />,
+    title: 'En ærlig, konkret profil',
+    intro: 'Profilen er det matchingen bygger på. Jo mer ærlig og konkret du er, jo bedre passer den du blir matchet med.',
+    points: [
+      "Svar ærlig — ikke «flott». Det er de reelle svarene som gir en match som faktisk passer.",
+      'Fyll inn de praktiske feltene (barn, røyking, tro, livsstil). Tomt felt gir nøytral poeng.',
+      'Hold «om deg» kort og konkret — en liten detalj forteller mer enn en lang generalisering.',
+      'Oppdater profilen din når livet endrer seg.',
     ],
   },
 ];
@@ -171,19 +173,22 @@ export default function TipsPage() {
                   {section.intro}
                 </p>
                 <div className="space-y-2">
-                  {section.points.map((point, pIdx) => (
-                    <p
-                      key={pIdx}
-                      style={{
-                        ...typographyToStyle('body'),
-                        color: color.text.secondary,
-                        lineHeight: '1.6',
-                      }}
-                    >
-                      <span className="text-[#D4AF37] mr-2">✦</span>
-                      {point}
-                    </p>
-                  ))}
+                  {section.points.map((point, pIdx) => {
+                    const isGold = section.goldPoints?.includes(pIdx) ?? false;
+                    return (
+                      <p
+                        key={pIdx}
+                        style={{
+                          ...typographyToStyle('body'),
+                          color: isGold ? color.brand.gold : color.text.secondary,
+                          lineHeight: '1.6',
+                        }}
+                      >
+                        <span className="text-[#D4AF37] mr-2">✦</span>
+                        {point}
+                      </p>
+                    );
+                  })}
                 </div>
               </GlassCard>
             ))}

@@ -256,7 +256,7 @@ export default function HvorforPage() {
           spotlight="blue"
           className="px-6"
         >
-          <div className="mx-auto max-w-5xl">
+          <div className="mx-auto max-w-3xl">
             <GlassCard padding="xl" gold interactive className="space-y-6">
               <div className="flex items-center gap-4">
                 <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
@@ -335,7 +335,7 @@ export default function HvorforPage() {
           spotlight="blue"
           className="px-6"
         >
-          <div className="mx-auto max-w-5xl">
+          <div className="mx-auto max-w-3xl">
             <GlassCard padding="xl" gold interactive className="space-y-6">
               <div className="flex items-center gap-4">
                 <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
@@ -403,7 +403,7 @@ export default function HvorforPage() {
           spotlight="blue"
           className="px-6"
         >
-          <div className="mx-auto max-w-3xl space-y-8">
+          <div className="mx-auto max-w-3xl">
             <GlassCard padding="xl" gold interactive className="space-y-6 text-center">
               <div className="flex justify-center">
                 <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
@@ -441,9 +441,9 @@ export default function HvorforPage() {
         </ToSomSection>
 
         {/* ===== NOE MER ===== */}
-        <section className="px-6 py-16 md:py-24 text-center">
+        <ToSomSection spotlight="blue" className="px-6">
           <div
-            className="mx-auto max-w-[780px] rounded-[28px] p-10 md:p-14 space-y-6"
+            className="mx-auto max-w-3xl rounded-[28px] p-10 md:p-14 space-y-6 text-center"
             style={{
               background: 'rgba(255,255,255,0.045)',
               backdropFilter: 'blur(16px)',
@@ -513,7 +513,7 @@ export default function HvorforPage() {
               Tosom er ikke en app. Det er en prosess. En reise. Et rom hvor to mennesker kan møtes på ordentlig.
             </p>
           </div>
-        </section>
+        </ToSomSection>
 
         {/* ===== CTA ===== */}
         <ToSomSection

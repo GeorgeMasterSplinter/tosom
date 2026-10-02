@@ -411,7 +411,7 @@ export default function ReisenPage() {
                         lineHeight: '1.8',
                       }}
                     >
-                      Hver dag får dere nye spørsmål som hjelper dere å bli kjent dypere. 12 kategorier med over 240 spørsmål — fra lek og humor til nærhet, intimitet og modne samtaler. Dere velger selv hvor dypere dere vil grave.
+                      Dere har mulighet til å velge mange spørsmål som hjelper dere å bli kjent dypere. 12 kategorier med over 240 spørsmål — fra lek og humor til nærhet, intimitet og modne samtaler. Dere velger selv hvor dypere dere vil grave.
                     </p>
                   </div>
                 </div>
@@ -439,7 +439,7 @@ export default function ReisenPage() {
                         lineHeight: '1.8',
                       }}
                     >
-                      Enkelte ting er best opplevd sammen. Små oppgaver skaper minner dere begge tar med dere videre.
+                      Enkelte ting er best opplevd sammen. 9 kategorier med små, enkle oppgaver skaper minner dere begge tar med dere videre.
                     </p>
                   </div>
                 </div>

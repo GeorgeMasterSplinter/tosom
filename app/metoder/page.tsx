@@ -249,6 +249,7 @@ export default function MetoderPage() {
               backdropFilter: 'blur(16px)',
               WebkitBackdropFilter: 'blur(16px)',
               border: '1px solid rgba(255,255,255,0.08)',
+              boxShadow: '0 18px 48px rgba(0,0,0,0.28), 0 0 40px rgba(212,175,55,0.16)',
               borderRadius: '28px',
               padding: `${spacing.lg}px`,
             }}
@@ -312,6 +313,7 @@ export default function MetoderPage() {
               backdropFilter: 'blur(16px)',
               WebkitBackdropFilter: 'blur(16px)',
               border: '1px solid rgba(255,255,255,0.08)',
+              boxShadow: '0 18px 48px rgba(0,0,0,0.28), 0 0 40px rgba(212,175,55,0.16)',
               borderRadius: '28px',
               padding: `${spacing.lg}px`,
             }}
@@ -328,7 +330,7 @@ export default function MetoderPage() {
               Et tre plantet riktig bærer i tiår.
             </p>
             <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
-              Vi har byttet ingenting. Bare vasket støvet av, og lagt moderne referanser under
+              Vi har bare vasket støvet av, og lagt moderne referanser under
               hver dimensjon — slik at du kan se at grenene fortsatt vokser.
             </p>
           </div>
@@ -384,6 +386,7 @@ export default function MetoderPage() {
               backdropFilter: 'blur(16px)',
               WebkitBackdropFilter: 'blur(16px)',
               border: '1px solid rgba(255,255,255,0.08)',
+              boxShadow: '0 18px 48px rgba(0,0,0,0.28), 0 0 40px rgba(212,175,55,0.16)',
               borderRadius: '28px',
               padding: `${spacing.lg}px`,
             }}

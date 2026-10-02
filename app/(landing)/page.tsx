@@ -151,61 +151,6 @@ export default function LandingPage() {
           <Hero />
         </section>
 
-        {/* ===== HVORFOR TOSOM ===== */}
-        <section className="px-6 py-16 md:py-24 text-center">
-          <Reveal direction="up" duration={1000}>
-          <div
-            className="mx-auto max-w-[780px] rounded-[28px] p-10 md:p-14 space-y-6"
-            style={{
-              background: 'rgba(255,255,255,0.045)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              boxShadow: '0 12px 40px rgba(0,0,0,0.20), 0 0 24px rgba(212,175,55,0.05)',
-            }}
-          >
-            <h2
-              style={{
-                ...typographyToStyle('heading-md'),
-                color: 'rgba(255,255,255,0.92)',
-              }}
-            >
-              Hvorfor Tosom?
-            </h2>
-
-            <p
-              style={{
-                ...typographyToStyle('body-lg'),
-                color: 'rgba(255,255,255,0.88)',
-                lineHeight: '1.7',
-                letterSpacing: '0.25px',
-                maxWidth: '740px',
-                marginLeft: 'auto',
-                marginRight: 'auto',
-              }}
-            >
-              Fordi mennesker ikke er skapt for å gå gjennom livet alene. Tosomhet handler om trygghet, utvikling, hverdagsmagi og å dele livet i to.
-            </p>
-
-            <p
-              style={{
-                ...typographyToStyle('body-lg'),
-                color: 'rgba(255,255,255,0.88)',
-                lineHeight: '1.7',
-                letterSpacing: '0.25px',
-                maxWidth: '740px',
-                marginLeft: 'auto',
-                marginRight: 'auto',
-              }}
-            >
-              Tosom gir deg ro, tid og én gjennomtenkt match — slik at du kan bli kjent.
-            </p>
-          </div>
-          </Reveal>
-        </section>
-
-        <ResonanceDivider />
-
         {/* ===== Slik fungerer det ===== */}
         <ToSomSection
           spotlight="blue"
@@ -316,6 +261,59 @@ export default function LandingPage() {
           </div>
         </ToSomSection>
 
+        {/* ===== HVORFOR TOSOM ===== */}
+        <section className="px-6 py-16 md:py-24 text-center">
+          <Reveal direction="up" duration={1000}>
+          <div
+            className="mx-auto max-w-[780px] rounded-[28px] p-10 md:p-14 space-y-6"
+            style={{
+              background: 'rgba(255,255,255,0.045)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              boxShadow: '0 12px 40px rgba(0,0,0,0.20), 0 0 24px rgba(212,175,55,0.05)',
+            }}
+          >
+            <h2
+              style={{
+                ...typographyToStyle('heading-md'),
+                color: 'rgba(255,255,255,0.92)',
+              }}
+            >
+              Hvorfor Tosom?
+            </h2>
+
+            <p
+              style={{
+                ...typographyToStyle('body-lg'),
+                color: 'rgba(255,255,255,0.88)',
+                lineHeight: '1.7',
+                letterSpacing: '0.25px',
+                maxWidth: '740px',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+              }}
+            >
+              Fordi mennesker ikke er skapt for å gå gjennom livet alene. Tosomhet handler om trygghet, utvikling, hverdagsmagi og å dele livet i to.
+            </p>
+
+            <p
+              style={{
+                ...typographyToStyle('body-lg'),
+                color: 'rgba(255,255,255,0.88)',
+                lineHeight: '1.7',
+                letterSpacing: '0.25px',
+                maxWidth: '740px',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+              }}
+            >
+              Tosom gir deg ro, tid og én gjennomtenkt match — slik at du kan bli kjent.
+            </p>
+          </div>
+          </Reveal>
+        </section>
+
         <ResonanceDivider />
 
         {/* ===== CTA ===== */}
@@ -364,8 +362,8 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* Lær mer — sekundær */}
-          <div className="flex flex-col items-center pt-4">
+          {/* Lær mer — sekundær, like bred som Logg inn */}
+          <div className="mx-auto flex max-w-md flex-col items-center pt-4">
             <ToSomButton href="/slik-fungerer-det" variant="dark" size="lg">
               Lær mer
             </ToSomButton>

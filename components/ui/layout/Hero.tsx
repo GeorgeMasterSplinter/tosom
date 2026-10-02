@@ -203,7 +203,7 @@ export const Hero: FC<HeroProps> = ({
           </div>
 
           {/* 3. Trust-notis — under løftet, rolig og kort */}
-          <div className="mt-14 flex justify-center">
+          <div className="mt-14 flex flex-col items-center gap-3">
             <div
               className="inline-flex items-center gap-3 rounded-full px-5 py-2.5"
               style={{
@@ -219,6 +219,30 @@ export const Hero: FC<HeroProps> = ({
                 Én kobling om gangen — 30 dager sammen.{' '}
                 <Link
                   href="/slik-fungerer-det"
+                  className="underline underline-offset-4 transition-colors hover:text-white/80 inline-block px-2 py-2 -my-2 -mx-1"
+                  style={{ color: 'rgba(255,255,255,0.72)', textDecorationColor: 'rgba(212,175,55,0.4)' }}
+                >
+                  Les mer
+                </Link>
+              </span>
+            </div>
+
+            {/* Metoder — samme stil som over, lenke til /metoder */}
+            <div
+              className="inline-flex items-center gap-3 rounded-full px-5 py-2.5"
+              style={{
+                border: '1px solid rgba(212,175,55,0.18)',
+                background: 'rgba(212,175,55,0.04)',
+              }}
+            >
+              <span className="w-[6px] h-[6px] rounded-full bg-[#D4AF37] ts-breath" />
+              <span
+                className="text-[13px]"
+                style={{ color: 'rgba(255,255,255,0.58)', letterSpacing: '0.15px' }}
+              >
+                Metoder vi bruker.{' '}
+                <Link
+                  href="/metoder"
                   className="underline underline-offset-4 transition-colors hover:text-white/80 inline-block px-2 py-2 -my-2 -mx-1"
                   style={{ color: 'rgba(255,255,255,0.72)', textDecorationColor: 'rgba(212,175,55,0.4)' }}
                 >

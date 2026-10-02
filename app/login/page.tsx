@@ -195,6 +195,20 @@ export default function LoginPage() {
           >
             Vipps er den vanligste måten å logge seg inn og betale på i Norge. Du trenger ikke huske nytt passord, og alt skjer trygt og raskt i appen din.
           </p>
+          <div className="space-y-2 pt-2">
+            {[
+              { title: "Ekte brukere", text: "Vipps er knyttet til et ekte navn og mobilnummer, så du snakker med folk — ikke fiktive profiler." },
+              { title: "Alder er verifisert", text: "Vipps bekrefter alderen automatisk, så vi holder grensen." },
+              { title: "Én Vipps, én konto", text: "Én identitet gir én konto. Du kan ikke lage flere kontoer." },
+            ].map((item) => (
+              <div key={item.title} className="flex items-start gap-2">
+                <span style={{ color: "#D4AF37", lineHeight: 1.7 }}>✦</span>
+                <p style={{ fontSize: "14px", lineHeight: "1.7", color: "rgba(255,255,255,0.55)", margin: 0 }}>
+                  <span style={{ color: "rgba(255,255,255,0.8)", fontWeight: 600 }}>{item.title}.</span> {item.text}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Error */}

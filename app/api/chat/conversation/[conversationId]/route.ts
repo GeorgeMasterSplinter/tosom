@@ -84,6 +84,28 @@ export async function GET(
       );
     }
 
+    // Dela reisedag for samtalen = max av begge partenes dag.
+    // Journey-day ligger per bruker (24t-lås per dag), så partene kan drive
+    // litt fra hverandre. Samtalen skal vise samme status for begge — inkludert
+    // slutt-tilstanden ved dag 30 — derfor bruker vi den mest fremskredne dagen.
+    const journeyWhere = (userId: string) => ({
+      userId,
+      ...(conversation.matchId ? { matchId: conversation.matchId } : {}),
+    });
+    const [journeyA, journeyB] = await Promise.all([
+      prisma.journeyProgress.findFirst({
+        where: journeyWhere(conversation.userAId),
+        orderBy: { startedAt: "desc" },
+        select: { day: true },
+      }),
+      prisma.journeyProgress.findFirst({
+        where: journeyWhere(conversation.userBId),
+        orderBy: { startedAt: "desc" },
+        select: { day: true },
+      }),
+    ]);
+    const journeyDay = Math.max(journeyA?.day ?? 0, journeyB?.day ?? 0);
+
     return NextResponse.json({
       conversationId: conversation.id,
       // Bruker-id til den innloggte — ChatPageClient bruker den som sessionUserId
@@ -94,6 +116,8 @@ export async function GET(
       myName,
       partnerAge,
       distanceKm,
+      // Dela reisedag (max av begge) — begge ser samme chat-status
+      journeyDay,
       imageShareAllowed: conversation.imageShareAllowedAt != null,
       lastMessageAt: conversation.lastMessageAt,
     });

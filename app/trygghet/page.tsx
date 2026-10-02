@@ -73,7 +73,7 @@ const sections: Section[] = [
     id: '5',
     title: 'Slik rapporterer du',
     paragraphs: [
-      'Du finner rapportknappen i samtalen og under Innstillinger. Velg en kategori, og skriv gjerne noen ord om hva som skjedde.',
+      'Du finner rapportknappen under Innstillinger. Velg en kategori, og skriv gjerne noen ord om hva som skjedde.',
       'Du kan rapportere for trakassering, upassende innhold, spam, mistanke om falsk profil, eller noe annet du reagerer på.',
       'Den du rapporterer får aldri vite at du har gjort det.',
     ],
@@ -106,7 +106,7 @@ const sections: Section[] = [
     id: '8',
     title: 'Før dere møtes',
     paragraphs: [
-      'Bestemmer dere dere for å møtes, er det deres valg — og vi er ikke med. Noen råd som gjelder uansett hvor godt dere kjenner hverandre digitalt:',
+      'Bestemmer dere for å møtes, er det deres valg — og vi er ikke med. Noen råd som gjelder uansett hvor godt dere kjenner hverandre digitalt:',
     ],
     list: [
       'Møtes et offentlig sted første gang',

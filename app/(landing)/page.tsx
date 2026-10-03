@@ -160,7 +160,7 @@ export default function LandingPage() {
           <div className="mx-auto max-w-5xl">
             <Reveal direction="up" delay={0}>
             <div className="flex flex-col items-center">
-              <ResonanceMark size={48} className="mb-4" />
+              <ResonanceMark size={56} glow resonate className="mb-4 ts-mark-pulse" />
               <h2
                 className="text-center mb-6"
                 style={{

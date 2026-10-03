@@ -206,7 +206,7 @@ export const Footer: FC<FooterProps> = ({
         {/* Botntekst */}
         <div className="text-center pt-20 ph:pt-24 md:pt-28">
           <div className="flex justify-center mb-6">
-            <ResonanceMark size={40} color="rgba(212,175,55,0.5)" />
+            <ResonanceMark size={44} glow resonate className="ts-mark-pulse" />
           </div>
           <ToSomTagline>
             Tosom — en rolig, moden måte å møtes på. To mennesker. Én reise. Ekte kontakt.

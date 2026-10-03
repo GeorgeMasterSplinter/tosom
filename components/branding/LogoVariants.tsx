@@ -7,7 +7,7 @@
 
 'use client';
 
-import { FC, CSSProperties } from 'react';
+import { FC, CSSProperties, useId } from 'react';
 import { Logo, LogoProps } from '@/components/ui/branding/Logo';
 import { color, shadow } from '@/config/design-tokens';
 import Link from 'next/link';
@@ -237,36 +237,56 @@ export interface ResonanceMarkProps {
   strokeWidth?: number;
   /** Strekkfarge. Standard: ToSom-gull. */
   color?: string;
+  /**
+   * Gradient-fade + gullglød (som chat-knappen «Bli kjent»): streken er
+   * klar der sirklene møtes, falmer mot ytre kanter, og får en myk glød.
+   */
+  glow?: boolean;
   className?: string;
   style?: CSSProperties;
 }
 
 /**
  * Resonansmerket — signaturmotivet: to sirkler som møter hverandre.
- * Gull (#D4AF37), 1.5px linje, ingen fyll. Brukes som logo-merke over
- * wordmarken, som seksjonsskilje og som dekorativt motiv.
+ * Gull (#D4AF37), 1.5px linje, ingen fyll. `glow` gir gradient-fade
+ * (klar i snittflaten) + myk gullglød. Brukes som logo-merke, seksjons-
+ * skilje og dekorativt motiv.
  */
 export const ResonanceMark: FC<ResonanceMarkProps> = ({
   size = 64,
   strokeWidth = 1.5,
   color: strokeColor = color.brand.gold,
+  glow = false,
   className = '',
   style,
 }) => {
+  const gradId = 'rm-' + useId().replace(/:/g, '');
+  const glowFilter =
+    'drop-shadow(0 0 5px rgba(212,175,55,0.55)) drop-shadow(0 0 16px rgba(212,175,55,0.28))';
+
   return (
     <svg
       width={size}
       height={Math.round(size * 0.7)}
       viewBox="2 5 20 14"
       fill="none"
-      stroke={strokeColor}
+      stroke={glow ? `url(#${gradId})` : strokeColor}
       strokeWidth={strokeWidth}
       strokeLinecap="round"
       strokeLinejoin="round"
       className={className}
-      style={style}
+      style={glow ? { filter: glowFilter, ...style } : style}
       aria-hidden="true"
     >
+      {glow && (
+        <defs>
+          <linearGradient id={gradId} x1="2" y1="12" x2="22" y2="12" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor={color.brand.gold} stopOpacity="0.28" />
+            <stop offset="50%" stopColor={color.brand.gold} stopOpacity="1" />
+            <stop offset="100%" stopColor={color.brand.gold} stopOpacity="0.28" />
+          </linearGradient>
+        </defs>
+      )}
       <circle cx="9" cy="12" r="6" />
       <circle cx="15" cy="12" r="6" />
     </svg>

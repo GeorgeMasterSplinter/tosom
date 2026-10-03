@@ -231,10 +231,39 @@ export default function AvslutningSide() {
 
   // B4.4: PDF-eksport — åpner samtalen som print-vennlig PDF før sletting (B-3)
   const [showPdfOffer, setShowPdfOffer] = useState(false);
+  // Feil-feedback: uten dette lå brukeren "fast" uten noe tilbakemelding når
+  // /api/journey/exit svarte med feil (t.d. 409/500) — nå viser vi meldingen.
+  const [error, setError] = useState<string | null>(null);
 
-  const handleExportPdf = () => {
-    // B-3: Åpne den faktiske samtalen som print-HTML (Lagre som PDF) i nytt vindu
-    window.open('/api/journey/export-pdf', '_blank', 'noopener,width=800,height=1000');
+  const handleExportPdf = async () => {
+    // B-3: Åpne den faktiske samtalen som print-HTML (Lagre som PDF) i nytt vindu.
+    // Vinduet åpnes FØRST (i gesten) så det ikke blir popup-blokkert, og HTML-et
+    // hentes via same-origin fetch + skrives inn FØR slettingen starter (unngår race
+    // der slettingen får bli ferdig før PDF-vinduet har lastet innholdet).
+    const w = window.open('', '_blank', 'width=820,height=1000');
+    try {
+      const res = await fetch('/api/journey/export-pdf', { credentials: 'include' });
+      const html = res.ok
+        ? await res.text()
+        : '<!doctype html><html><head><meta charset="utf-8"><title>PDF</title></head><body style="font-family:sans-serif;padding:40px"><h2>Kunne ikke laste samtalen</h2><p>Prøv igjen.</p></body></html>';
+      if (w) {
+        w.document.open();
+        w.document.write(html);
+        w.document.close();
+      } else if (res.ok) {
+        // Vinduet ble blokkert allerede -> fallback til anker (talt som brukergeste).
+        const a = document.createElement('a');
+        a.href = '/api/journey/export-pdf';
+        a.target = '_blank';
+        a.rel = 'noopener';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+    } catch {
+      // Sist-resort fallback
+      window.open('/api/journey/export-pdf', '_blank', 'noopener');
+    }
   };
 
   // Begge valg kaller /api/journey/exit med riktig reason:
@@ -250,6 +279,7 @@ export default function AvslutningSide() {
     }
 
     setLoading(true);
+    setError(null);
 
     try {
       const res = await csrfFetch('/api/journey/exit', {
@@ -268,14 +298,28 @@ export default function AvslutningSide() {
           // Gå til onboarding (prefylt fra profilen — de justerer, skriver ikke på nytt).
           router.push('/onboarding');
         }
+        return; // Naviger / byt side — ikke nullstill modaltasten.
       }
-    } catch (err) {
-      console.log('Feil ved journey-avslutning:', err);
-    }
 
-    setSelected(null);
-    setShowPdfOffer(false);
-    setLoading(false);
+      // Feil: les server-meldingen og vis den (brukeren skal ikke være "fast" uten svar).
+      let msg = 'Noe gikk galt med avslutningen. Prøv igjen.';
+      try {
+        const j = await res.json();
+        if (j?.error) msg = j.error;
+      } catch {
+        /* ikke-JSON feilsvar */
+      }
+      setError(msg);
+      setSelected(null);
+      setShowPdfOffer(false);
+    } catch (err) {
+      console.error('Feil ved journey-avslutning:', err);
+      setError('Nettverksfeil. Kontroller tilgangen og prøv igjen.');
+      setSelected(null);
+      setShowPdfOffer(false);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // "Vi fant hverandre" — begge kontoer er slettet, så vi kan ikke navigere til en
@@ -342,6 +386,22 @@ export default function AvslutningSide() {
 
       {/* Content */}
       <div className="relative z-10 w-full max-w-[540px] mx-auto px-6 py-16 flex flex-col items-center">
+
+        {/* Feil-banner (visast når /api/journey/exit svarte med feil) */}
+        {error && (
+          <div
+            className="w-full mb-6 rounded-xl px-4 py-3 text-sm"
+            role="alert"
+            style={{
+              background: 'rgba(220, 80, 80, 0.1)',
+              border: '1px solid rgba(220, 80, 80, 0.3)',
+              color: '#f2a6a6',
+              lineHeight: 1.5,
+            }}
+          >
+            ⚠️ {error}
+          </div>
+        )}
 
         {/* Header */}
         <div className="text-center space-y-4 mb-12 w-full">
@@ -429,9 +489,10 @@ export default function AvslutningSide() {
           confirmText={loading ? "Behandler..." : "Last ned PDF og avslutt 💛"}
           onCancel={() => { setShowPdfOffer(false); setSelected(null); }}
           onConfirm={() => {
-            handleExportPdf();
-            // Fortsett til sletting etter print-dialog
-            confirmChoice();
+            setLoading(true); // Vis "Behandler..." med ein gang
+            // Hent + skriv inn PDF-innholdet FØR vi kjører slettinga (unngår race),
+            // deretter fortsett til /api/journey/exit.
+            handleExportPdf().then(() => confirmChoice());
           }}
         />
       )}

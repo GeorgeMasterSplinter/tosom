@@ -40,10 +40,18 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
     const { reason } = body as { reason?: string };
 
-    // 3. Finn aktiv journey for brukeren
-    const journey = await prisma.journeyProgress.findFirst({
-      where: { userId: user.id },
-    });
+    // 3. Finn reisen — prioriter den aktive (endedAt = null), fall tilbake til
+    // nyeste reise (reisen kan ha endedAt satt fra en tidligere, feil avslutning
+    // og da fremdeles kunne være "fast" og behøve å avsluttes på nytt).
+    const journey =
+      (await prisma.journeyProgress.findFirst({
+        where: { userId: user.id, endedAt: null },
+        orderBy: { updatedAt: 'desc' },
+      })) ??
+      (await prisma.journeyProgress.findFirst({
+        where: { userId: user.id },
+        orderBy: { updatedAt: 'desc' },
+      }));
 
     if (!journey) {
       return NextResponse.json(
@@ -52,21 +60,19 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // Hent den tilknyttede matchen. Dette er den reelle "allerede løst"-sjekken:
-    // endedAt/completedAt kan være satt når reisen nådde dag 30, men valget
-    // (funnet hverandre / ny reise) må fortsatt kunne gjøres mens matchen er aktiv.
-    // Når endJourney har kjørt, er matchen borte → 409 (idempotent).
-    const activeMatch = await prisma.match.findFirst({
-      where: {
-        OR: [
-          { userAId: user.id, status: 'active' },
-          { userBId: user.id, status: 'active' },
-        ],
-        lockedAt: { not: null }, // Bare aktive matcher
-      },
+    // Hent den tilknyttede matchen DIREKTE via reisen sin matchId.
+    // (Før ble matchen funnet via en separat "active + lockedAt"-query — men
+    //  lockedAt settes ALDRI i den reelle matching-flyen, så queryen fant
+    //  aldri noe og ruten svarte alltid 409. Reisen kunne derfor aldri avsluttes
+    //  og kontoen ble aldri slettet. Dette var rotårsaken til at "Vi fant
+    //  hverandre" fastnet uten sletting.)
+    // Fremdeles den reelle "allerede løst"-sjekken: når endJourney har kjørt er
+    // matchen borte eller ikke lenger aktiv → 409 (idempotent).
+    const activeMatch = await prisma.match.findUnique({
+      where: { id: journey.matchId },
     });
 
-    if (!activeMatch) {
+    if (!activeMatch || activeMatch.status !== 'active') {
       return NextResponse.json(
         { error: 'Reisen er allerede avsluttet eller allerede håndtert' },
         { status: 409 }

@@ -70,7 +70,7 @@ export function ResonanceField({
           height: '44vw',
           maxWidth: '460px',
           maxHeight: '580px',
-          top: '14%',
+          top: '4%',
           background: `radial-gradient(ellipse at center, rgba(212,175,55,${gold}), transparent 64%)`,
           filter: 'blur(48px)',
         }}

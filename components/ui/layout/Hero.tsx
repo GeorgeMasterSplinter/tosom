@@ -71,8 +71,8 @@ export const Hero: FC<HeroProps> = ({
   useParallax(heroRef);
   /* Premium spacing constants — optimalisert for ro, dybde, optisk base og 8px-grid */
   const heroSpacing = {
-    paddingTop: 24,
-    paddingBottom: 110,
+    paddingTop: 10,
+    paddingBottom: 80,
   };
 
   /* Bølge 1: primær, organisk */
@@ -161,7 +161,7 @@ export const Hero: FC<HeroProps> = ({
           {/* 1. Resonansmerket over merkevaren — gløder som chat-knappen */}
           <div className="flex flex-col items-center mb-12">
             <div className="mb-6 animate-ts-fade-in [animation-duration:600ms]">
-              <ResonanceMark size={72} glow className="ts-breath" />
+              <ResonanceMark size={72} glow resonate className="ts-breath" />
             </div>
             <LogoAnimated />
           </div>

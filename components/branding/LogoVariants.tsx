@@ -242,6 +242,8 @@ export interface ResonanceMarkProps {
    * klar der sirklene møtes, falmer mot ytre kanter, og får en myk glød.
    */
   glow?: boolean;
+  /** Resonans: sirklene puster sakte mot hverandre og tilbake. */
+  resonate?: boolean;
   className?: string;
   style?: CSSProperties;
 }
@@ -249,14 +251,16 @@ export interface ResonanceMarkProps {
 /**
  * Resonansmerket — signaturmotivet: to sirkler som møter hverandre.
  * Gull (#D4AF37), 1.5px linje, ingen fyll. `glow` gir gradient-fade
- * (klar i snittflaten) + myk gullglød. Brukes som logo-merke, seksjons-
- * skilje og dekorativt motiv.
+ * (klar i snittflaten) + myk gullglød. `resonate` lar sirklene puste
+ * sakte mot hverandre og tilbake. Brukes som logo-merke, seksjonsskilje
+ * og dekorativt motiv.
  */
 export const ResonanceMark: FC<ResonanceMarkProps> = ({
   size = 64,
   strokeWidth = 1.5,
   color: strokeColor = color.brand.gold,
   glow = false,
+  resonate = false,
   className = '',
   style,
 }) => {
@@ -287,8 +291,32 @@ export const ResonanceMark: FC<ResonanceMarkProps> = ({
           </linearGradient>
         </defs>
       )}
-      <circle cx="9" cy="12" r="6" />
-      <circle cx="15" cy="12" r="6" />
+      <circle cx="9" cy="12" r="6">
+        {resonate && (
+          <animate
+            attributeName="cx"
+            values="9;9.7;9"
+            dur="3.8s"
+            repeatCount="indefinite"
+            calcMode="spline"
+            keyTimes="0;0.5;1"
+            keySplines="0.42 0 0.58 1;0.42 0 0.58 1"
+          />
+        )}
+      </circle>
+      <circle cx="15" cy="12" r="6">
+        {resonate && (
+          <animate
+            attributeName="cx"
+            values="15;14.3;15"
+            dur="3.8s"
+            repeatCount="indefinite"
+            calcMode="spline"
+            keyTimes="0;0.5;1"
+            keySplines="0.42 0 0.58 1;0.42 0 0.58 1"
+          />
+        )}
+      </circle>
     </svg>
   );
 };

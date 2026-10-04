@@ -118,6 +118,31 @@ export default function LoginPage() {
           </p>
         </div>
 
+        {/* Vi gjør oss klare — merkelyd */}
+        <div className="text-center space-y-2 mb-8">
+          <p
+            style={{
+              fontSize: "17px",
+              fontWeight: 600,
+              letterSpacing: "0.01em",
+              color: "#D4AF37",
+              margin: 0,
+            }}
+          >
+            Vi gjør oss klare
+          </p>
+          <p
+            style={{
+              fontSize: "15px",
+              lineHeight: "1.7",
+              color: "rgba(255,255,255,0.55)",
+              margin: 0,
+            }}
+          >
+            Litt finpuss og siste touch før vi åpner dørene. Mens vi holder på, prøver vi fortsatt å finne ut hva som kom først – egget eller høna! 😊
+          </p>
+        </div>
+
         {/* Under oppbygging — status */}
         <div
           className="w-full mb-8"
@@ -183,7 +208,7 @@ export default function LoginPage() {
               opacity: status === "loading" ? 0.6 : 1,
             }}
           >
-            {status === "loading" ? "Kommer i gang…" : "Kom i gang"}
+            {status === "loading" ? "Starter reisen…" : "Start reisen"}
           </button>
         </form>
 
@@ -208,26 +233,12 @@ export default function LoginPage() {
           >
             Hvorfor Vipps?
           </p>
-          <p
-            style={{
-              fontSize: "15px",
-              lineHeight: "1.8",
-              color: "rgba(255,255,255,0.6)",
-              margin: 0,
-            }}
-          >
-            Vipps er den vanligste måten å logge seg inn og betale på i Norge. Du trenger ikke huske nytt passord, og alt skjer trygt og raskt i appen din.
-          </p>
           <div className="space-y-2 pt-2">
-            {[
-              { title: "Ekte brukere", text: "Vipps er knyttet til et ekte navn og mobilnummer, så du snakker med folk — ikke fiktive profiler." },
-              { title: "Alder er verifisert", text: "Vipps bekrefter alderen automatisk, så vi holder grensen." },
-              { title: "Én Vipps, én konto", text: "Én identitet gir én konto. Du kan ikke lage flere kontoer." },
-            ].map((item) => (
-              <div key={item.title} className="flex items-start gap-2">
+            {["Ekte brukere", "Alderkontroll", "Trygg betaling", "Ingen skjulte gebyrer", "Én identitet"].map((item) => (
+              <div key={item} className="flex items-center gap-2">
                 <span style={{ color: "#D4AF37", lineHeight: 1.7 }}>✦</span>
-                <p style={{ fontSize: "14px", lineHeight: "1.7", color: "rgba(255,255,255,0.55)", margin: 0 }}>
-                  <span style={{ color: "rgba(255,255,255,0.8)", fontWeight: 600 }}>{item.title}.</span> {item.text}
+                <p style={{ fontSize: "14px", lineHeight: "1.7", color: "rgba(255,255,255,0.75)", margin: 0 }}>
+                  {item}
                 </p>
               </div>
             ))}

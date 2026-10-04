@@ -63,14 +63,26 @@ function IconPhotos() {
 const steps: Array<{
   icon: React.ReactNode;
   title: string;
-  intro: string;
+  intro: React.ReactNode;
   points: string[];
   closing?: string;
 }> = [
   {
     icon: <IconProfile />,
     title: 'Veiledet profil',
-    intro: 'Du starter med en guidet profil, underbygd av etablerte relasjonsmodeller (se det vi bygger på), som hjelper deg å forstå hvem du er, hva du trenger og hva som kan passe deg i en relasjon.',
+    intro: (
+      <>
+        Du starter med en guidet profil, underbygd av etablerte relasjonsmodeller (
+        <Link
+          href="/metoder"
+          className="underline decoration-[rgba(212,175,55,0.35)] decoration-1 underline-offset-4 hover:decoration-[#D4AF37] transition-all duration-300"
+          style={{ color: color.brand.gold }}
+        >
+          se det vi bygger på
+        </Link>
+        ), som hjelper deg å forstå hvem du er, hva du trenger og hva som kan passe deg i en relasjon.
+      </>
+    ),
     points: [
       'basert på relasjonspsykologi',
       'hjelper deg å forstå dine behov',

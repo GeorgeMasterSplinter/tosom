@@ -89,7 +89,7 @@ export default function LoginPage() {
         {/* Header */}
         <div className="text-center space-y-5 mb-10 w-full">
           <div className="flex justify-center">
-            <ResonanceMark size={72} strokeWidth={1.5} glow resonate />
+            <ResonanceMark size={72} strokeWidth={1.5} glow resonate orbit />
           </div>
           <h1
             style={{

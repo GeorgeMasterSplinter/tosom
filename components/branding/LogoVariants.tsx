@@ -232,7 +232,7 @@ export const LogoAnimated: FC<LogoAnimatedProps> = ({ className = '' }) => {
    ======================== */
 
 export interface ResonanceMarkProps {
-  /** Bredde i px — høyden følger automatisk (~10:7). */
+  /** Størrelse i px — merket er kvadratisk (både bredde og høyde). */
   size?: number;
   strokeWidth?: number;
   /** Strekkfarge. Standard: ToSom-gull. */
@@ -244,6 +244,11 @@ export interface ResonanceMarkProps {
   glow?: boolean;
   /** Resonans: sirklene puster sakte mot hverandre og tilbake. */
   resonate?: boolean;
+  /**
+   * Bane: paret roterer sakte klokkevis rundt møtestedet, samtidig som
+   * sirklene puster mot og fra hverandre — to som resonnerer med hverandre.
+   */
+  orbit?: boolean;
   className?: string;
   style?: CSSProperties;
 }
@@ -252,8 +257,9 @@ export interface ResonanceMarkProps {
  * Resonansmerket — signaturmotivet: to sirkler som møter hverandre.
  * Gull (#D4AF37), 1.5px linje, ingen fyll. `glow` gir gradient-fade
  * (klar i snittflaten) + myk gullglød. `resonate` lar sirklene puste
- * sakte mot hverandre og tilbake. Brukes som logo-merke, seksjonsskilje
- * og dekorativt motiv.
+ * sakte mot hverandre og tilbake, og `orbit` roterer paret sakte
+ * klokkevis rundt møtestedet. Brukes som logo-merke, seksjonsskilje og
+ * dekorativt motiv.
  */
 export const ResonanceMark: FC<ResonanceMarkProps> = ({
   size = 64,
@@ -261,6 +267,7 @@ export const ResonanceMark: FC<ResonanceMarkProps> = ({
   color: strokeColor = color.brand.gold,
   glow = false,
   resonate = false,
+  orbit = false,
   className = '',
   style,
 }) => {
@@ -271,8 +278,8 @@ export const ResonanceMark: FC<ResonanceMarkProps> = ({
   return (
     <svg
       width={size}
-      height={Math.round(size * 0.7)}
-      viewBox="2 5 20 14"
+      height={size}
+      viewBox="1 1 22 22"
       fill="none"
       stroke={glow ? `url(#${gradId})` : strokeColor}
       strokeWidth={strokeWidth}
@@ -291,32 +298,45 @@ export const ResonanceMark: FC<ResonanceMarkProps> = ({
           </linearGradient>
         </defs>
       )}
-      <circle cx="9" cy="12" r="6">
-        {resonate && (
-          <animate
-            attributeName="cx"
-            values="9;9.7;9"
-            dur="3.8s"
+      <g>
+        {orbit && (
+          <animateTransform
+            attributeName="transform"
+            attributeType="XML"
+            type="rotate"
+            from="0 12 12"
+            to="360 12 12"
+            dur="20s"
             repeatCount="indefinite"
-            calcMode="spline"
-            keyTimes="0;0.5;1"
-            keySplines="0.42 0 0.58 1;0.42 0 0.58 1"
           />
         )}
-      </circle>
-      <circle cx="15" cy="12" r="6">
-        {resonate && (
-          <animate
-            attributeName="cx"
-            values="15;14.3;15"
-            dur="3.8s"
-            repeatCount="indefinite"
-            calcMode="spline"
-            keyTimes="0;0.5;1"
-            keySplines="0.42 0 0.58 1;0.42 0 0.58 1"
-          />
-        )}
-      </circle>
+        <circle cx="9" cy="12" r="6">
+          {resonate && (
+            <animate
+              attributeName="cx"
+              values="9;9.7;9"
+              dur="3.8s"
+              repeatCount="indefinite"
+              calcMode="spline"
+              keyTimes="0;0.5;1"
+              keySplines="0.42 0 0.58 1;0.42 0 0.58 1"
+            />
+          )}
+        </circle>
+        <circle cx="15" cy="12" r="6">
+          {resonate && (
+            <animate
+              attributeName="cx"
+              values="15;14.3;15"
+              dur="3.8s"
+              repeatCount="indefinite"
+              calcMode="spline"
+              keyTimes="0;0.5;1"
+              keySplines="0.42 0 0.58 1;0.42 0 0.58 1"
+            />
+          )}
+        </circle>
+      </g>
     </svg>
   );
 };

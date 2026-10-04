@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "updatedAt": "2026-09-04",
+  "updatedAt": "2026-10-04",
   "commit": "8655a4f",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
@@ -252,6 +252,12 @@
   },
   "leveranser": [
     {
+      "dato": "2026-10-04",
+      "id": "LOGO-RESONANCE-ORBIT",
+      "title": "Resonanse-merket: klokkevis rotasjon (orbit) + kvadratisk scene uten klipping",
+      "content": "ResonanceMark (components/branding/LogoVariants.tsx): ny opt-in-prop `orbit` (standard false) som roterer paret sakte klokkevis (360° over 20s) rundt møtestedet (12,12) via SMIL animateTransform — samtidig som sirklene puster mot og fra hverandre (resonate, uendret). Fikset klipping i topp/bunn: viewBox endret fra '2 5 20 14' til '1 1 22 22' (kvadratisk, same sentrum) og height fra size*0.7 til size — det roterende feltet er sirkelformet (radius ~9) og krever kvadratisk rom. `orbit` aktivert på de 4 merkene: app/(landing)/page.tsx (56px), app/login/page.tsx (72px), components/ui/layout/Hero.tsx (72px), components/ui/layout/Footer.tsx (44px). Verifisert: tsc 0, jest 450 passed/1 skipped (52 suiter), verify:lang grønn. Påventer George sin visuelle godkjenning — evt. finpuss: tempo/fart, radial glow-gradient ved rotasjon, prefers-reduced-motion."
+    },
+    {
       "dato": "2026-09-03",
       "id": "LANSE-READINESS-0309",
       "title": "LANSE-READINESS 03.09: R2 aktiv i prod, secrets komplette (RESEND_API_KEY/ALERT_EMAIL_TO/SENTRY_DSN), CSRF aktivert+verifisert, uptime verifisert",
@@ -494,7 +500,7 @@
       "/metoder — ikke lenket noe sted"
     ]
   },
-  "nextAction": "SYSTEMAUDIT 03.09 — OPPFØLGING FULLSTENDIG (Fun 1–10 RETTA, npm run verify grønn: tsc 0, jest 433 passed/1 skipped, verify:lang grønn). FERDIG 03.09: (1) FUNN 1 — admin-ruter analytics+session bruker verifyAdminTokenFromRequest (async HMAC-SHA256) + test admin-jwt-signature (10). (2) FUNN 2 — reset-token+SMS-kode fjernet fra logg. (3) FUNN 3 (B-2, besluttet åpen dør i beta) — villedende flagg betaInviteMode + død gate-rute /api/beta/invite/request fjernet. (4) FUNN 4 — /api/system/health admin-gated detail (publikum: kun status+timestamp) + test health-public-surface. (5) FUNN 5 — csrfCheck på journey queue/reset/exit + frontend konvertert til csrfFetch (7 filer) + test csrf-client-coverage (6). (6) FUNN 6 — død ChatRoom.tsx + useSendMessage.ts fjernet. (7) FUNN 7 — død triggerConversationUpdated (public user-*) fjernet. (8) FUNN 8 — CD: ny ci-gate-jobb, deploy needs: ci-gate (manuell trigger kjører grønn lint/tsc/lang/jest). (9) FUNN 9 — CSP: unsafe-eval + dev-domener fjernet, dummy-bilder → data-URI (script-src unsafe-inline beholdes, krever nonce-system). (10) FUNN 10 — foreldet journey/reflect (userAId-bug, ingen kaller) fjernet. NESTE (KREVER GEORGE, CLAUDE-MASTERPLAN sak 7): automatiser prisma migrate deploy mot prod-DB i CD (krever prod DATABASE_URL-secret + rekkefølge FØR vercel deploy); i dag manuell (deploy/DEPLOYMENT-CHECKLIST.md). POST-BETA (AUDIT-PLAN §3.3): nonce-system for CSP script-src, Zod-validering på resterende write-ruter, XSS-test chat, admin-analytics-metrics. GJENSTÅR (George): SPF/DKIM tosom.no, slett test1/test2, ADMIN_PASSWORD_HASH+ADMIN_JWT_SECRET+ADMIN_EMAIL, live chat-test i to nettlesere, Vipps (fase 2), DPA/DPIA advokatgjennomgang+signatur. IKKE RØR UNDER BETA: matchevekter, terskler, journey-kadens (DI-2). Sikkerhet: DATABASE_URL delt i chat 03.09 — behandl som eksponert, IKKE commit.",
+  "nextAction": "LOGO 04.10 — resonanse-merket (ResonanceMark) roterer sakte klokkevis (orbit, 360°/20s) i kvadratisk scene (viewBox 1 1 22 22) uten klipping i topp/bunn; aktivert på landing/login/hero/footer. Påventer George sin visuelle godkjenning — evt. finpuss: tempo/fart, radial glow-gradient ved rotasjon, prefers-reduced-motion. \nSYSTEMAUDIT 03.09 — OPPFØLGING FULLSTENDIG (Fun 1–10 RETTA, npm run verify grønn: tsc 0, jest 433 passed/1 skipped, verify:lang grønn). FERDIG 03.09: (1) FUNN 1 — admin-ruter analytics+session bruker verifyAdminTokenFromRequest (async HMAC-SHA256) + test admin-jwt-signature (10). (2) FUNN 2 — reset-token+SMS-kode fjernet fra logg. (3) FUNN 3 (B-2, besluttet åpen dør i beta) — villedende flagg betaInviteMode + død gate-rute /api/beta/invite/request fjernet. (4) FUNN 4 — /api/system/health admin-gated detail (publikum: kun status+timestamp) + test health-public-surface. (5) FUNN 5 — csrfCheck på journey queue/reset/exit + frontend konvertert til csrfFetch (7 filer) + test csrf-client-coverage (6). (6) FUNN 6 — død ChatRoom.tsx + useSendMessage.ts fjernet. (7) FUNN 7 — død triggerConversationUpdated (public user-*) fjernet. (8) FUNN 8 — CD: ny ci-gate-jobb, deploy needs: ci-gate (manuell trigger kjører grønn lint/tsc/lang/jest). (9) FUNN 9 — CSP: unsafe-eval + dev-domener fjernet, dummy-bilder → data-URI (script-src unsafe-inline beholdes, krever nonce-system). (10) FUNN 10 — foreldet journey/reflect (userAId-bug, ingen kaller) fjernet. NESTE (KREVER GEORGE, CLAUDE-MASTERPLAN sak 7): automatiser prisma migrate deploy mot prod-DB i CD (krever prod DATABASE_URL-secret + rekkefølge FØR vercel deploy); i dag manuell (deploy/DEPLOYMENT-CHECKLIST.md). POST-BETA (AUDIT-PLAN §3.3): nonce-system for CSP script-src, Zod-validering på resterende write-ruter, XSS-test chat, admin-analytics-metrics. GJENSTÅR (George): SPF/DKIM tosom.no, slett test1/test2, ADMIN_PASSWORD_HASH+ADMIN_JWT_SECRET+ADMIN_EMAIL, live chat-test i to nettlesere, Vipps (fase 2), DPA/DPIA advokatgjennomgang+signatur. IKKE RØR UNDER BETA: matchevekter, terskler, journey-kadens (DI-2). Sikkerhet: DATABASE_URL delt i chat 03.09 — behandl som eksponert, IKKE commit.",
   "gjenstaarFoerBeta": [
     "Manuell sjekkliste — nå konsolidert i GEORGE.md (steg 2–9, env-liste, kill switches)"
   ],

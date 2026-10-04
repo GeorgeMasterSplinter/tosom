@@ -161,7 +161,7 @@ export const Hero: FC<HeroProps> = ({
           {/* 1. Resonansmerket over merkevaren — gløder som chat-knappen */}
           <div className="flex flex-col items-center mb-12">
             <div className="mb-6 animate-ts-fade-in [animation-duration:600ms]">
-              <ResonanceMark size={72} glow resonate className="ts-mark-pulse" />
+              <ResonanceMark size={72} glow resonate orbit className="ts-mark-pulse" />
             </div>
             <LogoAnimated />
           </div>

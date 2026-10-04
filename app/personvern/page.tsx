@@ -17,7 +17,7 @@ import Link from 'next/link';
 import { Footer } from '@/components/ui/layout/Footer';
 import { ToSomSection } from '@/components/ui/system';
 import { color, typographyToStyle } from '@/config/design-tokens';
-import { COMPANY, companyIdentification, companyFooterLine, PRIVACY_VERSION, PRIVACY_UPDATED } from '@/config/legal';
+import { COMPANY, companyIdentification, companyFooterLine, PRIVACY_VERSION, PRIVACY_UPDATED, LEGISLATION } from '@/config/legal';
 
 /* ========================
    INNHOLD
@@ -34,6 +34,7 @@ interface Section {
   list?: string[];
   table?: { headers: string[]; rows: Row[] };
   callout?: string;
+  references?: { label: string; url: string; note?: string }[];
 }
 
 const sections: Section[] = [
@@ -59,6 +60,7 @@ const sections: Section[] = [
     title: 'Hva vi samler inn',
     paragraphs: [
       'Vi deler opplysningene i fire grupper.',
+      'Alderen din verifiseres ved innlogging med Vipps. I dagens beta, der innlogging fortsatt skjer med e-post og passord, bekrefter du alderen selv.',
     ],
     table: {
       headers: ['Gruppe', 'Hva det er', 'Grunnlag', 'Oppbevaring'],
@@ -66,7 +68,7 @@ const sections: Section[] = [
         {
           cells: [
             'Konto',
-            'E-postadresse, navn, telefonnummer og alder (selvrapportert)',
+            'E-postadresse, navn, telefonnummer og alder',
             'Avtale (art. 6.1.b)',
             'Til kontoen slettes',
           ],
@@ -215,7 +217,14 @@ const sections: Section[] = [
     title: 'Klage til Datatilsynet',
     paragraphs: [
       'Mener du at vi behandler opplysningene dine feil, håper vi du sier fra til oss først. Da får vi rettet det.',
-      'Du har uansett rett til å klage til Datatilsynet. De kan kontaktes på datatilsynet.no, eller på Postboks 458 Sentrum, 0105 Oslo.',
+      'Du har uansett rett til å klage til Datatilsynet. De kan kontaktes på Postboks 458 Sentrum, 0105 Oslo.',
+    ],
+    references: [
+      {
+        label: LEGISLATION.datatilsynet.label,
+        url: LEGISLATION.datatilsynet.url,
+        note: 'Datatilsynets nettsted — også der du kan søke veiledning om dine rettigheter.',
+      },
     ],
   },
   {
@@ -250,6 +259,26 @@ const sections: Section[] = [
   },
   {
     id: '16',
+    title: 'Gjeldende regelverk',
+    paragraphs: [
+      'Behandlingen av opplysningene dine er basert på personvernforordningen (GDPR) og den norske personvernloven. Det er disse reglene som ligger bak punktene over.',
+    ],
+    references: [
+      {
+        label: LEGISLATION.gdpr.label,
+        url: LEGISLATION.gdpr.url,
+        note: 'Mellom annet art. 6 (lovlighetsgrunnlag), art. 9 (særlige kategorier), art. 13–14 (informasjonsplikt), art. 15–21 (rettighetene dine), art. 22 (automatiserte avgjørelser), art. 28 (databehandlere) og art. 33–34 (varsel ved brudd).',
+      },
+      { label: LEGISLATION.personvernlov.label, url: LEGISLATION.personvernlov.url },
+      {
+        label: LEGISLATION.bokforing.label,
+        url: LEGISLATION.bokforing.url,
+        note: 'Grunnlaget for at regnskapsopplysninger ved betaling beholdes i fem år.',
+      },
+    ],
+  },
+  {
+    id: '17',
     title: 'Endringer i erklæringen',
     paragraphs: [
       'Vi oppdaterer denne erklæringen når tjenesten endres eller regelverket krever det.',
@@ -411,6 +440,35 @@ export default function PersonvernPage() {
                       </tbody>
                     </table>
                   </div>
+                )}
+
+                {section.references && (
+                  <ul className="space-y-3 pl-1">
+                    {section.references.map((ref, i) => (
+                      <li key={i} className="space-y-0.5">
+                        <a
+                          href={ref.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline underline-offset-4"
+                          style={{ ...typographyToStyle('body'), color: color.brand.gold }}
+                        >
+                          {ref.label}
+                        </a>
+                        {ref.note && (
+                          <p
+                            style={{
+                              ...typographyToStyle('body-sm'),
+                              color: color.text.muted,
+                              lineHeight: '1.7',
+                            }}
+                          >
+                            {ref.note}
+                          </p>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
                 )}
               </section>
             ))}

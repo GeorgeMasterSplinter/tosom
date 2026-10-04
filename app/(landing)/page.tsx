@@ -371,7 +371,7 @@ export default function LandingPage() {
               variant="gold"
               size="xl"
             >
-              Logg inn
+              Start reisen
             </ToSomButton>
 
             <p

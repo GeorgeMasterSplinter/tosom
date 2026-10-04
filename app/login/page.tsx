@@ -66,7 +66,7 @@ export default function LoginPage() {
   return (
     <main
       className="relative min-h-screen overflow-hidden flex items-start justify-center"
-      style={{ paddingTop: "80px", paddingBottom: "60px" }}
+      style={{ paddingTop: "40px", paddingBottom: "60px" }}
     >
       {/* Bakgrunn */}
       <div
@@ -89,7 +89,7 @@ export default function LoginPage() {
         {/* Header */}
         <div className="text-center space-y-5 mb-10 w-full">
           <div className="flex justify-center">
-            <ResonanceMark size={72} strokeWidth={1.5} glow resonate orbit />
+            <ResonanceMark size={104} strokeWidth={1.5} glow resonate orbit />
           </div>
           <h1
             style={{

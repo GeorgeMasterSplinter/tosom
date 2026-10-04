@@ -43,9 +43,9 @@ const sections: Section[] = [
     id: '2',
     title: 'Hvem som slipper inn',
     paragraphs: [
-      `Du lager konto med e-post og passord, eller med Vipps, og bekrefter selv at du er minst ${MIN_AGE} år.`,
+      `Du lager konto og logger inn med Vipps, som bekrefter at du er minst ${MIN_AGE} år. I dagens beta er også e-post og passord tilgjengelig.`,
       `Aldersgrensen er ${MIN_AGE} år. Én person kan bare ha én konto.`,
-      'Vi gjør ikke bakgrunnssjekk. Alderen bekreftes selv — vi vet ikke mer enn det, og vi later ikke som noe annet.',
+      'Vi gjør ingen bakgrunnssjekk. Vipps bekrefter identitet og alder — utover det vet vi ikke, og vi later ikke som noe annet.',
     ],
   },
   {

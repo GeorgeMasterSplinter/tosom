@@ -14,7 +14,7 @@ import Link from 'next/link';
 import { Footer } from '@/components/ui/layout/Footer';
 import { ToSomSection } from '@/components/ui/system';
 import { color, typographyToStyle } from '@/config/design-tokens';
-import { COMPANY, companyIdentification, companyFooterLine, TERMS_VERSION, TERMS_UPDATED, MIN_AGE, PRICING, JOURNEY } from '@/config/legal';
+import { COMPANY, companyIdentification, companyFooterLine, TERMS_VERSION, TERMS_UPDATED, MIN_AGE, PRICING, JOURNEY, LEGISLATION } from '@/config/legal';
 
 /* ========================
    INNHOLD
@@ -25,6 +25,7 @@ interface Clause {
   title: string;
   paragraphs: string[];
   list?: string[];
+  references?: { label: string; url: string; note?: string }[];
 }
 
 const clauses: Clause[] = [
@@ -80,7 +81,7 @@ const clauses: Clause[] = [
     id: '5',
     title: `Aldersgrense — ${MIN_AGE} år`,
     paragraphs: [
-      `Du må ha fylt ${MIN_AGE} år for å bruke Tosom. Alderen er selvrapportert, og du bekrefter at du er ${MIN_AGE} år eller eldre.`,
+      `Du må ha fylt ${MIN_AGE} år for å bruke Tosom. Alderen din verifiseres ved innlogging med Vipps, som bekrefter at du er ${MIN_AGE} år eller eldre. I dagens beta, der innlogging fortsatt skjer med e-post og passord, bekrefter du alderen selv.`,
       `Oppdager vi at en bruker er under ${MIN_AGE} år, stenges kontoen umiddelbart og alle opplysninger slettes.`,
     ],
   },
@@ -88,7 +89,7 @@ const clauses: Clause[] = [
     id: '6',
     title: 'Konto og innlogging',
     paragraphs: [
-      'Du oppretter konto med e-post og passord, eller med Vipps. Kontoen er personlig, og du kan bare ha én.',
+      'Du logger inn med Vipps, som bekrefter både identitet og alder. I dagens beta kan du i tillegg opprette konto med e-post og passord. Kontoen er personlig, og du kan bare ha én.',
       'Du er ansvarlig for aktiviteten på kontoen din. Mistenker du at noen andre har fått tilgang, skal du si fra til oss.',
       'Du kan ikke overdra kontoen til andre, og du kan ikke opptre på vegne av noen andre.',
     ],
@@ -193,6 +194,13 @@ const clauses: Clause[] = [
       'Fram til koblingen er gjort natt til lørdag, kan du melde deg ut og få hele beløpet tilbake. Uten spørsmål.',
       'Når koblingen er gjort, er tjenesten levert, og angreretten er bortfalt.',
     ],
+    references: [
+      {
+        label: LEGISLATION.forbrukerkjop.label,
+        url: LEGISLATION.forbrukerkjop.url,
+        note: 'Angrerett på digitalt innhold følger av § 22. Retten bortfaller når leveringen har begynt med ditt forutgående samtykke.',
+      },
+    ],
   },
   {
     id: '16',
@@ -263,6 +271,35 @@ const clauses: Clause[] = [
   },
   {
     id: '23',
+    title: 'Gjeldende lovverk',
+    paragraphs: [
+      'Avtalen mellom oss er basert på norsk rett. Disse lovene ligger bak punktene over.',
+    ],
+    references: [
+      {
+        label: LEGISLATION.forbrukerkjop.label,
+        url: LEGISLATION.forbrukerkjop.url,
+        note: 'Angrerett og regler for digitalt innhold — blant annet § 22.',
+      },
+      {
+        label: LEGISLATION.markedsforing.label,
+        url: LEGISLATION.markedsforing.url,
+        note: 'Reglene for markedsføring og informasjon om tjenesten.',
+      },
+      {
+        label: LEGISLATION.avtalelov.label,
+        url: LEGISLATION.avtalelov.url,
+        note: 'Generelle regler for avtaler.',
+      },
+      {
+        label: LEGISLATION.gdpr.label,
+        url: LEGISLATION.gdpr.url,
+        note: 'Personvern — se personvernerklæringen.',
+      },
+    ],
+  },
+  {
+    id: '24',
     title: 'Lovvalg og tvister',
 
     paragraphs: [
@@ -353,6 +390,35 @@ export default function VilkarPage() {
                         >
                           {item}
                         </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                {clause.references && (
+                  <ul className="space-y-3 pl-1">
+                    {clause.references.map((ref, i) => (
+                      <li key={i} className="space-y-0.5">
+                        <a
+                          href={ref.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline underline-offset-4"
+                          style={{ ...typographyToStyle('body'), color: color.brand.gold }}
+                        >
+                          {ref.label}
+                        </a>
+                        {ref.note && (
+                          <p
+                            style={{
+                              ...typographyToStyle('body-sm'),
+                              color: color.text.muted,
+                              lineHeight: '1.7',
+                            }}
+                          >
+                            {ref.note}
+                          </p>
+                        )}
                       </li>
                     ))}
                   </ul>

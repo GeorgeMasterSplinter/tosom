@@ -54,12 +54,12 @@ export function companyFooterLine(): string {
 }
 
 /** Gjeldende versjon av vilkårene. Lagres på bruker ved aksept. */
-export const TERMS_VERSION = '2026-10-01';
-export const TERMS_UPDATED = '1. oktober 2026';
+export const TERMS_VERSION = '2026-10-05';
+export const TERMS_UPDATED = '5. oktober 2026';
 
 /** Gjeldende versjon av personvernerklæringen. */
-export const PRIVACY_VERSION = '2026-10-01';
-export const PRIVACY_UPDATED = '1. oktober 2026';
+export const PRIVACY_VERSION = '2026-10-05';
+export const PRIVACY_UPDATED = '5. oktober 2026';
 
 /**
  * Aldersgrense. Invariant I-14.
@@ -123,4 +123,44 @@ export const JOURNEY = {
   totalDays: 30,
   /** Første dag bilder kan deles. */
   imageUnlockDay: 15,
+} as const;
+
+/**
+ * Gjeldende lovverk.
+ *
+ * Én kilde for lovens navn og den offisielle lovdata.no-lenken, slik at
+ * vilkår og personvernerklæringen henviser konsistent og alltid peker på
+ * den gyldige teksten. Det er teksten på lovdata.no — ikke disse sidene —
+ * som er juridisk bindende. Advokatgjennomgang kreves før lansering
+ * (se docs/JURIDISK-GRUNNLAG-v1.0.md, åpne spørsmål A-1/A-2/A-4).
+ */
+export const LEGISLATION = {
+  gdpr: {
+    label: 'Dataverneforordningen (GDPR) — Forordning (EU) 2016/679',
+    url: 'https://lovdata.no/dokument/EU/forordning/2016-06-27/2016-679',
+  },
+  personvernlov: {
+    label: 'Personvernloven (lov 30. juni 2018 nr. 30)',
+    url: 'https://lovdata.no/dokument/NL/lov/2018-06-30-30',
+  },
+  forbrukerkjop: {
+    label: 'Forbrukerkjøpsloven (lov 27. mars 2009 nr. 14)',
+    url: 'https://lovdata.no/dokument/NL/lov/2009-03-27-14',
+  },
+  markedsforing: {
+    label: 'Markedsføringsloven (lov 18. desember 2003 nr. 92)',
+    url: 'https://lovdata.no/dokument/NL/lov/2003-12-18-92',
+  },
+  avtalelov: {
+    label: 'Avtaleloven (lov 13. juni 1918 nr. 3)',
+    url: 'https://lovdata.no/dokument/NL/lov/1918-06-13-3',
+  },
+  bokforing: {
+    label: 'Bokføringsloven (lov 12. juni 1998 nr. 13)',
+    url: 'https://lovdata.no/dokument/NL/lov/1998-06-12-13',
+  },
+  datatilsynet: {
+    label: 'Datatilsynet',
+    url: 'https://www.datatilsynet.no/',
+  },
 } as const;

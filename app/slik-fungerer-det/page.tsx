@@ -252,7 +252,7 @@ export default function SlikPage() {
                       color: color.brand.gold,
                     }}
                   >
-                    Bilder kommer etter 14 dager
+                    Muligheten for bilder åpnes etter 14 dager
                   </h3>
                   <p
                     className="mx-auto max-w-xl"
@@ -262,10 +262,10 @@ export default function SlikPage() {
                       lineHeight: '1.8',
                     }}
                   >
-                    Trygghet før utseende. Bildene åpnes først etter 14 dager — da har dere lært å kjenne hverandre som mennesker, ikke som profiler. Ordene først, bildet etter.
+                    Trygghet før utseende. Etter 14 dager åpnes muligheten til å sende bilder til hverandre — da har dere lært å kjenne hverandre som mennesker, ikke som profiler. Hver av dere bestemmer selv om, og når, dere vil sende. Ordene først, bildet etter.
                   </p>
                   <div className="mx-auto max-w-md grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2">
-                    {['14 dager uten bilder', 'fokus på personen og meningen', 'bildene åpnes ved dag 15', 'bygger tillit før utseende'].map((point, pIdx) => (
+                    {['14 dager uten bilder', 'fokus på personen og meningen', 'muligheten åpnes ved dag 15', 'du bestemmer selv om og når'].map((point, pIdx) => (
                       <p
                         key={pIdx}
                         style={{

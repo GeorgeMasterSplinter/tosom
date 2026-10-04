@@ -14,7 +14,6 @@
 'use client';
 
 import { FC, useRef, useEffect } from 'react';
-import Link from 'next/link';
 import { LogoAnimated, ResonanceMark } from '@/components/branding/LogoVariants';
 import { ToSomSection } from '@/components/ui/system';
 import { ResonanceField } from '@/components/brand/ResonanceField';
@@ -72,7 +71,7 @@ export const Hero: FC<HeroProps> = ({
   /* Premium spacing constants — optimalisert for ro, dybde, optisk base og 8px-grid */
   const heroSpacing = {
     paddingTop: 10,
-    paddingBottom: 80,
+    paddingBottom: 24,
   };
 
   /* Bølge 1: primær, organisk */
@@ -89,6 +88,8 @@ export const Hero: FC<HeroProps> = ({
       className="relative overflow-hidden"
       style={{
         background: 'linear-gradient(180deg, #0A0F1A 0%, #0F1923 50%, #0A0F1A 100%)',
+        paddingTop: 8,
+        paddingBottom: 32,
       }}
     >
       {/* ── Z-0: Atmosfæren ── */}
@@ -161,9 +162,9 @@ export const Hero: FC<HeroProps> = ({
           {/* 1. Resonansmerket over merkevaren — gløder som chat-knappen */}
           <div className="flex flex-col items-center mb-12">
             <div className="mb-6 animate-ts-fade-in [animation-duration:600ms]">
-              <ResonanceMark size={72} glow resonate orbit className="ts-mark-pulse" />
+              <ResonanceMark size={104} glow resonate orbit className="ts-mark-pulse" />
             </div>
-            <LogoAnimated />
+            <LogoAnimated showWordmark={false} />
           </div>
 
           {/* 2. Premium glassmorphism-blokk */}
@@ -203,56 +204,6 @@ export const Hero: FC<HeroProps> = ({
             >
               {subtitle}
             </p>
-          </div>
-
-          {/* 3. Trust-notis — under løftet, rolig og kort */}
-          <div className="mt-14 flex flex-col items-center gap-3">
-            <div
-              className="inline-flex items-center gap-3 rounded-full px-5 py-2.5"
-              style={{
-                border: '1px solid rgba(212,175,55,0.18)',
-                background: 'rgba(212,175,55,0.04)',
-              }}
-            >
-              <span className="w-[6px] h-[6px] rounded-full bg-[#D4AF37] ts-breath" />
-              <span
-                className="text-[13px]"
-                style={{ color: 'rgba(255,255,255,0.58)', letterSpacing: '0.15px' }}
-              >
-                Én kobling om gangen — 30 dager sammen.{' '}
-                <Link
-                  href="/slik-fungerer-det"
-                  className="underline underline-offset-4 transition-colors hover:text-white/80 inline-block px-2 py-2 -my-2 -mx-1"
-                  style={{ color: 'rgba(255,255,255,0.72)', textDecorationColor: 'rgba(212,175,55,0.4)' }}
-                >
-                  Les mer
-                </Link>
-              </span>
-            </div>
-
-            {/* Metoder — samme stil som over, lenke til /metoder */}
-            <div
-              className="inline-flex items-center gap-3 rounded-full px-5 py-2.5"
-              style={{
-                border: '1px solid rgba(212,175,55,0.18)',
-                background: 'rgba(212,175,55,0.04)',
-              }}
-            >
-              <span className="w-[6px] h-[6px] rounded-full bg-[#D4AF37] ts-breath" />
-              <span
-                className="text-[13px]"
-                style={{ color: 'rgba(255,255,255,0.58)', letterSpacing: '0.15px' }}
-              >
-                Metoder vi bruker.{' '}
-                <Link
-                  href="/metoder"
-                  className="underline underline-offset-4 transition-colors hover:text-white/80 inline-block px-2 py-2 -my-2 -mx-1"
-                  style={{ color: 'rgba(255,255,255,0.72)', textDecorationColor: 'rgba(212,175,55,0.4)' }}
-                >
-                  Les mer
-                </Link>
-              </span>
-            </div>
           </div>
         </div>
       </div>

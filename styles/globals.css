@@ -1389,6 +1389,16 @@ html, body {
   animation: ts-mark-pulse var(--ts-breath) ease-in-out infinite;
 }
 
+/* Skroll-hint: en tynn pil som mykt driver nedover (viser mer å lese) */
+@keyframes ts-arrow-drift {
+  0%, 100% { transform: translateY(0);   opacity: 0.45; }
+  50%      { transform: translateY(6px); opacity: 0.95; }
+}
+
+.ts-arrow-drift {
+  animation: ts-arrow-drift 2.4s ease-in-out infinite;
+}
+
 /* CTA-pust — gløden alene, aldri geometrien (S-7) */
 @keyframes ts-cta-breath {
   0%, 100% { box-shadow: 0 0 34px rgba(212,175,55,0.24); }

@@ -190,6 +190,8 @@ export const LogoStacked: FC<LogoStackedProps> = ({
 
 export interface LogoAnimatedProps {
   className?: string;
+  /** Vis «Tosom»-wordmarken over taglinen. Standard: true. */
+  showWordmark?: boolean;
 }
 
 /**
@@ -197,7 +199,7 @@ export interface LogoAnimatedProps {
  * Brukes kun i hero-seksjoner.
  * Logo er 3x større enn standard, med "Made in Norway" under (etterlogo, 150 ms forsinkelse).
  */
-export const LogoAnimated: FC<LogoAnimatedProps> = ({ className = '' }) => {
+export const LogoAnimated: FC<LogoAnimatedProps> = ({ className = '', showWordmark = true }) => {
   return (
     <div className={`relative flex flex-col items-center ${className}`}>
       {/* Premium radial backdrop — myk gull + blå glow */}
@@ -210,11 +212,13 @@ export const LogoAnimated: FC<LogoAnimatedProps> = ({ className = '' }) => {
         }}
       />
       <div className="flex flex-col items-center animate-ts-fade-in [animation-duration:600ms] relative">
-        <Logo
-          size="3xl"
-          colorVariant="gold"
-        />
-        <div className="mt-3 flex flex-col items-center gap-1 animate-ts-fade-in [animation-duration:600ms] [animation-delay:350ms]">
+        {showWordmark && (
+          <Logo
+            size="3xl"
+            colorVariant="gold"
+          />
+        )}
+        <div className={`${showWordmark ? 'mt-3' : 'mt-0'} flex flex-col items-center gap-1 animate-ts-fade-in [animation-duration:600ms] [animation-delay:350ms]`}>
           <span className="text-[10px] font-medium tracking-[0.35em] uppercase text-[var(--ts-gold)] opacity-35">
             Utviklet i Norge
           </span>

@@ -6,7 +6,6 @@ import { ToSomSection, ToSomButton } from '@/components/ui/system';
 import { color, typographyToStyle } from '@/config/design-tokens';
 import GlassCard from '@/components/ui/cards/GlassCard';
 import { Reveal } from '@/components/motion/Reveal';
-import { ResonanceMark } from '@/components/branding/LogoVariants';
 
 /* ========================
    Ikoner — bygget på resonans-motivet
@@ -122,7 +121,7 @@ const steps = [
   {
     icon: <IconPhotos />,
     title: 'Bilder etter 14 dager',
-    content: 'Trygghet før utseende. Bildene åpnes først etter 14 dager — da kjenner dere hverandre som mennesker, ikke som profiler. Ordene først, bildet etter.',
+    content: 'Trygghet før utseende. Muligheten til å sende bilder til hverandre åpnes først etter 14 dager — da kjenner dere hverandre som mennesker, ikke som profiler. Ordene først, bildet etter.',
   },
 ];
 
@@ -148,7 +147,7 @@ export default function LandingPage() {
 
       <main className="relative z-10">
         {/* Hero */}
-        <section className="relative overflow-hidden py-10 ph:py-14 md:py-[60px]">
+        <section className="relative overflow-hidden pt-4 ph:pt-4 md:pt-4 pb-6 ph:pb-6 md:pb-6">
           <Hero />
         </section>
 
@@ -156,11 +155,11 @@ export default function LandingPage() {
         <ToSomSection
           spotlight="blue"
           className="px-6"
+          style={{ paddingTop: 48 }}
         >
           <div className="mx-auto max-w-5xl">
             <Reveal direction="up" delay={0}>
             <div className="flex flex-col items-center">
-              <ResonanceMark size={56} glow resonate orbit className="mb-4 ts-mark-pulse" />
               <h2
                 className="text-center mb-6"
                 style={{
@@ -184,6 +183,26 @@ export default function LandingPage() {
               Tosom er bygget for kvalitet, ikke kvantitet. Her er hvordan det fungerer.
             </p>
             </Reveal>
+
+            {/* Skroll-hint — tre piler som peker nedover, mer å lese */}
+            <div className="flex justify-center mb-12" aria-hidden="true">
+              <svg
+                width="30"
+                height="30"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#D4AF37"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="ts-arrow-drift"
+                style={{ opacity: 0.7 }}
+              >
+                <path d="M6 3 L12 9 L18 3" />
+                <path d="M6 7.5 L12 13.5 L18 7.5" />
+                <path d="M6 12 L12 18 L18 12" />
+              </svg>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {steps.map((step, idx) => (

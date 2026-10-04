@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+import { ResonanceMark } from "@/components/branding/LogoVariants";
 
 /* ========================
    PAGE COMPONENT
@@ -86,7 +87,10 @@ export default function LoginPage() {
       {/* Content */}
       <div className="relative z-10 w-full max-w-[540px] px-8 flex flex-col items-center">
         {/* Header */}
-        <div className="text-center space-y-4 mb-10 w-full">
+        <div className="text-center space-y-5 mb-10 w-full">
+          <div className="flex justify-center">
+            <ResonanceMark size={72} strokeWidth={1.5} glow resonate />
+          </div>
           <h1
             style={{
               fontSize: "48px",
@@ -111,6 +115,25 @@ export default function LoginPage() {
             En guidet reise for to. Du bygger en dyp profil,
             vi matcher deg natt til lørdag, og dere går inn i
             en 30-dagers reise sammen.
+          </p>
+        </div>
+
+        {/* Under oppbygging — status */}
+        <div
+          className="w-full mb-8"
+          style={{
+            background: "rgba(212,175,55,0.05)",
+            border: "1px solid rgba(212,175,55,0.16)",
+            borderLeft: "3px solid rgba(212,175,55,0.55)",
+            borderRadius: "12px",
+            padding: "16px 18px",
+          }}
+        >
+          <p style={{ fontSize: "13px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#D4AF37", margin: 0 }}>
+            Under oppbygging
+          </p>
+          <p style={{ fontSize: "14px", lineHeight: "1.7", color: "rgba(255,255,255,0.65)", margin: "6px 0 0 0" }}>
+            Vi venter på å integrere Vipps, så plattformen er ikke helt klar for bruk enda. Men du er velkommen til å logge inn og ta en titt i onboardingen.
           </p>
         </div>
 

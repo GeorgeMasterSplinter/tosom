@@ -19,6 +19,7 @@ jest.mock('@/lib/auth/session', () => ({
 import { getServerSession } from '@/lib/auth/session';
 import prisma from '@/lib/prisma';
 import { POST } from '@/app/api/profile/setup/route';
+import { TERMS_VERSION } from '@/config/legal';
 import { ALL_ITEMS } from '@/lib/psychometrics/instruments';
 
 const mockedSession = getServerSession as jest.Mock;
@@ -160,7 +161,14 @@ describe('POST /api/profile/setup — EKT DB (bug 1 repro/regressjon)', () => {
     console.log('[profile-setup-save] DATABASE_URL =', url);
     // Opprett ein reell bruker i DB-en (FK-mål for profile.upsert).
     const user = await prisma.user.create({
-      data: { id: `save-${suffix}`, email: `save${suffix}@test.local`, name: 'Save Test' },
+      data: {
+        id: `save-${suffix}`,
+        email: `save${suffix}@test.local`,
+        name: 'Save Test',
+        // K-2: profil-setup krever nå samtykke — testen tester lagring, ikke samtykkeportet.
+        termsVersion: TERMS_VERSION,
+        sensitiveConsentAt: new Date(),
+      },
     });
     userId = user.id;
     mockedSession.mockResolvedValue({ user: { id: userId } });

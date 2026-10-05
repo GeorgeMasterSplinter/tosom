@@ -18,6 +18,7 @@ import { INSTRUMENT_SET_VERSION } from '@/lib/psychometrics/instruments';
 import { pgCheck } from '@/lib/rate-limit-pg';
 import { csrfCheck } from '@/lib/auth/csrf';
 import { tryParseJsonBody } from '@/lib/api/validation';
+import { TERMS_VERSION } from '@/config/legal';
 
 export const dynamic = 'force-dynamic';
 
@@ -75,6 +76,24 @@ async function postHandler(req: NextRequest) {
       return NextResponse.json(
         { error: 'Ikke autentisert. Logg inn først.' },
         { status: 401 }
+      );
+    }
+
+    // K-2: Ingen profil lagres uten samtykke — art. 9 krever uttrykkelig
+    // samtykke til behandling av særlige kategorier, og vilkårene må være
+    // aktivt akseptert i gjeldende versjon.
+    const consentUser = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { termsVersion: true, sensitiveConsentAt: true },
+    });
+    if (
+      !consentUser ||
+      consentUser.termsVersion !== TERMS_VERSION ||
+      consentUser.sensitiveConsentAt === null
+    ) {
+      return NextResponse.json(
+        { error: 'Samtykke mangler', code: 'CONSENT_REQUIRED' },
+        { status: 403 }
       );
     }
 

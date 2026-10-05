@@ -35,6 +35,8 @@ model User {
   // B4.1 — Vilkårssamtykke lagres med tidsstempel og versjon
   termsAcceptedAt     DateTime?
   termsVersion        String?
+  // K-2 — Uttrykkelig samtykke til særlige kategorier (GDPR art. 9) for matching
+  sensitiveConsentAt  DateTime?
   withdrawalWaiverAt  DateTime? // Angrerett-samtykke (ved betaling)
   accounts            Account[]
   auditLogs           AuditLog[]           @relation("AdminAuditLogs")

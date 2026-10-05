@@ -46,6 +46,7 @@ const PUBLIC_PATHS = [
 
 const PROTECTED_API_PREFIXES = [
   '/api/profile',
+  '/api/consent',
   '/api/match',
   '/api/journey',
   '/api/conversation',

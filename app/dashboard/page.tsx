@@ -422,6 +422,18 @@ export default function Dashboard() {
         }
         setUserName(session.user.name || '');
 
+        // K-2: Eksisterende brukere uten samtykke sendes til samtykkesiden.
+        // Etter samtykke tilbake til dashboardet (?next valideres i samtykke-siden:
+        // må starte med "/", ikke "//").
+        const consentRes = await fetch('/api/consent');
+        if (consentRes.ok) {
+          const consent = await consentRes.json();
+          if (consent.needsConsent === true) {
+            router.replace('/samtykke?next=/dashboard');
+            return;
+          }
+        }
+
         // Onboarding-guard: ny bruker må fullføre profil først
         const obRes = await fetch('/api/onboarding/progress');
         if (obRes.ok) {

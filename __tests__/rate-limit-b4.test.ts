@@ -11,6 +11,7 @@
  */
 
 import { NextRequest } from 'next/server';
+import { TERMS_VERSION } from '@/config/legal';
 
 jest.mock('@/lib/rate-limit-pg', () => ({
   pgCheck: jest.fn(),
@@ -58,11 +59,14 @@ import { POST as savePost } from '@/app/api/onboarding/save/route';
 import { POST as draftPost } from '@/app/api/onboarding/draft/route';
 import { POST as setupPost } from '@/app/api/profile/setup/route';
 import { POST as imagePost } from '@/app/api/chat/image/route';
+import { prisma } from '@/lib/prisma';
 
 const mockedPgCheck = pgCheck as jest.Mock;
 const mockedRequireAuth = requireAuth as jest.Mock;
 const mockedSession = getServerSession as jest.Mock;
 const mockedValidate = validateOnboarding as jest.Mock;
+const mockedUserFindUnique = (prisma as unknown as { user: { findUnique: jest.Mock } })
+  .user.findUnique;
 
 function jsonReq(method: string, path: string, body?: unknown): NextRequest {
   return new NextRequest(`http://localhost${path}`, {
@@ -103,6 +107,12 @@ describe('B-4: rate limiting gir 429 når taket er nått (mønster fra A5)', () 
   it('POST /api/profile/setup → 429 (nøkkel profile:setup:<id>, 20/60s)', async () => {
     mockedValidate.mockReturnValue({ success: true, data: {} });
     mockedSession.mockResolvedValue({ user: { id: 'u-p' } });
+    // K-2: samtykkesjekken kjører før rate-limit — la testbrukeren ha samtykke
+    // slik at testen fortsatt tester rate-limit-nøkkelen.
+    mockedUserFindUnique.mockResolvedValue({
+      termsVersion: TERMS_VERSION,
+      sensitiveConsentAt: new Date(),
+    });
     const res = await setupPost(jsonReq('POST', '/api/profile/setup', {}));
     expect(res.status).toBe(429);
     expect(mockedPgCheck).toHaveBeenCalledWith('profile:setup:u-p', 20, 60);

@@ -314,12 +314,28 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
 
    // WP2: Init-tilstand (én kilde): server-draft (pågående utkast) >
    // prefill (fullførte profiler, redigeringsøkt) > localStorage (hurtigbuffer)
-   useEffect(() => {
-     async function init() {
-       const [serverDraft, prefill] = await Promise.all([
-         loadDraftFromServer(),
-         loadPrefill(),
-       ]);
+    useEffect(() => {
+      async function init() {
+        // K-2: uten samtykke lagres ingen profil — send brukeren til
+        // samtykkesiden. Dekker både nye brukere og eksisterende brukere
+        // som ennå ikke har gitt samtykke.
+        try {
+          const consentRes = await fetch('/api/consent');
+          if (consentRes.ok) {
+            const consent = await consentRes.json();
+            if (consent.needsConsent === true) {
+              router.replace('/samtykke');
+              return;
+            }
+          }
+        } catch {
+          // Kunne ikke hente samtykkestatus — la pågangen skje; API-et
+          // nekter fortsatt å lagre profil uten samtykke (403).
+        }
+        const [serverDraft, prefill] = await Promise.all([
+          loadDraftFromServer(),
+          loadPrefill(),
+        ]);
        // 1) Pågående utkast vinner — brukerens nyeste tilstand
        if (serverDraft && Object.keys(serverDraft.data).length > 0) {
          setData((prev) => ({ ...prev, ...serverDraft.data }));

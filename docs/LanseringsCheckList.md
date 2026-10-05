@@ -745,9 +745,9 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 | [x] | Kontosletting virker ende-til-ende, med feilmelding ved feil *(✓ 2026-10-05 · PL-01)* | K-1 | **Før lansering — og før flere testere** |
 | [ ] | Brukere som har forsøkt å slette seg, er slettet manuelt og informert | K-1 | **Før lansering** |
 | [x] | Integrasjonstest for kontosletting med aktiv reise *(✓ 2026-10-05 · PL-01d, kjørt mot test-DB)* | K-1 | **Før lansering** |
-| [ ] | Aktiv aksept av vilkår + uttrykkelig samtykke til særlige kategorier | K-2 | **Før lansering — og før flere testere** |
-| [ ] | `termsAcceptedAt` / `termsVersion` lagres for alle nye brukere | K-2 | **Før lansering** |
-| [ ] | Eksisterende brukere bes om samtykke ved neste innlogging | K-2 | **Før lansering** |
+| [ ] *(klar for George · PL-02)* | Aktiv aksept av vilkår + uttrykkelig samtykke til særlige kategorier | K-2 | **Før lansering — og før flere testere** |
+| [ ] *(klar for George · PL-02)* | `termsAcceptedAt` / `termsVersion` lagres for alle nye brukere | K-2 | **Før lansering** |
+| [ ] *(klar for George · PL-02)* | Eksisterende brukere bes om samtykke ved neste innlogging | K-2 | **Før lansering** |
 | [ ] | FAQ og personvern beskriver faktisk databehandling (IP, tredjeparter) | K-7 | **Før lansering** |
 | [ ] | Google Fonts selvhostet via `next/font` | V-7 | **Før lansering** |
 | [ ] | Onboarding-utkast ikke lenger i `localStorage` | V-12 | Kan utsettes |

@@ -10,7 +10,7 @@ jest.mock('@/lib/prisma', () => {
   // alle tre operasjonane (upsert + draft-rydding + user-flagg) atomisk.
   const prismaMock = {
     profile: { upsert: jest.fn(), update: jest.fn() },
-    user: { update: jest.fn() },
+    user: { findUnique: jest.fn(), update: jest.fn() },
     $disconnect: jest.fn(),
     $transaction: jest.fn((cb: unknown) =>
       typeof cb === 'function' ? cb(prismaMock) : Promise.resolve(),
@@ -22,11 +22,12 @@ jest.mock('@/lib/prisma', () => {
 import { getServerSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/prisma';
 import { POST } from '@/app/api/profile/setup/route';
+import { TERMS_VERSION } from '@/config/legal';
 
 const mockedSession = getServerSession as jest.Mock;
 const mockedPrisma = prisma as unknown as {
   profile: { upsert: jest.Mock; update: jest.Mock };
-  user: { update: jest.Mock };
+  user: { findUnique: jest.Mock; update: jest.Mock };
   $transaction: jest.Mock;
 };
 
@@ -72,6 +73,11 @@ describe('POST /api/profile/setup (B1.2/B1.3 geo)', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockedSession.mockResolvedValue({ user: { id: UID } });
+    // K-2: samtykkesjekken kjører før skriving — testen tester geo-logikken.
+    mockedPrisma.user.findUnique.mockResolvedValue({
+      termsVersion: TERMS_VERSION,
+      sensitiveConsentAt: new Date(),
+    });
   });
 
   it('skriver postalCode som kolonne + utleder lat/lon for 5003 (Bergen)', async () => {

@@ -815,7 +815,7 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 
 | | Punkt | Ref | Prioritet |
 |---|---|---|---|
-| [ ] | Kritiske og høye sårbarheter i `next`, `next-auth`, `@auth/*` rettet | K-5 | **Før lansering** |
+| [x] | Kritiske og høye sårbarheter i `next`, `next-auth`, `@auth/*` rettet | K-5 | **Før lansering** |
 | [ ] | Øvrige høye sårbarheter (nodemailer, uploadthing, sharp, postcss) rettet eller vurdert | K-5 | **Før lansering** |
 | [ ] | Interne og døde sider fjernet eller 404 i prod | V-10 | **Før lansering** |
 | [ ] | `POST /api/auth/phone/send` deaktivert | V-10 | **Før lansering** |

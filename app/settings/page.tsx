@@ -496,14 +496,24 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteText, setDeleteText] = useState("");
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const handleDelete = async () => {
     if (deleteText !== "SLETT") return;
+    setDeleteError(null);
     try {
-      await csrfFetch("/api/settings/delete-account", { method: "POST" });
+      const res = await csrfFetch("/api/settings/delete-account", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ confirmation: "DELETE" }),
+      });
+      if (!res.ok) {
+        setDeleteError("Vi fikk ikke slettet kontoen din. Ingenting er slettet. Prøv igjen, eller skriv til support@tosom.no.");
+        return;
+      }
       await signOut({ callbackUrl: "/" });
     } catch {
-      console.error("Feil ved sletting av konto");
+      setDeleteError("Vi fikk ikke kontakt. Ingenting er slettet. Prøv igjen.");
     }
   };
 
@@ -663,6 +673,9 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
               value={deleteText}
               onChange={(e) => setDeleteText(e.target.value)}
             />
+            {deleteError && (
+              <p style={{ color: "#FF4D4D", fontSize: "13px", marginBottom: "12px", lineHeight: "1.5" }}>{deleteError}</p>
+            )}
             <div className="flex gap-3">
               <DangerButton fullWidth onClick={handleDelete} disabled={deleteText !== "SLETT"}>
                 Slett permanent

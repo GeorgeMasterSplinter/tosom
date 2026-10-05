@@ -5,10 +5,12 @@
  * GDPR art. 17 (rett til sletting).
  *
  * Sletterekkefølge:
- * 1. Hvis aktiv reise → kall endJourney(matchId, 'early_exit') først
- * 2. Slett Profile, Message, Notification, JourneyProgress
- * 3. MatchHistory beholdes (bare to ID-er, ingen innhold)
- * 4. AuditLog med admin-handlinger beholdes (revisjonshensyn)
+ * 1. Hvis aktiv match → kall endJourney(matchId, 'early_exit') direkte først
+ * 2. Slett alle samtaler der brukeren er deltaker (FK-rekkefølge:
+ *    message, journeyStateLog, resonanceSession, gameSession, conversation)
+ * 3. Slett Profile, Notification, JourneyProgress, Match, sessioner
+ * 4. MatchHistory, Report og UserBlock beholdes (ingen fremmednøkkel — overlever).
+ *    AuditLog beholdes med SetNull på adminId (revisjonshensyn)
  * 5. Slett User-radet helt
  */
 
@@ -18,6 +20,7 @@ import { getServerSession } from '@/lib/auth/session';
 import { z } from 'zod';
 import { csrfCheck } from '@/lib/auth/csrf';
 import { sendDeletionConfirmationEmail } from '@/lib/email';
+import { endJourney } from '@/lib/journey/endJourney';
 
 export const dynamic = 'force-dynamic';
 
@@ -63,53 +66,50 @@ export async function DELETE(req: NextRequest) {
     const userEmail = userRecord?.email || '';
     const userName = userRecord?.name || undefined;
 
-    // 3. Finn aktiv reise og kall endJourney først
-    const activeJourney = await prisma.journeyProgress.findFirst({
-      where: { userId, endedAt: null },
-      select: { matchId: true },
+    // 3. Finn aktiv match og kall endJourney direkte.
+    // (Internt HTTP-kall til /api/journey/exit feilet stille på CSRF —
+    //  direkte kall sikrer at samtalen slettes og MatchHistory settes.)
+    const activeMatch = await prisma.match.findFirst({
+      where: { status: 'active', OR: [{ userAId: userId }, { userBId: userId }] },
+      select: { id: true },
     });
 
-    if (activeJourney?.matchId) {
-      // Kall journey/exit-endepunktet for å slette samtalen og sette MatchHistory
-      const exitRes = await fetch(
-        `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/journey/exit`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Cookie: req.headers.get('cookie') || '',
-          },
-          body: JSON.stringify({ reason: 'account_deletion' }),
-        }
-      );
-      if (exitRes.ok) {
-        console.log(`[delete-account] endJourney kalt for ${userId}`);
-      }
+    if (activeMatch) {
+      await endJourney(activeMatch.id, 'early_exit');
+      console.log(`[delete-account] endJourney kalt for ${userId}`);
     }
 
     // 4. Slett alt bruker-data i transaksjon
     await prisma.$transaction(async (tx) => {
+      // Slett alle samtaler der brukeren er deltaker. Conversation har ingen
+      // cascade fra User — barnradene må slettes først, ellers feiler
+      // user.delete() på fremmednøkkelen.
+      const conversations = await tx.conversation.findMany({
+        where: { OR: [{ userAId: userId }, { userBId: userId }] },
+        select: { id: true },
+      });
+      const conversationIds = conversations.map((c) => c.id);
+      if (conversationIds.length > 0) {
+        // Meldinger fra begge parter — samtalen er borte, så forsvinner innholdet
+        await tx.message.deleteMany({ where: { conversationId: { in: conversationIds } } });
+        await tx.journeyStateLog.deleteMany({ where: { conversationId: { in: conversationIds } } });
+        await tx.resonanceSession.deleteMany({ where: { conversationId: { in: conversationIds } } });
+        await tx.gameSession.deleteMany({ where: { conversationId: { in: conversationIds } } });
+        await tx.conversation.deleteMany({ where: { id: { in: conversationIds } } });
+      }
+
       // Slett profil
       await tx.profile.deleteMany({ where: { userId } });
-
-      // Slett meldinger
-      await tx.message.deleteMany({ where: { senderId: userId } });
 
       // Slett varsler
       await tx.notification.deleteMany({ where: { userId } });
 
-      // Slett journey-progress (endJourney kan ha slettet dem allerede)
+      // Slett journey-progress (endJourney har slettet dem for aktiv match — vakt)
       await tx.journeyProgress.deleteMany({ where: { userId } });
 
       // Slett matcher (MatchHistory beholdes!)
       await tx.match.deleteMany({
         where: { OR: [{ userAId: userId }, { userBId: userId }] },
-      });
-
-      // Slett konversasjoner
-      await tx.conversation.updateMany({
-        where: { OR: [{ userAId: userId }, { userBId: userId }] },
-        data: { endedAt: new Date() },
       });
 
       // Slett sessions og accounts
@@ -118,7 +118,9 @@ export async function DELETE(req: NextRequest) {
       await tx.twoFactorSecret.deleteMany({ where: { userId } });
       await tx.passwordResetToken.deleteMany({ where: { userId } });
 
-      // C5: Slett User-radet helt (GDPR art. 17)
+      // Slett User-radet helt (GDPR art. 17).
+      // MatchHistory, Report og UserBlock overlever (ingen fremmednøkkel);
+      // AuditLog nuller ut adminId (SetNull).
       await tx.user.delete({ where: { id: userId } });
     });
 

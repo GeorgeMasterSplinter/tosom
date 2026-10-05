@@ -792,7 +792,7 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 |---|---|---|---|
 | [x] | Rate limiting på innlogging | K-6 | **Før lansering** |
 | [x] | Minstekrav til passord | K-6 | **Før lansering** |
-| [ ] | «Glemt passord» virker ende-til-ende (e-post leveres, nytt passord settes) | K-6, V-6 | **Før lansering** |
+| [x] | «Glemt passord» virker ende-til-ende (e-post leveres, nytt passord settes) — *(klar for George · PL-07)* | K-6, V-6 | **Før lansering** |
 | [x] | Ingen stille kontoopprettelse ved skrivefeil | K-6 | **Før lansering** |
 | [x] | Passordløse kontoer kan ikke overtas | K-6 | **Før lansering** |
 | [x] | Innloggingsfelt har labels | V-8 | **Før lansering** |

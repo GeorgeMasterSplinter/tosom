@@ -187,6 +187,37 @@ export async function sendWelcomeEmail(
 }
 
 /**
+ * PL-07a: Send passord-tilbakestillings-e-post.
+ * Rolig tekst; lenken er gyldig i én time.
+ * Tokenet ligger i lenken — den logges aldri (systemaudit 03.09, funn 2).
+ */
+export async function sendPasswordResetEmail(
+  to: string,
+  resetLink: string
+): Promise<EmailResult> {
+  return sendEmail({
+    to,
+    subject: 'Tilbakestill passordet ditt på ToSom',
+    text: `Hei,\n\nVi mottok en forespørsel om å tilbakestille passordet på kontoen din.\n\nTrykk på lenken under for å velge et nytt passord. Lenken er gyldig i én time.\n\n${resetLink}\n\nHvis det var deg som ba om dette, trykker du på lenken. Hvis det ikke var deg, beholder du denne e-posten — passordet ditt er uendret.\n\nRo, varme og én reise av gangen.\n\n— ToSom`,
+    html: `
+      <div style="font-family: Inter, -apple-system, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px; background: #0A1A2A; color: #ffffff; border-radius: 16px;">
+        <h1 style="font-size: 24px; font-weight: 600; color: #D4AF37; margin-bottom: 16px;">Tilbakestill passordet ditt</h1>
+        <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">
+          Vi mottok en forespørsel om å tilbakestille passordet på kontoen din. Lenken er gyldig i én time.
+        </p>
+        <a href="${resetLink}" style="display: inline-block; padding: 14px 28px; background: #D4AF37; color: #0A1A2A; text-decoration: none; border-radius: 12px; font-weight: 600; font-size: 16px;">
+          Velg nytt passord
+        </a>
+        <p style="font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.5); margin-top: 32px;">
+          Hvis det ikke var deg, beholder du denne e-posten — passordet ditt er uendret.<br />
+          Ro, varme og én reise av gangen.<br />— ToSom
+        </p>
+      </div>
+    `,
+  });
+}
+
+/**
  * Send bekreftelse ved kontosletting.
  * Siste ord fra ToSom.
  */

@@ -4,7 +4,7 @@
   "commit": "50dc3b6",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
-    "tests": "479 passed / 1 skipped (57 av 57 suiter) — målt 05.10 etter PL-05 innlogging/registrering (K-6, V-8, V-15): +10 i __tests__/login-rate-limit.test.ts",
+    "tests": "486 passed / 1 skipped (58 av 58 suiter) — målt 06.10 etter PL-07 «Glemt passord» E2E (K-6): +7 i __tests__/password-reset.test.ts; +10 i __tests__/login-rate-limit.test.ts (PL-05)",
     "e2e": "0 fixme igjen. Onboarding: 20/20 lokalt 29.08 (10 chromium + 10 firefox, inkl. full flow). Dashboard/journey/match: 90/90 fra 28.08-kjøringen (ingen kodeendringer som rakk dem siden). Totalt 110 passed / 0 failed. 5/6 prosjekt lokalt (Mobile Safari/webkit krever system-bibliotek — installeres i CI med --with-deps). Dev-login (storageState) fungerer — alle tester kjører innlogget. playwright.config: workers: 1 alltid (lokal kjøring = CI) — onboarding-testene deler en E2E-bruker som full-flow-testen muterer; parallelle workere racet på server-draften",
     "typecheck": "0 errors utover Prisma-klient (prisma generate kan ikke kjøre i sandbox — løses i CI)",
     "lint": "0 warnings (npx next lint --max-warnings 0)",
@@ -538,15 +538,28 @@
       "id": "PL-04-RAMMEVERK-SIKKERHET",
       "title": "PL-04 (K-5) — Sikkerhetsoppdatering av rammeverk og innlogging",
       "content": "PL-04a: next 15.1.7 → ^15.5.27 + eslint-config-next ^15.5.27 (npm install next@^15 eslint-config-next@^15). Changelog lest (next 15.5-blogg): Node.js-middleware stabil, Turbopack-builds beta, next lint deprecated; NINGEN breaking endring som rammer appen — kun deprecation-advarsler for Next 16 (images.localPatterns for query params, legacyBehavior på next/link). PL-04b: next-auth 5.0.0-beta.25 → ^5.0.0-beta.32 (siste tilgjengelige; dist-tags.latest = 4.24.15, altså v4 er «latest» og beta er 5-linjen). Changelog: getToken() returnerer nå null istedenfor å krasje på feilformet Bearer-header (GHSA-xmf8-cvqr-rfgj), OAuth state/nonce/PKCE-cookier koblet til provider (GHSA-x445-f3h2-j279). Cookie-navn endret IKKE (authjs.*-nomenklaturen er uendret) — middleware-cookie-salt-testen grønn. PL-04c: @auth/prisma-adapter ^2.11.2 → ^2.11.3 (versjonen npm audit fix pekte på; deduperer @auth/core til 0.41.3 under begge). PL-04d: npm audit fix (UTEN --force) — oppdaterte baseline-browser-mapping, browserslist, brace-expansion (sentry-plugins), og trakk med postcss-opprydding. Resultat: npm audit --omit=dev: 7 vulnerabilities (1 moderate, 6 high), 0 KRITISKE. next/next-auth/@auth/* er 100% ut av rapporten. De 6 high + 1 moderate som gjenstår er alle PL-24-området: postcss via next (krver next 16), nodemailer (≤10.0.5, --force), effect via uploadthing (<3.20.0, --force) m.fl. AVVIK (rapportert): instruksens pakkeliste (sharp, nanoid, postcss, brace-expansion) eksisterte delvis ikke som direkte avhengigheter — bare postcss/brace-expansion/browserslist som transitive; audit fix dekket alle som var der. Verifisert ETTER HVER PATCH: npm run verify grønn (tsc 0, lint 0, språkvakt 0, jest 469 passed / 1 skipped) + npm run build EXIT=0 (67/67 sider). Auth-tester grønne: admin-authorization, cron-auth, middleware-cookie-salt, pusher-auth-private-channel. Avkrysset i §6.7: «Kritiske og høye sårbarheter i next, next-auth, @auth/* rettet»."
+    },
+    {
+      "dato": "2026-10-06",
+      "id": "PL-05-INNLOGGING-REGISTRERING",
+      "title": "PL-05 (K-6, V-8, V-15) — Innlogging og registrering [D-7: eksplisitt registrering]",
+      "content": "PL-05a: lib/auth/authorize.ts (ny, eksportert for testbarhet) + lib/auth/config.ts — rate limit FØR alt annet (pgCheck(`login:${email}`, 10, 900)); auto-registrering fjernet (ukjent e-post → null, ingen user.create); passordløse kontoer kan ikke overtas (user uten passord → null — magic-link-brukere må bruke Glemt passord); events.createUser fjernet. PL-05b: app/api/auth/register/route.ts (ny) — CSRF → Zod (email, passord min 10, passord gjentatt likt) → pgCheck(`register:${ip}`, 5, 3600) → eksistenssjekk; eksisterende e-post svarer LIKT som suksess ({ok:true}) — avslører aldri registrerte e-poster; oppretter User + minimal Profile. PL-05c: lib/validation/auth.ts — ny registerSchema (refine password === passwordRepeat); resetPasswordSchema.password hevet min(8) → min(10). PL-05d: app/login/page.tsx — to visninger («Logg inn» / «Ny her? Opprett konto» med passord to ganger); <label className=\"sr-only\"> + autoComplete på alle felt; «Glemt passord?» → /glemt-passord; fjernet «egget eller høna», «Under oppbygging»-boksen, «Hvorfor Vipps»-lista (inkl. Alderskontroll — K-7) og «Første gang?»-hinten (V-15). PL-05e: __tests__/login-rate-limit.test.ts (ny, 10 tester). Verifisert: npm run verify grønn (479 passed / 1 skipped, 57/57 suiter) + npm run build EXIT=0. Avkrysset i §6.5: 5 av 6 punkter (Glemt passord E2E → PL-07)."
+    },
+    {
+      "dato": "2026-10-06",
+      "id": "PL-07-GLEMT-PASSORD",
+      "title": "PL-07 (K-6) — «Glemt passord» ende-til-ende",
+      "content": "PL-07a: lib/email/index.ts — ny sendPasswordResetEmail(to, link) i samme stil som sendDeletionConfirmationEmail; rolig tekst; lenken gyldig i én time. PL-07b: app/api/auth/request-reset/route.ts — etter storeResetToken sendes ${baseUrl}/nytt-passord?email=…&token=… (URL-kodet) via sendPasswordResetEmail; tokenet logges ALDRI; svaret er uendret uansett om sendingen klarte (avslører aldri om e-posten finnes). PL-07c: app/api/auth/reset-password/route.ts (ny) — CSRF → resetPasswordSchema (min 10 tegn) → pgCheck(`reset-password:${email}`, 5, 3600) → verifyResetToken → hashPassword → i ÉN transaksjon: user.update (nytt passord) + consumeResetToken (single-use) + session.deleteMany (alle øvrige sesjoner slettes); ugyldig/utløpt/brukt token og e-post-feil gir identisk 400. PL-07d: app/glemt-passord/page.tsx (ny) — epostfelt + rolig bekreftelse. PL-07e: app/nytt-passord/page.tsx (ny) — leser ?email=…&token=… fra e-postlenken (useSearchParams i Suspense); passord to ganger, min 10 tegn; manglende parametere → «Lenken er ikke gyldig». KRITISK BUGG RETTET (PL-07-avvik): lib/auth/reset.ts hashToken() brukte scrypt med TILFELDIG salt pr. kall — da kunne findUnique({ tokenHash }) ALDRI treffe den lagrede raden, og verifyResetToken returnerte ALLTID false («Glemt passord» fungerte aldri i praksis). Retta til deterministisk HMAC-SHA256 nøkklet med AUTH_SECRET (O(1)-oppslag via unik indeks bevart). verifyResetToken returnerer nå { userId } | null — userId er autoritativt bundet til tokenet; ruten henter brukeren PÅ TOKENETS userId (e-postparameteren skal bare stemme med kontoen). PL-07f: __tests__/password-reset.test.ts (ny, 7 tester; prisma mocket med in-memory PasswordResetToken-lager, ekte lib/auth/reset.ts). Verifisert: npm run verify grønn (486 passed / 1 skipped, 58/58 suiter) + npm run build EXIT=0. Avkrysset i §6.5: «Glemt passord» — merket «*(klar for George · PL-07)*», avventer at George mottar e-posten i prod (PL-G7)."
     }
   ],
   "verifiedFlow": {
-    "registrering": "/register og /onboarding/start redirecter til /login; auto-registrering i lib/auth/config.ts oppretter User + Profile ved ny e-post",
+    "registrering": "/register og /onboarding/start redirecter til /login; eksplisitt registrering via POST /api/auth/register (D-7, PL-05) — innlogging oppretter ALDRI konto",
     "navigasjon": "UniversalMenu er levende meny (Hvorfor/Slik fungerer det/Reisen/Priser). Header.tsx og GlobalHeaderWrapper.tsx var død kode — slettet.",
     "ikkeLenket": [
       "/trygghet — kun lenket fra /vilkar og /personvern, ikke fra hovedmeny",
       "/metoder — ikke lenket noe sted"
-    ]
+    ],
+    "glemtPassord": "POST /api/auth/request-reset → e-post med lenke til /nytt-passord?email=…&token=… (1 time, single-use) → POST /api/auth/reset-password setter passord og sletter øvrige sesjoner (PL-07)"
   },
   "nextAction": "",
   "gjenstaarFoerBeta": [

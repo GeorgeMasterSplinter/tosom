@@ -6,6 +6,7 @@ import { tryParseJsonBody } from "@/lib/api/validation";
 import { pgCheck } from "@/lib/rate-limit-pg";
 import { prisma } from "@/lib/prisma";
 import { storeResetToken, generateResetToken } from "@/lib/auth/reset";
+import { sendPasswordResetEmail } from "@/lib/email";
 import { NextRequest, NextResponse } from "next/server";
 import { csrfCheck } from "@/lib/auth/csrf";
 import { trackError } from "@/lib/errorTracker";
@@ -61,10 +62,18 @@ export async function POST(
 
     await storeResetToken(user.id, token, expiresAt);
 
-    // I produksjon: send e-post med token-lenkje
-    // t.d. /reset-password?email=${email}&token=${token}
+    // PL-07b: Send e-post med URL-kodet lenke til /nytt-passord.
     // IKKE logge token eller e-post — det er PII (systemaudit 03.09, funn 2).
-    console.log('[PASSWORD RESET] Reset-token generert og lagret');
+    // Svaret er uendret uansett om sendingen klarte — avslører aldri
+    // om e-posten finnes (også ikke gjennom feilmeldinger).
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || 'https://tosom.no';
+    const resetLink = `${baseUrl}/nytt-passord?email=${encodeURIComponent(email)}&token=${encodeURIComponent(token)}`;
+    const sent = await sendPasswordResetEmail(email, resetLink);
+    if (!sent.success) {
+      console.error('[PASSWORD RESET] E-postsending feilet (token ligger i DB)');
+    } else {
+      console.log('[PASSWORD RESET] E-post sendt');
+    }
 
     return new Response(JSON.stringify({
       ok: true,

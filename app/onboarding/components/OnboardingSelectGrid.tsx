@@ -27,7 +27,7 @@ interface OnboardingSelectGridProps {
   onChange: (value: string) => void;
   columns?: 1 | 2 | 3 | 4;
   maxSelected?: number; // For multi-select (default: 1)
-  multiHint?: string; // Egendefinert hint for multi-select (default: "Vel opp til N alternativ")
+  multiHint?: string; // Egendefinert hint for multi-select (default: "Du kan velge mellom opp til N alternativer")
   accentColor?: string; // Seksjonsfarge (default: OB.section.identity)
   /** Valfri data-testid for E2E-tester (settes på containeren — optioner scopes med getByRole inne i). */
   testId?: string;
@@ -178,7 +178,7 @@ export function OnboardingSelectGrid({
       {/* Multi-select hint */}
       {maxSelected > 1 && (
         <p className="text-[12px] text-center" style={{ color: OB.textSubtle }}>
-          {multiHint ?? `Vel opp til ${maxSelected} alternativ`}
+          {multiHint ?? `Du kan velge mellom opp til ${maxSelected} alternativer`}
         </p>
       )}
     </div>

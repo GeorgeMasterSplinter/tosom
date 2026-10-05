@@ -203,37 +203,6 @@ export default function TrygghetPage() {
           </p>
         </ToSomSection>
 
-        {/* ===== NØDNUMMER — alltid synlig øverst ===== */}
-        <ToSomSection spotlight="none" className="px-6">
-          <div className="mx-auto max-w-[760px]">
-            <div
-              className="rounded-2xl px-6 py-5"
-              style={{
-                background: 'rgba(255,77,77,0.05)',
-                border: '1px solid rgba(255,77,77,0.20)',
-              }}
-            >
-              <p
-                style={{
-                  ...typographyToStyle('body'),
-                  color: 'rgba(255,255,255,0.85)',
-                  lineHeight: '1.75',
-                }}
-              >
-                Er du i fare akkurat nå, ring{' '}
-                <a href="tel:112" style={{ color: '#FF6B6B', fontWeight: 600 }}>
-                  112
-                </a>
-                . Trenger du noen å snakke med, ring Mental Helse på{' '}
-                <a href="tel:116123" style={{ color: '#FF6B6B', fontWeight: 600 }}>
-                  116 123
-                </a>
-                . Begge er åpne hele døgnet.
-              </p>
-            </div>
-          </div>
-        </ToSomSection>
-
         {/* ===== SEKSJONER ===== */}
         <ToSomSection spotlight="none" className="px-6">
           <div className="mx-auto max-w-[760px] space-y-12">

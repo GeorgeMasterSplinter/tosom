@@ -13,9 +13,8 @@ import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import EmailProvider from "next-auth/providers/email"
 import { adapter } from "@/lib/auth/prisma-adapter"
-import { prisma } from "@/lib/prisma"
 import { defaultRole } from "@/lib/auth/roles"
-import { hashPassword, verifyPassword } from "@/lib/auth/hash"
+import { authorizeCredentials } from "@/lib/auth/authorize"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter,
@@ -48,52 +47,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: { label: "Passord", type: "password" },
       },
       async authorize(credentials) {
-        const email = String((credentials as any)?.email ?? "").trim().toLowerCase()
-        const password = String((credentials as any)?.password ?? "")
-
-        if (!email || !password) return null
-
-        // Sjekk om brukeren finnes
-        let user = await prisma.user.findUnique({ where: { email } })
-
-        if (!user) {
-          // AUTO-REGISTRERING: ny epost → lag konto
-          const passwordHash = await hashPassword(password)
-          user = await prisma.user.create({
-            data: {
-              email,
-              password: passwordHash,
-              verified: true,
-              role: "USER",
-            },
-          })
-
-          // Lag minimal profil (onboarding fyller resten)
-          await prisma.profile.create({
-            data: {
-              userId: user.id,
-              age: 25,
-              deepProfileStep: "IDENTITY",
-            },
-          }).catch(() => {})
-
-          console.log(`[Tosom Beta] Ny bruker registrert: ${email}`)
-        } else {
-          // EKISTERENDE BRUKER: verifiser passord
-          if (!user.password) {
-            // Bruker uten passord (fra tidligere magic-link-æra) — sett nytt
-            const passwordHash = await hashPassword(password)
-            await prisma.user.update({
-              where: { id: user.id },
-              data: { password: passwordHash },
-            })
-          } else {
-            const valid = await verifyPassword(password, user.password)
-            if (!valid) return null
-          }
-        }
-
-        return { id: user.id, email: user.email, name: user.name }
+        // PL-05a (K-6/D-7): rate limit → ingen auto-registrering →
+        // ingen overtakelse av passordløse kontoer → passordverifisering.
+        return authorizeCredentials(credentials as { email?: string; password?: string } | undefined);
       },
     }),
   ],
@@ -129,19 +85,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
   },
 
-  events: {
-     async createUser({ user }) {
-       if (user.email) {
-         await prisma.profile.create({
-           data: {
-             userId: user.id!,
-             age: 25,
-             deepProfileStep: "IDENTITY",
-           },
-         })
-       }
-     },
-  },
+  // PL-05a: events.createUser fjernet — auto-registrering er borte, og
+  // CredentialsProvider triggerer aldri createUser. Registreringsruten
+  // (POST /api/auth/register) oppretter User + minimal Profile selv.
 
   pages: {
     signIn: "/login",

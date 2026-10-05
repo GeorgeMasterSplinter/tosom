@@ -4,7 +4,7 @@
   "commit": "50dc3b6",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
-    "tests": "469 passed / 1 skipped (56 av 56 suiter) — målt 05.10 etter PL-03 bildesperre (K-8): +7 i __tests__/photo-lock-before-day15.test.ts",
+    "tests": "479 passed / 1 skipped (57 av 57 suiter) — målt 05.10 etter PL-05 innlogging/registrering (K-6, V-8, V-15): +10 i __tests__/login-rate-limit.test.ts",
     "e2e": "0 fixme igjen. Onboarding: 20/20 lokalt 29.08 (10 chromium + 10 firefox, inkl. full flow). Dashboard/journey/match: 90/90 fra 28.08-kjøringen (ingen kodeendringer som rakk dem siden). Totalt 110 passed / 0 failed. 5/6 prosjekt lokalt (Mobile Safari/webkit krever system-bibliotek — installeres i CI med --with-deps). Dev-login (storageState) fungerer — alle tester kjører innlogget. playwright.config: workers: 1 alltid (lokal kjøring = CI) — onboarding-testene deler en E2E-bruker som full-flow-testen muterer; parallelle workere racet på server-draften",
     "typecheck": "0 errors utover Prisma-klient (prisma generate kan ikke kjøre i sandbox — løses i CI)",
     "lint": "0 warnings (npx next lint --max-warnings 0)",

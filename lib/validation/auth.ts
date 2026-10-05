@@ -15,12 +15,28 @@ export const verifyResetSchema = z.object({
 export const resetPasswordSchema = z.object({
   email: z.string().email("Ugyldig e-postadresse"),
   token: z.string().min(32, "Token må være minst 32 tegn"),
-  password: z.string().min(8, "Passord må være minst 8 tegn"),
+  password: z.string().min(10, "Passord må være minst 10 tegn"),
 });
+
+/**
+ * PL-05b (D-7): Validering for eksplisitt kontoopprettelse.
+ * Passord min 10 tegn (K-6), gjentatt passord må være identisk.
+ */
+export const registerSchema = z
+  .object({
+    email: z.string().email("Ugyldig e-postadresse"),
+    password: z.string().min(10, "Passord må være minst 10 tegn"),
+    passwordRepeat: z.string().min(1, "Gjenta passordet"),
+  })
+  .refine((d) => d.password === d.passwordRepeat, {
+    message: "Passordene er ikke like",
+    path: ["passwordRepeat"],
+  });
 
 export type RequestResetInput = z.infer<typeof requestResetSchema>;
 export type VerifyResetInput = z.infer<typeof verifyResetSchema>;
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
+export type RegisterInput = z.infer<typeof registerSchema>;
 
 /**
  * Validering for 2FA-setup.

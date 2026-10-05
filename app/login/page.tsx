@@ -2,39 +2,34 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+import { csrfFetch } from "@/lib/api/csrfClient";
 import { ResonanceMark } from "@/components/branding/LogoVariants";
 
 /* ========================
    PAGE COMPONENT
    ======================== */
 
+type View = "login" | "register";
+
 export default function LoginPage() {
+  const [view, setView] = useState<View>("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordRepeat, setPasswordRepeat] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email.trim() || !password.trim()) return;
-    setStatus("loading");
+  const switchView = (next: View) => {
+    setView(next);
     setError("");
+    setPassword("");
+    setPasswordRepeat("");
+  };
 
-    const res = await signIn("credentials", {
-      email: email.trim(),
-      password: password,
-      redirect: false,
-    });
-
-    if (res?.error) {
-      setStatus("error");
-      setError("Kunne ikke logge inn. Prøv igjen.");
-      return;
-    }
-
-    // Bestem målretning basert på onboarding-status og reise-tilstand.
-    // Hard navigasjon (window.location.href) garanterer at session-cookie
-    // settes og påtverkes på nytt — påliteligere enn klient-navigasjon.
+  // Felles etter innlogging: bestem målretning basert på onboarding-status.
+  // Hard navigasjon (window.location.href) garanterer at session-cookie
+  // settes og påtverkes på nytt — påliteligere enn klient-navigasjon.
+  const afterAuth = async () => {
     let target = "/dashboard";
     try {
       const obRes = await fetch("/api/dashboard/overview");
@@ -50,6 +45,73 @@ export default function LoginPage() {
     window.location.href = target;
   };
 
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim() || !password.trim()) return;
+    setStatus("loading");
+    setError("");
+
+    const res = await signIn("credentials", {
+      email: email.trim(),
+      password: password,
+      redirect: false,
+    });
+
+    if (res?.error) {
+      setStatus("error");
+      setError("Kunne ikke logge inn. Sjekk epost og passord, eller opprett en konto.");
+      return;
+    }
+
+    await afterAuth();
+  };
+
+  // D-7 (PL-05): Eksplisitt registrering — POST /api/auth/register,
+  // deretter innlogging med credentials. Ruten svarer likt uansett om
+  // eposten eksisterte; signIn avdekker da feil passord.
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim() || !password.trim() || !passwordRepeat.trim()) return;
+    if (password !== passwordRepeat) {
+      setStatus("error");
+      setError("Passordene er ikke like.");
+      return;
+    }
+    setStatus("loading");
+    setError("");
+
+    const regRes = await csrfFetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: email.trim(),
+        password,
+        passwordRepeat,
+      }),
+    });
+
+    if (!regRes.ok) {
+      const data = await regRes.json().catch(() => ({}));
+      setStatus("error");
+      setError(data?.error ?? "Kunne ikke opprette konto. Prøv igjen.");
+      return;
+    }
+
+    const res = await signIn("credentials", {
+      email: email.trim(),
+      password,
+      redirect: false,
+    });
+
+    if (res?.error) {
+      setStatus("error");
+      setError("Kontoen ble opprettet, men innlogging feilet. Prøv igjen.");
+      return;
+    }
+
+    await afterAuth();
+  };
+
   const inputStyle: React.CSSProperties = {
     width: "100%",
     height: "64px",
@@ -61,6 +123,33 @@ export default function LoginPage() {
     color: "white",
     outline: "none",
     transition: "border 300ms",
+  };
+
+  const goldFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.currentTarget.style.border = "1px solid rgba(212,175,55,0.5)";
+  };
+  const resetBorder = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.currentTarget.style.border = "1px solid rgba(255,255,255,0.1)";
+  };
+
+  const buttonStyle: React.CSSProperties = {
+    width: "100%",
+    height: "64px",
+    borderRadius: "16px",
+    fontWeight: 700,
+    fontSize: "18px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: status === "loading" ? "wait" : "pointer",
+    transition: "all 300ms ease-out",
+    border: "none",
+    background:
+      status === "loading"
+        ? "rgba(212,175,55,0.3)"
+        : "linear-gradient(135deg, #D4AF37, #E8C766)",
+    color: "#0B1520",
+    opacity: status === "loading" ? 0.6 : 1,
   };
 
   return (
@@ -118,132 +207,136 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* Vi gjør oss klare — merkelyd */}
-        <div className="text-center space-y-2 mb-8">
-          <p
-            style={{
-              fontSize: "17px",
-              fontWeight: 600,
-              letterSpacing: "0.01em",
-              color: "#D4AF37",
-              margin: 0,
-            }}
-          >
-            Vi gjør oss klare
-          </p>
-          <p
-            style={{
-              fontSize: "15px",
-              lineHeight: "1.7",
-              color: "rgba(255,255,255,0.55)",
-              margin: 0,
-            }}
-          >
-            Litt finpuss og siste touch før vi åpner dørene. Mens vi holder på, prøver vi fortsatt å finne ut hva som kom først – egget eller høna! 😊
-          </p>
-        </div>
+        {/* Form: «Logg inn» eller «Ny her? Opprett konto» (D-7) */}
+        {view === "login" ? (
+          <form onSubmit={handleLogin} className="w-full space-y-4">
+            <div>
+              <label htmlFor="login-email" className="sr-only">
+                Epost
+              </label>
+              <input
+                id="login-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="din@epost.no"
+                disabled={status === "loading"}
+                style={inputStyle}
+                onFocus={goldFocus}
+                onBlur={resetBorder}
+                autoComplete="email"
+              />
+            </div>
+            <div>
+              <label htmlFor="login-password" className="sr-only">
+                Passord
+              </label>
+              <input
+                id="login-password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Passord"
+                disabled={status === "loading"}
+                style={inputStyle}
+                onFocus={goldFocus}
+                onBlur={resetBorder}
+                autoComplete="current-password"
+              />
+            </div>
 
-        {/* Under oppbygging — status */}
-        <div
-          className="w-full mb-8"
-          style={{
-            background: "rgba(212,175,55,0.05)",
-            border: "1px solid rgba(212,175,55,0.16)",
-            borderLeft: "3px solid rgba(212,175,55,0.55)",
-            borderRadius: "12px",
-            padding: "16px 18px",
-          }}
-        >
-          <p style={{ fontSize: "13px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#D4AF37", margin: 0 }}>
-            Under oppbygging
-          </p>
-          <p style={{ fontSize: "14px", lineHeight: "1.7", color: "rgba(255,255,255,0.65)", margin: "6px 0 0 0" }}>
-            Vi venter på å integrere Vipps, så plattformen er ikke helt klar for bruk enda. Men du er velkommen til å logge inn og ta en titt i onboardingen.
-          </p>
-        </div>
+            <button type="submit" disabled={status === "loading"} style={buttonStyle}>
+              {status === "loading" ? "Starter reisen…" : "Start reisen"}
+            </button>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="w-full space-y-4">
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="din@epost.no"
-            disabled={status === "loading"}
-            style={inputStyle}
-            onFocus={(e) => (e.currentTarget.style.border = "1px solid rgba(212,175,55,0.5)")}
-            onBlur={(e) => (e.currentTarget.style.border = "1px solid rgba(255,255,255,0.1)")}
-          />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Velg et passord"
-            disabled={status === "loading"}
-            style={inputStyle}
-            onFocus={(e) => (e.currentTarget.style.border = "1px solid rgba(212,175,55,0.5)")}
-            onBlur={(e) => (e.currentTarget.style.border = "1px solid rgba(255,255,255,0.1)")}
-          />
+            <div className="flex items-center justify-between pt-1">
+              <a
+                href="/glemt-passord"
+                className="text-sm underline"
+                style={{ color: "rgba(212,175,55,0.9)" }}
+              >
+                Glemt passord?
+              </a>
+              <button
+                type="button"
+                onClick={() => switchView("register")}
+                className="text-sm font-semibold"
+                style={{ color: "rgba(255,255,255,0.7)", background: "none", border: "none", cursor: "pointer" }}
+              >
+                Ny her? Opprett konto
+              </button>
+            </div>
+          </form>
+        ) : (
+          <form onSubmit={handleRegister} className="w-full space-y-4">
+            <div>
+              <label htmlFor="register-email" className="sr-only">
+                Epost
+              </label>
+              <input
+                id="register-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="din@epost.no"
+                disabled={status === "loading"}
+                style={inputStyle}
+                onFocus={goldFocus}
+                onBlur={resetBorder}
+                autoComplete="email"
+              />
+            </div>
+            <div>
+              <label htmlFor="register-password" className="sr-only">
+                Passord (minst 10 tegn)
+              </label>
+              <input
+                id="register-password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Velg et passord (minst 10 tegn)"
+                disabled={status === "loading"}
+                style={inputStyle}
+                onFocus={goldFocus}
+                onBlur={resetBorder}
+                autoComplete="new-password"
+              />
+            </div>
+            <div>
+              <label htmlFor="register-password-repeat" className="sr-only">
+                Gjenta passord
+              </label>
+              <input
+                id="register-password-repeat"
+                type="password"
+                value={passwordRepeat}
+                onChange={(e) => setPasswordRepeat(e.target.value)}
+                placeholder="Gjenta passordet"
+                disabled={status === "loading"}
+                style={inputStyle}
+                onFocus={goldFocus}
+                onBlur={resetBorder}
+                autoComplete="new-password"
+              />
+            </div>
 
-          <button
-            type="submit"
-            disabled={status === "loading"}
-            style={{
-              width: "100%",
-              height: "64px",
-              borderRadius: "16px",
-              fontWeight: 700,
-              fontSize: "18px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: status === "loading" ? "wait" : "pointer",
-              transition: "all 300ms ease-out",
-              border: "none",
-              background:
-                status === "loading"
-                  ? "rgba(212,175,55,0.3)"
-                  : "linear-gradient(135deg, #D4AF37, #E8C766)",
-              color: "#0B1520",
-              opacity: status === "loading" ? 0.6 : 1,
-            }}
-          >
-            {status === "loading" ? "Starter reisen…" : "Start reisen"}
-          </button>
-        </form>
+            <button type="submit" disabled={status === "loading"} style={buttonStyle}>
+              {status === "loading" ? "Starter reisen…" : "Start reisen"}
+            </button>
 
-        {/* Hvorfor Vipps */}
-        <div
-          className="w-full mt-8 space-y-3"
-          style={{
-            background: "rgba(212,175,55,0.04)",
-            border: "1px solid rgba(212,175,55,0.12)",
-            borderRadius: "16px",
-            padding: "24px",
-          }}
-        >
-          <p
-            style={{
-              fontSize: "15px",
-              lineHeight: "1.8",
-              color: "rgba(255,255,255,0.7)",
-              margin: 0,
-              fontWeight: 600,
-            }}
-          >
-            Hvorfor Vipps?
-          </p>
-          <div className="space-y-2 pt-2">
-            {["Ekte brukere", "Alderkontroll", "Trygg betaling", "Ingen skjulte gebyrer", "Én identitet"].map((item) => (
-              <div key={item} className="flex items-center gap-2">
-                <span style={{ color: "#D4AF37", lineHeight: 1.7 }}>✦</span>
-                <p style={{ fontSize: "14px", lineHeight: "1.7", color: "rgba(255,255,255,0.75)", margin: 0 }}>
-                  {item}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
+            <div className="pt-1 text-center">
+              <button
+                type="button"
+                onClick={() => switchView("login")}
+                className="text-sm font-semibold"
+                style={{ color: "rgba(255,255,255,0.7)", background: "none", border: "none", cursor: "pointer" }}
+              >
+                Har du allerede en konto? Logg inn
+              </button>
+            </div>
+          </form>
+        )}
 
         {/* Error */}
         {status === "error" && (
@@ -251,14 +344,6 @@ export default function LoginPage() {
             {error}
           </p>
         )}
-
-        {/* Hint for new users */}
-        <p
-          className="text-center mt-8 text-sm w-full"
-          style={{ color: "rgba(255,255,255,0.35)" }}
-        >
-          Første gang? Skriv inn epost og passord — kontoen din lages automatisk.
-        </p>
       </div>
     </main>
   );

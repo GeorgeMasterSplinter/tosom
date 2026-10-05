@@ -49,6 +49,7 @@ export async function GET(request: Request) {
         unreadCountA: true,
         unreadCountB: true,
         mood: true,
+        imageShareAllowedAt: true,
         userA: {
           select: {
             id: true,
@@ -101,6 +102,7 @@ export async function GET(request: Request) {
             unreadCountA: true,
             unreadCountB: true,
             mood: true,
+            imageShareAllowedAt: true,
             userA: {
               select: {
                 id: true,
@@ -147,6 +149,11 @@ export async function GET(request: Request) {
       const unreadCount = c.userAId === me ? c.unreadCountA : c.unreadCountB;
       const matchId = c.matchId;
       const resonance = matchId ? resonanceByMatch.get(matchId) : undefined;
+      // K-8: Partnerens profilbilde vises kun når imageShareAllowedAt
+      // (dag 15) er satt og passert. Før det: undefined.
+      const imageAllowed = c.imageShareAllowedAt
+        ? new Date() >= c.imageShareAllowedAt
+        : false;
 
       return {
         id: c.id,
@@ -154,7 +161,7 @@ export async function GET(request: Request) {
         partnerId: partner.id,
         partnerName: partner.profile?.identityName || partner.name || "Partner",
         partnerAge: partner.profile?.age ?? undefined,
-        partnerImageUrl: partner.profile?.photoUrl ?? undefined,
+        partnerImageUrl: imageAllowed ? (partner.profile?.photoUrl ?? undefined) : undefined,
         journeyDay: matchId ? dayByMatch.get(matchId) ?? 0 : 0,
         // Delt mood (server-styrt per samtale). Faller tilbake til resonans-avledt mood
         // kun for eksisterende samtaler som ennå ikke har en eksplisitt mood satt.

@@ -757,8 +757,8 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 
 | | Punkt | Ref | Prioritet |
 |---|---|---|---|
-| [ ] | Partnerens profilbilde skjult før dag 15 i alle API-svar | K-8 | **Før lansering** |
-| [ ] | `PUT /api/profile` har CSRF og URL-validering (eller `photos` fjernet) | K-8 | **Før lansering** |
+| [x] | Partnerens profilbilde skjult før dag 15 i alle API-svar | K-8 | **Før lansering** |
+| [x] | `PUT /api/profile` har CSRF og URL-validering (eller `photos` fjernet) | K-8 | **Før lansering** |
 | [ ] | Bevis bevares ved rapport/blokkering | V-5 | **Før lansering** |
 | [ ] | Rapport mulig også etter avsluttet match | V-5 | **Før lansering** |
 | [ ] | Rapport-rate-limit flyttet til `pgCheck` | V-5 | Kan utsettes |

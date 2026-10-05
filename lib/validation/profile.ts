@@ -10,7 +10,6 @@ export const profileCreateSchema = z.object({
   gender: z.string().min(1, "Kjønn er påkrevd"),
   bio: z.string().max(1000).optional(),
   interests: z.array(z.string()).min(1, "Minst éin interesse er påkrevd"),
-  photos: z.array(z.string()).optional(),
 });
 
 export type ProfileCreateInput = z.infer<typeof profileCreateSchema>;
@@ -26,7 +25,6 @@ export const profileUpdateSchema = z.object({
   gender: z.string().min(1).optional(),
   bio: z.string().max(1000).optional(),
   interests: z.array(z.string()).default([]),
-  photos: z.array(z.string()).default([]),
 });
 
 export type ProfileUpdateInput = z.infer<typeof profileUpdateSchema>;

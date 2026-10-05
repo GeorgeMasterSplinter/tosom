@@ -1,7 +1,9 @@
 
+import { NextRequest } from "next/server";
 import { getServerSession } from "@/lib/auth/session";
 import prisma from "@/lib/prisma";
 import { pgCheck } from "@/lib/rate-limit-pg";
+import { csrfCheck } from "@/lib/auth/csrf";
 import { profileUpdateSchema } from "@/lib/validation/profile";
 export const dynamic = 'force-dynamic';
 
@@ -20,6 +22,10 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
+  // K-8: CSRF-vern øverst i PUT — profilskrift er en skrivehandling
+  const csrf = await csrfCheck(new NextRequest(request));
+  if (csrf instanceof Response) return csrf;
+
   const session = await getServerSession();
 
   if (!session?.user?.id) {
@@ -61,7 +67,10 @@ export async function PUT(request: Request) {
       );
     }
 
-    const { firstName, lastName, age, gender, bio, interests, photos } = parse.data;
+    // K-8: photos fjernet fra PUT — profilbilde settes ikke lenger her
+    // (verken CSRF/URL-validert eller brukt av frontend). Skjemaet i
+    // lib/validation/profile.ts fjerner feltet (PL-03b).
+    const { firstName, lastName, age, gender, bio, interests } = parse.data;
 
     await prisma.profile.upsert({
       where: { userId: session.user.id },
@@ -72,7 +81,6 @@ export async function PUT(request: Request) {
         age: (age as number) || 25,
         bio: bio || undefined,
         interests: interests || [],
-        photoUrl: photos && photos.length > 0 ? photos[0] : undefined,
       },
       update: {
         firstName: firstName || undefined,
@@ -80,7 +88,6 @@ export async function PUT(request: Request) {
         age: (age as number) || 25,
         bio: bio || undefined,
         interests: interests || [],
-        photoUrl: photos && photos.length > 0 ? photos[0] : undefined,
       },
     });
 

@@ -145,6 +145,9 @@ async function postHandler(request: NextRequest) {
       createdAt: message.createdAt,
     }).catch(() => { /* Pusher-feil er ikke kritisk — polling dekker opp */ });
 
+    // K-8: Svaret inneholder kun senderen (den påloggte brukeren) — egne
+    // meldinger kan vise eget bilde. Partnerens bilde returneres aldri fra
+    // denne ruta, så ingen imageShareAllowedAt-gate trengs her.
     return NextResponse.json({ message });
   } catch (error) {
     console.error("POST /api/chat/send error:", error);

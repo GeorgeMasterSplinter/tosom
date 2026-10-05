@@ -124,7 +124,9 @@ async function getHandler(req: NextRequest) {
         id: otherUser.id,
         identityName: otherUser.profile?.identityName || null,
         age: otherUser.profile?.age || null,
-        photoUrl: otherUser.profile?.photoUrl || null,
+        // K-8: Partnerens profilbilde kun i bildefasen (imageShareAllowedAt
+        // satt og passert) — ellers null.
+        photoUrl: inImagePhase ? (otherUser.profile?.photoUrl || null) : null,
       },
       journey: journey
         ? {

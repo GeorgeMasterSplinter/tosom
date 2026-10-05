@@ -27,7 +27,7 @@ async function getHandler(request: Request) {
     // IDOR-vern: verifiser at brukeren er del av samtalen før meldinger returneres
     const conversation = await prisma.conversation.findUnique({
       where: { id: conversationId },
-      select: { userAId: true, userBId: true, mood: true },
+      select: { userAId: true, userBId: true, mood: true, imageShareAllowedAt: true },
     });
 
     if (!conversation) {
@@ -67,7 +67,26 @@ async function getHandler(request: Request) {
       },
     });
 
-    return NextResponse.json({ messages, mood: conversation.mood });
+    const me = session.user.id;
+
+    // K-8: Partnerens profilbilde vises kun når imageShareAllowedAt
+    // (dag 15) er satt og passert. Egne meldinger kan vise eget bilde.
+    const imageAllowed = conversation.imageShareAllowedAt
+      ? new Date() >= conversation.imageShareAllowedAt
+      : false;
+
+    const visibleMessages = messages.map((m) => {
+      if (m.sender.id !== me && !imageAllowed) {
+        // Responset sendes som JSON (any) — bare bildelen skal maskeres.
+        m.sender.profile = {
+          ...(m.sender.profile as unknown as Record<string, unknown>),
+          photoUrl: null,
+        } as typeof m.sender.profile;
+      }
+      return m;
+    });
+
+    return NextResponse.json({ messages: visibleMessages, mood: conversation.mood });
   } catch (error) {
     console.error("GET /api/chat/messages error:", error);
     return NextResponse.json(

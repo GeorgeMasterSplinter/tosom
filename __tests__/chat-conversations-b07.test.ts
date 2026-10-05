@@ -49,6 +49,9 @@ const conversationRow = {
   lastMessagePreview: 'God morgen!',
   unreadCountA: 2,
   unreadCountB: 0,
+  // K-8: bildefasen er passert (dag 15 gikk 01.08) — testen forventer
+  // at partnerens bilde er synlig (PL-03c).
+  imageShareAllowedAt: new Date('2026-08-01T09:00:00.000Z'),
   userA: { name: 'Erik', profile: { identityName: 'Erik', age: 30, photoUrl: null } },
   userB: { name: 'Astrid', profile: { identityName: 'Astrid', age: 31, photoUrl: 'https://x/a.png' } },
 };

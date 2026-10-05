@@ -137,27 +137,27 @@ export const JOURNEY = {
 export const LEGISLATION = {
   gdpr: {
     label: 'Dataverneforordningen (GDPR) — Forordning (EU) 2016/679',
-    url: 'https://lovdata.no/dokument/EU/forordning/2016-06-27/2016-679',
+    url: 'https://eur-lex.europa.eu/eli/reg/2016/679/oj',
   },
   personvernlov: {
-    label: 'Personvernloven (lov 30. juni 2018 nr. 30)',
-    url: 'https://lovdata.no/dokument/NL/lov/2018-06-30-30',
+    label: 'Personvernloven (lov om personvern, 2018)',
+    url: 'https://lovdata.no/',
   },
   forbrukerkjop: {
-    label: 'Forbrukerkjøpsloven (lov 27. mars 2009 nr. 14)',
-    url: 'https://lovdata.no/dokument/NL/lov/2009-03-27-14',
+    label: 'Forbrukerkjøpsloven (lov om forbrukerkjøp, 2002)',
+    url: 'https://lovdata.no/',
   },
   markedsforing: {
-    label: 'Markedsføringsloven (lov 18. desember 2003 nr. 92)',
-    url: 'https://lovdata.no/dokument/NL/lov/2003-12-18-92',
+    label: 'Markedsføringsloven (lov 9. januar 2009 nr. 2)',
+    url: 'https://lovdata.no/dokument/NL/lov/2009-01-09-2',
   },
   avtalelov: {
-    label: 'Avtaleloven (lov 13. juni 1918 nr. 3)',
-    url: 'https://lovdata.no/dokument/NL/lov/1918-06-13-3',
+    label: 'Avtaleloven (lov om avslutning av avtaler mv., 1918)',
+    url: 'https://lovdata.no/',
   },
   bokforing: {
-    label: 'Bokføringsloven (lov 12. juni 1998 nr. 13)',
-    url: 'https://lovdata.no/dokument/NL/lov/1998-06-12-13',
+    label: 'Bokføringsloven (lov om bokføring, 2004)',
+    url: 'https://lovdata.no/',
   },
   datatilsynet: {
     label: 'Datatilsynet',

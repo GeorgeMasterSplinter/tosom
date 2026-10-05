@@ -61,7 +61,7 @@ interface DashboardData {
 const PHASES = [
   { key: 'EARLY', name: 'Bli kjent', start: 1, end: 14, color: '#5B9BD5' },
   { key: 'BUILDING_TRUST', name: 'Bygger tillit', start: 15, end: 21, color: '#D4AF37' },
-  { key: 'DEEPER', name: 'Djupere samvær', start: 22, end: 25, color: '#4ECDC4' },
+  { key: 'DEEPER', name: 'Dypere samvær', start: 22, end: 25, color: '#4ECDC4' },
   { key: 'CHECKIN', name: 'Refleksjon', start: 26, end: 30, color: '#E8875B' },
 ];
 

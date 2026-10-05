@@ -140,7 +140,7 @@ export function ChatHeader({
   const PHASE_SYMBOLS: Record<string, { emoji: string; name: string }> = {
     EARLY: { emoji: "🌱", name: "Bli kjent" },
     BUILDING_TRUST: { emoji: "🤝", name: "Bygger tillit" },
-    DEEPER: { emoji: "💫", name: "Djupere samvær" },
+    DEEPER: { emoji: "💫", name: "Dypere samvær" },
     CHECKIN: { emoji: "🌙", name: "Refleksjon" },
   };
   const phaseSymbol = PHASE_SYMBOLS[phase] ?? PHASE_SYMBOLS.EARLY;

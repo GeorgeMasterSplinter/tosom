@@ -233,7 +233,7 @@ export const THEME_RANGES: Array<{ start: number; end: number; theme: Theme }> =
 const PHASE_LABELS: Record<JourneyPhase, string> = {
   [JourneyPhase.EARLY]: "Bli kjent",
   [JourneyPhase.BUILDING_TRUST]: "Bygger tillit",
-  [JourneyPhase.DEEPER]: "Djupere samvær",
+  [JourneyPhase.DEEPER]: "Dypere samvær",
   [JourneyPhase.CHECKIN]: "Refleksjon",
 };
 

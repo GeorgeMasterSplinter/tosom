@@ -1,11 +1,11 @@
 /**
  * Tosom — Settings Page (Premium Nordic Gold 2026) ⭐
- * Oppgradert: personlig header, granular varsler, sikkerhet, hjelp, statusbevisst match.
+ * Seksjoner: personlig header, konto, trygghet, personvern.
  */
 
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { csrfFetch } from "@/lib/api/csrfClient";
@@ -63,20 +63,6 @@ interface JourneyStatus {
   journeyState: string;
   day: number;
   conversationId: string | null;
-}
-
-interface Preferences {
-  language: string;
-  theme: string;
-  notifications: boolean;
-  push: boolean;
-  email: boolean;
-  pushMatch: boolean;
-  pushMessages: boolean;
-  pushJourney: boolean;
-  emailMatch: boolean;
-  emailMessages: boolean;
-  emailJourney: boolean;
 }
 
 /* ═══════════════════════════════════════
@@ -260,50 +246,6 @@ function GoldToggle({
 }
 
 /* ═══════════════════════════════════════
-   PREMIUM RADIO-knapp (20px radius)
-   ═══════════════════════════════════════ */
-
-function GoldRadio({ label, sublabel, selected, onClick, disabled }: { label: string; sublabel?: string; selected: boolean; onClick?: () => void; disabled?: boolean }) {
-  return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      className="w-full text-left transition-all duration-300 focus:outline-none disabled:opacity-50"
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: THEME.spaceSm,
-        padding: `${THEME.spaceSm} ${THEME.spaceMd}`,
-        borderRadius: THEME.radioRadius,
-        background: selected ? `${THEME.goldMuted}` : "rgba(255,255,255,0.04)",
-        border: selected ? `2px solid ${THEME.nordicGold}` : "1px solid rgba(255,255,255,0.06)",
-      }}
-    >
-      <div
-        className="flex-shrink-0"
-        style={{
-          width: "24px",
-          height: "24px",
-          borderRadius: "50%",
-          border: `2px solid ${selected ? THEME.nordicGold : "rgba(255,255,255,0.3)"}`,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        {selected && (
-          <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: THEME.nordicGold }} />
-        )}
-      </div>
-      <div>
-        <p style={{ color: selected ? THEME.nordicGold : THEME.softWhite, fontSize: "16px", fontWeight: selected ? 600 : 400 }}>{label}</p>
-        {sublabel && <p style={{ color: THEME.deepGrey, fontSize: "13px" }}>{sublabel}</p>}
-      </div>
-    </button>
-  );
-}
-
-/* ═══════════════════════════════════════
    GULL LENKJE
    ═══════════════════════════════════════ */
 
@@ -393,7 +335,7 @@ function SettingsHeader({ name, photoUrl }: { name: string; photoUrl: string | n
             Innstillinger
           </h1>
           <p style={{ fontSize: "16px", fontWeight: 400, color: THEME.deepGrey, marginTop: "4px" }}>
-            Hei {name}. Administrer kontoen, varslene og preferansene dine.
+            Hei {name}. Administrer kontoen din.
           </p>
         </div>
       </div>
@@ -405,7 +347,7 @@ function SettingsHeader({ name, photoUrl }: { name: string; photoUrl: string | n
    2. KONTO-SEKSJON
    ═══════════════════════════════════════ */
 
-function KontoSection({ name, email, memberSince }: { name: string; email: string; memberSince: string }) {
+function KontoSection({ name, email }: { name: string; email: string }) {
   return (
     <GlassCard className="transition-all duration-300 hover:brightness-110 mb-8">
       <SectionTitle>KONTO</SectionTitle>
@@ -420,13 +362,6 @@ function KontoSection({ name, email, memberSince }: { name: string; email: strin
       <div style={{ marginBottom: "24px" }}>
         <FieldLabel>E-postadresse</FieldLabel>
         <FieldValue>{email}</FieldValue>
-      </div>
-
-      <Divider />
-
-      <div style={{ marginBottom: "24px" }}>
-        <FieldLabel>Medlem siden</FieldLabel>
-        <FieldValue>{memberSince}</FieldValue>
       </div>
 
       <Divider />
@@ -454,117 +389,7 @@ function KontoSection({ name, email, memberSince }: { name: string; email: strin
 }
 
 /* ═══════════════════════════════════════
-   3. VARSLER-SEKSJON — Granular kontroll
-   ═══════════════════════════════════════ */
-
-function NotificationPill({
-  label,
-  active,
-  dimmed,
-  onClick,
-}: {
-  label: string;
-  active: boolean;
-  dimmed: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      disabled={dimmed}
-      className="rounded-full transition-all duration-300 focus:outline-none disabled:cursor-not-allowed"
-      style={{
-        padding: "6px 16px",
-        fontSize: "13px",
-        fontWeight: 500,
-        letterSpacing: "0.02em",
-        background: active ? "rgba(212,175,55,0.15)" : "rgba(255,255,255,0.03)",
-        border: `1px solid ${active ? "rgba(212,175,55,0.4)" : "rgba(255,255,255,0.08)"}`,
-        color: active ? THEME.nordicGold : "rgba(255,255,255,0.4)",
-        boxShadow: active ? "0 0 10px rgba(212,175,55,0.2)" : "none",
-        opacity: dimmed ? 0.4 : 1,
-        pointerEvents: dimmed ? "none" : "auto",
-      }}
-    >
-      {label}
-    </button>
-  );
-}
-
-function NotificationGroup({
-  icon,
-  title,
-  pills,
-}: {
-  icon: string;
-  title: string;
-  pills: Array<{ label: string; active: boolean; onToggle: () => void }>;
-}) {
-  return (
-    <div
-      className="rounded-2xl transition-all duration-300"
-      style={{
-        padding: "16px 20px",
-        background: "rgba(255,255,255,0.03)",
-        border: "1px solid rgba(212,175,55,0.12)",
-        marginBottom: "12px",
-      }}
-    >
-      <div className="flex items-center gap-3" style={{ marginBottom: "12px" }}>
-        <span style={{ fontSize: "24px" }}>{icon}</span>
-        <p style={{ color: THEME.softWhite, fontSize: "15px", fontWeight: 500, letterSpacing: "0.02em" }}>
-          {title}
-        </p>
-      </div>
-
-      <div className="flex flex-wrap gap-2" style={{ paddingLeft: "32px" }}>
-        {pills.map((p) => (
-          <NotificationPill
-            key={p.label}
-            label={p.label}
-            active={p.active}
-            dimmed={false}
-            onClick={p.onToggle}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function VarslerSection({
-  prefs,
-  onToggle,
-}: {
-  prefs: Preferences;
-  onToggle: (key: keyof Preferences, value: boolean) => void;
-}) {
-  return (
-    <GlassCard className="transition-all duration-300 hover:brightness-110 mb-8">
-      <SectionTitle>VARSLER</SectionTitle>
-
-      <NotificationGroup
-        icon="📱"
-        title="Push-varsler"
-        pills={[
-          { label: "Match", active: prefs.pushMatch, onToggle: () => onToggle("pushMatch", !prefs.pushMatch) },
-          { label: "Meldinger", active: prefs.pushMessages, onToggle: () => onToggle("pushMessages", !prefs.pushMessages) },
-        ]}
-      />
-
-      <NotificationGroup
-        icon="📧"
-        title="E-post-varsler"
-        pills={[
-          { label: "Match", active: prefs.emailMatch, onToggle: () => onToggle("emailMatch", !prefs.emailMatch) },
-        ]}
-      />
-    </GlassCard>
-  );
-}
-
-/* ═══════════════════════════════════════
-   4. SIKKERHET — Rapportering & blokkering
+   4. TRYGGHET — Rapportering & blokkering
    ═══════════════════════════════════════ */
 
 function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchStatus; journeyStatus: JourneyStatus }) {
@@ -684,7 +509,7 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
 
   return (
     <GlassCard className="transition-all duration-300 hover:brightness-110 mb-8">
-      <SectionTitle>SIKKERHET</SectionTitle>
+      <SectionTitle>Trygghet</SectionTitle>
 
       <p style={{ color: THEME.whitePrimary, fontSize: "15px", lineHeight: "1.7", marginBottom: "24px" }}>
         Opplever du noe ubehagelig, kan du rapportere det her. Vi leser alle rapporter. Ved brudd gir vi advarsel eller stenger kontoen.
@@ -960,46 +785,6 @@ function PersonvernSection() {
 }
 
 /* ═══════════════════════════════════════
-   6. SPRÅK-SEKSJON — Forenklet
-   ═══════════════════════════════════════ */
-
-function SprakSection({ lang, onLangChange }: { lang: string; onLangChange: (l: string) => void }) {
-  return (
-    <GlassCard className="transition-all duration-300 hover:brightness-110 mb-8">
-      <SectionTitle>SPRÅK</SectionTitle>
-
-      <div className="space-y-3">
-        <GoldRadio label="Bokmål" selected={lang === "bokmal"} onClick={() => onLangChange("bokmal")} />
-        <GoldRadio label="Nynorsk" sublabel="Kommer snart" disabled selected={lang === "nynorsk"} />
-        <GoldRadio label="English" sublabel="Coming soon" disabled selected={lang === "english"} />
-      </div>
-    </GlassCard>
-  );
-}
-
-/* ═══════════════════════════════════════
-   7. TEMA-SEKSJON — Forenklet
-   ═══════════════════════════════════════ */
-
-function TemaSection({ theme, onThemeChange }: { theme: string; onThemeChange: (t: string) => void }) {
-  return (
-    <GlassCard className="transition-all duration-300 hover:brightness-110 mb-8">
-      <SectionTitle>TEMA</SectionTitle>
-
-      <div className="space-y-3">
-        <GoldRadio
-          label="ToSom Blue + Nordic Gold"
-          sublabel="Premium kombinasjon"
-          selected={theme === "mork" || theme === "premium"}
-          onClick={() => onThemeChange("mork")}
-        />
-        <GoldRadio label="Lys" sublabel="Kommer snart" disabled selected={theme === "lys"} />
-      </div>
-    </GlassCard>
-  );
-}
-
-/* ═══════════════════════════════════════
    8. MATCH-SEKSJON — Statusbevisst
    ═══════════════════════════════════════ */
 
@@ -1109,60 +894,6 @@ function MatchSection({
 }
 
 /* ═══════════════════════════════════════
-   9. HJELP-SEKSJON
-   ═══════════════════════════════════════ */
-
-function HjelpSection() {
-  return (
-    <GlassCard className="transition-all duration-300 hover:brightness-110 mb-8">
-      <SectionTitle>HJELP</SectionTitle>
-
-      <p style={{ color: THEME.whitePrimary, fontSize: "16px", lineHeight: "1.7", marginBottom: "24px" }}>
-        Har du spørsmål eller trenger du hjelp? Vi er her for deg.
-      </p>
-
-      <div className="space-y-3">
-        <a
-          href="mailto:support@tosom.no"
-          className="flex items-center gap-3 p-4 rounded-2xl transition-all duration-300 hover:bg-white/5"
-          style={{ border: `1px solid ${THEME.glassBorder}` }}
-        >
-          <span className="text-xl">📧</span>
-          <div>
-            <p style={{ color: THEME.softWhite, fontSize: "15px", fontWeight: 500 }}>Kontakt oss</p>
-            <p style={{ color: THEME.deepGrey, fontSize: "13px" }}>support@tosom.no</p>
-          </div>
-        </a>
-
-        <a
-          href="/personvern"
-          className="flex items-center gap-3 p-4 rounded-2xl transition-all duration-300 hover:bg-white/5"
-          style={{ border: `1px solid ${THEME.glassBorder}` }}
-        >
-          <span className="text-xl">🔒</span>
-          <div>
-            <p style={{ color: THEME.softWhite, fontSize: "15px", fontWeight: 500 }}>Personvern</p>
-            <p style={{ color: THEME.deepGrey, fontSize: "13px" }}>Les personvernerklæringen</p>
-          </div>
-        </a>
-
-        <a
-          href="/vilkar"
-          className="flex items-center gap-3 p-4 rounded-2xl transition-all duration-300 hover:bg-white/5"
-          style={{ border: `1px solid ${THEME.glassBorder}` }}
-        >
-          <span className="text-xl">📋</span>
-          <div>
-            <p style={{ color: THEME.softWhite, fontSize: "15px", fontWeight: 500 }}>Vilkår</p>
-            <p style={{ color: THEME.deepGrey, fontSize: "13px" }}>Les våre vilkår og regler</p>
-          </div>
-        </a>
-      </div>
-    </GlassCard>
-  );
-}
-
-/* ═══════════════════════════════════════
    10. SLETT KONTO-SEKSJON
    ═══════════════════════════════════════ */
 
@@ -1222,20 +953,6 @@ function SlettKontoSection() {
    HOVED-KOMONENT — SETTINGS PAGE
    ═══════════════════════════════════════ */
 
-const DEFAULT_PREFS: Preferences = {
-  language: "bokmal",
-  theme: "mork",
-  notifications: true,
-  push: true,
-  email: true,
-  pushMatch: true,
-  pushMessages: true,
-  pushJourney: true,
-  emailMatch: true,
-  emailMessages: true,
-  emailJourney: true,
-};
-
 interface SessionData {
   user?: { name?: string; email?: string; [key: string]: any };
   [key: string]: any;
@@ -1248,14 +965,10 @@ export default function SettingsPage() {
   const [profile, setProfile] = useState<ProfileData>({ identityName: null, photoUrl: null, currentDay: 0 });
   const [matchStatus, setMatchStatus] = useState<MatchStatus>({ hasActiveMatch: false, matchId: null, conversationId: null });
   const [journeyStatus, setJourneyStatus] = useState<JourneyStatus>({ journeyState: "IDLE", day: 0, conversationId: null });
-  const [prefs, setPrefs] = useState<Preferences>(DEFAULT_PREFS);
   const [loading, setLoading] = useState(true);
 
   const userName = session?.user?.name || "ToSom-bruker";
   const userEmail = session?.user?.email || "";
-  const memberSince = session?.user?.createdAt
-    ? new Date(session.user.createdAt).toLocaleDateString("no-NO", { month: "long", year: "numeric" })
-    : "—";
 
   // Hent sesjon + last inn data ved montering
   useEffect(() => {
@@ -1279,11 +992,10 @@ export default function SettingsPage() {
 
         // Deretter: last inn settings-data
         // /api/match/check er POST (GET gir 405 og match-statusen blir aldri lastet)
-        const [profileRes, matchRes, journeyRes, prefsRes] = await Promise.all([
+        const [profileRes, matchRes, journeyRes] = await Promise.all([
           fetch("/api/profile/me"),
           fetch("/api/match/check", { method: "POST" }),
           fetch("/api/journey/status"),
-          fetch("/api/settings/preferences"),
         ]);
 
         if (profileRes.ok) {
@@ -1309,22 +1021,6 @@ export default function SettingsPage() {
           });
         }
 
-        if (prefsRes.ok) {
-          const p = await prefsRes.json();
-          setPrefs({
-            language: p.language || "bokmal",
-            theme: p.theme || "mork",
-            notifications: p.notifications ?? true,
-            push: (p as any).push ?? true,
-            email: (p as any).email ?? true,
-            pushMatch: (p as any).pushMatch ?? true,
-            pushMessages: (p as any).pushMessages ?? true,
-            pushJourney: (p as any).pushJourney ?? true,
-            emailMatch: (p as any).emailMatch ?? true,
-            emailMessages: (p as any).emailMessages ?? true,
-            emailJourney: (p as any).emailJourney ?? true,
-          });
-        }
       } catch (err) {
         console.error("Feil ved lasting av settings:", err);
       } finally {
@@ -1334,52 +1030,6 @@ export default function SettingsPage() {
 
     loadAll();
   }, []);
-
-  // Lagre preferanser
-  const savePrefs = useCallback(
-    async (newPrefs: Preferences) => {
-      try {
-        await csrfFetch("/api/settings/preferences", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            language: newPrefs.language,
-            theme: newPrefs.theme,
-            notifications: newPrefs.push || newPrefs.email,
-            push: newPrefs.push,
-            email: newPrefs.email,
-            pushMatch: newPrefs.pushMatch,
-            pushMessages: newPrefs.pushMessages,
-            pushJourney: newPrefs.pushJourney,
-            emailMatch: newPrefs.emailMatch,
-            emailMessages: newPrefs.emailMessages,
-            emailJourney: newPrefs.emailJourney,
-          }),
-        });
-      } catch {
-        console.error("Feil ved lagring av preferanser");
-      }
-    },
-    []
-  );
-
-  const handleToggle = (key: keyof Preferences, value: boolean) => {
-    const newPrefs = { ...prefs, [key]: value };
-    setPrefs(newPrefs);
-    savePrefs(newPrefs);
-  };
-
-  const handleLangChange = (lang: string) => {
-    const newPrefs = { ...prefs, language: lang };
-    setPrefs(newPrefs);
-    savePrefs(newPrefs);
-  };
-
-  const handleThemeChange = (theme: string) => {
-    const newPrefs = { ...prefs, theme };
-    setPrefs(newPrefs);
-    savePrefs(newPrefs);
-  };
 
   // Loading state
   if (loading || authStatus === "loading") {
@@ -1414,13 +1064,9 @@ export default function SettingsPage() {
         <SettingsHeader name={profile.identityName || userName} photoUrl={profile.photoUrl} />
 
         {/* ═══ SEKSJONAR ═══ */}
-        <KontoSection name={userName} email={userEmail} memberSince={memberSince} />
-        <VarslerSection prefs={prefs} onToggle={handleToggle} />
+        <KontoSection name={userName} email={userEmail} />
         <SikkerhetSection matchStatus={matchStatus} journeyStatus={journeyStatus} />
         <PersonvernSection />
-        <SprakSection lang={prefs.language} onLangChange={handleLangChange} />
-        <TemaSection theme={prefs.theme} onThemeChange={handleThemeChange} />
-        <HjelpSection />
       </div>
     </div>
   );

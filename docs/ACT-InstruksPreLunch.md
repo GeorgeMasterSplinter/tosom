@@ -1033,7 +1033,9 @@ Ingen overforklaring. Ingen selvros. Er noe uklart eller ikke verifisert: si det
 | PL-24 | Øvrige sårbarheter | C | 🔒 | godkjenning | §6.7 |
 | PL-25 | Middleware | C | | — | §6.7 |
 | PL-26 | Opprydding | Q | | — | — |
-| PL-G1 … G12 | George | G | | — | §6.1–§6.8 |
+| PL-27 | Religion: opptil fire valg, ulik tro gir ingen trekk ✅ 06.10 | C | 🔒 | Georges beslutning 06.10 | §6.3 |
+| PL-28 | «Åpen for bonusfamilie» ✅ 06.10 | C | 🔒 | Georges beslutning 06.10 | §6.3 |
+| PL-G1 … G12 | George | G | | — | §6.1–§6.8 (videreført som G-01 … G-25 i `RestSjekkliste.md`) |
 | PL-99 | Sluttkontroll | C | | alt over | — |
 
 **Vipps** (sjekklisten §5 og §6.9, punktet «Alle punkter i §5 oppfylt») er ikke

@@ -81,6 +81,9 @@ describe('cheapSjekkAll ≡ sjekkAlleDealbreakers(A,B) ?? (B,A)', () => {
     ['barn: nei', mkProfile({ lifestyle: { wantChildren: 'Nei' } })],
     ['barn: usikker', mkProfile({ lifestyle: { wantChildren: 'Usikker' } })],
     ['barn: ja,usikker', mkProfile({ lifestyle: { wantChildren: 'Ja,Usikker' } })],
+    // PL-28: bonusfamilie
+    ['barn: nei,bonusfamilie', mkProfile({ lifestyle: { wantChildren: 'Nei,Bonusfamilie' } })],
+    ['barn: kun bonusfamilie', mkProfile({ lifestyle: { wantChildren: 'Bonusfamilie' } })],
     // Modenheit
     ['modenheit 1', mkProfile({ maturityLevel: 1 })],
     ['modenheit 6 (gap 5 mot m1)', mkProfile({ maturityLevel: 6 })],
@@ -249,7 +252,7 @@ const RANDOM_SEEKING = ['Kvinne', 'Mann', 'Ikke-binær', 'Alle kjønner', 'Kjemi
 const RANDOM_RHYTHMS = ['morning', 'evening', 'fast', 'slow', 'nattergal', null];
 const RANDOM_SECURITY = ['secure', 'sikker', 'trygg', 'ambivalent', 'ambivalert', 'usikker', 'unsicher', 'ukomfortabel', 'xyz', null];
 const TAG_POOL = ['smoking', 'natur', 'gaming', 'vegan', 'musikk'];
-const RANDOM_WANT_CHILDREN = ['Ja', 'Nei', 'Usikker', 'Ja,Usikker', null];
+const RANDOM_WANT_CHILDREN = ['Ja', 'Nei', 'Usikker', 'Ja,Usikker', 'Nei,Bonusfamilie', 'Bonusfamilie', 'Usikker,Bonusfamilie', null];
 
 describe('egenskapstest: seeda tilfeldige profiler', () => {
   test('4000 tilfeldige par: same reason som den gamle logikken', () => {

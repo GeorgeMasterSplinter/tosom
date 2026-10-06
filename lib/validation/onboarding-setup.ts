@@ -57,6 +57,14 @@ export const basicProfileSchema = z
 
   })
   .superRefine((val, ctx) => {
+    // PL-27: religion / livssyn — opptil fire valg (kommaseparert, som i Step1)
+    if (val.religion && val.religion.split(',').map((s) => s.trim()).filter(Boolean).length > 4) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['religion'],
+        message: 'Du kan velge opptil fire under religion og livssyn.',
+      });
+    }
     // D-4 (PL-12): ukjent postnummer → avvis (klienten sjekker også, Step1)
     if (!lookupPostalCode(val.postalCode)) {
       ctx.addIssue({

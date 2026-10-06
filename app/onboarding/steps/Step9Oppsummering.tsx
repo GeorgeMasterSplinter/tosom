@@ -37,7 +37,7 @@ const LABELS: Record<string, Record<string, string>> = {
   smoking: { 'Roker-snuser-ikke': 'Røyker/Snuser ikke', 'Roker-av-og-til': 'Røyker av og til', Snuser: 'Snuser', Roker: 'Røyker' },
   religion: { Kristen: 'Kristen', Katolsk: 'Katolsk', Agnostiker: 'Agnostiker', Ateist: 'Ateist', Muslim: 'Muslim', 'Jehovas-vitne': 'Jehovas vitne', Hindu: 'Hindu', Judedom: 'Jødedom', Buddhist: 'Buddhist', Spirituell: 'Spirituell', Annet: 'Annet' },
   children: { 'Har-små-barn': 'Har små barn', 'Har-barn': 'Har barn', 'Har-vaksen-barn': 'Har voksne barn', 'Har-ikke-barn': 'Har ikke barn' },
-  wantChildren: { Ja: 'Ja', Usikker: 'Usikker', Nei: 'Nei' },
+  wantChildren: { Ja: 'Ja', Usikker: 'Usikker', Nei: 'Nei', Bonusfamilie: 'Åpen for bonusfamilie' },
   workType: { 'anstatt-fulltid': 'Ansett på fulltid', 'anstatt-deltid': 'Ansett på deltid', 'egen-næring': 'Egen næringsdrivende', studier: 'Studier', frivillig: 'Frivillig arbeid', 'husmor-husmann': 'Husmor / Husmann', pensjonist: 'Pensjonist', permisjon: 'Permisjon', nav: 'Ungdomskontakt / NAV', annet: 'Annet' },
   housingType: { leilighet: 'Leilighet', hus: 'Hus (eiendom)', 'delt-bo': 'Delt bo', kollektiv: 'Kollektiv', studentbolig: 'Studentbolig', 'foreldres-bo': 'Foreldres bo', annet: 'Annet' },
   economicStability: { stabil: 'Stabil økonomi', dekker: 'Nøye penninger dekker utgifter', varierer: 'Varierer fra måned til måned', sparing: 'Prioriterer sparing aktivt', stabilitet: 'Fokus på stabilitet, ikke overskudd' },

@@ -775,6 +775,8 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 | [x] | Beslutning om barn som dealbreaker | V-2 | **Før lansering** (PL-11: D-3 = ja — «Ønske om barn» er aktiv dealbreaker: blokkerer kun kun-ja vs kun-nei; «Usikker», flervalg og manglende data blokkerer aldri) |
 | [x] | Ukjent postnummer avvises eller blokkerer matching | V-3 | **Før lansering** (PL-12: D-4 = avvis — ukjent postnummer avvises i onboarding (klient + server) med rolig melding og forslag om nærliggende koder; cron-heartbeat teller `utenKoordinater`) |
 | [x] | Kjønns- og søkevalg avklart og forklart | V-4 | **Før lansering** (PL-13: D-5 — «Ikke-binær» er et søkevalg, «Kjemisk tiltrekning» får forklaringstekst; matching av «Ikke-binær»-søk verifisert i tester) |
+| [x] | Religion: opptil fire valg, og ulik tro gjør ikke en match mindre kompatibel *(✓ 2026-10-06 · PL-27)* | George 06.10 | **Før lansering** (religion inngår ikke lenger i livssituasjonsscoren — lik og ulik tro gir samme score; server avviser over fire valg; 7 tester) |
+| [x] | «Åpen for bonusfamilie» i «Ønsker du barn?» gir pluss når partneren har barn fra før *(✓ 2026-10-06 · PL-28)* | George 06.10 | **Før lansering** (+10 i livssituasjonen, begge veier, én gang; telles ikke som barneønske; D-3 uendret — «Nei, bonusfamilie» mot «Ja» blokkeres fortsatt; ekvivalens holder; 10 tester) |
 | [ ] | Score- og nivåfordeling fra siste matcherunde gjennomgått i admin | — | **Før lansering** |
 
 ### 6.4 Reisen
@@ -792,7 +794,7 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 |---|---|---|---|
 | [x] | Rate limiting på innlogging | K-6 | **Før lansering** |
 | [x] | Minstekrav til passord | K-6 | **Før lansering** |
-| [x] | «Glemt passord» virker ende-til-ende (e-post leveres, nytt passord settes) — *(klar for George · PL-07)* | K-6, V-6 | **Før lansering** |
+| [ ] *(klar for George · PL-07 — kode og tester ferdige; krysses av når e-posten er mottatt i prod, PL-G7)* | «Glemt passord» virker ende-til-ende (e-post leveres, nytt passord settes) | K-6, V-6 | **Før lansering** |
 | [x] | Ingen stille kontoopprettelse ved skrivefeil | K-6 | **Før lansering** |
 | [x] | Passordløse kontoer kan ikke overtas | K-6 | **Før lansering** |
 | [x] | Innloggingsfelt har labels | V-8 | **Før lansering** |
@@ -804,7 +806,7 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 | [x] | «Én match innen 24 timer» fjernet overalt (meta, OG, JSON-LD, llms.txt) | K-7 | **Før lansering** (PL-09: «én gjennomtenkt match i uken»; grep viser kun kontakt-svar) |
 | [x] | FAQ stemmer med produktet (anonymitet, e-post, IP, sletting) | K-7 | **Før lansering** (PL-09: fornavn+alder synlig, bilder dag 15, matchen venter ved innlogging, ingen match-e-post, IP/tredjeparter ærlig, sletting beholdt per PL-01) |
 | [x] | `/metoder` og llms.txt beskriver tilknytningsspørsmålene ærlig | K-7 | **Før lansering** (PL-09: «Tilknytning (egne spørsmål)», ingen «ECR», kilde-liste beholdt) |
-| [ ] | Innloggingssiden skrevet for lansering (uten spøk, uten «under oppbygging») | V-15 | **Før lansering** |
+| [x] | Innloggingssiden skrevet for lansering (uten spøk, uten «under oppbygging») *(✓ 2026-10-06 · PL-05d — verifisert: ingen treff på spøken, «Under oppbygging», «Alderkontroll» eller «Første gang»)* | V-15 | **Før lansering** |
 | [ ] | Bloggen rettet eller avpublisert | V-10, V-13 | **Før lansering** |
 | [ ] | Manuell språkgjennomgang av alle brukervendte sider | V-13 | **Før lansering** |
 | [ ] | Vilkår: angrerettloven og direkte lovlenker | V-9 | **Før lansering** |

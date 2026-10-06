@@ -164,15 +164,16 @@ describe('scoreLifeSituationCompat', () => {
   });
 
   it('flervalg: delvis overlap gir Jaccard-mellomverdi', () => {
-    // a har 2 valg, b har 1 av dem → 1/2 = 50 (religion er den eneste dimensjonen)
-    const a = { religion: 'kristen,katolsk' };
-    const b = { religion: 'katolsk' };
+    // a har 2 valg, b har 1 av dem → 1/2 = 50 (røyk er den eneste dimensjonen).
+    // PL-27: eksemplet var religion — religion er ikke lenger et samsvarskrav.
+    const a = { smoking: 'Roker,Snuser' };
+    const b = { smoking: 'Snuser' };
     expect(scoreLifeSituationCompat(a, b)).toBe(50);
   });
 
   it('flervalg: ingen felles valg gir 0', () => {
-    const a = { religion: 'kristen,katolsk' };
-    const b = { religion: 'muslim' };
+    const a = { smoking: 'Roker,Snuser' };
+    const b = { smoking: 'Nei' };
     expect(scoreLifeSituationCompat(a, b)).toBe(0);
   });
 
@@ -184,14 +185,74 @@ describe('scoreLifeSituationCompat', () => {
     expect(scoreLifeSituationCompat(a, b)).toBe(83);
   });
 
-  it('leser religion fra deepProfileData (produksjonsformen), ikke bare toppnivå', () => {
-    // Kalibreringsbug: religion ligger i deepProfileData, som pickField ikke
-    // leste tidligere. Samme religion → fullt samsvar (100), ulik religion → 0.
-    // Før fikset var begge tilfellene «mangler data» = nøytralt 50.
-    const a = { deepProfileData: { religion: 'kristen' } };
-    const same = { deepProfileData: { religion: 'kristen' } };
-    const diff = { deepProfileData: { religion: 'muslim' } };
-    expect(scoreLifeSituationCompat(a, same)).toBe(100);
-    expect(scoreLifeSituationCompat(a, diff)).toBe(0);
+  // PL-27 (Georges beslutning 06.10): Ulik tro gjør ikke en match mindre
+  // kompatibel. Religion inngår ikke i livssituasjonsscoren — verken som
+  // pluss for lik tro eller trekk for ulik. (Erstatter testen som krevde
+  // 100 for lik og 0 for ulik religion.)
+  describe('religion er ikke et samsvarskrav (PL-27)', () => {
+    const base = { wantChildren: 'ja', smoking: 'nei' };
+
+    it('lik og ulik religion gir samme score', () => {
+      const a = { ...base, deepProfileData: { religion: 'kristen' } };
+      const lik = { ...base, deepProfileData: { religion: 'kristen' } };
+      const ulik = { ...base, deepProfileData: { religion: 'muslim' } };
+      expect(scoreLifeSituationCompat(a, lik)).toBe(scoreLifeSituationCompat(a, ulik));
+    });
+
+    it('fire valg mot ett gir samme score som ingen religion', () => {
+      const a = { ...base, deepProfileData: { religion: 'kristen,muslim,spirituell,annet' } };
+      const b = { ...base, deepProfileData: { religion: 'buddhist' } };
+      expect(scoreLifeSituationCompat(a, b)).toBe(scoreLifeSituationCompat(base, base));
+    });
+
+    it('religion alene gir nøytral 50 (ingen praktiske data)', () => {
+      const a = { deepProfileData: { religion: 'ateist' } };
+      const b = { deepProfileData: { religion: 'kristen' } };
+      expect(scoreLifeSituationCompat(a, b)).toBe(50);
+    });
+  });
+
+  // PL-28: «Åpen for bonusfamilie» — pluss når partneren har barn fra før.
+  describe('åpen for bonusfamilie (PL-28)', () => {
+    it('gir pluss når partneren har barn fra før', () => {
+      const apen = { wantChildren: 'nei,bonusfamilie', children: 'har-ikke-barn', smoking: 'nei' };
+      const harBarn = { wantChildren: 'nei', children: 'har-barn', smoking: 'nei' };
+      const lukket = { wantChildren: 'nei', children: 'har-ikke-barn', smoking: 'nei' };
+      expect(scoreLifeSituationCompat(apen, harBarn)).toBeGreaterThan(
+        scoreLifeSituationCompat(lukket, harBarn)
+      );
+    });
+
+    it('gjelder begge veier og gis bare én gang', () => {
+      const apen = { wantChildren: 'nei,bonusfamilie', children: 'har-ikke-barn' };
+      const harBarn = { wantChildren: 'nei', children: 'har-små-barn' };
+      expect(scoreLifeSituationCompat(apen, harBarn)).toBe(scoreLifeSituationCompat(harBarn, apen));
+    });
+
+    it('gir ingen pluss når partneren ikke har barn', () => {
+      const apen = { wantChildren: 'nei,bonusfamilie', children: 'har-ikke-barn' };
+      const utenBarn = { wantChildren: 'nei', children: 'har-ikke-barn' };
+      const lukket = { wantChildren: 'nei', children: 'har-ikke-barn' };
+      expect(scoreLifeSituationCompat(apen, utenBarn)).toBe(scoreLifeSituationCompat(lukket, utenBarn));
+    });
+
+    it('bonusfamilie telles ikke som barneønske i samsvaret', () => {
+      // «nei,bonusfamilie» mot «nei» er like ønsker — samme som «nei» mot «nei».
+      const a = { wantChildren: 'nei,bonusfamilie' };
+      const b = { wantChildren: 'nei' };
+      expect(scoreLifeSituationCompat(a, b)).toBe(scoreLifeSituationCompat({ wantChildren: 'nei' }, b));
+    });
+
+    it('kun bonusfamilie (uten ja/nei/usikker) hopper over barneønsket uten straff', () => {
+      const a = { wantChildren: 'bonusfamilie', smoking: 'nei' };
+      const b = { wantChildren: 'ja', smoking: 'nei' };
+      expect(scoreLifeSituationCompat(a, b)).toBe(100);
+    });
+
+    it('aldri over 100', () => {
+      const a = { wantChildren: 'ja,bonusfamilie', children: 'har-barn', smoking: 'nei' };
+      const b = { wantChildren: 'ja', children: 'har-barn', smoking: 'nei' };
+      expect(scoreLifeSituationCompat(a, b)).toBe(100);
+    });
   });
 });

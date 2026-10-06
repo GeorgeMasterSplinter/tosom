@@ -195,7 +195,8 @@ function pickField(profile: Record<string, unknown>, ...keys: string[]): string 
     }
   }
   // Sjekk inni lifestyle / lifeSituation / basic / deepProfileData Json-objekt
-  // (religion ligger i deepProfileData — uten dette ble vekt 0,10 aldri lest).
+  // (deepProfileData leses fortsatt for felt som ligger der; religion ble lest
+  // herfra før PL-27, men inngår ikke lenger i scoren).
   for (const container of ['lifestyle', 'lifeSituation', 'basic', 'deepProfileData']) {
     const c = profile[container];
     if (c && typeof c === 'object') {
@@ -228,6 +229,50 @@ function categoryMatch(a: string | null, b: string | null): number {
   return union === 0 ? 50 : Math.round((common / union) * 100);
 }
 
+/**
+ * Religion / livssyn (PL-27, Georges beslutning 06.10):
+ * Ulik tro gjør ikke en match mindre kompatibel. Mange har foreldre med to
+ * ulike religioner, bor i et tredje land og dater på tvers — det er lov, og
+ * det er vanlig. Religion er derfor ikke et samsvarskrav og inngår ikke i
+ * livssituasjonsscoren: felles tro gir ikke ekstra poeng, ulik tro gir ikke
+ * trekk, og det å svare gir ikke annen score enn å la feltet stå tomt.
+ * (En fast nøytral verdi ville trukket scoren mot midten for alle som svarer.)
+ */
+
+/**
+ * «Ønsker du barn?» (PL-28): «Åpen for bonusfamilie» betyr at brukeren er
+ * åpen for en partner som har barn fra før — og for samarbeidet det
+ * innebærer med tidligere partnere, besteforeldre og søsken. Verdien er
+ * ikke et svar på om brukeren selv ønsker barn, og telles derfor ikke med i
+ * samsvaret for wantChildren. Den gir i stedet pluss når partneren har barn.
+ */
+const BONUSFAMILIE = 'bonusfamilie';
+const BONUSFAMILIE_PLUSS = 10;
+
+/** Verdier i «Barn?» som betyr at personen har barn fra før. */
+const HAR_BARN = new Set(['har-små-barn', 'har-barn', 'har-vaksen-barn']);
+
+function splitValg(v: string | null): Set<string> {
+  if (!v) return new Set();
+  return new Set(v.split(',').map((s) => s.trim()).filter(Boolean));
+}
+
+/** wantChildren uten bonusfamilie — null hvis ingenting gjenstår. */
+function barneonskeUtenBonus(v: string | null): string | null {
+  const valg = splitValg(v);
+  valg.delete(BONUSFAMILIE);
+  return valg.size > 0 ? [...valg].join(',') : null;
+}
+
+function harBarnFraFor(children: string | null): boolean {
+  for (const v of splitValg(children)) if (HAR_BARN.has(v)) return true;
+  return false;
+}
+
+function erApenForBonusfamilie(wantChildren: string | null): boolean {
+  return splitValg(wantChildren).has(BONUSFAMILIE);
+}
+
 export function scoreLifeSituationCompat(
   a: Record<string, unknown>,
   b: Record<string, unknown>
@@ -237,21 +282,34 @@ export function scoreLifeSituationCompat(
     [['wantChildren'], 0.4],
     [['children'], 0.2],
     [['smoking'], 0.2],
-    [['religion'], 0.1],
+    // PL-27: religion er fjernet herfra — se kommentaren over.
     [['lifestyle', 'lifestyleType'], 0.1],
   ];
 
   let total = 0;
   let weightSum = 0;
   for (const [keys, weight] of dimensions) {
-    const va = pickField(a, ...keys);
-    const vb = pickField(b, ...keys);
+    let va = pickField(a, ...keys);
+    let vb = pickField(b, ...keys);
+    // PL-28: bonusfamilie er ikke et barneønske — sammenlign uten den.
+    if (keys[0] === 'wantChildren') {
+      va = barneonskeUtenBonus(va);
+      vb = barneonskeUtenBonus(vb);
+    }
     if (!va || !vb) continue; // hopper over om det mangler — ikke straff for tom profil
     total += categoryMatch(va, vb) * weight;
     weightSum += weight;
   }
 
-  // Ingen felles praktiske data — nøytral.
-  if (weightSum === 0) return 50;
-  return Math.round(total / weightSum);
+  // PL-28: åpen for bonusfamilie + partneren har barn fra før → pluss.
+  // Gjelder begge veier, men gis bare én gang (samme pluss om begge passer).
+  const wantA = pickField(a, 'wantChildren');
+  const wantB = pickField(b, 'wantChildren');
+  const bonusPasser =
+    (erApenForBonusfamilie(wantA) && harBarnFraFor(pickField(b, 'children'))) ||
+    (erApenForBonusfamilie(wantB) && harBarnFraFor(pickField(a, 'children')));
+
+  // Ingen felles praktiske data — nøytral (bonusfamilie-plusset gjelder likevel).
+  const base = weightSum === 0 ? 50 : total / weightSum;
+  return Math.round(clamp(base + (bonusPasser ? BONUSFAMILIE_PLUSS : 0), 0, 100));
 }

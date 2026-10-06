@@ -136,9 +136,13 @@ function ageOneWay(seeker: CheapFeatures, partner: CheapFeatures): string | null
 }
 
 function childrenOnly(set: Set<string> | null): 'ja' | 'nei' | null {
-  if (!set || set.size !== 1) return null;
-  if (set.has('ja')) return 'ja';
-  if (set.has('nei')) return 'nei';
+  if (!set) return null;
+  // PL-28: «bonusfamilie» er ikke et barneønske — tell den ikke med
+  // (samme regel som childrenOnlyChoice i dealbreaker.ts).
+  const valg = [...set].filter((v) => v !== 'bonusfamilie');
+  if (valg.length !== 1) return null;
+  if (valg[0] === 'ja') return 'ja';
+  if (valg[0] === 'nei') return 'nei';
   return null;
 }
 

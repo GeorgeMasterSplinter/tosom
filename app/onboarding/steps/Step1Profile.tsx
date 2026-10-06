@@ -416,7 +416,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
 
           <OnboardingSelectGrid
             label="Religion / livssyn"
-            mikroguiding="Velg det som passer best"
+            mikroguiding="Velg opptil fire som beskriver deg. Mange har røtter i flere tradisjoner — det er helt naturlig. Ulik tro gjør ikke en match mindre aktuell."
             options={[
               { value: 'Kristen', label: 'Kristen', icon: '✝️' },
               { value: 'Katolsk', label: 'Katolsk', icon: '⛪' },
@@ -432,7 +432,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             ]}
             selectedValue={val('religion', '')(data)}
             onChange={(v) => onChange('religion', v)}
-            maxSelected={2}
+            maxSelected={4}
             accentColor={OB.section.lifestyle}
           />
 
@@ -460,6 +460,12 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
               { value: 'Ja', label: 'Ja', icon: '💚' },
               { value: 'Usikker', label: 'Usikker', icon: '🤷' },
               { value: 'Nei', label: 'Nei', icon: '❌' },
+              {
+                value: 'Bonusfamilie',
+                label: 'Åpen for bonusfamilie',
+                icon: '🏡',
+                description: 'Åpen for en partner som har barn fra før — og for å bli kjent med familien rundt.',
+              },
             ]}
             selectedValue={val('wantChildren', '')(data)}
             onChange={(v) => onChange('wantChildren', v)}

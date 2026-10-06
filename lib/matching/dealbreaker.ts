@@ -239,10 +239,18 @@ function checkAgePreference(a: ProfileData, b: ProfileData): DealbreakerResult {
  * Blokkerer KUN når den ene har valgt nøyaktig «Ja» og den andre nøyaktig
  * «Nei». 'Usikker', flervalg eller manglende data blokkerer aldri
  * (ærlig: vi vet ikke deres svar — forsvarlig, samme mønster som radius).
+ *
+ * PL-28: «Åpen for bonusfamilie» ('Bonusfamilie') svarer ikke på om brukeren
+ * selv ønsker barn, og tas ut før sjekken. Ellers ville «Nei» + bonusfamilie
+ * telle som flervalg og slå av D-3 mot «Ja». Ingen ny dealbreaker — D-3
+ * virker som før. Bonusfamilie gir pluss i livssituasjonen (dimensions.ts).
  */
 function childrenOnlyChoice(raw: unknown): 'ja' | 'nei' | null {
   if (typeof raw !== 'string' || raw.trim() === '') return null;
-  const parts = raw.split(',').map((s) => s.trim().toLowerCase()).filter(Boolean);
+  const parts = raw
+    .split(',')
+    .map((s) => s.trim().toLowerCase())
+    .filter((s) => s !== '' && s !== 'bonusfamilie');
   if (parts.length !== 1) return null;
   return parts[0] === 'ja' ? 'ja' : parts[0] === 'nei' ? 'nei' : null;
 }

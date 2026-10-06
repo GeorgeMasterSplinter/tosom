@@ -253,6 +253,31 @@ describe('sjekkAlleDealbreakers', () => {
 
       expect(sjekkAlleDealbreakers(a, b).hasDealbreaker).toBe(false);
     });
+
+    // PL-28: «Åpen for bonusfamilie» er ikke et barneønske og skal ikke
+    // slå av D-3 (ellers ville «Nei» + bonusfamilie telle som flervalg).
+    it('skal blokkere «Nei, Åpen for bonusfamilie» vs Ja (D-3 virker som før)', () => {
+      const a = makeProfile({ lifestyle: { wantChildren: 'Nei,Bonusfamilie' } });
+      const b = makeProfile({ lifestyle: { wantChildren: 'Ja' } });
+
+      const result = sjekkAlleDealbreakers(a, b);
+      expect(result.hasDealbreaker).toBe(true);
+      expect(result.reason).toBe('Ønske om barn: nei vs ja');
+    });
+
+    it('skal IKKE blokkere «Nei, Åpen for bonusfamilie» vs Nei', () => {
+      const a = makeProfile({ lifestyle: { wantChildren: 'Nei,Bonusfamilie' } });
+      const b = makeProfile({ lifestyle: { wantChildren: 'Nei' } });
+
+      expect(sjekkAlleDealbreakers(a, b).hasDealbreaker).toBe(false);
+    });
+
+    it('skal IKKE blokkere kun «Åpen for bonusfamilie» vs Ja eller Nei', () => {
+      const a = makeProfile({ lifestyle: { wantChildren: 'Bonusfamilie' } });
+
+      expect(sjekkAlleDealbreakers(a, makeProfile({ lifestyle: { wantChildren: 'Ja' } })).hasDealbreaker).toBe(false);
+      expect(sjekkAlleDealbreakers(a, makeProfile({ lifestyle: { wantChildren: 'Nei' } })).hasDealbreaker).toBe(false);
+    });
   });
 
   describe('edge-tilfeller', () => {

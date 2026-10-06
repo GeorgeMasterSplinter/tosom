@@ -90,7 +90,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       daysRemaining = Math.max(0, totalDays - elapsed);
     }
 
-    // Kan brukeren fullføre reisa?
+    // Kan brukeren fullføre reisen?
     const canComplete = journeyProgress ? (journeyProgress.day >= 30 || daysRemaining === 0 || isActive) : false;
 
     // Melding basert på status
@@ -98,15 +98,15 @@ export async function GET(request: Request): Promise<NextResponse> {
     if (!journeyProgress || !isActive) {
       message = "Du har ingen pågående reise. Vent på en match eller fullfør onboarding.";
     } else if (journeyProgress.pausedAt) {
-      message = `Reisa di er pausa. Dag ${journeyProgress.day}/30 — du kan holde fram når du vil.`;
+      message = `Reisen din er satt på pause. Dag ${journeyProgress.day}/30 — du kan holde fram når du vil.`;
     } else if (journeyProgress.endedAt) {
-      message = "Reisa di er fullført. Gratulerer! 🎉";
+      message = "Reisen din er fullført. Gratulerer! 🎉";
     } else if (daysRemaining && daysRemaining <= 7) {
-      message = `Kun ${daysRemaining} dag att av reisa di — du er nær målet!`;
+      message = `Kun ${daysRemaining} dag igjen av reisen din — du er nær målet!`;
     } else if (daysRemaining) {
-      message = `Dag ${journeyProgress.day}/30 — ${daysRemaining} dager att av reisa di.`;
+      message = `Dag ${journeyProgress.day}/30 — ${daysRemaining} dager igjen av reisen din.`;
     } else {
-      message = "Reisa di er i gang.";
+      message = "Reisen din er i gang.";
     }
 
     await logInfo("journey/check fetched", "journey_check", { userId, active: isActive, day: journeyProgress?.day });

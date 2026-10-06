@@ -2,10 +2,10 @@
  * Tosom UI 5.0 - GlassPanel (Round 3 Premium Visual Polish)
  * 
  * Forbedringar:
- * - Sterkare ytre glow: 0 0 50px rgba(80,120,255,0.15)
+ * - Sterkere ytre glow: 0 0 50px rgba(80,120,255,0.15)
  * - Double shadow: 0 8px 40px rgba(0,0,0,0.45) + inset
  * - Gull-border: 1.5px opacity 0.22
- * - Sterkare indre refleks: inset 0 0 20px rgba(255,255,255,0.04)
+ * - Sterkere indre refleks: inset 0 0 20px rgba(255,255,255,0.04)
  * - Reflekslag over heile panelet
  * Bokmål
  */
@@ -64,14 +64,14 @@ export const GlassPanel: FC<GlassPanelProps> = ({
     lg: '0 12px 60px rgba(0, 0, 0, 0.55)',
   };
 
-  // Ytre glow — Round 3: sterkare
+  // Ytre glow — Round 3: sterkere
   const outerGlow = {
     default: '0 0 50px rgba(80,120,255,0.15)',
     light: '0 0 40px rgba(80,120,255,0.12)',
     strong: '0 0 60px rgba(80,120,255,0.18)',
   };
 
-  // Indre lysrefleks — Round 3: sterkare
+  // Indre lysrefleks — Round 3: sterkere
   const innerReflect = 'inset 0 0 20px rgba(255,255,255,0.04)';
 
   const baseStyle: React.CSSProperties = {

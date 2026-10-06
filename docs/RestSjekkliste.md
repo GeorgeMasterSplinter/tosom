@@ -89,6 +89,7 @@ npm audit --omit=dev   → 0 kritiske · 5 høye · 1 moderat (målt etter PL-24
 | **PL-20** | V-10 | Døde sider: `/design-system` + `/register/vipps` 404 i prod, `onboarding/payment` + `onboarding/access` slettet, `phone/send` + `phone/verify` 404 i prod *(kode ferdig — venter på G-24 curl etter deploy)* |
 | **PL-19** | V-9 | Vilkår → angrerettloven § 22 bokstav n + direkte lovdata-lenker; personopplysningsloven; versjonsbump 2026-10-06 |
 | **PL-21** | V-10, V-13 | Bloggen avpublisert (404 i prod, innhold beholdes) + dag 30-varsel og milestone-tekst til bokmål |
+| **PL-22** | V-13 | Språkvakt utvidet med 10 V-13-ord + `docs/archive` utenfor skanningen; alle nye treff i levende kode rettet (14 filer); sideliste til G-20 laget |
 | **PL-24** | K-5 | `nodemailer` 7 → 10 + skriftlig vurdering av gjenstående sårbarheter |
 | **PL-25** | V-11 | API-prefikser i middleware + `api-route-coverage`-test |
 | **PL-27** | ny | **Religion: opptil fire valg, ulik tro gir ingen trekk** (se §6) |
@@ -298,8 +299,53 @@ Etter første lørdag med ekte brukere: åpne `/admin/logs` og finn siste
 - [ ] Gjort
 
 #### 👤 G-20 · Manuell språkgjennomgang  🟥
-Les alle sidene brukerne ser (Cline lager listen i PL-22). Merk alt som ikke er
+Les alle sidene brukerne ser (listen under er laget i PL-22). Merk alt som ikke er
 godt, varmt bokmål.
+
+**Sideliste** (alle brukersider, fra `find app -name page.tsx` uten `admin` og `api`):
+
+| Side | Lest |
+|---|---|
+| `/` (forsiden) | ☐ |
+| `/betaling` | ☐ |
+| `/blogg` (skal vise «Fant ikke siden» — 404 i prod) | ☐ |
+| `/blogg/[slug]` (som over) | ☐ |
+| `/chat` | ☐ |
+| `/chat/[id]` | ☐ |
+| `/cookies` | ☐ |
+| `/dashboard` | ☐ |
+| `/dashboard/conversation` | ☐ |
+| `/design-system` (skal vise «Fant ikke siden») | ☐ |
+| `/dev-login` (kun utvikling — kan slippes) | ☐ |
+| `/faq` | ☐ |
+| `/glemt-passord` | ☐ |
+| `/hvorfor` | ☐ |
+| `/kontakt` | ☐ |
+| `/login` | ☐ |
+| `/maintenance` (kun ved vedlikehold) | ☐ |
+| `/matching` | ☐ |
+| `/metoder` | ☐ |
+| `/nytt-passord` | ☐ |
+| `/om-oss` | ☐ |
+| `/onboarding` | ☐ |
+| `/onboarding/start` | ☐ |
+| `/personvern` | ☐ |
+| `/priser` | ☐ |
+| `/profile` | ☐ |
+| `/profile/edit` | ☐ |
+| `/questions` (avventer G-06b) | ☐ |
+| `/register` | ☐ |
+| `/register/vipps` (skal vise «Fant ikke siden») | ☐ |
+| `/reisen` | ☐ |
+| `/reisen/avslutning` | ☐ |
+| `/samtykke` | ☐ |
+| `/settings` | ☐ |
+| `/slik-fungerer-det` | ☐ |
+| `/tilgjengelighet` | ☐ |
+| `/tips` | ☐ |
+| `/trygghet` | ☐ |
+| `/vilkår` | ☐ |
+
 - [ ] Gjort
 
 #### 👤 G-21 · Delingsbilde `og-image.png`  🟥

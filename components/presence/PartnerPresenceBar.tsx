@@ -6,7 +6,7 @@
  * Viser:
  *   - Online/offline status
  *   - Hva part gjer no
- *   - Same position i reisa
+ *   - Samme posisjon i reisen
  *   - Resonans-nivå
  */
 

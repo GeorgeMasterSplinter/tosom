@@ -13,7 +13,7 @@ const blogPosts = {
     content: `
       <p>I et samfunn der vi konstant blir eksponert for bilder og overflatefokus, er det lett å glemtje hva som betyr noe i en relasjon.</p>
       
-      <p>Studier viser at kompatibilitet basert på verdier, livssituasjon og emosjonelle mønstre er langt sterkare prediktorar for varige relasjonar enn utseende.</p>
+      <p>Studier viser at kompatibilitet basert på verdier, livssituasjon og emosjonelle mønstre er langt bedre prediktorer for varige relasjoner enn utseende.</p>
       
       <p>Tosom vel å fokusere på det som skaper varig forbindelse. Når to menneske møter hverandre på et dypere plan, blir overflateikke det første — det blir det siste.</p>
       
@@ -25,9 +25,9 @@ const blogPosts = {
     date: '10. januar 2026',
     readTime: '4 min lesing',
     content: `
-      <p>Psykologar har observert at det tek omtrent 30 dager for to menneske å bygge verktrueleg tillit og forbindelse.</p>
+      <p>Psykologer har observert at det tar omtrent 30 dager for to mennesker å bygge ekte tillit og forbindelse.</p>
       
-      <p>Den fyrsteuka handlar om å identifisere hverandre. Den andreuka handlar om sårbarheit. Den tredje uka handlar om dype samtaler. Og den fjerde uka handlar om felles framtid.</p>
+      <p>Den første uken handler om å bli kjent med hverandre. Den andre uken handler om sårbarhet. Den tredje uken handler om dype samtaler. Og den fjerde uken handler om felles framtid.</p>
       
       <p>30 dager er ikke for lang tid — det er nøyaktig den tida som trengst for to menneske å bli kjende på et nivå som betyr noe.</p>
       

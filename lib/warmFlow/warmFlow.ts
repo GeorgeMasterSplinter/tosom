@@ -180,9 +180,9 @@ export function getWarmLoadingState(
   const messages: Record<string, string> = {
     onboarding: 'Bygger din profil...',
     match: 'Finn din match...',
-    chat: 'Lastar samtalen...',
-    journey: 'Startar reisa...',
-    profile: 'Opener profilen...',
+    chat: 'Laster samtalen...',
+    journey: 'Starter reisen...',
+    profile: 'Åpner profilen...',
     default: 'Vent litt...',
   }
 

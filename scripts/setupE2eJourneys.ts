@@ -68,8 +68,8 @@ async function main() {
         data: {
           progressId: journey.id,
           day: 1,
-          title: 'Dag 1 — Velkommen til reisa',
-          summary: 'Reisa di har begynt. Dette er starten på 30 dager sammen med din match.',
+          title: 'Dag 1 — Velkommen til reisen',
+          summary: 'Reisen din har begynt. Dette er starten på 30 dager sammen med din match.',
         },
       })
     } else {
@@ -77,7 +77,7 @@ async function main() {
     }
   }
 
-  // Oppdater matches til "locked" (reisa er i gang)
+  // Oppdater matches til "locked" (reisen er i gang)
   await prisma.match.update({
     where: { id: match.id },
     data: {

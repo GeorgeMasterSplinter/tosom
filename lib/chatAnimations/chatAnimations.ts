@@ -181,7 +181,7 @@ export function determineChatMood(conversationContext: {
     return 'warm'
   }
 
-  // Mild: tidlig i reisa
+  // Mild: tidlig i reisen
   if (journeyPhase === 'EARLY' || conversationContext.messageCount < 10) {
     return 'gentle'
   }

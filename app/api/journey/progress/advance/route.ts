@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
     // 3. Sjekk om reise er fullført
     if (journey.endedAt) {
       return NextResponse.json(
-        { error: "Reisa di er allerede fullført.", alreadyEnded: true },
+        { error: "Reisen din er allerede fullført.", alreadyEnded: true },
         { status: 409 }
       );
     }
@@ -161,7 +161,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("POST /api/journey/progress/advance error:", error);
     return NextResponse.json(
-      { error: "Internt feil ved framrykking i reisa.", internal: true },
+      { error: "Internt feil ved framrykking i reisen.", internal: true },
       { status: 500 }
     );
   }

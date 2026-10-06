@@ -23,7 +23,7 @@ export async function eventJourneyMilestone(userId: string, day: number): Promis
   await dispatchEvent(
     NotificationType.JOURNEY,
     userId,
-    `Du har nådd dag ${day} i reisa di!`,
+    `Du har nådd dag ${day} av reisen!`,
     { day },
   )
 }

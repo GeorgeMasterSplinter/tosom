@@ -26,7 +26,7 @@ const KEY = 'conv-1/abc-123.jpg';
 const BUF = Buffer.from('fake-image-bytes');
 
 describe('assertSafeImageKey', () => {
-  it('godtek gyldig format {conversationId}/{uuid}.{ext}', () => {
+  it('godtar gyldig format {conversationId}/{uuid}.{ext}', () => {
     expect(assertSafeImageKey(KEY)).toBe(KEY);
   });
 

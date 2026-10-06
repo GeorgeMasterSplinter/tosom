@@ -16,6 +16,9 @@
  *   som den gamle listen ikke fanget. Listen ble utvidet med ~50 ord,
  *   scan-området utvidet til scripts/, e2e/, docs/ og rotnivåets .md-filer,
  *   og bugen der «gikk» (korrekt bokmål!) ble flagget ble fjernet.
+ * - 2026-10-06: PL-22/V-13: +10 ord (m.a. «reisa», «handlar», «sterkare»).
+ *   docs/archive ble utelatt fra skanningen — historikk som aldri er
+ *   normativ (docs/README.md, dokumentasjonsregler).
  *
  * Kjør: npm run verify:lang
  * exit 0 = ingen treff · exit 1 = treff funnet
@@ -74,6 +77,10 @@ const NYNORSK_WORDS = [
   // NB: «fortelle» er gyldig bokmål (infinitiv) — IKKE på listen.
   "fortel", "kjensler", "kjensle", "kjenslar",
   "stjela", "stundane", "tinga",
+  // Runde 5 (2026-10-06, PL-22/V-13): ord fra lanseringsvurderingen.
+  // «handler» (bokmål, presens av «å handle») er IKKE med — kun «handlar».
+  "reisa", "godtek", "rettleien", "respektar", "andrar",
+  "handlar", "psykologar", "prediktorar", "sterkare", "verktrueleg",
 ];
 // NB: «gikk» (fra 08-28-listen) er fjernet — det er korrekt bokmål.
 const EXTRA_PATTERNS = ["ver vennleg", "ver glad"];
@@ -89,6 +96,9 @@ const SCAN_DIRS = ["app", "lib", "components", "hooks", "providers", "scripts", 
 const ROOT_FILES = ["GEORGE.md", "README.md"];
 const EXTENSIONS = [".ts", ".tsx", ".js", ".jsx", ".mjs", ".md"];
 const SKIP_DIRS = new Set(["node_modules", ".next", "dist", "build"]);
+// docs/archive er historikk (snapshots, erstatte dokumenter) — aldri normativ,
+// og sitterer bevisst eldre nynorsk-tekster. Skannes derfor ikke.
+const DOCS_SKIP_DIRS = new Set(["archive"]);
 // Vakten selv inneholder nynorsk-ord i ordlisten — den skal ikke skannes.
 const SKIP_FILES = new Set(["scripts/verify-language.mjs"]);
 // Referanseblokker (f.eks. forbudte-ord-tabellen i ai/system_prompt.md)
@@ -112,6 +122,7 @@ function walkDir(dir, results = []) {
     try { st = statSync(full); } catch { continue; }
     const rel = relative(ROOT, full).split("\\").join("/");
     if (st.isDirectory()) {
+      if (dir === join(ROOT, "docs") && DOCS_SKIP_DIRS.has(entry)) continue;
       walkDir(full, results);
     } else if (EXTENSIONS.some((e) => entry.endsWith(e)) && !SKIP_FILES.has(rel)) {
       results.push(full);

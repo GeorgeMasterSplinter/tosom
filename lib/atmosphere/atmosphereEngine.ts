@@ -1,7 +1,7 @@
 /**
  * ToSom — Atmosphere Layer
  * 
- * Miljø-lag som forsterkar kjensla av reisa.
+ * Miljø-lag som forsterker følelsen av reisen.
  * 
  * Funksjonar:
  *   - Ambient bakgrunnsanimasjonar

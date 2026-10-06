@@ -149,7 +149,7 @@ export async function GET(req: NextRequest) {
           });
 
           if (!activeMatch) {
-            // Ingen aktiv match — reisa kan avsluttes
+            // Ingen aktiv match — reisen kan avsluttes
             await prisma.journeyProgress.update({
               where: { id: journey.id },
               data: { endedAt: new Date() },

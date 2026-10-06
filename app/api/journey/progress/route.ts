@@ -5,7 +5,7 @@
  * V2-prinsipp: Oppgaver er valfrie. Ingen måling av resonans under reisen.
  * Se docs/tosom-concept-v2-skisse.md for detaljer.
  * 
- * Hent progresjon for reisa — alle dager, milestones.
+ * Hent progresjon for reisen — alle dager, milestones.
  * Core-definition: Viser reise uten gamification.
  */
 
@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // 3. Finn milestones for reisa
+    // 3. Finn milestones for reisen
     const milestones = await prisma.journeyMilestone.findMany({
       where: { progressId: journey.id },
       orderBy: { day: "asc" },

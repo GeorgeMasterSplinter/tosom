@@ -78,7 +78,7 @@ export function ProfileLockBanner({
             }}
           >
             Profilen din er låst mens du er i reise med {partnerName}. 
-            Dag {currentDay} av {totalDays}. Du kan oppdatere profilen din igjen etter at reisa er fullført.
+            Dag {currentDay} av {totalDays}. Du kan oppdatere profilen din igjen etter at reisen er fullført.
           </p>
 
           {/* Låst-indikator */}
@@ -145,7 +145,7 @@ export function JourneyLockOverlay() {
           className="mb-3 text-2xl font-bold"
           style={{ color: '#D4AF37' }}
         >
-          Reisa di pågår 🔒
+          Reisen din pågår 🔒
         </h2>
 
         <p
@@ -164,7 +164,7 @@ export function JourneyLockOverlay() {
           className="mt-6 text-sm italic"
           style={{ color: 'rgba(255, 255, 255, 0.3)' }}
         >
-          Når reisa er fullført kan du oppdatere profilen din og starte ei ny reise.
+          Når reisen er fullført kan du oppdatere profilen din og starte en ny reise.
         </p>
       </div>
     </div>

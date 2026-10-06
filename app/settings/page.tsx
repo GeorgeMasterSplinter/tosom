@@ -402,6 +402,25 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
   const [sending, setSending] = useState(false);
   const [success, setSuccess] = useState(false);
   const [reportError, setReportError] = useState<string | null>(null);
+  // PL-15 (V-5): kandidater for rapportering av tidligere matcher
+  // uten aktiv match.
+  const [candidates, setCandidates] = useState<{ id: string; firstName: string }[]>([]);
+  const [candidateId, setCandidateId] = useState("");
+  const [loadingCandidates, setLoadingCandidates] = useState(false);
+
+  const openReport = async () => {
+    setShowReport(true);
+    if (hasActiveMatch) return;
+    setLoadingCandidates(true);
+    try {
+      const res = await fetch("/api/report/candidates");
+      const data = res.ok ? await res.json() : {};
+      setCandidates(Array.isArray(data.candidates) ? data.candidates : []);
+    } catch {
+      setCandidates([]);
+    }
+    setLoadingCandidates(false);
+  };
 
   const hasActiveMatch = matchStatus.hasActiveMatch;
 
@@ -417,31 +436,45 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
   };
 
   const handleSubmit = async () => {
-    if (!category || !matchStatus.matchId) return;
+    if (!category) return;
+    if (!hasActiveMatch && !candidateId) {
+      setReportError("Velg en du vil rapportere.");
+      return;
+    }
     setSending(true);
     setReportError(null);
     try {
-      // Hent partnerId via conversation
-      const convRes = await fetch(`/api/chat/conversations`);
-      const convData = convRes.ok ? await convRes.json() : {};
-      // API-et returnerer { success, data: [...] } — «data», ikke «conversations»
-      const conversations: any[] = convData.data || [];
-      const currentConvo =
-        conversations.find((c) => c.id === matchStatus.conversationId) ||
-        conversations[0];
-      const partnerId = currentConvo?.partnerId || currentConvo?.partner?.id;
+      let reportedId: string;
+      let matchIdToPost: string | undefined;
 
-      if (!partnerId) {
-        console.error("Kunne ikke finne partnerId");
-        setReportError("Fant ingen aktiv samtale å rapportere. Gå til chatten først, og prøv igjen.");
-        setSending(false);
-        return;
+      if (hasActiveMatch && matchStatus.matchId) {
+        // Hent partnerId via conversation
+        const convRes = await fetch(`/api/chat/conversations`);
+        const convData = convRes.ok ? await convRes.json() : {};
+        // API-et returnerer { success, data: [...] } — «data», ikke «conversations»
+        const conversations: any[] = convData.data || [];
+        const currentConvo =
+          conversations.find((c) => c.id === matchStatus.conversationId) ||
+          conversations[0];
+        const partnerId = currentConvo?.partnerId || currentConvo?.partner?.id;
+
+        if (!partnerId) {
+          console.error("Kunne ikke finne partnerId");
+          setReportError("Fant ingen aktiv samtale å rapportere. Gå til chatten først, og prøv igjen.");
+          setSending(false);
+          return;
+        }
+        reportedId = partnerId;
+        matchIdToPost = matchStatus.matchId;
+      } else {
+        // PL-15 (V-5): rapport på en tidligere match (uten aktiv samtale)
+        reportedId = candidateId;
       }
 
       const res = await csrfFetch("/api/report", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reportedId: partnerId, matchId: matchStatus.matchId, category: severityToApi(category), description }),
+        body: JSON.stringify({ reportedId, ...(matchIdToPost ? { matchId: matchIdToPost } : {}), category: severityToApi(category), description }),
       });
 
       if (res.ok) {
@@ -527,7 +560,7 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
 
       <div className="flex gap-3 flex-wrap">
         <button
-          onClick={() => setShowReport(true)}
+          onClick={openReport}
           className="transition-all duration-300 hover:brightness-110 active:scale-[0.98] focus:outline-none"
           style={{
             background: "rgba(16,185,129,0.12)",
@@ -604,7 +637,7 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
               ✕
             </button>
             <h3 className="text-xl font-bold mb-4" style={{ color: THEME.nordicGold }}>
-              Rapporter din match
+              {hasActiveMatch ? "Rapporter din match" : "Rapporter en tidligere match"}
             </h3>
 
             {success ? (
@@ -614,6 +647,32 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
               </div>
             ) : (
               <>
+                {/* PL-15 (V-5): uten aktiv match velger brukeren hvem som rapporteres */}
+                {!hasActiveMatch && (
+                  <div className="mb-4">
+                    <p style={{ color: THEME.softWhite, fontSize: "14px", fontWeight: 600, marginBottom: "8px" }}>
+                      Hvilken tidligere match vil du rapportere?
+                    </p>
+                    <select
+                      value={candidateId}
+                      onChange={(e) => setCandidateId(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl text-sm mb-1 border focus:outline-none"
+                      style={{ borderColor: "rgba(255,255,255,0.1)", color: THEME.softWhite, background: "rgba(11,21,32,0.9)" }}
+                    >
+                      <option value="">{loadingCandidates ? "Henter..." : "Velg en person"}</option>
+                      {candidates.map((c) => (
+                        <option key={c.id} value={c.id} style={{ background: "#0B1520" }}>
+                          {c.firstName}
+                        </option>
+                      ))}
+                    </select>
+                    {!loadingCandidates && candidates.length === 0 && (
+                      <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "13px", lineHeight: 1.5 }}>
+                        Ingen tidligere matcher funnet. Du kan bare rapportere personer du har vært matchet med.
+                      </p>
+                    )}
+                  </div>
+                )}
                 <div className="space-y-2 mb-4">
                   {severities.map((s) => (
                     <button
@@ -641,7 +700,7 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
                 {reportError && (
                   <p style={{ color: "#FF4D4D", fontSize: "13px", marginBottom: "12px", lineHeight: "1.5" }}>{reportError}</p>
                 )}
-                <GoldButton fullWidth disabled={!category || sending} onClick={handleSubmit}>
+                <GoldButton fullWidth disabled={!category || sending || (!hasActiveMatch && !candidateId)} onClick={handleSubmit}>
                   {sending ? "Sender..." : "Send rapport"}
                 </GoldButton>
               </>

@@ -689,6 +689,11 @@ model Report {
   createdAt   DateTime       @default(now())
   reviewedAt  DateTime?
   reviewedBy  String?
+  // PL-15 (V-5, D-8): øyeblikksbilde av de siste meldingene — kun moderering.
+  // Kun tilgjengelig for den som behandler rapporten. Nullstilles automatisk
+  // 90 dager etter at saken er lukket (cron/journey).
+  evidence          Json?
+  evidenceExpiresAt DateTime?
 
   @@index([status, createdAt])
   @@index([reportedId])

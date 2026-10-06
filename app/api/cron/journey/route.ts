@@ -542,6 +542,20 @@ export async function GET(req: NextRequest) {
       console.error('[cron/journey] Retention feilet:', retErr);
     }
 
+    // PL-15 (V-5, D-8): moderasjonsbevis — nullstilles når 90-dagers-fristen
+    // har løpt ut (fristen starter når admin lukker saken).
+    try {
+      const expiredEvidence = await prisma.report.updateMany({
+        where: { evidenceExpiresAt: { lt: new Date() } },
+        data: { evidence: Prisma.DbNull },
+      });
+      if (expiredEvidence.count > 0) {
+        console.log(`[cron/journey] Moderasjonsbevis utløpt: ${expiredEvidence.count} rapporter`);
+      }
+    } catch (evErr) {
+      console.error('[cron/journey] Bevis-opprydding feilet:', evErr);
+    }
+
     // OBSERVABILITY O-11: Terskelvarsling.
     // Ett varsel per tilstand per døgn (SystemLog-markør som rate-limiter).
     try {

@@ -1,7 +1,7 @@
 /**
  * POST /api/report — Brukerstyrt rapportering (STEG C1)
  *
- * Krever autentisering. Rate-limitet via enkel in-memory teller.
+ * Krever autentisering. Rate-limitet via pgCheck (3 per minutt, DB-basert).
  * Validerer at `reportedId` faktisk er brukerens nåværende eller tidligere match.
  *
  * Viktigt: Report slettes IKKE av endJourney() — rapporten må overleve
@@ -18,23 +18,13 @@ import { requireAuth } from '@/lib/auth/requireAuth';
 import { csrfCheck } from '@/lib/auth/csrf';
 import { sendAlert } from '@/lib/observability/alert';
 import { tryParseJsonBody } from '@/lib/api/validation';
+import { pgCheck } from '@/lib/rate-limit-pg';
 
 export const dynamic = 'force-dynamic';
 
-// Enkel rate-limiter (in-memory, bør erstattes med Upstash i prod)
-const reportRateLimit = new Map<string, number[]>();
-const RATE_LIMIT_WINDOW_MS = 60_000; // 1 minutt
-const RATE_LIMIT_MAX = 3; // maks 3 rapporter per minutt
-
-function checkRateLimit(userId: string): boolean {
-  const now = Date.now();
-  const timestamps = reportRateLimit.get(userId) || [];
-  const recent = timestamps.filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
-  if (recent.length >= RATE_LIMIT_MAX) return false;
-  recent.push(now);
-  reportRateLimit.set(userId, recent);
-  return true;
-}
+// PL-15 (V-5): rategrensen flyttet til pgCheck (DB-basert, overlever
+// instance-recycling på Vercel — den in-memory Map-en gikk tapt mellom
+// kald starts). Maks 3 rapporter per bruker per minutt.
 
 type ReportCategory = 'HARASSMENT' | 'INAPPROPRIATE' | 'SPAM' | 'FAKE_PROFILE' | 'OTHER';
 
@@ -62,8 +52,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
     const user = result.user;
 
-    // 2. Rate limiting
-    if (!checkRateLimit(user.id)) {
+    // 2. Rate limiting (PL-15: pgCheck i stedet for in-memory teller)
+    const rl = await pgCheck(`report:${user.id}`, 3, 60);
+    if (!rl.ok) {
       return NextResponse.json(
         { error: 'For mange rapporter. Vent et øyeblikk.' },
         { status: 429 }
@@ -132,25 +123,54 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // 6. Opprett rapporten
+    // 6. PL-15 (V-5): bevis — øyeblikksbilde av de siste meldingene i en
+    // aktiv samtale. Kun tekst (ikke bilder): moderatoren skal se hva som
+    // skjedde, ikke motta bildefiler. Evidens blir null når samtalen ikke
+    // lenger finnes (f.eks. rapport etter avsluttet reise).
+    let evidence: Array<{
+      senderId: string;
+      content: string;
+      createdAt: Date;
+      type: string;
+    }> | undefined;
+    const matchRef = matchId || activeMatch?.id;
+    if (matchRef) {
+      const convo = await prisma.conversation.findFirst({
+        where: { matchId: matchRef },
+      });
+      if (convo) {
+        const messages = await prisma.message.findMany({
+          where: { conversationId: convo.id, type: { not: 'image' } },
+          orderBy: { createdAt: 'desc' },
+          take: 50,
+          select: { senderId: true, content: true, createdAt: true, type: true },
+        });
+        if (messages.length > 0) evidence = messages;
+      }
+    }
+
+    // 7. Opprett rapporten
     const report = await prisma.report.create({
       data: {
         reporterId: user.id,
         reportedId,
-        matchId: matchId || activeMatch?.id || undefined,
+        matchId: matchRef || undefined,
         category: category as ReportCategory,
         description: description || null,
+        // Prisma Json-felt: null legges ikke inn — feltet blir da null i DB
+        // (default) når ingen meldinger finnes.
+        ...(evidence ? { evidence } : {}),
       },
     });
 
-    // 7. Logg
+    // 8. Logg
     console.log(`[report] Bruker ${user.id} rapporterte ${reportedId}`, {
       reportId: report.id,
       category,
       matchId: report.matchId,
     });
 
-    // 8. Varsling — kategori + identifikatorer, IKKE fritekstbeskrivelsen
+    // 9. Varsling — kategori + identifikatorer, IKKE fritekstbeskrivelsen
     try {
       await sendAlert(
         'warning',
@@ -243,12 +263,18 @@ export async function PATCH(req: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: 'Ugyldig status' }, { status: 400 });
     }
 
+    // PL-15 (V-5, D-8): når saken lukkes starter 90-dagers-fristen for
+    // beviset. Cronen i cron/journey nullstiller evidence når fristen løper ut.
+    const isClosing = status === 'REVIEWED' || status === 'ACTIONED' || status === 'DISMISSED';
     await prisma.report.update({
       where: { id: reportId },
       data: {
         status: status as any,
         reviewedAt: new Date(),
         reviewedBy: result.user.id,
+        ...(isClosing
+          ? { evidenceExpiresAt: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000) }
+          : {}),
       },
     });
 

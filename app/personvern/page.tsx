@@ -280,6 +280,14 @@ const sections: Section[] = [
   },
   {
     id: '17',
+    title: 'Bevis ved rapport og blokkering',
+    paragraphs: [
+      'Når du rapporterer en bruker eller blokkerer en match, lagrer vi et øyeblikksbilde av de siste meldingene i samtalen som bevis for saksbehandling.',
+      'Beviset lagres i inntil 90 dager etter at saken er avsluttet, og slettes deretter automatisk. Kun den som behandler rapporten kan se det, og det vises aldri for den rapporterte.',
+    ],
+  },
+  {
+    id: '18',
     title: 'Endringer i erklæringen',
     paragraphs: [
       'Vi oppdaterer denne erklæringen når tjenesten endres eller regelverket krever det.',

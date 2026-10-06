@@ -105,6 +105,39 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         },
         update: { matchId: activeMatch.id, reason: 'blocked' },
       });
+
+      // PL-15 (V-5): rapport med bevis FØR endJourney sletter meldingene.
+      // En blokkering fortjener alltid moderasjonsblikk, selv om brukeren
+      // ikke sender en separat rapport.
+      const blockedConvo = await prisma.conversation.findFirst({
+        where: { matchId: activeMatch.id },
+      });
+      let blockedEvidence: Array<{
+        senderId: string;
+        content: string;
+        createdAt: Date;
+        type: string;
+      }> | undefined;
+      if (blockedConvo) {
+        const blockedMessages = await prisma.message.findMany({
+          where: { conversationId: blockedConvo.id, type: { not: 'image' } },
+          orderBy: { createdAt: 'desc' },
+          take: 50,
+          select: { senderId: true, content: true, createdAt: true, type: true },
+        });
+        if (blockedMessages.length > 0) blockedEvidence = blockedMessages;
+      }
+      await prisma.report.create({
+        data: {
+          reporterId: user.id,
+          reportedId: partnerId,
+          matchId: activeMatch.id,
+          category: 'OTHER',
+          description: 'Blokkert av brukeren',
+          // Prisma Json-felt: utelatt når tomt (blir null i DB).
+          ...(blockedEvidence ? { evidence: blockedEvidence } : {}),
+        },
+      });
     }
 
     // 4. Kall endJourney() — verifisert sletting

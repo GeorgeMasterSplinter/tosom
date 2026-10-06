@@ -161,9 +161,8 @@ npm audit --omit=dev   → 0 kritiske · 6 høye · 1 moderat
 | Oppgave | Hva | Hvorfor låst |
 |---|---|---|
 | PL-06 | Reisedagen beregnes fra start i stedet for å telles | Endrer reisens tempo (DI-2) — **gjør G-03 først** |
-| PL-15 | Bevis bevares ved rapport/blokkering | Ny databasekolonne + personvern (90 dager) |
 | PL-24 | Oppdatere `nodemailer` og vurdere `uploadthing` | Store versjonshopp |
-- [ ] «kjør» PL-06 · [ ] «kjør» PL-15 · [ ] «kjør» PL-24
+- [ ] «kjør» PL-06 · [x] «kjør» PL-15 (gitt 06.10 — FERDIG) · [ ] «kjør» PL-24
 
 #### 👤 G-06 · Svar på tre små spørsmål  🟨
 | # | Spørsmål | Agentens forslag |
@@ -392,7 +391,7 @@ PL-nummer. Her står bare **hva som gjenstår** og **hva som venter på hva**.
 |---|---|---|
 | **1 — nå** | G-01 push · G-02 glemt passord · G-03 reisedager · G-04 roter `DATABASE_URL` | PL-16 fonter · PL-19 vilkår · PL-20 døde sider · PL-21 blogg/dag 30 |
 | **2** | G-05 «kjør» PL-06/15/24 · G-06 tre svar · G-10 Vercel-plan | PL-06 reisedag (etter G-03) · PL-22 språkvakt · PL-23a sitemap |
-| **3** | G-07 advokat · G-08 DMARC/SPF · G-09 support@ · G-11 testbrukere · G-12 brytere | PL-15 bevis · PL-18 universell utforming · PL-24 avhengigheter · PL-14 tidsplan |
+| **3** | G-07 advokat · G-08 DMARC/SPF · G-09 support@ · G-11 testbrukere · G-12 brytere | PL-18 universell utforming · PL-24 avhengigheter · PL-14 tidsplan |
 | **4** | G-13 backup · G-14 Sentry · G-15 slettinger · G-21 delingsbilde · G-22 rapportrutine | PL-17 sessionStorage · PL-26 opprydding · slette-skript til G-15 |
 | **5 — sluttest** | G-16 ende-til-ende · G-17 telefoner · G-18 konsoll/Lighthouse · G-20 språk · G-23 CI · G-24 404-sider | PL-99 sluttkontroll (instruksen §9) |
 | **6 — etter første lørdag** | G-19 score- og nivåfordeling | Analyse — **ingen justering** (DI-2) |
@@ -475,9 +474,9 @@ Speiler `LanseringsCheckList.md` §6. **Kryss av begge steder.**
 - [ ] 👤 G-07 · DPA og DPIA gjennomgått og signert 🟥
 
 ### 6.2 Trygghet
-- [ ] 🤖 C PL-15 🔒 · Bevis bevares ved rapport/blokkering 🟥
-- [ ] 🤖 C PL-15 🔒 · Rapport mulig etter avsluttet match 🟥
-- [ ] 🤖 C PL-15 🔒 · Rapport-grense via `pgCheck` 🟨
+- [x] 🤖 C PL-15 · Bevis bevares ved rapport/blokkering 🟥 *(PL-15: `Report.evidence` + `evidenceExpiresAt` (migrasjon 20261006120000, deployt til dev/test), evidence = siste 50 tekstmeldinger ved rapport og ved blokkering (før sletting), 90 dager etter lukking (PATCH + cron), personvern §17)*
+- [x] 🤖 C PL-15 · Rapport mulig etter avsluttet match 🟥 *(PL-15f+g: `GET /api/report/candidates` + «Rapporter» i innstillinger fungerer uten aktiv match — tidligere matcher fra MatchHistory)*
+- [x] 🤖 C PL-15 · Rapport-grense via `pgCheck` 🟨 *(PL-15b: `pgCheck('report:<id>', 3, 60)` i stedet for in-memory Map; 4. rapport → 429. Test: `__tests__/report-evidence.test.ts` (4 nye))*
 - [ ] 👤 G-22 · Skriftlig rutine for rapporter 🟥
 
 ### 6.3 Matchingmotoren

@@ -767,9 +767,9 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 |---|---|---|---|
 | [x] | Partnerens profilbilde skjult før dag 15 i alle API-svar | K-8 | **Før lansering** |
 | [x] | `PUT /api/profile` har CSRF og URL-validering (eller `photos` fjernet) | K-8 | **Før lansering** |
-| [ ] | Bevis bevares ved rapport/blokkering | V-5 | **Før lansering** |
-| [ ] | Rapport mulig også etter avsluttet match | V-5 | **Før lansering** |
-| [ ] | Rapport-rate-limit flyttet til `pgCheck` | V-5 | Kan utsettes |
+| [x] | Bevis bevares ved rapport/blokkering | V-5 | **Før lansering** |
+| [x] | Rapport mulig også etter avsluttet match | V-5 | **Før lansering** |
+| [x] | Rapport-rate-limit flyttet til `pgCheck` | V-5 | Kan utsettes |
 | [ ] | Rutine for behandling av rapporter (hvem, hvor raskt, hva skjer) er skriftlig | V-5 | **Før lansering** |
 
 ### 6.3 Matchingmotoren
@@ -892,7 +892,7 @@ npm run build                       # før deploy
 | K-8 | `__tests__/photo-lock-before-day15.test.ts` | Partnerens `photoUrl` er `null` i `chat/conversations`, `chat/messages` og `match/status` før `imageShareAllowedAt` |
 | V-1 | Utvid `dealbreaker.test.ts` | Aktive dealbreakere treffer med data fra faktisk `profile/setup`-format (ikke bare fixtures) |
 | V-3 | Utvid `profile-setup-geo-b12.test.ts` *(skrevet · PL-12)* | Ukjent postnummer («9999») → 400 og ingen lagring; forslag om nærliggende koder via `suggestNearbyPostalCodes` |
-| V-5 | `__tests__/report-evidence.test.ts` | Rapport + blokkering → bevis-snapshot finnes for admin; meldinger slettet for brukerne |
+| V-5 | `__tests__/report-evidence.test.ts` *(skrevet · PL-15)* | Rapport + blokkering → bevis-snapshot finnes for admin; meldinger slettet for brukerne |
 | V-11 | `__tests__/api-route-coverage.test.ts` *(skrevet · PL-25)* | Alle `app/api/**/route.ts` er beskyttet av middleware eller oppført som offentlig |
 
 ### 7.3 Manuell regresjon før lansering (to nettlesere, to testkontoer)

@@ -13,7 +13,18 @@ jest.mock('@/lib/prisma', () => ({
     match: { findFirst: jest.fn() },
     matchHistory: { findFirst: jest.fn() },
     report: { create: jest.fn() },
+    // PL-15: ruten henter nå også bevis fra samtalen. Null/empty i denne
+    // suitten — report-evidence.test.ts dekker bevisførselen.
+    conversation: { findFirst: jest.fn().mockResolvedValue(null) },
+    message: { findMany: jest.fn().mockResolvedValue([]) },
   },
+}));
+
+// PL-15: rategrensen flyttet til pgCheck. Denne suitten dekker varsling,
+// ikke rategrensing — pgCheck svarer alltid ok (429-oppgaven er i
+// report-evidence.test.ts).
+jest.mock('@/lib/rate-limit-pg', () => ({
+  pgCheck: jest.fn().mockResolvedValue({ ok: true }),
 }));
 
 jest.mock('@/lib/auth/requireAuth', () => ({

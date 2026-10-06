@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "updatedAt": "2026-10-06",
-  "commit": "f9b4b9c",
+  "commit": "56d5586",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
     "tests": "521 passed / 1 skipped (59 av 60 suiter) — målt 06.10 etter PL-27/PL-28: +17 nye tester (religion ×3 + bonusfamilie ×6 i dimensions-compat, bonusfamilie-dealbreaker ×3, onboarding-religion-barn-pl27 ×6, bonusfamilie i ekvivalensmatrisen); to religionstester erstattet bevisst (Georges beslutning: ulik tro gir ingen trekk); ekvivalens holder",

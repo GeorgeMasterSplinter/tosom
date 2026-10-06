@@ -175,7 +175,7 @@ export async function GET(req: NextRequest) {
               data: {
                 userId: journey.userId,
                 type: 'JOURNEY',
-                message: 'Reisa di er fullført. Takk for at du gav 30 dager.',
+                message: 'Reisen deres er fullført. Takk for at dere ga hverandre 30 dager.',
               },
             });
             continue;
@@ -220,7 +220,7 @@ export async function GET(req: NextRequest) {
               progressId: journey.id,
               day: newDay,
               title: `Dag ${newDay}`,
-              summary: `Ny dag i reisa di: Dag ${newDay} av 30.`,
+              summary: `Ny dag i reisen: Dag ${newDay} av 30.`,
             },
           }).catch((err) => {
             // Ignorer duplikat-feil (kan hende ved race condition, STEG 5.4 fanger dette)

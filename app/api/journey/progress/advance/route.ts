@@ -130,7 +130,7 @@ export async function POST(req: NextRequest) {
           progressId: journey.id,
           day: newDay,
           title: `Dag ${newDay} — ${getPhaseForDay(newDay)}`,
-          summary: `Ny dag i reisa di: Dag ${newDay} av 30.`,
+          summary: `Ny dag i reisen: Dag ${newDay} av 30.`,
         },
       });
     }

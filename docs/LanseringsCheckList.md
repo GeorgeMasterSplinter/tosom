@@ -805,7 +805,7 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 | [ ] | Verifisert i prod-DB at `day` følger kalenderen og er lik for begge partnere | K-4 | **Før lansering** |
 | [ ] | Dagframrykk deterministisk (midnatt eller beregnet fra start), begge partnere samtidig | K-4 | **Før lansering** |
 | [ ] | Bildesperren løftes dag 15 for begge, testet med ekte par | K-4, K-8 | **Før lansering** |
-| [ ] | Brukervarselet ved dag 30 skrevet på bokmål | V-13 | **Før lansering** |
+| [x] | Brukervarselet ved dag 30 skrevet på bokmål *(✓ 2026-10-06 · PL-21)* | V-13 | **Før lansering** |
 
 ### 6.5 Innlogging og konto
 
@@ -826,7 +826,7 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 | [x] | FAQ stemmer med produktet (anonymitet, e-post, IP, sletting) | K-7 | **Før lansering** (PL-09: fornavn+alder synlig, bilder dag 15, matchen venter ved innlogging, ingen match-e-post, IP/tredjeparter ærlig, sletting beholdt per PL-01) |
 | [x] | `/metoder` og llms.txt beskriver tilknytningsspørsmålene ærlig | K-7 | **Før lansering** (PL-09: «Tilknytning (egne spørsmål)», ingen «ECR», kilde-liste beholdt) |
 | [x] | Innloggingssiden skrevet for lansering (uten spøk, uten «under oppbygging») *(✓ 2026-10-06 · PL-05d — verifisert: ingen treff på spøken, «Under oppbygging», «Alderkontroll» eller «Første gang»)* | V-15 | **Før lansering** |
-| [ ] | Bloggen rettet eller avpublisert | V-10, V-13 | **Før lansering** |
+| [x] | Bloggen rettet eller avpublisert *(✓ 2026-10-06 · PL-21)* | V-10, V-13 | **Før lansering** |
 | [ ] | Manuell språkgjennomgang av alle brukervendte sider | V-13 | **Før lansering** |
 | [x] | Vilkår: angrerettloven og direkte lovlenker *(✓ 2026-10-06 · PL-19)* | V-9 | **Før lansering** |
 | [ ] | Adressekravet avklart med advokat — privat adresse publiseres ikke | V-9 | **Før lansering** |

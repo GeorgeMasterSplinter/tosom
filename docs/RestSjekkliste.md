@@ -64,8 +64,8 @@ npm audit --omit=dev   → 0 kritiske · 5 høye · 1 moderat (målt etter PL-24
 | | Antall |
 |---|---|
 | Punkter totalt | **70** (68 + 2 nye: religion og bonusfamilie) |
-| ✅ Avkrysset | **25** |
-| ⬜ Gjenstår | **45** — hvorav **4** er kodeferdige og bare venter på George |
+| ✅ Avkrysset | **27** |
+| ⬜ Gjenstår | **43** — hvorav **4** er kodeferdige og bare venter på George |
 
 ### 1.3 Ferdig siden 05.10 (gjennom 06.10)
 
@@ -88,6 +88,7 @@ npm audit --omit=dev   → 0 kritiske · 5 høye · 1 moderat (målt etter PL-24
 | **PL-17** | V-12 | Onboarding-utkast ut av `localStorage` (sessionStorage, per fane) |
 | **PL-20** | V-10 | Døde sider: `/design-system` + `/register/vipps` 404 i prod, `onboarding/payment` + `onboarding/access` slettet, `phone/send` + `phone/verify` 404 i prod *(kode ferdig — venter på G-24 curl etter deploy)* |
 | **PL-19** | V-9 | Vilkår → angrerettloven § 22 bokstav n + direkte lovdata-lenker; personopplysningsloven; versjonsbump 2026-10-06 |
+| **PL-21** | V-10, V-13 | Bloggen avpublisert (404 i prod, innhold beholdes) + dag 30-varsel og milestone-tekst til bokmål |
 | **PL-24** | K-5 | `nodemailer` 7 → 10 + skriftlig vurdering av gjenstående sårbarheter |
 | **PL-25** | V-11 | API-prefikser i middleware + `api-route-coverage`-test |
 | **PL-27** | ny | **Religion: opptil fire valg, ulik tro gir ingen trekk** (se §6) |
@@ -490,13 +491,13 @@ Speiler `LanseringsCheckList.md` §6. **Kryss av begge steder.**
 - [ ] 👤 G-03 · Reisedager verifisert i prod-DB 🟥
 - [ ] 🤖 C PL-06 🔒 · Dagframrykk deterministisk, begge partnere samtidig 🟥
 - [ ] 👤 G-16 · Bildesperren løftes dag 15, testet med ekte par 🟥
-- [ ] 🤖 Q PL-21 · Dag 30-varselet på bokmål 🟥
+- [x] 🤖 Q PL-21 · Dag 30-varselet på bokmål 🟥 *(PL-21c+d: avslutningsvarselet «Reisen deres er fullført. Takk for at dere ga hverandre 30 dager.» + milestone «Ny dag i reisen» i cron/journey og progress/advance)*
 
 ### 6.5 Innlogging og konto
 - [ ] 👤 G-02 · «Glemt passord» ende-til-ende i prod *(kode ferdig, PL-07)* 🟥
 
 ### 6.6 Innhold og språk
-- [ ] 🤖 Q PL-21 · Bloggen avpublisert (404) 🟥
+- [x] 🤖 Q PL-21 · Bloggen avpublisert (404) 🟥 *(PL-21a+b: app/blogg/layout.tsx (server-side notFound) dekker forsiden og [slug]; artikkelfilene beholdes for omskriving; live-verifisert med next start: /blogg 404, /blogg/[slug] 404, øvrige sider 200)*
 - [ ] 👤 G-20 · Manuell språkgjennomgang *(sideliste fra PL-22)* 🟥
 - [x] 🤖 Q PL-19 · Vilkår: angrerettloven og direkte lovlenker 🟥 *(PL-19a–d: §15 «Angrerett og refusjon» henviser til angrerettloven § 22 bokstav n; alle 5 norske lover i `LEGISLATION` med direkte lovdata-lenke (verifisert 200 OK); personvern-siden bruker «personopplysningsloven»; TERMS/PRIVACY_VERSION → 2026-10-06)*
 - [ ] 👤 G-07 · Adressekravet avklart — privat adresse publiseres ikke 🟥

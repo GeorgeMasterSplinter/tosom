@@ -1,7 +1,7 @@
 # TOSOM — RESTSJEKKLISTE FØR LANSERING
 
 **Dato:** 2026-10-06
-**Commit:** `46bb423` (PL-19 committet 06.10)
+**Commit:** `1a450ed` (PL-20 committet 06.10)
 **For:** Qwen3.8 27B Q8, Cline og George
 **Skrevet av:** Cline (senior fullstack-utvikler og systemagent i ToSom)
 **Bygger på:** [`LanseringsCheckList.md`](LanseringsCheckList.md) (fasit, §6) og [`ACT-InstruksPreLunch.md`](ACT-InstruksPreLunch.md) (oppgavene PL-xx)

@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "updatedAt": "2026-10-06",
-  "commit": "56d5586",
+  "commit": "de76510",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
     "tests": "524 passed / 1 skipped (60 av 61 suiter) — målt 06.10 etter PL-25: +3 nye (api-route-coverage: ruter funnet, hver rute beskyttet/eksplisitt offentlig, ingen utdaterte OFFENTLIGE_RUTER-poster); før det: 521 etter PL-27/PL-28",

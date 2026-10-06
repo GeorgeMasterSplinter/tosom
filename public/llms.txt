@@ -13,7 +13,7 @@ Ingen swipe. Ingen feed. Ingen overflate.
 
 1. **Onboarding** — Du bygger en dyp, veiledet profil basert på forskning:
    verdier, relasjonsstil, personlighet, emosjonell regulering.
-2. **Matching** — Når profilen er klar, mottar du én match innen 24 timer,
+2. **Matching** — Når profilen er klar, mottar du én gjennomtenkt match i uken,
    valgt basert på resonans — ikke tilfeldighet.
 3. **Reisen** — Paret går på en guidet 30-dagers reise med refleksjoner,
    oppgaver og samtalehjelp. Bilder låst til dag 15.
@@ -21,7 +21,7 @@ Ingen swipe. Ingen feed. Ingen overflate.
 ## Verdifundament
 
 - Privat — profilen din ses aldri av andre enn matchen
-- Forskningsbasert — PVQ-10, ECR, BFI-10, ERQ-6
+- Forskningsbasert — PVQ-10, BFI-10, ERQ-6, egne spørsmål inspirert av tilknytningsforskning
 - Ro og trygghet — ingen stress, ingen press, ingen gamification
 - Nordisk design — rolig, premium, med dybde
 

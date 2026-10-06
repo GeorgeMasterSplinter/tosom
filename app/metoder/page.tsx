@@ -156,7 +156,7 @@ const INSTRUMENTS: Array<{
     note: 'Vår egen oversettelse — ikke den offisielle norske versjonen.',
   },
   {
-    name: 'Tilknytning (ECR-12)',
+    name: 'Tilknytning (egne spørsmål)',
     source: 'Inspirert av Bowlby (1969), Ainsworth et al. (1978), Hazan & Shaver (1987), Fraley & Shaver (2000)',
     modern: 'Fraley (2018) — tilknytning hos voksne, meta-analyser.',
     note: 'Våre egne items som taper på akserne angst og unnvikelse.',

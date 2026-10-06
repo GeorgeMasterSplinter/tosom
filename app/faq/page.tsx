@@ -9,11 +9,11 @@ import { typographyToStyle } from '@/config/design-tokens';
 const FAQS = [
   {
     q: 'Hva er ToSom egentlig?',
-    a: 'ToSom er en 30-dagers samtale mellom to mennesker som ikke kjenner hverandre. Ingen bilder, ingen navn, ingen alder — bare ord. Dere blir koblet basert på de seks dimensjonene vi ser på. Det hele er anonymt, varmt og i eget tempo.',
+    a: 'ToSom er en 30-dagers samtale mellom to mennesker som ikke kjenner hverandre. Dere blir koblet basert på de seks dimensjonene vi ser på. Dere kan se hverandres fornavn og alder fra start, og fra dag 15 kan dere dele bilder om dere vil. Det hele er privat, varmt og i eget tempo.',
   },
   {
     q: 'Hvordan fungerer matching?',
-    a: 'Vi sammenligner dere på seks dimensjoner — verdier, tilknytning, personlighet, kommunikasjon, emosjonsregulering og livssituasjon. Systemet finner den personen som passer best. Matching kjører hver lørdag, og du får en e-post når det er klart.',
+    a: 'Vi sammenligner dere på seks dimensjoner — verdier, tilknytning, personlighet, kommunikasjon, emosjonsregulering og livssituasjon. Systemet finner den personen som passer best. Matching kjører hver lørdag, og matchen din venter på deg når du logger inn.',
   },
   {
     q: 'Hva skjer i de 30 dagene?',
@@ -33,7 +33,10 @@ const FAQS = [
   },
   {
     q: 'Hvor er dataene mine?',
-    a: 'Alt ligger i Europa (PostgreSQL, EU-region). Vi logger ikke IP-adresser. Vi bruker ingen tredjeparts tracking. Ved reiseslutt eller kontosletting slettes ALT — verifisert og irreversibelt. Det som gjenstår er to anonyme ID-er for statistikk. Alt annet er borte.',
+    a: (
+      <>Alt ligger i Europa (PostgreSQL, EU-region). Driftsleverandørene våre (Vercel, Cloudflare og Sentry) behandler teknisk informasjon som IP-adresse for å levere og sikre tjenesten — les mer i{' '}
+        <Link href="/personvern" style={{ color: '#D4AF37' }}>personvernerklæringen</Link>. Ved reiseslutt eller kontosletting slettes ALT — verifisert og irreversibelt. Det som gjenstår er to anonyme ID-er for statistikk. Alt annet er borte.</>
+    ),
   },
   {
     q: 'Kan jeg slette kontoen min når som helst?',
@@ -49,7 +52,7 @@ const FAQS = [
   },
 ];
 
-function FaqItem({ q, a }: { q: string; a: string }) {
+function FaqItem({ q, a }: { q: string; a: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   return (
     <div

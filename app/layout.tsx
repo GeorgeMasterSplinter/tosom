@@ -8,7 +8,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { COMPANY } from "@/config/legal";
 
 const BESKRIVELSE =
-  "Tosom er en rolig, privat plattform for ekte relasjoner. Én match innen 24 timer, én guidet 30-dagers reise, og et trygt sted å bli kjent. For voksne 21+.";
+  "Tosom er en rolig, privat plattform for ekte relasjoner. Én gjennomtenkt match i uken, én guidet 30-dagers reise, og et trygt sted å bli kjent. For voksne 21+.";
 
 const JSONLD_ORGANIZATION = {
   "@context": "https://schema.org",
@@ -40,7 +40,7 @@ export const metadata = {
   alternates: {
     canonical: "/",
   },
-  keywords: ["dating", "par", "relasjoner", "norsk", "premium"],
+  keywords: ["par", "relasjoner", "norsk", "premium"],
   authors: [{ name: "Tosom Team" }],
   creator: "Tosom",
   publisher: "Tosom",
@@ -69,9 +69,6 @@ export const metadata = {
     title: "Tosom — En rolig plass for ekte møter",
     description: BESKRIVELSE,
     images: ["/og-image.png"],
-  },
-  verification: {
-    google: "google-site-verification",
   },
 };
 

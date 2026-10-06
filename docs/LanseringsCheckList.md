@@ -748,7 +748,7 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 | [ ] *(klar for George · PL-02)* | Aktiv aksept av vilkår + uttrykkelig samtykke til særlige kategorier | K-2 | **Før lansering — og før flere testere** |
 | [ ] *(klar for George · PL-02)* | `termsAcceptedAt` / `termsVersion` lagres for alle nye brukere | K-2 | **Før lansering** |
 | [ ] *(klar for George · PL-02)* | Eksisterende brukere bes om samtykke ved neste innlogging | K-2 | **Før lansering** |
-| [ ] | FAQ og personvern beskriver faktisk databehandling (IP, tredjeparter) | K-7 | **Før lansering** |
+| [x] | FAQ og personvern beskriver faktisk databehandling (IP, tredjeparter) | K-7 | **Før lansering** (PL-09: FAQ IP/tredjeparter + personverntabell Vercel/Cloudflare/Neon/Resend; Upstash fjernet — ikke konfigurert i prod) |
 | [ ] | Google Fonts selvhostet via `next/font` | V-7 | **Før lansering** |
 | [ ] | Onboarding-utkast ikke lenger i `localStorage` | V-12 | Kan utsettes |
 | [ ] | DPA og DPIA gjennomgått av advokat og signert | V-9 | **Før lansering** |
@@ -801,9 +801,9 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 
 | | Punkt | Ref | Prioritet |
 |---|---|---|---|
-| [ ] | «Én match innen 24 timer» fjernet overalt (meta, OG, JSON-LD, llms.txt) | K-7 | **Før lansering** |
-| [ ] | FAQ stemmer med produktet (anonymitet, e-post, IP, sletting) | K-7 | **Før lansering** |
-| [ ] | `/metoder` og llms.txt beskriver tilknytningsspørsmålene ærlig | K-7 | **Før lansering** |
+| [x] | «Én match innen 24 timer» fjernet overalt (meta, OG, JSON-LD, llms.txt) | K-7 | **Før lansering** (PL-09: «én gjennomtenkt match i uken»; grep viser kun kontakt-svar) |
+| [x] | FAQ stemmer med produktet (anonymitet, e-post, IP, sletting) | K-7 | **Før lansering** (PL-09: fornavn+alder synlig, bilder dag 15, matchen venter ved innlogging, ingen match-e-post, IP/tredjeparter ærlig, sletting beholdt per PL-01) |
+| [x] | `/metoder` og llms.txt beskriver tilknytningsspørsmålene ærlig | K-7 | **Før lansering** (PL-09: «Tilknytning (egne spørsmål)», ingen «ECR», kilde-liste beholdt) |
 | [ ] | Innloggingssiden skrevet for lansering (uten spøk, uten «under oppbygging») | V-15 | **Før lansering** |
 | [ ] | Bloggen rettet eller avpublisert | V-10, V-13 | **Før lansering** |
 | [ ] | Manuell språkgjennomgang av alle brukervendte sider | V-13 | **Før lansering** |

@@ -583,6 +583,14 @@ avpubliser bloggen.
 forsvar i dybden (A2-prinsippet) mangler. Én glemt sjekk i en ny rute blir
 en lekkasje.
 
+**Status (PL-25):** De seks prefiksen er lagt til i `PROTECTED_API_PREFIXES`.
+`/api/questions`* er bevisst åpent read-only-innhold (ingen brukerdata), og
+`/api/analytics/track` krever sesjon + `pgCheck` i selve ruten (S-4) — begge
+står i den eksplisitte `OFFENTLIGE_RUTER`-listen i
+`__tests__/api-route-coverage.test.ts` med begrunnelse, sammen med
+`auth/*`, `cron/*` (CRON_SECRET), `beta/invites` (requireAdmin) og
+dev-rutene (fail-closed i produksjon). Ny rute uten dekning gir rød test.
+
 **Løsning:** Legg prefiksene til. Legg til en test som krever at alle
 `app/api/**/route.ts` enten er dekket av middleware eller eksplisitt
 oppført som offentlig.
@@ -821,7 +829,7 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 | [ ] | Øvrige høye sårbarheter (nodemailer, uploadthing, sharp, postcss) rettet eller vurdert | K-5 | **Før lansering** |
 | [ ] | Interne og døde sider fjernet eller 404 i prod | V-10 | **Før lansering** |
 | [ ] | `POST /api/auth/phone/send` deaktivert | V-10 | **Før lansering** |
-| [ ] | Manglende API-prefikser i middleware | V-11 | Kan utsettes |
+| [x] | Manglende API-prefikser i middleware | V-11 | Kan utsettes |
 | [ ] | `og-image.png` finnes; sitemap viser offentlige sider | V-14 | **Før lansering** |
 | [ ] | WCAG 2.1 AA: kontrast, fokus, labels, redusert bevegelse | V-8 | **Før lansering** |
 | [ ] | Manuell test på iOS Safari, Android Chrome, desktop Chrome/Firefox/Safari | §1.2 | **Før lansering** |
@@ -885,7 +893,7 @@ npm run build                       # før deploy
 | V-1 | Utvid `dealbreaker.test.ts` | Aktive dealbreakere treffer med data fra faktisk `profile/setup`-format (ikke bare fixtures) |
 | V-3 | Utvid `profile-setup-geo-b12.test.ts` *(skrevet · PL-12)* | Ukjent postnummer («9999») → 400 og ingen lagring; forslag om nærliggende koder via `suggestNearbyPostalCodes` |
 | V-5 | `__tests__/report-evidence.test.ts` | Rapport + blokkering → bevis-snapshot finnes for admin; meldinger slettet for brukerne |
-| V-11 | `__tests__/api-route-coverage.test.ts` | Alle `app/api/**/route.ts` er beskyttet av middleware eller oppført som offentlig |
+| V-11 | `__tests__/api-route-coverage.test.ts` *(skrevet · PL-25)* | Alle `app/api/**/route.ts` er beskyttet av middleware eller oppført som offentlig |
 
 ### 7.3 Manuell regresjon før lansering (to nettlesere, to testkontoer)
 

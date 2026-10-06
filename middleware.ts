@@ -12,12 +12,12 @@
  *   /api/auth/* (NextAuth)
  *   Statisk innhold
  *
- * Beskytt:
- *   /api/profile/*
- *   /api/match/*
- *   /api/journey/*
- *   /api/conversation/*
- *   /admin/* (krever admin-role)
+ * Beskytt (PROTECTED_API_PREFIXES):
+ *   /api/profile/* · /api/consent · /api/match/* · /api/journey/*
+ *   /api/conversation/* · /api/chat/* · /api/system/* · /api/ai/*
+ *   /api/admin/* (krever admin-role) · /api/notifications/* · /api/relationship/*
+ *   PL-25 (V-11): /api/settings/* · /api/report · /api/onboarding/*
+ *   /api/dashboard/* · /api/pusher/* · /api/presence/*
  */
 
 import { NextResponse } from 'next/server'
@@ -33,7 +33,7 @@ const MAINTENANCE_ENABLED = isMaintenanceMode()
 const DEV_LOGIN_DISABLED = process.env.DEV_LOGIN_ENABLED !== 'true'
 
 /** Alltid tilgjengelige baner (nivå 0) */
-const PUBLIC_PATHS = [
+export const PUBLIC_PATHS = [
   '/maintenance',
   '/api/system/health',
   '/api/system/cron-health',  // STEG 1.3: cron-health må være tilgjengelig for Vercel cron
@@ -44,7 +44,7 @@ const PUBLIC_PATHS = [
   '/api/admin/auth',
 ]
 
-const PROTECTED_API_PREFIXES = [
+export const PROTECTED_API_PREFIXES = [
   '/api/profile',
   '/api/consent',
   '/api/match',
@@ -60,6 +60,14 @@ const PROTECTED_API_PREFIXES = [
   // gjenoppstå uten innlogging. Varsler leses via /api/system/messages.
   '/api/notifications',
   '/api/relationship',
+  // PL-25 (V-11) — tidligere manglende prefikser (forsvar i dybden).
+  // Disse rutene krever nå verifisert sesjon før de når håndtereren.
+  '/api/settings',
+  '/api/report',
+  '/api/onboarding',
+  '/api/dashboard',
+  '/api/pusher',
+  '/api/presence',
 ]
 
 const ADMIN_PREFIX = '/admin'

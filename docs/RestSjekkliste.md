@@ -341,7 +341,6 @@ PL-nummer. Her står bare **hva som gjenstår** og **hva som venter på hva**.
 | **PL-22** | 🤖 Q | Utvid språkvakten med nynorsk-ordene fra V-13 + lag sidelisten til George (G-20) | Forarbeid for §6.6 (George krysser) | 🟥 |
 | **PL-23a** | 🤖 Q | Sitemap: kun offentlige sider (fjern `/match`, `/journey`, `/dashboard`, `/profile`, `/onboarding`) | §6.7 «`og-image.png` finnes; sitemap …» (bildet = G-21) | 🟥 |
 | **PL-18** | 🤖 Q | Universell utforming: `:focus-visible`, `prefers-reduced-motion`, kontrast ≥ 4,5:1, FAQ-knapper | §6.7 «WCAG 2.1 AA …» (George bekrefter med Lighthouse, G-18) | 🟥 |
-| **PL-25** | 🤖 C | Middleware: legg til `/api/settings`, `/api/report`, `/api/onboarding`, `/api/dashboard`, `/api/pusher`, `/api/presence` + dekningstest | §6.7 «Manglende API-prefikser …» | 🟨 |
 | **PL-17** | 🤖 Q | Onboarding-utkast i `sessionStorage` i stedet for `localStorage` (11 steder i `OnboardingFlow.tsx`) | §6.1 «Onboarding-utkast …» | 🟨 |
 
 ### 3.2 Venter på George
@@ -394,7 +393,7 @@ PL-nummer. Her står bare **hva som gjenstår** og **hva som venter på hva**.
 | **1 — nå** | G-01 push · G-02 glemt passord · G-03 reisedager · G-04 roter `DATABASE_URL` | PL-16 fonter · PL-19 vilkår · PL-20 døde sider · PL-21 blogg/dag 30 |
 | **2** | G-05 «kjør» PL-06/15/24 · G-06 tre svar · G-10 Vercel-plan | PL-06 reisedag (etter G-03) · PL-22 språkvakt · PL-23a sitemap |
 | **3** | G-07 advokat · G-08 DMARC/SPF · G-09 support@ · G-11 testbrukere · G-12 brytere | PL-15 bevis · PL-18 universell utforming · PL-24 avhengigheter · PL-14 tidsplan |
-| **4** | G-13 backup · G-14 Sentry · G-15 slettinger · G-21 delingsbilde · G-22 rapportrutine | PL-25 middleware · PL-17 sessionStorage · PL-26 opprydding · slette-skript til G-15 |
+| **4** | G-13 backup · G-14 Sentry · G-15 slettinger · G-21 delingsbilde · G-22 rapportrutine | PL-17 sessionStorage · PL-26 opprydding · slette-skript til G-15 |
 | **5 — sluttest** | G-16 ende-til-ende · G-17 telefoner · G-18 konsoll/Lighthouse · G-20 språk · G-23 CI · G-24 404-sider | PL-99 sluttkontroll (instruksen §9) |
 | **6 — etter første lørdag** | G-19 score- og nivåfordeling | Analyse — **ingen justering** (DI-2) |
 
@@ -504,7 +503,7 @@ Speiler `LanseringsCheckList.md` §6. **Kryss av begge steder.**
 - [ ] 🤖 C PL-24 🔒 · Øvrige høye sårbarheter rettet eller vurdert 🟥
 - [ ] 🤖 Q PL-20 · Interne og døde sider 404 i prod *(George bekrefter, G-24)* 🟥
 - [ ] 🤖 Q PL-20 · `POST /api/auth/phone/send` deaktivert 🟥
-- [ ] 🤖 C PL-25 · Manglende API-prefikser i middleware 🟨
+- [x] 🤖 C PL-25 · Manglende API-prefikser i middleware 🟨 *(PL-25a+b: 6 nye prefikser i `PROTECTED_API_PREFIXES` + `__tests__/api-route-coverage.test.ts` (119 ruter verifisert, 21 eksplisitt offentlig med begrunnelse). Ny rute uten dekning → rød test.)*
 - [ ] 🤖 Q PL-23a + 👤 G-21 · Sitemap + `og-image.png` 🟥
 - [ ] 🤖 Q PL-18 + 👤 G-18 · WCAG 2.1 AA 🟥
 - [ ] 👤 G-17 · Manuell test på telefoner og nettlesere 🟥

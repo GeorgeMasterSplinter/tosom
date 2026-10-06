@@ -8,6 +8,7 @@
  */
 
 import { validateOnboarding } from '@/lib/validation/onboarding-setup';
+import { ALL_ITEMS } from '@/lib/psychometrics/instruments';
 
 // Nøyaktig option-verdiene i Step8Grenser.tsx (select-grid)
 const NEVER_CROSS_OPTIONS = ['respekt', 'tid-aleine', 'venner', 'selvstende', 'sandhet'];
@@ -38,6 +39,8 @@ function fullPayload(overrides: Record<string, any> = {}): any {
     grenser: {},
     moden: {},
     preferanser: {},
+    // PL-08g: serveren er fasit — alle 44 items er påkrevde.
+    psychometrics: Object.fromEntries(ALL_ITEMS.map((item, i) => [item.id, (i % 5) + 1])),
     ...overrides,
   };
 }

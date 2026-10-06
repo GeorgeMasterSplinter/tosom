@@ -12,12 +12,52 @@
  *     til det steget som mangler felt i stedet for å la serveren avvise med 400
  *     på siste steg («noe mangler i profilen din»).
  *
- * Kun steg 0 (grunnprofil) og steg 1 (selfDesc) har obligatoriske felt i
- * backend; alle øvrige steg har valfrie felt og returnerer derfor ingen feil.
+ * Kun steg 0 (grunnprofil), steg 1 (selfDesc) og de fem skalastegene
+ * (1, 3, 5, 8, 10 — PL-08a, D-1) har obligatoriske felt; de øvrige stegene
+ * har valfrie felt og returnerer derfor ingen feil.
  */
 
 import { getDistancePrefRange } from '@/config/distance-prefs';
 import { MIN_AGE } from '@/config/legal';
+import {
+  BFI10,
+  ATTACHMENT,
+  PVQ10,
+  COMMUNICATION,
+  ERQ6,
+  Item,
+} from '@/lib/psychometrics/instruments';
+
+/**
+ * PL-08a: Skalastegene med påkrevde svar (D-1). Stegeindeksene kommer fra
+ * renderStep() i OnboardingFlow.tsx:
+ *   1 → Step2Personlighet (BFI10) · 3 → Step3Tilknytning (ATTACHMENT) ·
+ *   5 → Step5LivsstilVerdier (PVQ10) · 8 → Step7HumorPersonlighet (COMMUNICATION) ·
+ *   10 → Step8ModenNysgjerrighet (ERQ6)
+ */
+const SCALE_STEPS: Record<number, Item[]> = {
+  1: BFI10,
+  3: ATTACHMENT,
+  5: PVQ10,
+  8: COMMUNICATION,
+  10: ERQ6,
+};
+
+/**
+ * PL-08a: Returnerer ID-ene til skalaprofiler uten et gyldig svar (tall 1–5).
+ * Brukes både av stegets egen validate (PL-08b) og den sentrale
+ * validateOnboardingStep-gaten (PL-08a) — serveren er fasit (PL-08g).
+ */
+export function missingScaleItems(
+  data: Record<string, unknown>,
+  items: Item[]
+): string[] {
+  return items.filter((item) => {
+    const v = data[item.id];
+    if (typeof v !== 'number' || Number.isNaN(v)) return true;
+    return v < 1 || v > 5;
+  }).map((item) => item.id);
+}
 
 export interface StepFieldError {
   field: string;
@@ -111,21 +151,34 @@ function validatePersonlighetStep(data: Record<string, unknown>): StepFieldError
 }
 
 /**
- * Validerer ett onboarding-steg mot det som er obligatorisk for å fullføre.
- * Kun steg 0 (basic) og steg 1 (selfDesc) har obligatoriske felt; de øvrige
- * stegene har kun valfrie felt og returnerer derfor ingen feil.
+ * Validerer ett onboarding-steg mot det som er påkrevd for å fullføre.
+ * PL-08a: skalastegene (1, 3, 5, 8, 10) krever svar på alle påstandene.
  */
 export function validateOnboardingStep(step: number, data: Record<string, unknown>): StepValidation {
   let errors: StepFieldError[] = [];
   if (step === 0) errors = validateBasicStep(data);
   else if (step === 1) errors = validatePersonlighetStep(data);
+
+  // PL-08a: påkrevde skalasvar på de fem skalastegene.
+  const scaleItems = SCALE_STEPS[step];
+  if (scaleItems) {
+    const missing = missingScaleItems(data, scaleItems);
+    if (missing.length > 0) {
+      errors.push({
+        field: missing[0],
+        message: 'Svar på alle påstandene — det finnes ingen fasit.',
+      });
+    }
+  }
+
   return { step, errors };
 }
 
 /** Alle ufullstendige steg (i rekkefølge). Tomt array = profilen er komplett. */
 export function validateAllOnboardingSteps(data: Record<string, unknown>): StepValidation[] {
   const incomplete: StepValidation[] = [];
-  for (const step of [0, 1]) {
+  // PL-08a: kjører over ALLE steg (0–12), ikke bare [0, 1].
+  for (let step = 0; step <= 12; step++) {
     const validation = validateOnboardingStep(step, data);
     if (validation.errors.length > 0) incomplete.push(validation);
   }

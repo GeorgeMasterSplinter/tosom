@@ -12,6 +12,7 @@ import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { BackButton } from '@/components/onboarding/BackButton';
 import { ScaleQuestion } from '@/components/onboarding/ScaleQuestion';
 import { ATTACHMENT } from '@/lib/psychometrics/instruments';
+import { missingScaleItems } from '@/lib/validation/onboarding-steps';
 
 interface Props {
   data: Record<string, unknown>;
@@ -37,6 +38,9 @@ const validate = (data: Record<string, unknown>): ValidationError[] => {
     const v = String(data[f.key] ?? '').trim();
     if (!v || v.length < f.min) errors.push({ field: f.key, message: `Skriv minst ${f.min} tegn om ${f.hint}.` });
   }
+  // PL-08b (D-1): skalasvarene er påkrevd per steg.
+  const missing = missingScaleItems(data, ATTACHMENT);
+  if (missing.length > 0) errors.push({ field: missing[0], message: 'Svar på alle påstandene — det finnes ingen fasit.' });
   return errors;
 };
 

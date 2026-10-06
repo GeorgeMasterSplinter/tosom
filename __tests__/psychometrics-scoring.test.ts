@@ -11,7 +11,8 @@ import {
   scoreCommunication,
   scoreAll,
 } from '@/lib/psychometrics/scoring';
-import { BFI10, ATTACHMENT, PVQ10, ERQ6, COMMUNICATION } from '@/lib/psychometrics/instruments';
+import { BFI10, ATTACHMENT, PVQ10, ERQ6, COMMUNICATION, ALL_ITEMS } from '@/lib/psychometrics/instruments';
+import { onboardingSetupSchema } from '@/lib/validation/onboarding-setup';
 
 describe('psychometrics/scoring', () => {
   /* ─── BFI-10 ─── */
@@ -155,8 +156,103 @@ describe('psychometrics/scoring', () => {
       expect(s.values).toBeDefined();
       expect(s.emotionRegulation).toBeDefined();
       expect(s.communication).toBeDefined();
-      // Alle 3.0: begge akser er >= 3.0 → 'fearful' (terskel er >= 3.0, ikke > 3.0)
-      expect(s.attachment.style).toBe('fearful');
+      // PL-08h: alle 3.0 er nøytral midtsone → 'secure', IKKE 'fearful'
+      // (tersklene er strengt over 3.0).
+      expect(s.attachment.style).toBe('secure');
+    });
+
+    it('PL-08j: scoreAll({}) gir ikke stil «fearful» (tomme svar er nøytrale)', () => {
+      const s = scoreAll({});
+      // Manglende items behandles som 3 (nøytral) → begge akser = 3.0
+      // → ingen indikasjon på angst/unnvikelse → secure.
+      expect(s.attachment.style).not.toBe('fearful');
+      expect(s.attachment.style).toBe('secure');
+    });
+  });
+
+  /* ─── PL-08g: Serveren er fasit — alle 44 items er påkrevd ─── */
+
+  describe('onboardingSetupSchema (PL-08g)', () => {
+    // Fullt, gyldig payload — samme form som /api/profile/setup mottar.
+    function fullBody(): Record<string, unknown> {
+      const psychometrics: Record<string, number> = {};
+      ALL_ITEMS.forEach((item, i) => {
+        psychometrics[item.id] = (i % 5) + 1;
+      });
+      return {
+        basic: {
+          identityName: 'Reprobruker', age: 30, gender: 'Kvinne', seekingGender: 'Mann',
+          height: 170, bodyType: 'slank', lifestyle: 'aktiv', smoking: 'røyker ikke',
+          religion: 'ateist', children: 'ingen', wantChildren: 'vet ikke',
+          city: 'Bergen', postalCode: '5003', distancePref: 100, agePrefMin: 23, agePrefMax: 40,
+        },
+        personlighet: {
+          selfDesc: 'Jeg liker natur, musikk og gode samtaler om livet.',
+          energyGiver: 'venner og ro', energyDrainer: 'støy og kaos',
+          pressureReact: 'blir rolig', quirk: 'mumler for meg selv',
+        },
+        livssituasjon: {
+          workType: 'fulltid', housingType: 'leilighet', householdSize: '2 personer',
+          economicStability: 'stabil', responsibilities: 'jobb og husdyr',
+          dailyRoutine: 'regelrett med rom for improvisasjon',
+        },
+        tilknytning: {
+          safetyNeed: 'at du er der', insecurityTrigger: 'når du blir stum',
+          sadnessNeed: 'trygghet og ro', stressNeed: 'rom for meg selv',
+          importantBoundary: 'respekt alltid',
+        },
+        kommunikasjon: { calmingHelp: 'berøring og ord', trigger: 'utrygghet', trustBuilder: 'trygghet over tid' },
+        kjaerlighet: {
+          loveGive: 'tid og oppmerksomhet', loveReceive: 'ord og berøring',
+          closenessBuilder: 'åpen samtale', distanceCreator: 'arbeid og stress',
+          smallThing: 'en kopp kaffe sammen',
+        },
+        livsstil: {
+          highPriority: 'trygghet', lowPriority: 'status', goodEveryday: 'ro og god mat',
+          desiredLifestyle: 'familieliv', undesiredLifestyle: 'konflikt',
+        },
+        relasjonsStil: { relationshipSeeking: 'fast parforhold', closenessNeed: 'middels', independenceBalance: 'balanse' },
+        fremtid: {
+          futureVision: 'et trygt hjem vi bygger sammen', dreamGoal: 'reise mye sammen',
+          buildTogether: 'en familie', experienceAlone: 'naturen og fjellet',
+          experienceTogether: 'god mat og musikk',
+        },
+        humor: {
+          laughterTrigger: 'ironi', quirkyHabit: 'danser i kjøkkenet',
+          guiltyPleasure: 'serier om natten', totallyYou: 'rolig og lojalt',
+          partnerWouldLaugh: 'at jeg tar alt for langt på alvor',
+        },
+        grenser: {
+          neverCrossBoundary: 'respekt', understandPartnersBoundaries: 'ja',
+          limitations: 'trenger tid etter dag', partnerMustUnderstand: 'at trygghet er viktig for meg',
+        },
+        moden: {
+          intimacySafety: 'jeg trenger å vite at det er trygt', comfortableWith: 'å dele følelser',
+          boundary: 'fysisk press', nearerType: 'ord og berøring', needsTime: 'en pause nå og da',
+        },
+        preferanser: {
+          politicsImportance: 3, religionImportance: 1, dietPreference: 'vegetar',
+          sleepSchedule: 'fugl', pets: 'har en katte', travelFreq: 'par ganger i året',
+          alcoholFreq: 'sjelden', ambitionLevel: 'målbevisst', structureSpontaneity: 'struktur',
+          introExtrovert: 'introvert', attachmentStyle: 'sikre',
+        },
+        psychometrics,
+      };
+    }
+
+    it('PL-08j: godkjenner payload med alle 44 items', () => {
+      const result = onboardingSetupSchema.safeParse(fullBody());
+      expect(result.success).toBe(true);
+    });
+
+    it('PL-08j: avviser payload med 43 av 44 items', () => {
+      const body = fullBody();
+      const psych = { ...(body.psychometrics as Record<string, number>) };
+      // Fjern ett item (det siste i ALL_ITEMS).
+      delete psych[ALL_ITEMS[ALL_ITEMS.length - 1].id];
+      body.psychometrics = psych;
+      const result = onboardingSetupSchema.safeParse(body);
+      expect(result.success).toBe(false);
     });
   });
 });

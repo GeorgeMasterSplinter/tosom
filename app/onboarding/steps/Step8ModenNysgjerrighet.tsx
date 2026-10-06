@@ -7,11 +7,15 @@ import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { BackButton } from '@/components/onboarding/BackButton';
 import { ScaleQuestion } from '@/components/onboarding/ScaleQuestion';
 import { ERQ6 } from '@/lib/psychometrics/instruments';
+import { missingScaleItems } from '@/lib/validation/onboarding-steps';
 interface Props { data: Record<string, unknown>; onChange: (f: string, v: unknown) => void; onBack: () => void; step: number; goToStep: (s: number) => void; onNext: () => void; }
 interface ValidationError { field: string; message: string; }
 const validate = (d: Record<string, unknown>): ValidationError[] => {
   const e: ValidationError[] = [];
   for (const k of ['intimacySafety','comfortableWith','boundary','nearerType','needsTime']) { const v = String(d[k] ?? '').trim(); if (!v || v.length < 10) e.push({ field: k, message: 'Skriv minst 10 tegn om feltet.' }); }
+  // PL-08b (D-1): skalasvarene er påkrevd per steg.
+  const missing = missingScaleItems(d, ERQ6);
+  if (missing.length > 0) e.push({ field: missing[0], message: 'Svar på alle påstandene — det finnes ingen fasit.' });
   return e;
 };
 export default function Step8ModenNysgjerrighet({ data, onChange, onBack, onNext }: Props) {

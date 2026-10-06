@@ -19,6 +19,7 @@ import { BackButton } from '@/components/onboarding/BackButton';
 import { OB } from '@/app/onboarding/theme';
 import { ScaleQuestion } from '@/components/onboarding/ScaleQuestion';
 import { BFI10 } from '@/lib/psychometrics/instruments';
+import { missingScaleItems } from '@/lib/validation/onboarding-steps';
 
 interface Props {
   data: Record<string, unknown>;
@@ -60,6 +61,12 @@ const validate = (data: Record<string, unknown>): ValidationError[] => {
   const quirk = String(data['quirk'] ?? '').trim();
   if (!quirk || quirk.length < 5) {
     errors.push({ field: 'quirk', message: 'Skriv minst 5 tegn om en egenskap du ler av deg selv.' });
+  }
+
+  // PL-08b (D-1): skalasvarene er påkrevd per steg.
+  const missing = missingScaleItems(data, BFI10);
+  if (missing.length > 0) {
+    errors.push({ field: missing[0], message: 'Svar på alle påstandene — det finnes ingen fasit.' });
   }
 
   return errors;

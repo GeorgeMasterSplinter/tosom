@@ -14,6 +14,7 @@ import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { BackButton } from '@/components/onboarding/BackButton';
 import { ScaleQuestion } from '@/components/onboarding/ScaleQuestion';
 import { PVQ10 } from '@/lib/psychometrics/instruments';
+import { missingScaleItems } from '@/lib/validation/onboarding-steps';
 
 interface Props { data: Record<string, unknown>; onChange: (f: string, v: unknown) => void; onBack: () => void; step: number; goToStep: (s: number) => void; onNext: () => void; }
 interface ValidationError { field: string; message: string; }
@@ -22,6 +23,9 @@ const validate = (d: Record<string, unknown>): ValidationError[] => {
   const e: ValidationError[] = [];
   const ge = String(d['goodEveryday'] ?? '').trim();
   if (!ge || ge.length < 10) e.push({ field: 'goodEveryday', message: 'Skriv minst 10 tegn om din gode hverdag.' });
+  // PL-08b (D-1): skalasvarene er påkrevd per steg.
+  const missing = missingScaleItems(d, PVQ10);
+  if (missing.length > 0) e.push({ field: missing[0], message: 'Svar på alle påstandene — det finnes ingen fasit.' });
   return e;
 };
 

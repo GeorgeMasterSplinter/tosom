@@ -768,8 +768,8 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 
 | | Punkt | Ref | Prioritet |
 |---|---|---|---|
-| [ ] | Ubesvarte skalaspørsmål gir ikke høy resonans; tilknytningsstil krever data | K-3 | **Før lansering** |
-| [ ] | Skalaspørsmål påkrevd per steg (eller tydelig fallback) | K-3 | **Før lansering** |
+| [x] | Ubesvarte skalaspørsmål gir ikke høy resonans; tilknytningsstil krever data | K-3 | **Før lansering** (PL-08: scoreAll({}) ikke «fearful» — terskler > 3.0; flat×flat verdier = 50; tom×tom klampes til MODERATE) |
+| [x] | Skalaspørsmål påkrevd per steg (eller tydelig fallback) | K-3 | **Før lansering** (PL-08: påkrevde svar i alle 5 skalasteg + server krever alle 44 items; fallback: profiler uten skalasvar max MODERATE) |
 | [ ] | Avklart hvilke dealbreakere som skal være aktive; inaktive fjernet eller koblet til data | V-1 | **Før lansering** |
 | [ ] | Brukerens valgte grenser (`neverCrossBoundary`) brukes, eller teksten lover ikke at de gjør det | V-1 | **Før lansering** |
 | [ ] | Beslutning om barn som dealbreaker | V-2 | Kan utsettes (beslutning kreves) |

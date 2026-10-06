@@ -96,7 +96,25 @@ export function unifiedScore(
     }, 0)
   );
 
-  const clampedScore = clamp(score, 0, 100);
+  // PL-08 (K-3): Ubesvarte skalaspørsmål gir ikke høy resonans.
+  // Hvis ENGEN av de fem psykometriske dimensjonene har data fra begge
+  // profiler (ren ordoverlapp-fallback — legacy-profiler uten skalasvar),
+  // kan ordoverlapp alene ikke gi STRONG/DEEP: klampes til MODERATE (64).
+  // Vektene og MIN_SCORE er urørt (DI-2).
+  const psychUsed = [
+    Boolean(readValueProfile(pA) && readValueProfile(pB)),
+    Boolean(readAttachment(pA) && readAttachment(pB)),
+    Boolean(readBigFive(pA) && readBigFive(pB)),
+    Boolean(readCommScores(pA) && readCommScores(pB)),
+    Boolean(readER(pA) && readER(pB)),
+  ].filter(Boolean).length;
+
+  const MAX_LEGACY_FALLBACK = 64; // MODERATE-øvre grense (resonanceLevel 50–64)
+  const clampedScore = clamp(
+    psychUsed === 0 ? Math.min(score, MAX_LEGACY_FALLBACK) : score,
+    0,
+    100
+  );
   // M-1: Kanonisk resonansnivå (80/65/50/40) — same funksjon som cron/db bruker.
   const level = toResonanceLevel(clampedScore);
 

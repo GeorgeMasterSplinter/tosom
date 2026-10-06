@@ -127,9 +127,10 @@ export function scoreValueCompat(a: ValueProfile, b: ValueProfile): number {
 
   const denom = Math.sqrt(varA * varB);
   if (denom === 0) {
-    // En av profilene er flat (ingen variasjon) — bruk nærhet på gjennomsnitt.
-    const meanClose = 100 - (Math.abs(meanA - meanB) / 4) * 100;
-    return clamp(Math.round(meanClose), 0, 100);
+    // PL-08i: En av profilene er flat (ingen variasjon) — ingen
+    // korrelasjon kan beregnes, og «nærhet på snitt» belønner tilfeldige
+    // middeler. Nøytral 50 i stedet (ingen resonans uten data).
+    return 50;
   }
 
   const r = clamp(cov / denom, -1, 1);

@@ -1,15 +1,15 @@
 {
   "version": "1.0",
-  "updatedAt": "2026-10-05",
+  "updatedAt": "2026-10-06",
   "commit": "50dc3b6",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
-    "tests": "486 passed / 1 skipped (58 av 58 suiter) — målt 06.10 etter PL-07 «Glemt passord» E2E (K-6): +7 i __tests__/password-reset.test.ts; +10 i __tests__/login-rate-limit.test.ts (PL-05)",
+    "tests": "499 passed / 1 skipped (58 av 59 suiter) — målt 06.10 etter PL-08 (K-3): +20 nye/oppdaterte tester i onboarding-steps-validation (PL-08a/b), psychometrics-scoring (PL-08g/h/j) og unified-scorer (PL-08j); 5 eksisterende payload-tester oppdatert til 44-items-kontrakten",
     "e2e": "0 fixme igjen. Onboarding: 20/20 lokalt 29.08 (10 chromium + 10 firefox, inkl. full flow). Dashboard/journey/match: 90/90 fra 28.08-kjøringen (ingen kodeendringer som rakk dem siden). Totalt 110 passed / 0 failed. 5/6 prosjekt lokalt (Mobile Safari/webkit krever system-bibliotek — installeres i CI med --with-deps). Dev-login (storageState) fungerer — alle tester kjører innlogget. playwright.config: workers: 1 alltid (lokal kjøring = CI) — onboarding-testene deler en E2E-bruker som full-flow-testen muterer; parallelle workere racet på server-draften",
     "typecheck": "0 errors utover Prisma-klient (prisma generate kan ikke kjøre i sandbox — løses i CI)",
     "lint": "0 warnings (npx next lint --max-warnings 0)",
     "ciGuards": "7/7 grønne (lang, ai, concept, one-engine, 05:00, cron + lang-guard) — lang-guard utvidet 02.09: ~125 ord, case-insensitiv, skanner __tests__/ + ai/ + rotnivåets .md, SPRAKREF-blokk for bevisste nynorsk-eksempler",
-    "productionBuild": "verified 06.10 etter PL-04 (next 15.5.27, next-auth 5.0.0-beta.32) — npx next build EXIT=0, 67/67 sider; også verifisert 2026-09-04 (Strøm A)"
+    "productionBuild": "verified 06.10 etter PL-08 (next 15.5.27) — npx next build EXIT=0, 69/69 sider; også verifisert 06.10 etter PL-04"
   },
   "currentPhaseId": "apen-beta-test",
   "blockers": [
@@ -550,6 +550,11 @@
       "id": "PL-07-GLEMT-PASSORD",
       "title": "PL-07 (K-6) — «Glemt passord» ende-til-ende",
       "content": "PL-07a: lib/email/index.ts — ny sendPasswordResetEmail(to, link) i samme stil som sendDeletionConfirmationEmail; rolig tekst; lenken gyldig i én time. PL-07b: app/api/auth/request-reset/route.ts — etter storeResetToken sendes ${baseUrl}/nytt-passord?email=…&token=… (URL-kodet) via sendPasswordResetEmail; tokenet logges ALDRI; svaret er uendret uansett om sendingen klarte (avslører aldri om e-posten finnes). PL-07c: app/api/auth/reset-password/route.ts (ny) — CSRF → resetPasswordSchema (min 10 tegn) → pgCheck(`reset-password:${email}`, 5, 3600) → verifyResetToken → hashPassword → i ÉN transaksjon: user.update (nytt passord) + consumeResetToken (single-use) + session.deleteMany (alle øvrige sesjoner slettes); ugyldig/utløpt/brukt token og e-post-feil gir identisk 400. PL-07d: app/glemt-passord/page.tsx (ny) — epostfelt + rolig bekreftelse. PL-07e: app/nytt-passord/page.tsx (ny) — leser ?email=…&token=… fra e-postlenken (useSearchParams i Suspense); passord to ganger, min 10 tegn; manglende parametere → «Lenken er ikke gyldig». KRITISK BUGG RETTET (PL-07-avvik): lib/auth/reset.ts hashToken() brukte scrypt med TILFELDIG salt pr. kall — da kunne findUnique({ tokenHash }) ALDRI treffe den lagrede raden, og verifyResetToken returnerte ALLTID false («Glemt passord» fungerte aldri i praksis). Retta til deterministisk HMAC-SHA256 nøkklet med AUTH_SECRET (O(1)-oppslag via unik indeks bevart). verifyResetToken returnerer nå { userId } | null — userId er autoritativt bundet til tokenet; ruten henter brukeren PÅ TOKENETS userId (e-postparameteren skal bare stemme med kontoen). PL-07f: __tests__/password-reset.test.ts (ny, 7 tester; prisma mocket med in-memory PasswordResetToken-lager, ekte lib/auth/reset.ts). Verifisert: npm run verify grønn (486 passed / 1 skipped, 58/58 suiter) + npm run build EXIT=0. Avkrysset i §6.5: «Glemt passord» — merket «*(klar for George · PL-07)*», avventer at George mottar e-posten i prod (PL-G7)."
+    },
+    {
+      "id": "PL-08-SCALE-ONBOARDING",
+      "title": "PL-08 (K-3) — Obligatoriske skalasvar per steg + datagrunnlag for resonansnivå [D-1]",
+      "content": "PL-08a: lib/validation/onboarding-steps.ts — missingScaleItems(data, items) + SCALE_STEPS-kart (step 1→BFI10, 3→ATTACHMENT, 5→PVQ10, 8→COMMUNICATION, 10→ERQ6 fra renderStep i OnboardingFlow.tsx); validateOnboardingStep sjekker skalasvar på de 5 steget; validateAllOnboardingSteps kjører nå alle steg 0–12 (var [0,1]). PL-08b: éin missingScaleItems-sjekk i stegets egen validate i alle 5 skalastegkomponentene (Step2Personlighet/Step3Tilknytning/Step5LivsstilVerdier/Step7HumorPersonlighet/Step8ModenNysgjerrighet) — samme feilmelding «Svar på alle påstandene — det finnes ingen fasit.»; Step7HumorPersonlighet bygget opp med useState + error-summary + handleNext (hadde ingen validering før). PL-08g: lib/validation/onboarding-setup.ts — psychometricsSchema bygges fra ALL_ITEMS: alle 44 item-ID-er påkrevde, .optional() fjernet (serveren er fasit). PL-08h: lib/psychometrics/scoring.ts — scoreAttachment terskler > 3.0 (var >= 3.0): nøytral midtsone (begge akser 3,0 — også tomme svar) gir «secure», ikke «fearful». Godkjent av George 06.10 («ok. gå i gang»); kjent konsekvens: eksisterende brukere med midtzonerespons kan få ny stil ved neste lagring. PL-08i: lib/matching/dimensions.ts — scoreValueCompat flat×flat (denom===0) → nøytral 50 (var nærhet på snitt som belønnet tilfeldige middeler). K-3-bonus: lib/matching/unifiedScorer.ts — legacy-fallback uten psykometrisk data klampes til 64 (MODERATE): tom×tom var 88/DEEP, blir nå ≤64/MODERATE; vekter og MIN_SCORE urørt (DI-2). PL-08j: 20 nye/oppdaterte tester — scoreAll({}) ikke «fearful», onboardingSetupSchema avviser 43/44 items og godkjenner 44, flat×flat=50, tom×tom<STRONG, validateOnboardingStep/missingScaleItems-dekning. Oppdaterte eksisterende tester som asserterte gammelt mønster: onboarding-steps-validation (steg 2–12 «valfrie» → ny kontrakt), profile-setup-save scenario D (prodBody: 44 items, 5 opprinnelige produksjonsverdier bevart), profile-setup-geo-b12 + onboarding-setup-grenser-select + prod-smoke-profile-save (44 items i payload-hjelpere). Verifisert: verify 499/499 + 1 skip (tsc 0, lint 0, språkvakt 0), build OK (69/69 sider). Avkrysset i §6.3: «Ubesvarte skalaspørsmål gir ikke høy resonans; tilknytningsstil krever data» + «Skalaspørsmål påkrevd per steg (eller tydelig fallback)». MÅ TILBAGE: D-2 (kalibrering 80/65/50/40 på ekte data etter beta), D-3 (min 50% svarandel i F-2-dokumentet), PL-09, PL-10 (kvalitetssikring B-1–B-4), PL-11 (sikkerhet: PII i logg, rate limiting, CORS, SQL-injection, XSS)."
     }
   ],
   "verifiedFlow": {
@@ -561,7 +566,7 @@
     ],
     "glemtPassord": "POST /api/auth/request-reset → e-post med lenke til /nytt-passord?email=…&token=… (1 time, single-use) → POST /api/auth/reset-password setter passord og sletter øvrige sesjoner (PL-07)"
   },
-  "nextAction": "",
+  "nextAction": "PL-08 FERDIG (06.10, godkjent av George). Neste for agent: PL-09 (avhenger av hva instruksen sier) — ellers gjenstår PL-10/PL-11 for lansering. George: PL-G2 (deploy migration 20261005212832_add_sensitive_consent til PROD), PL-G7 (verifisere «Glemt passord»-e-post i prod), D-2/D-3 ved beta.",
   "gjenstaarFoerBeta": [
     "Manuell sjekkliste — nå konsolidert i GEORGE.md (steg 2–9, env-liste, kill switches)"
   ],

@@ -11,6 +11,9 @@ import {
   DIMENSION_WEIGHTS,
 } from '@/lib/matching/unifiedScorer';
 import { toResonanceLevel } from '@/lib/matching/resonanceLevel';
+import { scoreValueCompat } from '@/lib/matching/dimensions';
+import { validateOnboardingStep, missingScaleItems } from '@/lib/validation/onboarding-steps';
+import { BFI10, COMMUNICATION } from '@/lib/psychometrics/instruments';
 import { ResonanceLevel } from '@prisma/client';
 import type { ProfileData } from '@/lib/matching/types';
 
@@ -166,5 +169,59 @@ describe('calculateTotalScore (backwards compat)', () => {
     expect(result.breakdown.semantic).toBeDefined();
     expect(result.breakdown.intimacy).toBeDefined();
     expect(result.breakdown.future).toBeDefined();
+  });
+});
+
+/* ═══════════════════════════════════════════════════════════
+   PL-08 (K-3): Skalaspørsmål og tilknytning
+   ═══════════════════════════════════════════════════════════ */
+
+describe('PL-08 (K-3): Ubesvarte skalaspørsmål gir ikke høy resonans', () => {
+  it('tom × tom (ingen psykometrisk data) gir IKKE STRONG eller DEEP', () => {
+    const result = unifiedScore(makeProfile(), makeProfile());
+    // Legacy-fallback (ren ordoverlapp) klampes til MODERATE eller lavere.
+    expect(result.score).toBeLessThan(65);
+    expect(result.level).not.toBe(ResonanceLevel.STRONG);
+    expect(result.level).not.toBe(ResonanceLevel.DEEP);
+  });
+
+  it('flat × flat verdiprofil (denom === 0) gir verdier = 50', () => {
+    // Begge profiler fullt flate (alle verdier like) — ingen variasjon,
+    // ingen korrelasjon kan beregnes.
+    const flatA = { benevolence: 3, security: 3, power: 3, stimulation: 3, hedonism: 3, conformity: 3, self_direction: 3 };
+    const flatB = { benevolence: 3, security: 3, power: 3, stimulation: 3, hedonism: 3, conformity: 3, self_direction: 3 };
+    expect(scoreValueCompat(flatA, flatB)).toBe(50);
+  });
+
+  it('validateOnboardingStep avviser skalasteg med manglende svar', () => {
+    // Steg 1 (BFI-10): ingen skalasvar + gyldig selfDesc.
+    const empty = validateOnboardingStep(1, { selfDesc: 'Jeg liker natur og gode samtaler.' });
+    expect(empty.errors.some((e) => e.message === 'Svar på alle påstandene — det finnes ingen fasit.')).toBe(true);
+
+    // Alle BFI-10-items svart (1–5) → ingen feil.
+    const allAnswered: Record<string, unknown> = { selfDesc: 'Jeg liker natur og gode samtaler.' };
+    for (const item of BFI10) allAnswered[item.id] = 3;
+    const complete = validateOnboardingStep(1, allAnswered);
+    expect(complete.errors).toHaveLength(0);
+
+    // Steg 8 (COMMUNICATION): to av seks items svart → avvises.
+    const partial: Record<string, unknown> = { comm1: 4, comm2: 2 };
+    const step8 = validateOnboardingStep(8, partial);
+    expect(step8.errors.some((e) => e.message === 'Svar på alle påstandene — det finnes ingen fasit.')).toBe(true);
+
+    // Alle COMMUNICATION-items svart → ingen feil.
+    const all8: Record<string, unknown> = {};
+    for (const item of COMMUNICATION) all8[item.id] = 3;
+    expect(validateOnboardingStep(8, all8).errors).toHaveLength(0);
+  });
+
+  it('missingScaleItems returnerer ID-ene uten tall 1–5', () => {
+    const data: Record<string, unknown> = { bfi1: 3, bfi2: 'ugyldig', bfi10: 6 };
+    const missing = missingScaleItems(data, BFI10);
+    // bfi2 (streng) og bfi10 (utenfor 1–5) er manglende; bfi1 er gyldig.
+    expect(missing).toContain('bfi2');
+    expect(missing).toContain('bfi10');
+    expect(missing).not.toContain('bfi1');
+    expect(missing).toHaveLength(9); // kun bfi1 svart
   });
 });

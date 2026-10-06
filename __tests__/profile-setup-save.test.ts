@@ -275,7 +275,12 @@ describe('POST /api/profile/setup — EKT DB (bug 1 repro/regressjon)', () => {
       grenser: { neverCrossBoundary: 'økonomisk press', understandPartnersBoundaries: 'rom for seg selv', limitations: 'trenger tid alene', partnerMustUnderstand: 'at ro og trygghet er viktig' },
       moden: { intimacySafety: 'trygghet og tillit', comfortableWith: 'å ta det rolig', boundary: 'ingen press overhodet', nearerType: 'fysisk nærhet', needsTime: 'ja, litt tid' },
       preferanser: { politicsImportance: 5, religionImportance: 3, dietPreference: 'normalt', sleepSchedule: 'natt', pets: 'ja', travelFreq: 'noen ganger', alcoholFreq: 'sjelden', ambitionLevel: 'moderat', structureSpontaneity: 'struktur', introExtrovert: 'introvert', attachmentStyle: 'sikker' },
-      psychometrics: { bfi1: 4, bfi3: 5, bfi5: 2, bfi7: 3, bfi9: 4 },
+      // PL-08g: serveren er fasit — alle 44 items er påkrevde. De fem
+      // opprinnelige produksjonsverdiene er bevart; resten er utfylt.
+      psychometrics: {
+        ...Object.fromEntries(ALL_ITEMS.map((item, i) => [item.id, (i % 5) + 1])),
+        bfi1: 4, bfi3: 5, bfi5: 2, bfi7: 3, bfi9: 4,
+      },
     };
 
     const res = await POST(request(prodBody));
@@ -287,7 +292,7 @@ describe('POST /api/profile/setup — EKT DB (bug 1 repro/regressjon)', () => {
     expect(profile!.identityName).toBe('Kari Solberg');
     expect(profile!.age).toBe(32); // strengen '32' ble coerced
     expect(profile!.postalCode).toBe('0150');
-    // Psykometri med bare 5 items — alle skårer må være endlege tal (ikke NaN)
+    // Psykometri med alle 44 items — alle skårer må være endlege tal (ikke NaN)
     const bigFive = profile!.bigFive as Record<string, number>;
     expect(bigFive).toBeDefined();
     Object.values(bigFive).forEach((v) => {

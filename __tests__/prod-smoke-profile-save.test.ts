@@ -22,6 +22,7 @@ jest.mock('@/lib/auth/session', () => ({
 import { getServerSession } from '@/lib/auth/session';
 import prisma from '@/lib/prisma';
 import { POST } from '@/app/api/profile/setup/route';
+import { ALL_ITEMS } from '@/lib/psychometrics/instruments';
 
 const mockedSession = getServerSession as jest.Mock;
 
@@ -106,7 +107,10 @@ describeProd('PROD-SMOKE: POST /api/profile/setup (Bug 1-verifisering)', () => {
     grenser: { neverCrossBoundary: 'økonomisk press', understandPartnersBoundaries: 'rom for seg selv', limitations: 'trenger tid alene', partnerMustUnderstand: 'at ro og trygghet er viktig' },
     moden: { intimacySafety: 'trygghet og tillit', comfortableWith: 'å ta det rolig', boundary: 'ingen press overhodet', nearerType: 'fysisk nærhet', needsTime: 'ja, litt tid' },
     preferanser: { politicsImportance: 5, religionImportance: 3, dietPreference: 'normalt', sleepSchedule: 'natt', pets: 'ja', travelFreq: 'noen ganger', alcoholFreq: 'sjelden', ambitionLevel: 'moderat', structureSpontaneity: 'struktur', introExtrovert: 'introvert', attachmentStyle: 'sikker' },
-    psychometrics: { bfi1: 4, bfi3: 5, bfi5: 2, bfi7: 3, bfi9: 4 },
+    // PL-08g: serveren er fasit — alle 44 items er påkrevde.
+    psychometrics: Object.fromEntries(
+      ALL_ITEMS.map((item, i) => [item.id, (i % 5) + 1])
+    ),
   };
 
   function request(body: unknown): any {

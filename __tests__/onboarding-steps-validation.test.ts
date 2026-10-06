@@ -11,7 +11,18 @@ import {
   validateOnboardingStep,
   validateAllOnboardingSteps,
   firstIncompleteOnboardingStep,
+  missingScaleItems,
 } from '@/lib/validation/onboarding-steps';
+import { ERQ6, ALL_ITEMS } from '@/lib/psychometrics/instruments';
+
+const SCALE_ERROR = 'Svar på alle påstandene — det finnes ingen fasit.';
+
+/** Alle 44 skalasvar (1–5) — fullt datagrunnlag for skalastegene. */
+function allScaleAnswers(): Record<string, number> {
+  const answers: Record<string, number> = {};
+  for (const item of ALL_ITEMS) answers[item.id] = 3;
+  return answers;
+}
 
 /** Fullstendig grunnprofil som passerer backend-skjemaet. */
 const completeBasic = {
@@ -69,8 +80,8 @@ describe('validateOnboardingStep — steg 0 (grunnprofil)', () => {
 });
 
 describe('validateOnboardingStep — steg 1 (personlighet)', () => {
-  it('returnerer ingen feil for god selfDesc (>= 10 tegn)', () => {
-    expect(validateOnboardingStep(1, { selfDesc: 'Jeg er veldig kreativ' }).errors).toEqual([]);
+  it('returnerer ingen feil for god selfDesc + alle BFI-10-svar (PL-08a)', () => {
+    expect(validateOnboardingStep(1, { selfDesc: 'Jeg er veldig kreativ', ...allScaleAnswers() }).errors).toEqual([]);
   });
 
   it('flagger tom selfDesc', () => {
@@ -82,19 +93,52 @@ describe('validateOnboardingStep — steg 1 (personlighet)', () => {
     const { errors } = validateOnboardingStep(1, { selfDesc: 'For kort' });
     expect(errors.some((e) => e.field === 'selfDesc')).toBe(true);
   });
+
+  it('PL-08a: flagger manglende BFI-10-svar selv med god selfDesc', () => {
+    const { errors } = validateOnboardingStep(1, { selfDesc: 'Jeg er veldig kreativ' });
+    expect(errors.some((e) => e.message === SCALE_ERROR)).toBe(true);
+  });
 });
 
-describe('validateOnboardingStep — valfrie steg', () => {
-  it('returnerer ingen feil for steg 2–12 (ingen obligatoriske felt)', () => {
-    for (const step of [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]) {
+describe('validateOnboardingStep — skalasteg (PL-08a: påkrevde svar per steg)', () => {
+  it('skalasteg (1, 3, 5, 8, 10) avvises uten skalasvar', () => {
+    for (const step of [1, 3, 5, 8, 10]) {
+      const { errors } = validateOnboardingStep(step, {});
+      expect(errors.some((e) => e.message === SCALE_ERROR)).toBe(true);
+    }
+  });
+
+  it('skala med bare delvis svar avvises (3 av 12 ATTACHMENT-items)', () => {
+    const partial: Record<string, unknown> = { att_a1: 2, att_a2: 4, att_a3: 3 };
+    const { errors } = validateOnboardingStep(3, partial);
+    expect(errors.some((e) => e.message === SCALE_ERROR)).toBe(true);
+  });
+
+  it('skalasteg med alle items svart (1–5) godkjennes', () => {
+    const answers = allScaleAnswers();
+    for (const step of [3, 5, 8, 10]) {
+      expect(validateOnboardingStep(step, answers).errors).toEqual([]);
+    }
+  });
+
+  it('valfrie steg (2, 4, 6, 7, 9, 11, 12) returnerer ingen feil uten data', () => {
+    for (const step of [2, 4, 6, 7, 9, 11, 12]) {
       expect(validateOnboardingStep(step, {}).errors).toEqual([]);
     }
+  });
+
+  it('missingScaleItems identifiserer ugyldige verdier (streng/NaN/utenfor 1–5)', () => {
+    const data: Record<string, unknown> = { erq_r1: 3, erq_r2: 'x', erq_r3: 7 };
+    const missing = missingScaleItems(data, ERQ6);
+    expect(missing).toContain('erq_r2');
+    expect(missing).toContain('erq_r3');
+    expect(missing).not.toContain('erq_r1');
   });
 });
 
 describe('firstIncompleteOnboardingStep / validateAllOnboardingSteps', () => {
-  it('returnerer null / [] når profilen er komplett', () => {
-    const full = { ...completeBasic, selfDesc: 'Jeg er veldig kreativ' };
+  it('returnerer null / [] når profilen er komplett (inkl. alle 44 skalasvar)', () => {
+    const full = { ...completeBasic, selfDesc: 'Jeg er veldig kreativ', ...allScaleAnswers() };
     expect(firstIncompleteOnboardingStep(full)).toBeNull();
     expect(validateAllOnboardingSteps(full)).toEqual([]);
   });
@@ -111,8 +155,13 @@ describe('firstIncompleteOnboardingStep / validateAllOnboardingSteps', () => {
     expect(missing?.errors.map((e) => e.field)).toContain('selfDesc');
   });
 
-  it('returnerer begge ufullstendige steg i rekkefølge', () => {
+  it('PL-08a: tom profil returnerer alle ufullstendige steg (0, 1 + skalasteg)', () => {
     const all = validateAllOnboardingSteps({});
-    expect(all.map((v) => v.step)).toEqual([0, 1]);
+    expect(all.map((v) => v.step)).toEqual([0, 1, 3, 5, 8, 10]);
+  });
+
+  it('PL-08a: full profil uten skalasvar blokkeres av skalasteg (steget med første skaler)', () => {
+    const noScales = { ...completeBasic, selfDesc: 'Jeg er veldig kreativ' };
+    expect(firstIncompleteOnboardingStep(noScales)?.step).toBe(1);
   });
 });

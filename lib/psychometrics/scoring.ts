@@ -109,20 +109,26 @@ export function scoreBigFive(answers: Record<string, number>): BigFiveScores {
 /**
  * scoreAttachment — 12 egne tilknytnings-items (6 angst + 6 unnvikelse).
  * Utleder tilknytningsstil fra de to akserne:
- *   - begge < 3.0        → 'secure'
- *   - angst over, unnv. under → 'anxious'
- *   - angst under, unnv. over → 'avoidant'
- *   - begge over         → 'fearful'
+ *   - begge ≤ 3.0       → 'secure'
+ *   - angst over, unnv. ikke → 'anxious'
+ *   - unnv. over, angst ikke → 'avoidant'
+ *   - begge over        → 'fearful'
+ *
+ * PL-08h (godkjent av George 06.10): tersklene er STRENGT over 3.0.
+ * Nøytral midtsone (begge akser = 3,0) er IKKE «fearful» — en
+ * fullt nøytral bruker har ingen indikasjon på angst eller
+ * unnvikelse. Tidligere >= 3.0 ga 'fearful' for både tomme svar
+ * (manglende items teller som 3) og nøytrale svar.
  */
 export function scoreAttachment(answers: Record<string, number>): AttachmentScores {
   const anxiety   = averageForTrait(answers, ATTACHMENT, 'attachment_anxiety');
   const avoidance = averageForTrait(answers, ATTACHMENT, 'attachment_avoidance');
 
   let style: AttachmentStyle = 'secure';
-  if (anxiety >= 3.0 && avoidance >= 3.0)       style = 'fearful';
-  else if (anxiety >= 3.0)                      style = 'anxious';
-  else if (avoidance >= 3.0)                    style = 'avoidant';
-  // else secure (begge < 3.0)
+  if (anxiety > 3.0 && avoidance > 3.0)       style = 'fearful';
+  else if (anxiety > 3.0)                     style = 'anxious';
+  else if (avoidance > 3.0)                   style = 'avoidant';
+  // else secure (begge ≤ 3.0)
 
   return { anxiety, avoidance, style };
 }

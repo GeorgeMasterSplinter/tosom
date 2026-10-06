@@ -23,6 +23,7 @@ import { getServerSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/prisma';
 import { POST } from '@/app/api/profile/setup/route';
 import { TERMS_VERSION } from '@/config/legal';
+import { ALL_ITEMS } from '@/lib/psychometrics/instruments';
 
 const mockedSession = getServerSession as jest.Mock;
 const mockedPrisma = prisma as unknown as {
@@ -58,6 +59,8 @@ function validBody(): any {
     grenser: {},
     moden: {},
     preferanser: {},
+    // PL-08g: serveren er fasit — alle 44 items er påkrevde.
+    psychometrics: Object.fromEntries(ALL_ITEMS.map((item, i) => [item.id, (i % 5) + 1])),
   };
 }
 

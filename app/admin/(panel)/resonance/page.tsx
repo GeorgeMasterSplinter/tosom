@@ -74,7 +74,7 @@ function MatchingRoundsPanel() {
                   background: 'linear-gradient(180deg, rgba(212,175,55,0.6) 0%, rgba(212,175,55,0.15) 100%)',
                 }}
               />
-              <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.3)' }}>{bucket}</span>
+              <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.6)' }}>{bucket}</span>
             </div>
           ))}
         </div>
@@ -85,25 +85,25 @@ function MatchingRoundsPanel() {
         {Object.entries(data.resonanceDistribution).map(([level, count]) => (
           <div key={level} className="rounded-xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
             <div className="text-lg font-bold" style={{ color: '#D4AF37' }}>{count}</div>
-            <div className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>{level}</div>
+            <div className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>{level}</div>
           </div>
         ))}
       </div>
 
       {/* Siste runder */}
       <div>
-        <h4 className="text-xs font-semibold mb-2" style={{ color: 'rgba(255,255,255,0.5)' }}>SISTE RUNDER</h4>
+        <h4 className="text-xs font-semibold mb-2" style={{ color: 'rgba(255,255,255,0.6)' }}>SISTE RUNDER</h4>
         <div className="space-y-1 max-h-40 overflow-y-auto">
           {data.rounds.slice(0, 10).map((round, i) => (
             <div key={i} className="flex items-center justify-between text-xs py-1" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-              <span style={{ color: 'rgba(255,255,255,0.4)' }}>
+              <span style={{ color: 'rgba(255,255,255,0.6)' }}>
                 {new Date(round.at).toLocaleString('no-NO', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
               </span>
-              <span style={{ color: round.skipped ? '#FBBF24' : round.paired > 0 ? '#4ADE80' : 'rgba(255,255,255,0.4)' }}>
+              <span style={{ color: round.skipped ? '#FBBF24' : round.paired > 0 ? '#4ADE80' : 'rgba(255,255,255,0.6)' }}>
                 {round.skipped ? `Hoppet over (${round.reason})` : round.deferred ? 'Deferert' : `${round.paired} par, ${round.queueSize} i kø`}
               </span>
               {round.durationMs !== null && (
-                <span style={{ color: 'rgba(255,255,255,0.3)' }}>{(round.durationMs / 1000).toFixed(1)}s</span>
+                <span style={{ color: 'rgba(255,255,255,0.6)' }}>{(round.durationMs / 1000).toFixed(1)}s</span>
               )}
             </div>
           ))}
@@ -227,7 +227,7 @@ export default function AdminResonancePage() {
               padding: "12px 16px",
               borderRadius: "12px",
               background: "rgba(255,255,255,0.05)",
-              border: "1px solid rgba(255,255,255,0.1)",
+              border: "1px solid rgba(255,255,255,0.6)",
               color: "#E0E0E0",
               fontSize: "14px",
             }}
@@ -259,7 +259,7 @@ export default function AdminResonancePage() {
       )}
 
       {!data && !error && !loading && (
-        <div style={{ textAlign: "center", padding: "48px 0", color: "rgba(255,255,255,0.3)" }}>
+        <div style={{ textAlign: "center", padding: "48px 0", color: "rgba(255,255,255,0.6)" }}>
           Skriv inn en bruker-ID for å se resonansdata
         </div>
       )}
@@ -276,7 +276,7 @@ export default function AdminResonancePage() {
               { label: "DEEPER", value: `${data.phases.DEEPER?.count || 0} (dybde: ${data.phases.DEEPER?.avgDepth.toFixed(1) || "0"})`, color: "#F472B6" },
             ].map((stat) => (
               <div key={stat.label} style={{ padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}>
-                <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", marginBottom: "4px" }}>{stat.label}</div>
+                <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.6)", marginBottom: "4px" }}>{stat.label}</div>
                 <div style={{ fontSize: "16px", fontWeight: 600, color: stat.color }}>{stat.value}</div>
               </div>
             ))}
@@ -290,7 +290,7 @@ export default function AdminResonancePage() {
               </h2>
               <div style={{ position: "relative", height: chartH + 40, background: "rgba(255,255,255,0.02)", borderRadius: "12px", padding: "16px" }}>
                 {/* X-axis labels */}
-                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, display: "flex", justifyContent: "space-between", fontSize: "10px", color: "rgba(255,255,255,0.3)" }}>
+                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, display: "flex", justifyContent: "space-between", fontSize: "10px", color: "rgba(255,255,255,0.6)" }}>
                   {chartData.filter((_, i) => i % Math.max(1, Math.floor(chartData.length / 8)) === 0).map((d, i) => (
                     <span key={i} style={{ position: "absolute", bottom: 0, left: `${(d.day / 30) * 100}%`, transform: "translateX(-50%)" }}>
                       D{d.day}
@@ -299,7 +299,7 @@ export default function AdminResonancePage() {
                 </div>
 
                 {/* Y-axis labels */}
-                <div style={{ position: "absolute", left: 4, top: 16, bottom: 20, display: "flex", flexDirection: "column", justifyContent: "space-between", fontSize: "10px", color: "rgba(255,255,255,0.3)" }}>
+                <div style={{ position: "absolute", left: 4, top: 16, bottom: 20, display: "flex", flexDirection: "column", justifyContent: "space-between", fontSize: "10px", color: "rgba(255,255,255,0.6)" }}>
                   <span>3</span><span>2</span><span>1</span>
                 </div>
 
@@ -352,11 +352,11 @@ export default function AdminResonancePage() {
                     </div>
                     <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
                       {s.vulnerability && <span title="Sårbarhet" style={{ fontSize: "12px" }}>🔓</span>}
-                      <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)" }}>{new Date(s.createdAt).toLocaleDateString("nb-NO")}</span>
+                      <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.6)" }}>{new Date(s.createdAt).toLocaleDateString("nb-NO")}</span>
                     </div>
                   </div>
                   {s.summary && (
-                    <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.5)", fontStyle: "italic" }}>
+                    <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.6)", fontStyle: "italic" }}>
                       "{s.summary}"
                     </div>
                   )}

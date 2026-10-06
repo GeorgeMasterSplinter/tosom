@@ -49,7 +49,7 @@ export const Avatar = ({
       <div
         className="flex h-full w-full items-center justify-center overflow-hidden rounded-full border-2"
         style={{
-          borderColor: src ? "var(--ts-gold)" : "rgba(255, 255, 255, 0.12)",
+          borderColor: src ? "var(--ts-gold)" : "rgba(255, 255, 255, 0.6)",
           background: src ? "transparent" : "rgba(255, 255, 255, 0.06)",
         }}
       >

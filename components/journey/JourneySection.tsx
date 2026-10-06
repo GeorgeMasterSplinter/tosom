@@ -110,7 +110,7 @@ const JourneySection = ({ currentDay, daysCompleted, phaseLabel }: JourneySectio
                   ? `linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.1))`
                   : 'rgba(255, 255, 255, 0.04)',
                 border: `1px solid ${isActive ? 'rgba(212, 175, 55, 0.4)' : 'rgba(255, 255, 255, 0.08)'}`,
-                color: isActive ? '#D4AF37' : 'rgba(255, 255, 255, 0.4)',
+                color: isActive ? '#D4AF37' : 'rgba(255, 255, 255, 0.6)',
               }}
             >
               {phase.label} <span className="opacity-60">{phase.days}</span>
@@ -135,7 +135,7 @@ const JourneySection = ({ currentDay, daysCompleted, phaseLabel }: JourneySectio
         style={{
           fontSize: `${typography.fontSize.base}px`,
           lineHeight: typography.lineHeight.normal,
-          color: 'rgba(255, 255, 255, 0.5)',
+          color: 'rgba(255, 255, 255, 0.6)',
         }}
       >
         {getCurrentPhase(currentDay) === 'Oppdage' && 'Utforsk hverandre — små steg, store inntrykk.'}
@@ -181,9 +181,9 @@ const JourneySection = ({ currentDay, daysCompleted, phaseLabel }: JourneySectio
 
         {/* Dager under bar */}
         <div className="flex justify-between mt-2">
-          <span style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.3)' }}>Dag 1</span>
+          <span style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.6)' }}>Dag 1</span>
           <span style={{ fontSize: '10px', color: '#D4AF37', fontWeight: 600 }}>{currentPhase}</span>
-          <span style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.3)' }}>Dag 30</span>
+          <span style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.6)' }}>Dag 30</span>
         </div>
       </div>
 
@@ -231,7 +231,7 @@ const JourneySection = ({ currentDay, daysCompleted, phaseLabel }: JourneySectio
             style={{
               fontSize: `${typography.fontSize.sm}px`,
               lineHeight: typography.lineHeight.normal,
-              color: 'rgba(255, 255, 255, 0.5)',
+              color: 'rgba(255, 255, 255, 0.6)',
               fontStyle: 'italic',
             }}
           >
@@ -286,7 +286,7 @@ const JourneySection = ({ currentDay, daysCompleted, phaseLabel }: JourneySectio
             className="mt-1"
             style={{
               fontSize: `${typography.fontSize.sm}px`,
-              color: 'rgba(255, 255, 255, 0.5)',
+              color: 'rgba(255, 255, 255, 0.6)',
             }}
           >
             Ta deg tid til å reflektere over veien dere har gått sammen.

@@ -90,7 +90,7 @@ export default function AdminUsersPage() {
           <h1 className="text-2xl font-bold mb-1" style={{ color: 'rgba(255,255,255,0.95)' }}>
             Brukere
           </h1>
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
+          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
             Registrerte kontoer — midlertidig oversikt
           </p>
         </div>
@@ -116,7 +116,7 @@ export default function AdminUsersPage() {
         <span className="text-2xl font-mono font-bold" style={{ color: '#D4AF37' }}>
           {loading ? '—' : pagination.total.toLocaleString('nb-NO')}
         </span>
-        <span className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
+        <span className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>
           registrerte kontoer
         </span>
       </div>
@@ -161,7 +161,7 @@ export default function AdminUsersPage() {
             <button
               onClick={() => setConfirmEmail(null)}
               className="px-4 py-2 rounded-lg text-xs font-medium transition-colors"
-              style={{ background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.5)', border: '1px solid rgba(255,255,255,0.08)' }}
+              style={{ background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.6)', border: '1px solid rgba(255,255,255,0.08)' }}
             >
               Avbryt
             </button>
@@ -175,20 +175,20 @@ export default function AdminUsersPage() {
         style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}
       >
         <div className="grid grid-cols-[1fr_auto_auto] items-center px-4 py-3 gap-3" style={{ background: 'rgba(255,255,255,0.02)' }}>
-          <span className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>Epost · Registrert</span>
-          <span className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>Status</span>
-          <span className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>Handling</span>
+          <span className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>Epost · Registrert</span>
+          <span className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>Status</span>
+          <span className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>Handling</span>
         </div>
 
         {loading && (
           <div className="py-12 text-center">
-            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>Henter brukere …</p>
+            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>Henter brukere …</p>
           </div>
         )}
 
         {!loading && !error && users.length === 0 && (
           <div className="py-12 text-center">
-            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>Ingen registrerte kontoer ennå.</p>
+            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>Ingen registrerte kontoer ennå.</p>
           </div>
         )}
 
@@ -199,7 +199,7 @@ export default function AdminUsersPage() {
               u.journeyState === 'MATCHED' ? '#34D399'
               : u.journeyState === 'QUEUED' ? '#D4AF37'
               : u.journeyState === 'IN_JOURNEY' ? '#60A5FA'
-              : 'rgba(255,255,255,0.35)';
+              : 'rgba(255,255,255,0.6)';
             const journeyLabel =
               u.journeyState === 'MATCHED' ? 'Matchet'
               : u.journeyState === 'QUEUED' ? 'I kø'
@@ -217,7 +217,7 @@ export default function AdminUsersPage() {
                   <p className="text-sm break-all" style={{ color: 'rgba(255,255,255,0.85)' }}>
                     {u.email}
                   </p>
-                  <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                  <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.6)' }}>
                     {new Date(u.createdAt).toLocaleDateString('nb-NO')}
                     {u.role === 'ADMIN' ? ' · Admin' : ''}
                     {u.bannedAt ? ' · Utestengt' : ''}
@@ -231,7 +231,7 @@ export default function AdminUsersPage() {
                   >
                     {journeyLabel}
                   </span>
-                  <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                  <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.6)' }}>
                     {u.onboardingComplete
                       ? 'Onboarding fullført'
                       : `Onboarding steg ${u.onboardingStep}`}
@@ -254,7 +254,7 @@ export default function AdminUsersPage() {
       {/* Paginering */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
-          <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
+          <span className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>
             Side {pagination.page} av {totalPages}
           </span>
           <div className="flex items-center gap-2">

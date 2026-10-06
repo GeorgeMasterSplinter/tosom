@@ -54,7 +54,7 @@ export function ImageShareLockBanner({ imageShareAllowedAt }: ImageShareLockBann
       <div style={{ fontSize: '16px', color: '#D4AF37', fontWeight: '500' }}>
         Du kan dele bilder om {daysLeft} dag{daysLeft !== 1 ? 'er' : ''}
       </div>
-      <div style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.4)', marginTop: '4px' }}>
+      <div style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.6)', marginTop: '4px' }}>
         La ord og tanker være veien mellom dere — i alle fall for nå.
       </div>
     </div>

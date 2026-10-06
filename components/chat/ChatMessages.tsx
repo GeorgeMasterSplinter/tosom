@@ -55,12 +55,12 @@ export default function ChatMessages({
           <div
             className="w-10 h-10 rounded-full flex items-center justify-center"
             style={{
-              border: '2px solid rgba(255, 255, 255, 0.2)',
+              border: '2px solid rgba(255, 255, 255, 0.6)',
               borderTopColor: '#D4AF37',
               animation: 'spin 1s linear infinite',
             }}
           />
-          <p style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: '14px' }}>
+          <p style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '14px' }}>
             Lastar meldinger...
           </p>
         </div>

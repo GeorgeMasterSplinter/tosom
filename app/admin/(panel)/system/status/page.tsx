@@ -134,7 +134,7 @@ export default function SystemStatusPage() {
           >
             ● {health?.status?.toUpperCase() ?? 'UNKNOWN'}
           </span>
-          <span style={{ fontSize: '13px', color: 'rgba(255,255,255,0.4)' }}>
+          <span style={{ fontSize: '13px', color: 'rgba(255,255,255,0.6)' }}>
             Oppdaterer hvar 30s · {new Date().toLocaleTimeString('nb-NO')}
           </span>
         </div>
@@ -191,7 +191,7 @@ export default function SystemStatusPage() {
                       {statusLabel(service.status)}
                     </span>
                   </div>
-                  <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)' }}>
+                  <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)' }}>
                     {service.details || service.error || ''}
                   </div>
                 </div>
@@ -228,7 +228,7 @@ export default function SystemStatusPage() {
                   border: '1px solid rgba(255,255,255,0.08)',
                 }}
               >
-                <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', marginBottom: '4px' }}>
+                <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)', marginBottom: '4px' }}>
                   {item.label}
                 </div>
                 <div style={{ fontSize: '24px', fontWeight: 600, color: item.color }}>
@@ -241,7 +241,7 @@ export default function SystemStatusPage() {
           {/* Top Slow Routes */}
           {latency.topSlowRoutes.length > 0 && (
             <div style={{ marginTop: '16px' }}>
-              <h3 style={{ fontSize: '14px', fontWeight: 500, marginBottom: '8px', color: 'rgba(255,255,255,0.5)' }}>
+              <h3 style={{ fontSize: '14px', fontWeight: 500, marginBottom: '8px', color: 'rgba(255,255,255,0.6)' }}>
                 Top 5 tregaste ruter (gj.snitt ms)
               </h3>
               <div style={{ display: 'grid', gap: '4px' }}>
@@ -282,7 +282,7 @@ export default function SystemStatusPage() {
                 border: '1px solid rgba(255,255,255,0.08)',
               }}
             >
-              <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', marginBottom: '4px' }}>
+              <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)', marginBottom: '4px' }}>
                 {item.label}
               </div>
               <div style={{ fontSize: '14px', fontWeight: 500 }}>{item.value}</div>
@@ -303,7 +303,7 @@ export default function SystemStatusPage() {
             background: 'rgba(255,255,255,0.03)',
             border: '1px solid rgba(255,255,255,0.08)',
           }}>
-            <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', marginBottom: '4px' }}>
+            <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)', marginBottom: '4px' }}>
               Siste AI-request logg
             </div>
             <div style={{ fontSize: '14px' }}>

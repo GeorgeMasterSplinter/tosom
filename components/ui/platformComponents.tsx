@@ -32,7 +32,7 @@ const PlatformButton: React.FC<PlatformButtonProps> = ({
   onPress,
   className = '',
 }) => {
-  const base = 'inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:ring-offset-2 focus:ring-offset-[#0B0E11]';
+  const base = 'inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200  focus:ring-2 focus:ring-[#D4AF37] focus:ring-offset-2 focus:ring-offset-[#0B0E11]';
   const variants = {
     primary: 'bg-[#D4AF37] text-[#0B0E11] hover:bg-[#E8C766] disabled:opacity-40 disabled:cursor-not-allowed',
     secondary: 'bg-white/[0.04] text-white border border-white/8 hover:bg-white/[0.08] disabled:opacity-40',
@@ -132,7 +132,7 @@ const PlatformInput: React.FC<PlatformInputProps> = ({ label, error, className =
       {label && <label className="block text-sm font-medium text-white mb-2">{label}</label>}
       <input
         {...(onChange ? { onChange } : {})}
-        className={`w-full bg-white/[0.04] border border-white/8 rounded-xl px-4 py-3 text-base text-white outline-none transition-all duration-200 placeholder:text-white/45 focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/25 disabled:opacity-40 ${error ? 'border-[#FF4D4D]' : ''} ${className}`}
+        className={`w-full bg-white/[0.04] border border-white/8 rounded-xl px-4 py-3 text-base text-white transition-all duration-200 placeholder:text-white/45 focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/25 disabled:opacity-40 ${error ? 'border-[#FF4D4D]' : ''} ${className}`}
         {...props}
       />
       {error && <span className="block text-xs text-[#FF4D4D] mt-1">{error}</span>}

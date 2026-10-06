@@ -62,11 +62,11 @@ export const TextAreaField: FC<TextAreaFieldProps> = ({
           w-full px-4 py-3 rounded-xl text-sm
           transition-all duration-200 ease-out
           resize-none
-          focus:outline-none
+          
         "
         style={{
           background: 'rgba(255, 255, 255, 0.05)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
+          border: '1px solid rgba(255, 255, 255, 0.6)',
           color: '#FFFFFF',
           backdropFilter: 'blur(12px)',
           borderRadius: '20px',
@@ -76,7 +76,7 @@ export const TextAreaField: FC<TextAreaFieldProps> = ({
           e.target.style.boxShadow = '0 0 0 3px rgba(212, 175, 55, 0.15)';
         }}
         onBlur={(e) => {
-          e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+          e.target.style.borderColor = 'rgba(255, 255, 255, 0.6)';
           e.target.style.boxShadow = 'none';
         }}
       />

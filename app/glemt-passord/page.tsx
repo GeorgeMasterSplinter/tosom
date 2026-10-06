@@ -45,11 +45,10 @@ export default function GlemtPassordPage() {
     height: "64px",
     borderRadius: "16px",
     background: "rgba(255,255,255,0.03)",
-    border: "1px solid rgba(255,255,255,0.1)",
+    border: "1px solid rgba(255,255,255,0.6)",
     padding: "0 20px",
     fontSize: "18px",
     color: "white",
-    outline: "none",
     transition: "border 300ms",
   };
 
@@ -121,7 +120,7 @@ export default function GlemtPassordPage() {
                     disabled={status === "loading"}
                     style={inputStyle}
                     onFocus={(e) => (e.currentTarget.style.border = "1px solid rgba(212,175,55,0.5)")}
-                    onBlur={(e) => (e.currentTarget.style.border = "1px solid rgba(255,255,255,0.1)")}
+                    onBlur={(e) => (e.currentTarget.style.border = "1px solid rgba(255,255,255,0.6)")}
                     autoComplete="email"
                   />
                 </div>
@@ -163,7 +162,7 @@ export default function GlemtPassordPage() {
                 <a
                   href="/login"
                   className="text-sm"
-                  style={{ color: "rgba(255,255,255,0.5)" }}
+                  style={{ color: "rgba(255,255,255,0.6)" }}
                 >
                   Tilbake til innlogging
                 </a>

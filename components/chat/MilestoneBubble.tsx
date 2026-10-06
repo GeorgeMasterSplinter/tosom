@@ -21,7 +21,7 @@ const G = {
   goldLight: "#E8C766",
   goldMuted: "rgba(212,175,55,0.2)",
   textPrimary: "rgba(255,255,255,0.92)",
-  textSecondary: "rgba(255,255,255,0.55)",
+  textSecondary: "rgba(255,255,255,0.6)",
 };
 
 /* ═══════════════════════════════════════

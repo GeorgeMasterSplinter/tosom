@@ -73,7 +73,7 @@ export function ProfileLockBanner({
             style={{
               fontSize: '15px',
               lineHeight: '1.6',
-              color: 'rgba(255, 255, 255, 0.55)',
+              color: 'rgba(255, 255, 255, 0.6)',
               margin: 0,
             }}
           >
@@ -99,7 +99,7 @@ export function ProfileLockBanner({
                 }}
               />
             </div>
-            <span style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.3)' }}>
+            <span style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.6)' }}>
               {Math.round((currentDay / totalDays) * 100)}% fullført
             </span>
           </div>
@@ -152,7 +152,7 @@ export function JourneyLockOverlay() {
           style={{
             fontSize: '16px',
             lineHeight: '1.7',
-            color: 'rgba(255, 255, 255, 0.5)',
+            color: 'rgba(255, 255, 255, 0.6)',
             margin: 0,
           }}
         >
@@ -162,7 +162,7 @@ export function JourneyLockOverlay() {
 
         <p
           className="mt-6 text-sm italic"
-          style={{ color: 'rgba(255, 255, 255, 0.3)' }}
+          style={{ color: 'rgba(255, 255, 255, 0.6)' }}
         >
           Når reisen er fullført kan du oppdatere profilen din og starte en ny reise.
         </p>

@@ -88,7 +88,7 @@ export const ToSomToast: FC<ToSomToastProps> = ({ message, variant = 'info', onC
         {onClose && (
           <button
             className="flex-shrink-0 w-6 h-6 flex items-center justify-center"
-            style={{ color: 'rgba(255,255,255,0.5)' }}
+            style={{ color: 'rgba(255,255,255,0.6)' }}
             onClick={() => setVisible(false)}
           >
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none">

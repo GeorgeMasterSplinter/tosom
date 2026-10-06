@@ -77,7 +77,7 @@ function RoundReminder() {
           {countdown} til fredag 23:59
         </p>
       </div>
-      <p className="text-center mt-2 text-xs leading-relaxed" style={{ color: 'rgba(255, 255, 255, 0.35)' }}>
+      <p className="text-center mt-2 text-xs leading-relaxed" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
         Matcherunden kjører lørdag. Vær ferdig med profilen før fredag 23:59 for å være
         med på denne runden — eller la den ligge til neste lørdag.
       </p>
@@ -104,7 +104,7 @@ function SaveLogoutBar({ isSaving }: { isSaving: boolean }) {
     <div className="mt-5 flex items-center justify-between px-1">
       <span
         className="inline-flex items-center gap-1.5 text-xs transition-opacity duration-500"
-        style={{ color: 'rgba(255, 255, 255, 0.45)', opacity: isSaving ? 0.5 : saved ? 1 : 0.4 }}
+        style={{ color: 'rgba(255, 255, 255, 0.6)', opacity: isSaving ? 0.5 : saved ? 1 : 0.4 }}
         aria-live="polite"
       >
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'rgba(77, 213, 158, 0.7)' }}>
@@ -117,7 +117,7 @@ function SaveLogoutBar({ isSaving }: { isSaving: boolean }) {
         type="button"
         onClick={() => { clearOnboardingDraft(); signOut({ callbackUrl: '/' }); }} // PL-17 (V-12): tøm utkast ved utlogging
         className="text-xs transition-colors duration-300 hover:opacity-100"
-        style={{ color: 'rgba(255, 255, 255, 0.35)' }}
+        style={{ color: 'rgba(255, 255, 255, 0.6)' }}
       >
         Logg ut
       </button>

@@ -62,7 +62,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
               ${sizeMap[size]}
               pr-10
               cursor-pointer
-              focus:outline-none focus:ring-0
+               focus:ring-0
               ${props.disabled ? 'opacity-50 cursor-not-allowed' : ''}
             `}
             {...props}

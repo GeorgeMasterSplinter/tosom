@@ -169,7 +169,7 @@ const WelcomeScreen: React.FC = () => {
             placeholder="Hva heter du?"
             value={state.name}
             onChange={(e) => set({ name: e.target.value })}
-            className="w-full bg-white/[0.04] border border-white/10 backdrop-blur-xl rounded-2xl px-6 py-4 text-white placeholder:text-white/30 text-center focus:outline-none focus:border-[#D4AF37] focus:shadow-[0_0_0_3px_rgba(212,175,55,0.2)] transition-all"
+            className="w-full bg-white/[0.04] border border-white/10 backdrop-blur-xl rounded-2xl px-6 py-4 text-white placeholder:text-white/30 text-center  focus:border-[#D4AF37] focus:shadow-[0_0_0_3px_rgba(212,175,55,0.2)] transition-all"
           />
           <button
             onClick={next}

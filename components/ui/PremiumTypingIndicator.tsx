@@ -38,7 +38,7 @@ export const PremiumTypingIndicator = ({ visible = true, name = 'Partner' }: Pre
         <div className="flex items-center gap-1">
           <span
             className="text-xs font-medium"
-            style={{ color: 'rgba(255, 255, 255, 0.5)' }}
+            style={{ color: 'rgba(255, 255, 255, 0.6)' }}
           >
             {name} skriv
           </span>

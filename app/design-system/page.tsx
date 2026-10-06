@@ -45,7 +45,7 @@ function SubsectionTitle({ children, description }: { children: React.ReactNode;
         {children}
       </h3>
       {description && (
-        <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>
+        <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.6)' }}>
           {description}
         </p>
       )}
@@ -79,7 +79,7 @@ function CopyBlock({ label, code }: { label: string; code: string }) {
           className="text-xs px-3 py-1 rounded-md transition-all duration-200"
           style={{
             background: copied ? 'rgba(76,175,80,0.15)' : 'rgba(255,255,255,0.06)',
-            color: copied ? '#4CAF50' : 'rgba(255,255,255,0.5)',
+            color: copied ? '#4CAF50' : 'rgba(255,255,255,0.6)',
             border: `1px solid ${copied ? 'rgba(76,175,80,0.3)' : 'rgba(255,255,255,0.08)'}`,
           }}
         >
@@ -168,15 +168,15 @@ export default function DesignSystemPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
           <div className="p-5 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
             <span className="text-sm font-semibold" style={{ color: '#D4AF37' }}>card-padding</span>
-            <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>Standard: p-6 (24px)</p>
+            <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.6)' }}>Standard: p-6 (24px)</p>
           </div>
           <div className="p-5 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
             <span className="text-sm font-semibold" style={{ color: '#D4AF37' }}>section-gap</span>
-            <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>Standard: gap-6 (24px)</p>
+            <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.6)' }}>Standard: gap-6 (24px)</p>
           </div>
           <div className="p-5 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
             <span className="text-sm font-semibold" style={{ color: '#D4AF37' }}>page-padding</span>
-            <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>Standard: px-6 py-8</p>
+            <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.6)' }}>Standard: px-6 py-8</p>
           </div>
         </div>
       </ToSomSection>
@@ -211,19 +211,19 @@ export default function DesignSystemPage() {
           {/* H1 */}
           <div className="p-5 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
             <h1 className="text-[40px] font-bold mb-2" style={{ color: '#FFFFFF' }}>H1 — 40px</h1>
-            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>Bruk: Sidetittel på landing og onboarding</p>
+            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>Bruk: Sidetittel på landing og onboarding</p>
           </div>
 
           {/* H2 */}
           <div className="p-5 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
             <h2 className="text-[28px] font-semibold mb-2" style={{ color: '#FFFFFF' }}>H2 — 28px</h2>
-            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>Bruk: Seksjonstitlar i dashboard og chat</p>
+            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>Bruk: Seksjonstitlar i dashboard og chat</p>
           </div>
 
           {/* H3 */}
           <div className="p-5 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
             <h3 className="text-[22px] font-medium mb-2" style={{ color: '#FFFFFF' }}>H3 — 22px</h3>
-            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>Bruk: Kort-titlar og paneloverskrifter</p>
+            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>Bruk: Kort-titlar og paneloverskrifter</p>
           </div>
 
           {/* Body */}
@@ -231,15 +231,15 @@ export default function DesignSystemPage() {
             <p className="text-[18px] leading-relaxed mb-2" style={{ color: 'rgba(255,255,255,0.8)' }}>
               Body — 18px med line-height 1.7. Dette er standardbruket for brødtekst i heile appen.
             </p>
-            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>Bruk: Brødtekst, dialogar, chat-meldinger</p>
+            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>Bruk: Brødtekst, dialogar, chat-meldinger</p>
           </div>
 
           {/* Microcopy */}
           <div className="p-5 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
-            <p className="text-[14px] mb-2" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            <p className="text-[14px] mb-2" style={{ color: 'rgba(255,255,255,0.6)' }}>
               Microcopy — 14px med line-height 1.5. Små tekstar som knapper, labelar og hints.
             </p>
-            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>Bruk: Knapp-text, form-labelar, hjelpetekstar</p>
+            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>Bruk: Knapp-text, form-labelar, hjelpetekstar</p>
           </div>
         </div>
 
@@ -264,7 +264,7 @@ export default function DesignSystemPage() {
           <div className="h-20 rounded-xl" style={{ background: '#F5F5F5' }}>
             <span className="text-xs block p-3 font-mono text-[#0B1520]">#F5F5F5</span>
           </div>
-          <div className="h-20 rounded-xl" style={{ background: '#FFFFFF', border: '1px solid rgba(255,255,255,0.2)' }}>
+          <div className="h-20 rounded-xl" style={{ background: '#FFFFFF', border: '1px solid rgba(255,255,255,0.6)' }}>
             <span className="text-xs block p-3 font-mono text-[#0B1520]">#FFFFFF</span>
           </div>
         </div>
@@ -320,7 +320,7 @@ export default function DesignSystemPage() {
           className="inline-flex items-center justify-center px-5 py-3 font-medium rounded-[16px] ml-4"
           style={{
             background: 'rgba(212,175,55,0.2)',
-            color: 'rgba(255,255,255,0.3)',
+            color: 'rgba(255,255,255,0.6)',
             fontSize: '18px',
             cursor: 'not-allowed',
           }}
@@ -340,7 +340,7 @@ export default function DesignSystemPage() {
           {/* Default */}
           <GlassPanel borderStyle="default" padding="md">
             <span className="text-xs font-medium mb-2 block" style={{ color: 'rgba(212,175,55,0.8)' }}>default</span>
-            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>border: rgba(255,255,255,0.1)</p>
+            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>border: rgba(255,255,255,0.6)</p>
           </GlassPanel>
 
           {/* Gold */}
@@ -424,7 +424,7 @@ export default function DesignSystemPage() {
             <h4 className="font-semibold mb-3" style={{ color: '#D4AF37' }}>🎨 Glassmorphism</h4>
             <ul className="space-y-1 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
               <li>Bakgrunn: rgba(255,255,255,0.04)</li>
-              <li>Border: 1px solid rgba(255,255,255,0.1)</li>
+              <li>Border: 1px solid rgba(255,255,255,0.6)</li>
               <li>Blur: backdrop-blur-md</li>
             </ul>
           </div>

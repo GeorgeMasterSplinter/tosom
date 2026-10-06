@@ -38,7 +38,7 @@ export const ToSomChatBubble: FC<ToSomChatBubbleProps> = ({
         }}
       >
         <p className="text-sm leading-relaxed whitespace-pre-wrap">{message}</p>
-        <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.5)', textAlign: isSent ? 'right' : 'left' }}>
+        <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.6)', textAlign: isSent ? 'right' : 'left' }}>
           {timestamp}
         </p>
       </div>

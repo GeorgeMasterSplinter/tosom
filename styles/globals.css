@@ -792,8 +792,8 @@ body.landing-page {
   /* ══ UI 5.0 Text Palette ══ */
   --ts-text-primary: #FFFFFF;
   --ts-text-secondary: rgba(255, 255, 255, 0.65);
-  --ts-text-muted: rgba(255, 255, 255, 0.45);
-  --ts-text-subtle: rgba(255, 255, 255, 0.30);
+  --ts-text-muted: rgba(255, 255, 255, 0.6);
+  --ts-text-subtle: rgba(255, 255, 255, 0.6);
   --ts-text-gold-accent: #D4AF37;
 
   /* ══ UI 5.0 Gold Accents ══ */
@@ -1464,4 +1464,14 @@ input,
 textarea,
 select {
   font-size: 16px;
+}
+
+/* V-8: synlig tastaturfokus og respekt for redusert bevegelse (WCAG 2.1 AA) */
+:focus-visible { outline: 2px solid #D4AF37; outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -33,7 +33,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const base =
-    "inline-flex items-center justify-center rounded-[12px] font-medium border-none cursor-pointer transition-all duration-[150ms] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/50 focus-visible:ring-offset-2";
+    "inline-flex items-center justify-center rounded-[12px] font-medium border-none cursor-pointer transition-all duration-[150ms]  focus-visible:ring-2 focus-visible:ring-[#D4AF37]/50 focus-visible:ring-offset-2";
   
   const variants: Record<ButtonVariant, string> = {
     primary:
@@ -119,7 +119,7 @@ export function Input({ label, error, className = "", ...props }: InputProps) {
         </label>
       )}
       <input
-        className={`bg-white/[0.04] border border-white/10 rounded-[12px] px-4 py-3 text-sm text-white placeholder:text-white/25 focus:outline-none focus:border-[#D4AF37]/50 focus:shadow-[0_0_0_3px_rgba(212,175,55,0.2)] backdrop-blur-xl transition-all ${
+        className={`bg-white/[0.04] border border-white/10 rounded-[12px] px-4 py-3 text-sm text-white placeholder:text-white/25  focus:border-[#D4AF37]/50 focus:shadow-[0_0_0_3px_rgba(212,175,55,0.2)] backdrop-blur-xl transition-all ${
           error ? "border-[#FF4D4D]" : ""
         } ${className}`.trim()}
         {...props}
@@ -148,7 +148,7 @@ export function TextArea({ label, error, className = "", ...props }: TextAreaPro
         </label>
       )}
       <textarea
-        className={`bg-white/[0.04] border border-white/10 rounded-[12px] px-4 py-3 text-sm text-white placeholder:text-white/25 focus:outline-none focus:border-[#D4AF37]/50 focus:shadow-[0_0_0_3px_rgba(212,175,55,0.2)] backdrop-blur-xl transition-all resize-none ${
+        className={`bg-white/[0.04] border border-white/10 rounded-[12px] px-4 py-3 text-sm text-white placeholder:text-white/25  focus:border-[#D4AF37]/50 focus:shadow-[0_0_0_3px_rgba(212,175,55,0.2)] backdrop-blur-xl transition-all resize-none ${
           error ? "border-[#FF4D4D]" : ""
         } ${className}`.trim()}
         {...props}

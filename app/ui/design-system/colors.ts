@@ -15,7 +15,7 @@ export const COLORS = {
   // Text
   textPrimary: "#FFFFFF",
   textSecondary: "rgba(255, 255, 255, 0.65)",
-  textMuted: "rgba(255, 255, 255, 0.45)",
+  textMuted: "rgba(255, 255, 255, 0.6)",
 
   // Accent
   gold: "#D4AF37",

@@ -135,7 +135,7 @@ export const UniversalMenu = () => {
                 background: 'rgba(255,255,255,0.04)',
                 backdropFilter: 'blur(10px)',
                 color: 'rgba(255,255,255,0.90)',
-                border: '1px solid rgba(255,255,255,0.15)',
+                border: '1px solid rgba(255,255,255,0.6)',
               }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.08)';
@@ -146,7 +146,7 @@ export const UniversalMenu = () => {
               onMouseLeave={(e) => {
                 (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.04)';
                 (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.90)';
-                (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.15)';
+                (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.6)';
                 (e.currentTarget as HTMLElement).style.transform = 'scale(1)';
               }}
             >
@@ -158,15 +158,15 @@ export const UniversalMenu = () => {
               style={{
                 background: 'linear-gradient(135deg, rgba(212,175,55,0.92) 0%, rgba(232,194,122,0.92) 100%)',
                 color: '#0A0F1A',
-                boxShadow: '0 4px 12px rgba(212,175,55,0.20), 0.5px 0.5px 0 rgba(255,255,255,0.1) inset',
-                border: '0.5px solid rgba(255,255,255,0.15)',
+                boxShadow: '0 4px 12px rgba(212,175,55,0.20), 0.5px 0.5px 0 rgba(255,255,255,0.6) inset',
+                border: '0.5px solid rgba(255,255,255,0.6)',
               }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 16px rgba(212,175,55,0.25), 0.5px 0.5px 0 rgba(255,255,255,0.15) inset';
+                (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 16px rgba(212,175,55,0.25), 0.5px 0.5px 0 rgba(255,255,255,0.6) inset';
                 (e.currentTarget as HTMLElement).style.transform = 'scale(1.02)';
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 12px rgba(212,175,55,0.20), 0.5px 0.5px 0 rgba(255,255,255,0.1) inset';
+                (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 12px rgba(212,175,55,0.20), 0.5px 0.5px 0 rgba(255,255,255,0.6) inset';
                 (e.currentTarget as HTMLElement).style.transform = 'scale(1)';
               }}
             >
@@ -248,7 +248,7 @@ export const UniversalMenu = () => {
                     style={{
                       background: 'rgba(255,255,255,0.04)',
                       color: 'rgba(255,255,255,0.90)',
-                      border: '1px solid rgba(255,255,255,0.15)',
+                      border: '1px solid rgba(255,255,255,0.6)',
                     }}
                     onClick={() => setMenuOpen(false)}
                   >
@@ -261,7 +261,7 @@ export const UniversalMenu = () => {
                       background: 'linear-gradient(135deg, rgba(212,175,55,0.92) 0%, rgba(232,194,122,0.92) 100%)',
                       color: '#0A0F1A',
                       boxShadow: '0 4px 12px rgba(212,175,55,0.20)',
-                      border: '0.5px solid rgba(255,255,255,0.15)',
+                      border: '0.5px solid rgba(255,255,255,0.6)',
                     }}
                     onClick={() => setMenuOpen(false)}
                   >

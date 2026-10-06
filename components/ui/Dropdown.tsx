@@ -12,7 +12,7 @@ export default function Dropdown({ options }) {
     <div className="relative">
       <button
         onClick={toggleDropdown}
-        className="w-full text-left p-3 bg-[#0A1A2A]/5 border border-[#0A1A2A]/10 backdrop-blur-sm rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition-colors"
+        className="w-full text-left p-3 bg-[#0A1A2A]/5 border border-[#0A1A2A]/10 backdrop-blur-sm rounded-lg text-white  focus:ring-2 focus:ring-[#D4AF37] transition-colors"
       >
         {selected}
       </button>

@@ -86,7 +86,7 @@ export const ToSomModal: FC<ToSomModalProps> = ({ open, onClose, title, children
               }}
               onClick={onClose}
             >
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" style={{ color: 'rgba(255,255,255,0.5)' }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" style={{ color: 'rgba(255,255,255,0.6)' }}>
                 <path d="M6 6L18 18M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
               </svg>
             </button>

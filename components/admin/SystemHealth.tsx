@@ -81,7 +81,7 @@ export const SystemHealth = ({
         <div>
           <p
             className="text-xs font-medium uppercase tracking-wider mb-1"
-            style={{ color: 'rgba(255, 255, 255, 0.4)' }}
+            style={{ color: 'rgba(255, 255, 255, 0.6)' }}
           >
             Systemtilstand
           </p>
@@ -110,7 +110,7 @@ export const SystemHealth = ({
         <div className="text-center">
           <p
             className="text-xs mb-1"
-            style={{ color: 'rgba(255, 255, 255, 0.4)' }}
+            style={{ color: 'rgba(255, 255, 255, 0.6)' }}
           >
             Oppetid
           </p>
@@ -124,7 +124,7 @@ export const SystemHealth = ({
         <div className="text-center">
           <p
             className="text-xs mb-1"
-            style={{ color: 'rgba(255, 255, 255, 0.4)' }}
+            style={{ color: 'rgba(255, 255, 255, 0.6)' }}
           >
             DB-latens
           </p>
@@ -138,7 +138,7 @@ export const SystemHealth = ({
         <div className="text-center">
           <p
             className="text-xs mb-1"
-            style={{ color: 'rgba(255, 255, 255, 0.4)' }}
+            style={{ color: 'rgba(255, 255, 255, 0.6)' }}
           >
             API-latens
           </p>
@@ -154,7 +154,7 @@ export const SystemHealth = ({
       {/* Melding */}
       <p
         className="mt-4 text-sm text-center"
-        style={{ color: 'rgba(255, 255, 255, 0.5)' }}
+        style={{ color: 'rgba(255, 255, 255, 0.6)' }}
       >
         {message}
       </p>

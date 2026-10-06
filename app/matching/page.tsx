@@ -375,7 +375,7 @@ export default function MatchingPage() {
       <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(180deg, #0B1520 0%, #0F1A26 100%)' }}>
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 rounded-full border-2 animate-spin" style={{ borderColor: 'rgba(212,175,55,0.2)', borderTopColor: '#D4AF37' }} />
-          <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '14px' }}>Laster…</p>
+          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px' }}>Laster…</p>
         </div>
       </div>
     );
@@ -394,7 +394,7 @@ export default function MatchingPage() {
           <h1 style={{ ...typographyToStyle('hero'), fontSize: '36px', color: 'rgba(255,255,255,0.92)' }}>
             {greeting}, {userName}
           </h1>
-          <p className="mt-3" style={{ fontSize: '17px', color: 'rgba(255,255,255,0.55)', lineHeight: '1.6' }}>
+          <p className="mt-3" style={{ fontSize: '17px', color: 'rgba(255,255,255,0.6)', lineHeight: '1.6' }}>
             Ta deg tid. Her møter du partneren din, steg for steg.
           </p>
         </div>
@@ -424,7 +424,7 @@ export default function MatchingPage() {
                   <p className="font-semibold" style={{ color: 'rgba(255,255,255,0.9)', fontSize: '20px' }}>
                     {overview.match.name || 'Din match'}
                   </p>
-                  <div className="mt-1 flex items-center justify-center gap-3 text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                  <div className="mt-1 flex items-center justify-center gap-3 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
                     {overview.match.age != null && <span>{overview.match.age} år</span>}
                     {overview.match.distanceKm != null && <span>ca. {overview.match.distanceKm} km</span>}
                   </div>
@@ -433,7 +433,7 @@ export default function MatchingPage() {
                   </p>
                 </div>
               )}
-              <p className="mt-6 text-sm" style={{ color: 'rgba(255,255,255,0.35)' }}>
+              <p className="mt-6 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
                 Reisen deres er i gang. Dere har 30 dager — rolig og i deres tempo.
               </p>
               <button
@@ -489,7 +489,7 @@ export default function MatchingPage() {
                   <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '16px', fontWeight: 500 }}>
                     Oppdater profil for betre match
                   </p>
-                  <p className="mt-1" style={{ color: 'rgba(255,255,255,0.4)', fontSize: '14px' }}>
+                  <p className="mt-1" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px' }}>
                     Jo dypere profilen, jo betre kan vi matche deg.
                   </p>
                 </div>
@@ -549,7 +549,7 @@ export default function MatchingPage() {
                 <p className="text-3xl font-bold tabular-nums" style={{ color: '#D4AF37' }}>
                   {countdown}
                 </p>
-                <p className="mt-1 text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                <p className="mt-1 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
                   {countdownLabel} — siste sjanse å ombestemme
                 </p>
               </div>
@@ -562,7 +562,7 @@ export default function MatchingPage() {
                   <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '16px', fontWeight: 500 }}>
                     Oppdater profil for bedre match
                   </p>
-                  <p className="mt-1" style={{ color: 'rgba(255,255,255,0.4)', fontSize: '14px' }}>
+                  <p className="mt-1" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px' }}>
                     Jo dypere profilen, jo bedre kan vi matche deg.
                   </p>
                 </div>
@@ -581,13 +581,13 @@ export default function MatchingPage() {
               <p className="font-medium" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '16px' }}>
                 Får du kalde føtter
               </p>
-              <p className="mt-2" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '15px', lineHeight: '1.6' }}>
+              <p className="mt-2" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '15px', lineHeight: '1.6' }}>
                 Du kan velge å vente til neste runde. Pengene går med, men du beholder plassen din. Ingen press.
               </p>
               <button
                 onClick={() => setShowSkipConfirm(true)}
                 className="mt-4 px-5 py-3 rounded-2xl text-sm font-medium transition-all duration-300 hover:bg-white/5"
-                style={{ border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.7)' }}
+                style={{ border: '1px solid rgba(255,255,255,0.6)', color: 'rgba(255,255,255,0.7)' }}
               >
                 Vente til neste runde
               </button>
@@ -598,7 +598,7 @@ export default function MatchingPage() {
               <p className="font-medium" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '16px' }}>
                 Ombestemme deg
               </p>
-              <p className="mt-2" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '15px', lineHeight: '1.6' }}>
+              <p className="mt-2" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '15px', lineHeight: '1.6' }}>
                 Ombestemmer du deg før fredag 23:59, kan du melde deg ut og få pengene tilbake.
                 Fra lørdag er dere to i gang. Vil du melde deg på igjen, starter du på nytt.
               </p>
@@ -631,12 +631,12 @@ export default function MatchingPage() {
                 <p className="text-3xl font-bold tabular-nums" style={{ color: '#D4AF37' }}>
                   {countdown}
                 </p>
-                <p className="mt-1 text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                <p className="mt-1 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
                   {countdownLabel}
                 </p>
               </div>
 
-              <p className="mt-6 text-sm" style={{ color: 'rgba(255,255,255,0.35)' }}>
+              <p className="mt-6 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
                 Tålmodighet er ikke passivitet. Det er tillit.
               </p>
             </GlassCard>
@@ -665,7 +665,7 @@ export default function MatchingPage() {
               <p className="font-medium" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '16px' }}>
                 Oppdater profilen din
               </p>
-              <p className="mt-2" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '15px', lineHeight: '1.6' }}>
+              <p className="mt-2" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '15px', lineHeight: '1.6' }}>
                 De detaljene du deler er alt vi har å gå etter.
                 Jo dypere profilen, jo bedre kan vi matche deg.
               </p>
@@ -683,14 +683,14 @@ export default function MatchingPage() {
               <p className="font-medium" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '16px' }}>
                 Vente på neste runde
               </p>
-              <p className="mt-2" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '15px', lineHeight: '1.6' }}>
+              <p className="mt-2" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '15px', lineHeight: '1.6' }}>
                 Du er fortsatt i venterommet. Neste mulighet er lørdag.
               </p>
               <div className="mt-4 px-5 py-3 rounded-2xl inline-block" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.15)' }}>
                 <p className="text-2xl font-bold tabular-nums" style={{ color: '#D4AF37' }}>
                   {countdown}
                 </p>
-                <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.6)' }}>
                   {countdownLabel}
                 </p>
               </div>
@@ -701,7 +701,7 @@ export default function MatchingPage() {
               <p className="font-medium" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '16px' }}>
                 Melde deg ut og få pengene tilbake
               </p>
-              <p className="mt-2" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '15px', lineHeight: '1.6' }}>
+              <p className="mt-2" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '15px', lineHeight: '1.6' }}>
                 Du har alltid muligheten. Hvis vi ikke finner en god nok match,
                 er det ingen grunn å betale. Ingen spørsmål, ingen binding.
               </p>
@@ -723,7 +723,7 @@ export default function MatchingPage() {
             className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl text-base font-medium transition-all duration-300 hover:brightness-110 hover:scale-[1.02] active:scale-[0.98]"
             style={{
               background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.14)',
+              border: '1px solid rgba(255,255,255,0.6)',
               color: 'rgba(255,255,255,0.6)',
               boxShadow: '0 2px 12px rgba(0,0,0,0.15)',
             }}
@@ -736,26 +736,26 @@ export default function MatchingPage() {
         {/* ═══ SKIP ROUND CONFIRM MODAL ═══ */}
         {showSkipConfirm && (
           <div className="fixed inset-0 z-[999] flex items-center justify-center p-6" style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(12px)' }}>
-            <div className="w-full max-w-sm rounded-3xl p-8 text-center relative" style={{ background: 'rgba(11,21,32,0.97)', border: '1px solid rgba(255,255,255,0.15)' }}>
-              <button onClick={() => setShowSkipConfirm(false)} className="absolute top-4 right-4" style={{ color: 'rgba(255,255,255,0.4)' }}>✕</button>
+            <div className="w-full max-w-sm rounded-3xl p-8 text-center relative" style={{ background: 'rgba(11,21,32,0.97)', border: '1px solid rgba(255,255,255,0.6)' }}>
+              <button onClick={() => setShowSkipConfirm(false)} className="absolute top-4 right-4" style={{ color: 'rgba(255,255,255,0.6)' }}>✕</button>
               <h3 className="text-xl font-bold mb-3" style={{ color: 'rgba(255,255,255,0.9)' }}>
                 Vente til neste runde?
               </h3>
-              <p className="text-sm mb-6 leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
+              <p className="text-sm mb-6 leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
                 Du hopper over denne runden. Pengene går med, men du kan melde deg på igjen neste uke.
               </p>
               <button
                 onClick={handleSkipRound}
                 disabled={skipping}
                 className="w-full py-4 rounded-2xl font-bold text-base transition-all disabled:opacity-50"
-                style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.9)' }}
+                style={{ background: 'rgba(255,255,255,0.6)', border: '1px solid rgba(255,255,255,0.6)', color: 'rgba(255,255,255,0.9)' }}
               >
                 {skipping ? 'Behandler...' : 'Ja, vent til neste runde'}
               </button>
               <button
                 onClick={() => setShowSkipConfirm(false)}
                 className="w-full mt-3 py-3 rounded-xl text-sm transition-all hover:opacity-80"
-                style={{ color: 'rgba(255,255,255,0.4)' }}
+                style={{ color: 'rgba(255,255,255,0.6)' }}
               >
                 Avbryt
               </button>
@@ -767,11 +767,11 @@ export default function MatchingPage() {
         {showExitConfirm && (
           <div className="fixed inset-0 z-[999] flex items-center justify-center p-6" style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(12px)' }}>
             <div className="w-full max-w-sm rounded-3xl p-8 text-center relative" style={{ background: 'rgba(11,21,32,0.97)', border: '1px solid rgba(255,77,77,0.2)' }}>
-              <button onClick={() => setShowExitConfirm(false)} className="absolute top-4 right-4" style={{ color: 'rgba(255,255,255,0.4)' }}>✕</button>
+              <button onClick={() => setShowExitConfirm(false)} className="absolute top-4 right-4" style={{ color: 'rgba(255,255,255,0.6)' }}>✕</button>
               <h3 className="text-xl font-bold mb-3" style={{ color: '#FF4D4D' }}>
                 Melde deg ut?
               </h3>
-              <p className="text-sm mb-6 leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
+              <p className="text-sm mb-6 leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
                 Du forlater køen – profilen din blir behalden.
                 Når du er klar igjen, trykk «Start reisen» og still deg i køen på nytt.
               </p>
@@ -786,7 +786,7 @@ export default function MatchingPage() {
               <button
                 onClick={() => setShowExitConfirm(false)}
                 className="w-full mt-3 py-3 rounded-xl text-sm transition-all hover:opacity-80"
-                style={{ color: 'rgba(255,255,255,0.4)' }}
+                style={{ color: 'rgba(255,255,255,0.6)' }}
               >
                 Avbryt
               </button>

@@ -128,7 +128,7 @@ export default function AdminConversationsPage() {
         >
           {frozenOnly ? "🔴 Vis bare fryste" : "⚪ Vis alle"}
         </button>
-        <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)" }}>
+        <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.6)" }}>
           {pagination.total} totalt · Side {pagination.page}/{pagination.pages}
         </span>
       </div>
@@ -141,14 +141,14 @@ export default function AdminConversationsPage() {
       )}
 
       {!conversations.length && !error && (
-        <div style={{ textAlign: "center", padding: "48px 0", color: "rgba(255,255,255,0.3)" }}>
+        <div style={{ textAlign: "center", padding: "48px 0", color: "rgba(255,255,255,0.6)" }}>
           Ingen conversations funnet.
         </div>
       )}
 
       {/* Detail panel */}
       {selectedConversation && (
-        <div style={{ marginBottom: "24px", padding: "20px", borderRadius: "12px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)" }}>
+        <div style={{ marginBottom: "24px", padding: "20px", borderRadius: "12px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.6)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
             <h2 style={{ fontSize: "18px", fontWeight: 600, color: "#D4AF37" }}>
               Detaljer — {selectedConversation.id.substring(0, 12)}...
@@ -156,12 +156,12 @@ export default function AdminConversationsPage() {
             <button onClick={() => setSelectedConversation(null)} style={{ background: "none", border: "none", color: "#E0E0E0", cursor: "pointer", fontSize: "18px" }}>✕</button>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", fontSize: "13px" }}>
-            <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Bruker A:</span> {selectedConversation.userA.name || selectedConversation.userA.email}</div>
-            <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Bruker B:</span> {selectedConversation.userB.name || selectedConversation.userB.email}</div>
-            <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Match score:</span> {selectedConversation.match?.score ?? '—'}</div>
-            <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Status:</span> {statusBadge(selectedConversation)}</div>
-            <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Oppretta:</span> {new Date(selectedConversation.createdAt).toLocaleString('nb-NO')}</div>
-            <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Bilde delt:</span> {selectedConversation.imageShared ? 'Ja' : 'Nei'}</div>
+            <div><span style={{ color: "rgba(255,255,255,0.6)" }}>Bruker A:</span> {selectedConversation.userA.name || selectedConversation.userA.email}</div>
+            <div><span style={{ color: "rgba(255,255,255,0.6)" }}>Bruker B:</span> {selectedConversation.userB.name || selectedConversation.userB.email}</div>
+            <div><span style={{ color: "rgba(255,255,255,0.6)" }}>Match score:</span> {selectedConversation.match?.score ?? '—'}</div>
+            <div><span style={{ color: "rgba(255,255,255,0.6)" }}>Status:</span> {statusBadge(selectedConversation)}</div>
+            <div><span style={{ color: "rgba(255,255,255,0.6)" }}>Oppretta:</span> {new Date(selectedConversation.createdAt).toLocaleString('nb-NO')}</div>
+            <div><span style={{ color: "rgba(255,255,255,0.6)" }}>Bilde delt:</span> {selectedConversation.imageShared ? 'Ja' : 'Nei'}</div>
           </div>
         </div>
       )}
@@ -188,10 +188,10 @@ export default function AdminConversationsPage() {
               <div>
                 <div style={{ fontSize: "14px", fontWeight: 500 }}>
                   {conv.userA.name || conv.userA.email?.substring(0, 20)}
-                  <span style={{ color: "rgba(255,255,255,0.3)" }}>{' ↔ '}</span>
+                  <span style={{ color: "rgba(255,255,255,0.6)" }}>{' ↔ '}</span>
                   {conv.userB.name || conv.userB.email?.substring(0, 20)}
                 </div>
-                <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)" }}>
+                <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.6)" }}>
                   {conv.id.substring(0, 12)}... · Match: {conv.match?.score ?? '—'} · Oppretta {new Date(conv.createdAt).toLocaleDateString('nb-NO')}
                 </div>
               </div>
@@ -247,7 +247,7 @@ export default function AdminConversationsPage() {
       )}
 
       {/* Footer */}
-      <div style={{ marginTop: "32px", padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", fontSize: "13px", color: "rgba(255,255,255,0.4)" }}>
+      <div style={{ marginTop: "32px", padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", fontSize: "13px", color: "rgba(255,255,255,0.6)" }}>
         💡 Klikk på en conversation for å se detaljer. Fryst/ås opp-logg vert lagret i SystemLog under modulen <code>admin/conversation-freeze</code> og <code>admin/conversation-unlock</code>.
       </div>
     </div>

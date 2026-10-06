@@ -37,7 +37,7 @@ function IconRefresh() {
 
 function IconX() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <line x1="18" y1="6" x2="6" y2="18" />
       <line x1="6" y1="6" x2="18" y2="18" />
     </svg>
@@ -110,7 +110,7 @@ function ChoiceCard({ title, description, icon, gradientFrom, gradientTo, border
         </h3>
 
         {/* Description */}
-        <p style={{ fontSize: '15px', lineHeight: '1.7', color: 'rgba(255, 255, 255, 0.5)' }}>
+        <p style={{ fontSize: '15px', lineHeight: '1.7', color: 'rgba(255, 255, 255, 0.6)' }}>
           {description}
         </p>
       </div>
@@ -156,7 +156,7 @@ function ConfirmModal({
           {title}
         </h3>
 
-        <p style={{ fontSize: '15px', lineHeight: '1.7', color: 'rgba(255, 255, 255, 0.5)', marginBottom: '16px' }}>
+        <p style={{ fontSize: '15px', lineHeight: '1.7', color: 'rgba(255, 255, 255, 0.6)', marginBottom: '16px' }}>
           {message}
         </p>
 
@@ -181,7 +181,7 @@ function ConfirmModal({
           onClick={onCancel}
           className="w-full mt-3 py-3 rounded-xl font-medium text-sm transition-all hover:opacity-80"
           style={{
-            color: 'rgba(255, 255, 255, 0.4)',
+            color: 'rgba(255, 255, 255, 0.6)',
           }}
         >
           Avbryt
@@ -355,7 +355,7 @@ export default function AvslutningSide() {
             style={{
               fontSize: '18px',
               lineHeight: '1.7',
-              color: 'rgba(255, 255, 255, 0.55)',
+              color: 'rgba(255, 255, 255, 0.6)',
               margin: '20px 0 0',
             }}
           >
@@ -422,7 +422,7 @@ export default function AvslutningSide() {
             style={{
               fontSize: '18px',
               lineHeight: '1.7',
-              color: 'rgba(255, 255, 255, 0.5)',
+              color: 'rgba(255, 255, 255, 0.6)',
               margin: 0,
             }}
           >
@@ -461,7 +461,7 @@ export default function AvslutningSide() {
         <button
           onClick={() => router.push('/dashboard')}
           className="mt-10 text-sm transition-all hover:opacity-80"
-          style={{ color: 'rgba(255, 255, 255, 0.3)' }}
+          style={{ color: 'rgba(255, 255, 255, 0.6)' }}
         >
           ← Tilbake til oversikt
         </button>

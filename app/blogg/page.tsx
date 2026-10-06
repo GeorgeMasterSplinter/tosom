@@ -166,7 +166,7 @@ export default function BloggPage() {
                     {art.excerpt}
                   </p>
 
-                  <p style={{ ...typographyToStyle('body-sm'), color: 'rgba(255,255,255,0.50)', fontStyle: 'italic' }}>
+                  <p style={{ ...typographyToStyle('body-sm'), color: 'rgba(255,255,255,0.6)', fontStyle: 'italic' }}>
                     📖 <em>{art.reference}</em>
                   </p>
                 </GlassCard>

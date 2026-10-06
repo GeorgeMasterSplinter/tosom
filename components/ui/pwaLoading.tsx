@@ -94,7 +94,7 @@ const PWALoadingScreen: React.FC = () => {
       {/* Tagline */}
       <span style={{
         fontSize: 14,
-        color: 'rgba(255,255,255,0.5)',
+        color: 'rgba(255,255,255,0.6)',
         letterSpacing: 0.5,
         marginBottom: 40,
       }}>To mennesker. Én reise.</span>
@@ -120,7 +120,7 @@ const PWALoadingScreen: React.FC = () => {
       {/* Status */}
       <span style={{
         fontSize: 12,
-        color: 'rgba(255,255,255,0.35)',
+        color: 'rgba(255,255,255,0.6)',
         letterSpacing: 0.3,
       }}>
         {progress < 30 ? 'Laster oppsett...' :

@@ -29,7 +29,7 @@ const G = {
   glassBg: "rgba(255,255,255,0.03)",
   glassBorder: "rgba(255,255,255,0.08)",
   textPrimary: "rgba(255,255,255,0.92)",
-  textSecondary: "rgba(255,255,255,0.55)",
+  textSecondary: "rgba(255,255,255,0.6)",
 };
 
 /* ═══════════════════════════════════════
@@ -79,7 +79,7 @@ function toneColor(tone: string): string {
     case 'open': return '#60A5FA';
     case 'guarded': return '#FBBF24';
     case 'surface': return '#EF4444';
-    default: return 'rgba(255,255,255,0.3)';
+    default: return 'rgba(255,255,255,0.6)';
   }
 }
 
@@ -179,7 +179,7 @@ function Tooltip({
           {session.summary && (
             <div 
               className="text-[11px] italic leading-relaxed"
-              style={{ color: 'rgba(255,255,255,0.5)' }}
+              style={{ color: 'rgba(255,255,255,0.6)' }}
             >
               "{session.summary.substring(0, 120)}{session.summary.length > 120 ? '...' : ''}"
             </div>
@@ -234,7 +234,7 @@ function DayBox({
           style={{
             background: hasData 
               ? phaseInfo.color 
-              : 'rgba(255,255,255,0.1)',
+              : 'rgba(255,255,255,0.6)',
             boxShadow: isActive 
               ? `0 0 8px ${phaseInfo.color}60` 
               : hasData
@@ -432,7 +432,7 @@ export function ResonanceBar({ sessions, journeyDay }: ResonanceBarProps) {
           <span 
             key={day}
             className="text-[8px] font-medium"
-            style={{ color: 'rgba(255,255,255,0.25)' }}
+            style={{ color: 'rgba(255,255,255,0.6)' }}
           >
             {day}
           </span>

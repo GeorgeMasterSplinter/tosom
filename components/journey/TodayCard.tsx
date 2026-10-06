@@ -30,7 +30,7 @@ const G = {
   glassBorderGold: "rgba(212,175,55,0.25)",
   textPrimary: "rgba(255,255,255,0.95)",
   textSecondary: "rgba(255,255,255,0.6)",
-  textMuted: "rgba(255,255,255,0.4)",
+  textMuted: "rgba(255,255,255,0.6)",
 };
 
 /* ═══════════════════════════════════════
@@ -69,7 +69,7 @@ function getPhaseStyle(phase: string) {
     case 'DEEPER':
       return { color: '#9B59B6', icon: '💫', label: 'Djupde' };
     default:
-      return { color: 'rgba(255,255,255,0.4)', icon: '⚪', label: phase || 'Ukjent fase' };
+      return { color: 'rgba(255,255,255,0.6)', icon: '⚪', label: phase || 'Ukjent fase' };
   }
 }
 
@@ -94,7 +94,7 @@ function LoadingState() {
         />
         <div 
           className="h-4 w-32 rounded"
-          style={{ background: 'rgba(255,255,255,0.1)' }}
+          style={{ background: 'rgba(255,255,255,0.6)' }}
         />
       </div>
 

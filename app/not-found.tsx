@@ -68,7 +68,7 @@ export default function NotFoundPage() {
         {/* Description */}
         <p
           className="text-sm leading-relaxed mb-8"
-          style={{ color: "rgba(255,255,255,0.45)" }}
+          style={{ color: "rgba(255,255,255,0.6)" }}
         >
           Noe stemmer ikke. Siden du leter etter finnes
           ikke — eller så har den blitt fjernet.
@@ -93,8 +93,8 @@ export default function NotFoundPage() {
             className="flex-1 font-medium transition-all duration-300 py-3 rounded-xl text-center"
             style={{
               background: "transparent",
-              border: "1px solid rgba(255,255,255,0.1)",
-              color: "rgba(255,255,255,0.5)",
+              border: "1px solid rgba(255,255,255,0.6)",
+              color: "rgba(255,255,255,0.6)",
             }}
           >
             Logg inn
@@ -104,7 +104,7 @@ export default function NotFoundPage() {
         {/* Footer hint */}
         <p
           className="text-xs leading-relaxed mt-6"
-          style={{ color: "rgba(255,255,255,0.2)" }}
+          style={{ color: "rgba(255,255,255,0.6)" }}
         >
           Treng du hjelp? Kontakt oss på{" "}
           <a

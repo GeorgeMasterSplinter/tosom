@@ -34,7 +34,7 @@ const G = {
   glassBorderGold: "rgba(212,175,55,0.2)",
   textPrimary: "rgba(255,255,255,0.95)",
   textSecondary: "rgba(255,255,255,0.6)",
-  textMuted: "rgba(255,255,255,0.4)",
+  textMuted: "rgba(255,255,255,0.6)",
   
   // Bubble-spesifikke fargar
   bubbleMeBgStart: "rgba(212,175,55,0.18)",
@@ -97,7 +97,7 @@ function GoldButton({ children, onClick }: { children: React.ReactNode; onClick?
     <button
       type="button"
       onClick={onClick}
-      className="transition-all duration-300 hover:brightness-110 active:scale-[0.98] focus:outline-none animate-glowPulse"
+      className="transition-all duration-300 hover:brightness-110 active:scale-[0.98]  animate-glowPulse"
       style={{
         background: `linear-gradient(135deg, ${G.gold}, ${G.goldLight})`,
         color: G.blueDeep,
@@ -411,7 +411,7 @@ function ImageBubble({
             aria-label="Lukk bildet"
             onClick={(e) => { e.stopPropagation(); setLightbox(false); }}
             className="absolute flex items-center justify-center rounded-full"
-            style={{ top: "1rem", right: "1rem", width: "2.5rem", height: "2.5rem", background: "rgba(255,255,255,0.14)", color: "#fff", fontSize: "1.15rem", zIndex: 20 }}
+            style={{ top: "1rem", right: "1rem", width: "2.5rem", height: "2.5rem", background: "rgba(255,255,255,0.6)", color: "#fff", fontSize: "1.15rem", zIndex: 20 }}
           >
             ✕
           </button>
@@ -422,7 +422,7 @@ function ImageBubble({
               aria-label="Forrige bilde"
               onClick={(e) => { e.stopPropagation(); goPrev(); }}
               className="absolute flex items-center justify-center rounded-full"
-              style={{ left: "0.75rem", top: "50%", transform: "translateY(-50%)", width: "2.75rem", height: "2.75rem", background: "rgba(255,255,255,0.14)", color: "#fff", fontSize: "2rem", lineHeight: 1, zIndex: 20 }}
+              style={{ left: "0.75rem", top: "50%", transform: "translateY(-50%)", width: "2.75rem", height: "2.75rem", background: "rgba(255,255,255,0.6)", color: "#fff", fontSize: "2rem", lineHeight: 1, zIndex: 20 }}
             >
               ‹
             </button>
@@ -442,7 +442,7 @@ function ImageBubble({
               aria-label="Neste bilde"
               onClick={(e) => { e.stopPropagation(); goNext(); }}
               className="absolute flex items-center justify-center rounded-full"
-              style={{ right: "0.75rem", top: "50%", transform: "translateY(-50%)", width: "2.75rem", height: "2.75rem", background: "rgba(255,255,255,0.14)", color: "#fff", fontSize: "2rem", lineHeight: 1, zIndex: 20 }}
+              style={{ right: "0.75rem", top: "50%", transform: "translateY(-50%)", width: "2.75rem", height: "2.75rem", background: "rgba(255,255,255,0.6)", color: "#fff", fontSize: "2rem", lineHeight: 1, zIndex: 20 }}
             >
               ›
             </button>
@@ -633,7 +633,7 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
               <div 
                 className="absolute top-0 left-0 right-0 h-px opacity-40"
                 style={{
-                  background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
+                  background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent)',
                 }}
               />
             )}

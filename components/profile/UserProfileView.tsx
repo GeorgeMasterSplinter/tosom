@@ -136,7 +136,7 @@ export default function UserProfileView({
             <textarea
               value={p.bio}
               onChange={(e) => handleBioChange(e.target.value)}
-              className="w-full text-sm text-[#4A4A4A]/80 leading-relaxed border border-[#e2e8f0] rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-emerald-200 resize-none bg-[#f8fafc]"
+              className="w-full text-sm text-[#4A4A4A]/80 leading-relaxed border border-[#e2e8f0] rounded-lg px-3 py-2  focus:ring-1 focus:ring-emerald-200 resize-none bg-[#f8fafc]"
               rows={3}
             />
             <p className="text-xs text-[#4A4A4A]/40 mt-1">

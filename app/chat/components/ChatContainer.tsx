@@ -70,8 +70,8 @@ const G = {
   bgPrimary: "#0B1520",
   bgChat: "#0F1A26",
   textPrimary: "rgba(255,255,255,0.92)",
-  textSecondary: "rgba(255,255,255,0.55)",
-  textMuted: "rgba(255,255,255,0.35)",
+  textSecondary: "rgba(255,255,255,0.6)",
+  textMuted: "rgba(255,255,255,0.6)",
   dangerRed: "#FF4D4D",
 };
 
@@ -493,7 +493,7 @@ function ChatInput({
           {!imageShareAllowed && (
             <span
               className="absolute -bottom-0.5 -right-0.5 text-xs flex items-center justify-center w-4 h-4 rounded-full"
-              style={{ background: 'rgba(11,21,32,0.9)', border: '1px solid rgba(255,255,255,0.1)' }}
+              style={{ background: 'rgba(11,21,32,0.9)', border: '1px solid rgba(255,255,255,0.6)' }}
             >
               🔒
             </span>
@@ -513,7 +513,7 @@ function ChatInput({
           onBlur={() => setIsFocused(false)}
           placeholder="Skriv ei melding…"
           rows={1}
-          className="flex-1 resize-none bg-transparent outline-none text-sm leading-relaxed py-1.5"
+          className="flex-1 resize-none bg-transparent text-sm leading-relaxed py-1.5"
           style={{ 
             color: moodTheme.textPrimary,
             caretColor: moodTheme.accent,

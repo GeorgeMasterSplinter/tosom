@@ -117,11 +117,10 @@ export default function LoginPage() {
     height: "64px",
     borderRadius: "16px",
     background: "rgba(255,255,255,0.03)",
-    border: "1px solid rgba(255,255,255,0.1)",
+    border: "1px solid rgba(255,255,255,0.6)",
     padding: "0 20px",
     fontSize: "18px",
     color: "white",
-    outline: "none",
     transition: "border 300ms",
   };
 
@@ -129,7 +128,7 @@ export default function LoginPage() {
     e.currentTarget.style.border = "1px solid rgba(212,175,55,0.5)";
   };
   const resetBorder = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.currentTarget.style.border = "1px solid rgba(255,255,255,0.1)";
+    e.currentTarget.style.border = "1px solid rgba(255,255,255,0.6)";
   };
 
   const buttonStyle: React.CSSProperties = {

@@ -60,20 +60,20 @@ function ToolButton({
       <div className="flex items-center gap-2 mb-2">
         <span
           className="w-2 h-2 rounded-full flex-shrink-0"
-          style={{ background: available ? '#D4AF37' : 'rgba(255,255,255,0.15)' }}
+          style={{ background: available ? '#D4AF37' : 'rgba(255,255,255,0.6)' }}
         />
         <span
           className="text-sm font-medium"
-          style={{ color: available ? '#D4AF37' : 'rgba(255,255,255,0.4)' }}
+          style={{ color: available ? '#D4AF37' : 'rgba(255,255,255,0.6)' }}
         >
           {loading ? 'Kjører …' : title}
         </span>
       </div>
-      <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.35)' }}>
+      <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
         {description}
       </p>
       {!available && (
-        <p className="text-[11px] mt-1.5 font-medium" style={{ color: 'rgba(255,255,255,0.2)' }}>
+        <p className="text-[11px] mt-1.5 font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>
           Ikke tilgjengelig ennå
         </p>
       )}
@@ -85,7 +85,7 @@ function ToolButton({
 
 function LogRow({ log }: { log: SystemLog }) {
   const levelColor =
-    log.level === 'ERROR' ? '#FF4D4D' : log.level === 'WARN' ? '#FBBF24' : 'rgba(255,255,255,0.4)';
+    log.level === 'ERROR' ? '#FF4D4D' : log.level === 'WARN' ? '#FBBF24' : 'rgba(255,255,255,0.6)';
 
   const timeAgo = formatDistanceToNow(new Date(log.createdAt), {
     addSuffix: true,
@@ -106,7 +106,7 @@ function LogRow({ log }: { log: SystemLog }) {
           {log.message}
         </p>
         <div className="flex items-center gap-2 mt-0.5">
-          <span className="text-[10px] font-mono" style={{ color: 'rgba(255,255,255,0.25)' }}>
+          <span className="text-[10px] font-mono" style={{ color: 'rgba(255,255,255,0.6)' }}>
             {log.module}
           </span>
           <span
@@ -125,7 +125,7 @@ function LogRow({ log }: { log: SystemLog }) {
           </span>
         </div>
       </div>
-      <span className="text-[11px] flex-shrink-0 mt-0.5" style={{ color: 'rgba(255,255,255,0.25)' }}>
+      <span className="text-[11px] flex-shrink-0 mt-0.5" style={{ color: 'rgba(255,255,255,0.6)' }}>
         {timeAgo}
       </span>
     </div>
@@ -275,7 +275,7 @@ export default function AdminToolsPage() {
           <h1 className="text-2xl font-bold mb-1" style={{ color: 'rgba(255,255,255,0.95)' }}>
             Verktøy
           </h1>
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
+          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
             Driftsverktøy og systemlogg
           </p>
         </div>
@@ -295,7 +295,7 @@ export default function AdminToolsPage() {
 
       {/* Verktøy-grid */}
       <div>
-        <h2 className="text-xs font-semibold uppercase tracking-[0.12em] mb-3" style={{ color: 'rgba(255,255,255,0.3)' }}>
+        <h2 className="text-xs font-semibold uppercase tracking-[0.12em] mb-3" style={{ color: 'rgba(255,255,255,0.6)' }}>
           Verktøy
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -307,14 +307,14 @@ export default function AdminToolsPage() {
             <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#D4AF37' }}>
               Journey Time Machine
             </p>
-            <p className="text-xs mb-3" style={{ color: 'rgba(255,255,255,0.4)' }}>
+            <p className="text-xs mb-3" style={{ color: 'rgba(255,255,255,0.6)' }}>
               Sett begge i en match til spesifikk dag (1–30)
             </p>
             <select
               value={selectedMatch}
               onChange={(e) => setSelectedMatch(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg text-xs mb-2 outline-none cursor-pointer"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.8)' }}
+              className="w-full px-3 py-2 rounded-lg text-xs mb-2 cursor-pointer"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.6)', color: 'rgba(255,255,255,0.8)' }}
             >
               <option value="" style={{ background: '#0A1A2A' }}>Velg match…</option>
               {matches.map((m) => (
@@ -328,8 +328,8 @@ export default function AdminToolsPage() {
                 max={30}
                 value={timelineDay}
                 onChange={(e) => setTimelineDay(parseInt(e.target.value) || 1)}
-                className="w-16 px-2 py-2 rounded-lg text-xs bg-transparent outline-none text-center"
-                style={{ border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.8)' }}
+                className="w-16 px-2 py-2 rounded-lg text-xs bg-transparent text-center"
+                style={{ border: '1px solid rgba(255,255,255,0.6)', color: 'rgba(255,255,255,0.8)' }}
               />
               <button
                 onClick={runTimeline}
@@ -355,7 +355,7 @@ export default function AdminToolsPage() {
             <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#D4AF37' }}>
               Send Test Epost
             </p>
-            <p className="text-xs mb-3" style={{ color: 'rgba(255,255,255,0.4)' }}>
+            <p className="text-xs mb-3" style={{ color: 'rgba(255,255,255,0.6)' }}>
               Verifiser SMTP — sender velkommen-epost til valgt bruker
             </p>
             <div className="flex gap-2">
@@ -364,8 +364,8 @@ export default function AdminToolsPage() {
                 value={emailTest}
                 onChange={(e) => setEmailTest(e.target.value)}
                 placeholder="bruker@tosom.no"
-                className="flex-1 px-3 py-2 rounded-lg text-xs bg-transparent outline-none min-w-0"
-                style={{ border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.8)' }}
+                className="flex-1 px-3 py-2 rounded-lg text-xs bg-transparent min-w-0"
+                style={{ border: '1px solid rgba(255,255,255,0.6)', color: 'rgba(255,255,255,0.8)' }}
               />
               <button
                 onClick={sendTestEmail}
@@ -397,12 +397,12 @@ export default function AdminToolsPage() {
             className="p-4 rounded-xl"
             style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}
           >
-            <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: 'rgba(255,255,255,0.6)' }}>
               Cron Runs — siste 5
             </p>
-            {cronRuns === null && <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>Henter…</p>}
+            {cronRuns === null && <p className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>Henter…</p>}
             {cronRuns !== null && cronRuns.length === 0 && (
-              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>Ingen cron runs logget ennå.</p>
+              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>Ingen cron runs logget ennå.</p>
             )}
             {cronRuns !== null && cronRuns.length > 0 && (
               <div className="space-y-1.5">
@@ -412,11 +412,11 @@ export default function AdminToolsPage() {
                       className="w-1.5 h-1.5 rounded-full shrink-0"
                       style={{ background: run.level === 'ERROR' ? '#FF4D4D' : run.level === 'WARN' ? '#FBBF24' : '#4ADE80' }}
                     />
-                    <span className="font-mono" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                    <span className="font-mono" style={{ color: 'rgba(255,255,255,0.6)' }}>
                       {new Date(run.createdAt).toLocaleString('nb-NO', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                     </span>
-                    <span style={{ color: 'rgba(255,255,255,0.4)' }}>{run.module}</span>
-                    <span className="truncate flex-1" style={{ color: 'rgba(255,255,255,0.3)' }}>{run.message}</span>
+                    <span style={{ color: 'rgba(255,255,255,0.6)' }}>{run.module}</span>
+                    <span className="truncate flex-1" style={{ color: 'rgba(255,255,255,0.6)' }}>{run.message}</span>
                   </div>
                 ))}
               </div>
@@ -445,7 +445,7 @@ export default function AdminToolsPage() {
         style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}
       >
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-xs font-semibold uppercase tracking-[0.12em]" style={{ color: 'rgba(255,255,255,0.4)' }}>
+          <h3 className="text-xs font-semibold uppercase tracking-[0.12em]" style={{ color: 'rgba(255,255,255,0.6)' }}>
             Systemlogg — siste 20
           </h3>
           {stats && (
@@ -468,7 +468,7 @@ export default function AdminToolsPage() {
               )}
               <span
                 className="text-[10px] font-mono px-2 py-0.5 rounded-full"
-                style={{ background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.3)' }}
+                style={{ background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.6)' }}
               >
                 {stats.total} totalt
               </span>
@@ -483,13 +483,13 @@ export default function AdminToolsPage() {
         )}
 
         {logs === null && !error && (
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>
+          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
             Henter …
           </p>
         )}
 
         {logs !== null && logs.length === 0 && (
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>
+          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
             Ingen loggmeldinger ennå.
           </p>
         )}

@@ -115,7 +115,7 @@ export const SelectField: FC<SelectFieldProps> = ({
         className={`
           w-full px-4 py-3.5 rounded-xl text-sm cursor-pointer
           transition-all duration-200 ease-out
-          focus:outline-none select-none
+           select-none
           border-l-[3px]
           ${isHovered && !isOpen ? 'translate-y-[-1px]' : ''}
         `}
@@ -130,7 +130,7 @@ export const SelectField: FC<SelectFieldProps> = ({
             : (hasMounted && value)
               ? 'rgba(212, 175, 55, 0.35)'
               : 'rgba(255, 255, 255, 0.1)',
-          color: (hasMounted && value) ? '#FFFFFF' : 'rgba(255, 255, 255, 0.45)',
+          color: (hasMounted && value) ? '#FFFFFF' : 'rgba(255, 255, 255, 0.6)',
           backdropFilter: 'blur(12px)',
           backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23D4AF37' d='M6 8L1 3h10z'/%3E%3C/svg%3E")`,
           backgroundRepeat: 'no-repeat',

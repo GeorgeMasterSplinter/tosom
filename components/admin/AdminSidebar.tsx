@@ -103,7 +103,7 @@ export function AdminSidebar() {
           <div key={group.title} className="mb-5">
             <div
               className="px-3 mb-1.5 text-[10px] font-semibold uppercase tracking-[0.12em]"
-              style={{ color: 'rgba(255,255,255,0.28)' }}
+              style={{ color: 'rgba(255,255,255,0.6)' }}
             >
               {group.title}
             </div>
@@ -118,7 +118,7 @@ export function AdminSidebar() {
                     className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
                     style={{
                       background: active ? 'rgba(212,175,55,0.10)' : 'transparent',
-                      color: active ? '#D4AF37' : 'rgba(255,255,255,0.55)',
+                      color: active ? '#D4AF37' : 'rgba(255,255,255,0.6)',
                       borderLeft: active ? '2px solid #D4AF37' : '2px solid transparent',
                     }}
                   >
@@ -135,7 +135,7 @@ export function AdminSidebar() {
       {/* Bunn */}
       <div
         className="py-3 px-6 text-[11px]"
-        style={{ borderTop: '1px solid rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.2)' }}
+        style={{ borderTop: '1px solid rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.6)' }}
       >
         Tosom Admin v1.0
       </div>

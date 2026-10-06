@@ -135,12 +135,12 @@ function IndicatorCard({ item }: { item: ActionItem }) {
     >
       <div className="flex items-center gap-2 mb-2">
         <span className="h-1.5 w-1.5 rounded-full flex-shrink-0" style={{ background: color }} />
-        <span className="text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>{item.label}</span>
+        <span className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>{item.label}</span>
       </div>
       <div className="text-lg font-mono font-semibold mb-1" style={{ color }}>
         {item.value}
       </div>
-      <p className="text-[11px] leading-snug" style={{ color: 'rgba(255,255,255,0.28)' }}>
+      <p className="text-[11px] leading-snug" style={{ color: 'rgba(255,255,255,0.6)' }}>
         {item.action ?? explainFor(item.key)}
       </p>
     </div>
@@ -165,12 +165,12 @@ function MetricCard({
     >
       <div className="flex items-center justify-between mb-2">
         <Icon size={15} className="opacity-40" />
-        <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.2)' }}>→</span>
+        <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.6)' }}>→</span>
       </div>
       <div className="text-2xl font-mono font-bold leading-none mb-1.5" style={{ color }}>
         {value}
       </div>
-      <div className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>{label}</div>
+      <div className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>{label}</div>
     </Link>
   );
 }
@@ -191,7 +191,7 @@ function JourneyPhaseMonitor({ phases }: { phases?: Record<string, number> }) {
 
   return (
     <div className="rounded-2xl p-5" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
-      <h3 className="text-xs font-semibold mb-4 uppercase tracking-[0.12em]" style={{ color: 'rgba(255,255,255,0.4)' }}>
+      <h3 className="text-xs font-semibold mb-4 uppercase tracking-[0.12em]" style={{ color: 'rgba(255,255,255,0.6)' }}>
         Reisefasemonitor
       </h3>
 
@@ -206,7 +206,7 @@ function JourneyPhaseMonitor({ phases }: { phases?: Record<string, number> }) {
           <div key={p.label} className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="w-2.5 h-2.5 rounded-full" style={{ background: p.color }} />
-              <span className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>{p.label}</span>
+              <span className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>{p.label}</span>
             </div>
             <span className="text-xs font-mono" style={{ color: 'rgba(255,255,255,0.7)' }}>
               {p.count} ({Math.round((p.count / total) * 100)}%)
@@ -259,12 +259,12 @@ function SystemStatus({ errorsLast24h }: { errorsLast24h?: number }) {
 
   return (
     <div className="rounded-2xl p-5" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
-      <h3 className="text-xs font-semibold mb-4 uppercase tracking-[0.12em]" style={{ color: 'rgba(255,255,255,0.4)' }}>
+      <h3 className="text-xs font-semibold mb-4 uppercase tracking-[0.12em]" style={{ color: 'rgba(255,255,255,0.6)' }}>
         Systemtjenester
       </h3>
 
       {loading ? (
-        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>Laster …</p>
+        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>Laster …</p>
       ) : (
         <div className="space-y-3">
           {services.map((s) => {
@@ -284,7 +284,7 @@ function SystemStatus({ errorsLast24h }: { errorsLast24h?: number }) {
 
       {errorsLast24h !== undefined && (
         <div className="mt-4 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-          <span className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>
+          <span className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>
             Feil 24 t:{' '}
             <span className="font-mono font-semibold" style={{ color: errorsLast24h > 0 ? '#FBBF24' : '#4ADE80' }}>{errorsLast24h}</span>
           </span>
@@ -336,7 +336,7 @@ export default function AdminDashboardPage() {
             <h1 className="text-xl font-semibold mb-0.5" style={{ color: 'rgba(255,255,255,0.92)' }}>
               Kommandopanel
             </h1>
-            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>
+            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>
               {lastUpdated
                 ? `Oppdatert ${lastUpdated.toLocaleTimeString('nb-NO', { hour: '2-digit', minute: '2-digit' })}`
                 : 'Henter data …'}
@@ -395,7 +395,7 @@ export default function AdminDashboardPage() {
       {/* Alle indikatorer med forklaring */}
       {overview && (
         <div>
-          <h3 className="text-xs font-semibold uppercase tracking-[0.12em] mb-3" style={{ color: 'rgba(255,255,255,0.3)' }}>
+          <h3 className="text-xs font-semibold uppercase tracking-[0.12em] mb-3" style={{ color: 'rgba(255,255,255,0.6)' }}>
             Indikatorer
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">

@@ -24,7 +24,7 @@ const THEME = {
   deepGrey: "#9CA3AF",
   whitePrimary: "#E5E7EB",
   glassBg: "rgba(255,255,255,0.06)",
-  glassBorder: "rgba(255,255,255,0.12)",
+  glassBorder: "rgba(255,255,255,0.6)",
   goldMuted: "rgba(212,175,55,0.2)",
   dangerRed: "#FF4D4D",
   greenPrimary: "#10B981",
@@ -105,7 +105,7 @@ function GoldButton({
     <button
       onClick={onClick}
       disabled={disabled}
-      className="transition-all duration-300 hover:brightness-110 active:scale-[0.98] focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed"
+      className="transition-all duration-300 hover:brightness-110 active:scale-[0.98]  disabled:opacity-40 disabled:cursor-not-allowed"
       style={{
         background: `linear-gradient(135deg, ${THEME.nordicGold}, ${THEME.goldLight})`,
         color: THEME.tosomBlue,
@@ -139,7 +139,7 @@ function OutlineGoldButton({
     <button
       onClick={onClick}
       disabled={disabled}
-      className="transition-all duration-300 hover:brightness-110 active:scale-[0.98] focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed"
+      className="transition-all duration-300 hover:brightness-110 active:scale-[0.98]  disabled:opacity-40 disabled:cursor-not-allowed"
       style={{
         background: "transparent",
         border: `1px solid ${THEME.nordicGold}`,
@@ -165,7 +165,7 @@ function DangerButton({ children, onClick, fullWidth, disabled }: { children: Re
     <button
       onClick={onClick}
       disabled={disabled}
-      className="transition-all duration-300 hover:brightness-110 active:scale-[0.98] focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed"
+      className="transition-all duration-300 hover:brightness-110 active:scale-[0.98]  disabled:opacity-40 disabled:cursor-not-allowed"
       style={{
         background: "rgba(255,77,77,0.12)",
         border: "1px solid rgba(255,77,77,0.4)",
@@ -214,7 +214,7 @@ function GoldToggle({
       }}
     >
       <div>
-        <p style={{ color: disabled ? "rgba(255,255,255,0.3)" : THEME.softWhite, fontSize: sub ? "14px" : "16px", fontWeight: sub ? 400 : 500, letterSpacing: sub ? "0.01em" : "0.02em" }}>
+        <p style={{ color: disabled ? "rgba(255,255,255,0.6)" : THEME.softWhite, fontSize: sub ? "14px" : "16px", fontWeight: sub ? 400 : 500, letterSpacing: sub ? "0.01em" : "0.02em" }}>
           {label}
         </p>
         {desc && <p style={{ color: THEME.deepGrey, fontSize: "13px", marginTop: "6px", letterSpacing: "0.01em" }}>{desc}</p>}
@@ -224,11 +224,11 @@ function GoldToggle({
         role="switch"
         aria-checked={checked}
         disabled={disabled}
-        className="relative w-[52px] h-[28px] rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-yellow-400/40 disabled:opacity-30 disabled:cursor-not-allowed"
+        className="relative w-[52px] h-[28px] rounded-full transition-all duration-300  focus:ring-2 focus:ring-yellow-400/40 disabled:opacity-30 disabled:cursor-not-allowed"
         style={{
           background: checked
             ? `linear-gradient(135deg, ${THEME.nordicGold}, ${THEME.goldLight})`
-            : "rgba(255,255,255,0.12)",
+            : "rgba(255,255,255,0.6)",
           borderRadius: THEME.toggleRadius,
           boxShadow: checked ? `0 0 12px rgba(212,175,55,0.35), 0 0 24px rgba(212,175,55,0.15)` : "none",
         }}
@@ -254,7 +254,7 @@ function GoldLink({ children, href }: { children: React.ReactNode; href?: string
   return (
     <a
       href={href}
-      className="transition-all duration-300 hover:opacity-80 focus:outline-none"
+      className="transition-all duration-300 hover:opacity-80 "
       style={{ color: THEME.nordicGold, fontSize: "16px", fontWeight: 500 }}
     >
       {children}
@@ -371,7 +371,7 @@ function KontoSection({ name, email }: { name: string; email: string }) {
         <button
           // PL-17 (V-12): tøm onboarding-utkastet ved utlogging
           onClick={() => { clearOnboardingDraft(); signOut({ callbackUrl: "/" }); }}
-          className="transition-all duration-300 hover:bg-white/[0.06] hover:border-[rgba(212,175,55,0.4)] active:scale-[0.98] focus:outline-none"
+          className="transition-all duration-300 hover:bg-white/[0.06] hover:border-[rgba(212,175,55,0.4)] active:scale-[0.98] "
           style={{
             background: "rgba(255,255,255,0.04)",
             border: "1px solid rgba(212,175,55,0.25)",
@@ -564,7 +564,7 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
       <div className="flex gap-3 flex-wrap">
         <button
           onClick={openReport}
-          className="transition-all duration-300 hover:brightness-110 active:scale-[0.98] focus:outline-none"
+          className="transition-all duration-300 hover:brightness-110 active:scale-[0.98] "
           style={{
             background: "rgba(16,185,129,0.12)",
             border: "1px solid rgba(16,185,129,0.4)",
@@ -595,14 +595,14 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
             <button
               onClick={() => setShowEndConfirm(false)}
               className="absolute top-4 right-4"
-              style={{ color: "rgba(255,255,255,0.4)" }}
+              style={{ color: "rgba(255,255,255,0.6)" }}
             >
               ✕
             </button>
             <h3 className="mb-3 text-xl font-bold" style={{ color: THEME.nordicGold }}>
               Avslutt reisen?
             </h3>
-            <p style={{ fontSize: "15px", lineHeight: "1.7", color: "rgba(255,255,255,0.5)", marginBottom: "12px" }}>
+            <p style={{ fontSize: "15px", lineHeight: "1.7", color: "rgba(255,255,255,0.6)", marginBottom: "12px" }}>
               Reisen avsluttes. Samtalen slettes for dere begge.
             </p>
             <p style={{ fontSize: "13px", lineHeight: "1.5", color: "rgba(212,175,55,0.8)", marginBottom: "24px", fontStyle: "italic" }}>
@@ -614,7 +614,7 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
             <button
               onClick={() => setShowEndConfirm(false)}
               className="w-full mt-3 py-3 rounded-xl text-sm transition-all hover:opacity-80"
-              style={{ color: "rgba(255,255,255,0.4)" }}
+              style={{ color: "rgba(255,255,255,0.6)" }}
             >
               Avbryt
             </button>
@@ -635,7 +635,7 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
             <button
               onClick={() => setShowReport(false)}
               className="absolute top-4 right-4"
-              style={{ color: "rgba(255,255,255,0.4)" }}
+              style={{ color: "rgba(255,255,255,0.6)" }}
             >
               ✕
             </button>
@@ -659,8 +659,8 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
                     <select
                       value={candidateId}
                       onChange={(e) => setCandidateId(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl text-sm mb-1 border focus:outline-none"
-                      style={{ borderColor: "rgba(255,255,255,0.1)", color: THEME.softWhite, background: "rgba(11,21,32,0.9)" }}
+                      className="w-full px-4 py-3 rounded-xl text-sm mb-1 border "
+                      style={{ borderColor: "rgba(255,255,255,0.6)", color: THEME.softWhite, background: "rgba(11,21,32,0.9)" }}
                     >
                       <option value="">{loadingCandidates ? "Henter..." : "Velg en person"}</option>
                       {candidates.map((c) => (
@@ -670,7 +670,7 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
                       ))}
                     </select>
                     {!loadingCandidates && candidates.length === 0 && (
-                      <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "13px", lineHeight: 1.5 }}>
+                      <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "13px", lineHeight: 1.5 }}>
                         Ingen tidligere matcher funnet. Du kan bare rapportere personer du har vært matchet med.
                       </p>
                     )}
@@ -688,7 +688,7 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
                       }}
                     >
                       <p style={{ color: category === s.value ? (s as any).color : THEME.softWhite, fontSize: "15px", fontWeight: 600 }}>{s.label}</p>
-                      <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "13px", marginTop: "4px" }}>{s.desc}</p>
+                      <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "13px", marginTop: "4px" }}>{s.desc}</p>
                     </button>
                   ))}
                 </div>
@@ -697,8 +697,8 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Beskriv hva som skjedde (valgfritt)..."
                   rows={3}
-                  className="w-full px-4 py-3 rounded-xl text-sm mb-4 bg-transparent border resize-none focus:outline-none"
-                  style={{ borderColor: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.7)" }}
+                  className="w-full px-4 py-3 rounded-xl text-sm mb-4 bg-transparent border resize-none "
+                  style={{ borderColor: "rgba(255,255,255,0.6)", color: "rgba(255,255,255,0.7)" }}
                 />
                 {reportError && (
                   <p style={{ color: "#FF4D4D", fontSize: "13px", marginBottom: "12px", lineHeight: "1.5" }}>{reportError}</p>
@@ -729,7 +729,7 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
               Er du sikker? Skriv "SLETT" for å bekrefte.
             </p>
             <input
-              className="w-full h-10 text-center rounded-xl font-mono focus:outline-none focus:ring-2 focus:ring-red-400/40"
+              className="w-full h-10 text-center rounded-xl font-mono  focus:ring-2 focus:ring-red-400/40"
               style={{ background: "rgba(255,77,77,0.06)", border: "1px solid rgba(255,77,77,0.2)", color: THEME.dangerRed }}
               placeholder="SLETT"
               value={deleteText}
@@ -763,14 +763,14 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
             <button
               onClick={() => setShowBlock(false)}
               className="absolute top-4 right-4"
-              style={{ color: "rgba(255,255,255,0.4)" }}
+              style={{ color: "rgba(255,255,255,0.6)" }}
             >
               ✕
             </button>
             <h3 className="mb-3 text-xl font-bold" style={{ color: THEME.dangerRed }}>
               Blokker og avslutt?
             </h3>
-            <p style={{ fontSize: "15px", lineHeight: "1.7", color: "rgba(255,255,255,0.5)", marginBottom: "12px" }}>
+            <p style={{ fontSize: "15px", lineHeight: "1.7", color: "rgba(255,255,255,0.6)", marginBottom: "12px" }}>
               Reisen avsluttes. Brukeren blokkeres permanent.
             </p>
             <p style={{ fontSize: "13px", lineHeight: "1.5", color: "rgba(212,175,55,0.8)", marginBottom: "24px", fontStyle: "italic" }}>
@@ -782,7 +782,7 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
             <button
               onClick={() => setShowBlock(false)}
               className="w-full mt-3 py-3 rounded-xl text-sm transition-all hover:opacity-80"
-              style={{ color: "rgba(255,255,255,0.4)" }}
+              style={{ color: "rgba(255,255,255,0.6)" }}
             >
               Avbryt
             </button>
@@ -840,7 +840,7 @@ function PersonvernSection() {
         <button
           onClick={handleExport}
           disabled={requesting}
-          className="w-full transition-all duration-300 hover:bg-white/[0.06] hover:border-[rgba(212,175,55,0.4)] active:scale-[0.98] focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed"
+          className="w-full transition-all duration-300 hover:bg-white/[0.06] hover:border-[rgba(212,175,55,0.4)] active:scale-[0.98]  disabled:opacity-40 disabled:cursor-not-allowed"
           style={{
             background: "rgba(255,255,255,0.04)",
             border: "1px solid rgba(212,175,55,0.25)",
@@ -938,14 +938,14 @@ function MatchSection({
             <button
               onClick={() => setShowEndConfirm(false)}
               className="absolute top-4 right-4"
-              style={{ color: "rgba(255,255,255,0.4)" }}
+              style={{ color: "rgba(255,255,255,0.6)" }}
             >
               ✕
             </button>
             <h3 className="mb-3 text-xl font-bold" style={{ color: THEME.nordicGold }}>
               Avslutt reisen?
             </h3>
-            <p style={{ fontSize: "15px", lineHeight: "1.7", color: "rgba(255,255,255,0.5)", marginBottom: "12px" }}>
+            <p style={{ fontSize: "15px", lineHeight: "1.7", color: "rgba(255,255,255,0.6)", marginBottom: "12px" }}>
               Reisen avsluttes. Samtalen slettes for dere begge.
             </p>
             <p style={{ fontSize: "13px", lineHeight: "1.5", color: "rgba(212,175,55,0.8)", marginBottom: "24px", fontStyle: "italic" }}>
@@ -957,7 +957,7 @@ function MatchSection({
             <button
               onClick={() => setShowEndConfirm(false)}
               className="w-full mt-3 py-3 rounded-xl text-sm transition-all hover:opacity-80"
-              style={{ color: "rgba(255,255,255,0.4)" }}
+              style={{ color: "rgba(255,255,255,0.6)" }}
             >
               Avbryt
             </button>
@@ -1005,7 +1005,7 @@ function SlettKontoSection() {
             Er du sikker? Skriv "SLETT" for å bekrefte.
           </p>
           <input
-            className="w-full h-10 text-center rounded-xl font-mono focus:outline-none focus:ring-2 focus:ring-red-400/40"
+            className="w-full h-10 text-center rounded-xl font-mono  focus:ring-2 focus:ring-red-400/40"
             style={{ background: "rgba(255,77,77,0.06)", border: "1px solid rgba(255,77,77,0.2)", color: THEME.dangerRed }}
             placeholder="SLETT"
             value={confirmText}
@@ -1119,7 +1119,7 @@ export default function SettingsPage() {
             className="w-12 h-12 rounded-full border-2 animate-spin"
             style={{ borderColor: `${THEME.nordicGold}20`, borderTopColor: THEME.nordicGold }}
           />
-          <p style={{ color: "rgba(255,255,255,0.3)", fontSize: "14px" }}>Laster innstillinger…</p>
+          <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "14px" }}>Laster innstillinger…</p>
         </div>
       </div>
     );

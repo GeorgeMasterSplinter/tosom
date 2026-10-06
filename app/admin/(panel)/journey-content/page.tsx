@@ -135,7 +135,7 @@ export default function JourneyContentEditor() {
 
       {/* Content list */}
       {!content.length && !error && (
-        <div style={{ textAlign: "center", padding: "48px 0", color: "rgba(255,255,255,0.3)" }}>
+        <div style={{ textAlign: "center", padding: "48px 0", color: "rgba(255,255,255,0.6)" }}>
           Inget journey-innhold funnet. Køyrd seed-skriptet først.
         </div>
       )}
@@ -162,7 +162,7 @@ export default function JourneyContentEditor() {
                   padding: "10px 12px",
                   borderRadius: "8px",
                   background: "rgba(255,255,255,0.05)",
-                  border: "1px solid rgba(255,255,255,0.1)",
+                  border: "1px solid rgba(255,255,255,0.6)",
                   color: "#E0E0E0",
                   fontSize: "14px",
                 }}
@@ -182,7 +182,7 @@ export default function JourneyContentEditor() {
                   padding: "10px 12px",
                   borderRadius: "8px",
                   background: "#0A1A2A",
-                  border: "1px solid rgba(255,255,255,0.1)",
+                  border: "1px solid rgba(255,255,255,0.6)",
                   color: "#E0E0E0",
                   fontSize: "14px",
                 }}
@@ -208,7 +208,7 @@ export default function JourneyContentEditor() {
                   padding: "10px 12px",
                   borderRadius: "8px",
                   background: "rgba(255,255,255,0.05)",
-                  border: "1px solid rgba(255,255,255,0.1)",
+                  border: "1px solid rgba(255,255,255,0.6)",
                   color: "#E0E0E0",
                   fontSize: "14px",
                   resize: "vertical",
@@ -230,7 +230,7 @@ export default function JourneyContentEditor() {
                   padding: "10px 12px",
                   borderRadius: "8px",
                   background: "rgba(255,255,255,0.05)",
-                  border: "1px solid rgba(255,255,255,0.1)",
+                  border: "1px solid rgba(255,255,255,0.6)",
                   color: "#E0E0E0",
                   fontSize: "14px",
                   resize: "vertical",
@@ -252,7 +252,7 @@ export default function JourneyContentEditor() {
                   padding: "10px 12px",
                   borderRadius: "8px",
                   background: "rgba(255,255,255,0.05)",
-                  border: "1px solid rgba(255,255,255,0.1)",
+                  border: "1px solid rgba(255,255,255,0.6)",
                   color: "#E0E0E0",
                   fontSize: "14px",
                   resize: "vertical",
@@ -274,7 +274,7 @@ export default function JourneyContentEditor() {
                   padding: "10px 12px",
                   borderRadius: "8px",
                   background: "rgba(255,255,255,0.05)",
-                  border: "1px solid rgba(255,255,255,0.1)",
+                  border: "1px solid rgba(255,255,255,0.6)",
                   color: "#E0E0E0",
                   fontSize: "14px",
                 }}
@@ -351,7 +351,7 @@ export default function JourneyContentEditor() {
 
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               {/* Quick stats */}
-              <div style={{ display: "flex", gap: "12px", fontSize: "11px", color: "rgba(255,255,255,0.4)" }}>
+              <div style={{ display: "flex", gap: "12px", fontSize: "11px", color: "rgba(255,255,255,0.6)" }}>
                 {item.reflectionQuestion && (
                   <span title={item.reflectionQuestion}>
                     RQ: {item.reflectionQuestion.substring(0, 30)}...
@@ -365,7 +365,7 @@ export default function JourneyContentEditor() {
       </div>
 
       {/* Footer */}
-      <div style={{ marginTop: "32px", padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", fontSize: "13px", color: "rgba(255,255,255,0.4)" }}>
+      <div style={{ marginTop: "32px", padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", fontSize: "13px", color: "rgba(255,255,255,0.6)" }}>
         💡 Klikk på en dag for å redigere innhaldet. Endringer vert lagra direkte i databasen og verkar umiddelbart i API-et <code>/api/journey/today</code>.
       </div>
     </div>

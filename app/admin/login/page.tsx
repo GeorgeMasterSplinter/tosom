@@ -102,7 +102,7 @@ export default function AdminLoginPage() {
           </h1>
           <p
             className="text-xs mt-1"
-            style={{ color: 'rgba(255,255,255,0.35)' }}
+            style={{ color: 'rgba(255,255,255,0.6)' }}
           >
             Kun autorisert personell
           </p>
@@ -127,7 +127,7 @@ export default function AdminLoginPage() {
               <label
                 htmlFor="email"
                 className="block text-xs font-medium mb-1.5"
-                style={{ color: 'rgba(255,255,255,0.55)' }}
+                style={{ color: 'rgba(255,255,255,0.6)' }}
               >
                 E-postadresse
               </label>
@@ -138,7 +138,7 @@ export default function AdminLoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="George eller george@tosom.no"
-                className="w-full px-3 py-2.5 rounded-lg text-sm outline-none transition-all duration-200"
+                className="w-full px-3 py-2.5 rounded-lg text-sm transition-all duration-200"
                 style={{
                   background: 'rgba(255,255,255,0.04)',
                   border: '1px solid rgba(255,255,255,0.08)',
@@ -152,7 +152,7 @@ export default function AdminLoginPage() {
               <label
                 htmlFor="password"
                 className="block text-xs font-medium mb-1.5"
-                style={{ color: 'rgba(255,255,255,0.55)' }}
+                style={{ color: 'rgba(255,255,255,0.6)' }}
               >
                 Passord
               </label>
@@ -163,7 +163,7 @@ export default function AdminLoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full px-3 py-2.5 rounded-lg text-sm outline-none transition-all duration-200"
+                className="w-full px-3 py-2.5 rounded-lg text-sm transition-all duration-200"
                 style={{
                   background: 'rgba(255,255,255,0.04)',
                   border: '1px solid rgba(255,255,255,0.08)',
@@ -200,7 +200,7 @@ export default function AdminLoginPage() {
         </form>
 
         {/* Footer */}
-        <p className="text-center mt-6 text-xs" style={{ color: 'rgba(255,255,255,0.15)' }}>
+        <p className="text-center mt-6 text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>
           © 2026 Tosom AS — Alle rettigheter reservert
         </p>
       </div>

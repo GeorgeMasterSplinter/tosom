@@ -11,13 +11,13 @@ export const OB = {
   glassBg: 'rgba(255,255,255,0.03)',
   glassBgHover: 'rgba(255,255,255,0.05)',
   glassBorder: 'rgba(255,255,255,0.08)',
-  glassBorderHover: 'rgba(255,255,255,0.12)',
+  glassBorderHover: 'rgba(255,255,255,0.6)',
 
   /* ── Tekst ── */
   textPrimary: 'rgba(255,255,255,0.92)',
   textSecondary: 'rgba(255,255,255,0.6)',
-  textMuted: 'rgba(255,255,255,0.4)',
-  textSubtle: 'rgba(255,255,255,0.3)',
+  textMuted: 'rgba(255,255,255,0.6)',
+  textSubtle: 'rgba(255,255,255,0.6)',
 
   /* ── Gull — kun CTA + brand-aksent ── */
   gold: '#D4AF37',

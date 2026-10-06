@@ -90,6 +90,7 @@ npm audit --omit=dev   → 0 kritiske · 5 høye · 1 moderat (målt etter PL-24
 | **PL-19** | V-9 | Vilkår → angrerettloven § 22 bokstav n + direkte lovdata-lenker; personopplysningsloven; versjonsbump 2026-10-06 |
 | **PL-21** | V-10, V-13 | Bloggen avpublisert (404 i prod, innhold beholdes) + dag 30-varsel og milestone-tekst til bokmål |
 | **PL-22** | V-13 | Språkvakt utvidet med 10 V-13-ord + `docs/archive` utenfor skanningen; alle nye treff i levende kode rettet (14 filer); sideliste til G-20 laget |
+| **PL-18** | V-8 | Universell utforming: fokus-ring, reduced-motion, kontrast 0.6+ på lesbar tekst (114 filer), FAQ-<button>, ResonanceMark stilling *(kode ferdig — venter på G-18 Lighthouse)* |
 | **PL-24** | K-5 | `nodemailer` 7 → 10 + skriftlig vurdering av gjenstående sårbarheter |
 | **PL-25** | V-11 | API-prefikser i middleware + `api-route-coverage`-test |
 | **PL-27** | ny | **Religion: opptil fire valg, ulik tro gir ingen trekk** (se §6) |
@@ -555,7 +556,7 @@ Speiler `LanseringsCheckList.md` §6. **Kryss av begge steder.**
 - [ ] 🤖 Q PL-20 · `POST /api/auth/phone/send` deaktivert 🟥 *(kode ferdig · PL-20d — 404 i prod, bekreft med curl etter deploy)*
 - [x] 🤖 C PL-25 · Manglende API-prefikser i middleware 🟨 *(PL-25a+b: 6 nye prefikser i `PROTECTED_API_PREFIXES` + `__tests__/api-route-coverage.test.ts` (119 ruter verifisert, 21 eksplisitt offentlig med begrunnelse). Ny rute uten dekning → rød test.)*
 - [ ] 🤖 Q PL-23a + 👤 G-21 · Sitemap + `og-image.png` 🟥
-- [ ] 🤖 Q PL-18 + 👤 G-18 · WCAG 2.1 AA 🟥
+- [ ] 🤖 Q PL-18 + 👤 G-18 · WCAG 2.1 AA 🟥 *(kode ferdig · PL-18a–e: :focus-visible + prefers-reduced-motion i globals.css, kontrast hevet til min. 0.6 alpha på all lesbar hvit tekst (317 treff, 114 filer) + text.muted/–subtle-tokens, outline-none fjernet fra interaktive elementer (68 + 9), FAQ-spørsmål er ekte <button> i <h3>, ResonanceMark: SMIL-animasjonene stanses ved reduced-motion — verify + build grønne; Lighthouse ≥ 95 på /, /login, /onboarding venter på G-18)*
 - [ ] 👤 G-17 · Manuell test på telefoner og nettlesere 🟥
 - [ ] 👤 G-18 · Ingen konsollfeil 🟥
 - [ ] 👤 G-18 · INP < 200 ms på mobil 🟨

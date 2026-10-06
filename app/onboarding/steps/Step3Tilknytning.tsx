@@ -99,7 +99,7 @@ export default function Step3Tilknytning({ data, onChange, onBack, onNext }: Pro
           />
         ))}
       </div>
-      <p className="text-center text-xs mt-8" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>Tilknytningsmønsteret ditt sier mye om hvordan du møter andre mennesker.</p>
+      <p className="text-center text-xs mt-8" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>Tilknytningsmønsteret ditt sier mye om hvordan du møter andre mennesker.</p>
       <div className="mt-8 space-y-4">
         <BackButton onClick={onBack} />
          <PremiumCTAButton onClick={handleNext} label={!canProceed ? 'Fyll ut alle påkrevde felt' : 'Fortsett til neste steg'} disabled={!canProceed} fullWidth />

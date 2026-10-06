@@ -112,15 +112,15 @@ export default function AdminLogsPage() {
           <div style={{ fontSize: "12px", color: "#34D399" }}>ℹ️ Info</div>
           <div style={{ fontSize: "24px", fontWeight: 700, color: "#34D399" }}>{stats.infoCount}</div>
         </div>
-        <div style={{ padding: "12px", borderRadius: "12px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}>
-          <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)" }}>Totalt</div>
+        <div style={{ padding: "12px", borderRadius: "12px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.6)" }}>
+          <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.6)" }}>Totalt</div>
           <div style={{ fontSize: "24px", fontWeight: 700 }}>{stats.total}</div>
         </div>
       </div>
 
       {/* Filters */}
       <div style={{ marginBottom: "24px", display: "flex", gap: "12px", flexWrap: "wrap" }}>
-        <select value={filterModule} onChange={(e) => setFilterModule(e.target.value)} style={{ padding: "8px 16px", borderRadius: "8px", background: "#0A1A2A", border: "1px solid rgba(255,255,255,0.1)", color: "#E0E0E0", fontSize: "13px" }}>
+        <select value={filterModule} onChange={(e) => setFilterModule(e.target.value)} style={{ padding: "8px 16px", borderRadius: "8px", background: "#0A1A2A", border: "1px solid rgba(255,255,255,0.6)", color: "#E0E0E0", fontSize: "13px" }}>
           <option value="">Alle moduler</option>
           <option value="api">API-aktivitet</option>
           <option value="admin">Admin-handlingar</option>
@@ -131,7 +131,7 @@ export default function AdminLogsPage() {
           <option value="payment">Betaling</option>
         </select>
 
-        <select value={filterLevel} onChange={(e) => setFilterLevel(e.target.value)} style={{ padding: "8px 16px", borderRadius: "8px", background: "#0A1A2A", border: "1px solid rgba(255,255,255,0.1)", color: "#E0E0E0", fontSize: "13px" }}>
+        <select value={filterLevel} onChange={(e) => setFilterLevel(e.target.value)} style={{ padding: "8px 16px", borderRadius: "8px", background: "#0A1A2A", border: "1px solid rgba(255,255,255,0.6)", color: "#E0E0E0", fontSize: "13px" }}>
           <option value="">Alle nivå</option>
           <option value="ERROR">❌ Error</option>
           <option value="WARNING">⚠️ Warning</option>
@@ -150,7 +150,7 @@ export default function AdminLogsPage() {
             padding: "8px 16px",
             borderRadius: "8px",
             background: "rgba(255,255,255,0.05)",
-            border: "1px solid rgba(255,255,255,0.1)",
+            border: "1px solid rgba(255,255,255,0.6)",
             color: "#E0E0E0",
             fontSize: "13px",
           }}
@@ -162,7 +162,7 @@ export default function AdminLogsPage() {
           </button>
         )}
 
-        <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)", alignSelf: "center" }}>
+        <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.6)", alignSelf: "center" }}>
           Side {pagination.page}/{pagination.pages}
         </span>
       </div>
@@ -182,20 +182,20 @@ export default function AdminLogsPage() {
 
           <div style={{ display: "grid", gap: "12px", fontSize: "13px" }}>
             <div style={{ padding: "12px", borderRadius: "8px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}>
-              <div style={{ color: "rgba(255,255,255,0.4)", marginBottom: "4px" }}>Melding</div>
+              <div style={{ color: "rgba(255,255,255,0.6)", marginBottom: "4px" }}>Melding</div>
               <div style={{ color: "#E0E0E0", whiteSpace: "pre-wrap" }}>{selectedLog.message}</div>
             </div>
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
-              <div><span style={{ color: "rgba(255,255,255,0.4)" }}>ID:</span> {selectedLog.id.substring(0, 12)}...</div>
-              <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Oppretta:</span> {new Date(selectedLog.createdAt).toLocaleString("nb-NO")}</div>
-              <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Module:</span> {selectedLog.module}</div>
-              <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Bruker:</span> {selectedLog.userId?.substring(0, 12) || "—"}</div>
+              <div><span style={{ color: "rgba(255,255,255,0.6)" }}>ID:</span> {selectedLog.id.substring(0, 12)}...</div>
+              <div><span style={{ color: "rgba(255,255,255,0.6)" }}>Oppretta:</span> {new Date(selectedLog.createdAt).toLocaleString("nb-NO")}</div>
+              <div><span style={{ color: "rgba(255,255,255,0.6)" }}>Module:</span> {selectedLog.module}</div>
+              <div><span style={{ color: "rgba(255,255,255,0.6)" }}>Bruker:</span> {selectedLog.userId?.substring(0, 12) || "—"}</div>
             </div>
 
             {parseMetadata(selectedLog.metadata) && typeof parseMetadata(selectedLog.metadata) === "object" && (
               <div style={{ padding: "12px", borderRadius: "8px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}>
-                <div style={{ color: "rgba(255,255,255,0.4)", marginBottom: "4px" }}>Metadata (JSON)</div>
+                <div style={{ color: "rgba(255,255,255,0.6)", marginBottom: "4px" }}>Metadata (JSON)</div>
                 <pre style={{ fontSize: "11px", color: "#E0E0E0", overflowX: "auto", whiteSpace: "pre-wrap" }}>
                   {JSON.stringify(parseMetadata(selectedLog.metadata), null, 2)}
                 </pre>
@@ -225,18 +225,18 @@ export default function AdminLogsPage() {
             <div style={{ display: "flex", alignItems: "center", gap: "12px", flex: 1, overflow: "hidden" }}>
               <span style={{ fontSize: "14px" }}>{log.level === "ERROR" ? "❌" : log.level === "WARNING" ? "⚠️" : "ℹ️"}</span>
               <span style={{ fontSize: "10px", fontWeight: 600, color: LEVEL_COLORS[log.level] || "#9CA3AF", minWidth: "50px" }}>{log.level}</span>
-              <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)", minWidth: "120px" }}>{log.module}</span>
+              <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.6)", minWidth: "120px" }}>{log.module}</span>
               <span style={{ fontSize: "13px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{log.message}</span>
             </div>
 
-            <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)", marginLeft: "12px" }}>
+            <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.6)", marginLeft: "12px" }}>
               {new Date(log.createdAt).toLocaleDateString("nb-NO")} {new Date(log.createdAt).toLocaleTimeString("nb-NO", { hour: "2-digit", minute: "2-digit" })}
             </span>
           </div>
         ))}
       </div>
 
-      {!logs.length && !error && <div style={{ textAlign: "center", padding: "48px 0", color: "rgba(255,255,255,0.3)" }}>Ingen loggar funnet.</div>}
+      {!logs.length && !error && <div style={{ textAlign: "center", padding: "48px 0", color: "rgba(255,255,255,0.6)" }}>Ingen loggar funnet.</div>}
 
       {/* Pagination */}
       {pagination.pages > 1 && (
@@ -250,7 +250,7 @@ export default function AdminLogsPage() {
       )}
 
       {/* Footer */}
-      <div style={{ marginTop: "32px", padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", fontSize: "13px", color: "rgba(255,255,255,0.4)" }}>
+      <div style={{ marginTop: "32px", padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", fontSize: "13px", color: "rgba(255,255,255,0.6)" }}>
         💡 Klikk på en logg for å se detaljer og metadata. Filter kan brukast for å finne spesifikke hendingar som API-aktivitet, admin-handlingar, onboarding, matching, journey, chat eller betaling.
       </div>
     </div>

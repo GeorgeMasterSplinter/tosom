@@ -33,7 +33,7 @@ export const ActionGrid = forwardRef<HTMLDivElement, ActionGridProps>(
               className="w-full min-h-[60px] py-5 px-6 rounded-2xl text-lg font-medium flex items-center justify-start gap-4 transition-all duration-300 active:scale-95"
               style={{
                 background: 'rgba(255, 255, 255, 0.03)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                border: '1px solid rgba(255, 255, 255, 0.6)',
                 color: 'rgba(255, 255, 255, 0.7)',
               }}
             >

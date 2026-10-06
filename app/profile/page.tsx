@@ -154,7 +154,7 @@ export default function ProfilePage() {
         </Link>
         <Link href="/chat" className="px-6 py-3 rounded-lg text-sm font-medium" style={{
           background: 'rgba(255,255,255,0.04)',
-          border: '1px solid rgba(255,255,255,0.1)',
+          border: '1px solid rgba(255,255,255,0.6)',
           color: 'rgba(255,255,255,0.6)',
         }}>
           Til Chat

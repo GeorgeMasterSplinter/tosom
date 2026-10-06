@@ -97,7 +97,7 @@ export function InstallPrompt() {
               className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all hover:brightness-125 active:scale-[0.97]"
               style={{
                 background: "rgba(255,255,255,0.05)",
-                border: "1px solid rgba(255,255,255,0.1)",
+                border: "1px solid rgba(255,255,255,0.6)",
                 color: "rgba(255,255,255,0.6)",
               }}
             >
@@ -109,7 +109,7 @@ export function InstallPrompt() {
         <button
           onClick={dismiss}
           className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-all hover:bg-white/10 active:scale-90"
-          style={{ color: "rgba(255,255,255,0.4)" }}
+          style={{ color: "rgba(255,255,255,0.6)" }}
           aria-label="Lukk"
         >
           ×

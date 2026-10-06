@@ -90,7 +90,7 @@ export const ResonanceMeter = ({ value, size = 'lg', showLabel = true }: Resonan
         {showLabel && (
           <span
             className="mt-1 text-xs"
-            style={{ color: 'rgba(255, 255, 255, 0.4)' }}
+            style={{ color: 'rgba(255, 255, 255, 0.6)' }}
           >
             Resonans
           </span>

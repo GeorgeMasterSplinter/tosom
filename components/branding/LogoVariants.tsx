@@ -7,7 +7,7 @@
 
 'use client';
 
-import { FC, CSSProperties, useId } from 'react';
+import { FC, CSSProperties, useId, useEffect, useState } from 'react';
 import { Logo, LogoProps } from '@/components/ui/branding/Logo';
 import { color, shadow } from '@/config/design-tokens';
 import Link from 'next/link';
@@ -47,7 +47,7 @@ export const LogoHorizontal: FC<LogoHorizontalProps> = ({
       {showTagline && (
         <span
           className="mt-1 text-[11px] font-medium tracking-[0.2em] uppercase"
-          style={{ color: 'rgba(255,255,255,0.40)' }}
+          style={{ color: 'rgba(255,255,255,0.6)' }}
         >
           Ro · Trygghet · Dybde
         </span>
@@ -175,7 +175,7 @@ export const LogoStacked: FC<LogoStackedProps> = ({
       {showTagline && (
         <span
           className="mt-2 text-xs"
-          style={{ color: 'rgba(255,255,255,0.50)' }}
+          style={{ color: 'rgba(255,255,255,0.6)' }}
         >
           Ro · Trygghet · Dybde
         </span>
@@ -258,6 +258,23 @@ export interface ResonanceMarkProps {
 }
 
 /**
+ * V-8: respekt for redusert bevegelse (WCAG 2.1 AA).
+ * SMIL-animasjoner i SVG dekkes ikke av CSS-mediaqueryen i globals.css,
+ * så vi leser prefers-reduced-motion her og renderer merket stille.
+ */
+function usePrefersReducedMotion(): boolean {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReduced(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setReduced(e.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+  return reduced;
+}
+
+/**
  * Resonansmerket — signaturmotivet: to sirkler som møter hverandre.
  * Gull (#D4AF37), 1.5px linje, ingen fyll. `glow` gir gradient-fade
  * (klar i snittflaten) + myk gullglød. `resonate` lar sirklene puste
@@ -276,6 +293,7 @@ export const ResonanceMark: FC<ResonanceMarkProps> = ({
   style,
 }) => {
   const gradId = 'rm-' + useId().replace(/:/g, '');
+  const reducedMotion = usePrefersReducedMotion();
   const glowFilter =
     'drop-shadow(0 0 5px rgba(212,175,55,0.55)) drop-shadow(0 0 16px rgba(212,175,55,0.28))';
 
@@ -303,7 +321,7 @@ export const ResonanceMark: FC<ResonanceMarkProps> = ({
         </defs>
       )}
       <g>
-        {orbit && (
+        {orbit && !reducedMotion && (
           <animateTransform
             attributeName="transform"
             attributeType="XML"
@@ -315,7 +333,7 @@ export const ResonanceMark: FC<ResonanceMarkProps> = ({
           />
         )}
         <circle cx="9" cy="12" r="6">
-          {resonate && (
+          {resonate && !reducedMotion && (
             <animate
               attributeName="cx"
               values="9;9.7;9"
@@ -328,7 +346,7 @@ export const ResonanceMark: FC<ResonanceMarkProps> = ({
           )}
         </circle>
         <circle cx="15" cy="12" r="6">
-          {resonate && (
+          {resonate && !reducedMotion && (
             <animate
               attributeName="cx"
               values="15;14.3;15"

@@ -13,7 +13,7 @@ export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputE
       "rounded-[var(--ts-radius-md)] px-4 py-3 text-base " +
       "placeholder-[var(--ts-text-subtle)] " +
       "transition-all duration-[var(--ts-transition-fast)] " +
-      "focus:border-[var(--ts-gold)] focus:outline-none focus:ring-0 " +
+      "focus:border-[var(--ts-gold)]  focus:ring-0 " +
       "focus:shadow-[0_0_0_3px_rgba(212,175,55,0.2)] focus:bg-[var(--ts-glass-bg-hover)]";
 
     return (
@@ -32,7 +32,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<H
       "rounded-[var(--ts-radius-md)] px-4 py-3 text-base " +
       "placeholder-[var(--ts-text-subtle)] resize-y " +
       "transition-all duration-[var(--ts-transition-fast)] " +
-      "focus:border-[var(--ts-gold)] focus:outline-none focus:ring-0 " +
+      "focus:border-[var(--ts-gold)]  focus:ring-0 " +
       "focus:shadow-[0_0_0_3px_rgba(212,175,55,0.2)] focus:bg-[var(--ts-glass-bg-hover)]";
 
     return (
@@ -51,7 +51,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectHTMLAttributes<HTMLSel
       "rounded-[var(--ts-radius-md)] px-4 py-3 text-base " +
       "appearance-none cursor-pointer " +
       "transition-all duration-[var(--ts-transition-fast)] " +
-      "focus:border-[var(--ts-gold)] focus:outline-none focus:ring-0 " +
+      "focus:border-[var(--ts-gold)]  focus:ring-0 " +
       "focus:shadow-[0_0_0_3px_rgba(212,175,55,0.2)] focus:bg-[var(--ts-glass-bg-hover)]";
 
     return (

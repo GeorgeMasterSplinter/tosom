@@ -82,7 +82,7 @@ export default function BetalingPage() {
           <h1 className="text-[32px] font-semibold mb-4" style={{ color: '#FFFFFF', letterSpacing: '-0.02em' }}>
             Klar til å starte reisen?
           </h1>
-          <p className="text-lg" style={{ color: 'rgba(255,255,255,0.5)', lineHeight: '1.6' }}>
+          <p className="text-lg" style={{ color: 'rgba(255,255,255,0.6)', lineHeight: '1.6' }}>
             De første 5 000 reiser er gratis. Deretter koster én reise 349 kroner, betalt én gang med Vipps.
           </p>
         </div>
@@ -150,7 +150,7 @@ export default function BetalingPage() {
           className="mb-8"
           style={{
             background: 'rgba(255,255,255,0.03)',
-            border: '1px solid rgba(255,255,255,0.1)',
+            border: '1px solid rgba(255,255,255,0.6)',
             borderRadius: '12px',
             padding: '16px',
           }}
@@ -208,7 +208,7 @@ export default function BetalingPage() {
             {loading ? 'Starter reisen...' : 'Start reisen'}
           </button>
 
-          <p className="mt-6 text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>
+          <p className="mt-6 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
             Du blir aldri belastet uten at du godkjenner det på forhånd.
           </p>
 
@@ -218,7 +218,7 @@ export default function BetalingPage() {
         <div className="mt-12 text-center">
           <Link
             href="/onboarding"
-            style={{ color: 'rgba(255,255,255,0.4)', fontSize: '14px' }}
+            style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px' }}
           >
             ← Tilbake
           </Link>

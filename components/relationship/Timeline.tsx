@@ -38,7 +38,7 @@ const eventColors: Record<string, string> = {
   first_meeting: "rgba(255, 120, 120, 0.3)",
   milestone: "rgba(212, 175, 55, 0.5)",
   journey_complete: "rgba(100, 255, 180, 0.3)",
-  custom: "rgba(255, 255, 255, 0.15)",
+  custom: "rgba(255, 255, 255, 0.6)",
 };
 
 export function Timeline({ conversationId, variant = "full" }: TimelineProps) {
@@ -246,21 +246,21 @@ function AddEventForm({
           placeholder="Tittel"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full px-3 py-2 rounded-lg text-sm bg-transparent border border-white/10 text-white placeholder-white/40 focus:border-[var(--ts-gold)] focus:ring-1 focus:ring-[var(--ts-gold)]/30 outline-none transition-all"
+          className="w-full px-3 py-2 rounded-lg text-sm bg-transparent border border-white/10 text-white placeholder-white/40 focus:border-[var(--ts-gold)] focus:ring-1 focus:ring-[var(--ts-gold)]/30 transition-all"
           required
         />
         <textarea
           placeholder="Beskrivelse (valgfritt)"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="w-full px-3 py-2 rounded-lg text-sm bg-transparent border border-white/10 text-white placeholder-white/40 focus:border-[var(--ts-gold)] focus:ring-1 focus:ring-[var(--ts-gold)]/30 outline-none transition-all resize-none"
+          className="w-full px-3 py-2 rounded-lg text-sm bg-transparent border border-white/10 text-white placeholder-white/40 focus:border-[var(--ts-gold)] focus:ring-1 focus:ring-[var(--ts-gold)]/30 transition-all resize-none"
           rows={2}
         />
         <div className="flex gap-3">
           <select
             value={type}
             onChange={(e) => setType(e.target.value)}
-            className="px-3 py-2 rounded-lg text-sm bg-white/5 border border-white/10 text-white focus:border-[var(--ts-gold)] outline-none"
+            className="px-3 py-2 rounded-lg text-sm bg-white/5 border border-white/10 text-white focus:border-[var(--ts-gold)]"
           >
             <option value="match" className="bg-[#111418]">Match</option>
             <option value="first_message" className="bg-[#111418]">Første melding</option>
@@ -273,7 +273,7 @@ function AddEventForm({
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="px-3 py-2 rounded-lg text-sm bg-white/5 border border-white/10 text-white focus:border-[var(--ts-gold)] outline-none"
+            className="px-3 py-2 rounded-lg text-sm bg-white/5 border border-white/10 text-white focus:border-[var(--ts-gold)]"
             required
           />
         </div>

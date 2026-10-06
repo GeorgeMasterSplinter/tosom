@@ -43,7 +43,7 @@ export default function Step4Kjærlighetsspråk({ data, onChange, onBack, onNext
       <OnboardingTextField label="Hva skaper avstand mellom deg og andre? *" value={getValue('distanceCreator', '')} onChange={(v) => onChange('distanceCreator', v)} placeholder="Identifiser det spesifikke mønsteret eller opplevelsen som får deg til å trekke deg unna — og hvilket behov som står bak den reaksjonen" mikroguiding="Skriv f.eks. Når folk er ukjente med følelser mine" maxLength={300} minChars={10} rows={3} multiline testId="ob-distance-creator" />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
       <OnboardingTextField label="Hva er de små tingene som betyr mest for deg? *" value={getValue('smallThing', '')} onChange={(v) => onChange('smallThing', v)} placeholder="Beskriv en liten, hverdagslig gest som noen gjør, og som får deg til å kjenne at du er virkelig sett og verdsatt — jo mer spesifikt, jo bedre" mikroguiding="Skriv f.eks. At noen husker at jeg vil ha kaffe på morgenen" maxLength={300} minChars={10} rows={3} multiline testId="ob-small-thing" />
-      <p className="text-center text-xs mt-8" style={{ color: 'rgba(255,255,255,0.3)' }}>Kjærlighetsspråket ditt er viktig for å finne noen som passer deg.</p>
+      <p className="text-center text-xs mt-8" style={{ color: 'rgba(255,255,255,0.6)' }}>Kjærlighetsspråket ditt er viktig for å finne noen som passer deg.</p>
       <div className="mt-8 space-y-4"><BackButton onClick={onBack} /><PremiumCTAButton onClick={handleNext} label={!canProceed ? 'Fyll ut alle påkrevde felt' : 'Fortsett til neste steg'} disabled={!canProceed} fullWidth /></div>
     </OnboardingSlide>
   );

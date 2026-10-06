@@ -842,7 +842,7 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 | [ ] | `POST /api/auth/phone/send` deaktivert *(klar for George · PL-20 — 404 i prod, bekreft med curl etter deploy)* | V-10 | **Før lansering** |
 | [x] | Manglende API-prefikser i middleware | V-11 | Kan utsettes |
 | [ ] | `og-image.png` finnes; sitemap viser offentlige sider | V-14 | **Før lansering** |
-| [ ] | WCAG 2.1 AA: kontrast, fokus, labels, redusert bevegelse | V-8 | **Før lansering** |
+| [ ] | WCAG 2.1 AA: kontrast, fokus, labels, redusert bevegelse *(klar for George · PL-18 — a–e ferdig, Lighthouse-sjekk G-18)* | V-8 | **Før lansering** |
 | [ ] | Manuell test på iOS Safari, Android Chrome, desktop Chrome/Firefox/Safari | §1.2 | **Før lansering** |
 | [ ] | Ingen konsollfeil på hovedsidene (innlogget og utlogget) | §1.2 | **Før lansering** |
 | [ ] | INP < 200 ms på mobil | V-17 | Kan utsettes |

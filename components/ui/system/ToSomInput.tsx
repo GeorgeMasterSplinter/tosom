@@ -26,19 +26,18 @@ interface ToSomInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 's
 const baseInputStyles: React.CSSProperties = {
   borderRadius: radius.md,
   background: 'rgba(255,255,255,0.05)',
-  border: '1px solid rgba(255,255,255,0.10)',
+  border: '1px solid rgba(255,255,255,0.6)',
   color: colors.textPrimary,
   padding: '12px 16px',
   fontSize: '16px',
   transition: 'all 200ms ease-out',
   width: '100%',
-  outline: 'none',
 };
 
 const baseInputStylesByVariant: Record<string, React.CSSProperties> = {
   default: {
     background: 'rgba(255,255,255,0.05)',
-    border: '1px solid rgba(255,255,255,0.10)',
+    border: '1px solid rgba(255,255,255,0.6)',
   },
   gold: {
     background: 'rgba(212,175,55,0.04)',

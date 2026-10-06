@@ -92,11 +92,11 @@ export const GlassPanel: FC<GlassPanelProps> = ({
 
   const handleMouseEnter = (e: React.MouseEvent) => {
     if (hover) {
-      (e.currentTarget as HTMLElement).style.background = `linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.06) 100%)`;
+      (e.currentTarget as HTMLElement).style.background = `linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.06) 100%)`;
       (e.currentTarget as HTMLElement).style.boxShadow = `${shadowMap[shadow]}, ${outerGlow[strength].replace('0.15', '0.22').replace('0.12', '0.18').replace('0.18', '0.26')}, ${innerReflect}`;
       (e.currentTarget as HTMLElement).style.borderColor = goldBorder
         ? 'rgba(212, 175, 55, 0.45)'
-        : 'rgba(255, 255, 255, 0.14)';
+        : 'rgba(255, 255, 255, 0.6)';
     }
     onClick?.();
   };

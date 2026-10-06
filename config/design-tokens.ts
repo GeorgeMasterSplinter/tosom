@@ -69,7 +69,7 @@ export const color = {
   text: {
     primary:   '#FFFFFF',       /* Hovedtekst */
     secondary: 'rgba(255,255,255,0.65)',  /* Sekundær tekst */
-    muted:     'rgba(255,255,255,0.45)',  /* Dempet tekst */
+    muted:     'rgba(255,255,255,0.6)',  /* Dempet tekst (V-8: hevet til AA-kontrast) */
     subtle:    'rgba(255,255,255,0.30)',  /* Subtil tekst */
     inverse:   '#0B1520',       /* Tekst på lys bakgrunn */
     gold:      '#D4AF37',

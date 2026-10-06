@@ -19,7 +19,7 @@ const variantClasses: Record<string, string> = {
   default:
     'bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.08)]',
   glass:
-    'bg-[rgba(255,255,255,0.06)] backdrop-blur-xl border border-[rgba(255,255,255,0.12)] shadow-lg',
+    'bg-[rgba(255,255,255,0.06)] backdrop-blur-xl border border-[rgba(255,255,255,0.6)] shadow-lg',
   gold:
     'bg-[rgba(212,175,55,0.06)] border border-[rgba(212,175,55,0.20)] shadow-gold',
 };
@@ -31,7 +31,7 @@ export const SettingsCard = forwardRef<HTMLDivElement, SettingsCardProps>(
         ref={ref}
         className={`
           rounded-2xl p-6 transition-all duration-300
-          hover:border-[rgba(255,255,255,0.16)]
+          hover:border-[rgba(255,255,255,0.6)]
           ${variantClasses[variant]}
           ${className}
         `.trim()}
@@ -60,7 +60,7 @@ export const SettingsCard = forwardRef<HTMLDivElement, SettingsCardProps>(
               {description && (
                 <p
                   className="text-sm leading-relaxed"
-                  style={{ color: 'rgba(255, 255, 255, 0.5)' }}
+                  style={{ color: 'rgba(255, 255, 255, 0.6)' }}
                 >
                   {description}
                 </p>

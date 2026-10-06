@@ -78,12 +78,12 @@ function SystemRow({ name, status, latency, errors, uptime, lastCheck }: {
         <StatusDot status={status} />
       </td>
       <td className="py-3 px-4">
-        <span className="text-xs font-mono" style={{ color: 'rgba(255,255,255,0.5)' }}>
+        <span className="text-xs font-mono" style={{ color: 'rgba(255,255,255,0.6)' }}>
           {latency}
         </span>
       </td>
       <td className="py-3 px-4 text-center">
-        <span className="text-xs" style={{ color: errors > 0 ? '#FF4D4D' : 'rgba(255,255,255,0.4)' }}>
+        <span className="text-xs" style={{ color: errors > 0 ? '#FF4D4D' : 'rgba(255,255,255,0.6)' }}>
           {errors}
         </span>
       </td>
@@ -98,13 +98,13 @@ function SystemRow({ name, status, latency, errors, uptime, lastCheck }: {
               }}
             />
           </div>
-          <span className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
+          <span className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>
             {uptime}
           </span>
         </div>
       </td>
       <td className="py-3 px-4">
-        <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
+        <span className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>
           {lastCheck}
         </span>
       </td>
@@ -132,7 +132,7 @@ function ErrorLogItem({ time, service, message }: { time: string; service: strin
           {message}
         </span>
       </div>
-      <span className="text-xs flex-shrink-0" style={{ color: 'rgba(255,255,255,0.3)' }}>
+      <span className="text-xs flex-shrink-0" style={{ color: 'rgba(255,255,255,0.6)' }}>
         {time}
       </span>
     </div>
@@ -238,7 +238,7 @@ export default function AdminSystemPage() {
         >
           🚦 Systemstatus
         </h1>
-        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
+        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
           Sanntids oversikt over alle system — health heatmap + feillogg
         </p>
       </div>
@@ -254,7 +254,7 @@ export default function AdminSystemPage() {
             {h.label}
           </span>
         </div>
-        <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
+        <span className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>
           Sist full sjekk: {lastFullCheck}
         </span>
       </div>
@@ -273,18 +273,18 @@ export default function AdminSystemPage() {
           <table className="w-full">
             <thead>
               <tr style={{ background: 'rgba(255,255,255,0.02)' }}>
-                <th className="py-3 px-4 text-left text-xs font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>System</th>
-                <th className="py-3 px-4 text-left text-xs font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>Status</th>
-                <th className="py-3 px-4 text-left text-xs font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>Latens</th>
-                <th className="py-3 px-4 text-center text-xs font-medium w-16" style={{ color: 'rgba(255,255,255,0.35)' }}>Feil 24t</th>
-                <th className="py-3 px-4 text-left text-xs font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>Oppetid</th>
-                <th className="py-3 px-4 text-left text-xs font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>Siste sjekk</th>
+                <th className="py-3 px-4 text-left text-xs font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>System</th>
+                <th className="py-3 px-4 text-left text-xs font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>Status</th>
+                <th className="py-3 px-4 text-left text-xs font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>Latens</th>
+                <th className="py-3 px-4 text-center text-xs font-medium w-16" style={{ color: 'rgba(255,255,255,0.6)' }}>Feil 24t</th>
+                <th className="py-3 px-4 text-left text-xs font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>Oppetid</th>
+                <th className="py-3 px-4 text-left text-xs font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>Siste sjekk</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="py-8 text-center text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                  <td colSpan={6} className="py-8 text-center text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
                     Laster systemdata...
                   </td>
                 </tr>
@@ -321,9 +321,9 @@ export default function AdminSystemPage() {
         </div>
         <div>
           {loading ? (
-            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>Laster...</p>
+            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>Laster...</p>
           ) : errors.length === 0 ? (
-            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>Ingen feil de siste 24 timene ✓</p>
+            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>Ingen feil de siste 24 timene ✓</p>
           ) : (
             errors.map((err, i) => (
               <ErrorLogItem key={i} {...err} />

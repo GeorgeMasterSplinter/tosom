@@ -166,7 +166,7 @@ export function WaitingForMatch({ userName }: { userName: string }) {
                   style={{
                     background: 'rgba(255, 255, 255, 0.05)',
                     color: 'rgba(255, 255, 255, 0.7)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    border: '1px solid rgba(255, 255, 255, 0.6)',
                   }}
                 >
                   Avbryt
@@ -178,7 +178,7 @@ export function WaitingForMatch({ userName }: { userName: string }) {
               type="button"
               onClick={() => setShowConfirm(true)}
               className="text-sm underline transition-all duration-200 hover:brightness-125"
-              style={{ color: 'rgba(255, 255, 255, 0.35)' }}
+              style={{ color: 'rgba(255, 255, 255, 0.6)' }}
             >
               Får du kalde føtter?
             </button>
@@ -186,7 +186,7 @@ export function WaitingForMatch({ userName }: { userName: string }) {
         </div>
 
         {/* 1.3: Ombestemme deg — nedtonet lenke (masterplan v8.0 del 9.3) */}
-        <div className="mt-6 text-xs leading-relaxed" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>
+        <div className="mt-6 text-xs leading-relaxed" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
           <button
             type="button"
             onClick={handleAngerett}

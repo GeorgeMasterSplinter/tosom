@@ -83,7 +83,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               ${prefix ? 'pl-1' : 'pl-4'}
               ${suffix ? 'pr-4' : 'pr-3'}
               ${props.disabled ? 'cursor-not-allowed' : ''}
-              focus:outline-none focus:ring-0
+               focus:ring-0
             `}
             {...props}
           />

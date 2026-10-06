@@ -43,7 +43,7 @@ export default function Step6FramtidVisjon({ data, onChange, onBack, onNext }: P
       <OnboardingTextField label={`${labels['experienceAlone']} *`} value={getValue('experienceAlone', '')} onChange={(v) => onChange('experienceAlone', v)} placeholder={placeholders['experienceAlone']} mikroguiding={guiding['experienceAlone']} maxLength={500} minChars={10} rows={3} multiline testId="ob-experience-alone" />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
       <OnboardingTextField label={`${labels['experienceTogether']} *`} value={getValue('experienceTogether', '')} onChange={(v) => onChange('experienceTogether', v)} placeholder={placeholders['experienceTogether']} mikroguiding={guiding['experienceTogether']} maxLength={500} minChars={10} rows={3} multiline testId="ob-experience-together" />
-      <p className="text-center text-xs mt-8" style={{ color: 'rgba(255,255,255,0.3)' }}>Framtidsønsker viser veien for hva dere kan bygge sammen.</p>
+      <p className="text-center text-xs mt-8" style={{ color: 'rgba(255,255,255,0.6)' }}>Framtidsønsker viser veien for hva dere kan bygge sammen.</p>
       <div className="mt-8 space-y-4"><BackButton onClick={onBack} /><PremiumCTAButton onClick={handleNext} label={!canProceed ? 'Fyll ut alle påkrevde felt' : 'Fortsett til neste steg'} disabled={!canProceed} fullWidth /></div>
     </OnboardingSlide>
   );

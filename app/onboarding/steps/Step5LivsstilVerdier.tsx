@@ -64,7 +64,7 @@ export default function Step5LivsstilVerdier({ data, onChange, onBack, onNext, s
           />
         ))}
       </div>
-      <p className="text-center text-xs mt-8" style={{ color: 'rgba(255,255,255,0.3)' }}>Hverdagssvarene dine hjelper oss å finne noen som trives sammen med deg.</p>
+      <p className="text-center text-xs mt-8" style={{ color: 'rgba(255,255,255,0.6)' }}>Hverdagssvarene dine hjelper oss å finne noen som trives sammen med deg.</p>
       <div className="mt-8 space-y-4"><BackButton onClick={onBack} /><PremiumCTAButton onClick={handleNext} label={!canProceed ? 'Fyll ut alle påkrevde felt' : 'Fortsett til neste steg'} disabled={!canProceed} fullWidth /></div>
     </OnboardingSlide>
   );

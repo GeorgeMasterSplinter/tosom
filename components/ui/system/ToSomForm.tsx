@@ -82,9 +82,9 @@ export const ToSomForm: FC<ToSomFormProps> = ({
         disabled={loading}
         className="w-full py-4 px-6 rounded-2xl font-semibold transition-all duration-200"
         style={{
-          background: loading ? 'rgba(255,255,255,0.15)' : 'rgba(212,175,55,0.15)',
-          border: `1px solid ${loading ? 'rgba(255,255,255,0.10)' : 'rgba(212,175,55,0.25)'}`,
-          color: loading ? 'rgba(255,255,255,0.4)' : colors.gold,
+          background: loading ? 'rgba(255,255,255,0.6)' : 'rgba(212,175,55,0.15)',
+          border: `1px solid ${loading ? 'rgba(255,255,255,0.6)' : 'rgba(212,175,55,0.25)'}`,
+          color: loading ? 'rgba(255,255,255,0.6)' : colors.gold,
           cursor: loading ? 'not-allowed' : 'pointer',
         }}
       >

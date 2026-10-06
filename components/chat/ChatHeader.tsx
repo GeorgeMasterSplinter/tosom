@@ -20,7 +20,7 @@ interface ChatHeaderProps {
 /* ====== Icons ====== */
 function IconDots() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2" strokeLinecap="round">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="2" strokeLinecap="round">
       <circle cx="12" cy="5" r="1" /><circle cx="12" cy="12" r="1" /><circle cx="12" cy="19" r="1" />
     </svg>
   );
@@ -28,7 +28,7 @@ function IconDots() {
 
 function IconX() {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="2" strokeLinecap="round">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="2" strokeLinecap="round">
       <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
     </svg>
   );
@@ -46,12 +46,12 @@ function ConfirmModal({
       <div className="w-full max-w-sm rounded-3xl p-8 text-center relative" style={{ background: 'rgba(11, 21, 32, 0.97)', border: '1px solid rgba(212,175,55,0.2)' }}>
         <button onClick={onCancel} className="absolute top-4 right-4"><IconX /></button>
         <h3 className="mb-3 text-xl font-bold" style={{ color: danger ? '#EF4444' : '#D4AF37' }}>{title}</h3>
-        <p style={{ fontSize: '15px', lineHeight: '1.7', color: 'rgba(255,255,255,0.5)', marginBottom: '12px' }}>{message}</p>
+        <p style={{ fontSize: '15px', lineHeight: '1.7', color: 'rgba(255,255,255,0.6)', marginBottom: '12px' }}>{message}</p>
         <p style={{ fontSize: '13px', lineHeight: '1.5', color: 'rgba(212,175,55,0.8)', marginBottom: '24px', fontStyle: 'italic' }}>{warningText}</p>
         <button onClick={onConfirm} disabled={loading} className="w-full py-4 rounded-xl font-semibold text-base transition-all active:scale-[0.98]" style={{ background: danger ? '#EF4444' : 'linear-gradient(135deg, #D4AF37, #E8C766)', color: '#0B1520' }}>
           {loading ? 'Behandler...' : confirmText}
         </button>
-        <button onClick={onCancel} className="w-full mt-3 py-3 rounded-xl text-sm transition-all hover:opacity-80" style={{ color: 'rgba(255,255,255,0.4)' }}>Avbryt</button>
+        <button onClick={onCancel} className="w-full mt-3 py-3 rounded-xl text-sm transition-all hover:opacity-80" style={{ color: 'rgba(255,255,255,0.6)' }}>Avbryt</button>
       </div>
     </div>
   );
@@ -101,8 +101,8 @@ function ReportModal({ partnerId, matchId, onCancel, onSubmit }: { partnerId: st
             </button>
           ))}
         </div>
-        <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Beskriv hva som skjedde (valgfritt)..." rows={3} className="w-full px-4 py-3 rounded-xl text-sm mb-4 bg-transparent border resize-none focus:outline-none" style={{ borderColor: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.7)' }} />
-        <button onClick={handleSubmit} disabled={!category || sending} className="w-full py-4 rounded-xl font-semibold text-base transition-all active:scale-[0.98]" style={{ background: category ? 'linear-gradient(135deg, #D4AF37, #E8C766)' : 'rgba(255,255,255,0.1)', color: '#0B1520' }}>
+        <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Beskriv hva som skjedde (valgfritt)..." rows={3} className="w-full px-4 py-3 rounded-xl text-sm mb-4 bg-transparent border resize-none " style={{ borderColor: 'rgba(255,255,255,0.6)', color: 'rgba(255,255,255,0.7)' }} />
+        <button onClick={handleSubmit} disabled={!category || sending} className="w-full py-4 rounded-xl font-semibold text-base transition-all active:scale-[0.98]" style={{ background: category ? 'linear-gradient(135deg, #D4AF37, #E8C766)' : 'rgba(255,255,255,0.6)', color: '#0B1520' }}>
           {sending ? 'Sender...' : 'Send rapport'}
         </button>
       </div>
@@ -163,8 +163,8 @@ export default function ChatHeader({
         <div className="flex-1 min-w-0 pr-4 flex flex-col gap-2">
           <div className="flex items-center gap-2 flex-wrap">
             <h2 className="text-lg font-bold tracking-tight" style={{ color: '#FFF' }}>{partnerName}</h2>
-            {partnerAge && <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '14px' }}>· {partnerAge} år</span>}
-            {distance && <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '14px' }}>· {distance}</span>}
+            {partnerAge && <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px' }}>· {partnerAge} år</span>}
+            {distance && <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px' }}>· {distance}</span>}
           </div>
           {onBliKjentClick && (
             <button onClick={onBliKjentClick} className="flex flex-col items-center justify-center gap-1.5 py-4 px-6 rounded-2xl font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]" style={{ background: 'linear-gradient(135deg, rgba(212,175,55,0.15), rgba(212,175,55,0.05))', color: '#D4AF37', border: '1px solid rgba(212,175,55,0.25)' }}>

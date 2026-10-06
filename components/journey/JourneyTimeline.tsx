@@ -77,7 +77,7 @@ export const JourneyTimeline = ({ currentDay, completedDays, phases = defaultPha
                     marginTop: isCurrent ? -6 : 0,
                     background: isCompleted ? '#D4AF37' :
                                 isCurrent ? 'rgba(212, 175, 55, 0.3)' :
-                                isFuture ? 'rgba(255, 255, 255, 0.1)' :
+                                isFuture ? 'rgba(255, 255, 255, 0.6)' :
                                 'rgba(212, 175, 55, 0.6)',
                     border: isCurrent ? '2px solid #D4AF37' : 'none',
                   }}
@@ -104,7 +104,7 @@ export const JourneyTimeline = ({ currentDay, completedDays, phases = defaultPha
               </span>
               <p
                 className="text-sm mt-1"
-                style={{ color: 'rgba(255, 255, 255, 0.4)' }}
+                style={{ color: 'rgba(255, 255, 255, 0.6)' }}
               >
                 Dag {phase.start}–{phase.end} · {phase.name}
               </p>

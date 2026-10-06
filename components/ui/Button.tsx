@@ -19,7 +19,7 @@ export default function Button({ variant = 'default', size = 'md', children, onC
     lg: "px-6 py-3"
   }[size];
 
-  const baseClasses = `${sizeClasses} rounded-[12px] font-medium transition-all duration-300 focus:outline-none cursor-pointer`;
+  const baseClasses = `${sizeClasses} rounded-[12px] font-medium transition-all duration-300  cursor-pointer`;
 
   let variantClasses = "";
   switch (variant) {

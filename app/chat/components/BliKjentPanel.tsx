@@ -29,7 +29,7 @@ const G = {
   glassBgDark: "rgba(11,21,32,0.85)",
   textPrimary: "rgba(255,255,255,0.95)",
   textSecondary: "rgba(255,255,255,0.6)",
-  textMuted: "rgba(255,255,255,0.4)",
+  textMuted: "rgba(255,255,255,0.6)",
 };
 
 /* ═══════════════════════════════════════

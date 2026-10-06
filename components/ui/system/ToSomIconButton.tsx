@@ -43,7 +43,6 @@ const baseStyles: CSSProperties = {
   border: '1px solid rgba(255,255,255,0.08)',
   cursor: 'pointer',
   transition: `all ${motion.durations.normal} ${motion.easings.fadeIn}`,
-  outline: 'none',
 };
 
 const hoverDefaults: Record<string, Record<string, string>> = {

@@ -78,7 +78,7 @@ export const moodThemes: Record<MoodId, MoodTheme> = {
     typingDot: "rgba(96,165,250,0.7)",
     textPrimary: "rgba(255,255,255,0.95)",
     textSecondary: "rgba(255,255,255,0.6)",
-    textMuted: "rgba(255,255,255,0.4)",
+    textMuted: "rgba(255,255,255,0.6)",
   },
 
   warm: {
@@ -106,7 +106,7 @@ export const moodThemes: Record<MoodId, MoodTheme> = {
     typingDot: "rgba(212,175,55,0.7)",
     textPrimary: "rgba(255,255,255,0.95)",
     textSecondary: "rgba(255,255,255,0.6)",
-    textMuted: "rgba(255,255,255,0.4)",
+    textMuted: "rgba(255,255,255,0.6)",
   },
 
   deep: {
@@ -134,7 +134,7 @@ export const moodThemes: Record<MoodId, MoodTheme> = {
     typingDot: "rgba(167,139,250,0.7)",
     textPrimary: "rgba(255,255,255,0.95)",
     textSecondary: "rgba(255,255,255,0.6)",
-    textMuted: "rgba(255,255,255,0.4)",
+    textMuted: "rgba(255,255,255,0.6)",
   },
 
   gentle: {
@@ -162,7 +162,7 @@ export const moodThemes: Record<MoodId, MoodTheme> = {
     typingDot: "rgba(52,211,153,0.7)",
     textPrimary: "rgba(255,255,255,0.95)",
     textSecondary: "rgba(255,255,255,0.6)",
-    textMuted: "rgba(255,255,255,0.4)",
+    textMuted: "rgba(255,255,255,0.6)",
   },
 
   joyful: {
@@ -190,7 +190,7 @@ export const moodThemes: Record<MoodId, MoodTheme> = {
     typingDot: "rgba(251,191,36,0.7)",
     textPrimary: "rgba(255,255,255,0.95)",
     textSecondary: "rgba(255,255,255,0.6)",
-    textMuted: "rgba(255,255,255,0.4)",
+    textMuted: "rgba(255,255,255,0.6)",
   },
 
   romantic: {
@@ -218,7 +218,7 @@ export const moodThemes: Record<MoodId, MoodTheme> = {
     typingDot: "rgba(251,113,133,0.7)",
     textPrimary: "rgba(255,255,255,0.95)",
     textSecondary: "rgba(255,255,255,0.6)",
-    textMuted: "rgba(255,255,255,0.4)",
+    textMuted: "rgba(255,255,255,0.6)",
   },
 
   cozy: {
@@ -246,7 +246,7 @@ export const moodThemes: Record<MoodId, MoodTheme> = {
     typingDot: "rgba(224,122,47,0.7)",
     textPrimary: "rgba(255,255,255,0.95)",
     textSecondary: "rgba(255,255,255,0.6)",
-    textMuted: "rgba(255,255,255,0.4)",
+    textMuted: "rgba(255,255,255,0.6)",
   },
 
   dreamy: {
@@ -274,7 +274,7 @@ export const moodThemes: Record<MoodId, MoodTheme> = {
     typingDot: "rgba(179,191,248,0.7)",
     textPrimary: "rgba(255,255,255,0.95)",
     textSecondary: "rgba(255,255,255,0.6)",
-    textMuted: "rgba(255,255,255,0.4)",
+    textMuted: "rgba(255,255,255,0.6)",
   },
 
   playful: {
@@ -302,7 +302,7 @@ export const moodThemes: Record<MoodId, MoodTheme> = {
     typingDot: "rgba(34,211,238,0.7)",
     textPrimary: "rgba(255,255,255,0.95)",
     textSecondary: "rgba(255,255,255,0.6)",
-    textMuted: "rgba(255,255,255,0.4)",
+    textMuted: "rgba(255,255,255,0.6)",
   },
 
   cotton: {
@@ -314,7 +314,7 @@ export const moodThemes: Record<MoodId, MoodTheme> = {
     bubbleMeEnd: "rgba(255,255,255,0.65)",
     bubbleMeBorder: "rgba(0,0,0,0.08)",
     bubbleMeGlow: "rgba(0,0,0,0.04)",
-    bubblePartnerBg: "rgba(255,255,255,0.55)",
+    bubblePartnerBg: "rgba(255,255,255,0.6)",
     bubblePartnerBorder: "rgba(0,0,0,0.06)",
     inputBorder: "rgba(0,0,0,0.1)",
     inputGlow: "rgba(0,0,0,0.04)",
@@ -338,13 +338,13 @@ export const moodThemes: Record<MoodId, MoodTheme> = {
     name: "Flammus",
     emoji: "🖤",
     containerBg: "linear-gradient(180deg, #000000 0%, #0A0A0A 100%)",
-    bubbleMeStart: "rgba(255,255,255,0.12)",
+    bubbleMeStart: "rgba(255,255,255,0.6)",
     bubbleMeEnd: "rgba(255,255,255,0.04)",
-    bubbleMeBorder: "rgba(255,255,255,0.15)",
+    bubbleMeBorder: "rgba(255,255,255,0.6)",
     bubbleMeGlow: "rgba(255,255,255,0.06)",
     bubblePartnerBg: "rgba(255,255,255,0.06)",
     bubblePartnerBorder: "rgba(255,255,255,0.08)",
-    inputBorder: "rgba(255,255,255,0.12)",
+    inputBorder: "rgba(255,255,255,0.6)",
     inputGlow: "rgba(255,255,255,0.05)",
     inputFocusBg: "rgba(255,255,255,0.03)",
     accent: "#8A8A8A",
@@ -357,8 +357,8 @@ export const moodThemes: Record<MoodId, MoodTheme> = {
     typingBg: "rgba(138,138,138,0.1)",
     typingDot: "rgba(176,176,176,0.6)",
     textPrimary: "rgba(255,255,255,0.92)",
-    textSecondary: "rgba(255,255,255,0.55)",
-    textMuted: "rgba(255,255,255,0.3)",
+    textSecondary: "rgba(255,255,255,0.6)",
+    textMuted: "rgba(255,255,255,0.6)",
   },
 
   sage: {
@@ -386,7 +386,7 @@ export const moodThemes: Record<MoodId, MoodTheme> = {
     typingDot: "rgba(168,196,160,0.6)",
     textPrimary: "rgba(255,255,255,0.95)",
     textSecondary: "rgba(255,255,255,0.6)",
-    textMuted: "rgba(255,255,255,0.4)",
+    textMuted: "rgba(255,255,255,0.6)",
   },
 };
 

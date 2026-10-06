@@ -90,7 +90,7 @@ export default function ProfileEditForm({
           rows={rows ?? 3}
           value={form?.[field] ?? ""}
           onChange={(e) => handleField(field, e.target.value)}
-          className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/20 h-32 resize-none leading-relaxed"
+          className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-gray-200 placeholder-gray-500  focus:ring-2 focus:ring-white/20 h-32 resize-none leading-relaxed"
           placeholder="Skriv litt om deg selv …"
         />
       ) : (
@@ -107,7 +107,7 @@ export default function ProfileEditForm({
                 : e.target.value
             )
           }
-          className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/20"
+          className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-gray-200 placeholder-gray-500  focus:ring-2 focus:ring-white/20"
         />
       )}
       {errors[field] && (
@@ -206,7 +206,7 @@ export default function ProfileEditForm({
             type="text"
             value={form.photoUrl ?? ""}
             onChange={(e) => handleField("photoUrl", e.target.value)}
-            className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/20"
+            className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-gray-200 placeholder-gray-500  focus:ring-2 focus:ring-white/20"
             placeholder="Bilde-URL (valfritt)"
           />
         </div>

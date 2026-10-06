@@ -56,25 +56,28 @@ function FaqItem({ q, a }: { q: string; a: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   return (
     <div
-      className="border-b py-5 cursor-pointer transition-colors"
+      className="border-b py-5"
       style={{ borderColor: 'rgba(255,255,255,0.08)' }}
-      onClick={() => setOpen(!open)}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => e.key === 'Enter' && setOpen(!open)}
-      aria-expanded={open}
     >
-      <div className="flex items-center justify-between gap-4">
-        <h3 style={{ ...typographyToStyle('heading-sm'), color: 'rgba(255,255,255,0.85)' }}>{q}</h3>
-        <span
-          className="flex-shrink-0 text-xl transition-transform duration-200"
-          style={{ color: '#D4AF37', transform: open ? 'rotate(45deg)' : 'none' }}
+      {/* V-8: ekte <button> inni <h3> — mellomrom og Enter virker av seg selv */}
+      <h3 style={{ ...typographyToStyle('heading-sm'), color: 'rgba(255,255,255,0.85)' }}>
+        <button
+          type="button"
+          className="flex w-full items-center justify-between gap-4 cursor-pointer transition-colors"
+          onClick={() => setOpen(!open)}
+          aria-expanded={open}
         >
-          +
-        </span>
-      </div>
+          <span>{q}</span>
+          <span
+            className="flex-shrink-0 text-xl transition-transform duration-200"
+            style={{ color: '#D4AF37', transform: open ? 'rotate(45deg)' : 'none' }}
+          >
+            +
+          </span>
+        </button>
+      </h3>
       {open && (
-        <p className="mt-4 leading-relaxed" style={{ ...typographyToStyle('body'), color: 'rgba(255,255,255,0.55)' }}>
+        <p className="mt-4 leading-relaxed" style={{ ...typographyToStyle('body'), color: 'rgba(255,255,255,0.6)' }}>
           {a}
         </p>
       )}
@@ -90,7 +93,7 @@ export default function FaqPage() {
           <h1 style={{ ...typographyToStyle('heading-lg'), color: 'rgba(255,255,255,0.92)' }}>
             Ofte stilte spørsmål
           </h1>
-          <p className="mt-2" style={{ ...typographyToStyle('body-lg'), color: 'rgba(255,255,255,0.4)' }}>
+          <p className="mt-2" style={{ ...typographyToStyle('body-lg'), color: 'rgba(255,255,255,0.6)' }}>
             Alt du lurer på, svart på en rolig og ærlig måte.
           </p>
         </ToSomSection>
@@ -102,7 +105,7 @@ export default function FaqPage() {
         </div>
 
         <ToSomSection>
-          <p style={{ ...typographyToStyle('body'), color: 'rgba(255,255,255,0.5)' }}>
+          <p style={{ ...typographyToStyle('body'), color: 'rgba(255,255,255,0.6)' }}>
             Finner du ikke svaret?{' '}
             <Link href="/kontakt" style={{ color: '#D4AF37', textDecoration: 'underline' }}>
               Ta kontakt

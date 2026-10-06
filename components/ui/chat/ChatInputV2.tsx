@@ -68,7 +68,7 @@ const ChatInputV2: React.FC<ChatInputV2Props> = ({
               text-sm text-ts-primary
               placeholder:text-ts-text-muted
               focus:border-ts-gold/50
-              focus:outline-none
+              
               focus:ring-2 focus:ring-ts-gold/20
               backdrop-blur-sm
               transition-all

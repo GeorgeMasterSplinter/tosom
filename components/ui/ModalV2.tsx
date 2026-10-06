@@ -132,7 +132,7 @@ export const ModalV2 = ({
         <div
           ref={panelRef}
           tabIndex={-1}
-          className={`relative w-full ${sizeClasses[size]} ${positionPanel[position]} rounded-2xl border border-white/8 bg-[var(--ts-bg-secondary)] shadow-xl outline-none focus-visible:ring-2 focus-visible:ring-[var(--ts-gold)]/50`}
+          className={`relative w-full ${sizeClasses[size]} ${positionPanel[position]} rounded-2xl border border-white/8 bg-[var(--ts-bg-secondary)] shadow-xl focus-visible:ring-2 focus-visible:ring-[var(--ts-gold)]/50`}
           style={{
             background: "rgba(17, 24, 39, 0.95)",
             backdropFilter: "blur(12px)",

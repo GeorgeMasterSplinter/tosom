@@ -67,7 +67,7 @@ export default function Step8ModenNysgjerrighet({ data, onChange, onBack, onNext
           />
         ))}
       </div>
-      <p className="text-center text-xs mt-8" style={{ color: 'rgba(255,255,255,0.3)' }}>Modne svar viser hvem du er — del bare det du kjenner deg trygg med.</p>
+      <p className="text-center text-xs mt-8" style={{ color: 'rgba(255,255,255,0.6)' }}>Modne svar viser hvem du er — del bare det du kjenner deg trygg med.</p>
       <div className="mt-8 space-y-4"><BackButton onClick={onBack} /><PremiumCTAButton onClick={handleNext} label={!canProceed ? 'Fyll ut alle påkrevde felt' : 'Fortsett til neste steg'} disabled={!canProceed} fullWidth /></div>
     </OnboardingSlide>
   );

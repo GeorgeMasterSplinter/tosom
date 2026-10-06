@@ -142,7 +142,7 @@ const ChatWindowV2: React.FC<ChatWindowV2Props> = ({
             ref={inputRef}
             placeholder={placeholder}
             rows={1}
-            className="flex-1 resize-none rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-ts-primary placeholder:text-ts-text-muted focus:border-ts-gold/50 focus:outline-none focus:ring-2 focus:ring-ts-gold/20 backdrop-blur-sm transition-all"
+            className="flex-1 resize-none rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-ts-primary placeholder:text-ts-text-muted focus:border-ts-gold/50  focus:ring-2 focus:ring-ts-gold/20 backdrop-blur-sm transition-all"
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();

@@ -125,7 +125,7 @@ export default function AdminMatchesPage() {
 
       {/* Filter */}
       <div style={{ marginBottom: "24px", display: "flex", gap: "12px", alignItems: "center" }}>
-        <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} style={{ padding: "8px 16px", borderRadius: "8px", background: "#0A1A2A", border: "1px solid rgba(255,255,255,0.1)", color: "#E0E0E0", fontSize: "13px" }}>
+        <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} style={{ padding: "8px 16px", borderRadius: "8px", background: "#0A1A2A", border: "1px solid rgba(255,255,255,0.6)", color: "#E0E0E0", fontSize: "13px" }}>
           <option value="">Alle statusar</option>
           
           <option value="active">Active</option>
@@ -133,7 +133,7 @@ export default function AdminMatchesPage() {
           <option value="expired">Expired</option>
           <option value="ended">Ended</option>
         </select>
-        <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)" }}>{pagination.total} totalt · Side {pagination.page}/{pagination.pages}</span>
+        <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.6)" }}>{pagination.total} totalt · Side {pagination.page}/{pagination.pages}</span>
       </div>
 
       {/* Error */}
@@ -141,7 +141,7 @@ export default function AdminMatchesPage() {
 
       {/* Inspector panel */}
       {selectedMatch && (inspectorData || loadingInspector) && (
-        <div style={{ marginBottom: "24px", padding: "20px", borderRadius: "12px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)" }}>
+        <div style={{ marginBottom: "24px", padding: "20px", borderRadius: "12px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.6)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "16px" }}>
             <h2 style={{ fontSize: "18px", fontWeight: 600, color: "#D4AF37" }}>
               {loadingInspector ? "Lastar inspeksjon..." : `Match-inspeksjon — ${selectedMatch.id.substring(0, 12)}...`}
@@ -155,10 +155,10 @@ export default function AdminMatchesPage() {
               <div style={{ marginBottom: "20px", padding: "16px", borderRadius: "12px", background: `${LEVEL_COLORS[inspectorData.match.resonanceLevel] || "#9CA3AF"}11`, border: `1px solid ${LEVEL_COLORS[inspectorData.match.resonanceLevel] || "#9CA3AF"}33` }}>
                 <div style={{ fontSize: "14px", fontWeight: 600, color: "#D4AF37", marginBottom: "12px" }}>📊 Match Score</div>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: "8px", fontSize: "13px" }}>
-                  <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Score:</span> {inspectorData.match.score}</div>
-                  <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Normalized:</span> {inspectorData.match.normalizedScore.toFixed(2)}</div>
-                  <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Resonance:</span> <span style={{ color: LEVEL_COLORS[inspectorData.match.resonanceLevel] || "#9CA3AF" }}>{inspectorData.match.resonanceLevel}</span></div>
-                  <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Status:</span> {statusBadge(inspectorData.match.status)}</div>
+                  <div><span style={{ color: "rgba(255,255,255,0.6)" }}>Score:</span> {inspectorData.match.score}</div>
+                  <div><span style={{ color: "rgba(255,255,255,0.6)" }}>Normalized:</span> {inspectorData.match.normalizedScore.toFixed(2)}</div>
+                  <div><span style={{ color: "rgba(255,255,255,0.6)" }}>Resonance:</span> <span style={{ color: LEVEL_COLORS[inspectorData.match.resonanceLevel] || "#9CA3AF" }}>{inspectorData.match.resonanceLevel}</span></div>
+                  <div><span style={{ color: "rgba(255,255,255,0.6)" }}>Status:</span> {statusBadge(inspectorData.match.status)}</div>
                 </div>
               </div>
 
@@ -168,10 +168,10 @@ export default function AdminMatchesPage() {
                   <div key={i} style={{ padding: "12px", borderRadius: "8px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}>
                     <div style={{ fontSize: "13px", fontWeight: 600, marginBottom: "8px", color: i === 0 ? "#34D399" : "#60A5FA" }}>Bruker {i + 1}</div>
                     <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.6)" }}>{u.name || u.email}</div>
-                    <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)", marginBottom: "4px" }}>{u.email}</div>
+                    <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.6)", marginBottom: "4px" }}>{u.email}</div>
                     {u.journey ? (
-                      <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.4)" }}>Journey: Dag {u.journey.day} ({u.journey.phase}) · {u.journey.completedDays} dager fullførte</div>
-                    ) : <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)" }}>Ingen journey</div>}
+                      <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.6)" }}>Journey: Dag {u.journey.day} ({u.journey.phase}) · {u.journey.completedDays} dager fullførte</div>
+                    ) : <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.6)" }}>Ingen journey</div>}
                   </div>
                 ))}
               </div>
@@ -193,9 +193,9 @@ export default function AdminMatchesPage() {
                 <div style={{ padding: "12px", borderRadius: "8px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}>
                   <div style={{ fontSize: "13px", fontWeight: 600, color: "#D4AF37", marginBottom: "8px" }}>💬 Conversation</div>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: "8px", fontSize: "12px" }}>
-                    <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Status:</span> {inspectorData.conversation.frozenAt ? "🔴 Fryst" : inspectorData.conversation.endedAt ? "⚫ Endeleg" : "🟢 Aktiv"}</div>
-                    <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Meldinger:</span> {inspectorData.conversation.messageCount}</div>
-                    <div><span style={{ color: "rgba(255,255,255,0.4)" }}>Resonans-sesjonar:</span> {inspectorData.conversation.totalResonanceSessions}</div>
+                    <div><span style={{ color: "rgba(255,255,255,0.6)" }}>Status:</span> {inspectorData.conversation.frozenAt ? "🔴 Fryst" : inspectorData.conversation.endedAt ? "⚫ Endeleg" : "🟢 Aktiv"}</div>
+                    <div><span style={{ color: "rgba(255,255,255,0.6)" }}>Meldinger:</span> {inspectorData.conversation.messageCount}</div>
+                    <div><span style={{ color: "rgba(255,255,255,0.6)" }}>Resonans-sesjonar:</span> {inspectorData.conversation.totalResonanceSessions}</div>
                   </div>
                 </div>
               )}
@@ -214,10 +214,10 @@ export default function AdminMatchesPage() {
               <div>
                 <div style={{ fontSize: "14px" }}>
                   {m.userA.name || m.userA.email?.substring(0, 15)}
-                  <span style={{ color: "rgba(255,255,255,0.3)" }}>{' ↔ '}</span>
+                  <span style={{ color: "rgba(255,255,255,0.6)" }}>{' ↔ '}</span>
                   {m.userB.name || m.userB.email?.substring(0, 15)}
                 </div>
-                <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)" }}>Score: {m.score} · {m.normalizedScore.toFixed(2)} · Oppretta {new Date(m.createdAt).toLocaleDateString("nb-NO")}</div>
+                <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.6)" }}>Score: {m.score} · {m.normalizedScore.toFixed(2)} · Oppretta {new Date(m.createdAt).toLocaleDateString("nb-NO")}</div>
               </div>
             </div>
             <span style={{ fontSize: "12px", color: "#D4AF37" }}>🔍 Inspekter</span>
@@ -236,10 +236,10 @@ export default function AdminMatchesPage() {
         </div>
       )}
 
-      {!matches.length && !error && <div style={{ textAlign: "center", padding: "48px 0", color: "rgba(255,255,255,0.3)" }}>Ingen matcher funnet.</div>}
+      {!matches.length && !error && <div style={{ textAlign: "center", padding: "48px 0", color: "rgba(255,255,255,0.6)" }}>Ingen matcher funnet.</div>}
 
       {/* Footer */}
-      <div style={{ marginTop: "32px", padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", fontSize: "13px", color: "rgba(255,255,255,0.4)" }}>
+      <div style={{ marginTop: "32px", padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", fontSize: "13px", color: "rgba(255,255,255,0.6)" }}>
         💡 Klikk på en match for å se full inspeksjon med score, resonans, journey, conversation og insight-data.
       </div>
     </div>

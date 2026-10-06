@@ -20,7 +20,7 @@ interface TrendConfig {
 const trendConfig: Record<TrendValue, TrendConfig> = {
   up: { color: '#4DFF88', icon: '↗' },
   down: { color: '#FF4D4D', icon: '↘' },
-  neutral: { color: 'rgba(255,255,255,0.45)', icon: '→' },
+  neutral: { color: 'rgba(255,255,255,0.6)', icon: '→' },
 };
 
 interface ToSomDashboardCardProps {

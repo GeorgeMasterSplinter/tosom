@@ -28,7 +28,7 @@ export const ToSomDivider: FC<ToSomDividerProps> = ({
     className={`w-full ${className}`}
     style={{
       height: '1px',
-      background: 'rgba(255,255,255,0.10)',
+      background: 'rgba(255,255,255,0.6)',
       marginTop: `${spacing[spacingProp]}`,
       marginBottom: `${spacing[spacingProp]}`,
     }}

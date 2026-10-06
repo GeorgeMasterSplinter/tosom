@@ -29,7 +29,7 @@ export const StepIndicator = ({ current, total, title, subtitle }: StepIndicator
           </h2>
           <p
             className="text-sm md:text-base leading-relaxed"
-            style={{ color: 'rgba(255, 255, 255, 0.5)' }}
+            style={{ color: 'rgba(255, 255, 255, 0.6)' }}
           >
             {subtitle}
           </p>
@@ -55,7 +55,7 @@ export const StepIndicator = ({ current, total, title, subtitle }: StepIndicator
         </div>
         <span
           className="text-xs font-medium whitespace-nowrap"
-          style={{ color: 'rgba(255, 255, 255, 0.4)' }}
+          style={{ color: 'rgba(255, 255, 255, 0.6)' }}
         >
           {percent}%
         </span>

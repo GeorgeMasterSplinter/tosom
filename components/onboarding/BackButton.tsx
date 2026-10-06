@@ -24,7 +24,7 @@ export function BackButton({ onClick }: BackButtonProps) {
         backdrop-blur-sm
         shadow-md shadow-black/10
         transition-all duration-400 ease-in-out
-        focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-3"
+         focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-3"
       style={{ willChange: 'background-color, border-color' }}
     >
       <span className="flex items-center justify-center gap-2">

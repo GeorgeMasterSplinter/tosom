@@ -423,7 +423,7 @@ export default function PersonvernPage() {
                               key={header}
                               className="px-4 py-3 text-xs font-semibold uppercase tracking-[0.08em]"
                               style={{
-                                color: 'rgba(255,255,255,0.45)',
+                                color: 'rgba(255,255,255,0.6)',
                                 borderBottom: '1px solid rgba(255,255,255,0.08)',
                               }}
                             >

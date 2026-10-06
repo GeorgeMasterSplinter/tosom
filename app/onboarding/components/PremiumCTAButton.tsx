@@ -63,7 +63,7 @@ export function PremiumCTAButton({
             : isHovered
               ? 'linear-gradient(135deg, #E8C766 0%, #F0D575 50%, #E8C766 100%)'
               : 'linear-gradient(135deg, #D4AF37 0%, #E8C766 50%, #D4AF37 100%)',
-          color: disabled ? 'rgba(255, 255, 255, 0.3)' : '#0B1520',
+          color: disabled ? 'rgba(255, 255, 255, 0.6)' : '#0B1520',
           boxShadow: disabled
             ? 'none'
             : isHovered
@@ -96,7 +96,7 @@ export function PremiumCTAButton({
           style={{
             height: '48px',
             fontSize: '14px',
-            color: 'rgba(255, 255, 255, 0.4)',
+            color: 'rgba(255, 255, 255, 0.6)',
             letterSpacing: '-0.01em',
           }}
         >

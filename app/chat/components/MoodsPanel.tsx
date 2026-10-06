@@ -26,7 +26,7 @@ const G = {
   glassBgDark: "rgba(11,21,32,0.85)",
   textPrimary: "rgba(255,255,255,0.95)",
   textSecondary: "rgba(255,255,255,0.6)",
-  textMuted: "rgba(255,255,255,0.4)",
+  textMuted: "rgba(255,255,255,0.6)",
 };
 
 /* ═══════════════════════════════════════
@@ -180,7 +180,7 @@ export function MoodsPanel({ onClose }: MoodsPanelProps) {
         <style jsx>{`
           ::-webkit-scrollbar { width: 6px; }
           ::-webkit-scrollbar-track { background: transparent; }
-          ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+          ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.6); border-radius: 3px; }
         `}</style>
       </div>
     </FadeIn>

@@ -128,7 +128,7 @@ function EmptyState() {
 
         <button
           onClick={() => router.push("/dashboard")}
-          className="transition-all duration-300 hover:brightness-110 active:scale-[0.98] focus:outline-none"
+          className="transition-all duration-300 hover:brightness-110 active:scale-[0.98] "
           style={{
             background: `linear-gradient(135deg, ${color.brand.gold}, ${color.brand['gold-hover']})`,
             color: color.bg.primary,

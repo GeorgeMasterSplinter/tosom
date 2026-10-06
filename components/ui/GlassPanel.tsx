@@ -31,7 +31,7 @@ export default function GlassPanel({
   const borderMap = {
     default: {
       background: "rgba(255,255,255,0.04)",
-      border: "1px solid rgba(255,255,255,0.1)",
+      border: "1px solid rgba(255,255,255,0.6)",
       shadow: "0 8px 32px rgba(0,0,0,0.25)",
     },
     gold: {
@@ -84,7 +84,7 @@ export function GlassPanelHeader({
       {description && (
         <p
           className="text-sm leading-relaxed"
-          style={{ color: "rgba(255,255,255,0.4)" }}
+          style={{ color: "rgba(255,255,255,0.6)" }}
         >
           {description}
         </p>
@@ -112,7 +112,7 @@ export function GoldButton({
       className={`inline-flex items-center justify-center px-5 py-3 font-medium rounded-[16px] transition-all duration-300 hover:shadow-[0_0_24px_rgba(212,175,55,0.3)] active:scale-[0.98] ${className}`}
       style={{
         background: disabled ? "rgba(212,175,55,0.2)" : "linear-gradient(135deg, #D4AF37, #E8C766)",
-        color: disabled ? "rgba(255,255,255,0.3)" : "#0B1520",
+        color: disabled ? "rgba(255,255,255,0.6)" : "#0B1520",
         fontSize: "18px",
         cursor: disabled ? "not-allowed" : "pointer",
         opacity: disabled ? 0.6 : 1,

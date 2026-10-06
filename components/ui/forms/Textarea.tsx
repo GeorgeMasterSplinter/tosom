@@ -58,7 +58,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             focus-within:ring-ts-gold/20
             transition-all
             ${props.disabled ? 'opacity-50 cursor-not-allowed' : ''}
-            focus:outline-none focus:ring-0
+             focus:ring-0
           `}
           {...props}
         />

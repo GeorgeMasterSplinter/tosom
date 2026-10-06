@@ -28,7 +28,7 @@ const variants = {
   default: {
     background: 'rgba(255,255,255,0.04)',
     border: '1px solid rgba(255,255,255,0.08)',
-    glowBorder: 'rgba(255,255,255,0.12)',
+    glowBorder: 'rgba(255,255,255,0.6)',
     glowColor: 'transparent',
   },
   gold: {
@@ -115,7 +115,7 @@ export const GlassPanelStyles = () => (
       100% { transform: translate(10px, -5px); opacity: 0.6; }
     }
     .tosom-glass-panel:hover {
-      border-color: rgba(255,255,255,0.14) !important;
+      border-color: rgba(255,255,255,0.6) !important;
       transition: border-color 300ms ease-out, background 300ms ease-out;
     }
     .tosom-glass-panel__gold:hover {

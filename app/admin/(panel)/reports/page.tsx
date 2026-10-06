@@ -115,7 +115,7 @@ export default function AdminReportsPage() {
                   <button onClick={(e) => { e.stopPropagation(); updateStatus(r.id, 'ACTIONED'); }} className="px-4 py-2 rounded-lg text-xs font-medium transition-all hover:opacity-80" style={{ background: 'rgba(239,68,68,0.2)', color: '#EF4444' }}>
                     ⛔ Iverksett (ban)
                   </button>
-                  <button onClick={(e) => { e.stopPropagation(); updateStatus(r.id, 'DISMISSED'); }} className="px-4 py-2 rounded-lg text-xs font-medium transition-all hover:opacity-80" style={{ background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.5)' }}>
+                  <button onClick={(e) => { e.stopPropagation(); updateStatus(r.id, 'DISMISSED'); }} className="px-4 py-2 rounded-lg text-xs font-medium transition-all hover:opacity-80" style={{ background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.6)' }}>
                     ✕ Avvis
                   </button>
                 </div>

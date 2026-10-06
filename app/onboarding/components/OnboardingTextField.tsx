@@ -55,7 +55,7 @@ export function OnboardingTextField({
 
   const baseInputStyle: React.CSSProperties = {
     background: isFocused ? 'rgba(255,255,255,0.04)' : OB.glassBg,
-    border: `1px solid ${isFocused ? 'rgba(255,255,255,0.15)' : OB.glassBorder}`,
+    border: `1px solid ${isFocused ? 'rgba(255,255,255,0.6)' : OB.glassBorder}`,
     borderRadius: '12px',
     padding: rows > 3 ? '14px 16px' : '12px 16px',
     color: OB.textPrimary,
@@ -63,7 +63,6 @@ export function OnboardingTextField({
     lineHeight: '1.6',
     width: '100%',
     minWidth: 0,
-    outline: 'none',
     transition: 'all 0.2s ease-out',
     backdropFilter: 'blur(8px)',
     // PL-16: Inter er selvhostet (next/font) — variabelen peker på den

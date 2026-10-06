@@ -226,7 +226,7 @@ export function PremiumJourneyDayView({ content }: { content: DayContentProps })
         <div style={{ fontSize: '20px', color: '#D4AF37', fontWeight: '500', marginTop: '8px' }}>
           {dayContent.title}
         </div>
-        <div style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.5)', marginTop: '4px' }}>
+        <div style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.6)', marginTop: '4px' }}>
           {dayContent.theme} · {content.phase}
         </div>
       </div>

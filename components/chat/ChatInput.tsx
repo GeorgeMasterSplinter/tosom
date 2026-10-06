@@ -96,7 +96,7 @@ export default function ChatInput({
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
             disabled={disabled || sending}
-            className="w-full px-5 py-3.5 outline-none transition-all duration-300 text-sm"
+            className="w-full px-5 py-3.5 transition-all duration-300 text-sm"
             style={{
               background: color.glass['bg'],
               border: `1px solid ${isFocused ? color.border.gold : color.glass.border}`,

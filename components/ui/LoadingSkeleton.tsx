@@ -75,7 +75,7 @@ export function DashboardSkeleton() {
       <div className="animate-pulse space-y-3">
         <div
           className="h-8 rounded-full w-48"
-          style={{ background: "rgba(255,255,255,0.1)" }}
+          style={{ background: "rgba(255,255,255,0.6)" }}
         />
         <div
           className="h-4 rounded-full w-72"
@@ -102,7 +102,7 @@ export function DashboardSkeleton() {
               />
               <div
                 className="h-6 rounded-full w-16"
-                style={{ background: "rgba(255,255,255,0.12)" }}
+                style={{ background: "rgba(255,255,255,0.6)" }}
               />
             </div>
           </div>
@@ -133,7 +133,7 @@ export function AdminListSkeleton({ rows = 8 }: { rows?: number }) {
           <div className="flex-1 space-y-2">
             <div
               className="h-3 rounded-full w-48"
-              style={{ background: "rgba(255,255,255,0.1)" }}
+              style={{ background: "rgba(255,255,255,0.6)" }}
             />
             <div
               className="h-2 rounded-full w-32"
@@ -163,7 +163,7 @@ export function ProfileSkeleton() {
         <div className="space-y-3">
           <div
             className="h-6 rounded-full w-48"
-            style={{ background: "rgba(255,255,255,0.12)" }}
+            style={{ background: "rgba(255,255,255,0.6)" }}
           />
           <div
             className="h-4 rounded-full w-32"
@@ -188,7 +188,7 @@ export function MatchingSkeleton() {
       <div className="text-center space-y-4">
         <div
           className="h-8 rounded-full w-64 mx-auto"
-          style={{ background: "rgba(255,255,255,0.1)" }}
+          style={{ background: "rgba(255,255,255,0.6)" }}
         />
         <div
           className="h-4 rounded-full w-96 mx-auto"
@@ -207,7 +207,7 @@ export function MatchingSkeleton() {
         />
         <div
           className="h-5 rounded-full w-48 mx-auto mb-3"
-          style={{ background: "rgba(255,255,255,0.12)" }}
+          style={{ background: "rgba(255,255,255,0.6)" }}
         />
         <div
           className="h-4 rounded-full w-64 mx-auto"
@@ -220,7 +220,7 @@ export function MatchingSkeleton() {
             <div key={i} className="text-center space-y-2">
               <div
                 className="h-4 rounded-full w-12 mx-auto"
-                style={{ background: "rgba(255,255,255,0.1)" }}
+                style={{ background: "rgba(255,255,255,0.6)" }}
               />
               <div
                 className="h-3 rounded-full w-8 mx-auto"
@@ -246,7 +246,7 @@ export function LoadingOverlay({ message = "Lastar..." }: { message?: string }) 
           className="w-10 h-10 rounded-full mx-auto border-2 border-[rgba(212,175,55,0.2)] border-t-[#D4AF37]"
           style={{ animation: "spin 1s linear infinite" }}
         />
-        <p className="text-sm" style={{ color: "rgba(255,255,255,0.5)" }}>
+        <p className="text-sm" style={{ color: "rgba(255,255,255,0.6)" }}>
           {message}
         </p>
       </div>

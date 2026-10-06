@@ -59,7 +59,7 @@ export default function ErrorState({
         {/* Description */}
         <p
           className="text-sm leading-relaxed mb-8"
-          style={{ color: "rgba(255,255,255,0.45)" }}
+          style={{ color: "rgba(255,255,255,0.6)" }}
         >
           {description}
         </p>
@@ -72,7 +72,7 @@ export default function ErrorState({
             className="inline-flex items-center justify-center px-6 py-3 font-medium rounded-xl transition-all duration-300"
             style={{
               background: retrying ? "rgba(212,175,55,0.3)" : "linear-gradient(135deg, #D4AF37, #E8C766)",
-              color: retrying ? "rgba(255,255,255,0.4)" : "#0B1520",
+              color: retrying ? "rgba(255,255,255,0.6)" : "#0B1520",
               cursor: retrying ? "not-allowed" : "pointer",
               opacity: retrying ? 0.6 : 1,
             }}

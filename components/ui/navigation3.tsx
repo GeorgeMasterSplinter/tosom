@@ -91,7 +91,7 @@ export const CommandPalette: React.FC<{ open: boolean; onClose: () => void; onSe
       <div className="relative w-full max-w-lg bg-white/[0.04] border border-white/8 rounded-2xl backdrop-blur-xl shadow-xl overflow-hidden">
         <input
           placeholder="Søk i Tosom..."
-          className="w-full bg-transparent px-6 py-4 text-white text-lg outline-none placeholder:text-white/40"
+          className="w-full bg-transparent px-6 py-4 text-white text-lg placeholder:text-white/40"
           autoFocus
           onChange={e => onSearch?.(e.target.value)}
         />

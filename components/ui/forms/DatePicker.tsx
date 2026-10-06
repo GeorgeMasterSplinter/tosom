@@ -79,7 +79,7 @@ const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
               py-3 px-4
               text-base
               cursor-pointer
-              focus:outline-none focus:ring-0
+               focus:ring-0
               ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
               [&::-webkit-calendar-picker-indicator]:brightness-0 [&::-webkit-calendar-picker-indicator]:opacity-50
             `}

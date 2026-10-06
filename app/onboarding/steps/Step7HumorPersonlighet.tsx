@@ -40,7 +40,7 @@ export default function Step7HumorPersonlighet({ data, onChange, onBack, onNext 
           />
         ))}
       </div>
-      <p className="text-center text-xs mt-8" style={{ color: 'rgba(255,255,255,0.3)' }}>Det er ingen rette eller gale svar. Svarene dine hjelper oss å forstå deg bedre.</p>
+      <p className="text-center text-xs mt-8" style={{ color: 'rgba(255,255,255,0.6)' }}>Det er ingen rette eller gale svar. Svarene dine hjelper oss å forstå deg bedre.</p>
       <div className="mt-8 space-y-4"><BackButton onClick={onBack} /><PremiumCTAButton onClick={handleNext} label={!canProceed ? 'Svar på alle påstandene' : 'Fortsett til neste steg'} disabled={!canProceed} fullWidth /></div>
     </OnboardingSlide>
   );

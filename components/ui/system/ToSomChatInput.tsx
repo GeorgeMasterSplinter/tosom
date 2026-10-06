@@ -47,7 +47,7 @@ export const ToSomChatInput: FC<ToSomChatInputProps> = ({
       <input
         ref={inputRef}
         type="text"
-        className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none transition-all duration-200"
+        className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm transition-all duration-200"
         style={{
           color: colors.textPrimary,
         }}
@@ -56,7 +56,7 @@ export const ToSomChatInput: FC<ToSomChatInputProps> = ({
           (e.target as HTMLElement).style.boxShadow = '0 0 20px rgba(212,175,55,0.2)';
         }}
         onBlur={(e) => {
-          (e.target as HTMLElement).style.borderColor = 'rgba(255,255,255,0.10)';
+          (e.target as HTMLElement).style.borderColor = 'rgba(255,255,255,0.6)';
           (e.target as HTMLElement).style.boxShadow = 'none';
         }}
         value={value}

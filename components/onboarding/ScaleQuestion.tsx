@@ -91,7 +91,7 @@ export function ScaleQuestion({ text, value, onChange, hint, accentColor = DEFAU
           {text}
         </p>
         {hint && (
-          <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>{hint}</p>
+          <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.6)' }}>{hint}</p>
         )}
       </div>
 
@@ -125,12 +125,11 @@ export function ScaleQuestion({ text, value, onChange, hint, accentColor = DEFAU
                   ? '1px solid rgba(212,175,55,0.5)'
                   : isFocused
                     ? `1px solid ${rgba(accentColor, 0.5)}`
-                    : `1px solid rgba(255,255,255,0.12)`,
+                    : `1px solid rgba(255,255,255,0.6)`,
                 color: selected ? '#D4AF37' : 'rgba(255,255,255,0.7)',
                 boxShadow: selected
                   ? '0 2px 8px rgba(212,175,55,0.15)'
                   : '0 1px 3px rgba(0,0,0,0.1)',
-                outline: 'none',
                 cursor: 'pointer',
               }}
             >

@@ -29,7 +29,7 @@ export default function OnboardingLayout({ children }: OnboardingLayoutProps) {
       <div className="mt-14 text-center">
         <p
           className="text-xs"
-          style={{ color: 'rgba(255, 255, 255, 0.3)' }}
+          style={{ color: 'rgba(255, 255, 255, 0.6)' }}
         >
           Tosom — der sanne møter skjer i ro og trygghet
         </p>

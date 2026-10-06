@@ -153,7 +153,7 @@ function MatchRevealModal({
         <button
           onClick={onClose}
           className="absolute -top-16 right-0 text-sm transition-all hover:opacity-70"
-          style={{ color: 'rgba(255,255,255,0.4)' }}
+          style={{ color: 'rgba(255,255,255,0.6)' }}
         >
           Lukke →
         </button>
@@ -184,10 +184,10 @@ function MatchRevealModal({
           {/* User card */}
           <div
             className="flex-1 rounded-2xl p-5 text-center"
-            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}
+            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.6)' }}
           >
             <p className="font-semibold text-lg" style={{ color: 'rgba(255,255,255,0.9)' }}>{userName}</p>
-            <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>Deg</p>
+            <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.6)' }}>Deg</p>
           </div>
 
           {/* Resonance */}
@@ -203,13 +203,13 @@ function MatchRevealModal({
             style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.2)' }}
           >
             <p className="font-semibold text-lg" style={{ color: 'rgba(255,255,255,0.9)' }}>{partnerName}</p>
-            {partnerAge && <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>{partnerAge} år</p>}
-            {partnerDistance != null && <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>ca. {partnerDistance} km</p>}
+            {partnerAge && <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.6)' }}>{partnerAge} år</p>}
+            {partnerDistance != null && <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>ca. {partnerDistance} km</p>}
           </div>
         </div>
 
         {/* Description */}
-        <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
+        <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
           Vi koblet dere basert på resonans — verdier, livsstil og emosjonell rytme.
         </p>
         <p className="text-sm mt-3 font-medium" style={{ color: 'rgba(255,255,255,0.7)' }}>
@@ -248,7 +248,7 @@ function JourneyCalendar({ currentDay }: { currentDay: number }) {
             <p className="text-xs font-medium truncate px-1" style={{ color: phase.color }}>
               {phase.name}
             </p>
-            <p className="text-[11px]" style={{ color: 'rgba(255,255,255,0.3)' }}>
+            <p className="text-[11px]" style={{ color: 'rgba(255,255,255,0.6)' }}>
               dag {phase.start}–{phase.end}
             </p>
           </div>
@@ -278,7 +278,7 @@ function JourneyCalendar({ currentDay }: { currentDay: number }) {
                 border: isCurrent
                   ? `2px solid ${phase.color}`
                   : `1px solid ${isPast ? phase.color + '30' : 'rgba(255,255,255,0.06)'}`,
-                color: isCurrent ? '#fff' : isPast ? phase.color + 'CC' : 'rgba(255,255,255,0.25)',
+                color: isCurrent ? '#fff' : isPast ? phase.color + 'CC' : 'rgba(255,255,255,0.6)',
                 fontWeight: isCurrent ? 700 : 400,
                 boxShadow: isCurrent ? `0 0 12px ${phase.color}40` : 'none',
               }}
@@ -292,7 +292,7 @@ function JourneyCalendar({ currentDay }: { currentDay: number }) {
       {/* Hover tooltip */}
       {hoveredDay && (
         <div className="mt-3 text-center">
-          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
+          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>
             Dag {hoveredDay} — {getPhaseForDay(hoveredDay).name}
           </p>
         </div>
@@ -334,7 +334,7 @@ function Milestones({ currentDay }: { currentDay: number }) {
           <p className="font-semibold" style={{ color: 'rgba(255,255,255,0.9)', fontSize: '16px' }}>
             {current.label}
           </p>
-          <p className="mt-2 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
+          <p className="mt-2 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
             {current.description}
           </p>
         </div>
@@ -343,7 +343,7 @@ function Milestones({ currentDay }: { currentDay: number }) {
           className="rounded-2xl p-5"
           style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}
         >
-          <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
+          <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
             Ta dere tid i dag. Ingen oppgave. Bare å være sammen.
           </p>
         </div>
@@ -352,10 +352,10 @@ function Milestones({ currentDay }: { currentDay: number }) {
       {/* Neste milestone (kun hvis ikke i dag) */}
       {next && next.day !== currentDay && (
         <div className="flex items-center gap-3 px-4 py-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.02)' }}>
-          <span className="text-xs font-medium tabular-nums w-12 shrink-0" style={{ color: 'rgba(255,255,255,0.3)' }}>
+          <span className="text-xs font-medium tabular-nums w-12 shrink-0" style={{ color: 'rgba(255,255,255,0.6)' }}>
             Dag {next.day}
           </span>
-          <span className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
+          <span className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>
             {next.label}
           </span>
         </div>
@@ -388,7 +388,7 @@ function ProfilePrivateSection() {
           'Du kan når som helst slette profilen din.',
           'Ingen deling med tredjepart.',
         ].map((text, i) => (
-          <p key={i} className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.35)' }}>
+          <p key={i} className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
             {text}
           </p>
         ))}
@@ -499,7 +499,7 @@ export default function Dashboard() {
       <div className="min-h-screen flex items-center justify-center" style={{ background: 'linear-gradient(180deg, #0B1520 0%, #0F1A26 100%)' }}>
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 rounded-full border-2 animate-spin" style={{ borderColor: 'rgba(212,175,55,0.2)', borderTopColor: '#D4AF37' }} />
-          <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '14px' }}>Laster din reise…</p>
+          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px' }}>Laster din reise…</p>
         </div>
       </div>
     );
@@ -527,7 +527,7 @@ export default function Dashboard() {
   if (!data || !data.match || !data.journey) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: '#0B1520' }}>
-        <p style={{ color: 'rgba(255,255,255,0.4)' }}>Du har ingen aktiv reise.</p>
+        <p style={{ color: 'rgba(255,255,255,0.6)' }}>Du har ingen aktiv reise.</p>
       </div>
     );
   }
@@ -552,7 +552,7 @@ export default function Dashboard() {
           <h1 style={{ fontSize: '28px', fontWeight: 600, color: 'rgba(255,255,255,0.92)' }}>
             {getGreeting()}, {userName}
           </h1>
-          <p className="mt-1 text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
+          <p className="mt-1 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
             Dere er på dag {displayDay} av {journey.totalDays}. {currentPhase.name}.
           </p>
         </div>
@@ -584,9 +584,9 @@ export default function Dashboard() {
               <p className="font-semibold" style={{ color: 'rgba(255,255,255,0.9)', fontSize: '20px' }}>
                 {match.name}
               </p>
-              {match.age && <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>{match.age} år</p>}
+              {match.age && <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.6)' }}>{match.age} år</p>}
               {match.distanceKm != null && (
-                <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>ca. {match.distanceKm} km</p>
+                <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>ca. {match.distanceKm} km</p>
               )}
             </div>
 

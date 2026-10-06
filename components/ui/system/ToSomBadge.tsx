@@ -38,7 +38,7 @@ const variantStyles: Record<BadgeVariant, VariantStyles> = {
   },
   neutral: {
     bg: 'rgba(255,255,255,0.06)',
-    border: 'rgba(255,255,255,0.10)',
+    border: 'rgba(255,255,255,0.6)',
     text: 'rgba(255,255,255,0.75)',
   },
 };

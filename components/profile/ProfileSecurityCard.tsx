@@ -87,7 +87,7 @@ export const ProfileSecurityCard = ({ showDetails = false }: ProfileSecurityCard
                 </svg>
                 <span
                   className="text-sm"
-                  style={{ color: 'rgba(255, 255, 255, 0.5)' }}
+                  style={{ color: 'rgba(255, 255, 255, 0.6)' }}
                 >
                   {item}
                 </span>

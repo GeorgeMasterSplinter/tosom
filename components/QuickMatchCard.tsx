@@ -67,7 +67,7 @@ export function QuickMatchCard({ score, otherUser, type, highlight }: Props) {
   const age = otherUser?.age;
   const photoUrl = otherUser?.photoUrl;
   const distanceKm = otherUser?.distanceKm; // B1.6: null hvis koordinater mangler
-  const borderColor = highlight ? 'rgba(212,175,55,0.4)' : 'rgba(255,255,255,0.1)';
+  const borderColor = highlight ? 'rgba(212,175,55,0.4)' : 'rgba(255,255,255,0.6)';
   const boxShadow = highlight
     ? '0 0 30px rgba(212,175,55,0.2), inset 0 0 20px rgba(212,175,55,0.05)'
     : '0 8px 40px rgba(0,0,0,0.45), inset 0 0 20px rgba(255,255,255,0.04)';

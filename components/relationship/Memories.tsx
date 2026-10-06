@@ -226,7 +226,7 @@ function AddMemoryForm({
           placeholder="Hva skjedde? (valgfritt)"
           value={note}
           onChange={(e) => setNote(e.target.value)}
-          className="w-full px-3 py-2 rounded-lg text-sm bg-transparent border border-white/10 text-white placeholder-white/40 focus:border-[var(--ts-gold)] focus:ring-1 focus:ring-[var(--ts-gold)]/30 outline-none transition-all resize-none"
+          className="w-full px-3 py-2 rounded-lg text-sm bg-transparent border border-white/10 text-white placeholder-white/40 focus:border-[var(--ts-gold)] focus:ring-1 focus:ring-[var(--ts-gold)]/30 transition-all resize-none"
           rows={2}
         />
         <input
@@ -234,13 +234,13 @@ function AddMemoryForm({
           placeholder="Bilde URL (valgfritt)"
           value={imageUrl}
           onChange={(e) => setImageUrl(e.target.value)}
-          className="w-full px-3 py-2 rounded-lg text-sm bg-transparent border border-white/10 text-white placeholder-white/40 focus:border-[var(--ts-gold)] focus:ring-1 focus:ring-[var(--ts-gold)]/30 outline-none transition-all"
+          className="w-full px-3 py-2 rounded-lg text-sm bg-transparent border border-white/10 text-white placeholder-white/40 focus:border-[var(--ts-gold)] focus:ring-1 focus:ring-[var(--ts-gold)]/30 transition-all"
         />
         <input
           type="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          className="px-3 py-2 rounded-lg text-sm bg-white/5 border border-white/10 text-white focus:border-[var(--ts-gold)] outline-none"
+          className="px-3 py-2 rounded-lg text-sm bg-white/5 border border-white/10 text-white focus:border-[var(--ts-gold)]"
           required
         />
         <div className="flex gap-2 justify-end">

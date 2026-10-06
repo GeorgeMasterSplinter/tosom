@@ -143,14 +143,14 @@ function ChatRow({ c }: { c: Conversation }) {
 
       {/* Bilde */}
       <td className="py-3 px-4 text-center">
-        <span className="text-sm font-mono" style={{ color: c.imageShared ? '#4ADE80' : 'rgba(255,255,255,0.3)' }}>
+        <span className="text-sm font-mono" style={{ color: c.imageShared ? '#4ADE80' : 'rgba(255,255,255,0.6)' }}>
           {c.imageShared ? 'Ja' : 'Nei'}
         </span>
       </td>
 
       {/* Siste melding */}
       <td className="py-3 px-4">
-        <span className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
+        <span className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>
           {c.lastMessageAt
             ? formatDistanceToNow(new Date(c.lastMessageAt), { addSuffix: true, locale: nb })
             : 'Ingen ennå'}
@@ -159,7 +159,7 @@ function ChatRow({ c }: { c: Conversation }) {
 
       {/* Startet */}
       <td className="py-3 px-4">
-        <span className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
+        <span className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>
           {format(new Date(c.createdAt), 'd. MMM yyyy', { locale: nb })}
         </span>
       </td>
@@ -212,7 +212,7 @@ export default function AdminChatPage() {
           <h1 className="text-2xl font-bold mb-1" style={{ color: 'rgba(255,255,255,0.95)' }}>
             Samtaler
           </h1>
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
+          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
             Oversikt over alle samtaler — metadata kun. Ingen innsyn i innhold eller bilder.
           </p>
         </div>
@@ -249,7 +249,7 @@ export default function AdminChatPage() {
           <div className="text-2xl font-mono font-bold" style={{ color: '#D4AF37' }}>
             {loading ? '—' : pagination.total.toLocaleString('nb-NO')}
           </div>
-          <div className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>Totale samtaler</div>
+          <div className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>Totale samtaler</div>
         </div>
         <div
           className="rounded-xl p-4"
@@ -258,16 +258,16 @@ export default function AdminChatPage() {
           <div className="text-2xl font-mono font-bold" style={{ color: '#4ADE80' }}>
             {loading ? '—' : activeCount.toLocaleString('nb-NO')}
           </div>
-          <div className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>Aktive (denne siden)</div>
+          <div className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>Aktive (denne siden)</div>
         </div>
         <div
           className="rounded-xl p-4"
           style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
         >
-          <div className="text-2xl font-mono font-bold" style={{ color: 'rgba(255,255,255,0.5)' }}>
+          <div className="text-2xl font-mono font-bold" style={{ color: 'rgba(255,255,255,0.6)' }}>
             {loading ? '—' : conversations.length.toLocaleString('nb-NO')}
           </div>
-          <div className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>Vises nå</div>
+          <div className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>Vises nå</div>
         </div>
       </div>
 
@@ -289,7 +289,7 @@ export default function AdminChatPage() {
         >
           {frozenOnly ? 'Vis bare fryste' : 'Vis alle'}
         </button>
-        <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
+        <span className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>
           {pagination.total.toLocaleString('nb-NO')} totalt
         </span>
       </div>
@@ -303,12 +303,12 @@ export default function AdminChatPage() {
           <table className="w-full">
             <thead>
               <tr style={{ background: 'rgba(255,255,255,0.02)' }}>
-                <th className="py-3 px-4 text-left text-xs font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>Par</th>
-                <th className="py-3 px-4 text-left text-xs font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>Status</th>
-                <th className="py-3 px-4 text-left text-xs font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>Meldinger</th>
-                <th className="py-3 px-4 text-left text-xs font-medium text-center" style={{ color: 'rgba(255,255,255,0.35)' }}>Bilde</th>
-                <th className="py-3 px-4 text-left text-xs font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>Siste melding</th>
-                <th className="py-3 px-4 text-left text-xs font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>Startet</th>
+                <th className="py-3 px-4 text-left text-xs font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>Par</th>
+                <th className="py-3 px-4 text-left text-xs font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>Status</th>
+                <th className="py-3 px-4 text-left text-xs font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>Meldinger</th>
+                <th className="py-3 px-4 text-left text-xs font-medium text-center" style={{ color: 'rgba(255,255,255,0.6)' }}>Bilde</th>
+                <th className="py-3 px-4 text-left text-xs font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>Siste melding</th>
+                <th className="py-3 px-4 text-left text-xs font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>Startet</th>
               </tr>
             </thead>
             <tbody>
@@ -331,7 +331,7 @@ export default function AdminChatPage() {
         {/* Henting */}
         {loading && !error && (
           <div className="py-12 text-center">
-            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>
+            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
               Henter samtaler …
             </p>
           </div>
@@ -340,7 +340,7 @@ export default function AdminChatPage() {
         {/* Tom tilstand */}
         {!loading && !error && conversations.length === 0 && (
           <div className="py-12 text-center">
-            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>
+            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
               Ingen samtaler ennå.
             </p>
           </div>
@@ -350,7 +350,7 @@ export default function AdminChatPage() {
       {/* Paginering */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
-          <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
+          <span className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>
             Side {pagination.page} av {totalPages}
           </span>
           <div className="flex items-center gap-2">

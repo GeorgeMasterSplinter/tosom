@@ -25,7 +25,7 @@ export default function CategoryButton({
         hover:border-[var(--ts-gold)]/30
         transition-all duration-200
         text-white font-medium
-        focus:outline-none focus:border-[var(--ts-gold)] focus:ring-2 focus:ring-[var(--ts-gold)]/20
+         focus:border-[var(--ts-gold)] focus:ring-2 focus:ring-[var(--ts-gold)]/20
       "
     >
       <div className="flex items-center justify-between">

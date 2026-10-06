@@ -125,7 +125,7 @@ const TagInput = forwardRef<HTMLInputElement, TagInputProps>(
                 text-sm
                 py-1
                 px-2
-                focus:outline-none focus:ring-0
+                 focus:ring-0
                 ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
               "
             />

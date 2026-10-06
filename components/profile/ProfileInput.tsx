@@ -28,7 +28,7 @@ export default function ProfileInput({
   const baseInputClass =
     'w-full rounded-lg border border-[var(--color-card-border)] ' +
     'bg-white/[0.03] text-[var(--color-text)] placeholder:text-[var(--color-muted)]/50 ' +
-    'focus:border-[var(--color-gold)]/40 focus:bg-[var(--color-gold)]/[0.03] focus:outline-none ' +
+    'focus:border-[var(--color-gold)]/40 focus:bg-[var(--color-gold)]/[0.03]  ' +
     'transition-all duration-200 ease-out ' +
     'px-4 py-3 text-sm';
 

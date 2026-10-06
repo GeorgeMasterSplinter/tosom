@@ -47,7 +47,7 @@ export default function Step10StartReisen({ step, goToStep, loading, onStart }: 
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
           </svg>
         </div>
-        <p style={{ color: 'rgba(255, 255, 255, 0.5)' }}>
+        <p style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
           Én match, hver lørdag. Ingen sveiping, ingen press.
         </p>
       </div>
@@ -67,7 +67,7 @@ export default function Step10StartReisen({ step, goToStep, loading, onStart }: 
       />
 
       {/* Trust text */}
-      <p className="text-center text-xs mt-6" style={{ color: 'rgba(255, 255, 255, 0.3)', lineHeight: 1.6 }}>
+      <p className="text-center text-xs mt-6" style={{ color: 'rgba(255, 255, 255, 0.6)', lineHeight: 1.6 }}>
         Du kan endre svarene dine i venterommet frem til fredag 23:59.
         Etter at reisen har startet (lørdag), låses profilen din for denne reisen.
       </p>

@@ -46,7 +46,7 @@ export function ActionRequired({ items }: { items: ActionItem[] }) {
           <p className="text-sm font-medium" style={{ color: '#34D399' }}>
             Ingen tiltak nødvendig
           </p>
-          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>
+          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>
             Alle indikatorer er innenfor normalen.
           </p>
         </div>
@@ -89,12 +89,12 @@ export function ActionRequired({ items }: { items: ActionItem[] }) {
                     {item.value}
                   </span>
                 </div>
-                <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.6)' }}>
                   {item.action}
                 </p>
               </div>
               {item.href && (
-                <span className="text-xs flex-shrink-0 mt-0.5" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                <span className="text-xs flex-shrink-0 mt-0.5" style={{ color: 'rgba(255,255,255,0.6)' }}>
                   →
                 </span>
               )}

@@ -35,7 +35,7 @@ const G = {
   glassBorderGold: "rgba(212,175,55,0.25)",
   textPrimary: "rgba(255,255,255,0.95)",
   textSecondary: "rgba(255,255,255,0.6)",
-  textMuted: "rgba(255,255,255,0.4)",
+  textMuted: "rgba(255,255,255,0.6)",
 };
 
 /* ═══════════════════════════════════════
@@ -74,7 +74,7 @@ function PresenceDot({ partnerId, accent, tMuted }: { partnerId?: string | null;
           style={{
             background: isTyping
               ? (accent ?? '#D4AF37')
-              : isOnline ? '#34D399' : 'rgba(255,255,255,0.2)',
+              : isOnline ? '#34D399' : 'rgba(255,255,255,0.6)',
             boxShadow: isTyping
               ? `0 0 10px ${accent ?? 'rgba(212,175,55,0.55)'}`
               : isOnline ? '0 0 10px rgba(52,211,153,0.7)' : 'none',
@@ -94,7 +94,7 @@ function PresenceDot({ partnerId, accent, tMuted }: { partnerId?: string | null;
       {(isOnline || isTyping) && (
         <span
           className="hidden md:inline text-[11px] italic transition-all duration-300"
-          style={{ color: isTyping ? (accent ?? '#D4AF37') : (tMuted ?? 'rgba(255,255,255,0.4)') }}
+          style={{ color: isTyping ? (accent ?? '#D4AF37') : (tMuted ?? 'rgba(255,255,255,0.6)') }}
         >
           {isTyping ? 'Skriver…' : 'Online'}
         </span>

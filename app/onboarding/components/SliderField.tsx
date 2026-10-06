@@ -62,11 +62,10 @@ export const SliderField: FC<SliderFieldProps> = ({
         onChange={(e) => onChange(Number(e.target.value))}
         className="w-full h-2 rounded-full appearance-none cursor-pointer"
         style={{
-          background: `linear-gradient(to right, #D4AF37 0%, #D4AF37 ${percentage}%, rgba(255, 255, 255, 0.1) ${percentage}%, rgba(255, 255, 255, 0.1) 100%)`,
-          outline: 'none',
+          background: `linear-gradient(to right, #D4AF37 0%, #D4AF37 ${percentage}%, rgba(255, 255, 255, 0.6) ${percentage}%, rgba(255, 255, 255, 0.6) 100%)`,
         }}
       />
-      <div className="flex justify-between text-xs" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>
+      <div className="flex justify-between text-xs" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
         <span>{labelLeft || min}</span>
         <span>{labelRight || max}</span>
       </div>

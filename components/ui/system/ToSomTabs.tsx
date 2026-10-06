@@ -37,7 +37,7 @@ export const ToSomTabs: FC<ToSomTabsProps> = ({ tabs, value, onChange }) => {
     <div className="relative" ref={(el) => setIndicatorRef(el as HTMLElement)}>
       <div
         className="flex gap-6 pb-0 overflow-x-auto"
-        style={{ borderBottom: `1px solid rgba(255,255,255,0.10)` }}
+        style={{ borderBottom: `1px solid rgba(255,255,255,0.6)` }}
       >
         {tabs.map((tab) => {
           const isActive = value === tab.value;

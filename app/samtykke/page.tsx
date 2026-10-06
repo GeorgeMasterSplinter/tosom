@@ -64,7 +64,7 @@ export default function ConsentPage() {
     width: "100%",
     padding: "18px 20px",
     background: "rgba(255,255,255,0.03)",
-    border: "1px solid rgba(255,255,255,0.1)",
+    border: "1px solid rgba(255,255,255,0.6)",
     borderRadius: "16px",
     cursor: "pointer",
   };
@@ -206,7 +206,7 @@ export default function ConsentPage() {
               justifyContent: "center",
               cursor: bothChecked && status !== "loading" ? "pointer" : "not-allowed",
               background: bothChecked ? "#D4AF37" : "rgba(212,175,55,0.25)",
-              color: bothChecked ? "#0B1520" : "rgba(255,255,255,0.35)",
+              color: bothChecked ? "#0B1520" : "rgba(255,255,255,0.6)",
               transition: "background 300ms, color 300ms",
             }}
           >

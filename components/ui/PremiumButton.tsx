@@ -18,7 +18,7 @@ const baseClasses =
   'font-medium tracking-[-0.01em] rounded-[var(--ts-radius-6xl)] ' +
   'border-none cursor-pointer ' +
   'transition-all duration-[var(--ts-transition-normal)] ' +
-  'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-3 ' +
+  ' focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-3 ' +
   'active:scale-[0.98]';
 
 const sizeClasses: Record<'sm' | 'md' | 'lg' | 'xl', string> = {
@@ -37,8 +37,8 @@ const variantClasses: Record<ButtonVariant, string> = {
     'active:opacity-90',
   secondary:
     'bg-[rgba(255,255,255,0.06)] ' +
-    'text-white border border-[rgba(255,255,255,0.12)] ' +
-    'hover:bg-[rgba(255,255,255,0.10)] hover:border-[rgba(255,255,255,0.18)] ' +
+    'text-white border border-[rgba(255,255,255,0.6)] ' +
+    'hover:bg-[rgba(255,255,255,0.6)] hover:border-[rgba(255,255,255,0.6)] ' +
     'active:opacity-80',
   tertiary:
     'bg-[rgba(212,175,55,0.12)] ' +

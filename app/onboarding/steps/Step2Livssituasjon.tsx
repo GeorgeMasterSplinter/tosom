@@ -223,7 +223,7 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
       </div>
 
       {/* Trust text */}
-      <p className="text-center text-xs mt-8" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>
+      <p className="text-center text-xs mt-8" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
         Svarene dine hjelper oss å finne noen som passer din hverdagsrytme.
       </p>
 

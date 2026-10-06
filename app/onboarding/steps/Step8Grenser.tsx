@@ -32,7 +32,7 @@ export default function Step8Grenser({ data, onChange, onBack, onNext }: Props) 
       <OnboardingTextField label="Hva er dine viktigste avgrensninger? *" value={getValue('limitations', '')} onChange={(v) => onChange('limitations', v)} placeholder="Beskriv det konkrete atferdsmønsteret eller opplevelsen som utgjør en hard grense for deg — og hva som må til for at du kjenner deg tryggt respektert" mikroguiding="Skriv f.eks. Jeg trenger aldri å bli møtt med høye stemmer" maxLength={300} minChars={10} rows={3} multiline testId="ob-limitations" />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
       <OnboardingTextField label="Hva må partneren din forstå om deg? *" value={getValue('partnerMustUnderstand', '')} onChange={(v) => onChange('partnerMustUnderstand', v)} placeholder="Reflekter over det du mener er viktigst å dele for at den andre kan møte deg på en trygg og forstående måte — beskriv det konkret" mikroguiding="Skriv f.eks. At jeg trenger tid til å bearbeide følelser alene" maxLength={300} minChars={10} rows={3} multiline testId="ob-partner-must-understand" />
-      <p className="text-center text-xs mt-8" style={{ color: 'rgba(255,255,255,0.3)' }}>Grenser beskytter deg selv — og den du elsker. Del bare det du kjenner deg trygg med.</p>
+      <p className="text-center text-xs mt-8" style={{ color: 'rgba(255,255,255,0.6)' }}>Grenser beskytter deg selv — og den du elsker. Del bare det du kjenner deg trygg med.</p>
       <div className="mt-8 space-y-4"><BackButton onClick={onBack} /><PremiumCTAButton onClick={handleNext} label={!canProceed ? 'Fyll ut alle påkrevde felt' : 'Fortsett til neste steg'} disabled={!canProceed} fullWidth /></div>
     </OnboardingSlide>
   );

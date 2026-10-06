@@ -38,13 +38,12 @@ const baseContainerStyles: React.CSSProperties = {
 const baseSelectStyles: React.CSSProperties = {
   borderRadius: radius.lg,
   background: 'rgba(255,255,255,0.05)',
-  border: '1px solid rgba(255,255,255,0.10)',
+  border: '1px solid rgba(255,255,255,0.6)',
   color: colors.textPrimary,
   padding: '12px 40px 12px 16px',
   fontSize: '16px',
   transition: `all ${motion.durations.fast} ${motion.easings.fadeIn}`,
   width: '100%',
-  outline: 'none',
   cursor: 'pointer',
   appearance: 'none' as const,
 };
@@ -127,7 +126,7 @@ export const ToSomSelect = forwardRef<HTMLButtonElement, ToSomSelectProps>(({
           onBlur={() => setFocused(false)}
         >
           <span className="flex items-center justify-between">
-            <span style={{ color: selectedOption ? colors.textPrimary : 'rgba(255,255,255,0.45)' }}>
+            <span style={{ color: selectedOption ? colors.textPrimary : 'rgba(255,255,255,0.6)' }}>
               {selectedOption?.label || placeholder || ''}
             </span>
             <svg
@@ -136,7 +135,7 @@ export const ToSomSelect = forwardRef<HTMLButtonElement, ToSomSelectProps>(({
               height="12"
               viewBox="0 0 24 24"
               fill="none"
-              style={{ color: 'rgba(255,255,255,0.5)' }}
+              style={{ color: 'rgba(255,255,255,0.6)' }}
             >
               <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>

@@ -23,7 +23,7 @@ export const AdminStatsCard = ({
 }: AdminStatsCardProps) => {
   return (
     <div
-      className="rounded-2xl p-6 transition-all duration-300 hover:border-[rgba(255,255,255,0.16)]"
+      className="rounded-2xl p-6 transition-all duration-300 hover:border-[rgba(255,255,255,0.6)]"
       style={{
         background: 'rgba(255, 255, 255, 0.04)',
         border: `1px solid ${color}20`,
@@ -33,7 +33,7 @@ export const AdminStatsCard = ({
         <div className="flex-1">
           <p
             className="text-xs font-medium uppercase tracking-wider mb-1"
-            style={{ color: 'rgba(255, 255, 255, 0.4)' }}
+            style={{ color: 'rgba(255, 255, 255, 0.6)' }}
           >
             {title}
           </p>

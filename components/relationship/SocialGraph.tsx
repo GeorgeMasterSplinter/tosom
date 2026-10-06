@@ -307,7 +307,7 @@ export function SocialGraph({
         }
         safeCtx.stroke();
 
-        safeCtx.fillStyle = "rgba(255,255,255,0.4)";
+        safeCtx.fillStyle = "rgba(255,255,255,0.6)";
         safeCtx.font = "9px Inter, sans-serif";
         safeCtx.textAlign = "right";
         safeCtx.fillText("Resonans", w - 20, chartY - 4);

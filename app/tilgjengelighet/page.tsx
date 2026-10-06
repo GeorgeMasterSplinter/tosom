@@ -46,7 +46,7 @@ export default function TilgjengelighetPage() {
           <h1 style={{ ...typographyToStyle('heading-lg'), color: 'rgba(255,255,255,0.92)' }}>
             Tilgjengelighet
           </h1>
-          <p className="mt-3" style={{ ...typographyToStyle('body-lg'), color: 'rgba(255,255,255,0.45)' }}>
+          <p className="mt-3" style={{ ...typographyToStyle('body-lg'), color: 'rgba(255,255,255,0.6)' }}>
             ToSom er bygget for alle. Uansett hvordan du bruker en datamaskin, en telefon eller en skjermleser — vi ønsker at du skal komme deg inn og finne roen.
           </p>
         </ToSomSection>

@@ -50,7 +50,7 @@ export const ToSomStepper: FC<ToSomStepperProps> = ({ steps, active, orientation
                 borderRadius: '50%',
                 background: isActive ? 'rgba(212,175,55,0.15)' : isComplete ? `rgba(212,175,55,0.10)` : 'rgba(255,255,255,0.04)',
                 border: `1px solid ${isActive ? colors.gold : isComplete ? 'rgba(212,175,55,0.4)' : 'rgba(255,255,255,0.08)'}`,
-                color: isActive ? colors.gold : isComplete ? 'rgba(212,175,55,0.7)' : 'rgba(255,255,255,0.3)',
+                color: isActive ? colors.gold : isComplete ? 'rgba(212,175,55,0.7)' : 'rgba(255,255,255,0.6)',
                 fontSize: '14px',
                 fontWeight: isActive ? '600' : '400',
                 flexShrink: 0,

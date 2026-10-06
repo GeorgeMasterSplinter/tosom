@@ -35,7 +35,7 @@ function TimeFilter({ value, onChange }: { value: string; onChange: (v: string) 
           className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200"
           style={{
             background: value === opt.value ? 'rgba(212,175,55,0.2)' : 'rgba(255,255,255,0.03)',
-            color: value === opt.value ? '#D4AF37' : 'rgba(255,255,255,0.4)',
+            color: value === opt.value ? '#D4AF37' : 'rgba(255,255,255,0.6)',
             border: value === opt.value ? '1px solid rgba(212,175,55,0.3)' : '1px solid rgba(255,255,255,0.06)',
           }}
         >
@@ -51,7 +51,7 @@ function ChartBar({ data, label }: { data: number[]; label: string }) {
   const max = Math.max(...data, 1);
   return (
     <div className="rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
-      <div className="text-xs mb-3 flex items-center justify-between" style={{ color: 'rgba(255,255,255,0.5)' }}>
+      <div className="text-xs mb-3 flex items-center justify-between" style={{ color: 'rgba(255,255,255,0.6)' }}>
         <span>{label}</span>
         <span className="font-medium" style={{ color: '#D4AF37' }}>{data.reduce((a, b) => a + b, 0).toLocaleString()} totalt</span>
       </div>
@@ -71,7 +71,7 @@ function ChartBar({ data, label }: { data: number[]; label: string }) {
           ))}
         </div>
       ) : (
-        <div className="flex items-center justify-center h-24 text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>Ingen data</div>
+        <div className="flex items-center justify-center h-24 text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>Ingen data</div>
       )}
     </div>
   );
@@ -85,7 +85,7 @@ function SummaryStat({ label, value, unit, color }: { label: string; value: stri
         {typeof value === 'number' ? value.toLocaleString() : value}
         {unit && <span className="text-sm ml-0.5">{unit}</span>}
       </div>
-      <div className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>{label}</div>
+      <div className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>{label}</div>
     </div>
   );
 }
@@ -108,7 +108,7 @@ function JourneyStatPanel({ stats }: { stats: JourneyStatSummary | null }) {
     return (
       <div className="rounded-2xl p-5" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
         <h3 className="text-sm font-semibold mb-3 tracking-wide" style={{ color: 'rgba(255,255,255,0.6)' }}>REISESTATISTIKK (JOURNEYSTAT)</h3>
-        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>Ingen fullførte reiser ennå. Statistikken fylles når reiser avsluttes.</p>
+        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>Ingen fullførte reiser ennå. Statistikken fylles når reiser avsluttes.</p>
       </div>
     );
   }
@@ -139,14 +139,14 @@ function JourneyStatPanel({ stats }: { stats: JourneyStatSummary | null }) {
         {Object.entries(stats.byOutcome).map(([outcome, count]) => (
           <div key={outcome} className="rounded-xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
             <div className="text-xl font-bold" style={{ color: '#D4AF37' }}>{count}</div>
-            <div className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>{outcomeLabels[outcome] || outcome}</div>
+            <div className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>{outcomeLabels[outcome] || outcome}</div>
           </div>
         ))}
       </div>
 
       {/* Fullføringsgrad per resonansnivå — den viktigste metrikken */}
       <div className="mb-2">
-        <h4 className="text-xs font-semibold mb-2" style={{ color: 'rgba(255,255,255,0.5)' }}>
+        <h4 className="text-xs font-semibold mb-2" style={{ color: 'rgba(255,255,255,0.6)' }}>
           FULLFØRINGSGRAD PER RESONANSNIVÅ (validerer matchemotoren)
         </h4>
         <div className="space-y-2">
@@ -154,7 +154,7 @@ function JourneyStatPanel({ stats }: { stats: JourneyStatSummary | null }) {
             const rate = data.total > 0 ? Math.round((data.completed / data.total) * 100) : 0;
             return (
               <div key={level} className="flex items-center gap-3">
-                <span className="text-xs w-28" style={{ color: 'rgba(255,255,255,0.5)' }}>{resonanceLabels[level] || level}</span>
+                <span className="text-xs w-28" style={{ color: 'rgba(255,255,255,0.6)' }}>{resonanceLabels[level] || level}</span>
                 <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
                   <div className="h-full rounded-full" style={{ width: `${rate}%`, background: '#D4AF37' }} />
                 </div>
@@ -209,7 +209,7 @@ function MetricsPanel() {
     return (
       <div className="rounded-2xl p-5" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
         <h3 className="text-sm font-semibold mb-3 tracking-wide" style={{ color: 'rgba(255,255,255,0.6)' }}>DRIFT-METRIKKER (30 DAGER)</h3>
-        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>Ingen drift-data ennå. Data fylles etter første matcherunde + API-trafikk.</p>
+        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>Ingen drift-data ennå. Data fylles etter første matcherunde + API-trafikk.</p>
       </div>
     );
   }
@@ -229,11 +229,11 @@ function MetricsPanel() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {Object.entries(data).map(([metric, resp]) => (
           <div key={metric} className="rounded-xl p-3" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-            <div className="text-xs mb-2" style={{ color: 'rgba(255,255,255,0.45)' }}>{labels[metric] || metric}</div>
+            <div className="text-xs mb-2" style={{ color: 'rgba(255,255,255,0.6)' }}>{labels[metric] || metric}</div>
             <div className="text-xl font-bold" style={{ color: '#D4AF37' }}>
               {resp.summary.count > 0 ? `${resp.summary.avg.toLocaleString()}` : '—'}
             </div>
-            <div className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>
+            <div className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.6)' }}>
               p95: {resp.summary.p95.toLocaleString()} · n={resp.summary.count}
             </div>
             {/* Mini bar chart (siste 14 dager) */}
@@ -278,7 +278,7 @@ const GENDER_COLORS: Record<keyof Omit<GenderCounts, 'total'>, string> = {
   man: '#8B5CF6',
   kvinne: '#D4AF37',
   annen: '#4ADE80',
-  ukjent: 'rgba(255,255,255,0.4)',
+  ukjent: 'rgba(255,255,255,0.6)',
 };
 
 /* Ukentlig: grupperte stolper per uke (mann/kvinne) */
@@ -287,7 +287,7 @@ function WeeklyGenderBars({ data }: { data: WeeklyGender[] }) {
   const max = Math.max(...weeks.flatMap((w) => [w.man, w.kvinne]), 1);
   return (
     <div>
-      <div className="flex items-center gap-4 mb-2 text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
+      <div className="flex items-center gap-4 mb-2 text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>
         <span className="flex items-center gap-1"><span style={{ width: 10, height: 10, borderRadius: 2, background: GENDER_COLORS.man, display: 'inline-block' }} /> Menn</span>
         <span className="flex items-center gap-1"><span style={{ width: 10, height: 10, borderRadius: 2, background: GENDER_COLORS.kvinne, display: 'inline-block' }} /> Kvinner</span>
       </div>
@@ -298,7 +298,7 @@ function WeeklyGenderBars({ data }: { data: WeeklyGender[] }) {
               <div className="flex-1 rounded-t" style={{ height: `${(w.man / max) * 100}%`, minHeight: w.man > 0 ? '4px' : '0', background: GENDER_COLORS.man }} />
               <div className="flex-1 rounded-t" style={{ height: `${(w.kvinne / max) * 100}%`, minHeight: w.kvinne > 0 ? '4px' : '0', background: GENDER_COLORS.kvinne }} />
             </div>
-            <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.3)' }}>{w.weekStart.slice(5, 10)}</span>
+            <span className="text-[10px]" style={{ color: 'rgba(255,255,255,0.6)' }}>{w.weekStart.slice(5, 10)}</span>
           </div>
         ))}
       </div>
@@ -310,14 +310,14 @@ function WeeklyGenderBars({ data }: { data: WeeklyGender[] }) {
 function GenderCards({ title, data, accent }: { title: string; data: GenderCounts; accent?: string }) {
   return (
     <div>
-      <h4 className="text-xs font-semibold mb-2 tracking-wide" style={{ color: 'rgba(255,255,255,0.5)' }}>
+      <h4 className="text-xs font-semibold mb-2 tracking-wide" style={{ color: 'rgba(255,255,255,0.6)' }}>
         {title} <span style={{ color: accent || '#D4AF37' }}>· {data.total} totalt</span>
       </h4>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {(Object.keys(GENDER_LABELS) as (keyof Omit<GenderCounts, 'total'>)[]).map((g) => (
           <div key={g} className="rounded-xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}>
             <div className="text-xl font-bold" style={{ color: GENDER_COLORS[g] }}>{data[g]}</div>
-            <div className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>{GENDER_LABELS[g]}</div>
+            <div className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>{GENDER_LABELS[g]}</div>
           </div>
         ))}
       </div>
@@ -350,7 +350,7 @@ function GenderQueuePanel() {
     return (
       <div className="rounded-2xl p-5" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
         <h3 className="text-sm font-semibold mb-3 tracking-wide" style={{ color: 'rgba(255,255,255,0.6)' }}>KJØNN OG VENTEKØ</h3>
-        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>Kunne ikke laste kjønn- og ventekø-statistikk.</p>
+        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>Kunne ikke laste kjønn- og ventekø-statistikk.</p>
       </div>
     );
   }
@@ -364,7 +364,7 @@ function GenderQueuePanel() {
 
       {/* Ukentlig */}
       <div>
-        <h4 className="text-xs font-semibold mb-3 tracking-wide" style={{ color: 'rgba(255,255,255,0.5)' }}>NYE REGISTRERINGER PER UKE (siste 12 uker)</h4>
+        <h4 className="text-xs font-semibold mb-3 tracking-wide" style={{ color: 'rgba(255,255,255,0.6)' }}>NYE REGISTRERINGER PER UKE (siste 12 uker)</h4>
         <WeeklyGenderBars data={data.weekly} />
       </div>
 
@@ -412,7 +412,7 @@ export default function AdminAnalyticsPage() {
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h1 className="text-2xl font-bold mb-1" style={{ color: 'rgba(255,255,255,0.95)' }}>📊 Statistikk</h1>
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>Ekte data fra Tosom-plattformen</p>
+          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>Ekte data fra Tosom-plattformen</p>
         </div>
         <TimeFilter value={timeFilter} onChange={setTimeFilter} />
       </div>
@@ -441,7 +441,7 @@ export default function AdminAnalyticsPage() {
         {/* Totale brukere */}
         <div className="rounded-2xl p-6 mt-4 flex items-center justify-between" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
           <div>
-            <div className="text-xs mb-1" style={{ color: 'rgba(255,255,255,0.35)' }}>TOTALE REGISTRERTE BRUKERE</div>
+            <div className="text-xs mb-1" style={{ color: 'rgba(255,255,255,0.6)' }}>TOTALE REGISTRERTE BRUKERE</div>
             <div className="text-4xl font-bold" style={{ color: '#D4AF37' }}>{st.totalUsers.toLocaleString()}</div>
           </div>
         </div>

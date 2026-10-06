@@ -30,9 +30,9 @@ interface ToSomCardProps {
 const cardVariants = {
   default: {
     background: 'rgba(255,255,255,0.05)',
-    border: '1px solid rgba(255,255,255,0.10)',
+    border: '1px solid rgba(255,255,255,0.6)',
     hoverBg: 'rgba(255,255,255,0.07)',
-    hoverBorder: 'rgba(255,255,255,0.14)',
+    hoverBorder: 'rgba(255,255,255,0.6)',
     shadow: '0 0 40px rgba(0,0,0,0.30)',
     glowShadow: null as string | null,
   },

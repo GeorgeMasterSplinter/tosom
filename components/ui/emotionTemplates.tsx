@@ -145,7 +145,7 @@ export const ChatTemplate5: React.FC<ChatTemplate5Props> = ({
             <input
               type="text"
               placeholder="Skriv en melding med hjertet..."
-              className="w-full bg-transparent text-white text-sm placeholder:text-white/30 focus:outline-none"
+              className="w-full bg-transparent text-white text-sm placeholder:text-white/30 "
             />
           </div>
           <button className="w-12 h-12 rounded-2xl bg-[#D4AF37] flex items-center justify-center active:scale-[0.95] transition-transform">

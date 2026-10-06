@@ -71,7 +71,7 @@ export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
     if (showIf && !value) return null;
     return (
       <div className="flex justify-between">
-        <span style={{ color: 'rgba(255, 255, 255, 0.5)' }}>{label}</span>
+        <span style={{ color: 'rgba(255, 255, 255, 0.6)' }}>{label}</span>
         <span style={{ color: 'rgba(255, 255, 255, 0.85)' }}>{value || '—'}</span>
       </div>
     );
@@ -211,7 +211,7 @@ export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
 
         {/* CTA */}
         <div className="mt-8 space-y-4">
-           <p className="text-center text-xs" style={{ color: 'rgba(255, 255, 255, 0.3)' }}>
+           <p className="text-center text-xs" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
             Du har fullført hele profilen din! Nå er det klart for matching.
           </p>
           <BackButton onClick={() => goToStep(10)} />

@@ -8,6 +8,7 @@
 
 import { FC, ReactNode, useState, useEffect } from 'react';
 import { signOut } from 'next-auth/react';
+import { clearOnboardingDraft } from '@/lib/onboarding-draft';
 
 /** Neste fredag 23:59:59 (siste sjanse til å være med på runden). */
 function getNextFriday2359(): Date {
@@ -114,7 +115,7 @@ function SaveLogoutBar({ isSaving }: { isSaving: boolean }) {
 
       <button
         type="button"
-        onClick={() => signOut({ callbackUrl: '/' })}
+        onClick={() => { clearOnboardingDraft(); signOut({ callbackUrl: '/' }); }} // PL-17 (V-12): tøm utkast ved utlogging
         className="text-xs transition-colors duration-300 hover:opacity-100"
         style={{ color: 'rgba(255, 255, 255, 0.35)' }}
       >

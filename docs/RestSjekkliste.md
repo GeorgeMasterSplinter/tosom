@@ -338,7 +338,6 @@ PL-nummer. Her står bare **hva som gjenstår** og **hva som venter på hva**.
 | **PL-22** | 🤖 Q | Utvid språkvakten med nynorsk-ordene fra V-13 + lag sidelisten til George (G-20) | Forarbeid for §6.6 (George krysser) | 🟥 |
 | **PL-23a** | 🤖 Q | Sitemap: kun offentlige sider (fjern `/match`, `/journey`, `/dashboard`, `/profile`, `/onboarding`) | §6.7 «`og-image.png` finnes; sitemap …» (bildet = G-21) | 🟥 |
 | **PL-18** | 🤖 Q | Universell utforming: `:focus-visible`, `prefers-reduced-motion`, kontrast ≥ 4,5:1, FAQ-knapper | §6.7 «WCAG 2.1 AA …» (George bekrefter med Lighthouse, G-18) | 🟥 |
-| **PL-17** | 🤖 Q | Onboarding-utkast i `sessionStorage` i stedet for `localStorage` (11 steder i `OnboardingFlow.tsx`) | §6.1 «Onboarding-utkast …» | 🟨 |
 
 ### 3.2 Venter på George
 
@@ -390,7 +389,7 @@ PL-nummer. Her står bare **hva som gjenstår** og **hva som venter på hva**.
 | **1 — nå** | G-01 push · G-02 glemt passord · G-03 reisedager · G-04 roter `DATABASE_URL` | PL-19 vilkår · PL-20 døde sider · PL-21 blogg/dag 30 |
 | **2** | G-05 «kjør» PL-06/15/24 · G-06 tre svar · G-10 Vercel-plan | PL-06 reisedag (etter G-03) · PL-22 språkvakt · PL-23a sitemap |
 | **3** | G-07 advokat · G-08 DMARC/SPF · G-09 support@ · G-11 testbrukere · G-12 brytere | PL-18 universell utforming · PL-14 tidsplan |
-| **4** | G-13 backup · G-14 Sentry · G-15 slettinger · G-21 delingsbilde · G-22 rapportrutine | PL-17 sessionStorage · PL-26 opprydding · slette-skript til G-15 |
+| **4** | G-13 backup · G-14 Sentry · G-15 slettinger · G-21 delingsbilde · G-22 rapportrutine | PL-26 opprydding · slette-skript til G-15 |
 | **5 — sluttest** | G-16 ende-til-ende · G-17 telefoner · G-18 konsoll/Lighthouse · G-20 språk · G-23 CI · G-24 404-sider | PL-99 sluttkontroll (instruksen §9) |
 | **6 — etter første lørdag** | G-19 score- og nivåfordeling | Analyse — **ingen justering** (DI-2) |
 
@@ -468,7 +467,7 @@ Speiler `LanseringsCheckList.md` §6. **Kryss av begge steder.**
 - [ ] 👤 G-01 · `termsAcceptedAt` / `termsVersion` lagres for nye brukere *(kode ferdig, PL-02)* 🟥
 - [ ] 👤 G-01 · Eksisterende brukere bes om samtykke *(kode ferdig, PL-02)* 🟥
 - [x] 🤖 Q PL-16 · Google Fonts selvhostet 🟥 *(PL-16: Inter via next/font/google (400–700, swap, --font-inter), eksterne lenker fjernet, CSP font-src 'self' (fonts.gstatic.com borte), build-verifisert — kun /_next/static/media i HTML/CSS)*
-- [ ] 🤖 Q PL-17 · Onboarding-utkast ikke i `localStorage` 🟨
+- [x] 🤖 Q PL-17 · Onboarding-utkast ikke i `localStorage` 🟨 *(PL-17: sessionStorage i loadDraft/saveDraft (per fane), gammelt localStorage-utkast slettes, clearOnboardingDraft() i alle 4 signOut-punkter (lib/onboarding-draft.ts), personvern-tabellrad lagt til)*
 - [ ] 👤 G-07 · DPA og DPIA gjennomgått og signert 🟥
 
 ### 6.2 Trygghet

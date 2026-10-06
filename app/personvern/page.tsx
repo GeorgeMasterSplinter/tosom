@@ -97,6 +97,14 @@ const sections: Section[] = [
             'Til reisen avsluttes. Logger inntil 90 dager.',
           ],
         },
+        {
+          cells: [
+            'Onboarding-utkast',
+            'Svar du har skrevet i onboarding, inntil du ferdigstiller',
+            'Avtale (art. 6.1.b)',
+            'Per nettleserøkt (sessionStorage) — forsvinner når fanen stenges, og tømmes ved utlogging. Server-utkastet slettes når profilen lagres.',
+          ],
+        },
       ],
     },
   },

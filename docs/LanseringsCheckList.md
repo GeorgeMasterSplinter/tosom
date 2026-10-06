@@ -618,6 +618,8 @@ lykkes. På en delt eller lånt maskin kan neste bruker lese det.
 `sessionStorage`, og tøm ved utlogging. Nevn mellomlagringen i
 personvernerklæringen.
 
+**Status 06.10 (PL-17) — RETTET:** `loadDraft`/`saveDraft` bruker nå `sessionStorage` (per fane — forsvinner når fanen stenges); server-utkastet (WP2) er fortsatt hovedkilden. Gammelt `localStorage`-utkast slettes automatisk ved neste `loadDraft` og ved utlogging (ny `lib/onboarding-draft.ts`: `clearOnboardingDraft()` kjøres i alle 4 `signOut`-punktene — innstillinger ×3, onboarding-layout ×1). Mellomlagringen er nevnt i personvernerklæringen (ny tabellrad «Onboarding-utkast»).
+
 ---
 
 ### V-13 · Språkvakten slipper gjennom tydelig nynorsk
@@ -767,7 +769,7 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 | [ ] *(klar for George · PL-02)* | Eksisterende brukere bes om samtykke ved neste innlogging | K-2 | **Før lansering** |
 | [x] | FAQ og personvern beskriver faktisk databehandling (IP, tredjeparter) | K-7 | **Før lansering** (PL-09: FAQ IP/tredjeparter + personverntabell Vercel/Cloudflare/Neon/Resend; Upstash fjernet — ikke konfigurert i prod) |
 | [x] | Google Fonts selvhostet via `next/font` | V-7 | **Før lansering** |
-| [ ] | Onboarding-utkast ikke lenger i `localStorage` | V-12 | Kan utsettes |
+| [x] | Onboarding-utkast ikke lenger i `localStorage` | V-12 | Kan utsettes |
 | [ ] | DPA og DPIA gjennomgått av advokat og signert | V-9 | **Før lansering** |
 
 ### 6.2 Trygghet

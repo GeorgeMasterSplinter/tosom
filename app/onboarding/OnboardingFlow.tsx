@@ -14,6 +14,7 @@ import {
   validateOnboardingStep,
   firstIncompleteOnboardingStep,
 } from '@/lib/validation/onboarding-steps';
+import { ONBOARDING_DRAFT_KEY, clearOnboardingDraft } from '@/lib/onboarding-draft';
 
 import Step1Profile from './steps/Step1Profile';
 import Step2Personlighet from './steps/Step2Personlighet';
@@ -31,7 +32,8 @@ import Step10StartReisen from './steps/Step10StartReisen';
 import { ALL_ITEMS } from '@/lib/psychometrics/instruments';
 import type { UserProfile } from "../../lib/profile/userProfile";
 
-const STORAGE_KEY = 'tosom_onboarding_draft';
+// PL-17 (V-12): nøkkelen er delt med utlogging-ryddingen (lib/onboarding-draft)
+const STORAGE_KEY = ONBOARDING_DRAFT_KEY;
 
 /**
  * Profil-datastruktur for heile 13-stegs onboarding.
@@ -161,7 +163,11 @@ const initialData: ProfileData = {
 
 function loadDraft(): Partial<ProfileData> {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    // PL-17 (V-12): utkastet er per fane (sessionStorage) og forsvinner med
+    // fanen. Gammelt localStorage-utkast (før PL-17) slettes. Server-utkastet
+    // (WP2) er hovedkilden.
+    localStorage.removeItem(STORAGE_KEY);
+    const raw = sessionStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
       if (parsed && typeof parsed === 'object') return parsed;
@@ -172,7 +178,8 @@ function loadDraft(): Partial<ProfileData> {
 
 function saveDraft(data: ProfileData) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    // PL-17 (V-12): sessionStorage — hurtigbuffer innenfor økten.
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   } catch { /* ignore */ }
 }
 
@@ -308,12 +315,12 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
   // Sted for steg-valideringsfeil (vises på steget som mangler felt) —
   // holdt separat fra `error` (lagre/kø-feil, vises på siste steg).
   const [stepError, setStepError] = useState<string | null>(null);
-   // Flytt localStorage-henting til useEffect for å unngå HydrationMismatch
+   // Flytt utkast-henting (sessionStorage) til useEffect for å unngå HydrationMismatch
    // SSR ser alltid tomme felt — klientet hentar lagrede data etter mount
    const [data, setData] = useState<ProfileData>(() => ({ ...initialData }));
 
    // WP2: Init-tilstand (én kilde): server-draft (pågående utkast) >
-   // prefill (fullførte profiler, redigeringsøkt) > localStorage (hurtigbuffer)
+   // prefill (fullførte profiler, redigeringsøkt) > sessionStorage (hurtigbuffer)
     useEffect(() => {
       async function init() {
         // K-2: uten samtykke lagres ingen profil — send brukeren til
@@ -343,7 +350,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
          return;
        }
        // 2) Fullførte profiler pre-fylles — men lokal draft og brukerens
-       // levende input vinner. Prioritet: live input > localStorage >
+       // levende input vinner. Prioritet: live input > sessionStorage >
        // prefill > default.
        // (28.08: prefill slo over localStorage, og felt forsvant ved
        // reload for brukere med eksisterende profil. 29.08: sammenslåingen
@@ -375,7 +382,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
          if (prefill.step > 0) setStep(prefill.step);
          return;
        }
-       // 3) Fallback til localStorage
+       // 3) Fallback til sessionStorage (PL-17)
        const localDraft = loadDraft();
        if (localDraft && Object.keys(localDraft).length > 0) {
          setData((prev) => ({ ...prev, ...localDraft }));
@@ -393,7 +400,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
   useEffect(() => {
     // Hopp over fyrste kørsel: ved mount er data endå tomme (draft-
     // restaureringa hentar asynkront). Uten dette kan en tom draft
-    // overstyre localStorage dersom server-kalla tek lengre enn debounce-vinduet.
+    // overstyre sessionStorage dersom server-kalla tek lengre enn debounce-vinduet.
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
@@ -401,7 +408,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     setShowSaving(true);
     saveTimerRef.current = setTimeout(() => {
-      saveDraft(data); // localStorage som hurtigbuffer
+      saveDraft(data); // sessionStorage som hurtigbuffer (PL-17)
       setShowSaving(false);
     }, 400);
     return () => { if (saveTimerRef.current) clearTimeout(saveTimerRef.current); };
@@ -638,7 +645,8 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
       // neste onboarding-omgang starter rent. Fire-and-forget: bruker skal
       // ikke vente på rydding, og ryddingsfeil skal ikke blokkere suksessen.
       try {
-        localStorage.removeItem(STORAGE_KEY);
+        // PL-17: tømmer sessionStorage og eventuelle gamle localStorage-verdier.
+        clearOnboardingDraft();
       } catch { /* ignore */ }
       fetch('/api/onboarding/draft', { method: 'DELETE' }).catch(() => {});
 

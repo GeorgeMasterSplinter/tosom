@@ -7,6 +7,7 @@
 
 import { useState, useEffect } from "react";
 import { signOut } from "next-auth/react";
+import { clearOnboardingDraft } from "@/lib/onboarding-draft";
 import { useRouter } from "next/navigation";
 import { csrfFetch } from "@/lib/api/csrfClient";
 import GlassCard from "@/components/ui/cards/GlassCard";
@@ -368,7 +369,8 @@ function KontoSection({ name, email }: { name: string; email: string }) {
 
       <div className="flex gap-3 flex-wrap">
         <button
-          onClick={() => signOut({ callbackUrl: "/" })}
+          // PL-17 (V-12): tøm onboarding-utkastet ved utlogging
+          onClick={() => { clearOnboardingDraft(); signOut({ callbackUrl: "/" }); }}
           className="transition-all duration-300 hover:bg-white/[0.06] hover:border-[rgba(212,175,55,0.4)] active:scale-[0.98] focus:outline-none"
           style={{
             background: "rgba(255,255,255,0.04)",
@@ -544,6 +546,7 @@ function SikkerhetSection({ matchStatus, journeyStatus }: { matchStatus: MatchSt
         setDeleteError("Vi fikk ikke slettet kontoen din. Ingenting er slettet. Prøv igjen, eller skriv til support@tosom.no.");
         return;
       }
+      clearOnboardingDraft(); // PL-17: tøm utkast ved utlogging
       await signOut({ callbackUrl: "/" });
     } catch {
       setDeleteError("Vi fikk ikke kontakt. Ingenting er slettet. Prøv igjen.");
@@ -977,6 +980,7 @@ function SlettKontoSection() {
     if (confirmText !== "SLETT") return;
     try {
       await csrfFetch("/api/settings/delete-account", { method: "POST" });
+      clearOnboardingDraft(); // PL-17: tøm utkast ved utlogging
       await signOut({ callbackUrl: "/" });
     } catch {
       console.error("Feil ved sletting av konto");

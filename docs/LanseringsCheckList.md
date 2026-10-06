@@ -318,7 +318,7 @@ døren inn til de mest personlige opplysningene i systemet.
 | «Én match innen 24 timer» | `app/layout.tsx:11` (meta, OG, JSON-LD), `public/llms.txt` | Ukentlig, natt til lørdag (I-10) |
 | «Ingen bilder, ingen navn, ingen alder … anonymt» | `app/faq/page.tsx:12` | Navn og alder vises; bilder fra dag 15 |
 | «Du får en e-post når det er klart» | `app/faq/page.tsx:16` | I-4: ingen e-post ved match |
-| «Vi logger ikke IP-adresser. Ingen tredjeparts tracking» | `app/faq/page.tsx:36` | Vercel, Cloudflare, Sentry og Speed Insights behandler IP; Google Fonts (V-7) |
+| «Vi logger ikke IP-adresser. Ingen tredjeparts tracking» | `app/faq/page.tsx:36` | Vercel, Cloudflare, Sentry og Speed Insights behandler IP; Google Fonts (V-7) *(fjernet via PL-16 06.10 — fonte er selvhostet)* |
 | «Du får en bekreftelse per e-post» ved sletting | `app/faq/page.tsx:40` | Slettingen virker ikke (K-1) |
 | Abonnement 149/129/99 kr/mnd, nynorsk tekst | `/onboarding/payment` (live, HTTP 200) | Én reise 349 kr; de første 5 000 gratis |
 | «ECR-12» som validert instrument | `app/metoder/page.tsx:159`, `public/llms.txt` | Tilknytningsspørsmålene er egenutviklede (`lib/psychometrics/instruments.ts:12–19`) |
@@ -508,6 +508,8 @@ Lastes det likevel, sendes brukerens IP til Google uten samtykke
 
 **Løsning:** Bruk `next/font/google` (selvhostet ved bygg, ingen ekstern
 forespørsel). Fjern `<link>`-taggene. Verifiser i DevTools at Inter lastes.
+
+**Status 06.10 (PL-16) — RETTET:** `app/layout.tsx` bruker nå `next/font/google` (Inter 400/500/600/700, `display: swap`, CSS-variabel `--font-inter` på `<html>`); de eksterne `fonts.googleapis.com`-lenkene er fjernet. De to stedene som faktisk refererte til fonten (onboarding-tekstfelt, not-found-SVG) peker på `var(--font-inter)` med `Inter` som fallback. CSP i `next.config.js`: `font-src 'self'` — `fonts.gstatic.com` fjernet (kreves ikke lenger). Build-verifisert: `.next/static/media/` inneholder .woff2-filene, @font-face i lokal CSS (`/_next/static/media/*.woff2`), og ingen `fonts.googleapis.com`/`fonts.gstatic.com`-referanser i den genererte HTML/CSS-en.
 
 ---
 
@@ -764,7 +766,7 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 | [ ] *(klar for George · PL-02)* | `termsAcceptedAt` / `termsVersion` lagres for alle nye brukere | K-2 | **Før lansering** |
 | [ ] *(klar for George · PL-02)* | Eksisterende brukere bes om samtykke ved neste innlogging | K-2 | **Før lansering** |
 | [x] | FAQ og personvern beskriver faktisk databehandling (IP, tredjeparter) | K-7 | **Før lansering** (PL-09: FAQ IP/tredjeparter + personverntabell Vercel/Cloudflare/Neon/Resend; Upstash fjernet — ikke konfigurert i prod) |
-| [ ] | Google Fonts selvhostet via `next/font` | V-7 | **Før lansering** |
+| [x] | Google Fonts selvhostet via `next/font` | V-7 | **Før lansering** |
 | [ ] | Onboarding-utkast ikke lenger i `localStorage` | V-12 | Kan utsettes |
 | [ ] | DPA og DPIA gjennomgått av advokat og signert | V-9 | **Før lansering** |
 

@@ -1,5 +1,6 @@
 import "@/styles/globals.css";
 import "@/styles/animated.css";
+import { Inter } from "next/font/google";
 import { AnalyticsProvider } from "@/components/analytics/AnalyticsProvider";
 import { UniversalMenu } from '@/components/layout/UniversalMenu';
 import { ContentWrapper } from '@/components/layout/ContentWrapper';
@@ -32,6 +33,17 @@ const JSONLD_WEBSITE = {
   description: BESKRIVELSE,
   inLanguage: "no",
 };
+
+// PL-16 (V-7): Inter selvhostet via next/font — lastes ved build og serveres
+// fra /_next/static/media (CSP: font-src 'self'). Erstattet de eksterne
+// fonts.googleapis.com/fonts.gstatic.com-lenkene. display: swap — samme
+// oppførsel som den gamle Google Fonts CSS-en.
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-inter",
+});
 
 export const metadata = {
   metadataBase: new URL("https://tosom.no"),
@@ -78,13 +90,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="no" dir="ltr">
+    <html lang="no" dir="ltr" className={inter.className}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-        />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />

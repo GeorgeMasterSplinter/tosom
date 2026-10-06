@@ -332,7 +332,6 @@ PL-nummer. Her står bare **hva som gjenstår** og **hva som venter på hva**.
 
 | ID | Hvem | Oppgave | Sjekklistepunkt (§6) | Prioritet |
 |---|---|---|---|---|
-| **PL-16** | 🤖 Q | Google Fonts selvhostet via `next/font` (fjern `<link>` til fonts.googleapis.com i `app/layout.tsx`) | §6.1 «Google Fonts selvhostet …» | 🟥 |
 | **PL-19** | 🤖 Q | Vilkår: angrerettloven § 22 n + direkte lovdata-lenker (`config/legal.ts`, `app/vilkar/page.tsx`). **Ingen adresse.** | §6.6 «Vilkår: angrerettloven og direkte lovlenker» | 🟥 |
 | **PL-20** | 🤖 Q | Interne/døde sider 404 i prod: `/design-system`, `/onboarding/payment` (slett), `/onboarding/access` (slett), `/register/vipps`, `phone/send` og `phone/verify` | §6.7 «Interne og døde sider …» og «`POST /api/auth/phone/send` deaktivert» | 🟥 |
 | **PL-21** | 🤖 Q | Blogg 404 i prod (D-9) + dag 30-varselet og milepælteksten i `cron/journey` til bokmål | §6.6 «Bloggen …» · §6.4 «Brukervarselet ved dag 30 …» | 🟥 |
@@ -388,7 +387,7 @@ PL-nummer. Her står bare **hva som gjenstår** og **hva som venter på hva**.
 
 | Steg | 👤 George | 🤖 Agentene (parallelt) |
 |---|---|---|
-| **1 — nå** | G-01 push · G-02 glemt passord · G-03 reisedager · G-04 roter `DATABASE_URL` | PL-16 fonter · PL-19 vilkår · PL-20 døde sider · PL-21 blogg/dag 30 |
+| **1 — nå** | G-01 push · G-02 glemt passord · G-03 reisedager · G-04 roter `DATABASE_URL` | PL-19 vilkår · PL-20 døde sider · PL-21 blogg/dag 30 |
 | **2** | G-05 «kjør» PL-06/15/24 · G-06 tre svar · G-10 Vercel-plan | PL-06 reisedag (etter G-03) · PL-22 språkvakt · PL-23a sitemap |
 | **3** | G-07 advokat · G-08 DMARC/SPF · G-09 support@ · G-11 testbrukere · G-12 brytere | PL-18 universell utforming · PL-14 tidsplan |
 | **4** | G-13 backup · G-14 Sentry · G-15 slettinger · G-21 delingsbilde · G-22 rapportrutine | PL-17 sessionStorage · PL-26 opprydding · slette-skript til G-15 |
@@ -468,7 +467,7 @@ Speiler `LanseringsCheckList.md` §6. **Kryss av begge steder.**
 - [ ] 👤 G-01 · Aktiv aksept av vilkår + uttrykkelig samtykke *(kode ferdig, PL-02)* 🟥
 - [ ] 👤 G-01 · `termsAcceptedAt` / `termsVersion` lagres for nye brukere *(kode ferdig, PL-02)* 🟥
 - [ ] 👤 G-01 · Eksisterende brukere bes om samtykke *(kode ferdig, PL-02)* 🟥
-- [ ] 🤖 Q PL-16 · Google Fonts selvhostet 🟥
+- [x] 🤖 Q PL-16 · Google Fonts selvhostet 🟥 *(PL-16: Inter via next/font/google (400–700, swap, --font-inter), eksterne lenker fjernet, CSP font-src 'self' (fonts.gstatic.com borte), build-verifisert — kun /_next/static/media i HTML/CSS)*
 - [ ] 🤖 Q PL-17 · Onboarding-utkast ikke i `localStorage` 🟨
 - [ ] 👤 G-07 · DPA og DPIA gjennomgått og signert 🟥
 

@@ -49,7 +49,7 @@ export default function NotFoundPage() {
               textAnchor="middle"
               fill="#D4AF37"
               fontSize="20"
-              fontFamily="Inter, sans-serif"
+              fontFamily="var(--font-inter), Inter, sans-serif"
               fontWeight="300"
             >
               404

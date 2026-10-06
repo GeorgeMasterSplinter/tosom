@@ -114,7 +114,9 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob: *.uploadthing.com uploadthing.com *.s3.amazonaws.com tosom-storage.up.railway.app *.r2.cloudflarestorage.com",
               "media-src 'self'",
-              "font-src 'self' fonts.gstatic.com",
+              // PL-16: fonte er selvhostet via next/font (/_next/static/media)
+              // — fonts.gstatic.com kreves ikke lenger.
+              "font-src 'self'",
               "connect-src 'self' api.stripe.com auth.vipps.no vipps.no *.pusher.com *.pubnub.com wss://*.pusher.io wss://*.pusher.com *.ingest.sentry.io *.sentry.io",
               "frame-src *.stripe.com stripe.com",
               "frame-ancestors 'none'",

@@ -66,7 +66,9 @@ export function OnboardingTextField({
     outline: 'none',
     transition: 'all 0.2s ease-out',
     backdropFilter: 'blur(8px)',
-    fontFamily: 'Inter, -apple-system, sans-serif',
+    // PL-16: Inter er selvhostet (next/font) — variabelen peker på den
+    // lokale fonten; 'Inter' beholdes som fallback dersom variabelen savnes.
+    fontFamily: 'var(--font-inter), Inter, -apple-system, sans-serif',
     boxShadow: isFocused ? '0 0 0 3px rgba(255,255,255,0.03)' : 'none',
   };
 

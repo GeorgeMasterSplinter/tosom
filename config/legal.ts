@@ -54,12 +54,12 @@ export function companyFooterLine(): string {
 }
 
 /** Gjeldende versjon av vilkårene. Lagres på bruker ved aksept. */
-export const TERMS_VERSION = '2026-10-05';
-export const TERMS_UPDATED = '5. oktober 2026';
+export const TERMS_VERSION = '2026-10-06';
+export const TERMS_UPDATED = '6. oktober 2026';
 
 /** Gjeldende versjon av personvernerklæringen. */
-export const PRIVACY_VERSION = '2026-10-05';
-export const PRIVACY_UPDATED = '5. oktober 2026';
+export const PRIVACY_VERSION = '2026-10-06';
+export const PRIVACY_UPDATED = '6. oktober 2026';
 
 /**
  * Aldersgrense. Invariant I-14.
@@ -139,25 +139,29 @@ export const LEGISLATION = {
     label: 'Dataverneforordningen (GDPR) — Forordning (EU) 2016/679',
     url: 'https://eur-lex.europa.eu/eli/reg/2016/679/oj',
   },
+  angrerett: {
+    label: 'Angrerettloven (lov 20. juni 2014 nr. 27)',
+    url: 'https://lovdata.no/dokument/NL/lov/2014-06-20-27',
+  },
   personvernlov: {
-    label: 'Personvernloven (lov om personvern, 2018)',
-    url: 'https://lovdata.no/',
+    label: 'Personopplysningsloven (lov 15. juni 2018 nr. 38)',
+    url: 'https://lovdata.no/dokument/NL/lov/2018-06-15-38',
   },
   forbrukerkjop: {
-    label: 'Forbrukerkjøpsloven (lov om forbrukerkjøp, 2002)',
-    url: 'https://lovdata.no/',
+    label: 'Forbrukerkjøpsloven (lov 21. juni 2002 nr. 34)',
+    url: 'https://lovdata.no/dokument/NL/lov/2002-06-21-34',
   },
   markedsforing: {
     label: 'Markedsføringsloven (lov 9. januar 2009 nr. 2)',
     url: 'https://lovdata.no/dokument/NL/lov/2009-01-09-2',
   },
   avtalelov: {
-    label: 'Avtaleloven (lov om avslutning av avtaler mv., 1918)',
-    url: 'https://lovdata.no/',
+    label: 'Avtaleloven (lov 31. mai 1918 nr. 4)',
+    url: 'https://lovdata.no/dokument/NL/lov/1918-05-31-4',
   },
   bokforing: {
-    label: 'Bokføringsloven (lov om bokføring, 2004)',
-    url: 'https://lovdata.no/',
+    label: 'Bokføringsloven (lov 19. november 2004 nr. 73)',
+    url: 'https://lovdata.no/dokument/NL/lov/2004-11-19-73',
   },
   datatilsynet: {
     label: 'Datatilsynet',

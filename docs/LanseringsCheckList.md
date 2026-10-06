@@ -828,7 +828,7 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 | [x] | Innloggingssiden skrevet for lansering (uten spøk, uten «under oppbygging») *(✓ 2026-10-06 · PL-05d — verifisert: ingen treff på spøken, «Under oppbygging», «Alderkontroll» eller «Første gang»)* | V-15 | **Før lansering** |
 | [ ] | Bloggen rettet eller avpublisert | V-10, V-13 | **Før lansering** |
 | [ ] | Manuell språkgjennomgang av alle brukervendte sider | V-13 | **Før lansering** |
-| [ ] | Vilkår: angrerettloven og direkte lovlenker | V-9 | **Før lansering** |
+| [x] | Vilkår: angrerettloven og direkte lovlenker *(✓ 2026-10-06 · PL-19)* | V-9 | **Før lansering** |
 | [ ] | Adressekravet avklart med advokat — privat adresse publiseres ikke | V-9 | **Før lansering** |
 | [ ] | Juridiske tekster gjennomgått av advokat | V-9 | **Før lansering** |
 

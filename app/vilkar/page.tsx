@@ -196,9 +196,9 @@ const clauses: Clause[] = [
     ],
     references: [
       {
-        label: LEGISLATION.forbrukerkjop.label,
-        url: LEGISLATION.forbrukerkjop.url,
-        note: 'Angrerett på digitale tjenester følger av forbrukerkjøpsloven. Retten bortfaller når leveringen har begynt med ditt forutgående samtykke.',
+        label: LEGISLATION.angrerett.label,
+        url: LEGISLATION.angrerett.url,
+        note: 'Angrerett på digitale tjenester følger av angrerettloven, § 22 bokstav n. Retten bortfaller når leveringen har begynt med ditt uttrykkelige samtykke og din bekreftelse på at angreretten da går tapt.',
       },
     ],
   },
@@ -279,7 +279,7 @@ const clauses: Clause[] = [
       {
         label: LEGISLATION.forbrukerkjop.label,
         url: LEGISLATION.forbrukerkjop.url,
-        note: 'Angrerett og regler for forbrukerkjøp, herunder digitalt innhold.',
+        note: 'Regler for forbrukerkjøp, herunder digitalt innhold.',
       },
       {
         label: LEGISLATION.markedsforing.label,

@@ -52,11 +52,11 @@ De fire viktigste først (de gjør at agentenes ferdige arbeid kan krysses av):
 
 ## 1. Status 06.10.2026
 
-### 1.1 Helse (målt etter PL-27/PL-28)
+### 1.1 Helse (målt etter PL-19)
 ```
-npm run verify   → språkvakt grønn (1042 filer) · tsc 0 feil · jest 521 bestått / 1 hoppet over (59/60 suiter)
+npm run verify   → språkvakt grønn (1047 filer) · tsc 0 feil · jest 528 bestått / 1 hoppet over (61/62 suiter)
 npx next lint --max-warnings 0   → 0 advarsler
-npm audit --omit=dev   → 0 kritiske · 6 høye · 1 moderat
+npm audit --omit=dev   → 0 kritiske · 5 høye · 1 moderat (målt etter PL-24)
 ```
 
 ### 1.2 Fremdrift i sjekklisten (§6 i `LanseringsCheckList.md`)
@@ -64,10 +64,10 @@ npm audit --omit=dev   → 0 kritiske · 6 høye · 1 moderat
 | | Antall |
 |---|---|
 | Punkter totalt | **70** (68 + 2 nye: religion og bonusfamilie) |
-| ✅ Avkrysset | **24** |
-| ⬜ Gjenstår | **46** — hvorav **4** er kodeferdige og bare venter på George |
+| ✅ Avkrysset | **25** |
+| ⬜ Gjenstår | **45** — hvorav **4** er kodeferdige og bare venter på George |
 
-### 1.3 Ferdig siden 05.10 (commit `39154bc` … `225d648` + PL-27/28)
+### 1.3 Ferdig siden 05.10 (gjennom 06.10)
 
 | Oppgave | Funn | Hva |
 |---|---|---|
@@ -83,6 +83,12 @@ npm audit --omit=dev   → 0 kritiske · 6 høye · 1 moderat
 | PL-11 | V-2 | Barn som dealbreaker (kun «Ja» mot kun «Nei») |
 | PL-12 | V-3 | Ukjent postnummer avvises, med forslag i nærheten |
 | PL-13 | V-4 | «Ikke-binær» som søkevalg, «Kjemisk tiltrekning» forklart |
+| **PL-15** | V-5 | Bevis ved rapport/blokkering (90 dager), rapport etter avsluttet match, `pgCheck`-rategrense |
+| **PL-16** | V-7 | Google Fonts selvhostet via `next/font` (Inter lokalt) |
+| **PL-17** | V-12 | Onboarding-utkast ut av `localStorage` (sessionStorage, per fane) |
+| **PL-19** | V-9 | Vilkår → angrerettloven § 22 bokstav n + direkte lovdata-lenker; personopplysningsloven; versjonsbump 2026-10-06 |
+| **PL-24** | K-5 | `nodemailer` 7 → 10 + skriftlig vurdering av gjenstående sårbarheter |
+| **PL-25** | V-11 | API-prefikser i middleware + `api-route-coverage`-test |
 | **PL-27** | ny | **Religion: opptil fire valg, ulik tro gir ingen trekk** (se §6) |
 | **PL-28** | ny | **«Åpen for bonusfamilie»: pluss når partneren har barn** (se §6) |
 
@@ -491,7 +497,7 @@ Speiler `LanseringsCheckList.md` §6. **Kryss av begge steder.**
 ### 6.6 Innhold og språk
 - [ ] 🤖 Q PL-21 · Bloggen avpublisert (404) 🟥
 - [ ] 👤 G-20 · Manuell språkgjennomgang *(sideliste fra PL-22)* 🟥
-- [ ] 🤖 Q PL-19 · Vilkår: angrerettloven og direkte lovlenker 🟥
+- [x] 🤖 Q PL-19 · Vilkår: angrerettloven og direkte lovlenker 🟥 *(PL-19a–d: §15 «Angrerett og refusjon» henviser til angrerettloven § 22 bokstav n; alle 5 norske lover i `LEGISLATION` med direkte lovdata-lenke (verifisert 200 OK); personvern-siden bruker «personopplysningsloven»; TERMS/PRIVACY_VERSION → 2026-10-06)*
 - [ ] 👤 G-07 · Adressekravet avklart — privat adresse publiseres ikke 🟥
 - [ ] 👤 G-07 · Juridiske tekster gjennomgått av advokat 🟥
 

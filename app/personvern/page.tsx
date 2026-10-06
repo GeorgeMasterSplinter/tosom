@@ -270,7 +270,7 @@ const sections: Section[] = [
     id: '16',
     title: 'Gjeldende regelverk',
     paragraphs: [
-      'Behandlingen av opplysningene dine er basert på personvernforordningen (GDPR) og den norske personvernloven. Det er disse reglene som ligger bak punktene over.',
+      'Behandlingen av opplysningene dine er basert på personvernforordningen (GDPR) og den norske personopplysningsloven. Det er disse reglene som ligger bak punktene over.',
     ],
     references: [
       {

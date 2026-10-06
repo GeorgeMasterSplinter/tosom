@@ -161,8 +161,7 @@ npm audit --omit=dev   → 0 kritiske · 6 høye · 1 moderat
 | Oppgave | Hva | Hvorfor låst |
 |---|---|---|
 | PL-06 | Reisedagen beregnes fra start i stedet for å telles | Endrer reisens tempo (DI-2) — **gjør G-03 først** |
-| PL-24 | Oppdatere `nodemailer` og vurdere `uploadthing` | Store versjonshopp |
-- [ ] «kjør» PL-06 · [x] «kjør» PL-15 (gitt 06.10 — FERDIG) · [ ] «kjør» PL-24
+- [ ] «kjør» PL-06 · [x] «kjør» PL-15 (gitt 06.10 — FERDIG) · [x] «kjør» PL-24 (gitt 06.10 — FERDIG)
 
 #### 👤 G-06 · Svar på tre små spørsmål  🟨
 | # | Spørsmål | Agentens forslag |
@@ -391,7 +390,7 @@ PL-nummer. Her står bare **hva som gjenstår** og **hva som venter på hva**.
 |---|---|---|
 | **1 — nå** | G-01 push · G-02 glemt passord · G-03 reisedager · G-04 roter `DATABASE_URL` | PL-16 fonter · PL-19 vilkår · PL-20 døde sider · PL-21 blogg/dag 30 |
 | **2** | G-05 «kjør» PL-06/15/24 · G-06 tre svar · G-10 Vercel-plan | PL-06 reisedag (etter G-03) · PL-22 språkvakt · PL-23a sitemap |
-| **3** | G-07 advokat · G-08 DMARC/SPF · G-09 support@ · G-11 testbrukere · G-12 brytere | PL-18 universell utforming · PL-24 avhengigheter · PL-14 tidsplan |
+| **3** | G-07 advokat · G-08 DMARC/SPF · G-09 support@ · G-11 testbrukere · G-12 brytere | PL-18 universell utforming · PL-14 tidsplan |
 | **4** | G-13 backup · G-14 Sentry · G-15 slettinger · G-21 delingsbilde · G-22 rapportrutine | PL-17 sessionStorage · PL-26 opprydding · slette-skript til G-15 |
 | **5 — sluttest** | G-16 ende-til-ende · G-17 telefoner · G-18 konsoll/Lighthouse · G-20 språk · G-23 CI · G-24 404-sider | PL-99 sluttkontroll (instruksen §9) |
 | **6 — etter første lørdag** | G-19 score- og nivåfordeling | Analyse — **ingen justering** (DI-2) |
@@ -499,7 +498,7 @@ Speiler `LanseringsCheckList.md` §6. **Kryss av begge steder.**
 - [ ] 👤 G-07 · Juridiske tekster gjennomgått av advokat 🟥
 
 ### 6.7 Teknisk kvalitet og sikkerhet
-- [ ] 🤖 C PL-24 🔒 · Øvrige høye sårbarheter rettet eller vurdert 🟥
+- [x] 🤖 C PL-24 · Øvrige høye sårbarheter rettet eller vurdert 🟥 *(PL-24a: nodemailer 7.0.13 → 10.0.15, levetestet mot maildev (250 OK + accepted); PL-24b: uploadthing avklart — IKKE brukt i prod (ingen endepunkt, bildene går via R2), beholdes etter Georges beslutning; PL-24c: effect/uploadthing + postcss×4/next + next-moderat dokumentert i LanseringsCheckList K-5. Audit: 0 kritiske, alle høye vurdert skriftlig)*
 - [ ] 🤖 Q PL-20 · Interne og døde sider 404 i prod *(George bekrefter, G-24)* 🟥
 - [ ] 🤖 Q PL-20 · `POST /api/auth/phone/send` deaktivert 🟥
 - [x] 🤖 C PL-25 · Manglende API-prefikser i middleware 🟨 *(PL-25a+b: 6 nye prefikser i `PROTECTED_API_PREFIXES` + `__tests__/api-route-coverage.test.ts` (119 ruter verifisert, 21 eksplisitt offentlig med begrunnelse). Ny rute uten dekning → rød test.)*

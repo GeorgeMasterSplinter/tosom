@@ -272,6 +272,13 @@ lagene alt annet står på.
 **Løsning:** Én pakke per patch, med `npm run verify` og `npm run build`
 mellom hver. Versjonsendringer krever Georges godkjenning (ACT-PIPELINE §1).
 
+**Status 06.10 (PL-24):** `npm audit --omit=dev` har 6 åpne (5 høye, 1 moderat) — ned fra 4 kritiske / 10 høye 05.10. Ingen kritiske gjenstår.
+- **nodemailer** — RETTET (PL-24a): 7.0.13 → 10.0.15. Breaking-endringer lest (v8: feilkode `NoAuth` → `ENOAUTH`; v9: TLS-validasjon ved henting av ekstern innhold; v10: krever Node ≥ 20 + TypeScript/ESM-build). Ingen kodeendring nødvendig — API-et vi bruker (`createTransport`/`sendMail`) er uendret. Levetestet mot maildev (SMTP 250 OK + `accepted` bekreftet mottaker).
+- **uploadthing / `effect` (høy)** — VURDERT (PL-24b/c): brukes **ikke** i produksjon. Koden har ingen uploadthing-endepunkt (`app/api/uploadthing/[...uploadthing]/route.ts` eksisterer ikke — kun `core.ts`), chatbildene går via R2 (`STORAGE_DRIVER=r2`, `/api/chat/image`), og `ImageUpload`-komponenten er importert ingen steder. `effect`-sårbarheten (AsyncLocalStorage i Effect-fibers) har derfor ingen runtime-betydning. Pakkene beholdes (Georges beslutning 06.10); fjernes ved neste major (audit-fix = uploadthing 6.12.0, breaking).
+- **postcss ×4 (høy)** — VURDERT: finnes kun via `next@15` sin build-tids CSS-prosessering (verktøy under `next build`, ikke runtime). Rettes i next 16.3.8 (major). Plan: Next 16-oppgradering som eget prosjekt — blokkerer ikke lansering.
+- **next (1 moderat)** — VURDERT: kun rettelig i Next 16 (RestSjekkliste §3.4). Samme plan som postcss.
+- **sharp / nanoid / browserslist / brace-expansion** — ikke lenger i audit (retnede i 05.10-auditfix).
+
 ---
 
 ### K-6 · Svak innlogging: ingen forsøksgrense, ingen passordkrav, ingen «glemt passord»
@@ -826,7 +833,7 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 | | Punkt | Ref | Prioritet |
 |---|---|---|---|
 | [x] | Kritiske og høye sårbarheter i `next`, `next-auth`, `@auth/*` rettet | K-5 | **Før lansering** |
-| [ ] | Øvrige høye sårbarheter (nodemailer, uploadthing, sharp, postcss) rettet eller vurdert | K-5 | **Før lansering** |
+| [x] | Øvrige høye sårbarheter (nodemailer, uploadthing, sharp, postcss) rettet eller vurdert | K-5 | **Før lansering** |
 | [ ] | Interne og døde sider fjernet eller 404 i prod | V-10 | **Før lansering** |
 | [ ] | `POST /api/auth/phone/send` deaktivert | V-10 | **Før lansering** |
 | [x] | Manglende API-prefikser i middleware | V-11 | Kan utsettes |

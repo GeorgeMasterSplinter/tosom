@@ -7,6 +7,8 @@
  * - Lagre i PhoneVerification med 10 min utløp
  * - (Placeholder: console.log for SMS)
  * - Returner { ok: true }
+ *
+ * PL-20: Telefonsjekk er deaktivert — 404 i produksjon.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -17,6 +19,12 @@ import { tryParseJsonBody } from '@/lib/api/validation';
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
+  // PL-20: Telefonsjekk er deaktivert — ruten er død (ingen frontend-kaller).
+  // I produksjon: 404. I utvikling: atferden er bevart for eventuelle tester.
+  if (process.env.NODE_ENV === 'production') {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+
   try {
     // Hent IP-adresse for rate limiting
     const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() 

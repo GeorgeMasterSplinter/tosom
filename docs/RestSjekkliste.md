@@ -86,6 +86,7 @@ npm audit --omit=dev   → 0 kritiske · 5 høye · 1 moderat (målt etter PL-24
 | **PL-15** | V-5 | Bevis ved rapport/blokkering (90 dager), rapport etter avsluttet match, `pgCheck`-rategrense |
 | **PL-16** | V-7 | Google Fonts selvhostet via `next/font` (Inter lokalt) |
 | **PL-17** | V-12 | Onboarding-utkast ut av `localStorage` (sessionStorage, per fane) |
+| **PL-20** | V-10 | Døde sider: `/design-system` + `/register/vipps` 404 i prod, `onboarding/payment` + `onboarding/access` slettet, `phone/send` + `phone/verify` 404 i prod *(kode ferdig — venter på G-24 curl etter deploy)* |
 | **PL-19** | V-9 | Vilkår → angrerettloven § 22 bokstav n + direkte lovdata-lenker; personopplysningsloven; versjonsbump 2026-10-06 |
 | **PL-24** | K-5 | `nodemailer` 7 → 10 + skriftlig vurdering av gjenstående sårbarheter |
 | **PL-25** | V-11 | API-prefikser i middleware + `api-route-coverage`-test |
@@ -503,8 +504,8 @@ Speiler `LanseringsCheckList.md` §6. **Kryss av begge steder.**
 
 ### 6.7 Teknisk kvalitet og sikkerhet
 - [x] 🤖 C PL-24 · Øvrige høye sårbarheter rettet eller vurdert 🟥 *(PL-24a: nodemailer 7.0.13 → 10.0.15, levetestet mot maildev (250 OK + accepted); PL-24b: uploadthing avklart — IKKE brukt i prod (ingen endepunkt, bildene går via R2), beholdes etter Georges beslutning; PL-24c: effect/uploadthing + postcss×4/next + next-moderat dokumentert i LanseringsCheckList K-5. Audit: 0 kritiske, alle høye vurdert skriftlig)*
-- [ ] 🤖 Q PL-20 · Interne og døde sider 404 i prod *(George bekrefter, G-24)* 🟥
-- [ ] 🤖 Q PL-20 · `POST /api/auth/phone/send` deaktivert 🟥
+- [ ] 🤖 Q PL-20 · Interne og døde sider 404 i prod *(George bekrefter, G-24)* 🟥 *(kode ferdig · PL-20a–f: `/design-system` + `/register/vipps` 404 via layout, `onboarding/payment` + `onboarding/access` slettet (grep rene), `phone/send` + `phone/verify` 404 i prod — verifisert med lokal prod-kjøring `next start`, alle 404)*
+- [ ] 🤖 Q PL-20 · `POST /api/auth/phone/send` deaktivert 🟥 *(kode ferdig · PL-20d — 404 i prod, bekreft med curl etter deploy)*
 - [x] 🤖 C PL-25 · Manglende API-prefikser i middleware 🟨 *(PL-25a+b: 6 nye prefikser i `PROTECTED_API_PREFIXES` + `__tests__/api-route-coverage.test.ts` (119 ruter verifisert, 21 eksplisitt offentlig med begrunnelse). Ny rute uten dekning → rød test.)*
 - [ ] 🤖 Q PL-23a + 👤 G-21 · Sitemap + `og-image.png` 🟥
 - [ ] 🤖 Q PL-18 + 👤 G-18 · WCAG 2.1 AA 🟥

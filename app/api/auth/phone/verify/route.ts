@@ -7,7 +7,9 @@
  * - Marker usedAt
  * - Oppdater bruker: phoneVerified = true
  * - Set cookie-session (HMAC-signert, identisk med Vipps-callback)
- * - Redirect til /onboarding/payment
+ * - Redirect til /login
+ *
+ * PL-20: Telefonsjekk er deaktivert — 404 i produksjon.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -19,6 +21,12 @@ import { tryParseJsonBody } from '@/lib/api/validation';
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
+  // PL-20: Telefonsjekk er deaktivert — ruten er død (ingen frontend-kaller).
+  // I produksjon: 404. I utvikling: atferden er bevart for eventuelle tester.
+  if (process.env.NODE_ENV === 'production') {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
+
   try {
     const body = await tryParseJsonBody(req);
     if (!body) {
@@ -102,12 +110,15 @@ export async function POST(req: NextRequest) {
     const secret = process.env.NEXTAUTH_SECRET || '';
     const sessionToken = crypto.createHmac('sha256', secret).update(user.id + '-phone-verify').digest('hex');
 
-    const response = NextResponse.redirect(new URL('/onboarding/payment', req.url));
+    // PL-20: /onboarding/payment er slettet (gammel abonnementsmodell) —
+    // dev-fallback peker på dagens inngang heller.
+    const response = NextResponse.redirect(new URL('/login', req.url));
     
     // Sett cookie (bruk samme navn som Vipps: tosom_session)
     response.cookies.set('tosom_session', sessionToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      // Bare nåbar i dev/test (prod svarer 404 over) — Secure-flagg er unødvendig.
+      secure: false,
       sameSite: 'lax',
       maxAge: 60 * 60 * 24, // 24 timer
       path: '/',

@@ -838,8 +838,8 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 |---|---|---|---|
 | [x] | Kritiske og høye sårbarheter i `next`, `next-auth`, `@auth/*` rettet | K-5 | **Før lansering** |
 | [x] | Øvrige høye sårbarheter (nodemailer, uploadthing, sharp, postcss) rettet eller vurdert | K-5 | **Før lansering** |
-| [ ] | Interne og døde sider fjernet eller 404 i prod | V-10 | **Før lansering** |
-| [ ] | `POST /api/auth/phone/send` deaktivert | V-10 | **Før lansering** |
+| [ ] | Interne og døde sider fjernet eller 404 i prod *(klar for George · PL-20 — kode ferdig, G-24 curl etter deploy)* | V-10 | **Før lansering** |
+| [ ] | `POST /api/auth/phone/send` deaktivert *(klar for George · PL-20 — 404 i prod, bekreft med curl etter deploy)* | V-10 | **Før lansering** |
 | [x] | Manglende API-prefikser i middleware | V-11 | Kan utsettes |
 | [ ] | `og-image.png` finnes; sitemap viser offentlige sider | V-14 | **Før lansering** |
 | [ ] | WCAG 2.1 AA: kontrast, fokus, labels, redusert bevegelse | V-8 | **Før lansering** |

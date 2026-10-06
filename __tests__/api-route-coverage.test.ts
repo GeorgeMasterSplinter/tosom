@@ -56,8 +56,8 @@ const OFFENTLIGE_RUTER: Record<string, string> = {
   '/api/auth/request-reset': 'Åpen glemt-passord-flyt (PL-07).',
   '/api/auth/reset-password': 'Åpen glemt-passord-flyt (PL-07).',
   '/api/auth/test-login': 'Kun utvikling — svaret 404 (fail-closed) i produksjon.',
-  '/api/auth/phone/send': 'Telefonsjekk er deaktivert (stubb) — slettes i PL-20.',
-  '/api/auth/phone/verify': 'Telefonsjekk er deaktivert (stubb) — slettes i PL-20.',
+  '/api/auth/phone/send': 'Telefonsjekk er deaktivert — 404 i produksjon (PL-20).',
+  '/api/auth/phone/verify': 'Telefonsjekk er deaktivert — 404 i produksjon (PL-20).',
   '/api/auth/vipps/authorize': 'Vipps-OAuth-flyt, åpen (PAYMENTS_ENABLED av til G-12).',
   '/api/auth/vipps/callback': 'Vipps-OAuth-flyt, åpen (PAYMENTS_ENABLED av til G-12).',
   // Vercel cron — CRON_SECRET sjekkes i selve ruten

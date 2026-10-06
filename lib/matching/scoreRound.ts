@@ -67,12 +67,12 @@ export const REJECT_REASON_KEYS = [
   'sperreliste',
   'kjonn',
   'alder',
-  'modenhetsgap',
+  'modenhetsgap', // inaktiv sidan PL-10 — behaldt for historikk i admin
   'livsrytme',
   'preferanser',
   'grenser',
   'radius',
-  'sikkerhetsniva',
+  'sikkerhetsniva', // inaktiv sidan PL-10 — behaldt for historikk i admin
   'score_under_termin',
   'scoring_feil',
 ] as const;

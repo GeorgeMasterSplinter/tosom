@@ -4,6 +4,11 @@
 // Inaktive filtre (kodet og testet, men ingen datasource i dagens onboarding):
 // livsrytme-konflikt og eksplisitte preferanser/matchTags. De aktiveres
 // automatisk når dataene finnes.
+//
+// Fjernet i PL-10 (V-1): modenhets-gap (syntetiske 7/5-verdier fra ett svar)
+// og sikkerhetsnivå-gap (derivert av attachmentStyle med 'secure' som
+// fallback). Nøklene modenhetsgap/sikkerhetsniva ligger fortsatt i
+// scoreRound.REJECT_REASON_KEYS for historikk i admin.
 
 import { ProfileData } from "./types";
 import { haversineKm } from "./distance";
@@ -14,23 +19,6 @@ import { haversineKm } from "./distance";
 export interface DealbreakerResult {
   hasDealbreaker: boolean;
   reason?: string;
-}
-
-/**
- * sjekkMaturityGap — hvis modenhets-gapet er for stort, er det en dealbreaker.
- * Core-definition: modenhetsnivå og trygghet er kritisk for en trygg relasjon.
- */
-function checkMaturityGap(a: ProfileData, b: ProfileData): DealbreakerResult {
-  if (!a.maturityLevel || !b.maturityLevel) return { hasDealbreaker: false };
-  
-  const gap = Math.abs(a.maturityLevel - b.maturityLevel);
-  if (gap > 4) {
-    return {
-      hasDealbreaker: true,
-      reason: `Modenhets-gap for stort (${a.maturityLevel} vs ${b.maturityLevel})`,
-    };
-  }
-  return { hasDealbreaker: false };
 }
 
 /**
@@ -52,46 +40,6 @@ function checkLifeRhythmConflict(a: ProfileData, b: ProfileData): DealbreakerRes
     return {
       hasDealbreaker: true,
       reason: `Inkompatibel livsrytme (${a.lifeRhythm} vs ${b.lifeRhythm})`,
-    };
-  }
-  return { hasDealbreaker: false };
-}
-
-/**
- * checkSecurityLevelGap — sikkerhetsnivå er en AKTIV dealbreaker
- * hvis det er en stor uoverensstemmelse (gap >= 2).
- *
- * ToSom-filosofi: et stort sikkerhetsnivå-gap betyr at to personer har helt
- * ulik trygghetsprofil. Det skaper risiko for misforståelser, utrygghet og
- * dårlig match. Matching-motoren skal beskytte brukerne, ikke gamble.
- *
- * Verdiene har historisk blandet staving (engelsk/tysk: secure/unsicher,
- * norsk legacy: sikker/trygg, usikker/ukomfortabel) → normaliseres.
- * Ukjent/manglende verdi → blokkerer IKKE (forsvarlig, samme mønster som radius).
- */
-// Tilknytningsnivåer: usikker (1) → ambivalent (2) → sikker (3)
-const SECURITY_LEVELS: Record<string, number> = {
-  secure: 3, sikker: 3, trygg: 3,
-  ambivalent: 2, ambivalert: 2,
-  usikker: 1, unsicher: 1, ukomfortabel: 1,
-};
-
-export function securityLevelToNum(level: string): number | null {
-  return SECURITY_LEVELS[level.trim().toLowerCase()] ?? null;
-}
-
-function checkSecurityLevelGap(a: ProfileData, b: ProfileData): DealbreakerResult {
-  const levelA = a.securityLevel ? securityLevelToNum(a.securityLevel) : null;
-  const levelB = b.securityLevel ? securityLevelToNum(b.securityLevel) : null;
-  // Ukjent eller manglende verdi → kan ikke sjekke, ikke blokkér
-  if (levelA == null || levelB == null) return { hasDealbreaker: false };
-
-  const gap = Math.abs(levelA - levelB);
-  if (gap >= 2) {
-    // AKTIV dealbreaker: automatisk avvis ved stort trygghetsgap
-    return {
-      hasDealbreaker: true,
-      reason: `Sikkerhetsnivå-gap for stort (${a.securityLevel} vs ${b.securityLevel})`,
     };
   }
   return { hasDealbreaker: false };
@@ -299,29 +247,23 @@ export function sjekkAlleDealbreakers(
   result = checkAgePreference(queryUser, candidate);
   if (result.hasDealbreaker) return result;
 
-  // 3. Modenhets-gap
-  result = checkMaturityGap(queryUser, candidate);
-  if (result.hasDealbreaker) return result;
-  
-  // 4. Livsrytme-konflikt
+  // 3. Livsrytme-konflikt
   result = checkLifeRhythmConflict(queryUser, candidate);
   if (result.hasDealbreaker) return result;
   
-  // 5. Eksplisitte preferanser
+  // 4. Eksplisitte preferanser
   result = checkExplicitPreferences(queryUser, candidate);
   if (result.hasDealbreaker) return result;
   
-  // 6. Grenser
+  // 5. Grenser
   result = checkBoundaries(queryUser, candidate);
   if (result.hasDealbreaker) return result;
   
-  // 7. Radius — B1.4: aktiv preferanse, tosidig blokkering
+  // 6. Radius — B1.4: aktiv preferanse, tosidig blokkering
   result = checkRadius(queryUser, candidate);
   if (result.hasDealbreaker) return result;
 
-  // 8. Security level — AKTIV dealbreaker ved gap >= 2
-  result = checkSecurityLevelGap(queryUser, candidate);
-  if (result.hasDealbreaker) return result;
-  
+  // PL-10 (V-1): modenhets-gap og sikkerhetsnivå-gap er fjernet (syntetiske
+  // data). Nøklene beholdes i scoreRound.REJECT_REASON_KEYS for admin-historikk.
   return { hasDealbreaker: false };
 }

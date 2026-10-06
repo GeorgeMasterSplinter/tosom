@@ -61,7 +61,7 @@ async function postHandler(req: NextRequest) {
       fremtid,
       humor,
       grenser,
-      moden,
+      // PL-10 (V-1): «moden» brukes ikke lenger — maturityLevel skrives null (syntetisk verdi fjernet)
       preferanser,
       psychometrics,
     } = data;
@@ -205,8 +205,11 @@ async function postHandler(req: NextRequest) {
           stressNeed: tilknytning?.stressNeed,
           importantBoundary: tilknytning?.importantBoundary,
         },
-        maturityLevel: moden?.intimacySafety ? 7 : 5,
-        securityLevel: preferanser?.attachmentStyle || 'secure',
+        // PL-10 (V-1): syntetiske verdiene er fjernet — onboarding måler verken
+        // modenhet (var 7/5 fra ett svar) eller trygghet (var attachmentStyle med 'secure' som fallback).
+        // Feltene skrives ikke lenger (null); ekte tilknytningsskår ligger i attachment-kolonnen.
+        maturityLevel: null,
+        securityLevel: null,
         // FORSKNINGSMOTOR F-6: Psykometriske skårer (additive felt).
         // Prisma Json-kolonner krever InputJsonValue — kaster for å unngå index-signature-feil.
         psychometricAnswers: (psychometrics as any) ?? undefined,
@@ -318,8 +321,11 @@ async function postHandler(req: NextRequest) {
           stressNeed: tilknytning?.stressNeed,
           importantBoundary: tilknytning?.importantBoundary,
         },
-        maturityLevel: moden?.intimacySafety ? 7 : 5,
-        securityLevel: preferanser?.attachmentStyle || 'secure',
+        // PL-10 (V-1): syntetiske verdiene er fjernet — onboarding måler verken
+        // modenhet (var 7/5 fra ett svar) eller trygghet (var attachmentStyle med 'secure' som fallback).
+        // Feltene skrives ikke lenger (null); ekte tilknytningsskår ligger i attachment-kolonnen.
+        maturityLevel: null,
+        securityLevel: null,
         // FORSKNINGSMOTOR F-6: Psykometriske skårer (additive felt).
         // Prisma Json-kolonner krever InputJsonValue — kaster for å unngå index-signature-feil.
         psychometricAnswers: (psychometrics as any) ?? undefined,

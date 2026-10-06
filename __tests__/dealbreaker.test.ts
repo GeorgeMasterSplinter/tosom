@@ -1,8 +1,10 @@
 /**
  * ToSom — Enhetstester for dealbreaker (E2)
  *
- * Tester alle 5 dealbreakere: maturity gap, life rhythm conflict,
- * explicit preferences, boundaries, security level gap.
+ * Tester de aktive dealbreakerene: life rhythm conflict, explicit
+ * preferences, boundaries. Maturity gap og security level gap er inaktive
+ * siden PL-10 (syntetiske data fjernet) — testene bekrefter at de ikke
+ * blokkerer lenger.
  */
 
 import { sjekkAlleDealbreakers } from '@/lib/matching/dealbreaker';
@@ -47,14 +49,13 @@ describe('sjekkAlleDealbreakers', () => {
     expect(result.reason).toBeUndefined();
   });
 
-  describe('maturity gap dealbreaker', () => {
-    it('skal avvise ved maturity gap > 4', () => {
+  describe('maturity gap dealbreaker (inaktiv siden PL-10)', () => {
+    it('PL-10: maturity gap > 4 blokkerer ikke lenger (syntetiske verdier fjernet)', () => {
       const a = makeProfile({ maturityLevel: 1 });
       const b = makeProfile({ maturityLevel: 7 });
 
       const result = sjekkAlleDealbreakers(a, b);
-      expect(result.hasDealbreaker).toBe(true);
-      expect(result.reason).toContain('Modenhets-gap');
+      expect(result.hasDealbreaker).toBe(false);
     });
 
     it('skal tillate ved maturity gap <= 4', () => {
@@ -179,14 +180,13 @@ describe('sjekkAlleDealbreakers', () => {
     });
   });
 
-  describe('security level gap dealbreaker', () => {
-    it('skal avvise ved gap >= 2 (unsicher vs secure)', () => {
+  describe('security level gap dealbreaker (inaktiv siden PL-10)', () => {
+    it('PL-10: gap >= 2 blokkerer ikke lenger (derivert verdi fjernet)', () => {
       const a = makeProfile({ securityLevel: 'unsicher' });
       const b = makeProfile({ securityLevel: 'secure' });
 
       const result = sjekkAlleDealbreakers(a, b);
-      expect(result.hasDealbreaker).toBe(true);
-      expect(result.reason).toContain('Sikkerhetsnivå');
+      expect(result.hasDealbreaker).toBe(false);
     });
 
     it('skal tillate ved gap < 2 (unsicher vs ambivalent)', () => {

@@ -136,12 +136,13 @@ describe('cheapSjekkAll ≡ sjekkAlleDealbreakers(A,B) ?? (B,A)', () => {
       }
     }
     expect(Array.from(keys)).toEqual(
-      expect.arrayContaining(['kjonn', 'alder', 'modenhetsgap', 'livsrytme', 'preferanser', 'grenser', 'radius', 'sikkerhetsniva'])
+      // PL-10: 'modenhetsgap' og 'sikkerhetsniva' er fjerna frå sjekkane
+      expect.arrayContaining(['kjonn', 'alder', 'livsrytme', 'preferanser', 'grenser', 'radius'])
     );
   });
 
   test('prioritet ved fleirfeil-par (første feil i original rekkjefølgje vinn)', () => {
-    // Kjønn(1) + alder(2) + modenheit(3) + radius(7) + sikkerheit(8) alle feil
+    // Kjønn(1) + alder(2) + radius(6) alle feil (modenheit/sikkerheit inaktive sidan PL-10)
     const multiFail = mkProfile({
       lifeSituation: { gender: 'Kvinne', seekingGender: 'Mann' },
       age: 50,
@@ -163,7 +164,7 @@ describe('cheapSjekkAll ≡ sjekkAlleDealbreakers(A,B) ?? (B,A)', () => {
     });
     const cheap = cheapSjekkAll(buildCheapFeatures(multiFail), buildCheapFeatures(ref));
     expect(cheap).toBe(oldReason(multiFail, ref));
-    // Kjønn er sjekk #1 → kjonn må vinne over dei andre fem feila
+    // Kjønn er sjekk #1 → kjonn må vinne over dei andre to feila
     expect(mapRejectReason(cheap!)).toBe('kjonn');
   });
 });

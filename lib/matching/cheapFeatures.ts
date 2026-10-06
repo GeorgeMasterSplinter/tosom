@@ -10,10 +10,11 @@
 //
 //   sjekkAlleDealbreakers(A, B).reason ?? sjekkAlleDealbreakers(B, A).reason
 //
-// Grunn: sjekkAlleDealbreakers køyrer 8 sjekk i fast rekkjefølgje og returnerer
-// den FØRSTE feilen. Kjønns/alders/modenheit/radius/sikkerheit er symmetriske
-// (bilkreftige i seg selve), mens livsrytme/preferanser/grenser er retta —
-// derfor 11 steg: A→B-sida si rekkjefølgje, deretter B→A si resterande del.
+// Grunn: sjekkAlleDealbreakers køyrer 6 sjekk i fast rekkjefølgje og returnerer
+// den FØRSTE feilen. Kjønn/alder/radius er symmetriske (bilkreftige i seg
+// selve), mens livsrytme/preferanser/grenser er retta — derfor 9 steg:
+// A→B-sida si rekkjefølgje, deretter B→A si resterande del.
+// (PL-10: modenheit og sikkerheit er fjerna frå sjekkane — syntetiske data.)
 //
 // Identitet er verifisert av __tests__/matching-score-round.test.ts
 // (ekvivalens-test: same fixture-matrise gjennom gammal og ny logikk).
@@ -24,7 +25,6 @@ import {
   normalizeGender,
   normalizeSeeking,
   toAgeNumber,
-  securityLevelToNum,
 } from './dealbreaker';
 
 /** Prekalkulerte felt per kandidat — alt som de dyre sjekkane treng. */
@@ -39,24 +39,20 @@ export interface CheapFeatures {
   ageNum: number | null;
   agePrefMin: number | null;
   agePrefMax: number | null;
-  // 3. Modenheit
-  maturity: number | null;
-  // 4. Livsrytme
+  // 3. Livsrytme
   lifeRhythm: string | null;
-  // 5. Eksplisitte preferanser (A si liste mot B si tag-sett)
+  // 4. Eksplisitte preferanser (A si liste mot B si tag-sett)
   dealbreakers: string[] | null;
   matchTagSet: Set<string>;
-  // 6. Grenser
+  // 5. Grenser
   hasBoundaries: boolean;
   excludes: string[] | null;
   includes: string[];
-  // 7. Radius/avstand
+  // 6. Radius/avstand
   lat: number | null;
   lon: number | null;
   distancePref: number | null;
-  // 8. Sikkerhetsnivå
-  securityRaw: string | null;
-  securityNum: number | null;
+  // PL-10 (V-1): maturity/securityRaw/securityNum fjerna — sjekkane er inaktive
 }
 
 /**
@@ -73,10 +69,6 @@ export function buildCheapFeatures(profile: ProfileData): CheapFeatures {
     lifeSituation && typeof lifeSituation.gender === 'string'
       ? (lifeSituation.gender as string)
       : null;
-  const securityRaw =
-    typeof profile.securityLevel === 'string' && profile.securityLevel !== ''
-      ? profile.securityLevel
-      : null;
   const a = profile.boundaries as { excludes?: unknown; includes?: unknown } | null;
 
   return {
@@ -88,7 +80,6 @@ export function buildCheapFeatures(profile: ProfileData): CheapFeatures {
     ageNum: toAgeNumber(profile.age),
     agePrefMin: toAgeNumber(profile.deepProfileData?.agePrefMin),
     agePrefMax: toAgeNumber(profile.deepProfileData?.agePrefMax),
-    maturity: profile.maturityLevel ?? null,
     lifeRhythm: profile.lifeRhythm ?? null,
     dealbreakers:
       profile.preferences &&
@@ -103,8 +94,6 @@ export function buildCheapFeatures(profile: ProfileData): CheapFeatures {
     lat: profile.latitude ?? null,
     lon: profile.longitude ?? null,
     distancePref: profile.distancePref ?? null,
-    securityRaw,
-    securityNum: securityRaw ? securityLevelToNum(securityRaw) : null,
   };
 }
 
@@ -137,13 +126,6 @@ function ageOneWay(seeker: CheapFeatures, partner: CheapFeatures): string | null
   if (max != null && age > max) {
     return `Alderspreferanse: kandidat er ${age} år, over maks alder ${max} for ${seeker.userId}`;
   }
-  return null;
-}
-
-function maturityGap(a: CheapFeatures, b: CheapFeatures): string | null {
-  if (!a.maturity || !b.maturity) return null;
-  const gap = Math.abs(a.maturity - b.maturity);
-  if (gap > 4) return `Modenhets-gap for stort (${a.maturity} vs ${b.maturity})`;
   return null;
 }
 
@@ -186,25 +168,17 @@ function radiusCheck(a: CheapFeatures, b: CheapFeatures): string | null {
   return null;
 }
 
-function securityGap(a: CheapFeatures, b: CheapFeatures): string | null {
-  if (a.securityNum == null || b.securityNum == null) return null;
-  const gap = Math.abs(a.securityNum - b.securityNum);
-  if (gap >= 2) {
-    return `Sikkerhetsnivå-gap for stort (${a.securityRaw} vs ${b.securityRaw})`;
-  }
-  return null;
-}
-
 /**
  * Hovudfunksjon: reproduserer
  *   sjekkAlleDealbreakers(A, B).reason ?? sjekkAlleDealbreakers(B, A).reason
  * med prekalkulat data — ingen normalisering per par.
  *
  * Rekkefølge (må ikke endres uten ekvivalens-test):
- *   1. kjønn (bilkreftig)   2. alder (bilkreftig)   3. modenheit (symmetrisk)
- *   4. livsrytme A→B        5. preferansar A→B      6. grenser A→B
- *   7. radius (bilkreftig)  8. sikkerheit (symmetrisk)
- *   9. livsrytme B→A       10. preferansar B→A     11. grenser B→A
+ *   1. kjønn (bilkreftig)   2. alder (bilkreftig)   3. livsrytme A→B
+ *   4. preferansar A→B      5. grenser A→B          6. radius (bilkreftig)
+ *   7. livsrytme B→A        8. preferansar B→A      9. grenser B→A
+ *
+ * (PL-10: modenheit og sikkerheit er fjerna frå rekkjefølgja.)
  *
  * @returns reason-strengen til den første dealbreakeren, eller null.
  */
@@ -212,12 +186,10 @@ export function cheapSjekkAll(a: CheapFeatures, b: CheapFeatures): string | null
   return (
     genderOneWay(a, b) ?? genderOneWay(b, a) ??
     ageOneWay(a, b) ?? ageOneWay(b, a) ??
-    maturityGap(a, b) ??
     lifeRhythmOneWay(a, b) ??
     explicitPrefsOneWay(a, b) ??
     boundariesOneWay(a, b) ??
     radiusCheck(a, b) ??
-    securityGap(a, b) ??
     lifeRhythmOneWay(b, a) ??
     explicitPrefsOneWay(b, a) ??
     boundariesOneWay(b, a)

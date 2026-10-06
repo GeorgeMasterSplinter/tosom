@@ -203,43 +203,20 @@ describe('WP1 — alderspreferanse (checkAgePreference)', () => {
   });
 });
 
-describe('WP1 — sikkerhetsnivå-normalisering (checkSecurityLevelGap)', () => {
-  it('skal blokkere norske verdier usikker vs sikker (gap 2)', () => {
+describe('WP1 — sikkerhetsnivå-normalisering (inaktiv siden PL-10)', () => {
+  it('PL-10: gap 2 blokkerer ikke lenger (usikker vs sikker)', () => {
     const a = makeProfile({ userId: 'a', securityLevel: 'usikker' });
     const b = makeProfile({ userId: 'b', securityLevel: 'sikker' });
 
     const result = sjekkAlleDealbreakers(a, b);
-    expect(result.hasDealbreaker).toBe(true);
-    expect(result.reason).toContain('Sikkerhetsnivå');
+    expect(result.hasDealbreaker).toBe(false);
   });
 
-  it('skal blokkere trygg vs ukomfortabel (gap 2)', () => {
-    const a = makeProfile({ userId: 'a', securityLevel: 'trygg' });
-    const b = makeProfile({ userId: 'b', securityLevel: 'ukomfortabel' });
-
-    expect(sjekkAlleDealbreakers(a, b).hasDealbreaker).toBe(true);
-  });
-
-  it('skal tillate sikker vs ambivalert (gap 1)', () => {
-    const a = makeProfile({ userId: 'a', securityLevel: 'sikker' });
-    const b = makeProfile({ userId: 'b', securityLevel: 'ambivalert' });
-
-    expect(sjekkAlleDealbreakers(a, b).hasDealbreaker).toBe(false);
-  });
-
-  it('skal håndtere blandede språk og case: Secure vs usikker (gap 2)', () => {
+  it('PL-10: blandede språk og case blokkerer ikke lenger (Secure vs usikker)', () => {
     const a = makeProfile({ userId: 'a', securityLevel: 'Secure' });
     const b = makeProfile({ userId: 'b', securityLevel: 'usikker' });
 
-    expect(sjekkAlleDealbreakers(a, b).hasDealbreaker).toBe(true);
-  });
-
-  it('skal IKKE blokkere (og ikke kaste) på ukjent verdi', () => {
-    const a = makeProfile({ userId: 'a', securityLevel: 'nøkkelfri-tilknytning' });
-    const b = makeProfile({ userId: 'b', securityLevel: 'secure' });
-
-    const result = sjekkAlleDealbreakers(a, b);
-    expect(result.hasDealbreaker).toBe(false);
+    expect(sjekkAlleDealbreakers(a, b).hasDealbreaker).toBe(false);
   });
 });
 

@@ -770,8 +770,8 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 |---|---|---|---|
 | [x] | Ubesvarte skalaspørsmål gir ikke høy resonans; tilknytningsstil krever data | K-3 | **Før lansering** (PL-08: scoreAll({}) ikke «fearful» — terskler > 3.0; flat×flat verdier = 50; tom×tom klampes til MODERATE) |
 | [x] | Skalaspørsmål påkrevd per steg (eller tydelig fallback) | K-3 | **Før lansering** (PL-08: påkrevde svar i alle 5 skalasteg + server krever alle 44 items; fallback: profiler uten skalasvar max MODERATE) |
-| [ ] | Avklart hvilke dealbreakere som skal være aktive; inaktive fjernet eller koblet til data | V-1 | **Før lansering** |
-| [ ] | Brukerens valgte grenser (`neverCrossBoundary`) brukes, eller teksten lover ikke at de gjør det | V-1 | **Før lansering** |
+| [x] | Avklart hvilke dealbreakere som skal være aktive; inaktive fjernet eller koblet til data | V-1 | **Før lansering** (PL-10: modenhetsgap + sikkerhetsnivå fjernet — onboarding skriver ikke lenger syntetiske verdier; livsrytme + eksplisitte preferanser koblet til data, aktiveres automatisk når data finnes) |
+| [x] | Brukerens valgte grenser (`neverCrossBoundary`) brukes, eller teksten lover ikke at de gjør det | V-1 | **Før lansering** (PL-10e: verifisert — Step8Grenser, /slik-fungerer-det og /metoder lover ikke at grensene styrer matching) |
 | [ ] | Beslutning om barn som dealbreaker | V-2 | Kan utsettes (beslutning kreves) |
 | [ ] | Ukjent postnummer avvises eller blokkerer matching | V-3 | **Før lansering** |
 | [ ] | Kjønns- og søkevalg avklart og forklart | V-4 | **Før lansering** |

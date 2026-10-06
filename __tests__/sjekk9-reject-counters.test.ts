@@ -79,24 +79,12 @@ function simulateRound(
   return { pairsEvaluated: pairsEvaluated.count, rejectReasons };
 }
 
-describe('Sjekk 9 — modenhetsgap-telleren kan bevege seg', () => {
-  it('skal gå fra 0 til 1 ved konstruert avvisning (gap = 8 > 4)', () => {
-    // To profiler med maturityLevel 1 og 9 → gap = 8 > 4 → dealbreaker
+describe('Sjekk 9 — modenhetsgap-telleren (inaktiv siden PL-10)', () => {
+  it('PL-10: stor modenhetsgap (1 vs 9) teller ikke lenger i modenhetsgap', () => {
+    // Før PL-10 var gap = 8 > 4 en dealbreaker; sjekken er fjernet
+    // (syntetiske 7/5-verdier) — telleren må stå på 0 og ingen avvisning.
     const a = makeProfile({ userId: 'user-a', maturityLevel: 1 });
     const b = makeProfile({ userId: 'user-b', maturityLevel: 9 });
-
-    const result = simulateRound([[a, b]]);
-
-    expect(result.pairsEvaluated).toBe(1);
-    expect(result.rejectReasons['modenhetsgap']).toBe(1);
-    // Total avvisninger > 0
-    expect(Object.values(result.rejectReasons).reduce((s, v) => s + v, 0)).toBeGreaterThan(0);
-  });
-
-  it('skal stå stille (0) når ingen avvisning skjer (gap = 0 ≤ 4)', () => {
-    // To profiler med identisk maturityLevel → gap = 0 → ingen dealbreaker
-    const a = makeProfile({ userId: 'user-a', maturityLevel: 5 });
-    const b = makeProfile({ userId: 'user-b', maturityLevel: 5 });
 
     const result = simulateRound([[a, b]]);
 
@@ -104,21 +92,6 @@ describe('Sjekk 9 — modenhetsgap-telleren kan bevege seg', () => {
     expect(result.rejectReasons['modenhetsgap']).toBe(0);
     // Ingen avvisninger totalt
     expect(Object.values(result.rejectReasons).reduce((s, v) => s + v, 0)).toBe(0);
-  });
-
-  it('skal teller 0→1 og stå stille for et annet par i samme runde', () => {
-    // Par 1: gap = 8 → avvises (modenhetsgap++)
-    // Par 2: gap = 0 → ikke avvises (telleren står stille)
-    const a1 = makeProfile({ userId: 'user-a1', maturityLevel: 1 });
-    const b1 = makeProfile({ userId: 'user-b1', maturityLevel: 9 });
-    const a2 = makeProfile({ userId: 'user-a2', maturityLevel: 5 });
-    const b2 = makeProfile({ userId: 'user-b2', maturityLevel: 5 });
-
-    const result = simulateRound([[a1, b1], [a2, b2]]);
-
-    expect(result.pairsEvaluated).toBe(2);
-    expect(result.rejectReasons['modenhetsgap']).toBe(1); // kun par 1
-    expect(Object.values(result.rejectReasons).reduce((s, v) => s + v, 0)).toBe(1);
   });
 });
 

@@ -841,7 +841,7 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 | [ ] | Interne og døde sider fjernet eller 404 i prod *(klar for George · PL-20 — kode ferdig, G-24 curl etter deploy)* | V-10 | **Før lansering** |
 | [ ] | `POST /api/auth/phone/send` deaktivert *(klar for George · PL-20 — 404 i prod, bekreft med curl etter deploy)* | V-10 | **Før lansering** |
 | [x] | Manglende API-prefikser i middleware | V-11 | Kan utsettes |
-| [ ] | `og-image.png` finnes; sitemap viser offentlige sider | V-14 | **Før lansering** |
+| [ ] | `og-image.png` finnes; sitemap viser offentlige sider *(klar for George · PL-23a — sitemap ferdig med kun offentlige sider; bildet = G-21)* | V-14 | **Før lansering** |
 | [ ] | WCAG 2.1 AA: kontrast, fokus, labels, redusert bevegelse *(klar for George · PL-18 — a–e ferdig, Lighthouse-sjekk G-18)* | V-8 | **Før lansering** |
 | [ ] | Manuell test på iOS Safari, Android Chrome, desktop Chrome/Firefox/Safari | §1.2 | **Før lansering** |
 | [ ] | Ingen konsollfeil på hovedsidene (innlogget og utlogget) | §1.2 | **Før lansering** |

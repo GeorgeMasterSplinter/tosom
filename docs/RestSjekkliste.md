@@ -91,6 +91,7 @@ npm audit --omit=dev   → 0 kritiske · 5 høye · 1 moderat (målt etter PL-24
 | **PL-21** | V-10, V-13 | Bloggen avpublisert (404 i prod, innhold beholdes) + dag 30-varsel og milestone-tekst til bokmål |
 | **PL-22** | V-13 | Språkvakt utvidet med 10 V-13-ord + `docs/archive` utenfor skanningen; alle nye treff i levende kode rettet (14 filer); sideliste til G-20 laget |
 | **PL-18** | V-8 | Universell utforming: fokus-ring, reduced-motion, kontrast 0.6+ på lesbar tekst (114 filer), FAQ-<button>, ResonanceMark stilling *(kode ferdig — venter på G-18 Lighthouse)* |
+| **PL-23a** | V-14 | Sitemap omskrevet: kun de 16 offentlige sidene *(G-21: `og-image.png` mangler)* |
 | **PL-24** | K-5 | `nodemailer` 7 → 10 + skriftlig vurdering av gjenstående sårbarheter |
 | **PL-25** | V-11 | API-prefikser i middleware + `api-route-coverage`-test |
 | **PL-27** | ny | **Religion: opptil fire valg, ulik tro gir ingen trekk** (se §6) |
@@ -555,7 +556,7 @@ Speiler `LanseringsCheckList.md` §6. **Kryss av begge steder.**
 - [ ] 🤖 Q PL-20 · Interne og døde sider 404 i prod *(George bekrefter, G-24)* 🟥 *(kode ferdig · PL-20a–f: `/design-system` + `/register/vipps` 404 via layout, `onboarding/payment` + `onboarding/access` slettet (grep rene), `phone/send` + `phone/verify` 404 i prod — verifisert med lokal prod-kjøring `next start`, alle 404)*
 - [ ] 🤖 Q PL-20 · `POST /api/auth/phone/send` deaktivert 🟥 *(kode ferdig · PL-20d — 404 i prod, bekreft med curl etter deploy)*
 - [x] 🤖 C PL-25 · Manglende API-prefikser i middleware 🟨 *(PL-25a+b: 6 nye prefikser i `PROTECTED_API_PREFIXES` + `__tests__/api-route-coverage.test.ts` (119 ruter verifisert, 21 eksplisitt offentlig med begrunnelse). Ny rute uten dekning → rød test.)*
-- [ ] 🤖 Q PL-23a + 👤 G-21 · Sitemap + `og-image.png` 🟥
+- [ ] 🤖 Q PL-23a + 👤 G-21 · Sitemap + `og-image.png` 🟥 *(kode ferdig · PL-23a: sitemap omskrevet — kun de 16 offentlige sidene (/, hvorfor, slik-fungerer-det, reisen, metoder, tips, priser, trygghet, faq, om-oss, kontakt, tilgjengelighet, vilkår, personvern, cookies, login); /match, /journey, /dashboard, /profile, /onboarding borte. G-21: `public/og-image.png` (1200×630) mangler)*
 - [ ] 🤖 Q PL-18 + 👤 G-18 · WCAG 2.1 AA 🟥 *(kode ferdig · PL-18a–e: :focus-visible + prefers-reduced-motion i globals.css, kontrast hevet til min. 0.6 alpha på all lesbar hvit tekst (317 treff, 114 filer) + text.muted/–subtle-tokens, outline-none fjernet fra interaktive elementer (68 + 9), FAQ-spørsmål er ekte <button> i <h3>, ResonanceMark: SMIL-animasjonene stanses ved reduced-motion — verify + build grønne; Lighthouse ≥ 95 på /, /login, /onboarding venter på G-18)*
 - [ ] 👤 G-17 · Manuell test på telefoner og nettlesere 🟥
 - [ ] 👤 G-18 · Ingen konsollfeil 🟥

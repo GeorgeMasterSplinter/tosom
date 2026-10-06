@@ -71,3 +71,27 @@ export function postalCodeCountWithCoords(): number {
   }
   return n;
 }
+
+export interface PostalSuggestion {
+  kode: string;
+  sted: string;
+}
+
+/**
+ * D-4 (PL-12): Foreslå gyldige postnummer "i nærheten" av et ukjent
+ * 4-sifret inndatafelt. Norske postnummer nummeres geografisk, så de
+ * numerisk nærmeste gyldige kodene er vanligvis i samme område —
+ * stedsnavnet i lista hjelper brukeren med å finne det rette.
+ *
+ * Ugyldig format → []. (Krever ikke koordinater — bare at koden finnes
+ * i datasettet, slik at postboks-koder også kan foreslås.)
+ */
+export function suggestNearbyPostalCodes(code: string, limit = 3): PostalSuggestion[] {
+  if (!/^\d{4}$/.test(code)) return [];
+  const n = parseInt(code, 10);
+  return Object.keys(codes)
+    .map((k) => ({ kode: k, d: Math.abs(parseInt(k, 10) - n) }))
+    .sort((a, b) => a.d - b.d)
+    .slice(0, limit)
+    .map(({ kode }) => ({ kode, sted: codes[kode].sted }));
+}

@@ -214,6 +214,47 @@ describe('sjekkAlleDealbreakers', () => {
     });
   });
 
+  describe('barn (PL-11, D-3 = ja): kun-ja vs kun-nei', () => {
+    it('skal blokkere Ja vs Nei', () => {
+      const a = makeProfile({ lifestyle: { wantChildren: 'Ja' } });
+      const b = makeProfile({ lifestyle: { wantChildren: 'Nei' } });
+
+      const result = sjekkAlleDealbreakers(a, b);
+      expect(result.hasDealbreaker).toBe(true);
+      expect(result.reason).toBe('Ønske om barn: ja vs nei');
+    });
+
+    it('skal blokkere i begge retninger (Nei vs Ja)', () => {
+      const a = makeProfile({ lifestyle: { wantChildren: 'Ja' } });
+      const b = makeProfile({ lifestyle: { wantChildren: 'Nei' } });
+
+      const result = sjekkAlleDealbreakers(b, a);
+      expect(result.hasDealbreaker).toBe(true);
+      expect(result.reason).toBe('Ønske om barn: nei vs ja');
+    });
+
+    it('skal IKKE blokkere Ja vs Usikker', () => {
+      const a = makeProfile({ lifestyle: { wantChildren: 'Ja' } });
+      const b = makeProfile({ lifestyle: { wantChildren: 'Usikker' } });
+
+      expect(sjekkAlleDealbreakers(a, b).hasDealbreaker).toBe(false);
+    });
+
+    it('skal IKKE blokkere flervalg "Ja,Usikker" vs Nei', () => {
+      const a = makeProfile({ lifestyle: { wantChildren: 'Ja,Usikker' } });
+      const b = makeProfile({ lifestyle: { wantChildren: 'Nei' } });
+
+      expect(sjekkAlleDealbreakers(a, b).hasDealbreaker).toBe(false);
+    });
+
+    it('skal IKKE blokkere når data mangler', () => {
+      const a = makeProfile({ lifestyle: { wantChildren: 'Ja' } });
+      const b = makeProfile({ lifestyle: null });
+
+      expect(sjekkAlleDealbreakers(a, b).hasDealbreaker).toBe(false);
+    });
+  });
+
   describe('edge-tilfeller', () => {
     it('tomme profiler skal ikke ha dealbreaker', () => {
       const emptyA = {} as ProfileData;

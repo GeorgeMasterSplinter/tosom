@@ -76,6 +76,11 @@ describe('cheapSjekkAll ≡ sjekkAlleDealbreakers(A,B) ?? (B,A)', () => {
     ['alderspref max 29 — 30 år (fail)', mkProfile({ age: 30, deepProfileData: { agePrefMax: 29 } })],
     ['mangler alder med pref', mkProfile({ age: null, deepProfileData: { agePrefMin: 40 } })],
     ['alderspref som string', mkProfile({ deepProfileData: { agePrefMin: '40' } })],
+    // Barn (PL-11, D-3)
+    ['barn: ja', mkProfile({ lifestyle: { wantChildren: 'Ja' } })],
+    ['barn: nei', mkProfile({ lifestyle: { wantChildren: 'Nei' } })],
+    ['barn: usikker', mkProfile({ lifestyle: { wantChildren: 'Usikker' } })],
+    ['barn: ja,usikker', mkProfile({ lifestyle: { wantChildren: 'Ja,Usikker' } })],
     // Modenheit
     ['modenheit 1', mkProfile({ maturityLevel: 1 })],
     ['modenheit 6 (gap 5 mot m1)', mkProfile({ maturityLevel: 6 })],
@@ -137,7 +142,7 @@ describe('cheapSjekkAll ≡ sjekkAlleDealbreakers(A,B) ?? (B,A)', () => {
     }
     expect(Array.from(keys)).toEqual(
       // PL-10: 'modenhetsgap' og 'sikkerhetsniva' er fjerna frå sjekkane
-      expect.arrayContaining(['kjonn', 'alder', 'livsrytme', 'preferanser', 'grenser', 'radius'])
+      expect.arrayContaining(['kjonn', 'alder', 'barn', 'livsrytme', 'preferanser', 'grenser', 'radius'])
     );
   });
 
@@ -204,7 +209,11 @@ function randomProfile(rng: () => number, idx: number): ProfileData {
       gender: pick(RANDOM_GENDERS),
       seekingGender: pick(RANDOM_SEEKING),
     } as Record<string, unknown>,
-    lifestyle: null,
+    // PL-11 (barn): tilfeldig barnønske — egenskapstesten dekker den nye sjekken
+    lifestyle:
+      rng() < 0.5
+        ? { wantChildren: pick(RANDOM_WANT_CHILDREN) }
+        : null,
     personality: null,
     relationshipStyle: null,
     communication: null,
@@ -240,6 +249,7 @@ const RANDOM_SEEKING = ['Kvinne', 'Mann', 'Ikke-binær', 'Alle kjønner', 'Kjemi
 const RANDOM_RHYTHMS = ['morning', 'evening', 'fast', 'slow', 'nattergal', null];
 const RANDOM_SECURITY = ['secure', 'sikker', 'trygg', 'ambivalent', 'ambivalert', 'usikker', 'unsicher', 'ukomfortabel', 'xyz', null];
 const TAG_POOL = ['smoking', 'natur', 'gaming', 'vegan', 'musikk'];
+const RANDOM_WANT_CHILDREN = ['Ja', 'Nei', 'Usikker', 'Ja,Usikker', null];
 
 describe('egenskapstest: seeda tilfeldige profiler', () => {
   test('4000 tilfeldige par: same reason som den gamle logikken', () => {
@@ -328,11 +338,12 @@ describe('scoreRound (ren kjerne)', () => {
     expect(r.deadlineHit).toBe(true);
   });
 
-  test('rejectReasons startar med alle 12 M-12-nøklar på 0', () => {
+  test('rejectReasons startar med alle 13 M-12-nøklar på 0 (PL-11 la til «barn»)', () => {
     const r0 = emptyRejectReasons();
     expect(r0['scoring_feil']).toBe(0);
     expect(r0['sikkerhetsniva']).toBe(0);
-    expect(Object.keys(r0)).toHaveLength(12);
+    expect(r0['barn']).toBe(0);
+    expect(Object.keys(r0)).toHaveLength(13);
   });
 });
 

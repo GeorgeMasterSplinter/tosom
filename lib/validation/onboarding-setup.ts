@@ -6,6 +6,7 @@
 
 import { z } from 'zod';
 import { getDistancePrefRange } from '@/config/distance-prefs';
+import { lookupPostalCode } from '@/lib/geo/lookup';
 import { ALL_ITEMS } from '@/lib/psychometrics/instruments';
 
 /* ============================================================
@@ -56,6 +57,14 @@ export const basicProfileSchema = z
 
   })
   .superRefine((val, ctx) => {
+    // D-4 (PL-12): ukjent postnummer → avvis (klienten sjekker også, Step1)
+    if (!lookupPostalCode(val.postalCode)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['postalCode'],
+        message: 'Vi finner ikke dette postnummeret. Sjekk at det stemmer.',
+      });
+    }
     // Dag 11: tetthetsbasert avstandsvalg — område basert på postnummer
     const range = getDistancePrefRange(val.postalCode);
     const v = Number(val.distancePref);

@@ -232,6 +232,34 @@ function checkAgePreference(a: ProfileData, b: ProfileData): DealbreakerResult {
 }
 
 /**
+ * checkChildrenWant — «Ønsker du barn?» er en AKTIV dealbreaker (PL-11,
+ * D-3 = ja, symmetrisk). Verdiene fra onboarding er 'Ja'/'Usikker'/'Nei'
+ * (flervalg, kommaseparert i lifestyle.wantChildren).
+ *
+ * Blokkerer KUN når den ene har valgt nøyaktig «Ja» og den andre nøyaktig
+ * «Nei». 'Usikker', flervalg eller manglende data blokkerer aldri
+ * (ærlig: vi vet ikke deres svar — forsvarlig, samme mønster som radius).
+ */
+function childrenOnlyChoice(raw: unknown): 'ja' | 'nei' | null {
+  if (typeof raw !== 'string' || raw.trim() === '') return null;
+  const parts = raw.split(',').map((s) => s.trim().toLowerCase()).filter(Boolean);
+  if (parts.length !== 1) return null;
+  return parts[0] === 'ja' ? 'ja' : parts[0] === 'nei' ? 'nei' : null;
+}
+
+function checkChildrenWant(a: ProfileData, b: ProfileData): DealbreakerResult {
+  const aOnly = childrenOnlyChoice(a.lifestyle?.wantChildren);
+  const bOnly = childrenOnlyChoice(b.lifestyle?.wantChildren);
+  if (aOnly && bOnly && aOnly !== bOnly) {
+    return {
+      hasDealbreaker: true,
+      reason: `Ønske om barn: ${aOnly} vs ${bOnly}`,
+    };
+  }
+  return { hasDealbreaker: false };
+}
+
+/**
  * sjekkAlleDealbreakers — hovedfunksjon som kjører alle dealbreaker-testene.
  * Returnerer resultatet av den første dealbreaker som blir funnet.
  */
@@ -247,19 +275,23 @@ export function sjekkAlleDealbreakers(
   result = checkAgePreference(queryUser, candidate);
   if (result.hasDealbreaker) return result;
 
-  // 3. Livsrytme-konflikt
+  // 3. Barn (PL-11, D-3 = ja): blokkerer kun kun-ja vs kun-nei
+  result = checkChildrenWant(queryUser, candidate);
+  if (result.hasDealbreaker) return result;
+  
+  // 4. Livsrytme-konflikt
   result = checkLifeRhythmConflict(queryUser, candidate);
   if (result.hasDealbreaker) return result;
   
-  // 4. Eksplisitte preferanser
+  // 5. Eksplisitte preferanser
   result = checkExplicitPreferences(queryUser, candidate);
   if (result.hasDealbreaker) return result;
   
-  // 5. Grenser
+  // 6. Grenser
   result = checkBoundaries(queryUser, candidate);
   if (result.hasDealbreaker) return result;
   
-  // 6. Radius — B1.4: aktiv preferanse, tosidig blokkering
+  // 7. Radius — B1.4: aktiv preferanse, tosidig blokkering
   result = checkRadius(queryUser, candidate);
   if (result.hasDealbreaker) return result;
 

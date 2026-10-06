@@ -75,6 +75,7 @@ export const REJECT_REASON_KEYS = [
   'sikkerhetsniva', // inaktiv sidan PL-10 — behaldt for historikk i admin
   'score_under_termin',
   'scoring_feil',
+  'barn', // PL-11 (D-3): lagt til sist — de andre nøklene er ikke flyttet
 ] as const;
 
 export function emptyRejectReasons(): Record<string, number> {

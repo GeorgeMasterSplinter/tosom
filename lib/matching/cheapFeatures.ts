@@ -10,9 +10,9 @@
 //
 //   sjekkAlleDealbreakers(A, B).reason ?? sjekkAlleDealbreakers(B, A).reason
 //
-// Grunn: sjekkAlleDealbreakers køyrer 6 sjekk i fast rekkjefølgje og returnerer
-// den FØRSTE feilen. Kjønn/alder/radius er symmetriske (bilkreftige i seg
-// selve), mens livsrytme/preferanser/grenser er retta — derfor 9 steg:
+// Grunn: sjekkAlleDealbreakers køyrer 7 sjekk i fast rekkjefølgje og returnerer
+// den FØRSTE feilen. Kjønn/alder/barn/radius er symmetriske (bilkreftige i seg
+// selve), mens livsrytme/preferanser/grenser er retta — derfor 10 steg:
 // A→B-sida si rekkjefølgje, deretter B→A si resterande del.
 // (PL-10: modenheit og sikkerheit er fjerna frå sjekkane — syntetiske data.)
 //
@@ -39,16 +39,18 @@ export interface CheapFeatures {
   ageNum: number | null;
   agePrefMin: number | null;
   agePrefMax: number | null;
-  // 3. Livsrytme
+  // 3. Barn (PL-11, D-3: kun «ja» vs «nei» blokkerer)
+  wantChildren: Set<string> | null;
+  // 4. Livsrytme
   lifeRhythm: string | null;
-  // 4. Eksplisitte preferanser (A si liste mot B si tag-sett)
+  // 5. Eksplisitte preferanser (A si liste mot B si tag-sett)
   dealbreakers: string[] | null;
   matchTagSet: Set<string>;
-  // 5. Grenser
+  // 6. Grenser
   hasBoundaries: boolean;
   excludes: string[] | null;
   includes: string[];
-  // 6. Radius/avstand
+  // 7. Radius/avstand
   lat: number | null;
   lon: number | null;
   distancePref: number | null;
@@ -80,6 +82,10 @@ export function buildCheapFeatures(profile: ProfileData): CheapFeatures {
     ageNum: toAgeNumber(profile.age),
     agePrefMin: toAgeNumber(profile.deepProfileData?.agePrefMin),
     agePrefMax: toAgeNumber(profile.deepProfileData?.agePrefMax),
+    wantChildren:
+      profile.lifestyle && typeof profile.lifestyle.wantChildren === 'string' && profile.lifestyle.wantChildren.trim() !== ''
+        ? new Set(profile.lifestyle.wantChildren.split(',').map((s) => s.trim().toLowerCase()).filter(Boolean))
+        : null,
     lifeRhythm: profile.lifeRhythm ?? null,
     dealbreakers:
       profile.preferences &&
@@ -129,6 +135,22 @@ function ageOneWay(seeker: CheapFeatures, partner: CheapFeatures): string | null
   return null;
 }
 
+function childrenOnly(set: Set<string> | null): 'ja' | 'nei' | null {
+  if (!set || set.size !== 1) return null;
+  if (set.has('ja')) return 'ja';
+  if (set.has('nei')) return 'nei';
+  return null;
+}
+
+function childrenConflict(a: CheapFeatures, b: CheapFeatures): string | null {
+  const aOnly = childrenOnly(a.wantChildren);
+  const bOnly = childrenOnly(b.wantChildren);
+  if (aOnly && bOnly && aOnly !== bOnly) {
+    return `Ønske om barn: ${aOnly} vs ${bOnly}`;
+  }
+  return null;
+}
+
 function lifeRhythmOneWay(a: CheapFeatures, b: CheapFeatures): string | null {
   if (!a.lifeRhythm || !b.lifeRhythm) return null;
   const conflicting = LIFE_RHYTHM_OPPOSITES[a.lifeRhythm];
@@ -174,9 +196,10 @@ function radiusCheck(a: CheapFeatures, b: CheapFeatures): string | null {
  * med prekalkulat data — ingen normalisering per par.
  *
  * Rekkefølge (må ikke endres uten ekvivalens-test):
- *   1. kjønn (bilkreftig)   2. alder (bilkreftig)   3. livsrytme A→B
- *   4. preferansar A→B      5. grenser A→B          6. radius (bilkreftig)
- *   7. livsrytme B→A        8. preferansar B→A      9. grenser B→A
+ *   1. kjønn (bilkreftig)   2. alder (bilkreftig)   3. barn (symmetrisk)
+ *   4. livsrytme A→B        5. preferansar A→B      6. grenser A→B
+ *   7. radius (bilkreftig)  8. livsrytme B→A
+ *   9. preferansar B→A      10. grenser B→A
  *
  * (PL-10: modenheit og sikkerheit er fjerna frå rekkjefølgja.)
  *
@@ -186,6 +209,7 @@ export function cheapSjekkAll(a: CheapFeatures, b: CheapFeatures): string | null
   return (
     genderOneWay(a, b) ?? genderOneWay(b, a) ??
     ageOneWay(a, b) ?? ageOneWay(b, a) ??
+    childrenConflict(a, b) ??
     lifeRhythmOneWay(a, b) ??
     explicitPrefsOneWay(a, b) ??
     boundariesOneWay(a, b) ??

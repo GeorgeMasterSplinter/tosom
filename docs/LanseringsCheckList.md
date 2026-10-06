@@ -772,9 +772,9 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 | [x] | Skalaspørsmål påkrevd per steg (eller tydelig fallback) | K-3 | **Før lansering** (PL-08: påkrevde svar i alle 5 skalasteg + server krever alle 44 items; fallback: profiler uten skalasvar max MODERATE) |
 | [x] | Avklart hvilke dealbreakere som skal være aktive; inaktive fjernet eller koblet til data | V-1 | **Før lansering** (PL-10: modenhetsgap + sikkerhetsnivå fjernet — onboarding skriver ikke lenger syntetiske verdier; livsrytme + eksplisitte preferanser koblet til data, aktiveres automatisk når data finnes) |
 | [x] | Brukerens valgte grenser (`neverCrossBoundary`) brukes, eller teksten lover ikke at de gjør det | V-1 | **Før lansering** (PL-10e: verifisert — Step8Grenser, /slik-fungerer-det og /metoder lover ikke at grensene styrer matching) |
-| [ ] | Beslutning om barn som dealbreaker | V-2 | Kan utsettes (beslutning kreves) |
-| [ ] | Ukjent postnummer avvises eller blokkerer matching | V-3 | **Før lansering** |
-| [ ] | Kjønns- og søkevalg avklart og forklart | V-4 | **Før lansering** |
+| [x] | Beslutning om barn som dealbreaker | V-2 | **Før lansering** (PL-11: D-3 = ja — «Ønske om barn» er aktiv dealbreaker: blokkerer kun kun-ja vs kun-nei; «Usikker», flervalg og manglende data blokkerer aldri) |
+| [x] | Ukjent postnummer avvises eller blokkerer matching | V-3 | **Før lansering** (PL-12: D-4 = avvis — ukjent postnummer avvises i onboarding (klient + server) med rolig melding og forslag om nærliggende koder; cron-heartbeat teller `utenKoordinater`) |
+| [x] | Kjønns- og søkevalg avklart og forklart | V-4 | **Før lansering** (PL-13: D-5 — «Ikke-binær» er et søkevalg, «Kjemisk tiltrekning» får forklaringstekst; matching av «Ikke-binær»-søk verifisert i tester) |
 | [ ] | Score- og nivåfordeling fra siste matcherunde gjennomgått i admin | — | **Før lansering** |
 
 ### 6.4 Reisen
@@ -881,7 +881,7 @@ npm run build                       # før deploy
 | K-6 | `__tests__/login-rate-limit.test.ts` | 11. feilforsøk innen 15 min → avvist; passord < 10 tegn → avvist ved registrering |
 | K-8 | `__tests__/photo-lock-before-day15.test.ts` | Partnerens `photoUrl` er `null` i `chat/conversations`, `chat/messages` og `match/status` før `imageShareAllowedAt` |
 | V-1 | Utvid `dealbreaker.test.ts` | Aktive dealbreakere treffer med data fra faktisk `profile/setup`-format (ikke bare fixtures) |
-| V-3 | Utvid `radius-dealbreaker-b14.test.ts` | Ukjent postnummer håndteres etter valgt regel |
+| V-3 | Utvid `profile-setup-geo-b12.test.ts` *(skrevet · PL-12)* | Ukjent postnummer («9999») → 400 og ingen lagring; forslag om nærliggende koder via `suggestNearbyPostalCodes` |
 | V-5 | `__tests__/report-evidence.test.ts` | Rapport + blokkering → bevis-snapshot finnes for admin; meldinger slettet for brukerne |
 | V-11 | `__tests__/api-route-coverage.test.ts` | Alle `app/api/**/route.ts` er beskyttet av middleware eller oppført som offentlig |
 

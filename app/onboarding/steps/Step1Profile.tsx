@@ -15,7 +15,7 @@ import { OnboardingSection } from '@/app/onboarding/components/OnboardingSection
 import { OnboardingTextField } from '@/app/onboarding/components/OnboardingTextField';
 import { OnboardingSelectGrid } from '@/app/onboarding/components/OnboardingSelectGrid';
 import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
-import { lookupPostalCode } from '@/lib/geo/lookup';
+import { lookupPostalCode, suggestNearbyPostalCodes } from '@/lib/geo/lookup';
 import { getDistancePrefRange } from '@/config/distance-prefs';
 import { MIN_AGE } from '@/config/legal';
 import { OB } from '@/app/onboarding/theme';
@@ -52,6 +52,7 @@ const validate = (data: Record<string, unknown>): ValidationError[] => {
   const pc = String(data['postalCode'] ?? '').trim();
   if (!pc) errors.push({ field: 'postalCode', message: 'Postnummer er påkrevd.' });
   else if (!/^\d{4}$/.test(pc)) errors.push({ field: 'postalCode', message: 'Postnummer må ha fire siffer.' });
+  else if (!lookupPostalCode(pc)) errors.push({ field: 'postalCode', message: 'Vi finner ikke dette postnummeret. Sjekk at det stemmer.' });
 
   // Avstanden må ligge i det tetthetsbaserte området for postnummeret.
   // Serveren håndhever dette (lib/validation/onboarding-setup.ts). Uten samme
@@ -147,6 +148,12 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
     return lookupPostalCode(postalCodeValue);
   }, [postalCodeValue]);
 
+  // D-4 (PL-12): ukjent postnummer → foreslå gyldige koder i nærheten
+  const postalSuggestions = useMemo(() => {
+    if (!/^\d{4}$/.test(postalCodeValue) || postalPlace) return [];
+    return suggestNearbyPostalCodes(postalCodeValue);
+  }, [postalCodeValue, postalPlace]);
+
   return (
     <OnboardingSlide
       title="Grunnprofil"
@@ -223,8 +230,14 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             options={[
               { value: 'Mann', label: 'Mann', icon: '♂' },
               { value: 'Kvinne', label: 'Kvinne', icon: '♀' },
+              { value: 'Ikke-binær', label: 'Ikke-binær', icon: '⚧' },
               { value: 'Alle-kjon', label: 'Alle kjønn', icon: '♂♀' },
-              { value: 'Kjemisk-tiltrekning', label: 'Kjemisk tiltrekning', icon: '💜' },
+              {
+                value: 'Kjemisk-tiltrekning',
+                label: 'Kjemisk tiltrekning',
+                icon: '💜',
+                description: 'Kjønn er ikke avgjørende for meg',
+              },
             ]}
             selectedValue={val('seekingGender', '')(data)}
             onChange={(v) => onChange('seekingGender', v)}
@@ -269,6 +282,12 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             {postalPlace && (
               <p className="text-[12px] mt-1 ml-1" style={{ color: OB.section.location }}>
                 ✓ {postalPlace.sted}
+              </p>
+            )}
+            {!postalPlace && /^\d{4}$/.test(postalCodeValue) && (
+              <p className="text-[12px] mt-1 ml-1" style={{ color: '#FF4D4D' }}>
+                Vi finner ikke {postalCodeValue}. Prøv et postnummer i nærheten:{' '}
+                {postalSuggestions.map((s) => `${s.kode} ${s.sted}`).join(', ')}
               </p>
             )}
           </div>

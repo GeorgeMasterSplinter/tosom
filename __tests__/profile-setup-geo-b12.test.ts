@@ -133,4 +133,13 @@ describe('POST /api/profile/setup (B1.2/B1.3 geo)', () => {
     expect(res.status).toBe(400);
     expect(mockedPrisma.profile.upsert).not.toHaveBeenCalled();
   });
+
+  it('ukjent postnummer ("9999") → 400 (D-4) og INGEN lagring', async () => {
+    const body = validBody();
+    body.basic.postalCode = '9999';
+
+    const res = await POST(request(body));
+    expect(res.status).toBe(400);
+    expect(mockedPrisma.profile.upsert).not.toHaveBeenCalled();
+  });
 });

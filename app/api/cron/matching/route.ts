@@ -266,6 +266,13 @@ export async function GET(req: NextRequest) {
         };
       });
 
+      // D-4 (PL-12): tell kandidater uten koordinater (ukjent/manglende
+      // postnummer før PL-12-avvisningen). Ingen blokkering i motoren —
+      // kun observabilitet i heartbeat-metadatene.
+      const utenKoordinater = candidates.filter(
+        (c) => !c.profile || c.profile.latitude == null || c.profile.longitude == null
+      ).length;
+
       // Prekalkuler dealbreaker-features EN GANG per kandidat (O(n)) —
       // den dyre normaliseringa gikk tidlegare per PAR (O(n²)).
       const features = candidates.map((c) => (c.profile ? buildCheapFeatures(c.profile) : null));
@@ -480,6 +487,7 @@ export async function GET(req: NextRequest) {
             queueSize: cohortSize, pairsEvaluated, rejectReasons,
             scoreDistribution, levelDistribution: levelCounts, oldestQueueAgeDays,
             userBlockPairs,
+            utenKoordinater,
             unmapped: unmapped.length > 0 ? unmapped : undefined,
           },
         },

@@ -229,3 +229,36 @@ describe('WP1 — mapRejectReason: nye kategorier', () => {
     expect(mapRejectReason('Alderspreferanse: kandidat er 25 år, under minste alder 28 for user-a')).toBe('alder');
   });
 });
+
+describe('PL-13 — «Ikke-binær» som søk (D-5)', () => {
+  // «Ikke-binær» som søk normaliseres til «annen» — matcher ikke-binær og
+  // genderfluid kandidater, men blokkerer mann/kvinne.
+  const seeker = makeProfile({
+    userId: 'søker',
+    lifeSituation: { gender: 'Kvinne', seekingGender: 'Ikke-binær' },
+  });
+
+  it('skal matche ikke-binær kandidat', () => {
+    const cand = makeProfile({ userId: 'c', lifeSituation: { gender: 'Ikke-binær', seekingGender: 'Alle-kjon' } });
+    expect(sjekkAlleDealbreakers(seeker, cand).hasDealbreaker).toBe(false);
+  });
+
+  it('skal matche genderfluid kandidat (annen-norm)', () => {
+    const cand = makeProfile({ userId: 'c', lifeSituation: { gender: 'Genderfluid', seekingGender: 'Alle-kjon' } });
+    expect(sjekkAlleDealbreakers(seeker, cand).hasDealbreaker).toBe(false);
+  });
+
+  it('skal blokkere mann-kandidat', () => {
+    const cand = makeProfile({ userId: 'c', lifeSituation: { gender: 'Mann', seekingGender: 'Alle-kjon' } });
+    const result = sjekkAlleDealbreakers(seeker, cand);
+    expect(result.hasDealbreaker).toBe(true);
+    expect(result.reason).toContain('Kjønnspreferanse');
+  });
+
+  it('skal blokkere kvinne-kandidat', () => {
+    const cand = makeProfile({ userId: 'c', lifeSituation: { gender: 'Kvinne', seekingGender: 'Alle-kjon' } });
+    const result = sjekkAlleDealbreakers(seeker, cand);
+    expect(result.hasDealbreaker).toBe(true);
+    expect(result.reason).toContain('Kjønnspreferanse');
+  });
+});

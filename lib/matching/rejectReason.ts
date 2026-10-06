@@ -13,6 +13,7 @@ export function mapRejectReason(reason: string | undefined): string {
   if (!reason) return 'preferanser';
   if (reason.startsWith('Kjønnspreferanse')) return 'kjonn';
   if (reason.startsWith('Alderspreferanse')) return 'alder';
+  if (reason.startsWith('Ønske om barn')) return 'barn';
   if (reason.startsWith('Modenhets-gap')) return 'modenhetsgap';
   if (reason.startsWith('Inkompatibel livsrytme')) return 'livsrytme';
   if (reason.startsWith('Sikkerhetsnivå')) return 'sikkerhetsniva';

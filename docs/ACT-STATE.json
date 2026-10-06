@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "updatedAt": "2026-10-06",
-  "commit": "414cc73",
+  "commit": "c9cc6a5",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
     "tests": "528 passed / 1 skipped (61 av 62 suiter) — målt 06.10 etter PL-15: +4 nye (report-evidence: bevis ved rapport, rapport før sletting ved blokkering, rapport etter avsluttet match, 429 via pgCheck); report-alert-testen fikk utvidet prisma-mock + pgCheck-mock (legitim vedlikehold, ruten ble utvidet); før det: 524 etter PL-25",

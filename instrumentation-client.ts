@@ -20,3 +20,7 @@ Sentry.init({
     return sentryPiiConfig.beforeSend(event);
   },
 });
+
+// M-8 (PL-26c): Sentry skal ha router-overganger for RUM-baking (transactioner
+// pr. sideovergang) — ellers savner dashboardet navigasjonsmålingene.
+export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;

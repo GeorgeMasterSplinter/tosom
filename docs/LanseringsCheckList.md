@@ -781,7 +781,7 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 | [x] | Bevis bevares ved rapport/blokkering | V-5 | **Før lansering** |
 | [x] | Rapport mulig også etter avsluttet match | V-5 | **Før lansering** |
 | [x] | Rapport-rate-limit flyttet til `pgCheck` | V-5 | Kan utsettes |
-| [ ] | Rutine for behandling av rapporter (hvem, hvor raskt, hva skjer) er skriftlig | V-5 | **Før lansering** |
+| [ ] | Rutine for behandling av rapporter (hvem, hvor raskt, hva skjer) er skriftlig *(klar for George · PL-G9 — utkast i `docs/operations/BEHANDLING-av-rapporter.md`)* | V-5 | **Før lansering** |
 
 ### 6.3 Matchingmotoren
 

@@ -92,6 +92,8 @@ npm audit --omit=dev   → 0 kritiske · 5 høye · 1 moderat (målt etter PL-24
 | **PL-22** | V-13 | Språkvakt utvidet med 10 V-13-ord + `docs/archive` utenfor skanningen; alle nye treff i levende kode rettet (14 filer); sideliste til G-20 laget |
 | **PL-18** | V-8 | Universell utforming: fokus-ring, reduced-motion, kontrast 0.6+ på lesbar tekst (114 filer), FAQ-<button>, ResonanceMark stilling *(kode ferdig — venter på G-18 Lighthouse)* |
 | **PL-23a** | V-14 | Sitemap omskrevet: kun de 16 offentlige sidene *(G-21: `og-image.png` mangler)* |
+| **PL-26** | M-1…M-11 | Opprydding: døde GoldToggle/MatchSection/SlettKontoSection slettet (settings), døde MatchBreakdown-filer slettet (3), Sentry router-overganger, `ikkeLenket` ut av ACT-STATE, GEORGE.md SPF/DKIM oppdatert *(a, b, c, e, f — d venter på G-06c; g + h venter på George, M-3/M-4 krever avklaring)* |
+| **PL-G9** | V-5 | Rapportrutine: utkast i `docs/operations/BEHANDLING-av-rapporter.md` *(klart til godkjenning for George = G-22)* |
 | **PL-24** | K-5 | `nodemailer` 7 → 10 + skriftlig vurdering av gjenstående sårbarheter |
 | **PL-25** | V-11 | API-prefikser i middleware + `api-route-coverage`-test |
 | **PL-27** | ny | **Religion: opptil fire valg, ulik tro gir ingen trekk** (se §6) |
@@ -359,6 +361,7 @@ Lag eller godkjenn et bilde på **1200 × 630** piksler (logo + «Én match. Én
 #### 👤 G-22 · Skriftlig rutine for rapporter  🟥
 En halv side: hvem leser rapporter, hvor raskt (f.eks. innen 24 timer), og hva
 som skjer (advarsel, utestengelse, politi ved trusler). Cline kan lage utkast.
+*(Utkast ferdig · PL-G9: `docs/operations/BEHANDLING-av-rapporter.md` — godkjenn/endre og kjennfør.)*
 - [ ] Gjort
 
 #### 👤 G-23 · CI grønn etter push  🟥

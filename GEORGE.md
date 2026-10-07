@@ -1,6 +1,6 @@
 GEORGE.md — ToSom i åpen beta
 Deploy‑guide, drift, og daglig oversikt  
-Opprettet 24.08.2026 — Sist oppdatert 03.09.2026 (LANSE-READINESS nesten komplett: R2 aktiv i prod, GitHub-secrets + SENTRY_DSN satt, CSRF aktivert+verifisert (POST=403), uptime-monitor verifisert, CD grønn (team-scoped token), chat-routing FIXET (private Pusher-kanal + /api/pusher/auth, venterom redirect), systemauditts funn 1–10 RETTA (admin-signatur, PII, gate, health, CSRF-journey, død-kode, CD-port, CSP, refleksjon) + 3 nye tester. Gjenstår: SPF/DKIM, slett test1/test2 (dry-run klar), admin-secrets, Vipps, automatisér prisma-migrasjoner mot prod (sak 7))
+Opprettet 24.08.2026 — Sist oppdatert 06.10.2026 (LANSE-READINESS: SPF + DKIM satt i Cloudflare DNS (V-6); R2 aktiv i prod, GitHub-secrets + SENTRY_DSN satt, CSRF aktivert+verifisert (POST=403), uptime-monitor verifisert, CD grønn (team-scoped token), chat-routing FIXET (private Pusher-kanal + /api/pusher/auth, venterom redirect), systemauditts funn 1–10 RETTA (admin-signatur, PII, gate, health, CSRF-journey, død-kode, CD-port, CSP, refleksjon) + 3 nye tester. Gjenstår: DMARC (G-08), slett test1/test2 (dry-run klar), admin-secrets, Vipps, automatisér prisma-migrasjoner mot prod (sak 7))
 
 0. Status i dag (03.09.2026)
 🟢 Produksjon kjører: tosom.no → www.tosom.no (Vercel, prod, HTTP 200). Landing, /login, /admin/login fungerer.
@@ -21,7 +21,7 @@ Opprettet 24.08.2026 — Sist oppdatert 03.09.2026 (LANSE-READINESS nesten kompl
 
 🟢 R2: AKTIV I PROD (03.09). Alle R2_* + STORAGE_DRIVER=r2 satt i Vercel Production; ny prod-deploy; app starter (validateEnv OK). Bilder lagres i tosom-images og slettes ikke lenger ved deploy.
 
-🟡 E-post: RESEND_API_KEY + ALERT_EMAIL_TO satt; uptime-varsel mottatt 03.09 (Resend leverer). MEN tosom.no mangler fortsatt SPF/DKIM i Resend/Cloudflare (§5) — verifisert senderdomene (passord-reset) krever dette.
+🟢 E-post: RESEND_API_KEY + ALERT_EMAIL_TO satt; uptime-varsel mottatt 03.09 (Resend leverer). SPF (`include:spf.resend.com -all`) + DKIM (Resend) SATT i Cloudflare DNS — verifisert i LanseringsCheckList V-6. Gjenstår: DMARC (G-08, start `p=none`).
 
 🟡 Testbrukere: test1/test2 er fortsatt i prod-DB. DRY RUN 03.09: 2 brukere funnet (test1@tosom.no + test2@tosom.no, hver 47 meldinger/1 match/2 reports) — safe å slette; kjør med --apply for faktisk sletting (krever DATABASE_URL).
 
@@ -152,7 +152,7 @@ Status: nå OK.
 Men chat‑routing må fikses (se §1).
 
 5. Resend (e-post)
-DOMENET ER IKKE VERIFISERT (sjekket 01.09: tosom.no har ingen SPF/DKIM-records i det hele). Steg:
+DOMENE VERIFISERT — SPF (`include:spf.resend.com -all`) og DKIM (Resend) er satt i Cloudflare DNS (bekreftet i LanseringsCheckList V-6; notatet under er utdatert fra 01.09). Gjenstår: DMARC (G-08, start `p=none`).
 
 1. Resend-dashboard → Domains → legg til tosom.no
 2. Cloudflare DNS for tosom.no:

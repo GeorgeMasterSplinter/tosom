@@ -626,5 +626,10 @@
     "Lanseringsrydding (03.09: R2-verifisering, Sentry DSN, CSRF-flagg på, uptime-alert-secrets = FERDIG): gjenstår slett test1/test2 fra prod (launch-1, dry run først), e-post-e2e/SPF-DKIM for tosom.no, chat-routing + Pusher-kanalnavn (GEORGE §1), ADMIN_PASSWORD_HASH/ADMIN_JWT_SECRET/ADMIN_EMAIL før bred beta",
     "Tetthetsbasert radius 30-300 / 50-400 km",
     "Kostnadsplan: Vercel Pro/Fluid, Pusher/Resend betalte tier, R2-lagring"
-  ]
+  ],
+  "done": [
+    "G-01: push til GitHub utført (06.10); G-23: vent på grønn CI",
+    "G-02: lokal e2e-verifisering av passord-reset (SMTP-fange): fullt grønn"
+  ],
+  "blocked": []
 }

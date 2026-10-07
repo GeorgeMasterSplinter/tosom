@@ -128,7 +128,7 @@ npm audit --omit=dev   → 0 kritiske · 5 høye · 1 moderat (målt etter PL-24
 - **Ferdig når:** GitHub Actions viser grønn `db-migrate` og `deploy`, og en
   ny testbruker blir sendt til `/samtykke` i prod.
 - **Låser opp:** 3 punkter i §6.1 (K-2) og «`prisma migrate status` …» i §6.8.
-- [ ] Gjort
+- [x] Gjort *(06.10 — push utført; G-23: vent på grønn CI på GitHub Actions)*
 
 #### 👤 G-02 · Test «Glemt passord» i produksjon  🟥
 - **Hva:** På www.tosom.no → «Glemt passord?» → skriv inn en e-post du eier og
@@ -138,6 +138,16 @@ npm audit --omit=dev   → 0 kritiske · 5 høye · 1 moderat (målt etter PL-24
 - **Ferdig når:** E-posten kom (sjekk også søppelpost), lenken virket, og
   innlogging med nytt passord gikk.
 - **Låser opp:** «Glemt passord»-punktet i §6.5.
+- **Status 07.10 (lokal verifisering):** Hele flyten ble kjørt end-to-end mot
+  dev-DB med e-postfange (SMTP-sink på 1025) — e-post sendt med korrekt
+  lenke (`https://tosom.no/nytt-passord?email=…&token=…`), passord endret,
+  gammelt passord avvist, nytt passord logget inn, token single-use bekreftet.
+  Koden fungerer. George's forsøk i prod feilet med «Kunne ikke logge inn»
+  → usannsynlig kodefeil, trolig e-postlevering (spam/Resend) eller at
+  lenken tok ut (1 time). Koden er i prod (origin/main = local main, PL-07 der) —
+  det som mangler er kun at e-posten faktisk leveres via Resend i prod.
+  Nytt forsøk under prod-observasjon (G-24) — sjekk
+  også Vercel loggen for `[PASSWORD RESET] E-post sendt` vs. «E-postsending feilet».
 - [ ] Gjort
 
 #### 👤 G-03 · Sjekk reisedagene i prod-databasen (kun lesing)  🟥

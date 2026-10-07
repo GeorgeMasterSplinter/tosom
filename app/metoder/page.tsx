@@ -16,6 +16,7 @@
  */
 
 import { Footer } from '@/components/ui/layout/Footer';
+import { ResonanceLogo } from '@/components/branding/LogoVariants';
 import { ToSomSection, ToSomButton } from '@/components/ui/system';
 import { color, spacing, typographyToStyle } from '@/config/design-tokens';
 import GlassCard from '@/components/ui/cards/GlassCard';
@@ -238,6 +239,9 @@ export default function MetoderPage() {
             gjennom tiår av testing og fortsatt brukes i moderne psykologi.
             Her er hva vi bruker, og hva vi ikke lover.
           </p>
+
+          {/* Standard ToSom-logo — rett under innledningen */}
+          <ResonanceLogo className="mt-10" />
         </ToSomSection>
 
         {/* ===== 1. VI BYGGER PÅ ETABLERTE MODELLER ===== */}

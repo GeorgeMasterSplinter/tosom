@@ -10,7 +10,7 @@
 
 import { FC } from 'react';
 import Link from 'next/link';
-import { LogoWordmark, ResonanceMark } from '@/components/branding/LogoVariants';
+import { LogoWordmark, ResonanceLogo } from '@/components/branding/LogoVariants';
 import { ToSomTagline } from '@/components/ui/system';
 import { color } from '@/config/design-tokens';
 import { COMPANY } from '@/config/legal';
@@ -205,9 +205,8 @@ export const Footer: FC<FooterProps> = ({
 
         {/* Botntekst */}
         <div className="text-center pt-20 ph:pt-24 md:pt-28">
-          <div className="flex justify-center mb-6">
-            <ResonanceMark size={44} glow resonate orbit className="ts-mark-pulse" />
-          </div>
+          {/* Standard ToSom-logo — nøyaktig som toppen av landing-siden */}
+          <ResonanceLogo className="mb-6" />
           <ToSomTagline>
             Tosom — en rolig, moden måte å møtes på. To mennesker. Én reise. Ekte kontakt.
           </ToSomTagline>

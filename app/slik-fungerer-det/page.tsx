@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Footer } from '@/components/ui/layout/Footer';
+import { ResonanceLogo } from '@/components/branding/LogoVariants';
 import { ToSomSection, ToSomButton } from '@/components/ui/system';
 import { color, typographyToStyle } from '@/config/design-tokens';
 import GlassCard from '@/components/ui/cards/GlassCard';
@@ -175,6 +176,9 @@ export default function SlikPage() {
           >
             En rolig og trygg prosess som hjelper deg å møte én person, valgt med omtanke. Ingen stress. Ingen sveiping. Bare ro.
           </p>
+
+          {/* Standard ToSom-logo — rett under innledningen */}
+          <ResonanceLogo className="mt-10" />
         </ToSomSection>
 
         {/* ===== 4 STEG ===== */}

@@ -9,7 +9,7 @@
 
 import { useState } from "react";
 import { csrfFetch } from "@/lib/api/csrfClient";
-import { ResonanceMark } from "@/components/branding/LogoVariants";
+import { ResonanceLogo } from "@/components/branding/LogoVariants";
 
 export default function GlemtPassordPage() {
   const [email, setEmail] = useState("");
@@ -76,9 +76,8 @@ export default function GlemtPassordPage() {
       />
 
       <div className="relative z-10 w-full max-w-[480px] px-8 flex flex-col items-center">
-        <div className="flex justify-center mb-10">
-          <ResonanceMark size={80} strokeWidth={1.5} glow />
-        </div>
+        {/* Standard ToSom-logo — nøyaktig som toppen av landing-siden */}
+        <ResonanceLogo className="mb-10" />
 
         <div style={cardStyle}>
           {status === "sent" ? (

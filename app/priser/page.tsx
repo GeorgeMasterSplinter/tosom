@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Footer } from '@/components/ui/layout/Footer';
+import { ResonanceLogo } from '@/components/branding/LogoVariants';
 import { ToSomSection, ToSomButton } from '@/components/ui/system';
 import { color, typographyToStyle } from '@/config/design-tokens';
 import GlassCard from '@/components/ui/cards/GlassCard';
@@ -94,6 +95,9 @@ export default function PriserPage() {
           >
             Én enkel pris. Ingen abonnement. Ingen skjulte kostnader. Bare ro, trygghet og en gjennomtenkt prosess.
           </p>
+
+          {/* Standard ToSom-logo — rett under innledningen */}
+          <ResonanceLogo className="mt-10" />
         </ToSomSection>
 
         {/* ===== HVORFOR ÉN PRIS ===== */}

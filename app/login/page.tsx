@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { csrfFetch } from "@/lib/api/csrfClient";
-import { ResonanceMark } from "@/components/branding/LogoVariants";
+import { ResonanceLogo } from "@/components/branding/LogoVariants";
 
 /* ========================
    PAGE COMPONENT
@@ -176,9 +176,8 @@ export default function LoginPage() {
       <div className="relative z-10 w-full max-w-[540px] px-8 flex flex-col items-center">
         {/* Header */}
         <div className="text-center space-y-5 mb-10 w-full">
-          <div className="flex justify-center">
-            <ResonanceMark size={104} strokeWidth={1.5} glow resonate orbit />
-          </div>
+          {/* Standard ToSom-logo — nøyaktig som toppen av landing-siden */}
+          <ResonanceLogo />
           <h1
             style={{
               fontSize: "48px",

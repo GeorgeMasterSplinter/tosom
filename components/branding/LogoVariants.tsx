@@ -364,6 +364,43 @@ export const ResonanceMark: FC<ResonanceMarkProps> = ({
 };
 
 /* ========================
+    STANDARD TO-SOM LOGO
+    ======================== */
+
+export interface ResonanceLogoProps {
+  /** Størrelse i px. Standard: 104 — nøyaktig som toppen av landing-siden. */
+  size?: number;
+  className?: string;
+  style?: CSSProperties;
+}
+
+/**
+ * STANDARD ToSom-logo — den samme som toppen av landing-siden (Hero).
+ *
+ * To sirkler som roterer (`orbit`), går sakte mot og fra hverandre
+ * (`resonate`) med glød og «blinklys» (`ts-mark-pulse`). Én kilde til
+ * standard-logoen, slik at alle sider som bruker den er identiske.
+ *
+ * Respekterer `prefers-reduced-motion` (via `ResonanceMark`).
+ */
+export const ResonanceLogo: FC<ResonanceLogoProps> = ({
+  size = 104,
+  className = '',
+  style,
+}) => (
+  <div className={`flex justify-center ${className}`} style={style}>
+    <ResonanceMark
+      size={size}
+      strokeWidth={1.5}
+      glow
+      resonate
+      orbit
+      className="ts-mark-pulse"
+    />
+  </div>
+);
+
+/* ========================
    CONVENIENCE GROUP
    ======================== */
 
@@ -374,6 +411,7 @@ export const LogoVariants = {
   Stacked: LogoStacked,
   Animated: LogoAnimated,
   ResonanceMark: ResonanceMark,
+  ResonanceLogo: ResonanceLogo,
 };
 
 /* ========================

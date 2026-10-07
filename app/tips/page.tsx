@@ -9,6 +9,7 @@
  */
 
 import { Footer } from '@/components/ui/layout/Footer';
+import { ResonanceLogo } from '@/components/branding/LogoVariants';
 import { ToSomSection, ToSomButton } from '@/components/ui/system';
 import { color, typographyToStyle } from '@/config/design-tokens';
 import GlassCard from '@/components/ui/cards/GlassCard';
@@ -140,6 +141,9 @@ export default function TipsPage() {
           >
             Et par enkle råd — om profilen, matchingen og selve reisen. Målet er ro og ærlighet, ikke å «optimere» deg til å se best mulig ut.
           </p>
+
+          {/* Standard ToSom-logo — rett under innledningen */}
+          <ResonanceLogo className="mt-10" />
         </ToSomSection>
 
         {/* ===== TIPS-SEKSJONER ===== */}

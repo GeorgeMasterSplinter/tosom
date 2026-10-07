@@ -1,6 +1,7 @@
 'use client';
 
 import { Footer } from '@/components/ui/layout/Footer';
+import { ResonanceLogo } from '@/components/branding/LogoVariants';
 import { ToSomSection, ToSomCard, ToSomButton } from '@/components/ui/system';
 import { color, spacing, typographyToStyle } from '@/config/design-tokens';
 import GlassCard from '@/components/ui/cards/GlassCard';
@@ -93,6 +94,9 @@ export default function OmOssPage() {
           >
             Tosom ble skapt med én tanke: at ekte forbindelse fortsatt er mulig — når vi gir rom for den.
           </p>
+
+          {/* Standard ToSom-logo — rett under innledningen */}
+          <ResonanceLogo className="mt-10" />
         </ToSomSection>
 
         {/* ===== INTRO ===== */}

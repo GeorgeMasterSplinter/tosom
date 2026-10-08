@@ -803,7 +803,7 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 | | Punkt | Ref | Prioritet |
 |---|---|---|---|
 | [ ] | Verifisert i prod-DB at `day` følger kalenderen og er lik for begge partnere | K-4 | **Før lansering** |
-| [ ] | Dagframrykk deterministisk (midnatt eller beregnet fra start), begge partnere samtidig | K-4 | **Før lansering** |
+| [x] | Dagframrykk deterministisk (beregnet fra start), begge partnere samtidig *(✓ 2026-10-07 · PL-06: `journeyDayFor` beregner dagen fra `bothSeenAt`; cron fanger opp utilsatte døgn, begge partnere får samme dag — test `journey-day-advance`)* | K-4 | **Før lansering** |
 | [ ] | Bildesperren løftes dag 15 for begge, testet med ekte par | K-4, K-8 | **Før lansering** |
 | [x] | Brukervarselet ved dag 30 skrevet på bokmål *(✓ 2026-10-06 · PL-21)* | V-13 | **Før lansering** |
 

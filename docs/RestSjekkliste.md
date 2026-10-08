@@ -76,6 +76,7 @@ npm audit --omit=dev   → 0 kritiske · 5 høye · 1 moderat (målt etter PL-24
 | PL-03 | K-8 | Partnerens profilbilde skjult før dag 15 i alle API-svar |
 | PL-04 | K-5 | `next` 15.5.27, `next-auth` 5.0.0-beta.32 — ingen kritiske sårbarheter |
 | PL-05 | K-6, V-8, V-15 | Rate limit, passordkrav, eksplisitt registrering, labels, ny innloggingsside |
+| **PL-06** | K-4 | Reisedagen beregnes fra `bothSeenAt` (`journeyDayFor`) — deterministisk, fanger opp utilsatte døgn, begge partnere samme dag *(test `journey-day-advance`)* |
 | PL-07 | K-6 | «Glemt passord» (kode ferdig — venter på e-posttest, G-02) |
 | PL-08 | K-3 | Påkrevde skalasvar, tilknytning krever data, flat profil = nøytral |
 | PL-09 | K-7 | Ærlige tekster (meta, llms.txt, metoder, FAQ, personvern) |
@@ -184,7 +185,7 @@ npm audit --omit=dev   → 0 kritiske · 5 høye · 1 moderat (målt etter PL-24
 | Oppgave | Hva | Hvorfor låst |
 |---|---|---|
 | PL-06 | Reisedagen beregnes fra start i stedet for å telles | Endrer reisens tempo (DI-2) — **gjør G-03 først** |
-- [ ] «kjør» PL-06 · [x] «kjør» PL-15 (gitt 06.10 — FERDIG) · [x] «kjør» PL-24 (gitt 06.10 — FERDIG)
+- [x] «kjør» PL-06 (gitt 07.10 — FERDIG) · [x] «kjør» PL-15 (gitt 06.10 — FERDIG) · [x] «kjør» PL-24 (gitt 06.10 — FERDIG)
 
 #### 👤 G-06 · Svar på tre små spørsmål  🟨
 | # | Spørsmål | Agentens forslag |
@@ -412,7 +413,7 @@ PL-nummer. Her står bare **hva som gjenstår** og **hva som venter på hva**.
 
 | ID | Hvem | Oppgave | Venter på | Sjekklistepunkt (§6) |
 |---|---|---|---|---|
-| **PL-06** | 🤖 C 🔒 | Reisedagen beregnes fra `bothSeenAt` (`journeyDayFor`), begge partnere i samme transaksjon | ⏳ **G-03** (tall fra prod) + **G-05** («kjør») | §6.4 «Dagframrykk deterministisk …» |
+| **PL-06** | 🤖 C 🔒 | Reisedagen beregnes fra `bothSeenAt` (`journeyDayFor`), begge partnere samtidig ✅ **07.10** (G-03: prod 0 aktive, drift=0; G-05 «kjør» gitt) | — | §6.4 «Dagframrykk deterministisk …» |
 | **PL-15** | 🤖 C 🔒 | Bevis ved rapport/blokkering (`Report.evidence`, 90 dager), rapport etter avsluttet match, `pgCheck` i stedet for minnebasert grense | ⏳ **G-05** («kjør») — ny migrasjon | §6.2 «Bevis bevares …», «Rapport mulig også …», «Rapport-rate-limit …» |
 | **PL-24** | 🤖 C 🔒 | `nodemailer` 7 → 10; avklare om `uploadthing` brukes (R2 er lagring i prod) — fjern hvis ikke | ⏳ **G-05** («kjør») | §6.7 «Øvrige høye sårbarheter …» |
 | **PL-14** | 🤖 Q | Samordne tidspunktet for matcherunden i `config/legal.ts`, watchdog-kommentaren og `vercel.json` | ⏳ **G-10** (Hobby eller Pro) | §6.8 «Vercel-plan bekreftet …» |
@@ -550,7 +551,7 @@ Speiler `LanseringsCheckList.md` §6. **Kryss av begge steder.**
 
 ### 6.4 Reisen
 - [ ] 👤 G-03 · Reisedager verifisert i prod-DB 🟥
-- [ ] 🤖 C PL-06 🔒 · Dagframrykk deterministisk, begge partnere samtidig 🟥
+- [x] 🤖 C PL-06 🔒 · Dagframrykk deterministisk, begge partnere samtidig 🟥 *(PL-06: `journeyDayFor` i engine beregner dagen fra `bothSeenAt` (Oslo-kalenderdag, 1–30); cron avanserer kun fremover; begge partnere deler `bothSeenAt` → samme dag; test `__tests__/journey-day-advance.test.ts` (10). G-03: prod 0 aktive reiser, drift=0, partnere i synk)*
 - [ ] 👤 G-16 · Bildesperren løftes dag 15, testet med ekte par 🟥
 - [x] 🤖 Q PL-21 · Dag 30-varselet på bokmål 🟥 *(PL-21c+d: avslutningsvarselet «Reisen deres er fullført. Takk for at dere ga hverandre 30 dager.» + milestone «Ny dag i reisen» i cron/journey og progress/advance)*
 

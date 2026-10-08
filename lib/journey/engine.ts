@@ -310,6 +310,27 @@ export function dayToPhase(day: number): JourneyPhase {
   return getPhaseForDay(day).phase;
 }
 
+/**
+ * PL-06 / K-4: Beregner reisedagen deterministisk ut fra starttidspunktet
+ * (bothSeenAt), i stedet for å telle +1 per cron-kjøring.
+ *
+ * Dag 1 er startdøgnet (norsk tid). Differansen er alltid hele kalenderdøgn,
+ * også over overgangen mellom sommertid og vintertid, fordi begge
+ * tidspunktene snapes til Oslo-dato før de trekkes fra. Begrenset til 1–30.
+ *
+ * Begge partnere deler samme bothSeenAt og får derfor alltid samme dag,
+ * uavhengig av når hver sin reiserad prosesseres.
+ */
+export function journeyDayFor(start: Date, now: Date = new Date()): number {
+  const osloDato = (d: Date) =>
+    new Date(d.toLocaleDateString('sv-SE', { timeZone: 'Europe/Oslo' }));
+  const MS_PER_DAG = 24 * 60 * 60 * 1000;
+  const dager = Math.round(
+    (osloDato(now).getTime() - osloDato(start).getTime()) / MS_PER_DAG
+  );
+  return Math.max(1, Math.min(JOURNEY_TOTAL_DAYS, 1 + dager));
+}
+
 // ═══════════════════════════════════════════
 // MILEPÆLS-FUNKSJONAR (fra milestones.ts)
 // ═══════════════════════════════════════════

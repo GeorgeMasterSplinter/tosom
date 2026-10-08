@@ -15,7 +15,7 @@ import { prisma } from '@/lib/prisma';
 import { timingSafeEqual } from 'crypto';
 import type { GuidedQuestion } from '@prisma/client';
 import { sendAlert } from '@/lib/observability/alert'; // B5.6
-import { getPhaseForDay } from '@/lib/journey/engine'; // ST3.1
+import { getPhaseForDay, journeyDayFor } from '@/lib/journey/engine'; // ST3.1, PL-06
 import { runRetention } from '@/lib/privacy/retention'; // S-10
 import { recordMetric, recordEvent } from '@/lib/observability/metric'; // O-3
 import { endJourney } from '@/lib/journey/endJourney'; // B-D: no-action auto-sletting
@@ -182,7 +182,19 @@ export async function GET(req: NextRequest) {
           }
 
           const oldPhase = journey.phase;
-          const newDay = journey.day + 1;
+          // PL-06 / K-4: beregn dagen fra start (bothSeenAt) i stedet for å telle +1.
+          // Deterministisk på Oslo-kalenderdag, fanger opp utilsatte døgn, og gir
+          // begge partnere samme dag (felles bothSeenAt). Avanserer kun fremover.
+          const newDay = journeyDayFor(journey.bothSeenAt!);
+          if (newDay <= journey.day) {
+            // Ingen ny dag ennå (eller allerede oppdatert) — skyv bare låsen fremover.
+            await prisma.journeyProgress.update({
+              where: { id: journey.id },
+              data: { nextDayAt: new Date(Date.now() + 24 * 60 * 60 * 1000) },
+            });
+            processed++;
+            continue;
+          }
           const newPhase = getPhaseForDay(newDay).phase;
           const phaseChanged = newPhase !== oldPhase;
 

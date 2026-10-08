@@ -14,6 +14,7 @@
  */
 
 import { PrismaClient } from '@prisma/client';
+import { TERMS_VERSION } from '../config/legal';
 
 const prisma = new PrismaClient();
 
@@ -33,6 +34,10 @@ async function upsertUser(opts: {
       role: opts.role ?? 'USER',
       onboardingComplete: opts.onboardingComplete,
       onboardingStep: opts.onboardingComplete ? 13 : 1,
+      // K-2 (PL-02): uten termsVersion + sensitiveConsentAt redirecterer
+      // onboarding-/dashboard-porten brukeren til /samtykke midt i testene.
+      termsVersion: TERMS_VERSION,
+      sensitiveConsentAt: new Date(),
     },
     create: {
       email: opts.email,
@@ -41,6 +46,8 @@ async function upsertUser(opts: {
       onboardingComplete: opts.onboardingComplete,
       onboardingStep: opts.onboardingComplete ? 13 : 1,
       termsAcceptedAt: new Date(),
+      termsVersion: TERMS_VERSION,
+      sensitiveConsentAt: new Date(),
       phoneVerified: true,
       verified: true,
     },

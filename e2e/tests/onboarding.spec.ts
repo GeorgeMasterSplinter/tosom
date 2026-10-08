@@ -41,6 +41,23 @@ async function clickNext(page: Page) {
   await next.click();
 }
 
+/**
+ * PL-08 (D-1): svarer på alle skalaspørsmålene steget krever.
+ * Hver skalagruppe (ScaleQuestion, role="radiogroup") får det nøytrale
+ * svaret «Både og (3 av 5)» — et gyldig svar (1–5) for valideringen.
+ * Steg uten skalaspørsmål har ingen radiogroup og påverkes ikke.
+ */
+async function answerScales(page: Page) {
+  const groups = page.getByRole('radiogroup');
+  const count = await groups.count();
+  for (let i = 0; i < count; i++) {
+    await groups
+      .nth(i)
+      .getByRole('radio', { name: 'Både og (3 av 5)' })
+      .click();
+  }
+}
+
 /** Steg 1 (Grunnprofil): de påkrevde feltene. */
 async function fillStep1(page: Page) {
   await page.getByTestId('ob-name').fill('Testbruker');
@@ -51,13 +68,14 @@ async function fillStep1(page: Page) {
   await page.getByTestId('ob-postal').fill('0150');
 }
 
-/** Steg 2 (Personlighet & identitet): fire lengdefelt + én quirk. */
+/** Steg 2 (Personlighet & identitet): fire lengdefelt + én quirk + BFI10-skala (PL-08). */
 async function fillStep2(page: Page) {
   await page.getByTestId('ob-self-desc').fill('Jeg er en rolig og balansert person som verdsetter dype samtaler og ærlighet.');
   await page.getByTestId('ob-energy-giver').fill('Gode samtaler, natur og kreativt arbeid gir meg energi.');
   await page.getByTestId('ob-energy-drainer').fill('Store folkemengder, konflikt og uvissighet tar fra meg.');
   await page.getByTestId('ob-pressure-react').fill('Jeg trekker meg tilbake litt til jeg kjenner meg trygg igjen.');
   await page.getByTestId('ob-quirk').fill('Jeg må alltid ha orden på ting før jeg kan slappe av.');
+  await answerScales(page);
 }
 
 /** Steg 3 (Livssituasjon): fire valg-gridene + to lengdefelt. */
@@ -77,6 +95,7 @@ async function fillStep4(page: Page) {
   await page.getByTestId('ob-sadness-need').fill('En klem og at noen sier det skal bli bra.');
   await page.getByTestId('ob-stress-need').fill('At noen tar over ansvaret midlertidig, slik at jeg kan puste.');
   await page.getByTestId('ob-important-boundary').fill('Jeg trenger tid alene etter en tung dag.');
+  await answerScales(page);
 }
 /** Steg 5 (Kjærlighetsspråk & nærhet): to gridene + tre lengdefelt. */
 async function fillStep5(page: Page) {
@@ -87,9 +106,10 @@ async function fillStep5(page: Page) {
   await page.getByTestId('ob-small-thing').fill('At noen husker at jeg vil ha kaffe på morgenen uten at jeg ber om det.');
 }
 
-/** Steg 6 (Livsstil & verdier): ett lengdefelt (gridene er valfrie). */
+/** Steg 6 (Livsstil & verdier): ett lengdefelt (gridene er valfrie) + PVQ10-skala (PL-08). */
 async function fillStep6(page: Page) {
   await page.getByTestId('ob-good-everyday').fill('Frokost i ro, en tur ute, og en kveld med dype samtaler med noen jeg bryr meg om.');
+  await answerScales(page);
 }
 
 /** Steg 7 (Relasjonsstil): to gridene. */
@@ -107,7 +127,8 @@ async function fillStep8(page: Page) {
   await page.getByTestId('ob-experience-together').fill('Å lage mat sammen kveld etter kveld og prate om dagen vi har hatt.');
 }
 
-// Steg 9 (Humor & personlighet): alle felt er valfrie — ingenting å fylle.
+// Steg 9 (Humor & personlighet): ingen tekstfelt — men COMMUNICATION-skala
+// er påkrevd (PL-08). Svares med answerScales i fullflyt-testen.
 
 /** Steg 10 (Grenser & behov): to gridene + to lengdefelt. */
 async function fillStep10(page: Page) {
@@ -117,13 +138,14 @@ async function fillStep10(page: Page) {
   await page.getByTestId('ob-partner-must-understand').fill('At jeg trenger tid alene for å bearbeide følelser før jeg kan dele dem.');
 }
 
-/** Steg 11 (Moden nysgjerrighet): fem lengdefelt. */
+/** Steg 11 (Moden nysgjerrighet): fem lengdefelt + ERQ6-skala (PL-08). */
 async function fillStep11(page: Page) {
   await page.getByTestId('ob-intimacy-safety').fill('At noen trygger meg med ord før noe dypt skal skje.');
   await page.getByTestId('ob-comfortable-with').fill('Å dele sårbarhet uten å bli dømt eller kritisert bagefter.');
   await page.getByTestId('ob-personal-boundary').fill('Jeg trenger tydelige signaler om når ting blir for mye.');
   await page.getByTestId('ob-nearer-type').fill('Ro og stille samtaler om noe som betyr mye for begge.');
   await page.getByTestId('ob-needs-time').fill('Tid til å bearbeide følelsene mine alene før jeg deler dem.');
+  await answerScales(page);
 }
 
 /**
@@ -250,10 +272,10 @@ test.describe('Onboarding Flow (13-stegs)', () => {
     await expectStep(page, 2);
   });
   // -------------------------------------------------------------------------
-  // Autosave (localStorage)
+  // Autosave (sessionStorage siden PL-17)
   // -------------------------------------------------------------------------
 
-  test('skal autosave inndata til localStorage', async ({ page }) => {
+  test('skal autosave inndata til sessionStorage', async ({ page }) => {
     await page.goto('/onboarding');
 
     const nameInput = page.locator('input[placeholder="Navn eller kallenavn"]');
@@ -266,7 +288,7 @@ test.describe('Onboarding Flow (13-stegs)', () => {
     await expect
       .poll(async () => {
         const raw = await page.evaluate(
-          () => localStorage.getItem('tosom_onboarding_draft')
+          () => sessionStorage.getItem('tosom_onboarding_draft')
         );
         return raw
           ? (JSON.parse(raw) as { identityName?: string }).identityName
@@ -291,7 +313,7 @@ test.describe('Onboarding Flow (13-stegs)', () => {
     await expect
       .poll(async () => {
         const raw = await page.evaluate(
-          () => localStorage.getItem('tosom_onboarding_draft')
+          () => sessionStorage.getItem('tosom_onboarding_draft')
         );
         return raw
           ? (JSON.parse(raw) as { identityName?: string }).identityName
@@ -303,7 +325,7 @@ test.describe('Onboarding Flow (13-stegs)', () => {
     await page.reload();
     await page.waitForLoadState('networkidle');
 
-    // Sjekk at verdien er restaurert frå localStorage (polling:
+    // Sjekk at verdien er restaurert frå sessionStorage (polling:
     // restaureringa hentar asynkront etter mount)
     await expect.poll(() => nameInput.inputValue()).toBe('DraftTest123');
   });
@@ -324,7 +346,7 @@ test.describe('Onboarding Flow (13-stegs)', () => {
     const fillers: Array<(p: Page) => Promise<void>> = [
       fillStep1, fillStep2, fillStep3, fillStep4,
       fillStep5, fillStep6, fillStep7, fillStep8,
-      async () => {}, // Steg 9 (humor): alle felt er valfrie
+      answerScales, // Steg 9 (humor): COMMUNICATION-skala (PL-08)
       fillStep10, fillStep11,
     ];
     for (let step = 1; step <= 11; step++) {

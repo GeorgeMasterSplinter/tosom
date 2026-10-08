@@ -13,6 +13,7 @@
  */
 
 import { Prisma, PrismaClient } from '@prisma/client';
+import { TERMS_VERSION } from '../config/legal';
 
 const prisma = new PrismaClient();
 
@@ -25,6 +26,10 @@ export async function resetOnboardingUser(): Promise<void> {
       onboardingComplete: false,
       onboardingStep: 1,
       journeyState: 'IDLE',
+      // K-2 (PL-02): hold samtykket — ellers sendes OnboardingFlow-brukeren
+      // til /samtykke midt i testene (router.replace i init-useEffect).
+      termsVersion: TERMS_VERSION,
+      sensitiveConsentAt: new Date(),
     },
     create: {
       email: E2E_ONBOARDING_EMAIL,
@@ -34,6 +39,8 @@ export async function resetOnboardingUser(): Promise<void> {
       onboardingStep: 1,
       journeyState: 'IDLE',
       termsAcceptedAt: new Date(),
+      termsVersion: TERMS_VERSION,
+      sensitiveConsentAt: new Date(),
       phoneVerified: true,
       verified: true,
     },

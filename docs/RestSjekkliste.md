@@ -418,7 +418,7 @@ PL-nummer. Her står bare **hva som gjenstår** og **hva som venter på hva**.
 | **PL-24** | 🤖 C 🔒 | `nodemailer` 7 → 10; avklare om `uploadthing` brukes (R2 er lagring i prod) — fjern hvis ikke | ⏳ **G-05** («kjør») | §6.7 «Øvrige høye sårbarheter …» |
 | **PL-14** | 🤖 Q | Samordne tidspunktet for matcherunden i `config/legal.ts`, watchdog-kommentaren og `vercel.json` | ⏳ **G-10** (Hobby eller Pro) | §6.8 «Vercel-plan bekreftet …» |
 | **PL-26** | 🤖 Q | Opprydding (død kode, «Djupere», gamle dokumenter) | ⏳ **G-06** (svar a–c) | — (mindre forbedringer) |
-| **PL-G15-skript** | 🤖 C | Slette-skript (prøvekjøring + `--apply`) for brukere som prøvde å slette seg | ⏳ **G-15** (liste over ID-er) | §6.1 «Brukere som har forsøkt å slette seg …» |
+| **PL-G15-skript** | 🤖 C | Slette-skript (prøvekjøring + `--apply`) for brukere som prøvde å slette seg | 📝 **Skript klart** (`scripts/deleteFailedDeletionUsers.ts`, dry-run OK mot dev) — vent på **G-15** ID-liste | §6.1 «Brukere som har forsøkt å slette seg …» |
 
 ### 3.3 Kodeferdige — venter bare på at George bekrefter i prod
 

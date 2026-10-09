@@ -8,7 +8,9 @@
  * Avsender: noreplay@tosom.no (autosvar er satt opp på denne).
  * Support: support@tosom.no.
  *
- * Ingen velkomst-e-post. Ingen e-postverifisering. Bevisst.
+ * E-poster: driftsvarsel (alltid), match (bak BETA_MATCH_EMAIL), velkomst
+ * (fullført onboarding), reise slutt (dag 30 / fant hverandre), passord-reset
+ * og sletting-bekreftelse. Ingen e-postverifisering. Bevisst.
  */
 
 import type { Transporter } from 'nodemailer';
@@ -210,6 +212,52 @@ export async function sendPasswordResetEmail(
         </a>
         <p style="font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.5); margin-top: 32px;">
           Hvis det ikke var deg, beholder du denne e-posten — passordet ditt er uendret.<br />
+          Ro, varme og én reise av gangen.<br />— ToSom
+        </p>
+      </div>
+    `,
+  });
+}
+
+/**
+ * Send «reisen er slutt»-e-post ved fullført reise (dag 30) eller når brukerne
+ * fant hverandre. Takk + bekrefter at alle data er slettet (GDPR art. 17).
+ *
+ * foundEachOther: gratulerende variant (de ble en ekte kontakt).
+ * Ellers: nøytral «reisen er fullført»-variant.
+ */
+export async function sendJourneyEndEmail(
+  userEmail: string,
+  userName?: string,
+  foundEachOther?: boolean
+): Promise<EmailResult> {
+  const name = userName || 'hei';
+  const opening = foundEachOther
+    ? 'Gratulerer — dere fant hverandre. Nettopp det er det ToSom er laget for.'
+    : 'De 30 dagene sammen er fullført. Takk for at du var med på reisen.';
+  const closing = foundEachOther
+    ? 'Lykke videre — sammen, i det virkelige liv.'
+    : 'Hvis du noen gang ønsker en ny reise, kan du registrere deg på nytt.';
+
+  return sendEmail({
+    to: userEmail,
+    subject: foundEachOther ? 'Gratulerer — reisen er fullført' : 'Reisen er fullført',
+    text:
+      `Hei ${name},\n\n` +
+      `${opening}\n\n` +
+      `Som lovet har vi nå slettet alt: samtalene, bildene og svarene er borte. Vi har ikke lagret noe.\n\n` +
+      `${closing}\n\n` +
+      `Ro, varme og én reise av gangen.\n\n— ToSom`,
+    html: `
+      <div style="font-family: Inter, -apple-system, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px; background: #0A1A2A; color: #ffffff; border-radius: 16px;">
+        <h1 style="font-size: 24px; font-weight: 600; color: #D4AF37; margin-bottom: 16px;">${foundEachOther ? 'Dere fant hverandre' : 'Reisen er fullført'}</h1>
+        <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">Hei ${name},</p>
+        <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">${opening}</p>
+        <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">
+          Som lovet har vi nå slettet alt: samtalene, bildene og svarene er borte. Vi har ikke lagret noe.
+        </p>
+        <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 24px; font-weight: 500;">${closing}</p>
+        <p style="font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.5); margin-top: 32px;">
           Ro, varme og én reise av gangen.<br />— ToSom
         </p>
       </div>

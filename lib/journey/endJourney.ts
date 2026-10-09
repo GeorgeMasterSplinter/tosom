@@ -21,6 +21,7 @@
 
 import { prisma } from '@/lib/prisma';
 import { getImageStorage } from '@/lib/storage';
+import { sendJourneyEndEmail } from '@/lib/email';
 
 /** Normalize pair — consistent ordering for MatchHistory unique constraint */
 function normalizePair(aId: string, bId: string): { userAId: string; userBId: string } {
@@ -278,6 +279,21 @@ export async function endJourney(
     }
     if (deletedImageCount > 0) {
       result.ImageObject = deletedImageCount;
+    }
+  }
+
+  // B-2 / G: «Reisen er slutt»-e-post — sendes kun når reisen er endelig over
+  // og kontoene er slettet (no_action = dag 30, eller de fant hverandre).
+  // Best-effort: e-postfeil skal aldri blokkere reiseslutt. E-post og navn
+  // leses fra de in-memory-objektene (DB-radene er nå borte).
+  if (outcome === 'found_each_other' || outcome === 'no_action') {
+    const found = outcome === 'found_each_other';
+    for (const u of [userA, userB]) {
+      if (u.email) {
+        sendJourneyEndEmail(u.email, u.name || undefined, found).catch((err) => {
+          console.warn(`[endJourney] Kunne ikke sende reiseslutt-e-post til ${u.email}:`, err);
+        });
+      }
     }
   }
 

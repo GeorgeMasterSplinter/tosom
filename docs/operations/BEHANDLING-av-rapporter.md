@@ -1,6 +1,7 @@
 # Behandling av rapporter — rutine for ToSom
 
-**Status:** UTKAST (PL-G9) — George skal godkjenne navne/endringer før lansering.
+**Status:** Godkjent av George 11.10. Håndterer: George — i admin-panelet, med
+verktøykassen.
 **Gjelder fra:** lansering
 **Ansvarlig eier av rutinen:** George
 

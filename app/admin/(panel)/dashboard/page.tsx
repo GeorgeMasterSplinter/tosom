@@ -177,9 +177,10 @@ function MetricCard({
 
 /* ─── JourneyPhaseMonitor ─── */
 function JourneyPhaseMonitor({ phases }: { phases?: Record<string, number> }) {
-  const phaseLabels = ['Bli kjent (1-14)', 'Bygger tillit (15-21)', 'Djupere (22-30)'];
-  const phaseColors = ['#4ADE80', '#D4AF37', '#FBBF24'];
-  const phaseKeys = ['EARLY', 'BUILDING_TRUST', 'DEEPER'];
+  // Rekkeviddene følger lib/journey/engine.ts (PHASE_CONFIGS) — fire faser.
+  const phaseLabels = ['Bli kjent (1-14)', 'Bygger tillit (15-21)', 'Dypere (22-25)', 'Refleksjon (26-30)'];
+  const phaseColors = ['#4ADE80', '#D4AF37', '#FBBF24', '#A8D8EA'];
+  const phaseKeys = ['EARLY', 'BUILDING_TRUST', 'DEEPER', 'CHECKIN'];
 
   const phaseData = phaseKeys.map((key, i) => ({
     label: phaseLabels[i],

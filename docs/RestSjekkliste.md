@@ -64,10 +64,10 @@ npm audit --omit=dev   → 0 kritiske · 5 høye · 1 moderat (målt etter PL-24
 | | Antall |
 |---|---|
 | Punkter totalt | **70** (68 + 2 nye: religion og bonusfamilie) |
-| ✅ Avkrysset | **27** |
-| ⬜ Gjenstår | **43** — hvorav **4** er kodeferdige og bare venter på George |
+| ✅ Avkrysset | **31** (målt 11.10: +PL-20 ×2 via G-24, +Vercel-plan (G-10/PL-14), +rapportrutine (G-22)) |
+| ⬜ Gjenstår | **39** — hvorav 3 er kodeferdige og bare venter på George |
 
-### 1.3 Ferdig siden 05.10 (gjennom 06.10)
+### 1.3 Ferdig siden 05.10 (gjennom 11.10)
 
 | Oppgave | Funn | Hva |
 |---|---|---|
@@ -87,7 +87,7 @@ npm audit --omit=dev   → 0 kritiske · 5 høye · 1 moderat (målt etter PL-24
 | **PL-15** | V-5 | Bevis ved rapport/blokkering (90 dager), rapport etter avsluttet match, `pgCheck`-rategrense |
 | **PL-16** | V-7 | Google Fonts selvhostet via `next/font` (Inter lokalt) |
 | **PL-17** | V-12 | Onboarding-utkast ut av `localStorage` (sessionStorage, per fane) |
-| **PL-20** | V-10 | Døde sider: `/design-system` + `/register/vipps` 404 i prod, `onboarding/payment` + `onboarding/access` slettet, `phone/send` + `phone/verify` 404 i prod *(kode ferdig — venter på G-24 curl etter deploy)* |
+| **PL-20** | V-10 | Døde sider: `/design-system` + `/register/vipps` 404 i prod, `onboarding/payment` + `onboarding/access` slettet, `phone/send` + `phone/verify` 404 i prod *(✓ 11.10: G-24 bekreftet av George — alle 404)* |
 | **PL-19** | V-9 | Vilkår → angrerettloven § 22 bokstav n + direkte lovdata-lenker; personopplysningsloven; versjonsbump 2026-10-06 |
 | **PL-21** | V-10, V-13 | Bloggen avpublisert (404 i prod, innhold beholdes) + dag 30-varsel og milestone-tekst til bokmål |
 | **PL-22** | V-13 | Språkvakt utvidet med 10 V-13-ord + `docs/archive` utenfor skanningen; alle nye treff i levende kode rettet (14 filer); sideliste til G-20 laget |
@@ -99,6 +99,12 @@ npm audit --omit=dev   → 0 kritiske · 5 høye · 1 moderat (målt etter PL-24
 | **PL-25** | V-11 | API-prefikser i middleware + `api-route-coverage`-test |
 | **PL-27** | ny | **Religion: opptil fire valg, ulik tro gir ingen trekk** (se §6) |
 | **PL-28** | ny | **«Åpen for bonusfamilie»: pluss når partneren har barn** (se §6) |
+| **PL-26d** | M-2 | Foreldete ruten `journey/progress/advance` slettet (G-06a) — ingen referanser, ingen egen fasetabell |
+| G-06b | V-10 | `/questions` → 404 i prod (layout-mønster; datafilen beholdes — BliKjentPanel importerer fra den) |
+| G-06c | — | Reisefasemonitor i admin: fire faser etter `PHASE_CONFIGS` — Bli kjent (1-14) · Bygger tillit (15-21) · Dypere (22-25) · Refleksjon (26-30) |
+| G-24 | V-10 | George bekrefter at alle fjernede sider gir 404 i prod → PL-20s to punkter avkrysset |
+| G-10 / PL-14 | V-16 | Vercel er **Pro** — bekreftet; matching `0 2,3,4 * * 6` er gyldig. Nytt samlet **Vercel-kontrollpunkt** (§2.6) |
+| G-22 | V-5 | Rapportrutinen godkjent — George håndterer i admin-panelet med verktøykassen og bestemmer hva som skal gjøres |
 
 ### 1.4 Rettelser i sjekklisten 06.10
 - «Glemt passord» var krysset av, men e-posten er ikke testet i prod. **Krysset er fjernet** → nå G-02.
@@ -149,6 +155,12 @@ npm audit --omit=dev   → 0 kritiske · 5 høye · 1 moderat (målt etter PL-24
   det som mangler er kun at e-posten faktisk leveres via Resend i prod.
   Nytt forsøk under prod-observasjon (G-24) — sjekk
   også Vercel loggen for `[PASSWORD RESET] E-post sendt` vs. «E-postsending feilet».
+  **11.10:** Nytt forsøk skjer når e-postlevering i prod er bekreftet (George:
+  «jeg skal sjekke dette etter vi har fått e-post på plass»). Da følger G-16
+  (ende-til-ende med to testkontoer) etter — hele flyten skal testes med e-post.
+  E-postplanen: velkommen (fullført onboarding) → match (`BETA_MATCH_EMAIL=true`
+  i Vercel, beslutning 11.10) → reisen er slutt/takk. Alle tre er allerede bygd
+  og koblet i koden.
 - [ ] Gjort
 
 #### 👤 G-03 · Sjekk reisedagene i prod-databasen (kun lesing)  🟥
@@ -188,12 +200,12 @@ npm audit --omit=dev   → 0 kritiske · 5 høye · 1 moderat (målt etter PL-24
 - [x] «kjør» PL-06 (gitt 07.10 — FERDIG) · [x] «kjør» PL-15 (gitt 06.10 — FERDIG) · [x] «kjør» PL-24 (gitt 06.10 — FERDIG)
 
 #### 👤 G-06 · Svar på tre små spørsmål  🟨
-| # | Spørsmål | Agentens forslag |
+| # | Spørsmål | Svar (11.10) |
 |---|---|---|
-| a | Kan den gamle ruten `journey/progress/advance` (merket «utgått») slettes? | Ja — ingen bruker den, og den har egen fasetabell |
-| b | Skal `/questions` være offentlig? | Nei — 404 i prod |
-| c | Admin-panelet viser «Djupere (22-30)». Hva skal stå? | «Dypere (22–25)» og «Refleksjon (26–30)» |
-- [ ] Svart
+| a | Kan den gamle ruten `journey/progress/advance` (merket «utgått») slettes? | Ja — **slettet 11.10 (PL-26d)**, ingen referanser |
+| b | Skal `/questions` være offentlig? | Nei — **404 i prod 11.10** (layout-mønster; datafilen beholdes — BliKjentPanel bruker den) |
+| c | Admin-panelet viser «Djupere (22-30)». Hva skal stå? | Det som er relevant: **fire faser etter `PHASE_CONFIGS` — Bli kjent (1-14) · Bygger tillit (15-21) · Dypere (22-25) · Refleksjon (26-30)** — satt 11.10 |
+- [x] Svart (11.10 — alle tre utført)
 
 ---
 
@@ -236,14 +248,15 @@ npm audit --omit=dev   → 0 kritiske · 5 høye · 1 moderat (målt etter PL-24
 - **Hvorfor:** `vercel.json` kjører matching tre ganger lørdag natt
   (`0 2,3,4 * * 6`). Hobby tillater bare én gang i døgnet.
 - **Ferdig når:** Du har sagt «Hobby» eller «Pro» til Cline (PL-14 følger av svaret).
-- [ ] Gjort
+- [x] Gjort *(11.10 — **Pro**. Matching `0 2,3,4 * * 6` er gyldig; PL-14 avkrysset.)*
 
 #### 👤 G-11 · Slett testbrukerne test1/test2  🟥
 - **Hva:** Først prøvekjøring — den sletter ingenting:
   `DATABASE_URL="<prod>" node scripts/launch-1-delete-test-users.mjs`
   Ser listen riktig ut → kjør samme kommando med `--apply` på slutten.
 - **Ferdig når:** En ny prøvekjøring finner 0 brukere.
-- [ ] Gjort
+- **Beslutning 11.10:** Utsettes til **rett før Vipps-innføringen** — så lenge som de ikke plager oss. Skriptet ligger klar (dry-run først, deretter `--apply`).
+- [ ] Gjort *(utsettes — se beslutning over)*
 
 #### 👤 G-12 · Admin-hemmeligheter og brytere i Vercel  🟥
 I Vercel → Settings → Environment Variables (**Production**):
@@ -278,17 +291,43 @@ I Vercel → Settings → Environment Variables (**Production**):
 - **Hvorfor:** De trodde kontoen var slettet. GDPR art. 17.
 - **Ferdig når:** Skriptets prøvekjøring finner 0, og e-postene er sendt.
 - **Låser opp:** «Brukere som har forsøkt å slette seg …» i §6.1.
-- [ ] Gjort
+- **Beslutning 11.10:** Skriptet og e-postene behøves ikke — George har oversikt
+  over brukerne i **admin-panelet** og sletter der. Skriptet
+  (`scripts/deleteFailedDeletionUsers.ts`) beholdes i repo som sikkerhetsnett.
+- [x] Gjort *(11.10 — løst via admin-panelet; ingen skriptkjøring/e-post)*
 
 ---
 
-### 2.6 Manuell testing (krever ekte nettleser og telefon)
+### 2.6 Samlet Vercel-kontrollpunkt (11.10 — alt på én gang)
+
+Beslutning 11.10: alt som hører til Vercel samles i **ett punkt** og gjøres
+sammen, slik at alt blir oversett på én gang. Vercel → Settings:
+
+| # | Hva | Hvor | Skal være |
+|---|---|---|---|
+| 1 | `ADMIN_PASSWORD_HASH`, `ADMIN_JWT_SECRET`, `ADMIN_EMAIL` | Environment Variables (Production) | Satt (ikke tomme) |
+| 2 | `DEV_LOGIN_ENABLED` | Environment Variables (Production) | Ikke satt, eller `false` |
+| 3 | `PAYMENTS_ENABLED` | Environment Variables (Production) | Ikke satt, eller `false` (til Vipps er verifisert) |
+| 4 | `ENABLE_CSRF_PROTECTION` | Environment Variables (Production) | `true` |
+| 5 | `BETA_MATCH_EMAIL` | Environment Variables (Production) | `true` (match-e-post på, beslutning 11.10) |
+| 6 | `DATABASE_URL` | Vercel **og** GitHub → Secrets (Actions) | Rotert — den ble delt i chat 03.09 (G-04); redeploy etter |
+| 7 | `prisma migrate status` | mot prod-URL | Alle migrasjoner applied |
+| 8 | Cron | Vercel → Functions / logs | Plan = **Pro** (bekreftet 11.10); matching `0 2,3,4 * * 6` er gyldig |
+| 9 | (senere, sak 7) | `.github/workflows/cd.yml` | Automatisere `prisma migrate deploy` i CD mot prod, FØR vercel deploy |
+
+Når du er ferdig: si fra, så krysses G-04, G-10, G-12 og `prisma migrate status`
+av i begge sjekklistene.
+
+---
+
+### 2.7 Manuell testing (krever ekte nettleser og telefon)
 
 #### 👤 G-16 · Ende-til-ende med to testkontoer  🟥
 To nettlesere (vanlig + privat vindu), to kontoer som søker hverandre:
 registrer → samtykke → onboarding → kø → **«Kjør matching manuelt»** i
 `/admin/tools` → chat → dag 15 → bilder → avslutning → sletting.
 - **Ferdig når:** Alt virket, og ingen bilder var synlige før dag 15.
+- **11.10:** Kjøres **etter at e-postlevering i prod er bekreftet** (G-02) — da skal hele flyten testes fra start til slutt, inkludert velkommen-e-post, match-e-post (`BETA_MATCH_EMAIL=true`) og reisen-slutt-e-post.
 - **Låser opp:** «Bildesperren løftes dag 15 …» i §6.4.
 - [ ] Gjort
 
@@ -348,7 +387,7 @@ godt, varmt bokmål.
 | `/priser` | ☐ |
 | `/profile` | ☐ |
 | `/profile/edit` | ☐ |
-| `/questions` (avventer G-06b) | ☐ |
+| `/questions` (404 i prod 11.10 — G-06b) | ☐ |
 | `/register` | ☐ |
 | `/register/vipps` (skal vise «Fant ikke siden») | ☐ |
 | `/reisen` | ☐ |
@@ -372,8 +411,8 @@ Lag eller godkjenn et bilde på **1200 × 630** piksler (logo + «Én match. Én
 #### 👤 G-22 · Skriftlig rutine for rapporter  🟥
 En halv side: hvem leser rapporter, hvor raskt (f.eks. innen 24 timer), og hva
 som skjer (advarsel, utestengelse, politi ved trusler). Cline kan lage utkast.
-*(Utkast ferdig · PL-G9: `docs/operations/BEHANDLING-av-rapporter.md` — godkjenn/endre og kjennfør.)*
-- [ ] Gjort
+*(Utkast ferdig · PL-G9: `docs/operations/BEHANDLING-av-rapporter.md`.)*
+- [x] Gjort *(11.10 — godkjent: George håndterer rapportene i admin-panelet med verktøykassen og bestemmer hva som skal gjøres videre.)*
 
 #### 👤 G-23 · CI grønn etter push  🟥
 Etter G-01: siste kjøring i GitHub Actions er grønn (lint, tsc, språkvakt,
@@ -384,7 +423,7 @@ jest, build — og Playwright hvis den kjører i CI).
 #### 👤 G-24 · Bekreft at sidene som fjernes, gir 404  🟥
 Etter at PL-20/PL-21 er deployet: åpne `/design-system`, `/blogg`,
 `/onboarding/payment` og `/register/vipps` i prod. Alle skal vise «Fant ikke siden».
-- [ ] Gjort
+- [x] Gjort *(11.10 — George bekrefter: alle gir 404. Også `/questions` (G-06b) og `phone/send`/`phone/verify`.)*
 
 #### 👤 G-25 · Vipps (eget løp — ikke lanseringsfeil)  🟨
 Når Vipps-avtalen er på plass: si fra, så lager Cline en egen instruks
@@ -403,7 +442,7 @@ PL-nummer. Her står bare **hva som gjenstår** og **hva som venter på hva**.
 | ID | Hvem | Oppgave | Sjekklistepunkt (§6) | Prioritet |
 |---|---|---|---|---|
 | **PL-19** | 🤖 Q | Vilkår: angrerettloven § 22 n + direkte lovdata-lenker (`config/legal.ts`, `app/vilkar/page.tsx`). **Ingen adresse.** | §6.6 «Vilkår: angrerettloven og direkte lovlenker» | 🟥 |
-| **PL-20** | 🤖 Q | Interne/døde sider 404 i prod: `/design-system`, `/onboarding/payment` (slett), `/onboarding/access` (slett), `/register/vipps`, `phone/send` og `phone/verify` | §6.7 «Interne og døde sider …» og «`POST /api/auth/phone/send` deaktivert» | 🟥 |
+| **PL-20** | 🤖 Q ✅ **11.10** | Interne/døde sider 404 i prod — G-24 bekreftet (alle 404) | §6.7 — **avkrysset** | 🟥 |
 | **PL-21** | 🤖 Q | Blogg 404 i prod (D-9) + dag 30-varselet og milepælteksten i `cron/journey` til bokmål | §6.6 «Bloggen …» · §6.4 «Brukervarselet ved dag 30 …» | 🟥 |
 | **PL-22** | 🤖 Q | Utvid språkvakten med nynorsk-ordene fra V-13 + lag sidelisten til George (G-20) | Forarbeid for §6.6 (George krysser) | 🟥 |
 | **PL-23a** | 🤖 Q | Sitemap: kun offentlige sider (fjern `/match`, `/journey`, `/dashboard`, `/profile`, `/onboarding`) | §6.7 «`og-image.png` finnes; sitemap …» (bildet = G-21) | 🟥 |
@@ -418,7 +457,7 @@ PL-nummer. Her står bare **hva som gjenstår** og **hva som venter på hva**.
 | **PL-24** | 🤖 C 🔒 | `nodemailer` 7 → 10; avklare om `uploadthing` brukes (R2 er lagring i prod) — fjern hvis ikke | ⏳ **G-05** («kjør») | §6.7 «Øvrige høye sårbarheter …» |
 | **PL-14** | 🤖 Q | Samordne tidspunktet for matcherunden i `config/legal.ts`, watchdog-kommentaren og `vercel.json` | ⏳ **G-10** (Hobby eller Pro) | §6.8 «Vercel-plan bekreftet …» |
 | **PL-26** | 🤖 Q | Opprydding (død kode, «Djupere», gamle dokumenter) | ⏳ **G-06** (svar a–c) | — (mindre forbedringer) |
-| **PL-G15-skript** | 🤖 C | Slette-skript (prøvekjøring + `--apply`) for brukere som prøvde å slette seg | 📝 **Skript klart** (`scripts/deleteFailedDeletionUsers.ts`, dry-run OK mot dev) — vent på **G-15** ID-liste | §6.1 «Brukere som har forsøkt å slette seg …» |
+| **PL-G15-skript** | 🤖 C | Slette-skript (prøvekjøring + `--apply`) for brukere som prøvde å slette seg | ✅ **11.10: G-15 løst via admin-panelet** (beslutning: ingen skriptkjøring, ingen e-post) — skriptet `scripts/deleteFailedDeletionUsers.ts` beholdes som sikkerhetsnett | §6.1 |
 
 ### 3.3 Kodeferdige — venter bare på at George bekrefter i prod
 
@@ -456,7 +495,7 @@ PL-nummer. Her står bare **hva som gjenstår** og **hva som venter på hva**.
 
 | Steg | 👤 George | 🤖 Agentene (parallelt) |
 |---|---|---|
-| **1 — nå** | G-01 push · G-02 glemt passord · G-03 reisedager · G-04 roter `DATABASE_URL` | PL-19 vilkår · PL-20 døde sider · PL-21 blogg/dag 30 |
+| **1 — nå** | Samlet **Vercel-kontrollpunkt** (§2.6: env, `BETA_MATCH_EMAIL=true`, roter `DATABASE_URL`, migrate status) · G-02 glemt passord (etter e-postbekreftelse) | — (PL-19/20/21/22/23a/18 ferdig 06.10) |
 | **2** | G-05 «kjør» PL-06/15/24 · G-06 tre svar · G-10 Vercel-plan | PL-06 reisedag (etter G-03) · PL-22 språkvakt · PL-23a sitemap |
 | **3** | G-07 advokat · G-08 DMARC/SPF · G-09 support@ · G-11 testbrukere · G-12 brytere | PL-18 universell utforming · PL-14 tidsplan |
 | **4** | G-13 backup · G-14 Sentry · G-15 slettinger · G-21 delingsbilde · G-22 rapportrutine | PL-26 opprydding · slette-skript til G-15 |
@@ -527,12 +566,12 @@ Fullstendig regresjonsliste: `LanseringsCheckList.md` §7.
 
 ---
 
-## 8. Avkrysningsliste — alle 46 åpne punkter
+## 8. Avkrysningsliste — de åpne punktene (39 åpne per 11.10)
 
 Speiler `LanseringsCheckList.md` §6. **Kryss av begge steder.**
 
 ### 6.1 Personvern og samtykke
-- [ ] 👤 G-15 · Brukere som har forsøkt å slette seg, er slettet og informert 🟥
+- [ ] 👤 G-15 · Brukere som har forsøkt å slette seg, er slettet 🟥 *(besluttet 11.10: George har oversikt i admin-panelet og sletter der — ingen skript, ingen e-post; skriptet i repo som sikkerhetsnett)*
 - [ ] 👤 G-01 · Aktiv aksept av vilkår + uttrykkelig samtykke *(kode ferdig, PL-02)* 🟥
 - [ ] 👤 G-01 · `termsAcceptedAt` / `termsVersion` lagres for nye brukere *(kode ferdig, PL-02)* 🟥
 - [ ] 👤 G-01 · Eksisterende brukere bes om samtykke *(kode ferdig, PL-02)* 🟥
@@ -544,7 +583,7 @@ Speiler `LanseringsCheckList.md` §6. **Kryss av begge steder.**
 - [x] 🤖 C PL-15 · Bevis bevares ved rapport/blokkering 🟥 *(PL-15: `Report.evidence` + `evidenceExpiresAt` (migrasjon 20261006120000, deployt til dev/test), evidence = siste 50 tekstmeldinger ved rapport og ved blokkering (før sletting), 90 dager etter lukking (PATCH + cron), personvern §17)*
 - [x] 🤖 C PL-15 · Rapport mulig etter avsluttet match 🟥 *(PL-15f+g: `GET /api/report/candidates` + «Rapporter» i innstillinger fungerer uten aktiv match — tidligere matcher fra MatchHistory)*
 - [x] 🤖 C PL-15 · Rapport-grense via `pgCheck` 🟨 *(PL-15b: `pgCheck('report:<id>', 3, 60)` i stedet for in-memory Map; 4. rapport → 429. Test: `__tests__/report-evidence.test.ts` (4 nye))*
-- [ ] 👤 G-22 · Skriftlig rutine for rapporter 🟥
+- [x] 👤 G-22 · Skriftlig rutine for rapporter 🟥 *(✓ 11.10 — godkjent: George håndterer i admin-panelet med verktøykassen; `docs/operations/BEHANDLING-av-rapporter.md`)*
 
 ### 6.3 Matchingmotoren
 - [ ] 👤 G-19 · Score- og nivåfordeling gjennomgått etter ekte runde 🟥
@@ -567,8 +606,8 @@ Speiler `LanseringsCheckList.md` §6. **Kryss av begge steder.**
 
 ### 6.7 Teknisk kvalitet og sikkerhet
 - [x] 🤖 C PL-24 · Øvrige høye sårbarheter rettet eller vurdert 🟥 *(PL-24a: nodemailer 7.0.13 → 10.0.15, levetestet mot maildev (250 OK + accepted); PL-24b: uploadthing avklart — IKKE brukt i prod (ingen endepunkt, bildene går via R2), beholdes etter Georges beslutning; PL-24c: effect/uploadthing + postcss×4/next + next-moderat dokumentert i LanseringsCheckList K-5. Audit: 0 kritiske, alle høye vurdert skriftlig)*
-- [ ] 🤖 Q PL-20 · Interne og døde sider 404 i prod *(George bekrefter, G-24)* 🟥 *(kode ferdig · PL-20a–f: `/design-system` + `/register/vipps` 404 via layout, `onboarding/payment` + `onboarding/access` slettet (grep rene), `phone/send` + `phone/verify` 404 i prod — verifisert med lokal prod-kjøring `next start`, alle 404)*
-- [ ] 🤖 Q PL-20 · `POST /api/auth/phone/send` deaktivert 🟥 *(kode ferdig · PL-20d — 404 i prod, bekreft med curl etter deploy)*
+- [x] 🤖 Q PL-20 · Interne og døde sider 404 i prod 🟥 *(✓ 11.10 — G-24: George bekrefter at alle gir 404 i prod. Kode: PL-20a–f: `/design-system` + `/register/vipps` 404 via layout, `onboarding/payment` + `onboarding/access` slettet (grep rene), `phone/send` + `phone/verify` 404; 11.10: `/questions` 404 (G-06b))*
+- [x] 🤖 Q PL-20 · `POST /api/auth/phone/send` deaktivert 🟥 *(✓ 11.10 — G-24: 404 i prod, bekreftet av George)*
 - [x] 🤖 C PL-25 · Manglende API-prefikser i middleware 🟨 *(PL-25a+b: 6 nye prefikser i `PROTECTED_API_PREFIXES` + `__tests__/api-route-coverage.test.ts` (119 ruter verifisert, 21 eksplisitt offentlig med begrunnelse). Ny rute uten dekning → rød test.)*
 - [ ] 🤖 Q PL-23a + 👤 G-21 · Sitemap + `og-image.png` 🟥 *(kode ferdig · PL-23a: sitemap omskrevet — kun de 16 offentlige sidene (/, hvorfor, slik-fungerer-det, reisen, metoder, tips, priser, trygghet, faq, om-oss, kontakt, tilgjengelighet, vilkår, personvern, cookies, login); /match, /journey, /dashboard, /profile, /onboarding borte. G-21: `public/og-image.png` (1200×630) mangler)*
 - [ ] 🤖 Q PL-18 + 👤 G-18 · WCAG 2.1 AA 🟥 *(kode ferdig · PL-18a–e: :focus-visible + prefers-reduced-motion i globals.css, kontrast hevet til min. 0.6 alpha på all lesbar hvit tekst (317 treff, 114 filer) + text.muted/–subtle-tokens, outline-none fjernet fra interaktive elementer (68 + 9), FAQ-spørsmål er ekte <button> i <h3>, ResonanceMark: SMIL-animasjonene stanses ved reduced-motion — verify + build grønne; Lighthouse ≥ 95 på /, /login, /onboarding venter på G-18)*
@@ -579,9 +618,10 @@ Speiler `LanseringsCheckList.md` §6. **Kryss av begge steder.**
 - [ ] 👤 G-23 · `npm run build` grønn 🟥
 
 ### 6.8 Drift
-- [ ] 👤 G-10 + 🤖 Q PL-14 · Vercel-plan og tidsplaner 🟥
+- [x] 👤 G-10 + 🤖 Q PL-14 · Vercel-plan og tidsplaner 🟥 *(✓ 11.10 — Pro bekreftet; matching `0 2,3,4 * * 6` er gyldig)*
+- [ ] 👤 Samlet **Vercel-kontrollpunkt** (§2.6) 🟥 *(11.10: alt Vercel-relatert samlet i én liste — env-variable, `BETA_MATCH_EMAIL=true`, rotasjon av `DATABASE_URL`, migrate status, cron)*
 - [ ] 👤 G-01 · `prisma migrate status` viser alle migrasjoner 🟥
-- [ ] 👤 G-11 · Testbrukere slettet 🟥
+- [ ] 👤 G-11 · Testbrukere slettet 🟥 *(besluttet 11.10: utsettes til rett før Vipps; skriptet ligger klar)*
 - [ ] 👤 G-12 · Admin-hemmeligheter satt 🟥
 - [ ] 👤 G-12 · `DEV_LOGIN_ENABLED` ikke `true` 🟥
 - [ ] 👤 G-12 · `PAYMENTS_ENABLED` ikke `true` 🟥

@@ -720,7 +720,7 @@ animasjonen etter første syklus og respektere `prefers-reduced-motion`.
 | # | Funn | Hvor | Neste handling |
 |---|---|---|---|
 | M-1 | `MatchBreakdown` viser score i prosent med fargekoding. Ikke rendret noe sted i dag, men bryter I-12 hvis den tas i bruk | `components/MatchBreakdown.tsx:96–104` | Slett, eller bytt til `toDimensionLabel` |
-| M-2 | Egen fasetabell i `journey/progress/advance` — ACT-PIPELINE §5.3 sier én kilde (`lib/journey/engine.ts`) | `app/api/journey/progress/advance/route.ts:81–86` | Importer `getPhaseForDay` fra engine |
+| M-2 | LØST 11.10 (PL-26d, G-06a): foreldete ruten `journey/progress/advance` slettet — ingen egen fasetabell lenger | `app/api/journey/progress/advance/route.ts` (slettet) | — |
 | M-3 | `client_public.key` og `server_public.key` er sporet i git, men står i `.gitignore` | rotnivå | Avklar om de trengs; `git rm --cached` |
 | M-4 | `access-control-allow-origin: *` på HTML-sider | live-hoder | Fjern for ikke-API-ruter |
 | M-5 | Død kode i settings (`SlettKontoSection`, `GoldToggle`, `MatchSection`) inneholder samme slettefeil som K-1 | `app/settings/page.tsx:900+` | Slett når K-1 rettes |
@@ -762,7 +762,7 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 | | Punkt | Ref | Prioritet |
 |---|---|---|---|
 | [x] | Kontosletting virker ende-til-ende, med feilmelding ved feil *(✓ 2026-10-05 · PL-01)* | K-1 | **Før lansering — og før flere testere** |
-| [ ] | Brukere som har forsøkt å slette seg, er slettet manuelt og informert | K-1 | **Før lansering** |
+| [ ] | Brukere som har forsøkt å slette seg, er slettet manuelt *(besluttet 11.10 — George: han har oversikt i admin-panelet og sletter der; ingen skript, ingen e-post)* | K-1 | **Før lansering** |
 | [x] | Integrasjonstest for kontosletting med aktiv reise *(✓ 2026-10-05 · PL-01d, kjørt mot test-DB)* | K-1 | **Før lansering** |
 | [ ] *(klar for George · PL-02)* | Aktiv aksept av vilkår + uttrykkelig samtykke til særlige kategorier | K-2 | **Før lansering — og før flere testere** |
 | [ ] *(klar for George · PL-02)* | `termsAcceptedAt` / `termsVersion` lagres for alle nye brukere | K-2 | **Før lansering** |
@@ -781,7 +781,7 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 | [x] | Bevis bevares ved rapport/blokkering | V-5 | **Før lansering** |
 | [x] | Rapport mulig også etter avsluttet match | V-5 | **Før lansering** |
 | [x] | Rapport-rate-limit flyttet til `pgCheck` | V-5 | Kan utsettes |
-| [ ] | Rutine for behandling av rapporter (hvem, hvor raskt, hva skjer) er skriftlig *(klar for George · PL-G9 — utkast i `docs/operations/BEHANDLING-av-rapporter.md`)* | V-5 | **Før lansering** |
+| [x] | Rutine for behandling av rapporter (hvem, hvor raskt, hva skjer) er skriftlig *(✓ 11.10 — godkjent: George håndterer rapportene i admin-panelet med verktøykassen og bestemmer hva som skal gjøres; `docs/operations/BEHANDLING-av-rapporter.md`)* | V-5 | **Før lansering** |
 
 ### 6.3 Matchingmotoren
 
@@ -838,8 +838,8 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 |---|---|---|---|
 | [x] | Kritiske og høye sårbarheter i `next`, `next-auth`, `@auth/*` rettet | K-5 | **Før lansering** |
 | [x] | Øvrige høye sårbarheter (nodemailer, uploadthing, sharp, postcss) rettet eller vurdert | K-5 | **Før lansering** |
-| [ ] | Interne og døde sider fjernet eller 404 i prod *(klar for George · PL-20 — kode ferdig, G-24 curl etter deploy)* | V-10 | **Før lansering** |
-| [ ] | `POST /api/auth/phone/send` deaktivert *(klar for George · PL-20 — 404 i prod, bekreft med curl etter deploy)* | V-10 | **Før lansering** |
+| [x] | Interne og døde sider fjernet eller 404 i prod *(✓ 11.10 — G-24: George bekrefter at alle gir 404 i prod)* | V-10 | **Før lansering** |
+| [x] | `POST /api/auth/phone/send` deaktivert *(✓ 11.10 — G-24: 404 i prod, bekreftet av George)* | V-10 | **Før lansering** |
 | [x] | Manglende API-prefikser i middleware | V-11 | Kan utsettes |
 | [ ] | `og-image.png` finnes; sitemap viser offentlige sider *(klar for George · PL-23a — sitemap ferdig med kun offentlige sider; bildet = G-21)* | V-14 | **Før lansering** |
 | [ ] | WCAG 2.1 AA: kontrast, fokus, labels, redusert bevegelse *(klar for George · PL-18 — a–e ferdig, Lighthouse-sjekk G-18)* | V-8 | **Før lansering** |
@@ -853,9 +853,9 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 
 | | Punkt | Ref | Prioritet |
 |---|---|---|---|
-| [ ] | Vercel-plan bekreftet; cron-tidsplaner gyldige for planen | V-16 | **Før lansering** |
+| [x] | Vercel-plan bekreftet; cron-tidsplaner gyldige for planen *(✓ 11.10 — G-10: prosjektet er på **Pro**; matching `0 2,3,4 * * 6` er gyldig)* | V-16 | **Før lansering** |
 | [ ] | `prisma migrate status` mot prod-URL viser alle migrasjoner applied | GEORGE.md | **Før lansering** |
-| [ ] | Testbrukere (test1/test2) slettet fra prod | GEORGE.md | **Før lansering** |
+| [ ] | Testbrukere (test1/test2) slettet fra prod *(besluttet 11.10 — G-11: utsettes til rett før Vipps-innføring; skriptet ligger klar)* | GEORGE.md | **Før lansering** |
 | [ ] | `ADMIN_PASSWORD_HASH`, `ADMIN_JWT_SECRET`, `ADMIN_EMAIL` satt | GEORGE.md | **Før lansering** |
 | [ ] | `DEV_LOGIN_ENABLED` ikke `true` i prod; `/dev-login` redirecter (bekreftet 05.10) | — | **Før lansering** |
 | [ ] | `PAYMENTS_ENABLED` ikke `true` før Vipps er verifisert | §5 | **Før lansering** |

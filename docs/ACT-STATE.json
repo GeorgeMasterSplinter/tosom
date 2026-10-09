@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "updatedAt": "2026-10-08",
-  "commit": "0611486",
+  "commit": "45e7bf0",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
     "tests": "538 passed / 1 skipped (62 av 63 suiter) — målt 07.10 etter PL-06: +10 nye (__tests__/journey-day-advance.test.ts: startdag, +N dager, clamp 1–30, DST sommer↔vinter, begge-partnere-samme-dag, cron fanger opp utilsatte døgn); før det: 528 etter PL-15 (report-evidence +4, report-alert prisma/pgCheck-mock), 524 etter PL-25",
@@ -630,7 +630,8 @@
   "done": [
     "G-01: push til GitHub utført (06.10); G-23: vent på grønn CI",
     "G-02: lokal e2e-verifisering av passord-reset (SMTP-fange): fullt grønn",
-    "G-15 (PL-G15): slette-skript bygd + verifisert (0611486, 08.10) — dry-run OK mot dev; kjøre mot prod venter på ID-liste (G-15)"
+    "G-15 (PL-G15): slette-skript bygd + verifisert (0611486, 08.10) — dry-run OK mot dev; kjøre mot prod venter på ID-liste (G-15)",
+    "E-post: reisen-slutt/takk (sendJourneyEndEmail) bygd + koblet i endJourney (dag 30 / fant hverandre) + test (45e7bf0, 08.10); verifisert (jest 541)"
   ],
   "blocked": []
 }

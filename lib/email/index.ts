@@ -29,14 +29,14 @@ export interface EmailResult {
 
 /**
  * Hent konfigurert transporter (lat initialisering — unngår build-feil).
- * Returnerer null hvis konfigurasjon mangler.
+ * Returnerer null hvis konfigurasjon mangler. Feilede forsøk caches ikke —
+ * neste sending prøver på nytt (serverless: en varm container skal ikke
+ * giftes av én transient feil).
  */
 let cachedTransporter: Transporter | null = null;
-let transporterInitAttempted = false;
 
 async function getTransporter(): Promise<Transporter | null> {
-  if (transporterInitAttempted) return cachedTransporter;
-  transporterInitAttempted = true;
+  if (cachedTransporter) return cachedTransporter;
 
   try {
     const host = process.env.EMAIL_SERVER_HOST;
@@ -48,9 +48,19 @@ async function getTransporter(): Promise<Transporter | null> {
       return null;
     }
 
+    // Hosten må være et rent hostname: nodemailer resoluterer hele
+    // strengen, så «https://smtp.resend.com» gir DNS-feil (getaddrinfo
+    // EBUSY). 11.10: nøyaktig feilen i prod. Normaliser og varsel.
+    const normalizedHost = host.replace(/^[a-z]+:\/\//i, '').replace(/\/+$/, '');
+    if (normalizedHost !== host) {
+      console.warn(
+        `[email] EMAIL_SERVER_HOST er «${host}» — skal være «${normalizedHost}» uten protokoll. Rett verdien i Vercel.`
+      );
+    }
+
     const nodemailer = await import('nodemailer');
     cachedTransporter = nodemailer.createTransport({
-      host,
+      host: normalizedHost,
       port: parseInt(process.env.EMAIL_SERVER_PORT || '587', 10),
       secure: process.env.EMAIL_SERVER_PORT === '465',
       auth: { user, pass: password },

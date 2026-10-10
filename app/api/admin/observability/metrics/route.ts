@@ -10,9 +10,8 @@
  * Admin-autorisasjon som alle andre admin-ruter.
  */
 
-import { auth } from '@/lib/auth/config'
-import { requireAdmin } from '@/lib/admin/requireAuth'
-import { AuthenticatedUser } from '@/lib/auth/admin-auth'
+import { NextRequest, NextResponse } from 'next/server'
+import { requireAdmin } from '@/lib/auth/requireAuth'
 import prisma from '@/lib/prisma'
 export const dynamic = 'force-dynamic';
 
@@ -30,21 +29,10 @@ function percentile(values: number[], p: number): number {
   return s[idx];
 }
 
-export async function GET(request: Request): Promise<Response> {
+export async function GET(request: NextRequest): Promise<Response> {
   try {
-    const session = await auth()
-    const rawUser = session?.user
-    if (!rawUser) {
-      return json({ error: 'Unauthorized' }, 401);
-    }
-    const user: AuthenticatedUser = {
-      id: String(rawUser.id ?? 'unknown'),
-      name: rawUser.name ?? '',
-      email: rawUser.email ?? '',
-      image: rawUser.image ?? '',
-      role: 'USER' as const,
-    }
-    await requireAdmin(user)
+    const authResult = await requireAdmin(request);
+    if (authResult instanceof NextResponse) return authResult;
 
     const url = new URL(request.url);
     const metric = url.searchParams.get('metric');

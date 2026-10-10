@@ -1,7 +1,7 @@
 # ToSom — En rolig, privat plattform for ekte relasjoner
 
 ToSom er en relasjonsplattform for voksne (21+) som søker ekte forbindelse.
-Ingen swipe. Ingen feed. Én match innen 24 timer.
+Ingen swipe. Ingen feed. Én gjennomtenkt match i uken.
 
 ## Språkprofil
 

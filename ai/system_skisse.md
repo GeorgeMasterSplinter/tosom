@@ -64,7 +64,7 @@ Ingen nynorsk. Ingen slang. Ingen teknisk språk mot bruker.
 ```
 ┌──────────────┐     ┌──────────────────┐     ┌─────────────┐     ┌──────────────┐
 │  ONBOARDING  │────▶│ WAITING_FOR_MATCH│────▶│ACTIVE_JOURNEY│────▶│DAY_30_CHOICE │
-│ "Bygg meg"   │     │  "≤24 timer"     │     │  Dag 1-29    │     │ Ja? Nei?      │
+│ "Bygg meg"   │     │  "opptil 1 uke"  │     │  Dag 1-29    │     │ Ja? Nei?      │
 └──────────────┘     └──────────────────┘     └─────────────┘     └──────┬───────┘
                                                                           │
                                                                  ┌────────┴────────┐
@@ -120,7 +120,7 @@ Ingen nynorsk. Ingen slang. Ingen teknisk språk mot bruker.
    ├── Lagrer som `Profile` i database (JSON for dyp profil)
    └── "Start reisen" → User.onboardingComplete = true
 
-3. VENTER PÅ MATCH ("≤24 timer")
+3. VENTER PÅ MATCH ("opptil en uke — matchrunden er lørdag")
    ├── Dashboard viser: "Din match er på vei, [navn] 💛"
    ├── Pulsring-animasjon + nedtelling
    ├── Alt låst: Onboarding 🔒 Profil 🔒 Chat 🔒
@@ -354,7 +354,7 @@ Text Muted:    rgba(255,255,255,0.4)
 - ❌ Se andres profiler (`/profile/[id]`)
 
 ### Tillatt
-- ✅ Én match per 24 timer
+- ✅ Én match i uken (natt til lørdag)
 - ✅ Guided spørsmål ("Bli kjent" — 12 kategorier × ~20 spørsmål)
 - ✅ Valgfri mood-farger i chat (5 alternativer)
 - ✅ Bilder fra dag 15

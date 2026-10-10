@@ -121,7 +121,7 @@ Dette dokumentet er din permanente referanse.
 ToSom er en rolig, moderne og forskningsbasert relasjonsplattform for voksne (21+). 
 Plattformen hjelper to mennesker å møtes på en trygg, moden og strukturert måte — uten støy, uten jag, uten overflate.
 
-Brukeren bygger en dyp, veiledet profil, og når profilen er fullført, mottar de én match innen 24 timer. 
+Brukeren bygger en dyp, veiledet profil, og når profilen er fullført, mottar de én gjennomtenkt match i uken (matchrunden kjører natt til lørdag). 
 Deretter går paret inn i en guidet 30-dagers reise som hjelper dem å bli kjent på en trygg, moden og fokusert måte.
 
 ### 1.1 ToSom er
@@ -432,7 +432,7 @@ ToSom bruker kun én AI-modul: matching-motoren.
 - forstå verdier, relasjonsstil, kommunikasjon, trygghet  
 - måle resonans  
 - finne kompatibilitet  
-- velge én match per 24 timer  
+- velge én match per matchrunde (ukentlig)  
 
 ### Matching-motoren skal:
 - aldri bruke bilder  
@@ -1570,7 +1570,7 @@ Matching-motoren er den eneste AI-funksjonen i ToSom.
 Den skal:
 - kun bruke onboarding-profilen  
 - kun bruke resonanslogikk  
-- kun gi én match per 24 timer  
+- kun gi én match per matchrunde (ukentlig)  
 
 Den skal aldri:
 - bruke bilder  

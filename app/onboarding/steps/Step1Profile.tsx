@@ -489,7 +489,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
                 value: 'Bonusfamilie',
                 label: 'Åpen for bonusfamilie',
                 icon: '🏡',
-                description: 'Åpen for en partner som har barn fra før — og for å bli kjent med familien rundt.',
+                description: 'Åpen for en partner som har barn fra før.',
               },
             ]}
             selectedValue={val('wantChildren', '')(data)}

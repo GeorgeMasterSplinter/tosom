@@ -1,23 +1,11 @@
-import { auth } from '@/lib/auth/config'
-import { requireAdmin } from '@/lib/admin/requireAuth'
-import { castToAdminUser, AuthenticatedUser } from '@/lib/auth/admin-auth'
+import { NextRequest, NextResponse } from 'next/server'
+import { requireAdmin } from '@/lib/auth/requireAuth'
 export const dynamic = 'force-dynamic';
 
-export async function GET(request: Request): Promise<Response> {
+export async function GET(request: NextRequest): Promise<Response> {
   try {
-    const session = await auth()
-    const rawUser = session?.user
-    if (!rawUser) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } })
-    }
-    const user: AuthenticatedUser = {
-      id: String(rawUser.id ?? 'unknown'),
-      name: rawUser.name ?? '',
-      email: rawUser.email ?? '',
-      image: rawUser.image ?? '',
-      role: 'USER' as const,
-    }
-    await requireAdmin(user)
+    const authResult = await requireAdmin(request)
+    if (authResult instanceof NextResponse) return authResult
 
     return new Response(JSON.stringify({ errors: [] }), { status: 200, headers: { 'Content-Type': 'application/json' } })
   } catch (error) {

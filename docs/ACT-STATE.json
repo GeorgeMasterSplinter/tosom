@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "updatedAt": "2026-10-11",
-  "commit": "b0871c5",
+  "commit": "7e959a6",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
     "tests": "538 passed / 1 skipped (62 av 63 suiter) — målt 07.10 etter PL-06: +10 nye (__tests__/journey-day-advance.test.ts: startdag, +N dager, clamp 1–30, DST sommer↔vinter, begge-partnere-samme-dag, cron fanger opp utilsatte døgn); før det: 528 etter PL-15 (report-evidence +4, report-alert prisma/pgCheck-mock), 524 etter PL-25",
@@ -628,6 +628,7 @@
     "Kostnadsplan: Vercel Pro/Fluid, Pusher/Resend betalte tier, R2-lagring"
   ],
   "done": [
+    "11.10: lib/email hardet — host normaliseres (fix for getaddrinfo EBUSY «https://smtp.resend.com») + feilet init caches ikke; 4 nye tester (email-transport). Admin-e-posttest-resultatene + rett verdiene notert i G-02 (Vercel: HOST uten protokoll, USER=resend, redeploy).",
     "11.10: onboarding steg 1 — anonymitetsvarsel under navnefeltet (gull + varsel-ikon: partneren ser navnet, ikke ditt fulle ekte navn); placeholder «Ikke ditt ekte navn»; 6 eksempler; e2e-selectorer → data-testid. Verifisert inkl. live next start (200, ny tekst i HTML).",
     "11.10: konsekvensrett — «match innen 24 timer» fjernet fra README.md (Google-indexert) + ai/system_prompt.md (3) + ai/system_skisse.md (3); erstattet med ukentlig konsept (én gjennomtenkt match i uken, matchrunden natt til lørdag). Gjenstående «24 timer»-treff er support-svartid (kontakt/microcopy) + tekniske kommentarer — begge korrekte.",
     "11.10: G-06a/b/c + G-24 + G-10 (Pro) + G-22 + G-15 (admin) + G-11 (Vipps) — kode: advance-ruten slettet, /questions 404, admin fire faser; begge sjekklistene + Vercel-kontrollpunkt (§2.6) oppdatert; verifisert tsc/jest 541/lang/lint",

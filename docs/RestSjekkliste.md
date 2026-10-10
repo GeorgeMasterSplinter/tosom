@@ -166,6 +166,11 @@ npm audit --omit=dev   → 0 kritiske · 5 høye · 1 moderat (målt etter PL-24
   (og `[email]`) — enten `sent` (da: spam/levering) eller `failed: <årsak>`
   (da: `EMAIL_SERVER_*` i Vercel — se Vercel-kontrollpunkt §2.6, rad 6).
   Hurtigtest av hele veien: admin-panelet → Verktøy → e-posttest til din egen e-post.
+  **Admin-e-posttest 11.10:** først `535 Invalid username` (feil `EMAIL_SERVER_USER`),
+  deretter `getaddrinfo EBUSY https://smtp.resend.com` (host med protokoll). Rett:
+  `EMAIL_SERVER_HOST=smtp.resend.com` **uten protokoll**, `EMAIL_SERVER_USER=resend`,
+  og **redeploy etter env-endring**. Koden er hardet 11.10: host normaliseres +
+  feilet initialisering caches ikke (`lib/email`, test `email-transport`).
 - [ ] Gjort
 
 #### 👤 G-03 · Sjekk reisedagene i prod-databasen (kun lesing)  🟥

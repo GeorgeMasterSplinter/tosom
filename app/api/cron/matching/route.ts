@@ -318,6 +318,10 @@ export async function GET(req: NextRequest) {
 
       // 6. Per batch: én transaksjon for BATCH_SIZE par (S1 — batch transaksjoner)
       const BATCH_SIZE = 50;
+      // B-2: Match-e-poster som skal vente på før runden returnerer —
+      // ellers kan Vercel drepe kjørekonteksten før fire-and-forget-e-postene
+      // faktisk er sendt (serverless). allSettled er best-effort og kaster aldri.
+      const pendingMatchEmails: Promise<unknown>[] = [];
 
       for (let batchIdx = 0; batchIdx < matchedPairs.length; batchIdx += BATCH_SIZE) {
         if (Date.now() >= deadline) break;
@@ -398,7 +402,7 @@ export async function GET(req: NextRequest) {
               });
               for (const user of users) {
                 if (user.email) {
-                  sendMatchEmail(user.email).catch(() => {});
+                  pendingMatchEmails.push(sendMatchEmail(user.email));
                 }
               }
             } catch {
@@ -408,6 +412,12 @@ export async function GET(req: NextRequest) {
         } catch (err) {
           errors.push(`batch ${Math.floor(batchIdx / BATCH_SIZE) + 1} (${batch.length} par): ${(err as Error).message}`);
         }
+      }
+
+      // B-2: Vent på at match-e-postene er sendt før runden returnerer.
+      // Best-effort: allSettled løyser uten å kaste, selv om en send feiler.
+      if (pendingMatchEmails.length > 0) {
+        await Promise.allSettled(pendingMatchEmails);
       }
 
       const remaining = queued.length - used.size;

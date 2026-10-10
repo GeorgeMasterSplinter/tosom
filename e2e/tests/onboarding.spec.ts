@@ -278,7 +278,7 @@ test.describe('Onboarding Flow (13-stegs)', () => {
   test('skal autosave inndata til sessionStorage', async ({ page }) => {
     await page.goto('/onboarding');
 
-    const nameInput = page.locator('input[placeholder="Navn eller kallenavn"]');
+    const nameInput = page.locator('input[data-testid="ob-name"]');
     if (await nameInput.count() > 0) {
       await nameInput.fill('AutosaveTest');
     }
@@ -304,7 +304,7 @@ test.describe('Onboarding Flow (13-stegs)', () => {
   test('skal restaurera draft etter side-opprettning', async ({ page }) => {
     await page.goto('/onboarding');
 
-    const nameInput = page.locator('input[placeholder="Navn eller kallenavn"]');
+    const nameInput = page.locator('input[data-testid="ob-name"]');
     if (await nameInput.count() > 0) {
       await nameInput.fill('DraftTest123');
     }

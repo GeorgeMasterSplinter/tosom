@@ -191,12 +191,37 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             label="Hva vil du at vi skal kalle deg? *"
             value={val('identityName', '')(data)}
             onChange={(v) => onChange('identityName', v)}
-            placeholder="Navn eller kallenavn"
-            mikroguiding="Skriv f.eks. Sofia, Jonas eller Lia"
+            placeholder="Ikke ditt ekte navn"
+            mikroguiding="F.eks. Sofia, Noa, Freja, Elias, Luna eller Oscar"
             maxLength={50}
             minChars={2}
             testId="ob-name"
           />
+
+          {/* Anonymitetsvarsel — partneren ser dette navnet */}
+          <div
+            className="flex items-start gap-2.5 rounded-xl p-3"
+            style={{
+              background: OB.goldBg,
+              border: `1px solid ${OB.goldSoft}`,
+            }}
+          >
+            <span
+              aria-hidden="true"
+              className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[12px] font-semibold"
+              style={{
+                background: OB.goldGlow,
+                color: OB.gold,
+                border: `1px solid ${OB.goldSoft}`,
+              }}
+            >
+              !
+            </span>
+            <p className="text-[12px] leading-relaxed" style={{ color: OB.textSecondary }}>
+              <span style={{ color: OB.gold }}>Partneren din ser dette navnet.</span>{' '}
+              Velg noe du er komfortabel med — ikke ditt fulle, ekte navn.
+            </p>
+          </div>
 
           <OnboardingTextField
             label="Alder *"

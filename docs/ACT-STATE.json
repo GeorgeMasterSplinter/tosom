@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "updatedAt": "2026-10-11",
-  "commit": "e0e1ff0",
+  "commit": "b0871c5",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
     "tests": "538 passed / 1 skipped (62 av 63 suiter) — målt 07.10 etter PL-06: +10 nye (__tests__/journey-day-advance.test.ts: startdag, +N dager, clamp 1–30, DST sommer↔vinter, begge-partnere-samme-dag, cron fanger opp utilsatte døgn); før det: 528 etter PL-15 (report-evidence +4, report-alert prisma/pgCheck-mock), 524 etter PL-25",

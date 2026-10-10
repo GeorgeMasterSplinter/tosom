@@ -161,6 +161,11 @@ npm audit --omit=dev   → 0 kritiske · 5 høye · 1 moderat (målt etter PL-24
   E-postplanen: velkommen (fullført onboarding) → match (`BETA_MATCH_EMAIL=true`
   i Vercel, beslutning 11.10) → reisen er slutt/takk. Alle tre er allerede bygd
   og koblet i koden.
+  **11.10 (ettermelding):** Georges nye prod-konto mottok **ikke** velkommen-e-posten.
+  Koden logger alltid nøyaktig status: Vercel → Logs, søk på `Velkomst-e-post`
+  (og `[email]`) — enten `sent` (da: spam/levering) eller `failed: <årsak>`
+  (da: `EMAIL_SERVER_*` i Vercel — se Vercel-kontrollpunkt §2.6, rad 6).
+  Hurtigtest av hele veien: admin-panelet → Verktøy → e-posttest til din egen e-post.
 - [ ] Gjort
 
 #### 👤 G-03 · Sjekk reisedagene i prod-databasen (kun lesing)  🟥
@@ -310,10 +315,11 @@ sammen, slik at alt blir oversett på én gang. Vercel → Settings:
 | 3 | `PAYMENTS_ENABLED` | Environment Variables (Production) | Ikke satt, eller `false` (til Vipps er verifisert) |
 | 4 | `ENABLE_CSRF_PROTECTION` | Environment Variables (Production) | `true` |
 | 5 | `BETA_MATCH_EMAIL` | Environment Variables (Production) | `true` (match-e-post på, beslutning 11.10) |
-| 6 | `DATABASE_URL` | Vercel **og** GitHub → Secrets (Actions) | Rotert — den ble delt i chat 03.09 (G-04); redeploy etter |
-| 7 | `prisma migrate status` | mot prod-URL | Alle migrasjoner applied |
-| 8 | Cron | Vercel → Functions / logs | Plan = **Pro** (bekreftet 11.10); matching `0 2,3,4 * * 6` er gyldig |
-| 9 | (senere, sak 7) | `.github/workflows/cd.yml` | Automatisere `prisma migrate deploy` i CD mot prod, FØR vercel deploy |
+| 6 | `EMAIL_SERVER_HOST/PORT/USER/PASSWORD` + `EMAIL_FROM` + `ALERT_EMAIL_TO` | Environment Variables (Production) | Sjekk verdiene — velkommen-, match-, reisen-slutt- og reset-e-post sendes via disse (nodemailer SMTP, `lib/email`). **11.10: velkommen-e-post kom ikke fram for ny prod-bruker** — se G-02 |
+| 7 | `DATABASE_URL` | Vercel **og** GitHub → Secrets (Actions) | Rotert — den ble delt i chat 03.09 (G-04); redeploy etter |
+| 8 | `prisma migrate status` | mot prod-URL | Alle migrasjoner applied |
+| 9 | Cron | Vercel → Functions / logs | Plan = **Pro** (bekreftet 11.10); matching `0 2,3,4 * * 6` er gyldig |
+| 10 | (senere, sak 7) | `.github/workflows/cd.yml` | Automatisere `prisma migrate deploy` i CD mot prod, FØR vercel deploy |
 
 Når du er ferdig: si fra, så krysses G-04, G-10, G-12 og `prisma migrate status`
 av i begge sjekklistene.

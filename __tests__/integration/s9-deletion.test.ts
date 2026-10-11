@@ -1,5 +1,5 @@
 /**
- * ToSom — S-9: Verifiser at sletting er fullstendig (found_each_other)
+ * ToSom — S-9: Verifiser at sletting er fullstendig (no_action — dag 30 auto-sletting)
  *
  * Kaller den EKTEN endJourney()-funksjonen (ikke en simulert transaksjon) og
  * bekrefter:
@@ -8,6 +8,9 @@
  *   3. Opplaaste bilde-OBJEKTA i lagringen er slettet (GDPR art. 17 — reell
  *      lekkasjevei). Testen kjører mot local-driver mot ein isolert tempdir,
  *      slik at vi kan verifisere at fila faktisk er borte frå disken.
+ *
+ * (found_each_other har no 24-timers grace-period (D) og sletter IKKE umiddelbart —
+ * se full-loop-beta STEP 7. no_action er det ubrodde fullsletter-utfallet.)
  *
  * (Oppdatert: bildet knyttest no til meldingen via imageKey og slettast per
  * nøkkel via lib/storage — ikke lenger som mappe-rydding i public/.)
@@ -26,7 +29,7 @@ const CONV_ID = 's9-test-conversation';
 // Nøkkelen bildet får i lagringen (format: {conversationId}/{uuid}.{ext})
 const IMAGE_KEY = 's9-test-conversation/bilde.jpg';
 
-describe('S-9: endJourney(found_each_other) — fullstendig sletting', () => {
+describe('S-9: endJourney(no_action) — fullstendig sletting (auto-sveip dag 30)', () => {
   let storageDir: string;
   let storage: LocalImageStorage;
 
@@ -102,7 +105,7 @@ describe('S-9: endJourney(found_each_other) — fullstendig sletting', () => {
     });
 
     // --- Kall den EKTEN endJourney ---
-    await endJourney(match.id, 'found_each_other');
+    await endJourney(match.id, 'no_action');
 
     // 1) Konto + innhold er borte for begge
     expect(await db.user.findUnique({ where: { id: userA.id } })).toBeNull();
@@ -121,7 +124,7 @@ describe('S-9: endJourney(found_each_other) — fullstendig sletting', () => {
       where: { uh_idx: { userAId: first, userBId: second } },
     });
     expect(history).not.toBeNull();
-    expect(history?.outcomeA).toBe('found_each_other');
+    expect(history?.outcomeA).toBe('no_action');
 
     expect(await db.report.findUnique({ where: { id: report.id } })).not.toBeNull();
 
@@ -130,7 +133,7 @@ describe('S-9: endJourney(found_each_other) — fullstendig sletting', () => {
     });
     expect(survivingAudit).not.toBeNull();
     expect(survivingAudit?.adminId).toBeNull();
-    expect(JSON.parse(survivingAudit!.metadata!)).toMatchObject({ outcome: 'found_each_other' });
+    expect(JSON.parse(survivingAudit!.metadata!)).toMatchObject({ outcome: 'no_action' });
 
     // 3) Bilde-OBJEKTA i lagringa er slettet (GDPR art. 17 — reell lekkasjevei)
     expect(await storage.exists(IMAGE_KEY)).toBe(false);

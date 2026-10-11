@@ -19,8 +19,9 @@ jest.mock('@/lib/auth/session', () => ({
 }));
 jest.mock('@/lib/prisma', () => ({
   prisma: {
-    user: { findUnique: jest.fn(), delete: jest.fn() },
+    user: { findUnique: jest.fn(), delete: jest.fn(), updateMany: jest.fn() },
     match: { findFirst: jest.fn() },
+    journeyProgress: { deleteMany: jest.fn() },
     $transaction: jest.fn(),
   },
 }));
@@ -70,8 +71,9 @@ const mockedTx = {
 };
 
 const mockedPrisma = prisma as unknown as {
-  user: { findUnique: jest.Mock; delete: jest.Mock };
+  user: { findUnique: jest.Mock; delete: jest.Mock; updateMany: jest.Mock };
   match: { findFirst: jest.Mock };
+  journeyProgress: { deleteMany: jest.Mock };
   $transaction: jest.Mock;
 };
 
@@ -106,6 +108,9 @@ describe('POST /api/settings/delete-account (K-1)', () => {
     mockedSession.mockResolvedValue({ user: { id: 'u-1', email: 'bruker@eksempel.no' } });
     mockedTx.conversation.findMany.mockResolvedValue([]);
     mockedTx.user.delete.mockResolvedValue({ id: 'u-1' });
+    // D: grace-period — partner-reset etter transaksjonen (mockes for ikke-kaste)
+    mockedPrisma.user.updateMany.mockResolvedValue({ count: 0 });
+    mockedPrisma.journeyProgress.deleteMany.mockResolvedValue({ count: 0 });
     mockTransaction();
   });
 
@@ -139,7 +144,10 @@ describe('POST /api/settings/delete-account (K-1)', () => {
 
   it('aktiv match → endJourney(matchId, "early_exit") kalles FØR transaksjonen', async () => {
     mockedPrisma.user.findUnique.mockResolvedValue({ email: 'bruker@eksempel.no', name: 'Anna' });
-    mockedPrisma.match.findFirst.mockResolvedValue({ id: 'm-1' });
+    // Første kall: aktiv match. Andre kall (D: grace-sjekk): ingen 'ended'-match.
+    mockedPrisma.match.findFirst
+      .mockResolvedValueOnce({ id: 'm-1' })
+      .mockResolvedValueOnce(null);
     mockedEndJourney.mockResolvedValue({ deleted: {} });
 
     const callOrder: string[] = [];

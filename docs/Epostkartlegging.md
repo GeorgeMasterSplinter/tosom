@@ -3,6 +3,9 @@
 Status per 10.11.2026. Alle eposter sendes fra `noreply@tosom.no` (Resend/SMTP,
 konfigurert i `lib/email` + Vercel-env `EMAIL_SERVER_*`).
 
+**Nye detaljer:** Arkitektur, symmetrivurdering (begge brukere), kjedebilde for
+grace-perioden og diagnose-runbook: `docs/EPINNTAK-EPPOSTSYSTEM-OVERSIKT.md`.
+
 ## Prinsipp
 
 - Epost sendes kun ved **store livshendelser** og **admin-informasjon**.
@@ -19,7 +22,7 @@ konfigurert i `lib/email` + Vercel-env `EMAIL_SERVER_*`).
 | 2 | Match funnet (matcherunde) | Begge i paret | «Du har fått en kobling» — bak flagget `BETA_MATCH_EMAIL=true` (leses live fra Vercel-env, ingen redeploy) | `app/api/cron/matching/route.ts` |
 | 3 | Reisen avsluttet tidlig (tidlig avslutning / «start ny reise» / blokkering / kontosletting med aktiv match) | **Partneren** (den som avsluttet får ingen — den valgte selv) | «Reisen er avsluttet» — nøytral, konkret, empatisk; avslører aldri hvem | `lib/journey/endJourney.ts` (via `initiatorId`) |
 | 4 | Reisen fullført (dag 30, `no_action`) | Begge | «Reisen er fullført» — takk + bekrefter at alt er slettet | `lib/journey/endJourney.ts` |
-| 5 | De fant hverandre (`found_each_other`) | Begge (før kontosletting) | «Gratulerer — reisen er fullført» | `lib/journey/endJourney.ts` |
+| 5 | De fant hverandre (`found_each_other`) | Begge | «Gratulerer — reisen er fullført» — **D (10.11): 24-timers grace**; innholdet beholdes slik at begge kan laste ned PDF før `cron/journey` sletter alt | `lib/journey/endJourney.ts` |
 | 6 | Admin løyser kobling (unmatch) | Begge i paret | «Reisen er avsluttet» (nøytral) | `app/api/admin/matches/[id]/unmatch/route.ts` |
 | 7 | Passord-nullstilling | Brukeren | «Tilbakestill passordet ditt» (link, 1 time) | `app/api/auth/request-reset/route.ts` |
 | 8 | Konto slettet | Brukeren | «Din ToSom-konto er slettet» (siste ord) | `app/api/settings/delete-account/route.ts` |

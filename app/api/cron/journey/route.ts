@@ -19,6 +19,7 @@ import { getPhaseForDay, journeyDayFor } from '@/lib/journey/engine'; // ST3.1, 
 import { runRetention } from '@/lib/privacy/retention'; // S-10
 import { recordMetric, recordEvent } from '@/lib/observability/metric'; // O-3
 import { endJourney } from '@/lib/journey/endJourney'; // B-D: no-action auto-sletting
+import { getImageStorage } from '@/lib/storage'; // D: grace-period — bildeobjekter
 import {
   thresholdQueueSize,
   thresholdRoundDuration,
@@ -363,6 +364,98 @@ export async function GET(req: NextRequest) {
       } catch (day30Error) {
         console.error('[cron/journey] Feil ved dag-30 auto-sletting:', day30Error);
         errors.push(`day30 no_action: ${(day30Error as Error).message}`);
+      }
+
+      // D: 24-timers grace-period for «Vi fant hverandre».
+      // endJourney('found_each_other') BEHOLDER innhold + kontoer (status='ended',
+      // expiresAt=+24 t) slik at begge kan eksportere PDF. Når fristen har gått:
+      // slett alt — innhold, bildeobjekter, match og begge kontoer (om de
+      // fortsatt finnes — brukeren kan ha slettet kontoen selv under perioden).
+      let graceCleaned = 0;
+      try {
+        const now = new Date();
+        const graceMatches = await prisma.match.findMany({
+          where: { status: 'ended', expiresAt: { not: null, lt: now } },
+          select: { id: true, userAId: true, userBId: true },
+          take: 20,
+        });
+
+        for (const m of graceMatches) {
+          try {
+            // Bilde-nøkler FØR sletting (PDF-objektene i lagringen)
+            const imageKeys = (
+              await prisma.message.findMany({
+                where: { conversation: { matchId: m.id }, imageKey: { not: null } },
+                select: { imageKey: true },
+              })
+            )
+              .map((r) => r.imageKey)
+              .filter((k): k is string => typeof k === 'string' && k.length > 0);
+
+            // Innhold (FK-rekkefølge — samme som endJourney)
+            await prisma.message.deleteMany({ where: { conversation: { matchId: m.id } } });
+            await prisma.journeyStateLog.deleteMany({ where: { conversation: { matchId: m.id } } });
+            await prisma.resonanceSession.deleteMany({ where: { conversation: { matchId: m.id } } });
+            await prisma.gameSession.deleteMany({ where: { conversation: { matchId: m.id } } });
+            const graceJourneys = await prisma.journeyProgress.findMany({
+              where: { matchId: m.id },
+              select: { id: true },
+            });
+            if (graceJourneys.length > 0) {
+              await prisma.journeyMilestone.deleteMany({
+                where: { progressId: { in: graceJourneys.map((j) => j.id) } },
+              });
+            }
+            await prisma.journeyProgress.deleteMany({ where: { matchId: m.id } });
+            await prisma.conversation.deleteMany({ where: { matchId: m.id } });
+
+            // Bildeobjekter (best-effort)
+            if (imageKeys.length > 0) {
+              const storage = getImageStorage();
+              for (const key of imageKeys) {
+                try {
+                  await storage.deleteImage(key);
+                } catch (imgErr) {
+                  console.warn(`[cron/journey] Kunne ikke slette bilde-objekt ${key}:`, imgErr);
+                }
+              }
+            }
+
+            // Match
+            await prisma.match.delete({ where: { id: m.id } });
+
+            // Begge kontoer — kun om de fortsatt finnes
+            for (const uid of [m.userAId, m.userBId]) {
+              const u = await prisma.user.findUnique({ where: { id: uid }, select: { id: true, email: true } });
+              if (!u) continue;
+              await prisma.$transaction(async (tx) => {
+                await tx.notification.deleteMany({ where: { userId: uid } });
+                await tx.phoneVerification.deleteMany({ where: { userId: uid } });
+                await tx.passwordResetToken.deleteMany({ where: { userId: uid } });
+                await tx.magicLinkToken.deleteMany({ where: { email: u.email } });
+                await tx.session.deleteMany({ where: { userId: uid } });
+                await tx.account.deleteMany({ where: { userId: uid } });
+                await tx.order.deleteMany({ where: { userId: uid } });
+                await tx.twoFactorSecret.deleteMany({ where: { userId: uid } });
+                await tx.profile.deleteMany({ where: { userId: uid } });
+                await tx.user.delete({ where: { id: uid } });
+              });
+            }
+
+            graceCleaned++;
+            recordEvent('journey.grace_period_expired', { matchId: m.id });
+            console.log(`[cron/journey] Grace-period: match ${m.id} slettet etter 24 timer (found_each_other)`);
+          } catch (graceError) {
+            console.error(`[cron/journey] Feil ved grace-sletting for match ${m.id}:`, graceError);
+            errors.push(`grace match ${m.id}: ${(graceError as Error).message}`);
+          }
+        }
+        if (graceCleaned > 0) {
+          console.log(`[cron/journey] Grace-period: ${graceCleaned} reiser slettet (24 timer etter found_each_other)`);
+        }
+      } catch (graceQueryError) {
+        console.error('[cron/journey] Feil ved grace-sletting:', graceQueryError);
+        errors.push(`grace cleanup: ${(graceQueryError as Error).message}`);
       }
 
       // B2.5 — STILLHETSDETEKSJON

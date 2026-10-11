@@ -148,21 +148,24 @@ describe('BETA-ACCESS §7.8 — Full loop: onboarding → match → reise → sl
     await db.journeyProgress.update({ where: { jp_user_match: { userId: userB.id, matchId } }, data: { day: 30, completedAt: new Date() } });
     expect(dayToPhase(30)).toBe('CHECKIN');
 
-    // ── STEP 7: found_each_other → full sletting (I-13) ──
+    // ── STEP 7: found_each_other → grace-period (D: 24 t til begge kan PDF) ──
     const delResult = await endJourney(matchId, 'found_each_other');
 
-    // ALT reise-innhold slettet
-    expect(await db.match.findUnique({ where: { id: matchId } })).toBeNull();
-    expect(await db.conversation.findUnique({ where: { matchId } })).toBeNull();
-    expect(await db.message.count({ where: { conversationId: conversation.id } })).toBe(0);
-    expect(await db.journeyProgress.findFirst({ where: { userId: userA.id, matchId } })).toBeNull();
-    expect(await db.journeyProgress.findFirst({ where: { userId: userB.id, matchId } })).toBeNull();
-
-    // Begge kontoer slettet permanent
-    expect(await db.user.findUnique({ where: { id: userA.id } })).toBeNull();
-    expect(await db.user.findUnique({ where: { id: userB.id } })).toBeNull();
-    expect(await db.profile.findUnique({ where: { userId: userA.id } })).toBeNull();
-    expect(await db.profile.findUnique({ where: { userId: userB.id } })).toBeNull();
+    // Grace: innhold + kontoer BEHOLDES til fristen (cron/journey sletter etter 24 t)
+    const endedMatch = await db.match.findUnique({ where: { id: matchId } });
+    expect(endedMatch).not.toBeNull();
+    expect(endedMatch!.status).toBe('ended');
+    expect(endedMatch!.expiresAt).not.toBeNull();
+    expect(endedMatch!.expiresAt!.getTime()).toBeGreaterThan(Date.now() + 23 * 60 * 60 * 1000);
+    expect(endedMatch!.expiresAt!.getTime()).toBeLessThan(Date.now() + 25 * 60 * 60 * 1000);
+    const endedConvo = await db.conversation.findUnique({ where: { matchId } });
+    expect(endedConvo).not.toBeNull();
+    expect(endedConvo!.endedAt).not.toBeNull();
+    expect(await db.message.count({ where: { conversationId: conversation.id } })).toBe(2);
+    const uA = await db.user.findUnique({ where: { id: userA.id } });
+    const uB = await db.user.findUnique({ where: { id: userB.id } });
+    expect(uA!.journeyState).toBe('COMPLETED');
+    expect(uB!.journeyState).toBe('COMPLETED');
 
     // MatchHistory BEHOLDT (sperreliste overlever) — I-13 beholder to ID-er
     const [first, second] = userA.id < userB.id ? [userA.id, userB.id] : [userB.id, userA.id];
@@ -174,17 +177,23 @@ describe('BETA-ACCESS §7.8 — Full loop: onboarding → match → reise → sl
     // Notifications slettet
     expect(await db.notification.count({ where: { userId: userA.id, type: 'MATCH' } })).toBe(0);
 
-    // Slettingstatistikk fra endJourney
-    expect(delResult.deleted.Match).toBe(1);
-    expect(delResult.deleted.Conversation).toBe(1);
-    expect(delResult.deleted.User).toBe(2);
+    // Grace-statistikk fra endJourney — ingenting slettet, fristen satt
+    expect(delResult.deleted.Match).toBe(0);
+    expect(delResult.deleted.Conversation).toBeUndefined();
+    expect(delResult.deleted.graceUntil).toBeGreaterThan(Date.now());
 
-    // ── STEP 8: Ingen hengende data ──
-    expect(await db.user.count({ where: { email: { in: [userA.email, userB.email] } } })).toBe(0);
-    expect(await db.profile.count({ where: { userId: { in: [userA.id, userB.id] } } })).toBe(0);
+    // ── STEP 8: Grace — begge kontoer lever frem til sweeperen (24 t) ──
+    expect(await db.user.count({ where: { email: { in: [userA.email, userB.email] } } })).toBe(2);
+    expect(await db.profile.count({ where: { userId: { in: [userA.id, userB.id] } } })).toBe(2);
 
-    // Cleanup (MatchHistory beholdes bevisst — det er hel-poengs)
+    // Cleanup (grace: brukere + innhold slettes manuelt her; MatchHistory beholdes bevisst)
     try {
+      await db.message.deleteMany({ where: { conversationId: conversation.id } });
+      await db.journeyProgress.deleteMany({ where: { matchId } });
+      await db.conversation.delete({ where: { id: conversation.id } });
+      await db.match.delete({ where: { id: matchId } });
+      await db.profile.deleteMany({ where: { userId: { in: [userA.id, userB.id] } } });
+      await db.user.deleteMany({ where: { id: { in: [userA.id, userB.id] } } });
       await db.matchHistory.deleteMany({ where: { matchId } });
       await db.systemLog.deleteMany({ where: { module: 'journey:end' } });
       await db.auditLog.deleteMany({});

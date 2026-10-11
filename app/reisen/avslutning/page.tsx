@@ -4,7 +4,7 @@
  * Tosom — Avslutnings-side (2 valg)
  *
  * Vises etter 30-dagers reise. Brukeren får 2 valg:
- * 1. "Vi fant hverandre" — `found_each_other` → begge kontoer slettes → lokal takkeside
+ * 1. "Vi fant hverandre" — `found_each_other` → grace-period (24 t) → lokal takkeside
  * 2. "Start ny reise" — `ny_reise` → beholdt profil → ny onboarding (prefylt)
  *
  * Begge kaller /api/journey/exit som mapper reason → endJourney-outcome.
@@ -198,8 +198,8 @@ export default function AvslutningSide() {
   const [selected, setSelected] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [journeyDay, setJourneyDay] = useState<number | null>(null);
-  // "Vi fant hverandre" — begge kontoer er slettet, så vis lokal takkeside
-  // (kan ikke navigere til en beskyttet side etter kontosletting).
+  // "Vi fant hverandre" (D: grace-period) — kontoen overlever 24 t, så vi
+  // viser en lokal takkeside med PDF-nedlasting + kontosletting.
   const [finishedTogether, setFinishedTogether] = useState(false);
 
   // Sjekk om dag 30 er nådd ved side-lasting
@@ -290,8 +290,8 @@ export default function AvslutningSide() {
 
       if (res.ok) {
         if (selected === 1) {
-          // "Vi fant hverandre" — begge kontoer er nå SLETTET. Sesjonen er borte,
-          // så vi viser en lokal takkeside i stedet for å navigere til en beskyttet side.
+          // "Vi fant hverandre" (D: grace-period) — reisen er fullført, innholdet
+          // beholdes 24 t slik at begge kan laste ned PDF-en. Vis lokal takkeside.
           setFinishedTogether(true);
         } else {
           // "Start ny reise" — profilen er beholdt og onboarding låst opp.
@@ -322,8 +322,8 @@ export default function AvslutningSide() {
     }
   };
 
-  // "Vi fant hverandre" — begge kontoer er slettet, så vi kan ikke navigere til en
-  // beskyttet side (sesjonen er borte). Vis en lokal takkeside i stedet.
+  // "Vi fant hverandre" (D: grace-period) — kontoen overlever 24 t.
+  // Vis lokal takkeside med PDF-nedlasting + mulighet for umiddelbar kontosletting.
   if (finishedTogether) {
     return (
       <main className="relative min-h-screen overflow-hidden">
@@ -359,7 +359,25 @@ export default function AvslutningSide() {
               margin: '20px 0 0',
             }}
           >
-            Tusen takk for 30 dager med åpenhet. ToSom sletter nå kontoene deres — minnet er deres.
+            Tusen takk for 30 dager med åpenhet. Minnet er deres — last ned
+            PDF-en i løpet av 24 timer, så slettes alt automatisk.
+          </p>
+          <button
+            onClick={handleExportPdf}
+            className="mt-10 w-full px-10 py-4 rounded-2xl font-semibold text-base transition-all duration-300 hover:brightness-110"
+            style={{ background: 'linear-gradient(135deg, #D4AF37, #E8C766)', color: '#0B1520', fontWeight: 600 }}
+          >
+            Last ned minnet (PDF)
+          </button>
+          <button
+            onClick={() => router.push('/settings')}
+            className="mt-3 w-full px-10 py-3 rounded-2xl font-medium text-sm transition-all duration-300 hover:brightness-110"
+            style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.25)', color: 'rgba(255, 255, 255, 0.7)' }}
+          >
+            Slett kontoen min (umiddelbart)
+          </button>
+          <p style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.4)' }}>
+            Eller la den slettes automatisk etter 24 timer.
           </p>
         </div>
       </main>
@@ -473,7 +491,7 @@ export default function AvslutningSide() {
         <ConfirmModal
           title="Vi fant hverandre?"
           message="Dere møtes utenom Tosom. Lykke til!"
-          warningText="Dette sletter samtalen OG begge kontoene deres permanent. Det kan ikke angres."
+          warningText="Samtalen kan lastes ned som PDF av begge i 24 timer. Deretter slettes alt permanent."
           confirmText={loading ? "Behandler..." : "Ja, det var noe 💛"}
           onCancel={() => setSelected(null)}
           onConfirm={confirmChoice}
@@ -485,7 +503,7 @@ export default function AvslutningSide() {
         <ConfirmModal
           title="Ta med deg minnet?"
           message="Du kan laste ned en PDF av samtalen deres før den slettes. Tosom sletter alt — men minnet er ditt."
-          warningText="Etter nedlasting (eller hvis du velger å hoppe over) slettes samtalen og kontoen din permanent."
+          warningText="Etter nedlasting (eller hvis du velger å hoppe over) er reisen fullført. Alt slettes permanent etter 24 timer — begge kan laste ned den inntil da."
           confirmText={loading ? "Behandler..." : "Last ned PDF og avslutt 💛"}
           onCancel={() => { setShowPdfOffer(false); setSelected(null); }}
           onConfirm={() => {

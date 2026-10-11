@@ -1,8 +1,9 @@
 /**
  * ToSom — «Reisen er slutt»-e-post (sendJourneyEndEmail).
  *
- * De to utfallene som sletter kontoene: found_each_other (gratulerende) og
- * no_action (dag 30, nøytral). Verifiserer avsender, mottaker, emne og tekst.
+ * De to utfallene der reisen er endelig over: found_each_other (gratulerende,
+ * 24-timers PDF-grace) og no_action (dag 30, nøytral, alt slettet).
+ * Verifiserer avsender, mottaker, emne og tekst.
  */
 
 const mockSendMail = jest.fn().mockResolvedValue({ messageId: 'test' });
@@ -32,7 +33,9 @@ describe('sendJourneyEndEmail', () => {
     expect(arg.from).toBe('ToSom <noreplay@tosom.no>');
     expect(arg.subject).toBe('Gratulerer — reisen er fullført');
     expect(arg.text).toContain('Asta');
-    expect(arg.text).toContain('slettet alt');
+    // D: grace-period — innholdet beholdes 24 t for PDF (ikke «slettet alt»)
+    expect(arg.text).toContain('24 timer');
+    expect(arg.text).not.toContain('slettet alt');
   });
 
   it('sender nøytral e-post ved no_action (dag 30)', async () => {
@@ -44,6 +47,8 @@ describe('sendJourneyEndEmail', () => {
     expect(arg.subject).toBe('Reisen er fullført');
     expect(arg.text).toContain('hei'); // standard hilsen uten navn
     expect(arg.text).toContain('30 dagene');
+    // no_action: alt slettes umiddelbart (ingen grace)
+    expect(arg.text).toContain('slettet alt');
   });
 
   it('returnerer feil (og sender ikke) når e-post ikke er konfigurert', async () => {

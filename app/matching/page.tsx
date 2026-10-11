@@ -36,6 +36,8 @@ interface OverviewData {
     totalDays: number;
     phase: string;
   } | null;
+  // D: Grace-period — 'ended'-match med 24 timers PDF-beholdelse
+  graceMatch?: { expiresAt: string } | null;
   // Visningsnavn til innlogga bruker (navnet valgt i onboarding)
   myName?: string;
   // BUG 3: Sanne reise-tilstandar fra databasen (dashboard/overview)
@@ -51,7 +53,7 @@ interface OverviewData {
   } | null;
 }
 
-type QueueState = 'loading' | 'in_queue' | 'locked' | 'no_match' | 'start' | 'not_started' | 'matched';
+type QueueState = 'loading' | 'in_queue' | 'locked' | 'no_match' | 'start' | 'not_started' | 'matched' | 'grace';
 
 /* ═══════════════════════════════════════
    COUNTDOWN HELPERS
@@ -206,6 +208,14 @@ export default function MatchingPage() {
           // dashboardet (localStorage, vises én gang per match).
           if (data.match && data.journey && data.journey.day > 0) {
             router.replace('/dashboard');
+            return;
+          }
+
+          // D: Grace-period (24 t etter «Vi fant hverandre») — innholdet er
+          // beholdt slik at brukeren kan laste ned PDF-en. Vis fullførts-
+          // tilstanden, IKKE venterommet.
+          if (data.graceMatch) {
+            setQueueState('grace');
             return;
           }
 
@@ -447,6 +457,40 @@ export default function MatchingPage() {
                 style={{ background: 'linear-gradient(135deg, #D4AF37, #E8C766)', color: '#0B1520', fontWeight: 600 }}
               >
                 {overview?.conversation?.conversationId ? 'Gå til samtalen' : 'Gå til reisen'}
+              </button>
+            </GlassCard>
+          </div>
+        )}
+
+        {/* ═══ D: GRACE-PERIOD (24 t etter «Vi fant hverandre») ═══
+            Innhold + konto er beholdt så brukeren kan laste ned PDF-en.
+            cron/journey sletter alt når fristen passerer. */}
+        {queueState === 'grace' && (
+          <div className="space-y-8">
+            <GlassCard className="text-center py-12 px-8">
+              <div className="flex justify-center mb-4">
+                <PulsingOrb size="lg" />
+              </div>
+              <h2 className="text-xl font-semibold mb-2" style={{ color: '#D4AF37' }}>
+                Reisen er fullført 🎉
+              </h2>
+              <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '16px', lineHeight: '1.7' }}>
+                Dere fant hverandre. Minnet deres ligger trygt lagret i 24 timer —
+                så begge kan laste det ned som PDF. Deretter slettes alt permanent.
+              </p>
+              <button
+                onClick={() => window.open('/api/journey/export-pdf', '_blank', 'noopener')}
+                className="mt-8 px-10 py-4 rounded-2xl font-semibold text-base transition-all duration-300 hover:brightness-110"
+                style={{ background: 'linear-gradient(135deg, #D4AF37, #E8C766)', color: '#0B1520', fontWeight: 600 }}
+              >
+                Last ned minnet (PDF)
+              </button>
+              <button
+                onClick={() => router.push('/settings')}
+                className="mt-3 w-full px-10 py-3 rounded-2xl font-medium text-sm transition-all duration-300 hover:brightness-110"
+                style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.25)', color: 'rgba(255,255,255,0.7)' }}
+              >
+                Slett kontoen min (umiddelbart)
               </button>
             </GlassCard>
           </div>

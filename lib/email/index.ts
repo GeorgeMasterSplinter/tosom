@@ -248,6 +248,11 @@ export async function sendJourneyEndEmail(
   const closing = foundEachOther
     ? 'Lykke videre — sammen, i det virkelige liv.'
     : 'Hvis du noen gang ønsker en ny reise, kan du registrere deg på nytt.';
+  // D: Grace-period — ved «fant hverandre» beholdes innholdet 24 timer slik
+  // at begge kan eksportere PDF. Ved no_action er alt slettet umiddelbart.
+  const dataNote = foundEachOther
+    ? 'Samtalen er trygt lagret i 24 timer, slik at begge kan laste ned minnet som PDF (logg inn og last den ned fra reisen). Etter 24 timer slettes alt permanent.'
+    : 'Som lovet har vi nå slettet alt: samtalene, bildene og svarene er borte. Vi har ikke lagret noe.';
 
   return sendEmail({
     to: userEmail,
@@ -255,7 +260,7 @@ export async function sendJourneyEndEmail(
     text:
       `Hei ${name},\n\n` +
       `${opening}\n\n` +
-      `Som lovet har vi nå slettet alt: samtalene, bildene og svarene er borte. Vi har ikke lagret noe.\n\n` +
+      `${dataNote}\n\n` +
       `${closing}\n\n` +
       `Ro, varme og én reise av gangen.\n\n— ToSom`,
     html: `
@@ -263,9 +268,7 @@ export async function sendJourneyEndEmail(
         <h1 style="font-size: 24px; font-weight: 600; color: #D4AF37; margin-bottom: 16px;">${foundEachOther ? 'Dere fant hverandre' : 'Reisen er fullført'}</h1>
         <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">Hei ${name},</p>
         <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">${opening}</p>
-        <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">
-          Som lovet har vi nå slettet alt: samtalene, bildene og svarene er borte. Vi har ikke lagret noe.
-        </p>
+        <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">${dataNote}</p>
         <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 24px; font-weight: 500;">${closing}</p>
         <p style="font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.5); margin-top: 32px;">
           Ro, varme og én reise av gangen.<br />— ToSom

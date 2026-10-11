@@ -239,11 +239,30 @@ export async function GET(_request: Request) {
       unreadMatch = unreadNotif != null;
     }
 
+    // D: Grace-period («Vi fant hverandre») — 'ended'-match med beholte
+    // innhold i 24 t. Venterommet viser fullførts-tilstanden (PDF + sletting)
+    // i stedet for kø, så lenge fristen ikke er passert.
+    let graceMatchInfo: { expiresAt: string } | null = null;
+    if (!match) {
+      const gm = await prisma.match.findFirst({
+        where: {
+          status: "ended",
+          expiresAt: { gt: new Date() },
+          OR: [{ userAId: userId }, { userBId: userId }],
+        },
+        orderBy: { expiresAt: "desc" },
+        select: { expiresAt: true },
+      });
+      if (gm?.expiresAt) graceMatchInfo = { expiresAt: gm.expiresAt.toISOString() };
+    }
+
     return new Response(
       JSON.stringify({
         match: matchInfo,
         conversation: convoInfo,
         journey: journeyInfo,
+        // D: grace-period (24 t etter «Vi fant hverandre») — null ellers
+        graceMatch: graceMatchInfo,
         // Visningsnavn til innlogga bruker — navnet valgt i onboarding.
         // Brukes til hilsenen («God kveld, Anne Sofie») i dashboard og venterom.
         myName: me ? displayName(me.profile, me.name) : "Ukjent",

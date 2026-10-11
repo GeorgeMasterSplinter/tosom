@@ -74,6 +74,15 @@ export async function DELETE(req: NextRequest) {
       select: { id: true },
     });
 
+    // D: Grace-period — en 'ended'-match (24 t etter «Vi fant hverandre»)
+    // har beholte samtale + PDF. Sletter man kontoen i perioden, forsvinner
+    // det delte innholdet med brukeren → partneren må resettes til IDLE
+    // (ellers står partneren fast i COMPLETED uten reise og uten PDF).
+    const graceMatch = await prisma.match.findFirst({
+      where: { status: 'ended', OR: [{ userAId: userId }, { userBId: userId }] },
+      select: { userAId: true, userBId: true },
+    });
+
     if (activeMatch) {
       // initiatorId sendes med slik at PARTNEREN får «reisen er avsluttet»-epost
       // (kontosletting er ikke en grunn til at partneren skal stå uten svar).
@@ -127,6 +136,20 @@ export async function DELETE(req: NextRequest) {
     });
 
     console.log(`[delete-account] Bruker ${userId} slettet fullstendig`);
+
+    // D: Grace-period — delte innholdet gikk med kontoen ovenfor.
+    // Partneren (i COMPLETED etter «Vi fant hverandre») resettes til IDLE
+    // slik at vedkommende kan starte en ny reise. Ingen epost — sletting
+    // er en privat handling og avslører aldri hvem som handlet.
+    if (graceMatch) {
+      const partnerId = graceMatch.userAId === userId ? graceMatch.userBId : graceMatch.userAId;
+      await prisma.journeyProgress.deleteMany({ where: { userId: partnerId } });
+      await prisma.user.updateMany({
+        where: { id: partnerId, journeyState: 'COMPLETED' },
+        data: { journeyState: 'IDLE', lockedUntil: null, matchQueuedAt: null },
+      });
+      console.log(`[delete-account] Partner ${partnerId} resettet til IDLE (grace-innholdet gikk med konto-slettingen)`);
+    }
 
     // Send sletting-bekreftelse (best-effort — skal aldri blokkere)
     if (userEmail) {

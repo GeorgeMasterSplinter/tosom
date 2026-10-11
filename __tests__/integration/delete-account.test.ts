@@ -106,4 +106,77 @@ describe('PL-01d: kontosletting med aktiv reise (K-1)', () => {
     });
     expect(history).not.toBeNull();
   });
+
+  it('D: Grace-period — A sletter kontoen under 24 t; innholdet forsvinner, B blir IDLE', async () => {
+    mockedCsrf.mockResolvedValue({ token: 'csrf-token' });
+
+    const suffix = Date.now();
+    const userA = await db.user.create({
+      data: {
+        id: `pl01g-a-${suffix}`,
+        email: `pl01ga${suffix}@example.com`,
+        name: 'Anna Grace',
+        journeyState: 'COMPLETED',
+      },
+    });
+    const userB = await db.user.create({
+      data: {
+        id: `pl01g-b-${suffix}`,
+        email: `pl01gb${suffix}@example.com`,
+        name: 'Bjørn Grace',
+        journeyState: 'COMPLETED',
+      },
+    });
+    await db.profile.create({ data: { userId: userA.id, age: 30 } });
+    await db.profile.create({ data: { userId: userB.id, age: 31 } });
+
+    // 'ended'-match med grace-frist (D: 24 t etter «Vi fant hverandre»)
+    const match = await db.match.create({
+      data: {
+        userAId: userA.id,
+        userBId: userB.id,
+        status: 'ended',
+        normalizedScore: 0.8,
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      },
+    });
+    const conversation = await db.conversation.create({
+      data: { matchId: match.id, userAId: userA.id, userBId: userB.id, endedAt: new Date() },
+    });
+    await db.journeyProgress.create({ data: { userId: userA.id, matchId: match.id, day: 30, endedAt: new Date() } });
+    await db.journeyProgress.create({ data: { userId: userB.id, matchId: match.id, day: 30, endedAt: new Date() } });
+    await db.message.create({ data: { conversationId: conversation.id, senderId: userA.id, content: 'Hei!' } });
+    await db.message.create({ data: { conversationId: conversation.id, senderId: userB.id, content: 'Heisann!' } });
+
+    // A sletter kontoen under grace-perioden
+    mockedSession.mockResolvedValue({ user: { id: userA.id, email: userA.email } });
+    const req = new NextRequest('http://localhost/api/settings/delete-account', {
+      method: 'POST',
+      body: JSON.stringify({ confirmation: 'DELETE' }),
+      headers: { 'content-type': 'application/json' },
+    });
+    const res = await POST(req);
+    expect(res.status).toBe(200);
+
+    // A er borte, og det DELTE innholdet forsvant med kontoen (GDPR art. 17)
+    expect(await db.user.findUnique({ where: { id: userA.id } })).toBeNull();
+    expect(await db.conversation.findUnique({ where: { id: conversation.id } })).toBeNull();
+    expect(await db.message.findMany({ where: { conversationId: conversation.id } })).toEqual([]);
+    expect(await db.match.findUnique({ where: { id: match.id } })).toBeNull();
+
+    // B lever og er tilbaqe i IDLE — kan starte ny reise, står ikke fast i COMPLETED
+    const b = await db.user.findUnique({ where: { id: userB.id } });
+    expect(b).not.toBeNull();
+    expect(b!.journeyState).toBe('IDLE');
+    expect(await db.journeyProgress.findMany({ where: { userId: userB.id } })).toEqual([]);
+    expect(await db.profile.findUnique({ where: { userId: userB.id } })).not.toBeNull();
+
+    // Cleanup (best-effort)
+    try {
+      await db.profile.deleteMany({ where: { userId: userB.id } });
+      await db.user.deleteMany({ where: { id: userB.id } });
+    } catch {
+      // Best-effort
+    }
+  });
 });

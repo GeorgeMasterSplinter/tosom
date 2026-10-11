@@ -4,6 +4,11 @@
  * Invariant I-6: ToSom lover at ingen ser samtalene.
  * Ved reiseslutt skal alt innhold forsvinne — etterprøvbart.
  *
+ * found_each_other (D — 24-timers grace): innhold og kontoer BEHOLDES slik at
+ * begge kan eksportere PDF (match.status='ended', expiresAt=+24 t).
+ * cron/journey sletter alt når grace-perioden utløper.
+ * Alle andre utfall: full sletting umiddelbart (rekkefølgen under).
+ *
  * Rekkefølgen følger fremmednøkkelavhengighetene:
  *   1. Message deleteMany     { conversationId }
  *   2. JourneyStateLog deleteMany { conversationId }
@@ -144,50 +149,80 @@ export async function endJourney(
   const result = await prisma.$transaction(async (tx) => {
     const deleted: Record<string, number> = {};
 
-    // 1. Delete messages
-    const msgResult = await tx.message.deleteMany({ where: { conversationId } });
-    deleted.Message = (msgResult as any).count ?? 0;
+    // D: 24-timers grace-period for found_each_other — innhold og kontoer
+    // beholdes slik at begge kan eksportere PDF. match.expiresAt er
+    // fristen; cron/journey sletter alt når den passerer.
+    // Alle andre utfall: full sletting umiddelbart (som før).
+    const isGrace = outcome === 'found_each_other';
 
-    // 2. Delete journey state logs
-    const logResult = await tx.journeyStateLog.deleteMany({ where: { conversationId } });
-    deleted.JourneyStateLog = (logResult as any).count ?? 0;
+    if (isGrace) {
+      // Grace: marker slutt — slett INGENTING.
+      // - Match: status 'ended' + expiresAt (sweeper-fristen)
+      // - Conversation: endedAt (chat lukket, innholdet lever for PDF-eksport)
+      // - JourneyProgress: endedAt (reisen er fullført)
+      // - Begge brukere: COMPLETED (kontoen overlever — hver part kan
+      //   slette kontoen sin når som helst, eller la den utløpe etter 24 t)
+      const graceUntil = new Date(Date.now() + 24 * 60 * 60 * 1000);
+      await tx.match.update({
+        where: { id: matchId },
+        data: { status: 'ended', expiresAt: graceUntil },
+      });
+      deleted.Match = 0; // beholdes til grace-perioden slutter
+      await tx.conversation.updateMany({ where: { matchId }, data: { endedAt: new Date() } });
+      await tx.journeyProgress.updateMany({ where: { matchId }, data: { endedAt: new Date() } });
+      for (const user of [userA, userB]) {
+        await tx.user.update({
+          where: { id: user.id },
+          data: { journeyState: 'COMPLETED', matchQueuedAt: null, lockedUntil: null },
+        });
+      }
+      deleted.graceUntil = graceUntil.getTime();
+    } else {
+      // 1. Delete messages
+      const msgResult = await tx.message.deleteMany({ where: { conversationId } });
+      deleted.Message = (msgResult as any).count ?? 0;
 
-    // 3. Delete resonance sessions
-    const resResult = await tx.resonanceSession.deleteMany({ where: { conversationId } });
-    deleted.ResonanceSession = (resResult as any).count ?? 0;
+      // 2. Delete journey state logs
+      const logResult = await tx.journeyStateLog.deleteMany({ where: { conversationId } });
+      deleted.JourneyStateLog = (logResult as any).count ?? 0;
 
-    // 4. Delete journey milestones (for both users if they have separate journeys)
-    let milestonesA = 0;
-    let milestonesB = 0;
-    if (journeyA) {
-      const r = await tx.journeyMilestone.deleteMany({ where: { progressId: journeyA.id } });
-      milestonesA = (r as any).count ?? 0;
+      // 3. Delete resonance sessions
+      const resResult = await tx.resonanceSession.deleteMany({ where: { conversationId } });
+      deleted.ResonanceSession = (resResult as any).count ?? 0;
+
+      // 4. Delete journey milestones (for both users if they have separate journeys)
+      let milestonesA = 0;
+      let milestonesB = 0;
+      if (journeyA) {
+        const r = await tx.journeyMilestone.deleteMany({ where: { progressId: journeyA.id } });
+        milestonesA = (r as any).count ?? 0;
+      }
+      if (journeyB) {
+        const r = await tx.journeyMilestone.deleteMany({ where: { progressId: journeyB.id } });
+        milestonesB = (r as any).count ?? 0;
+      }
+      deleted.JourneyMilestone = milestonesA + milestonesB;
+
+      // 5. Delete journey progress (for both users) — B4 composite where [userId, matchId]
+      if (journeyA) {
+        await tx.journeyProgress.delete({ where: { jp_user_match: { userId: userA.id, matchId } } });
+        deleted.JourneyProgress = (deleted.JourneyProgress ?? 0) + 1;
+      }
+      if (journeyB) {
+        await tx.journeyProgress.delete({ where: { jp_user_match: { userId: userB.id, matchId } } });
+        deleted.JourneyProgress = (deleted.JourneyProgress ?? 0) + 1;
+      }
+
+      // 6. Delete conversation
+      await tx.conversation.delete({ where: { id: conversationId } });
+      deleted.Conversation = 1;
+
+      //
+
+      // 8. Delete match
+      await tx.match.delete({ where: { id: matchId } });
+      deleted.Match = 1;
     }
-    if (journeyB) {
-      const r = await tx.journeyMilestone.deleteMany({ where: { progressId: journeyB.id } });
-      milestonesB = (r as any).count ?? 0;
-    }
-    deleted.JourneyMilestone = milestonesA + milestonesB;
-
-    // 5. Delete journey progress (for both users) — B4 composite where [userId, matchId]
-    if (journeyA) {
-      await tx.journeyProgress.delete({ where: { jp_user_match: { userId: userA.id, matchId } } });
-      deleted.JourneyProgress = (deleted.JourneyProgress ?? 0) + 1;
-    }
-    if (journeyB) {
-      await tx.journeyProgress.delete({ where: { jp_user_match: { userId: userB.id, matchId } } });
-      deleted.JourneyProgress = (deleted.JourneyProgress ?? 0) + 1;
-    }
-
-    // 6. Delete conversation
-    await tx.conversation.delete({ where: { id: conversationId } });
-    deleted.Conversation = 1;
-
-    //
-
-    // 8. Delete match
-    await tx.match.delete({ where: { id: matchId } });
-    deleted.Match = 1;
 
     // 9. Create MatchHistory record (normalize pair for unique constraint)
     const { userAId, userBId } = normalizePair(userA.id, userB.id);
@@ -224,10 +259,11 @@ export async function endJourney(
     });
 
     // 11. B4.5: Utfallet bestemmer hva som skjer med kontoene
-    // - found_each_other / no_action: SLETT begge kontoer permanent (behold MatchHistory + Report + AuditLog)
+    // - no_action: SLETT begge kontoer permanent (behold MatchHistory + Report + AuditLog)
     //   (no_action = reisen fullførte 30 dager, ingen handlet innen 24 t → auto-sletting)
+    // - found_each_other: kontoene OVERLEVER (D: 24-timers grace — satt til COMPLETED over)
     // - new_journey / andre: Reset til IDLE (kontoen lever videre)
-    if (outcome === 'found_each_other' || outcome === 'no_action') {
+    if (outcome === 'no_action') {
       // Full kontosletting — brukeren har funnet hverandre utenfor ToSom
       // Behold: MatchHistory (to ID-er), Report (må overleve), AuditLog (admin-handlinger)
       for (const user of [userA, userB]) {
@@ -246,8 +282,9 @@ export async function endJourney(
         await tx.user.delete({ where: { id: user.id } });
         deleted.User = (deleted.User ?? 0) + 1;
       }
-    } else {
+    } else if (!isGrace) {
       // Reset both users to IDLE — kontoen lever videre
+      // (isGrace: brukerne er allerede satt til COMPLETED i grace-greina over)
       await tx.user.update({
         where: { id: userA.id },
         data: { journeyState: 'IDLE', matchQueuedAt: null, lastMatchAt: null, lockedUntil: null },
@@ -268,7 +305,9 @@ export async function endJourney(
   // DB-radene (Message type=image) er allerede borte, men objektet i R2/local
   // ligger ellers igjen som en reell lekkasje. Best-effort: feil her skal ikke
   // blokkere reiseslutt — men logg tydeleg for å fange tapte slettingar.
-  if (imageKeys.length > 0) {
+  // Grace-period (found_each_other): bilde-OBJEKTA beholdes — PDF-eksporten
+  // trenger dem. cron/journey sletter dem når grace-perioden utløper.
+  if (imageKeys.length > 0 && outcome !== 'found_each_other') {
     const storage = getImageStorage();
     let deletedImageCount = 0;
     for (const key of imageKeys) {
@@ -284,10 +323,11 @@ export async function endJourney(
     }
   }
 
-  // B-2 / G: «Reisen er slutt»-e-post — sendes kun når reisen er endelig over
-  // og kontoene er slettet (no_action = dag 30, eller de fant hverandre).
+  // B-2 / G: «Reisen er slutt»-e-post — sendes kun når reisen er endelig over.
+  // no_action: kontoene er slettet (dag 30). found_each_other: grace-period —
+  // kontoene lever 24 t mer (eposten forteller om PDF-vinduet).
   // Best-effort: e-postfeil skal aldri blokkere reiseslutt. E-post og navn
-  // leses fra de in-memory-objektene (DB-radene er nå borte).
+  // leses fra de in-memory-objektene.
   type EndEmail = { to: string; label: string; promise: Promise<EmailResult> };
   const pendingEndEmails: EndEmail[] = [];
   if (outcome === 'found_each_other' || outcome === 'no_action') {

@@ -236,6 +236,34 @@ export default function AdminToolsPage() {
     }
   };
 
+  const [broadcastSubject, setBroadcastSubject] = useState('');
+  const [broadcastMessage, setBroadcastMessage] = useState('');
+  const [broadcastLoading, setBroadcastLoading] = useState(false);
+  const [broadcastResult, setBroadcastResult] = useState<string | null>(null);
+
+  const sendBroadcast = async () => {
+    if (!broadcastSubject.trim() || !broadcastMessage.trim() || broadcastLoading) return;
+    setBroadcastLoading(true);
+    setBroadcastResult(null);
+    try {
+      const res = await fetch('/api/admin/broadcast', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ subject: broadcastSubject.trim(), message: broadcastMessage.trim() }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        setBroadcastResult(`OK: Sendt til ${data.sent} av ${data.total} brukere${data.failed > 0 ? ` (${data.failed} feilet)` : ''}`);
+      } else {
+        setBroadcastResult(`Feil: ${data.error || 'Ukjent feil'}`);
+      }
+    } catch (e) {
+      setBroadcastResult('Feil: ' + (e instanceof Error ? e.message : 'Ukjent'));
+    } finally {
+      setBroadcastLoading(false);
+    }
+  };
+
   const loadCronRuns = useCallback(async () => {
     try {
       const res = await fetch('/api/admin/cron/status');
@@ -391,6 +419,48 @@ export default function AdminToolsPage() {
             loading={matchRunning}
             onClick={runMatching}
           />
+
+          {/* Broadcast Email */}
+          <div
+            className="p-4 rounded-xl"
+            style={{ background: 'rgba(212,175,55,0.04)', border: '1px solid rgba(212,175,55,0.15)' }}
+          >
+            <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#D4AF37' }}>
+              Send epost til alle brukere
+            </p>
+            <p className="text-xs mb-3" style={{ color: 'rgba(255,255,255,0.6)' }}>
+              Felles kunngjøring: endringer, tilbud eller informasjon til alle aktive brukere
+            </p>
+            <input
+              type="text"
+              value={broadcastSubject}
+              onChange={(e) => setBroadcastSubject(e.target.value)}
+              placeholder="Emne (max 100 tegn)"
+              className="w-full px-3 py-2 rounded-lg text-xs bg-transparent mb-2"
+              style={{ border: '1px solid rgba(255,255,255,0.6)', color: 'rgba(255,255,255,0.8)' }}
+            />
+            <textarea
+              value={broadcastMessage}
+              onChange={(e) => setBroadcastMessage(e.target.value)}
+              placeholder="Melding…"
+              rows={4}
+              className="w-full px-3 py-2 rounded-lg text-xs bg-transparent mb-2 resize-y"
+              style={{ border: '1px solid rgba(255,255,255,0.6)', color: 'rgba(255,255,255,0.8)' }}
+            />
+            <button
+              onClick={sendBroadcast}
+              disabled={!broadcastSubject.trim() || !broadcastMessage.trim() || broadcastLoading}
+              className="w-full px-3 py-2 rounded-lg text-xs font-semibold transition-all disabled:opacity-40"
+              style={{ background: 'linear-gradient(135deg, #D4AF37, #E8C766)', color: '#0B1520' }}
+            >
+              {broadcastLoading ? 'Sender…' : 'Send til alle'}
+            </button>
+            {broadcastResult && (
+              <p className="text-xs mt-2" style={{ color: broadcastResult.startsWith('OK') ? '#4ADE80' : '#FF4D4D' }}>
+                {broadcastResult}
+              </p>
+            )}
+          </div>
 
           {/* Cron Run Status */}
           <div

@@ -155,7 +155,7 @@ describe('POST /api/settings/delete-account (K-1)', () => {
     const { status } = await call({ confirmation: 'DELETE' });
 
     expect(status).toBe(200);
-    expect(mockedEndJourney).toHaveBeenCalledWith('m-1', 'early_exit');
+    expect(mockedEndJourney).toHaveBeenCalledWith('m-1', 'early_exit', 'u-1');
     expect(callOrder).toEqual(['endJourney', 'transaction']);
     expect(mockedTx.user.delete).toHaveBeenCalledWith({ where: { id: 'u-1' } });
     expect(mockedEmail).toHaveBeenCalledWith('bruker@eksempel.no', 'Anna');

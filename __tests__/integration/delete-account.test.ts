@@ -18,6 +18,8 @@ jest.mock('@/lib/auth/csrf', () => ({
 }));
 jest.mock('@/lib/email', () => ({
   sendDeletionConfirmationEmail: jest.fn().mockResolvedValue(undefined),
+  sendJourneyEndEmail: jest.fn().mockResolvedValue({ success: true }),
+  sendJourneyEndedEmail: jest.fn().mockResolvedValue({ success: true }),
 }));
 
 import { NextRequest } from 'next/server';

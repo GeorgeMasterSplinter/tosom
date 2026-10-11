@@ -141,7 +141,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
 
     // 4. Kall endJourney() — verifisert sletting
-    const { deleted } = await endJourney(activeMatch.id, outcome);
+    // initiatorId sendes med slik at PARTNEREN får «reisen er avsluttet»-epost.
+    const { deleted } = await endJourney(activeMatch.id, outcome, user.id);
 
     // Ny reise: lås opp onboarding for den handlingen brukeren slik at profilen
     // kan brukes om via prefill (de justerer, skriver ikke på nytt). Kontoen

@@ -75,7 +75,9 @@ export async function DELETE(req: NextRequest) {
     });
 
     if (activeMatch) {
-      await endJourney(activeMatch.id, 'early_exit');
+      // initiatorId sendes med slik at PARTNEREN får «reisen er avsluttet»-epost
+      // (kontosletting er ikke en grunn til at partneren skal stå uten svar).
+      await endJourney(activeMatch.id, 'early_exit', userId);
       console.log(`[delete-account] endJourney kalt for ${userId}`);
     }
 

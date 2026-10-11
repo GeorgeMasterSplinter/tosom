@@ -276,6 +276,49 @@ export async function sendJourneyEndEmail(
 }
 
 /**
+ * Send nøytral «reisen er avsluttet»-epost til partnern når reisen tar slutt
+ * midt i (tidlig avslutning, ny reise, blokkering). Konkret, nøytralt og
+ * empatisk — avslører aldri hvem som avsluttet eller blokkerte.
+ *
+ * Den som avsluttet har selv truffet valget og får ingen e-post.
+ */
+export async function sendJourneyEndedEmail(
+  userEmail: string,
+  userName?: string
+): Promise<EmailResult> {
+  const name = userName || 'hei';
+
+  return sendEmail({
+    to: userEmail,
+    subject: 'Reisen er avsluttet',
+    text:
+      `Hei ${name},\n\n` +
+      `Reisen du delte på ToSom er nå avsluttet.\n\n` +
+      `Det er ok. En reise kan stoppe midt i, og det dere delte underveis er likevel ikke bortkastet. Som lovet har vi slettet alt innholdet fra reisen — vi har ikke lagret noe.\n\n` +
+      `Når du er klar for en ny reise, er du velkommen tilbake. Ta deg god tid.\n\n` +
+      `Ro, varme og én reise av gangen.\n\n— ToSom`,
+    html: `
+      <div style="font-family: Inter, -apple-system, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px; background: #0A1A2A; color: #ffffff; border-radius: 16px;">
+        <h1 style="font-size: 24px; font-weight: 600; color: #D4AF37; margin-bottom: 16px;">Reisen er avsluttet</h1>
+        <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">Hei ${name},</p>
+        <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">
+          Reisen du delte på ToSom er nå avsluttet.
+        </p>
+        <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">
+          Det er ok. En reise kan stoppe midt i, og det dere delte underveis er likevel ikke bortkastet. Som lovet har vi slettet alt innholdet fra reisen — vi har ikke lagret noe.
+        </p>
+        <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 24px; font-weight: 500;">
+          Når du er klar for en ny reise, er du velkommen tilbake. Ta deg god tid.
+        </p>
+        <p style="font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.5); margin-top: 32px;">
+          Ro, varme og én reise av gangen.<br />— ToSom
+        </p>
+      </div>
+    `,
+  });
+}
+
+/**
  * Send bekreftelse ved kontosletting.
  * Siste ord fra ToSom.
  */

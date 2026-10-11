@@ -21,7 +21,7 @@
 
 import { prisma } from '@/lib/prisma';
 import { getImageStorage } from '@/lib/storage';
-import { sendJourneyEndEmail } from '@/lib/email';
+import { sendJourneyEndEmail, sendJourneyEndedEmail } from '@/lib/email';
 
 /** Normalize pair — consistent ordering for MatchHistory unique constraint */
 function normalizePair(aId: string, bId: string): { userAId: string; userBId: string } {
@@ -31,6 +31,7 @@ function normalizePair(aId: string, bId: string): { userAId: string; userBId: st
 export async function endJourney(
   matchId: string,
   outcome: 'completed' | 'early_exit' | 'blocked' | 'expired' | 'found_each_other' | 'new_journey' | 'no_action',
+  initiatorId?: string,
 ): Promise<{ deleted: Record<string, number> }> {
   // Fetch match with full relations
   const match = await prisma.match.findUnique({
@@ -286,15 +287,40 @@ export async function endJourney(
   // og kontoene er slettet (no_action = dag 30, eller de fant hverandre).
   // Best-effort: e-postfeil skal aldri blokkere reiseslutt. E-post og navn
   // leses fra de in-memory-objektene (DB-radene er nå borte).
+  const pendingEndEmails: Promise<unknown>[] = [];
   if (outcome === 'found_each_other' || outcome === 'no_action') {
     const found = outcome === 'found_each_other';
     for (const u of [userA, userB]) {
       if (u.email) {
-        sendJourneyEndEmail(u.email, u.name || undefined, found).catch((err) => {
-          console.warn(`[endJourney] Kunne ikke sende reiseslutt-e-post til ${u.email}:`, err);
-        });
+        pendingEndEmails.push(sendJourneyEndEmail(u.email, u.name || undefined, found));
       }
     }
+  }
+
+  // B-2: Partners «reisen er avsluttet»-epost — når reisen tar slutt midt i
+  // pga. én part (tidlig avslutning, ny reise, blokkering). Går KUN til den
+  // andre: den som avsluttet har selv truffet valget. Nøytral — avslører
+  // aldri hvem som avsluttet eller blokkerte.
+  if (
+    ['early_exit', 'new_journey', 'blocked', 'expired'].includes(outcome) &&
+    initiatorId
+  ) {
+    const partner = initiatorId === userA.id ? userB : userA;
+    if (partner?.email) {
+      pendingEndEmails.push(sendJourneyEndedEmail(partner.email, partner.name || undefined));
+    }
+  }
+
+  // Serverless: vent på at e-postene er sendt før vi returnerer — ellers kan
+  // Vercel drepe kjørekonteksten før de når frem (fire-and-forget gikk tapt).
+  // allSettled er best-effort og kaster aldri.
+  if (pendingEndEmails.length > 0) {
+    const results = await Promise.allSettled(pendingEndEmails);
+    results.forEach((r, i) => {
+      if (r.status === 'rejected') {
+        console.warn('[endJourney] Kunne ikke sende reiseslutt-e-post:', r.reason);
+      }
+    });
   }
 
   // Create SystemLog entry for the event

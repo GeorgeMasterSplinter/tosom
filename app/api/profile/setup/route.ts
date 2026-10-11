@@ -19,6 +19,7 @@ import { pgCheck } from '@/lib/rate-limit-pg';
 import { csrfCheck } from '@/lib/auth/csrf';
 import { tryParseJsonBody } from '@/lib/api/validation';
 import { TERMS_VERSION } from '@/config/legal';
+import { sendWelcomeEmail } from '@/lib/email';
 
 export const dynamic = 'force-dynamic';
 
@@ -84,7 +85,7 @@ async function postHandler(req: NextRequest) {
     // aktivt akseptert i gjeldende versjon.
     const consentUser = await prisma.user.findUnique({
       where: { id: session.user.id },
-      select: { termsVersion: true, sensitiveConsentAt: true },
+      select: { termsVersion: true, sensitiveConsentAt: true, onboardingComplete: true, email: true },
     });
     if (
       !consentUser ||
@@ -377,6 +378,26 @@ async function postHandler(req: NextRequest) {
       },
     });
     });
+
+    // B-2 (10.11): Velkomst-e-post når onboarding faktisk fullføres — dette er
+    // øyeblikket brukeren havner i venterommet. Eposten levde tidligere på
+    // /api/onboarding/complete, som har NULL kallere (død rute) — den ble
+    // aldri sendt. Ved «start ny reise» settes onboardingComplete:false, så
+    // ny omgang gir ny (velkommen-tilbake)-epost — bevisst.
+    // Best-effort: e-postfeil skal aldri velte en vellykket profil-lagring.
+    if (!consentUser.onboardingComplete) {
+      try {
+        const emailResult = await sendWelcomeEmail(
+          consentUser.email,
+          basic.identityName || undefined
+        );
+        console.log(
+          `[profile/setup] Velkomst-e-post til ${consentUser.email}: ${emailResult.success ? 'sendt' : 'feilet: ' + emailResult.error}`
+        );
+      } catch (emailErr) {
+        console.error('[profile/setup] Velkomst-e-post kastet:', emailErr);
+      }
+    }
 
     return NextResponse.json({
       success: true,

@@ -402,7 +402,20 @@ export async function GET(req: NextRequest) {
               });
               for (const user of users) {
                 if (user.email) {
-                  pendingMatchEmails.push(sendMatchEmail(user.email));
+                  pendingMatchEmails.push(
+                    (async () => {
+                      const res = await sendMatchEmail(user.email);
+                      // 10.11: logg resultat per mottaker — tidligere var en
+                      // feilet sending til én i paret fullstendig usynlig
+                      // (sendEmail kaster aldri, den returnerer feilen).
+                      console.log(
+                        `[matching] Match-epost til ${user.email}: ${res.success ? 'sendt' : 'FEILET: ' + res.error}`
+                      );
+                      return res;
+                    })()
+                  );
+                } else {
+                  console.warn(`[matching] Match-epost SKIPPET — bruker ${user.id} uten epost`);
                 }
               }
             } catch {

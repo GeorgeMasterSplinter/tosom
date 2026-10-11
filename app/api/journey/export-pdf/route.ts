@@ -46,10 +46,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     }
     const userId = result.user.id;
 
-    // 2. Finn brukerens AKTIVE match + samtale (må eksistere før sletting)
+    // 2. Finn brukerens match + samtale. 'active' = reisen pågår; 'ended' =
+    // grace-periode etter «vi fant hverandre» (innholdet holdes en tid slik at
+    // PARTNEREN også kan laste ned minnet før det slettes).
     const activeMatch = await prisma.match.findFirst({
       where: {
-        status: 'active',
+        status: { in: ['active', 'ended'] },
         OR: [{ userAId: userId }, { userBId: userId }],
       },
       include: {

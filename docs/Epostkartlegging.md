@@ -15,7 +15,7 @@ konfigurert i `lib/email` + Vercel-env `EMAIL_SERVER_*`).
 
 | # | Utfall | Hvem får | Epost | Kilde i koden |
 |---|--------|----------|-------|---------------|
-| 1 | Onboarding fullført | Brukeren | «Velkommen til ToSom» (med navn) | `app/api/onboarding/complete/route.ts` |
+| 1 | Onboarding fullført (faktisk sluttsteg — profil lagret, bruker i venterom) | Brukeren | «Velkommen til ToSom» (med navn) — kun ved overgang `onboardingComplete: false→true` (ny omgang etter «start ny reise» gir ny velkomst-epost) | `app/api/profile/setup/route.ts` (10.11: flyttet fra `app/api/onboarding/complete/route.ts` som har null kallere — død rute) |
 | 2 | Match funnet (matcherunde) | Begge i paret | «Du har fått en kobling» — bak flagget `BETA_MATCH_EMAIL=true` (leses live fra Vercel-env, ingen redeploy) | `app/api/cron/matching/route.ts` |
 | 3 | Reisen avsluttet tidlig (tidlig avslutning / «start ny reise» / blokkering / kontosletting med aktiv match) | **Partneren** (den som avsluttet får ingen — den valgte selv) | «Reisen er avsluttet» — nøytral, konkret, empatisk; avslører aldri hvem | `lib/journey/endJourney.ts` (via `initiatorId`) |
 | 4 | Reisen fullført (dag 30, `no_action`) | Begge | «Reisen er fullført» — takk + bekrefter at alt er slettet | `lib/journey/endJourney.ts` |

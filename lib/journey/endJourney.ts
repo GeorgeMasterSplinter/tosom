@@ -22,6 +22,7 @@
 import { prisma } from '@/lib/prisma';
 import { getImageStorage } from '@/lib/storage';
 import { sendJourneyEndEmail, sendJourneyEndedEmail } from '@/lib/email';
+import type { EmailResult } from '@/lib/email';
 
 /** Normalize pair — consistent ordering for MatchHistory unique constraint */
 function normalizePair(aId: string, bId: string): { userAId: string; userBId: string } {
@@ -287,12 +288,19 @@ export async function endJourney(
   // og kontoene er slettet (no_action = dag 30, eller de fant hverandre).
   // Best-effort: e-postfeil skal aldri blokkere reiseslutt. E-post og navn
   // leses fra de in-memory-objektene (DB-radene er nå borte).
-  const pendingEndEmails: Promise<unknown>[] = [];
+  type EndEmail = { to: string; label: string; promise: Promise<EmailResult> };
+  const pendingEndEmails: EndEmail[] = [];
   if (outcome === 'found_each_other' || outcome === 'no_action') {
     const found = outcome === 'found_each_other';
     for (const u of [userA, userB]) {
       if (u.email) {
-        pendingEndEmails.push(sendJourneyEndEmail(u.email, u.name || undefined, found));
+        pendingEndEmails.push({
+          to: u.email,
+          label: found ? 'fant-hverandre-epost' : 'reiseslutt-epost (dag 30)',
+          promise: sendJourneyEndEmail(u.email, u.name || undefined, found),
+        });
+      } else {
+        console.warn(`[endJourney] ${outcome}: bruker ${u.id} uten epost — reiseslutt-epost hoppet over`);
       }
     }
   }
@@ -307,20 +315,31 @@ export async function endJourney(
   ) {
     const partner = initiatorId === userA.id ? userB : userA;
     if (partner?.email) {
-      pendingEndEmails.push(sendJourneyEndedEmail(partner.email, partner.name || undefined));
+      pendingEndEmails.push({
+        to: partner.email,
+        label: 'partner-epost',
+        promise: sendJourneyEndedEmail(partner.email, partner.name || undefined),
+      });
+    } else {
+      console.warn(`[endJourney] Partner ${partner?.id} uten epost — partner-epost hoppet over`, { outcome, initiatorId });
     }
   }
 
   // Serverless: vent på at e-postene er sendt før vi returnerer — ellers kan
   // Vercel drepe kjørekonteksten før de når frem (fire-and-forget gikk tapt).
-  // allSettled er best-effort og kaster aldri.
+  // 10.11: logg resultat per mottaker — sendEmail kaster aldri, så uten dette
+  // var en feilet sending fullstendig usynlig i funksjonsloggen.
   if (pendingEndEmails.length > 0) {
-    const results = await Promise.allSettled(pendingEndEmails);
-    results.forEach((r, i) => {
-      if (r.status === 'rejected') {
-        console.warn('[endJourney] Kunne ikke sende reiseslutt-e-post:', r.reason);
-      }
-    });
+    await Promise.all(
+      pendingEndEmails.map(async (e) => {
+        try {
+          const r = await e.promise;
+          console.log(`[endJourney] ${e.label} til ${e.to}: ${r.success ? 'sendt' : 'FEILET: ' + r.error}`);
+        } catch (err) {
+          console.warn(`[endJourney] ${e.label} til ${e.to} kastet:`, err);
+        }
+      })
+    );
   }
 
   // Create SystemLog entry for the event

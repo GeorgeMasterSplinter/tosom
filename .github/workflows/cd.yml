@@ -1,12 +1,25 @@
-# ToSom — CD Pipeline (Vercel Deployment)
-# Kjøres etter at CI er fullført med grønn status på main/master
+# ToSom — CD Pipeline (produksjonsverifisering)
+# Kjøres etter at «ToSom CI» er fullført med grønn status på main/master
+#
+# Arkitektur (oppdatert 10.11): Deploys til produksjonsdomenet utføres av
+# Vercels GIT-INTEGRASJON (hver push til main → build + production deploy).
+# GitHub Actions utfører IKKE en parallell deploy: det tidligere
+# «Deploy to Vercel»-jobbet (vercel deploy --prebuilt --prod) var redundant —
+# det feilet i CLI-steget etter at buildet var grønt, mens selve deployen
+# allikevel gikk via git-integration. Resultatet var rødt CD uten at prod
+# ble blokkert. Pipelineen gjør nå:
+#   1. ci-gate        — kvalitetssjekk (kun ved manuell trigger)
+#   2. db-migrate     — Prisma-migrasjoner mot prod-DB FØR ny kode skal gjelde
+#   3. verify-deploy  — poller Vercel-API: den nyeste deploymenten må bli
+#                       READY (target=production) innen 10 minutter
+#   4. health-check   — curl health-endepunktet etter at deployen er ready
+#
+# A3 — Kvalitetsporten (systemaudit 03.09) er fortsatt gjeldende for CI:
+# manuell trigger (workflow_dispatch) må kjøre de sentrale quality-checkene
+# (lint + tsc + lang + jest) grønn i ci-gate før db-migrate/verify kjører.
 
 name: ToSom CD
 
-# A3 — Kvalitetsporten. CD gikk tidligere rett på push til main, uavhengig av
-# CI. En rød CI (typefeil, rød test, brutt invariant-vakt) stanset altså ingen
-# deploy. Nå kjører CD kun etter at «ToSom CI» er FULLFØRT med konklusjon
-# 'success' på main — porten er reell, ikke dekorativ.
 on:
   workflow_run:
     workflows: ["ToSom CI"]
@@ -22,8 +35,8 @@ jobs:
   # Manuell trigger (workflow_dispatch) omgikk tidligere kvalitetsporten:
   # «if: workflow_dispatch || ci_green» short-circuiterer til true, så en
   # manuell deploy kunne kjøre selv med rød/ikke-kjørt CI. Nå må en MANUELL
-  # deploy kjøre de sentrale quality-checkene (lint + tsc + lang + jest), og
-  # de må gå grønn — deploy er avhengig av denne via «needs: ci-gate». For
+  # trigger kjøre de sentrale quality-checkene (lint + tsc + lang + jest), og
+  # de må gå grønn — db-migrate/verify-deploy er avhengige via «needs». For
   # automatisk trigger (workflow_run) er CI allerede grønn (conclusion-filtret),
   # så gate-jobben er en no-op (undgår dobbelt CI).
   ci-gate:
@@ -32,7 +45,7 @@ jobs:
     steps:
       - name: Auto-trigger — CI kjørte allerede (deploy gates på conclusion)
         if: github.event_name == 'workflow_run'
-        run: echo "Auto-trigger (workflow_run) — deploy er gattet på CI-conclusion, ingen gjenkjøring."
+        run: echo "Auto-trigger (workflow_run) — gate er gattet på CI-conclusion, ingen gjenkjøring."
       - name: Checkout (manuell trigger)
         if: github.event_name == 'workflow_dispatch'
         uses: actions/checkout@v4
@@ -62,11 +75,11 @@ jobs:
         run: npx jest --ci --silent
 
   # ─── DB MIGRATIONS (prod) — sak 7, systemaudit 03.09 ───
-  # Prisma-migrasjoner til prod-DB kjører FØR Vercel-deploy, slik at schemat er
-  # klart når ny kode går live. Idempotent — prisma migrate deploy legger kun på
-  # ventende migrasjoner. Gated på samme måte som deploy: automatisk (workflow_run)
-  # kun ved grønn CI, manuell (workflow_dispatch) kun ved grønn ci-gate. Krever
-  # secrets.DATABASE_URL (prod, lagt inn 03.09). deploy er nå needs: db-migrate.
+  # Prisma-migrasjoner til prod-DB kjører FØR ny kode gjelde, slik at schemat
+  # er klart. Idempotent — prisma migrate deploy legger kun på ventende
+  # migrasjoner. Gated på samme måte som verify-deploy: automatisk
+  # (workflow_run) kun ved grønn CI, manuell (workflow_dispatch) kun ved
+  # grønn ci-gate. Krever secrets.DATABASE_URL (prod, lagt inn 03.09).
   db-migrate:
     name: Apply DB Migrations (prod)
     runs-on: ubuntu-latest
@@ -93,13 +106,21 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
-  # ─── DEPLOY TO VERCEL ───
-  deploy:
-    name: Deploy to Vercel
+  # ─── VERIFY PRODUCTION DEPLOYMENT ───
+  # Vercels git-integration deployer hver push til main (build + prod). Dette
+  # steget gjør deploy-statusen SYNLIG og reell i CD: det poller Vercel-API
+  # for den nyeste deploymenten i prosjektet og krever at den når
+  # READY med target=production innen 10 minutter.
+  #   ERROR  → gate feiler (rød): bygget/deployen feilet — prod er ikke oppdatert.
+  #   READY  → grønn: prod kjører den ferske deployen.
+  #   timeout → rød: ingen READY-deploy innen tidsgrensen (f.eks. CI og
+  #             git-integration kjører parallelt, og deployen tok for lenge).
+  # Krever secrets.VERCEL_TOKEN + secrets.VERCEL_PROJECT_ID (prod, som den
+  # tidligere deploy-jobben brukte).
+  verify-deploy:
+    name: Verify Production Deployment
     runs-on: ubuntu-latest
-    needs: [ci-gate, db-migrate]
-    # Automatisk trigger (workflow_run) krever grønn CI (conclusion). Manuell
-    # trigger (workflow_dispatch) krever at ci-gate kjørte grønn (needs).
+    needs: db-migrate
     if: >-
       github.event_name == 'workflow_dispatch' ||
       github.event.workflow_run.conclusion == 'success'
@@ -107,114 +128,39 @@ jobs:
       name: production
       url: https://tosom.no
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: Install Vercel CLI
-        run: npm i -g vercel
-
-      # .vercel/ er gitignored → prosjektlenken eksisterer ikke i CI.
-      # vercel pull --yes feiler umiddelbart uten den (rotårsak i CD 23–171:
-      # alle ekte deploy-kjøringer har feilet i dette steget).
-      # Lenken bygges derfor ved kjøring fra org/project-ID i secrets.
-      - name: Link Vercel Project
+      - name: Poll Vercel API for READY production-deployment
+        timeout-minutes: 12
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
-          mkdir -p .vercel
-          printf '{\n  "orgId": "%s",\n  "projectId": "%s",\n  "projectName": "tosom"\n}\n' \
-            "$VERCEL_ORG_ID" "$VERCEL_PROJECT_ID" > .vercel/project.json
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-      - name: Pull Vercel Environment Info
-        run: vercel pull --yes
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-      - name: Build Project
-        run: vercel build --prod
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-      - name: Deploy Project
-        run: vercel deploy --prebuilt --prod
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-      - name: Deploy Output
-        run: |
-          echo "Deployment successful!"
-          echo "URL: https://tosom.no"
-
-  # ─── DOCKER BUILD & PUSH ───
-  docker:
-    name: Build & Push Docker Image
-    runs-on: ubuntu-latest
-    needs: deploy
-    if: success()
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: |
-            ${{ secrets.DOCKER_USERNAME }}/tosom
-            ghcr.io/${{ github.repository_owner }}/tosom
-          tags: |
-            type=ref,event=branch
-            type=sha
-            type=semver,pattern={{version}}
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          echo "Vent på at Vercel-git-integration deployen blir READY..."
+          for i in $(seq 1 40); do
+            RESP=$(curl -sf -H "Authorization: Bearer $VERCEL_TOKEN" \
+              "https://api.vercel.com/v6/deployments?project-id=$VERCEL_PROJECT_ID&limit=1" || echo '{}')
+            DEPLOY_ID=$(printf '%s' "$RESP" | jq -r '.deployments[0].id // empty')
+            STATE=$(printf '%s' "$RESP" | jq -r '.deployments[0].readyState // "UNKNOWN"')
+            TARGET=$(printf '%s' "$RESP" | jq -r '.deployments[0].target // empty')
+            REASON=$(printf '%s' "$RESP" | jq -r '.deployments[0].readyStateReason // empty')
+            echo "Forsøk ${i}/40: deployment=${DEPLOY_ID:-?} state=${STATE} target=${TARGET} reason=${REASON}"
+            if [ "$STATE" = "READY" ] && [ "$TARGET" = "production" ]; then
+              echo "Production deployment er READY: ${DEPLOY_ID}"
+              exit 0
+            fi
+            if [ "$STATE" = "ERROR" ]; then
+              echo "::error::Den nyeste Vercel-deploymenten er i ERROR (${DEPLOY_ID}: ${REASON})."
+              exit 1
+            fi
+            sleep 15
+          done
+          echo "::error::Tidmanke: ingen READY production-deployment etter 10 minutter."
+          exit 1
 
   # ─── POST-DEPLOY HEALTH CHECK ───
   health-check:
     name: Post-Deploy Health Check
     runs-on: ubuntu-latest
-    needs: deploy
+    needs: verify-deploy
     if: always()
     steps:
       - name: Health Check
@@ -223,28 +169,3 @@ jobs:
           sleep 60
           echo "Checking health endpoint..."
           curl -f https://tosom.no/api/system/health || echo "Health check pending (may need stabilization time)"
-
-  # ─── DEPLOY GATE (synlig kvalitetsgate) ───
-  # Gjør deploy-statusen synlig i CD-kjøringen:
-  #   failure  → gate feiler (rød): ekte deploy-feil.
-  #   skipped  → warning (gul) + grønn kjøring: CI var ikke grønn, deploy hoppes
-  #              bevisst over (IKKE en deploy-feil — CI-rødt er selve signalet).
-  #   success  → grønn: deploy OK.
-  deploy-gate:
-    name: Deploy Gate
-    runs-on: ubuntu-latest
-    needs: deploy
-    if: always()
-    steps:
-      - name: Verify Deploy Ran
-        run: |
-          RESULT="${{ needs.deploy.result }}"
-          if [ "$RESULT" = "failure" ]; then
-            echo "::error::Deploy-jobben feilet."
-            exit 1
-          fi
-          if [ "$RESULT" = "skipped" ]; then
-            echo "::warning::Deploy-jobben ble hoppet over — CI var ikke grønn."
-            exit 0
-          fi
-          echo "Deploy-jobben fullførte med success."

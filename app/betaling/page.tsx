@@ -111,7 +111,7 @@ export default function BetalingPage() {
               '30 dagers guidet reise sammen',
               'Bli kjent-spørsmål underveis',
               'Bilder fra dag 15',
-              'Alt slettes ved reiseslutt',
+              'Alt slettes ved reiseslutt (24 timer hvis dere fant hverandre)',
             ].map((feature) => (
               <li key={feature} className="flex items-start text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
                 <span className="mr-3 mt-0.5" style={{ color: '#D4AF37' }}>✓</span>

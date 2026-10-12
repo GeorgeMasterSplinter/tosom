@@ -58,8 +58,8 @@ export const TERMS_VERSION = '2026-10-06';
 export const TERMS_UPDATED = '6. oktober 2026';
 
 /** Gjeldende versjon av personvernerklæringen. */
-export const PRIVACY_VERSION = '2026-10-06';
-export const PRIVACY_UPDATED = '6. oktober 2026';
+export const PRIVACY_VERSION = '2026-10-12';
+export const PRIVACY_UPDATED = '12. oktober 2026';
 
 /**
  * Aldersgrense. Invariant I-14.

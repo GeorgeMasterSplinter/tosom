@@ -94,7 +94,7 @@ const sections: Section[] = [
             'Bruk',
             'Meldinger, bilder du deler, framdrift i reisen, innlogginger, tekniske logger',
             'Avtale og berettiget interesse (art. 6.1.b og f)',
-            'Til reisen avsluttes. Logger inntil 90 dager.',
+            'Til reisen avsluttes (inntil 24 timer etter «vi fant hverandre»). Logger inntil 90 dager.',
           ],
         },
         {
@@ -183,7 +183,7 @@ const sections: Section[] = [
       headers: ['Hva', 'Hvor lenge'],
       rows: [
         { cells: ['Konto og profil', 'Til du sletter kontoen'] },
-        { cells: ['Samtaler og bilder', 'Til reisen avsluttes, deretter slettet'] },
+        { cells: ['Samtaler og bilder', 'Til reisen avsluttes (inntil 24 timer etter «vi fant hverandre», deretter permanent slettet)'] },
         { cells: ['Sensitive opplysninger', 'Til kontoen slettes eller samtykket trekkes'] },
         { cells: ['Tekniske logger', 'Inntil 90 dager'] },
         { cells: ['Rapporter om alvorlige forhold', 'Inntil 3 år, i anonymisert form'] },
@@ -191,7 +191,7 @@ const sections: Section[] = [
       ],
     },
     paragraphs: [
-      'Velger dere «vi fant hverandre», slettes begge kontoene og hele samtalen umiddelbart.',
+      'Velger dere «vi fant hverandre», beholdes samtalen i 24 timer slik at begge kan laste ned minnet som PDF. Deretter slettes begge kontoer, samtalen, bildene og svarene — permanent og irreversibelt.',
       'Ett unntak: har noen rapportert et alvorlig forhold, beholder vi rapporten selv om kontoen slettes. Det er nødvendig for å kunne håndtere saken og beskytte andre brukere. Rapporten inneholder da ikke mer enn det som trengs.',
     ],
   },

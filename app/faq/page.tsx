@@ -25,7 +25,7 @@ const FAQS = [
   },
   {
     q: 'Hva skjer etter dag 30?',
-    a: 'To valg. «Vi fant hverandre» — da slettes alt. Alle samtaler, bilder, spørsmål og svar — alt forsvinner permanent. Bare en følelse gjenstår. Eller «Start ny reise» — dere slettes, og begge kommer tilbake i køen for en ny match. Ingen hard landing. Bare videre.',
+    a: 'To valg. «Vi fant hverandre» — dere har 24 timer på dere til å laste ned minnet som PDF, så slettes alt: alle samtaler, bilder, spørsmål og svar — alt forsvinner permanent. Bare en følelse gjenstår. Eller «Start ny reise» — dere slettes, og begge kommer tilbake i køen for en ny match. Ingen hard landing. Bare videre.',
   },
   {
     q: 'Hva koster ToSom?',
@@ -35,7 +35,7 @@ const FAQS = [
     q: 'Hvor er dataene mine?',
     a: (
       <>Alt ligger i Europa (PostgreSQL, EU-region). Driftsleverandørene våre (Vercel, Cloudflare og Sentry) behandler teknisk informasjon som IP-adresse for å levere og sikre tjenesten — les mer i{' '}
-        <Link href="/personvern" style={{ color: '#D4AF37' }}>personvernerklæringen</Link>. Ved reiseslutt eller kontosletting slettes ALT — verifisert og irreversibelt. Det som gjenstår er to anonyme ID-er for statistikk. Alt annet er borte.</>
+        <Link href="/personvern" style={{ color: '#D4AF37' }}>personvernerklæringen</Link>. Ved reiseslutt eller kontosletting slettes ALT — senest 24 timer etter, verifisert og irreversibelt. Det som gjenstår er to anonyme ID-er for statistikk. Alt annet er borte.</>
     ),
   },
   {

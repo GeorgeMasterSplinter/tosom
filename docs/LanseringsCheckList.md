@@ -9,6 +9,15 @@
 > Koden vinner over dokumentasjonen. Alle funn er verifisert mot kildekoden
 > eller mot det levende nettstedet — ikke mot andre dokumenter.
 
+### Status 12.10 (Cline-oppdatering)
+
+- **24-timers grace-period er levert** (D): commit `41de1a9`, deployt 12.10 kl. 01:42 (Vercel, alias `tosom.no`, health `ok`). Tre eposter per konto bekreftet mottatt i prod: velkommen → match → reisen er fullført (med 24-t-varsel). Bekreft-parret (B) kan fullføre PDF-nedlastningstesten innen 24 timer.
+- **Personvern og FAQ oppdatert** for grace-perioden (PRIVACY_VERSION 2026-10-12): «vi fant hverandre» → 24 timer til PDF, deretter permanent slettet.
+- **K-1 (kontosletting):** kodeferdig — sletting har virket siden S-9 (09.10), nå integrert med grace. Gjenstår kun manuell admin-sletting av tidligere forsøk (George).
+- **K-2 (samtykke):** kodeferdig (PL-02a–h) — `/samtykke`, samtykkeport i onboarding + dashboard, 403 i profil-setup uten samtykke, 5 tester grønne. Gjenstår: bekrefte at migrasjonen `20261005212832_add_sensitive_consent` er applikert i prod (Vercel-kontrollpunktet) og at `/samtykke` virker (George).
+- **Epostlevering i prod: BEKREFTET 12.10** — åpner den manuelle E2E-regressjonen med to kontoer (§7.3) og ferdigstillelse av «Glemt passord» (PL-07, §6.5).
+
+
 ---
 
 ## 0. Samlet lanseringsstatus
@@ -762,11 +771,11 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 | | Punkt | Ref | Prioritet |
 |---|---|---|---|
 | [x] | Kontosletting virker ende-til-ende, med feilmelding ved feil *(✓ 2026-10-05 · PL-01)* | K-1 | **Før lansering — og før flere testere** |
-| [ ] | Brukere som har forsøkt å slette seg, er slettet manuelt *(besluttet 11.10 — George: han har oversikt i admin-panelet og sletter der; ingen skript, ingen e-post)* | K-1 | **Før lansering** |
+| [ ] | Brukere som har forsøkt å slette seg, er slettet manuelt *(besluttet 11.10 — George: han har oversikt i admin-panelet og sletter der; ingen skript, ingen e-post; slettekoden selv har virket siden S-9 09.10 og er integrert med grace-period 11.10 — `41de1a9`)* | K-1 | **Før lansering** |
 | [x] | Integrasjonstest for kontosletting med aktiv reise *(✓ 2026-10-05 · PL-01d, kjørt mot test-DB)* | K-1 | **Før lansering** |
-| [ ] *(klar for George · PL-02)* | Aktiv aksept av vilkår + uttrykkelig samtykke til særlige kategorier | K-2 | **Før lansering — og før flere testere** |
-| [ ] *(klar for George · PL-02)* | `termsAcceptedAt` / `termsVersion` lagres for alle nye brukere | K-2 | **Før lansering** |
-| [ ] *(klar for George · PL-02)* | Eksisterende brukere bes om samtykke ved neste innlogging | K-2 | **Før lansering** |
+| [ ] *(kodeferdig · PL-02 — `/samtykke` med to separate avkrysninger, samtykkeport i onboarding + dashboard, 403 i profil-setup uten samtykke, 5 tester grønne; George: bekrefte at siden virker i prod)* | Aktiv aksept av vilkår + uttrykkelig samtykke til særlige kategorier | K-2 | **Før lansering — og før flere testere** |
+| [ ] *(kodeferdig · PL-02b: `termsAcceptedAt`/`termsVersion` lagres ved aksept — testet)* | `termsAcceptedAt` / `termsVersion` lagres for alle nye brukere | K-2 | **Før lansering** |
+| [ ] *(kodeferdig · PL-02g: dashboard-porten sender eksisterende brukere til `/samtykke` ved neste innlogging — testet)* | Eksisterende brukere bes om samtykke ved neste innlogging | K-2 | **Før lansering** |
 | [x] | FAQ og personvern beskriver faktisk databehandling (IP, tredjeparter) | K-7 | **Før lansering** (PL-09: FAQ IP/tredjeparter + personverntabell Vercel/Cloudflare/Neon/Resend; Upstash fjernet — ikke konfigurert i prod) |
 | [x] | Google Fonts selvhostet via `next/font` | V-7 | **Før lansering** |
 | [x] | Onboarding-utkast ikke lenger i `localStorage` | V-12 | Kan utsettes |
@@ -813,7 +822,7 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 |---|---|---|---|
 | [x] | Rate limiting på innlogging | K-6 | **Før lansering** |
 | [x] | Minstekrav til passord | K-6 | **Før lansering** |
-| [ ] *(klar for George · PL-07 — kode og tester ferdige; krysses av når e-posten er mottatt i prod, PL-G7)* | «Glemt passord» virker ende-til-ende (e-post leveres, nytt passord settes) | K-6, V-6 | **Før lansering** |
+| [ ] *(klar for George · PL-07 — kode og tester ferdige; e-postlevering i prod BEKREFTET 12.10 (3 eposter/testkonto); gjenstår: George kjører reset-en gang i prod. Relevansen synker når Vipps blir primær innlogging — avgjøres med K-6)* | «Glemt passord» virker ende-til-ende (e-post leveres, nytt passord settes) | K-6, V-6 | **Før lansering** |
 | [x] | Ingen stille kontoopprettelse ved skrivefeil | K-6 | **Før lansering** |
 | [x] | Passordløse kontoer kan ikke overtas | K-6 | **Før lansering** |
 | [x] | Innloggingsfelt har labels | V-8 | **Før lansering** |

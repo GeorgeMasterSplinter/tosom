@@ -16,7 +16,7 @@
 - **K-1 (kontosletting):** kodeferdig — sletting har virket siden S-9 (09.10), nå integrert med grace. Gjenstår kun manuell admin-sletting av tidligere forsøk (George).
 - **K-2 (samtykke):** kodeferdig (PL-02a–h) — `/samtykke`, samtykkeport i onboarding + dashboard, 403 i profil-setup uten samtykke, 5 tester grønne. Gjenstår: bekrefte at migrasjonen `20261005212832_add_sensitive_consent` er applikert i prod (Vercel-kontrollpunktet) og at `/samtykke` virker (George).
 - **Epostlevering i prod: BEKREFTET 12.10** — åpner den manuelle E2E-regressjonen med to kontoer (§7.3) og ferdigstillelse av «Glemt passord» (PL-07, §6.5).
-- **Vipps nettsidekrav (12.10):** Alle 7 salgsvilkår-punkter til stede (retur + reklamasjonshåndtering tilføyd i vilkårene, TERMS_VERSION 2026-10-12). Firma-info: navn/org.nr./e-post synlig i footer, kontakt og vilkår; **telefon mangler** (George: direkte nummer) og **adresse mangler** (på plass senere — ikke privatadresse). Begge feltene auto-renderes i koden når de fylles (`COMPANY.phone`/`COMPANY.address`).
+- **Vipps nettsidekrav (12.10):** Alle 7 salgsvilkår-punkter til stede (retur + reklamasjonshåndtering tilføyd i vilkårene, TERMS_VERSION 2026-10-12). Firma-info: navn, org.nr., e-post og telefon (92 64 22 23) synlige i footer, kontakt og vilkår; **gjenstår kun adresse** (på plass senere — ikke privatadresse; auto-renderes i koden via `COMPANY.address`).
 
 
 ---

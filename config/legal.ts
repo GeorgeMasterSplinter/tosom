@@ -25,11 +25,10 @@ export const COMPANY = {
   /** Settes inn når forretningsadressen er bekreftet. */
   address: null as string | null,
   /**
-   * Kontakttelefon. Settes inn når nummeret er bestemt (avgjort 12.10 —
-   * George: direkte nummer, ikke privatadresse). Så lenge null, vises
-   * den ingen steder.
+   * Kontakttelefon — direktenummer (avgjort 12.10 — George).
+   * Vises automatisk i footer, kontakt og vilkårsbotnlinje.
    */
-  phone: null as string | null,
+  phone: '92 64 22 23',
   email: 'support@tosom.no',
   country: 'Norge',
 };

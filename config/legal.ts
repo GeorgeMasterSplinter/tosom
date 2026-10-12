@@ -24,6 +24,12 @@ export const COMPANY = {
   orgNumber: '938 413 231',
   /** Settes inn når forretningsadressen er bekreftet. */
   address: null as string | null,
+  /**
+   * Kontakttelefon. Settes inn når nummeret er bestemt (avgjort 12.10 —
+   * George: direkte nummer, ikke privatadresse). Så lenge null, vises
+   * den ingen steder.
+   */
+  phone: null as string | null,
   email: 'support@tosom.no',
   country: 'Norge',
 };
@@ -50,12 +56,13 @@ export function companyIdentification(): string {
 export function companyFooterLine(): string {
   const org = COMPANY.orgNumber ? ` · Organisasjonsnummer ${COMPANY.orgNumber}` : '';
   const address = COMPANY.address ? ` · ${COMPANY.address}` : '';
-  return `${COMPANY.name}${org}${address || ` · ${COMPANY.country}`}`;
+  const phone = COMPANY.phone ? ` · Tlf. ${COMPANY.phone}` : '';
+  return `${COMPANY.name}${org}${address}${phone} · ${COMPANY.email}`;
 }
 
 /** Gjeldende versjon av vilkårene. Lagres på bruker ved aksept. */
-export const TERMS_VERSION = '2026-10-06';
-export const TERMS_UPDATED = '6. oktober 2026';
+export const TERMS_VERSION = '2026-10-12';
+export const TERMS_UPDATED = '12. oktober 2026';
 
 /** Gjeldende versjon av personvernerklæringen. */
 export const PRIVACY_VERSION = '2026-10-12';

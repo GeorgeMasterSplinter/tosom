@@ -173,7 +173,7 @@ export default function KontaktPage() {
                     textAlign: 'center',
                   }}
                 >
-                  support@tosom.no
+                  {COMPANY.email}
                 </p>
               </GlassCard>
 
@@ -237,9 +237,12 @@ export default function KontaktPage() {
               style={{
                 ...typographyToStyle('body-sm'),
                 color: color.text.muted,
+                lineHeight: '1.7',
               }}
             >
               {COMPANY.name} · Org.nr. {COMPANY.orgNumber}
+              {COMPANY.address ? ` · ${COMPANY.address}` : ''}
+              {COMPANY.phone ? ` · Tlf. ${COMPANY.phone}` : ''}
             </p>
           </div>
         </ToSomSection>

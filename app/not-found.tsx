@@ -2,6 +2,7 @@
 // Viser rolig, elegant melding når en side ikke finnes.
 
 import Link from "next/link";
+import { COMPANY } from "@/config/legal";
 
 export default function NotFoundPage() {
   return (
@@ -108,7 +109,7 @@ export default function NotFoundPage() {
         >
           Treng du hjelp? Kontakt oss på{" "}
           <a
-            href="mailto:hei@tosom.app"
+            href={`mailto:${COMPANY.email}`}
             className="underline hover:no-underline transition-all"
             style={{ color: "rgba(212,175,55,0.6)" }}
           >

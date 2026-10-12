@@ -184,10 +184,10 @@ const clauses: Clause[] = [
   },
   {
     id: '15',
-    title: 'Angrerett og refusjon',
+    title: 'Angrerett, retur og refusjon',
     paragraphs: [
       'Så lenge reisen er gratis, har dette punktet ingen økonomisk betydning. Det gjelder når reisen betales.',
-      'Norsk lov gir deg som forbruker angrerett på digitale tjenester. Retten faller bort når leveringen har begynt, forutsatt at du på forhånd har samtykket til det og forstått hva det innebærer. Du blir bedt om begge deler før du betaler.',
+      'Norsk lov gir deg som forbruker angrerett på digitale tjenester. Retten faller bort når leveringen har begynt, forutsatt at du på forhånd har samtykket til det og forstått hva det innebærer. Du blir bedt om begge deler før du betaler. Det finnes ingen vare å returnere: Tosom er en digital tjeneste, og refundering reguleres i fullt omfang av dette punktet.',
       'Grensen går ved koblingen:',
     ],
     list: [
@@ -300,12 +300,26 @@ const clauses: Clause[] = [
   },
   {
     id: '24',
-    title: 'Lovvalg og tvister',
-
+    title: 'Reklamasjon, klag og tvister',
     paragraphs: [
-      'Avtalen er underlagt norsk rett.',
       'Er du uenig i noe, håper vi du tar kontakt med oss først. De fleste ting løser seg i en samtale.',
-      'Kommer vi ikke til enighet, kan du bringe saken inn for Forbrukertilsynet eller Forbrukerklageutvalget. Tvister kan også bringes inn for de alminnelige domstolene, med Oslo tingrett som verneting.',
+      `Reklamasjoner og klag sendes skriftlig til ${COMPANY.email} med en beskrivelse av hva som er galt og hva du vil at vi skal gjøre. Oppgi e-postadressen til kontoen din, slik at vi raskt finner saken.`,
+      'Vi svarer innen 10 virkedager.',
+      'Reklamasjoner på tjenesten skal reises innen to år fra tjenesten er levert, jf. Forbrukerkjøpsloven. Reisen regnes som levert når koblingen er gjennomført.',
+      'Kommer vi ikke til enighet, kan du bringe saken inn for Forbrukerklageutvalget eller Forbrukertilsynet. Tvister kan også bringes inn for de alminnelige domstolene, med Oslo tingrett som verneting.',
+      'Avtalen er underlagt norsk rett.',
+    ],
+    references: [
+      {
+        label: 'Forbrukerklageutvalget',
+        url: 'https://www.forbrukerklageutvalget.no/',
+        note: 'Uavhengig klageinstans som kan hjelpe deg dersom vi ikke kommer til enighet.',
+      },
+      {
+        label: LEGISLATION.forbrukerkjop.label,
+        url: LEGISLATION.forbrukerkjop.url,
+        note: 'Reklamasjonsfristen følger Forbrukerkjøpsloven.',
+      },
     ],
   },
 ];

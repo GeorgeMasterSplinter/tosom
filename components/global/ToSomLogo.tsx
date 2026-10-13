@@ -36,7 +36,7 @@ export const ToSomLogo: FC<ToSomLogoProps> = ({
       <Logo size="lg" colorVariant="gold" />
       {showTagline && (
         <span
-          className="mt-3 text-[11px] font-medium tracking-[0.3em] uppercase"
+          className="mt-3 text-xs font-medium tracking-[0.3em] uppercase"
           style={{ color: 'rgba(212,175,55,0.55)' }}
         >
           Made in Norway

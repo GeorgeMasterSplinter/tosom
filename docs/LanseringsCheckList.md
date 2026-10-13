@@ -875,6 +875,7 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 | [ ] | Backup gjenopprettet minst én gang (ACT-PIPELINE §10) | — | **Før lansering** |
 | [ ] | Sentry uten uløste kritiske feil siste 14 dager | §1.2 | **Før lansering** |
 | [ ] | `DATABASE_URL` rotert (ble delt i chat 03.09, jf. ACT-STATE) | ACT-STATE | **Før lansering** |
+| [ ] | `Vary: Accept-Encoding` på komprimerte ressurser (Vercel/Cloudflare — G-26, Teste.no-funnet 13.10) | — | Kan utsettes |
 
 ### 6.9 Vipps
 

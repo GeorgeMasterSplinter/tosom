@@ -65,7 +65,7 @@ npm audit --omit=dev   → 0 kritiske · 5 høye · 1 moderat (målt etter PL-24
 |---|---|
 | Punkter totalt | **70** (68 + 2 nye: religion og bonusfamilie) |
 | ✅ Avkrysset | **31** (målt 11.10: +PL-20 ×2 via G-24, +Vercel-plan (G-10/PL-14), +rapportrutine (G-22)) |
-| ⬜ Gjenstår | **39** — hvorav 3 er kodeferdige og bare venter på George |
+| ⬜ Gjenstår | **40** per 13.10 (+G-26 `Vary: Accept-Encoding`) — hvorav 3 er kodeferdige og bare venter på George |
 
 ### 1.3 Ferdig siden 05.10 (gjennom 11.10)
 
@@ -306,6 +306,15 @@ I Vercel → Settings → Environment Variables (**Production**):
   (`scripts/deleteFailedDeletionUsers.ts`) beholdes i repo som sikkerhetsnett.
 - [x] Gjort *(11.10 — løst via admin-panelet; ingen skriptkjøring/e-post)*
 
+#### 👤 G-26 · `Vary: Accept-Encoding`-header (Vercel/Cloudflare)  🟨
+- **Hva:** Bekreft at komprimerte ressurser i prod mottar headeren `Vary: Accept-Encoding`.
+  Test: `curl -sI 'https://www.tosom.no/_next/static/chunks/<en-ressurs>.js'`
+- **Hvorfor:** Uten headeren kan felles mellomlagring (Cloudflare) servere komprimert
+  innhold til klienter som ikke ba om det. Teste.no-funnet (INFO, `docs/NeedAttention.md`).
+  Dette er en plattform-innstilling hos Vercel/Cloudflare — **ikke app-kode**.
+- **Ferdig når:** `Vary: Accept-Encoding` står i responsen (eller bekreftet unødvendig).
+- [ ] Gjort *(nytt 13.10)*
+
 ---
 
 ### 2.6 Samlet Vercel-kontrollpunkt (11.10 — alt på én gang)
@@ -464,8 +473,8 @@ PL-nummer. Her står bare **hva som gjenstår** og **hva som venter på hva**.
 | ID | Hvem | Oppgave | Venter på | Sjekklistepunkt (§6) |
 |---|---|---|---|---|
 | **PL-06** | 🤖 C 🔒 | Reisedagen beregnes fra `bothSeenAt` (`journeyDayFor`), begge partnere samtidig ✅ **07.10** (G-03: prod 0 aktive, drift=0; G-05 «kjør» gitt) | — | §6.4 «Dagframrykk deterministisk …» |
-| **PL-15** | 🤖 C 🔒 | Bevis ved rapport/blokkering (`Report.evidence`, 90 dager), rapport etter avsluttet match, `pgCheck` i stedet for minnebasert grense | ⏳ **G-05** («kjør») — ny migrasjon | §6.2 «Bevis bevares …», «Rapport mulig også …», «Rapport-rate-limit …» |
-| **PL-24** | 🤖 C 🔒 | `nodemailer` 7 → 10; avklare om `uploadthing` brukes (R2 er lagring i prod) — fjern hvis ikke | ⏳ **G-05** («kjør») | §6.7 «Øvrige høye sårbarheter …» |
+| **PL-15** | 🤖 C 🔒 | Bevis ved rapport/blokkering (`Report.evidence`, 90 dager), rapport etter avsluttet match, `pgCheck` i stedet for minnebasert grense — ✅ ferdig (migrasjon `20261006120000`; §6.2 avkrysset) | — | §6.2 «Bevis bevares …», «Rapport mulig også …», «Rapport-rate-limit …» |
+| **PL-24** | 🤖 C 🔒 | `nodemailer` 7 → 10; avklare om `uploadthing` brukes (R2 er lagring i prod) — ✅ ferdig (uploadthing beholdes etter Georges beslutning; §6.7 avkrysset) | — | §6.7 «Øvrige høye sårbarheter …» |
 | **PL-14** | 🤖 Q | Samordne tidspunktet for matcherunden i `config/legal.ts`, watchdog-kommentaren og `vercel.json` | ⏳ **G-10** (Hobby eller Pro) | §6.8 «Vercel-plan bekreftet …» |
 | **PL-26** | 🤖 Q | Opprydding (død kode, «Djupere», gamle dokumenter) | ⏳ **G-06** (svar a–c) | — (mindre forbedringer) |
 | **PL-G15-skript** | 🤖 C | Slette-skript (prøvekjøring + `--apply`) for brukere som prøvde å slette seg | ✅ **11.10: G-15 løst via admin-panelet** (beslutning: ingen skriptkjøring, ingen e-post) — skriptet `scripts/deleteFailedDeletionUsers.ts` beholdes som sikkerhetsnett | §6.1 |
@@ -577,7 +586,7 @@ Fullstendig regresjonsliste: `LanseringsCheckList.md` §7.
 
 ---
 
-## 8. Avkrysningsliste — de åpne punktene (39 åpne per 11.10)
+## 8. Avkrysningsliste — de åpne punktene (40 åpne per 13.10)
 
 Speiler `LanseringsCheckList.md` §6. **Kryss av begge steder.**
 
@@ -642,6 +651,7 @@ Speiler `LanseringsCheckList.md` §6. **Kryss av begge steder.**
 - [ ] 👤 G-13 · Backup gjenopprettet én gang 🟥
 - [ ] 👤 G-14 · Sentry gjennomgått 🟥
 - [ ] 👤 G-04 · `DATABASE_URL` rotert 🟥
+- [ ] 👤 G-26 · `Vary: Accept-Encoding` på komprimerte ressurser (Vercel/Cloudflare) 🟨 *(nytt 13.10 — plattform-innstilling, ikke kode; Teste.no-funnet, INFO)*
 
 ### 6.9 Vipps
 - [ ] 👤 G-25 · Alle punkter i sjekklisten §5 *(ikke lanseringsfeil)* 🟨

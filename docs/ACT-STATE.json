@@ -1,10 +1,10 @@
 {
   "version": "1.0",
-  "updatedAt": "2026-10-11",
-  "commit": "7e959a6",
+  "updatedAt": "2026-10-13",
+  "commit": "0c8c5e6",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
-    "tests": "538 passed / 1 skipped (62 av 63 suiter) — målt 07.10 etter PL-06: +10 nye (__tests__/journey-day-advance.test.ts: startdag, +N dager, clamp 1–30, DST sommer↔vinter, begge-partnere-samme-dag, cron fanger opp utilsatte døgn); før det: 528 etter PL-15 (report-evidence +4, report-alert prisma/pgCheck-mock), 524 etter PL-25",
+    "tests": "553 passed / 1 skipped (66 av 67 suiter) — målt 13.10 (runde: «Made in Norway» 12px i ToSomLogo + G-26-dokspunkter); 11.10: 545 etter email-transport-tester; 07.10 etter PL-06: +10 nye (__tests__/journey-day-advance.test.ts: startdag, +N dager, clamp 1–30, DST sommer↔vinter, begge-partnere-samme-dag, cron fanger opp utilsatte døgn); før det: 528 etter PL-15 (report-evidence +4, report-alert prisma/pgCheck-mock), 524 etter PL-25",
     "e2e": "07.10 (611a577): onboarding 20/20 lokalt (chromium+firefox, workers:1) etter CI-fix: samtykke i seed (K-2), skalasvar (PL-08), sessionStorage (PL-17). Tidligere: 0 fixme igjen. Onboarding: 20/20 lokalt 29.08 (10 chromium + 10 firefox, inkl. full flow). Dashboard/journey/match: 90/90 fra 28.08-kjøringen (ingen kodeendringer som rakk dem siden). Totalt 110 passed / 0 failed. 5/6 prosjekt lokalt (Mobile Safari/webkit krever system-bibliotek — installeres i CI med --with-deps). Dev-login (storageState) fungerer — alle tester kjører innlogget. playwright.config: workers: 1 alltid (lokal kjøring = CI) — onboarding-testene deler en E2E-bruker som full-flow-testen muterer; parallelle workere racet på server-draften",
     "typecheck": "0 errors utover Prisma-klient (prisma generate kan ikke kjøre i sandbox — løses i CI)",
     "lint": "0 warnings (npx next lint --max-warnings 0)",
@@ -628,6 +628,7 @@
     "Kostnadsplan: Vercel Pro/Fluid, Pusher/Resend betalte tier, R2-lagring"
   ],
   "done": [
+    "13.10: «Made in Norway»-teksten i ToSomLogo hevet 11px → 12px (text-xs) — siste gjenstående <12px-eksempel fra Teste.no-funnet (NeedAttention.md; footer-h2 og tap-targets var allerede rett, «Les mer» finnes ikke lenger i koden). RestSjekkliste: G-26 (Vary: Accept-Encoding, Vercel/Cloudflare, ikke kode) + utdaterte §3.2-poster (PL-15/PL-24 ferdige) rettet; LanseringsCheckList §6.8 +1. INP-analyse ferdig (rapport: hele landingen er 'use client' = hydrering er hovedkostnaden; ingen tunge JS-sykler; forslag om server-komponent ligger til Georges avgjørelse).",
     "11.10: lib/email hardet — host normaliseres (fix for getaddrinfo EBUSY «https://smtp.resend.com») + feilet init caches ikke; 4 nye tester (email-transport). Admin-e-posttest-resultatene + rett verdiene notert i G-02 (Vercel: HOST uten protokoll, USER=resend, redeploy).",
     "11.10: onboarding steg 1 — anonymitetsvarsel under navnefeltet (gull + varsel-ikon: partneren ser navnet, ikke ditt fulle ekte navn); placeholder «Ikke ditt ekte navn»; 6 eksempler; e2e-selectorer → data-testid. Verifisert inkl. live next start (200, ny tekst i HTML).",
     "11.10: konsekvensrett — «match innen 24 timer» fjernet fra README.md (Google-indexert) + ai/system_prompt.md (3) + ai/system_skisse.md (3); erstattet med ukentlig konsept (én gjennomtenkt match i uken, matchrunden natt til lørdag). Gjenstående «24 timer»-treff er support-svartid (kontakt/microcopy) + tekniske kommentarer — begge korrekte.",

@@ -15,6 +15,7 @@ import { prisma } from '@/lib/prisma';
 import { timingSafeEqual } from 'crypto';
 import type { GuidedQuestion } from '@prisma/client';
 import { sendAlert } from '@/lib/observability/alert'; // B5.6
+import { matchingRoundMissed } from '@/lib/cron/matchingWatchdog'; // B5.6: ukentlig runde
 import { getPhaseForDay, journeyDayFor } from '@/lib/journey/engine'; // ST3.1, PL-06
 import { runRetention } from '@/lib/privacy/retention'; // S-10
 import { recordMetric, recordEvent } from '@/lib/observability/metric'; // O-3
@@ -613,25 +614,33 @@ export async function GET(req: NextRequest) {
 
     // B5.6 — WATCHDOG: Sjekk om matcherunden uteble (kjøres på slutten av journey-cron)
     // Vercel Hobby tillater maks 2 cron-jobber — watchdog ligger her, ikke som egen jobb.
+    // Runden kjører hver lørdag 02:00–04:00 UTC (vercel.json). Den gamle 26-timers
+    // terskelen fyrte hver natt mandag–fredag (ved ukentlig runde går 44–140 timer
+    // mellom runde og neste sjekk) — falske alarme. En runde regnes nå som kjørt
+    // dersom det finnes en logg i tilhørende lørdagsvindu (02:00–05:00 UTC).
     try {
-      const lastMatchingLog = await prisma.systemLog.findFirst({
-        where: { module: 'cron:matching' },
+      const matchingLogs = await prisma.systemLog.findMany({
+        where: {
+          module: 'cron:matching',
+          createdAt: { gte: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000) },
+        },
         orderBy: { createdAt: 'desc' },
+        take: 10,
         select: { createdAt: true },
       });
 
-      const hoursSinceLastMatch = lastMatchingLog
-        ? (Date.now() - lastMatchingLog.createdAt.getTime()) / (1000 * 60 * 60)
-        : null;
-
-      // Alert hvis matcherunde uteble i > 26 timer
-      if (hoursSinceLastMatch === null || hoursSinceLastMatch > 26) {
+      if (matchingLogs.length === 0) {
         await sendAlert(
-          hoursSinceLastMatch === null ? 'critical' : 'warning',
+          'critical',
           'Matcherunde uteble',
-          hoursSinceLastMatch === null
-            ? 'Ingen matcherunde er logget noensinne. Sjekk cron-konfigurasjonen.'
-            : `Siste matcherunde var for ${Math.round(hoursSinceLastMatch)} timer siden (terskel: 26 t).`
+          'Ingen matcherunde er logget noensinne. Sjekk cron-konfigurasjonen.',
+        );
+      } else if (matchingRoundMissed(new Date(), matchingLogs.map((l) => l.createdAt))) {
+        await sendAlert(
+          'warning',
+          'Matcherunde uteble',
+          'Matcherunden (lørdag 02:00–04:00 UTC) kjørte ikke forrige lørdag. '
+            + 'Sjekk Vercel → Functions (cron) og SystemLog (modul cron:matching).',
         );
       }
     } catch (watchdogErr) {

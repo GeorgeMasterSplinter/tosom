@@ -68,11 +68,13 @@ Daglig 2–5 min: se `GEORGE.md` §8 «Daglig drift».
   advokat + signatur.
 - **Ferdig når:** Advokaten har levert dokumentene tilbake.
 
-### 9. Forretningsadresse (G-07)
-- **Status:** Forretningsadressen er sendt inn på Altinn fra 01.11 — tar noen dager.
-- **Beslutning når Altinn er ferdig:** Si «publiser adressen» → Cline legger den inn i
-  firma-info (vilkår/footer). Inntil da: ingen adresse på siden (avtalt regel:
-  adressen publiseres aldri uten din eksplisitte ordre).
+### 9. Forretningsadresse (G-07) — ✅ FERDIG 15.10
+- **Status:** Forretningsadressen (TOSOM AS, Henrik Ibsens gate 90, 0255 Oslo) er
+  **registrert i Foretaksregisteret 15.10** (ref. 2026 0075 4800 82) og **publisert**
+  i vilkår, footer og kontakt-siden (etter din ordre). Privat adresse er og blir
+  ikke publisert. Advokaten (post 8) bekrefter kun utformingen.
+- **Merk:** Vilkårene er bumpet til versjon 2026-10-15 — eksisterende brukere får
+  en rolig om-aksept ved neste innlogging (systemets normale mekanisme).
 
 ## D. Manuell testing (noen timer totalt)
 

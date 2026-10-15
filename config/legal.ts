@@ -13,17 +13,18 @@
 /**
  * Selskapet bak Tosom.
  *
- * `orgNumber` er bekreftet fra Enhetsregisteret. `address` står som
- * null inntil forretningsadressen er bekreftet; så lenge den er null,
- * utelates den fra vilkårene og personvernerklæringen. Hjelperne
- * nedenfor tar begge feltene i bruk automatisk når de er fylt.
+ * `orgNumber` er bekreftet fra Enhetsregisteret. `address` er forretningsadressen
+ * registrert i Foretaksregisteret 15.10 (ref. 2026 0075 4800 82) og publiseres
+ * etter Georges eksplisitte ordre — samsvarer med e-handelsloven § 8.
+ * En privat adresse publiseres aldri. Hjelperne nedenfor tar begge feltene
+ * i bruk automatisk når de er fylt.
  */
 export const COMPANY = {
   name: 'Tosom AS',
   /** Bekreftet fra Enhetsregisteret. */
   orgNumber: '938 413 231',
-  /** Settes inn når forretningsadressen er bekreftet. */
-  address: null as string | null,
+  /** Registrert i Foretaksregisteret 15.10; publisert etter Georges ordre. */
+  address: 'Henrik Ibsens gate 90, 0255 Oslo',
   /**
    * Kontakttelefon — direktenummer (avgjort 12.10 — George).
    * Vises automatisk i footer, kontakt og vilkårsbotnlinje.
@@ -59,13 +60,16 @@ export function companyFooterLine(): string {
   return `${COMPANY.name}${org}${address}${phone} · ${COMPANY.email}`;
 }
 
-/** Gjeldende versjon av vilkårene. Lagres på bruker ved aksept. */
-export const TERMS_VERSION = '2026-10-12';
-export const TERMS_UPDATED = '12. oktober 2026';
+/**
+ * Gjeldende versjon av vilkårene. Lagres på bruker ved aksept.
+ * 15.10: forretningsadresse lagt inn i avtaleparten (registrert i Foretaksregisteret).
+ */
+export const TERMS_VERSION = '2026-10-15';
+export const TERMS_UPDATED = '15. oktober 2026';
 
 /** Gjeldende versjon av personvernerklæringen. */
-export const PRIVACY_VERSION = '2026-10-12';
-export const PRIVACY_UPDATED = '12. oktober 2026';
+export const PRIVACY_VERSION = '2026-10-15';
+export const PRIVACY_UPDATED = '15. oktober 2026';
 
 /**
  * Aldersgrense. Invariant I-14.

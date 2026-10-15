@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "updatedAt": "2026-10-15",
-  "commit": "1b97b43",
+  "commit": "7b470ff",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
     "tests": "564 passed / 1 skipped (67 av 68 suiter) — målt 15.10 etter watchdog-fiks (B5.6): +11 tester (__tests__/matching-watchdog.test.ts); 13.10: 553; 11.10: 545",
@@ -628,6 +628,7 @@
     "Kostnadsplan: Vercel Pro/Fluid, Pusher/Resend betalte tier, R2-lagring"
   ],
   "done": [
+    "15.10: Forretningsadresse publisert — TOSOM AS, Henrik Ibsens gate 90, 0255 Oslo (registrert i Foretaksregisteret 15.10, ref. 2026 0075 4800 82; Brønnøysund-bekreftelse mottatt). config/legal.ts: COMPANY.address fylt (renderes automatisk i vilkår/footer/kontakt), TERMS_VERSION + PRIVACY_VERSION → 2026-10-15 (eksisterende brukere får rolig om-aksept). G-07-adressekravet avkrysset i begge sjekklistene + kontrollplan post 9. Privat adresse (daglig leder) er ALDRI skrevet i repoet.",
     "15.10: B5.6-watchdog fikset — «Matcherunde uteble»-varslet (falske alarme hver natt mandag–fredag, 26t-terkel ved ukentlig runde). Ny logikk: runden (lørdag 02:00–04:00 UTC) regnes som kjørt ved cron:matching-logg i tilhørende lørdagsvindu (02:00–05:00 UTC); manuell runde en ukedag teller ikke. Filer: lib/cron/matchingWatchdog.ts (ny, rene funksjoner), app/api/cron/journey/route.ts (B5.6-blokk), __tests__/matching-watchdog.test.ts (11 nye). Verifisert: tsc 0 · jest 564 · lang grønn · lint 0 · build EXIT=0.",
     "15.10: docs/GEORGE-KONTROLLPLAN.md — Georges eget enkle kontrollplan (16 poster i anbefalt rekkefølge: G-01/02/04/03 først, Vercel-kontrollpunkt, DMARC/support, advokat + forretningsadresse (Altinn fra 01.11 — publiseres ALDRI uten Georges eksplisitte ordre), manuell testing, CI, Sentry, backup-gjenoppretting G-13, testbrukere, G-26, G-19). Matcherunde-uteble-varselet analysert: falske alarm — 26t-terkelen i B5.6-watchdog (journey-cron, 00:05 UTC daglig = 02:05 Oslo) stemmer ikke med ukentlig runde; fiksløsning ligger til godkjenning. Backup: deploy/backup.md er utdatert (beskriver gammel VPS-stack) — ny plan (GitHub Actions pg_dump → R2-bucket + bilde-sync + omskrevet runbook) ligger til godkjenning.",
     "13.10: «Made in Norway»-teksten i ToSomLogo hevet 11px → 12px (text-xs) — siste gjenstående <12px-eksempel fra Teste.no-funnet (NeedAttention.md; footer-h2 og tap-targets var allerede rett, «Les mer» finnes ikke lenger i koden). RestSjekkliste: G-26 (Vary: Accept-Encoding, Vercel/Cloudflare, ikke kode) + utdaterte §3.2-poster (PL-15/PL-24 ferdige) rettet; LanseringsCheckList §6.8 +1. INP-analyse ferdig (rapport: hele landingen er 'use client' = hydrering er hovedkostnaden; ingen tunge JS-sykler; forslag om server-komponent ligger til Georges avgjørelse).",

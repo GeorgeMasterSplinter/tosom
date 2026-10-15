@@ -65,7 +65,7 @@ npm audit --omit=dev   → 0 kritiske · 5 høye · 1 moderat (målt etter PL-24
 |---|---|
 | Punkter totalt | **70** (68 + 2 nye: religion og bonusfamilie) |
 | ✅ Avkrysset | **31** (målt 11.10: +PL-20 ×2 via G-24, +Vercel-plan (G-10/PL-14), +rapportrutine (G-22)) |
-| ⬜ Gjenstår | **40** per 13.10 (+G-26 `Vary: Accept-Encoding`) — hvorav 3 er kodeferdige og bare venter på George |
+| ⬜ Gjenstår | **39** per 15.10 (G-07 adressekravet avkrysset 15.10) — hvorav 3 er kodeferdige og bare venter på George |
 
 ### 1.3 Ferdig siden 05.10 (gjennom 11.10)
 
@@ -230,8 +230,9 @@ npm audit --omit=dev   → 0 kritiske · 5 høye · 1 moderat (målt etter PL-24
 - **Hva:** Send advokaten vilkår, personvernerklæring, DPA og DPIA (`docs/legal/`),
   og spør spesielt om:
   1. **Angrerett:** holder «ingen refusjon etter koblingen»? (angrerettloven § 22 n)
-  2. **Adressekravet** (e-handelsloven § 8): hvordan oppfylles det **uten** din
-     private adresse? (kontoradresse, postboks, forretningsadressetjeneste)
+  2. **Adressekravet** (e-handelsloven § 8): *(oppløst 15.10 — forretningsadresse
+     registrert i Foretaksregisteret og publisert; ingen privat adresse er
+     involvert. Advokaten trenger kun å bekrefte at utformingen holder.)*
   3. **Særlige kategorier** (religion, legning): holder samtykkeløsningen i `/samtykke`?
 - **Agentene har klart:** `docs/JURIDISK-GRUNNLAG-v1.0.md` som brief.
 - **Ferdig når:** Advokaten har godkjent eller gitt rettelser, og DPA/DPIA er signert.
@@ -591,7 +592,7 @@ Fullstendig regresjonsliste: `LanseringsCheckList.md` §7.
 
 ---
 
-## 8. Avkrysningsliste — de åpne punktene (40 åpne per 13.10)
+## 8. Avkrysningsliste — de åpne punktene (39 åpne per 15.10)
 
 Speiler `LanseringsCheckList.md` §6. **Kryss av begge steder.**
 
@@ -626,7 +627,7 @@ Speiler `LanseringsCheckList.md` §6. **Kryss av begge steder.**
 - [x] 🤖 Q PL-21 · Bloggen avpublisert (404) 🟥 *(PL-21a+b: app/blogg/layout.tsx (server-side notFound) dekker forsiden og [slug]; artikkelfilene beholdes for omskriving; live-verifisert med next start: /blogg 404, /blogg/[slug] 404, øvrige sider 200)*
 - [ ] 👤 G-20 · Manuell språkgjennomgang *(sideliste fra PL-22)* 🟥
 - [x] 🤖 Q PL-19 · Vilkår: angrerettloven og direkte lovlenker 🟥 *(PL-19a–d: §15 «Angrerett og refusjon» henviser til angrerettloven § 22 bokstav n; alle 5 norske lover i `LEGISLATION` med direkte lovdata-lenke (verifisert 200 OK); personvern-siden bruker «personopplysningsloven»; TERMS/PRIVACY_VERSION → 2026-10-06)*
-- [ ] 👤 G-07 · Adressekravet avklart — privat adresse publiseres ikke 🟥
+- [x] 👤 G-07 · Adressekravet avklart 🟥 *(15.10: forretningsadresse (TOSOM AS, Henrik Ibsens gate 90, 0255 Oslo) registrert i Foretaksregisteret (ref. 2026 0075 4800 82) + publisert i vilkår/footer/kontakt etter Georges ordre — samsvarer med e-handelsloven § 8. Privat adresse publiseres fortsatt ikke.)*
 - [ ] 👤 G-07 · Juridiske tekster gjennomgått av advokat 🟥
 
 ### 6.7 Teknisk kvalitet og sikkerhet

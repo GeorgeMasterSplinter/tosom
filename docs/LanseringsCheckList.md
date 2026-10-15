@@ -839,7 +839,7 @@ Men når Vipps kobles på, må følgende være sant samtidig:
 | [x] | Bloggen rettet eller avpublisert *(✓ 2026-10-06 · PL-21)* | V-10, V-13 | **Før lansering** |
 | [ ] | Manuell språkgjennomgang av alle brukervendte sider | V-13 | **Før lansering** |
 | [x] | Vilkår: angrerettloven og direkte lovlenker *(✓ 2026-10-06 · PL-19)* | V-9 | **Før lansering** |
-| [ ] | Adressekravet avklart med advokat — privat adresse publiseres ikke | V-9 | **Før lansering** |
+| [x] | Adressekravet avklart (15.10: forretningsadresse registrert i Foretaksregisteret + publisert i vilkår/footer/kontakt; privat adresse publiseres ikke) | V-9 | **Før lansering** |
 | [ ] | Juridiske tekster gjennomgått av advokat | V-9 | **Før lansering** |
 
 ### 6.7 Teknisk kvalitet og sikkerhet

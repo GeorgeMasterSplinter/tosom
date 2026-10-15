@@ -192,11 +192,16 @@ npm audit --omit=dev   → 0 kritiske · 5 høye · 1 moderat (målt etter PL-24
 - **Låser opp:** «Verifisert i prod-DB at `day` …» i §6.4, og PL-06.
 - [ ] Gjort
 
-#### 👤 G-04 · Roter `DATABASE_URL`  🟥
+#### 👤 G-04 · Roter `DATABASE_URL` + `NEXTAUTH_SECRET`  🟥
 - **Hva:** I Neon: nytt passord for databasebrukeren. Oppdater `DATABASE_URL` i
   **Vercel → Settings → Environment Variables** (Production) **og** i
-  **GitHub → Settings → Secrets and variables → Actions**. Redeploy.
+  **GitHub → Settings → Secrets and variables → Actions**. Generer nytt
+  `NEXTAUTH_SECRET` (f.eks. `openssl rand -hex 32`) og sett det i Vercel.
+  Redeploy. Til slutt: slett `.env.prod` og `.env` fra PC-en.
 - **Hvorfor:** Adressen med passord ble delt i en chat 03.09 — regn den som eksponert.
+  15.10: `NEXTAUTH_SECRET` ligger også i ren tekst i `.env.prod` på PC-en (filen er
+  ikke på GitHub, men en styrt/tappet PC gir tilgang). Merk: ny `NEXTAUTH_SECRET`
+  logger alle ut én gang (beta — akseptert).
 - **Ferdig når:** `https://www.tosom.no/api/system/health` gir `"status":"ok"`,
   og neste CD-kjøring er grønn.
 - [ ] Gjort
@@ -650,7 +655,7 @@ Speiler `LanseringsCheckList.md` §6. **Kryss av begge steder.**
 - [ ] 👤 G-09 · support@ testet 🟥
 - [ ] 👤 G-13 · Backup gjenopprettet én gang 🟥
 - [ ] 👤 G-14 · Sentry gjennomgått 🟥
-- [ ] 👤 G-04 · `DATABASE_URL` rotert 🟥
+- [ ] 👤 G-04 · `DATABASE_URL` + `NEXTAUTH_SECRET` rotert 🟥 *(15.10: begge ligger også i `.env.prod` på PC-en — roter begge og slett filen)*
 - [ ] 👤 G-26 · `Vary: Accept-Encoding` på komprimerte ressurser (Vercel/Cloudflare) 🟨 *(nytt 13.10 — plattform-innstilling, ikke kode; Teste.no-funnet, INFO)*
 
 ### 6.9 Vipps

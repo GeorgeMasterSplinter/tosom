@@ -1,7 +1,7 @@
 {
   "version": "1.0",
-  "updatedAt": "2026-10-13",
-  "commit": "0c8c5e6",
+  "updatedAt": "2026-10-15",
+  "commit": "2c71372",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
     "tests": "553 passed / 1 skipped (66 av 67 suiter) — målt 13.10 (runde: «Made in Norway» 12px i ToSomLogo + G-26-dokspunkter); 11.10: 545 etter email-transport-tester; 07.10 etter PL-06: +10 nye (__tests__/journey-day-advance.test.ts: startdag, +N dager, clamp 1–30, DST sommer↔vinter, begge-partnere-samme-dag, cron fanger opp utilsatte døgn); før det: 528 etter PL-15 (report-evidence +4, report-alert prisma/pgCheck-mock), 524 etter PL-25",
@@ -628,6 +628,7 @@
     "Kostnadsplan: Vercel Pro/Fluid, Pusher/Resend betalte tier, R2-lagring"
   ],
   "done": [
+    "15.10: docs/GEORGE-KONTROLLPLAN.md — Georges eget enkle kontrollplan (16 poster i anbefalt rekkefølge: G-01/02/04/03 først, Vercel-kontrollpunkt, DMARC/support, advokat + forretningsadresse (Altinn fra 01.11 — publiseres ALDRI uten Georges eksplisitte ordre), manuell testing, CI, Sentry, backup-gjenoppretting G-13, testbrukere, G-26, G-19). Matcherunde-uteble-varselet analysert: falske alarm — 26t-terkelen i B5.6-watchdog (journey-cron, 00:05 UTC daglig = 02:05 Oslo) stemmer ikke med ukentlig runde; fiksløsning ligger til godkjenning. Backup: deploy/backup.md er utdatert (beskriver gammel VPS-stack) — ny plan (GitHub Actions pg_dump → R2-bucket + bilde-sync + omskrevet runbook) ligger til godkjenning.",
     "13.10: «Made in Norway»-teksten i ToSomLogo hevet 11px → 12px (text-xs) — siste gjenstående <12px-eksempel fra Teste.no-funnet (NeedAttention.md; footer-h2 og tap-targets var allerede rett, «Les mer» finnes ikke lenger i koden). RestSjekkliste: G-26 (Vary: Accept-Encoding, Vercel/Cloudflare, ikke kode) + utdaterte §3.2-poster (PL-15/PL-24 ferdige) rettet; LanseringsCheckList §6.8 +1. INP-analyse ferdig (rapport: hele landingen er 'use client' = hydrering er hovedkostnaden; ingen tunge JS-sykler; forslag om server-komponent ligger til Georges avgjørelse).",
     "11.10: lib/email hardet — host normaliseres (fix for getaddrinfo EBUSY «https://smtp.resend.com») + feilet init caches ikke; 4 nye tester (email-transport). Admin-e-posttest-resultatene + rett verdiene notert i G-02 (Vercel: HOST uten protokoll, USER=resend, redeploy).",
     "11.10: onboarding steg 1 — anonymitetsvarsel under navnefeltet (gull + varsel-ikon: partneren ser navnet, ikke ditt fulle ekte navn); placeholder «Ikke ditt ekte navn»; 6 eksempler; e2e-selectorer → data-testid. Verifisert inkl. live next start (200, ny tekst i HTML).",

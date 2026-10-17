@@ -267,6 +267,220 @@ function checkChildrenWant(a: ProfileData, b: ProfileData): DealbreakerResult {
   return { hasDealbreaker: false };
 }
 
+/* ─────────────────────────────────────────────────────────────
+   LIVSSTIL-2026 (18.10, D-1 + D-4) — to nye dealbreakere
+   ───────────────────────────────────────────────────────────── */
+
+/**
+ * D-1 (Alternativ A, besluttet 18.10): høyde er en hard standardregel.
+ * Et mann–kvinne-par avvises når mannen er ≥ HEIGHT_GAP_CM kortere enn
+ * kvinnen. Kun par der begge kjønn normaliserer til 'man'/'kvinne'
+ * (ikke-binær/ukjent kjønn → ingen gate). Manglende høyde på én eller
+ * begge → blokkerer ALDRI (forsvarlig, samme mønster som radius).
+ */
+export const HEIGHT_GAP_CM = 5;
+
+function toHeightNumber(raw: unknown): number | null {
+  if (typeof raw === 'number') return Number.isFinite(raw) ? raw : null;
+  if (typeof raw === 'string' && raw.trim() !== '') {
+    const n = Number(raw);
+    if (Number.isFinite(n)) return n;
+  }
+  return null;
+}
+
+function checkHeightRule(a: ProfileData, b: ProfileData): DealbreakerResult {
+  const genderA = a.lifeSituation?.gender ? normalizeGender(a.lifeSituation.gender) : null;
+  const genderB = b.lifeSituation?.gender ? normalizeGender(b.lifeSituation.gender) : null;
+  // Kun mann–kvinne-par gjelder regelen
+  let man: ProfileData;
+  let kvinne: ProfileData;
+  if (genderA === 'man' && genderB === 'kvinne') {
+    man = a;
+    kvinne = b;
+  } else if (genderA === 'kvinne' && genderB === 'man') {
+    man = b;
+    kvinne = a;
+  } else {
+    return { hasDealbreaker: false };
+  }
+
+  const mannHoyde = toHeightNumber(man.lifestyle?.height);
+  const kvinneHoyde = toHeightNumber(kvinne.lifestyle?.height);
+  if (mannHoyde == null || kvinneHoyde == null) {
+    // Manglende høyde → blokkerer aldri (I-12: vises heller ikke for brukeren)
+    return { hasDealbreaker: false };
+  }
+
+  const gap = Math.round((kvinneHoyde - mannHoyde) * 10) / 10;
+  if (gap >= HEIGHT_GAP_CM) {
+    return {
+      hasDealbreaker: true,
+      reason: `Høyde: mannen er ${gap} cm kortere enn kvinnen (≥ ${HEIGHT_GAP_CM} cm)`,
+    };
+  }
+  return { hasDealbreaker: false };
+}
+
+/**
+ * D-4 (besluttet 18.10): vektmodellens øverste nivå «Må stemme» er en hard
+ * dealbreaker. For bil/kosthold/alkohol/dyr: hvis MINST ÉN part har satt
+ * «ma-stemme» og begge har verdi, og verdien ligger IKKE i den andres
+ * kompatibilitetssett (i noen retning) → avvis.
+ * Manglende verdi → blokkerer aldri (forsvarlig, som radius).
+ */
+export const LIVSSTIL2026_KOMPAT: Record<string, Record<string, string[]>> = {
+  kosthold: {
+    'spiser-koett': ['spiser-koett', 'fleksitar'],
+    fleksitar: ['spiser-koett', 'fleksitar', 'vegetar', 'vegan', 'fisk'],
+    vegetar: ['vegetar', 'fleksitar', 'vegan', 'fisk'],
+    vegan: ['vegan', 'vegetar', 'fisk'],
+    fisk: ['fisk', 'vegetar', 'vegan', 'fleksitar'],
+  },
+  bil: {
+    'full-el': ['full-el', 'phev', 'esykkel-ingen'],
+    phev: ['full-el', 'phev', 'bensin', 'diesel', 'esykkel-ingen'],
+    bensin: ['bensin', 'diesel', 'phev', 'esykkel-ingen'],
+    diesel: ['diesel', 'bensin', 'phev', 'esykkel-ingen'],
+    'esykkel-ingen': ['full-el', 'phev', 'bensin', 'diesel', 'esykkel-ingen'],
+  },
+  alkohol: {
+    aldri: ['aldri', 'sjelden'],
+    sjelden: ['sjelden', 'aldri', 'helligdager'],
+    helligdager: ['helligdager', 'sjelden', 'ofte'],
+    ofte: ['ofte', 'helligdager'],
+  },
+  dyr: {
+    hund: ['hund', 'annet-dyr', 'ingen'],
+    katt: ['katt', 'annet-dyr', 'ingen'],
+    'annet-dyr': ['hund', 'katt', 'annet-dyr', 'ingen'],
+    ingen: ['hund', 'katt', 'annet-dyr', 'ingen'],
+  },
+  bosted: {
+    sentrum: ['sentrum', 'forstad'],
+    forstad: ['sentrum', 'forstad', 'land'],
+    land: ['forstad', 'land'],
+  },
+  arbeidsrytme: {
+    kontorbundet: ['kontorbundet', 'hybrid', 'hjemmearbeid'],
+    hybrid: ['kontorbundet', 'hybrid', 'hjemmearbeid', 'skift'],
+    hjemmearbeid: ['kontorbundet', 'hybrid', 'hjemmearbeid'],
+    skift: ['hybrid', 'skift'],
+  },
+  skjerm: {
+    mye: ['mye', 'moderat'],
+    moderat: ['mye', 'moderat', 'vil-skru-ned'],
+    'vil-skru-ned': ['moderat', 'vil-skru-ned'],
+  },
+  reiser: {
+    'fjell-bobil': ['fjell-bobil', 'utlandet', 'naturen-naermest'],
+    utlandet: ['fjell-bobil', 'utlandet', 'naturen-naermest'],
+    'naturen-naermest': ['fjell-bobil', 'utlandet', 'naturen-naermest', 'lite-reising'],
+    'lite-reising': ['naturen-naermest', 'lite-reising'],
+  },
+};
+
+export interface Livsstil2026Data {
+  bil: string | null;
+  bilViktig: string | null;
+  kosthold: string | null;
+  kostholdViktig: string | null;
+  alkohol: string | null;
+  alkoholViktig: string | null;
+  dyr: string | null;
+  dyrViktig: string | null;
+  bosted: string | null;
+  bostedViktig: string | null;
+  arbeidsrytme: string | null;
+  arbeidsrytmeViktig: string | null;
+  skjerm: string | null;
+  skjermViktig: string | null;
+  reiser: string | null;
+  reiserViktig: string | null;
+  aktivitet: string | null;
+  aktivitetViktig: string | null;
+}
+
+/** Defensiv lesing av D-4-feltene fra preferences.livsstil2026. */
+export function readLivsstil2026Gated(profile: ProfileData): Livsstil2026Data | null {
+  const prefs = profile.preferences as Record<string, unknown> | null | undefined;
+  const l = prefs?.livsstil2026 as Record<string, unknown> | null | undefined;
+  if (!l || typeof l !== 'object' || Array.isArray(l)) return null;
+  const str = (k: string): string | null => {
+    const v = l[k];
+    return typeof v === 'string' && v.trim() !== '' ? v.trim() : null;
+  };
+  return {
+    bil: str('bil'),
+    bilViktig: str('bilViktig'),
+    kosthold: str('kosthold'),
+    kostholdViktig: str('kostholdViktig'),
+    alkohol: str('alkohol'),
+    alkoholViktig: str('alkoholViktig'),
+    dyr: str('dyr'),
+    dyrViktig: str('dyrViktig'),
+    bosted: str('bosted'),
+    bostedViktig: str('bostedViktig'),
+    arbeidsrytme: str('arbeidsrytme'),
+    arbeidsrytmeViktig: str('arbeidsrytmeViktig'),
+    skjerm: str('skjerm'),
+    skjermViktig: str('skjermViktig'),
+    reiser: str('reiser'),
+    reiserViktig: str('reiserViktig'),
+    aktivitet: str('aktivitet'),
+    aktivitetViktig: str('aktivitetViktig'),
+  };
+}
+
+function isKompatibel(felt: string, a: string, b: string): boolean {
+  // aktivitet er flervalg (kommaseparert): «må stemme» krever minst én
+  // felles verdi; ubestemt-verdier er håndtert av kalleren.
+  if (felt === 'aktivitet') {
+    const sa = new Set(a.split(',').map((s) => s.trim()).filter(Boolean));
+    const sb = new Set(b.split(',').map((s) => s.trim()).filter(Boolean));
+    if (sa.size === 0 || sb.size === 0) return true;
+    for (const v of sa) if (sb.has(v)) return true;
+    return false;
+  }
+  const matrise = LIVSSTIL2026_KOMPAT[felt];
+  if (!matrise) return true; // ukjent felt/verdi → ikke blokkér (forsvarlig)
+  return (matrise[a]?.includes(b) ?? true) && (matrise[b]?.includes(a) ?? true);
+}
+
+function checkLifestyle2026(a: ProfileData, b: ProfileData): DealbreakerResult {
+  const da = readLivsstil2026Gated(a);
+  const db = readLivsstil2026Gated(b);
+  if (!da || !db) return { hasDealbreaker: false };
+
+  const felt: Array<{ key: keyof Livsstil2026Data; viktig: keyof Livsstil2026Data; navn: string }> = [
+    { key: 'bil', viktig: 'bilViktig', navn: 'bil' },
+    { key: 'kosthold', viktig: 'kostholdViktig', navn: 'kosthold' },
+    { key: 'alkohol', viktig: 'alkoholViktig', navn: 'alkohol' },
+    { key: 'dyr', viktig: 'dyrViktig', navn: 'dyr' },
+    { key: 'bosted', viktig: 'bostedViktig', navn: 'bosted' },
+    { key: 'arbeidsrytme', viktig: 'arbeidsrytmeViktig', navn: 'arbeidsrytme' },
+    { key: 'skjerm', viktig: 'skjermViktig', navn: 'skjerm' },
+    { key: 'reiser', viktig: 'reiserViktig', navn: 'reiser' },
+    { key: 'aktivitet', viktig: 'aktivitetViktig', navn: 'aktivitet' },
+  ];
+
+  for (const f of felt) {
+    const va = da[f.key];
+    const vb = db[f.key];
+    if (!va || !vb) continue; // mangler verdi → blokkerer aldri
+    const aSkalStemme = da[f.viktig] === 'ma-stemme';
+    const bSkalStemme = db[f.viktig] === 'ma-stemme';
+    if (!aSkalStemme && !bSkalStemme) continue; // «må stemme» kreves (D-4)
+    if (isKompatibel(f.navn, va, vb)) continue;
+    const streng = aSkalStemme ? a.userId : b.userId;
+    return {
+      hasDealbreaker: true,
+      reason: `Hverdagsvalg: ${f.navn} (${va} vs ${vb}) for ${streng}`,
+    };
+  }
+  return { hasDealbreaker: false };
+}
+
 /**
  * sjekkAlleDealbreakers — hovedfunksjon som kjører alle dealbreaker-testene.
  * Returnerer resultatet av den første dealbreaker som blir funnet.
@@ -286,20 +500,28 @@ export function sjekkAlleDealbreakers(
   // 3. Barn (PL-11, D-3 = ja): blokkerer kun kun-ja vs kun-nei
   result = checkChildrenWant(queryUser, candidate);
   if (result.hasDealbreaker) return result;
-  
-  // 4. Livsrytme-konflikt
+
+  // 4. Høyde (LIVSSTIL-2026, D-1): mann ≥ 5 cm kortere enn kvinne → avvis
+  result = checkHeightRule(queryUser, candidate);
+  if (result.hasDealbreaker) return result;
+
+  // 5. Livsstil 2026 (LIVSSTIL-2026, D-4): «må stemme»-konflikter
+  result = checkLifestyle2026(queryUser, candidate);
+  if (result.hasDealbreaker) return result;
+
+  // 6. Livsrytme-konflikt
   result = checkLifeRhythmConflict(queryUser, candidate);
   if (result.hasDealbreaker) return result;
   
-  // 5. Eksplisitte preferanser
+  // 7. Eksplisitte preferanser
   result = checkExplicitPreferences(queryUser, candidate);
   if (result.hasDealbreaker) return result;
   
-  // 6. Grenser
+  // 8. Grenser
   result = checkBoundaries(queryUser, candidate);
   if (result.hasDealbreaker) return result;
   
-  // 7. Radius — B1.4: aktiv preferanse, tosidig blokkering
+  // 9. Radius — B1.4: aktiv preferanse, tosidig blokkering
   result = checkRadius(queryUser, candidate);
   if (result.hasDealbreaker) return result;
 

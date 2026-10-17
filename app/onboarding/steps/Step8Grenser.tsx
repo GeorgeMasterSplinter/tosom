@@ -12,8 +12,8 @@ const validate = (d: Record<string, unknown>): ValidationError[] => {
   const e: ValidationError[] = [];
   if (!String(d['neverCrossBoundary'] ?? '').trim()) e.push({ field: 'neverCrossBoundary', message: 'Velg hva du aldri vil krysse.' });
   if (!String(d['understandPartnersBoundaries'] ?? '').trim()) e.push({ field: 'understandPartnersBoundaries', message: 'Velg hvordan du forstår partnerens grenser.' });
-  const lim = String(d['limitations'] ?? '').trim(); if (!lim || lim.length < 10) e.push({ field: 'limitations', message: 'Skriv minst 10 tegn om dine avgrensninger.' });
-  const pmu = String(d['partnerMustUnderstand'] ?? '').trim(); if (!pmu || pmu.length < 10) e.push({ field: 'partnerMustUnderstand', message: 'Skriv minst 10 tegn om hva partneren må forstå.' });
+  // LIVSSTIL-2026 (D-3, besluttet 18.10): limitations/partnerMustUnderstand er
+  // VALGFRIE — ERQ-6 + grense-gridene bærer sikkerhetsdataene.
   return e;
 };
 export default function Step8Grenser({ data, onChange, onBack, onNext }: Props) {
@@ -29,9 +29,10 @@ export default function Step8Grenser({ data, onChange, onBack, onNext }: Props) 
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
       <OnboardingSelectGrid label="Hvordan forstår du partnerens grenser? *" mikroguiding="Velg det som passer best" options={[{ value: 'lyttar', label: 'Jeg lytter aktivt når de sier noe', icon: '👂' }, { value: 'observerer', label: 'Jeg observerer hva de trenger', icon: '👀' }, { value: 'sporar', label: 'Jeg spør rett ut om de trenger rom', icon: '❓' }, { value: 'lar', label: 'Jeg gir rom uten at de ber om det', icon: '🕊️' }]} selectedValue={getValue('understandPartnersBoundaries', '')} onChange={(v) => onChange('understandPartnersBoundaries', v)} testId="ob-understand-partner" />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
-      <OnboardingTextField label="Hva er dine viktigste avgrensninger? *" value={getValue('limitations', '')} onChange={(v) => onChange('limitations', v)} placeholder="Beskriv det konkrete atferdsmønsteret eller opplevelsen som utgjør en hard grense for deg — og hva som må til for at du kjenner deg tryggt respektert" mikroguiding="Skriv f.eks. Jeg trenger aldri å bli møtt med høye stemmer" maxLength={300} minChars={10} rows={3} multiline testId="ob-limitations" />
+      <OnboardingTextField label="Hva er dine viktigste avgrensninger?" value={getValue('limitations', '')} onChange={(v) => onChange('limitations', v)} placeholder="Noe konkret du trenger at partneren din respekterer" mikroguiding="Skriv f.eks. Jeg trenger aldri å bli møtt med høye stemmer" maxLength={300} rows={2} multiline testId="ob-limitations" />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
-      <OnboardingTextField label="Hva må partneren din forstå om deg? *" value={getValue('partnerMustUnderstand', '')} onChange={(v) => onChange('partnerMustUnderstand', v)} placeholder="Reflekter over det du mener er viktigst å dele for at den andre kan møte deg på en trygg og forstående måte — beskriv det konkret" mikroguiding="Skriv f.eks. At jeg trenger tid til å bearbeide følelser alene" maxLength={300} minChars={10} rows={3} multiline testId="ob-partner-must-understand" />
+      {/* D-3 (18.10): valgfri — del bare det du kjenner deg trygg med */}
+      <OnboardingTextField label="Hva må partneren din forstå om deg?" value={getValue('partnerMustUnderstand', '')} onChange={(v) => onChange('partnerMustUnderstand', v)} placeholder="Noe viktig å dele for at den andre kan møte deg trygt" mikroguiding="Skriv f.eks. At jeg trenger tid til å bearbeide følelser alene" maxLength={300} rows={2} multiline testId="ob-partner-must-understand" />
       <p className="text-center text-xs mt-8" style={{ color: 'rgba(255,255,255,0.6)' }}>Grenser beskytter deg selv — og den du elsker. Del bare det du kjenner deg trygg med.</p>
       <div className="mt-8 space-y-4"><BackButton onClick={onBack} /><PremiumCTAButton onClick={handleNext} label={!canProceed ? 'Fyll ut alle påkrevde felt' : 'Fortsett til neste steg'} disabled={!canProceed} fullWidth /></div>
     </OnboardingSlide>

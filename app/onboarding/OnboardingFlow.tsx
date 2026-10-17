@@ -137,6 +137,21 @@ interface ProfileData extends Record<string, unknown> {
   boundary: string;
   nearerType: string;
   needsTime: string;
+  // LIVSSTIL-2026 (D-2): nye hverdagsvalg i steg 2b + 5a (alle valgfrie)
+  arbeidsrytme: string;
+  bosted: string;
+  reiser: string;
+  dyr: string;
+  dyrViktig: string;
+  skjerm: string;
+  bil: string;
+  bilViktig: string;
+  kosthold: string;
+  kostholdViktig: string;
+  klima: string;
+  alkohol: string;
+  alkoholViktig: string;
+  aktivitet: string;
 }
 
 const initialData: ProfileData = {
@@ -159,6 +174,10 @@ const initialData: ProfileData = {
   laughterTrigger: '', quirkyHabit: '', guiltyPleasure: '', totallyYou: '', partnerWouldLaugh: '',
   neverCrossBoundary: '', understandPartnersBoundaries: '', limitations: '', partnerMustUnderstand: '',
   intimacySafety: '', comfortableWith: '', boundary: '', nearerType: '', needsTime: '',
+  // LIVSSTIL-2026 (D-2): nye hverdagsvalg (valgfrie)
+  arbeidsrytme: '', bosted: '', reiser: '', dyr: '', dyrViktig: '', skjerm: '',
+  bil: '', bilViktig: '', kosthold: '', kostholdViktig: '', klima: '',
+  alkohol: '', alkoholViktig: '', aktivitet: '',
 };
 
 function loadDraft(): Partial<ProfileData> {
@@ -556,6 +575,27 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
         }
       }
 
+      // LIVSSTIL-2026 (D-2): nye hverdagsvalg — valgfri seksjon.
+      // Tomme verdier sendes som undefined (serveren behandler '' som «ikke svart»).
+      // Et viktighetsvalg (D-4) uten selve svaret bærer ingen mening → undefined.
+      const l2026 = (v: string) => (v ? v : undefined);
+      const livsstil2026Payload = {
+        arbeidsrytme: l2026(data.arbeidsrytme),
+        bosted: l2026(data.bosted),
+        reiser: l2026(data.reiser),
+        dyr: l2026(data.dyr),
+        dyrViktig: data.dyr ? l2026(data.dyrViktig) : undefined,
+        skjerm: l2026(data.skjerm),
+        bil: l2026(data.bil),
+        bilViktig: data.bil ? l2026(data.bilViktig) : undefined,
+        kosthold: l2026(data.kosthold),
+        kostholdViktig: data.kosthold ? l2026(data.kostholdViktig) : undefined,
+        klima: l2026(data.klima),
+        alkohol: l2026(data.alkohol),
+        alkoholViktig: data.alkohol ? l2026(data.alkoholViktig) : undefined,
+        aktivitet: l2026(data.aktivitet),
+      };
+
       const payload = {
         basic: {
           identityName: data.identityName, age: data.age, gender: data.gender,
@@ -622,6 +662,8 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
         },
         // FORSKNINGSMOTOR F-6: Rå psykometriske svar (1–5 per item)
         psychometrics,
+        // LIVSSTIL-2026 (D-2): nye hverdagsvalg → Profile.preferences (serveren)
+        livsstil2026: livsstil2026Payload,
       };
 
       const profileRes = await csrfFetch('/api/profile/setup', {

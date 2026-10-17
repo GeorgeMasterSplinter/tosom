@@ -10,6 +10,7 @@ import { OnboardingSlide } from '@/app/onboarding/components/OnboardingSlide';
 import { OB } from '@/app/onboarding/theme';
 import { OnboardingTextField } from '@/app/onboarding/components/OnboardingTextField';
 import { OnboardingSelectGrid } from '@/app/onboarding/components/OnboardingSelectGrid';
+import { Valgvikt } from '@/app/onboarding/components/Valgvikt';
 import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { BackButton } from '@/components/onboarding/BackButton';
 import { ScaleQuestion } from '@/components/onboarding/ScaleQuestion';
@@ -48,6 +49,69 @@ export default function Step5LivsstilVerdier({ data, onChange, onBack, onNext, s
       <OnboardingSelectGrid label="Hvordan ønsker du å leve? *" mikroguiding="Dette er hva du drømmer om" options={[{ value: 'roleg', label: 'Rolig og forutsigbart', icon: '🌿' }, { value: 'eventyr', label: 'Eventyr og endring', icon: '🧭' }, { value: 'balansert', label: 'Balansen mellom ro og aktivitet', icon: '⚖️' }, { value: 'skapende', label: 'Skapende og kunstnerisk', icon: '🎨' }]} selectedValue={getValue('desiredLifestyle', '')} onChange={(v) => onChange('desiredLifestyle', v)} maxSelected={2} />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
       <OnboardingSelectGrid label="Hvordan ønsker du IKKE å leve? *" mikroguiding="Hva du vil unngå" options={[{ value: 'ensom', label: 'Alene og isolert', icon: '😔' }, { value: 'stress', label: 'Konstant stress', icon: '🌀' }, { value: 'rutine', label: 'Monoton rutine', icon: '😐' }, { value: 'økonomisk-utrygg', label: 'Økonomisk utrygghet', icon: '💸' }]} selectedValue={getValue('undesiredLifestyle', '')} onChange={(v) => onChange('undesiredLifestyle', v)} maxSelected={2} />
+
+      {/* ────────────────────────────────────────────────────── */}
+      {/* Nye hverdagsvalg (LIVSSTIL-2026, D-2/D-4) — alle valgfrie */}
+      {/* ────────────────────────────────────────────────────── */}
+      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '28px', marginBottom: '20px' }} />
+
+      {/* bil + vektmodell */}
+      <div>
+        <OnboardingSelectGrid label="Hvordan kommer du deg rundt?" mikroguiding="Velg det som beskriver deg best." options={[
+          { value: 'full-el', label: 'Full lader', icon: '🔌' },
+          { value: 'phev', label: 'Plug-in hybrid', icon: '⚡' },
+          { value: 'bensin', label: 'Bensin', icon: '⛽' },
+          { value: 'diesel', label: 'Diesel', icon: '🛢️' },
+          { value: 'esykkel-ingen', label: 'Elsykkel / kollektiv', icon: '🚲' },
+        ]} selectedValue={getValue('bil', '')} onChange={(v) => onChange('bil', v)} maxSelected={2} columns={2} testId="ob-l2026-bil" />
+        <Valgvikt value={getValue('bilViktig', '')} onChange={(v) => onChange('bilViktig', v)} testId="ob-l2026-bil-viktig" />
+      </div>
+      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
+
+      {/* kosthold + vektmodell */}
+      <div>
+        <OnboardingSelectGrid label="Hvordan spiser du?" mikroguiding="Velg det som gjelder for deg nå." options={[
+          { value: 'spiser-koett', label: 'Spiser kjøtt', icon: '🍖' },
+          { value: 'fleksitar', label: 'Fleksitar', icon: '🥗' },
+          { value: 'vegetar', label: 'Vegetar', icon: '🥦' },
+          { value: 'vegan', label: 'Vegan', icon: '🌱' },
+          { value: 'fisk', label: 'Fokus på fisk', icon: '🐟' },
+        ]} selectedValue={getValue('kosthold', '')} onChange={(v) => onChange('kosthold', v)} columns={2} testId="ob-l2026-kosthold" />
+        <Valgvikt value={getValue('kostholdViktig', '')} onChange={(v) => onChange('kostholdViktig', v)} testId="ob-l2026-kosthold-viktig" />
+      </div>
+      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
+
+      {/* klima — 3 trinn, ingen vektmodell */}
+      <OnboardingSelectGrid label="Hvor viktig er klima og miljø for deg?" mikroguiding="Velg det som kjennes mest riktig." options={[
+        { value: 'veldig-viktig', label: 'Veldig viktig', icon: '🌍' },
+        { value: 'viktig', label: 'Viktig', icon: '🌿' },
+        { value: 'ikke-stor-sak', label: 'Ikke en stor sak', icon: '🤷' },
+      ]} selectedValue={getValue('klima', '')} onChange={(v) => onChange('klima', v)} columns={1} testId="ob-l2026-klima" />
+      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
+
+      {/* alkohol + vektmodell */}
+      <div>
+        <OnboardingSelectGrid label="Hvordan er det med alkohol?" mikroguiding="Velg det som gjelder for deg." options={[
+          { value: 'aldri', label: 'Aldri', icon: '🚫' },
+          { value: 'sjelden', label: 'Sjelden', icon: '🥂' },
+          { value: 'helligdager', label: 'Ved helligdager', icon: '🎄' },
+          { value: 'ofte', label: 'Ofte', icon: '🍷' },
+        ]} selectedValue={getValue('alkohol', '')} onChange={(v) => onChange('alkohol', v)} columns={2} testId="ob-l2026-alkohol" />
+        <Valgvikt value={getValue('alkoholViktig', '')} onChange={(v) => onChange('alkoholViktig', v)} testId="ob-l2026-alkohol-viktig" />
+      </div>
+      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
+
+      {/* aktivitet — flervalg */}
+      <div>
+        <OnboardingSelectGrid label="Hvor aktiv er du?" mikroguiding="Velg opptil tre — hva fyller fritiden din?" options={[
+          { value: 'gym', label: 'Gym og trening', icon: '🏋️' },
+          { value: 'lop-turer', label: 'Løping og turer', icon: '🏃' },
+          { value: 'lagidrett', label: 'Lagidrett', icon: '⚽' },
+          { value: 'natur-fritid', label: 'Natur og fritid', icon: '🥾' },
+          { value: 'lite', label: 'Lite aktiv', icon: '🛋️' },
+        ]} selectedValue={getValue('aktivitet', '')} onChange={(v) => onChange('aktivitet', v)} maxSelected={3} columns={2} testId="ob-l2026-aktivitet" />
+        <Valgvikt value={getValue('aktivitetViktig', '')} onChange={(v) => onChange('aktivitetViktig', v)} testId="ob-l2026-aktivitet-viktig" />
+      </div>
       {/* FORSKNINGSMOTOR F-5 — PVQ-10 (verdier) */}
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '28px', marginBottom: '8px' }} />
       <p className="text-sm mb-4" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>

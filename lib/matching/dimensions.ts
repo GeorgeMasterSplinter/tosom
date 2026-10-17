@@ -273,6 +273,79 @@ function erApenForBonusfamilie(wantChildren: string | null): boolean {
   return splitValg(wantChildren).has(BONUSFAMILIE);
 }
 
+/**
+ * LIVSSTIL-2026 (D-2): defensiv lesing av de nye hverdagsvalgene fra
+ * preferences.livsstil2026 (skrevet av /api/profile/setup). Mangler data
+ * (legacy-profiler) → null, slik at dimensjonen scorer nøyaktig som før.
+ */
+function readLivsstil2026(profile: Record<string, unknown>): Record<string, string> | null {
+  const prefs = profile.preferences as Record<string, unknown> | null | undefined;
+  const l = prefs?.livsstil2026 as Record<string, unknown> | null | undefined;
+  if (!l || typeof l !== 'object' || Array.isArray(l)) return null;
+  const out: Record<string, string> = {};
+  for (const [k, v] of Object.entries(l)) {
+    if (typeof v === 'string' && v.trim() !== '') out[k] = v.trim();
+  }
+  return Object.keys(out).length > 0 ? out : null;
+}
+
+// «ubestemt» («Ikke bestemt ennå») bærer ingen data — behandles som manglende.
+const UBESTEMT = 'ubestemt';
+
+/** Ordinal-skår for klima (3 trinn): trinn-forskjell 0/1/2 → 100/75/50. */
+const KLIMA_STEG = ['veldig-viktig', 'viktig', 'ikke-stor-sak'];
+function klimaScore(a: string, b: string): number {
+  const diff = Math.abs(KLIMA_STEG.indexOf(a) - KLIMA_STEG.indexOf(b));
+  if (diff <= 0) return 100;
+  if (diff === 1) return 75;
+  return 50;
+}
+
+/**
+ * LIVSSTIL-2026 (D-2/D-4): hverdagsvalgene i livssituasjon-dimensjonen.
+ *
+ * Mønstret fra i dag gjeldes: mangler data → feltet hoppes over (ikke
+ * nøytral 50, ikke straff). D-4-vektmodellen: bil/kosthold/alkohol/dyr
+ * utelates fra scoringen når ÉN part har valgt «ikke-viktig».
+ * Returnerer { total, weightSum } klar til foldes inn i den vektede summen.
+ */
+function livsstil2026Items(
+  a: Record<string, unknown>,
+  b: Record<string, unknown>
+): { total: number; weightSum: number } {
+  const la = readLivsstil2026(a);
+  const lb = readLivsstil2026(b);
+  if (!la || !lb) return { total: 0, weightSum: 0 };
+
+  const items: Array<{ key: string; weight: number; gate?: string }> = [
+    { key: 'bil', weight: 0.06, gate: 'bilViktig' },
+    { key: 'kosthold', weight: 0.06, gate: 'kostholdViktig' },
+    { key: 'klima', weight: 0.06 },
+    { key: 'alkohol', weight: 0.05, gate: 'alkoholViktig' },
+    { key: 'aktivitet', weight: 0.05, gate: 'aktivitetViktig' },
+    { key: 'arbeidsrytme', weight: 0.05, gate: 'arbeidsrytmeViktig' },
+    { key: 'bosted', weight: 0.05, gate: 'bostedViktig' },
+    { key: 'reiser', weight: 0.04, gate: 'reiserViktig' },
+    { key: 'dyr', weight: 0.04, gate: 'dyrViktig' },
+    { key: 'skjerm', weight: 0.04, gate: 'skjermViktig' },
+  ];
+
+  let total = 0;
+  let weightSum = 0;
+  for (const item of items) {
+    const va = la[item.key];
+    const vb = lb[item.key];
+    if (!va || !vb) continue; // mangler data → hopp over feltet
+    if (va === UBESTEMT || vb === UBESTEMT) continue; // «ikke bestemt» = ingen data
+    // D-4: «ikke-viktig» hos én part → feltet utelates fra scoringen.
+    if (item.gate && (la[item.gate] === 'ikke-viktig' || lb[item.gate] === 'ikke-viktig')) continue;
+    const score = item.key === 'klima' ? klimaScore(va, vb) : categoryMatch(va, vb);
+    total += score * item.weight;
+    weightSum += item.weight;
+  }
+  return { total, weightSum };
+}
+
 export function scoreLifeSituationCompat(
   a: Record<string, unknown>,
   b: Record<string, unknown>
@@ -300,6 +373,12 @@ export function scoreLifeSituationCompat(
     total += categoryMatch(va, vb) * weight;
     weightSum += weight;
   }
+
+  // LIVSSTIL-2026 (D-2/D-4): nye hverdagsvalg (preferences.livsstil2026).
+  // Foldes inn i samme vektede sum — legacy-profiler (uten data) bidrar 0.
+  const l2026 = livsstil2026Items(a, b);
+  total += l2026.total;
+  weightSum += l2026.weightSum;
 
   // PL-28: åpen for bonusfamilie + partneren har barn fra før → pluss.
   // Gjelder begge veier, men gis bare én gang (samme pluss om begge passer).

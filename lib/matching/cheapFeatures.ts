@@ -25,6 +25,10 @@ import {
   normalizeGender,
   normalizeSeeking,
   toAgeNumber,
+  readLivsstil2026Gated,
+  HEIGHT_GAP_CM,
+  LIVSSTIL2026_KOMPAT,
+  type Livsstil2026Data,
 } from './dealbreaker';
 
 /** Prekalkulerte felt per kandidat — alt som de dyre sjekkane treng. */
@@ -41,6 +45,10 @@ export interface CheapFeatures {
   agePrefMax: number | null;
   // 3. Barn (PL-11, D-3: kun «ja» vs «nei» blokkerer)
   wantChildren: Set<string> | null;
+  // LIVSSTIL-2026 (D-1): høyde (lifestyle.height) — mann–kvinne-gate
+  heightNum: number | null;
+  // LIVSSTIL-2026 (D-4): «må stemme»-feltene fra preferences.livsstil2026
+  livsstil2026: Livsstil2026Data | null;
   // 4. Livsrytme
   lifeRhythm: string | null;
   // 5. Eksplisitte preferanser (A si liste mot B si tag-sett)
@@ -87,6 +95,11 @@ export function buildCheapFeatures(profile: ProfileData): CheapFeatures {
         ? new Set(profile.lifestyle.wantChildren.split(',').map((s) => s.trim().toLowerCase()).filter(Boolean))
         : null,
     lifeRhythm: profile.lifeRhythm ?? null,
+    // LIVSSTIL-2026 (D-1): høyde fra lifestyle.height (toAgeNumber har
+    // identisk semantikk: number/string → finite tall eller null)
+    heightNum: toAgeNumber((profile.lifestyle as Record<string, unknown> | null)?.height),
+    // LIVSSTIL-2026 (D-4): prekalkulerte «må stemme»-felt
+    livsstil2026: readLivsstil2026Gated(profile),
     dealbreakers:
       profile.preferences &&
       Array.isArray((profile.preferences as Record<string, unknown>).dealbreakers)
@@ -155,6 +168,79 @@ function childrenConflict(a: CheapFeatures, b: CheapFeatures): string | null {
   return null;
 }
 
+/* ─── LIVSSTIL-2026 (D-1 + D-4): høyde + «må stemme»-konflikter ─── */
+
+/**
+ * D-1: høyde-gate — same semantikk og reason-strenge som checkHeightRule
+ * i dealbreaker.ts (symmetrisk: kjører én gang per par).
+ */
+function heightConflict(a: CheapFeatures, b: CheapFeatures): string | null {
+  let man: CheapFeatures;
+  let kvinne: CheapFeatures;
+  if (a.genderNorm === 'man' && b.genderNorm === 'kvinne') {
+    man = a;
+    kvinne = b;
+  } else if (a.genderNorm === 'kvinne' && b.genderNorm === 'man') {
+    man = b;
+    kvinne = a;
+  } else {
+    return null; // kun mann–kvinne-par gjelder regelen
+  }
+  if (man.heightNum == null || kvinne.heightNum == null) return null; // mangler → aldri blokkér
+  const gap = Math.round((kvinne.heightNum - man.heightNum) * 10) / 10;
+  if (gap >= HEIGHT_GAP_CM) {
+    return `Høyde: mannen er ${gap} cm kortere enn kvinnen (≥ ${HEIGHT_GAP_CM} cm)`;
+  }
+  return null;
+}
+
+function isL2026Kompatibel(felt: string, va: string, vb: string): boolean {
+  // aktivitet er flervalg (kommaseparert): minst én felles verdi kreves
+  if (felt === 'aktivitet') {
+    const sa = new Set(va.split(',').map((s) => s.trim()).filter(Boolean));
+    const sb = new Set(vb.split(',').map((s) => s.trim()).filter(Boolean));
+    if (sa.size === 0 || sb.size === 0) return true;
+    for (const v of sa) if (sb.has(v)) return true;
+    return false;
+  }
+  const matrise = LIVSSTIL2026_KOMPAT[felt];
+  if (!matrise) return true; // ukjent felt/verdi → ikke blokkér (forsvarlig)
+  return (matrise[va]?.includes(vb) ?? true) && (matrise[vb]?.includes(va) ?? true);
+}
+
+/**
+ * D-4: «må stemme»-konflikter — same semantikk og reason-strenger som
+ * checkLifestyle2026 i dealbreaker.ts (symmetrisk: kjører én gang per par).
+ */
+function lifestyle2026Conflict(a: CheapFeatures, b: CheapFeatures): string | null {
+  const da = a.livsstil2026;
+  const db = b.livsstil2026;
+  if (!da || !db) return null;
+  const felt: Array<{ key: keyof Livsstil2026Data; viktig: keyof Livsstil2026Data; navn: string }> = [
+    { key: 'bil', viktig: 'bilViktig', navn: 'bil' },
+    { key: 'kosthold', viktig: 'kostholdViktig', navn: 'kosthold' },
+    { key: 'alkohol', viktig: 'alkoholViktig', navn: 'alkohol' },
+    { key: 'dyr', viktig: 'dyrViktig', navn: 'dyr' },
+    { key: 'bosted', viktig: 'bostedViktig', navn: 'bosted' },
+    { key: 'arbeidsrytme', viktig: 'arbeidsrytmeViktig', navn: 'arbeidsrytme' },
+    { key: 'skjerm', viktig: 'skjermViktig', navn: 'skjerm' },
+    { key: 'reiser', viktig: 'reiserViktig', navn: 'reiser' },
+    { key: 'aktivitet', viktig: 'aktivitetViktig', navn: 'aktivitet' },
+  ];
+  for (const f of felt) {
+    const va = da[f.key];
+    const vb = db[f.key];
+    if (!va || !vb) continue; // mangler verdi → blokkerer aldri
+    const aSkalStemme = da[f.viktig] === 'ma-stemme';
+    const bSkalStemme = db[f.viktig] === 'ma-stemme';
+    if (!aSkalStemme && !bSkalStemme) continue; // «må stemme» kreves (D-4)
+    if (isL2026Kompatibel(f.navn, va, vb)) continue;
+    const streng = aSkalStemme ? a.userId : b.userId;
+    return `Hverdagsvalg: ${f.navn} (${va} vs ${vb}) for ${streng}`;
+  }
+  return null;
+}
+
 function lifeRhythmOneWay(a: CheapFeatures, b: CheapFeatures): string | null {
   if (!a.lifeRhythm || !b.lifeRhythm) return null;
   const conflicting = LIFE_RHYTHM_OPPOSITES[a.lifeRhythm];
@@ -201,9 +287,11 @@ function radiusCheck(a: CheapFeatures, b: CheapFeatures): string | null {
  *
  * Rekkefølge (må ikke endres uten ekvivalens-test):
  *   1. kjønn (bilkreftig)   2. alder (bilkreftig)   3. barn (symmetrisk)
- *   4. livsrytme A→B        5. preferansar A→B      6. grenser A→B
- *   7. radius (bilkreftig)  8. livsrytme B→A
- *   9. preferansar B→A      10. grenser B→A
+ *   4. høyde (LIVSSTIL-2026, D-1, symmetrisk)
+ *   5. livsstil 2026 (LIVSSTIL-2026, D-4, symmetrisk)
+ *   6. livsrytme A→B        7. preferansar A→B      8. grenser A→B
+ *   9. radius (bilkreftig)  10. livsrytme B→A
+ *   11. preferansar B→A     12. grenser B→A
  *
  * (PL-10: modenheit og sikkerheit er fjerna frå rekkjefølgja.)
  *
@@ -214,6 +302,8 @@ export function cheapSjekkAll(a: CheapFeatures, b: CheapFeatures): string | null
     genderOneWay(a, b) ?? genderOneWay(b, a) ??
     ageOneWay(a, b) ?? ageOneWay(b, a) ??
     childrenConflict(a, b) ??
+    heightConflict(a, b) ??
+    lifestyle2026Conflict(a, b) ??
     lifeRhythmOneWay(a, b) ??
     explicitPrefsOneWay(a, b) ??
     boundariesOneWay(a, b) ??

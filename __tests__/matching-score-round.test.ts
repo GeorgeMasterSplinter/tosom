@@ -341,12 +341,14 @@ describe('scoreRound (ren kjerne)', () => {
     expect(r.deadlineHit).toBe(true);
   });
 
-  test('rejectReasons startar med alle 13 M-12-nøklar på 0 (PL-11 la til «barn»)', () => {
+  test('rejectReasons startar med alle 15 M-12-nøklar på 0 (PL-11 la til «barn», LIVSSTIL-2026 la til «hoyde»+«livsstil2026»)', () => {
     const r0 = emptyRejectReasons();
     expect(r0['scoring_feil']).toBe(0);
     expect(r0['sikkerhetsniva']).toBe(0);
     expect(r0['barn']).toBe(0);
-    expect(Object.keys(r0)).toHaveLength(13);
+    expect(r0['hoyde']).toBe(0);
+    expect(r0['livsstil2026']).toBe(0);
+    expect(Object.keys(r0)).toHaveLength(15);
   });
 });
 

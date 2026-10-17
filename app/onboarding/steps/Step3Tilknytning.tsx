@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { OnboardingSlide } from '@/app/onboarding/components/OnboardingSlide';
 import { OB } from '@/app/onboarding/theme';
 import { OnboardingTextField } from '@/app/onboarding/components/OnboardingTextField';
+import { OnboardingSelectGrid } from '@/app/onboarding/components/OnboardingSelectGrid';
 import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { BackButton } from '@/components/onboarding/BackButton';
 import { ScaleQuestion } from '@/components/onboarding/ScaleQuestion';
@@ -26,18 +27,9 @@ interface Props {
 interface ValidationError { field: string; message: string; }
 
 const validate = (data: Record<string, unknown>): ValidationError[] => {
+  // LIVSSTIL-2026 (D-5): 4 felt konvertert til valg-grid (blokkerer ikke lenger).
+  // importantBoundary er valgfri kort fritekst. Tilknytningsskalaen må svares.
   const errors: ValidationError[] = [];
-  const fields: Array<{key: string; min: number; hint: string}> = [
-    { key: 'safetyNeed', min: 10, hint: 'hva som gjør deg trygg' },
-    { key: 'insecurityTrigger', min: 10, hint: 'hva som utløser usikkerhet' },
-    { key: 'sadnessNeed', min: 10, hint: 'hva du trenger når du er lei' },
-    { key: 'stressNeed', min: 10, hint: 'hva du trenger under stress' },
-    { key: 'importantBoundary', min: 10, hint: 'hva grenser som er viktige for deg' },
-  ];
-  for (const f of fields) {
-    const v = String(data[f.key] ?? '').trim();
-    if (!v || v.length < f.min) errors.push({ field: f.key, message: `Skriv minst ${f.min} tegn om ${f.hint}.` });
-  }
   // PL-08b (D-1): skalasvarene er påkrevd per steg.
   const missing = missingScaleItems(data, ATTACHMENT);
   if (missing.length > 0) errors.push({ field: missing[0], message: 'Svar på alle påstandene — det finnes ingen fasit.' });
@@ -74,15 +66,41 @@ export default function Step3Tilknytning({ data, onChange, onBack, onNext }: Pro
           <ul className="text-sm space-y-1" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>{errors.map((e) => (<li key={e.field}>• {e.message}</li>))}</ul>
         </div>
       )}
-      <OnboardingTextField label="Hva gjør deg trygg i en relasjon? *" value={getValue('safetyNeed', '')} onChange={(v) => onChange('safetyNeed', v)} placeholder="Beskriv en konkret situasjon der du kjente deg tryggest i en relasjon — hva var det spesifikke som skapte den tryggheten?" mikroguiding="Skriv f.eks. At noen lytter uten å dømme" maxLength={300} minChars={10} rows={3} multiline testId="ob-safety-need" />
+      {/* LIVSSTIL-2026 (D-5): fritekst konvertert til valg-grid */}
+      <OnboardingSelectGrid label="Hva gjør deg trygg i en relasjon?" mikroguiding="Velg opptil tre — det hjelper oss å forstå hva som gir deg trygghet." options={[
+        { value: 'aerlighet', label: 'Ærlighet', icon: '💎' },
+        { value: 'konsekvens', label: 'Konsekvens', icon: '🧭' },
+        { value: 'rom-for-egen-tempo', label: 'Rom for eget tempo', icon: '🌙' },
+        { value: 'fysisk-naerhet', label: 'Fysisk nærhet', icon: '🤗' },
+        { value: 'praktisk-omsorg', label: 'Praktisk omsorg', icon: '🍲' },
+        { value: 'humor', label: 'Humor', icon: '😄' },
+      ]} selectedValue={getValue('safetyNeed', '')} onChange={(v) => onChange('safetyNeed', v)} maxSelected={3} testId="ob-safety-need" />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
-      <OnboardingTextField label="Hva utløser usikkerhet hos deg? *" value={getValue('insecurityTrigger', '')} onChange={(v) => onChange('insecurityTrigger', v)} placeholder="Tenk på et mønster som gjentatt har fått deg til å lure på om du var tryggt tatt vare på — beskriv utløseren konkret" mikroguiding="Skriv f.eks. Når folk lover noe og holder ikke ordet" maxLength={300} minChars={10} rows={3} multiline testId="ob-insecurity-trigger" />
+      <OnboardingSelectGrid label="Hva utløser usikkerhet hos deg?" mikroguiding="Velg opptil tre — det finnes ingen fasit." options={[
+        { value: 'endringer-uten-avtale', label: 'Endringer uten avtale', icon: '🌪️' },
+        { value: 'taushet', label: 'Taushet og stille', icon: '🤐' },
+        { value: 'avstand', label: 'Avstand', icon: '↔️' },
+        { value: 'ubestemthet', label: 'Ubestemthet', icon: '🌫️' },
+        { value: 'manglende-oppmerksomhet', label: 'Manglende oppmerksomhet', icon: '👀' },
+      ]} selectedValue={getValue('insecurityTrigger', '')} onChange={(v) => onChange('insecurityTrigger', v)} maxSelected={3} testId="ob-insecurity-trigger" />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
-      <OnboardingTextField label="Hva trenger du når du er lei? *" value={getValue('sadnessNeed', '')} onChange={(v) => onChange('sadnessNeed', v)} placeholder="Beskriv hva som hjelper deg mest med å gå gjennom en tung periode — både følelsesmessig og praktisk, og hvorfor akkurat det" mikroguiding="Skriv f.eks. En klem og at noen sier det skal gå bra" maxLength={300} minChars={10} rows={3} multiline testId="ob-sadness-need" />
+      <OnboardingSelectGrid label="Hva trenger du når du er lei?" mikroguiding="Velg det som hjelper deg mest gjennom en tung periode." options={[
+        { value: 'bare-tilstedevaerelse', label: 'Bare tilstedeværelse', icon: '🫂' },
+        { value: 'trygge-ord', label: 'Trygge ord', icon: '💬' },
+        { value: 'praktisk-hjelp', label: 'Praktisk hjelp', icon: '🤝' },
+        { value: 'tid-aleine', label: 'Tid alene', icon: '🌙' },
+        { value: 'humor', label: 'Humor', icon: '😄' },
+      ]} selectedValue={getValue('sadnessNeed', '')} onChange={(v) => onChange('sadnessNeed', v)} columns={2} testId="ob-sadness-need" />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
-      <OnboardingTextField label="Hva trenger du under stress? *" value={getValue('stressNeed', '')} onChange={(v) => onChange('stressNeed', v)} placeholder="Beskriv hvordan stress reagerer i kroppen din og hvilken type støtte som hjelper deg mest med å regulere og gjenopprette balanse" mikroguiding="Skriv f.eks. At noen tar over ansvaret midlertidig" maxLength={300} minChars={10} rows={3} multiline testId="ob-stress-need" />
+      <OnboardingSelectGrid label="Hva trenger du under stress?" mikroguiding="Velg det som hjelper deg mest til å regulere og gjenopprette balanse." options={[
+        { value: 'rom-til-a-roe-meg', label: 'Rom til å roe meg', icon: '🧘' },
+        { value: 'praktisk-hjelp', label: 'Praktisk hjelp', icon: '🤝' },
+        { value: 'a-snakke-det-gjennom', label: 'Å snakke det gjennom', icon: '🗣️' },
+        { value: 'fysisk-naerhet', label: 'Fysisk nærhet', icon: '🤗' },
+      ]} selectedValue={getValue('stressNeed', '')} onChange={(v) => onChange('stressNeed', v)} columns={2} testId="ob-stress-need" />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
-      <OnboardingTextField label="Hva grenser er viktigst for deg? *" value={getValue('importantBoundary', '')} onChange={(v) => onChange('importantBoundary', v)} placeholder="Reflekter over hva du absolutt ikke kan tolerere i en relasjon — beskriv grensen og hvorfor den er essensiell for din velvære" mikroguiding="Skriv f.eks. Jeg trenger tid alene etter en tung dag" maxLength={300} minChars={10} rows={3} multiline testId="ob-important-boundary" />
+      {/* Valgfri kort fritekst — det personlige du selv vil fremheve */}
+      <OnboardingTextField label="Hva grenser er viktigst for deg?" value={getValue('importantBoundary', '')} onChange={(v) => onChange('importantBoundary', v)} placeholder="Noe konkret du trenger at partneren din respekterer" mikroguiding="Skriv f.eks. Jeg trenger tid alene etter en tung dag" maxLength={300} rows={2} multiline testId="ob-important-boundary" />
       {/* FORSKNINGSMOTOR F-5 — Tilknytning (egne items, Bowlby/Ainsworth/Hazan-Shaver) */}
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '28px', marginBottom: '8px' }} />
       <p className="text-sm mb-4" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>

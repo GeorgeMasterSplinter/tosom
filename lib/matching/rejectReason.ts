@@ -14,6 +14,9 @@ export function mapRejectReason(reason: string | undefined): string {
   if (reason.startsWith('Kjønnspreferanse')) return 'kjonn';
   if (reason.startsWith('Alderspreferanse')) return 'alder';
   if (reason.startsWith('Ønske om barn')) return 'barn';
+  // LIVSSTIL-2026 (18.10, D-1/D-4): to nye avvisningsklasser
+  if (reason.startsWith('Høyde')) return 'hoyde';
+  if (reason.startsWith('Hverdagsvalg')) return 'livsstil2026';
   if (reason.startsWith('Modenhets-gap')) return 'modenhetsgap';
   if (reason.startsWith('Inkompatibel livsrytme')) return 'livsrytme';
   if (reason.startsWith('Sikkerhetsnivå')) return 'sikkerhetsniva';

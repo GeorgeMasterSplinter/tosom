@@ -32,6 +32,11 @@ function optStr(max?: number, min = 0, msg?: string) {
   return z.preprocess(blankToUndefined, s.optional());
 }
 
+/** Valgfritt valg-felt: verdien må være én av de gitte option-verdiene. */
+function optEnum(values: string[]) {
+  return z.preprocess(blankToUndefined, z.enum(values as [string, ...string[]]).optional());
+}
+
 /* ============================================================
    BASIC PROFILE (Steg 1: Grunnprofil)
    ============================================================ */
@@ -93,10 +98,11 @@ export type BasicProfileInput = z.infer<typeof basicProfileSchema>;
 
 export const personlighetSchema = z.object({
   selfDesc: z.string().min(10, 'Skriv minst 10 tegn om hvem du er').max(500),
-  energyGiver: optStr(300, 10, 'Hva gir deg energi?'),
-  energyDrainer: optStr(300, 10, 'Hva tapper deg for energi?'),
-  pressureReact: optStr(300, 10, 'Hvordan reagerer du under press?'),
-  quirk: optStr(200, 5, 'Skildre en quirky eigenskap'),
+  // LIVSSTIL-2026 (D-5): konvertert til valg-grid — korte option-verdier, ingen min-lengde.
+  energyGiver: optStr(300),
+  energyDrainer: optStr(300),
+  pressureReact: optStr(300),
+  quirk: optStr(200),
 });
 
 export type PersonlighetInput = z.infer<typeof personlighetSchema>;
@@ -110,8 +116,9 @@ export const livssituasjonSchema = z.object({
   housingType: optStr(),
   householdSize: optStr(),
   economicStability: optStr(),
-  responsibilities: optStr(500, 10),
-  dailyRoutine: optStr(500, 10),
+  // LIVSSTIL-2026 (D-5): konvertert til valg-grid — korte option-verdier.
+  responsibilities: optStr(200),
+  dailyRoutine: optStr(200),
 });
 
 export type LivssituasjonInput = z.infer<typeof livssituasjonSchema>;
@@ -121,11 +128,13 @@ export type LivssituasjonInput = z.infer<typeof livssituasjonSchema>;
    ============================================================ */
 
 export const tilknytningSchema = z.object({
-  safetyNeed: optStr(300, 10),
-  insecurityTrigger: optStr(300, 10),
-  sadnessNeed: optStr(300, 10),
-  stressNeed: optStr(300, 10),
-  importantBoundary: optStr(300, 10),
+  // LIVSSTIL-2026 (D-5): 4 felt konvertert til valg-grid; importantBoundary
+  // beholdes som valgfri kort fritekst.
+  safetyNeed: optStr(300),
+  insecurityTrigger: optStr(300),
+  sadnessNeed: optStr(300),
+  stressNeed: optStr(300),
+  importantBoundary: optStr(300),
 });
 
 export type TilknytningInput = z.infer<typeof tilknytningSchema>;
@@ -137,9 +146,10 @@ export type TilknytningInput = z.infer<typeof tilknytningSchema>;
 export const kjærlighetsspråkSchema = z.object({
   loveGive: optStr(),
   loveReceive: optStr(),
-  closenessBuilder: optStr(300, 10),
-  distanceCreator: optStr(300, 10),
-  smallThing: optStr(300, 10),
+  // LIVSSTIL-2026 (D-5): konvertert til valg-grid; smallThing er valgfri kort.
+  closenessBuilder: optStr(300),
+  distanceCreator: optStr(300),
+  smallThing: optStr(300),
 });
 
 export type KjærlighetsspråkInput = z.infer<typeof kjærlighetsspråkSchema>;
@@ -175,11 +185,13 @@ export type RelasjonsStilInput = z.infer<typeof relasjonsStilSchema>;
    ============================================================ */
 
 export const fremtidSchema = z.object({
-  futureVision: optStr(500, 10),
-  dreamGoal: optStr(300, 10),
+  // LIVSSTIL-2026 (D-5): futureVision/experienceAlone/experienceTogether konvertert
+  // til valg-grid; dreamGoal er valgfri kort; buildTogether beholdes (varme, min 10).
+  futureVision: optStr(200),
+  dreamGoal: optStr(300),
   buildTogether: optStr(300, 10),
-  experienceAlone: optStr(300, 10),
-  experienceTogether: optStr(300, 10),
+  experienceAlone: optStr(200),
+  experienceTogether: optStr(200),
 });
 
 export type FremtidInput = z.infer<typeof fremtidSchema>;
@@ -205,11 +217,13 @@ export type HumorInput = z.infer<typeof humorSchema>;
 export const grenserSchema = z.object({
   // Select-grid-felt fra steg 8a: sender korte option-verdier
   // (f.eks. «respekt», «lar») — ingen min-lengde på disse.
-  // Fritekst-feltene (limitations/partnerMustUnderstand) beholder min 10.
   neverCrossBoundary: optStr(300),
   understandPartnersBoundaries: optStr(300),
+  // LIVSSTIL-2026 (D-3, besluttet 18.10): begge fritekstfeltene er VALGFRIE.
+  // ERQ-6 + grense-gridene bærer sikkerhetsdataene — to store tomme bokser
+  // var et av de tyngste fravikelstegene i onboarding.
   limitations: optStr(300),
-  partnerMustUnderstand: optStr(300, 10),
+  partnerMustUnderstand: optStr(300),
 });
 
 export type GrenserInput = z.infer<typeof grenserSchema>;
@@ -227,6 +241,44 @@ export const modenSchema = z.object({
 });
 
 export type ModenInput = z.infer<typeof modenSchema>;
+
+/* ============================================================
+   LIVSSTIL 2026 (ny 18.10.2026 — D-2/D-4)
+   Hverdagsvalg for 2026-Norge, plassert i steg 2b (arbeidsrytme, bosted,
+   reiser, dyr, skjerm) og steg 5a (bil, kosthold, klima, alkohol,
+   aktivitet). Lagres i Profile.preferences.livsstil2026 (ingen migrasjon).
+   Vekt-modellen (D-4): bil/kosthold/alkohol/dyr får et viktighetsvalg —
+   «ma-stemme» gjør feltet til en hard dealbreaker i motoren.
+   Alle felt er valfrie; motoren behandler manglende data nøytralt.
+   ============================================================ */
+
+const VIKTIGHET = ['ikke-viktig', 'bor-stemme', 'ma-stemme'] as const;
+
+export const livsstil2026Schema = z.object({
+  // Steg 2b — hverdagen
+  arbeidsrytme: optEnum(['kontorbundet', 'hybrid', 'hjemmearbeid', 'skift']),
+  arbeidsrytmeViktig: optEnum([...VIKTIGHET]),
+  bosted: optEnum(['sentrum', 'forstad', 'land', 'ubestemt']),
+  bostedViktig: optEnum([...VIKTIGHET]),
+  reiser: optEnum(['fjell-bobil', 'utlandet', 'naturen-naermest', 'lite-reising']),
+  reiserViktig: optEnum([...VIKTIGHET]),
+  dyr: optEnum(['hund', 'katt', 'annet-dyr', 'ingen']),
+  dyrViktig: optEnum([...VIKTIGHET]),
+  skjerm: optEnum(['mye', 'moderat', 'vil-skru-ned', 'ubestemt']),
+  skjermViktig: optEnum([...VIKTIGHET]),
+  // Steg 5a — livsstil & verdier
+  bil: optEnum(['full-el', 'phev', 'bensin', 'diesel', 'esykkel-ingen']),
+  bilViktig: optEnum([...VIKTIGHET]),
+  kosthold: optEnum(['spiser-koett', 'fleksitar', 'vegetar', 'vegan', 'fisk']),
+  kostholdViktig: optEnum([...VIKTIGHET]),
+  klima: optEnum(['veldig-viktig', 'viktig', 'ikke-stor-sak']),
+  alkohol: optEnum(['aldri', 'sjelden', 'helligdager', 'ofte']),
+  alkoholViktig: optEnum([...VIKTIGHET]),
+  aktivitet: optStr(100), // flervalg (maks 3), kommaseparert
+  aktivitetViktig: optEnum([...VIKTIGHET]),
+});
+
+export type Livsstil2026Input = z.infer<typeof livsstil2026Schema>;
 
 /* ============================================================
    PREFERSAR (valgfritt)
@@ -288,6 +340,9 @@ export const onboardingSetupSchema = z.object({
   grenser: grenserSchema,
   moden: modenSchema,
   preferanser: preferanserSchema,
+  // LIVSSTIL-2026 (D-2): ny seksjon — VALGFRI (gammle payloads/tester uten
+  // seksjonen må fortsatt gå gjennom; alle felt i selve seksjonen er optionale).
+  livsstil2026: livsstil2026Schema.optional(),
   psychometrics: psychometricsSchema,
 });
 

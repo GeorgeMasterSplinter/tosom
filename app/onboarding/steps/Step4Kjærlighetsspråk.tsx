@@ -20,7 +20,8 @@ const validate = (d: Record<string, unknown>): ValidationError[] => {
   const e: ValidationError[] = [];
   if (!String(d['loveGive'] ?? '').trim()) e.push({ field: 'loveGive', message: 'Velg hvordan du viser kjærlighet.' });
   if (!String(d['loveReceive'] ?? '').trim()) e.push({ field: 'loveReceive', message: 'Velg hvordan du ønsker kjærlighet.' });
-  ['closenessBuilder','distanceCreator','smallThing'].forEach(k => { const v = String(d[k] ?? '').trim(); if (!v || v.length < 10) e.push({ field: k, message: 'Skriv minst 10 tegn om feltet.' }); });
+  // LIVSSTIL-2026 (D-5): closenessBuilder/distanceCreator er nå valg-grid;
+  // smallThing er valgfri kort fritekst.
   return e;
 };
 
@@ -38,11 +39,23 @@ export default function Step4Kjærlighetsspråk({ data, onChange, onBack, onNext
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
       <OnboardingSelectGrid label="Hvordan ønsker du kjærlighet? *" mikroguiding="Velg det som får deg til å kjenne deg elsket" options={[{ value: 'ord', label: 'Ord og ros', icon: '💬' }, { value: 'tjenester', label: 'Gjør ting for meg', icon: '🎁' }, { value: 'tid', label: 'Kvalitetstid sammen', icon: '⏰' }, { value: 'kjønnlig', label: 'Fysiske klemmer og berøring', icon: '🤗' }, { value: 'gaver', label: 'Å få gaver', icon: '🎀' }]} selectedValue={getValue('loveReceive', '')} onChange={(v) => onChange('loveReceive', v)} maxSelected={2} testId="ob-love-receive" />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
-      <OnboardingTextField label="Hva bygger nærhet mellom mennesker? *" value={getValue('closenessBuilder', '')} onChange={(v) => onChange('closenessBuilder', v)} placeholder="Beskriv en konkret interaksjon som bygger ekte emosjonell nærhet mellom to mennesker — og hvorfor nettopp denne formen for kontakt betyr mest for deg" mikroguiding="Skriv f.eks. Dype samtaler om noe som betyr mye" maxLength={300} minChars={10} rows={3} multiline testId="ob-closeness-builder" />
+      {/* LIVSSTIL-2026 (D-5): fritekst konvertert til valg-grid */}
+      <OnboardingSelectGrid label="Hva bygger nærhet mellom mennesker?" mikroguiding="Velg det som betyr mest for deg." options={[
+        { value: 'dype-samtaler', label: 'Dype samtaler', icon: '💬' },
+        { value: 'felles-aktivitet', label: 'Felles aktivitet', icon: '🥾' },
+        { value: 'fysisk-naerhet', label: 'Fysisk nærhet', icon: '🤗' },
+        { value: 'smaa-ritualer', label: 'Små ritualer', icon: '☕' },
+      ]} selectedValue={getValue('closenessBuilder', '')} onChange={(v) => onChange('closenessBuilder', v)} columns={2} testId="ob-closeness-builder" />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
-      <OnboardingTextField label="Hva skaper avstand mellom deg og andre? *" value={getValue('distanceCreator', '')} onChange={(v) => onChange('distanceCreator', v)} placeholder="Identifiser det spesifikke mønsteret eller opplevelsen som får deg til å trekke deg unna — og hvilket behov som står bak den reaksjonen" mikroguiding="Skriv f.eks. Når folk er ukjente med følelser mine" maxLength={300} minChars={10} rows={3} multiline testId="ob-distance-creator" />
+      <OnboardingSelectGrid label="Hva skaper avstand mellom deg og andre?" mikroguiding="Velg det som kjennes mest kjent." options={[
+        { value: 'stress', label: 'Stress og press', icon: '🌩️' },
+        { value: 'manglende-oppmerksomhet', label: 'Manglende oppmerksomhet', icon: '👀' },
+        { value: 'konflikt', label: 'Konflikt', icon: '⚡' },
+        { value: 'taushet-eller-avstand', label: 'Taushet eller avstand', icon: '↔️' },
+      ]} selectedValue={getValue('distanceCreator', '')} onChange={(v) => onChange('distanceCreator', v)} columns={2} testId="ob-distance-creator" />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
-      <OnboardingTextField label="Hva er de små tingene som betyr mest for deg? *" value={getValue('smallThing', '')} onChange={(v) => onChange('smallThing', v)} placeholder="Beskriv en liten, hverdagslig gest som noen gjør, og som får deg til å kjenne at du er virkelig sett og verdsatt — jo mer spesifikt, jo bedre" mikroguiding="Skriv f.eks. At noen husker at jeg vil ha kaffe på morgenen" maxLength={300} minChars={10} rows={3} multiline testId="ob-small-thing" />
+      {/* Valgfri kort fritekst — det lille som betyr mye */}
+      <OnboardingTextField label="Hva er de små tingene som betyr mest for deg?" value={getValue('smallThing', '')} onChange={(v) => onChange('smallThing', v)} placeholder="En liten, hverdagslig gest som får deg til å kjenne deg sett" mikroguiding="Skriv f.eks. At noen husker at jeg vil ha kaffe på morgenen" maxLength={200} rows={2} multiline testId="ob-small-thing" />
       <p className="text-center text-xs mt-8" style={{ color: 'rgba(255,255,255,0.6)' }}>Kjærlighetsspråket ditt er viktig for å finne noen som passer deg.</p>
       <div className="mt-8 space-y-4"><BackButton onClick={onBack} /><PremiumCTAButton onClick={handleNext} label={!canProceed ? 'Fyll ut alle påkrevde felt' : 'Fortsett til neste steg'} disabled={!canProceed} fullWidth /></div>
     </OnboardingSlide>

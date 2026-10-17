@@ -50,6 +50,36 @@ const LABELS: Record<string, Record<string, string>> = {
   closenessNeed: { 'mye tid sammen hver dag': 'Mye samvær', 'balansert samvær': 'Balansert', 'mye egen rom og autonomi': 'Mye egenrom' },
   neverCrossBoundary: { respekt: 'Respekt for meg som person', 'tid-aleine': 'Tid alene hver dag', venner: 'Kontakt med venner/familie', selvstende: 'Eget rom og selvstendighet', sandhet: 'Ærlighet og sannferdighet' },
   relationshipSeeking: { 'dyp vennskap': 'Dyp vennskap', dating: 'Dating', 'langvarig parforhold': 'Langvarig parforhold', 'åpen uforpliktende': 'Åpen & uforpliktende' },
+  // LIVSSTIL-2026 (D-5): konverterte fritekstfelt → valg-verdier
+  energyGiver: { natur: 'Natur og frisk luft', 'dype-samtaler': 'Dype samtaler', sosialt: 'Sosialt selskap', 'kreativt-arbeid': 'Kreativt arbeid', bevegelse: 'Bevegelse', 'god-musikk': 'God musikk', 'familie-og-venner': 'Familie og venner', 'meningsfullt-arbeid': 'Meningsfullt arbeid' },
+  energyDrainer: { støy: 'Støy og trange rom', konflikt: 'Konflikt og skrik', ubestemthet: 'Ubestemthet og venting', 'store-folkmengder': 'Store folkemengder', 'overfladiske-samtaler': 'Overfladiske samtaler', arbeidspress: 'Arbeidspress', 'skjerm-tid': 'For mye skjerm' },
+  pressureReact: { 'trekker-meg-tilbake': 'Trekker meg tilbake litt', 'prater-meg-igjennom': 'Prater meg gjennom det', 'blir-irritabel': 'Blir litt irritabel', 'blir-handlingsparat': 'Blir handlingsparat' },
+  responsibilities: { 'sma-barn': 'Små barn', 'vaksne-barn': 'Voksne barn', foreldre: 'Foreldre', 'andre-naere': 'Andre nære', 'ingen-faste': 'Ingen faste ansvar' },
+  dailyRoutine: { 'i-ro': 'I ro og mak', 'rett-i-det': 'Rett i det', 'pa-farten': 'På farten' },
+  safetyNeed: { aerlighet: 'Ærlighet', konsekvens: 'Konsekvens', 'rom-for-egen-tempo': 'Rom for eget tempo', 'fysisk-naerhet': 'Fysisk nærhet', 'praktisk-omsorg': 'Praktisk omsorg', humor: 'Humor' },
+  insecurityTrigger: { 'endringer-uten-avtale': 'Endringer uten avtale', taushet: 'Taushet og stille', avstand: 'Avstand', ubestemthet: 'Ubestemthet', 'manglende-oppmerksomhet': 'Manglende oppmerksomhet' },
+  sadnessNeed: { 'bare-tilstedevaerelse': 'Bare tilstedeværelse', 'trygge-ord': 'Trygge ord', 'praktisk-hjelp': 'Praktisk hjelp', 'tid-aleine': 'Tid alene', humor: 'Humor' },
+  stressNeed: { 'rom-til-a-roe-meg': 'Rom til å roe meg', 'praktisk-hjelp': 'Praktisk hjelp', 'a-snakke-det-gjennom': 'Å snakke det gjennom', 'fysisk-naerhet': 'Fysisk nærhet' },
+  closenessBuilder: { 'dype-samtaler': 'Dype samtaler', 'felles-aktivitet': 'Felles aktivitet', 'fysisk-naerhet': 'Fysisk nærhet', 'smaa-ritualer': 'Små ritualer' },
+  distanceCreator: { stress: 'Stress og press', 'manglende-oppmerksomhet': 'Manglende oppmerksomhet', konflikt: 'Konflikt', 'taushet-eller-avstand': 'Taushet eller avstand' },
+  futureVision: { 'ro-og-stabilitet': 'Ro og stabilitet', 'vekst-og-maal': 'Vekst og mål', 'familie-og-hjem': 'Familie og hjem', 'frihet-og-reiser': 'Frihet og reiser' },
+  experienceAlone: { reiser: 'Reiser', natur: 'Natur', 'kreativt-arbeid': 'Kreativt arbeid', hobier: 'Hobier' },
+  experienceTogether: { 'hverdags-ritualer': 'Hverdags-ritualer', 'reiser-sammen': 'Reiser sammen', 'bygge-noe-felles': 'Bygge noe felles', 'kos-og-fellesskap': 'Kos og fellesskap' },
+  intimacySafety: { tydelighet: 'Tydelighet', 'langsomt-tempo': 'Langsommere tempo', 'ord-for-naerhet': 'Ord før nærhet', 'trygghet-hjemme': 'Trygghet hjemme' },
+  comfortableWith: { 'stille-samtaler': 'Stille samtaler', 'fysisk-naerhet': 'Fysisk nærhet', 'dele-hverdager': 'Dele hverdager', svarbarhet: 'Sårbarhet' },
+  nearerType: { 'ro-og-stille': 'Ro og stille', 'fysisk-kontakt': 'Fysisk kontakt', 'dype-samtaler': 'Dype samtaler', 'felles-aktivitet': 'Felles aktivitet' },
+  needsTime: { 'lite-tid': 'Lite tid', 'noen-dager': 'Noen dager', 'noen-uker': 'Noen uker', 'eget-tempo': 'Mitt eget tempo' },
+  // LIVSSTIL-2026 (D-2): nye hverdagsvalg
+  arbeidsrytme: { kontorbundet: 'Kontorbundet', hybrid: 'Hybrid', hjemmearbeid: 'Hjemmearbeid', skift: 'Skiftarbeid' },
+  bosted: { sentrum: 'Sentrum', forstad: 'Forstad', land: 'Land', ubestemt: 'Ikke bestemt ennå' },
+  reiser: { 'fjell-bobil': 'Fjell og bobil', utlandet: 'Utlandet', 'naturen-naermest': 'Naturen nærmest', 'lite-reising': 'Lite reising' },
+  dyr: { hund: 'Hund', katt: 'Katt', 'annet-dyr': 'Annet kjæledyr', ingen: 'Ingen dyr' },
+  skjerm: { mye: 'Mye', moderat: 'Moderat', 'vil-skru-ned': 'Vil skru ned', ubestemt: 'Ikke bestemt ennå' },
+  bil: { 'full-el': 'Full lader', phev: 'Plug-in hybrid', bensin: 'Bensin', diesel: 'Diesel', 'esykkel-ingen': 'Elsykkel / kollektiv' },
+  kosthold: { 'spiser-koett': 'Spiser kjøtt', fleksitar: 'Fleksitar', vegetar: 'Vegetar', vegan: 'Vegan', fisk: 'Fokus på fisk' },
+  klima: { 'veldig-viktig': 'Veldig viktig', viktig: 'Viktig', 'ikke-stor-sak': 'Ikke en stor sak' },
+  alkohol: { aldri: 'Aldri', sjelden: 'Sjelden', helligdager: 'Ved helligdager', ofte: 'Ofte' },
+  aktivitet: { gym: 'Gym og trening', 'lop-turer': 'Løping og turer', lagidrett: 'Lagidrett', 'natur-fritid': 'Natur og fritid', lite: 'Lite aktiv' },
 };
 
 /** Viser (fler)val med lesbare etiketter: «Roker-av-og-til,Snuser» → «Røyker av og til, Snuser». */
@@ -64,6 +94,19 @@ const fmt = (f: string) => (d: Record<string, unknown>) => {
     .map((s) => (map ? map[s] ?? s : s))
     .join(', ');
 };
+
+// LIVSSTIL-2026 (D-4): viktighetsnivået for vektmodell-feltene — vises i
+// oppsummeringen bak selve verdien.
+const viktSuffix = (f: string) => (d: Record<string, unknown>) => {
+  const v = d[f];
+  if (v === 'ma-stemme') return ' — må stemme';
+  if (v === 'bor-stemme') return ' — bør stemme';
+  return '';
+};
+
+/** Verdi + vekt-suffiks for D-4-feltene; '—' hvis selve feltet er tomt. */
+const gatedVal = (f: string, vf: string) => (d: Record<string, unknown>) =>
+  d[f] ? `${fmt(f)(d)}${viktSuffix(vf)(d)}` : '—';
 
 export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
   // Helper-funksjon for å gjøre felt synlege bare dersom de har verdi
@@ -133,9 +176,9 @@ export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
         {/* Personlighet */}
         <Section title="Personlighet">
           <Field label="Om deg" value={val('selfDesc')(data)} showIf />
-          <Field label="Gir deg energi" value={val('energyGiver')(data)} showIf />
-          <Field label="Tappar energi" value={val('energyDrainer')(data)} showIf />
-          <Field label="Under press" value={val('pressureReact')(data)} showIf />
+          <Field label="Gir deg energi" value={fmt('energyGiver')(data)} showIf />
+          <Field label="Tappar energi" value={fmt('energyDrainer')(data)} showIf />
+          <Field label="Under press" value={fmt('pressureReact')(data)} showIf />
           <Field label="Quirk" value={val('quirk')(data)} showIf />
         </Section>
 
@@ -145,16 +188,30 @@ export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
           <Field label="Boetype" value={fmt('housingType')(data)} showIf />
           <Field label="Husholdning" value={val('householdSize')(data)} showIf />
           <Field label="Økonomi" value={fmt('economicStability')(data)} showIf />
-          <Field label="Ansvar" value={val('responsibilities')(data)} showIf />
-           <Field label="Hverdagsrutine" value={val('dailyRoutine')(data)} showIf />
+          <Field label="Ansvar" value={fmt('responsibilities')(data)} showIf />
+           <Field label="Hverdagsrutine" value={fmt('dailyRoutine')(data)} showIf />
+        </Section>
+
+        {/* Hverdagsvalg (LIVSSTIL-2026, D-2/D-4) */}
+        <Section title="Hverdagsvalg">
+          <Field label="Arbeidsrytme" value={gatedVal('arbeidsrytme', 'arbeidsrytmeViktig')(data)} showIf />
+          <Field label="Bosted" value={gatedVal('bosted', 'bostedViktig')(data)} showIf />
+          <Field label="Reiser" value={gatedVal('reiser', 'reiserViktig')(data)} showIf />
+          <Field label="Dyr" value={gatedVal('dyr', 'dyrViktig')(data)} showIf />
+          <Field label="Skjerm" value={gatedVal('skjerm', 'skjermViktig')(data)} showIf />
+          <Field label="Bil" value={gatedVal('bil', 'bilViktig')(data)} showIf />
+          <Field label="Kosthold" value={gatedVal('kosthold', 'kostholdViktig')(data)} showIf />
+          <Field label="Klima" value={fmt('klima')(data)} showIf />
+          <Field label="Alkohol" value={gatedVal('alkohol', 'alkoholViktig')(data)} showIf />
+          <Field label="Aktivitet" value={gatedVal('aktivitet', 'aktivitetViktig')(data)} showIf />
         </Section>
 
         {/* Tilknytning */}
         <Section title="Tilknytning & trygghet">
-          <Field label="Trygghet" value={val('safetyNeed')(data)} showIf />
-           <Field label="Usikkerhetsutløser" value={val('insecurityTrigger')(data)} showIf />
-           <Field label="Når du er lei" value={val('sadnessNeed')(data)} showIf />
-           <Field label="Når du er stresset" value={val('stressNeed')(data)} showIf />
+          <Field label="Trygghet" value={fmt('safetyNeed')(data)} showIf />
+           <Field label="Usikkerhetsutløser" value={fmt('insecurityTrigger')(data)} showIf />
+           <Field label="Når du er lei" value={fmt('sadnessNeed')(data)} showIf />
+           <Field label="Når du er stresset" value={fmt('stressNeed')(data)} showIf />
           <Field label="Viktig grense" value={val('importantBoundary')(data)} showIf />
         </Section>
 
@@ -162,8 +219,8 @@ export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
         <Section title="Kjærlighetsspråk & nærhet">
           <Field label="Viser kjærlighet" value={fmt('loveGive')(data)} showIf />
           <Field label="Mottar kjærlighet" value={fmt('loveReceive')(data)} showIf />
-          <Field label="Bygger nærhet" value={val('closenessBuilder')(data)} showIf />
-          <Field label="Skaper avstand" value={val('distanceCreator')(data)} showIf />
+          <Field label="Bygger nærhet" value={fmt('closenessBuilder')(data)} showIf />
+          <Field label="Skaper avstand" value={fmt('distanceCreator')(data)} showIf />
            <Field label="Liten ting som betyr mye" value={val('smallThing')(data)} showIf />
         </Section>
 
@@ -176,11 +233,11 @@ export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
 
         {/* Framtid */}
         <Section title="Fremtid og visjon">
-          <Field label="Din fremtidsvisjon" value={val('futureVision')(data)} showIf />
+          <Field label="Din fremtidsvisjon" value={fmt('futureVision')(data)} showIf />
           <Field label="Din største drøm" value={val('dreamGoal')(data)} showIf />
           <Field label="Bygge sammen" value={val('buildTogether')(data)} showIf />
-          <Field label="Oppleve alene" value={val('experienceAlone')(data)} showIf />
-          <Field label="Oppleve sammen" value={val('experienceTogether')(data)} showIf />
+          <Field label="Oppleve alene" value={fmt('experienceAlone')(data)} showIf />
+          <Field label="Oppleve sammen" value={fmt('experienceTogether')(data)} showIf />
         </Section>
 
         {/* Humor */}
@@ -202,11 +259,11 @@ export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
 
         {/* Moden nysgjerrighet */}
         <Section title="Moden nysgjerrighet">
-          <Field label="Intimitet trygg" value={val('intimacySafety')(data)} showIf />
-          <Field label="Komfortabel med" value={val('comfortableWith')(data)} showIf />
+          <Field label="Intimitet trygg" value={fmt('intimacySafety')(data)} showIf />
+          <Field label="Komfortabel med" value={fmt('comfortableWith')(data)} showIf />
           <Field label="Personlig grense" value={val('boundary')(data)} showIf />
-          <Field label="Nærhetstype" value={val('nearerType')(data)} showIf />
-          <Field label="Treng tid til" value={val('needsTime')(data)} showIf />
+          <Field label="Nærhetstype" value={fmt('nearerType')(data)} showIf />
+          <Field label="Treng tid til" value={fmt('needsTime')(data)} showIf />
         </Section>
 
         {/* CTA */}

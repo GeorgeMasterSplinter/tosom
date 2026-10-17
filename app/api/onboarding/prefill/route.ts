@@ -47,6 +47,8 @@ export async function GET() {
             securityLevel: true,
             psychometricAnswers: true,
             deepProfileData: true,
+            // LIVSSTIL-2026 (D-2): nye hverdagsvalg pre-fylles fra preferences-kolonnen
+            preferences: true,
           },
         },
       },

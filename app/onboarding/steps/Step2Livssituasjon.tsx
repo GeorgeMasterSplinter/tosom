@@ -15,8 +15,8 @@
 import { useState } from 'react';
 import { OnboardingSlide } from '@/app/onboarding/components/OnboardingSlide';
 import { OB } from '@/app/onboarding/theme';
-import { OnboardingTextField } from '@/app/onboarding/components/OnboardingTextField';
 import { OnboardingSelectGrid } from '@/app/onboarding/components/OnboardingSelectGrid';
+import { Valgvikt } from '@/app/onboarding/components/Valgvikt';
 import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { BackButton } from '@/components/onboarding/BackButton';
 
@@ -42,15 +42,8 @@ const validate = (data: Record<string, unknown>): ValidationError[] => {
   if (!String(data['householdSize'] ?? '').trim()) errors.push({ field: 'householdSize', message: 'Velg hvor mange som bor i hjemmet.' });
   if (!String(data['economicStability'] ?? '').trim()) errors.push({ field: 'economicStability', message: 'Velg økonomisk stabilitet.' });
   
-  const responsibilities = String(data['responsibilities'] ?? '').trim();
-  if (!responsibilities || responsibilities.length < 10) {
-    errors.push({ field: 'responsibilities', message: 'Skriv minst 10 tegn om dine ansvar.' });
-  }
-  
-  const dailyRoutine = String(data['dailyRoutine'] ?? '').trim();
-  if (!dailyRoutine || dailyRoutine.length < 10) {
-    errors.push({ field: 'dailyRoutine', message: 'Skriv minst 10 tegn om din hverdagsrutine.' });
-  }
+  // LIVSSTIL-2026 (D-5): responsibilities og dailyRoutine er nå valg-grid
+  // (ingen blokkerende fritekst lenger). Hverdag-2026-feltene er valgfrie.
   
   return errors;
 };
@@ -192,35 +185,165 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
 
       {/* ────────────────────────────────────── */}
-      {/* ANSVAR & HVERDAG */}
+      {/* HVERDAG (LIVSSTIL-2026, D-2/D-4) — alt valgfritt */}
       {/* ────────────────────────────────────── */}
-      <div className="space-y-6">
-        <OnboardingTextField
-          label="Hva ansvar har du i livet ditt? *"
-          value={getValue('responsibilities', '')}
-          onChange={(v) => onChange('responsibilities', v)}
-          placeholder="Beskriv de faste ansvarsområdene du har utover deg selv — omsorg, økonomi, husholdning eller andre forpliktelser — med konkrete eksempler på hvordan de former hverdagen din"
-          mikroguiding="Skriv f.eks. Jeg har to barn som bor hos meg, jeg tar omsorg for en forelder"
-          maxLength={500}
-          minChars={10}
-          rows={4}
-          multiline
-          testId="ob-responsibilities"
-        />
+      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
 
-        <OnboardingTextField
-          label="Hvordan starter en typisk dag for deg? *"
-          value={getValue('dailyRoutine', '')}
-          onChange={(v) => onChange('dailyRoutine', v)}
-          placeholder="Beskriv rytmen i en typisk dag — når du er mest aktiv, faste rutiner og hvordan du fyller tiden — så kan vi finne noen hvis hverdagsrytme passer din"
-          mikroguiding="Skriv f.eks. Jeg står opp tidlig, drikker kaffe i ro og går en tur før jobben"
-          maxLength={500}
-          minChars={10}
-          rows={4}
-          multiline
-          testId="ob-daily-routine"
+      <div>
+        <OnboardingSelectGrid
+          label="Hvordan ser jobben din ut?"
+          mikroguiding="Arbeidsrytmen din former tiden dere har sammen."
+          options={[
+            { value: 'kontorbundet', label: 'Kontorbundet', icon: '🏢' },
+            { value: 'hybrid', label: 'Hybrid', icon: '🔀' },
+            { value: 'hjemmearbeid', label: 'Hjemmearbeid', icon: '🏠' },
+            { value: 'skift', label: 'Skiftarbeid', icon: '🕐' },
+          ]}
+          selectedValue={getValue('arbeidsrytme', '')}
+          onChange={(v) => onChange('arbeidsrytme', v)}
+          columns={2}
+          testId="ob-l2026-arbeidsrytme"
+        />
+        <Valgvikt
+          value={getValue('arbeidsrytmeViktig', '')}
+          onChange={(v) => onChange('arbeidsrytmeViktig', v)}
+          testId="ob-l2026-arbeidsrytme-viktig"
         />
       </div>
+
+      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
+
+      <div>
+        <OnboardingSelectGrid
+          label="Hvor trives du?"
+          mikroguiding="Hvor du bor, former hverdagen dere kan dele."
+          options={[
+            { value: 'sentrum', label: 'Sentrum', icon: '🏙️' },
+            { value: 'forstad', label: 'Forstad', icon: '🏘️' },
+            { value: 'land', label: 'Land', icon: '🌿' },
+            { value: 'ubestemt', label: 'Ikke bestemt ennå', icon: '❔' },
+          ]}
+          selectedValue={getValue('bosted', '')}
+          onChange={(v) => onChange('bosted', v)}
+          columns={2}
+          testId="ob-l2026-bosted"
+        />
+        <Valgvikt
+          value={getValue('bostedViktig', '')}
+          onChange={(v) => onChange('bostedViktig', v)}
+          testId="ob-l2026-bosted-viktig"
+        />
+      </div>
+
+      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
+
+      <div>
+        <OnboardingSelectGrid
+          label="Hvordan reiser du?"
+          mikroguiding="Velg det som beskriver deg best."
+          options={[
+            { value: 'fjell-bobil', label: 'Fjell og bobil', icon: '🚐' },
+            { value: 'utlandet', label: 'Utlandet', icon: '✈️' },
+            { value: 'naturen-naermest', label: 'Naturen nærmest', icon: '🥾' },
+            { value: 'lite-reising', label: 'Lite reising', icon: '🛋️' },
+          ]}
+          selectedValue={getValue('reiser', '')}
+          onChange={(v) => onChange('reiser', v)}
+          columns={2}
+          testId="ob-l2026-reiser"
+        />
+        <Valgvikt
+          value={getValue('reiserViktig', '')}
+          onChange={(v) => onChange('reiserViktig', v)}
+          testId="ob-l2026-reiser-viktig"
+        />
+      </div>
+
+      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
+
+      {/* dyr + vektmodell (D-4) */}
+      <div>
+        <OnboardingSelectGrid
+          label="Hva med dyr i hverdagen?"
+          mikroguiding="Velg det som gjelder for deg."
+          options={[
+            { value: 'hund', label: 'Hund', icon: '🐕' },
+            { value: 'katt', label: 'Katt', icon: '🐈' },
+            { value: 'annet-dyr', label: 'Annet kjæledyr', icon: '🐹' },
+            { value: 'ingen', label: 'Ingen dyr', icon: '🪶' },
+          ]}
+          selectedValue={getValue('dyr', '')}
+          onChange={(v) => onChange('dyr', v)}
+          columns={2}
+          testId="ob-l2026-dyr"
+        />
+        <Valgvikt
+          value={getValue('dyrViktig', '')}
+          onChange={(v) => onChange('dyrViktig', v)}
+          testId="ob-l2026-dyr-viktig"
+        />
+      </div>
+
+      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
+
+      <div>
+        <OnboardingSelectGrid
+          label="Hvordan er det med skjerm?"
+          mikroguiding="Mobb, tv, spill — hvor mye rom tar det i hverdagen din?"
+          options={[
+            { value: 'mye', label: 'Mye', icon: '📱' },
+            { value: 'moderat', label: 'Moderat', icon: '⚖️' },
+            { value: 'vil-skru-ned', label: 'Vil skru ned', icon: '📉' },
+            { value: 'ubestemt', label: 'Ikke bestemt ennå', icon: '❔' },
+          ]}
+          selectedValue={getValue('skjerm', '')}
+          onChange={(v) => onChange('skjerm', v)}
+          columns={2}
+          testId="ob-l2026-skjerm"
+        />
+        <Valgvikt
+          value={getValue('skjermViktig', '')}
+          onChange={(v) => onChange('skjermViktig', v)}
+          testId="ob-l2026-skjerm-viktig"
+        />
+      </div>
+
+      {/* ────────────────────────────────────── */}
+      {/* ANSVAR & HVERDAG (LIVSSTIL-2026, D-5: konvertert til valg) */}
+      {/* ────────────────────────────────────── */}
+      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
+
+      <OnboardingSelectGrid
+        label="Hva ansvar har du i livet ditt?"
+        mikroguiding="Velg det som gjelder for deg."
+        options={[
+          { value: 'sma-barn', label: 'Små barn', icon: '🍼' },
+          { value: 'vaksne-barn', label: 'Voksne barn', icon: '🎓' },
+          { value: 'foreldre', label: 'Foreldre', icon: '👵' },
+          { value: 'andre-naere', label: 'Andre nære', icon: '💛' },
+          { value: 'ingen-faste', label: 'Ingen faste ansvar', icon: '🪶' },
+        ]}
+        selectedValue={getValue('responsibilities', '')}
+        onChange={(v) => onChange('responsibilities', v)}
+        maxSelected={3}
+        testId="ob-responsibilities"
+      />
+
+      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
+
+      <OnboardingSelectGrid
+        label="Hvordan starter en typisk dag for deg?"
+        mikroguiding="Hverdagsrytmen din — ingen rette svar."
+        options={[
+          { value: 'i-ro', label: 'I ro og mak', icon: '🌅', description: 'Tid til kaffe før dagen tar til' },
+          { value: 'rett-i-det', label: 'Rett i det', icon: '⚡', description: 'Ute av døra uten varsel' },
+          { value: 'pa-farten', label: 'På farten', icon: '🚶', description: 'Moro av å ha mange baller i lufta' },
+        ]}
+        selectedValue={getValue('dailyRoutine', '')}
+        onChange={(v) => onChange('dailyRoutine', v)}
+        columns={1}
+        testId="ob-daily-routine"
+      />
 
       {/* Trust text */}
       <p className="text-center text-xs mt-8" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>

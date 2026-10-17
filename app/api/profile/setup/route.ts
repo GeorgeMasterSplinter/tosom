@@ -64,6 +64,8 @@ async function postHandler(req: NextRequest) {
       grenser,
       // PL-10 (V-1): «moden» brukes ikke lenger — maturityLevel skrives null (syntetisk verdi fjernet)
       preferanser,
+      // LIVSSTIL-2026 (D-2): nye hverdagsvalg → Profile.preferences (Json), ingen migrasjon
+      livsstil2026,
       psychometrics,
     } = data;
 
@@ -241,6 +243,8 @@ async function postHandler(req: NextRequest) {
           // Kommunikasjonsskår (FORSKNINGSMOTOR) — lagres i deepProfileData, ikke dedikert kolonne
           communicationScores: psychScores?.communication ?? undefined,
         },
+        // LIVSSTIL-2026 (D-2): nye hverdagsvalg i den (før ubrukte) preferences-kolonnen.
+        preferences: livsstil2026 ? { livsstil2026 } : undefined,
       },
       create: {
         userId: userId,
@@ -357,6 +361,8 @@ async function postHandler(req: NextRequest) {
           // Kommunikasjonsskår (FORSKNINGSMOTOR) — lagres i deepProfileData, ikke dedikert kolonne
           communicationScores: psychScores?.communication ?? undefined,
         },
+        // LIVSSTIL-2026 (D-2): nye hverdagsvalg i den (før ubrukte) preferences-kolonnen.
+        preferences: livsstil2026 ? { livsstil2026 } : undefined,
       },
     });
 

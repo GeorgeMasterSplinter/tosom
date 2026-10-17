@@ -24,6 +24,7 @@ function makeProfile(overrides: Partial<ProfileRow> = {}): ProfileRow {
     securityLevel: null,
     psychometricAnswers: null,
     deepProfileData: null,
+    preferences: null,
     ...overrides,
   };
 }
@@ -236,5 +237,44 @@ describe('toOnboardingData — livssituasjon (steg 2b) fra lifeSituation-kolonne
     expect(data.economicStability).toBeUndefined();
     expect(data.responsibilities).toBeUndefined();
     expect(data.dailyRoutine).toBeUndefined();
+  });
+});
+
+describe('toOnboardingData — livsstil2026 (D-2) fra preferences-kolonnen', () => {
+  it('pre-fyller alle 14 nye hverdagsvalg', () => {
+    const p = makeProfile({
+      preferences: {
+        livsstil2026: {
+          arbeidsrytme: 'hybrid', bosted: 'forstad', reiser: 'fjell-bobil',
+          dyr: 'hund', dyrViktig: 'ma-stemme', skjerm: 'moderat',
+          bil: 'full-el', bilViktig: 'bor-stemme', kosthold: 'vegan',
+          kostholdViktig: 'ma-stemme', klima: 'veldig-viktig', alkohol: 'sjelden',
+          alkoholViktig: 'ikke-viktig', aktivitet: 'gym,lop-turer',
+        },
+      },
+    });
+    const { data } = toOnboardingData(p, true);
+    expect(data.arbeidsrytme).toBe('hybrid');
+    expect(data.bosted).toBe('forstad');
+    expect(data.reiser).toBe('fjell-bobil');
+    expect(data.dyr).toBe('hund');
+    expect(data.dyrViktig).toBe('ma-stemme');
+    expect(data.skjerm).toBe('moderat');
+    expect(data.bil).toBe('full-el');
+    expect(data.bilViktig).toBe('bor-stemme');
+    expect(data.kosthold).toBe('vegan');
+    expect(data.kostholdViktig).toBe('ma-stemme');
+    expect(data.klima).toBe('veldig-viktig');
+    expect(data.alkohol).toBe('sjelden');
+    expect(data.alkoholViktig).toBe('ikke-viktig');
+    expect(data.aktivitet).toBe('gym,lop-turer');
+  });
+
+  it('pre-fyller ikke nye felt for legacy-profiler uten preferences (mangler aldri blokkerer)', () => {
+    const { data } = toOnboardingData(makeProfile({ identityName: 'Gamle dager' }), true);
+    expect(data.bil).toBeUndefined();
+    expect(data.kosthold).toBeUndefined();
+    expect(data.klima).toBeUndefined();
+    expect(data.aktivitet).toBeUndefined();
   });
 });

@@ -76,6 +76,9 @@ export const REJECT_REASON_KEYS = [
   'score_under_termin',
   'scoring_feil',
   'barn', // PL-11 (D-3): lagt til sist — de andre nøklene er ikke flyttet
+  // LIVSSTIL-2026 (18.10, D-1/D-4): nye avvisningsklasser — lagt til sist
+  'hoyde',
+  'livsstil2026',
 ] as const;
 
 export function emptyRejectReasons(): Record<string, number> {

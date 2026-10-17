@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { OnboardingSlide } from '@/app/onboarding/components/OnboardingSlide';
 import { OB } from '@/app/onboarding/theme';
 import { OnboardingTextField } from '@/app/onboarding/components/OnboardingTextField';
+import { OnboardingSelectGrid } from '@/app/onboarding/components/OnboardingSelectGrid';
 import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { BackButton } from '@/components/onboarding/BackButton';
 import { ScaleQuestion } from '@/components/onboarding/ScaleQuestion';
@@ -12,7 +13,8 @@ interface Props { data: Record<string, unknown>; onChange: (f: string, v: unknow
 interface ValidationError { field: string; message: string; }
 const validate = (d: Record<string, unknown>): ValidationError[] => {
   const e: ValidationError[] = [];
-  for (const k of ['intimacySafety','comfortableWith','boundary','nearerType','needsTime']) { const v = String(d[k] ?? '').trim(); if (!v || v.length < 10) e.push({ field: k, message: 'Skriv minst 10 tegn om feltet.' }); }
+  // LIVSSTIL-2026 (D-5): 4 felt konvertert til valg-grid; boundary er valgfri
+  // kort fritekst. Kun ERQ-6-skalaen må svares.
   // PL-08b (D-1): skalasvarene er påkrevd per steg.
   const missing = missingScaleItems(d, ERQ6);
   if (missing.length > 0) e.push({ field: missing[0], message: 'Svar på alle påstandene — det finnes ingen fasit.' });
@@ -30,27 +32,42 @@ export default function Step8ModenNysgjerrighet({ data, onChange, onBack, onNext
     nearerType: 'Skriv f.eks. Ro, stille samtaler om noe som betyr mye', 
     needsTime: 'Skriv f.eks. Tid til å bearbeide følelser før jeg deler dem' 
   };
-  const placeholders: Record<string, string> = {
-    intimacySafety: 'Beskriv den spesifikke betingelsen eller handlingen som gjør at du kan la vaktene senke deg når det kommer intimitet',
-    comfortableWith: 'Reflekter over hva du i dag kjente deg trygg med å dele i en nær relasjon — og hva som gjør at akkurat dette føles trygt',
-    boundary: 'Definer tydelig hva som utgjør din personlige grense i nærhet, og hvilken type signal fra partneren som hjelper deg å navigere den',
-    nearerType: 'Beskriv den typen nærhet og kontakt du søker aktivt — med konkrete eksempler på atmosfære og form for samvær som gir deg mest',
-    needsTime: 'Forhold deg til ditt eget tempo for åpenhet — hvor lang tid og hvilke typer mellomrom trenger du for å kjenne deg trygg nok til å dele dypt',
-  };
   const labels: Record<string, string> = { intimacySafety: 'Hva gjør intimitet trygg for deg?', comfortableWith: 'Hva er du komfortabel med i nærheten?', boundary: 'Hva er din personlige grense?', nearerType: 'Hva type nærhet søker du?', needsTime: 'Hvor mye tid trenger du for å åpne deg?' };
   return (
     <OnboardingSlide title="Moden nysgjerrighet" subtitle="Hva trenger du for å kjenne deg trygg i nærheten?" guidingText="Dette er et rolig øyeblikk for deg — del bare det du kjenner deg trygg med." slideIndex={10} totalSlides={13}
       accentColor={OB.section.boundaries}>
       {errors.length > 0 && (<div className="mb-8 rounded-xl p-4 border" style={{ background: 'rgba(255,77,77,0.08)', borderColor: 'rgba(255,77,77,0.2)' }}><p className="text-sm font-medium mb-2" style={{ color: '#FF4D4D' }}>Vennligst fyll ut alle påkrevde felt:</p><ul className="text-sm space-y-1" style={{ color: 'rgba(255,255,255,0.7)' }}>{errors.map((x) => (<li key={x.field}>• {x.message}</li>))}</ul></div>)}
-      <OnboardingTextField label={`${labels['intimacySafety']} *`} value={getValue('intimacySafety', '')} onChange={(v) => onChange('intimacySafety', v)} placeholder={placeholders['intimacySafety']} mikroguiding={guiding['intimacySafety']} maxLength={300} minChars={10} rows={3} multiline testId="ob-intimacy-safety" />
+      {/* LIVSSTIL-2026 (D-5): 4 felt konvertert til valg-grid; boundary valgfri */}
+      <OnboardingSelectGrid label={`${labels['intimacySafety'].replace('?', '')} *`} mikroguiding="Velg det som gjør at du kan senke vaktene." options={[
+        { value: 'tydelighet', label: 'Tydelighet', icon: '💎' },
+        { value: 'langsomt-tempo', label: 'Langsommere tempo', icon: '🐢' },
+        { value: 'ord-for-naerhet', label: 'Ord før nærhet', icon: '💬' },
+        { value: 'trygghet-hjemme', label: 'Trygghet hjemme', icon: '🏡' },
+      ]} selectedValue={getValue('intimacySafety', '')} onChange={(v) => onChange('intimacySafety', v)} columns={2} testId="ob-intimacy-safety" />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
-      <OnboardingTextField label={`${labels['comfortableWith']} *`} value={getValue('comfortableWith', '')} onChange={(v) => onChange('comfortableWith', v)} placeholder={placeholders['comfortableWith']} mikroguiding={guiding['comfortableWith']} maxLength={300} minChars={10} rows={3} multiline testId="ob-comfortable-with" />
+      <OnboardingSelectGrid label={labels['comfortableWith']} mikroguiding="Velg det du i dag kjente deg trygg med å dele." options={[
+        { value: 'stille-samtaler', label: 'Stille samtaler', icon: '🌙' },
+        { value: 'fysisk-naerhet', label: 'Fysisk nærhet', icon: '🤗' },
+        { value: 'dele-hverdager', label: 'Dele hverdager', icon: '☕' },
+        { value: 'svarbarhet', label: 'Sårbarhet', icon: '💛' },
+      ]} selectedValue={getValue('comfortableWith', '')} onChange={(v) => onChange('comfortableWith', v)} columns={2} testId="ob-comfortable-with" />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
-      <OnboardingTextField label={`${labels['boundary']} *`} value={getValue('boundary', '')} onChange={(v) => onChange('boundary', v)} placeholder={placeholders['boundary']} mikroguiding={guiding['boundary']} maxLength={300} minChars={10} rows={3} multiline testId="ob-personal-boundary" />
+      {/* Valgfri kort fritekst — den personlige grensen */}
+      <OnboardingTextField label={labels['boundary']} value={getValue('boundary', '')} onChange={(v) => onChange('boundary', v)} placeholder="Hva er din personlige grense i nærhet?" mikroguiding={guiding['boundary']} maxLength={300} rows={2} multiline testId="ob-personal-boundary" />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
-      <OnboardingTextField label={`${labels['nearerType']} *`} value={getValue('nearerType', '')} onChange={(v) => onChange('nearerType', v)} placeholder={placeholders['nearerType']} mikroguiding={guiding['nearerType']} maxLength={300} minChars={10} rows={3} multiline testId="ob-nearer-type" />
+      <OnboardingSelectGrid label={labels['nearerType']} mikroguiding="Velg det typen nærhet og kontakt du søker aktivt." options={[
+        { value: 'ro-og-stille', label: 'Ro og stille', icon: '🕯️' },
+        { value: 'fysisk-kontakt', label: 'Fysisk kontakt', icon: '🫂' },
+        { value: 'dype-samtaler', label: 'Dype samtaler', icon: '💬' },
+        { value: 'felles-aktivitet', label: 'Felles aktivitet', icon: '🥾' },
+      ]} selectedValue={getValue('nearerType', '')} onChange={(v) => onChange('nearerType', v)} columns={2} testId="ob-nearer-type" />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
-      <OnboardingTextField label={`${labels['needsTime']} *`} value={getValue('needsTime', '')} onChange={(v) => onChange('needsTime', v)} placeholder={placeholders['needsTime']} mikroguiding={guiding['needsTime']} maxLength={300} minChars={10} rows={3} multiline testId="ob-needs-time" />
+      <OnboardingSelectGrid label={labels['needsTime']} mikroguiding="Velg ditt eget tempo for åpenhet." options={[
+        { value: 'lite-tid', label: 'Lite tid', icon: '⚡' },
+        { value: 'noen-dager', label: 'Noen dager', icon: '📅' },
+        { value: 'noen-uker', label: 'Noen uker', icon: '🗓️' },
+        { value: 'eget-tempo', label: 'Mitt eget tempo', icon: '🐢' },
+      ]} selectedValue={getValue('needsTime', '')} onChange={(v) => onChange('needsTime', v)} columns={2} testId="ob-needs-time" />
       {/* FORSKNINGSMOTOR F-5 — ERQ-6 (emotiv romslighet) */}
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '28px', marginBottom: '8px' }} />
       <p className="text-sm mb-4" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>

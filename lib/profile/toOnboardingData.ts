@@ -24,6 +24,7 @@ export interface ProfileRow {
   securityLevel: string | null;
   psychometricAnswers: Record<string, unknown> | null;
   deepProfileData: Record<string, unknown> | null;
+  preferences: Record<string, unknown> | null;
 }
 
 export interface ToOnboardingResult {
@@ -162,6 +163,21 @@ export function toOnboardingData(
     put('relationshipSeeking', toStr(rsObj.relationshipSeeking));
     put('closenessNeed', toStr(rsObj.closenessNeed));
     put('independenceBalance', toStr(rsObj.independenceBalance));
+  }
+
+  // LIVSSTIL-2026 (D-2): nye hverdagsvalg lagret i preferences.livsstil2026.
+  // Prefylles slik at en fullført bruker ser sine valg igjen ved ny onboarding-omgang.
+  const l2026 = profile.preferences?.livsstil2026;
+  if (l2026 && typeof l2026 === 'object' && !Array.isArray(l2026)) {
+    const l = l2026 as Record<string, unknown>;
+    for (const k of [
+      'arbeidsrytme', 'arbeidsrytmeViktig', 'bosted', 'bostedViktig',
+      'reiser', 'reiserViktig', 'dyr', 'dyrViktig', 'skjerm', 'skjermViktig',
+      'bil', 'bilViktig', 'kosthold', 'kostholdViktig', 'klima',
+      'alkohol', 'alkoholViktig', 'aktivitet', 'aktivitetViktig',
+    ]) {
+      put(k, toStr(l[k]));
+    }
   }
 
   // attachmentStyle ← securityLevel (legacy: setup skrev verdien før PL-10;

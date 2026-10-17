@@ -80,11 +80,12 @@ describe('validateOnboarding — grenser-selectfelt (steg 8a)', () => {
     expect(result.success).toBe(true);
   });
 
-  it('fritekst-feltet partnerMustUnderstand krever fortsatt minst 10 tegn', () => {
-    const result = validateOnboarding(fullPayload({ grenser: { partnerMustUnderstand: 'kort' } }));
-    expect(result.success).toBe(false);
-    if (!result.success) {
-      expect(result.errors.map((e) => e.field)).toContain('grenser.partnerMustUnderstand');
-    }
+  it('D-3 (18.10): fritekst-feltene er VALGFRIE — korte og tomme verdier går gjennom', () => {
+    // Tidligere krevde partnerMustUnderstand min 10 tegn; feltet er nå valgfritt
+    // (ERQ-6 + grense-gridene bærer sikkerhetsdataene).
+    const kort = validateOnboarding(fullPayload({ grenser: { partnerMustUnderstand: 'kort' } }));
+    expect(kort.success).toBe(true);
+    const tom = validateOnboarding(fullPayload({ grenser: { partnerMustUnderstand: '', limitations: '' } }));
+    expect(tom.success).toBe(true);
   });
 });

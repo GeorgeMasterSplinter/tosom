@@ -9,6 +9,8 @@ Opprettet 24.08.2026 — Sist oppdatert 18.10.2026 (🔴→🟢 AUTH-FIKS: Edge-
 
 🟢 Auth: secret 60 tegn, URL OK, trustHost OK.
 
+🟢 Onboarding-validering: FIXET 18.10.2026 (del 2) — «livsstil2026.bil: Invalid input» på Start reisen: bil-griden la velge 2 (kommaseparert verdi mot engangsenum). Fikset: bil = engangsvalg (maxSelected 1); auditt viste alle andre flervalgs-grids på fritekst-felt. Ny steg-gate: validateLivsstil2026Step (steg 2 og 5) — valgfrie felt, men satt verdi må være gyldig; fanges i Fortsett-gate OG pre-flight (hopper til steget, aldri server-400 på siste steg). 11 nye tester.
+
 🟢 Auth-middleware: FIXET 18.10.2026 — Edge-middleware (Vercel) beregnet secureCookie fra NODE_ENV, som ikke er 'production' i Edge-runtime → feil cookie-navn + feil salt → 401 på alle API-er for alle innloggede brukere (innlogginga fungerte i Node-runtime, så /api/auth/session viste sesjon, men /api/consent, /api/onboarding/progress, /api/dashboard/overview osv. svarte 401 → nye brukere havnet i «Kunne ikke laste dashboard»). Fix: middleware sjekker hvilket cookie-navn som faktisk finnes (`__Secure-authjs.session-token` / `authjs.session-token`) og velger secureCookie ut fra det — ingen NODE_ENV-avhengighet. Test: __tests__/middleware-cookie-salt.test.ts (oppdatert). Admin-panelet var umattet (egen admin_token-vei). B-7 (23.08.2026) antok at samme feil var rettet — det var den det ikke.
 
 🟢 Cron: journey-cron kjører (siste kjøring ~15:27). Matching-cron kjører lørdag 02–04.

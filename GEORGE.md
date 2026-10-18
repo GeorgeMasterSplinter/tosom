@@ -1,6 +1,6 @@
 GEORGE.md — ToSom i åpen beta
 Deploy‑guide, drift, og daglig oversikt  
-Opprettet 24.08.2026 — Sist oppdatert 06.10.2026 (LANSE-READINESS: SPF + DKIM satt i Cloudflare DNS (V-6); R2 aktiv i prod, GitHub-secrets + SENTRY_DSN satt, CSRF aktivert+verifisert (POST=403), uptime-monitor verifisert, CD grønn (team-scoped token), chat-routing FIXET (private Pusher-kanal + /api/pusher/auth, venterom redirect), systemauditts funn 1–10 RETTA (admin-signatur, PII, gate, health, CSRF-journey, død-kode, CD-port, CSP, refleksjon) + 3 nye tester. Gjenstår: DMARC (G-08), slett test1/test2 (dry-run klar), admin-secrets, Vipps, automatisér prisma-migrasjoner mot prod (sak 7))
+Opprettet 24.08.2026 — Sist oppdatert 18.10.2026 (🔴→🟢 AUTH-FIKS: Edge-middleware ga 401 til ALLE innloggede brukere — secureCookie ble beregnet fra NODE_ENV, som ikke er 'production' i Vercels Edge-runtime (feil cookie-navn + feil salt). Fix: middleware leser faktisk cookie-navn. Livsstil-2026 på onboarding + matching deployet samme dag.) Tidligere 06.10.2026 (LANSE-READINESS: SPF + DKIM satt i Cloudflare DNS (V-6); R2 aktiv i prod, GitHub-secrets + SENTRY_DSN satt, CSRF aktivert+verifisert (POST=403), uptime-monitor verifisert, CD grønn (team-scoped token), chat-routing FIXET (private Pusher-kanal + /api/pusher/auth, venterom redirect), systemauditts funn 1–10 RETTA (admin-signatur, PII, gate, health, CSRF-journey, død-kode, CD-port, CSP, refleksjon) + 3 nye tester. Gjenstår: DMARC (G-08), slett test1/test2 (dry-run klar), admin-secrets, Vipps, automatisér prisma-migrasjoner mot prod (sak 7))
 
 0. Status i dag (03.09.2026)
 🟢 Produksjon kjører: tosom.no → www.tosom.no (Vercel, prod, HTTP 200). Landing, /login, /admin/login fungerer.
@@ -8,6 +8,8 @@ Opprettet 24.08.2026 — Sist oppdatert 06.10.2026 (LANSE-READINESS: SPF + DKIM 
 🟢 Database: Neon Frankfurt, pooled URL, helsesjekk viser connected (~1000 ms kald start).
 
 🟢 Auth: secret 60 tegn, URL OK, trustHost OK.
+
+🟢 Auth-middleware: FIXET 18.10.2026 — Edge-middleware (Vercel) beregnet secureCookie fra NODE_ENV, som ikke er 'production' i Edge-runtime → feil cookie-navn + feil salt → 401 på alle API-er for alle innloggede brukere (innlogginga fungerte i Node-runtime, så /api/auth/session viste sesjon, men /api/consent, /api/onboarding/progress, /api/dashboard/overview osv. svarte 401 → nye brukere havnet i «Kunne ikke laste dashboard»). Fix: middleware sjekker hvilket cookie-navn som faktisk finnes (`__Secure-authjs.session-token` / `authjs.session-token`) og velger secureCookie ut fra det — ingen NODE_ENV-avhengighet. Test: __tests__/middleware-cookie-salt.test.ts (oppdatert). Admin-panelet var umattet (egen admin_token-vei). B-7 (23.08.2026) antok at samme feil var rettet — det var den det ikke.
 
 🟢 Cron: journey-cron kjører (siste kjøring ~15:27). Matching-cron kjører lørdag 02–04.
 

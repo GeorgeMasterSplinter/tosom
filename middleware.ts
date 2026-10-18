@@ -123,18 +123,31 @@ export async function middleware(req: NextRequest) {
   // STEG 2.2: Hent og verifiser signert JWT-token via NextAuth getToken()
   // Dette fungerer i Edge-runtime og krever NEXTAUTH_SECRET for dekryptering
   //
-  // KRITISK — secureCookie må speile useSecureCookies i lib/auth/config.ts:
-  // I NextAuth v5 er cookie-navnet selve saltet i nøkkelavledningen
+  // KRITISK — cookie-navnet ER selve saltet i nøkkelavledningen
   // (@auth/core/jwt.js: `salt = cookieName`, deretter hkdf(..., salt, ...)).
-  // I produksjon skrives sesjonen som `__Secure-authjs.session-token`.
-  // Uten secureCookie:true leser vi `authjs.session-token` — feil cookie OG
-  // feil salt — og dekrypteringen feiler. Resultat: brukeren logges inn,
-  // men kastes rett ut igjen. Secret-fallback fordi AUTH_SECRET er v5-navnet.
-  const token = await getToken({
-    req,
-    secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
-    secureCookie: process.env.NODE_ENV === 'production',
-  })
+  // lib/auth/config.ts skriver `__Secure-authjs.session-token` i produksjon
+  // (useSecureCookies) og `authjs.session-token` lokalt (HTTP).
+  //
+  // secureCookie må ALDRI beregnes fra NODE_ENV her: Vercels Edge-runtime
+  // har ikke NODE_ENV='production', så da leste vi feil cookie-navn OG feil
+  // salt — og alle innloggede brukere fikk 401 på alle API-er (B-7 23.08
+  // bygde på nettopp denne feilantagelsen; feilen kom tilbake 18.10.2026).
+  // Løsning: les hvilket cookie-navn som faktisk finnes i forespørselen.
+  // (Secret-fallback fordi AUTH_SECRET er v5-navnet.)
+  const hasSecureCookie = req.cookies.has('__Secure-authjs.session-token')
+  const hasInsecureCookie = req.cookies.has('authjs.session-token')
+
+  type SessionToken = Awaited<ReturnType<typeof getToken>>
+  let token: SessionToken = null
+  if (hasSecureCookie || hasInsecureCookie) {
+    // secureCookie må matche cookie-navnet vi leser — navnet er saltet.
+    // Dersom begge finnes, vinner secure (den nyeste sesjonen).
+    token = await getToken({
+      req,
+      secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
+      secureCookie: hasSecureCookie,
+    })
+  }
 
   // 2. Admin-vern — krever signert admin_token JWT ELLER verifisert session med ADMIN-role
   if (path.startsWith(ADMIN_PREFIX)) {

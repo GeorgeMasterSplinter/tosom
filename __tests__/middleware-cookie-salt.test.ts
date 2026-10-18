@@ -10,13 +10,18 @@
  * lib/auth/config.ts setter `useSecureCookies: NODE_ENV === 'production'`,
  * som i produksjon skriver `__Secure-authjs.session-token`.
  *
- * Leser middleware uten `secureCookie: true`, leter den etter
- * `authjs.session-token` — feil cookie OG feil salt. Dekrypteringen feiler,
- * og brukeren logges inn for så å kastes rett ut igjen.
+ * Leser middleware feil cookie-navn, feiler også saltet — og brukeren
+ * logges inn for så å kastes rett ut igjen.
  *
- * Symptomet er lumsk: alt virker lokalt (HTTP → useSecureCookies false → likt
- * navn begge steder), og /admin virker i produksjon (egen admin_token-vei).
- * Kun vanlige brukere i produksjon rammes.
+ * Symptomet er lumsk: alt virker lokalt (HTTP → useSecureCookies false →
+ * likt navn begge steder), og /admin virker i produksjon (egen
+ * admin_token-vei). Kun vanlige brukere i produksjon rammes.
+ *
+ * LERING (18.10.2026 — feilen kom tilbake):
+ * secureCookie kan ALDRI beregnes fra NODE_ENV i middleware — Vercels
+ * Edge-runtime har ikke NODE_ENV='production'. Midlet må i stedet sjekke
+ * hvilket cookie-navn som faktisk finnes i forespørselen og velge
+ * secureCookie ut fra det.
  */
 
 import fs from 'fs';
@@ -62,17 +67,20 @@ describe('middleware ↔ NextAuth cookie/salt-samsvar', () => {
     );
   });
 
-  it('middleware sender secureCookie til getToken', () => {
+  it('middleware velger secureCookie ut fra faktisk cookie — aldri NODE_ENV', () => {
+    // NODE_ENV er ikke 'production' i Vercels Edge-runtime. Hadde midlet
+    // brukt NODE_ENV, leste det feil cookie-navn + feil salt i produksjon.
     const call = getTokenCall(middlewareSrc);
     expect(call).not.toBe('');
     expect(call).toMatch(/secureCookie\s*:/);
+    expect(call).not.toMatch(/secureCookie\s*:\s*process\.env\.NODE_ENV/);
   });
 
-  it('secureCookie speiler useSecureCookies — ellers blir saltet feil', () => {
-    const call = getTokenCall(middlewareSrc);
-    expect(call).toMatch(
-      /secureCookie\s*:\s*process\.env\.NODE_ENV\s*===\s*['"]production['"]/
-    );
+  it('middleware sjekker begge cookie-navnene (secure og insecure)', () => {
+    // Midlet må oppdage hvilket cookie-navn som faktisk finnes i
+    // forespørselen — secureCookie-flagget må følge navnet (saltet).
+    expect(middlewareSrc).toMatch(/req\.cookies\.has\(['"]__Secure-authjs\.session-token['"]\)/);
+    expect(middlewareSrc).toMatch(/req\.cookies\.has\(['"]authjs\.session-token['"]\)/);
   });
 
   it('middleware godtar samme secret-navn som config (AUTH_SECRET først)', () => {

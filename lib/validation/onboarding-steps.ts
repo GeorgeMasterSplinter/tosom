@@ -151,6 +151,101 @@ function validatePersonlighetStep(data: Record<string, unknown>): StepFieldError
 }
 
 /**
+ * LIVSSTIL-2026 (D-2/D-4): tillatte verdier — speiler livsstil2026Schema i
+ * lib/validation/onboarding-setup.ts. Alle felt er VALFRIE; sjekken under
+ * gjelder bare verdier som faktisk er satt.
+ */
+const L2026_VIKTIGHET = ['ikke-viktig', 'bor-stemme', 'ma-stemme'];
+
+const L2026_SINGLE: Record<string, string[]> = {
+  // Steg 2 — hverdagen
+  arbeidsrytme: ['kontorbundet', 'hybrid', 'hjemmearbeid', 'skift'],
+  arbeidsrytmeViktig: L2026_VIKTIGHET,
+  bosted: ['sentrum', 'forstad', 'land', 'ubestemt'],
+  bostedViktig: L2026_VIKTIGHET,
+  reiser: ['fjell-bobil', 'utlandet', 'naturen-naermest', 'lite-reising'],
+  reiserViktig: L2026_VIKTIGHET,
+  dyr: ['hund', 'katt', 'annet-dyr', 'ingen'],
+  dyrViktig: L2026_VIKTIGHET,
+  skjerm: ['mye', 'moderat', 'vil-skru-ned', 'ubestemt'],
+  skjermViktig: L2026_VIKTIGHET,
+  // Steg 5 — livsstil & verdier
+  bil: ['full-el', 'phev', 'bensin', 'diesel', 'esykkel-ingen'],
+  bilViktig: L2026_VIKTIGHET,
+  kosthold: ['spiser-koett', 'fleksitar', 'vegetar', 'vegan', 'fisk'],
+  kostholdViktig: L2026_VIKTIGHET,
+  klima: ['veldig-viktig', 'viktig', 'ikke-stor-sak'],
+  alkohol: ['aldri', 'sjelden', 'helligdager', 'ofte'],
+  alkoholViktig: L2026_VIKTIGHET,
+};
+
+// Aktivitet er det eneste flervalgsfeltet (kommaseparert, maks 3).
+const L2026_AKTIVITET = ['gym', 'lop-turer', 'lagidrett', 'natur-fritid', 'lite'];
+const L2026_AKTIVITET_MAKS = 3;
+
+/** Hvilke livsstil2026-felt hører til hvilket steg (renderStep-indeks). */
+const L2026_STEP_FIELDS: Record<number, string[]> = {
+  2: [
+    'arbeidsrytme', 'arbeidsrytmeViktig',
+    'bosted', 'bostedViktig',
+    'reiser', 'reiserViktig',
+    'dyr', 'dyrViktig',
+    'skjerm', 'skjermViktig',
+  ],
+  5: [
+    'bil', 'bilViktig',
+    'kosthold', 'kostholdViktig',
+    'klima',
+    'alkohol', 'alkoholViktig',
+    'aktivitet', 'aktivitetViktig',
+  ],
+};
+
+/**
+ * LIVSSTIL-2026: validerer stegets livsstil-felt mot tillatte verdier.
+ * Returnerer tomme feil dersom ingenting er satt (alt er valgfritt) —
+ * men en satt verdi som ikke er tillatt (f.eks. 'full-el,bensin' fra et
+ * gammelt flervalgs-utkast i et engangsfelt) stopper brukeren PÅ STEGET,
+ * ikke med en 400 på «Start reisen».
+ */
+export function validateLivsstil2026Step(
+  step: number,
+  data: Record<string, unknown>
+): StepFieldError[] {
+  const fields = L2026_STEP_FIELDS[step];
+  if (!fields) return [];
+
+  const errors: StepFieldError[] = [];
+  for (const field of fields) {
+    const raw = str(data, field);
+    if (!raw) continue; // valgfritt — tom er i orden
+
+    if (field === 'aktivitet') {
+      const parts = raw.split(',').map((s) => s.trim()).filter(Boolean);
+      const overMaks = parts.length > L2026_AKTIVITET_MAKS;
+      const ukjent = parts.some((p) => !L2026_AKTIVITET.includes(p));
+      if (overMaks) {
+        errors.push({ field, message: `Velg opptil ${L2026_AKTIVITET_MAKS} aktiviteter.` });
+      } else if (ukjent) {
+        errors.push({ field, message: 'Velg aktiviteter fra listen — og prøv igjen.' });
+      }
+      continue;
+    }
+
+    const allowed = L2026_SINGLE[field];
+    if (!allowed || !allowed.includes(raw)) {
+      errors.push({
+        field,
+        message: field.endsWith('Viktig')
+          ? 'Velg et gyldig viktighetsnivå for dette feltet.'
+          : 'Velg ett av alternativene for dette feltet.',
+      });
+    }
+  }
+  return errors;
+}
+
+/**
  * Validerer ett onboarding-steg mot det som er påkrevd for å fullføre.
  * PL-08a: skalastegene (1, 3, 5, 8, 10) krever svar på alle påstandene.
  */
@@ -170,6 +265,12 @@ export function validateOnboardingStep(step: number, data: Record<string, unknow
       });
     }
   }
+
+  // LIVSSTIL-2026: feltene er valfrie, men en satt verdi må være gyldig —
+  // fanger f.eks. gammelt utkast med kommaseparert flervalg i et
+  // engangsfelt (18.10: «livsstil2026.bil: Invalid input» på siste steg).
+  const l2026Errors = validateLivsstil2026Step(step, data);
+  if (l2026Errors.length > 0) errors = [...errors, ...l2026Errors];
 
   return { step, errors };
 }

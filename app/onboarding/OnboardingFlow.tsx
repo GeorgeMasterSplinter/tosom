@@ -255,6 +255,17 @@ const FIELD_LABELS: Record<string, string> = {
   'basic.agePrefMin': 'Min alder',
   'basic.agePrefMax': 'Maks alder',
   'personlighet.selfDesc': 'Om deg selv',
+  // LIVSSTIL-2026 (serverfeil fra /api/profile/setup)
+  'livsstil2026.arbeidsrytme': 'Arbeidsrytme',
+  'livsstil2026.bosted': 'Bostedstype',
+  'livsstil2026.reiser': 'Reisevaner',
+  'livsstil2026.dyr': 'Dyr',
+  'livsstil2026.skjerm': 'Skjermbruk',
+  'livsstil2026.bil': 'Bil',
+  'livsstil2026.kosthold': 'Kosthold',
+  'livsstil2026.klima': 'Klima og miljø',
+  'livsstil2026.alkohol': 'Alkohol',
+  'livsstil2026.aktivitet': 'Fritidsaktiviteter',
 };
 
 // Kort etikett per obligatorisk onboarding-felt — brukt av den sentrale
@@ -271,6 +282,17 @@ const STEP_FIELD_LABELS: Record<string, string> = {
   agePrefMin: 'minste alder',
   agePrefMax: 'høyeste alder',
   selfDesc: 'en kort tekst om deg selv',
+  // LIVSSTIL-2026 — valgfrie felt, men en satt verdi må være gyldig
+  arbeidsrytme: 'arbeidsrytme',
+  bosted: 'bostedstype',
+  reiser: 'reisevaner',
+  dyr: 'dyr',
+  skjerm: 'skjermbruk',
+  bil: 'biltype',
+  kosthold: 'kosthold',
+  klima: 'klima og miljø',
+  alkohol: 'alkohol',
+  aktivitet: 'fritidsaktiviteter',
 };
 
 /**

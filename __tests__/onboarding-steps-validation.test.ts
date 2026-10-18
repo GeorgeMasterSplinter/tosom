@@ -12,6 +12,7 @@ import {
   validateAllOnboardingSteps,
   firstIncompleteOnboardingStep,
   missingScaleItems,
+  validateLivsstil2026Step,
 } from '@/lib/validation/onboarding-steps';
 import { ERQ6, ALL_ITEMS } from '@/lib/psychometrics/instruments';
 
@@ -163,5 +164,78 @@ describe('firstIncompleteOnboardingStep / validateAllOnboardingSteps', () => {
   it('PL-08a: full profil uten skalasvar blokkeres av skalasteg (steget med første skaler)', () => {
     const noScales = { ...completeBasic, selfDesc: 'Jeg er veldig kreativ' };
     expect(firstIncompleteOnboardingStep(noScales)?.step).toBe(1);
+  });
+});
+
+describe('livsstil2026 i steg-gaten (18.10: «livsstil2026.bil: Invalid input»)', () => {
+  it('steg 2 og 5 uten l2026-data gir ingen feil (alt er valgfritt)', () => {
+    expect(validateLivsstil2026Step(2, {})).toEqual([]);
+    expect(validateLivsstil2026Step(5, {})).toEqual([]);
+  });
+
+  it('steg 2: gyldige hverdagsvalg godkjennes', () => {
+    expect(
+      validateLivsstil2026Step(2, {
+        arbeidsrytme: 'hybrid',
+        arbeidsrytmeViktig: 'bor-stemme',
+        bosted: 'sentrum',
+        reiser: 'utlandet',
+        dyr: 'ingen',
+        dyrViktig: 'ma-stemme',
+        skjerm: 'moderat',
+      })
+    ).toEqual([]);
+  });
+
+  it('steg 2: ugyldig viktighetsnivå avvises', () => {
+    const errors = validateLivsstil2026Step(2, { dyr: 'hund', dyrViktig: 'veldig-viktig' });
+    expect(errors.map((e) => e.field)).toContain('dyrViktig');
+  });
+
+  it('steg 2: kommaseparert flervalg i engangsfelt avvises', () => {
+    const errors = validateLivsstil2026Step(2, { bosted: 'sentrum,land' });
+    expect(errors.map((e) => e.field)).toContain('bosted');
+  });
+
+  it('steg 5: gyldig bilverdi + vekt godkjennes', () => {
+    expect(validateLivsstil2026Step(5, { bil: 'full-el', bilViktig: 'ma-stemme' })).toEqual([]);
+  });
+
+  it('steg 5: kommaseparert flervalg i bil avvises (den opprinnelige feilen)', () => {
+    const errors = validateLivsstil2026Step(5, { bil: 'full-el,bensin' });
+    expect(errors.map((e) => e.field)).toContain('bil');
+  });
+
+  it('steg 5: ukjent/legacy-verdi avvises', () => {
+    const errors = validateLivsstil2026Step(5, { bil: 'Elbil' });
+    expect(errors.map((e) => e.field)).toContain('bil');
+  });
+
+  it('aktivitet: opptil tre gyldige verdier godkjennes, fire avvises', () => {
+    expect(validateLivsstil2026Step(5, { aktivitet: 'gym,lop-turer,lagidrett' })).toEqual([]);
+    const errors = validateLivsstil2026Step(5, { aktivitet: 'gym,lop-turer,lagidrett,natur-fritid' });
+    expect(errors.map((e) => e.field)).toContain('aktivitet');
+  });
+
+  it('aktivitet: ukjent verdi avvises', () => {
+    const errors = validateLivsstil2026Step(5, { aktivitet: 'gym,spilling' });
+    expect(errors.map((e) => e.field)).toContain('aktivitet');
+  });
+
+  it('sentral gate: validateOnboardingStep(5) fanger ugyldig bil — stopp PÅ steget', () => {
+    const { errors } = validateOnboardingStep(5, { ...allScaleAnswers(), bil: 'full-el,bensin' });
+    expect(errors.map((e) => e.field)).toContain('bil');
+  });
+
+  it('pre-flight: firstIncompleteOnboardingStep hopper til steg 5 ved ugyldig bil', () => {
+    const full = {
+      ...completeBasic,
+      selfDesc: 'Jeg er veldig kreativ',
+      ...allScaleAnswers(),
+      bil: 'full-el,bensin',
+    };
+    const missing = firstIncompleteOnboardingStep(full);
+    expect(missing?.step).toBe(5);
+    expect(missing?.errors.map((e) => e.field)).toContain('bil');
   });
 });

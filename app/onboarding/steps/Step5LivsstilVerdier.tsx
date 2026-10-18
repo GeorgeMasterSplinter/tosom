@@ -63,7 +63,7 @@ export default function Step5LivsstilVerdier({ data, onChange, onBack, onNext, s
           { value: 'bensin', label: 'Bensin', icon: '⛽' },
           { value: 'diesel', label: 'Diesel', icon: '🛢️' },
           { value: 'esykkel-ingen', label: 'Elsykkel / kollektiv', icon: '🚲' },
-        ]} selectedValue={getValue('bil', '')} onChange={(v) => onChange('bil', v)} maxSelected={2} columns={2} testId="ob-l2026-bil" />
+        ]} selectedValue={getValue('bil', '')} onChange={(v) => onChange('bil', v)} maxSelected={1} columns={2} testId="ob-l2026-bil" />
         <Valgvikt value={getValue('bilViktig', '')} onChange={(v) => onChange('bilViktig', v)} testId="ob-l2026-bil-viktig" />
       </div>
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />

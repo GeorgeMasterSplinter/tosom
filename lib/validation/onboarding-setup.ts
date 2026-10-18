@@ -34,7 +34,10 @@ function optStr(max?: number, min = 0, msg?: string) {
 
 /** Valgfritt valg-felt: verdien må være én av de gitte option-verdiene. */
 function optEnum(values: string[]) {
-  return z.preprocess(blankToUndefined, z.enum(values as [string, ...string[]]).optional());
+  return z.preprocess(
+    blankToUndefined,
+    z.enum(values as [string, ...string[]], { error: 'Ugyldig valg' }).optional()
+  );
 }
 
 /* ============================================================

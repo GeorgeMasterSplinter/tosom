@@ -43,18 +43,15 @@ async function clickNext(page: Page) {
 
 /**
  * PL-08 (D-1): svarer på alle skalaspørsmålene steget krever.
- * Hver skalagruppe (ScaleQuestion, role="radiogroup") får det nøytrale
- * svaret «Både og (3 av 5)» — et gyldig svar (1–5) for valideringen.
- * Steg uten skalaspørsmål har ingen radiogroup og påverkes ikke.
+ * Kun ScaleQuestion-gruppene har «Både og (3 av 5)» som nøytralt svar
+ * (1–5) — Valgvikt-radioknappene («Må stemme» osv.) ignoreres.
+ * Steg uten skalaspørsmål har ingen slike radios og påverkes ikke.
  */
 async function answerScales(page: Page) {
-  const groups = page.getByRole('radiogroup');
-  const count = await groups.count();
+  const radios = page.getByRole('radio', { name: 'Både og (3 av 5)' });
+  const count = await radios.count();
   for (let i = 0; i < count; i++) {
-    await groups
-      .nth(i)
-      .getByRole('radio', { name: 'Både og (3 av 5)' })
-      .click();
+    await radios.nth(i).click();
   }
 }
 
@@ -68,32 +65,36 @@ async function fillStep1(page: Page) {
   await page.getByTestId('ob-postal').fill('0150');
 }
 
-/** Steg 2 (Personlighet & identitet): fire lengdefelt + én quirk + BFI10-skala (PL-08). */
+/**
+ * Steg 2 (Personlighet & identitet): selfDesc + quirk som lengdefelt,
+ * energyGiver/energyDrainer/pressureReact som valg-grid (LIVSSTIL-2026)
+ * + BFI10-skala (PL-08).
+ */
 async function fillStep2(page: Page) {
   await page.getByTestId('ob-self-desc').fill('Jeg er en rolig og balansert person som verdsetter dype samtaler og ærlighet.');
-  await page.getByTestId('ob-energy-giver').fill('Gode samtaler, natur og kreativt arbeid gir meg energi.');
-  await page.getByTestId('ob-energy-drainer').fill('Store folkemengder, konflikt og uvissighet tar fra meg.');
-  await page.getByTestId('ob-pressure-react').fill('Jeg trekker meg tilbake litt til jeg kjenner meg trygg igjen.');
+  await page.getByTestId('ob-energy-giver').getByRole('button', { name: /Dype samtaler/ }).click();
+  await page.getByTestId('ob-energy-drainer').getByRole('button', { name: /Store folkemengder/ }).click();
+  await page.getByTestId('ob-pressure-react').getByRole('button', { name: /Trekker meg tilbake/ }).click();
   await page.getByTestId('ob-quirk').fill('Jeg må alltid ha orden på ting før jeg kan slappe av.');
   await answerScales(page);
 }
 
-/** Steg 3 (Livssituasjon): fire valg-gridene + to lengdefelt. */
+/** Steg 3 (Livssituasjon): seks valg-gridene (LIVSSTIL-2026). */
 async function fillStep3(page: Page) {
   await page.getByTestId('ob-work-type').getByRole('button', { name: /fulltid/i }).click();
   await page.getByTestId('ob-housing').getByRole('button', { name: /Leilighet/ }).click();
   await page.getByTestId('ob-household').getByRole('button', { name: /Jeg alene/ }).click();
   await page.getByTestId('ob-economy').getByRole('button', { name: /Stabil økonomi/ }).click();
-  await page.getByTestId('ob-responsibilities').fill('Jeg har to barn som bor hos meg helga og hverdags.');
-  await page.getByTestId('ob-daily-routine').fill('Jeg står opp tidlig, drikker kaffe i ro og går en tur før jobben.');
+  await page.getByTestId('ob-responsibilities').getByRole('button', { name: /Små barn/ }).click();
+  await page.getByTestId('ob-daily-routine').getByRole('button', { name: /I ro og mak/ }).click();
 }
 
-/** Steg 4 (Tilknytning & trygghet): fem lengdefelt. */
+/** Steg 4 (Tilknytning & trygghet): fire valg-gridene (LIVSSTIL-2026) + ett lengdefelt. */
 async function fillStep4(page: Page) {
-  await page.getByTestId('ob-safety-need').fill('At noen lytter uten å dømme, og holder det de lover.');
-  await page.getByTestId('ob-insecurity-trigger').fill('Når folk lover noe og holder ikke ordet, mister jeg tryggheten.');
-  await page.getByTestId('ob-sadness-need').fill('En klem og at noen sier det skal bli bra.');
-  await page.getByTestId('ob-stress-need').fill('At noen tar over ansvaret midlertidig, slik at jeg kan puste.');
+  await page.getByTestId('ob-safety-need').getByRole('button', { name: /Ærlighet/ }).click();
+  await page.getByTestId('ob-insecurity-trigger').getByRole('button', { name: /Ubestemthet/ }).click();
+  await page.getByTestId('ob-sadness-need').getByRole('button', { name: /Bare tilstedeværelse/ }).click();
+  await page.getByTestId('ob-stress-need').getByRole('button', { name: /Rom til å roe meg/ }).click();
   await page.getByTestId('ob-important-boundary').fill('Jeg trenger tid alene etter en tung dag.');
   await answerScales(page);
 }
@@ -101,8 +102,8 @@ async function fillStep4(page: Page) {
 async function fillStep5(page: Page) {
   await page.getByTestId('ob-love-give').getByRole('button', { name: /Ord og ros/ }).click();
   await page.getByTestId('ob-love-receive').getByRole('button', { name: /Ord og ros/ }).click();
-  await page.getByTestId('ob-closeness-builder').fill('Dype samtaler om noe som betyr mye, der begge er til stede.');
-  await page.getByTestId('ob-distance-creator').fill('Når følelsene mine ikke blir tatt på alvor, trekker jeg meg unna.');
+  await page.getByTestId('ob-closeness-builder').getByRole('button', { name: /Dype samtaler/ }).click();
+  await page.getByTestId('ob-distance-creator').getByRole('button', { name: /Stress og press/ }).click();
   await page.getByTestId('ob-small-thing').fill('At noen husker at jeg vil ha kaffe på morgenen uten at jeg ber om det.');
 }
 
@@ -118,13 +119,13 @@ async function fillStep7(page: Page) {
   await page.getByTestId('ob-closeness-need').getByRole('button', { name: /Balansert/ }).click();
 }
 
-/** Steg 8 (Framtid & visjon): fem lengdefelt. */
+/** Steg 8 (Framtid & visjon): tre valg-gridene (LIVSSTIL-2026) + to lengdefelt. */
 async function fillStep8(page: Page) {
-  await page.getByTestId('ob-future-vision').fill('Et rolig liv med dype relasjoner og et hjem der alle føler seg hjemme.');
+  await page.getByTestId('ob-future-vision').getByRole('button', { name: /Familie og hjem/ }).click();
   await page.getByTestId('ob-dream-goal').fill('Å bygge et eget hus i naturen sammen med noen jeg elsker.');
   await page.getByTestId('ob-build-together').fill('En hverdag der vi deler både moro og utfordringer uten å tape oss selv.');
-  await page.getByTestId('ob-experience-alone').fill('Å reise alene til Japan for å lære om meg selv.');
-  await page.getByTestId('ob-experience-together').fill('Å lage mat sammen kveld etter kveld og prate om dagen vi har hatt.');
+  await page.getByTestId('ob-experience-alone').getByRole('button', { name: /Reiser/ }).click();
+  await page.getByTestId('ob-experience-together').getByRole('button', { name: /Kos og fellesskap/ }).click();
 }
 
 // Steg 9 (Humor & personlighet): ingen tekstfelt — men COMMUNICATION-skala
@@ -138,13 +139,13 @@ async function fillStep10(page: Page) {
   await page.getByTestId('ob-partner-must-understand').fill('At jeg trenger tid alene for å bearbeide følelser før jeg kan dele dem.');
 }
 
-/** Steg 11 (Moden nysgjerrighet): fem lengdefelt + ERQ6-skala (PL-08). */
+/** Steg 11 (Moden nysgjerrighet): fire valg-gridene (LIVSSTIL-2026) + ett lengdefelt + ERQ6-skala (PL-08). */
 async function fillStep11(page: Page) {
-  await page.getByTestId('ob-intimacy-safety').fill('At noen trygger meg med ord før noe dypt skal skje.');
-  await page.getByTestId('ob-comfortable-with').fill('Å dele sårbarhet uten å bli dømt eller kritisert bagefter.');
+  await page.getByTestId('ob-intimacy-safety').getByRole('button', { name: /Ord før nærhet/ }).click();
+  await page.getByTestId('ob-comfortable-with').getByRole('button', { name: /Sårbarhet/ }).click();
   await page.getByTestId('ob-personal-boundary').fill('Jeg trenger tydelige signaler om når ting blir for mye.');
-  await page.getByTestId('ob-nearer-type').fill('Ro og stille samtaler om noe som betyr mye for begge.');
-  await page.getByTestId('ob-needs-time').fill('Tid til å bearbeide følelsene mine alene før jeg deler dem.');
+  await page.getByTestId('ob-nearer-type').getByRole('button', { name: /Ro og stille/ }).click();
+  await page.getByTestId('ob-needs-time').getByRole('button', { name: /Mitt eget tempo/ }).click();
   await answerScales(page);
 }
 

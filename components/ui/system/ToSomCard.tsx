@@ -113,11 +113,22 @@ export const ToSomCard: FC<ToSomCardProps> = ({
       }}
     >
       {icon && (
-        <div
-          className={`flex justify-center w-10 h-10 md:w-12 md:h-12 mx-auto rounded-xl items-center justify-center transition-all duration-300 ease-out text-gold-300 ${iconWrapperClassName}`}
-          style={baseIconStyles}
-        >
-          {icon}
+        <div className="relative mx-auto w-fit" style={{ marginBottom: '24px' }}>
+          {/* Myk gull glød bak ikonet (keyframes i styles/globals.css) */}
+          <div
+            className="tosom-icon-pulse-glow absolute rounded-full pointer-events-none"
+            style={{
+              inset: '-12px',
+              background: 'radial-gradient(circle, rgba(212,175,55,0.35) 0%, rgba(212,175,55,0.1) 50%, transparent 72%)',
+              animation: 'tosom-icon-glow 4.5s ease-in-out infinite',
+            }}
+          />
+          <div
+            className={`tosom-icon-pulse relative flex justify-center w-10 h-10 md:w-12 md:h-12 mx-auto rounded-xl items-center justify-center transition-all duration-300 ease-out text-gold-300 ${iconWrapperClassName}`}
+            style={{ ...baseIconStyles, marginBottom: 0, animation: 'tosom-icon-breathe 4.5s ease-in-out infinite' }}
+          >
+            {icon}
+          </div>
         </div>
       )}
       <h3 className="text-xl font-semibold mb-[22px]" style={{ color: colors.textPrimary }}>

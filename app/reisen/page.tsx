@@ -5,6 +5,7 @@ import { Footer } from '@/components/ui/layout/Footer';
 import { ToSomSection, ToSomButton } from '@/components/ui/system';
 import { color, typographyToStyle } from '@/config/design-tokens';
 import GlassCard from '@/components/ui/cards/GlassCard';
+import GoldPulseIcon from '@/components/ui/feedback/GoldPulseIcon';
 
 /* ========================
    INLINE SVG-ikoner
@@ -233,9 +234,9 @@ export default function ReisenPage() {
               {/* Fase 1 */}
               <GlassCard padding="lg" gold interactive className="space-y-3">
                 <div className="flex justify-center">
-                  <div className="w-12 h-12 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                  <GoldPulseIcon size={48}>
                     <IconNoImage />
-                  </div>
+                  </GoldPulseIcon>
                 </div>
                 <h3
                   style={{
@@ -280,9 +281,9 @@ export default function ReisenPage() {
               {/* Fase 2 */}
               <GlassCard padding="lg" gold interactive className="space-y-3">
                 <div className="flex justify-center">
-                  <div className="w-12 h-12 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                  <GoldPulseIcon size={48}>
                     <IconImage />
-                  </div>
+                  </GoldPulseIcon>
                 </div>
                 <h3
                   style={{
@@ -327,9 +328,9 @@ export default function ReisenPage() {
               {/* Fase 3 */}
               <GlassCard padding="lg" gold interactive className="space-y-3">
                 <div className="flex justify-center">
-                  <div className="w-12 h-12 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                  <GoldPulseIcon size={48}>
                     <IconFuture />
-                  </div>
+                  </GoldPulseIcon>
                 </div>
                 <h3
                   style={{
@@ -392,9 +393,9 @@ export default function ReisenPage() {
               {/* Guidede samtaler */}
               <GlassCard padding="xl" gold interactive className="space-y-4">
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                  <GoldPulseIcon size={56} className="flex-shrink-0">
                     <IconQuestion />
-                  </div>
+                  </GoldPulseIcon>
                   <div className="space-y-3">
                     <h3
                       style={{
@@ -420,9 +421,9 @@ export default function ReisenPage() {
               {/* Små oppgaver sammen */}
               <GlassCard padding="xl" gold interactive className="space-y-4">
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                  <GoldPulseIcon size={56} className="flex-shrink-0">
                     <IconTask />
-                  </div>
+                  </GoldPulseIcon>
                   <div className="space-y-3">
                     <h3
                       style={{
@@ -467,9 +468,9 @@ export default function ReisenPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <GlassCard padding="xl" gold interactive className="space-y-4 text-center">
                 <div className="flex justify-center">
-                  <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                  <GoldPulseIcon size={56}>
                     <IconContinue />
-                  </div>
+                  </GoldPulseIcon>
                 </div>
                 <h3
                   style={{
@@ -492,9 +493,9 @@ export default function ReisenPage() {
 
               <GlassCard padding="xl" gold interactive className="space-y-4 text-center">
                 <div className="flex justify-center">
-                  <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                  <GoldPulseIcon size={56}>
                     <IconEnd />
-                  </div>
+                  </GoldPulseIcon>
                 </div>
                 <h3
                   style={{
@@ -517,9 +518,9 @@ export default function ReisenPage() {
 
               <GlassCard padding="xl" gold interactive className="space-y-4 text-center">
                 <div className="flex justify-center">
-                  <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                  <GoldPulseIcon size={56}>
                     <IconNew />
-                  </div>
+                  </GoldPulseIcon>
                 </div>
                 <h3
                   style={{

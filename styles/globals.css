@@ -1475,3 +1475,22 @@ select {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ═══════════════════════════════════════════
+   ToSom — rolig ikon-puls (landing-sidene)
+   Gull-sirkler puster mykt (scale 1 → 1.06)
+   med en glød bak som pulserer i takt. 4,5 s.
+   ═══════════════════════════════════════════ */
+@keyframes tosom-icon-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+@keyframes tosom-icon-glow {
+  0%, 100% { opacity: 0.45; transform: scale(0.9); }
+  50% { opacity: 0.9; transform: scale(1.15); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tosom-icon-pulse,
+  .tosom-icon-pulse-glow { animation: none !important; }
+  .tosom-icon-pulse-glow { opacity: 0.55; }
+}

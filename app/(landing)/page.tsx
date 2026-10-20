@@ -6,6 +6,7 @@ import { ToSomSection, ToSomButton } from '@/components/ui/system';
 import { color, typographyToStyle } from '@/config/design-tokens';
 import GlassCard from '@/components/ui/cards/GlassCard';
 import { Reveal } from '@/components/motion/Reveal';
+import GoldPulseIcon from '@/components/ui/feedback/GoldPulseIcon';
 
 /* ========================
    Ikoner — bygget på resonans-motivet
@@ -214,9 +215,9 @@ export default function LandingPage() {
                     interactive
                     className="space-y-4 h-full"
                   >
-                    <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                    <GoldPulseIcon size={56}>
                       {step.icon}
-                    </div>
+                    </GoldPulseIcon>
                     <h3
                       style={{
                         ...typographyToStyle('heading-md'),

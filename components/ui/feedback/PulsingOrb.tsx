@@ -1,7 +1,8 @@
 /**
  * ToSom — PulsingOrb
  *
- * Gull, pulserende hjerte-orb med konsentriske ringer.
+ * Gull, pulserende orb med konsentriske ringer og ToSom-logoet
+ * (to sirkler som roterer rundt) i sentrum.
  * Brukes i venterommet (matching), dashboard og andre "ventefase"-kontekster.
  *
  * Design: Nordic Gold Premium + ToSom Blue
@@ -13,7 +14,6 @@
 export function PulsingOrb({ size = 'lg' }: { size?: 'md' | 'lg' }) {
   const containerSize = size === 'lg' ? 160 : 120;
   const centerSize = size === 'lg' ? 80 : 60;
-  const emojiSize = size === 'lg' ? '32px' : '24px';
 
   return (
     <div
@@ -44,7 +44,7 @@ export function PulsingOrb({ size = 'lg' }: { size?: 'md' | 'lg' }) {
           animation: 'pulse-ring 3s ease-in-out infinite 1s',
         }}
       />
-      {/* Sentrum — gull glød */}
+      {/* Sentrum — gull glød med ToSom-logoet (to sirkler som roterer rundt) */}
       <div
         className="rounded-full flex items-center justify-center"
         style={{
@@ -54,7 +54,23 @@ export function PulsingOrb({ size = 'lg' }: { size?: 'md' | 'lg' }) {
           animation: 'pulse-glow 2s ease-in-out infinite',
         }}
       >
-        <span style={{ fontSize: emojiSize, lineHeight: 1 }}>💛</span>
+        <div
+          className="flex items-center justify-center"
+          style={{ animation: 'tosom-orbit 12s linear infinite' }}
+        >
+          <svg
+            width={size === 'lg' ? 44 : 34}
+            height={size === 'lg' ? 22 : 17}
+            viewBox="0 0 48 24"
+            fill="none"
+            stroke="#D4AF37"
+            strokeWidth="1.5"
+            style={{ filter: 'drop-shadow(0 0 8px rgba(212,175,55,0.55))' }}
+          >
+            <circle cx="18" cy="12" r="8" />
+            <circle cx="30" cy="12" r="8" />
+          </svg>
+        </div>
       </div>
 
       {/* CSS keyframes */}
@@ -66,6 +82,13 @@ export function PulsingOrb({ size = 'lg' }: { size?: 'md' | 'lg' }) {
         @keyframes pulse-glow {
           0%, 100% { transform: scale(0.95); opacity: 0.7; }
           50% { transform: scale(1.05); opacity: 1; }
+        }
+        @keyframes tosom-orbit {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          [style*="tosom-orbit"] { animation: none !important; }
         }
       `}</style>
     </div>

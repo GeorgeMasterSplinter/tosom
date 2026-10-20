@@ -6,6 +6,7 @@ import { ToSomSection, ToSomCard, ToSomButton } from '@/components/ui/system';
 import { color, typographyToStyle } from '@/config/design-tokens';
 import { COMPANY } from '@/config/legal';
 import GlassCard from '@/components/ui/cards/GlassCard';
+import GoldPulseIcon from '@/components/ui/feedback/GoldPulseIcon';
 
 /* ========================
    INLINE SVG-ikoner
@@ -152,9 +153,9 @@ export default function KontaktPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
               <GlassCard padding="xl" interactive className="space-y-4">
                 <div className="flex justify-center">
-                  <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                  <GoldPulseIcon size={56}>
                     <IconMail />
-                  </div>
+                  </GoldPulseIcon>
                 </div>
                 <h3
                   style={{
@@ -179,9 +180,9 @@ export default function KontaktPage() {
 
               <GlassCard padding="xl" interactive className="space-y-4">
                 <div className="flex justify-center">
-                  <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                  <GoldPulseIcon size={56}>
                     <IconClock />
-                  </div>
+                  </GoldPulseIcon>
                 </div>
                 <h3
                   style={{
@@ -206,9 +207,9 @@ export default function KontaktPage() {
 
               <GlassCard padding="xl" interactive className="space-y-4">
                 <div className="flex justify-center">
-                  <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                  <GoldPulseIcon size={56}>
                     <IconSend />
-                  </div>
+                  </GoldPulseIcon>
                 </div>
                 <h3
                   style={{

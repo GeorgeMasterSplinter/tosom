@@ -20,6 +20,7 @@ import { ResonanceLogo } from '@/components/branding/LogoVariants';
 import { ToSomSection, ToSomButton } from '@/components/ui/system';
 import { color, spacing, typographyToStyle } from '@/config/design-tokens';
 import GlassCard from '@/components/ui/cards/GlassCard';
+import GoldPulseIcon from '@/components/ui/feedback/GoldPulseIcon';
 
 /* ========================
    IKONER — 6 dimensjoner
@@ -289,9 +290,9 @@ export default function MetoderPage() {
               {DIMENSIONS.map((d) => (
                 <GlassCard key={d.name} padding="lg" interactive className="space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37] flex-shrink-0">
+                    <GoldPulseIcon size={40} className="flex-shrink-0">
                       {d.icon}
-                    </div>
+                    </GoldPulseIcon>
                     <div className="flex-1">
                       <p style={{ ...typographyToStyle('heading-sm'), color: color.text.primary }}>{d.name}</p>
                     </div>

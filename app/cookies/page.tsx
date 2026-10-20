@@ -5,6 +5,7 @@ import { Footer } from '@/components/ui/layout/Footer';
 import { ToSomSection, ToSomButton } from '@/components/ui/system';
 import { color, typographyToStyle } from '@/config/design-tokens';
 import GlassCard from '@/components/ui/cards/GlassCard';
+import GoldPulseIcon from '@/components/ui/feedback/GoldPulseIcon';
 
 /* ========================
    INLINE SVG-ikoner
@@ -175,9 +176,9 @@ export default function CookiesPage() {
               {/* Teknisk nødvendige cookies */}
               <GlassCard padding="xl" interactive className="space-y-4">
                 <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                  <GoldPulseIcon size={56} className="flex-shrink-0">
                     <IconShield />
-                  </div>
+                  </GoldPulseIcon>
                   <h3
                     style={{
                       ...typographyToStyle('heading-sm'),
@@ -201,9 +202,9 @@ export default function CookiesPage() {
               {/* Analytics-cookies */}
               <GlassCard padding="xl" interactive className="space-y-4">
                 <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                  <GoldPulseIcon size={56} className="flex-shrink-0">
                     <IconAnalytics />
-                  </div>
+                  </GoldPulseIcon>
                   <h3
                     style={{
                       ...typographyToStyle('heading-sm'),
@@ -227,9 +228,9 @@ export default function CookiesPage() {
               {/* Hva er en cookie? */}
               <GlassCard padding="xl" interactive className="space-y-4">
                 <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                  <GoldPulseIcon size={56} className="flex-shrink-0">
                     <IconCookie />
-                  </div>
+                  </GoldPulseIcon>
                   <h3
                     style={{
                       ...typographyToStyle('heading-sm'),
@@ -253,9 +254,9 @@ export default function CookiesPage() {
               {/* Hvor lenge lagres cookies? */}
               <GlassCard padding="xl" interactive className="space-y-4">
                 <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                  <GoldPulseIcon size={56} className="flex-shrink-0">
                     <IconClock />
-                  </div>
+                  </GoldPulseIcon>
                   <h3
                     style={{
                       ...typographyToStyle('heading-sm'),
@@ -307,9 +308,9 @@ export default function CookiesPage() {
 
             <GlassCard padding="xl" interactive className="space-y-4">
               <div className="flex items-center gap-4">
-                <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                <GoldPulseIcon size={56} className="flex-shrink-0">
                   <IconSettings />
-                </div>
+                </GoldPulseIcon>
                 <p
                   style={{
                     ...typographyToStyle('body'),
@@ -341,9 +342,9 @@ export default function CookiesPage() {
 
             <GlassCard padding="xl" interactive className="space-y-4">
               <div className="flex justify-center mb-4">
-                <div className="w-16 h-16 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                <GoldPulseIcon size={64}>
                   <IconMail />
-                </div>
+                </GoldPulseIcon>
               </div>
 
               <p

@@ -6,6 +6,7 @@ import { ResonanceLogo } from '@/components/branding/LogoVariants';
 import { ToSomSection, ToSomButton } from '@/components/ui/system';
 import { color, typographyToStyle } from '@/config/design-tokens';
 import GlassCard from '@/components/ui/cards/GlassCard';
+import GoldPulseIcon from '@/components/ui/feedback/GoldPulseIcon';
 
 /* ========================
    INLINE SVG-ikoner
@@ -190,9 +191,9 @@ export default function SlikPage() {
             {steps.map((step, idx) => (
               <GlassCard key={idx} padding="xl" gold interactive className="space-y-4">
                 <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                  <GoldPulseIcon size={56} className="flex-shrink-0">
                     {step.icon}
-                  </div>
+                  </GoldPulseIcon>
                   <h3
                     style={{
                       ...typographyToStyle('heading-md'),
@@ -246,9 +247,9 @@ export default function SlikPage() {
               <div className="mx-auto max-w-3xl">
                 <GlassCard padding="xl" gold glow className="text-center space-y-5">
                   <div className="flex justify-center">
-                    <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                    <GoldPulseIcon size={56}>
                       <IconPhotos />
-                    </div>
+                    </GoldPulseIcon>
                   </div>
                   <h3
                     style={{

@@ -16,6 +16,7 @@ import Link from 'next/link';
 import { Footer } from '@/components/ui/layout/Footer';
 import { ToSomSection } from '@/components/ui/system';
 import { color, typographyToStyle } from '@/config/design-tokens';
+import GlassCard from '@/components/ui/cards/GlassCard';
 import { COMPANY, MIN_AGE, JOURNEY } from '@/config/legal';
 
 /* ========================
@@ -203,54 +204,61 @@ export default function TrygghetPage() {
           </p>
         </ToSomSection>
 
-        {/* ===== SEKSJONER ===== */}
+        {/* ===== SEKSJONER — hvert punkt i sitt eget panel ===== */}
         <ToSomSection spotlight="none" className="px-6">
-          <div className="mx-auto max-w-[760px] space-y-12">
+          <div className="mx-auto max-w-[760px] space-y-6">
             {sections.map((section) => (
-              <section key={section.id} id={`punkt-${section.id}`} className="space-y-4">
-                <h2
-                  className="flex gap-3"
-                  style={{ ...typographyToStyle('heading-md'), color: color.text.primary }}
-                >
-                  <span style={{ color: color.brand.gold }}>{section.id}.</span>
-                  <span>{section.title}</span>
-                </h2>
-
-                {section.paragraphs?.map((text, i) => (
-                  <p
-                    key={i}
-                    style={{
-                      ...typographyToStyle('body'),
-                      color: color.text.secondary,
-                      lineHeight: '1.85',
-                    }}
+              <GlassCard
+                key={section.id}
+                padding="lg"
+                gold
+                className="space-y-4"
+              >
+                <section id={`punkt-${section.id}`}>
+                  <h2
+                    className="flex gap-3"
+                    style={{ ...typographyToStyle('heading-md'), color: color.text.primary }}
                   >
-                    {text}
-                  </p>
-                ))}
+                    <span style={{ color: color.brand.gold }}>{section.id}.</span>
+                    <span>{section.title}</span>
+                  </h2>
 
-                {section.list && (
-                  <ul className="space-y-2.5 pl-1">
-                    {section.list.map((item, i) => (
-                      <li key={i} className="flex gap-3">
-                        <span
-                          className="flex-shrink-0 mt-[11px] w-1 h-1 rounded-full"
-                          style={{ background: color.brand.gold }}
-                        />
-                        <span
-                          style={{
-                            ...typographyToStyle('body'),
-                            color: color.text.secondary,
-                            lineHeight: '1.85',
-                          }}
-                        >
-                          {item}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </section>
+                  {section.paragraphs?.map((text, i) => (
+                    <p
+                      key={i}
+                      style={{
+                        ...typographyToStyle('body'),
+                        color: color.text.secondary,
+                        lineHeight: '1.85',
+                      }}
+                    >
+                      {text}
+                    </p>
+                  ))}
+
+                  {section.list && (
+                    <ul className="space-y-2.5 pl-1">
+                      {section.list.map((item, i) => (
+                        <li key={i} className="flex gap-3">
+                          <span
+                            className="flex-shrink-0 mt-[11px] w-1 h-1 rounded-full"
+                            style={{ background: color.brand.gold }}
+                          />
+                          <span
+                            style={{
+                              ...typographyToStyle('body'),
+                              color: color.text.secondary,
+                              lineHeight: '1.85',
+                            }}
+                          >
+                            {item}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </section>
+              </GlassCard>
             ))}
           </div>
         </ToSomSection>

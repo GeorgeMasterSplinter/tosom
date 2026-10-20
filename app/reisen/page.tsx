@@ -218,7 +218,7 @@ export default function ReisenPage() {
           spotlight="blue"
           className="px-6"
         >
-          <div className="mx-auto max-w-5xl">
+          <div className="mx-auto max-w-7xl">
             <h2
               className="text-center mb-6"
               style={{
@@ -231,9 +231,9 @@ export default function ReisenPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Fase 1 */}
-              <GlassCard padding="xl" gold interactive className="space-y-4">
+              <GlassCard padding="lg" gold interactive className="space-y-3">
                 <div className="flex justify-center">
-                  <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                  <div className="w-12 h-12 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
                     <IconNoImage />
                   </div>
                 </div>
@@ -248,27 +248,27 @@ export default function ReisenPage() {
                 </h3>
                 <p
                   style={{
-                    ...typographyToStyle('body-lg'),
+                    ...typographyToStyle('body'),
                     color: color.text.secondary,
-                    lineHeight: '1.8',
+                    lineHeight: '1.7',
                   }}
                 >
                   De første dagene er uten bilder.
                 </p>
                 <p
                   style={{
-                    ...typographyToStyle('body-lg'),
+                    ...typographyToStyle('body'),
                     color: color.text.secondary,
-                    lineHeight: '1.8',
+                    lineHeight: '1.7',
                   }}
                 >
                   Ekte forbindelse bygges gjennom ord, tanker og sårbarhet — ikke gjennom utseende. Når dere ikke ser hverandre, lytter dere dypere.
                 </p>
                 <p
                   style={{
-                    ...typographyToStyle('body-lg'),
+                    ...typographyToStyle('body'),
                     color: color.brand.gold,
-                    lineHeight: '1.8',
+                    lineHeight: '1.7',
                     textAlign: 'center',
                     fontStyle: 'italic',
                   }}
@@ -278,9 +278,9 @@ export default function ReisenPage() {
               </GlassCard>
 
               {/* Fase 2 */}
-              <GlassCard padding="xl" gold interactive className="space-y-4">
+              <GlassCard padding="lg" gold interactive className="space-y-3">
                 <div className="flex justify-center">
-                  <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                  <div className="w-12 h-12 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
                     <IconImage />
                   </div>
                 </div>
@@ -295,27 +295,27 @@ export default function ReisenPage() {
                 </h3>
                 <p
                   style={{
-                    ...typographyToStyle('body-lg'),
+                    ...typographyToStyle('body'),
                     color: color.text.secondary,
-                    lineHeight: '1.8',
+                    lineHeight: '1.7',
                   }}
                 >
                   Når dere har snakket sammen i to uker, åpner muligheten for bilder. Det er helt valgfritt — du deler hvis det føles naturlig.
                 </p>
                 <p
                   style={{
-                    ...typographyToStyle('body-lg'),
+                    ...typographyToStyle('body'),
                     color: color.text.secondary,
-                    lineHeight: '1.8',
+                    lineHeight: '1.7',
                   }}
                 >
                   Bildene kommer sent av en grunn: Først trygghet, så ansikt. Først samtalen, så bekreftelsen.
                 </p>
                 <p
                   style={{
-                    ...typographyToStyle('body-lg'),
+                    ...typographyToStyle('body'),
                     color: color.brand.gold,
-                    lineHeight: '1.8',
+                    lineHeight: '1.7',
                     textAlign: 'center',
                     fontStyle: 'italic',
                   }}
@@ -325,9 +325,9 @@ export default function ReisenPage() {
               </GlassCard>
 
               {/* Fase 3 */}
-              <GlassCard padding="xl" gold interactive className="space-y-4">
+              <GlassCard padding="lg" gold interactive className="space-y-3">
                 <div className="flex justify-center">
-                  <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                  <div className="w-12 h-12 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
                     <IconFuture />
                   </div>
                 </div>
@@ -342,27 +342,27 @@ export default function ReisenPage() {
                 </h3>
                 <p
                   style={{
-                    ...typographyToStyle('body-lg'),
+                    ...typographyToStyle('body'),
                     color: color.text.secondary,
-                    lineHeight: '1.8',
+                    lineHeight: '1.7',
                   }}
                 >
                   Her handler det om hvordan dere møter fremtiden — ikke sammen, men som to mennesker som vurderer om de passer.
                 </p>
                 <p
                   style={{
-                    ...typographyToStyle('body-lg'),
+                    ...typographyToStyle('body'),
                     color: color.text.secondary,
-                    lineHeight: '1.8',
+                    lineHeight: '1.7',
                   }}
                 >
                   Dere snakker om mål, grenser, styrker og utfordringer. Dere ser hvordan dere håndterer forskjeller, og hvordan dere bygger videre på tryggheten dere har skapt.
                 </p>
                 <p
                   style={{
-                    ...typographyToStyle('body-lg'),
+                    ...typographyToStyle('body'),
                     color: color.brand.gold,
-                    lineHeight: '1.8',
+                    lineHeight: '1.7',
                   }}
                 >
                   Det er en fase som gir innsikt, ikke forventning.

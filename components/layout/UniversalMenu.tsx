@@ -74,7 +74,7 @@ export const UniversalMenu = () => {
       {/* Overlay for mobil meny */}
       {menuOpen && (
         <div
-          className="lg:hidden fixed inset-0 z-40 menu-overlay-fade"
+          className="xl:hidden fixed inset-0 z-40 menu-overlay-fade"
           style={{ background: 'rgba(0,0,0,0.4)' }}
           onClick={() => setMenuOpen(false)}
           aria-hidden="true"
@@ -89,7 +89,7 @@ export const UniversalMenu = () => {
           </Link>
 
           {/* Midten: Meny (desktop) */}
-          <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
+          <nav className="hidden xl:flex items-center gap-6 xl:gap-8">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -130,7 +130,7 @@ export const UniversalMenu = () => {
           <div className="hidden md:flex items-center gap-4">
             <Link
               href="/login"
-              className="h-[40px] px-6 flex items-center justify-center rounded-[10px] text-sm font-medium transition-all duration-200 ease-out"
+              className="h-[40px] px-6 flex items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-medium transition-all duration-200 ease-out"
               style={{
                 background: 'rgba(255,255,255,0.04)',
                 backdropFilter: 'blur(10px)',
@@ -154,7 +154,7 @@ export const UniversalMenu = () => {
             </Link>
             <Link
               href="/onboarding/start"
-              className="h-[40px] px-6 flex items-center justify-center rounded-[10px] text-sm font-semibold transition-all duration-200 ease-out"
+              className="h-[40px] px-6 flex items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-semibold transition-all duration-200 ease-out"
               style={{
                 background: 'linear-gradient(135deg, rgba(212,175,55,0.92) 0%, rgba(232,194,122,0.92) 100%)',
                 color: '#0A0F1A',
@@ -176,7 +176,7 @@ export const UniversalMenu = () => {
 
           {/* Mobil meny-knapp */}
           <button
-            className="lg:hidden w-12 h-12 flex items-center justify-center rounded-xl transition-all duration-200 ease-out"
+            className="xl:hidden w-12 h-12 flex items-center justify-center rounded-xl transition-all duration-200 ease-out"
             style={{
               color: '#E8C27A',
               background: menuOpen ? 'rgba(212,175,55,0.12)' : 'rgba(255,255,255,0.03)',
@@ -202,7 +202,7 @@ export const UniversalMenu = () => {
           {/* Mobil meny (slide-in fra høyre) */}
           {menuOpen && (
             <div
-              className="lg:hidden fixed top-[64px] right-0 z-50 menu-slide-in"
+              className="xl:hidden fixed top-[64px] right-0 z-50 menu-slide-in"
               style={{
                 width: '280px',
                 background: 'rgba(10,15,26,0.95)',

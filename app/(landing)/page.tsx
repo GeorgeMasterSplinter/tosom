@@ -148,7 +148,7 @@ export default function LandingPage() {
 
       <main className="relative z-10">
         {/* Hero */}
-        <section className="relative overflow-hidden pt-4 ph:pt-4 md:pt-4 pb-6 ph:pb-6 md:pb-6 min-h-[75vh] flex flex-col justify-center">
+        <section className="relative overflow-hidden pt-4 ph:pt-4 md:pt-4 pb-6 ph:pb-6 md:pb-6">
           <Hero />
         </section>
 

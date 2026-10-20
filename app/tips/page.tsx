@@ -90,9 +90,9 @@ const tipsSections: Array<{
   {
     icon: <IconTime />,
     title: 'Tosom er for alle',
-    intro: 'Barn, studier, jobb eller frivillig — Tosom er for alle. Også for deg som ikke rår å chatte hele tiden.',
+    intro: 'Tosom er for alle livsfaser — skole, studier, barn, jobb eller livet ellers. Du trenger ikke være til stede hele tiden for at reisen skal fungere.',
     points: [
-      'Vær åpen om tempo og rammer dine — det hjelper matchingen, og den andre.',
+      'Vær åpen om hvor mye tid du har og når du er mest til stede — det hjelper matchingen, og den andre.',
       'Planlegg «dates»: faste tider i uken når dere kan være litt ekstra til stede i chatten.',
       'Det er greit å være borte en stund. Reisen venter der du er.',
       'Rytmen sies fra, ikke gjettes — si ifra når du trenger pause.',

@@ -45,6 +45,15 @@ function IconJourney() {
   );
 }
 
+function IconTime() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 6V12L16 14" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 /* ========================
    SEKSJONER
    ======================== */
@@ -58,13 +67,35 @@ const tipsSections: Array<{
 }> = [
   {
     icon: <IconMatch />,
-    title: 'Øk sjansen for en god match',
-    intro: 'Vi kobler én person til deg hver lørdag. Du påvirker kvaliteten — gjennom ærlighet, ikke gjetteri.',
+    title: 'Slik matcher vi deg',
+    intro: 'Én match per uke, valgt ut fra svarene dine. Ikke en liste — en person.',
     points: [
-      'Ha profilen din klar før matchrunden, så er du med.',
-      'Matchingen vektlegger verdier, tilknytning, personlighet, kommunikasjon, emosjonsregulering og livssituasjon.',
-      'Dealbreakere (barn, modenhetsnivå, avstand) jobber for deg — da matcher vi deg med noen som faktisk passer.',
-      'En match er et utgangspunkt, ikke en dom. Du bestemmer alltid selv.',
+      'Du får én match hver lørdag. Profilen din må være klar før matchrunden for å være med.',
+      'Matchingen bygger på onboarding-svarene dine: verdier, tilknytning, personlighet, kommunikasjon, emosjonsregulering og livssituasjon.',
+      'Dealbreakere (barn, modenhetsnivå, avstand) er hardsjekk — da slipper du å møte noen som aldri ville passet.',
+      'Ingen liker, ingen swiping, ingen scoringer. En match er et utgangspunkt, ikke en dom — du bestemmer alltid selv.',
+    ],
+  },
+  {
+    icon: <IconProfile />,
+    title: 'En ærlig, konkret profil',
+    intro: 'Profilen er det matchingen bygger på. Jo mer ærlig og konkret du er, jo bedre passer den du blir matchet med.',
+    points: [
+      "Svar ærlig — ikke «flott». Det er de reelle svarene som gir en match som faktisk passer.",
+      'Fyll inn de praktiske feltene (barn, røyking, tro, livsstil). Tomt felt gir nøytral poeng.',
+      'Hold «om deg» kort og konkret — en liten detalj forteller mer enn en lang generalisering.',
+      'Oppdater profilen din når livet endrer seg.',
+    ],
+  },
+  {
+    icon: <IconTime />,
+    title: 'Tosom er for alle',
+    intro: 'Barn, studier, jobb eller frivillig — Tosom er for alle. Også for deg som ikke rår å chatte hele tiden.',
+    points: [
+      'Vær åpen om tempo og rammer dine — det hjelper matchingen, og den andre.',
+      'Planlegg «dates»: faste tider i uken når dere kan være litt ekstra til stede i chatten.',
+      'Det er greit å være borte en stund. Reisen venter der du er.',
+      'Rytmen sies fra, ikke gjettes — si ifra når du trenger pause.',
     ],
   },
   {
@@ -78,17 +109,6 @@ const tipsSections: Array<{
       'Vær proaktiv, men gi plass.',
     ],
     goldPoints: [3],
-  },
-  {
-    icon: <IconProfile />,
-    title: 'En ærlig, konkret profil',
-    intro: 'Profilen er det matchingen bygger på. Jo mer ærlig og konkret du er, jo bedre passer den du blir matchet med.',
-    points: [
-      "Svar ærlig — ikke «flott». Det er de reelle svarene som gir en match som faktisk passer.",
-      'Fyll inn de praktiske feltene (barn, røyking, tro, livsstil). Tomt felt gir nøytral poeng.',
-      'Hold «om deg» kort og konkret — en liten detalj forteller mer enn en lang generalisering.',
-      'Oppdater profilen din når livet endrer seg.',
-    ],
   },
 ];
 

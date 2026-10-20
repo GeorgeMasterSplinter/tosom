@@ -251,32 +251,33 @@ export default function HvorforPage() {
           </div>
         </section>
 
-        {/* ===== HVORFOR TO SOM FINNES ===== */}
+        {/* ===== SIDSTE 4 — 2×2-gruppe (to på hverandre på laptop, én i kolonne på mobil) ===== */}
         <ToSomSection
           spotlight="blue"
           className="px-6"
         >
-          <div className="mx-auto max-w-3xl">
-            <GlassCard padding="xl" gold interactive className="space-y-6">
-              <div className="flex items-center gap-4">
-                <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+          <div className="mx-auto max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Kart 1 */}
+            <GlassCard padding="lg" gold interactive className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="flex-shrink-0 w-11 h-11 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
                   <IconWhy />
                 </div>
-                <h2
+                <h3
                   style={{
-                    ...typographyToStyle('heading-lg'),
-                    color: color.text.primary,
+                    ...typographyToStyle('heading-sm'),
+                    color: color.brand.gold,
                   }}
                 >
                   Hvorfor Tosom finnes
-                </h2>
+                </h3>
               </div>
 
               <p
                 style={{
-                  ...typographyToStyle('body-lg'),
+                  ...typographyToStyle('body'),
                   color: color.text.secondary,
-                  lineHeight: '1.8',
+                  lineHeight: '1.7',
                 }}
               >
                 Fordi moderne dating har gjort det vanskelig å finne dette. Tempoet er for høyt. Valgene er for mange. Oppmerksomheten er for kort. Folk hopper videre før de rekker å kjenne etter.
@@ -284,21 +285,21 @@ export default function HvorforPage() {
 
               <p
                 style={{
-                  ...typographyToStyle('heading-md'),
+                  ...typographyToStyle('heading-sm'),
                   color: color.brand.gold,
                 }}
               >
                 Tosom gjør det motsatte.
               </p>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-x-4 gap-y-2">
                 {['ro', 'trygghet', 'én match', 'én prosess', 'én reise', 'én mulighet til å bli kjent'].map((item, idx) => (
                   <p
                     key={idx}
                     style={{
                       ...typographyToStyle('body'),
                       color: color.text.secondary,
-                      lineHeight: '1.6',
+                      lineHeight: '1.5',
                     }}
                   >
                     <span className="text-[#D4AF37] mr-2">✦</span>
@@ -309,7 +310,7 @@ export default function HvorforPage() {
 
               <p
                 style={{
-                  ...typographyToStyle('body-lg'),
+                  ...typographyToStyle('body'),
                   color: color.text.muted,
                   fontStyle: 'italic',
                 }}
@@ -319,7 +320,7 @@ export default function HvorforPage() {
 
               <p
                 style={{
-                  ...typographyToStyle('body-lg'),
+                  ...typographyToStyle('body'),
                   color: color.brand.gold,
                   fontWeight: 600,
                 }}
@@ -327,41 +328,34 @@ export default function HvorforPage() {
                 Bare deg — og én person som passer deg.
               </p>
             </GlassCard>
-          </div>
-        </ToSomSection>
 
-        {/* ===== FOR DEG SOM SØKER ===== */}
-        <ToSomSection
-          spotlight="blue"
-          className="px-6"
-        >
-          <div className="mx-auto max-w-3xl">
-            <GlassCard padding="xl" gold interactive className="space-y-6">
-              <div className="flex items-center gap-4">
-                <div className="flex-shrink-0 w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+            {/* Kart 2 */}
+            <GlassCard padding="lg" gold interactive className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="flex-shrink-0 w-11 h-11 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
                   <IconSeek />
                 </div>
-                <h2
+                <h3
                   style={{
-                    ...typographyToStyle('heading-lg'),
-                    color: color.text.primary,
+                    ...typographyToStyle('heading-sm'),
+                    color: color.brand.gold,
                   }}
                 >
                   For deg som søker noe ekte
-                </h2>
+                </h3>
               </div>
 
               <p
                 style={{
-                  ...typographyToStyle('body-lg'),
+                  ...typographyToStyle('body'),
                   color: color.text.secondary,
-                  lineHeight: '1.8',
+                  lineHeight: '1.7',
                 }}
               >
                 Enten du:
               </p>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
                 {[
                   'vil ha din første voksne relasjon',
                   'vil utvikle deg som menneske',
@@ -376,7 +370,7 @@ export default function HvorforPage() {
                     style={{
                       ...typographyToStyle('body'),
                       color: color.text.secondary,
-                      lineHeight: '1.6',
+                      lineHeight: '1.5',
                     }}
                   >
                     <span className="text-[#D4AF37] mr-2">✦</span>
@@ -387,7 +381,7 @@ export default function HvorforPage() {
 
               <p
                 style={{
-                  ...typographyToStyle('body-lg'),
+                  ...typographyToStyle('body'),
                   color: color.brand.gold,
                   fontWeight: 600,
                 }}
@@ -395,41 +389,34 @@ export default function HvorforPage() {
                 Tosom er laget for deg.
               </p>
             </GlassCard>
-          </div>
-        </ToSomSection>
 
-        {/* ===== FOR DEG SOM HAR LEVD ===== */}
-        <ToSomSection
-          spotlight="blue"
-          className="px-6"
-        >
-          <div className="mx-auto max-w-3xl">
-            <GlassCard padding="xl" gold interactive className="space-y-6 text-center">
-              <div className="flex justify-center">
-                <div className="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+            {/* Kart 3 */}
+            <GlassCard padding="lg" gold interactive className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="flex-shrink-0 w-11 h-11 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
                   <IconLived />
                 </div>
+                <h3
+                  style={{
+                    ...typographyToStyle('heading-sm'),
+                    color: color.brand.gold,
+                  }}
+                >
+                  For deg som har levd litt
+                </h3>
               </div>
-              <h2
-                style={{
-                  ...typographyToStyle('heading-lg'),
-                  color: color.text.primary,
-                }}
-              >
-                For deg som har levd litt
-              </h2>
               <p
                 style={{
-                  ...typographyToStyle('body-lg'),
+                  ...typographyToStyle('body'),
                   color: color.text.secondary,
-                  lineHeight: '1.8',
+                  lineHeight: '1.7',
                 }}
               >
                 For deg som vet at relasjoner krever tid, trygghet bygges sakte, kjemi kommer fra dybde ikke overflate, modenhet er viktigere enn perfeksjon, og det er bedre å være to enn å være alene om alt.
               </p>
               <p
                 style={{
-                  ...typographyToStyle('body-lg'),
+                  ...typographyToStyle('body'),
                   color: color.brand.gold,
                   fontWeight: 600,
                 }}
@@ -437,81 +424,75 @@ export default function HvorforPage() {
                 Tosom er laget for deg.
               </p>
             </GlassCard>
-          </div>
-        </ToSomSection>
 
-        {/* ===== NOE MER ===== */}
-        <ToSomSection spotlight="blue" className="px-6">
-          <div
-            className="mx-auto max-w-3xl rounded-[28px] p-10 md:p-14 space-y-6 text-center"
-            style={{
-              background: 'rgba(255,255,255,0.045)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              boxShadow: '0 12px 40px rgba(0,0,0,0.20), 0 0 24px rgba(212,175,55,0.05)',
-            }}
-          >
-            <h2
-              style={{
-                ...typographyToStyle('heading-lg'),
-                color: 'rgba(255,255,255,0.92)',
-              }}
-            >
-              For deg som vil noe mer
-            </h2>
+            {/* Kart 4 */}
+            <GlassCard padding="lg" gold interactive className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="flex-shrink-0 w-11 h-11 rounded-full bg-[rgba(212,175,55,0.1)] flex items-center justify-center text-[#D4AF37]">
+                  <IconMore />
+                </div>
+                <h3
+                  style={{
+                    ...typographyToStyle('heading-sm'),
+                    color: color.brand.gold,
+                  }}
+                >
+                  For deg som vil noe mer
+                </h3>
+              </div>
 
-            <p
-              style={{
-                ...typographyToStyle('body-lg'),
-                color: 'rgba(255,255,255,0.88)',
-                lineHeight: '1.7',
-                letterSpacing: '0.25px',
-              }}
-            >
-              Noe rolig.
-            </p>
-            <p
-              style={{
-                ...typographyToStyle('body-lg'),
-                color: 'rgba(255,255,255,0.88)',
-                lineHeight: '1.7',
-                letterSpacing: '0.25px',
-              }}
-            >
-              Noe ekte.
-            </p>
-            <p
-              style={{
-                ...typographyToStyle('body-lg'),
-                color: 'rgba(255,255,255,0.88)',
-                lineHeight: '1.7',
-                letterSpacing: '0.25px',
-              }}
-            >
-              Noe som kan vokse.
-            </p>
-            <p
-              style={{
-                ...typographyToStyle('body-lg'),
-                color: 'rgba(255,255,255,0.88)',
-                lineHeight: '1.7',
-                letterSpacing: '0.25px',
-              }}
-            >
-              Noe som kan bli til noe.
-            </p>
+              <p
+                style={{
+                  ...typographyToStyle('body'),
+                  color: 'rgba(255,255,255,0.88)',
+                  lineHeight: '1.7',
+                  letterSpacing: '0.25px',
+                }}
+              >
+                Noe rolig.
+              </p>
+              <p
+                style={{
+                  ...typographyToStyle('body'),
+                  color: 'rgba(255,255,255,0.88)',
+                  lineHeight: '1.7',
+                  letterSpacing: '0.25px',
+                }}
+              >
+                Noe ekte.
+              </p>
+              <p
+                style={{
+                  ...typographyToStyle('body'),
+                  color: 'rgba(255,255,255,0.88)',
+                  lineHeight: '1.7',
+                  letterSpacing: '0.25px',
+                }}
+              >
+                Noe som kan vokse.
+              </p>
+              <p
+                style={{
+                  ...typographyToStyle('body'),
+                  color: 'rgba(255,255,255,0.88)',
+                  lineHeight: '1.7',
+                  letterSpacing: '0.25px',
+                }}
+              >
+                Noe som kan bli til noe.
+              </p>
 
-            <p
-              style={{
-                ...typographyToStyle('body-lg'),
-                color: 'rgba(212,175,55,0.9)',
-                fontWeight: 600,
-                fontStyle: 'italic',
-              }}
-            >
-              Tosom er ikke en app. Det er en prosess. En reise. Et rom hvor to mennesker kan møtes på ordentlig.
-            </p>
+              <p
+                style={{
+                  ...typographyToStyle('body'),
+                  color: 'rgba(212,175,55,0.9)',
+                  fontWeight: 600,
+                  fontStyle: 'italic',
+                }}
+              >
+                Tosom er ikke en app. Det er en prosess. En reise. Et rom hvor to mennesker kan møtes på ordentlig.
+              </p>
+            </GlassCard>
           </div>
         </ToSomSection>
 

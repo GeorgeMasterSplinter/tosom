@@ -190,7 +190,7 @@ export default function TrygghetPage() {
 
       <div className="relative z-10">
         {/* ===== HERO ===== */}
-        <ToSomSection spotlight="blue" className="px-6 text-center space-y-6">
+        <ToSomSection spotlight="blue" className="px-6 text-center space-y-6 flex flex-col justify-center min-h-[75vh]">
           <h1 style={{ ...typographyToStyle('hero'), color: color.text.primary }}>
             Trygghet
           </h1>

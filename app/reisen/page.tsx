@@ -132,7 +132,7 @@ export default function ReisenPage() {
       <div className="relative z-10">
 
         {/* ===== HERO ===== */}
-        <section className="px-6 mt-32 mb-24 md:mt-48 md:mb-32 text-center">
+        <section className="px-6 pt-28 pb-16 text-center min-h-[75vh] flex flex-col justify-center">
           <div className="mx-auto max-w-[780px] space-y-6">
             <h1
               style={{

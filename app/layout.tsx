@@ -3,6 +3,7 @@ import "@/styles/animated.css";
 import { Inter } from "next/font/google";
 import { AnalyticsProvider } from "@/components/analytics/AnalyticsProvider";
 import { UniversalMenu } from '@/components/layout/UniversalMenu';
+import { ScrollAffordance } from '@/components/ui/feedback/ScrollAffordance';
 import { ContentWrapper } from '@/components/layout/ContentWrapper';
 import { SentryErrorBoundary } from "@/components/system/SentryErrorBoundary";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -122,6 +123,7 @@ export default function RootLayout({
         <SentryErrorBoundary>
           <AnalyticsProvider />
           <UniversalMenu />
+          <ScrollAffordance />
           <ContentWrapper>{children}</ContentWrapper>
         </SentryErrorBoundary>
         <SpeedInsights />

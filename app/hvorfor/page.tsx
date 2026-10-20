@@ -100,7 +100,7 @@ export default function HvorforPage() {
       <div className="relative z-10">
 
         {/* ===== HERO ===== */}
-        <section className="px-6 py-16 md:py-24 text-center">
+        <section className="px-6 pt-24 pb-16 text-center min-h-[75vh] flex flex-col justify-center">
           <div
             className="mx-auto max-w-[780px] rounded-[28px] p-10 md:p-14 space-y-6"
             style={{

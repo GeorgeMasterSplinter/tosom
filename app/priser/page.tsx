@@ -75,7 +75,7 @@ export default function PriserPage() {
         {/* ===== HERO ===== */}
         <ToSomSection
           spotlight="blue-strong"
-          className="px-6 text-center space-y-6"
+          className="px-6 text-center space-y-6 flex flex-col justify-center min-h-[75vh]"
         >
           <h1
             style={{

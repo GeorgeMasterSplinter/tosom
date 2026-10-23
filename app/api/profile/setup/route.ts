@@ -119,6 +119,16 @@ async function postHandler(req: NextRequest) {
     // Ukjent postnummer / postboks-kode uten geometri → null (håndteres i B1.4).
     const geo = lookupPostalCode(basic.postalCode);
 
+    // Phase 1.5: 'OPEN_TO_ALL' er en UI-sentinel. OnboardingFlow mapper den til
+    // religionOpen før sending — dette er forsvar i dybden: dersom en gammel/
+    // feil klient likevel sender sentinelen som lagringsverdi, normaliserer vi
+    // den til det eksplisitte religionOpen-flagget (tom liste + flagg).
+    const rawAccepted = typeof basic.acceptedReligions === 'string' ? basic.acceptedReligions : '';
+    const acceptedParts = rawAccepted.split(',').map((s) => s.trim()).filter(Boolean);
+    const hasOpenSentinel = acceptedParts.includes('OPEN_TO_ALL');
+    const acceptedReligions = acceptedParts.filter((s) => s !== 'OPEN_TO_ALL').join(',');
+    const religionOpen = basic.religionOpen === true || hasOpenSentinel;
+
     // BUG 1 ROBUSTHET: De tre skrivingane (profil-upsert, draft-rydding,
     // user-flagg) ligg i éin atomisk transaksjon — all-eller-ingenting.
     // Tidlegare kunne en feil midt i sekvensen la att delvis tilstand
@@ -227,7 +237,8 @@ async function postHandler(req: NextRequest) {
           agePrefMin: basic.agePrefMin,
           agePrefMax: basic.agePrefMax,
           religion: basic.religion,
-          politicsImportance: preferanser?.politicsImportance,
+          acceptedReligions: acceptedReligions,
+          religionOpen: religionOpen || undefined,
           religionImportance: preferanser?.religionImportance,
           dietPreference: preferanser?.dietPreference,
           sleepSchedule: preferanser?.sleepSchedule,
@@ -345,7 +356,8 @@ async function postHandler(req: NextRequest) {
           agePrefMin: basic.agePrefMin,
           agePrefMax: basic.agePrefMax,
           religion: basic.religion,
-          politicsImportance: preferanser?.politicsImportance,
+          acceptedReligions: acceptedReligions,
+          religionOpen: religionOpen || undefined,
           religionImportance: preferanser?.religionImportance,
           dietPreference: preferanser?.dietPreference,
           sleepSchedule: preferanser?.sleepSchedule,

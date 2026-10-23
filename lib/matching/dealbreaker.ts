@@ -481,6 +481,94 @@ function checkLifestyle2026(a: ProfileData, b: ProfileData): DealbreakerResult {
   return { hasDealbreaker: false };
 }
 
+/* ─────────────────────────────────────────────────────────────
+   RELIGION / LIVSSYN (Lansering — hard, brukerdefinert kompatibilitet)
+   ───────────────────────────────────────────────────────────── */
+
+/**
+ * Religion/livssyn er en HARD, brukerdefinert kompatibilitetsregel.
+ *
+ * Tosom avgjør IKKE at to religioner/livssyn er inkompatible — det gjør
+ * BRUKEREN via sin eksplisitte akseptliste (opptil 4). Regelen er gjensidig:
+ *   A aksepterer B  ⇔  A.acceptedReligions ∩ B.religion ≠ ∅
+ *   B aksepterer A  ⇔  B.acceptedReligions ∩ A.religion ≠ ∅
+ *   RELIGION_COMPATIBLE = (A aksepterer B) OG (B aksepterer A)
+ *
+ * Data (i deepProfileData — religion/acceptedReligions kommaseparert, samme
+ * representasjon som eksisterende «religion»):
+ *   - religion:          brukerens EGEN religion/livssyn (opptil 4)
+ *   - acceptedReligions: religioner/livssyn brukeren er ÅPEN for (opptil 4)
+ *   - religionOpen:      boolean — OPEN TO ALL (Phase 1.5): religion/livssyn
+ *                        skal ikke begrense hvem brukeren kan møte
+ *
+ * Trygg håndtering av manglende data (mønsteret i hele filen, f.eks. D-1
+ * «mangler høyde blokkerer aldri»):
+ *   - Accepter uten eksplisitt akseptliste (legacy/ikke svart) → ingen
+ *     religion-begrensning → blokkerer IKKE. Vi gjetter ikke brukerens ønsker.
+ *   - Target uten egen religion (legacy/ikke svart) → begrensningen kan ikke
+ *     evalueres → blokkerer IKKE.
+ *
+ * Tre teknisk distinkte tilstander for accepterende side (Phase 1.5):
+ *   - MISSING:     verken religionOpen eller acceptedReligions (legacy/ikke
+ *                  svart) → ingen begrensning. MISSING er IKKE «åpen for
+ *                  alle» — de skiller seg ved om religionOpen-feltet eksisterer.
+ *   - OPEN TO ALL: religionOpen === true → aksepterer uansett religion.
+ *   - VALG:        acceptedReligions (1–4) → snitt med target sin egen religion.
+ * En høy resonansscore kan aldri overstyre dette: sjekken kjører som
+ * dealbreaker FØR scoring.
+ */
+
+/** Parse en kommaseparert religionsstreng til en rentet, ikke-tom liste. */
+export function parseReligionList(raw: unknown): string[] {
+  if (typeof raw !== 'string' || raw.trim() === '') return [];
+  return raw.split(',').map((s) => s.trim()).filter((s) => s !== '');
+}
+
+/** Normaliser én religion-verdi til en sammenliknbart nøkkel (versal/blank-tolerant). */
+export function religionKey(v: string): string {
+  return v.trim().toLowerCase();
+}
+
+/**
+ * Éin felles årsak-strenge, slik at dealbreaker.ts og cheapFeatures.ts aldri
+ * divergerer (ekvivalens-testen krever byte-identiske reason-strenger).
+ */
+export function religionReason(accepterId: string, targetId: string, targetOwn: string[]): string {
+  return `Religion/livssyn: ${accepterId} er ikke åpen for religionen/livssynet til ${targetId} (${targetOwn.join(' / ')})`;
+}
+
+/**
+ * Éin retning: dekker `accepter` sin eksplisitte akseptliste minst én av
+ * `target` sin egen religion/livssyn? Returnerer reason dersom NEI.
+ * Manglende akseptliste eller manglende egen religion → null (blokkerer ikke).
+ */
+function checkReligionOneWay(accepter: ProfileData, target: ProfileData): string | null {
+  const dp = accepter.deepProfileData ?? null;
+  // OPEN TO ALL: brukeren har eksplisitt sagt at religion/livssyn ikke skal
+  // begrense hvem vedkommende kan møte → aksepterer uansett religion.
+  // (Teknisk distinkt fra MISSING: her er religionOpen eksplisitt true.)
+  if (dp?.religionOpen === true) return null;
+  const accepted = parseReligionList(dp?.acceptedReligions);
+  // MISSING (legacy/ikke svart) → ingen religion-begrensning
+  if (accepted.length === 0) return null;
+  const own = parseReligionList(target.deepProfileData?.religion);
+  // Target sin egen religion ukjent → kan ikke evaluere begrensinga
+  if (own.length === 0) return null;
+
+  const acceptedKeys = new Set(accepted.map(religionKey));
+  for (const r of own) {
+    if (acceptedKeys.has(religionKey(r))) return null; // minst éin snitt → akseptert
+  }
+  return religionReason(accepter.userId, target.userId, own);
+}
+
+function checkReligionCompat(a: ProfileData, b: ProfileData): DealbreakerResult {
+  // TOSIDIG: begge parters eksplisitte akseptlister må dekkje den andres religion
+  const reason = checkReligionOneWay(a, b) ?? checkReligionOneWay(b, a);
+  if (reason) return { hasDealbreaker: true, reason };
+  return { hasDealbreaker: false };
+}
+
 /**
  * sjekkAlleDealbreakers — hovedfunksjon som kjører alle dealbreaker-testene.
  * Returnerer resultatet av den første dealbreaker som blir funnet.
@@ -523,6 +611,11 @@ export function sjekkAlleDealbreakers(
   
   // 9. Radius — B1.4: aktiv preferanse, tosidig blokkering
   result = checkRadius(queryUser, candidate);
+  if (result.hasDealbreaker) return result;
+
+  // 10. Religion/livssyn — gjensidig HARD kompatibilitet (brukerdefinert
+  //     akseptliste). Kjører FØR scoring: en høy score kan aldri overstyre.
+  result = checkReligionCompat(queryUser, candidate);
   if (result.hasDealbreaker) return result;
 
   // PL-10 (V-1): modenhets-gap og sikkerhetsnivå-gap er fjernet (syntetiske

@@ -55,6 +55,9 @@ export const basicProfileSchema = z
     lifestyle: optStr(),
     smoking: optStr(),
     religion: optStr(),
+    acceptedReligions: optStr(),
+    // Phase 1.5: OPEN TO ALL som eksplisitt tilstand (teknisk distinkt fra tom/manglende)
+    religionOpen: z.boolean().optional(),
     children: optStr(),
     wantChildren: optStr(),
     city: z.string().min(1, 'Hvor bor du?').max(100),
@@ -71,6 +74,25 @@ export const basicProfileSchema = z
         code: z.ZodIssueCode.custom,
         path: ['religion'],
         message: 'Du kan velge opptil fire under religion og livssyn.',
+      });
+    }
+    // Lansering: aksepterte religioner/livssyn — opptil fire valg (hard kompatibilitet)
+    if (val.acceptedReligions && val.acceptedReligions.split(',').map((s) => s.trim()).filter(Boolean).length > 4) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['acceptedReligions'],
+        message: 'Du kan velge opptil fire religioner eller livssyn du er åpen for.',
+      });
+    }
+    // «Åpen for alle» er eksklusivt — det er en egen tilstand, ikke et femte valg
+    const acceptedParts = val.acceptedReligions
+      ? val.acceptedReligions.split(',').map((s) => s.trim()).filter(Boolean)
+      : [];
+    if (acceptedParts.includes('OPEN_TO_ALL') && acceptedParts.length > 1) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['acceptedReligions'],
+        message: '«Åpen for alle» velges alene — ikke sammen med konkrete religioner.',
       });
     }
     // D-4 (PL-12): ukjent postnummer → avvis (klienten sjekker også, Step1)

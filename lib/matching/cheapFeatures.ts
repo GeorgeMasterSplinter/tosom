@@ -29,6 +29,9 @@ import {
   HEIGHT_GAP_CM,
   LIVSSTIL2026_KOMPAT,
   type Livsstil2026Data,
+  parseReligionList,
+  religionKey,
+  religionReason,
 } from './dealbreaker';
 
 /** Prekalkulerte felt per kandidat — alt som de dyre sjekkane treng. */
@@ -62,6 +65,11 @@ export interface CheapFeatures {
   lat: number | null;
   lon: number | null;
   distancePref: number | null;
+  // Lansering: religion/livssyn — hard kompatibilitet (brukerdefinert akseptliste)
+  religionOwn: string[];             // sin egen religion (target-side, for reason + snitt)
+  religionOwnKeys: Set<string>;      // sin egen religion som nøkler
+  religionAcceptedKeys: Set<string>; // sin akseptliste som nøkler (tom = ingen begrensning)
+  religionOpen: boolean;             // OPEN TO ALL (Phase 1.5) — eksplisitt, ikke MISSING
   // PL-10 (V-1): maturity/securityRaw/securityNum fjerna — sjekkane er inaktive
 }
 
@@ -80,6 +88,11 @@ export function buildCheapFeatures(profile: ProfileData): CheapFeatures {
       ? (lifeSituation.gender as string)
       : null;
   const a = profile.boundaries as { excludes?: unknown; includes?: unknown } | null;
+
+  // Lansering: religion/livssyn — prekalkuler egen religion + akseptliste en gang per kandidat.
+  const dp = profile.deepProfileData ?? null;
+  const religionOwn = parseReligionList(dp?.religion);
+  const religionAccepted = parseReligionList(dp?.acceptedReligions);
 
   return {
     userId: profile.userId,
@@ -113,6 +126,10 @@ export function buildCheapFeatures(profile: ProfileData): CheapFeatures {
     lat: profile.latitude ?? null,
     lon: profile.longitude ?? null,
     distancePref: profile.distancePref ?? null,
+    religionOwn,
+    religionOwnKeys: new Set(religionOwn.map(religionKey)),
+    religionAcceptedKeys: new Set(religionAccepted.map(religionKey)),
+    religionOpen: dp?.religionOpen === true,
   };
 }
 
@@ -281,6 +298,21 @@ function radiusCheck(a: CheapFeatures, b: CheapFeatures): string | null {
 }
 
 /**
+ * Lansering: religion/livssyn — samme semantikk og reason-strenge som
+ * checkReligionOneWay i dealbreaker.ts. Én retning: dekker `accepter` sin
+ * akseptliste `target` sin egen religion? Manglende akseptliste/egen religion → null.
+ */
+function religionOneWay(accepter: CheapFeatures, target: CheapFeatures): string | null {
+  if (accepter.religionOpen) return null;                      // OPEN TO ALL
+  if (accepter.religionAcceptedKeys.size === 0) return null;   // MISSING — ingen akseptliste
+  if (target.religionOwnKeys.size === 0) return null;          // egen religion ukjent
+  for (const k of target.religionOwnKeys) {
+    if (accepter.religionAcceptedKeys.has(k)) return null;   // minst éin felles → akseptert
+  }
+  return religionReason(accepter.userId, target.userId, target.religionOwn);
+}
+
+/**
  * Hovudfunksjon: reproduserer
  *   sjekkAlleDealbreakers(A, B).reason ?? sjekkAlleDealbreakers(B, A).reason
  * med prekalkulat data — ingen normalisering per par.
@@ -290,8 +322,10 @@ function radiusCheck(a: CheapFeatures, b: CheapFeatures): string | null {
  *   4. høyde (LIVSSTIL-2026, D-1, symmetrisk)
  *   5. livsstil 2026 (LIVSSTIL-2026, D-4, symmetrisk)
  *   6. livsrytme A→B        7. preferansar A→B      8. grenser A→B
- *   9. radius (bilkreftig)  10. livsrytme B→A
- *   11. preferansar B→A     12. grenser B→A
+ *   9. radius (bilkreftig)
+ *   10. religion A→B/B→A   (Lansering — gjensidig hard regel. I full logikk er
+ *                           religion del av A→B-kjøret, FØR B→A-retteta sjekkar.)
+ *   11. livsrytme B→A       12. preferansar B→A     13. grenser B→A
  *
  * (PL-10: modenheit og sikkerheit er fjerna frå rekkjefølgja.)
  *
@@ -308,6 +342,8 @@ export function cheapSjekkAll(a: CheapFeatures, b: CheapFeatures): string | null
     explicitPrefsOneWay(a, b) ??
     boundariesOneWay(a, b) ??
     radiusCheck(a, b) ??
+    religionOneWay(a, b) ??
+    religionOneWay(b, a) ??
     lifeRhythmOneWay(b, a) ??
     explicitPrefsOneWay(b, a) ??
     boundariesOneWay(b, a)

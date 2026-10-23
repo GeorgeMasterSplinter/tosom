@@ -18,6 +18,7 @@ import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { lookupPostalCode, suggestNearbyPostalCodes } from '@/lib/geo/lookup';
 import { getDistancePrefRange } from '@/config/distance-prefs';
 import { MIN_AGE } from '@/config/legal';
+import { getReligionSelfAcceptHint } from '@/lib/onboarding/religionSelfAccept';
 import { OB } from '@/app/onboarding/theme';
 
 interface Props {
@@ -386,21 +387,8 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             minChars={0}
           />
 
-          <OnboardingSelectGrid
-            label="Kroppstype"
-            mikroguiding="Velg det som passer best for deg"
-            options={[
-              { value: 'Slank', label: 'Slank', icon: '🏃' },
-              { value: 'Gjennomsnittlig', label: 'Gjennomsnittlig', icon: '🧍' },
-              { value: 'Atletisk', label: 'Atletisk', icon: '💪' },
-              { value: 'Kraftig', label: 'Kraftig', icon: '🏋️' },
-              { value: 'Myk', label: 'Myk', icon: '🌸' },
-            ]}
-            selectedValue={val('bodyType', '')(data)}
-            onChange={(v) => onChange('bodyType', v)}
-            accentColor={OB.section.lifestyle}
-          />
-
+          {/* Kroppsform/bodyType er tatt ut av aktiv innsamling (lansering).
+              Gammel data beholdes i DB — se docs/LanseringsCheckList.md (Fase 1B). */}
           {/* Divider — nøytral */}
           <div style={{ borderTop: `1px solid ${OB.divider}`, margin: '16px 0' }} />
 
@@ -441,7 +429,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
 
           <OnboardingSelectGrid
             label="Religion / livssyn"
-            mikroguiding="Velg opptil fire som beskriver deg. Mange har røtter i flere tradisjoner — det er helt naturlig. Ulik tro gjør ikke en match mindre aktuell."
+            mikroguiding="Velg opptil fire som beskriver deg. Mange har røtter i flere tradisjoner — det er helt naturlig."
             options={[
               { value: 'Kristen', label: 'Kristen', icon: '✝️' },
               { value: 'Katolsk', label: 'Katolsk', icon: '⛪' },
@@ -460,6 +448,70 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             maxSelected={4}
             accentColor={OB.section.lifestyle}
           />
+
+          <div style={{ borderTop: `1px solid ${OB.divider}`, margin: '16px 0' }} />
+
+          <OnboardingSelectGrid
+            label="Hvilke religioner/livssyn er du åpen for hos en partner?"
+            mikroguiding="Velg opptil fire religioner eller livssyn du er åpen for hos en partner. Det er du — ikke Tosom — som bestemmer hva som passer for deg. Jo færre du velger, desto færre mulige matcher kan vi finne."
+            options={[
+              { value: 'Kristen', label: 'Kristen', icon: '✝️' },
+              { value: 'Katolsk', label: 'Katolsk', icon: '⛪' },
+              { value: 'Agnostiker', label: 'Agnostiker', icon: '?' },
+              { value: 'Ateist', label: 'Ateist', icon: '🔬' },
+              { value: 'Muslim', label: 'Muslim', icon: '☪️' },
+              { value: 'Jehovas-vitne', label: 'Jehovas vitne', icon: '🔯' },
+              { value: 'Hindu', label: 'Hindu', icon: '🕉️' },
+              { value: 'Judedom', label: 'Jødedom', icon: '✡️' },
+              { value: 'Buddhist', label: 'Buddhist', icon: '☯️' },
+              { value: 'Spirituell', label: 'Spirituell', icon: '🌙' },
+              { value: 'Annet', label: 'Annet', icon: '✨' },
+              {
+                value: 'OPEN_TO_ALL',
+                label: 'Åpen for alle religioner og livssyn',
+                icon: '🌍',
+                description: 'Religion eller livssyn avgjør ikke hvem jeg er åpen for.',
+              },
+            ]}
+            selectedValue={
+              val('religionOpen', '')(data) === '1' ? 'OPEN_TO_ALL' : val('acceptedReligions', '')(data)
+            }
+            onChange={(v) => {
+              // «Åpen for alle» er eksklusiv: å velge den fjerner konkrete valg,
+              // og å velge en konkret religion fjerner «Åpen for alle».
+              if (v === 'OPEN_TO_ALL') {
+                onChange('acceptedReligions', '');
+                onChange('religionOpen', '1');
+                return;
+              }
+              const parts = v.split(',').map((s) => s.trim()).filter((s) => s !== '' && s !== 'OPEN_TO_ALL');
+              onChange('acceptedReligions', parts.join(','));
+              onChange('religionOpen', '');
+            }}
+            maxSelected={4}
+            accentColor={OB.section.lifestyle}
+          />
+
+          {/* R-12 UX-hjelp (Phase 1.5): rolig informasjon hvis egen religion/livssyn
+              mangler i akseptlisten. Ikke en feil, ikke obligatorisk, ikke valgt
+              automatisk — brukerens valg beholdes. Vises ikke når «Åpen for alle»
+              er valgt eller når akseptlisten ikke er svart. */}
+          {(() => {
+            const hint = getReligionSelfAcceptHint({
+              religion: val('religion', '')(data),
+              acceptedReligions: val('acceptedReligions', '')(data),
+              religionOpen: val('religionOpen', '')(data) === '1',
+            });
+            if (!hint) return null;
+            return (
+              <p
+                className="text-[13px] leading-relaxed"
+                style={{ color: OB.textMuted, margin: 0 }}
+              >
+                ℹ️ {hint}
+              </p>
+            );
+          })()}
 
           <div style={{ borderTop: `1px solid ${OB.divider}`, margin: '16px 0' }} />
 

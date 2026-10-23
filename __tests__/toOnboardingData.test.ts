@@ -68,6 +68,7 @@ describe('toOnboardingData — full round-trip av persistert data', () => {
     psychometricAnswers: { bfi1: 4, att_a1: 2, bfi2: '3', att_a2: 0, bfi3: 6 },
     deepProfileData: {
       distancePref: 80, agePrefMin: 28, agePrefMax: 42, religion: 'spirituell',
+      acceptedReligions: 'Kristen,Muslim',
       politicsImportance: 6, religionImportance: 4, dietPreference: 'vegetar',
       sleepSchedule: 'natt', pets: 'katt', travelFreq: 'sjelden',
       alcoholFreq: 'aldri', ambitionLevel: 'høy', structureSpontaneity: 'struktur',
@@ -139,7 +140,10 @@ describe('toOnboardingData — full round-trip av persistert data', () => {
     expect(data.agePrefMin).toBe(28);
     expect(data.agePrefMax).toBe(42);
     expect(data.religion).toBe('spirituell');
-    expect(data.politicsImportance).toBe(6);
+    expect(data.acceptedReligions).toBe('Kristen,Muslim'); // Lansering: akseptliste pre-fylles
+    expect(data.religionImportance).toBeUndefined(); // Fase 1C: ikke lenger pre-fylt
+    expect(data.religionOpen).toBeUndefined(); // Phase 1.5: MISSING — IKKE «åpen for alle»
+    expect(data.politicsImportance).toBeUndefined(); // Phase 1.5: dødt felt, ikke pre-fylt
     expect(data.structureSpontaneity).toBe('struktur');
     expect(data.introExtrovert).toBe('introvert');
     expect(data.relationshipSeeking).toBe('rolig påbygd');
@@ -276,5 +280,20 @@ describe('toOnboardingData — livsstil2026 (D-2) fra preferences-kolonnen', () 
     expect(data.kosthold).toBeUndefined();
     expect(data.klima).toBeUndefined();
     expect(data.aktivitet).toBeUndefined();
+  });
+});
+
+describe('Phase 1.5 — OPEN TO ALL-serialisering (R-17)', () => {
+  it('mappar religionOpen: true til eksplisitt OPEN TO ALL-tilstand', () => {
+    const { data } = toOnboardingData(
+      makeProfile({ deepProfileData: { religionOpen: true, religion: 'Muslim' } }),
+      true
+    );
+    expect(data.religionOpen).toBe('1');
+  });
+
+  it('legacy uten religionOpen pre-fylles ikke — aldri som OPEN TO ALL', () => {
+    const { data } = toOnboardingData(makeProfile({}), true);
+    expect(data.religionOpen).toBeUndefined();
   });
 });

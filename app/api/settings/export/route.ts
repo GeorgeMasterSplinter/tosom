@@ -100,6 +100,10 @@ export async function GET(req: NextRequest) {
           verified: true,
           createdAt: true,
           termsAcceptedAt: true,
+          // Phase 1.5 (export-audit): samtykker er brukerens egne behandlingsgrunnlag —
+          // art. 9-samtykket må med i uttrekket (teknisk utelatelse i Phase 1).
+          sensitiveConsentAt: true,
+          withdrawalWaiverAt: true,
         },
       }),
       prisma.profile.findUnique({ where: { userId } }),
@@ -148,6 +152,10 @@ export async function GET(req: NextRequest) {
         'Identitet verifisert': user?.verified ?? false,
         'Medlem siden': iso(user?.createdAt),
         'Vilkår godkjent': iso(user?.termsAcceptedAt),
+        // Phase 1.5 (export-audit): art. 9-samtykke (særlige kategorier) og
+        // angrerett-samtykke — brukeropplysninger som manglet ved teknisk utelatelse.
+        'Samtykke til særlige kategorier (art. 9)': iso(user?.sensitiveConsentAt),
+        'Angrerett-samtykke': iso(user?.withdrawalWaiverAt),
       },
 
       Profil: profile
@@ -178,6 +186,11 @@ export async function GET(req: NextRequest) {
         : null,
 
       Preferanser: profile?.preferences ?? null,
+
+      // Phase 1.5 (export-audit): egen dypprofil — religion/livssyn, akseptliste,
+      // OPEN TO ALL, alders-/avstandspreferanser osv. Kun brukerens egne data
+      // (hentet via profile.findUnique med userId) — ingen andre brukeres data.
+      'Dypprofil': profile?.deepProfileData ?? null,
 
       Reiser: journeys.map((j) => ({
         'Fase': phaseLabels[j.phase] || j.phase,

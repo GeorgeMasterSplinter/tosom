@@ -50,6 +50,8 @@ interface ProfileData extends Record<string, unknown> {
   lifestyle: string;
   smoking: string;
   religion: string;
+  acceptedReligions: string;
+  religionOpen: string;
   children: string;
   wantChildren: string;
   city: string;
@@ -63,8 +65,6 @@ interface ProfileData extends Record<string, unknown> {
   minAge: number;
   maxAge: number;
   location: string;
-  politicsImportance: number;
-  religionImportance: number;
   dietPreference: string;
   sleepSchedule: string;
   pets: string;
@@ -156,10 +156,10 @@ interface ProfileData extends Record<string, unknown> {
 
 const initialData: ProfileData = {
   identityName: '', age: '', gender: '', seekingGender: '', height: '',
-  bodyType: '', lifestyle: '', smoking: '', religion: '', children: '',
+  bodyType: '', lifestyle: '', smoking: '', religion: '', acceptedReligions: '', religionOpen: '', children: '',
   wantChildren: '', city: '', distancePref: 50, agePrefMin: 21, agePrefMax: 40,
   firstName: '', seeking: '', maxDistance: 50, minAge: 21, maxAge: 40, location: '',
-  politicsImportance: 5, religionImportance: 5, dietPreference: '',
+  dietPreference: '',
   sleepSchedule: '', pets: '', travelFreq: '', alcoholFreq: '',
   ambitionLevel: '', structureSpontaneity: '', introExtrovert: '',
   attachmentStyle: '',
@@ -623,6 +623,10 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
           identityName: data.identityName, age: data.age, gender: data.gender,
           seekingGender: data.seekingGender, height: data.height, bodyType: data.bodyType,
           lifestyle: data.lifestyle, smoking: data.smoking, religion: data.religion,
+          // Phase 1.5: «Åpen for alle» er en eksklusiv UI-tilstand som mappes til
+          // en eksplisitt religionOpen-bølean (teknisk distinkt fra tom liste).
+          acceptedReligions: data.acceptedReligions === 'OPEN_TO_ALL' ? '' : data.acceptedReligions,
+          religionOpen: data.acceptedReligions === 'OPEN_TO_ALL',
           children: data.children, wantChildren: data.wantChildren, city: data.city,
           // FIX: postalCode kreves av basicProfileSchema (lib/validation/onboarding-setup.ts)
           // men ble aldri sendt — ga 400 på /api/profile/setup hver gang.
@@ -676,7 +680,6 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
           nearerType: data.nearerType, needsTime: data.needsTime,
         },
         preferanser: {
-          politicsImportance: data.politicsImportance, religionImportance: data.religionImportance,
           dietPreference: data.dietPreference, sleepSchedule: data.sleepSchedule, pets: data.pets,
           travelFreq: data.travelFreq, alcoholFreq: data.alcoholFreq, ambitionLevel: data.ambitionLevel,
           structureSpontaneity: data.structureSpontaneity, introExtrovert: data.introExtrovert,

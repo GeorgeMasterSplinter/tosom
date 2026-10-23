@@ -117,6 +117,12 @@ describe('cheapSjekkAll ≡ sjekkAlleDealbreakers(A,B) ?? (B,A)', () => {
     ['ambivalent', mkProfile({ securityLevel: 'ambivalent' })],
     ['ukomfortabel', mkProfile({ securityLevel: 'ukomfortabel' })],
     ['ukjent sikkerheit', mkProfile({ securityLevel: 'xyz' })],
+    // Religion/livssyn (Lansering — gjensidig hard kompatibilitet)
+    ['religion: kristen, aksepterer muslim', mkProfile({ deepProfileData: { religion: 'Kristen', acceptedReligions: 'Muslim' } })],
+    ['religion: muslim, aksepterer kristen', mkProfile({ deepProfileData: { religion: 'Muslim', acceptedReligions: 'Kristen' } })],
+    ['religion: muslim, aksepterer bare ateist', mkProfile({ deepProfileData: { religion: 'Muslim', acceptedReligions: 'Ateist' } })],
+    ['religion: legacy uten akseptliste', mkProfile({ deepProfileData: { religion: 'Kristen' } })],
+    ['religion: bare akseptliste (ingen egen)', mkProfile({ deepProfileData: { acceptedReligions: 'Muslim' } })],
   ];
 
   test('same reason-streng for alle par i matrisa', () => {
@@ -235,12 +241,17 @@ function randomProfile(rng: () => number, idx: number): ProfileData {
     securityLevel: pick(RANDOM_SECURITY),
     preferences: rng() < 0.3 ? { dealbreakers: [pick(TAG_POOL)] } : null,
     matchTags: tags,
-    deepProfileData: hasPref
-      ? {
-          agePrefMin: rng() < 0.5 ? Math.floor(18 + rng() * 30) : undefined,
-          agePrefMax: rng() < 0.5 ? Math.floor(40 + rng() * 40) : undefined,
-        }
-      : null,
+    deepProfileData: {
+      ...(hasPref
+        ? {
+            agePrefMin: rng() < 0.5 ? Math.floor(18 + rng() * 30) : undefined,
+            agePrefMax: rng() < 0.5 ? Math.floor(40 + rng() * 40) : undefined,
+          }
+        : {}),
+      religion: rng() < 0.5 ? pick(RANDOM_RELIGIONS) : undefined,
+      acceptedReligions:
+        rng() < 0.5 ? `${pick(RANDOM_RELIGIONS)}${rng() < 0.3 ? ',' + pick(RANDOM_RELIGIONS) : ''}` : undefined,
+    },
     latitude: lat,
     longitude: lat != null ? lon : null,
     distancePref: rng() < 0.4 ? Math.floor(10 + rng() * 490) : null,
@@ -253,6 +264,7 @@ const RANDOM_RHYTHMS = ['morning', 'evening', 'fast', 'slow', 'nattergal', null]
 const RANDOM_SECURITY = ['secure', 'sikker', 'trygg', 'ambivalent', 'ambivalert', 'usikker', 'unsicher', 'ukomfortabel', 'xyz', null];
 const TAG_POOL = ['smoking', 'natur', 'gaming', 'vegan', 'musikk'];
 const RANDOM_WANT_CHILDREN = ['Ja', 'Nei', 'Usikker', 'Ja,Usikker', 'Nei,Bonusfamilie', 'Bonusfamilie', 'Usikker,Bonusfamilie', null];
+const RANDOM_RELIGIONS = ['Kristen', 'Muslim', 'Agnostiker', 'Ateist', 'Spirituell'];
 
 describe('egenskapstest: seeda tilfeldige profiler', () => {
   test('4000 tilfeldige par: same reason som den gamle logikken', () => {
@@ -341,14 +353,15 @@ describe('scoreRound (ren kjerne)', () => {
     expect(r.deadlineHit).toBe(true);
   });
 
-  test('rejectReasons startar med alle 15 M-12-nøklar på 0 (PL-11 la til «barn», LIVSSTIL-2026 la til «hoyde»+«livsstil2026»)', () => {
+  test('rejectReasons startar med alle 16 M-12-nøklar på 0 (Lansering la til «religion»)', () => {
     const r0 = emptyRejectReasons();
     expect(r0['scoring_feil']).toBe(0);
     expect(r0['sikkerhetsniva']).toBe(0);
     expect(r0['barn']).toBe(0);
     expect(r0['hoyde']).toBe(0);
     expect(r0['livsstil2026']).toBe(0);
-    expect(Object.keys(r0)).toHaveLength(15);
+    expect(r0['religion']).toBe(0);
+    expect(Object.keys(r0)).toHaveLength(16);
   });
 });
 

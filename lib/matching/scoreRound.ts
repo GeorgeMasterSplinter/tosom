@@ -79,6 +79,8 @@ export const REJECT_REASON_KEYS = [
   // LIVSSTIL-2026 (18.10, D-1/D-4): nye avvisningsklasser — lagt til sist
   'hoyde',
   'livsstil2026',
+  // Lansering: religion/livssyn — gjensidig hard kompatibilitet — lagt til sist
+  'religion',
 ] as const;
 
 export function emptyRejectReasons(): Record<string, number> {

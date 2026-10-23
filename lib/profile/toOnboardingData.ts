@@ -145,8 +145,15 @@ export function toOnboardingData(
   put('agePrefMin', toNum(dp?.agePrefMin));
   put('agePrefMax', toNum(dp?.agePrefMax));
   put('religion', toStr(dp?.religion));
-  put('politicsImportance', toNum(dp?.politicsImportance));
-  put('religionImportance', toNum(dp?.religionImportance));
+  // Lansering: akseptliste (hard kompatibilitet) — pre-fyller for re-inngang
+  put('acceptedReligions', toStr(dp?.acceptedReligions));
+  // Phase 1.5: OPEN TO ALL — pre-fylles som egen eksplisitt tilstand (ikke som tom liste).
+  // Manglende religionOpen → pre-fylles IKKE (put hopper over undefined): MISSING ≠ OPEN.
+  put('religionOpen', dp?.religionOpen === true ? '1' : undefined);
+  // religionImportance fjernet fra aktiv innsamling (lansering, Fase 1C): overflødig
+  // nå som akseptlisten er hard constraint. Ingen destruktiv DB-rydding (Fase 1C).
+  // politicsImportance fjernet fra aktiv innsamling (Phase 1.5): dokumentert dødt felt
+  // (spørres ikke, vises ikke, påvirker ikke matching). Gammel data håndteres.
   put('dietPreference', toStr(dp?.dietPreference));
   put('sleepSchedule', toStr(dp?.sleepSchedule));
   put('pets', toStr(dp?.pets));

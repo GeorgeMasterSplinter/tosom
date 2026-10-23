@@ -153,7 +153,6 @@ export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
           <Field label="Søker" value={val('seekingGender')(data)} />
           <Field label="Bosted" value={val('city')(data)} />
           <Field label="Høyde" value={getHeight(data) !== '—' ? `${getHeight(data)} cm` : '—'} showIf />
-          <Field label="Kroppstype" value={val('bodyType')(data)} showIf />
           <Field label="Livsstil" value={fmt('lifestyle')(data)} showIf />
           <Field label="Røyking/snus" value={fmt('smoking')(data)} showIf />
           <Field label="Barn" value={fmt('children')(data)} showIf />

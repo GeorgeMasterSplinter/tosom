@@ -17,6 +17,8 @@ export function mapRejectReason(reason: string | undefined): string {
   // LIVSSTIL-2026 (18.10, D-1/D-4): to nye avvisningsklasser
   if (reason.startsWith('Høyde')) return 'hoyde';
   if (reason.startsWith('Hverdagsvalg')) return 'livsstil2026';
+  // Lansering: religion/livssyn — gjensidig hard kompatibilitet
+  if (reason.startsWith('Religion/livssyn')) return 'religion';
   if (reason.startsWith('Modenhets-gap')) return 'modenhetsgap';
   if (reason.startsWith('Inkompatibel livsrytme')) return 'livsrytme';
   if (reason.startsWith('Sikkerhetsnivå')) return 'sikkerhetsniva';

@@ -69,9 +69,9 @@ const tipsSections: Array<{
   {
     icon: <IconMatch />,
     title: 'Slik matcher vi deg',
-    intro: 'Én match per uke, valgt ut fra svarene dine. Ikke en liste — en person.',
+    intro: 'Én match om gangen, valgt ut fra svarene dine. Ikke en liste — en person.',
     points: [
-      'Du får én match hver lørdag. Profilen din må være klar før matchrunden for å være med.',
+      'Natt til lørdag forsøker vi å finne deg en match. Profilen din må være klar før matchrunden for å være med — og får du ingen god nok denne gangen, står du i kø til neste runde.',
       'Matchingen bygger på onboarding-svarene dine: verdier, tilknytning, personlighet, kommunikasjon, emosjonsregulering og livssituasjon.',
       'Dealbreakere (barn, modenhetsnivå, avstand) er hardsjekk — da slipper du å møte noen som aldri ville passet.',
       'Ingen liker, ingen swiping, ingen scoringer. En match er et utgangspunkt, ikke en dom — du bestemmer alltid selv.',

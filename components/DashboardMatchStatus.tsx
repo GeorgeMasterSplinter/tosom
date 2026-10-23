@@ -56,7 +56,7 @@ export default function DashboardMatchStatus() {
 
         {status.state === "queue" && (
           <p className="text-neutral-300 leading-relaxed">
-            Du er i venterommet… vi finner en match til deg.
+            Du er i venterommet. Natt til lørdag forsøker vi å finne noen som passer deg.
           </p>
         )}
 

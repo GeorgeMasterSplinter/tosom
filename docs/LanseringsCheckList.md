@@ -989,8 +989,8 @@ Kun read-only-verifisering fra prod (ingen skrive-handlinger mot prod i denne fa
 
 | ID | Kategori | Status | Prioritet | Kort |
 |---|---|---|---|---|
-| TC-01 | Match-lovte vs motor | CONFIRMED | P1 | «Du får én match hver lørdag»-copy uten garanti i motoren |
-| TC-02 | Venterom/betaling | CONFIRMED | P1 | Refund/penges-copy i venterommet i gratis-modus |
+| TC-01 | Match-lovte vs motor | ✅ FIXED (ACT B) | P1 | «Du får én match hver lørdag»-copy omskrevet til forsøks-formulering i 14 filer; ingen aktiv copy garanterer match (MT-01/02/04/10) |
+| TC-02 | Venterom/betaling | ✅ FIXED (ACT B) | P1 | All penges/refund-copy fjernet fra venterommet (aktiv + død kode); copy beskriver faktisk gratis oppførsel (MT-05/06/07). Betalingsmodell/Vipps = fortsatt åpen (TC-03/TC-35) |
 | TC-03 | Vipps/betaling | PARTLY CONFIRMED | P1/PD | Betalingsvei ikke implementert; 402-blindvei ved full kvote; «Vipps» i all copy |
 | TC-04 | Reisen-faser | CONFIRMED | P2 | Reisen-side: «tre faser» vs motor/vilkår/dashboard: «fire faser» |
 | TC-05 | Metoder/blogg | ✅ FIXED (ACT A1) | P0 | Uverifiserte kilder («Fetvedt 2018», «Reisner & McAndrew 2022») fjernet; påstander gjort redaksjonelle; Gottman (1999) verifisert og beholdt |
@@ -1005,7 +1005,7 @@ Kun read-only-verifisering fra prod (ingen skrive-handlinger mot prod i denne fa
 | TC-14 | AI-påstand | VERIFIED CLAIM | — | «Ingen AI» i vilkar stemmer: ingen AI-deps, ingen LLM-kall; openai: not_in_use |
 | TC-15 | Personvern/impl | ✅ PARTIALLY FIXED (ACT A2) | P1 | Copy-gap lukket (personvern lover nå kun den eksisterende slettingsbaserte mekanismen); selvbetjening-trekking = PD-6 + legal verifisering |
 | TC-16 | Cookies/analytics | PARTLY CONFIRMED + EV | P2 | Cookies-side: «bare det nødvendige / deler aldri med tredjeparts-tracking» vs aktiv SpeedInsights; Plausible/Umami = av |
-| TC-17 | FAQ/re-queue | PARTLY CONFIRMED | P3 | FAQ: «begge kommer tilbake i køen» — koden setter begge til IDLE (manuell re-queue) |
+| TC-17 | FAQ/re-queue + tidspunkt | ✅ FIXED (ACT B) | P3 | FAQ «kommer tilbake i køen» → «kan stille seg i køen igjen»; eksakte «04:00»-copy erstattet med «natt til lørdag» (cron-vinduet 02:00–04:00 UTC) |
 | TC-18 | Innholdsteller | CONFIRMED | P2 | Reisen: «12 kategorier med over 240 spørsmål» — faktisk 135 oppgaver i 9 kategorier (FAQ er rett) |
 | TC-19 | Språk | CONFIRMED | P2 | Alle 7 tidligere rapporterte feil fortsatt + nye (oversikt under) |
 | TC-20 | Merkenavn | CONFIRMED | P2 | «ToSom» i FAQ, tilgjengelighet, glemt-passord, settings, e-poster, llms.txt, APP_NAME |
@@ -1021,7 +1021,7 @@ Kun read-only-verifisering fra prod (ingen skrive-handlinger mot prod i denne fa
 | TC-30 | 21+ | NOT CONFIRMED | — | MIN_AGE=21 håndhevet i onboarding; ærlig «bekrefter du alderen selv» i personvern |
 | TC-31 | Personvern-påstander | MOSTLY VERIFIED | — | bcrypt ✓, presigned URLs ✓, Sentry PII-scrub ✓, admin leser ikke sensitive data ✓; gaps = TC-15/TC-16 |
 | TC-32 | Gratis-kohorte/fallback | PRODUCT DECISION | PD | Full kvote → 402 → /betaling uten betalings-UI (se TC-03); prisloftet er avslørt i copy |
-| TC-33 | Venting/likviditet | PARTLY CONFIRMED | P2 | Venterommet er ærlig («ingen god nok match»); offentlig copy lover mer (TC-01); >14 d-alert er kun admin |
+| TC-33 | Venting/likviditet | ✅ FIXED (ACT B) | P2 | Venterom + offentlig copy formidler nå: match ikke garantert, står i kø til neste runde, ingen ventetid-ETA, profil beholdes, utmelding = forlate køen (MT-03/07). P2: langventing >14 d er kun intern observasjon (PRODUCT/OPERATIONS FOLLOW-UP) |
 | TC-34 | Footer/juridisk | NOT CONFIRMED | — | Én COMPANY-konfig, alle public sider renderer Footer; ingen avvik (ingen ©-linje = konsekvent) |
 | TC-35 | Betalingstidspunkt | PRODUCT DECISION + EV | PD | Modell: full refusjon før kobling, ingen etter (vilkår §15 + REFUND-config); config merker «Ikke juridisk bekreftet — må avklares før betaling aktiveres» |
 
@@ -1030,7 +1030,7 @@ Kun read-only-verifisering fra prod (ingen skrive-handlinger mot prod i denne fa
 
 ## TC-Detaljer
 
-### TC-01 — «Én match»-formuleringer vs faktisk matchingmotor — CONFIRMED / P1
+### TC-01 — «Én match»-formuleringer vs faktisk matchingmotor — ✅ FIXED (ACT B, 26.10.2026) / **P1**
 - **Lokasjon:** `app/(landing)/page.tsx:108-109` («Én match i uken / Du får én match — valgt med omtanke»), `app/layout.tsx:13` (metadata: «Én gjennomtenkt match i uken»), `app/tips/page.tsx:74` («Du får én match hver lørdag»), `app/faq/page.tsx:16` («Systemet finner den personen som passer best … matchen din venter på deg når du logger inn»), `public/llms.txt` («mottar du én gjennomtenkt match i uken»), `app/priser/page.tsx:228,237`, `app/onboarding/steps/Step10StartReisen.tsx:51`
 - **Faktisk implementasjon:** `app/api/cron/matching/route.ts` + `lib/matching/scoreRound.ts`: ukentlig runde (cron `0 2,3,4 * * 6`), grådig 1:1-paring sortert på score. Forutsetninger: cohort ≥ `MIN_COHORT_SIZE` (2), `MIN_SCORE` (40), dealbreakers klare, deadline ikke nådd. Uten gyldig gjensidig kompatibel kandidat → ingen match; brukeren står fortsatt i kø. **Tosom forsøker å finne én match når en gyldig kandidat finnes — Tosom garanterer ikke én match hver uke.**
 - **Evidens:** `config/matching.ts` (MIN_COHORT_SIZE=2, MIN_SCORE=40); matching-cron: «Kun ${cohortSize} i kø — runden ble ikke kjørt»; venterom `app/matching/page.tsx:690+` (tilstand 3: «Vi fant ingen god nok match denne runden»)
@@ -1039,12 +1039,67 @@ Kun read-only-verifisering fra prod (ingen skrive-handlinger mot prod i denne fa
 - **Anbefalt fix:** Omskrive loverende formuleringer til forsøks-formulering: «Hver lørdag prøver vi å finne den ene rette — og vi foretrekker ingen match fremfor en dårlig match.»
 - **Verifisering:** Re-grep «får én match|matchen din venter» etter fix.
 
-### TC-02 — Venterom: penges/refund-copy i gratis-modus — CONFIRMED / P1
+#### ACT B — utført 26.10.2026 (sluttstatus: FIXED)
+
+**Sannhetsmodell (verifisert fra kode):**
+
+- **A. Når forsøkes match?** Cron `/api/cron/matching`, `vercel.json` schedule `0 2,3,4 * * 6` (UTC) → tre kjøringer lørdag 02:00/03:00/04:00 UTC = «natt til lørdag» i norsk lokal tid (advisory lock = kun en runde per natt). Les QUEUED-brukere (FIFO, max `QUEUE_LIMIT` 5 000), ekskl. banned/deleted.
+- **B. Når får brukeren match?** Kun ved gjensidig kompatibel kandidat: begge har profil → ikke sperrelistet (tidligere `blocked`/`early_exit`-par) → tosidige dealbreakers (kjønn, alder, barn, høyde, livsstil2026, livsrytme, preferanser, grenser, radius, religion) → `unifiedScore` ≥ `MIN_SCORE` (40/100) → grådig 1:1 (høyeste score først; én bruker maks én match per runde; 50 s tidsbudsjett).
+- **C. Når får brukeren ingen match?** Ingen overlevende kandidat (dealbreaker/score/radius/religion), kohort < `MIN_COHORT_SIZE` (2) → runden deferres, kill switch, eller tidsbudsjett treft. Brukeren forblir `QUEUED` — ingen match, ingen e-post (I-4; `BETA_MATCH_EMAIL` default av).
+- **D. Etter runde uten match?** Brukeren står fortsatt i kø til neste lørdag. Profilen kan endres (gelder fra neste runde). Utmelding (DELETE `/api/journey/queue`) tillatt når som helst inntil MATCHED. Langventing: kun intern observasjon (WARN + alert når eldste i kø > 14 d) — ingen brukerrettet oppfølging eller ventetid-ETA i koden.
+- **E. Hvor lenge i kø?** Ubegrenset — ingen øvre grense, ingen automatisk utmelding, ingen datagrunnlag for ETA → ingen offentlig ventetidspåstand.
+- **F. Informasjon brukeren får:** venteromstater (i kø / låst natt til lørdag / ingen match denne runden / match-kort), in-app Notification ved match, valgfri beta-e-post.
+
+**Copy-forekomster gjennomgått (gamle → nye) — del 1:**
+
+| Sted | Gamle (OVERPROMISE) | Nye |
+|---|---|---|
+| `(landing)/page.tsx` step-kort | «Én match i uken» / «Du får én match — valgt med omtanke» | «Én match om gangen» / «Én person om gangen — … Finner vi ingen god nok, lar vi deg vente til neste runde» |
+| `(landing)/page.tsx` CTA-blokk | «Neste kobling skjer natt til lørdag» / «… og én gjennomtenkt match» | «Neste matcherunde er natt til lørdag» / «… og gjennomtenkt matching» |
+| `layout.tsx` metadata | «Én gjennomtenkt match i uken» | «Én gjennomtenkt match om gangen» |
+| `tips/page.tsx` | «Én match per uke…» / «Du får én match hver lørdag» | «Én match om gangen…» / «Natt til lørdag forsøker vi å finne deg en match … står du i kø til neste runde» |
+| `faq/page.tsx` | «Systemet finner den personen som passer best. … matchen din venter på deg» | «Matcherunden kjører natt til lørdag, og vi forsøker å finne … Finner vi ingen god nok denne runden, står du i kø til neste» («venter på deg» kun betinget) |
+| `faq/page.tsx` (TC-17) | «begge kommer tilbake i køen for en ny match» | «begge kan stille seg i køen igjen for en ny reise» |
+| `priser/page.tsx` | «Én match hver lørdag» / «Du får kun én match om gangen» | «Én match om gangen» / «Én person om gangen — og heller ingen match enn en dårlig» |
+| `slik-fungerer-det/page.tsx` | «Én match, hver lørdag» / «Natt til lørdag kobler vi dem som passer best sammen, og reisen starter lørdag morgen» / «vi matcher deg når det betyr noe» | «Én match om gangen» / «…forsøker vi å finne én person som passer deg godt — og hvis ingen gjør det, venter du til neste runde» / «vi kobler deg først når det betyr noe» |
+| `login/page.tsx` | «vi matcher deg natt til lørdag, og dere går inn i en 30-dagers reise» | «natt til lørdag leter vi etter noen som passer deg godt. Finner vi det, går dere inn i en 30-dagers reise» |
+| `onboarding/steps/Step10StartReisen.tsx` | «Vi matcher deg rolig og presist» / «så finner vi din match» / «Én match, hver lørdag» / «Starter... finn din match» / «låses profilen din for denne reisen» | «Nå stiller du deg i kø — vi leter rolig og presist» / «så stiller vi deg i køen. Natt til lørdag forsøker vi å finne noen som passer deg» / «Én match om gangen, natt til lørdag» / «Stiller deg i kø…» / «endringer gjelder fra neste matcherunde» (kode har ingen profil-lås → fjernet) |
+| `onboarding/OnboardingFlow.tsx` | steg-header + guidingText «Vi matcher deg…» / «så finner vi din match» | samme retning som Step10 |
+| `public/llms.txt` | «mottar du én gjennomtenkt match i uken» | «stiller du deg i kø. Natt til lørdag forsøker vi å finne én person … Finner vi ingen god nok, venter du til neste runde» |
+| `matching/page.tsx` (venterom) | «Vi kobler deg til lørdag morgen. Da starter reisen» / «Reisen starter lørdag morgen» / «til lørdag 04:00» / «Din neste match skal være verdt ventetiden» / penges-tekster (se TC-02) | «Natt til lørdag forsøker vi …» / «Matcherunden kjører nå, natt til lørdag» / «til matcherunden er ferdig» / «Vi kobler aldri tilfeldig — det er hele poenget» / gratis-tekster |
+| Døde komponenter (ikke rendret i dag): `components/dashboard/WaitingForMatch.tsx`, `components/DashboardMatchStatus.tsx`, `lib/match/matchFlow.ts` | «Da får du beskjed, og reisen starter» / «vi finner en match til deg» / «opptil 48 timer» / penges-tekster | rettet til forsøks-formulering + gratis-faktum (forhindrer reintroduksjon ved fremtidig import) |
+
+**Beholdt (klassifisert):** `vilkar §8` («Matcherunden kjøres én gang i uken, natt til lørdag … Får du ingen kobling i en runde, står du i kø til neste lørdag») = ACCURATE; `vilkar §15` refund-tekst = CONTEXTUALLY CORRECT (eksplisitt «Så lenge reisen er gratis, har dette punktet ingen økonomisk betydning. Det gjelder når reisen betales»); `hvorfor` «én match»-bullet = CONTEXTUALLY CORRECT (én-om-gangen-prinsippet, kontrast mot sveiping); `samtykke` «for å finne én match til deg» = CONTEXTUALLY CORRECT (formålsbeskrivelse av behandling; samtykke er IKKE RØR i ACT B); `metoder:500` + `tips:252` «Tosom lover ikke at du får en match» = ærlige tillitselementer beholdt; match-e-post «Du har fått en kobling» + venterom match-kort «Her er matchen din» = hendelsesbasert, korrekt (MT-09); `OnboardingLayout` «Matcherunden kjører lørdag … før fredag 23:59» = CONTEXTUALLY CORRECT (konservativ grense, alltid før cron-vinduet).
+
+**Sluttstatus TC-01: FIXED.** Gjenstående «04:00»-treff i `app/matching/page.tsx` er interne kodekommentarer (ikke brukerrettet).
+
+### TC-02 — Venterom: penges/refund-copy i gratis-modus — ✅ FIXED (ACT B, 26.10.2026) / P1
 - **Lokasjon:** `app/matching/page.tsx:629` («Pengene går med, men du beholder plassen din»), `:646-651` («…få pengene tilbake… Melde meg ut og få pengene tilbake»), `:759-766` («Melde deg ut og få pengene tilbake … ingen grunn å betale. Ingen spørsmål, ingen binding.»)
 - **Faktisk:** `config/features.ts` — `enablePayments` kaster FATAL hvis true (ingen betalingsvei finnes); `PRICING.active=false`; ingen refund-flow i koden.
 - **Risiko:** Misvisende for gratisbrukere; lover refusjonsmekanisme som ikke eksisterer.
 - **Anbefalt fix:** Gjerne betinge penges-teksten på `features.enablePayments` (vises kun i betalingsmodus) eller erstatte med gratis-modus-tekst.
 - **Verifisering:** Grep «pengene» i `app/matching` etter fix.
+
+#### ACT B — utført 26.10.2026 (sluttstatus: FIXED)
+
+**Kartlegging (hva var aktivt vs dødt):**
+- **Aktiv:** `app/matching/page.tsx` (ruta `/matching` — det ekte venterommet). Fire penges-forekomster: in_queue-kort «Får du kalde føtter» («Pengene går med, men du beholder plassen din»), in_queue-kort «Ombestemme deg» («…få pengene tilbake» + knapp «Melde meg ut og få pengene tilbake»), no_match-kort «Trekk deg» («…få pengene tilbake … ingen grunn å betale»), skip-modal («Pengene går med, men du kan melde deg på igjen neste uke»).
+- **Død kode (ikke rendret noe sted):** `components/dashboard/WaitingForMatch.tsx` (referert kun i `__tests__/csrf-client-coverage.test.ts` som csrf-dekkingsliste) med «Pengene går med» + «Få pengene tilbake og slett kontoen», og `components/DashboardMatchStatus.tsx` (ingen importere). Begge rettet for ikke å reintrodusere penges-løfter ved fremtidig import.
+- **Feature flags / status:** `config/features.ts` — `enablePayments` kaster FATAL dersom `PAYMENTS_ENABLED=true` (ingen betalingsvei finnes). `app/api/journey/queue/route.ts`: ved `isPaymentsEnabled() === false` (altid i dag) claimes gratiskvote — Order `amount: 0, status: 'PAID', provider: 'free_quota'`. Ingen gratis/betalt-indikator i UI; ingen refund-flow i koden. Konklusjon: alle aktive brukere i dag er FREE JOURNEY; copy kan ikke status-styres (ingen status i arkitekturen) → gap dokumentert under.
+
+**Endringer (aktiv venterom-copy, ingen logikk endret):**
+- «Får du kalde føtter»: → «Du kan forlate køen når som helst. Profilen din beholdes, og du kan stille deg på nytt når du er klar. Ingen press.» + knapp «Forlate køen» (stemmer med faktisk funksjon: DELETE `/api/journey/queue` → IDLE).
+- «Ombestemme deg»: → «Du kan melde deg ut når som helst — uten binding. Profilen din beholdes …» + knapp «Melde meg ut».
+- no_match «Trekk deg»: → «Melde deg ut … Ingen spørsmål, ingen binding. Profilen din beholdes — du kan stille deg på nytt når du er klar.»
+- Modal: «Vente til neste runde? / Pengene går med …» → «Forlate køen? / Du forlater køen. Profilen din beholdes …» (knapp «Ja, forlate køen»).
+- Døde komponenter: «Pengene går med» → «Du forlater køen. Profilen din beholdes …»; «Få pengene tilbake og slett kontoen» → «Forlater du bare køen — uten binding»; «Fra lørdag er dere to i gang» → «Profilen din beholdes …».
+
+**Dokumenterte gaps (IKKE løst i ACT B):**
+- **P2 (ved betalingslansering):** UI har ingen FREE/PAID/PAYMENT-PENDING/UNVERIFIED-status å styre copy på. Når Vipps implementeres (TC-03/TC-35/PD) må venteroms- og vilkårs-copy status-styres — i dag er alt gratis, så copy beskriver gratis-faktum.
+- **P2 DEAD CODE / CLEANUP (eksisterende):** `WaitingForMatch.tsx` «Ombestemt»-knapp kaller `handleAngerett` (POST `/api/journey/exit`) som svarer 404 for QUEUED-brukere — komponenten rendres ikke i dag; fiks ved eventuell gjenvinning. Relatert død kode: `lib/system/systemMessages.ts` `search_started`-melding «Det kan ta opptil 48 timer, men vi skal finne noen riktig.» — unåelig i dag (den eneste rendereren, `components/journey/JourneyView.tsx`, rendres ikke noe sted, og selv da kun med hardkodet `in_journey`, aldri `searching`); inneholder både feil tidspunkt og forhåndsgaranti — rett/slett ved gjenvinning.
+- **Uendret (bevisst):** vilkar §15 («Fram til koblingen er gjort natt til lørdag, kan du melde deg ut og få hele beløpet tilbake») — eksplisitt betinget «Det gjelder når reisen betales»; juridisk fremtidstekst, ikke aktiv gratis-modus-copy.
+
+**Sluttstatus TC-02: FIXED** (gratis copy beskriver faktisk gratis oppførsel; ingen penges-/refund-løfter i aktiv eller død venteromskode). **Betalingsmodell og Vipps er IKKE løst** — se TC-03/TC-35.
 
 ### TC-03 — Vipps/betalingsstatus (ny kartlegging) — PARTLY CONFIRMED / P1 + PRODUCT DECISION
 - **IMPLEMENTED:** Gratiskvote (5 000 unike brukere; atomisk claim `app/api/journey/queue/route.ts:144`; `lib/payment/freeQuota.ts`; Quota-rad `free_users` + gratis Order `amount:0,status:'PAID'`); admin-kvoteteller; 402 ved full kvote; `REGISTRATION_ENABLED` kill-switch.
@@ -1224,6 +1279,18 @@ Kun read-only-verifisering fra prod (ingen skrive-handlinger mot prod i denne fa
 - **Anbefalt fix:** «begge kan stille seg i køen igjen for en ny reise» (eller automatisk re-queue som PD).
 - **Verifisering:** Re-lese FAQ + endJourney etter fix.
 
+#### ACT B — utført 26.10.2026 (sluttstatus: FIXED; også tidspunktstekst)
+
+**Re-queue (opprinnelig TC-17):** FAQ rettet: «begge kommer tilbake i køen for en ny match» → «begge kan stille seg i køen igjen for en ny reise» (stemmer med `endJourney` → IDLE + manuell re-onboarding + `POST /api/journey/queue`).
+
+**Tidspunktstekst (ACT B-instruks §10):**
+- **Faktisk teknisk vindu:** `vercel.json` cron `0 2,3,4 * * 6` (Vercel kjører i UTC) → runden kjører lørdag 02:00–04:00 UTC = norsk lokal tid ca. 03:00–05:00 (vinter, UTC+1) / 04:00–06:00 (sommer, UTC+2). Eksakt klokkeslett i lokal tid varierer med sone — ingen «04:00»-påstand er korrekt på tvers av årstider.
+- **Rettet (aktiv copy):** venterom countdown-etikett «til lørdag 04:00» → «til matcherunden er ferdig»; «Vi kobler deg til lørdag morgen. Da starter reisen» → «Natt til lørdag forsøker vi …»; «Reisen starter lørdag morgen» → «Matcherunden kjører nå, natt til lørdag»; slik-fungerer-det «reisen starter lørdag morgen» → «venter du til neste runde»-formulering; landing «Neste kobling skjer natt til lørdag» → «Neste matcherunde er natt til lørdag».
+- **Beholdt (korrekt/konservativt):** OnboardingLayout «Matcherunden kjører lørdag. Vær ferdig med profilen før fredag 23:59» (23:59 er alltid før cron-vinduet uansett sone); venteroms «siste sjanse å ombestemme»-nedtelling til fredag 23:59 (UI-låsen er klientberegnet; backend tillater utmelding helt til MATCHED — copy lover ikke noe om lås).
+- **Ikke eksponert:** cron-detaljer (UTC, tre kjøringer, advisory lock) er kun i interne kommentarer/admin.
+
+**Sluttstatus TC-17: FIXED.**
+
 ### TC-18 — Oppgavetall: Reisen vs faktisk data — CONFIRMED / P2
 - **Påstand:** `app/reisen/page.tsx:415`: «12 kategorier med over 240 spørsmål».
 - **Faktisk:** `app/chat/data/tasks.ts`: 9 kategorier, 135 oppgaver (grepet). `app/faq/page.tsx:20`: «135 oppgaver i 9 kategorier» ✓ korrekt.
@@ -1377,6 +1444,20 @@ Kun read-only-verifisering fra prod (ingen skrive-handlinger mot prod i denne fa
 - **Mismatch:** Offentlig copy lover «én match i uken» (TC-01) uten å forklare at små kohorter = ingen match. Dealbreakers er **ikke** svekket (ingen kodeendring foreslått).
 - **Anbefalt fix:** Forventningsstyring i landing/slik-fungerer-det/FAQ («Vi matcher kun når vi finner en god match — da kan det noen ganger ta lenger enn en uke»).
 
+#### ACT B — utført 26.10.2026 (sluttstatus: FIXED)
+
+Brukeren ser nå (venterom + offentlig copy) alle TC-33-punktene stilt opp mot faktisk oppførsel:
+- Profil ferdig + stiller i kø: start-tilstand «Når du starter reisen, stiller du deg i køen» ✓
+- Når neste runde forsøkes: «Natt til lørdag» (ingen eksakt klokkeslett, jf. TC-17) ✓
+- Match ikke garantert: «Natt til lørdag forsøker vi å finne deg en gjensidig god match. Finner vi ingen god nok denne runden, står du i kø til neste.» ✓
+- Hva som skjer uten match: «Vi fant ingen god nok match denne runden» + «Vi kobler aldri tilfeldig — det er hele poenget.» + «Du er fortsatt i venterommet. Natt til lørdag forsøker vi igjen.» ✓
+- Profilen blir med videre: «Profilen din beholdes» (alle utmeldingsveier) ✓
+- Hvordan forlate køen: «Melde deg ut» / «Forlate køen» — stemmer med DELETE `/api/journey/queue` (TC-07/MT-07) ✓
+- Preferanser kan endres mens i kø: «Oppdater profil»-kort + Step10 «endringer gjelder fra neste matcherunde» ✓
+- Ingen forventet ventetid oppgitt (ingen datagrunnlag i koden) ✓
+
+**P2 PRODUCT/OPERATIONS FOLLOW-UP (åpen, bevisst ikke bygd i ACT B):** langventing > 14 dager er kun intern (SystemLog WARN + alert, `app/api/cron/matching/route.ts:491-497`). Offentlig copy lover bevisst ingen oppfølging. Vurder aktiv oppfølging/utsending av lange køer som operasjonstiltak. Dealbreakers og hard constraints er urørte.
+
 ### TC-34 — Footer/juridisk informasjon — NOT CONFIRMED
 - **Bevis:** Alle public sider renderer `<Footer/>`; `config/legal.ts` COMPANY = én kilde (Tosom AS, org.nr. 938 413 231, adresse, tlf., support@tosom.no); footer linker alle juridiske sider («Vilkår» → /vilkar ✓); kontakt viser COMPANY-info ✓. Ingen ©-linje noe sted (konsistent valg, ikke avvik).
 - **Konklusjon:** Ingen footer-avvik (sitemap-/vilkår-404 = TC-10).
@@ -1397,11 +1478,25 @@ Små, uavhengige ACT-pakker. Rekkefølgen er anbefalt, ikke obligatorisk.
 2. **TC-15:** ✅ DELVIS FERDIG (ACT A2, 24.10.2026) — personvern-copy rettet til slettingsbasert trekking (den faktiske mekanismen); copy-gap lukket. Resten = PD-6: selvbetjening-trekking (sletteomfang, aktiv reise, kø, bevis) + EXTERNAL LEGAL VERIFICATION (art. 9-felt-mapping).
 3. **TC-22:** ✅ FERDIG (ACT A3, 24.10.2026) — 116 006 rettet til VO-linjen (verifisert mot volinjen.no + dinutvei.no); 800 30 196 «Vern for eldre» fjernet (ikke verifiserbar i offisielle kilder; TryggEst er kommunalt — byttet til offisiell tryggest.no-peker); Kirkens SOS «døgnet rundt» bekreftet korrekt (kirkens-sos.no); 116 123 verifisert (mentalhelse.no); 112/02800 eksternt verifisert mot Politiet.no.
 
-### ACT B — Match-sannhet & venting (P1/P2)
-1. **TC-01:** Omskrive loverende «én match»-copy (landing, layout-metadata, tips, FAQ, llms.txt, priser, Step10) til forsøks-formulering; beholde metoder/tips-dissclaimere.
-2. **TC-02:** Fjerne/betinge penges-tekst i venterommet (vises kun når betalingsmodus).
-3. **TC-33:** Forventningsstyring om at det kan ta lenger enn en uke (landing/slik-fungerer-det/FAQ).
-4. **TC-17:** FAQ «kommer tilbake i køen» → «kan stille seg i køen igjen».
+### ACT B — Match-sannhet & venting (P1/P2) — ✅ FERDIG (26.10.2026, IKKE committet)
+1. **TC-01:** ✅ Omskrevet loverende «én match»-copy i 14 filer (landing, layout-metadata, tips, FAQ, llms.txt, priser, slik-fungerer-det, login, Step10, OnboardingFlow, venterom + 3 døde komponenter) til forsøks-formulering; metoder/tips-dissclaimere + vilkar §8/§15 + hendelsesbasert match-copy beholdt.
+2. **TC-02:** ✅ Penges-/refund-tekst fjernet fra venterommet (aktiv + død kode); copy beskriver faktisk gratis oppførsel (forlate køen, profil beholdes, ingen binding). Gaps dokumentert (ingen gratis/betalt-status i UI; død angerett-knapp 404).
+3. **TC-33:** ✅ Forventningsstyring i venterom/landing/slik-fungerer-det/FAQ: match ikke garantert, «står i kø til neste runde», ingen ventetid-ETA. P2 PRODUCT/OPERATIONS FOLLOW-UP: langventing >14 d er kun intern.
+4. **TC-17:** ✅ FAQ «kommer tilbake i køen» → «kan stille seg i køen igjen»; eksakt «04:00»-copy → «natt til lørdag» (cron-vinduet 02:00–04:00 UTC er årstidsavhengig i lokal tid).
+5. **MT-01…MT-10 (grep-verifisert; repo har ingen testmønster for statisk copy):**
+
+| Test | Resultat |
+|---|---|
+| MT-01 Ingen aktiv offentlig copy garanterer match hver lørdag | ✅ grep «match hver lørdag\|én match hver lørdag\|Én match, hver lørdag» i app/ components/ public/ lib/match lib/matching = 0 treff |
+| MT-02 Ingen «Du får én match» uten betingelse | ✅ grep «Du får én match\|Du får kun én» = 0 treff |
+| MT-03 Siden forklarer at brukeren går videre til neste runde uten match | ✅ venterom in_queue + no_match, landing, sfd, tips, FAQ, llms.txt («står du i kø til neste runde» / «venter du til neste runde») |
+| MT-04 Én match om gangen er tydelig | ✅ landing «Én match om gangen», tips intro, sfd tittel + bullet, priser-kort, Step10, vilkar §8 (urørt) |
+| MT-05 Gratis venterom omtaler ikke penger trukket/brukt | ✅ grep «Pengene går med\|penger\|pengene\|betale» i `app/matching` = 0 treff; døde komponenter rettet |
+| MT-06 Gratis venterom lover ikke refusjon | ✅ grep «få pengene tilbake\|får pengene» i app/ components/ public/ = 0 treff; vilkar §15 = betinget fremtidstekst («Det gjelder når reisen betales») — bevisst beholdt |
+| MT-07 Utmelding fra kø beskrevet i samsvar med faktisk funksjon | ✅ «Forlate køen/Melde deg ut» + «profilen din beholdes … stiller deg på nytt» = DELETE `/api/journey/queue` → IDLE; modal «Forlate køen?» |
+| MT-08 Eksakt 04:00-copy ikke aktivt | ✅ gjenstående «04:00»-treff = interne kodekommentarer i `app/matching/page.tsx` (rad 5, 86); aktiv etikett = «til matcherunden er ferdig» |
+| MT-09 Hendelsesbasert «match funnet»-copy beholdes | ✅ venterom match-kort «Her er matchen din», `sendMatchEmail` «Du har fått en kobling», matchFlow «Du har en match!» — urørte |
+| MT-10 FAQ, Vilkår og hovedcopy motsier ikke hverandre | ✅ vilkar §8 «natt til lørdag … står du i kø til neste lørdag» = ny FAQ/landing/venterom-copy; FAQ «Hva koster ToSom» (5 000 gratis → Vipps) = priser/vilkår §14; ingen motsetninger funnet |
 
 ### ACT C — SEO/metadata/canonical (P1/P2)
 1. **TC-08:** Per-route metadata (title/description/canonical/OG) for alle ~13 public sider.

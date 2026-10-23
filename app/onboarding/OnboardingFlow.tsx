@@ -514,7 +514,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     { title: 'Grenser & behov', subtitle: 'Hvordan ser du på grenser i en relasjon — og hva trenger du at partneren din forstår?' },
     { title: 'Moden nysgjerrighet', subtitle: 'Hva trenger du for å føle deg trygg i nærhet?' },
     { title: 'Oppsummering', subtitle: 'Se over det du har delt. Du kan endre alt senere.' },
-    { title: 'Start reisen', subtitle: 'Du er klar. Vi matcher deg rolig og presist — basert på det du har delt.' },
+    { title: 'Start reisen', subtitle: 'Du er klar. Nå stiller du deg i kø — vi leter rolig og presist, basert på det du har delt.' },
   ];
 
   const guidingTexts = [
@@ -530,7 +530,7 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
     'Grenser beskytter deg selv — og den du elsker. Del bare det du føler deg trygg med.',
     'Modne svar viser hvem du er. Del det du er komfortabel med.',
     'Du har nesten kommet helt til ende. Se over det du har delt.',
-    'Nå er det bare å trykke på «Start reisen» så finner vi din match.',
+    'Trykk på «Start reisen» så stiller vi deg i køen. Natt til lørdag forsøker vi å finne noen som passer deg.',
   ];
 
   // === Steg-renderer ===

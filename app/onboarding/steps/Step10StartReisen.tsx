@@ -30,8 +30,8 @@ export default function Step10StartReisen({ step, goToStep, loading, onStart }: 
   return (
     <OnboardingSlide
       title="Start reisen"
-      subtitle="Du er klar. Vi matcher deg rolig og presist — basert på det du har delt."
-      guidingText="Nå er det bare å trykke på «Start reisen» så finner vi din match."
+      subtitle="Du er klar. Nå stiller du deg i kø — vi leter rolig og presist, basert på det du har delt."
+      guidingText="Trykk på «Start reisen» så stiller vi deg i køen. Natt til lørdag forsøker vi å finne noen som passer deg."
       slideIndex={12}
       totalSlides={13}
       accentColor={OB.section.summary}
@@ -48,7 +48,7 @@ export default function Step10StartReisen({ step, goToStep, loading, onStart }: 
           </svg>
         </div>
         <p style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
-          Én match, hver lørdag. Ingen sveiping, ingen press.
+          Én match om gangen, natt til lørdag. Ingen sveiping, ingen press.
         </p>
       </div>
 
@@ -60,7 +60,7 @@ export default function Step10StartReisen({ step, goToStep, loading, onStart }: 
       {/* CTA med loading-state */}
       <PremiumCTAButton
         onClick={onStart}
-        label={loading ? 'Starter... finn din match' : 'Start reisen'}
+        label={loading ? 'Stiller deg i kø…' : 'Start reisen'}
         disabled={loading}
         isLoading={loading}
         fullWidth
@@ -68,8 +68,8 @@ export default function Step10StartReisen({ step, goToStep, loading, onStart }: 
 
       {/* Trust text */}
       <p className="text-center text-xs mt-6" style={{ color: 'rgba(255, 255, 255, 0.6)', lineHeight: 1.6 }}>
-        Du kan endre svarene dine i venterommet frem til fredag 23:59.
-        Etter at reisen har startet (lørdag), låses profilen din for denne reisen.
+        Du kan endre svarene dine i venterommet — endringer gjelder fra neste matcherunde.
+        Du kan også melde deg ut når som helst, uten binding.
       </p>
     </OnboardingSlide>
   );

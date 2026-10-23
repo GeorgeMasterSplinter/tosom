@@ -1,12 +1,13 @@
 /**
  * Tosom — Venterom (Waiting Room)
  *
- * Tre tilstander:
+ * Tre tilstander (visningstidene er lokal tid; selve runden kjører
+ * natt til lørdag, cron-vinduet 02:00–04:00 UTC):
  * 1. I kø (mandag–fredag): Nedtelling til fredag 23:59, kan melde seg ut
- * 2. Låst (fredag 23:59 – lørdag 06:00): Vent på matchmotoren
- * 3. Ingen match (etter lørdag 06:00): Ærlig melding + valg
+ * 2. Låst (fredag kveld – tidlig lørdag): Matcherunden kjører
+ * 3. Ingen match (etter runden): Ærlig melding + valg
  *
- * Har aktiv match → redirect /dashboard
+ * Har aktiv match → /dashboard
  */
 
 'use client';
@@ -296,7 +297,7 @@ export default function MatchingPage() {
         const target = getNextSaturday0400();
         const diff = target.getTime() - now.getTime();
         setCountdown(formatCountdown(diff));
-        setCountdownLabel('til lørdag 04:00');
+        setCountdownLabel('til matcherunden er ferdig');
       } else if (queueState === 'no_match') {
         const target = getNextFriday2359();
         const diff = target.getTime() - now.getTime();
@@ -509,7 +510,8 @@ export default function MatchingPage() {
               </h2>
               <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '16px', lineHeight: '1.7' }}>
                 Profilen din er fullført. Når du starter reisen, stiller du deg i
-                køen – og lørdag morgen finn vi noen som passer deg.
+                køen. Natt til lørdag forsøker vi å finne noen som passer deg —
+                og lar deg heller vente enn å koble tilfeldig.
               </p>
               <button
                 onClick={handleStartJourney}
@@ -585,7 +587,8 @@ export default function MatchingPage() {
                 Du er i venterommet, {userName}
               </h2>
               <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '16px', lineHeight: '1.7' }}>
-                Vi kobler deg til lørdag morgen. Da starter reisen.
+                Natt til lørdag forsøker vi å finne deg en gjensidig god match.
+                Finner vi ingen god nok denne runden, står du i kø til neste.
               </p>
 
               {/* Nedtelling */}
@@ -620,38 +623,39 @@ export default function MatchingPage() {
               </div>
             </GlassCard>
 
-            {/* Får du kalde føtter (ingen refund) */}
+            {/* Får du kalde føtter (forlater køen — gratis, ingen binding) */}
             <GlassCard className="py-6 px-6">
               <p className="font-medium" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '16px' }}>
                 Får du kalde føtter
               </p>
               <p className="mt-2" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '15px', lineHeight: '1.6' }}>
-                Du kan velge å vente til neste runde. Pengene går med, men du beholder plassen din. Ingen press.
+                Du kan forlate køen når som helst. Profilen din beholdes, og du
+                kan stille deg på nytt når du er klar. Ingen press.
               </p>
               <button
                 onClick={() => setShowSkipConfirm(true)}
                 className="mt-4 px-5 py-3 rounded-2xl text-sm font-medium transition-all duration-300 hover:bg-white/5"
                 style={{ border: '1px solid rgba(255,255,255,0.6)', color: 'rgba(255,255,255,0.7)' }}
               >
-                Vente til neste runde
+                Forlate køen
               </button>
             </GlassCard>
 
-            {/* Ombestemme deg (full refund) */}
+            {/* Ombestemme deg (forlater køen — gratis, ingen binding) */}
             <GlassCard className="py-6 px-6">
               <p className="font-medium" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '16px' }}>
                 Ombestemme deg
               </p>
               <p className="mt-2" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '15px', lineHeight: '1.6' }}>
-                Ombestemmer du deg før fredag 23:59, kan du melde deg ut og få pengene tilbake.
-                Fra lørdag er dere to i gang. Vil du melde deg på igjen, starter du på nytt.
+                Du kan melde deg ut når som helst — uten binding. Profilen din
+                beholdes, og du kan stille deg på nytt når du er klar.
               </p>
               <button
                 onClick={() => setShowExitConfirm(true)}
                 className="mt-4 px-5 py-3 rounded-2xl text-sm font-medium transition-all duration-300 hover:bg-red-500/10"
                 style={{ border: '1px solid rgba(255,77,77,0.3)', color: 'rgba(255,77,77,0.8)' }}
               >
-                Melde meg ut og få pengene tilbake
+                Melde meg ut
               </button>
             </GlassCard>
           </div>
@@ -668,7 +672,8 @@ export default function MatchingPage() {
                 Du er i venterommet
               </h2>
               <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '16px', lineHeight: '1.7' }}>
-                Reisen starter lørdag morgen. Vi jobber med å finne noen som passer deg.
+                Matcherunden kjører nå, natt til lørdag. Vi leter etter noen som
+                passer deg godt — og lar heller være enn å koble tilfeldig.
               </p>
 
               <div className="mt-8 px-6 py-4 rounded-2xl mx-auto max-w-[320px]" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.15)' }}>
@@ -700,7 +705,7 @@ export default function MatchingPage() {
               <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '16px', lineHeight: '1.8', maxWidth: '480px', margin: '0 auto' }}>
                 Vi vet at det kan være en skuffelse. Men vi mener på det sterkeste:
                 det er bedre å vente på en god match enn å få en dårlig.
-                Din neste match skal være verdt ventetiden.
+                Vi kobler aldri tilfeldig — det er hele poenget.
               </p>
             </GlassCard>
 
@@ -728,7 +733,7 @@ export default function MatchingPage() {
                 Vente på neste runde
               </p>
               <p className="mt-2" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '15px', lineHeight: '1.6' }}>
-                Du er fortsatt i venterommet. Neste mulighet er lørdag.
+                Du er fortsatt i venterommet. Natt til lørdag forsøker vi igjen.
               </p>
               <div className="mt-4 px-5 py-3 rounded-2xl inline-block" style={{ background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.15)' }}>
                 <p className="text-2xl font-bold tabular-nums" style={{ color: '#D4AF37' }}>
@@ -743,11 +748,11 @@ export default function MatchingPage() {
             {/* Trekk deg */}
             <GlassCard className="py-6 px-6">
               <p className="font-medium" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '16px' }}>
-                Melde deg ut og få pengene tilbake
+                Melde deg ut
               </p>
               <p className="mt-2" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '15px', lineHeight: '1.6' }}>
-                Du har alltid muligheten. Hvis vi ikke finner en god nok match,
-                er det ingen grunn å betale. Ingen spørsmål, ingen binding.
+                Du har alltid muligheten. Ingen spørsmål, ingen binding.
+                Profilen din beholdes — du kan stille deg på nytt når du er klar.
               </p>
               <button
                 onClick={() => setShowExitConfirm(true)}
@@ -783,10 +788,11 @@ export default function MatchingPage() {
             <div className="w-full max-w-sm rounded-3xl p-8 text-center relative" style={{ background: 'rgba(11,21,32,0.97)', border: '1px solid rgba(255,255,255,0.6)' }}>
               <button onClick={() => setShowSkipConfirm(false)} className="absolute top-4 right-4" style={{ color: 'rgba(255,255,255,0.6)' }}>✕</button>
               <h3 className="text-xl font-bold mb-3" style={{ color: 'rgba(255,255,255,0.9)' }}>
-                Vente til neste runde?
+                Forlate køen?
               </h3>
               <p className="text-sm mb-6 leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
-                Du hopper over denne runden. Pengene går med, men du kan melde deg på igjen neste uke.
+                Du forlater køen. Profilen din beholdes, og du kan stille deg
+                på nytt når du er klar.
               </p>
               <button
                 onClick={handleSkipRound}
@@ -794,7 +800,7 @@ export default function MatchingPage() {
                 className="w-full py-4 rounded-2xl font-bold text-base transition-all disabled:opacity-50"
                 style={{ background: 'rgba(255,255,255,0.6)', border: '1px solid rgba(255,255,255,0.6)', color: 'rgba(255,255,255,0.9)' }}
               >
-                {skipping ? 'Behandler...' : 'Ja, vent til neste runde'}
+                {skipping ? 'Behandler...' : 'Ja, forlate køen'}
               </button>
               <button
                 onClick={() => setShowSkipConfirm(false)}
@@ -816,7 +822,7 @@ export default function MatchingPage() {
                 Melde deg ut?
               </h3>
               <p className="text-sm mb-6 leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
-                Du forlater køen – profilen din blir behalden.
+                Du forlater køen – profilen din beholdes.
                 Når du er klar igjen, trykk «Start reisen» og still deg i køen på nytt.
               </p>
               <button

@@ -117,7 +117,8 @@ export function WaitingForMatch({ userName }: { userName: string }) {
             lineHeight: typography.lineHeight.relaxed,
           }}
         >
-          Vi kobler natt til lørdag. Da får du beskjed, og reisen starter.
+          Natt til lørdag forsøker vi å finne deg en match. Finner vi deg,
+          starter reisen.
         </p>
 
         {/* Countdown (mock) */}
@@ -143,7 +144,7 @@ export function WaitingForMatch({ userName }: { userName: string }) {
           {showConfirm ? (
             <div className="flex flex-col gap-2">
               <p className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
-                Du hopper over denne runden. Pengene går med, men du kan melde deg på igjen neste uke.
+                Du forlater køen. Profilen din beholdes, og du kan stille deg på nytt når du er klar.
               </p>
               <div className="flex gap-3 justify-center">
                 <button
@@ -157,7 +158,7 @@ export function WaitingForMatch({ userName }: { userName: string }) {
                     border: '1px solid rgba(255, 77, 77, 0.3)',
                   }}
                 >
-                  {leavingQueue ? 'Behandler...' : 'Ja, vent til neste runde'}
+                  {leavingQueue ? 'Behandler...' : 'Ja, forlate køen'}
                 </button>
                 <button
                   type="button"
@@ -193,9 +194,9 @@ export function WaitingForMatch({ userName }: { userName: string }) {
             disabled={leavingJourney}
             className="underline underline-offset-2 transition-opacity duration-200 disabled:opacity-50 hover:opacity-80"
           >
-            Ombestemme deg? Få pengene tilbake og slett kontoen.
+            Ombestemt? Forlater du bare køen — uten binding.
           </button>
-          <span className="block mt-1">Fra lørdag er dere to i gang. Vil du melde deg på igjen, starter du på nytt.</span>
+          <span className="block mt-1">Profilen din beholdes. Vil du melde deg på igjen, stiller du deg på nytt i køen.</span>
         </div>
       </div>
     </div>

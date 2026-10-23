@@ -225,7 +225,7 @@ export default function PriserPage() {
                         color: color.text.primary,
                       }}
                     >
-                      Én match hver lørdag
+                      Én match om gangen
                     </h3>
                     <p
                       style={{
@@ -234,7 +234,7 @@ export default function PriserPage() {
                         lineHeight: '1.8',
                       }}
                     >
-                      Natt til lørdag måler vi resonansen. Vi leter ikke etter den som ser lik deg ut — vi leter etter den som får svingen din til å vokse. Du får kun én match om gangen.
+                      Natt til lørdag måler vi resonansen. Vi leter ikke etter den som ser lik deg ut — vi leter etter den som får svingen din til å vokse. Én person om gangen — og heller ingen match enn en dårlig.
                     </p>
                   </div>
                 </div>

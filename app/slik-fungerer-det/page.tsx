@@ -94,15 +94,15 @@ const steps: Array<{
   },
   {
     icon: <IconMatch />,
-    title: 'Én match, hver lørdag',
-    intro: 'Når profilen din er klar, blir du med i neste matchrunde. Natt til lørdag kobler vi dem som passer best sammen, og reisen starter lørdag morgen. Ikke ti matcher. Ikke hundre. Bare én person, valgt med omtanke — ut fra verdier, livsstil, kommunikasjon og fremtidsønsker.',
+    title: 'Én match om gangen',
+    intro: 'Når profilen din er klar, blir du med i neste matchrunde. Natt til lørdag forsøker vi å finne én person som passer deg godt — og hvis ingen gjør det, venter du til neste runde. Ikke ti matcher. Ikke hundre. Én person om gangen, valgt med omtanke — ut fra verdier, livsstil, kommunikasjon og fremtidsønsker.',
     points: [
       'én match om gangen',
       'ingen sveiping',
       'ingen konkurranse',
       'fokus og ro',
     ],
-    closing: 'Du blir med når tiden er riktig – og vi matcher deg når det betyr noe.',
+    closing: 'Du blir med når tiden er riktig – og vi kobler deg først når det betyr noe.',
   },
   {
     icon: <IconJourney />,

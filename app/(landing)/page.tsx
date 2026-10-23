@@ -105,8 +105,8 @@ const steps = [
   },
   {
     icon: <IconMatch />,
-    title: 'Én match i uken',
-    content: 'Vi samler mennesker gjennom uken og kobler natt til lørdag. Du får én match — valgt med omtanke, ikke tilfeldighet. Ingen endeløs sveiping. Ingen overveldende valg.',
+    title: 'Én match om gangen',
+    content: 'Vi samler mennesker gjennom uken og kobler natt til lørdag. Én person om gangen — valgt med omtanke, ikke tilfeldighet. Finner vi ingen god nok, lar vi deg vente til neste runde. Ingen endeløs sveiping. Ingen overveldende valg.',
     featured: true,
   },
   {
@@ -332,7 +332,7 @@ export default function LandingPage() {
                 marginRight: 'auto',
               }}
             >
-              Tosom gir deg ro, tid og én gjennomtenkt match — slik at du kan bli kjent.
+              Tosom gir deg ro, tid og gjennomtenkt matching — slik at du kan bli kjent.
             </p>
           </div>
           </Reveal>
@@ -362,7 +362,7 @@ export default function LandingPage() {
                 lineHeight: '1.8',
               }}
             >
-              Logg inn og bygg profilen din. Neste kobling skjer natt til lørdag.
+              Logg inn og bygg profilen din. Neste matcherunde er natt til lørdag.
 
             </p>
 

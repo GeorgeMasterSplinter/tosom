@@ -13,7 +13,7 @@ const FAQS = [
   },
   {
     q: 'Hvordan fungerer matching?',
-    a: 'Vi sammenligner dere på seks dimensjoner — verdier, tilknytning, personlighet, kommunikasjon, emosjonsregulering og livssituasjon. Systemet finner den personen som passer best. Matching kjører hver lørdag, og matchen din venter på deg når du logger inn.',
+    a: 'Vi sammenligner dere på seks dimensjoner — verdier, tilknytning, personlighet, kommunikasjon, emosjonsregulering og livssituasjon. Matcherunden kjører natt til lørdag, og vi forsøker å finne personen som passer deg best. Finner vi ingen god nok denne runden, står du i kø til neste. Finner vi deg en match, venter den på deg når du logger inn.',
   },
   {
     q: 'Hva skjer i de 30 dagene?',
@@ -25,7 +25,7 @@ const FAQS = [
   },
   {
     q: 'Hva skjer etter dag 30?',
-    a: 'To valg. «Vi fant hverandre» — dere har 24 timer på dere til å laste ned minnet som PDF, så slettes alt: alle samtaler, bilder, spørsmål og svar — alt forsvinner permanent. Bare en følelse gjenstår. Eller «Start ny reise» — dere slettes, og begge kommer tilbake i køen for en ny match. Ingen hard landing. Bare videre.',
+    a: 'To valg. «Vi fant hverandre» — dere har 24 timer på dere til å laste ned minnet som PDF, så slettes alt: alle samtaler, bilder, spørsmål og svar — alt forsvinner permanent. Bare en følelse gjenstår. Eller «Start ny reise» — dere slettes, og begge kan stille seg i køen igjen for en ny reise. Ingen hard landing. Bare videre.',
   },
   {
     q: 'Hva koster ToSom?',

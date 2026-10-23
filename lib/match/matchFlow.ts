@@ -92,7 +92,7 @@ export const matchFlowAPI = {
       ready_for_match:
         "Finn match når du er klar. Du kan trykke knappen for å starte.",
       searching:
-        "Vi leter etter en match til deg. Dette tar typisk opptil 48 timer.",
+        "Vi leter etter en match til deg. Matcherunden kjører natt til lørdag.",
       matched: "Gratulerer! Du har fått en match. Aksepter å starte reisen.",
       in_journey:
         "Du er i en 30-dagers reise med din match. Når den er over kan du starte på nytt.",

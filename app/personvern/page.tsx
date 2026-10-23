@@ -86,7 +86,7 @@ const sections: Section[] = [
             'Sensitive opplysninger',
             'Se punkt 4 nedenfor',
             'Uttrykkelig samtykke (art. 9.2.a)',
-            'Til kontoen slettes eller samtykket trekkes',
+            'Til kontoen slettes (slik trekkes samtykket tilbake)',
           ],
         },
         {
@@ -132,7 +132,7 @@ const sections: Section[] = [
     paragraphs: [
       'Sensitive opplysninger behandles kun hvis du gir uttrykkelig samtykke. Du får spørsmål om dette særskilt, ikke som en del av vilkårene.',
       'Du kan la være å svare på disse spørsmålene. Da blir grunnlaget for koblingen tynnere, men du kan fortsatt bruke Tosom.',
-      'Du kan trekke samtykket når som helst under Innstillinger. Vi sletter da opplysningene, og de brukes ikke i framtidige koblinger. Det påvirker ikke lovligheten av behandlingen fram til du trakk det.',
+      'Du kan trekke samtykket tilbake når som helst. I Tosom gjør du dette ved å slette kontoen din under Innstillinger. Da slettes sensitive opplysninger om deg, og de brukes ikke i framtidige koblinger. Det påvirker ikke lovligheten av behandlingen som har skjedd fram til den tid.',
       'Opplysningene leses aldri av oss manuelt, deles aldri med andre brukere, og brukes utelukkende av matching-motoren.',
     ],
   },
@@ -184,7 +184,7 @@ const sections: Section[] = [
       rows: [
         { cells: ['Konto og profil', 'Til du sletter kontoen'] },
         { cells: ['Samtaler og bilder', 'Til reisen avsluttes (inntil 24 timer etter «vi fant hverandre», deretter permanent slettet)'] },
-        { cells: ['Sensitive opplysninger', 'Til kontoen slettes eller samtykket trekkes'] },
+        { cells: ['Sensitive opplysninger', 'Til kontoen slettes (slik trekkes samtykket tilbake)'] },
         { cells: ['Tekniske logger', 'Inntil 90 dager'] },
         { cells: ['Rapporter om alvorlige forhold', 'Inntil 3 år, i anonymisert form'] },
         { cells: ['Regnskapsopplysninger ved betaling', '5 år, som bokføringsloven krever'] },
@@ -209,14 +209,14 @@ const sections: Section[] = [
       'Begrensning — be oss stanse bruken midlertidig',
       'Innsigelse — protestere mot behandling basert på berettiget interesse',
       'Dataportabilitet — få opplysningene i et format du kan ta med deg',
-      'Trekke samtykke — når som helst, uten at det får følger for deg',
+      'Trekke samtykke — når som helst, ved å slette kontoen din',
     ],
   },
   {
     id: '11',
     title: 'Slik bruker du rettighetene',
     paragraphs: [
-      'Det meste ordner du selv under Innstillinger: se profilen, laste ned en kopi, rette opplysninger, trekke samtykke eller slette kontoen.',
+      'Det meste ordner du selv under Innstillinger: se profilen, laste ned en kopi, rette opplysninger eller slette kontoen (som også trekker samtykket).',
       `Trenger du hjelp, skriv til ${COMPANY.email}. Vi svarer innen 30 dager. Er saken omfattende, sier vi fra underveis.`,
       'Vi tar aldri betalt for at du bruker rettighetene dine.',
     ],

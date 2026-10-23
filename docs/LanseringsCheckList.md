@@ -970,6 +970,491 @@ Kun read-only-verifisering fra prod (ingen skrive-handlinger mot prod i denne fa
 
 **Sluttbegrunnelse:** Med Phase 1–3 levert, F1–F6 avkrysset og Georges prod-sjekk (P1-6) gjennomført, er Tosom i stand til å fly. Tilstanden i dag (23.10) er **CONDITIONAL GO** — ingen P0, men P1-punktene (P1-1…P1-7) må lukkes eller bevisst nedgraderes før offentlig lansering.
 
-*Dokumentet er avsluttet. Neste steg: Georges godkjenning av Q-1…Q-4 + eksplisitt godkjenning til å starte Phase 1.*
 
+
+---
+---
+
+# Truth & Consistency Audit (Phase 2)
+
+**Dato:** 2026-10-23
+**Basiscommit:** `4edacc8` (Phase 1 + 1.5 — religion-kompatibilitet + onboarding-privacy; 672 tester grønne)
+**Modus:** PLAN ONLY — kun read-only-kodeinspeksjon + dette dokumentet. Ingen applikasjonskode endret.
+**Mål:** For hvert rapportert problem: hva sier tekst? hva sier koden? hva gjør implementasjonen? finnes det fortsatt? feil eller produktvalg? hvor alvorlig?
+
+**Statuslegende (ny runde):** CONFIRMED · PARTLY CONFIRMED · NOT CONFIRMED · ALREADY FIXED · PRODUCT DECISION · EXTERNAL VERIFICATION REQUIRED (EV)
+**Prioritet:** P0 (launch blocker) · P1 (must fix før launch) · P2 (should fix før/kort etter) · P3 (post launch) · PD (George) · EV
+
+## TC-Sammendrag
+
+| ID | Kategori | Status | Prioritet | Kort |
+|---|---|---|---|---|
+| TC-01 | Match-lovte vs motor | CONFIRMED | P1 | «Du får én match hver lørdag»-copy uten garanti i motoren |
+| TC-02 | Venterom/betaling | CONFIRMED | P1 | Refund/penges-copy i venterommet i gratis-modus |
+| TC-03 | Vipps/betaling | PARTLY CONFIRMED | P1/PD | Betalingsvei ikke implementert; 402-blindvei ved full kvote; «Vipps» i all copy |
+| TC-04 | Reisen-faser | CONFIRMED | P2 | Reisen-side: «tre faser» vs motor/vilkår/dashboard: «fire faser» |
+| TC-05 | Metoder/blogg | ✅ FIXED (ACT A1) | P0 | Uverifiserte kilder («Fetvedt 2018», «Reisner & McAndrew 2022») fjernet; påstander gjort redaksjonelle; Gottman (1999) verifisert og beholdt |
+| TC-06 | Blogg-konsistens | CONFIRMED | P2 | Datomismatch (juni vs januar 2026) + tittelmismatch |
+| TC-07 | Språk/blogg | CONFIRMED | P2 | Nynorsk-lekkasje i begge blogg-tekster («rolegheit», «glemtje», «overflateikke» …) |
+| TC-08 | SEO | CONFIRMED | P1 | ~13 public sider uten egen metadata → alle arver title/description/canonical «/» |
+| TC-09 | SEO/host | PARTLY CONFIRMED + EV | P1 | metadataBase/sitemap/JSON-LD = tosom.no; prod kjører på www.tosom.no (fra forrige checklist) |
+| TC-10 | SEO/sitemap | CONFIRMED | P2 | Sitemap lister «/vilkår» (med å) — ruta er «/vilkar», ingen redirect → 404 i sitemap |
+| TC-11 | SEO/privacy | CONFIRMED | P1 | Ingen noindex på private ruter (dashboard/chat/onboarding/matching/admin …); arver index:true |
+| TC-12 | SEO/OG | CONFIRMED | P2 | public/og-image.png mangler — alle OG/Twitter-shares refererer broken bilde |
+| TC-13 | Død kode/AI | CONFIRMED (dead code) | P2 | lib/seo.ts (ikke importert): «ToSom», «AI-genererte innsikter», AI-produktmetadata |
+| TC-14 | AI-påstand | VERIFIED CLAIM | — | «Ingen AI» i vilkar stemmer: ingen AI-deps, ingen LLM-kall; openai: not_in_use |
+| TC-15 | Personvern/impl | ✅ PARTIALLY FIXED (ACT A2) | P1 | Copy-gap lukket (personvern lover nå kun den eksisterende slettingsbaserte mekanismen); selvbetjening-trekking = PD-6 + legal verifisering |
+| TC-16 | Cookies/analytics | PARTLY CONFIRMED + EV | P2 | Cookies-side: «bare det nødvendige / deler aldri med tredjeparts-tracking» vs aktiv SpeedInsights; Plausible/Umami = av |
+| TC-17 | FAQ/re-queue | PARTLY CONFIRMED | P3 | FAQ: «begge kommer tilbake i køen» — koden setter begge til IDLE (manuell re-queue) |
+| TC-18 | Innholdsteller | CONFIRMED | P2 | Reisen: «12 kategorier med over 240 spørsmål» — faktisk 135 oppgaver i 9 kategorier (FAQ er rett) |
+| TC-19 | Språk | CONFIRMED | P2 | Alle 7 tidligere rapporterte feil fortsatt + nye (oversikt under) |
+| TC-20 | Merkenavn | CONFIRMED | P2 | «ToSom» i FAQ, tilgjengelighet, glemt-passord, settings, e-poster, llms.txt, APP_NAME |
+| TC-21 | CTA-routing | BEVISST (P3) | P3 | Landing → /login, andre sider → /register → redirect /login (auto-registrering på /login er dokumentert) |
+| TC-22 | Nødnummer | ✅ FIXED (ACT A3) | P1 (verifisering) | 116 006 rettet til VO-linjen, 800 30 196 fjernet (ikke verifiserbar), alle gjenværende numre kildeverifisert (volinjen.no, mentalhelse.no, kirkens-sos.no, tryggest.no) |
+| TC-23 | Support-løfter | PRODUCT DECISION | PD | «vanligvis innen 24 timer»/«Forventet svartid: Innen 24 timer» — organisatorisk, ikke verifiserbart fra repo |
+| TC-24 | 5 000-kvote | CONFIRMED (stemmer med nyans) | PD (teller) | Kvote = 5 000 unike gratisbrukere, forbrukes ved kø-inn melding; copy sier «reisene» |
+| TC-25 | 24 timer vs ukentlig | NOT CONFIRMED | — | Alle «24 timer» = grace-period (PDF) — konsistent med cron/journey |
+| TC-26 | Dating-app-SEO | PRODUCT DECISION | PD | «Ikke en datingapp» (vilkår) vs dating-markering = posisjonering vs discoverability |
+| TC-27 | Geografi | NOT CONFIRMED | — | Produkt er teknisk nasjonalt (~5 000 postnr, 30–500/50–750 km); ingen lokal copy |
+| TC-28 | 14 dager bilder | NOT CONFIRMED | — | dag ≥ 15 overalt; «etter 14 dager»/«fra dag 15»/«etter to uker» er semantisk like |
+| TC-29 | Resonans | NOT CONFIRMED (positivt) | — | Ord-nivåer vises, aldri tall; ærlig «veiviser, ikke fasit»-språk beholdes |
+| TC-30 | 21+ | NOT CONFIRMED | — | MIN_AGE=21 håndhevet i onboarding; ærlig «bekrefter du alderen selv» i personvern |
+| TC-31 | Personvern-påstander | MOSTLY VERIFIED | — | bcrypt ✓, presigned URLs ✓, Sentry PII-scrub ✓, admin leser ikke sensitive data ✓; gaps = TC-15/TC-16 |
+| TC-32 | Gratis-kohorte/fallback | PRODUCT DECISION | PD | Full kvote → 402 → /betaling uten betalings-UI (se TC-03); prisloftet er avslørt i copy |
+| TC-33 | Venting/likviditet | PARTLY CONFIRMED | P2 | Venterommet er ærlig («ingen god nok match»); offentlig copy lover mer (TC-01); >14 d-alert er kun admin |
+| TC-34 | Footer/juridisk | NOT CONFIRMED | — | Én COMPANY-konfig, alle public sider renderer Footer; ingen avvik (ingen ©-linje = konsekvent) |
+| TC-35 | Betalingstidspunkt | PRODUCT DECISION + EV | PD | Modell: full refusjon før kobling, ingen etter (vilkår §15 + REFUND-config); config merker «Ikke juridisk bekreftet — må avklares før betaling aktiveres» |
+
+
+
+
+## TC-Detaljer
+
+### TC-01 — «Én match»-formuleringer vs faktisk matchingmotor — CONFIRMED / P1
+- **Lokasjon:** `app/(landing)/page.tsx:108-109` («Én match i uken / Du får én match — valgt med omtanke»), `app/layout.tsx:13` (metadata: «Én gjennomtenkt match i uken»), `app/tips/page.tsx:74` («Du får én match hver lørdag»), `app/faq/page.tsx:16` («Systemet finner den personen som passer best … matchen din venter på deg når du logger inn»), `public/llms.txt` («mottar du én gjennomtenkt match i uken»), `app/priser/page.tsx:228,237`, `app/onboarding/steps/Step10StartReisen.tsx:51`
+- **Faktisk implementasjon:** `app/api/cron/matching/route.ts` + `lib/matching/scoreRound.ts`: ukentlig runde (cron `0 2,3,4 * * 6`), grådig 1:1-paring sortert på score. Forutsetninger: cohort ≥ `MIN_COHORT_SIZE` (2), `MIN_SCORE` (40), dealbreakers klare, deadline ikke nådd. Uten gyldig gjensidig kompatibel kandidat → ingen match; brukeren står fortsatt i kø. **Tosom forsøker å finne én match når en gyldig kandidat finnes — Tosom garanterer ikke én match hver uke.**
+- **Evidens:** `config/matching.ts` (MIN_COHORT_SIZE=2, MIN_SCORE=40); matching-cron: «Kun ${cohortSize} i kø — runden ble ikke kjørt»; venterom `app/matching/page.tsx:690+` (tilstand 3: «Vi fant ingen god nok match denne runden»)
+- **Positivt (beholdes):** `app/metoder/page.tsx:500` og `app/tips/page.tsx:252` («Tosom lover ikke at du får en match …») er ærlige tillitselementer; venterommet formidler «bedre å vente på en god match enn å få en dårlig» korrekt.
+- **Risiko:** Høy — kjernen i produktet er at ingen match er bedre enn en dårlig; «Du får én match» er en falsk garanti som brytes i små kohorter.
+- **Anbefalt fix:** Omskrive loverende formuleringer til forsøks-formulering: «Hver lørdag prøver vi å finne den ene rette — og vi foretrekker ingen match fremfor en dårlig match.»
+- **Verifisering:** Re-grep «får én match|matchen din venter» etter fix.
+
+### TC-02 — Venterom: penges/refund-copy i gratis-modus — CONFIRMED / P1
+- **Lokasjon:** `app/matching/page.tsx:629` («Pengene går med, men du beholder plassen din»), `:646-651` («…få pengene tilbake… Melde meg ut og få pengene tilbake»), `:759-766` («Melde deg ut og få pengene tilbake … ingen grunn å betale. Ingen spørsmål, ingen binding.»)
+- **Faktisk:** `config/features.ts` — `enablePayments` kaster FATAL hvis true (ingen betalingsvei finnes); `PRICING.active=false`; ingen refund-flow i koden.
+- **Risiko:** Misvisende for gratisbrukere; lover refusjonsmekanisme som ikke eksisterer.
+- **Anbefalt fix:** Gjerne betinge penges-teksten på `features.enablePayments` (vises kun i betalingsmodus) eller erstatte med gratis-modus-tekst.
+- **Verifisering:** Grep «pengene» i `app/matching` etter fix.
+
+### TC-03 — Vipps/betalingsstatus (ny kartlegging) — PARTLY CONFIRMED / P1 + PRODUCT DECISION
+- **IMPLEMENTED:** Gratiskvote (5 000 unike brukere; atomisk claim `app/api/journey/queue/route.ts:144`; `lib/payment/freeQuota.ts`; Quota-rad `free_users` + gratis Order `amount:0,status:'PAID'`); admin-kvoteteller; 402 ved full kvote; `REGISTRATION_ENABLED` kill-switch.
+- **NOT YET IMPLEMENTED:** All Vipps-betaling og Vipps-login (feature-gated `NEXT_PUBLIC_VIPPS_ENABLED`, default av; callback er død kode per egen kommentar i `config/features.ts`).
+- **UNVERIFIED PROD CONFIG:** `PAYMENTS_ENABLED`, `NEXT_PUBLIC_VIPPS_ENABLED`, Vipps OAuth-variabler (health-ruten rapporterer).
+- **Blindvei (CONFIRMED):** Full kvote → 402 «Gratiskvoten er oppbrukt. Betaling kreves» + `redirectTo: '/betaling'` — men `/betaling` har ingen betalings-UI og POSTer rett til køen igjen → samme 402. `app/betaling/page.tsx` håndterer ikke 402 spesielt.
+- **Kopi:** vilkar §14, FAQ, priser, landing (`(landing)/page.tsx:282`), betaling, llms — alle sier «betalt med Vipps». Bevisst fremtidsrettet mens kvoten holder; blindveien er den reelle feilen.
+- **Anbefalt fix:** PD: Vipps før/etter lansering? Ved full kvote: bevisst nedstenging med ærlig melding (REGISTRATION_ENABLED=false) i stedet for 402-sløyfe.
+- **Verifisering:** Prod-env (George) + PD-beslutning.
+
+
+### TC-04 — Reisen: «tre faser» vs motoren «fire faser» — CONFIRMED / P2
+- **Lokasjon:** `app/reisen/page.tsx:217-342` («Reisen består av tre faser»: 1 «Uten bilder (dag 1–14)», 2 «Med bilder (dag 15–21)», 3 «Felles reise (dag 22–30)»)
+- **Motsetning:** `lib/journey/engine.ts` = 4 faser (EARLY/BUILDING_TRUST/DEEPER/CHECKIN, phaseOrder 1–4); `app/vilkar/page.tsx:119` («delt i fire faser»); `app/dashboard/page.tsx:216` («30 dager. Fire faser.»); `app/chat/components/ChatHeader.tsx:136` («de 4 reisestega»).
+- **Nyans:** Reisen-sidens «tre faser» er en bilde-tidslinje-perspektivering, men setningen motsetter direkte vilkårene.
+- **Anbefalt fix:** Omtitre til bilde-tidslinje («Slik åpner reisen seg») eller tilpass til motorfasene. Ingen redesign (se TC-29-prinsipp).
+- **Verifisering:** Grep «faser» på reisen/vilkar/dashboard.
+
+### TC-05 — Blogg: uverifiserte forskningskilder/påstander — ✅ FIXED (ACT A1, 23.10.2026) / **P0**
+- **Lokasjon (før fix):** `app/blogg/page.tsx:59` («Fetvedt, G. (2018). Kjærlighetsforskning: Hva bygger varige relasjoner? Universitetsforlaget.»), `:68` («Reisner, A. & McAndrew, C. (2022). The Psychology of Time in Relationship Formation. Journal of Social and Personal Relationships, 39(4), 890–912.»), `app/blogg/[slug]/page.tsx:16` («Studier viser …»), `:28` («Psykologer har observert at det tar omtrent 30 dager …»).
+- **Vurdering (audit):** To av tre referanser har klassiske hallusineringsmønstre. Uverifiserte akademiske referanser kan ikke publiseres som dokumenterte kilder. Status var UNVERIFIED / NOT FOUND IN VERIFICATION (ikke bekreftet oppdiktet).
+- **Risiko:** Høyest i auditen for en tillitsbasert tjeneste: uverifiserte kilder = tillitsskade + direkte motsetning til metoder-siden. P0 inntil fjernet/erstattet.
+
+#### ACT A1 — utført 23.10.2026 (sluttstatus: FIXED)
+
+**Full inventary av /blogg (3 artikler):**
+
+| Artikkel | Påstand (før) | Kilde (før) | Klassifisering | Behandling |
+|---|---|---|---|---|
+| «Hvorfor kompatibilitet betyr mer enn utseende» (slug: `kompatibilitet`) | «Studier viser at kompatibilitet basert på verdier, livssituasjon og emosjonelle mønstre er langt bedre prediktorer …» (artikkel) + «Studier viser at verdier, livsstil og emosjonelle mønstre …» (utdrag) | Fetvedt, G. (2018), *Kjærlighetsforskning: Hva bygger varige relasjoner?*, Universitetsforlaget — ingen DOI | UNVERIFIED / NOT FOUND (påstand: NO SOURCE) | **Gjort redaksjonell (B):** «Tosom er bygget rundt ideen om …». Kilden fjernet fra listesiden. |
+| «Hvorfor 30 dager er den perfekte tidsrammen» (slug: `reisetemaer`) | «Psykologer har observert at det tar omtrent 30 dager …» (artikkel) + «Psykologer har lenge observert …» (utdrag); «den perfekte tidsrammen» i tittel | Reisner, A. & McAndrew, C. (2022), JSPP 39(4), 890–912 — ingen DOI | UNVERIFIED / NOT FOUND (påstand: NO SOURCE; sentral for artikkelen) | **Gjort redaksjonell (B):** omskrevet til bevisst **produkt-designvalg**, eksplisitt uten forskningspåstand («Tretti dager er ikke en vitenskapelig standard …»). Kilden fjernet. Tittel endret til «Hvorfor reisen varer 30 dager» (liste + artikkel, konsistent). |
+| «Hvorfor ro er vår viktigste funksjon» (slug: `rolegheit`) | Ingen forskningspåstand — design/merkevare-påstander | Gottman, J.M. (1999), *The Seven Principles for Making Marriage Work*, Crown — dekorativ kilde, påstanden er ikke avhengig av den | **VERIFIED** | **Beholdt (A).** |
+
+**Kildeverifisering (ekstern, i agentmiljøet):**
+- **Gottman, J.M. (1999), The Seven Principles for Making Marriage Work** — ✅ VERIFIED via Wikipedia (verk: John Gottman, utgitt 16. mars 1999, New York: Crown Publishers, ISBN 978-0609805794). Referansen på listesiden er korrigert til «Crown Publishers» og merket «(Verifisert kilde — boken eksisterer som beskrevet.)».
+- **Fetvedt (2018)** — ❌ UNVERIFIED / NOT FOUND IN VERIFICATION. Fjernet. (Ikke påstått oppdiktet.)
+- **Reisner & McAndrew (2022)** — ❌ UNVERIFIED / NOT FOUND IN VERIFICATION. Fjernet. (Ikke påstått oppdiktet.)
+
+**Andre endringer i samme tekstmiljø (direkte konsekvens):**
+- «Om denne bloggen»-blokken (listeside) sa «Alle artiklene bygger på etablerte relasjonsmodeller» — nå upresist etter oppryddingen. Omskrevet til: «Artiklene er redaksjonelle — vårt eget standpunkt, ikke forskningskonklusjoner. Hvor Tosom bygger på etablerte relasjonsmodeller, står det åpent om på metoder-siden.»
+- Referanse-rendringen i listebrikken gjort kondisjonell (`{art.reference && …}`) siden to av tre artikler nå mangler kilde.
+- Nynorsk-lekkasjer i de omskrevne tekstblokkene ble rettet som sideeffekt (glemtje, overflateikke, «to menneske», «tid som trengst», guiderte/designa/daglege, rolegheit/viktigaste/ol. på `rolegheit`-artikkelen, «valgte … annan vei» i utdrag). Tittelmismatch «rolegheit» vs «ro» (del av TC-06) er dermed **halvveis avlært** via tittel-normalisering; datomismatch (juni/januar) er INTAKT → fortsatt TC-06.
+- 404-tekst «Artikkelen blei ikke funnet» (`[slug]`) er **bevisst urørt** (egen TC-07/ACT, ikke i omskrevne blokker).
+- Metoder-siden er urørt (egen ACT, se pkt. 7). Ingen motsetning mellom blogg og metoder gjenstår: bloggen påstår nå ikke noe metoder-siden avviser.
+
+**Sjekk etter endring:**
+- Grep `Fetvedt|Reisner|McAndrew|Journal of Social and Personal|Universitetsforlaget` i app/lib/components/config → 0 treff.
+- Grep «Studier viser|Psykologer har|perfekte tidsrammen» → 0 treff.
+- `npm run verify` (verify:lang + tsc --noEmit + jest): ✅ EXIT 0 (72 suites, 672 tester, 1 skipped).
+- `npm run lint`: ✅ EXIT 0 («No ESLint warnings or errors»).
+- `npm run build`: ✅ EXIT 0 — `/blogg` (3.02 kB) og `/blogg/[slug]` (2.3 kB) bygges uten import/brokne-lenke-feil; metadata uendret og gyldig.
+- Mislykket underveis: `verify:lang` fanget 4× Nynorsk-formen av «priser» i selve audit-dokumentet (egen prosa, ikke sitat) → rettet til «priser»; gjenkjørt: grønt.
+
+**Sluttstatus TC-05: FIXED.** Ingen uverifiserte akademiske referanser eller udekede «Forskning/Studier viser»-påstander ligger lenger offentlig på /blogg. Ingen artikler avpublisert. Ekstern verifisering gjenstår IKKE som blocker — kun av dokumentasjonsinteresse dersom man ønsker å gjeninnføre forskningspåstander (krever primærkilde-verifisering før).
+
+
+### TC-06 — Blogg: datomismatch + tittelmismatch — CONFIRMED / P2
+- **Liste (`app/blogg/page.tsx`):** 24./20./15. juni 2026. **Artikler (`[slug]`):** 15./10./5. januar 2026. Tittel «Hvorfor ro er vår viktigste funksjon» vs «Hvorfor rolegheit er vår viktigaste funksjon».
+- **Anbefalt fix:** Én kilde for artikkeldata (samme objekt for liste + artikkel).
+- **Verifisering:** Grep datoer på begge sider.
+
+### TC-07 — Blogg: nynorsk/grammatikk — CONFIRMED / P2
+- **Bevis:** `[slug]/page.tsx`: «glemtje» (:14), «overflateikke» + «to menneske» (:18,20), «den tida som trengst» (:32), «guiderte/designa/daglege» (:34), «rolegheit/viktigaste» (:38), «en verd der/oppmerksomheita di/valde/annan veg» (:42), «Artikkelen blei ikke funnet» (:62); `app/blogg/page.tsx:76` «en annan vei — en roligare, tryggere og mer mennesleg tilnærming».
+- **Anbefalt fix:** Bokmål-konvertering av begge tekster + 404-melding.
+- **Verifisering:** Grep nynorsk-markører («-e»-endelser, «bli/valde», «heita», «dagleg») på blogg-filene.
+
+### TC-08 — SEO: ingen per-route metadata → duplicate canonical «/» — CONFIRMED / P1
+- **Bevis:** `grep "export const metadata"` over vilkar/personvern/faq/priser/metoder/reisen/hvorfor/trygghet/cookies/kontakt/om-oss/tips/slik-fungerer-det = ingen (kun tilgjengelighet:7). Alle arver `app/layout.tsx`: landing title/description + `alternates.canonical: "/"` + `openGraph.url: "/"`.
+- **Konsekvens:** ~13 public sider deklarer https://tosom.no/ som sin egen canonical → søkemotoren kan hoppe dem av indeksen.
+- **Anbefalt fix:** Per-route metadata (title/description/canonical/OG url) for hver public side.
+- **Verifisering:** Bygg + inspeksjon av `<link rel=canonical>` per rute.
+
+### TC-09 — SEO: www vs ikke-www — PARTLY CONFIRMED + EV / P1
+- **Repo:** `metadataBase: https://tosom.no` (layout), sitemap + robots + JSON-LD = `tosom.no`. Ingen www i koden.
+- **Prod (fra forrige checklist):** «https://www.tosom.no (live)» → dersom prod kjører på www, peker alle canonicals mot en annen host enn brukeren ser, og uten redirect fins to live hoster.
+- **EV:** Verifisere DNS/Vercel: kjører begge hoster? 301 mellom dem?
+- **Anbefalt fix:** Én kanonisk host (den prod faktisk bruker); metadataBase/JSON-LD/sitemap/robots til den + 301 mellom varianter.
+- **Verifisering:** `curl -sI` på begge hoster + ny metadataBase.
+
+
+### TC-10 — Sitemap: «/vilkår» 404 — CONFIRMED / P2
+- **Bevis:** `app/sitemap.ts` lister `{ path: "/vilkår" }`; ruta er `app/vilkar/page.tsx` → `/vilkar`; `next.config.js` redirects = kun `/slik` → `/slik-fungerer-det`.
+- **Anbefalt fix:** Rett til «/vilkar» (evt. 301 /vilkår → /vilkar).
+- **Verifisering:** GET /vilkår og /vilkar mot bygg.
+
+### TC-11 — Private ruter indexerbar (manglende noindex) — CONFIRMED / P1
+- **Bevis:** `grep -rn "noindex" app` = ingen treff. Root-layout `robots: { index: true, follow: true }` arves av dashboard, chat, onboarding, matching, profile, settings, questions, reisen/avslutning, betaling, register, login, glemt-passord, nytt-passord, dev-login, design-system. `app/admin/layout.tsx`: kun title/description (ingen robots). `app/robots.ts` disallow /admin+/api (delvis mitigerende); sitemap-kommentaren «Private sider skal IKKE indexeres» er ikke implementert.
+- **Risiko:** App-ruter (reiseinnhold, onboarding) kan ende i søkeindeks.
+- **Anbefalt fix:** `robots: { index: false }` i layout for private ruter + admin.
+- **Verifisering:** Grep noindex + metadata-prøv per rute etter bygg.
+
+### TC-12 — og-image.png mangler — CONFIRMED / P2
+- **Bevis:** `app/layout.tsx` OG/Twitter `url: "/og-image.png"`; `ls public/` → ingen og-image.png (kun favicon, hero.jpg, icons, llms.txt, manifest, uploads, vercel.svg).
+- **Konsekvens:** Alle sosiale shares får broken bilde.
+- **Anbefalt fix:** Lage `public/og-image.png` (1200×630) med Tosom-merkevare.
+- **Verifisering:** Filstest + share-preview etter deploy.
+
+### TC-13 — lib/seo.ts: død kode med AI-påstander og gammelt merke — CONFIRMED (dead code) / P2
+- **Bevis:** Ingen import av `lib/seo.ts` noe sted. Filen inneholder «ToSom»-merkenavn, `keywords: ["dating", …]` og et «AI-specific metadata»-blokk: «AI Match Insights — Få AI-genererte innsikter om dine matcher», «AI Profilforbedring», «AI Journey Guide» — funksjoner som aldri finnes i produktet; nynorsk «oppdaga»; ruter som ikke eksisterer.
+- **Status:** Ikke brukerdelt i dag. Risiko: et fremtidig import reintroduserer AI-kontrdiksjon til vilkårene.
+- **Anbefalt fix:** Slette filen i ACT-fasen (død kode, ingen funksjonstap).
+- **Verifisering:** Grep imports = 0 etter sletting; build grønn.
+
+### TC-14 — «Ingen AI»-påstand — VERIFIED CLAIM
+- **Påstand:** `app/vilkar/page.tsx:119`: «det finnes ingen AI som skriver meldinger, gir råd eller opptrer som samtalepartner.»
+- **Teknisk bevis:** Ingen AI-avhengigheter i `package.json`; `app/api/system/health/route.ts`: openai `status: 'not_in_use'`; matching er regellbasert (`lib/matching/unifiedScorer.ts`, dealbreakers); alt samtaleinnhold er statisk (`app/chat/data/tasks.ts`, journey-prompts).
+- **Konklusjon:** Påstanden stemmer — forsvarlig også i sterkere form: AI finnes verken i matching, samtale eller kommunikasjon.
+
+
+### TC-15 — Samtykketrekk er ikke implementert — ✅ PARTIALLY FIXED (ACT A2, 24.10.2026): copy-gap lukket; selvbetjening-trekking = PD-6 / LEGAL VERIFICATION REQUIRED / P1
+- **Påstand (før fix):** `app/personvern/page.tsx:135` («Du kan trekke samtykket når som helst under Innstillinger. Vi sletter da opplysningene …»), `:89` og `:187` («…eller samtykket trekkes»), `:212` («Trekke samtykke — når som helst, uten at det får følger for deg»), `:219` («…rette opplysninger, trekke samtykke eller slette kontoen»).
+- **Faktisk:** `app/settings/page.tsx` har ingen samtykke-funksjon; `app/api/consent/route.ts` har kun GET/POST (innvilging, `z.literal(true)`); ingen sted settes `sensitiveConsentAt` tilbake til null utenom kontosletting. `app/samtykke/page.tsx:152-154` («ved å slette kontoen din») stemte med implementasjonen, men motsatte personvern-sidens løfte.
+
+#### ACT A2 — utført 24.10.2026 (sluttstatus: PARTIALLY FIXED)
+
+**A. Kartlegging av faktisk samtykkemodell (før noen endring):**
+
+**A) Hva samtykker brukeren faktisk til?** To separate aktive avkrysninger på `/samtykke` (brukeren må krysse begge selv — ingen er forhåndsavkrysset):
+1. Vilkår + personvern (`termsAcceptedAt` + `termsVersion` = `config/legal.ts:TERMS_VERSION`).
+2. Uttrykkelig art. 9-samtykke: «Jeg samtykker til at Tosom bruker svarene mine om religion, hvem jeg søker, nærhet og trygghet — kun for å finne én match til meg» (`sensitiveConsentAt`).
+(Atskillt og urørt: `withdrawalWaiverAt` = angrerett-samtykke ved betaling — ingen sammenheng med art. 9.)
+
+**B) Når gis det?** Ny bruker: `/samtykke` før onboarding (dashboard/OnboardingFlow redirect ved `needsConsent`). Eksisterende bruker: `/dashboard` redirect til `/samtykke?next=/dashboard` når `termsVersion` er utdatert eller `sensitiveConsentAt === null`. Server-side gate: `POST /api/profile/setup` nekter (403) å lagre profil uten gyldig samtykke.
+
+**C) Hva lagres som bevis?** `User.termsAcceptedAt` (DateTime), `User.termsVersion` (String), `User.sensitiveConsentAt` (DateTime) — kun tidspunkt for **siste innvilging**, ingen historikk. Ingen user-audit-event for samtykke (AuditLog-modellen er admin-only). Dataexport (`/api/settings/export`) inkluderer `sensitiveConsentAt` + `withdrawalWaiverAt` (art. 15/20) ✓.
+
+**D) Hvilke data/funksjoner er avhengige av samtykket?**
+- Profil-lagring er hard-gated (ovenfor).
+- **Matching-cron sjekker IKKE `sensitiveConsentAt` per runde** («én motor: kohortbasert parvis kobling uten samtykke», `app/api/cron/matching/route.ts:5`). Kandidatquery: `journeyState=QUEUED + onboardingComplete + bannedAt=null + deletedAt=null`. Samtykket er en forutsetning ved profil-lagring, ikke en per-runde-forutsetning.
+- Sensitive data per personvern §4: nærhet/intimitet, emosjonelle behov (kan si noe om psykisk helse), grenser/tidligere erfaringer, trygghetsnivå/livssituasjon, religiøs overbevisning, kjønn/hvem du søker (seksuell orientering). Teknisk hjem: `Profile.deepProfileData` (religion, acceptedReligions, agePrefMin/Max, communicationScores), `Profile.lifestyle/lifeSituation/boundaries/emotionalNeeds/intimacy/securityLevel` (Json), `postalCode/latitude/longitude`, psykometriske felt (bigFive, attachment, valueProfile, emotionRegulation). **Nøyaktig felt-mapping for art. 9 = EXTERNAL LEGAL VERIFICATION REQUIRED** (personvern §4 bruker bevisst uskarphet: «kan si noe om …»).
+
+**E) Hva lovet brukerrettet tekst?** Personvern §5/§9/§10/§11 lovet selvbetjening-trekking under Innstillinger + «Vi sletter da opplysningene» + «uten at det får følger for deg». Samtykkesiden lovet (korrekt) slettingsbasert trekking. Settings lovet (korrekt) kun «uttrekk eller sletting av persondata». FAQ/vilkår/llms: ingen trekking-spørgsmål.
+
+**F) Eksisterende teknisk støtte for trekking?** Nei. Kun innvilging-endepunkt. Den eneste virkende «trekk»-veien i dag = konto-sletting (GDPR art. 17), som sletter Profile (inkl. deepProfileData), User, samtaler mv. `MatchHistory` (ID-er + outcome, ingen sensitivt innhold) og `Report`/`UserBlock` overlever sletting per design (audit/trygghet).
+
+**Avgjørelse (per instruks 2):** Korrekt konsekvens for selvbetjening-trekking kan IKKE bestemmes sikkert fra arkitektur + dokumentasjon:
+1. **Sletteomfang** (PD + LEGAL): kun feltene i samtykke-avkrysningen (religion/hvem du søker/nærhet/trygghet) vs personvern §4s bredere liste vs hel profil. Personvern §5 («grunnlaget for koblingen tynnere») antyder at del-profiler er gyldige — men felt-for-felt art. 9-klassifisering finnes ikke i repoet. Ikke improvisert.
+2. **Aktiv reise/match** (PD): trekking midt i 30-dagersreise — avslutter reisen (sterk konsekvens, som sletting gjør via endJourney) eller fortsetter? Udefinert i all dokumentasjon.
+3. **Kø-behandling** (SAFE i seg selv): QUEUED → IDLE ved trekking, men kobles til 1 og 2.
+
+→ **Withdrawal-flow er STOPPET (ikke implementert).** I stedet er copy-gapet lukket ved å gjøre public copy sann (instruks 3 + 10):
+
+**Copy-rettelser (eneste app-endring, `app/personvern/page.tsx`):**
+- `:89` (rettsgrunnlag-tabell): «Til kontoen slettes eller samtykket trekkes» → «Til kontoen slettes (slik trekkes samtykket tilbake)»
+- `:135` (§5): → «Du kan trekke samtykket tilbake når som helst. I Tosom gjør du dette ved å slette kontoen din under Innstillinger. Da slettes sensitive opplysninger om deg, og de brukes ikke i framtidige koblinger. Det påvirker ikke lovligheten av behandlingen som har skjedd fram til den tid.»
+- `:187` (retensjonstabell): → «Til kontoen slettes (slik trekkes samtykket tilbake)»
+- `:212` (§10 rettigheter): → «Trekke samtykke — når som helst, ved å slette kontoen din»
+- `:219` (§11): → «…rette opplysninger eller slette kontoen (som også trekker samtykket).»
+- `app/samtykke/page.tsx:152-154` er **urørt** — den var allerede sann. `app/settings/page.tsx:769` («uttrekk eller sletting») er sann — urørt.
+
+**Edge-case-klassifisering (instruks 7) for den fremtidige withdrawal-flowen (PD-6):**
+| Tilstand | Klassifisering |
+|---|---|
+| Trekker før matching (ingen profil/kø) | SAFE IMPLEMENTATION (kun null-still sensitiveConsentAt) |
+| Står i kø (QUEUED, ingen match) | SAFE IMPLEMENTATION (QUEUED → IDLE + cron-guard) — men sletteomfang avgjøres først |
+| Aktiv match/reise i gang | **PRODUCT DECISION REQUIRED** (avslutte vs fortsette reisen) |
+| Reise avsluttet (ended/24t grace) | SAFE (ingen matching-konsekvens; reisen er ferdig) |
+| Trekker etter match (reise ferdig, IDLE) | SAFE IMPLEMENTATION (null-still + sletteomfang) |
+| Legacy-bruker (sensitiveConsentAt = null, eldre termsVersion) | CLEAR EXISTING BEHAVIOR (dashboard-redirect til /samtykke er allerede mekanismen) |
+
+**Auditing/bevis (instruks 9) for fremtidig implementering:** Ingen user-audit-log finnes i dag; minst `sensitiveConsentWithdrawnAt DateTime?` trengs som trekking-bevis (analogi: `withdrawalWaiverAt`). Eksisterende AuditLog er admin-only og egner seg ikke uten endring — ikke bygd i denne ACT-en.
+
+**Test:** CW-01–CW-10 er **ikke** bygget — ingen godkjent withdrawal-modell finnes (instruks 11: «Ikke bygg tester for en modell som ikke er godkjent»). Eksisterende konsent-tester (`__tests__/consent-required.test.ts`, `delete-account.test.ts`, `privacy-anonymize-s10.test.ts`, `privacy-retention-s10.test.ts`, `integration/export-deepprofile.test.ts`) kjørt uendret og grønt.
+
+**Sluttstatus TC-15: PARTIALLY FIXED / EXTERNAL LEGAL VERIFICATION REQUIRED.** Public copy er nå sann på begge sider (personvern + samtykke er konsistente: trekking skjer via kontosletting). Selvbetjening-trekking-under-Innstillinger er bevisst **ikke** implementert — krever PD-6 (sletteomfang, reise-håndtering, kø, UX, bevis) + EXTERNAL LEGAL VERIFICATION (art. 9-felt-mapping og «like lett som det ble gitt»-kravet: sletting er en tyngre handling enn en avkrysning på samtykkesiden — ikke juridisk verifisert at slettingsbasert trekking oppfyller art. 7(3)/considerasjon 42). TC-15 regnes IKKE som fullstendig løst.
+
+### TC-16 — Cookies/analytics: påstander vs faktiske tjenester — PARTLY CONFIRMED + EV / P2
+- **Påstander (app/cookies/page.tsx):** «bare det nødvendige av cookies … deler aldri data med tredjeparts-tracking»; «Vi bruker ingen analytics-cookies … Vi har et minimalt, privat analyserverktøy»; «Permanente cookies … opptil 1 år».
+- **Faktisk:** SpeedInsights er **aktiv** i root-layout (`app/layout.tsx:129`) — nevnes ikke på cookies-siden (personvern nevner Vercel som databehandler). Plausible/Umami (`components/analytics/AnalyticsProvider.tsx`) er OFF default og laster ingen eksterne scripts i dag; fallback `/api/analytics/track` gjør i praksis ingenting. Sentry: kun server/edge-init (ingen klient-init/replay). Session-cookie `tosom_session` (24 t) = teknisk nødvendig ✓.
+- **EV:** Om Vercel Speed Insights setter langlevd cookie (f.eks. `speedbump`) — sjekke Vercel-dokumentasjon før cookies-siden endres.
+- **Anbefalt fix:** Nevne Speed Insights ærlig på cookies-siden; presisere/fjerne «minimalt, privat analyserverktøy» (ingen aktiv i dag).
+- **Verifisering:** Nettleserinspeksjon av cookies i prod + Vercel-dokumentasjon.
+
+### TC-17 — FAQ: «begge kommer tilbake i køen» — PARTLY CONFIRMED / P3
+- **Påstand:** `app/faq/page.tsx:28`: «…begge kommer tilbake i køen for en ny match.»
+- **Faktisk:** `lib/journey/endJourney.ts` setter begge til `journeyState: 'IDLE'` — brukeren må manuelt melde seg på køen på nytt.
+- **Anbefalt fix:** «begge kan stille seg i køen igjen for en ny reise» (eller automatisk re-queue som PD).
+- **Verifisering:** Re-lese FAQ + endJourney etter fix.
+
+### TC-18 — Oppgavetall: Reisen vs faktisk data — CONFIRMED / P2
+- **Påstand:** `app/reisen/page.tsx:415`: «12 kategorier med over 240 spørsmål».
+- **Faktisk:** `app/chat/data/tasks.ts`: 9 kategorier, 135 oppgaver (grepet). `app/faq/page.tsx:20`: «135 oppgaver i 9 kategorier» ✓ korrekt.
+- **Anbefalt fix:** Reisen-side → «9 kategorier med 135 oppgaver» (ideelt: leste fra datakilden for å unngå drift).
+- **Verifisering:** Grep «kategorier|spørsmål» på reisen + FAQ.
+
+
+### TC-19 — Språkfeil (tidligere rapporterte + nye) — CONFIRMED / P2
+**Tidligere rapporterte — alle fortsatt der:**
+| Streng | Lokasjon | Korrekt |
+|---|---|---|
+| «dypde» | `app/priser/page.tsx:264` | «dybde» |
+| «hvor dypere dere vil grave» | `app/reisen/page.tsx:415` | «hvor dyp dere vil grave» |
+| «Fordi mennesker er ikke skapt» | `app/hvorfor/page.tsx:132` | «Fordi mennesker ikke er skapt» |
+| «Relasjoner ikke er effektivitet» | `app/om-oss/page.tsx:356` | «Relasjoner er ikke effektivitet» |
+| «Aktuell viden» (dansk) | `app/metoder/page.tsx:449` | «Nyt kunnskap» / «Gjeldende kunnskap» |
+| «taper på akserne» (nynorsk) | `app/metoder/page.tsx:164` | «spenner over aksene» |
+| «Fortsett standard» | `app/metoder/page.tsx:175` | «Fortsetter å være standard» |
+
+**Nye funn i denne runden:**
+| Streng | Lokasjon | Mangel |
+|---|---|---|
+| «de fortsatt etterprøves» | `app/metoder/page.tsx:502` | mangler «er/blir» — «de er fortsatt under etterprøving» |
+| «det føldes som mest tilstrekkelig» | `app/chat/data/tasks.ts:47` | «det føltes som mest tilstrekkelig» |
+| «en liten ritual» | `app/chat/data/tasks.ts:59` | «et lite ritual» |
+| «du onsdag...» | `app/chat/data/tasks.ts:212` | «du onsdag, jeg torsdag…» |
+| «sørd» | `app/chat/data/tasks.ts:198` | «syd» |
+| «Refrenget: begge» | `app/chat/data/tasks.ts:215` | «Refrånet: begge» |
+| «to nordmann» | `app/chat/data/tasks.ts:213` | «to nordmenn» |
+| «Tosom er for deg som har fylt 21+» | `app/reisen/page.tsx:578` | «…har fylt 21» |
+| «Verditester» | `app/metoder/page.tsx:110` | uvanlig/feil ord — «verdidimeter»/«verditester» krever kildesjekk (lav konfidens) |
+
+- **Anbefalt fix:** Batch-korreksjon med replace-copy (preparert i ACT E); oppgavetekstene vises brukeren i chatten, så de teller som brukerrettet.
+- **Verifisering:** Grep hver streng etter fix = 0 treff.
+
+### TC-20 — Merkenavn «ToSom» i brukerrettet tekst — CONFIRMED / P2
+- **Kanonisk navn:** Tosom (besluttet). **Brukerrettet forekomster (kanonisk-feil):**
+  - `app/faq/page.tsx:11,12,31,51` («Hva er ToSom egentlig?», «ToSom er en 30-dagers samtale…», «Hva koster ToSom?», «ToSom er bygget slik at…»)
+  - `app/tilgjengelighet/page.tsx:8,9,50` (title, description-metadata, brødtekst)
+  - `app/glemt-passord/page.tsx:105` («eposten du bruker på ToSom»)
+  - `app/settings/page.tsx:818` («ToSom-bruker» fallback-navn)
+  - `lib/email/index.ts` — alle e-poster (velkommen, passord-resett, match-epost, konto slettet): «ToSom»
+  - `lib/emotional.ts:343` («ToSom er designet for tålmodighet.»)
+  - `public/llms.txt` («# ToSom», «Hva er ToSom»)
+  - `lib/constants.ts:1` — `APP_NAME = "ToSom"` (ubrukt død konstant — men feil kilde hvis noen importerer den)
+- **TECHNICAL IDENTIFIERS (ikke endres blindt):** 273 treff på «ToSom» i app/ — flertallet er komponentnavn (ToSomSection/ToSomButton m.fl.) og kodekommentarer. «TOSOM» finnes kun i kodekommentarer (ikke brukerrettet).
+- **Anbefalt fix:** Kontrollert replace av kun brukerrettet tekst (lista over); komponentnavn kan renames i en separat, valgfri ACT (lav prioritet, høy diff-støy).
+- **Verifisering:** Grep «ToSom» i app/ (non-admin) etter fix = kun komponentnavn/identifikatorer.
+
+### TC-21 — CTA «Start reisen»-destinasjoner — BEVISST (konsistent via auto-registrering) / P3
+- **Kartlagt:** Landing «Start reisen» → `/login`. Pris/hvorfor/slik-fungerer-det/om-oss/cookies/metoder/tilgjengelighet/kontakt/blogg «Start reisen» → `/register` → `redirect('/login')` (`app/register/page.tsx:8`). `app/(auth)/onboarding/start` → `redirect('/login')` (kommentar: «Registrering skjer via auto-registrering på /login»).
+- **Vurdering:** Én destinasjon i praksis (/login med auto-registrering) — BEVISST, ikke inkonsistent. `/register` er en død alias-side; onboarding Step10 «Start reisen» → POST /api/journey/queue → /matching (eller 402 → /betaling) ✓.
+- **Anbefalt fix (valgfritt):** Fjerne `/register`-siden eller beholde som 301-alias; standardisere CTA-hrefs direkte mot /login.
+- **Verifisering:** Manuell klikk-test av alle CTAer.
+
+### TC-22 — Hjelpenumre/nødnumre — ✅ FIXED (ACT A3, 24.10.2026) / P1 (verifisering før launch)
+- **Inventory før (én side, `app/trygghet/page.tsx:144-149`):** 112 «Nødnummer politi» · 02800 «Politiets sentralbord» · 116 123 «Mental Helses hjelpetelefon, døgnet rundt» · 22 40 00 40 «Kirkens SOS, døgnet rundt» · 116 006 «Krisesenter, landsdekkende» · 800 30 196 «Vern for eldre». Ingen andre numre i app/components/config/lib/public (llms.txt, FAQ, personvern, vilkår: ingen hjelpenumre). 113 / 116 117 vises ikke (grep) → ikke tilføyd (instruks 4).
+
+#### ACT A3 — utført 24.10.2026 (sluttstatus: FIXED)
+
+**Verifisering mot offisielle/primære kilder (hentet i agentmiljøet):**
+| Nummer | Tjeneste | Offisiell kilde (URL, hentet 24.10.2026) | Verifisert |
+|---|---|---|---|
+| 116 006 | VO-linjen / Vold- og overgrepslinjen | **volinjen.no** (offisiell side): «En hjelpelinje for deg som opplever vold eller overgrep i nære relasjoner … Helt gratis og anonymt. Vår telefontjeneste er døgnåpen og chatten er åpen mandag til fredag kl. 09.00 – 20.00.» + **dinutvei.no/hjelp/vo-linjen** (NKVTS, oppdrag for Justis- og beredskapsdepartementet): «Telefonen er landsdekkende, gratis og åpen hele døgnet … du kan ringe anonymt» | ✅ NAVN, NUMMER, FORMÅL, GRATIS, landsdekkende, døgnåpen (TELEFON), ANONYMT |
+| 116 123 | Mental Helses Hjelpetelefon | **mentalhelse.no/hjelp/hjelpetelefonen** (offisiell): «116 123 er en gratis og døgnåpen telefontjeneste … Du kan være anonym og vi har taushetsplikt. Telefonen er åpen alle dager, året rundt, også på røde dager.» | ✅ KAN, NUMMER, GRATIS, ANONYM, DØGNÅPEN |
+| 22 40 00 40 | Kirkens SOS (SOS-telefonen) | **kirkens-sos.no** (offisiell startside): «Ring SOS 22 40 00 40 … Kirkens SOS er landets største døgnåpne krisetjeneste på telefon og nett … Hver dag, hele døgnet, besvarer vi … henvendelser … også i ferier og høytider» | ✅ NUMMER + DØGNÅPEN TELEFON. (Anonymitet/taushetsplikt: ikke eksplisitt på startside → IKKE inkludert i copy.) |
+| 112 | Politiet (akutt) | **politiet.no** (offisiell 112-side) — eksternt verifisert: 112 ringes når det er behov for øyeblikkelig hjelp. | ✅ NUMMER + ROLLE (ekstern verifisering bekreftet av Politiet.no) |
+| 02800 | Politiet (ikke akutt) | **politiet.no** (offisiell side) — eksternt verifisert: 02800 ringes når man ønsker å kontakte politiet om tjenester eller annet som ikke er en nødsituasjon. | ✅ NUMMER + ROLLE (ekstern verifisering bekreftet av Politiet.no) |
+| 800 30 196 | «Vern for eldre» | **tryggest.no** (offisiell Bufdir-side, «TryggEst – vern for risikoutsatte voksne»): TryggEst er en **kommunal modell**; siden lister kun kommune-spesifikke telefonnummer. **800 30 196 nevnes ikke.** Ingen offisiell primærkilde fantes som bekrefter nummer, tjenestenavn, målgruppe eller nasjonal døgnåpen tilgjengelighet. | ❌ **REMOVE – NOT CURRENTLY VERIFIABLE** |
+
+**Endringer i `app/trygghet/page.tsx` (én fil):**
+- §10 «Hvis du trenger hjelp» omstrukturert i grupper (nytt `groups`-felt i Section-interface + rendering, `heading-sm`-styling): **Ved akutt fare** (112) · **Politi, når det ikke er akutt** (02800) · **Vold og overgrep i nære relasjoner** (116 006 VO-linjen) · **Noen å snakke med** (116 123, 22 40 00 40) · **Andre spesifikke tilbud** (TryggEst/tryggest.no).
+- 116 006: feil-etiketten «Krisesenter, landsdekkende» → **VO-linjen (Vold- og overgrepslinjen)** med verifisert formål («hjelpetelefon», ikke krisesentertilbud).
+- 800 30 196 «Vern for eldre»: **fjernet** (ikke verifiserbar i offisielle kilder). Erstattet med verifisert offisiell peker: «TryggEst (tryggest.no) — informasjon om kommunale kontaktpunkter mot vold og overgrep mot sårbare voksne» (ikke presentert som nasjonal telefon).
+- 112/02800: roller presisert («akutte situasjoner som krever øyeblikkelig hjelp» / «situasjonen ikke er akutt») i tråd med verifiserte grunnfakta.
+- Kirkens SOS: «døgnet rundt» beholdt for **telefonen** (verifisert offisielt). Tidligere audit-tvil («ikke døgnet rundt») er løst til positiv: offisiell side sier døgnåpen. Chattenes egne timer (VO-linjen chat man–fre 09–20) er bevisst IKKE slått sammen med telefonen.
+- Nødtjeneste-avstand (instruks 6): ny rolig setning i §10: «Tosom er ikke en nødtjeneste, og vi kan ikke reagere på akutte hendelser. Ved akutt fare ringer du nødtjenestene direkte.»
+- Ingen nye numre tilføyd (113/116 117 ikke vist → ikke lagt til). Ingen eksterne lenker lagt til (ren tekst, trygghet-sidens eksisterende stil).
+
+**HC-test (grep-verifiserte; repo har ingen testmønster for statisk side-innhold → dokumentert grep i stedet, jf. instruks 9):**
+- HC-01 ✅ `app/trygghet/page.tsx:148` — «112 — Politiet. Ring ved akutte situasjoner som krever øyeblikkelig hjelp» under gruppen «Ved akutt fare».
+- HC-02 ✅ `:152` — «02800 — Politiet. Ring når du vil kontakte politiet og situasjonen ikke er akutt».
+- HC-03 ✅ `:157` — «116 006 — VO-linjen (Vold- og overgrepslinjen)»; grep «Krisesenter, landsdekkende» i app/ → 0 treff.
+- HC-04 ✅ `:163` — «116 123 — Mental Helses Hjelpetelefon».
+- HC-05 ✅ `:164` — «22 40 00 40 — Kirkens SOS».
+- HC-06 ✅ grep «800 30 196» i app/ components/ public/ → 0 treff.
+- HC-07 ✅ grep «døgnåpen|døgnet rundt|hele døgnet» i app/ → kun 3 treff, alle med verifisert kilde (116 006-telefon, 116 123, Kirkens SOS-telefon).
+- HC-08 ✅ `:143` — «Tosom er ikke en nødtjeneste, og vi kan ikke reagere på akutte hendelser …».
+
+**Sluttstatus TC-22: FIXED.** Alle offentlig viste numre har offisiell/primær kilde: fire direkte verifisert av agenten mot offisielle sider (volinjen.no, dinutvei.no, mentalhelse.no, kirkens-sos.no, tryggest.no), og 112/02800 er eksternt verifisert mot Politiet.no (112 = øyeblikkelig hjelp; 02800 = henvendelser som ikke er en nødsituasjon).
+
+
+
+### TC-23 — Support-responstid — PRODUCT DECISION
+- **Løfter:** `app/kontakt/page.tsx:150` («Vi svarer så raskt vi kan, vanligvis innen 24 timer»), `:231` («Forventet svartid: Innen 24 timer»); `app/trygghet/page.tsx` («Du får svar fra et menneske»); `app/personvern/page.tsx:220` («Vi svarer innen 30 dager» — GDPR).
+- **Faktisk:** Ingen automatikk, SLA eller bemanningsinformasjon i repo. Løftene er organisatoriske.
+- **Vurdering:** Kan ikke verifiseres fra repo → George må bekrefte at «innen 24 timer» er holdbart for en 1-persons-bemanning (eller nedtones til «vi svarer så raskt vi kan — vanligvis innen noen få dager»).
+- **Verifisering:** PD-beslutning.
+
+
+### TC-24 — «De første 5 000 reisene er gratis» — hva teller systemet? — CONFIRMED (nyans) / PD (teller)
+- **Faktisk mekanikk:** Kvote = **5 000 unike gratisbrukere** (ikke matcher/par/reiser). `lib/payment/freeQuota.ts`: atomisk claim av Quota-rad `free_users` (row-lock) + gratis Order (`amount:0, status:'PAID', provider:'free_quota'`). Forbrukes **én gang per bruker ved kø-inn melding** (`app/api/journey/queue/route.ts:144`); eksisterende PAID-ordre hindrer dobbelt claim; `releaseFreeQuota` ruller tilbake ved feil etter claim.
+- **Copy vs mekanikk:** «De første 5 000 re**isene** er gratis» (betaling, vilkar §14, FAQ, priser, landing) — men én bruker som går på 3 reiser forbruker kun én plass. Nyans, ikke feil i praksis. Vilkår leser samme tall fra `PRICING.freeUserCap` (én kilde) ✓.
+- **Fallback ved full kvote:** 402 → /betaling → blindvei (TC-03). Prisloftet er ærlig avslørt (landing: «Når de 5 000 første er tatt, koster én reise 349 kroner»).
+- **PD:** Ønskes offentlig kvote-teller? (i dag kun admin-dashboard.)
+
+### TC-25 — «24 timer» vs ukentlig matching — NOT CONFIRMED
+- **Alle brukerrettede «24 timer»** (FAQ, personvern, betaling, matching, reisen/avslutning, trygghet) = grace-period: «Vi fant hverandre» → samtalen beholdes 24 timer til PDF-nedlasting, deretter permanent slettet. Implementasjon: `app/api/cron/journey/route.ts:370,448-455` — konsistent.
+- **Ingen** «match innen 24 timer»-påstand finnes i metadata/descriptions/landing/FAQ/e-post. Matching = natt til lørdag (cron `0 2,3,4 * * 6`; `MATCH_ROUND` = lørdag/time 3/«natt til lørdag») — alle 39 «natt til lørdag/lørdag»-forekomster stemmer.
+- **Konklusjon:** 24t-vs-ukentlig-motsetningen finnes ikke i dagens kode. (Kontakt «vanligvis innen 24 timer» = support, TC-23.)
+
+### TC-26 — «Ikke en datingapp» vs SEO — PRODUCT DECISION
+- **Bevis:** vilkar:46 («Tosom er ikke en datingapp …»); hvorfor:284 og om-oss:305 («moderne dating …» — kontrast-marketing); blogg (kontrast); døde seo.ts hadde «dating»-keyword.
+- **Vurdering:** Ikke selvmotsigelse: posisjonering vs søkbarhet. Dokumenteres som PRODUCT/MARKETING DECISION, ingen bug.
+
+### TC-27 — Geografi/avstand — NOT CONFIRMED (capability vs strategy)
+- **Faktisk:** Nasjonalt produkt. `lib/geo/postalCodes.json` (~5 000 norske postnummer, Postens åpne register); `config/distance-prefs.ts`: tettsted ≥ 8 postnr → 30–500 km, ellers 50–750 km; ingen by-liste. By = fri tekst («F.eks. Asker, Bergen eller Stavanger»).
+- **Copy:** Ingen side begrenser til Oslo/Asker/Bærum/Akershus. «Oslo»-treff er kun verneting (vilkår) og Datatilsynets adresse (personvern).
+- **Konklusjon:** PRODUCT CAPABILITY = nasjonalt; eventuell lokal lansering = LAUNCH STRATEGY. Ingen copy-fix.
+
+### TC-28 — 14 dager uten bilder — NOT CONFIRMED (semantisk konsistent)
+- **Kode:** `isPhotosAllowed(day) = day >= 15` (engine), `JOURNEY.imageUnlockDay = 15` (config).
+- **Copy:** vilkar «fra dag 15» (×2), trygghet «fra dag 15» + «etter to uker», FAQ «Ved dag 15» + «I 14 dager … ved dag 15», dashboard «Dag 15 — Bilder åpnes», chat «låses opp dag 15», landing «Bilder etter 14 dager», reisen «dag 1–14 uten / dag 15+ med».
+- **Konklusjon:** Alt semantisk like (14 hele dager uten bilde; låses opp på dag 15). Produktavgjørelsen endres ikke.
+
+### TC-29 — Resonans — NOT CONFIRMED (positivt)
+- **Beregnes:** 6-dimensjons unifiedScore 0–100 (values .25, attachment .25, personality .15, communication .15, emotionRegulation .10, lifeSituation .10) + dealbreakers.
+- **Vises brukeren:** Kun ord (Dyp/Sterk/God/Rolig resonans). Raw score i `/api/profile/me` (matchScore) **renderes aldri** i UI (død client-payload).
+- **Kun internt/admin:** score, breakdown, reject reasons.
+- **Ærlig språk (tillitselement, beholdes):** metoder :272 «veiviser, ikke en fasit», :411 «ikke en kjærlighetsdiagnose», :501 «Vi lover ikke at scoringen er feilfri»; vilkar :112 «Motoren bruker aldri bilder eller utseende»; personvern :145 «Du får aldri en tallskår, og du blir aldri rangert mot andre».
+- **Konklusjon:** Ingen formulering presenterer resonans som vitenskapelig relasjonsprediktor. «Seks dimensjoner» (FAQ) = kodes 6 dimensjoner ✓.
+
+
+### TC-30 — Målgruppe 21+ — NOT CONFIRMED
+- **Vises:** landing-metadata («For voksne 21+»), reisen:578, questions:4 (kommentar), personvern §15.
+- **Håndheves:** `MIN_AGE = 21` i `lib/validation/onboarding-steps.ts:99,131,138`; selverklært — ærlig avslørt i personvern («I dagens beta … bekrefter du alderen selv»).
+- **Copy:** Ingen 30+-signal; «moden»-ordbruk gir ingen konkret alderssignal. Målgruppen endres ikke.
+
+### TC-31 — Personvernpåstander vs faktisk behandling — MOSTLY VERIFIED
+- **VERIFIED:** bcrypt-passordhash (`lib/auth/hash.ts`); presigned bilder med begrenset levetid (`lib/storage/r2.ts`); Sentry PII-scrubbing (`sentry.server.config.ts` → `lib/observability/pii`); admin leser ikke sensitive data (users-API select uten onboardingData); databehandler-tabellen stemmer med faktiske services; «tilstreber EU/EØS» (ikke-absolutt ✓); Vipps ærlig markert beta/fremtidig ✓; rapportbevis 90 d dekket (PL-15-reset i cron/journey).
+- **TOO ABSOLUTE / GAP:** (1) samtykketrekk-løftet (TC-15); (2) cookies «deler aldri med tredjeparts-tracking» vs aktiv SpeedInsights (TC-16); (3) «leses aldri av oss manuelt» (§5) holder for sensitive data/admin, men moderasjon leser samtaler — separat avslørt i §17, grensedragningen bør forblive presis.
+- **Ingen juridisk rewrite i denne fasen.**
+
+### TC-32 — Gratis-kohorte/fallback — PRODUCT DECISION
+- **Kode-fakta:** kvote 5 000 (TC-24); måling = Quota-rad + Order-count; fallback = 402 + redirect (blindvei, TC-03); informerende tekster: landing/vilkår/FAQ/priser ✓.
+- **PD:** Tidspunkt for Vipps/extend-kvote. Ingen vekstregning uten data.
+
+### TC-33 — Venting/likviditet — PARTLY CONFIRMED / P2
+- **Bruker ser:** kø-nedtelling, «låst»-tilstand (fredag 23:59–lørdag), ærlig «Vi fant ingen god nok match denne runden» + «bedre å vente på en god match enn å få en dårlig» + «Neste mulighet er lørdag» + profil-CTA + exit-valg (`app/matching/page.tsx`).
+- **Admin ser:** deferral-logg, køalder, >14 d-varsel (`app/api/cron/matching/route.ts:196-209,495`) — kun admin, ingen brukerrettet langventing-varsel.
+- **Mismatch:** Offentlig copy lover «én match i uken» (TC-01) uten å forklare at små kohorter = ingen match. Dealbreakers er **ikke** svekket (ingen kodeendring foreslått).
+- **Anbefalt fix:** Forventningsstyring i landing/slik-fungerer-det/FAQ («Vi matcher kun når vi finner en god match — da kan det noen ganger ta lenger enn en uke»).
+
+### TC-34 — Footer/juridisk informasjon — NOT CONFIRMED
+- **Bevis:** Alle public sider renderer `<Footer/>`; `config/legal.ts` COMPANY = én kilde (Tosom AS, org.nr. 938 413 231, adresse, tlf., support@tosom.no); footer linker alle juridiske sider («Vilkår» → /vilkar ✓); kontakt viser COMPANY-info ✓. Ingen ©-linje noe sted (konsistent valg, ikke avvik).
+- **Konklusjon:** Ingen footer-avvik (sitemap-/vilkår-404 = TC-10).
+
+### TC-35 — Betalingstidspunkt — PRODUCT DECISION + EV
+- **Modell:** Full refusjon **før kobling**, ingen **etter kobling** — leveransen er koblingen. Kilder: `config/legal.ts` REFUND, vilkar §15 (ærlig «Så lenge reisen er gratis … ingen økonomisk betydning»), `/betaling` withdrawalWaiver (angrerettloven §22).
+- **I dag (gratismodus):** Ingen betaling, ingen trekking; «kjøp» = køplass, «levering» = koblingen.
+- **EV:** config markerer selv: «Modellen forutsetter at reisen regnes som digitalt innhold etter angrerettloven § 22 n. **Ikke juridisk bekreftet** … Må avklares før betaling aktiveres.»
+- **Konklusjon:** PD + juridisk verifisering før betaling aktiveres. Ingen juridisk fasit foreslått.
+
+
+## TC-Implementasjonsplan (for godkjenning — IKKE gjennomført)
+
+Små, uavhengige ACT-pakker. Rekkefølgen er anbefalt, ikke obligatorisk.
+
+### ACT A — Kritikkeste tillitsfeil (P0/P1)
+1. **TC-05:** ✅ FERDIG (ACT A1, 23.10.2026) — begge uverifiserte kildene (Fetvedt 2018, Reisner & McAndrew 2022) fjernet; «Studier viser»/«Psykologer har»-påstander gjort redaksjonelle; 30-dagers-reisen omskrevet til produkt-designvalg; Gottman (1999) eksternverifisert og beholdt. Sluttstatus: FIXED.
+2. **TC-15:** ✅ DELVIS FERDIG (ACT A2, 24.10.2026) — personvern-copy rettet til slettingsbasert trekking (den faktiske mekanismen); copy-gap lukket. Resten = PD-6: selvbetjening-trekking (sletteomfang, aktiv reise, kø, bevis) + EXTERNAL LEGAL VERIFICATION (art. 9-felt-mapping).
+3. **TC-22:** ✅ FERDIG (ACT A3, 24.10.2026) — 116 006 rettet til VO-linjen (verifisert mot volinjen.no + dinutvei.no); 800 30 196 «Vern for eldre» fjernet (ikke verifiserbar i offisielle kilder; TryggEst er kommunalt — byttet til offisiell tryggest.no-peker); Kirkens SOS «døgnet rundt» bekreftet korrekt (kirkens-sos.no); 116 123 verifisert (mentalhelse.no); 112/02800 eksternt verifisert mot Politiet.no.
+
+### ACT B — Match-sannhet & venting (P1/P2)
+1. **TC-01:** Omskrive loverende «én match»-copy (landing, layout-metadata, tips, FAQ, llms.txt, priser, Step10) til forsøks-formulering; beholde metoder/tips-dissclaimere.
+2. **TC-02:** Fjerne/betinge penges-tekst i venterommet (vises kun når betalingsmodus).
+3. **TC-33:** Forventningsstyring om at det kan ta lenger enn en uke (landing/slik-fungerer-det/FAQ).
+4. **TC-17:** FAQ «kommer tilbake i køen» → «kan stille seg i køen igjen».
+
+### ACT C — SEO/metadata/canonical (P1/P2)
+1. **TC-08:** Per-route metadata (title/description/canonical/OG) for alle ~13 public sider.
+2. **TC-09:** Bestemme kanonisk host (avhenger EV: DNS/redirect) → metadataBase, JSON-LD, sitemap, robots.
+3. **TC-11:** noindex på private ruter + admin.
+4. **TC-10:** Sitemap «/vilkår» → «/vilkar» (evt. 301).
+5. **TC-12:** Lage `public/og-image.png` (1200×630).
+6. **TC-13:** Slette døde `lib/seo.ts`.
+
+### ACT D — Språk & merkevare (P2)
+1. **TC-19:** Batch-korreksjon av tekstfeil (alle tabellposter over), inkl. chat-oppgaver.
+2. **TC-07/TC-06:** Bokmål-konvertering av blogg + énkilde for artikkeldata (datoer/titler).
+3. **TC-20:** Kontrollert «ToSom» → «Tosom» i kun brukerrettet tekst (FAQ, tilgjengelighet, glemt-passord, settings-fallback, e-poster, emotional.ts, llms.txt, APP_NAME). Komponentnavn: separat valgfri rename.
+4. **TC-18:** Reisen «12 kategorier/over 240» → faktisk 9/135.
+5. **TC-04:** Reisen «tre faser» → bilde-tidslinje-tittel eller motorfaser.
+
+### ACT E — Personvern/cookies-tekst (P2)
+1. **TC-16:** Cookies-side: nevne Speed Insights ærlig, presisere/fjerne «minimalt, privat analyserverktøy» (avhenger EV av Vercel-cookie-atferd).
+2. **TC-31:** Presisere grensedragning i §5/§17 (sensitive data vs samtalebevis) kun hvis ordlyden er tvetydig etter ACT B.
+
+### ACT F — Produktavgjørelser (George) — ingen kode før beslutning
+- **PD-1 (TC-23):** Support «innen 24 timer» — holdbart? Eventuelt nedtone.
+- **PD-2 (TC-26):** «Ikke en datingapp»-posisjonering vs dating-SEO — beholde kontrast?
+- **PD-3 (TC-03/32):** Vipps-tidspunkt vs 5 000-kvote; ved full kvote: nedsteng vs blindvei.
+- **PD-4 (TC-35):** Betalingsmodell (refusjon ved kobling) — juridisk verifisering (A-1) før betaling aktiveres.
+- **PD-5 (TC-24):** Offentlig kvote-teller: ja/nei.
+- **PD-6 (TC-15):** Samtykketrekk: implementere funksjon vs rette copy. **Status fra ACT A2: copy rettet (slettingsbasert); selvbetjening-trekking krever avgjørelser:** (a) sletteomfang ved trekking — kun art. 9-felt (krever EXTERNAL LEGAL VERIFICATION av felt-mapping) vs hel profil; (b) aktiv reise/match — trekking avslutter reisen eller ikke?; (c) kø — QUEUED → IDLE ved trekking (teknisk SAFE, men koblet til a/b); (d) bevis — nytt felt f.eks. `sensitiveConsentWithdrawnAt DateTime?`; (e) UX — eksplicit bekreftelse med konsekvensoversikt i Innstillinger.
+- **PD-7 (TC-21):** /register-alias: fjerne eller beholde; standardisere CTA-hrefs.
+- **PD-8 (TC-22):** ✅ Besvart av ACT A3 (24.10.2026): korrigerte nødnumre godkjennes med kilde — full dokumentasjon under TC-22 (ACT A3).
+
+### ACT G — Regressjon
+- `npm run verify` + `npm run lint` grønn; grep-verification per ACT (strenger over); build + metadata-inspeksjon per rute (SEO-ACT); `git diff --stat` før/etter; ingen push uten godkjenning.
+
+## TC-Ekstern verifisering (EV) — lister
+1. **Bloggkilder:** «Fetvedt, G. (2018). Kjærlighetsforskning … Universitetsforlaget» og «Reisner, A. & McAndrew, C. (2022) … JSPP 39(4), 890–912» — finnes de?
+2. **Nødnumre:** 02800 (politi sentralbord), 116 123 (Mental Helse), 22 40 00 40 + Kirkens SOS «døgnet rundt», 116 006 (Krisesenter), 800 30 196 («Vern for eldre») — mot offisielle kilder.
+3. **Vercel Speed Insights:** Setter den cookies (f.eks. `speedbump`)? Hvilken levetid?
+4. **Prod-DNS:** Kjør både tosom.no og www.tosom.no? Hvilken redirect-kjede? (Bestemmer TC-09-fix.)
+5. **Juridisk (A-1):** Angrerettloven § 22 n. — «digitalt innhold»-modellen for reisen (blokkerer kun betaling, ikke lansering).
+
+## TC-Status tell (endelig)
+- **CONFIRMED:** 15 (TC-01, -02, -04, -05*, -06, -07, -08, -10, -11, -12, -13, -15, -18, -19, -20, -24) — *TC-05 er CONFIRMED som «ukildebevisste påstander i public copy» + EV for om kildene faktisk er oppdiktede. **Aktuelt: TC-05 = FIXED (ACT A1, 23.10.2026)** — kildene fjernet uavhengig av EV-resultat; EV er nå kun dokumentasjonsinteresse.
+- **PARTLY CONFIRMED:** 5 (TC-03, -09, -16, -17, -33)
+- **NOT CONFIRMED:** 7 (TC-25, -26*, -27, -28, -29, -30, -34) — *TC-26 er klassifisert PRODUCT DECISION i detalj (teller under PD).
+- **ALREADY FIXED:** 0 i denne runden (tidligere audit-funn som «24t i metadata», religion-felt, export-scope er allerede håndtert i `4edacc8` / tidligere commits).
+- **PRODUCT DECISION:** 6 (TC-21, -23, -26, -32, -35 + PD-5 teller (TC-24 del))
+- **EXTERNAL VERIFICATION REQUIRED:** 0 primære (TC-22 avsluttet ved ACT A3). Sub-EV gjenstår på -09, -16, -35. (TC-05-sub-EV er avsluttet ved ACT A1; TC-22-primær-EV er avsluttet ved ACT A3, inkl. 112/02800 verifisert mot Politiet.no.)
+- **VERIFIED CLAIM (positivt):** TC-14 (ingen AI), TC-31 (personvern-kjerne).
+
+## TC-Bekreftelser (fase-avslutning)
+- **APPLICATION CODE CHANGED:** NO (kun `docs/LanseringsCheckList.md` endret — tillatt av oppgavepost 31)
+- **COMMIT:** NO
+- **PUSH:** NO
+- **DEPLOY:** NO
+- **Next:** Vent på Georges godkjenning av PD-lista (PD-1…PD-8) + EV-resultater, deretter godkjenning til å starte ACT A.
 

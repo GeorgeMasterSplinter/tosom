@@ -7,44 +7,44 @@ import { useParams } from 'next/navigation';
 
 const blogPosts = {
   'kompatibilitet': {
-    title: 'Hvorfor kompatibilitet betyr mer enn utseende',
+    title: 'Hvorfor det som er dypere enn utseende, betyr mer',
     date: '15. januar 2026',
     readTime: '5 min lesing',
     content: `
-      <p>I et samfunn der vi konstant blir eksponert for bilder og overflatefokus, er det lett å glemtje hva som betyr noe i en relasjon.</p>
-      
-      <p>Studier viser at kompatibilitet basert på verdier, livssituasjon og emosjonelle mønstre er langt bedre prediktorer for varige relasjoner enn utseende.</p>
-      
-      <p>Tosom vel å fokusere på det som skaper varig forbindelse. Når to menneske møter hverandre på et dypere plan, blir overflateikke det første — det blir det siste.</p>
-      
-      <p>Vår match-motor måler kompatibilitet gjennom resonans — hvordan to menneske føles sammen, ikke hvordan de ser ut.</p>
+      <p>I et samfunn der vi konstant blir eksponert for bilder og overflatefokus, er det lett å glemme hva som faktisk betyr noe i en relasjon.</p>
+
+      <p>Tosom er bygget rundt ideen om at verdier, livssituasjon og emosjonelle mønstre betyr mer for en varig relasjon enn det ytre. Det er ikke en vitenskapelig konklusjon — det er et syn vi har valgt, og det former hele produktet.</p>
+
+      <p>Derfor starter reisen med ord, ikke bilder. Når to mennesker møtes på et dypere plan, blir overflaten det siste dere ser — ikke det første.</p>
+
+      <p>Matchingen vår ser på hva dere verdsetter, hvordan dere holder hverandre nær og hvordan dere håndterer det vanskelige. Ikke hvordan dere ser ut.</p>
     `,
   },
   'reisetemaer': {
-    title: 'Hvorfor 30 dager er den perfekte tidsrammen',
+    title: 'Hvorfor reisen varer 30 dager',
     date: '10. januar 2026',
     readTime: '4 min lesing',
     content: `
-      <p>Psykologer har observert at det tar omtrent 30 dager for to mennesker å bygge ekte tillit og forbindelse.</p>
-      
-      <p>Den første uken handler om å bli kjent med hverandre. Den andre uken handler om sårbarhet. Den tredje uken handler om dype samtaler. Og den fjerde uken handler om felles framtid.</p>
-      
-      <p>30 dager er ikke for lang tid — det er nøyaktig den tida som trengst for to menneske å bli kjende på et nivå som betyr noe.</p>
-      
-      <p>Tosoms guiderte reise er designa for å støtte denne prosessen med daglege refleksjoner, samtaletema og oppgaver.</p>
+      <p>Tretti dager er ikke en vitenskapelig standard, og vi påstår ikke at forskning har fastslått en «perfekt» tidsramme for å bygge tillit. Det er et bevisst designvalg — og vi vil være ærlige om at akkurat det er det.</p>
+
+      <p>Det vi forsøkte å oppnå med lengden: kort nok til at dere ikke mister tråden, og lang nok til at samtalen faktisk kan bli dyp. Den første uken handler om å bli kjent. Den andre om sårbarhet. Den tredje om dype samtaler. Den fjerde om felles framtid.</p>
+
+      <p>30 dager er derfor ikke en grense dere skal rekkje — det er et rom dere får. Trenger dere mer tid, fortsetter dere på egne premisser.</p>
+
+      <p>Reisen er designet for å støtte nettopp denne prosessen med daglige refleksjoner, samtaletema og små oppgaver — i eget tempo, uten press.</p>
     `,
   },
   'rolegheit': {
-    title: 'Hvorfor rolegheit er vår viktigaste funksjon',
+    title: 'Hvorfor ro er vår viktigste funksjon',
     date: '5. januar 2026',
     readTime: '3 min lesing',
     content: `
-      <p>I en verd der datingapper konstant konkurrerer om oppmerksomheita di med push-notifikasjonar og gamification, valde Tosom en annan veg.</p>
-      
-      <p>Vi trur at rolegheit er den viktigaste funksjonen på heile plattformen. Ingen swipe. Ingen feed. Ingen press.</p>
-      
+      <p>I en verden der datingapper konstant konkurrerer om oppmerksomheten din med push-notifikasjoner og gamification, har Tosom valgt en annen vei.</p>
+
+      <p>Vi tror at ro er den viktigste funksjonen på hele plattformen. Ingen sveiping. Ingen feed. Ingen press.</p>
+
       <p>Når du fjerner all støy, kommer det ekte tilbake. Folk blir seg selv. Samtalene blir dypere. Forbindelsen blir ekte.</p>
-      
+
       <p>Ro er ikke bare et estetisk valg — det er et grunnleggende designprinsipp.</p>
     `,
   },

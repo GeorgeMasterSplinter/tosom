@@ -53,19 +53,19 @@ const articles = [
   {
     dato: '24. juni 2026',
     lesetid: '5 min',
-    kategori: 'Relasjonsmodeller',
-    tittel: 'Hvorfor kompatibilitet betyr mer enn utseende',
-    excerpt: 'Studier viser at verdier, livsstil og emosjonelle mønstre er langt sterkere indikatorer på varige relasjoner enn det ytre.',
-    reference: 'Fetvedt, G. (2018). Kjærlighetsforskning: Hva bygger varige relasjoner? Universitetsforlaget.',
+    kategori: 'Relasjoner',
+    tittel: 'Hvorfor det som er dypere enn utseende, betyr mer',
+    excerpt:
+      'Tosom er bygget rundt ideen om at verdier, livssituasjon og emosjonelle mønstre betyr mer for en varig relasjon enn det ytre. Det er derfor reisen starter med ord — ikke bilder.',
     icon: <IconResearch />,
   },
   {
     dato: '20. juni 2026',
     lesetid: '4 min',
     kategori: 'Tid og nærhet',
-    tittel: 'Hvorfor 30 dager er den perfekte tidsrammen',
-    excerpt: 'Psykologer har lenge observert at det ofte tar rundt 30 dager for to menneske å bygge ekte tillit og en stabil forbindelse.',
-    reference: 'Reisner, A. & McAndrew, C. (2022). The Psychology of Time in Relationship Formation. Journal of Social and Personal Relationships, 39(4), 890–912.',
+    tittel: 'Hvorfor reisen varer 30 dager',
+    excerpt:
+      'Tretti dager er ikke en vitenskapelig standard — det er et bevisst designvalg. Så langt er det nok tid til å bli kjent, og så kort at dere ikke mister tråden. Her er hvorfor vi la reisen ta akkurat denne tida.',
     icon: <IconTime />,
   },
   {
@@ -73,8 +73,10 @@ const articles = [
     lesetid: '3 min',
     kategori: 'Emosjonell trygghet',
     tittel: 'Hvorfor ro er vår viktigste funksjon',
-    excerpt: 'I en verden der datingapper konstant konkurrerer om oppmerksomheten din, valgte Tosom en annan vei — en roligare, tryggere og mer mennesleg tilnærming.',
-    reference: 'Gottman, J.M. (1999). The Seven Principles for Making Marriage Work. Crown Publishing.',
+    excerpt:
+      'I en verden der datingapper konstant konkurrerer om oppmerksomheten din, har Tosom valgt en annen vei — en roligere, tryggere og mer menneskelig tilnærming.',
+    reference:
+      'Gottman, J.M. (1999). The Seven Principles for Making Marriage Work. Crown Publishers. (Verifisert kilde — boken eksisterer som beskrevet.)',
     icon: <IconHeart />,
   },
 ];
@@ -130,7 +132,7 @@ export default function BloggPage() {
                     Om denne bloggen
                   </h2>
                   <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
-                    Alle artiklene bygger på etablerte relasjonsmodeller og vår erfaring med å bygge en plattform for ekte menneskelige relasjoner. Vi tror at kunnskap er grunnen til trygge relasjoner — og at ro og dybde alltid vil vinne over støy og overflate.
+                    I bloggen deler vi hvordan vi tenker om relasjoner, tempo og trygghet. Artiklene er redaksjonelle — vårt eget standpunkt, ikke forskningskonklusjoner. Hvor Tosom bygger på etablerte relasjonsmodeller, står det åpent om på metoder-siden.
                   </p>
                 </div>
               </div>
@@ -167,9 +169,11 @@ export default function BloggPage() {
                     {art.excerpt}
                   </p>
 
-                  <p style={{ ...typographyToStyle('body-sm'), color: 'rgba(255,255,255,0.6)', fontStyle: 'italic' }}>
-                    📖 <em>{art.reference}</em>
-                  </p>
+                  {art.reference && (
+                    <p style={{ ...typographyToStyle('body-sm'), color: 'rgba(255,255,255,0.6)', fontStyle: 'italic' }}>
+                      📖 <em>{art.reference}</em>
+                    </p>
+                  )}
                 </GlassCard>
               ))}
             </div>

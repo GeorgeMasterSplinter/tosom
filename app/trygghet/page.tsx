@@ -28,6 +28,7 @@ interface Section {
   title: string;
   paragraphs?: string[];
   list?: string[];
+  groups?: { heading: string; items: string[] }[];
 }
 
 const sections: Section[] = [
@@ -138,15 +139,37 @@ const sections: Section[] = [
     id: '10',
     title: 'Hvis du trenger hjelp',
     paragraphs: [
-      'Noen ganger handler det om mer enn en samtale som gikk skjevt. Da finnes det folk som kan mer enn oss:',
+      'Noen ganger handler det om mer enn en samtale som gikk skjevt. Da finnes det folk som kan mer enn oss.',
+      'Tosom er ikke en nødtjeneste, og vi kan ikke reagere på akutte hendelser. Ved akutt fare ringer du nødtjenestene direkte — numrene står under.',
     ],
-    list: [
-      'Nødnummer politi — 112',
-      'Politiets sentralbord — 02800',
-      'Mental Helses hjelpetelefon — 116 123, døgnet rundt',
-      'Kirkens SOS — 22 40 00 40, døgnet rundt',
-      'Krisesenter, landsdekkende — 116 006',
-      'Vern for eldre — 800 30 196',
+    groups: [
+      {
+        heading: 'Ved akutt fare',
+        items: ['112 — Politiet. Ring ved akutte situasjoner som krever øyeblikkelig hjelp.'],
+      },
+      {
+        heading: 'Politi, når det ikke er akutt',
+        items: ['02800 — Politiet. Ring når du vil kontakte politiet og situasjonen ikke er akutt.'],
+      },
+      {
+        heading: 'Vold og overgrep i nære relasjoner',
+        items: [
+          '116 006 — VO-linjen (Vold- og overgrepslinjen). Gratis, landsdekkende og døgnåpen hjelpetelefon for deg som opplever vold eller overgrep i nære relasjoner. Du kan også kontakte anonymt.',
+        ],
+      },
+      {
+        heading: 'Noen å snakke med',
+        items: [
+          '116 123 — Mental Helses Hjelpetelefon. Gratis, anonym og døgnåpen.',
+          '22 40 00 40 — Kirkens SOS. Døgnåpen krisetelefon.',
+        ],
+      },
+      {
+        heading: 'Andre spesifikke tilbud',
+        items: [
+          'TryggEst (tryggest.no) — informasjon om kommunale kontaktpunkter mot vold og overgrep mot sårbare voksne.',
+        ],
+      },
     ],
   },
   {
@@ -234,6 +257,33 @@ export default function TrygghetPage() {
                     >
                       {text}
                     </p>
+                  ))}
+
+                  {section.groups?.map((group) => (
+                    <div key={group.heading} className="space-y-2">
+                      <h3 style={{ ...typographyToStyle('heading-sm'), color: color.brand.gold }}>
+                        {group.heading}
+                      </h3>
+                      <ul className="space-y-2.5 pl-1">
+                        {group.items.map((item, i) => (
+                          <li key={i} className="flex gap-3">
+                            <span
+                              className="flex-shrink-0 mt-[11px] w-1 h-1 rounded-full"
+                              style={{ background: color.brand.gold }}
+                            />
+                            <span
+                              style={{
+                                ...typographyToStyle('body'),
+                                color: color.text.secondary,
+                                lineHeight: '1.85',
+                              }}
+                            >
+                              {item}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   ))}
 
                   {section.list && (

@@ -68,7 +68,7 @@ async function fillStep1(page: Page) {
 /**
  * Steg 2 (Personlighet & identitet): selfDesc + quirk som lengdefelt,
  * energyGiver/energyDrainer/pressureReact som valg-grid (LIVSSTIL-2026)
- * + BFI10-skala (PL-08).
+ * + Personlighet-V2-skala (PL-08).
  */
 async function fillStep2(page: Page) {
   await page.getByTestId('ob-self-desc').fill('Jeg er en rolig og balansert person som verdsetter dype samtaler og ærlighet.');

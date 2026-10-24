@@ -8,8 +8,9 @@
  * Metodikke: renderToStaticMarkup (node, som motpol-testen). Copy-guards kjører på den
  * renderede teksten (uten HTML-tagger), så de fanger det brukeren faktisk ser.
  *
- * Merk: BFI-10-LISENS er en LAUNCH GATE som ikke løses av copy (se audit G/Q og
- * docs/LanseringsCheckList.md). Testene garanterer kun at OFFENTLIG TEKST er sann.
+ * Merk: Personlighet V2 (ACT F2) er implementert — den aktive modellen er
+ * Tosoms egne spørsmål inspirert av Big Five-rammeverket. Testene garanterer
+ * at OFFENTLIG TEKST er sann og inneholder ingen BFI-10-påstander.
  */
 
 import React from 'react';
@@ -46,7 +47,8 @@ const APPROVED_SOURCE_URLS = new Set([
   'https://doi.org/10.1016/S0065-2601(08)60281-6', // Schwartz 1992
   'https://doi.org/10.1037/1089-2680.4.2.132', // Fraley & Shaver 2000
   'https://doi.org/10.1037/0022-3514.85.2.348', // Gross & John 2003
-  'https://doi.org/10.1016/j.jrp.2006.02.001', // Rammstedt & John 2007
+  // PERSONALITY V2 (ACT F2): Rammstedt & John (2007, BFI-10) er fjernet —
+  // personlighetssettet er nå Tosoms egne spørsmål.
   'https://doi.org/10.1016/j.cpr.2009.11.004', // Aldao et al. 2010
   'https://doi.org/10.1080/1047840X.2014.940781', // Gross 2015
 ]);
@@ -195,19 +197,20 @@ describe('SCI-11 — alle aktive kilde-URLer er godkjente/verifiserte kilder', (
     expect(HTML).not.toContain('scholar?q=');
   });
 
-  it('alle 8 verifiserte kilder er til stede med full referanse (forfatter/år/journal/vol/sider)', () => {
+  it('alle 7 verifiserte kilder er til stede med full referanse (forfatter/år/journal/vol/sider)', () => {
     for (const part of [
       '52(3), 511–519', // Hazan & Shaver
       '63(2), 221–233', // Gottman & Levenson
       '25, 1–65', // Schwartz
       '4(2), 132–158', // Fraley & Shaver
       '85(2), 348–362', // Gross & John
-      '41(1), 203–212', // Rammstedt & John
       '30(2), 217–237', // Aldao
       '26(1), 1–26', // Gross 2015
     ]) {
       expect(TEXT).toContain(part);
     }
+    // PERSONALITY V2 (ACT F2): BFI-10-kilden (Rammstedt & John) er fjernet.
+    expect(TEXT).not.toContain('Rammstedt');
   });
 });
 
@@ -239,18 +242,21 @@ describe('SCI-12 — ingen ny research claim uten godkjent kilde', () => {
   });
 });
 
-describe('F1 — BFI-10: dokumentert som tilpasning, IKKE som validert instrument (lisens = launch gate)', () => {
-  it('BFI-10 nevnes som stil/inspirasjon med eksplisitte overganger', () => {
-    expect(TEXT).toMatch(/i stil med BFI-10-kortformen/);
-    expect(TEXT).toMatch(/tilpasset til norsk av oss/);
-    expect(TEXT).toMatch(/Våre egne tilpasninger — ikke det originale instrumentet/);
-    expect(TEXT).toMatch(/svarskalaen er endret/);
-    expect(TEXT).toMatch(/ikke selvstendig validert/);
+describe('F2 — Personality V2: ærlig produktbeskrivelse, ingen BFI-10-påstander (SIMP-13/14)', () => {
+  it('beskriver personlighet som Tosoms egne spørsmål inspirert av Big Five-rammeverket', () => {
+    expect(TEXT).toMatch(/Tosoms egne spørsmål inspirert av brede personlighetstrekk fra Big Five-rammeverket/);
+    expect(TEXT).toMatch(/ikke et standardisert eller klinisk personlighetsskjema/);
   });
 
-  it('ingen påstand om at Tosom administrerer et validert BFI-10-instrument', () => {
-    expect(TEXT).not.toMatch(/vi bruker BFI-10/);
+  it('beskriver resultatet som et begrenset kompatibilitetssignal, ikke en vurdering av personen', () => {
+    expect(TEXT).toMatch(/begrenset kompatibilitetssignal/);
+    expect(TEXT).toMatch(/ikke som en vurdering av hvem du er/);
+  });
+
+  it('ingen BFI-10-navn eller BFI-10-validitetspåstander i aktiv copy', () => {
+    expect(TEXT).not.toMatch(/BFI/i);
     expect(TEXT).not.toMatch(/validert BFI/i);
+    expect(TEXT).not.toMatch(/i stil med BFI-10-kortformen/);
   });
 });
 

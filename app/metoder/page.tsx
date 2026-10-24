@@ -15,8 +15,9 @@
  *
  * Språk: «rammeverk vi bygger på», «egne spørsmål», «en veiviser» —
  * aldri «vitenskapelig bevist», «en fasit» eller feil instrumentnavn.
- * PVQ/ERQ/ECR brukes ikke; BFI-10 nevnes som kilde til stil, ikke som et
- * publisert instrument vi administrerer uendret.
+ * PVQ/ERQ/ECR brukes ikke. Personlighet V2 (ACT F2, 2026-10-24): Tosoms egne
+ * spørsmål inspirert av Big Five-rammeverket — det gamle, nært kopierte
+ * itemssettet er utfaset; ingen validitetspåstander i aktiv copy.
  */
 
 import { Footer } from '@/components/ui/layout/Footer';
@@ -123,7 +124,7 @@ const DIMENSIONS: Array<{
     icon: <IconPersonlighet />,
     name: 'Personlighet',
     why: 'Alle har en rytme. Noen er stille, noen er fulle av energi. Vi ser om rytmen deres kan danne en melodi sammen — ikke om den er «riktig».',
-    modern: 'Big Five er i bruk i moderne parstudier. Forskningen antyder at verdier og tilknytning henger tettere sammen med relasjonskvalitet enn personlighet alene — vi vekter derfor dem tyngst.',
+    modern: 'Big Five er et utbredt rammeverk for å beskrive brede personlighetstrekk. Våre spørsmål bruker rammeverket som inspirasjon — ikke som test. Vi vekter verdier og tilknytning tyngst i modellen.',
   },
   {
     icon: <IconKommunikasjon />,
@@ -157,9 +158,9 @@ const INSTRUMENTS: Array<{
 }> = [
   {
     name: 'Personlighet',
-    source: '10 spørsmål i stil med BFI-10-kortformen (Rammstedt & John 2007), tilpasset til norsk av oss.',
-    modern: 'Big Five er i bruk i moderne studier.',
-    note: 'Våre egne tilpasninger — ikke det originale instrumentet. Tekstene er tilpasset, svarskalaen er endret, og tilpasningen er ikke selvstendig validert.',
+    source: 'Tosoms egne spørsmål inspirert av brede personlighetstrekk fra Big Five-rammeverket.',
+    modern: 'Big Five er et utbredt rammeverk for å beskrive brede personlighetstrekk. Vi bruker rammeverket som inspirasjon — ikke som testinstrument.',
+    note: 'Spørsmålene er laget for Tosoms matchingmodell og er ikke et standardisert eller klinisk personlighetsskjema. Resultatet brukes som et begrenset kompatibilitetssignal, ikke som en vurdering av hvem du er.',
   },
   {
     name: 'Tilknytning',
@@ -204,7 +205,8 @@ const CLASSIC_SOURCES: Array<{ text: string; link: string }> = [
 
 const MODERN_SOURCES: Array<{ text: string; link: string }> = [
   { text: 'Gross, J. J., & John, O. P. (2003). Individual differences in two emotion regulation processes: Implications for affect and relationships. Journal of Personality and Social Psychology, 85(2), 348–362.', link: 'https://doi.org/10.1037/0022-3514.85.2.348' },
-  { text: 'Rammstedt, T., & John, O. P. (2007). Measuring personality in one minute or less: A 10-item short version of the Big Five Inventory in English and German. Journal of Research in Personality, 41(1), 203–212.', link: 'https://doi.org/10.1016/j.jrp.2006.02.001' },
+  // PERSONALITY V2 (ACT F2): den tidligere kortformat-Big Five-kilden er fjernet
+  // fra kildelista — den aktive personlighetsmodellen er Tosoms egne spørsmål.
   { text: 'Aldao, A., Nolen-Hoeksema, S., & Schweizer, S. (2010). Emotion-regulation strategies across psychopathology: A meta-analytic review. Clinical Psychology Review, 30(2), 217–237.', link: 'https://doi.org/10.1016/j.cpr.2009.11.004' },
   { text: 'Gross, J. J. (2015). Emotion regulation: Current status and future prospects. Psychological Inquiry, 26(1), 1–26.', link: 'https://doi.org/10.1080/1047840X.2014.940781' },
 ];
@@ -363,8 +365,10 @@ export default function MetoderPage() {
             </h2>
             <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
               Nå er ærligheten: ikke alle delene er publiserte instrumenter.
-              Personlighetsspørsmålene ligger tett på BFI-10-kortformen, men tekstene
-              er tilpasset og svarskalaen er endret. Tilknytning, verdier,
+              Personligheten består av Tosoms egne spørsmål inspirert av brede
+              personlighetstrekk fra Big Five-rammeverket — laget for vår
+              matchingmodell, ikke et standardisert eller klinisk skjema.
+              Tilknytning, verdier,
               emosjonsregulering og kommunikasjon består av egne spørsmål inspirert av
               forskningen. Livssituasjon består av praktiske preferanser.
               Under hvert spørsmålssett sier vi hva som er hva.

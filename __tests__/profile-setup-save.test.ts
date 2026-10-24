@@ -5,7 +5,7 @@
  * faktiske DB-skrivinga (upsert create/update-greiner + DbNull-rydding +
  * user-flagg) ble aldri kørt. Denne testen køyrer den reelle rute-hendleren
  * mot ein ekte Postgres med eit fullstendig, realistisk payload (inkl. alle
- * 44 psykometriske items → scoreAll) og verifiserer slutt-tilstanden i DB-en.
+ * 49 aktive items → scoreAll) og verifiserer slutt-tilstanden i DB-en.
  *
  * Kjør mot isolert test-DB (ikke dev!) via:
  *   DATABASE_URL="postgresql://tosom:tosom@localhost:5433/tosom_test" \
@@ -26,7 +26,7 @@ const mockedSession = getServerSession as jest.Mock;
 
 // Bygg eit fullt, gyldig payload som samsvarer med onboardingSetupSchema.
 function fullBody(): Record<string, unknown> {
-  // Psykometri: svar på ALLE 44 items (1–5), som OnboardingFlow sender.
+  // Psykometri: svar på ALLE aktive items (49), som OnboardingFlow sender.
   const psychometrics: Record<string, number> = {};
   ALL_ITEMS.forEach((item, i) => {
     psychometrics[item.id] = (i % 5) + 1; // 1..5
@@ -205,7 +205,7 @@ describe('POST /api/profile/setup — EKT DB (bug 1 repro/regressjon)', () => {
     // Psykometri skåra og lagret
     expect(profile!.psychometricAnswers).not.toBeNull();
     expect(profile!.bigFive).not.toBeNull();
-    expect(profile!.psychometricVersion).toBe('2026-08-22.v1');
+    expect(profile!.psychometricVersion).toBe('2026-10-24.v2');
 
     const user = await prisma.user.findUnique({ where: { id: userId } });
     expect(user!.onboardingComplete).toBe(true);
@@ -238,9 +238,9 @@ describe('POST /api/profile/setup — EKT DB (bug 1 repro/regressjon)', () => {
     expect(json.details.length).toBeGreaterThan(0);
   });
 
-  // DETTE ER NØYAKTIGT det OnboardingFlow/seed-skriptet sender i produksjon:
+  // DETTE ER NØYAKTIGT det OnboardingFlow sender i produksjon:
   //  - age som STRENG
-  //  - bare 5 psykometriske items (bfi1/3/5/7/9) — ikke alle 44
+  //  - alle aktive items svart (49), med 5 eksplisite V2-personlighetsverdiene (p1/p3/p7/p8/p10)
   //  - kommunikasjon-med calmingHelp/trigger/trustBuilder (ikke kjærlighetsspråk-nøkler)
   //  - Oslo 0150
   it('SKENARIO D — NØYAKTIG produksjonspayload: 200 (bevis: kode er korrekt)', async () => {
@@ -275,11 +275,11 @@ describe('POST /api/profile/setup — EKT DB (bug 1 repro/regressjon)', () => {
       grenser: { neverCrossBoundary: 'økonomisk press', understandPartnersBoundaries: 'rom for seg selv', limitations: 'trenger tid alene', partnerMustUnderstand: 'at ro og trygghet er viktig' },
       moden: { intimacySafety: 'trygghet og tillit', comfortableWith: 'å ta det rolig', boundary: 'ingen press overhodet', nearerType: 'fysisk nærhet', needsTime: 'ja, litt tid' },
       preferanser: { politicsImportance: 5, religionImportance: 3, dietPreference: 'normalt', sleepSchedule: 'natt', pets: 'ja', travelFreq: 'noen ganger', alcoholFreq: 'sjelden', ambitionLevel: 'moderat', structureSpontaneity: 'struktur', introExtrovert: 'introvert', attachmentStyle: 'sikker' },
-      // PL-08g: serveren er fasit — alle 44 items er påkrevde. De fem
-      // opprinnelige produksjonsverdiene er bevart; resten er utfylt.
+      // PL-08g: serveren er fasit — alle aktive items er påkrevde. De fem
+      // eksplisite V2-personlighetsverdiene er bevart; resten er utfylt.
       psychometrics: {
         ...Object.fromEntries(ALL_ITEMS.map((item, i) => [item.id, (i % 5) + 1])),
-        bfi1: 4, bfi3: 5, bfi5: 2, bfi7: 3, bfi9: 4,
+        p1: 4, p3: 5, p7: 2, p8: 3, p10: 4,
       },
     };
 
@@ -292,12 +292,15 @@ describe('POST /api/profile/setup — EKT DB (bug 1 repro/regressjon)', () => {
     expect(profile!.identityName).toBe('Kari Solberg');
     expect(profile!.age).toBe(32); // strengen '32' ble coerced
     expect(profile!.postalCode).toBe('0150');
-    // Psykometri med alle 44 items — alle skårer må være endlege tal (ikke NaN)
+    // Psykometri med alle aktive items — alle skårer må være endlege tal (ikke NaN)
     const bigFive = profile!.bigFive as Record<string, number>;
     expect(bigFive).toBeDefined();
     Object.values(bigFive).forEach((v) => {
       expect(Number.isFinite(v as number)).toBe(true);
     });
+    // PERSONALITY V2 (ACT F2 §13/§14): fullstendig V2-sett → versjon 2 lagres
+    // (SIMP-07). Legacy (v1) brukere får aldri dette merket.
+    expect(profile!.personalityModelVersion).toBe(2);
     const attachment = profile!.attachment as Record<string, unknown>;
     expect(attachment).toBeDefined();
   });

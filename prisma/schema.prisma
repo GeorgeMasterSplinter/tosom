@@ -101,6 +101,11 @@ model Profile {
   valueProfile        Json? // { benevolence, security, ... } (PVQ-10)
   emotionRegulation   Json? // { reappraisal, suppression } (ERQ-6)
   psychometricVersion String? // Versjon av instrumentsettet
+  // PERSONALITY V2 (ACT F2, 2026-10-24): 2 = Tosoms egne V2-personlighets-spørsmål
+  // (15 items, TOSOM_PERSONALITY). null = legacy (v1, BFI-nært sett) eller ikke
+  // besvart. Matching bruker personlighetskomponenten kun når begge profiler
+  // har 2 — ellers deterministisk fallback (lib/matching/unifiedScorer.ts).
+  personalityModelVersion Int?
   createdAt           DateTime        @default(now())
   updatedAt           DateTime        @updatedAt
   user                User            @relation("UserProfile", fields: [userId], references: [id])

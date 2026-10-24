@@ -18,7 +18,7 @@ import { ERQ6, ALL_ITEMS } from '@/lib/psychometrics/instruments';
 
 const SCALE_ERROR = 'Svar på alle påstandene — det finnes ingen fasit.';
 
-/** Alle 44 skalasvar (1–5) — fullt datagrunnlag for skalastegene. */
+/** Alle aktive skalasvar (1–5) — fullt datagrunnlag for skalastegene. */
 function allScaleAnswers(): Record<string, number> {
   const answers: Record<string, number> = {};
   for (const item of ALL_ITEMS) answers[item.id] = 3;
@@ -81,7 +81,7 @@ describe('validateOnboardingStep — steg 0 (grunnprofil)', () => {
 });
 
 describe('validateOnboardingStep — steg 1 (personlighet)', () => {
-  it('returnerer ingen feil for god selfDesc + alle BFI-10-svar (PL-08a)', () => {
+  it('returnerer ingen feil for god selfDesc + alle V2-personlighetssvar (PL-08a)', () => {
     expect(validateOnboardingStep(1, { selfDesc: 'Jeg er veldig kreativ', ...allScaleAnswers() }).errors).toEqual([]);
   });
 
@@ -95,7 +95,7 @@ describe('validateOnboardingStep — steg 1 (personlighet)', () => {
     expect(errors.some((e) => e.field === 'selfDesc')).toBe(true);
   });
 
-  it('PL-08a: flagger manglende BFI-10-svar selv med god selfDesc', () => {
+  it('PL-08a: flagger manglende V2-personlighetssvar selv med god selfDesc', () => {
     const { errors } = validateOnboardingStep(1, { selfDesc: 'Jeg er veldig kreativ' });
     expect(errors.some((e) => e.message === SCALE_ERROR)).toBe(true);
   });
@@ -138,7 +138,7 @@ describe('validateOnboardingStep — skalasteg (PL-08a: påkrevde svar per steg)
 });
 
 describe('firstIncompleteOnboardingStep / validateAllOnboardingSteps', () => {
-  it('returnerer null / [] når profilen er komplett (inkl. alle 44 skalasvar)', () => {
+  it('returnerer null / [] når profilen er komplett (inkl. alle aktive skalasvar)', () => {
     const full = { ...completeBasic, selfDesc: 'Jeg er veldig kreativ', ...allScaleAnswers() };
     expect(firstIncompleteOnboardingStep(full)).toBeNull();
     expect(validateAllOnboardingSteps(full)).toEqual([]);

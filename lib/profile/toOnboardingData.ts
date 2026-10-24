@@ -191,7 +191,7 @@ export function toOnboardingData(
   // setup skriver ikke lenger i feltet — prefyll treffer bare gamle profiler)
   put('attachmentStyle', toStr(profile.securityLevel));
 
-  // Rå psykometriske svar (44 items, 1–5) → flate data[item.id]
+  // Rå psykometriske svar (aktive items, 1–5) → flate data[item.id]
   const pa = profile.psychometricAnswers;
   if (pa && typeof pa === 'object' && !Array.isArray(pa)) {
     for (const [itemId, v] of Object.entries(pa)) {

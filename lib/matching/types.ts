@@ -74,6 +74,8 @@ export interface ProfileData {
 
   // FORSKNINGSMOTOR F-8: Psykometriske skårer (valfrie — fallback til ordoverlapp)
   bigFive?: Record<string, unknown> | null;
+  /** PERSONALITY V2 (ACT F2): 2 = Tosoms egne V2-spørsmål; null = legacy/ikke besvart. */
+  personalityModelVersion?: number | null;
   attachment?: Record<string, unknown> | null;
   valueProfile?: Record<string, unknown> | null;
   emotionRegulation?: Record<string, unknown> | null;

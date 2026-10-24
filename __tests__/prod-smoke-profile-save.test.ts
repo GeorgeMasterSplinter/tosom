@@ -74,8 +74,8 @@ describeProd('PROD-SMOKE: POST /api/profile/setup (Bug 1-verifisering)', () => {
     await prisma.$disconnect();
   });
 
-  // Nøyaktig produksjonspayload (frå OnboardingFlow / seed-skriptet):
-  // age som streng, bare 5 BFI-items, Oslo 0150.
+  // Nøyaktig produksjonspayload (frå OnboardingFlow):
+  // age som streng, alle aktive items svart, Oslo 0150.
   const prodBody = {
     basic: {
       identityName: 'Kari Solberg',

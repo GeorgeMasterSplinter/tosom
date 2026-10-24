@@ -1142,3 +1142,594 @@ rettes i B-aktens missing-data policy.
 **Endring i denne seksjonen:** kun dokumentasjon. F1-copy, kode, tests, onboarding,
 scoring, matching, Prisma — alt urørt (PLAN MODE).
 
+---
+
+## T. ACT F2 — PERSONALITY MODEL V2 PLAN (24.10.2026, PLAN MODE)
+
+**Status:** PLAN KUN. Ingen items skrevet, ingen kode/DB/onboarding/matching/copy
+endret. Dagens BFI-avledede items (v1) forblir teknisk aktive inntil F2-implemen-
+tasjon — men **må ikke utsettes lenger i nye brukertilfeller** etter at V2 er
+godkjent (launch-gate G3, T.22).
+
+**Mål:** Erstatte v1 (CLOSE ADAPTATION av BFI-10, §S.2) med et selvstendig
+Tosom-itemssett basert på Big Five som **rammeverk** (§T.2). Må være: selvstendig,
+transparent, ikke-klinisk, forståelig, respektfull, relasjonelt relevant, teknisk
+kompatibel med `unifiedScore`, versjonert, ærlig om manglende validering.
+
+### T.2 — RAMMEVERK vs INSTRUMENT (regler for F2)
+
+1. Big Five/five-factor (Goldberg 1990-93; Costa & McCrae 1992; John et al. 2008)
+   = fri fagterminologi. BFI-10 (R&J 2007) = beskyttet itemssett — **null** av
+   dennes setninger, parafraser eller «Jeg vil si at jeg er X»-diktature må
+   inngå. Item utvikles kun fra §T.3-«T.4 konstruktdefinisjoner».
+2. «Ingen parafrasering» verifiseres med blind review (T.18) og guard-test PV2-01/12.
+3. Tosoms scoring, vekt og heuristikker er **TOSOM PRODUCT LOGIC** (§S.3) —
+   BFI-10s validitetsdata brukes aldri som underlag (slik har det vært siden F1).
+
+### T.3 — PRODUKTBEHOV PER TREKK (hvorfor trenger Tosom signalet?)
+
+| TREKK | CONSTRUCT | RELATIONSHIP/MATCHING RELEVANCE | VIL FORSTÅ | MÅ IKKE UTLEDA | POTENSIELL SKADE | STATUS |
+|-------|-----------|--------------------------------|------------|----------------|------------------|--------|
+| EXTRAVERSION | Hverdags-/sosial energi- og rytmebalanse | Par med svært ulik sosial rytme (sosial base vs hjemmabase) får hverdagsfriksjon som ikke er konflikt i seg selv | Hvor mye tid i sosial setting vs alenetid som lader uttørrer | at introverte er mindre, at ekstroverte er «bedre», intelligens, mental helse | Stigmatisering; press til å prestere sosialt | **NECESSARY** |
+| AGREEABLENESS | Forhandlings-/kompromissmønster i uenighet | Komplementaritet i beslutningsfordeling (hvem gir, hvem holder) påvirker hvor ofte små uenigheter blir store | Om mønsteret er mot avklaring eller mot sin egen linje — og om det er stabilt | «snillhet», moralisk verdi, bittelighet | Sosial ønskverdighet: «riktige» svar belønnes; maskering av reelle preferanser | **NECESSARY** (men overlapp med COMMUNICATION/ATTACHMENT håndteres med fasett-regler, T.4) |
+| CONSCIENTIOUSNESS | Struktur- og oppfølgningsnivå i hverdagen | Ulighet i planmessighet/avtaler/økonomi-rutiner er konkret kilde til friksjon | Om livet er planlagt eller flytende, og om avtaler oppfølges | at strukturert=bedre, moral («slapser»), kompetanse | Dømmende tone; «slapsers»-stigma | **NECESSARY** |
+| EMOTIONAL STABILITY | Tilbakehasting fra hverdagsfrustrasjon | Par der én fortsetter å bære en oppgik situasjon i timevis/vøker skaper konstant lav intensitet uenighet | Hvor fort roen kommer tilbake **etter** en hverdagsfrustrasjon, og om det er håndterbart i par | klinisk screening, diagnose-indikasjoner, helsestatus — alt | Helsestigmatisering; «syk»-label i en datingkontekst; GDPR-sensitivitet | **NECESSARY** (høyest forsiktighet, T.4) |
+| OPENNESS | Åpne for nye erfaringer og perspektiver | Par med lik lekenivå for nye ting (mat, reiser, tanker, rutiner) deler opplevelsesrom; ulikhet gir «ennå en»-friksjon | Om nyheter frister eller kjente rammer trygger | intellekt, kunstinteresse som status, «kultivert» vs «ordinær» | Elitistisk tone; kunstinteresse ≠ åpenhet | **NECESSARY** (lavest risikoprofil av de fem) |
+
+**Alle fem beholdes** (motoren, vekta og copy er bygd for 5 akser; å kutte ett
+trekk koster mer enn det gir — §S.8). Overlappshåndtering (T.4) sikrer at Tosom
+ikke spør det samme seks ganger.
+
+### T.4 — KONSTRUKTDEFINISJONER + OVERLAP-REGLER (grunnlag for F2A-itemskriving)
+
+**Fasett-regler** (hvad HVERT v2-item må mål, og hvad det må UNNGÅ):
+
+- **EXTRAVERSION** — fasett: *hverdagsenergi*. Item skal omhandle rytme (alene/tid,
+  sosial kontakt, tempo). FORBUDT-overlapp: ingen items om «sympatisk/fest» som
+  måler likhet; ingen items som belønner ekstrevert svar.
+- **AGREEABLENESS** — fasett: *kompromiss i beslutninger*. Item skal omhandle
+  konkrete beslutningssituasjoner (hvem bestemmer, hvem gir, hvem tar ut). FORBUDT:
+  karakterpriser («snill», «god», «hensynsfull» som stand-alone); overlapp med
+  COMMUNICATION (der måler **hvordan** man snakker; her måler **hvem som** gir)
+  og ATTACHMENT (der måler trygghetsbehov/unnvikelse, ikke forhandlingsmønster).
+- **CONSCIENTIOUSNESS** — fasett: *struktur og oppfølging*. Item om konkrete
+  hverdagsmønstre (avtaler, planer, «starter-fullfører» vs «flyter på»). FORBUDT:
+  moralsk ord («ansvarlig», «slaps»), jobb-prestasjon; overlapp med livsstil-felt
+  (arbeidsrytme er livsstil, ikke personlighet).
+- **EMOTIONAL STABILITY** — fasett: *tilbakehastingstid etter hverdagsfrustrasjon*.
+  Item skal omhandle **mønster** etter en konkret hverdagssituasjon (kø, feil,
+  kritikk av maten), aldri symptomer. FORBUDT: ord som angrep/panikk/depresjon/
+  «mange ganger», «ofte», «aldri kan jeg slappe av» (symptom-språk); kliniske
+  skala-referanser. Overlapp med ERQ-dimensjonen: ER måler **strategi** (omtydning
+  vs undertrykking), her måler **intensitet/hastighet** (hvor fort roen kommer
+  tilbake). Hvis F2A-reviewer finner at itemene likevel måler strategi → items
+  skrives om, ikke dimensjonen.
+- **OPENNESS** — fasett: *nysgjerrighet på nye erfaringer*. Item om konkrete
+  utforskningsmønstre (ny mat/ny rute/ny samtale). FORBUDT: kunst/bøker som
+  status; «intelligent»-tone; BFI-fantasi-fasetten («aktivt fantasiliv») er
+  eksplisitt ute — den måler noe annet enn relasjonell nytte.
+
+**Ekspertgodsending av disse konstruktdefinisjonene er gate G1 (T.22) — items
+skrives IKKE før definasjonene er godkjent.**
+
+### T.5 — ANTALL ITEMS
+
+| Struktur | Onboarding-burden | Coverage | Scoring-stabilitet | Redundans | Fatigue | Matching-verdi |
+|----------|-------------------|----------|--------------------|-----------|---------|----------------|
+| **A: 10 items (2/trekk)** — BFI-form | Minst (+0 vs v1) | 2 fasetter per trekk umulig å dekke fullt | Lav (1 ekstremt svar = 50 % av trekket) | Lav | Lav | OK |
+| **B: 15 items (3/trekk)** — anbefalt | +5 items ≈ 30–45 s i steg 2 | 3 fasetter per trekk dekker T.4-reglene (inkl. «ikke kun én fasett») | Middel-høy (minste kvotient ved 3 punkter; 1 feil-svar = 33 %) | Middel (må styres av blind review) | Middel (innerste steg, men 15 items er OK i mobil om de er kort) | Høyere signalpervekt (15 % av matchingen bygger på mer pålitelig input) |
+| **C: annen struktur** (f.eks. 12–20 med ulik fordeling) | Variabel | Maksimal fleksibilitet | Maksimal | Maksimal | Høyere risiko | Høyest, men kostbar |
+
+**Anbefaling: B — 15 items, 3 per trekk.** Begrunnelse: (1) T.4 krever minst
+3 distinkte fasetter for at EMOTIONAL STABILITY kan unngå symptom-språk og
+AGREEABLENESS kan unngå karakterprais med 3 ulike situasjoner; (2) 2/trekk gir
+for lav stabilitet til at 15 % av matchingen skal hvile der uten at vi måler
+re-test; (3) +5 items er akseptabel burden i ett steg (44 items i dag, 49 i V2);
+(4) C gir lite nytt over B ved høyere kompleksitet. 3/trekk er også det
+psykometrisk vanlige minimum for kortformer.
+
+### T.6 — RESPONSE SCALE
+
+**Anbefaling: beholde Tosoms eksisterende 5-punkt passerskala** («Passer ikke /
+Passer dårlig / — / Passer ganske godt / Passer helt», `ScaleQuestion`), felles
+med de andre 34 skalaspørsmålene.
+
+- **Forståelighet:** «passer» er selv-beskrivende og naturlig for norsk; 5 punkter
+  med ord-labeler er tilgjengelig (aria-labeler finnes i dag).
+- **Midpoint:** eksisterer (3) — akseptabelt; scoring T.8 sikrer at *manglende*
+  svar ikke blir 3.
+- **Sosial ønskverdighet:** passerskala er mildt mer resistent enn agree-skala
+  (brukeren vurderer «passer på meg», ikke «er jeg enig i en generell påstand») —
+  men karakterprais-items (T.4 forbud) ville likevel skru ønskeværdighet opp.
+- **Måler trait eller selvbilde?** Begge — selvrapportert personlighet er
+  per definisjon selvbilde; dette er ikke en feil i målet (matching sammenligner
+  selv-bilder, ikke «ekte» trekk), men copy skal aldri si annet (F1 holder).
+- **Ikke bytte skala** for hele onboarding (44 items) — migrasjon/reaksjon
+  for stor; V2-personlighetsitem kan eventuelt få presisert intro-tekst
+  («Hvor passende er dette som beskrivelse av deg i hverdagen?»).
+
+### T.7 — REVERSE ITEMS
+
+**Anbefaling: 0 reverse items i V2.** (FOR: acquiesence-kontroll, våkenhet.
+MOT: lesefeil, UX i mobil-onboarding, scoring-kompleksitet.) Passerskala reduserer
+acquiesence-risikoen (se §S.9); 15 items med 0 reversering er enklere for både
+bruker og scoring. `Item.reversed`-feltet beholdes (defensivt), alle V2-items
+får `reversed: false`. Dagens bfi1-reversering forsvinner med v1.
+
+### T.8 — MISSING-DATA-POLICY (retter §S.10 MATCHING INTEGRITY ISSUE)
+
+**Prinsipp: MISSING ≠ NEUTRAL ≠ MIDPOINT ANSWER. Aldri gi en psykologisk
+betydning en bruker aldri har uttrykt.**
+
+| Tilstand | Definisjon | V2-håndtering |
+|----------|------------|---------------|
+| NOT ANSWERED (ny onboarding) | Bruker hoppet skritt | Umulig — skalaspørsmål forblir påkrevd per item (PL-08b-mønsteret; PV2-07) |
+| MIDPOINT RESPONSE | Bevisst 3 | Tell som 3 (det brukeren ga) |
+| MISSING (legacy/partial i DB) | `bigFive`-felt null/ukomplett | **Ikke default 3.** `scoreAll`/`averageForTrait` endres: hvis et item mangler → trekket = null → `bigFive` = null → `readBigFive`-fallback i `unifiedScore` (ord-overlap/50) for akkurat den dimensjonen. Ingen falsk nøytralitet i 15 % av matchen |
+| LEGACY v1 (fullt besvart, men feil versjon) | v1-score eksisterer | Håndteres av T.11 versjonsregel — ikke av missing-logikk |
+
+Konsekvensanalyse: (1) Ny brukere påvirket: ingen (pålagt svar). (2) Legacy-profiler
+uten fullt data: de får i dag en «nøytral personlighet» som driver 15 % av
+matchingen — etter retting faller personlighetsdimensjonen tilbake til eksisterende
+fallback (deterministisk, testet). (3) Ingen endring i vekt eller terskler.
+(4) Retting kreves som en del av V2 (ikke separat), fordi V2 bytter item-id —
+gamle rå svar kan ikke scoring på nye trekk likevel.
+
+### T.9 — SCORING + VEKT
+
+**Scoring (mekanisme):** uendret fra dagens — gjennomsnitt per trekk (3 items),
+1–5, ingen normalisering. `scorePersonalityCompat`-heuristikker beholdes i V2
+(samme funksjonsform, samme skala). Dette er en bevisst beslutning: å bytte både
+items og scoring-form i én ACT fordobler regressjonsrisikoet uten faglig gevinst.
+Formen (T.10) er likevel **UNVERIFIED HEURISTIC** til videre — se merkelappene.
+
+**Vekt — tre alternativer:**
+
+| Alt | Vekt | Fordel | Ulempe |
+|-----|------|--------|--------|
+| A: Behold 0.15 midlertidlig | 0.15 | Ingen scoring-drift for eksisterende par; copy er allerede ærlig om heuristikker; V2 måler samme 5 akser på samme skala — signalkvaliteten *forbedres* (3 items/trekk) | 15 % på uvalidert sett (men: gate G1 eksperti­vurdering before launch; validering er post-launch roadmap, F1.5 §S.14) |
+| B: Reduser (f.eks. 0.08–0.10) | <0.15 | Mindre eksponering mot uvalidert signal | Krever renormalisering av de øvrige 5 vekter = matching-endring for **alle** par; terskler (80/65/50/40) må rekalibreres; copy må endres igjen; ingen validitetsgrunnlag tilsier at 0.15 er for høyt |
+| C: Kun svak sekundær komponent | ~0.03–0.05 | Minst risiko | Personlighet som signal blir nesten inert — produktverdi-tap; likevel et uvalidert sett med ny kode |
+
+**Anbefaling: A — beholde 0.15 midlertidlig**, med (1) gate G1 (ekspertgodsending
+av items + scoring-form) som forsikring før launch, (2) post-launch kalibrering
+mot ekte matchdata (F1.5 §S.14 roadmap), (3) copy fortsetter å si «heuristisk,
+ikke kalibrert». Risiko-vurdering: mest sannsynlige feilmodus (dårlige items)
+er fanget av G1 + blind review + PV2-06; systematisk feil (feil faglig form)
+er fanget av post-launch validering — og 0.15 er den *laveste* av de tre
+store vektingene i motivet (values/attachment er 0.25).
+
+### T.10 — LIKHET VS KOMPLEMENTARITET (per trekk, dagens form klassifisert)
+
+Dagens `scorePersonalityCompat`-form per trekk (kode, §S.3 steg 7):
+
+| TREKK | DAGENS FORM | LIKHET ØNSKELIG? (forskning) | KOMPLEMENTARITET ØNSKELIG? | MERKELAPP |
+|-------|-------------|------------------------------|-----------------------------|-----------|
+| Neuroticism | «Lav hos begge = bra» + straff ved høy-høy (absolutt-nivåregel, ikke ren likhet) | Ja — par-gjennomsnitt av nevrotisism er dokumentert negativt prediktor for relasjonskvalitet (f.eks. via metaanalytisk litteratur; **ikke** spesifikt verifisert i denne audit) | Nei | **THEORETICALLY SUPPORTED (retning)** / **UNVERIFIED (terskel 3.5, −20)** — tersklene er produktvalg |
+| Agreeableness | Gjennomsnitt/5 → «høy hos begge = bra» (absoluttregel) | Delvis — lik høyt agreeabelhetsnivå assosieres med mindre konflikt | Nei (lav agreeabelhet er ikke «komplementær til høy») | **PRODUCT HEURISTIC** |
+| Conscientiousness | Likhetsstraff \|Δ\|·25 | Usikkert/mikst i litteraturen (noen funn for likhet, noen for komplementaritet i rollefordeling) | Mulig, ikke dokumentert for Tosoms kontekst | **UNVERIFIED HEURISTIC** |
+| Extraversion | Gap-straff kun utover 1 poeng (tolerer litt forskjell) | Delvis — ulik sosial rytme gir friksjon | Nei | **PRODUCT HEURISTIC** |
+| Openness | Likhetsstraff Δ·20 | Ja — åpenhetslikhet er av de mest dokumenterte Big Five-knyttene til par-tilfredshet | Nei | **THEORETICALLY SUPPORTED (retning)** / **UNVERIFIED (koefisient 20)** |
+
+**V2-regel:** Ingen av disse reglene endres i V2 (T.9). Men: (1) alle merkelapper
+dokumenteres i F2-dokumentasjon og i Metoder («heuristikk, ikke validering»);
+(2) populærpsykologisk «motsetninger tiltrekker hverandre» brukes **ikke** som
+modellregel — den finnes ikke i koden og skal ikke lages; (3) post-launch
+validering (F1.5 roadmap) kan bytte ut UNVERIFIED-deler med data-drevne former
+— da som egen ACT med egen testing.
+
+### T.11 — MODELLVERSJONING (arkitektur)
+
+**Minimum:** `personalityModelVersion`: v1 = dagens BFI-avledede sett, v2 = nytt
+selvstendig sett.
+
+| Aspekt | Plan |
+|--------|------|
+| Lagringssted | Ny **additiv, nullable** Prisma-kolonne `personalityModelVersion Int?` på `Profile` (bakoverkompatibel: eksisterende rader = null = tolkes som v1). Alternativer vurdert: envelope i `bigFive`-JSON (`{v, scores}`) — null migrasjon, men verre til querying/testing; forkastet |
+| Type/standard | `Int?`, 1 \| 2. Null → legacy → håndteres av T.12 |
+| Prefill | Ny onboarding (etter V2-live) skriver alltid 2. Ingen backfill-kjøring: null er ærligere enn «vi antar at de gamle er v1» — men null og v1 er **identisk** i matching-bet (begge = v1-verden), så ingen logikk endres |
+| API | `profile/setup` (der `bigFive` skrives, linjer 229/348 i dag) mottar versjon fra itemsettet; `match/breakdown` (linje 99) utstiller versjon i utdata (transparens) |
+| Onboarding | `instruments.ts`: V2-items får nye id'er (`tp1`–`tp15`, «tosom personality»), v1-id'er beholdes kun for v1-lesing; `INSTRUMENT_SET_VERSION` bumpes (f.eks. `2026-XX-XX.v2`) |
+| Matching | `readBigFive` utvides til å returnere `{scores, version} \| null`; `dimPersonality` bruker T.12-regel. `scorePersonalityCompat` uendret (mottar scores uavhengig av versjon) |
+| Tests | PV2-02, 04, 07, 09, 10, 11 (T.20) |
+| Export | `app/api/settings/export/route.ts`: **funn i denne audit: `bigFive` er i dag IKKE inkludert i eksporten** (kun `personality` og `deepProfileData`). V2 legger inn `Personlighet: {version, scores}` — også et GDPR-tilsyn (brukere kan eksportere det vi har om dem) |
+| Prisma/DDL | Én trivial additiv migrasjon (`ALTER TABLE ... ADD COLUMN personalityModelVersion INT NULL`) — kjører i eksisterende CI «Apply DB Migrations (prod)». Ingen DDL før F2-implementasjon (PLAN MODE) |
+
+### T.12 — V1/V2-PAIRING (deterministisk regel)
+
+**Anbefaling: Strategi A+ — personlighetsdimensjonen brukes KUN når begge
+profiler har samme modellversjon; ellers eksisterende fallback.**
+
+| PAR | HENDELSE | HVGORDOM |
+|-----|----------|----------|
+| V2 ↔ V2 | `scorePersonalityCompat(v2scores)` | Normalt |
+| V1 ↔ V1 (eller null ↔ null) | `scorePersonalityCompat(v1scores)` | Normalt — v1-profiler kan fortsatt matches mot hverandre med v1-data (de har ikke blitt «borte») |
+| V1 ↔ V2 / null ↔ V2 / V1 ↔ null | **Ikke sammenlign personlighet** → `dimPersonality` faller tilbake til eksisterende ord-overlap-fallback (personality-tag eller 50) | Deterministisk; ingen falsk presisjon; ingen crosswalk |
+| MISSING (ingen bigFive) | Samme fallback som i dag (`readBigFive = null`) | Uendret |
+
+**Hvorfor ikke C (normalisert bridge)?** Ingen faglig forsvarlig kalibrering
+eksisterer for å oversette v1-score (BFI-avledte items) til v2-skala (eget sett)
+— en «bridge» ville være en ukalibrert transformasjon presentert som likhet.
+**Hvorfor ikke B (rematch/re-onboarding før bruk)?** Re-onboarding er likevel
+anbefalt (T.13) — men som *kampanje*, ikke som *blocking gate*: brukere som
+ikke har re-svart skal ikke straffes med dårligere matching, de skal få den
+eksisterende fallback.
+**Testbarhet:** regelen er en 2×3-sannhetstabell — PV2-04 dekker den fullt.
+
+### T.13 — LEGACY-BRUKERE + AKTIV REISE + KØ
+
+**Kontekst (faktiske state-maskiner i skjemaet):**
+`Profile.journeyState`: NOT_STARTED \| IN_PROGRESS \| COMPLETED \| PAUSED.
+`MatchStatus` (per match): active \| ended \| expired (14 dager).
+`onboardingComplete`: Boolean. Kø-berettigelse krever `onboardingComplete`.
+Matching-runden (`app/api/cron/matching`) scorer par; `scoreRound`/cheapFeatures
+er dealbreaker-prekalkulasjon (uavhengig av personlighet).
+
+**Strategi per state:**
+
+| STATE | HANDLING | BEGRENNING |
+|-------|----------|------------|
+| IDLE (NOT_STARTED / PAUSED / ingen aktiv match) | Re-onboarding-personalighet vises ved neste pålogging/session: «Vi har forbedret noen av spørsmålene våre. Før neste matchingrunde ber vi deg svare på personlighetsspørsmålene på nytt.» (15 items) | Ingen endring av ellers fullførte profiler |
+| QUEUED (onboardingComplete, venter på matching, ingen aktiv match) | Samme som IDLE — prompt **før** neste matchingrunde. Inntil da: V1-fallback (T.12) sikrer at de ikke mister matching-kvalitet dramatisk (v1↔v1 eller v1↔null er intakt; kun v1↔v2-par går til fallback) | Ingen tvinging; prompt er inviterende, ingen deadline |
+| IN_JOURNEY (MatchStatus=active) | **IKKE avbryt reisen.** Prompt utsettes til reisen er slutt (ended/expired/COMPLETED) eller naturlig sjekkpunkt (neste pålogging etter at samtalen er avsluttet) | PV2-08 garanterer dette |
+| COMPLETED (reise fullført, `journeyState=COMPLETED`) | Prompt ved neste pålogging | — |
+
+**Hvorfor re-onboarding fremfor «behold v1» som permanent løsning?**
+(1) Pre-launch brukerbasis er liten — absolutt antall å be er lite. (2) V1-items
+er lisensproblematisk tekst; å beholde dem som *aktivt* onboarding for nye
+sessioner er uaktuelt, og å la v1-profiler for evig ha «mismatch-privilegium»
+(skaper en permanent v1-klynge) er verkningsmessig dårlig. (3) Re-svar gir
+v2-kvalitet til alle — da blir T.12s fallback-regel kun overgangslogikk.
+**Data retention ved re-onboarding:** se T.14.
+
+### T.14 — DATA RETENTION (v1)
+
+- **Ikke slett v1-data** (rå svar + v1-score) automatisk: auditability
+  (reproduksjon av historisk matching) + GDPR rett til tilgang krever at vi
+  kan vise/eksportere det vi har. `personalityModelVersion` holder dem adskilt.
+- **Aktiv bruk i brukertilfeller stopper:** v1-itemtekster skal ikke lenger
+  vises i onboarding/eller andre aktive flater når V2 er live (gate G3). DB
+  lagring av gammel item-teks (som svarhistorikk) er ikke «aktiv bruk», men
+  dette punktet markeres **LEGAL REVIEW REQUIRED**: om v1-rå svar + v1-item-
+  tekst skal beholdes i DB på sikt, eller anonymiseres etter en periode, skal
+  avgjøres av lisens/privacy-ekspert (audit §O-profiler) — spesielt fordi
+  v1-itemteksten er BFI-avledet.
+- **Eksport:** V2-export inkluderer `Personlighet: { version, scores }` (T.11);
+  v1-profiler eksporterer `{ version: 1, scores }`.
+- **Sletting:** eksisterende GDPR-sletting-flow skal også slette
+  `personalityModelVersion` (kolonne på samme rad — automatisk).
+
+### T.15 — PRIVACY / CONSENT
+
+- **Data som allerede lagres:** `bigFive` (5×1–5), rå svar (44 item-id),
+  `deepProfileData` (attachment/values/ER/communication scores), `personality`
+  (legacy tag). V2 legger til: `personalityModelVersion` + 15 nye rå svar
+  (v2-id) + v2 `bigFive`-score.
+- **Datakategori:** Selvrapportert personlighet er personopplysning, men
+  **ikke** sensitiv data (art. 9) — så lenge items ikke screener for helse
+  (T.4 forbud). V2-beholder denne egenskapen; PV2-06 (ingen kliniske labels)
+  er en kontinuerlig guard. Hvis ekspert-review (G1) likevel finner helse-
+  antydning i et item → itemet forkastes, ikke kategorien.
+- **Consent:** Onboarding-samtykket dekker allerede profilsanking for matching.
+  V2 endrer ikke formålet (matching) — **LEGAL REVIEW REQUIRED**: om endret
+  items + ny kolonne krever oppdatert informasjonskapittel (høy sannsynlighet:
+  ja for informasjonsplikt, nei for nytt samtykkegrunnlag) — avgjøres av
+  GDPR-jurist (audit §O), ikke her.
+- **Profiling (art. 22):** V2 forsterker ikke automatisert beslutning —
+  matching-resultat er veiviser (F1-copy), menneske avgjør. Uendret fra v1.
+- **Export/sletting:** T.11/T.14.
+
+### T.16 — MODELLGRENSE: HVA TOSOM MÅLER, OG HVA DEN IKKE KAN KJENNE
+
+**Fire nivå (høy → lav kontroll):**
+
+1. **HARD COMPATIBILITY** — dealbreakers (kjønn/søker, alder, avstand, barn,
+   høydegate, religion, livsstil «må stemme»): overstyrer matchskår. Faktiske
+   felt i koden (L2026): `arbeidsrytme, bosted, reiser, dyr, skjerm, bil,
+   kosthold, klima, alkohol, aktivitet` (+ `Viktig`-varianter), `height`,
+   `religion`, `wantChildren`, `lifeRhythm`, eksplisitte preferanser/grenser.
+   (Disse er valgbare — tom felt blokkerer aldri.)
+2. **PRACTICAL / LIFESTYLE COMPATIBILITY** — livssituasjon-dimensjon (vekt 0.10):
+   praktisk kompatibilitet av nivå 1s felt.
+3. **RELATIONAL PATTERNS** — values (0.25), attachment (0.25), personality (0.15),
+   communication (0.15), emotionRegulation (0.10): selvrapporterte mønstre.
+4. **PHYSICAL ATTRACTION / CHEMISTRY** — **beregnes IKKE av Tosom.** Ingen input,
+   ingen proxy, ingen «livsstil → kropp»-inferanse.
+
+**Hard regler for V2 (PV2-14/15):**
+- `aktivitet ≠ kroppsform`, `kosthold ≠ kroppsform`, `livsstil ≠ fysisk
+  attraktivitet`. `bodyType` skal **ikke** gjeninnføres (slettet i et tidligere
+  ACT; ingen felt i dagens skjema — verifisert).
+- Ingen V2-personlighetsitem må antyde fysisk attraktivitet/utseende.
+- Copy (F1 holder, T.17): «Fysisk tiltrekning inngår ikke i matchskåren — Tosom
+  forsøker ikke å beregne den… Om fysisk tiltrekning og kjemi oppstår, må dere
+  finne det ut selv.»
+
+**Hvorfor grensa er ærlig, ikke svak:** matching skjer ikke «uten informasjon» —
+før bildet har Tosom uttrykte preferanser, praktiske grenser, selvrapporterte
+mønstre og livsstil (når brukeren selv gjør det relevant). Det kan redusere
+åpenbare konflikter (nivå 1–3). Det kan **ikke** predikere kjemi (nivå 4).
+
+### T.17 — PRODUKTPARADOKSET (faglig/public copy)
+
+| Situasjon | Hva algoritmen kan | Hva den ikke kan |
+|-----------|--------------------|------------------|
+| A: Sterk fysisk tiltrekning + svak kompatibilitet | Intet — Tosom ser ikke tiltrekningen | Si at «matchskår lav = ikke start samtalen» |
+| B: Sterk kompatibilitet + ingen fysisk tiltrekning | Intet — Tosom ser ikke tiltrekningen | Løfte scoren høyere fordi «alle feller stemmer» |
+
+**Formulering for Metoder/om matching (utkast, endres i F2C med copy-ACT):**
+«Matching velger hvem det kan være meningsfullt å undersøke — den bygger på det
+dere forteller om dere selv, og den kan redusere noen åpenbare konflikter. Den
+kan ikke vite om det blir kjemi. Menneskene avgjør om relasjonen faktisk
+eksisterer.» — Ingen endring av dagens F1-copy kreves for dette; utkastet
+reserveres til F2C der personlighets-copyen (V2) skjøres inn.
+
+### T.18 — DAG 15 / 14-DAGERSREGEL: MÅLINGSPLAN (PROPOSAL, endres IKKE)
+
+Regelen (bilde låses opp dag 15; match `expired` etter 14 dager uten at begge
+har vært innom) endres **ikke**; ingen dag 7 innføres. Målinger som repositoryet
+**i dag støtter** (eksisterende mekanismer):
+
+| METRIC | STØTTE I DAG | KILDE |
+|--------|--------------|-------|
+| Image reveal (unlock) | **JA** | `journey.image_unlocked` event (recordEvent) + `imageShareAllowedAt` på Conversation (cron/journey, dag 15) |
+| Image share etter unlock | **JA** (avledet) | `Message.imageKey` i conversation (består i cron/journey) — deling kan telles per match |
+| Fortsettelse etter dag 15 | **JA** (avledet) | `JourneyStateLog` (from/to) + messages etter `imageShareAllowedAt` |
+| Tidlig avslutning før/etter reveal | **JA** (avledet) | `MatchStatus.ended` + tid mot `imageShareAllowedAt` |
+| Reise-fullføring | **JA** | `journeyState=COMPLETED` + JourneyStateLog |
+| Avslutningsårsak | **IKKE** (ingen felt i dag) | **PROPOSAL** — krever eget ACT + juridisk/etisk vurdering (sensitivitet); ikke implementert i F2 |
+
+Ingen ny innsamling av sensitive data i F2; alle F2-relevente metrics er
+avledet fra eksisterende events/logg.
+
+### T.19 — JOEL / FINKEL: FAGLIG YDMYKHET (bruk av forskning)
+
+| KILDE | WHAT SOURCE SUPPORTS | WHAT IT DOES NOT SUPPORT | SAFE WORDING |
+|-------|---------------------|--------------------------|--------------|
+| Joel et al. 2020 (relationship-quality prediction fra tidlig pardata) | At tidlige parvariabler kan predikere **noen** aspekter av relasjonskvalitet — dvs. at personlighet/mønstre har reel (men beskjeden) prediktkraft | At ethvert spesifikt sett (Tosoms) kan predikere relasjonsutfall; at prediktkraft overføres til kommersiell matching uten egen validering; «bevis for Tosom» | «Forskning viser at visse personlighetsmønstre henger sammen med hvordan par forholder seg til hverandre. Vi bruker dette som veiviser — ikke som fasit. Vi har ikke egne data som viser at vår modell forutsier om dere blir et par.» |
+| Finkel et al. 2012 (online dating: access, communication, matching) | At matching i online-dating bygger på **tilgang og kommunikasjon**, og at selve «match» er et lite signal av endelig utfall; at plattformens matching er et av flere nivå | At Tosoms matching er «det som regjerer»; at høy matchskår forutser relasjonslykke | «Matching velger hvem det kan være meningsfullt å undersøke. Det er dere — ikke algoritmen — som avgjør om noe er der.» |
+
+Begge studiene brukes **kun** til å understøtte grensene (før-relasjon matching ≠
+hvordan relationship quality faktisk utvikler seg), aldri som validering av
+Tosoms modell. Ingen av dem er i F1s 8-kilde-sett; de kan nevnes i Metoder
+**kun** dersom de Crossref-verifiseres i F2C (ellers utelatt fra public copy —
+intet nytt kildesett uten verifisering).
+
+### T.20 — ITEM WRITING BRIEF (for F2A — de ferdige items leveres IKKE i denne fasen)
+
+Felles for alle dimensjoner: 15 items (3/trekk); **8–12 kandidat-items per trekk**
+skrives i F2A (blind-review-redundans); leksenivå: 9.–10. klasse; korte setninger
+(under 12 ord der mulig); første person; hverdagsmønster; ingen kliniske ord;
+ingen verdilading; relasjonell kontekst der naturlig; sosial ønskeværdighet
+risikovurdert per item.
+
+| TREKK | DESIRED BEHAVIORAL DOMAIN | FORBIDDEN OVERLAP | FORBIDDEN WORDING | BALANCE | SOCIAL DESIRABILITY RISK |
+|-------|---------------------------|-------------------|-------------------|---------|--------------------------|
+| EXTRAVERSION | Hverdagsenergi: alenetid vs sosial kontakt; tempo; initiativ i sosiale situasjoner | COMMUNICATION (hvordan man snakker), ATTACHMENT (trygghetsbehov) | «fest», «midtpunktet», «får folk til å le» (BFI-nabolag), «sympatisk» | 1 alenetid, 1 sosial energi, 1 initiativ/tempo | Middel — ekstrovert svar kan fremstå som «norm»; items må like mye framstå som «riktige» for begge poler |
+| AGREEABLENESS | Kompromiss i konkrete beslutninger: hvem gir, hvem holder, hvordan uenighet løses | COMMUNICATION (lytting/uttrykk), ATTACHMENT (angst/unnvikelse) | «snill», «god», «hensynsfull», «tilgivende» (BFI bfi8-nabolag), «mor» | 1 beslutningsmønster, 1 avklaring-tilt, 1 egen-linje | **Høy** — største risikodimensjon; blind review må spesifikt sjekke ønskeværdighet |
+| CONSCIENTIOUSNESS | Struktur og oppfølging: planer, avtaler, «starter-fullfører» vs flytende | L2026-livsstil-felt (arbeidsrytme er livsstil), OPENNESS (nytt) | «ansvarlig», «grundig», «systematisk» (BFI-nabolag), «slaps» | 1 planlegging, 1 oppfølging, 1 fleksibilitet/orden | Middel-høy — strukturert svar belønnes lett; 1 item må være like «riktig» for den flytende polen |
+| EMOTIONAL STABILITY | Tilbakehasting etter hverdagsfrustrasjon: intensitet og tid, håndterbarhet | **ER-dimensjonen (strategi: omtydning/undertrykking)**, klinisk screening | «angst», «panikk», «depresjon», «ofte», «mange ganger», «aldri kan jeg», «oppbrakt»/«tenner på ting» (BFI bfi9/10-nabolag) | 1 intensitet, 1 tid-for-ro, 1 håndterbarhet i par-kontekst | Middel — men **helse-stigma**-risikoen er den alvorligste; ekspertreview vurderer hvert item mot art. 9-grensa |
+| OPENNESS | Nysgjerrighet på nye erfaringer: ny mat, ny rute, ny samtale, ny rutine | BFI-fantasi-fasett, INT-referanse, L2026-reiser (praktisk) | «fantasi»/«imagination» (BFI bfi4-nabolag), «nysgjerrig på mange ting» (bfi3-nabolag), «kunst» som status | 1 ny-erfaring, 1 perspektiv/ideer, 1 kjente-rammer-nytt | Lav — ingen åpen «riktig» pol, men «kultivert»-tone unngås |
+
+**Blind review (obligatorisk i F2A):** én person som har BFI-10-engelsk som
+referanse leser de 15 kandidatene og flagger enhver parafrasering/struktur-ekko.
+Terskel: 0 items som er near-verbatim/close adaptation av BFI. V2s 3+3+3+3+3-
+fordeling er strukturmessig forskjellig fra BFI 2+2+2+2+2, men trekktilordning
+og posisjon (f.eks. «introvert-first») skal ikke kopieres 1:1.
+
+### T.21 — EKSPERTREVIEW GATE (G1)
+
+**Reviewpakke (fagpersonen må se svarenes bruk, ikke kun teksten):**
+1. Konstruktbeskrivelser (T.3/T.4, frosne).
+2. Kandidat-items (15 + alternativer) med provenance: «skrevet fra T.4, blind-
+   reviewet, null BFI-parafraser».
+3. Svarskala (T.6: 5-punkt passerskala, labels, intro-tekst).
+4. Scoring (T.9: gjennomsnitt 3/trekk, ingen reversering, ingen normalisering,
+   missing → null → fallback).
+5. Vekting (0.15, T.9) + `scorePersonalityCompat`-former med T.10s merkelapper.
+6. Missing-håndtering (T.8) + legacy-fallback.
+7. Matching-applikasjon: `unifiedScore`-kjede, T.12 versjonsregel,
+   resonansnivå.
+8. Public copy (Metoder-utkast for V2, T.17, fysisk tiltrekning, heuristik-
+   ærlighet).
+9. Privacy/ethics (T.15, T.4 EMOTIONAL STABILITY-grensa).
+
+**Gate-kriterium:** skriftlig godkjennelse av 1–9, eller godkjennelse med
+betingelser som er implementert før G3. Ekspert = psykometriker + relasjons-
+forsker-profilen fra audit §O (ikke samme person som skrev items).
+
+### T.22 — TESTPLAN (PV2, implementeres i F2B/F2C)
+
+| TEST | INNHOLD | FIL (plan) |
+|------|---------|------------|
+| PV2-01 | Ingen BFI-10-derived user-facing items: ingen av de 10 v1-engelske tekstene, ingen norske near-verbatim-oversettelser, ingen bfi1–bfi10-id i onboarding-flaten | Ny: `__tests__/personality-v2.test.ts` |
+| PV2-02 | `personalityModelVersion` persisteres (1/2/null) og overlever API-roundtrip | `profile-setup-save.test.ts` + ny |
+| PV2-03 | Missing ≠ neutral: tomt/partialt svar → `bigFive=null`; trekket får aldri 3 fra `effectiveValue` | `psychometrics-scoring.test.ts` (oppdatert) |
+| PV2-04 | V1/V2-par-håndtering: full T.12-sannhetstabell, deterministisk, samme input → samme output | `unified-scorer.test.ts` (oppdatert) |
+| PV2-05 | Scoring begrenset: alle items 1/5 → alle trekk 1/5; blandede → 1–5; ingen NaN | `psychometrics-scoring.test.ts` |
+| PV2-06 | Ingen kliniske labels: items + scoring-utdata + copy inneholder ingen angrep/panikk/depresjon/forstyrrelse-terminologi (guard-grep) | Ny i `personality-v2.test.ts` |
+| PV2-07 | Onboarding krever korrekt versjon: V2-steget krever alle 15 items besvart før Next; v1-id vises ikke | E2E: `onboarding.spec.ts` (oppdatert) |
+| PV2-08 | Aktiv reise avbrytes ikke: profil med `MatchStatus=active` + v1-data → reise-flow uendret; v2-prompt utsettes | Ny i `personality-v2.test.ts` (state-mock) |
+| PV2-09 | Legacy sikker: null-version profil → v1-fallback i matching, ingen crash, ingen 3-default | `unified-scorer.test.ts` |
+| PV2-10 | Export inkluderer versjon+data korrekt (v1 og v2-tilfeller) | Export-route-test |
+| PV2-11 | Full/cheap matching-ekvivalens opprettholdes: `scoreRound`-equivalence-test (dealbreaker-kjeden) grønn uendret | Eksisterende: `matching-score-round.test.ts` |
+| PV2-12 | Ingen BFI-10-terminologi i public produkt (metoder, motpol, e-post, llms.txt): grep-guard | `metoder.test.tsx` (oppdatert) + grep-guard |
+| PV2-13 | Metoder beskriver V2 korrekt: «egne spørsmål inspirert av Big Five-rammeverket» (ikke «i stil med BFI-10» når V2 er live), ærlig om heuristik + manglende validering | `metoder.test.tsx` (F2C) |
+| PV2-14 | Ingen bodyType-inferanse: ingen bodyType-felt/labels i skjema, API, onboarding, matching (guard) | Ny i `personality-v2.test.ts` + grep |
+| PV2-15 | Fysisk tiltrekning beregnes ikke: ingen attraktivt/utseende/chemistry-input i scoring; matchskår invariant mot slike input | `unified-scorer.test.ts` (invariant-test) |
+
+### T.23 — IMPLEMENTASJONSVARIANTER
+
+**MINIMAL SAFE (MS):**
+- SCOPE: 10 nye items (2/trekk), versjonskolonne, T.12-regel, T.8 missing-retting,
+  re-onboarding-prompt, Metoder-copy, PV2-01/02/03/04/07/09/12/13.
+- FILES: `instruments.ts`, `scoring.ts` (missing), `unifiedScorer.ts` (version),
+  `profile/setup`, `Step2Personlighet`, `metoder/page.tsx`, tests.
+- DB: 1 additiv nullable-kolonne. USER: v1-brukere får prompt; nye bruker V2.
+- MATCHING: uendret utover T.12/T.8. LEGACY: som T.13/T.14.
+- EXPERT REVIEW: G1 på 10 items. TIME/RISK: minst (~1 uke implementasjon + G1).
+  FAKE: 2/trekk gir lavere stabilite (T.5) — 15 %-signalet er svakere enn det
+  burde være; sosial ønskverdighet i AGREEABLENESS er vanskeligere å balansere
+  med bare 2 items.
+- LAUNCH FITNESS: god nok, men gir svakere faglig fundament enn MODERATE for
+  omtrent samme innsats.
+
+**MODERATE (M) — anbefalt:**
+- SCOPE: MS + **15 items (3/trekk)** med full T.20-brief + blind review +
+  export-versjon (T.11) + dag 15-metrikknivå (T.18, kun avledet — ingen ny
+  innsamling) + full PV2-suite (01–15) + T.10 merkelapp-dokumentasjon.
+- FILES: MS + export-route, `match/breakdown` (version i utdata),
+  `personality-v2.test.ts`, `metoder.test.tsx`-oppdateringer.
+- DB: samme 1 kolonne. USER/MATCHING/LEGACY: som MS, men med 3/trekk-signalkvalitet.
+- EXPERT REVIEW: G1 på 15 items + scoring-form. TIME/RISK: ~1,5–2 uker
+  implementasjon + G1 (G1 er paralleliserbar med itemskriving).
+- LAUNCH FITNESS: beste balanse — løser lisens-gaten fullt, gir best signal,
+  uten å endre vekt/terskler/14-dagersregel.
+
+**RIGOROUS (R):**
+- SCOPE: M + empirisk pilot (test-retest på beta-brukere, α-beregning),
+  eventuel vektrekalkulering, eventuell skala-endring, 2. runde ekspertiterasjon.
+- DB/USER/MATCHING: M + mulig vektendring (renormalisering, terskelrekalibrering).
+- EXPERT REVIEW: G1 + G1b etter pilot. TIME/RISK: uker→måneder; launch-bet;
+  test-retest krever tid som pre-launch ofte ikke har.
+- LAUNCH FITNESS: feil timing — pilot-ene hører hjemme post-launch
+  (F1.5 §S.14 roadmap: «SAFE POST-LAUNCH VALIDATION»).
+
+**Anbefaling: MODERATE.** Grunn: løser launch-gaten fullt (BFI-basert items
+ute av alle aktive flater), faglig best grunnlag av de to launch-feasible
+variantene (3/trekk), og bevisst uendret vekt/terskler holder regressjonsflaten
+liten. RIGOROUS deler flyttes til post-launch roadmap.
+
+### T.24 — LAUNCH GATES (F2, eksakte)
+
+| GATE | KRAV | BLOKKERER |
+|------|------|-----------|
+| G1 | Ekspertgodsending (T.21, 1–9) skriftlig | F2A-items finalisering |
+| G2 | PV2-01–15 grønn + full `npm run verify` grønn | F2B-merge |
+| G3 | **BFI-10 tekst ute av alle aktive brukertilfeller** (grep-guard + e2e): v1-itemtekster vises ikke lenger i onboarding/eller andre flater; nye profiler skaper kun V2 | Launch |
+| G4 | T.12-versjonsregel deterministisk (PV2-04) + missing-retting (PV2-03) i prod-kode | Launch |
+| G5 | Metoder-copy oppdatert for V2 (PV2-12/13): «egne spørsmål inspirert av Big Five-rammeverket», ingen «i stil med BFI-10», heuristik-ærlighet | Launch |
+| G6 | Re-onboarding-kampanje aktivert for v1-brukere (T.13) — eller dokumentert beslutning om at fallback alene er akseptabelt pre-launch | Launch (anbefalt) |
+| G7 | Export inkluderer `personalityModelVersion` + scores (PV2-10) | Launch (GDPR-tilsyn) |
+| G8 | LEGAL REVIEW REQUIRED-punktene (T.14 v1-retention, T.15 consent/informasjon) avklart av §O-ekspertene | Launch (juridisk) |
+
+Post-launch (IKKE gates): empirisk validering, vektkalibrering, eventuel
+UNVERIFIED-heuristikk-erstatning (T.10), dag 15-metrikkanalyse (T.18).
+
+### T.25 — IMPLEMENTERINGSREKKEFØLDE (neste ACT-er, etter plan-godkjenning)
+
+1. **F2A — ITEM DEVELOPMENT:** frosne konstruktdefinisjoner (T.3/4) → 8–12
+   kandidater/trekk → blind review → 15 finale items → G1-reviewpakke (T.21).
+   Leverer: items + godkjent review. Endrer IKKE kode.
+2. **F2B — SCORING/VERSIONING/MATCHING:** `instruments.ts` V2 (+v1 arvervet),
+   `scoring.ts` missing-retting, `unifiedScorer` versjonslogikk,
+   `profile/setup` + `match/breakdown` versjonsfelt, Prisma-migrasjon,
+   PV2-01–11 + 14/15. G2-grønn før merge.
+3. **F2C — ONBOARDING/LEGACY/COPY:** `Step2Personlighet` → V2-steget, re-
+   onboarding-prompt (T.13 state-logikk), Metoder-copy V2 (PV2-12/13),
+   e2e-oppdateringer, G3/G5/G6.
+4. **F2D — DOCS/GATES/DEPLOY-SIGT:** checklist-oppdateringer, G7/G8,
+   lanseringsberedskapsbeslutning, deretter deploy-runde (egen fase).
+
+**Leveransemapping (§32 → seksjon):** 1=T.3 · 2=T.3 · 3=T.20 · 4=T.5 ·
+5=T.6 · 6=T.7 · 7=T.8 · 8=T.9 · 9=T.9 · 10=T.10 · 11=T.11 · 12=T.14 ·
+13=T.13 · 14=T.13 · 15=T.12 · 16=T.13 · 17=T.14 · 18=T.15 · 19=T.16/T.22 ·
+20=T.18 · 21=T.19 · 22=T.21 · 23=T.22 · 24=T.23(MS) · 25=T.23(M) ·
+26=T.23(R) · 27=T.23 (anbefaling) · 28=T.24 · 29=T.25.
+
+**Endring i denne seksjonen:** kun dokumentasjon (PLAN MODE). Ingen items,
+kode, DB, onboarding, matching, copy, tests, commit, push, deploy.
+
+
+## U. ACT F2A — ITEM DEVELOPMENT SUMMARY (24.10.2026, DOKUMENTASJON KUN)
+
+Full leveranse: **`docs/PERSONALITY-V2-ITEM-DEVELOPMENT-v1.0.md`**
+(STATUS: DRAFT – REQUIRES EXTERNAL EXPERT REVIEW).
+
+| PUNKT | RESULTAT |
+|-------|----------|
+| Kildevalg | **A — fullstendig selvstendige Tosom-items** fra frosne konstruktdefinisjoner; IPIP kun som faglig benchmark (public domain), aldri som tekstkilde. BFI-referanse ikke brukt under skriving; likhetskontroll utført som separat post-frysing-steg |
+| Konstrukt | 5 frosne definisjoner (EX/AG/CO/ES/OP) med forbud-områder; ES-items nøkkles høy = mer intensiv (mapper til dagens `neuroticism` uten scoring-endring) |
+| Kandidater | **45** (9 per trekk), skrevet til formatreglene (ett innhold, kort, tendens, ingen alltid/aldri, ingen moralkode, ingen klinisk språk) |
+| Avviste | **9**: AG4 (ATT-overlap), AG7 (ERQ-duplikat), AG8 (selvoppofrelse+ATT), ES5 (polaritetsforvirring), ES8 (ATT-overlap), ES9 (internt duplikat), OP6 (AG3-overlap), OP9 (motsatt skalerekjøring), EX3 (SD-skjevhet) |
+| Finalister | **15 primære + 10 reserver** (se leveranse §12). G1-strukturelt valg: AG B-fasett (AG3) og OP C-fasett (OP4) ligger i reserve-sett |
+| BFI-sjekk | **0 CLOSE ADAPTATION / 0 NEAR-VERBATIM** — 31 INDEPENDENT, 14 CONCEPTUALLY SIMILAR (forventet ved samme konstrukt; ingen delt syntaks/formulering). Markant endring fra v1 (CLOSE ADAPTATION på 6/10) |
+| IPIP-provenans | Ingen IPIP-tekst brukt; konseptuelt nærhetsflagg på ~12 items dokumentert, alle beholdes som selvstendig; ingen kreditering nødvendig |
+| Overlap mot aktive Tosom-spørsmål | Ingen overlevende kandidat med MATERIAL OVERLAP/DUPLICATE; AG/CO-items ACCEPTABLE RELATEDNESS (forholdingsstil ≠ kommunikasjonskompetanse) |
+| Reverse-items | **Ingen** (bekrefter §T.7); polaritetsbalanse via nøytralt trade-off-innhold, ikke via motpoles-items (ugyldig i samme-retning gjennomsnitt) |
+| Svarskala | Dagens 5-punkts «Passer ikke / Passer dårlig / Både og / Passer ganske godt / Passer helt» **bekreftet uendret**; ankre balanserte, ingen negasjonsproblem (0 reverse) |
+| Vekt 0.15 | **Behold frem til G1**; G1-spørsmål 8 bindende for F2B; ingen vektendring i F2A (leveranse §14) |
+| Ekspertpakke | Klar (leveranse §15): 15 innholdspunkt + 10 bindende G1-spørsmål (bl.a. fasettdekning AG/OP, ES-nøkkling, 0.15, tillatte påstander) |
+| Kognitiv test | Plan klar (leveranse §13); utføres etter G1, før F2C; ingen data innsamlet i F2A |
+| Gate-status | **G1 ÅPEN** (pakke klar), G4/G5/G8 ÅPENE; G2 delvis, G3/G6 ferdige på papir |
+| F2B | Kan **forberedes**; implementering starter **først etter G1 + G8** |
+
+**Ingen applikasjonskode er endret i F2A.** Ingen commit/push/deploy.
+BFI-10-gate: **ULØST** juridisk (krever G8-advokatsvar), men F2A har
+fjernet den faktiske avledningsrisikoen (0 CLOSE/NEAR-VERBATIM).
+
+## V. ACT F2 (SIMPLIFIED) — PERSONALITY V2 IMPLEMENTATION SUMMARY (2026-10-24)
+
+**Beslutning:** F2A brukes som råmateriale, ikke som fasit. Stort
+psykometrisk forskningsprosjekt (G1-ekspertgjennomgang, kognitiv testing,
+G8-advokatsvar som gate) gjennomføres **IKKE** før launch. Personlighetsdelen
+er et **produktinstrument**: egne, hverdagslige spørsmål som gir et begrenset
+personlighetssignal til matching. Ikke et psykologisk testinstrument; ingen
+kliniske labels; ingen påstand om validitet.
+
+### V.1 Det som ble implementert
+
+| PUNKT | LØSNING |
+|-------|---------|
+| 15 items | `TOSOM_PERSONALITY` (p1–p15) i `lib/psychometrics/instruments.ts` — 3 per bredt område (sosial energi, samarbeid, struktur, hverdagsstress, nysgjerrighet). Ingen reversed items. Eksisterende 5-punkts «Passer ikke…Passer helt»-skala uendret |
+| BFI-10 ut | V1-settet (10 near-adapterte items) fjernet fra aktiv flyt OG fra koden: ingen `bfi*`-items, ingen BFI-tekster i produktflater, ingen BFI-navn i aktiv copy (metoder, onboarding, instrument). Gammle rå-svar beholdes i `psychometricAnswers` (historikk), men skåres og vises ikke lenger |
+| Missing-data | **FIXED:** `scorePersonality()` returnerer `null` ved ett eller flere manglende/ugyldige V2-svar — MISSING ≠ 3 ≠ «Både og». `bigFive` skrives ikke i DB uten fullt sett; matching faller da til deterministisk ordoverlapp-fallback |
+| Versjonering | Additiv nullable `Profile.personalityModelVersion Int?` (2 = V2; null/1 = legacy). Migration `20261024000000_add_personality_model_version` (additiv, kun `ALTER TABLE … ADD COLUMN`). Applied mot lokal dev- og test-DB. **IKKE kjørt mot produksjon** — skjer med neste deploy-runde |
+| Legacy brukere | Ingen crosswalk, ingen matematisk konvertering. Gammle (v1) svar kan ikke prefylle nye items (ulike IDs) → brukeren svarer de 15 nye på neste onboarding-omgang (profilredigering eller «start ny reise»). Frem til da er V2-komponenten stengt for vedkommende (safe fallback) |
+| Aktiv reise | Uendret. Scoring er ren (ingen sideeffekter, ingen journey-referanser i motoren). V2 gjelder neste gang brukeren skal tilbake til matching; ingen journey-redesign |
+| V1/V2 | `readBigFive()` krever `personalityModelVersion === 2` på **begge** profiler — v1↔v1, v1↔v2 og null↔V2 bruker alle den eksisterende trygge fallback (ordoverlapp / 50). Ingen sammenligning av ulike modeller |
+| Vekt | **0.15 — PRODUCT HEURISTIC, NOT EMPIRICALLY CALIBRATED** (ikke presentert som forskningsbasert) — beholdt i F2; ingen terskel/andre vekt endret. Kartlegging: vektene summerer til 1.0 og totalen er vektet sum over [0,100]. Redusjon til 0.10 uten re-normalisering senker alle scores med opptil 5 poeng mot MIN_SCORE=40 (terskel-rekalibrering); re-normalisering endrer de andre 5 vektene (DI-2). Begge veier = «stor rekalibrering» → STOPP og rapporter, som krevd i ACT F2 §17. Vektredusjon blir et post-launch-dataavgjørelse |
+| Metoder | Oppdatert: «Tosoms egne spørsmål inspirert av brede personlighetstrekk fra Big Five-rammeverket», «ikke et standardisert eller klinisk personlighetsskjema», «begrenset kompatibilitetssignal, ikke en vurdering av hvem du er». BFI-10-kilden (Rammstedt & John) fjernet fra kildelista (7 gjenværende verifiserte DOI-kilder). Ingen validitetspåstander; research-tonen senket |
+| Eksport | `personalityModelVersion` eksportert i `/api/settings/export` (Profil-seksjonen) |
+| Tester | Ny `__tests__/personality-v2.test.ts` (SIMP-01…SIMP-15) + DB-assertjon i `profile-setup-save.test.ts` (versjon lagres). Eksisterende suites oppdatert for nytt itemssett |
+
+### V.2 Itemvalg: avvik fra F2A-primærsettet (3 endringer)
+
+| F2A-primær | erstattet av | Grunn (ACT F2 §9) |
+|------------|--------------|-------------------|
+| AG2 «Jeg gir gjerne litt, for at vi skal komme til enighet.» | **p5** «Jeg prøver å se ting fra den andres side, også når jeg ikke er enig.» | AG2 flagget SD-HIGH («jeg skjønner åpenbart hvilket svar som gjør meg til et bedre menneske») → nøytralere B-fasett-kandidat fra reserve; fyller samtidig AG B-fasett-gapet fra F2A Review A |
+| CO3 «Jeg følger opp det jeg sier at jeg skal gjøre.» | **p9** «Jeg holder fast i det som er avtalt, selv om noe nytt frister.» | CO3 flagget SD-HIGH → nøytral trade-off-kopi fra reserve (avtale vs. fristelse) |
+| OP2 (nye erfaringer) | **p15** «Jeg liker endring i hverdagen.» | Fyller OP C-fasett (variasjon vs. kjente rammer) som F2A Review A krevde; OP2 var svakt differensiert fra OP1 |
+
+ES1–ES3 beholdes (SD LOW/LOW/MEDIUM; kognitiv testing dempet til
+etterlaunch-observasjon per forenklingen).
+
+### V.3 Forenklet status (ACT F2 §29)
+
+```
+PERSONALITY V2:        IMPLEMENTED
+BFI-10 ACTIVE USE:     REMOVED
+MISSING-DATA BUG:      FIXED
+MODEL VERSIONING:      IMPLEMENTED
+LEGACY USERS:          HANDLED
+METODER COPY:          CORRECT
+LEGAL/IP REVIEW:       LOW-RISK FOLLOW-UP (ikke blocker)
+```
+
+### V.4 LEGAL FOLLOW-UP (lav risiko, ikke launch-blocker)
+
+BFI-10-problemet er praktisk løst: ingen BFI-10-items i aktiv flyt, ingen
+BFI-navn i aktiv produktmodell, fullstendig eget itemssett med dokumentert
+provenance (F2A §7: 0 close adaptation / 0 near-verbatim), ingen påstand om
+at Tosom bruker eller har validert BFI-10. Gjenstående: skriftlig
+bekreftelse (G8) på at «conceptually similar» status er tilstrekkelig for
+kommersiell lisenssikkerhet — lavrisiko follow-up, ikke en gate. IPIP
+(public domain) er tilgjengelig som sikkerhetsreferanse hvis likhetsvurdering
+noensinne kreves.
+
+**Verifisering (utført før commit-stopp):** `npm run verify` (lang + tsc +
+jest), `npm run lint`, `npm run build` — resultater i ACT-rapport. Ingen
+commit, ingen push, ingen deploy. Produksjons-DB (Prisma) får
+`personalityModelVersion` med neste ordinære deploy-runde (additiv,
+nullable, ingen dataendring).
+

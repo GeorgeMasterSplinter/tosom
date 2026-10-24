@@ -226,7 +226,12 @@ async function postHandler(req: NextRequest) {
         // FORSKNINGSMOTOR F-6: Psykometriske skårer (additive felt).
         // Prisma Json-kolonner krever InputJsonValue — kaster for å unngå index-signature-feil.
         psychometricAnswers: (psychometrics as any) ?? undefined,
-        bigFive: psychScores ? (psychScores.bigFive as any) : undefined,
+        // PERSONALITY V2 (ACT F2): bigFive beregnes KUN naar alle 15 V2-items
+        // er besvart (scorePersonality gir ellers null) - MISSING = ingen skoer.
+        // Ufullstendig: bigFive skrives ikke (legacy-verdi beholdes); versjon settes
+        // kun naar V2-skoer faktisk er beregnet. Ingen crosswalk fra v1 til V2.
+        bigFive: psychScores?.bigFive ? (psychScores.bigFive as any) : undefined,
+        personalityModelVersion: psychScores?.bigFive ? 2 : undefined,
         attachment: psychScores ? (psychScores.attachment as any) : undefined,
         valueProfile: psychScores ? (psychScores.values as any) : undefined,
         emotionRegulation: psychScores ? (psychScores.emotionRegulation as any) : undefined,
@@ -345,7 +350,12 @@ async function postHandler(req: NextRequest) {
         // FORSKNINGSMOTOR F-6: Psykometriske skårer (additive felt).
         // Prisma Json-kolonner krever InputJsonValue — kaster for å unngå index-signature-feil.
         psychometricAnswers: (psychometrics as any) ?? undefined,
-        bigFive: psychScores ? (psychScores.bigFive as any) : undefined,
+        // PERSONALITY V2 (ACT F2): bigFive beregnes KUN naar alle 15 V2-items
+        // er besvart (scorePersonality gir ellers null) - MISSING = ingen skoer.
+        // Ufullstendig: bigFive skrives ikke (legacy-verdi beholdes); versjon settes
+        // kun naar V2-skoer faktisk er beregnet. Ingen crosswalk fra v1 til V2.
+        bigFive: psychScores?.bigFive ? (psychScores.bigFive as any) : undefined,
+        personalityModelVersion: psychScores?.bigFive ? 2 : undefined,
         attachment: psychScores ? (psychScores.attachment as any) : undefined,
         valueProfile: psychScores ? (psychScores.values as any) : undefined,
         emotionRegulation: psychScores ? (psychScores.emotionRegulation as any) : undefined,

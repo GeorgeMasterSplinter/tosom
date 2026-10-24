@@ -1,59 +1,78 @@
-// __tests__/psychometrics-scoring.test.ts — FORSKNINGSMOTOR F-2
+// __tests__/psychometrics-scoring.test.ts — FORSKNINGSMOTOR F-2 / PERSONALITY V2
 //
 // Test av skåringsfunksjonene i lib/psychometrics/scoring.ts med kjente
-// inn- og utverdier, inkludert reverserte items (BFI-10).
+// inn- og utverdier. Personlighet V2 (ACT F2): 15 egne items, ingen
+// reversed items, og MISSING ≠ NEUTRAL (manglende svar → null).
 
 import {
-  scoreBigFive,
+  scorePersonality,
   scoreAttachment,
   scoreValues,
   scoreEmotionRegulation,
   scoreCommunication,
   scoreAll,
 } from '@/lib/psychometrics/scoring';
-import { BFI10, ATTACHMENT, PVQ10, ERQ6, COMMUNICATION, ALL_ITEMS } from '@/lib/psychometrics/instruments';
+import { TOSOM_PERSONALITY, ATTACHMENT, PVQ10, ERQ6, COMMUNICATION, ALL_ITEMS } from '@/lib/psychometrics/instruments';
 import { onboardingSetupSchema } from '@/lib/validation/onboarding-setup';
 
 describe('psychometrics/scoring', () => {
-  /* ─── BFI-10 ─── */
+  /* ─── Personlighet V2 ─── */
 
-  describe('scoreBigFive', () => {
-    it('rekner gjennomsnitt per trekk', () => {
-      const answers: Record<string, number> = {};
-      // Alle 5 → alle trekk med ikke-reverserte items = 5
-      for (const i of BFI10) answers[i.id] = 5;
-      const s = scoreBigFive(answers);
-      expect(s.agreeableness).toBe(5);
-      expect(s.openness).toBe(5);
-      expect(s.conscientiousness).toBe(5);
-      expect(s.neuroticism).toBe(5);
+  describe('scorePersonality (V2)', () => {
+    const answersAll = (v: number): Record<string, number> => {
+      const a: Record<string, number> = {};
+      for (const i of TOSOM_PERSONALITY) a[i.id] = v;
+      return a;
+    };
+
+    it('rekner gjennomsnitt per trekk (alle 15 svart)', () => {
+      const s = scorePersonality(answersAll(5));
+      expect(s).not.toBeNull();
+      expect(s!.agreeableness).toBe(5);
+      expect(s!.openness).toBe(5);
+      expect(s!.conscientiousness).toBe(5);
+      expect(s!.neuroticism).toBe(5);
+      expect(s!.extraversion).toBe(5);
     });
 
-    it('håndterer reverserte items (bfi1 er reversert)', () => {
-      const bfi1 = BFI10.find((i) => i.id === 'bfi1')!;
-      const bfi7 = BFI10.find((i) => i.id === 'bfi7')!;
-      expect(bfi1.reversed).toBe(true);
-      expect(bfi7.reversed).toBe(false);
-
-      // bfi1 = 1 (reversert → 5), bfi7 = 5 → extraversion = 5
-      const high = { bfi1: 1, bfi7: 5 };
-      expect(scoreBigFive(high).extraversion).toBe(5);
-
-      // bfi1 = 5 (reversert → 1), bfi7 = 1 → extraversion = 1
-      const low = { bfi1: 5, bfi7: 1 };
-      expect(scoreBigFive(low).extraversion).toBe(1);
+    it('ingen reversed items i V2 (ACT F2 §11)', () => {
+      expect(TOSOM_PERSONALITY.every((i) => i.reversed === false)).toBe(true);
     });
 
-    it('blander reversert og ikke-reversert riktig', () => {
-      // bfi1 = 2 (reversert → 4), bfi7 = 3 → (4+3)/2 = 3.5
-      const s = scoreBigFive({ bfi1: 2, bfi7: 3 });
-      expect(s.extraversion).toBe(3.5);
+    it('har 3 items per hvert av de 5 brede områdene', () => {
+      for (const trait of ['extraversion', 'agreeableness', 'conscientiousness', 'neuroticism', 'openness']) {
+        expect(TOSOM_PERSONALITY.filter((i) => i.trait === trait)).toHaveLength(3);
+      }
     });
 
-    it('behandler manglende svar som nøytralt (3)', () => {
-      // Kun bfi1 = 1 (reversert → 5), bfi7 mangler (3) → (5+3)/2 = 4
-      const s = scoreBigFive({ bfi1: 1 });
-      expect(s.extraversion).toBe(4);
+    it('gjennomsnitt per trekk med blandede svar', () => {
+      const a = answersAll(1);
+      a.p1 = 5; a.p2 = 3; a.p3 = 1; // extraversion = (5+3+1)/3 = 3
+      const s = scorePersonality(a)!;
+      expect(s.extraversion).toBe(3);
+      expect(s.agreeableness).toBe(1);
+    });
+
+    it('MISSING ≠ NEUTRAL: ett manglende svar gir null, ikke 3 (ACT F2 §12)', () => {
+      const a = answersAll(5);
+      delete a.p15; // ett mangler (openness)
+      expect(scorePersonality(a)).toBeNull();
+      const b = answersAll(5);
+      delete b.p4; // ett mangler (agreeableness)
+      expect(scorePersonality(b)).toBeNull();
+    });
+
+    it('ugyldig svar (utenfor 1–5) gir null', () => {
+      const a = answersAll(3);
+      a.p1 = 6;
+      expect(scorePersonality(a)).toBeNull();
+      const b = answersAll(3);
+      b.p7 = 0;
+      expect(scorePersonality(b)).toBeNull();
+    });
+
+    it('ingen svare i det hele tatt gir null', () => {
+      expect(scorePersonality({})).toBeNull();
     });
   });
 
@@ -148,11 +167,12 @@ describe('psychometrics/scoring', () => {
   describe('scoreAll', () => {
     it('returnerer alle fem skårer i ett objekt', () => {
       const a: Record<string, number> = {};
-      for (const i of [...BFI10, ...ATTACHMENT, ...PVQ10, ...ERQ6, ...COMMUNICATION]) {
+      for (const i of ALL_ITEMS) {
         a[i.id] = 3;
       }
       const s = scoreAll(a);
-      expect(s.bigFive).toBeDefined();
+      // V2: fullstendig personlighets-sett → bigFive beregnes (ikke null)
+      expect(s.bigFive).not.toBeNull();
       expect(s.values).toBeDefined();
       expect(s.emotionRegulation).toBeDefined();
       expect(s.communication).toBeDefined();
@@ -161,16 +181,18 @@ describe('psychometrics/scoring', () => {
       expect(s.attachment.style).toBe('secure');
     });
 
-    it('PL-08j: scoreAll({}) gir ikke stil «fearful» (tomme svar er nøytrale)', () => {
+    it('V2: scoreAll({}) gir bigFive = null (MISSING ≠ NEUTRAL) og ikke «fearful»', () => {
       const s = scoreAll({});
-      // Manglende items behandles som 3 (nøytral) → begge akser = 3.0
-      // → ingen indikasjon på angst/unnvikelse → secure.
+      // Personlighet: manglende svar gir null — ingen skår beregnes.
+      expect(s.bigFive).toBeNull();
+      // Tilknytning: manglende items behandles som 3 (nøytral) → begge akser = 3.0
+      // → ingen indikasjon på angst/unnvikelse → secure (uforandret atferd).
       expect(s.attachment.style).not.toBe('fearful');
       expect(s.attachment.style).toBe('secure');
     });
   });
 
-  /* ─── PL-08g: Serveren er fasit — alle 44 items er påkrevd ─── */
+  /* ─── PL-08g: Serveren er fasit — alle aktive items er påkrevd ─── */
 
   describe('onboardingSetupSchema (PL-08g)', () => {
     // Fullt, gyldig payload — samme form som /api/profile/setup mottar.
@@ -240,12 +262,12 @@ describe('psychometrics/scoring', () => {
       };
     }
 
-    it('PL-08j: godkjenner payload med alle 44 items', () => {
+    it('PL-08j: godkjenner payload med alle aktive items (49)', () => {
       const result = onboardingSetupSchema.safeParse(fullBody());
       expect(result.success).toBe(true);
     });
 
-    it('PL-08j: avviser payload med 43 av 44 items', () => {
+    it('PL-08j: avviser payload med 48 av 49 items', () => {
       const body = fullBody();
       const psych = { ...(body.psychometrics as Record<string, number>) };
       // Fjern ett item (det siste i ALL_ITEMS).

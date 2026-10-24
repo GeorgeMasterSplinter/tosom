@@ -176,6 +176,9 @@ export async function GET(req: NextRequest) {
             'Livssituasjon': profile.lifeSituation ?? null,
             'Livsstil': profile.lifestyle ?? null,
             'Personlighet': profile.personality ?? null,
+            // PERSONALITY V2 (ACT F2): versjon av personlighetsmodellen
+            // (2 = Tosoms egne V2-spørsmål; null = legacy/ikke besvart).
+            'Personlighetsmodell (versjon)': profile.personalityModelVersion ?? null,
             'Kommunikasjon': profile.communication ?? null,
             'Nærhet og intimitet': profile.intimacy ?? null,
             'Framtidsbilder': profile.futureVision ?? null,

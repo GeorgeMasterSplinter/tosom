@@ -19,7 +19,7 @@ import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { BackButton } from '@/components/onboarding/BackButton';
 import { OB } from '@/app/onboarding/theme';
 import { ScaleQuestion } from '@/components/onboarding/ScaleQuestion';
-import { BFI10 } from '@/lib/psychometrics/instruments';
+import { TOSOM_PERSONALITY } from '@/lib/psychometrics/instruments';
 import { missingScaleItems } from '@/lib/validation/onboarding-steps';
 
 interface Props {
@@ -48,7 +48,7 @@ const validate = (data: Record<string, unknown>): ValidationError[] => {
   // (ingen min-lengde lenger); quirk er valgfri kort. Kun selfDesc blokkerer.
 
   // PL-08b (D-1): skalasvarene er påkrevd per steg.
-  const missing = missingScaleItems(data, BFI10);
+  const missing = missingScaleItems(data, TOSOM_PERSONALITY);
   if (missing.length > 0) {
     errors.push({ field: missing[0], message: 'Svar på alle påstandene — det finnes ingen fasit.' });
   }
@@ -202,13 +202,14 @@ export default function Step2Personlighet({ data, onChange, onBack, onNext }: Pr
         testId="ob-quirk"
       />
 
-      {/* FORSKNINGSMOTOR F-5 — BFI-10 (kortform av Big Five) */}
+      {/* PERSONALITY V2 — Tosoms egne personlighetsspørsmål (15) */}
       <div style={{ borderTop: `1px solid ${OB.divider}`, marginTop: '28px', marginBottom: '8px' }} />
       <p className="text-sm mb-4" style={{ color: OB.textSecondary }}>
-        Noen påstander. Svar det som kjennes riktigst — det finnes ingen fasit.
+        Hvordan er du vanligvis? Noen påstander — svar det som kjennes riktigst.
+        Det finnes ingen fasit.
       </p>
       <div className="space-y-3">
-        {BFI10.map((item) => (
+        {TOSOM_PERSONALITY.map((item) => (
           <ScaleQuestion
             key={item.id}
             text={item.text}

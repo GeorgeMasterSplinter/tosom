@@ -13,7 +13,7 @@ import {
 import { toResonanceLevel } from '@/lib/matching/resonanceLevel';
 import { scoreValueCompat } from '@/lib/matching/dimensions';
 import { validateOnboardingStep, missingScaleItems } from '@/lib/validation/onboarding-steps';
-import { BFI10, COMMUNICATION } from '@/lib/psychometrics/instruments';
+import { TOSOM_PERSONALITY, COMMUNICATION } from '@/lib/psychometrics/instruments';
 import { ResonanceLevel } from '@prisma/client';
 import type { ProfileData } from '@/lib/matching/types';
 
@@ -106,18 +106,26 @@ describe('unifiedScore (F-8: 6 dimensjoner)', () => {
       expect(unifiedScore(a, b).breakdown.attachment).toBe(25);
     });
 
-    it('faller tilbake til ordoverlapp når ein profil mangler skårer', () => {
-      // A har bigFive, B ikke → personality faller til ordoverlapp (ikke BFI-matrise).
-      const a = makeProfile({ bigFive, personality: { traits: ['open', 'calm'] } });
+    it('faller tilbake til ordoverlapp når ein profil mangler V2-skårer', () => {
+      // A har V2-bigFive, B mangler personlighet → ordoverlapp-fallback.
+      const a = makeProfile({ bigFive, personalityModelVersion: 2, personality: { traits: ['open', 'calm'] } });
       const b = makeProfile({ personality: { traits: ['open', 'calm'] } });
       const r = unifiedScore(a, b);
-      // Identiske ord → 100 via ordoverlapp (fallback), ikke BFI-kompatibilitet.
+      // Identiske ord → 100 via ordoverlapp (fallback), ikke V2-kompatibilitet.
       expect(r.breakdown.personality).toBe(100);
     });
 
-    it('to identiske BFI-profiler med psyk skårer score likt personlighet', () => {
-      const a = makeProfile({ bigFive });
-      const b = makeProfile({ bigFive });
+    it('legacy bigFive UTEN personalityModelVersion=2 brukes ikke i matching (ACT F2 §16)', () => {
+      // Begge har identiske bigFive-skor, men ingen har V2-merke →
+      // deterministisk ordoverlapp-fallback (ikke V2-kompatibilitet).
+      const a = makeProfile({ bigFive, personality: { traits: ['open', 'calm'] } });
+      const b = makeProfile({ bigFive, personality: { traits: ['open', 'calm'] } });
+      expect(unifiedScore(a, b).breakdown.personality).toBe(100); // ordoverlapp
+    });
+
+    it('to identiske V2-profiler score likt personlighet (V2-komponent)', () => {
+      const a = makeProfile({ bigFive, personalityModelVersion: 2 });
+      const b = makeProfile({ bigFive, personalityModelVersion: 2 });
       expect(unifiedScore(a, b).breakdown.personality).toBeGreaterThan(70);
     });
 
@@ -194,13 +202,13 @@ describe('PL-08 (K-3): Ubesvarte skalaspørsmål gir ikke høy resonans', () => 
   });
 
   it('validateOnboardingStep avviser skalasteg med manglende svar', () => {
-    // Steg 1 (BFI-10): ingen skalasvar + gyldig selfDesc.
+    // Steg 1 (Personlighet V2): ingen skalasvar + gyldig selfDesc.
     const empty = validateOnboardingStep(1, { selfDesc: 'Jeg liker natur og gode samtaler.' });
     expect(empty.errors.some((e) => e.message === 'Svar på alle påstandene — det finnes ingen fasit.')).toBe(true);
 
-    // Alle BFI-10-items svart (1–5) → ingen feil.
+    // Alle 15 V2-items svart (1–5) → ingen feil.
     const allAnswered: Record<string, unknown> = { selfDesc: 'Jeg liker natur og gode samtaler.' };
-    for (const item of BFI10) allAnswered[item.id] = 3;
+    for (const item of TOSOM_PERSONALITY) allAnswered[item.id] = 3;
     const complete = validateOnboardingStep(1, allAnswered);
     expect(complete.errors).toHaveLength(0);
 
@@ -216,12 +224,12 @@ describe('PL-08 (K-3): Ubesvarte skalaspørsmål gir ikke høy resonans', () => 
   });
 
   it('missingScaleItems returnerer ID-ene uten tall 1–5', () => {
-    const data: Record<string, unknown> = { bfi1: 3, bfi2: 'ugyldig', bfi10: 6 };
-    const missing = missingScaleItems(data, BFI10);
-    // bfi2 (streng) og bfi10 (utenfor 1–5) er manglende; bfi1 er gyldig.
-    expect(missing).toContain('bfi2');
-    expect(missing).toContain('bfi10');
-    expect(missing).not.toContain('bfi1');
-    expect(missing).toHaveLength(9); // kun bfi1 svart
+    const data: Record<string, unknown> = { p1: 3, p2: 'ugyldig', p15: 6 };
+    const missing = missingScaleItems(data, TOSOM_PERSONALITY);
+    // p2 (streng) og p15 (utenfor 1–5) er manglende; p1 er gyldig.
+    expect(missing).toContain('p2');
+    expect(missing).toContain('p15');
+    expect(missing).not.toContain('p1');
+    expect(missing).toHaveLength(14); // kun p1 svart av 15
   });
 });

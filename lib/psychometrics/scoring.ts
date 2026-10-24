@@ -1,11 +1,16 @@
-// lib/psychometrics/scoring.ts — FORSKNINGSMOTOR F-2
+// lib/psychometrics/scoring.ts — FORSKNINGSMOTOR F-2 / PERSONALITY V2 (ACT F2)
 //
 // Rå svar (1–5) inn, trekkskårer ut. Håndterer reverserte items.
 // Én kilde for all beregning av psykometriske skårer.
 //
 // Skala (se FORSKNINGSMOTOR-v1.0.md §5): 1=Passer ikke … 5=Passer helt.
+//
+// PERSONALITY V2 (ACT F2 §12): MISSING ≠ NEUTRAL. scorePersonality returnerer
+// null dersom ett eller flere av de 15 V2-svarene mangler — vi beregner aldri
+// en personlighetsverdi en bruker ikke har oppgitt. (De øvrige skåringsfunksjonene
+// har uendret atferd: manglende items teller der som 3.)
 
-import { BFI10, ATTACHMENT, PVQ10, ERQ6, COMMUNICATION, Item } from './instruments';
+import { TOSOM_PERSONALITY, ATTACHMENT, PVQ10, ERQ6, COMMUNICATION, Item } from './instruments';
 
 /* ═══════════════════════════════════════════════════════════
    TYPES
@@ -50,7 +55,8 @@ export type CommScores = Record<string, number>;
 
 /** Alle utregnede skårer for én bruker. */
 export interface PsychometricScores {
-  bigFive: BigFiveScores;
+  /** V2: null når ikke alle 15 personlighets-svar er gitt (MISSING ≠ NEUTRAL). */
+  bigFive: BigFiveScores | null;
   attachment: AttachmentScores;
   values: ValueProfile;
   emotionRegulation: ERScores;
@@ -93,17 +99,44 @@ function averageForTrait(
    ═══════════════════════════════════════════════════════════ */
 
 /**
- * scoreBigFive — BFI-10 (10 items, 2 per trekk).
- * Returnerer 5 akser på 1–5 skala.
+ * scorePersonality — Personlighet V2 (15 egne Tosom-spørsmål, 3 per trekk).
+ * Returnerer 5 akser på 1–5 skala, eller null.
+ *
+ * ACT F2 §12 (MISSING ≠ NEUTRAL): dersom ett eller flere av de 15 svarene
+ * mangler eller er ugyldige, returneres null — ingen skår beregnes.
+ * V2 har ingen reversed items, men reversering håndteres likevel generelt.
  */
-export function scoreBigFive(answers: Record<string, number>): BigFiveScores {
+export function scorePersonality(answers: Record<string, number>): BigFiveScores | null {
+  // Fullstendighet først: hvert av de 15 items må ha et gyldig tall 1–5.
+  for (const item of TOSOM_PERSONALITY) {
+    const v = answers[item.id];
+    if (typeof v !== 'number' || Number.isNaN(v) || v < 1 || v > 5) return null;
+  }
   return {
-    openness:          averageForTrait(answers, BFI10, 'openness'),
-    conscientiousness: averageForTrait(answers, BFI10, 'conscientiousness'),
-    extraversion:      averageForTrait(answers, BFI10, 'extraversion'),
-    agreeableness:     averageForTrait(answers, BFI10, 'agreeableness'),
-    neuroticism:       averageForTrait(answers, BFI10, 'neuroticism'),
+    openness:          averageForTraitStrict(answers, TOSOM_PERSONALITY, 'openness'),
+    conscientiousness: averageForTraitStrict(answers, TOSOM_PERSONALITY, 'conscientiousness'),
+    extraversion:      averageForTraitStrict(answers, TOSOM_PERSONALITY, 'extraversion'),
+    agreeableness:     averageForTraitStrict(answers, TOSOM_PERSONALITY, 'agreeableness'),
+    neuroticism:       averageForTraitStrict(answers, TOSOM_PERSONALITY, 'neuroticism'),
   };
+}
+
+/**
+ * Gjennomsnitt av de gyldige svarene for ett trekk — uten default.
+ * Brukes kun når fullstendighet allerede er verifisert (scorePersonality).
+ */
+function averageForTraitStrict(
+  answers: Record<string, number>,
+  items: Item[],
+  trait: string,
+): number {
+  const matching = items.filter((i) => i.trait === trait);
+  if (matching.length === 0) return 3;
+  const sum = matching.reduce((s, i) => {
+    const raw = answers[i.id];
+    return s + (i.reversed ? reverse(raw) : raw);
+  }, 0);
+  return Math.round((sum / matching.length) * 100) / 100;
 }
 
 /**
@@ -174,7 +207,7 @@ export function scoreCommunication(answers: Record<string, number>): CommScores 
  */
 export function scoreAll(answers: Record<string, number>): PsychometricScores {
   return {
-    bigFive:           scoreBigFive(answers),
+    bigFive:           scorePersonality(answers),
     attachment:        scoreAttachment(answers),
     values:            scoreValues(answers),
     emotionRegulation: scoreEmotionRegulation(answers),

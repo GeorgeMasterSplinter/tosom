@@ -20,7 +20,7 @@
 import { getDistancePrefRange } from '@/config/distance-prefs';
 import { MIN_AGE } from '@/config/legal';
 import {
-  BFI10,
+  TOSOM_PERSONALITY,
   ATTACHMENT,
   PVQ10,
   COMMUNICATION,
@@ -31,12 +31,12 @@ import {
 /**
  * PL-08a: Skalastegene med påkrevde svar (D-1). Stegeindeksene kommer fra
  * renderStep() i OnboardingFlow.tsx:
- *   1 → Step2Personlighet (BFI10) · 3 → Step3Tilknytning (ATTACHMENT) ·
+ *   1 → Step2Personlighet (TOSOM_PERSONALITY V2) · 3 → Step3Tilknytning (ATTACHMENT) ·
  *   5 → Step5LivsstilVerdier (PVQ10) · 8 → Step7HumorPersonlighet (COMMUNICATION) ·
  *   10 → Step8ModenNysgjerrighet (ERQ6)
  */
 const SCALE_STEPS: Record<number, Item[]> = {
-  1: BFI10,
+  1: TOSOM_PERSONALITY,
   3: ATTACHMENT,
   5: PVQ10,
   8: COMMUNICATION,

@@ -1,9 +1,19 @@
-// lib/psychometrics/instruments.ts — FORSKNINGSMOTOR F-1
+// lib/psychometrics/instruments.ts — FORSKNINGSMOTOR F-1 / PERSONALITY V2 (ACT F2)
 //
-// Alle 44 psykometriske items som data: id, tekst (norsk), trekk, reversert.
+// Alle aktive onboarding-items som data: id, tekst (norsk), trekk, reversert.
+//
+// PERSONALITY V2 (2026-10-24, ACT F2 SIMPLIFIED):
+//   Det gamle personlighetssettet (10 items som nær adaptasjon av BFI-10,
+//   Rammstedt & John 2007) er UTFASET fra aktiv brukerflyt og fra denne
+//   filen — ingen BFI-10-itemtekster lenger i koden. Ersatt av TOSOM_PERSONALITY:
+//   15 egne, hverdagslige spørsmål inspirert av de brede Big Five-trekkene
+//   (produktmodell, ikke et psykologisk testinstrument). Provenance og
+//   lighetskontroll: docs/PERSONALITY-V2-ITEM-DEVELOPMENT-v1.0.md og
+//   docs/METHODS-SCIENTIFIC-AUDIT-v1.0.md (§U/§V). Ingen reversed items i V2.
 //
 // Kilder (se FORSKNINGSMOTOR-v1.0.md):
-//   BFI-10:      Rammstedt & John (2007) — fritt tilgjengelig
+//   TOSOM_PERSONALITY: Egne Tosom-spørsmål (V2) — Big Five-rammeverket brukes
+//                      kun som faglig inspirasjon, ikke som instrument.
 //   PVQ-10:      Schwartz (1992) — fritt, brukt i European Social Survey
 //   ERQ-6:       Gross & John (2003) — fritt tilgjengelig
 //   COMMUNICATION: Egne items på Gottman-prinsipper (reparasjon, invitasjoner,
@@ -14,16 +24,17 @@
 //                "fritt for ikke-kommersiell forskning" — vi bruker derfor
 //                egne items som taper på de to akserne (angst + unnvikelse).
 //
-// Alle items merket [OVERSETTELSE — bør kvalitetssikres] for BFI-10, PVQ-10
-// og ERQ-6 (oversettelsene er våre, ikke de offisielle norske versjonene).
-// ATTACHMENT og COMMUNICATION er egne og kan kvalitetssikres som ToSom-tone.
+// PVQ-10 og ERQ-6 er merket [OVERSETTELSE — bør kvalitetssikres]
+// (oversettelsene er våre, ikke de offisielle norske versjonene).
+// ATTACHMENT, COMMUNICATION og TOSOM_PERSONALITY er egne og kan
+// kvalitetssikres som ToSom-tone.
 
 /* ═══════════════════════════════════════════════════════════
    TYPE
    ═══════════════════════════════════════════════════════════ */
 
 export interface Item {
-  /** Unik ID, f.eks. 'bfi1', 'att_a1', 'pvq3'. */
+  /** Unik ID, f.eks. 'p1', 'att_a1', 'pvq3'. */
   id: string;
   /** Norsk tekst (rolig ToSom-tone). */
   text: string;
@@ -34,24 +45,39 @@ export interface Item {
 }
 
 /** Versjon av instrumentsettet — for framtidig migrering. */
-export const INSTRUMENT_SET_VERSION = '2026-08-22.v1';
+export const INSTRUMENT_SET_VERSION = '2026-10-24.v2';
 
 /* ═══════════════════════════════════════════════════════════
-   BFI-10 — Big Five kortform (Rammstedt & John, 2007)
-   [OVERSETTELSE — bør kvalitetssikres]
+   TOSOM_PERSONALITY — Personlighet V2 (15 egne Tosom-spørsmål)
+   ACT F2 (2026-10-24): erstatter det BFI-10-nære v1-settet.
+   Produktinstrument — ikke et validert psykologisk testinstrument.
+   Inspirert av de brede Big Five-trekkene; 3 spørsmål per område.
+   Ingen reversed items (ACT F2 §11). Høy neuroticism-score =
+   mer intensiv reaksjon på hverdagsstress (direkte kartlegging til
+   eksisterende felt).
    ═══════════════════════════════════════════════════════════ */
 
-export const BFI10: Item[] = [
-  { id: 'bfi1',  text: 'Jeg er stille og reservert.',                      trait: 'extraversion',      reversed: true },
-  { id: 'bfi2',  text: 'Jeg stoler lett på andre.',                        trait: 'agreeableness',     reversed: false },
-  { id: 'bfi3',  text: 'Jeg er nysgjerrig på mange ting.',                 trait: 'openness',          reversed: false },
-  { id: 'bfi4',  text: 'Jeg har et aktivt fantasi-liv.',                   trait: 'openness',          reversed: false },
-  { id: 'bfi5',  text: 'Jeg fullfører alltid det jeg starter.',            trait: 'conscientiousness', reversed: false },
-  { id: 'bfi6',  text: 'Jeg er grundig og systematisk i det jeg gjør.',    trait: 'conscientiousness', reversed: false },
-  { id: 'bfi7',  text: 'Jeg er den som får folk til å le på en fest.',     trait: 'extraversion',      reversed: false },
-  { id: 'bfi8',  text: 'Jeg har en tilgivende natur.',                     trait: 'agreeableness',     reversed: false },
-  { id: 'bfi9',  text: 'Jeg blir lett oppbrakt.',                          trait: 'neuroticism',       reversed: false },
-  { id: 'bfi10', text: 'Jeg tenner lett på ting.',                         trait: 'neuroticism',       reversed: false },
+export const TOSOM_PERSONALITY: Item[] = [
+  // Sosial energi (extraversion)
+  { id: 'p1',  text: 'Jeg lader på å være sammen med andre.',                                        trait: 'extraversion',      reversed: false },
+  { id: 'p2',  text: 'Jeg starter gjerne en prat med noen jeg ikke har møtt.',                       trait: 'extraversion',      reversed: false },
+  { id: 'p3',  text: 'Jeg liker at det er mange folk rundt meg.',                                    trait: 'extraversion',      reversed: false },
+  // Samarbeid og medmenneskelighet (agreeableness)
+  { id: 'p4',  text: 'Når vi skal bestemme noe sammen, legger jeg ofte vekt på hva den andre mener.', trait: 'agreeableness',     reversed: false },
+  { id: 'p5',  text: 'Jeg prøver å se ting fra den andres side, også når jeg ikke er enig.',          trait: 'agreeableness',     reversed: false },
+  { id: 'p6',  text: 'Jeg prøver å finne en løsning som begge to kan leve med.',                      trait: 'agreeableness',     reversed: false },
+  // Struktur og planlegging (conscientiousness)
+  { id: 'p7',  text: 'Jeg liker at ting er planlagt på forhånd.',                                     trait: 'conscientiousness', reversed: false },
+  { id: 'p8',  text: 'Jeg holder meg til en plan, selv når noe annet dukker opp.',                    trait: 'conscientiousness', reversed: false },
+  { id: 'p9',  text: 'Jeg holder fast i det som er avtalt, selv om noe nytt frister.',                trait: 'conscientiousness', reversed: false },
+  // Reaksjon på hverdagsstress (neuroticism — høy = mer intensiv)
+  { id: 'p10', text: 'Småting som går galt i hverdagen, merker jeg lettere.',                         trait: 'neuroticism',       reversed: false },
+  { id: 'p11', text: 'Etter en dag som har gått galt, tar det litt tid før jeg finner roen.',        trait: 'neuroticism',       reversed: false },
+  { id: 'p12', text: 'Jeg tenker gjerne på en vanskelig samtale litt lenger enn nødvendig.',          trait: 'neuroticism',       reversed: false },
+  // Nysgjerrighet og variasjon (openness)
+  { id: 'p13', text: 'Jeg prøver gjerne noe nytt, som en ny matrett eller en ny vei.',                trait: 'openness',          reversed: false },
+  { id: 'p14', text: 'Jeg er nysgjerrig på hvordan andre ser på ting.',                               trait: 'openness',          reversed: false },
+  { id: 'p15', text: 'Jeg liker endring i hverdagen.',                                                trait: 'openness',          reversed: false },
 ];
 
 /* ═══════════════════════════════════════════════════════════
@@ -135,14 +161,14 @@ export const COMMUNICATION: Item[] = [
    SAMLET SETT
    ═══════════════════════════════════════════════════════════ */
 
-/** Alle 44 items i ett array. Brukes av onboarding for sekvensiell presentasjon. */
+/** Alle aktive items i ett array. Brukes av onboarding for sekvensiell presentasjon. */
 export const ALL_ITEMS: Item[] = [
-  ...BFI10,
+  ...TOSOM_PERSONALITY,
   ...ATTACHMENT,
   ...PVQ10,
   ...ERQ6,
   ...COMMUNICATION,
 ];
 
-/** Totalt antall items (må være 44). */
-export const TOTAL_ITEMS = ALL_ITEMS.length; // 10+12+10+6+6 = 44
+/** Totalt antall aktive items. */
+export const TOTAL_ITEMS = ALL_ITEMS.length; // 15+12+10+6+6 = 49

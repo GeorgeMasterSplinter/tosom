@@ -60,7 +60,15 @@ function buildPayload(u) {
     grenser: { neverCrossBoundary: 'økonomisk press', understandPartnersBoundaries: 'rom for seg selv', limitations: 'trenger tid alene', partnerMustUnderstand: 'at ro og trygghet er viktig' },
     moden: { intimacySafety: 'trygghet og tillit', comfortableWith: 'å ta det rolig', boundary: 'ingen press overhodet', nearerType: 'fysisk nærhet', needsTime: 'ja, litt tid' },
     preferanser: { politicsImportance: 5, religionImportance: 3, dietPreference: 'normalt', sleepSchedule: 'natt', pets: 'ja', travelFreq: 'noen ganger', alcoholFreq: 'sjelden', ambitionLevel: 'moderat', structureSpontaneity: 'struktur', introExtrovert: 'introvert', attachmentStyle: 'sikker' },
-    psychometrics: { bfi1: 4, bfi3: 5, bfi5: 2, bfi7: 3, bfi9: 4 },
+    // PERSONALITY V2: serveren er fasit — alle 49 aktive item-ID-er påkrevde (PL-08g).
+    psychometrics: {
+      ...Object.fromEntries(Array.from({ length: 15 }, (_, i) => [`p${i + 1}`, 3])),
+      ...Object.fromEntries(['a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'v1', 'v2', 'v3', 'v4', 'v5', 'v6'].map((s) => [`att_${s}`, 3])),
+      ...Object.fromEntries(Array.from({ length: 10 }, (_, i) => [`pvq${i + 1}`, 3])),
+      ...Object.fromEntries(['r1', 'r2', 'r3', 's1', 's2', 's3'].map((s) => [`erq_${s}`, 3])),
+      ...Object.fromEntries(Array.from({ length: 6 }, (_, i) => [`comm${i + 1}`, 3])),
+      p1: 4, p10: 2, // litt variasjon i personlighets-svarene
+    },
   };
 }
 

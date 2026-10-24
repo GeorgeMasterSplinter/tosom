@@ -1778,6 +1778,37 @@ spørsmålene som fullstendig uavhengig itemssett. Separat ACT før lansering.
 - **CONTINGENCY:** Alternativ C (fjerne personlighet fra matching, vekt 0.15)
   dokumentert som fallback ved T-5 dager (audit §S.8).
 
+**F2 PERSONALITY V2 (IMPLEMENTERT, 2026-10-24 — ACT F2 SIMPLIFIED, audit §V):**
+
+Forenklet status (erstattet de akademiske gates fra F1.5):
+
+```
+PERSONALITY V2:        IMPLEMENTED
+BFI-10 ACTIVE USE:     REMOVED
+MISSING-DATA BUG:      FIXED
+MODEL VERSIONING:      IMPLEMENTED
+LEGACY USERS:          PARTIALLY IMPLEMENTED (auto ved neste onboarding-omgang;
+                       ingen aktiv påminnelse = MANUAL/UX FOLLOW-UP)
+METODER COPY:          CORRECT
+PERSONALITY WEIGHT:    0.15 — PRODUCT HEURISTIC, NOT EMPIRICALLY CALIBRATED
+LEGAL/IP REVIEW:       LOW-RISK FOLLOW-UP (ikke blocker)
+```
+
+- BFI-10-items ut av aktiv flyt og ut av koden; 15 egne Tosom-items
+  (p1–p15) i onboarding; BFI-navn ut av aktiv copy og kildeliste.
+- `personalityModelVersion` (additiv nullable kolonne; migration
+  `20261024000000_add_personality_model_version`) — applied mot lokal dev/test,
+  **ikke** mot produksjon (neste ordinære deploy-runde).
+- Missing ≠ neutral: `scorePersonality()` gir null ved manglende svar;
+  v1/v2 sammenlignes aldri (version-gate i `readBigFive`); legacy brukere
+  svarer nytt ved neste onboarding-omgang; aktiv reise røres ikke.
+- Vekt 0.15 **beholdt** (reduksjon = stor rekalibrering → rapportert, ikke
+  gjennomført — audit §V.1).
+- Tester: SIMP-01…SIMP-15 (`__tests__/personality-v2.test.ts`) + oppdaterte
+  eksisterende suites.
+- Gjenstående: G8-skjriftlig bekreftelse (lav risiko) + eventuell vektjustering
+  post-launch med data.
+
 **EXPERT REVIEW:** **OPEN** (audit O-profiler: psykometri, relasjonsforskning, personvern-jurist,
 lisens-ekspert). F1.5 utvider scope: konstruktdefinisjon, item-wording, content
 validity, response scale, scoring, reverse items, missing data, matching-use,

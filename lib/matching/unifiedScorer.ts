@@ -38,7 +38,7 @@ import type {
 export interface UnifiedBreakdown {
   values: number;            // Verdier (PVQ-10 korrelasjon)
   attachment: number;        // Tilknytning (engstelig/unnvikende-matrise)
-  personality: number;       // Personlighet (BFI-10, per trekk)
+  personality: number;       // Personlighet V2 (Tosoms egne spørsmål, per trekk)
   communication: number;     // Kommunikasjon (Gottman-prinsipper)
   emotionRegulation: number; // Emosjonsregulering (ERQ-6)
   lifeSituation: number;     // Livssituasjon (praktisk kompatibilitet)
@@ -141,7 +141,12 @@ function dimAttachment(a: P, b: P): number {
   return dimensionRelationshipStyle(a, b);
 }
 
-/** Personlighet: BFI-10 per trekk dersom begge har bigFive, ellers ordoverlapp. */
+/**
+ * Personlighet: V2 per trekk dersom begge profiler har gyldig V2
+ * (personalityModelVersion = 2 + fullstendig bigFive), ellers ordoverlapp.
+ * ACT F2 §16: v1- og v2-personlighet sammenlignes aldri som samme modell —
+ * v1-skor (BFI-nært sett) brukes ikke lenger i matching.
+ */
 function dimPersonality(a: P, b: P): number {
   const pA = readBigFive(a);
   const pB = readBigFive(b);
@@ -185,7 +190,14 @@ function dimLifeSituation(a: P, b: P): number {
 
 /* ---------- PSYCH-READERS (defensive — mangler data gir null) ---------- */
 
+/**
+ * readBigFive — V2-personlighetsskor.
+ * ACT F2 §13/§16: kun gyldig når profilet har personalityModelVersion = 2.
+ * Legacy (v1/BFI-nær) bigFive-skor leses aldri i matching — deterministisk
+ * fallback (ordoverlapp) brukes i stedet. Manglende data gir null.
+ */
 function readBigFive(p: P): BigFiveScores | null {
+  if (p.personalityModelVersion !== 2) return null;
   const bf = p.bigFive as Record<string, unknown> | null | undefined;
   if (!bf || typeof bf !== "object") return null;
   const need: Array<keyof BigFiveScores> = [
@@ -260,6 +272,8 @@ interface P {
   emotionalNeeds?: unknown;
   // FORSKNINGSMOTOR F-8: psykometriske skårer
   bigFive?: unknown;
+  // PERSONALITY V2 (ACT F2): 2 = Tosoms egne V2-spørsmål; ellers null/legacy
+  personalityModelVersion?: unknown;
   attachment?: unknown;
   valueProfile?: unknown;
   emotionRegulation?: unknown;

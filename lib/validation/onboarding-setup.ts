@@ -327,7 +327,7 @@ export type PreferanserInput = z.infer<typeof preferanserSchema>;
 
 /* ============================================================
    PSYKOMETRIK (FORSKNINGSMOTOR F-6)
-   PL-08g (D-1): Rå svar (1–5) er PÅKREVDE for alle 44 item-ID-er.
+   PL-08g (D-1): Rå svar (1–5) er PÅKREVDE for alle aktive item-ID-er (49).
    Skjemaet bygges fra ALL_ITEMS slik at serveren er fasit —
    onboarding kan ikke fullføres uten komplett datagrunnlag
    for skårer og resonansnivå.

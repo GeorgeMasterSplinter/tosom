@@ -48,7 +48,7 @@ export default function Step6FramtidVisjon({ data, onChange, onBack, onNext }: P
         { value: 'reiser', label: 'Reiser', icon: '✈️' },
         { value: 'natur', label: 'Natur', icon: '🌲' },
         { value: 'kreativt-arbeid', label: 'Kreativt arbeid', icon: '🎨' },
-        { value: 'hobier', label: 'Hobier', icon: '🎸' },
+        { value: 'hobier', label: 'Hobbyer', icon: '🎸' },
       ]} selectedValue={getValue('experienceAlone', '')} onChange={(v) => onChange('experienceAlone', v)} columns={2} testId="ob-experience-alone" />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
       <OnboardingSelectGrid label={labels['experienceTogether']} mikroguiding="Velg det dere kan dele." options={[

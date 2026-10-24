@@ -76,7 +76,7 @@ const forhold: string[] = [
    ═══════════════════════════════════════ */
 
 const kommunikasjon: string[] = [
-  "Hvordan snakker du med noen du bryr deg om når dere uenige?",
+  "Hvordan snakker du med noen du bryr deg om når dere er uenige?",
   "Hva er noe du har lært om å lytte som har endret deg?",
   "Hvordan forteller du noen at de har såret deg uten å angripe?",
   "Hva er det som gjør at du stenger deg av i en samtale?",

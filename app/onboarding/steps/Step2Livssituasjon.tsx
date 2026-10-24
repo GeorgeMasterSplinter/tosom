@@ -104,7 +104,7 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
         options={[
           { value: 'anstatt-fulltid', label: 'Ansett på fulltid', icon: '💼' },
           { value: 'anstatt-deltid', label: 'Ansett på deltid', icon: '🕐' },
-          { value: 'egen-næring', label: 'Egen næringsdrivende', icon: '🏢' },
+          { value: 'egen-næring', label: 'Selvstendig næringsdrivende', icon: '🏢' },
           { value: 'studier', label: 'Studier', icon: '📚' },
           { value: 'frivillig', label: 'Frivillig arbeid', icon: '🤝' },
           { value: 'husmor-husmann', label: 'Husmor / Husmann', icon: '🏠' },
@@ -170,7 +170,7 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
         mikroguiding="Ingen detaljer trengs — bare hva som passer best"
         options={[
           { value: 'stabil', label: 'Stabil økonomi', icon: '💰' },
-          { value: 'dekker', label: 'Nøye penninger dekker utgifter', icon: '📊' },
+          { value: 'dekker', label: 'Lønna dekker akkurat utgiftene', icon: '📊' },
           { value: 'varierer', label: 'Varierer fra måned til måned', icon: '📈' },
           { value: 'sparning', label: 'Prioriterer sparing aktivt', icon: '🏦' },
           { value: 'stabilitet', label: 'Fokus på stabilitet, ikke overskudd', icon: '⚖️' },

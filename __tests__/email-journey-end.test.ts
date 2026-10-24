@@ -30,7 +30,7 @@ describe('sendJourneyEndEmail', () => {
     expect(mockSendMail).toHaveBeenCalledTimes(1);
     const arg = mockSendMail.mock.calls[0][0];
     expect(arg.to).toBe('hei@tosom.no');
-    expect(arg.from).toBe('ToSom <noreplay@tosom.no>');
+    expect(arg.from).toBe('Tosom <noreplay@tosom.no>');
     expect(arg.subject).toBe('Gratulerer — reisen er fullført');
     expect(arg.text).toContain('Asta');
     // D: grace-period — innholdet beholdes 24 t for PDF (ikke «slettet alt»)

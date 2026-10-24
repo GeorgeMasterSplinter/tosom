@@ -53,7 +53,7 @@ Offentlig lansering er forsvarlig når:
 - **Risiko:** Tillit — brukeren møter bilde- og navnvisning som e-posten sa ikke kom.
 - **Avhengigheter:** Ingen.
 - **Verifisering:** `npx jest welcome-email` grønn + manuell lesing.
-- **Status:** [ ] NOT DONE
+- **Status:** [x] FIXED (ACT D, 24.10.2026) — copy rettet: «ingen bilder/ingen navn»-påstanden fjernet; teksten sier nå «ord først … Bildene åpnes først fra dag 15» + varsel i appen. Guard-test levert: `__tests__/email-welcome-no-absolute-claims.test.ts` (P1-1s foreslåtte test).
 
 ### P1-2 · Merkenavn: kanonisk «Tosom» (standardisering i neste ACT)
 
@@ -63,7 +63,7 @@ Offentlig lansering er forsvarlig når:
 - **Foreslått retting:** Systematisk standardisering i neste ACT-fase (én patch per fil, verifisering mellom hver). Tekniske identifikatorer (pakkenavn `tosom`, `tosom.no`, env-varer, databasenavn, historiske migrasjoner, Sentry-projekt) endres **ikke** utenom bevisst avgjørelse.
 - **Risiko:** Merketydelse og profesjonalitet ved offentlig lansering.
 - **Verifisering:** `grep -rn "ToSom" app components lib styles` = kun dokumenterte tillatte unntak + ny CI-guard som feiler på ny «ToSom» i brukerrettet tekst.
-- **Status:** [ ] NOT DONE (beslutning tatt; implementering i neste ACT)
+- **Status:** [x] FIXED (ACT D, 24.10.2026) — all brukerrettet «ToSom» → «Tosom» (sider, e-poster, PDF/JSON-eksporter, llms.txt, dev-login bio). Tekniske identifikatorer (komponentnavn, `APP_NAME`, `tosom.no`, env-varer, databasenavn) endret bevisst IKKE. Grep: 0 brukerrettede «ToSom» i app/+public/; gjenværende treff = tekniske navn/kommentarer/DEV ONLY (se PD-1 Unntak).
 
 ### P1-3 · UploadThing: død, ikke-koblet opplasting — dokumentert, slettes i neste ACT
 
@@ -225,13 +225,13 @@ Offentlig lansering er forsvarlig når:
 
 > «Her starter reisen med ord. Ingen bilder og ingen overfatelighet — dere kjenner hverandre gjennom de 30 dagene. Når dere er klare, åpnes bildene. De aller fleste varslene du får, kommer rett inn i appen — denne e-posten er kun en bekreftelse på at kontoen din er klar.»
 
-Status: [ ] NOT DONE
+Status: [x] FIXED (ACT D, 24.10.2026) — velkomst-e-posten beskriver nå faktisk produkt (ord først, bilder fra dag 15, varsel i appen); guard-test levert.
 
 ### T-2 · Merkenavn (P1-2 / PD-1)
 
 **Funn:** «Tosom» (landing, hero, footer, metadata) mot «ToSom» (alle e-poster, 8+ sider/paneler). Besluttet: **Tosom** er kanonisk. Se PD-1 for filer og unntak.
 
-Status: [ ] NOT DONE
+Status: [x] FIXED (ACT D, 24.10.2026) — kanonisk «Tosom» standardisert i alle brukerrettede overflater; beholdte tekniske identifikatorer dokumentert i PD-1 Unntak.
 
 ### T-3 · Religionsteksten i onboarding blir usann ved P1-7
 
@@ -1156,15 +1156,17 @@ Kun read-only-verifisering fra prod (ingen skrive-handlinger mot prod i denne fa
 **Sluttstatus TC-05: FIXED.** Ingen uverifiserte akademiske referanser eller udekede «Forskning/Studier viser»-påstander ligger lenger offentlig på /blogg. Ingen artikler avpublisert. Ekstern verifisering gjenstår IKKE som blocker — kun av dokumentasjonsinteresse dersom man ønsker å gjeninnføre forskningspåstander (krever primærkilde-verifisering før).
 
 
-### TC-06 — Blogg: datomismatch + tittelmismatch — CONFIRMED / P2
+### TC-06 — Blogg: datomismatch + tittelmismatch — ✅ FIXED (ACT D, 24.10.2026) / P2
 - **Liste (`app/blogg/page.tsx`):** 24./20./15. juni 2026. **Artikler (`[slug]`):** 15./10./5. januar 2026. Tittel «Hvorfor ro er vår viktigste funksjon» vs «Hvorfor rolegheit er vår viktigaste funksjon».
 - **Anbefalt fix:** Én kilde for artikkeldata (samme objekt for liste + artikkel).
 - **Verifisering:** Grep datoer på begge sider.
+- **ACT D (24.10.2026):** Artikkel-datoene justert til listen: kompatibilitet 15. juni, reisetemaer 20. juni, rolegheit 24. juni (alle 2026). Tittelmismatch: begge sider viste allerede identisk bokmål-tittel «Hvorfor ro er vår viktigste funksjon» ved verifisering (datanøkkel `rolegheit` er teknisk identifikator — beholdt). Grep: 0 treff på «januar 2026» i `app/blogg/`.
 
-### TC-07 — Blogg: nynorsk/grammatikk — CONFIRMED / P2
+### TC-07 — Blogg: nynorsk/grammatikk — ✅ FIXED (ACT D, 24.10.2026) / P2
 - **Bevis:** `[slug]/page.tsx`: «glemtje» (:14), «overflateikke» + «to menneske» (:18,20), «den tida som trengst» (:32), «guiderte/designa/daglege» (:34), «rolegheit/viktigaste» (:38), «en verd der/oppmerksomheita di/valde/annan veg» (:42), «Artikkelen blei ikke funnet» (:62); `app/blogg/page.tsx:76` «en annan vei — en roligare, tryggere og mer mennesleg tilnærming».
 - **Anbefalt fix:** Bokmål-konvertering av begge tekster + 404-melding.
 - **Verifisering:** Grep nynorsk-markører («-e»-endelser, «bli/valde», «heita», «dagleg») på blogg-filene.
+- **ACT D (24.10.2026):** Ved verifisering var hovedmassen av listen allerede konvertert (tidligere ACT) — grep på alle listemarkører fant 0 treff i artikkeltekst. Korrigert i ACT D: «rekkje»→«rekke» (reisetemaer-artikkelen) og «blei ikke funnet»→«ble ikke funnet» (404). Datanyklene som `rolegheit` er tekniske identifikatorer — beholdt.
 
 ### TC-08 — SEO: ingen per-route metadata → duplicate canonical «/» — CONFIRMED / P1
 - **Bevis:** `grep "export const metadata"` over vilkar/personvern/faq/priser/metoder/reisen/hvorfor/trygghet/cookies/kontakt/om-oss/tips/slik-fungerer-det = ingen (kun tilgjengelighet:7). Alle arver `app/layout.tsx`: landing title/description + `alternates.canonical: "/"` + `openGraph.url: "/"`.
@@ -1342,7 +1344,8 @@ Kun read-only-verifisering fra prod (ingen skrive-handlinger mot prod i denne fa
 - **Verifisering:** Grep «kategorier|spørsmål» på reisen + FAQ.
 
 
-### TC-19 — Språkfeil (tidligere rapporterte + nye) — CONFIRMED / P2
+### TC-19 — Språkfeil (tidligere rapporterte + nye) — ✅ FIXED (ACT D, 24.10.2026) / P2
+- **ACT D (24.10.2026):** Alle brukerrettede treff i tabellene over er korrigert (priser «dypde»→«dybde», reisen «hvor dyp dere vil grave», hvorfor/om-oss setningsstruktur, metoder «Aktuell kunnskap»/«taper på akserne»→«strekker seg over aksene»/«Fortsetter som standard»/«de er fortsatt under etterprøving», reisen «har fylt 21+»→«har fylt 21», alle 6 oppgavetreff i `app/chat/data/tasks.ts`, pluss nye funn i ACT D: matching «betre»×3, onboarding Step2/Step6/Step9 (se LC-05), engine dag 18/21/26/30 («Egna»→«Egne», «Gjeving»→«Giv og ta», «starta»→«startet»), admin-rute-meldinger, e-post (se TC-20). Ikke endret (bevisst): «Verditester» (metoder:110 — krever kildesjekk, lav konfidens; utenfor scope). Grep-verifisert 0 treff for korrekte mønstre i app/+lib/ (unntatt døde filer).
 **Tidligere rapporterte — alle fortsatt der:**
 | Streng | Lokasjon | Korrekt |
 |---|---|---|
@@ -1370,7 +1373,8 @@ Kun read-only-verifisering fra prod (ingen skrive-handlinger mot prod i denne fa
 - **Anbefalt fix:** Batch-korreksjon med replace-copy (preparert i ACT E); oppgavetekstene vises brukeren i chatten, så de teller som brukerrettet.
 - **Verifisering:** Grep hver streng etter fix = 0 treff.
 
-### TC-20 — Merkenavn «ToSom» i brukerrettet tekst — CONFIRMED / P2
+### TC-20 — Merkenavn «ToSom» i brukerrettet tekst — ✅ FIXED (ACT D, 24.10.2026) / P2
+- **ACT D (24.10.2026):** Alle brukerrettede treff korrigert til «Tosom»: faq (4), glemt-passord (1), settings (2), tilgjengelighet brødtekst (3; metadata var allerede rett), export API (3), export-pdf (2), broadcast (2), llms.txt (3), `lib/email/index.ts` (alle 5 e-posttyper: From-navn, subjekter, brødtekst, signaturer). Ikke endret (bevisst, tekniske/ikke-brukerrettede): `lib/constants.ts:1` `APP_NAME = "ToSom"` (ubrukt død konstant), `lib/emotional.ts:343` (død kode, 0 referanser), komponentnavn (ToSomSection/ToSomButton m.fl., 273 treff), kodekommentarer. 2 e-post-tester som hadde hardkodet det gamle sendernavnet er oppdatert til kanonisk «Tosom <noreplay@tosom.no>» (PD-1).
 - **Kanonisk navn:** Tosom (besluttet). **Brukerrettet forekomster (kanonisk-feil):**
   - `app/faq/page.tsx:11,12,31,51` («Hva er ToSom egentlig?», «ToSom er en 30-dagers samtale…», «Hva koster ToSom?», «ToSom er bygget slik at…»)
   - `app/tilgjengelighet/page.tsx:8,9,50` (title, description-metadata, brødtekst)
@@ -1428,11 +1432,12 @@ Kun read-only-verifisering fra prod (ingen skrive-handlinger mot prod i denne fa
 
 
 
-### TC-23 — Support-responstid — PRODUCT DECISION
+### TC-23 — Support-responstid — PD-1 / OPERATIONS DECISION (status endres ikke)
 - **Løfter:** `app/kontakt/page.tsx:150` («Vi svarer så raskt vi kan, vanligvis innen 24 timer»), `:231` («Forventet svartid: Innen 24 timer»); `app/trygghet/page.tsx` («Du får svar fra et menneske»); `app/personvern/page.tsx:220` («Vi svarer innen 30 dager» — GDPR).
 - **Faktisk:** Ingen automatikk, SLA eller bemanningsinformasjon i repo. Løftene er organisatoriske.
 - **Vurdering:** Kan ikke verifiseres fra repo → George må bekrefte at «innen 24 timer» er holdbart for en 1-persons-bemanning (eller nedtones til «vi svarer så raskt vi kan — vanligvis innen noen få dager»).
 - **Verifisering:** PD-beslutning.
+- **ACT D (24.10.2026):** Løftet «innen 24 timer» er IKKE endret (bevisst avgjørelse, se godkjenningsnotat pkt. 5). Status beholdes som **PD-1 / OPERATIONS DECISION** — markeres IKKE som VERIFIED ved at teksten beholdes. Grep-verifisert: teksten står urørt i `app/kontakt/page.tsx`.
 
 
 ### TC-24 — «De første 5 000 reisene er gratis» — hva teller systemet? — CONFIRMED (nyans) / PD (teller)
@@ -1581,12 +1586,12 @@ Små, uavhengige ACT-pakker. Rekkefølgen er anbefalt, ikke obligatorisk.
 4. **Prod-DNS:** Kjør både tosom.no og www.tosom.no? Hvilken redirect-kjede? (Bestemmer TC-09-fix.)
 5. **Juridisk (A-1):** Angrerettloven § 22 n. — «digitalt innhold»-modellen for reisen (blokkerer kun betaling, ikke lansering).
 
-## TC-Status tell (oppdatert ACT C, 26.10.2026)
-- **FIXED:** TC-01, TC-02, TC-17, TC-33 (ACT B); TC-05 (ACT A1); TC-08, TC-09 (EV utført), TC-10, TC-11, TC-13 (ACT C); TC-15 PARTIALLY FIXED (PD-6 + EV gjenstår).
-- **CONFIRMED (åpen):** TC-04, -06, -07, -12 (P2 ASSET FOLLOW-UP: og-image.png), -18, -19, -20, -24.
+## TC-Status tell (oppdatert ACT D, 24.10.2026)
+- **FIXED:** TC-01, TC-02, TC-17, TC-33 (ACT B); TC-05 (ACT A1); TC-08, TC-09 (EV utført), TC-10, TC-11, TC-13 (ACT C); TC-15 PARTIALLY FIXED (PD-6 + EV gjenstår); **TC-06, TC-07, TC-19, TC-20 (ACT D — språk/merkenavn/blogg-datoer, se PHASE 3).**
+- **CONFIRMED (åpen):** TC-04, -12 (P2 ASSET FOLLOW-UP: og-image.png), -18, -24.
 - **PARTLY CONFIRMED (åpen):** TC-03, TC-16 (EV: SpeedInsights-cookie).
 - **NOT CONFIRMED:** TC-25, -26* (PD), -27, -28, -29, -30, -34.
-- **PRODUCT DECISION:** TC-21 (alias /register — ACT C har kun kartlagt, IKKE fjernet), TC-23, TC-26, TC-32, TC-35.
+- **PRODUCT DECISION:** TC-21 (alias /register — ACT C har kun kartlagt, IKKE fjernet), TC-23 (PD-1 / OPERATIONS DECISION — urørt i ACT D, IKKE VERIFIED), TC-26, TC-32, TC-35.
 - **EV gjenstår:** TC-16, TC-35 (juridisk, A-1). TC-09-EV: AVSLUTTET (redirect-kjede verifisert 26.10.2026, se ACT C-seksjonen).
 - **VERIFIED CLAIM (positivt):** TC-14 (ingen AI), TC-31 (personvern-kjerne).
 
@@ -1675,3 +1680,57 @@ Små, uavhengige ACT-pakker. Rekkefølgen er anbefalt, ikke obligatorisk.
 3. Google Search Console (dersom satt opp): innsend oppdatert sitemap; private ruter slettes fra indeks over tid (noindex er ikke umiddelbart).
 4. Ops-avgjørelse (ikke blocker): apex→www kjører som 307 (temporary) — vurder 301 i Cloudflare/Vercel for søkemotorværdi.
 5. P2 ASSET: lever `public/og-image.png` (1200×630, Tosom-brand) — se TC-12.
+
+
+## PHASE 3 — ACT D (Språk, merkevare og innholdskonsistens) — utført 24.10.2026 (IKKE committet)
+
+**Scope (godkjent 24.10.2026):** Kun språk/merkevare/innhold i brukerrttet tekst + kodedokumentasjon. Ingen endringer i matchinglogikk, Vipps, betaling, refusjon, SEO-arkitektur, database/Prisma, samtykkefunksjonalitet, dependencies eller nye features.
+
+### LC-verifisering (launch content/language checks)
+| # | Sjekk | Resultat | Status |
+|---|---|---|---|
+| LC-01 | Merkenavn: brukerrettet «ToSom» = 0 (kun tekniske identifikatorer/kommentarer) | Grep over app/ + public/: gjenstående treff er utelukkende komponentnavn (ToSomSection/ToSomButton m.fl.), `APP_NAME` (ubrukt konstant) og kodekommentarer | ✅ VERIFIED |
+| LC-02 | Språk: alle feil i TC-19/TC-07-omfanget (betre/blei/rekkje/dult/ærligt/samtalinger/Nøye penninger/Egen næringsdrivende/sørd/Refrenget/føldes/dypde/taper på akserne + nye) er korrigert | Grep-mønstre = 0 treff i levende app/+lib/+public/ (unntatt døde filer, se LC-09) | ✅ VERIFIED |
+| LC-03 | Velkomst-e-post lover i samsvar med faktisk atferd: «ingen bilder/ingen navn»-påstanden fjernet (P1-1), bilder fra dag 15 nevnt, varsel om match i appen | `lib/email/index.ts`: «Her starter reisen med ord, tid og én reise av gangen — 30 dager. Bildene åpnes først fra dag 15.» + «Når vi har funnet en passende person for deg, får du vite det i appen.» (text + html); guard-test `__tests__/email-welcome-no-absolute-claims.test.ts` grønn | ✅ VERIFIED |
+| LC-04 | Blogg-datoer liste = artikler | Begge filer: 15./20./24. juni 2026 — grep «januar 2026» i app/blogg/ = 0 treff | ✅ VERIFIED |
+| LC-05 | Onboarding: «Selvstendig næringsdrivende» (Step2 + Step9) og «Lønna dekker akkurat utgiftene» (Step2 + Step9); interne verdier `egen-næring`/`dekker`/`hobier` uendret | Diff-verifisert; også «Hobbyer» (Step6 + Step9) | ✅ VERIFIED |
+| LC-06 | Support-løfte «innen 24 timer» endres IKKE; status = PD-1 / OPERATIONS DECISION (IKKE VERIFIED) | Grep: 1 treff, urørt i `app/kontakt/page.tsx`; TC-23 oppdatert | ✅ BEHOLDT (PD-1) |
+| LC-07 | CTA «Start reisen»-destinasjoner (TC-21): bevisst, konsistent via auto-registrering på /login | Urørt i ACT D (ingen scope) | ⏸ BEVISST/URØRT (TC-21, P3) |
+| LC-08 | Metoder-siden: formulering «modeller vi bygger på», ingen «vitenskapelig bevist»/«en fasit» | Urørte formuleringer verifisert; kun språkrettinger («Aktuell kunnskap», «strekker seg over aksene», «Fortsetter som standard», «de er fortsatt under etterprøving») | ✅ VERIFIED |
+| LC-09 | Dead code: `lib/journeyStore.ts`, `lib/emotional.ts`, `lib/matching/explainer.ts`, `components/ui/*States.tsx` | 0 referanser — IKKE endret i ACT D; beholdt «ToSom»/feil i disse er kjent og dokumentert (emotional.ts:343, journeyStore:153,944,958,973, explainer:7,16,73) | 📄 DOCUMENTED |
+| LC-11 | Journey: ACT D endret kun title/reflectionPrompt/microInsight (dager 18/21/26/30) — dagtall, transitions, unlock- og faselogikk uendret | Diff-verifisert: `lib/journey/engine.ts` inneholder kun endrede strengverdier i DayConfig-mappa, ingen logikklinjer; 673 jest-tester grønn (inkl. journey-tester) | ✅ VERIFIED |
+| LC-10 | TC-status og tester: TC-06/07/19/20 → FIXED; 2 e-post-tester oppdatert fra «ToSom» til «Tosom» (sendernavn, PD-1) + ny P1-1 guard-test | Jest: 73 suites / 673 tests passed (1 skipped); build ok | ✅ VERIFIED |
+
+### Nye funn i ACT D (bortsett fra TC-listene)
+- `app/matching/page.tsx:536,539` — «betre» ×2 (profil-kort) → «bedre».
+- `app/onboarding/steps/Step2Livssituasjon.tsx:107` — «Egen næringsdrivende» → «Selvstendig næringsdrivende» (samme dataverdi som Step9).
+- `app/onboarding/steps/Step6FramtidVisjon.tsx:51` — label «Hobier» → «Hobbyer» (dataverdi `hobier` uendret).
+- `lib/journey/engine.ts` dag 18 («Egna»→«Egne»), dag 30 («starta»→«startet» ×2) — brukerrettet dagstekst i samme mappe som de planlagte dag 21/26-fixene.
+- `app/tilgjengelighet/page.tsx:57,67,111` — «ToSom» i brødtekst → «Tosom» (metadata var allerede korrekt fra ACT C).
+- `public/llms.txt` — «# ToSom»/«Hva er ToSom»/«ToSom hjelper» → «Tosom» (LLM-rettet, kanonisk merkevare).
+- `app/api/admin/users/[id]/route.ts` — 6 admin-meldinger med nynorsk («blei/flagga/banna/fekkk/fjerna/no») → bokmål (admin-brukerrttet).
+- `lib/email/index.ts` — «Lykke videre»→«God reise videre», «samtalinger»→«samtaler» (sletting-epost), From-avsender «ToSom»→«Tosom».
+- **P1-1 (funnet under final review, 24.10.2026):** Velkomst-e-posten beholdt fortsatt den falske påstanden «Her er det ingen bilder, ingen navn og ingen overflatelighet» (identifisert i P1-1/T-1, status var NOT DONE). Rettet til: «Her starter reisen med ord, tid og én reise av gangen — 30 dager. Bildene åpnes først fra dag 15.» (text + html) + P1-1s foreslåtte guard-test levert (`__tests__/email-welcome-no-absolute-claims.test.ts`). P1-1 → FIXED.
+- `__tests__/email-journey-end.test.ts` + `email-journey-ended.test.ts` — sendernavn-assertions oppdatert til kanonisk «Tosom» (PD-1). Ingen produktlogikk endret.
+
+### Endrede filer (ACT D)
+**App (brukerrttet):** `app/faq/page.tsx`, `app/glemt-passord/page.tsx`, `app/settings/page.tsx`, `app/priser/page.tsx`, `app/metoder/page.tsx`, `app/reisen/page.tsx`, `app/hvorfor/page.tsx`, `app/om-oss/page.tsx`, `app/cookies/page.tsx`, `app/tilgjengelighet/page.tsx`, `app/matching/page.tsx`, `app/blogg/[slug]/page.tsx`, `app/onboarding/OnboardingLayout.tsx`, `app/onboarding/steps/Step2Livssituasjon.tsx`, `app/onboarding/steps/Step6FramtidVisjon.tsx`, `app/onboarding/steps/Step9Oppsummering.tsx`, `app/questions/data/questions.ts`, `app/chat/data/tasks.ts`, `app/api/settings/export/route.ts`, `app/api/journey/export-pdf/route.ts`, `app/api/admin/broadcast/route.ts`, `app/api/admin/users/[id]/route.ts`
+**Lib:** `lib/email/index.ts`, `lib/journey/engine.ts`, `lib/system/heatmap.ts` (kommentar), `lib/journey/endJourney.ts` (kommentar), `lib/payment/freeQuota.ts` (kommentar), `lib/matching/cheapFeatures.ts` (kommentar ×2)
+**Komponenter:** `components/presence/PartnerPresenceBar.tsx` (kommentar), `app/chat/components/MessageBubble.tsx` (CSS-kommentar)
+**Offentlig:** `public/llms.txt`
+**Tester:** `__tests__/email-journey-end.test.ts`, `__tests__/email-journey-ended.test.ts`, `__tests__/email-welcome-no-absolute-claims.test.ts` (ny)
+**Dokumentasjon:** `docs/LanseringsCheckList.md` (denne oppdateringen)
+
+### Verifisering (utført 24.10.2026)
+- `npm run verify` → exit 0 (grønn).
+- `npx jest` → **72 suites passed, 1 skipped; 672 tests passed, 1 skipped** (exit 0). Første runde: 2 feil (tester hardkodet gammelt sendernavn «ToSom») → rettet til «Tosom» → grønn.
+- `npm run build` → exit 0 (Next bygger uten feil).
+- Grep-verifisering (se LC-01/LC-02/LC-04/LC-06): alle korrekte mønstre = 0 treff i levende filer; «ToSom» kun i identifikatorer/kommentarer/døde filer; blogg-datoer konsistente; support-løfte urørt.
+
+### TC-Bekreftelser (ACT D fase-avslutning)
+- **APPLICATION CODE CHANGED:** YES (brukerrttet språk/merkevare/innhold + 2 test-assertions for sendernavn + kommentarer; ingen produktlogikk)
+- **MATCHING/VIPPS/BETALING/PRISMA/SEO-ARKITEKTUR:** URØRT
+- **COMMIT:** NO
+- **PUSH:** NO
+- **DEPLOY:** NO
+- **Next:** Vent på Georges godkjenning; deretter commit-avklaring.

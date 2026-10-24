@@ -66,11 +66,11 @@ export async function POST(req: NextRequest): Promise<Response> {
       <h1 style="font-size: 24px; font-weight: 600; color: #D4AF37; margin-bottom: 16px;">${safeSubject}</h1>
       <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 24px;">${safeMessage}</p>
       <p style="font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.5); margin-top: 32px;">
-        Ro, varme og én reise av gangen.<br />— ToSom
+        Ro, varme og én reise av gangen.<br />— Tosom
       </p>
     </div>
   `;
-  const text = `${subject}\n\n${message}\n\n— ToSom`;
+  const text = `${subject}\n\n${message}\n\n— Tosom`;
 
   let sent = 0;
   let failed = 0;

@@ -412,7 +412,7 @@ export default function ReisenPage() {
                         lineHeight: '1.8',
                       }}
                     >
-                      Dere har mulighet til å velge mange spørsmål som hjelper dere å bli kjent dypere. 12 kategorier med over 240 spørsmål — fra lek og humor til nærhet, intimitet og modne samtaler. Dere velger selv hvor dypere dere vil grave.
+                      Dere har mulighet til å velge mange spørsmål som hjelper dere å bli kjent dypere. 12 kategorier med over 240 spørsmål — fra lek og humor til nærhet, intimitet og modne samtaler. Dere velger selv hvor dyp dere vil grave.
                     </p>
                   </div>
                 </div>
@@ -575,7 +575,7 @@ export default function ReisenPage() {
                   color: color.text.muted,
                 }}
               >
-                Tosom er for deg som har fylt 21+
+                Tosom er for deg som har fylt 21
               </span>
             </div>
 

@@ -765,7 +765,7 @@ function PersonvernSection() {
       <SectionTitle>PERSONVERN</SectionTitle>
 
       <p style={{ color: THEME.whitePrimary, fontSize: "16px", lineHeight: "1.7", marginBottom: "24px" }}>
-        ToSom lagrer bare data som er nødvendig for å gi deg en trygg og rolig relasjonsopplevelse.
+        Tosom lagrer bare data som er nødvendig for å gi deg en trygg og rolig relasjonsopplevelse.
         Du kan til enhver tid be om uttrekk eller sletting av dine persondata.
       </p>
 
@@ -815,7 +815,7 @@ export default function SettingsPage() {
   const [journeyStatus, setJourneyStatus] = useState<JourneyStatus>({ journeyState: "IDLE", day: 0, conversationId: null });
   const [loading, setLoading] = useState(true);
 
-  const userName = session?.user?.name || "ToSom-bruker";
+  const userName = session?.user?.name || "Tosom-bruker";
   const userEmail = session?.user?.email || "";
 
   // Hent sesjon + last inn data ved montering

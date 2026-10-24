@@ -139,9 +139,9 @@ export async function GET(req: NextRequest) {
       .replace(/[^a-z0-9-]/g, '-');
 
     const exportData = {
-      Dokument: 'ToSom — uttrekk av personopplysninger',
+      Dokument: 'Tosom — uttrekk av personopplysninger',
       Grunnlag:
-        'GDPR art. 15 (rett til innsyn) og art. 20 (dataportabilitet). Dette uttrekket inneholder alle personopplysninger ToSom behandler om deg.',
+        'GDPR art. 15 (rett til innsyn) og art. 20 (dataportabilitet). Dette uttrekket inneholder alle personopplysninger Tosom behandler om deg.',
       Eksportert: new Date().toISOString(),
 
       Konto: {
@@ -163,7 +163,7 @@ export async function GET(req: NextRequest) {
             'Fornavn': profile.firstName || null,
             'Etternavn': profile.lastName || null,
             'Alder': profile.age,
-            'Kallenavn på ToSom': profile.identityName || null,
+            'Kallenavn på Tosom': profile.identityName || null,
             'Om meg': profile.bio || null,
             'Interesser': profile.interests?.length ? profile.interests : null,
             'Postnummer': profile.postalCode || null,

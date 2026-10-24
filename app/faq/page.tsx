@@ -8,8 +8,8 @@ import { typographyToStyle } from '@/config/design-tokens';
 
 const FAQS = [
   {
-    q: 'Hva er ToSom egentlig?',
-    a: 'ToSom er en 30-dagers samtale mellom to mennesker som ikke kjenner hverandre. Dere blir koblet basert på de seks dimensjonene vi ser på. Dere kan se hverandres fornavn og alder fra start, og fra dag 15 kan dere dele bilder om dere vil. Det hele er privat, varmt og i eget tempo.',
+    q: 'Hva er Tosom egentlig?',
+    a: 'Tosom er en 30-dagers samtale mellom to mennesker som ikke kjenner hverandre. Dere blir koblet basert på de seks dimensjonene vi ser på. Dere kan se hverandres fornavn og alder fra start, og fra dag 15 kan dere dele bilder om dere vil. Det hele er privat, varmt og i eget tempo.',
   },
   {
     q: 'Hvordan fungerer matching?',
@@ -28,7 +28,7 @@ const FAQS = [
     a: 'To valg. «Vi fant hverandre» — dere har 24 timer på dere til å laste ned minnet som PDF, så slettes alt: alle samtaler, bilder, spørsmål og svar — alt forsvinner permanent. Bare en følelse gjenstår. Eller «Start ny reise» — dere slettes, og begge kan stille seg i køen igjen for en ny reise. Ingen hard landing. Bare videre.',
   },
   {
-    q: 'Hva koster ToSom?',
+    q: 'Hva koster Tosom?',
     a: 'De første 5 000 reiser er gratis. Deretter én engangsbetaling per 30-dagers reise, betalt med Vipps. Ingen abonnement. Ingen skjulte kostnader. Du betaler for reisen, ikke for å være der.',
   },
   {
@@ -48,7 +48,7 @@ const FAQS = [
   },
   {
     q: 'Er det trygt? Blir dataene mine solgt?',
-    a: 'Nei. Aldri. Vi selger ikke data. Vi deler ikke data. Vi bruker ikke data til annonser. Alle forbindelser er TLS-krypterte. Du kan slette alt når som helst. ToSom er bygget slik at vi ikke KAN gjøre noe med dataene dine etter at de er slettet.',
+    a: 'Nei. Aldri. Vi selger ikke data. Vi deler ikke data. Vi bruker ikke data til annonser. Alle forbindelser er TLS-krypterte. Du kan slette alt når som helst. Tosom er bygget slik at vi ikke KAN gjøre noe med dataene dine etter at de er slettet.',
   },
 ];
 

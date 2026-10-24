@@ -102,7 +102,7 @@ export default function GlemtPassordPage() {
                 Glemt passord
               </h1>
               <p style={{ fontSize: "15px", lineHeight: "1.7", color: "rgba(255,255,255,0.6)", margin: 0 }}>
-                Skriv inn eposten du bruker på ToSom. Vi sender deg en lenke for å velge nytt passord.
+                Skriv inn eposten du bruker på Tosom. Vi sender deg en lenke for å velge nytt passord.
               </p>
 
               <form onSubmit={handleSubmit} className="space-y-4">

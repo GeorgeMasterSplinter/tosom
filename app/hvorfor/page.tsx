@@ -129,7 +129,7 @@ export default function HvorforPage() {
                 letterSpacing: '0.25px',
               }}
             >
-              Fordi mennesker er ikke skapt for å gå gjennom livet alene. Ikke nødvendigvis for å være i et forhold hele tiden — men for å ha muligheten til å møte noen som ser dem, forstår dem og vil dem vel.
+              Fordi mennesker ikke er skapt for å gå gjennom livet alene. Ikke nødvendigvis for å være i et forhold hele tiden — men for å ha muligheten til å møte noen som ser dem, forstår dem og vil dem vel.
             </p>
           </div>
         </section>

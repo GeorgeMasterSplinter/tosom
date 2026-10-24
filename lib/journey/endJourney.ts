@@ -67,7 +67,7 @@ export async function endJourney(
   const conversationId = conversation.id;
 
   // Hent imageKeys FØR transaksjonen — Message-radene blir sletta inne i
-  // transaksjonen, så nøklene må være samla på førehand for å kunne slette
+  // transaksjonen, så nøklene må være samlet på forhånd for å kunne slette
   // de tilhøyrande objekta i lagringen etterpå (GDPR art. 17).
   const imageKeys: string[] = (
     await prisma.message.findMany({

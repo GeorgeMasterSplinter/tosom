@@ -14,7 +14,7 @@
 // den FØRSTE feilen. Kjønn/alder/barn/radius er symmetriske (bilkreftige i seg
 // selve), mens livsrytme/preferanser/grenser er retta — derfor 10 steg:
 // A→B-sida si rekkjefølgje, deretter B→A si resterande del.
-// (PL-10: modenheit og sikkerheit er fjerna frå sjekkane — syntetiske data.)
+// (PL-10: modenhet og sikkerhet er fjernet fra sjekkene — syntetiske data.)
 //
 // Identitet er verifisert av __tests__/matching-score-round.test.ts
 // (ekvivalens-test: same fixture-matrise gjennom gammal og ny logikk).
@@ -327,7 +327,7 @@ function religionOneWay(accepter: CheapFeatures, target: CheapFeatures): string 
  *                           religion del av A→B-kjøret, FØR B→A-retteta sjekkar.)
  *   11. livsrytme B→A       12. preferansar B→A     13. grenser B→A
  *
- * (PL-10: modenheit og sikkerheit er fjerna frå rekkjefølgja.)
+ * (PL-10: modenhet og sikkerhet er fjernet fra rekkefølgen.)
  *
  * @returns reason-strengen til den første dealbreakeren, eller null.
  */

@@ -62,8 +62,8 @@ const FREE_QUOTA_KEY = 'free_users';
 /**
  * F2-2: Atomisk claim av éin gratisbrukar-plass.
  *
- * Tidlegare var dette check-then-create (countFreeQuotaOrders → create)
- * — to samtidige onboardingar ved taket kunne begge seie «4 999 < 5 000»
+ * Tidligere var dette check-then-create (countFreeQuotaOrders → create)
+ * — to samtidige onboarding-øktene ved taket kunne begge si «4 999 < 5 000»
  * og begge få plass. Noe som skal være éin grense skal være éin grense.
  *
  * Mekanismen: éin betinga

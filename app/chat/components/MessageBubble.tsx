@@ -769,13 +769,13 @@ export function MessageBubbleStyles() {
         animation: softLand 0.45s ease-out forwards;
       }
 
-      /* ── Pålitelige inn-felt-animasjonar (LIVE-FIX 2026-08-27) ──
-         Tidlegare brukte boblane FadeIn (framer-motion useInView) med
-         start-verdi opacity:0 — om inView-triggeren aldri fyra (t.d. i
-         produksjon), forblei meldingen usynleg for alltid.
-         Her: vanlege CSS-keyframes med fill-mode both — dersom
-         animasjonen feilar eller keyframes mangler, er bobla likevel
-         fullt synleg. Ingen JS-avheng helt. */
+      /* ── Pålitelige innfelt-animasjoner (LIVE-FIX 2026-08-27) ──
+         Tidligere brukte boblene FadeIn (framer-motion useInView) med
+         start-verdi opacity:0 — om inView-triggeren aldri fyrte (t.d. i
+         produksjon), forble meldingen usynlig for alltid.
+         Her: vanlige CSS-keyframes med fill-mode both — dersom
+         animasjonen feiler eller keyframes mangler, er bobla likevel
+         fullt synlig. Ingen JS-avhengigheter helt. */
       @keyframes msgFadeInUp {
         from { opacity: 0; transform: translateY(10px); }
         to   { opacity: 1; transform: translateY(0); }

@@ -30,7 +30,7 @@ describe('sendJourneyEndedEmail', () => {
     expect(mockSendMailEnded).toHaveBeenCalledTimes(1);
     const arg = mockSendMailEnded.mock.calls[0][0];
     expect(arg.to).toBe('partner@tosom.no');
-    expect(arg.from).toBe('ToSom <noreplay@tosom.no>');
+    expect(arg.from).toBe('Tosom <noreplay@tosom.no>');
     expect(arg.subject).toBe('Reisen er avsluttet');
     expect(arg.text).toContain('Berg');
     expect(arg.text).toContain('slettet');

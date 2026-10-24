@@ -5,7 +5,7 @@
  * 
  * Viser:
  *   - Online/offline status
- *   - Hva part gjer no
+ *   - Hva partneren gjør nå
  *   - Samme posisjon i reisen
  *   - Resonans-nivå
  */

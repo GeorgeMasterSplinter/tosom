@@ -44,7 +44,7 @@ const kunneVilDuSi: string[] = [
 const fortellMegOm: string[] = [
   "Fortell meg ditt beste minne fra en ukeend du aldri glemmer.",
   "Fortell meg om en fremmed du møtte som endret noe i deg.",
-  "Fortell meg om en gang du var helt alene og det føldes som mest tilstrekkelig.",
+  "Fortell meg om en gang du var helt alene og det føltes som mest tilstrekkelig.",
   "Fortell meg om en matrett som alltid tar deg tilbake til noen.",
   "Fortell meg om et sted i verden der du føler deg helt hjemme.",
   "Fortell meg om en gang du sa ja og det endte med å bli det beste valget.",
@@ -56,7 +56,7 @@ const fortellMegOm: string[] = [
   "Fortell meg om en gave du mottok som betydde mer enn du sa det betydde.",
   "Fortell meg om en stund du satt helt stille og bare var lykkelig uten å vite hvorfor.",
   "Fortell meg om en gang du hjalp noen og det endret deg.",
-  "Fortell meg om en liten ritual du har med deg som ingen andre vet om.",
+  "Fortell meg om et lite ritual du har med deg som ingen andre vet om.",
 ];
 
 /* ═══════════════════════════════════════
@@ -195,7 +195,7 @@ const gjetterDuMeg: string[] = [
   "Jeg tenker på en aktivitet jeg gjorde i går. Du gjetter hva det var. Ja/nei-spørsmål, maks 5.",
   "Ranger mine tre favorittsesonger fra varmest til kuldest i humør. Du starter.",
   "Du gjetter hva jeg spiste til lunsj i dag. Du får én ledetråd før hvert forsøk. Maks 3.",
-  "Jeg velger et sted. Du gjetter om det er i Norge eller i utlandet. Deretter: nord, sørd, øst, vest. Maks 4.",
+  "Jeg velger et sted. Du gjetter om det er i Norge eller i utlandet. Deretter: nord, syd, øst, vest. Maks 4.",
 ];
 
 /* ═══════════════════════════════════════
@@ -209,10 +209,10 @@ const byggEnHistorie: string[] = [
   "Beskriv vår perfekte lørdag i akkurat 7 ord. Gå. (Bare 7.)",
   "Lag en norsk film i 5 setninger sammen. Du starter med tittelen. Jeg tar neste.",
   "Fortell meg en historie der hovedpersonen er en kaffekopp. Du starter.",
-  "Vi bygger en ukeend. Du skriver mandag, jeg skriver tirsdag, du onsdag... Siste som sier 'og så døde de' vinner.",
-  "Du starter: 'Det var en gang to nordmann som...' Fortsett. Jeg tar neste setning.",
+  "Vi bygger en ukeend. Du skriver mandag, jeg skriver tirsdag, du onsdag, jeg torsdag … Siste som sier 'og så døde de' vinner.",
+  "Du starter: 'Det var en gang to nordmenn som...' Fortsett. Jeg tar neste setning.",
   "Lag en oppskrift på vår perfekte kveld. Du starter med hovedingrediensen. Jeg tar neste.",
-  "Vi bygger en sang. Du starter med vers 1 (to linjer). Jeg tar vers 2. Refrenget: begge.",
+  "Vi bygger en sang. Du starter med vers 1 (to linjer). Jeg tar vers 2. Refrengets: begge synger.",
   "Du skriver en setning som begynner med 'Og så...'. Jeg fortsetter. Fortsett i 6 setninger totalt.",
   "Lag et kort eventyr der hovedpersonene er vi to. Du starter. Maks 5 setninger hver.",
   "Vi bygger en ukeend som bare går galt. Du starter med fredag. Jeg tar lørdag. Du søndag.",

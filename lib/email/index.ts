@@ -74,7 +74,7 @@ async function getTransporter(): Promise<Transporter | null> {
 
 /** Hent avsenderadresse fra env (standard: ToSom <noreplay@tosom.no>) */
 function getFromAddress(): string {
-  return process.env.EMAIL_FROM || 'ToSom <noreplay@tosom.no>';
+  return process.env.EMAIL_FROM || 'Tosom <noreplay@tosom.no>';
 }
 
 /**
@@ -117,7 +117,7 @@ export async function sendAlertEmail(
 ): Promise<EmailResult> {
   return sendEmail({
     to,
-    subject: `[ToSom ${severity.toUpperCase()}] ${title}`,
+    subject: `[Tosom ${severity.toUpperCase()}] ${title}`,
     text: `${title}\n\n${detail}\n\nTid: ${timestamp}`,
   });
 }
@@ -175,23 +175,23 @@ export async function sendWelcomeEmail(
 
   return sendEmail({
     to: userEmail,
-    subject: 'Velkommen til ToSom',
-    text: `Hei ${name},\n\nVelkommen til ToSom.\n\nHer er det ingen bilder, ingen navn og ingen overflatelighet. Bare ord, tid og én reise av gangen — 30 dager.\n\nNår systemet finner en passende person for deg, vil du få en e-post. Da starter reisen.\n\nTa deg tid til å svare ærligt på spørsmålene. Det er det som gir de beste koblingene.\n\nRo, varme og én reise av gangen.\n\n— ToSom`,
+    subject: 'Velkommen til Tosom',
+    text: `Hei ${name},\n\nVelkommen til Tosom.\n\nHer starter reisen med ord, tid og én reise av gangen — 30 dager. Bildene åpnes først fra dag 15.\n\nNår vi har funnet en passende person for deg, får du vite det i appen. Da starter reisen.\n\nTa deg tid til å svare ærlig på spørsmålene. Det er det som gir de beste koblingene.\n\nRo, varme og én reise av gangen.\n\n— Tosom`,
     html: `
       <div style="font-family: Inter, -apple-system, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px; background: #0A1A2A; color: #ffffff; border-radius: 16px;">
-        <h1 style="font-size: 24px; font-weight: 600; color: #D4AF37; margin-bottom: 16px;">Velkommen til ToSom</h1>
+        <h1 style="font-size: 24px; font-weight: 600; color: #D4AF37; margin-bottom: 16px;">Velkommen til Tosom</h1>
         <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">Hei ${name},</p>
         <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">
-          Her er det ingen bilder, ingen navn og ingen overflatelighet. Bare ord, tid og én reise av gangen — 30 dager.
+          Her starter reisen med ord, tid og én reise av gangen — 30 dager. Bildene åpnes først fra dag 15.
         </p>
         <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">
-          Når systemet finner en passende person for deg, vil du få en e-post. Da starter reisen.
+          Når vi har funnet en passende person for deg, får du vite det i appen. Da starter reisen.
         </p>
         <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">
-          Ta deg tid til å svare ærligt på spørsmålene. Det er det som gir de beste koblingene.
+          Ta deg tid til å svare ærlig på spørsmålene. Det er det som gir de beste koblingene.
         </p>
         <p style="font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.5); margin-top: 32px;">
-          Ro, varme og én reise av gangen.<br />— ToSom
+          Ro, varme og én reise av gangen.<br />— Tosom
         </p>
       </div>
     `,
@@ -209,8 +209,8 @@ export async function sendPasswordResetEmail(
 ): Promise<EmailResult> {
   return sendEmail({
     to,
-    subject: 'Tilbakestill passordet ditt på ToSom',
-    text: `Hei,\n\nVi mottok en forespørsel om å tilbakestille passordet på kontoen din.\n\nTrykk på lenken under for å velge et nytt passord. Lenken er gyldig i én time.\n\n${resetLink}\n\nHvis det var deg som ba om dette, trykker du på lenken. Hvis det ikke var deg, beholder du denne e-posten — passordet ditt er uendret.\n\nRo, varme og én reise av gangen.\n\n— ToSom`,
+    subject: 'Tilbakestill passordet ditt på Tosom',
+    text: `Hei,\n\nVi mottok en forespørsel om å tilbakestille passordet på kontoen din.\n\nTrykk på lenken under for å velge et nytt passord. Lenken er gyldig i én time.\n\n${resetLink}\n\nHvis det var deg som ba om dette, trykker du på lenken. Hvis det ikke var deg, beholder du denne e-posten — passordet ditt er uendret.\n\nRo, varme og én reise av gangen.\n\n— Tosom`,
     html: `
       <div style="font-family: Inter, -apple-system, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px; background: #0A1A2A; color: #ffffff; border-radius: 16px;">
         <h1 style="font-size: 24px; font-weight: 600; color: #D4AF37; margin-bottom: 16px;">Tilbakestill passordet ditt</h1>
@@ -222,7 +222,7 @@ export async function sendPasswordResetEmail(
         </a>
         <p style="font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.5); margin-top: 32px;">
           Hvis det ikke var deg, beholder du denne e-posten — passordet ditt er uendret.<br />
-          Ro, varme og én reise av gangen.<br />— ToSom
+          Ro, varme og én reise av gangen.<br />— Tosom
         </p>
       </div>
     `,
@@ -243,10 +243,10 @@ export async function sendJourneyEndEmail(
 ): Promise<EmailResult> {
   const name = userName || 'hei';
   const opening = foundEachOther
-    ? 'Gratulerer — dere fant hverandre. Nettopp det er det ToSom er laget for.'
+    ? 'Gratulerer — dere fant hverandre. Nettopp det er det Tosom er laget for.'
     : 'De 30 dagene sammen er fullført. Takk for at du var med på reisen.';
   const closing = foundEachOther
-    ? 'Lykke videre — sammen, i det virkelige liv.'
+    ? 'God reise videre — sammen, i det virkelige liv.'
     : 'Hvis du noen gang ønsker en ny reise, kan du registrere deg på nytt.';
   // D: Grace-period — ved «fant hverandre» beholdes innholdet 24 timer slik
   // at begge kan eksportere PDF. Ved no_action er alt slettet umiddelbart.
@@ -262,7 +262,7 @@ export async function sendJourneyEndEmail(
       `${opening}\n\n` +
       `${dataNote}\n\n` +
       `${closing}\n\n` +
-      `Ro, varme og én reise av gangen.\n\n— ToSom`,
+      `Ro, varme og én reise av gangen.\n\n— Tosom`,
     html: `
       <div style="font-family: Inter, -apple-system, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px; background: #0A1A2A; color: #ffffff; border-radius: 16px;">
         <h1 style="font-size: 24px; font-weight: 600; color: #D4AF37; margin-bottom: 16px;">${foundEachOther ? 'Dere fant hverandre' : 'Reisen er fullført'}</h1>
@@ -271,7 +271,7 @@ export async function sendJourneyEndEmail(
         <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">${dataNote}</p>
         <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 24px; font-weight: 500;">${closing}</p>
         <p style="font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.5); margin-top: 32px;">
-          Ro, varme og én reise av gangen.<br />— ToSom
+          Ro, varme og én reise av gangen.<br />— Tosom
         </p>
       </div>
     `,
@@ -296,16 +296,16 @@ export async function sendJourneyEndedEmail(
     subject: 'Reisen er avsluttet',
     text:
       `Hei ${name},\n\n` +
-      `Reisen du delte på ToSom er nå avsluttet.\n\n` +
+      `Reisen du delte på Tosom er nå avsluttet.\n\n` +
       `Det er ok. En reise kan stoppe midt i, og det dere delte underveis er likevel ikke bortkastet. Som lovet har vi slettet alt innholdet fra reisen — vi har ikke lagret noe.\n\n` +
       `Når du er klar for en ny reise, er du velkommen tilbake. Ta deg god tid.\n\n` +
-      `Ro, varme og én reise av gangen.\n\n— ToSom`,
+      `Ro, varme og én reise av gangen.\n\n— Tosom`,
     html: `
       <div style="font-family: Inter, -apple-system, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px; background: #0A1A2A; color: #ffffff; border-radius: 16px;">
         <h1 style="font-size: 24px; font-weight: 600; color: #D4AF37; margin-bottom: 16px;">Reisen er avsluttet</h1>
         <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">Hei ${name},</p>
         <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">
-          Reisen du delte på ToSom er nå avsluttet.
+          Reisen du delte på Tosom er nå avsluttet.
         </p>
         <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">
           Det er ok. En reise kan stoppe midt i, og det dere delte underveis er likevel ikke bortkastet. Som lovet har vi slettet alt innholdet fra reisen — vi har ikke lagret noe.
@@ -314,7 +314,7 @@ export async function sendJourneyEndedEmail(
           Når du er klar for en ny reise, er du velkommen tilbake. Ta deg god tid.
         </p>
         <p style="font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.5); margin-top: 32px;">
-          Ro, varme og én reise av gangen.<br />— ToSom
+          Ro, varme og én reise av gangen.<br />— Tosom
         </p>
       </div>
     `,
@@ -333,14 +333,14 @@ export async function sendDeletionConfirmationEmail(
 
   return sendEmail({
     to: userEmail,
-    subject: 'Din ToSom-konto er slettet',
-    text: `Hei ${name},\n\nDin ToSom-konto og all data er nå permanent slettet.\n\nIngen samtalinger, ingen bilder, ingen spørsmålssvar — alt er borte. Vi har ikke lagret noe.\n\nHvis du noen gang ønsker å komme tilbake, kan du registrere deg på nytt.\n\nHa det godt.\n\n— ToSom`,
+    subject: 'Din Tosom-konto er slettet',
+    text: `Hei ${name},\n\nDin Tosom-konto og all data er nå permanent slettet.\n\nIngen samtaler, ingen bilder, ingen spørsmålssvar — alt er borte. Vi har ikke lagret noe.\n\nHvis du noen gang ønsker å komme tilbake, kan du registrere deg på nytt.\n\nHa det godt.\n\n— Tosom`,
     html: `
       <div style="font-family: Inter, -apple-system, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px; background: #0A1A2A; color: #ffffff; border-radius: 16px;">
         <h1 style="font-size: 24px; font-weight: 600; color: #D4AF37; margin-bottom: 16px;">Kontoen er slettet</h1>
         <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">Hei ${name},</p>
         <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">
-          Din ToSom-konto og all data er nå permanent slettet. Ingen samtalinger, ingen bilder, ingen spørsmålssvar — alt er borte.
+          Din Tosom-konto og all data er nå permanent slettet. Ingen samtaler, ingen bilder, ingen spørsmålssvar — alt er borte.
         </p>
         <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">
           Hvis du noen gang ønsker å komme tilbake, kan du registrere deg på nytt.
@@ -349,7 +349,7 @@ export async function sendDeletionConfirmationEmail(
           Ha det godt.
         </p>
         <p style="font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.5); margin-top: 32px;">
-          Ro, varme og én reise av gangen.<br />— ToSom
+          Ro, varme og én reise av gangen.<br />— Tosom
         </p>
       </div>
     `,

@@ -151,7 +151,7 @@ export default function CookiesPage() {
                 lineHeight: '1.8',
               }}
             >
-              Vi deler aldri informasjonen din med annonsører, sporingstjenester eller tredjeparter. Din personvern er en del av Tosom-dnaet.
+              Vi deler aldri informasjonen din med annonsører, sporingstjenester eller tredjeparter. Ditt personvern er en del av Tosom-dnaet.
             </p>
           </div>
         </ToSomSection>

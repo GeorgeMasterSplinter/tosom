@@ -52,7 +52,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
     await prisma.systemLog.create({
       data: {
         level: 'INFO',
-        message: `Bruker ${targetUser.email} blei slettet permanent av admin ${adminUser.id}`,
+        message: `Bruker ${targetUser.email} ble slettet permanent av admin ${adminUser.id}`,
         module: 'admin/user-delete',
         metadata: { targetUserId, adminId: adminUser.id, deleted: del.deleted, imageObjects: del.imageObjects ?? 0 },
       },
@@ -106,33 +106,33 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
     switch (action) {
       case 'flag':
-        if (targetUser.bannedAt) return errorResponse('Bruker er allerede flagga/banna', 400)
+        if (targetUser.bannedAt) return errorResponse('Bruker er allerede flagget/bannlyst', 400)
         updatedUser = await prisma.user.update({ where: { id: targetUserId }, data: { bannedAt: new Date() }, select: { id: true, email: true, name: true, bannedAt: true } })
-        await logSystemLog(`Bruker ${targetUser.email} blei flagga/banna av admin ${adminUser.id}`, 'admin/user-flag', adminUser.id, { targetUserId, reason })
+        await logSystemLog(`Bruker ${targetUser.email} ble flagget/bannlyst av admin ${adminUser.id}`, 'admin/user-flag', adminUser.id, { targetUserId, reason })
         // STEG 9.2 FIX: Logg destruktiv admin-handling
         await recordAdminAction(adminUser.id, 'USER_BAN', { targetUserId, reason })
-        return successResponse({ data: updatedUser, message: `Bruker ${targetUser.email} er no flagga/banna.` })
+        return successResponse({ data: updatedUser, message: `Bruker ${targetUser.email} er nå flagget/bannlyst.` })
 
       case 'unflag':
-        if (!targetUser.bannedAt) return errorResponse('Bruker er ikke flagga', 400)
+        if (!targetUser.bannedAt) return errorResponse('Bruker er ikke flagget', 400)
         updatedUser = await prisma.user.update({ where: { id: targetUserId }, data: { bannedAt: null }, select: { id: true, email: true, name: true, bannedAt: true } })
-        await logSystemLog(`Bruker ${targetUser.email} fekk flagga fjerna av admin ${adminUser.id}`, 'admin/user-unflag', adminUser.id, { targetUserId })
+        await logSystemLog(`Bruker ${targetUser.email} fikk flagget fjernet av admin ${adminUser.id}`, 'admin/user-unflag', adminUser.id, { targetUserId })
         // STEG 9.2 FIX: Logg destruktiv admin-handling
         await recordAdminAction(adminUser.id, 'USER_UNBAN', { targetUserId })
-        return successResponse({ data: updatedUser, message: `Bruker ${targetUser.email} har no flagga fjerna.` })
+        return successResponse({ data: updatedUser, message: `Bruker ${targetUser.email} har nå flagget fjernet.` })
 
       case 'reset-onboarding':
         const wasComplete = targetUser.onboardingComplete
         updatedUser = await prisma.user.update({ where: { id: targetUserId }, data: { onboardingStep: 1, onboardingComplete: false, deepProfileComplete: false }, select: { id: true, email: true, name: true, onboardingStep: true, onboardingComplete: true } })
-        await logSystemLog(`Bruker ${targetUser.email} onboarding blei resatt av admin ${adminUser.id}`, 'admin/user-reset-onboarding', adminUser.id, { targetUserId, wasComplete })
-        return successResponse({ data: updatedUser, message: `Bruker ${targetUser.email} onboarding blei resatt til steg 1.` })
+        await logSystemLog(`Bruker ${targetUser.email} onboarding ble resatt av admin ${adminUser.id}`, 'admin/user-reset-onboarding', adminUser.id, { targetUserId, wasComplete })
+        return successResponse({ data: updatedUser, message: `Bruker ${targetUser.email} onboarding ble resatt til steg 1.` })
 
       case 'reset-journey':
         // B4 — JourneyProgress er match-scoped (krever matchId), bare slett eksisterande
         await prisma.journeyProgress.deleteMany({ where: { userId: targetUserId } })
         // STEG 9.2 FIX: Logg destruktiv admin-handling
         await recordAdminAction(adminUser.id, 'JOURNEY_RESET', { targetUserId })
-        return successResponse({ data: { userId: targetUserId, email: targetUser.email }, message: `Bruker ${targetUser.email} journey blei resatt til dag 1.` })
+        return successResponse({ data: { userId: targetUserId, email: targetUser.email }, message: `Bruker ${targetUser.email} journey ble resatt til dag 1.` })
 
       case 'force-match-end':
         await prisma.$transaction(async (tx) => {
@@ -141,10 +141,10 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
           const conversations = await tx.conversation.findMany({ where: { OR: [{ userAId: targetUserId }, { userBId: targetUserId }], endedAt: null }, select: { id: true } })
           for (const conv of conversations) await tx.conversation.update({ where: { id: conv.id }, data: { endedAt: new Date() } })
         })
-        await logSystemLog(`Bruker ${targetUser.email} force match end blei utført av admin ${adminUser.id}`, 'admin/user-force-match-end', adminUser.id, { targetUserId })
+        await logSystemLog(`Bruker ${targetUser.email} force match end ble utført av admin ${adminUser.id}`, 'admin/user-force-match-end', adminUser.id, { targetUserId })
         // STEG 9.2 FIX: Logg destruktiv admin-handling
         await recordAdminAction(adminUser.id, 'CONTENT_DELETE', { targetUserId, action: 'force-match-end' })
-        return successResponse({ data: { userId: targetUserId, email: targetUser.email }, message: `Aktive matcher og conversations for ${targetUser.email} blei avsluttet.` })
+        return successResponse({ data: { userId: targetUserId, email: targetUser.email }, message: `Aktive matcher og conversations for ${targetUser.email} ble avsluttet.` })
 
       default:
         return errorResponse(`Ugyldig action`, 400)

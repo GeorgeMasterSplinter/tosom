@@ -1,7 +1,7 @@
 /**
  * ToSom API Heatmap
  * 
- * Følgjer route-hit frequency for observability.
+ * Følger route-hit frequency for observability.
  * Uses SystemLog instead of removed RouteHit model (stability-cleanup).
  */
 

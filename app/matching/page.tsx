@@ -533,10 +533,10 @@ export default function MatchingPage() {
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '16px', fontWeight: 500 }}>
-                    Oppdater profil for betre match
+                    Oppdater profil for bedre match
                   </p>
                   <p className="mt-1" style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px' }}>
-                    Jo dypere profilen, jo betre kan vi matche deg.
+                    Jo dypere profilen, jo bedre kan vi matche deg.
                   </p>
                 </div>
                 <button
@@ -562,8 +562,8 @@ export default function MatchingPage() {
                 Fullfør profilen din først
               </h2>
               <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '16px', lineHeight: '1.7' }}>
-                Før du kan starte reisen må vi kjenne deg litt betre.
-                Det tar noen minutt – så kan du stille deg i køen.
+                Før du kan starte reisen må vi kjenne deg litt bedre.
+                Det tar noen minutter – så kan du stille deg i køen.
               </p>
               <button
                 onClick={() => router.push('/onboarding')}

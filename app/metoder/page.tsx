@@ -11,7 +11,7 @@
  *  5. Kilder
  *  6. Hva vi ikke lover
  *
- * Språk: «modeller vi bygger på», «Aktuell viden», «en veiviser» —
+ * Språk: «modeller vi bygger på», «Aktuell kunnskap», «en veiviser» —
  * aldri «vitenskapelig bevist» eller «en fasit».
  */
 
@@ -161,7 +161,7 @@ const INSTRUMENTS: Array<{
     name: 'Tilknytning (egne spørsmål)',
     source: 'Inspirert av Bowlby (1969), Ainsworth et al. (1978), Hazan & Shaver (1987), Fraley & Shaver (2000)',
     modern: 'Fraley (2018) — tilknytning hos voksne, meta-analyser.',
-    note: 'Våre egne items som taper på akserne angst og unnvikelse.',
+    note: 'Våre egne items som strekker seg over aksene angst og unnvikelse.',
   },
   {
     name: 'Verdier (PVQ-10)',
@@ -172,7 +172,7 @@ const INSTRUMENTS: Array<{
   {
     name: 'Emosjonsregulering (ERQ-6)',
     source: 'Gross & John (2003), Journal of Personality and Social Psychology 85(2)',
-    modern: 'Fortsett standard i nyere studier. Aldao et al. (2010) meta-analyse.',
+    modern: 'Fortsetter som standard i nyere studier. Aldao et al. (2010) meta-analyse.',
     note: 'Vår egen oversettelse — ikke den offisielle norske versjonen.',
   },
   {
@@ -410,7 +410,7 @@ export default function MetoderPage() {
             <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
               Vår resonansmåling er ikke en kjærlighetsdiagnose. Den er ikke en bedømmelse av verdi.
               Den er et utgangspunkt — en veiviser som forteller om de to rytmene deres kan svinge sammen.
-              Resten er opp til dere. Små, jevne dult i rett takt.
+              Resten er opp til dere. Små, jevne steg i rett takt.
             </p>
           </div>
         </ToSomSection>
@@ -446,7 +446,7 @@ export default function MetoderPage() {
 
             <div>
               <p style={{ ...typographyToStyle('heading-sm'), color: color.brand.gold, marginBottom: '12px' }}>
-                Aktuell viden (2000–2024)
+                Aktuell kunnskap (2000–2024)
               </p>
               <GlassCard padding="lg" interactive>
                 <ul className="space-y-3">
@@ -499,7 +499,7 @@ export default function MetoderPage() {
               {[
                 'Vi lover ikke at du får en match, eller at den du får blir til et langsiktig parforhold.',
                 'Vi lover ikke at scoringen er feilfri eller at den «beviser» at to personer passer sammen.',
-                'Vi lover ikke at tersklene våre er ferdig kalibrert — de fortsatt etterprøves.',
+                'Vi lover ikke at tersklene våre er ferdig kalibrert — de er fortsatt under etterprøving.',
                 'Vi lover at vi er ærlige om metoden, kildene og grensene for hva den kan.',
               ].map((line, idx) => (
                 <li key={idx} className="flex gap-3">

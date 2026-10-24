@@ -167,7 +167,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       <div class="sub">Samtalen mellom ${escapeHtml(meName)} og ${escapeHtml(partnerName)}</div>
     </header>
     <div class="note">
-      Dette er minnet fra reisen deres på ToSom. Lagre det som PDF, så kan dere ha det for alltid —
+      Dette er minnet fra reisen deres på Tosom. Lagre det som PDF, så kan dere ha det for alltid —
       plattformen sletter alt utover dette.
     </div>
     ${
@@ -176,7 +176,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         : messageRows
     }
     <footer>
-      Eksportert fra ToSom · ${fmtDate(new Date())}
+      Eksportert fra Tosom · ${fmtDate(new Date())}
     </footer>
   </div>
 </body>

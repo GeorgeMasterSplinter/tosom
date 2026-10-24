@@ -8,7 +8,7 @@ import { useParams } from 'next/navigation';
 const blogPosts = {
   'kompatibilitet': {
     title: 'Hvorfor det som er dypere enn utseende, betyr mer',
-    date: '15. januar 2026',
+    date: '15. juni 2026',
     readTime: '5 min lesing',
     content: `
       <p>I et samfunn der vi konstant blir eksponert for bilder og overflatefokus, er det lett å glemme hva som faktisk betyr noe i en relasjon.</p>
@@ -22,21 +22,21 @@ const blogPosts = {
   },
   'reisetemaer': {
     title: 'Hvorfor reisen varer 30 dager',
-    date: '10. januar 2026',
+    date: '20. juni 2026',
     readTime: '4 min lesing',
     content: `
       <p>Tretti dager er ikke en vitenskapelig standard, og vi påstår ikke at forskning har fastslått en «perfekt» tidsramme for å bygge tillit. Det er et bevisst designvalg — og vi vil være ærlige om at akkurat det er det.</p>
 
       <p>Det vi forsøkte å oppnå med lengden: kort nok til at dere ikke mister tråden, og lang nok til at samtalen faktisk kan bli dyp. Den første uken handler om å bli kjent. Den andre om sårbarhet. Den tredje om dype samtaler. Den fjerde om felles framtid.</p>
 
-      <p>30 dager er derfor ikke en grense dere skal rekkje — det er et rom dere får. Trenger dere mer tid, fortsetter dere på egne premisser.</p>
+      <p>30 dager er derfor ikke en grense dere skal rekke — det er et rom dere får. Trenger dere mer tid, fortsetter dere på egne premisser.</p>
 
       <p>Reisen er designet for å støtte nettopp denne prosessen med daglige refleksjoner, samtaletema og små oppgaver — i eget tempo, uten press.</p>
     `,
   },
   'rolegheit': {
     title: 'Hvorfor ro er vår viktigste funksjon',
-    date: '5. januar 2026',
+    date: '24. juni 2026',
     readTime: '3 min lesing',
     content: `
       <p>I en verden der datingapper konstant konkurrerer om oppmerksomheten din med push-notifikasjoner og gamification, har Tosom valgt en annen vei.</p>
@@ -59,7 +59,7 @@ export default function BlogPostPage() {
     return (
       <main className="min-h-screen flex items-center justify-center" style={{ background: '#0B1520' }}>
         <div className="text-center">
-          <h1 className="mb-4" style={{ ...typographyToStyle('heading-lg'), color: color.text.primary }}>Artikkelen blei ikke funnet</h1>
+          <h1 className="mb-4" style={{ ...typographyToStyle('heading-lg'), color: color.text.primary }}>Artikkelen ble ikke funnet</h1>
           <Link href="/blogg" style={{ ...typographyToStyle('body'), color: color.brand.gold }}>
             Tilbake til bloggen
           </Link>

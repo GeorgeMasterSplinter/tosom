@@ -261,7 +261,7 @@ export default function PriserPage() {
                         lineHeight: '1.8',
                       }}
                     >
-                      Når dere matcher, får dere et helt privat rom med guidede samtaler, refleksjoner, oppgaver og resonansmåling. Et rom designet for trygghet og dypde — uten distraksjoner.
+                      Når dere matcher, får dere et helt privat rom med guidede samtaler, refleksjoner, oppgaver og resonansmåling. Et rom designet for trygghet og dybde — uten distraksjoner.
                     </p>
                   </div>
                 </div>

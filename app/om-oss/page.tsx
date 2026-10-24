@@ -353,7 +353,7 @@ export default function OmOssPage() {
                     lineHeight: '1.8',
                   }}
                 >
-                  Relasjoner ikke er effektivitet — de er tilstedeværelse. Vi bygger på etablerte relasjonsmodeller som peker i retning av ekte kontakt — når mennesker møtes med ro, struktur og nysgjerrighet.
+                  Relasjoner er ikke effektivitet — de er tilstedeværelse. Vi bygger på etablerte relasjonsmodeller som peker i retning av ekte kontakt — når mennesker møtes med ro, struktur og nysgjerrighet.
                 </p>
               </GlassCard>
             </div>

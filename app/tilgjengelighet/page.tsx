@@ -54,7 +54,7 @@ export default function TilgjengelighetPage() {
             Tilgjengelighet
           </h1>
           <p className="mt-3" style={{ ...typographyToStyle('body-lg'), color: 'rgba(255,255,255,0.6)' }}>
-            ToSom er bygget for alle. Uansett hvordan du bruker en datamaskin, en telefon eller en skjermleser — vi ønsker at du skal komme deg inn og finne roen.
+            Tosom er bygget for alle. Uansett hvordan du bruker en datamaskin, en telefon eller en skjermleser — vi ønsker at du skal komme deg inn og finne roen.
           </p>
         </ToSomSection>
 
@@ -64,7 +64,7 @@ export default function TilgjengelighetPage() {
             Tilgjengelighet er ikke noe vi legger til til slutt. Det er en del av hvordan vi bygger. Vi følger WCAG 2.1 nivå AA som utgangspunkt, og tester med både tastatur, skjermleser og zoom.
           </p>
           <p className="mt-3 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
-            Hvis noe ikke virker for deg, så fortell oss det. Det hjelper oss å gjøre ToSom bedre for alle.
+            Hvis noe ikke virker for deg, så fortell oss det. Det hjelper oss å gjøre Tosom bedre for alle.
           </p>
         </Section>
 
@@ -79,7 +79,7 @@ export default function TilgjengelighetPage() {
               'Støtte for zoom inntil 200% uten tap av innhold',
               'Responsivt design som fungerer på mobil, nettbrett og storskjerm',
               'Fokustilstand som er synlig på alle interaktive elementer',
-              'Ingen innhold som kun formiles via farge — alltid tekst eller symbol i tillegg',
+              'Ingen innhold som kun formidles via farge — alltid tekst eller symbol i tillegg',
             ]}
           />
         </Section>
@@ -98,8 +98,8 @@ export default function TilgjengelighetPage() {
         <Section title="Bekjente begrensninger">
           <BulletList
             items={[
-              'Realtidsoppdateringer i chatten kan i enkelttilfeller ikke annonseres skjørt av skjermleseren. Vi jobber med å forbedre dette.',
-              'Mood-temaene bytter farger i hele grensesnittet. For brukere med fargestyring er dette noe å være obs på. Alle Mood-temaer har likevel tilstrekkelig kontrast.',
+              'Realtidsoppdateringer i chatten kan i enkelttilfeller ikke annonseres skjært av skjermleseren. Vi jobber med å forbedre dette.',
+              'Mood-temaene bytter farger i hele grensesnittet. For brukere med fargeblindhet er dette noe å være obs på. Alle Mood-temaer har likevel tilstrekkelig kontrast.',
               'Billedeling (fra dag 15) inkluderer alt-tekst, men dette er tomt ved opplasting. Vi jobber med å gjøre dette smartere.',
             ]}
           />
@@ -108,7 +108,7 @@ export default function TilgjengelighetPage() {
         {/* Tilbakemelding */}
         <Section title="Ser du noe som ikke fungerer?">
           <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
-            Vi er ikke ferdige. ToSom blir bedre ved at du forteller oss hva som virker og hva som ikke gjør det.
+            Vi er ikke ferdige. Tosom blir bedre ved at du forteller oss hva som virker og hva som ikke gjør det.
           </p>
           <p className="mt-4 text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
             Ta kontakt via{' '}

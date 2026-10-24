@@ -290,6 +290,26 @@ export default function SlikPage() {
           </div>
         </ToSomSection>
 
+        {/* ===== MOTPOL-Lenke (ACT MOTPOL, D1) ===== */}
+        <section className="px-6 pb-4 pt-2 text-center">
+          <p
+            style={{
+              ...typographyToStyle('body'),
+              color: 'rgba(255,255,255,0.65)',
+              lineHeight: '1.7',
+            }}
+          >
+            Hvorfor er det slik?{' '}
+            <Link
+              href="/motpol"
+              className="underline decoration-[rgba(212,175,55,0.35)] decoration-1 underline-offset-4 hover:decoration-[#D4AF37] transition-all duration-300"
+              style={{ color: color.brand.gold }}
+            >
+              Les motpolen vår
+            </Link>
+          </p>
+        </section>
+
         {/* ===== CTA ===== */}
         <ToSomSection
           spotlight="cta"

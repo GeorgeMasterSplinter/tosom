@@ -30,6 +30,8 @@ export interface FooterProps {
 
 const produktLinks = [
   { label: 'Hvorfor Tosom', href: '/hvorfor' },
+  // ACT MOTPOL (D1): Motpol i offentlig footer — ikke i hovedmenyen i v1
+  { label: 'Motpol', href: '/motpol' },
   { label: 'Slik fungerer det', href: '/slik-fungerer-det' },
   { label: 'Metoder vi bruker', href: '/metoder' },
   { label: 'Reisen', href: '/reisen' },

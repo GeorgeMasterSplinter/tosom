@@ -328,9 +328,11 @@ describe('D1 — navigasjonsendringer (footer + kontekstuelle lenker)', () => {
     expect(sfd).toContain('href="/motpol"');
   });
 
-  it('hovedmenyen (UniversalMenu) er uendret — ingen Motpol i v1', () => {
+  it('hovedmenyen (UniversalMenu) har Motpol i 4+4-structur (avgjørelse v2, 25.10.2026)', () => {
     const menu = src('components/layout/UniversalMenu.tsx');
-    expect(menu).not.toContain('/motpol');
+    expect(menu).toMatch(/label:\s*'Motpol',\s*href:\s*'\/motpol'/);
+    // Desktop-menyen ligger i 4 kolonner × 2 rader (4 + 4 lenker)
+    expect(menu).toContain('grid-cols-4');
   });
 
   it('landing-siden er uendret (D4: ingen teaser i v1)', () => {

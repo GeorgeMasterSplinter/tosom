@@ -16,7 +16,12 @@ import { usePathname } from 'next/navigation';
 import { Logo } from '@/components/ui/branding/Logo';
 import { color } from '@/config/design-tokens';
 
+// 8 lenker (avgjørelse 25.10.2026): på desktop (≥1280px) vises de som 4 + 4 i to rader:
+//   Rad 1: Motpol, Hvorfor Tosom, Slik fungerer det, Reisen
+//   Rad 2: Metoder, Tips, Priser, Trygghet
+// Mobilmenyen viser alle 8 i samme rekkefølge.
 const navItems = [
+  { label: 'Motpol', href: '/motpol' },
   { label: 'Hvorfor Tosom', href: '/hvorfor' },
   { label: 'Slik fungerer det', href: '/slik-fungerer-det' },
   { label: 'Reisen', href: '/reisen' },
@@ -82,14 +87,14 @@ export const UniversalMenu = () => {
       )}
 
       <header className="fixed top-0 left-0 right-0 z-50">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 h-[64px] flex items-center justify-between">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 h-[64px] xl:h-auto xl:py-3 flex items-center justify-between">
           {/* Venstre: Logo */}
           <Link href="/" className="flex-shrink-0">
             <Logo size="xl" colorVariant="gold" />
           </Link>
 
           {/* Midten: Meny (desktop) */}
-          <nav className="hidden xl:flex items-center gap-6 xl:gap-8">
+          <nav className="hidden xl:grid grid-cols-4 gap-x-8 gap-y-1.5">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -126,8 +131,8 @@ export const UniversalMenu = () => {
             ))}
           </nav>
 
-          {/* Høyre: CTA-knapper */}
-          <div className="hidden md:flex items-center gap-4">
+          {/* Høyre: CTA-knapper — stabelt under hverandre på desktop (to rader, som menyen) */}
+          <div className="hidden md:flex items-center gap-4 xl:flex-col xl:items-stretch xl:gap-3">
             <Link
               href="/login"
               className="h-[40px] px-6 flex items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-medium transition-all duration-200 ease-out"

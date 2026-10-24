@@ -801,7 +801,7 @@ Tom streng/kun manglende felt tolkes aldri som OPEN TO ALL — distinksjonen er 
 3. `components/ImageUpload.tsx`
 4. Dependencies: `uploadthing`, `@uploadthing/react`
 5. UploadThing-blokk i `app/api/system/health/route.ts` (linjene 62, 76-78)
-6. Env-varer i Vercel (George, etter deploy av 1–5)
+6. Env-varer i Vercel (George, etter deploy av 1–5) — **OPS CLEANUP FOLLOW-UP (24.10, ACT E):** 1–5 er gjennomført + verifisert (se status under); gjenstår: slette `UPLOADTHING_*`-variablene i Vercel Production etter neste deploy.
 
 **Slik verifiseres sletting:**
 - `tsc --noEmit` = 0 feil (fanger manglende imports)
@@ -810,7 +810,7 @@ Tom streng/kun manglende felt tolkes aldri som OPEN TO ALL — distinksjonen er 
 - `next build` = 69/69 sider
 - Prod: `/api/system/health` uten uploadthing-nøkkel; `/api/uploadthing/*` = 404 (både før og etter — bekrefter at intet gikk tapt)
 
-**Status:** [ ] NOT DONE (sletting i neste ACT) · [ ] REQUIRES PRODUCTION VERIFICATION (at live-deploy mangler catchall — bekreftes ved sletting eller rutesett-inspeksjon)
+**Status:** [x] FIXED (24.10, ACT E) — 1–5 slettet + verifisert: `grep -rin uploadthing app components utils lib config` = 0 treff; `tsc` 0 feil; `jest` 732 passed / 1 skipped; `next build` grønn; ny guard-test `__tests__/uploadthing-cleanup.test.ts` (UT-01–05, 07). [x] PRODUCTION VERIFIED (24.10, før sletting): `POST /api/uploadthing/image` → 404 og `GET /api/uploadthing/chatImage` → 404 — endepunktet var aldri live (manglende catchall). OPS-cleanups gjenstår: `UPLOADTHING_*` i Vercel (punkt 6 ovenfor).
 
 ## Implementation Plan
 
@@ -866,10 +866,10 @@ Neste ACT-fase (etter godkjenning av dette dokumentet og avklaring av Q-1…Q-4)
 |---|---|---|---|
 | 1 | Baseline (før første endring) | `tsc --noEmit` (0), `jest --ci` (621), `verify:lang` (832 filer) | [x] VERIFIED (23.10) |
 | 2 | Velkomst-e-post | Ny test: e-post inneholder ikke «ingen bilder»/«ingen navn»; inneholder «dag 15»/faktisk lovnader | [ ] NOT DONE |
-| 3 | 21+-synlighet | E2E: `/` og `/register` renderer «21+» | [ ] NOT DONE |
+| 3 | 21+-synlighet | `__tests__/login-age-21.test.ts` (AGE-01–03, 05): MIN_AGE=21 + server-side håndheving + «Tosom er for deg som har fylt 21 år.» i register-visningen på /login (P1-5, ACT E 24.10; kontekstsensitiv plassering — synlig ved registrering, ikke ved innlogging) | [x] FIXED (24.10) |
 | 4 | Merkenavn | `__tests__/brand-name.test.ts` (guard) + grep-manuelt | [ ] NOT DONE |
 | 5 | Kroppsform | Onboarding-flow-test uten `bodyType`; `profile-setup-save`-test uten felt; eksport-test uten `bodyType` for nye profiler | [ ] NOT DONE |
-| 6 | UploadThing | grep-guard (0 treff); eksisterende M-6/R2-tester uendret og grønn | [ ] NOT DONE |
+| 6 | UploadThing | `__tests__/uploadthing-cleanup.test.ts` (grep-guard 0 treff i app/components/utils/lib/config + dep-gerd); eksisterende M-6/R2-tester uendret og grønn | [x] FIXED (24.10, ACT E) |
 | 7 | Religion | R-01…R-12 + ekvivalens + E2E (PD-3.8) | [ ] NOT DONE |
 | 8 | Matching-regressjon (generelt) | Eksisterende `matching-score-round.test.ts`, `livsstil2026-dealbreaker.test.ts`, `psychometrics-scoring.test.ts` grønn etter alle endringer | [ ] NOT DONE (kjøres per patch) |
 | 9 | Journey/chat-regressjon | `chat-image-lock-m6`, `photo-lock-before-day15`, journey-tester grønn (berøres ikke direkte, men kjøres per patch) | [ ] NOT DONE (kjøres per patch) |
@@ -896,7 +896,7 @@ Kun read-only-verifisering fra prod (ingen skrive-handlinger mot prod i denne fa
 | 13 | Vipps-integrasjon status | George (PENDING) | [ ] PRODUCT DECISION: OPEN / PENDING |
 | 14 | DPA/DPIA signert (V-9) | George/advokat | [ ] REQUIRES PRODUCTION VERIFICATION |
 | 15 | Org.nr./firmaadresse i metadata/footer | George (P2-7, Legal #8/#9) | [ ] REQUIRES PRODUCTION VERIFICATION |
-| 16 | UploadThing-catchall finnes ikke i live-deploy | Rutesett-inspeksjon eller bekreftes ved sletting (PD-7) | [ ] REQUIRES PRODUCTION VERIFICATION |
+| 16 | UploadThing-catchall finnes ikke i live-deploy | `POST /api/uploadthing/image` = 404 og `GET /api/uploadthing/chatImage` = 404 (PD-7) | [x] VERIFIED (24.10) |
 
 ## Final Launch Checklist
 
@@ -908,7 +908,7 @@ Kun read-only-verifisering fra prod (ingen skrive-handlinger mot prod i denne fa
 |---|---|---|---|
 | [ ] | Velkomst-e-post beskriver faktisk produkt (P1-1-tekst inn + test) | P1-1, T-1 | **Før lansering** |
 | [ ] | Merkenavn «Tosom» standardisert + CI-guard (P1-2) | P1-2, PD-1 | **Før lansering** |
-| [ ] | 21+-grense synlig på landing + registrering (P1-5) | P1-5 | **Før lansering** |
+| [x] | 21+-krav synlig ved registrering: «Tosom er for deg som har fylt 21 år.» i register-visningen på /login + «For voksne 21+» i metadata (P1-5, ACT E 24.10) | P1-5 | **Før lansering** |
 | [ ] | Venteromstekst rett (P3-3) | P3-3 | Kan utsettes (lav) |
 | [ ] | «Investorer»-påstand verifisert eller myket (P3-4) | P3-4 | **Før lansering** (påstand) |
 | [ ] | Sosiale-medie-knapper: lenker eller fjernet | Public #12 | Kan utsettes |
@@ -919,7 +919,7 @@ Kun read-only-verifisering fra prod (ingen skrive-handlinger mot prod i denne fa
 |---|---|---|---|
 | [x] | Kroppsform samles ikke lenger inn fra nye brukere (PD-4 trinn 1–7) | P2-8 | **Før lansering** (minstekrav) |
 | [x] | Dataexport dekker `deepProfileData` + art. 9-samtykke (teknisk utelatelse fixet, testet mot test-DB) | 3.11 | **Før lansering** (matches/blokkeringer/konversjoner: [ ] REQUIRES DECISION — juridisk) |
-| [ ] | UploadThing fjernet (PD-7) | P1-3 | **Før lansering** |
+| [x] | UploadThing fjernet (PD-7, ACT E 24.10) | P1-3 | **Før lansering** |
 | [ ] | Død kode fjernet (`AgeRequirement`, `questions.ts`) | P3-2 | Kan utsettes |
 | [ ] | Sitemap/metadata til kanonisk host | P2-7, P2-9 | **Før lansering** (SEO+tro) |
 | [ ] | Analytics-strip av PII (P2-4) | P2-4 | **Før lansering** |

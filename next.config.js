@@ -97,7 +97,7 @@ const nextConfig = {
             value: "max-age=31536000; includeSubDomains; preload",
           },
           // Content-Security-Policy (STEG 4.4)
-          // Allows: self, Stripe checkout, Vipps auth, Pusher WS, uploadthing images,
+          // Allows: self, Stripe checkout, Vipps auth, Pusher WS,
           // S3/Railway storage (legacy) + Cloudflare R2 (chat images: /api/chat/image
           // 307-redirect-er til presigned URL på {acct}.r2.cloudflarestorage.com).
           // systemaudit 03.09 (funn 9): fjernet dev-domener (picsum.photos,
@@ -112,7 +112,7 @@ const nextConfig = {
               "default-src 'self'",
               CSP_SCRIPT_SRC,
               "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: blob: *.uploadthing.com uploadthing.com *.s3.amazonaws.com tosom-storage.up.railway.app *.r2.cloudflarestorage.com",
+              "img-src 'self' data: blob: *.s3.amazonaws.com tosom-storage.up.railway.app *.r2.cloudflarestorage.com",
               "media-src 'self'",
               // PL-16: fonte er selvhostet via next/font (/_next/static/media)
               // — fonts.gstatic.com kreves ikke lenger.
@@ -167,10 +167,6 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     formats: ["image/webp", "image/avif"],
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**.uploadthing.com',
-      },
       {
         protocol: 'https',
         hostname: '*.s3.amazonaws.com',

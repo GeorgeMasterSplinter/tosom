@@ -17,7 +17,7 @@ Opprettet 24.08.2026 — Sist oppdatert 18.10.2026 (🔴→🟢 AUTH-FIKS: Edge-
 
 🟢 Cron: journey-cron kjører (siste kjøring ~15:27). Matching-cron kjører lørdag 02–04.
 
-🟢 UploadThing: configured (token + secret satt).
+🟢 UploadThing: FJERNET (ACT E, 24.10) — død kode slettet (ingen catchall-rute, 0 referanser, endepunktet var 404 i prod). Bilder går via /api/chat/image → R2. OPS follow-up: slette UPLOADTHING_* i Vercel etter neste deploy.
 
 🟢 Pusher: configured (key/secret/cluster satt).
 

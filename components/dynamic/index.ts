@@ -40,12 +40,6 @@ function LoadingMatch() {
   );
 }
 
-function LoadingUpload() {
-  return React.createElement("div", { className: "flex items-center justify-center" },
-    React.createElement("div", { className: "text-white/40" }, "Laster opplasting...")
-  );
-}
-
 function LoadingTimeline() {
   return React.createElement("div", { className: "flex items-center justify-center" },
     React.createElement("div", { className: "text-white/40" }, "Laster timeline...")
@@ -111,15 +105,6 @@ export const DynamicResonanceMeter = dynamic(
 export const DynamicMatchPopup = dynamic(
   () => import("@/components/MatchPopup").catch(() => ({ default: EmptyFallback })),
   { ssr: false, loading: () => LoadingMatch() },
-);
-
-/* ---------------------------------------------------------- */
-/*  ImageUpload — dynamic import                                  */
-/* ---------------------------------------------------------- */
-
-export const DynamicImageUpload = dynamic(
-  () => import("@/components/ImageUpload").catch(() => ({ default: EmptyFallback })),
-  { ssr: false, loading: () => LoadingUpload() },
 );
 
 /* ---------------------------------------------------------- */

@@ -42,7 +42,6 @@ const PROD_REQUIRED_VARS: EnvVar[] = [
 const OPTIONAL_VARS: EnvVar[] = [
   { value: process.env.AI_API_KEY, required: false, description: 'AI provider API key' },
   { value: process.env.AI_MODEL, required: false, description: 'AI model name' },
-  { value: process.env.UPLOADTHING_TOKEN, required: false, description: 'UploadThing token' },
   { value: process.env.SUPABASE_URL, required: false, description: 'Supabase URL' },
   { value: process.env.SUPABASE_KEY, required: false, description: 'Supabase key' },
 ]

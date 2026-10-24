@@ -13,7 +13,6 @@ import { verifyAdminTokenFromRequest } from '@/lib/auth/admin-jwt';
  * Utvidet 2026-08-02 (Pakke 3, Steg 3a):
  * - DB-ping (allerede eksisterande)
  * - Pusher-status (miljøvariabel-validering)
- * - Uploadthing-status (miljøvariabel-validering)
  * - OpenAI-status (miljøvariabel-validering)
  * - Cron-siste kjøring (via Prisma MatchingAIRequestLog eller SystemLog)
  */
@@ -59,7 +58,6 @@ export async function GET(request: NextRequest) {
     // critical=true betyr at feil på denne tjenesten gjør hele systemet
     // utilgjengelig (HTTP 503). De øvrige er valgfrie: mangel vises som
     // warning i admin-panelet og nedgraderer ikke overall status.
-    const uploadthingOk = Boolean(process.env.UPLOADTHING_TOKEN || process.env.NEXT_PUBLIC_UPLOADTHING_TOKEN);
     const vippsOk = Boolean(process.env.VIPPS_CLIENT_ID && process.env.VIPPS_CLIENT_SECRET);
     const services = {
     database: {
@@ -72,11 +70,6 @@ export async function GET(request: NextRequest) {
       status: process.env.PUSHER_APP_ID ? 'configured' : 'missing',
         details: process.env.PUSHER_APP_ID ? 'Environment variabel satt' : 'Manglende miljøvariabel (PUSHER_APP_ID)',
       critical: false,
-    },
-    uploadthing: {
-      status: uploadthingOk ? 'configured' : 'missing',
-      details: uploadthingOk ? 'Token variabel satt' : 'Manglende miljøvariabel (UPLOADTHING_TOKEN)',
-    critical: false,
     },
     openai: {
         // Ingen AI-integrasjon i koden (kverken `ai` eller `openai` er ei

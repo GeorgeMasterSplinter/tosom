@@ -114,7 +114,7 @@ export default function CookiesPage() {
               color: color.text.secondary,
             }}
           >
-            Tosom bruker bare det nødvendige av cookies. Vi tar personvern alvorlig og deler aldri data med tredjeparts-tracking.
+            Tosom bruker ikke analyse- eller markedsføringscookies i dag. Vi bruker nødvendig lagring for innlogging, sikkerhet og enkelte funksjoner i tjenesten.
           </p>
         </ToSomSection>
 
@@ -141,7 +141,7 @@ export default function CookiesPage() {
                 lineHeight: '1.8',
               }}
             >
-              Cookies lar Tosom fungere trygt og effektivt. Vi samler inn minimalt med data — kun det som trengs for å gi deg en god og trygg opplevelse.
+              Cookies og lokal lagring i nettleseren lar Tosom fungere trygt og effektivt. Vi bruker dem bare til det som trengs for at innlogging, sikkerhet og enkelte funksjoner skal virke.
             </p>
 
             <p
@@ -151,7 +151,7 @@ export default function CookiesPage() {
                 lineHeight: '1.8',
               }}
             >
-              Vi deler aldri informasjonen din med annonsører, sporingstjenester eller tredjeparter. Ditt personvern er en del av Tosom-dnaet.
+              Vi bruker ikke opplysningene dine til annonsering eller sporing. Underleverandørene vi bruker driver tjenesten for oss, og de har ikke lov til å bruke opplysningene til egne formål. Personvern er en grunnleggende del av Tosom.
             </p>
           </div>
         </ToSomSection>
@@ -185,7 +185,7 @@ export default function CookiesPage() {
                       color: color.brand.gold,
                     }}
                   >
-                    Teknisk nødvendige cookies
+                    Nødvendige cookies
                   </h3>
                 </div>
                 <p
@@ -195,8 +195,20 @@ export default function CookiesPage() {
                     lineHeight: '1.8',
                   }}
                 >
-                  Disse er nødvendige for at plattformen skal fungere. De lagrer session-token og autentisering. Du kan ikke slå av disse.
+                  Disse er nødvendige for at Tosom skal fungere, og de settes kun når de trengs:
                 </p>
+                <ul
+                  className="list-disc pl-5 space-y-1.5"
+                  style={{
+                    ...typographyToStyle('body-sm'),
+                    color: color.text.secondary,
+                    lineHeight: '1.8',
+                  }}
+                >
+                  <li>Innlogging og sesjon (authjs.session-token) — inntil ca. 30 dager.</li>
+                  <li>Sikkerhet mot uautoriserte endringer (csrf_token) — 24 timer.</li>
+                  <li>Interne admin-funksjoner (admin_token) — 8 timer.</li>
+                </ul>
               </GlassCard>
 
               {/* Analytics-cookies */}
@@ -211,7 +223,7 @@ export default function CookiesPage() {
                       color: color.brand.gold,
                     }}
                   >
-                    Analytics-cookies
+                    Analyse- og markedsføringscookies
                   </h3>
                 </div>
                 <p
@@ -221,7 +233,7 @@ export default function CookiesPage() {
                     lineHeight: '1.8',
                   }}
                 >
-                  Vi bruker ingen analytics-cookies som sporer deg personlig. Vi har et minimalt, privat analyserverktøy som ikke deler data med noen.
+                  Vi bruker ingen analyse- eller markedsføringscookies i dag, og vi har ingen slik måling installert. Vi følger deg ikke på tvers av nettsteder.
                 </p>
               </GlassCard>
 
@@ -273,7 +285,59 @@ export default function CookiesPage() {
                     lineHeight: '1.8',
                   }}
                 >
-                  Session-cookies blir slettet når du lukker nettleseren. Permanente cookies kan bli lagret i opptil 1 år.
+                  De nødvendige cookieene har kort levetid: innloggingen inntil ca. 30 dager, sikkerhets-cookien 24 timer og den interne admin-cookien 8 timer. Når du logger ut eller nettleseren din ryddes, forsvinner de som er satt til å vare.
+                </p>
+              </GlassCard>
+
+              {/* Lokal lagring i nettleseren */}
+              <GlassCard padding="xl" interactive className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <GoldPulseIcon size={56} className="flex-shrink-0">
+                    <IconCookie />
+                  </GoldPulseIcon>
+                  <h3
+                    style={{
+                      ...typographyToStyle('heading-sm'),
+                      color: color.brand.gold,
+                    }}
+                  >
+                    Lokal lagring i nettleseren
+                  </h3>
+                </div>
+                <p
+                  style={{
+                    ...typographyToStyle('body'),
+                    color: color.text.secondary,
+                    lineHeight: '1.8',
+                  }}
+                >
+                  Tosom bruker også lagring i din egen nettleser (localStorage og sessionStorage) til konkrete funksjoner: å huske utkastet i onboarding, valg du gjør i chatten og visningsinnstillinger. Dette ligger lokalt hos deg, er ikke en cookie, og brukes ikke til sporing.
+                </p>
+              </GlassCard>
+
+              {/* Hvis vi senere bruker valgfri analyse */}
+              <GlassCard padding="xl" interactive className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <GoldPulseIcon size={56} className="flex-shrink-0">
+                    <IconSettings />
+                  </GoldPulseIcon>
+                  <h3
+                    style={{
+                      ...typographyToStyle('heading-sm'),
+                      color: color.brand.gold,
+                    }}
+                  >
+                    Hvis vi senere bruker valgfri analyse
+                  </h3>
+                </div>
+                <p
+                  style={{
+                    ...typographyToStyle('body'),
+                    color: color.text.secondary,
+                    lineHeight: '1.8',
+                  }}
+                >
+                  Dersom vi noensinne aktiverer valgfri analyse eller annen sporing, vil vi si det til deg før den slås på, og du vil få et valg. I dag er ingen slik teknologi aktiv, og derfor bruker Tosom ingen cookie-banner.
                 </p>
               </GlassCard>
             </div>
@@ -318,7 +382,7 @@ export default function CookiesPage() {
                     lineHeight: '1.8',
                   }}
                 >
-                  Gå til nettleserens innstillinger for å administrere cookies. De fleste nettlesere tilbyr alternativer for å velge hvilke typer cookies du vil akseptere.
+                  Gå til nettleserens innstillinger for å se og slette cookies. Der kan du også velge å blokkere cookies som ikke er nødvendige.
                 </p>
               </div>
             </GlassCard>

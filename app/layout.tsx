@@ -6,7 +6,6 @@ import { UniversalMenu } from '@/components/layout/UniversalMenu';
 import { ScrollAffordance } from '@/components/ui/feedback/ScrollAffordance';
 import { ContentWrapper } from '@/components/layout/ContentWrapper';
 import { SentryErrorBoundary } from "@/components/system/SentryErrorBoundary";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { COMPANY } from "@/config/legal";
 
 const BESKRIVELSE =
@@ -126,7 +125,6 @@ export default function RootLayout({
           <ScrollAffordance />
           <ContentWrapper>{children}</ContentWrapper>
         </SentryErrorBoundary>
-        <SpeedInsights />
       </body>
     </html>
   );

@@ -127,12 +127,11 @@ Offentlig lansering er forsvarlig når:
 - **Verifisering:** Cron mot test-DB, deretter prod med 24-timers gransje.
 - **Status:** [ ] REQUIRES PRODUCTION VERIFICATION
 
-### P2-2 · Informasjonskapsler (Vercel speed insights)
+### P2-2 · Informasjonskapsler (Vercel speed insights) — FIXED (ACT C1)
 
-- **Sted:** `config/cookies.ts`, `app/(landing)/page.tsx:25-43`
-- **Nåværende oppførsel:** Ingen cookie-banner-komponent funnet i prod-kode (kun konfig + tekst i vilkårene); `page.tsx:38` refererer til speed-insights uten synlig bannertilstand.
-- **Forventet oppførsel:** Hvit-liste for strictly necessary + valgfri analyse-kapsel, samtykke før setning.
-- **Status:** [ ] NOT DONE (verifisér først nøyaktig hva som settes i prod)
+- **Sted:** `app/layout.tsx`, `package.json`, `app/cookies/page.tsx`
+- **Nåværende oppførsel (etter ACT C1, 24.10.2026):** `<SpeedInsights />` er fjernet fra root layout, og `@vercel/speed-insights` er fjernet fra dependencies + lockfile (0 aktive referanser). Ingen Vercel Web Analytics er installert. Ingen cookie-banner/CMP: dagens produktkonfigurasjon bruker ingen valgfri analytics/marketing-teknologi som krever et consent-flow. Guard-test: `__tests__/privacy-analytics-guard.test.ts`.
+- **Status:** [x] FIXED — Speed Insights removed; NO ACTIVE WEB ANALYTICS; cookie consent NOT REQUIRED BY CURRENT PRODUCT CONFIGURATION (intern produktstatus)
 
 ### P2-3 · Tilgjengelighet (a11y)
 
@@ -141,12 +140,12 @@ Offentlig lansering er forsvarlig når:
 - **Foreslått retting:** Konverter til `role="button"` + `tabIndex` eller ekte `<button>`; legg på `aria-hidden`/`alt`.
 - **Status:** [ ] NOT DONE
 
-### P2-4 · Analytics leser PII
+### P2-4 · Analytics leser PII — LATENT
 
 - **Sted:** `app/api/analytics/track/route.ts:29,44,58-60`
-- **Nåværende oppførsel:** `session.userId`, `session.user?.name`, `session.user?.email` er tilgjengelig i `session`-typen; `properties`-felter ikke utelukket. `SystemLog` er 180 dager (G-09).
-- **Foreslått retting:** Strip `name`/`email` i analytics-ruten (bevisst avgjørelse); vurder kortere logretensjon.
-- **Status:** [ ] NOT DONE
+- **Nåværende oppførsel:** `session.userId`, `session.user?.name`, `session.user?.email` er tilgjengelig i `session`-typen; `properties`-felter ikke utelukket. Merk: ingen aktiv web analytics finnes i dag (ACT C1) — ruten svarer 403, så dette er latent. «180 dager» SystemLog/IP-retensjon er IKKE verifisert i kode/config (SystemLog har ingen IP-kolonne, ingen retensjonscron) — verifiser mot prod (G-09) før den publiseres.
+- **Foreslått retting:** Strip `name`/`email` i analytics-ruten FØR eventuell aktivering (bevisst avgjørelse); verifiser logretensjon mot prod.
+- **Status:** [ ] NOT DONE — LATENT (ingen aktiv analytics; stripes før aktivering)
 
 ### P2-5 · Høyde: PRODUCT DECISION: RETAIN HEIGHT
 
@@ -1004,7 +1003,7 @@ Kun read-only-verifisering fra prod (ingen skrive-handlinger mot prod i denne fa
 | TC-13 | Død kode/AI | ✅ FIXED (ACT C) | P2 | lib/seo.ts slettet (0 referanser over hele repo verifisert; build/lint/verify grønn etter sletting) |
 | TC-14 | AI-påstand | VERIFIED CLAIM | — | «Ingen AI» i vilkar stemmer: ingen AI-deps, ingen LLM-kall; openai: not_in_use |
 | TC-15 | Personvern/impl | ✅ PARTIALLY FIXED (ACT A2) | P1 | Copy-gap lukket (personvern lover nå kun den eksisterende slettingsbaserte mekanismen); selvbetjening-trekking = PD-6 + legal verifisering |
-| TC-16 | Cookies/analytics | PARTLY CONFIRMED + EV | P2 | Cookies-side: «bare det nødvendige / deler aldri med tredjeparts-tracking» vs aktiv SpeedInsights; Plausible/Umami = av |
+| TC-16 | Cookies/analytics | ✅ FIXED (ACT C1) | P2 | SpeedInsights fjernet (komponent + dependency); ingen aktiv web analytics; cookies-siden rettet (fjernet «privat analyserverktøy» + «1 år»); ingen cookie-banner |
 | TC-17 | FAQ/re-queue + tidspunkt | ✅ FIXED (ACT B) | P3 | FAQ «kommer tilbake i køen» → «kan stille seg i køen igjen»; eksakte «04:00»-copy erstattet med «natt til lørdag» (cron-vinduet 02:00–04:00 UTC) |
 | TC-18 | Innholdsteller | CONFIRMED | P2 | Reisen: «12 kategorier med over 240 spørsmål» — faktisk 135 oppgaver i 9 kategorier (FAQ er rett) |
 | TC-19 | Språk | CONFIRMED | P2 | Alle 7 tidligere rapporterte feil fortsatt + nye (oversikt under) |
@@ -1318,6 +1317,7 @@ Kun read-only-verifisering fra prod (ingen skrive-handlinger mot prod i denne fa
 - **EV:** Om Vercel Speed Insights setter langlevd cookie (f.eks. `speedbump`) — sjekke Vercel-dokumentasjon før cookies-siden endres.
 - **Anbefalt fix:** Nevne Speed Insights ærlig på cookies-siden; presisere/fjerne «minimalt, privat analyserverktøy» (ingen aktiv i dag).
 - **Verifisering:** Nettleserinspeksjon av cookies i prod + Vercel-dokumentasjon.
+- **Sluttstatus (ACT C1, 24.10.2026):** FIXED. `<SpeedInsights />` + `@vercel/speed-insights` fjernet (0 aktive referanser); ingen Vercel Web Analytics; cookies-siden beskriver nå faktisk lagring (3 nødvendige cookies + lokal nettleserlagring) og fjerner «privat analyserverktøy» + «opptil 1 år». Ingen cookie-banner (ingen valgfri aktiv teknologi). Guard: `__tests__/privacy-analytics-guard.test.ts`. EV om SpeedInsights-cookie er irrelevant nå (teknologien er fjernet).
 
 ### TC-17 — FAQ: «begge kommer tilbake i køen» — PARTLY CONFIRMED / P3
 - **Påstand:** `app/faq/page.tsx:28`: «…begge kommer tilbake i køen for en ny match.»
@@ -1587,12 +1587,12 @@ Små, uavhengige ACT-pakker. Rekkefølgen er anbefalt, ikke obligatorisk.
 5. **Juridisk (A-1):** Angrerettloven § 22 n. — «digitalt innhold»-modellen for reisen (blokkerer kun betaling, ikke lansering).
 
 ## TC-Status tell (oppdatert ACT D, 24.10.2026)
-- **FIXED:** TC-01, TC-02, TC-17, TC-33 (ACT B); TC-05 (ACT A1); TC-08, TC-09 (EV utført), TC-10, TC-11, TC-13 (ACT C); TC-15 PARTIALLY FIXED (PD-6 + EV gjenstår); **TC-06, TC-07, TC-19, TC-20 (ACT D — språk/merkenavn/blogg-datoer, se PHASE 3).**
+- **FIXED:** TC-01, TC-02, TC-17, TC-33 (ACT B); TC-05 (ACT A1); TC-08, TC-09 (EV utført), TC-10, TC-11, TC-13 (ACT C); TC-16 (ACT C1 — cookies/analytics truth alignment); TC-15 PARTIALLY FIXED (PD-6 + EV gjenstår); **TC-06, TC-07, TC-19, TC-20 (ACT D — språk/merkenavn/blogg-datoer, se PHASE 3).**
 - **CONFIRMED (åpen):** TC-04, -12 (P2 ASSET FOLLOW-UP: og-image.png), -18, -24.
-- **PARTLY CONFIRMED (åpen):** TC-03, TC-16 (EV: SpeedInsights-cookie).
+- **PARTLY CONFIRMED (åpen):** TC-03.
 - **NOT CONFIRMED:** TC-25, -26* (PD), -27, -28, -29, -30, -34.
 - **PRODUCT DECISION:** TC-21 (alias /register — ACT C har kun kartlagt, IKKE fjernet), TC-23 (PD-1 / OPERATIONS DECISION — urørt i ACT D, IKKE VERIFIED), TC-26, TC-32, TC-35.
-- **EV gjenstår:** TC-16, TC-35 (juridisk, A-1). TC-09-EV: AVSLUTTET (redirect-kjede verifisert 26.10.2026, se ACT C-seksjonen).
+- **EV gjenstår:** TC-35 (juridisk, A-1). TC-09-EV: AVSLUTTET (redirect-kjede verifisert 26.10.2026, se ACT C-seksjonen). TC-16-EV: AVSLUTTET (ACT C1 fjernet Speed Insights — ingen Vercel-cookie å verifisere).
 - **VERIFIED CLAIM (positivt):** TC-14 (ingen AI), TC-31 (personvern-kjerne).
 
 ## TC-Bekreftelser (fase-avslutning)

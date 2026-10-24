@@ -1,10 +1,10 @@
 {
   "version": "1.0",
   "updatedAt": "2026-10-24",
-  "commit": "d914c37",
+  "commit": "23284cc",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
-    "tests": "716 passed / 1 skipped (74 av 75 suiter) — målt 24.10 (/motpol-layout); 15.10: 564 etter watchdog-fiks (B5.6, +11 tester __tests__/matching-watchdog.test.ts); 13.10: 553; 11.10: 545",
+    "tests": "819 passed / 1 skipped (79 av 80 suiter) — målt 24.10 (ACT C1 cookie/analytics truth alignment); 24.10 (/motpol-layout): 716; 15.10: 564 etter watchdog-fiks (B5.6, +11 tester __tests__/matching-watchdog.test.ts); 13.10: 553; 11.10: 545",
     "e2e": "07.10 (611a577): onboarding 20/20 lokalt (chromium+firefox, workers:1) etter CI-fix: samtykke i seed (K-2), skalasvar (PL-08), sessionStorage (PL-17). Tidligere: 0 fixme igjen. Onboarding: 20/20 lokalt 29.08 (10 chromium + 10 firefox, inkl. full flow). Dashboard/journey/match: 90/90 fra 28.08-kjøringen (ingen kodeendringer som rakk dem siden). Totalt 110 passed / 0 failed. 5/6 prosjekt lokalt (Mobile Safari/webkit krever system-bibliotek — installeres i CI med --with-deps). Dev-login (storageState) fungerer — alle tester kjører innlogget. playwright.config: workers: 1 alltid (lokal kjøring = CI) — onboarding-testene deler en E2E-bruker som full-flow-testen muterer; parallelle workere racet på server-draften",
     "typecheck": "0 errors utover Prisma-klient (prisma generate kan ikke kjøre i sandbox — løses i CI)",
     "lint": "0 warnings (npx next lint --max-warnings 0)",
@@ -607,6 +607,12 @@
       "id": "PL-17-SESSIONSTORAGE",
       "title": "PL-17 (V-12) — Onboarding-utkast ut av localStorage (sessionStorage + tøm ved utlogging)",
       "content": "PL-17a (app/onboarding/OnboardingFlow.tsx): loadDraft/saveDraft bruker nå sessionStorage (per fane — forsvinner når fanen stenges) i stedet for localStorage; server-utkastet (WP2) er fortsatt hovedkilden. Gammelt localStorage-utkast (før PL-17) slettes automatisk i loadDraft (én-linjs-migrasjon) og ved utlogging. Rydding ved profil-lagring (før: localStorage.removeItem) byttet til clearOnboardingDraft(). 8 kommentarer i filen oppdatert fra localStorage til sessionStorage (historiske 28.08/29.08-notater beholdt som de er). PL-17b: ny lib/onboarding-draft.ts med ONBOARDING_DRAFT_KEY (delt med OnboardingFlow) + clearOnboardingDraft() (tømmer både sessionStorage og gammelt localStorage); kalt i alle 4 signOut-punkter: app/settings/page.tsx ×3 (Logg ut-knapp, handleDelete etter konto-sletting, SlettKontoSection) + app/onboarding/OnboardingLayout.tsx ×1 (Logg ut under onboarding). Bonus etter V-12s løsningstekst («Nevn mellomlagringen i personvernerklæringen»): ny tabellrad «Onboarding-utkast» i app/personvern/page.tsx §3 (gruppe/grunnlag/oppbevaring: per nettleserøkt, tømmes ved utlogging, server-utkast slettes ved lagring). Verifisert: verify grønn (528 bestått / 1 hoppet), ingen gjenstående funksjonelle localStorage-referanser i OnboardingFlow (kun legacy-sletting + historisk kommentar). LanseringsCheckList §6.1 (V-12) + V-12-statusblokk; RestSjekkliste §3.3/§5/§8 oppdatert i samme commit."
+    },
+    {
+      "dato": "2026-10-24",
+      "id": "ACT-C1-COOKIE-ANALYTICS-TRUTH-ALIGNMENT",
+      "title": "ACT C1 — Cookie/Analytics truth alignment: Speed Insights fjernet, /cookies + /personvern oppdatert mot faktisk runtime, CSRF Secure (prod), PubNub-CSP fjernet, privacy-guard CA-01–CA-15",
+      "content": "Speed Insights: <SpeedInsights /> + import fjernet fra app/layout.tsx; @vercel/speed-insights fjernet fra package.json + lockfile (0 kode/lock/node_modules-refs). Web Analytics: @vercel/analytics IKKE installert/brukt (NOT USED). Cookies (alle nødvendig, code-verified): __Secure-authjs.session-token (~30 d, innlogging), csrf_token (24 t, CSRF; ny Secure-flagg i prod via lib/api/csrfClient.ts — env+protocol-sensitiv, lokal HTTP-dev/preview påvirket ikke), admin_token (8 t, kun /admin); ingen settes på offentlig GET. Browser storage (NECESSARY/FUNCTIONAL, ikke cookies): localStorage tosom_onboarding_completed/tosom_mood/tosom-memory/tosom_demo/tosom_install_prompt_dismissed/tosom-personalization + sessionStorage tosom_onboarding_draft. /cookies: oppdatert copy — fjernet «minimalt privat analyserverktøy» + «opptil 1 år» + absolut («deler aldri»); ny cookie-inventar + seksjon om lokal nettleserlagring + «ingen analyse- eller markedsføringscookies i dag». /personvern: Vercel-raden uten Speed Insights; Sentry -> feil- og driftsmonitorering. Upstash: IKKE aktiv i prod (UPSTASH_* ikke satt; rate-limit->Postgres, cache->in-memory) -> ikke lagt i /personvern (CA-08). IP/SystemLog 180 dager: IKKE verifiserbar i kode/config -> ikke publisert (G-09); eksisterende «Inntil 90 dager» beholdes. Sentry: ACTIVE feil- og driftsmonitorering (IKKE analytics); PII-skrubbing + sendDefaultPii:false; LEGAL FOLLOW-UP (behandlingsgrunnlag/IP/retensjon). PubNub CSP: død referanse fjernet (0 refs). Cookie-banner/CMP: IKKE implementert (bevisst produktvalg — ingen valgfri tracking i dag). NY __tests__/privacy-analytics-guard.test.ts (CA-01–CA-15) fanger reintroduksjon av @vercel/analytics/@vercel/speed-insights/gtag/GTM/Meta Pixel. NY auditfil docs/COOKIE-ANALYTICS-TRUTH-AUDIT-v1.0.md (seksjon W: ACT-resultat). Verifisert 24.10: npm run verify grønn (tsc 0, jest 819 passed/1 skipped, 79 av 80 suiter, lang 0 treff) · next lint 0 · next build EXIT=0."
     }
   ],
   "verifiedFlow": {
@@ -640,7 +646,8 @@
     "G-01: push til GitHub utført (06.10); G-23: vent på grønn CI",
     "G-02: lokal e2e-verifisering av passord-reset (SMTP-fange): fullt grønn",
     "G-15 (PL-G15): slette-skript bygd + verifisert (0611486, 08.10) — dry-run OK mot dev; kjøre mot prod venter på ID-liste (G-15)",
-    "E-post: reisen-slutt/takk (sendJourneyEndEmail) bygd + koblet i endJourney (dag 30 / fant hverandre) + test (45e7bf0, 08.10); verifisert (jest 541)"
+    "E-post: reisen-slutt/takk (sendJourneyEndEmail) bygd + koblet i endJourney (dag 30 / fant hverandre) + test (45e7bf0, 08.10); verifisert (jest 541)",
+    "24.10 (ACT C1): Cookie/Analytics truth alignment commit — Speed Insights fjernet (komponent + dep), /cookies + /personvern oppdatert mot faktisk runtime, CSRF Secure (prod), PubNub-CSP fjernet, privacy-guard CA-01–CA-15 + ny auditfil; verify/lint/build grønn"
   ],
   "blocked": []
 }

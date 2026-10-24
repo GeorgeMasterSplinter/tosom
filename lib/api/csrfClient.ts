@@ -45,7 +45,18 @@ export function ensureCsrfToken(): string {
       currentToken = existing;
     } else {
       currentToken = generateCsrfToken();
-      document.cookie = `${COOKIE_NAME}=${encodeURIComponent(currentToken)}; path=/; max-age=${TOKEN_MAX_AGE}; samesite=lax`;
+      // ACT C1 hardening: Secure-flagg på csrf_token i produksjon (HTTPS),
+      // men IKKE i lokal HTTP-development. Samme miljømønster som
+      // server-side setCsrfCookie (lib/auth/csrf.ts) og admin_token
+      // (app/api/admin/auth/route.ts). Protocolsjekken sikrer at en
+      // produksjonsbuild kjørt over lokal HTTP fortsatt fungerer.
+      const secureAttr =
+        process.env.NODE_ENV === 'production' &&
+        typeof window !== 'undefined' &&
+        window.location.protocol === 'https:'
+          ? '; secure'
+          : '';
+      document.cookie = `${COOKIE_NAME}=${encodeURIComponent(currentToken)}; path=/; max-age=${TOKEN_MAX_AGE}; samesite=lax${secureAttr}`;
     }
   }
   return currentToken;

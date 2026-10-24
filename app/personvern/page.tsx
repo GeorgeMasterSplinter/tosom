@@ -156,12 +156,12 @@ const sections: Section[] = [
     table: {
       headers: ['Leverandør', 'Hva de behandler', 'Formål'],
       rows: [
-        { cells: ['Vercel', 'IP-adresse og tekniske logger (inkl. Speed Insights)', 'Drift av nettsiden og serverfunksjoner'] },
+        { cells: ['Vercel', 'IP-adresse og tekniske logger', 'Drift av nettsiden og serverfunksjoner'] },
         { cells: ['Cloudflare', 'IP-adresse', 'Nettverk og sikkerhet foran nettsiden'] },
         { cells: ['Neon (EU, Frankfurt)', 'All lagret data', 'Drift av databasen'] },
         { cells: ['Pusher', 'Meldinger i sanntid', 'Levere chat uten forsinkelse'] },
         { cells: ['Cloudflare R2', 'Bilder du deler', 'Sikker lagring av bilder'] },
-        { cells: ['Sentry', 'Tekniske feilmeldinger', 'Finne og rette feil'] },
+        { cells: ['Sentry', 'Tekniske feilmeldinger og driftsdata', 'Feil- og driftsmonitorering'] },
         { cells: ['Resend', 'E-postadresse', 'Sende passordlenker og nødvendige varsler'] },
         { cells: ['Vipps (ved lansering)', 'Identitet og alder', 'Innlogging og aldersverifisering'] },
       ],

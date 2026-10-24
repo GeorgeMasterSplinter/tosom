@@ -117,7 +117,7 @@ const nextConfig = {
               // PL-16: fonte er selvhostet via next/font (/_next/static/media)
               // — fonts.gstatic.com kreves ikke lenger.
               "font-src 'self'",
-              "connect-src 'self' api.stripe.com auth.vipps.no vipps.no *.pusher.com *.pubnub.com wss://*.pusher.io wss://*.pusher.com *.ingest.sentry.io *.sentry.io",
+              "connect-src 'self' api.stripe.com auth.vipps.no vipps.no *.pusher.com wss://*.pusher.io wss://*.pusher.com *.ingest.sentry.io *.sentry.io",
               "frame-src *.stripe.com stripe.com",
               "frame-ancestors 'none'",
               "base-uri 'self'",

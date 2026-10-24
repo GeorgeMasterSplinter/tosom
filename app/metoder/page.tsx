@@ -3,16 +3,20 @@
 /**
  * ToSom — Metoder vi bruker
  *
- * Vi sier det vi gjør. Denne siden dokumenterer:
- *  1. Vi har ikke selv gjennomført studier — vi bygger på etablerte modeller
- *  2. De seks dimensjonene, med vekt og begrunnelse
- *  3. Instrumentene vi bruker, med kilde
- *  4. Hva resonans er — og hva det ikke er
- *  5. Kilder
- *  6. Hva vi ikke lover
+ * Vi sier det vi gjør. Denne siden dokumenterer (oppdatert ACT F1, 24.10.2026):
+ *  1. Vi har ikke selv gjennomført studier — vi bygger på etablerte rammeverk
+ *  2. De seks områdene: rammeverk vs egne spørsmål vs praktiske preferanser
+ *  3. Spørsmålene vi stiller — hva som er etablert, tilpasset eller vårt eget
+ *  4. Hva resonans er — Tosoms merkebegrep, ikke et publisert instrument
+ *  5. Hva modellen kan hjelpe med — og hva den ikke kan vite
+ *  6. Psykometrisk avgrensning (ingen egen dokumentert validitet)
+ *  7. Kilder (kun verifiserte DOI-kilder, se docs/METHODS-SCIENTIFIC-AUDIT-v1.0.md)
+ *  8. Hva vi ikke lover
  *
- * Språk: «modeller vi bygger på», «Aktuell kunnskap», «en veiviser» —
- * aldri «vitenskapelig bevist» eller «en fasit».
+ * Språk: «rammeverk vi bygger på», «egne spørsmål», «en veiviser» —
+ * aldri «vitenskapelig bevist», «en fasit» eller feil instrumentnavn.
+ * PVQ/ERQ/ECR brukes ikke; BFI-10 nevnes som kilde til stil, ikke som et
+ * publisert instrument vi administrerer uendret.
  */
 
 import { Footer } from '@/components/ui/layout/Footer';
@@ -107,37 +111,37 @@ const DIMENSIONS: Array<{
     icon: <IconVerdier />,
     name: 'Verdier',
     why: 'Det som betyr noe for deg er fundamentet. Vi ser ikke om dere bruker de samme ordene — vi ser om det dere setter høyt harmonerer.',
-    modern: 'Schwartz la grunnlaget i 1992, og det holder fremdeles. Verditester er fortsatt i bruk i moderne forskning over hele verden.',
+    modern: 'Schwartz la grunnlaget for verdirammeverket i 1992, og det er fortsatt i bruk i moderne tverrkulturell forskning.',
   },
   {
     icon: <IconTilknytning />,
     name: 'Tilknytning',
     why: 'Hvordan du holder deg nær — og hvor mye du trenger å trekke deg vekk. Det er ikke om du «er trygg» eller ikke. Det er om dere kan være hos hverandre uten å miste dere selv.',
-    modern: 'Bowlby la til grunn det vi vet i dag, og moderne forskning (Fraley 2018 og nyere) fortsetter å bekrefte: hvordan vi knytter oss, former hvordan vi elsker.',
+    modern: 'Bygget opp over tiår — fra tidlig barneforskning til voksenromantikk (Hazan & Shaver 1987; Fraley & Shaver 2000). Hvordan vi knytter oss, former hvordan vi elsker.',
   },
   {
     icon: <IconPersonlighet />,
     name: 'Personlighet',
     why: 'Alle har en rytme. Noen er stille, noen er fulle av energi. Vi ser om rytmen deres kan danne en melodi sammen — ikke om den er «riktig».',
-    modern: 'Big Five er i bruk i moderne parstudier. Forskningen er tydelig: personlighet alene sier mindre om et forhold enn verdier og tilknytning.',
+    modern: 'Big Five er i bruk i moderne parstudier. Forskningen antyder at verdier og tilknytning henger tettere sammen med relasjonskvalitet enn personlighet alene — vi vekter derfor dem tyngst.',
   },
   {
     icon: <IconKommunikasjon />,
     name: 'Kommunikasjon',
     why: 'Hvordan dere snakker med hverandre når det er lett — og spesielt når det er vanskelig. Vi ser på hvordan dere reparerer, hvordan dere lytter, og hvordan dere holder ut uenighet.',
-    modern: 'Gottman observerte tusenvis av par over 40 år. Det han fant, holder. Vi bygger på prinsippene, ikke på selve skjemaene.',
+    modern: 'Hvordan par snakker med hverandre forutsier om forholdet holder (Gottman & Levenson 1992). Våre spørsmål er egne — bygget på prinsippene, ikke på Instituttets skjemaer.',
   },
   {
     icon: <IconEmosjon />,
     name: 'Emosjonsregulering',
     why: 'Hvordan du er i kroppen når det blir tungt. Ikke om du «bør» føle mindre — men om dere sammen kan være i det uten at det bryter dere.',
-    modern: 'Emosjonsregulering er ett av de mest aktive feltene i psykologien i dag (Gross 2015, Aldao 2010). Det sier litt om hvor viktig dette er.',
+    modern: 'Et aktivt forskningsfelt (Gross 2015; Aldao et al. 2010).',
   },
   {
     icon: <IconLivssituasjon />,
     name: 'Livssituasjon',
-    why: 'Praktisk resonans er undervurdert. Vilje til barn, røyking og hverdagsrytme setter en ramme.',
-    modern: 'Livsvalg er en av de sterkeste prediktorene for relasjonsstabilitet i nyere parstudier (2015–2024).',
+    why: 'Praktisk resonans er undervurdert. Vilje til barn, avstand, røyking og hverdagsrytme setter en ramme for om en hverdag kan fungere.',
+    modern: 'Praktiske preferanser, ikke et psykologisk instrument. Noen svar virker som harde grenser som overstyrer matchskåren.',
   },
 ];
 
@@ -152,34 +156,38 @@ const INSTRUMENTS: Array<{
   note?: string;
 }> = [
   {
-    name: 'Kortform av Big Five',
-    source: 'Rammstedt & John (2007), Journal of Research in Personality 41(1)',
-    modern: 'I bruk i moderne studier (2010–2024).',
-    note: 'Vår egen oversettelse — ikke den offisielle norske versjonen.',
+    name: 'Personlighet',
+    source: '10 spørsmål i stil med BFI-10-kortformen (Rammstedt & John 2007), tilpasset til norsk av oss.',
+    modern: 'Big Five er i bruk i moderne studier.',
+    note: 'Våre egne tilpasninger — ikke det originale instrumentet. Tekstene er tilpasset, svarskalaen er endret, og tilpasningen er ikke selvstendig validert.',
   },
   {
-    name: 'Tilknytning (egne spørsmål)',
-    source: 'Inspirert av Bowlby (1969), Ainsworth et al. (1978), Hazan & Shaver (1987), Fraley & Shaver (2000)',
-    modern: 'Fraley (2018) — tilknytning hos voksne, meta-analyser.',
-    note: 'Våre egne items som strekker seg over aksene angst og unnvikelse.',
+    name: 'Tilknytning',
+    source: 'Egne spørsmål inspirert av forskning på voksen tilknytning — særlig dimensjonene tilknytningsangst og tilknytningsunnvikelse.',
+    modern: 'Bygger på tilknytningsteorien og forskning på voksenromantikk (Hazan & Shaver 1987; Fraley & Shaver 2000).',
+    note: 'Ikke et publisert tilknytnings-skjema. Svarene danner ikke en diagnose eller en klinisk tilknytningskategori.',
   },
   {
-    name: 'Verdier (PVQ-10)',
-    source: 'Schwartz (1992), Advances in Experimental Social Psychology 25',
-    modern: 'PVQ i bruk i moderne tverrkulturelle studier (2010–2024).',
-    note: 'Vår egen oversettelse — ikke den offisielle norske versjonen.',
+    name: 'Verdier',
+    source: 'Egne spørsmål inspirert av forskningen til Schwartz på grunnleggende menneskelige verdier (1992).',
+    modern: 'Verdirammeverket er i bruk i moderne tverrkulturell forskning.',
+    note: 'Ikke et publisert standardisert verdisjema — spørsmålene og skåringen er våre egne.',
   },
   {
-    name: 'Emosjonsregulering (ERQ-6)',
-    source: 'Gross & John (2003), Journal of Personality and Social Psychology 85(2)',
-    modern: 'Fortsetter som standard i nyere studier. Aldao et al. (2010) meta-analyse.',
-    note: 'Vår egen oversettelse — ikke den offisielle norske versjonen.',
+    name: 'Emosjonsregulering',
+    source: 'Egne spørsmål inspirert av emosjonsreguleringsforskningen (Gross & John 2003).',
+    modern: 'Et aktivt felt (Aldao et al. 2010; Gross 2015).',
+    note: 'Ikke et publisert regulerings-skjema — spørsmålene er våre egne.',
   },
   {
     name: 'Kommunikasjon',
-    source: 'Prinsipper fra Gottman & Levenson (1992), Journal of Personality and Social Psychology 63(2)',
-    modern: 'Gottman Institute publisering 2000–2024.',
-    note: 'Våre egne items bygget på prinsippene — vi bruker ikke Gottman Institute sine skjemaer.',
+    source: 'Egne spørsmål bygget på prinsipper fra Gottmans parforskning (Gottman & Levenson 1992).',
+    note: 'Vi bruker ikke Gottman Institute sine skjemaer.',
+  },
+  {
+    name: 'Livssituasjon',
+    source: 'Praktiske preferanser: barn, avstand, røyking, livsrytme og lignende.',
+    note: 'Ikke et psykologisk instrument. Noen svar fungerer som harde grenser (dealbreakers) som overstyrer matchskåren.',
   },
 ];
 
@@ -188,24 +196,17 @@ const INSTRUMENTS: Array<{
    ======================== */
 
 const CLASSIC_SOURCES: Array<{ text: string; link: string }> = [
-  { text: 'Rammstedt, T., & John, O. P. (2007). Measuring personality in one minute or less: A 10-item short version of the Big Five Inventory in English and German. Journal of Research in Personality, 41(1).', link: 'https://doi.org/10.1016/j.jrp.2006.02.001' },
-  { text: 'Bowlby, J. (1969). Attachment and Loss, Vol. 1: Attachment. Basic Books.', link: 'https://scholar.google.com/scholar?q=Bowlby+1969+Attachment+and+Loss' },
-  { text: 'Ainsworth, M. D. S., Blehar, M. C., Waters, E., & Wall, S. (1978). Patterns of Attachment. Lawrence Erlbaum.', link: 'https://scholar.google.com/scholar?q=Ainsworth+Blehar+Waters+Wall+1978+Patterns+of+Attachment' },
-  { text: 'Hazan, C., & Shaver, P. (1987). Romantic love conceptualized as an attachment process. Journal of Personality and Social Psychology, 52(3).', link: 'https://doi.org/10.1037/0022-3514.52.3.511' },
-  { text: 'Fraley, R. C., & Shaver, P. R. (2000). Adult romantic attachment: Theoretical developments, emerging controversies, and unanswered questions. Review of General Psychology, 4(2).', link: 'https://doi.org/10.1037/1089-2680.4.2.132' },
-  { text: 'Schwartz, S. H. (1992). Domains of human values: Application and extension to four new countries. Advances in Experimental Social Psychology, 25.', link: 'https://scholar.google.com/scholar?q=Schwartz+1992+domains+of+human+values+four+new+countries' },
-  { text: 'Gross, J. J., & John, O. P. (2003). Individual differences in two emotion regulation processes. Journal of Personality and Social Psychology, 85(2).', link: 'https://doi.org/10.1037/0022-3514.85.2.348' },
-  { text: 'Gottman, J. M., & Levenson, R. W. (1992). Marital processes predictive of later dissolution. Journal of Personality and Social Psychology, 63(2).', link: 'https://doi.org/10.1037/0022-3514.63.2.221' },
+  { text: 'Hazan, C., & Shaver, P. (1987). Romantic love conceptualized as an attachment process. Journal of Personality and Social Psychology, 52(3), 511–519.', link: 'https://doi.org/10.1037/0022-3514.52.3.511' },
+  { text: 'Gottman, J. M., & Levenson, R. W. (1992). Marital processes predictive of later dissolution: Behavior, physiology, and health. Journal of Personality and Social Psychology, 63(2), 221–233.', link: 'https://doi.org/10.1037/0022-3514.63.2.221' },
+  { text: 'Schwartz, S. H. (1992). Universals in the content and structure of values: Theoretical advances and empirical tests in 20 countries. Advances in Experimental Social Psychology, 25, 1–65.', link: 'https://doi.org/10.1016/S0065-2601(08)60281-6' },
+  { text: 'Fraley, R. C., & Shaver, P. R. (2000). Adult romantic attachment: Theoretical developments, emerging controversies, and unanswered questions. Review of General Psychology, 4(2), 132–158.', link: 'https://doi.org/10.1037/1089-2680.4.2.132' },
 ];
 
 const MODERN_SOURCES: Array<{ text: string; link: string }> = [
-  { text: 'Fraley, R. C. (2018). The Adult Attachment Inventory. In: Adult Attachment: Concepts, Adult Development, and Assessment.', link: 'https://scholar.google.com/scholar?q=Fraley+2018+Adult+Attachment+Inventory' },
-  { text: 'Schwartz, S. H., Cieciuch, J., Vecchione, M., et al. (2012). Structure and levels of human values: Theory and applications across 20 countries. Advances in Experimental Social Psychology, 47.', link: 'https://scholar.google.com/scholar?q=Schwartz+Cieciuch+Vecchione+2012+structure+and+levels+of+human+values' },
-  { text: 'Roberts, B. W., Neale, M. C., Roberts, K. L., & Roberts, S. A. (2016). Stability and change in personality across the life course. Journal of Personality and Social Psychology, 109(3).', link: 'https://scholar.google.com/scholar?q=Roberts+2016+stability+and+change+in+personality+across+the+life+course' },
-  { text: 'Aldao, A., Nolen-Hoeksema, S., & Schweizer, S. (2010). Emotion-regulation strategies across psychopathology: A meta-analytic review. Clinical Psychology Review, 30(2).', link: 'https://doi.org/10.1016/j.cpr.2009.11.004' },
-  { text: 'Gross, J. J. (2015). Emotion regulation: Current status and future prospects. Psychological Inquiry, 26(1).', link: 'https://doi.org/10.1080/1047840x.2014.940781' },
-  { text: 'Gottman, J. M., Gottman, J. L., & Levenson, R. W. (2000–2024). The Gottman Institute — ongoing publications.', link: 'https://www.gottman.com/' },
-  { text: 'Mikulincer, M., & Shaver, P. R. (2007). Attachment in Adulthood: Structure, Dynamics, and Change. Guilford Press.', link: 'https://scholar.google.com/scholar?q=Mikulincer+Shaver+2007+Attachment+in+Adulthood' },
+  { text: 'Gross, J. J., & John, O. P. (2003). Individual differences in two emotion regulation processes: Implications for affect and relationships. Journal of Personality and Social Psychology, 85(2), 348–362.', link: 'https://doi.org/10.1037/0022-3514.85.2.348' },
+  { text: 'Rammstedt, T., & John, O. P. (2007). Measuring personality in one minute or less: A 10-item short version of the Big Five Inventory in English and German. Journal of Research in Personality, 41(1), 203–212.', link: 'https://doi.org/10.1016/j.jrp.2006.02.001' },
+  { text: 'Aldao, A., Nolen-Hoeksema, S., & Schweizer, S. (2010). Emotion-regulation strategies across psychopathology: A meta-analytic review. Clinical Psychology Review, 30(2), 217–237.', link: 'https://doi.org/10.1016/j.cpr.2009.11.004' },
+  { text: 'Gross, J. J. (2015). Emotion regulation: Current status and future prospects. Psychological Inquiry, 26(1), 1–26.', link: 'https://doi.org/10.1080/1047840X.2014.940781' },
 ];
 
 /* ========================
@@ -235,10 +236,11 @@ export default function MetoderPage() {
             className="max-w-2xl mx-auto"
             style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}
           >
-            Tosom matcher på seks dimensjoner bygget på etablerte psykologiske modeller.
-            Vi har ikke selv gjennomført studier — vi bygger på modeller som har vært
-            gjennom tiår av testing og fortsatt brukes i moderne psykologi.
-            Her er hva vi bruker, og hva vi ikke lover.
+            Tosom vurderer seks områder ved matchingen. Noen bygger på etablerte
+            psykologiske rammeverk, andre består av egne spørsmål og praktiske
+            preferanser utviklet for Tosoms matchingmodell. Vi har ikke selv
+            gjennomført studier — rammeverkene vi viser til har vært gjennom tiår
+            av testing. Her er hva vi gjør, og hva vi ikke lover.
           </p>
 
           {/* Standard ToSom-logo — rett under innledningen */}
@@ -267,8 +269,9 @@ export default function MetoderPage() {
               to mennesker passer sammen. Det kan ingen plattform gjøre.
             </p>
             <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
-              Det vi gjør, er å la etablerte, publiserte og moderne psykologiske modeller
-              veilede hva vi spør om og hvordan vi vekter det.
+              Det vi gjør, er å la etablerte psykologiske rammeverk veilede hva vi spør om
+              og hvordan vi vekter det. Vektingen er en faglig vurdering av hva vi vet —
+              ikke et empirisk funn fra våre egne data.
               Resonansmålingen er en veiviser, ikke en fasit.
             </p>
           </div>
@@ -278,13 +281,14 @@ export default function MetoderPage() {
         <ToSomSection spotlight="blue" className="px-6">
           <div className="mx-auto max-w-5xl">
             <h2 className="text-center mb-4" style={{ ...typographyToStyle('heading-lg'), color: color.text.primary }}>
-              De seks dimensjonene
+              De seks områdene
             </h2>
             <p
               className="max-w-3xl mx-auto text-center mb-10"
               style={{ ...typographyToStyle('body-lg'), color: color.text.secondary }}
             >
-              Seks dimensjoner, hver med et etablert instrument bak seg.
+              Seks områder. Noen bygger på etablerte psykologiske rammeverk,
+              andre består av egne spørsmål og praktiske preferanser.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {DIMENSIONS.map((d) => (
@@ -335,8 +339,8 @@ export default function MetoderPage() {
               Et tre plantet riktig bærer i tiår.
             </p>
             <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
-              Vi har bare vasket støvet av, og lagt moderne referanser under
-              hver dimensjon — slik at du kan se at grenene fortsatt vokser.
+              Vi har bare vasket støvet av, og lagt nyere referanser under
+              hvert område — slik at du kan se at grenene fortsatt vokser.
             </p>
           </div>
         </ToSomSection>
@@ -355,11 +359,15 @@ export default function MetoderPage() {
             }}
           >
             <h2 style={{ ...typographyToStyle('heading-lg'), color: color.text.primary, textAlign: 'center' }}>
-              Instrumentene vi bruker
+              Spørsmålene vi stiller
             </h2>
             <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
-              Hver dimensjon støttes av et etablert instrument. Vi har ikke utviklet dem selv —
-              vi bruker dem som de er ment å brukes, og er ærlige om der vi har gjort egne tilpasninger.
+              Nå er ærligheten: ikke alle delene er publiserte instrumenter.
+              Personlighetsspørsmålene ligger tett på BFI-10-kortformen, men tekstene
+              er tilpasset og svarskalaen er endret. Tilknytning, verdier,
+              emosjonsregulering og kommunikasjon består av egne spørsmål inspirert av
+              forskningen. Livssituasjon består av praktiske preferanser.
+              Under hvert spørsmålssett sier vi hva som er hva.
             </p>
             <div className="space-y-4">
               {INSTRUMENTS.map((i) => (
@@ -408,6 +416,10 @@ export default function MetoderPage() {
               Ikke når de er identiske — men når de forsterker hverandre.
             </p>
             <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
+              Resonans er Tosoms navn på den samlede matchvurderingen. Det er et
+              merkebegrep — ikke et etablert psykologisk instrument eller en klinisk skår.
+            </p>
+            <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
               Vår resonansmåling er ikke en kjærlighetsdiagnose. Den er ikke en bedømmelse av verdi.
               Den er et utgangspunkt — en veiviser som forteller om de to rytmene deres kan svinge sammen.
               Resten er opp til dere. Små, jevne steg i rett takt.
@@ -415,16 +427,109 @@ export default function MetoderPage() {
           </div>
         </ToSomSection>
 
-        {/* ===== 6. KILDER ===== */}
+        {/* ===== 6. HVA MODELLEN KAN OG IKKE KAN ===== */}
+        <ToSomSection spotlight="blue" className="px-6">
+          <div
+            className="mx-auto max-w-3xl space-y-6"
+            style={{
+              background: 'rgba(255,255,255,0.045)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              boxShadow: '0 18px 48px rgba(0,0,0,0.28), 0 0 40px rgba(212,175,55,0.16)',
+              borderRadius: '28px',
+              padding: `${spacing.lg}px`,
+            }}
+          >
+            <h2 style={{ ...typographyToStyle('heading-lg'), color: color.text.primary }}>
+              Hva modellen kan hjelpe med — og hva den ikke kan vite
+            </h2>
+            <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
+              Matchskåren bygger på det dere selv forteller oss. Derfor vet den noe —
+              og vet noe den ikke kan vite.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <p style={{ ...typographyToStyle('heading-sm'), color: color.brand.gold, marginBottom: '12px' }}>
+                  Kan hjelpe med
+                </p>
+                <ul className="space-y-2">
+                  {[
+                    'respektere uttrykte preferanser og harde grenser',
+                    'oppdage enkelte praktiske konflikter før dere møtes',
+                    'sammenligne selvrapporterte mønstre i verdier, tilknytning, personlighet, kommunikasjon og emosjonsregulering',
+                    'strukturere en kandidatvurdering med én tydelig veiviser',
+                    'redusere noen åpenbare mismatch',
+                  ].map((line, idx) => (
+                    <li key={idx} className="flex gap-3">
+                      <span style={{ color: color.brand.gold, flexShrink: 0 }}>•</span>
+                      <span style={{ ...typographyToStyle('body'), color: color.text.secondary, lineHeight: '1.7' }}>
+                        {line}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <p style={{ ...typographyToStyle('heading-sm'), color: color.brand.gold, marginBottom: '12px' }}>
+                  Kan ikke vite
+                </p>
+                <ul className="space-y-2">
+                  {[
+                    'om dere blir fysisk tiltrukket av hverandre',
+                    'om kjemi oppstår',
+                    'om dere forelsker dere',
+                    'hvordan et fysisk møte oppleves',
+                    'om et forhold vil vare',
+                  ].map((line, idx) => (
+                    <li key={idx} className="flex gap-3">
+                      <span style={{ color: color.text.muted, flexShrink: 0 }}>–</span>
+                      <span style={{ ...typographyToStyle('body'), color: color.text.secondary, lineHeight: '1.7' }}>
+                        {line}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
+              Fysisk tiltrekning inngår ikke i matchskåren — Tosom forsøker ikke å
+              beregne den. Matchingen kan redusere enkelte praktiske og relasjonelle
+              konflikter. Om fysisk tiltrekning og kjemi oppstår, må dere finne det ut selv.
+            </p>
+            <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
+              Tosom er ikke en klinisk tjeneste, og ingen av spørsmålene er en diagnose.
+              Svarene er selvrapporterte mønstre og preferanser — de sier noe om dere
+              slik dere opplever dere selv, ikke om helse eller sykdom.
+            </p>
+            <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
+              Tosom har foreløpig ikke egne data som viser hvor godt modellen forutsier
+              relasjonsutfall. Vi har ikke dokumentert reliabilitet, faktorstruktur,
+              normering eller prediktiv validitet for spørsmålene, og tersklene er ikke
+              kalibrert mot langsiktige utfall. Derfor bruker vi resultatet som en
+              veiviser, ikke som et bevis.
+            </p>
+          </div>
+        </ToSomSection>
+
+        {/* ===== 7. KILDER ===== */}
         <ToSomSection spotlight="blue" className="px-6">
           <div className="mx-auto max-w-3xl space-y-8">
             <h2 style={{ ...typographyToStyle('heading-lg'), color: color.text.primary, textAlign: 'center' }}>
               Kilder
             </h2>
+            <p
+              className="max-w-3xl mx-auto text-center"
+              style={{ ...typographyToStyle('body'), color: color.text.secondary, marginBottom: '8px' }}
+            >
+              Her finner du sentrale publikasjoner som ligger bak rammeverkene vi viser
+              til. De dokumenterer teoriene og forskningen — ikke Tosoms egen
+              matchingmodell.
+            </p>
 
             <div>
               <p style={{ ...typographyToStyle('heading-sm'), color: color.brand.gold, marginBottom: '12px' }}>
-                Klassiske modeller
+                Klassiske modeller (1987–2000)
               </p>
               <GlassCard padding="lg" interactive>
                 <ul className="space-y-3">
@@ -446,7 +551,7 @@ export default function MetoderPage() {
 
             <div>
               <p style={{ ...typographyToStyle('heading-sm'), color: color.brand.gold, marginBottom: '12px' }}>
-                Aktuell kunnskap (2000–2024)
+                Nyere forskning (2003–2015)
               </p>
               <GlassCard padding="lg" interactive>
                 <ul className="space-y-3">
@@ -474,7 +579,8 @@ export default function MetoderPage() {
                 textAlign: 'center',
               }}
             >
-              Alle kildene er publiserte, fagfellevurderte studier og bøker. Klikk på en kilde for å åpne den.
+              Alle kildene er publisert forskning, koblet til sin egen DOI.
+              Klikk på en kilde for å åpne den.
             </p>
           </div>
         </ToSomSection>
@@ -500,6 +606,8 @@ export default function MetoderPage() {
                 'Vi lover ikke at du får en match, eller at den du får blir til et langsiktig parforhold.',
                 'Vi lover ikke at scoringen er feilfri eller at den «beviser» at to personer passer sammen.',
                 'Vi lover ikke at tersklene våre er ferdig kalibrert — de er fortsatt under etterprøving.',
+                'Vi lover ikke at Tosom er en diagnostisk tjeneste — svarene er selvrapporterte mønstre og preferanser, ikke en vurdering av helse.',
+                'Vi legger ikke kropp, utseende eller livsstil til grunn for å vurdere attraktivitet — livsstilsspørsmål teller bare der du selv har sagt at det betyr noe.',
                 'Vi lover at vi er ærlige om metoden, kildene og grensene for hva den kan.',
               ].map((line, idx) => (
                 <li key={idx} className="flex gap-3">

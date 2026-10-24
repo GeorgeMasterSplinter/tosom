@@ -1734,3 +1734,60 @@ Små, uavhengige ACT-pakker. Rekkefølgen er anbefalt, ikke obligatorisk.
 - **PUSH:** NO
 - **DEPLOY:** NO
 - **Next:** Vent på Georges godkjenning; deretter commit-avklaring.
+
+---
+
+## ACT F1 — /METODER SCIENTIFIC INTEGRITY (24.10.2026, COPY ONLY)
+
+**Scope:** `app/metoder/page.tsx` (offentlig copy) + ny `__tests__/metoder.test.tsx` (SCI-01–12).
+Grunnlag: `docs/METHODS-SCIENTIFIC-AUDIT-v1.0.md` (godkjent konklusjon: /metoder er IKKE
+SAFE AS IS; full F1-journal i audit-seksjon R). IKKE endret: onboarding, questions, BFI-items,
+matchingmotor, score, weights, dealbreakers, religion, høyde, /motpol, Vipps/betaling,
+samtykke, database/Prisma, dependencies.
+
+**METHODS SCIENTIFIC COPY:** **FIXED (24.10.2026)** — SCI-01–SCI-12 grønn (35/35 i
+`__tests__/metoder.test.tsx`). Den offentlige siden beskriver nå det Tosom faktisk gjør:
+seks områder (rammeverk vs egne spørsmål vs praktiske preferanser); BFI-10 = tilpasning
+(ikke validert instrument, eksplisitte overganger); PVQ-10/ERQ-6/ECR-navn fjernet; resonans =
+merkebegrep; fysisk tiltrekning beregnes IKKE; ikke klinisk diagnostikk; psykometrisk
+avgrensning eksplisitt (ingen egen dokumentert reliabilitet/faktorstruktur/normering/prediktiv
+validitet); kilder = kun 8 verifiserte DOI-kilder (alle Crossref-verifisert).
+
+**BFI-10 LICENSE:** **UNRESOLVED — LAUNCH GATE.** Copy/omdøping er IKKE lisensløsnings
+(audit G/Q, F1.7). Krever skriftlig tillatelse fra Rammstedt/John/GESIS som dekker
+Tosoms faktiske (kommersielle) bruk — eller dokumentert beslutning om å behandle
+spørsmålene som fullstendig uavhengig itemssett. Separat ACT før lansering.
+
+**F1.5 PERSONALITY RESOLUTION (PLAN, 24.10.2026 — audit §S):**
+
+- **BFI-10 COMMERCIAL USE:** **UNRESOLVED – PRE-LAUNCH MUST FIX.** Dagens 10
+  personlighetsspørsmål er en CLOSE ADAPTATION av BFI-10 (identisk struktur,
+  6/10 near-verbatim items) — kommersiell/individuell/endret-form bruk ligger
+  utenfor de dokumenterte vilkårene. Å fjerne «BFI-10»-navnet fra copyen løser
+  **IKKE** den faktiske item-bruken (audit §S.2, §S.5).
+- **PERSONALITY ITEM REPLACEMENT:** **OPEN – ACT F2.** Anbefaling B: eget,
+  konstruktbasert Big Five-inspirert itemssett (implementasjonsplan: audit §S.7.4).
+  Ingen items endret i F1.5 (PLAN MODE).
+- **PERSONALITY MODEL VERSIONING:** **REQUIRED** — `personalityModelVersion` per
+  profil ved itemsbytte; v1/v2-scores må ikke blandes stille (audit §S.11).
+- **LEGACY PERSONALITY DATA:** **REQUIRES DECISION** — re-onboarding (foretrukket)
+  vs behold v1-score med versjonsmerke (audit §S.11, §S.7.4 #11).
+- **MISSING PERSONALITY VALUES:** **MATCHING INTEGRITY FOLLOW-UP** — default-3 i
+  `scoring.ts` gir legacy-profiler uten data en nøytral personlighetsbetydning
+  brukeren aldri har gitt (latent i dagens påkrevde onboarding; audit §S.10).
+- **CONTINGENCY:** Alternativ C (fjerne personlighet fra matching, vekt 0.15)
+  dokumentert som fallback ved T-5 dager (audit §S.8).
+
+**EXPERT REVIEW:** **OPEN** (audit O-profiler: psykometri, relasjonsforskning, personvern-jurist,
+lisens-ekspert). F1.5 utvider scope: konstruktdefinisjon, item-wording, content
+validity, response scale, scoring, reverse items, missing data, matching-use,
+personvern/ethics, public claims (audit §S.13).
+
+**Verifisering (24.10.2026):** `npx jest __tests__/metoder.test.tsx` → 35/35 passed.
+Full `npm run verify` / `npm run lint` / `npm run build` / `npx jest`: se ACT F1-rapport
+(24.10.2026) — se «Verifisering» nedenfor i denne runden.
+
+**Endrede filer (ACT F1):** `app/metoder/page.tsx`, `__tests__/metoder.test.tsx` (ny),
+`docs/METHODS-SCIENTIFIC-AUDIT-v1.0.md` (seksjon R), denne filen.
+
+**COMMIT/PUSH/DEPLOY:** NO / NO / NO (instruks §28 — stopp før commit).

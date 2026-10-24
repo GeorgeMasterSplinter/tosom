@@ -218,9 +218,8 @@ export default function MotpolPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-              <ToSomButton href="/register" variant="gold" size="lg">
-                Start reisen
-              </ToSomButton>
+              {/* «Start reisen» fjernet fra hero 24.10.2026 (godkjent av George) —
+                  CTA-knappen nederst på siden er uendret. */}
               <ToSomButton href="#hva-er-motpol" variant="dark" size="lg">
                 Se hvorfor
               </ToSomButton>
@@ -228,9 +227,15 @@ export default function MotpolPage() {
           </div>
         </section>
 
-        {/* ===== 2. HVORDAN KOM VI HIT? ===== */}
-        <ToSomSection id="hva-er-motpol" spotlight="blue" className="px-6">
-          <GlassCard padding="xl" className="mx-auto max-w-3xl">
+        {/* ===== 2–13. 12 innholdsseksjoner — 2-kolonnes grid, 6 rader, på lg
+            (laptop/PC), én kolonne under. 24.10.2026, godkjent av George.
+            DOM-rekkefølgen 2→13 og copy er uendret. ===== */}
+        <ToSomSection spotlight="none">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+
+            {/* ===== 2. HVORDAN KOM VI HIT? ===== */}
+            <div id="hva-er-motpol" className="scroll-mt-24">
+              <GlassCard padding="xl" className="h-full">
             <H2>Hvordan kom vi hit?</H2>
             <Prose>
               {/* [OB] */}
@@ -251,12 +256,11 @@ export default function MotpolPage() {
                 kan passe deg bedre.
               </Quote>
             </Prose>
-          </GlassCard>
-        </ToSomSection>
+              </GlassCard>
+            </div>
 
         {/* ===== 3. MER ER IKKE ALLTID MER ===== */}
-        <ToSomSection spotlight="none" className="px-6">
-          <GlassCard padding="xl" className="mx-auto max-w-3xl">
+          <GlassCard padding="xl">
             <H2>Mer er ikke alltid mer</H2>
             <Prose>
               {/* [OB] */}
@@ -279,11 +283,9 @@ export default function MotpolPage() {
               </P>
             </Prose>
           </GlassCard>
-        </ToSomSection>
 
         {/* ===== 4. DERFOR ÉN MATCH OM GANGEN ===== */}
-        <ToSomSection spotlight="soft" className="px-6">
-          <GlassCard padding="xl" className="mx-auto max-w-3xl">
+          <GlassCard padding="xl">
             <H2>Derfor én match om gangen</H2>
             <Prose>
               {/* [PF] F2 */}
@@ -307,11 +309,9 @@ export default function MotpolPage() {
               <P>For oss er en dårlig kobling verdt mindre enn ingen kobling.</P>
             </Prose>
           </GlassCard>
-        </ToSomSection>
 
         {/* ===== 5. DERFOR 14 DAGER UTEN BILDER ===== */}
-        <ToSomSection spotlight="none" className="px-6">
-          <GlassCard padding="xl" className="mx-auto max-w-3xl">
+          <GlassCard padding="xl">
             <H2>Derfor 14 dager uten bilder</H2>
             <Prose>
               {/* [PH] */}
@@ -336,11 +336,9 @@ export default function MotpolPage() {
               </P>
             </Prose>
           </GlassCard>
-        </ToSomSection>
 
         {/* ===== 6. MEN UTSEENDE BETYR JO NOE? ===== */}
-        <ToSomSection spotlight="none" className="px-6">
-          <GlassCard padding="xl" className="mx-auto max-w-3xl">
+          <GlassCard padding="xl">
             <H2>Men utseende betyr jo noe?</H2>
             <Prose>
               {/* [PH] — ærlig trade-off (obligatorisk, plan §29.7) */}
@@ -360,11 +358,9 @@ export default function MotpolPage() {
               <Quote>Ja, utseende betyr noe. Derfor kommer bildet. Bare ikke først.</Quote>
             </Prose>
           </GlassCard>
-        </ToSomSection>
 
         {/* ===== 7. TO MENNESKER, IKKE TO PROFILER ===== */}
-        <ToSomSection spotlight="soft" className="px-6">
-          <GlassCard padding="xl" className="mx-auto max-w-3xl">
+          <GlassCard padding="xl">
             <H2>To mennesker, ikke to profiler</H2>
             <Prose>
               {/* [OB] */}
@@ -394,11 +390,9 @@ export default function MotpolPage() {
               </P>
             </Prose>
           </GlassCard>
-        </ToSomSection>
 
         {/* ===== 8. INTENSJON FREMFOR OPPMERKSOMHET ===== */}
-        <ToSomSection spotlight="none" className="px-6">
-          <GlassCard padding="xl" className="mx-auto max-w-3xl">
+          <GlassCard padding="xl">
             <H2>Intensjon fremfor oppmerksomhet</H2>
             <Prose>
               {/* [OB] */}
@@ -425,11 +419,9 @@ export default function MotpolPage() {
               </P>
             </Prose>
           </GlassCard>
-        </ToSomSection>
 
         {/* ===== 9. TEKNOLOGIEN HjELPER — DEN SNAKKER IKKE FOR DERE ===== */}
-        <ToSomSection spotlight="soft" className="px-6">
-          <GlassCard padding="xl" className="mx-auto max-w-3xl">
+          <GlassCard padding="xl">
             <H2>Teknologien hjelper — den snakker ikke for dere</H2>
             <Prose>
               {/* [PF] F7/F4 — lenke: /metoder (plan §14) */}
@@ -457,11 +449,9 @@ export default function MotpolPage() {
               <Quote>Teknologien kan hjelpe dere å møtes. Den skal ikke snakke for dere.</Quote>
             </Prose>
           </GlassCard>
-        </ToSomSection>
 
         {/* ===== 10. TRYGGERE BETYR IKKE RISIKOFRITT ===== */}
-        <ToSomSection spotlight="blue" className="px-6">
-          <GlassCard padding="xl" className="mx-auto max-w-3xl">
+          <GlassCard padding="xl">
             <H2>Tryggere betyr ikke risikofritt</H2>
             <Prose>
               {/* [PH] */}
@@ -483,11 +473,9 @@ export default function MotpolPage() {
               </P>
             </Prose>
           </GlassCard>
-        </ToSomSection>
 
         {/* ===== 11. ET ANNET SYSTEM HAR OGSÅ EN PRIS ===== */}
-        <ToSomSection spotlight="none" className="px-6">
-          <GlassCard padding="xl" className="mx-auto max-w-3xl">
+          <GlassCard padding="xl">
             <H2>Et annet system har også en pris</H2>
             <Prose>
               {/* [PH] */}
@@ -520,13 +508,11 @@ export default function MotpolPage() {
               </Quote>
             </Prose>
           </GlassCard>
-        </ToSomSection>
 
         {/* ===== 12. TOSOM PASSER IKKE FOR ALLE ===== */}
-        <ToSomSection spotlight="soft" className="px-6">
-          <GlassCard padding="xl" className="mx-auto max-w-4xl">
+          <GlassCard padding="xl">
             <H2>Tosom passer ikke for alle</H2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6">
               <GlassCard padding="lg" className="space-y-5">
                 <h3
                   style={{
@@ -600,15 +586,14 @@ export default function MotpolPage() {
               </Prose>
             </div>
           </GlassCard>
-        </ToSomSection>
 
-        {/* ===== 13. DE TO MODELLERNE ===== */}
-        <ToSomSection spotlight="none" className="px-6">
-          <GlassCard padding="xl" className="mx-auto max-w-4xl">
-            <H2>To måter å gjøre det på.</H2>
-            {/* [PF] per rad (se comparisonRows[]) */}
-            <ComparisonRows rows={comparisonRows} />
-          </GlassCard>
+            {/* ===== 13. DE TO MODELLERNE ===== */}
+            <GlassCard padding="xl">
+              <H2>To måter å gjøre det på.</H2>
+              {/* [PF] per rad (se comparisonRows[]) */}
+              <ComparisonRows rows={comparisonRows} />
+            </GlassCard>
+          </div>
         </ToSomSection>
 
         {/* ===== 14. CTA ===== */}

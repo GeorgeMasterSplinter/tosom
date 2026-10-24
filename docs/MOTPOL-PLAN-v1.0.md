@@ -1,6 +1,7 @@
 # MOTPOL-PLAN v1.0
 
 **Status:** FERGIGSTILT (24.10.2026) — /motpol implementert i samsvar med BUILD WITH CHANGES (alle 10 punkter): rute, layout/metadata, ComparisonRows, sitemap, footer-lenke, kontekstuelle lenker fra /hvorfor og /slik-fungerer-det, testsuite (MOT-01–19). verify/lint/build/test grønn. Manuell pass (sks. 25, steg 8: 360px, keyboard, reduced motion, screen reader) gjenstår som go-live-prerequisitt. Ingen commit foreløpig.
+**Layout-justering 24.10.2026 (godkjent av George):** «Start reisen»-knappen fjernet fra hero (CTA nederst uendret). Seksjonene 2–13 ligger i 2-kolonnes grid, 6 rader, på lg (laptop/PC), og én kolonne under (mobil/nettbrett). DOM-rekkefølgen 2→13, copy og påstandstyper er uendret; MOT-suitten grønn.
 **Sluttbetjening:** Denne filen er leveranse 23 («Lag: docs/MotpolResearchPlan.md eller tilsvarende») — prosjektets dokumentasjonsstruktur (UPPERCASE-PLAN-vX.Y.md) tilsier dette navnet. Research/Source-Plan er seksjon 15 i denne filen.
 
 ---

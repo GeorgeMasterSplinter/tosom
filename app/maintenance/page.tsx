@@ -1,3 +1,8 @@
+// TC-11: vedlikeholds-state — skal ikke indexeres.
+export const metadata = {
+  robots: { index: false, follow: false },
+};
+
 export default function Maintenance() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0B1520] text-white relative overflow-hidden">

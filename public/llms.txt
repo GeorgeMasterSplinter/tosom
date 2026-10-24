@@ -28,11 +28,11 @@ Ingen swipe. Ingen feed. Ingen overflate.
 
 ## Sider
 
-- [Hvorfor Tosom](https://tosom.no/hvorfor)
-- [Slik fungerer det](https://tosom.no/slik-fungerer-det)
-- [Metoder vi bruker](https://tosom.no/metoder)
-- [Reisen](https://tosom.no/reisen)
-- [Priser](https://tosom.no/priser)
-- [Personvern](https://tosom.no/personvern)
-- [Vilkår](https://tosom.no/vilkar)
-- [Trygghet](https://tosom.no/trygghet)
+- [Hvorfor Tosom](https://www.tosom.no/hvorfor)
+- [Slik fungerer det](https://www.tosom.no/slik-fungerer-det)
+- [Metoder vi bruker](https://www.tosom.no/metoder)
+- [Reisen](https://www.tosom.no/reisen)
+- [Priser](https://www.tosom.no/priser)
+- [Personvern](https://www.tosom.no/personvern)
+- [Vilkår](https://www.tosom.no/vilkar)
+- [Trygghet](https://www.tosom.no/trygghet)

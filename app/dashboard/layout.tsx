@@ -1,26 +1,19 @@
 /**
  * Tosom — Dashboard Layout (cleaned 2026)
- * 
- * Kun context-providers + navigasjon. Alt innhold styres av page.tsx.
+ *
+ * Server-komponent med TC-11 noindex-metadata. Providers + navigasjon ligger
+ * i DashboardShell ('use client' fordi context-providers er klient-komponenter).
+ * Alt innhold styres av page.tsx.
  */
 
-'use client';
+import type { Metadata } from 'next';
+import DashboardShell from './DashboardShell';
 
-import { DashboardProvider } from './context/DashboardContext';
-import { NotificationProvider } from './context/NotificationContext';
-// STEG 8.2: Koble inn DashboardNavBar for å vise navigasjon i dashboard-layout
-import DashboardNavBar from './components/DashboardNavBar';
+// TC-11: privat brukerområde — skal ikke indexeres.
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return (
-    <NotificationProvider>
-      <DashboardProvider>
-        <main className="min-h-screen w-full">
-          {/* STEG 8.2: DashboardNavBar med Desktop + Mobile navigasjon */}
-          <DashboardNavBar />
-          {children}
-        </main>
-      </DashboardProvider>
-    </NotificationProvider>
-  );
+  return <DashboardShell>{children}</DashboardShell>;
 }

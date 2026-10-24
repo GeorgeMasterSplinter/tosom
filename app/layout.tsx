@@ -16,7 +16,7 @@ const JSONLD_ORGANIZATION = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: COMPANY.name,
-  url: "https://tosom.no",
+  url: "https://www.tosom.no",
   email: COMPANY.email,
   ...(COMPANY.orgNumber ? { identifier: COMPANY.orgNumber } : {}),
   address: {
@@ -30,7 +30,7 @@ const JSONLD_WEBSITE = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: "Tosom",
-  url: "https://tosom.no",
+  url: "https://www.tosom.no",
   description: BESKRIVELSE,
   inLanguage: "no",
 };
@@ -47,7 +47,7 @@ const inter = Inter({
 });
 
 export const metadata = {
-  metadataBase: new URL("https://tosom.no"),
+  metadataBase: new URL("https://www.tosom.no"),
   title: "Tosom — En rolig plass for ekte møter",
   description: BESKRIVELSE,
   alternates: {

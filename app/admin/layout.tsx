@@ -11,6 +11,8 @@
 export const metadata = {
   title: 'Tosom Admin',
   description: 'Administrasjonspanel for Tosom-plattformen',
+  // TC-11/SEO-05: admin er aldri indexert. (robots.txt Disallow er ikke sikkerhetsmekanisme — metadata er primary.)
+  robots: { index: false, follow: false },
 };
 
 export default function AdminRootLayout({

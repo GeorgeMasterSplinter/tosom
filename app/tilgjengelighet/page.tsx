@@ -5,8 +5,15 @@ import { ToSomSection } from '@/components/ui/system';
 import { typographyToStyle } from '@/config/design-tokens';
 
 export const metadata = {
-  title: 'Tilgjengelighet — ToSom',
-  description: 'ToSom er bygget for alle. Her er hva vi har på plass og hva vi jobber med.',
+  title: 'Tilgjengelighet',
+  description: 'Tosom er bygget for alle. Her er hva vi har på plass og hva vi jobber med.',
+  // TC-08: per-route metadata (eksistert siden ACT A; fullført med canonical + OG).
+  alternates: { canonical: '/tilgjengelighet' },
+  openGraph: {
+    title: 'Tilgjengelighet',
+    description: 'Tosom er bygget for alle. Her er hva vi har på plass og hva vi jobber med.',
+    url: '/tilgjengelighet',
+  },
 };
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {

@@ -18,6 +18,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/admin", "/api"],
       },
     ],
-    sitemap: "https://tosom.no/sitemap.xml",
+    // TC-09 (prod-verifisert 26.10.2026): kanonisk host er www.tosom.no.
+    sitemap: "https://www.tosom.no/sitemap.xml",
   };
 }

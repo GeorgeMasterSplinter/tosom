@@ -12,6 +12,11 @@
 
 export const dynamic = "force-dynamic";
 
+// TC-11: privat samtaleflate — skal ikke indexeres.
+export const metadata = {
+  robots: { index: false, follow: false },
+};
+
 export default function ChatLayout({
   children,
 }: {

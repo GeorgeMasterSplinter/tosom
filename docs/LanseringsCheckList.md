@@ -996,12 +996,12 @@ Kun read-only-verifisering fra prod (ingen skrive-handlinger mot prod i denne fa
 | TC-05 | Metoder/blogg | ✅ FIXED (ACT A1) | P0 | Uverifiserte kilder («Fetvedt 2018», «Reisner & McAndrew 2022») fjernet; påstander gjort redaksjonelle; Gottman (1999) verifisert og beholdt |
 | TC-06 | Blogg-konsistens | CONFIRMED | P2 | Datomismatch (juni vs januar 2026) + tittelmismatch |
 | TC-07 | Språk/blogg | CONFIRMED | P2 | Nynorsk-lekkasje i begge blogg-tekster («rolegheit», «glemtje», «overflateikke» …) |
-| TC-08 | SEO | CONFIRMED | P1 | ~13 public sider uten egen metadata → alle arver title/description/canonical «/» |
-| TC-09 | SEO/host | PARTLY CONFIRMED + EV | P1 | metadataBase/sitemap/JSON-LD = tosom.no; prod kjører på www.tosom.no (fra forrige checklist) |
-| TC-10 | SEO/sitemap | CONFIRMED | P2 | Sitemap lister «/vilkår» (med å) — ruta er «/vilkar», ingen redirect → 404 i sitemap |
-| TC-11 | SEO/privacy | CONFIRMED | P1 | Ingen noindex på private ruter (dashboard/chat/onboarding/matching/admin …); arver index:true |
-| TC-12 | SEO/OG | CONFIRMED | P2 | public/og-image.png mangler — alle OG/Twitter-shares refererer broken bilde |
-| TC-13 | Død kode/AI | CONFIRMED (dead code) | P2 | lib/seo.ts (ikke importert): «ToSom», «AI-genererte innsikter», AI-produktmetadata |
+| TC-08 | SEO | ✅ FIXED (ACT C) | P1 | Alle public sider har nå per-route metadata (title/description/canonical/OG) — ingen arver lenger «/» (SEO-01/02/03) |
+| TC-09 | SEO/host | ✅ FIXED (ACT C, EV utført) | P1 | Prod-verifisert: tosom.no 307 → www.tosom.no (200, appen). metadataBase/sitemap/robots/JSON-LD/llms.txt flyttet til www.tosom.no |
+| TC-10 | SEO/sitemap | ✅ FIXED (ACT C) | P2 | Sitemap: /vilkår → /vilkar (kanonisk sti, 301-bevist i prod); falsk lastModified (new Date() per build) fjernet |
+| TC-11 | SEO/privacy | ✅ FIXED (ACT C) | P1 | noindex+nofollow på alle private/personlige ruter + admin (16 ruter); verifisert i bygd HTML (SEO-04/05) |
+| TC-12 | SEO/OG | CONFIRMED — P2 ASSET FOLLOW-UP | P2 | public/og-image.png mangler fortsatt (designarbeid, ikke laget i ACT C); metadata refererer korrekt sti slik at fil kan leveres uten kodelendring |
+| TC-13 | Død kode/AI | ✅ FIXED (ACT C) | P2 | lib/seo.ts slettet (0 referanser over hele repo verifisert; build/lint/verify grønn etter sletting) |
 | TC-14 | AI-påstand | VERIFIED CLAIM | — | «Ingen AI» i vilkar stemmer: ingen AI-deps, ingen LLM-kall; openai: not_in_use |
 | TC-15 | Personvern/impl | ✅ PARTIALLY FIXED (ACT A2) | P1 | Copy-gap lukket (personvern lover nå kun den eksisterende slettingsbaserte mekanismen); selvbetjening-trekking = PD-6 + legal verifisering |
 | TC-16 | Cookies/analytics | PARTLY CONFIRMED + EV | P2 | Cookies-side: «bare det nødvendige / deler aldri med tredjeparts-tracking» vs aktiv SpeedInsights; Plausible/Umami = av |
@@ -1172,6 +1172,13 @@ Kun read-only-verifisering fra prod (ingen skrive-handlinger mot prod i denne fa
 - **Anbefalt fix:** Per-route metadata (title/description/canonical/OG url) for hver public side.
 - **Verifisering:** Bygg + inspeksjon av `<link rel=canonical>` per rute.
 
+#### ACT C — utført 26.10.2026 (sluttstatus: FIXED, IKKE committet)
+
+- **Rotårsak:** root-layouts `alternates: { canonical: "/" }` + `openGraph.url: "/"` + `robots: { index: true }` arves av alle sider uten egen metadata (Next.js metadata-merging). De 13+ public sidene er `'use client'` og kan ikke eksportere metadata selv.
+- **Fix:** 14 nye pass-through `layout.tsx` (server-komponenter) med per-route title/description/canonical/OG-url: `/hvorfor`, `/slik-fungerer-det`, `/reisen`, `/metoder`, `/tips`, `/priser`, `/trygghet`, `/faq`, `/om-oss`, `/kontakt`, `/vilkar`, `/personvern`, `/cookies`, `/login`. `app/tilgjengelighet/page.tsx` (server) fikk canonical+OG og merkenavn ToSom→Tosom i metadata (kun metadata-blokken, ikke sidecopy — TC-20/PD-1 urørt ellers).
+- **Metadata-kvalitet:** alle beskrivelinger grundet i faktisk sideinnhold; «Tosom»-merkenavn; ingen matchgarantier (forsøks-formulering fra ACT B beholdt, f.eks. slik-fungerer-det «matcherunden forsøker å koble deg»); ingen «24 timer»; ingen vitenskapelige påstander.
+- **Verifisert i bygd HTML:** alle 16 public ruter har selv-canonical på kanonisk host; ingen public rute deklarerer «/» (SEO-01/02/03 ✓).
+
 ### TC-09 — SEO: www vs ikke-www — PARTLY CONFIRMED + EV / P1
 - **Repo:** `metadataBase: https://tosom.no` (layout), sitemap + robots + JSON-LD = `tosom.no`. Ingen www i koden.
 - **Prod (fra forrige checklist):** «https://www.tosom.no (live)» → dersom prod kjører på www, peker alle canonicals mot en annen host enn brukeren ser, og uten redirect fins to live hoster.
@@ -1179,11 +1186,33 @@ Kun read-only-verifisering fra prod (ingen skrive-handlinger mot prod i denne fa
 - **Anbefalt fix:** Én kanonisk host (den prod faktisk bruker); metadataBase/JSON-LD/sitemap/robots til den + 301 mellom varianter.
 - **Verifisering:** `curl -sI` på begge hoster + ny metadataBase.
 
+#### ACT C — utført 26.10.2026 (sluttstatus: FIXED, IKKE committet)
+
+- **EV utført (read-only, 26.10.2026 ~23:54 UTC):**
+
+| REQUEST | STATUS | LOCATION | FINAL HOST |
+|---|---|---|---|
+| `https://tosom.no` | 307 | `https://www.tosom.no/` | www.tosom.no |
+| `https://www.tosom.no` | 200 | — (leverer appen; `<title>Tosom — En rolig plass for ekte møter</title>`) | www.tosom.no |
+| `http://tosom.no` | 308 | `https://tosom.no/` | (→ kjeden over) |
+| `http://www.tosom.no` | 308 | `https://www.tosom.no/` | (→ kjeden over) |
+
+  I tillegg: `www /vilkar` = 200, `www /vilkår` = 301 → `https://www.tosom.no/vilkar` (alias levende i prod).
+- **Kanonisk host fastslått: `https://www.tosom.no`** — www er endelig 200-host; apex 307-redirect-er dit; ingen motvendt redirect. Entydig, ingen gjeting.
+- **Endringer:** `metadataBase` (layout) → www; `sitemap` BASE_URL → www; `robots.txt` Sitemap-URL → www; JSON-LD Organization.url + WebSite.url → www; `public/llms.txt` 8 absolute URLs → www. Per-route canonicals er relative og løses mot metadataBase (automatisk www).
+- **Ikke endret (infra-eiet, dokumentert som production verification):** apex→www-redirecten selve (Cloudflare/Vercel-nivå) — kjører i dag som 307 (temporary); dersom infra-eieren ønsker 301 (permanent) for søkemotorværdi, er det en ops-endring utenfor repo. `next.config.js` serverActions allowedOrigins beholder alle varianter (funksjonell konfig, ikke SEO). E-post/auth-fallback-URLer (`lib/email/index.ts`, `request-reset`) er env-drevne i prod (`NEXT_PUBLIC_APP_URL`) og berørt ikke — funksjonell kode, utenfor SEO-scope.
+
 
 ### TC-10 — Sitemap: «/vilkår» 404 — CONFIRMED / P2
 - **Bevis:** `app/sitemap.ts` lister `{ path: "/vilkår" }`; ruta er `app/vilkar/page.tsx` → `/vilkar`; `next.config.js` redirects = kun `/slik` → `/slik-fungerer-det`.
 - **Anbefalt fix:** Rett til «/vilkar» (evt. 301 /vilkår → /vilkar).
 - **Verifisering:** GET /vilkår og /vilkar mot bygg.
+
+#### ACT C — utført 26.10.2026 (sluttstatus: FIXED, IKKE committet)
+
+- Sitemap: `/vilkår` → `/vilkar` (kanonisk sti; 301-kjeden bevist i prod, se TC-09). Falsk `lastModified = new Date()` fjernet (endret seg ved hvert build uten faktisk dato — misvisende; ingen end date-kilde i systemet).
+- Alle 16 sitemap-entries verifisert mot faktiske ruter (ingen 404, ingen private ruter, ingen redirect-only URLer; `/login` beholdt = eksisterende index-intent). `/blogg`, `/questions`, `/design-system`, `/register/vipps` er **prod-404** (PL-21/G-06b/PL-20) og med rette ikke i sitemap.
+- Bygd `.next`-output inspisert: 16 `<loc>`-poster, alle `https://www.tosom.no/...`, ingen `lastmod`.
 
 ### TC-11 — Private ruter indexerbar (manglende noindex) — CONFIRMED / P1
 - **Bevis:** `grep -rn "noindex" app` = ingen treff. Root-layout `robots: { index: true, follow: true }` arves av dashboard, chat, onboarding, matching, profile, settings, questions, reisen/avslutning, betaling, register, login, glemt-passord, nytt-passord, dev-login, design-system. `app/admin/layout.tsx`: kun title/description (ingen robots). `app/robots.ts` disallow /admin+/api (delvis mitigerende); sitemap-kommentaren «Private sider skal IKKE indexeres» er ikke implementert.
@@ -1191,17 +1220,32 @@ Kun read-only-verifisering fra prod (ingen skrive-handlinger mot prod i denne fa
 - **Anbefalt fix:** `robots: { index: false }` i layout for private ruter + admin.
 - **Verifisering:** Grep noindex + metadata-prøv per rute etter bygg.
 
+#### ACT C — utført 26.10.2026 (sluttstatus: FIXED, IKKE committet)
+
+- **noindex + nofollow på (16 ruter, verifisert i bygd HTML):** `/dashboard` (+conversation), `/chat` (force-dynamic; metadata i layout, renderes per request), `/matching`, `/onboarding` (+`/onboarding/start` via ny `(auth)`-gruppe-layout), `/settings`, `/profile` (+`/profile/edit`), `/questions` (prod-404 uansett), `/samtykke`, `/glemt-passord`, `/nytt-passord`, `/dev-login`, `/betaling` (+`/register/vipps`), `/maintenance`, `/design-system` (prod-404), `/admin` (alle admin-runder inkl. login).
+- **Mekanisme:** eksisterende server-layouts fikk `robots: { index: false, follow: false }` (dashboard, onboarding, settings, chat, admin, register/vipps); `'use client'`-layouts håndtert korrekt: dashboard → klient-delen flyttet til `app/dashboard/DashboardShell.tsx` og layouten ble server-komponent (build-krevde dette); onboarding + settings → unødvendig `'use client'`-direktive fjernet (ren JSX); `use client`-sider uten layout fikk ny pass-through noindex-layout (matching, betaling, profile, dev-login, samtykke, glemt-passord, nytt-passord, reisen/avslutning).
+- **IKKE noindexed (bevisst):** alle 16 public informasjonssider + `/login` (i sitemap). Auth-klassifisering: `/login` = INDEX (eksisterende sitemap-intent), `/register` = redirect-kjede til `/login` (nå INDEX-metadata-fri; se alias-tabell), passordreset = NOINDEX (sensitiv state).
+- Authentication endret ikke — noindex er indeksbeskyttelse, ikke auth (de to er forskjellige problemstillinger; begge gjelder nå).
+
 ### TC-12 — og-image.png mangler — CONFIRMED / P2
 - **Bevis:** `app/layout.tsx` OG/Twitter `url: "/og-image.png"`; `ls public/` → ingen og-image.png (kun favicon, hero.jpg, icons, llms.txt, manifest, uploads, vercel.svg).
 - **Konsekvens:** Alle sosiale shares får broken bilde.
 - **Anbefalt fix:** Lage `public/og-image.png` (1200×630) med Tosom-merkevare.
 - **Verifisering:** Filstest + share-preview etter deploy.
 
+#### ACT C — utført 26.10.2026 (sluttstatus: CONFIRMED — P2 ASSET FOLLOW-UP, IKKE committet)
+
+- `public/og-image.png` mangler fortsatt. Ingen korrekt eksisterende 1200×630 Tosom-brand-asset i `public/` (kun favicon/hero.jpg/icons). Designarbeid er eksplisitt ute av denne fasen → **P2 ASSET FOLLOW-UP**: lage `public/og-image.png` (1200×630) med Tosom-merkevare; metadata refererer allerede korrekt stien, så kun filen mangler (ingen kodelendring kreves ved levering).
+
 ### TC-13 — lib/seo.ts: død kode med AI-påstander og gammelt merke — CONFIRMED (dead code) / P2
 - **Bevis:** Ingen import av `lib/seo.ts` noe sted. Filen inneholder «ToSom»-merkenavn, `keywords: ["dating", …]` og et «AI-specific metadata»-blokk: «AI Match Insights — Få AI-genererte innsikter om dine matcher», «AI Profilforbedring», «AI Journey Guide» — funksjoner som aldri finnes i produktet; nynorsk «oppdaga»; ruter som ikke eksisterer.
 - **Status:** Ikke brukerdelt i dag. Risiko: et fremtidig import reintroduserer AI-kontrdiksjon til vilkårene.
 - **Anbefalt fix:** Slette filen i ACT-fasen (død kode, ingen funksjonstap).
 - **Verifisering:** Grep imports = 0 etter sletting; build grønn.
+
+#### ACT C — utført 26.10.2026 (sluttstatus: FIXED, IKKE committet)
+
+- 0 referanser verifisert over hele repo (app/, lib/, components/, __tests__/, config/, e2e, .json) → helt isolert. `git rm lib/seo.ts` utført. `npm run verify` + `lint` + `build` grønn etter sletting (bekrefter ingen runtime/test/build-avhengighet).
 
 ### TC-14 — «Ingen AI»-påstand — VERIFIED CLAIM
 - **Påstand:** `app/vilkar/page.tsx:119`: «det finnes ingen AI som skriver meldinger, gir råd eller opptrer som samtalepartner.»
@@ -1537,13 +1581,13 @@ Små, uavhengige ACT-pakker. Rekkefølgen er anbefalt, ikke obligatorisk.
 4. **Prod-DNS:** Kjør både tosom.no og www.tosom.no? Hvilken redirect-kjede? (Bestemmer TC-09-fix.)
 5. **Juridisk (A-1):** Angrerettloven § 22 n. — «digitalt innhold»-modellen for reisen (blokkerer kun betaling, ikke lansering).
 
-## TC-Status tell (endelig)
-- **CONFIRMED:** 15 (TC-01, -02, -04, -05*, -06, -07, -08, -10, -11, -12, -13, -15, -18, -19, -20, -24) — *TC-05 er CONFIRMED som «ukildebevisste påstander i public copy» + EV for om kildene faktisk er oppdiktede. **Aktuelt: TC-05 = FIXED (ACT A1, 23.10.2026)** — kildene fjernet uavhengig av EV-resultat; EV er nå kun dokumentasjonsinteresse.
-- **PARTLY CONFIRMED:** 5 (TC-03, -09, -16, -17, -33)
-- **NOT CONFIRMED:** 7 (TC-25, -26*, -27, -28, -29, -30, -34) — *TC-26 er klassifisert PRODUCT DECISION i detalj (teller under PD).
-- **ALREADY FIXED:** 0 i denne runden (tidligere audit-funn som «24t i metadata», religion-felt, export-scope er allerede håndtert i `4edacc8` / tidligere commits).
-- **PRODUCT DECISION:** 6 (TC-21, -23, -26, -32, -35 + PD-5 teller (TC-24 del))
-- **EXTERNAL VERIFICATION REQUIRED:** 0 primære (TC-22 avsluttet ved ACT A3). Sub-EV gjenstår på -09, -16, -35. (TC-05-sub-EV er avsluttet ved ACT A1; TC-22-primær-EV er avsluttet ved ACT A3, inkl. 112/02800 verifisert mot Politiet.no.)
+## TC-Status tell (oppdatert ACT C, 26.10.2026)
+- **FIXED:** TC-01, TC-02, TC-17, TC-33 (ACT B); TC-05 (ACT A1); TC-08, TC-09 (EV utført), TC-10, TC-11, TC-13 (ACT C); TC-15 PARTIALLY FIXED (PD-6 + EV gjenstår).
+- **CONFIRMED (åpen):** TC-04, -06, -07, -12 (P2 ASSET FOLLOW-UP: og-image.png), -18, -19, -20, -24.
+- **PARTLY CONFIRMED (åpen):** TC-03, TC-16 (EV: SpeedInsights-cookie).
+- **NOT CONFIRMED:** TC-25, -26* (PD), -27, -28, -29, -30, -34.
+- **PRODUCT DECISION:** TC-21 (alias /register — ACT C har kun kartlagt, IKKE fjernet), TC-23, TC-26, TC-32, TC-35.
+- **EV gjenstår:** TC-16, TC-35 (juridisk, A-1). TC-09-EV: AVSLUTTET (redirect-kjede verifisert 26.10.2026, se ACT C-seksjonen).
 - **VERIFIED CLAIM (positivt):** TC-14 (ingen AI), TC-31 (personvern-kjerne).
 
 ## TC-Bekreftelser (fase-avslutning)
@@ -1553,3 +1597,81 @@ Små, uavhengige ACT-pakker. Rekkefølgen er anbefalt, ikke obligatorisk.
 - **DEPLOY:** NO
 - **Next:** Vent på Georges godkjenning av PD-lista (PD-1…PD-8) + EV-resultater, deretter godkjenning til å starte ACT A.
 
+
+## PHASE 2 — ACT C (SEO / Canonical / Indexering) — utført 26.10.2026 (IKKE committet)
+
+### Kanonisk host (TC-09)
+`https://www.tosom.no` — prod-verifisert read-only 26.10.2026 (request/status/location-tabell under TC-09). Repo viste ikke-www konsekvent (metadataBase, sitemap, robots, JSON-LD, llms.txt) — alle flyttet til www. Ingen DNS/Vercel-endringer fra repo.
+
+### Route inventory (alle HTML-ruter; API-ruter unntatt — ingen metadata)
+| ROUTE | PUBLIC/PRIVATE | INDEX | TITLE | CANONICAL | SITEMAP | ACTION ACT C |
+|---|---|---|---|---|---|---|
+| `/` | public | INDEX | root (urørt) | `/` (selv) | ja | — (korrekt fra før) |
+| `/hvorfor` | public | INDEX | ny layout | `/hvorfor` | ja | per-route metadata |
+| `/slik-fungerer-det` | public | INDEX | ny layout | `/slik-fungerer-det` | ja | per-route metadata |
+| `/reisen` | public | INDEX | ny layout | `/reisen` | ja | per-route metadata |
+| `/metoder` | public | INDEX | ny layout | `/metoder` | ja | per-route metadata |
+| `/tips` | public | INDEX | ny layout | `/tips` | ja | per-route metadata |
+| `/priser` | public | INDEX | ny layout | `/priser` | ja | per-route metadata |
+| `/trygghet` | public | INDEX | ny layout | `/trygghet` | ja | per-route metadata |
+| `/faq` | public | INDEX | ny layout | `/faq` | ja | per-route metadata |
+| `/om-oss` | public | INDEX | ny layout | `/om-oss` | ja | per-route metadata |
+| `/kontakt` | public | INDEX | ny layout | `/kontakt` | ja | per-route metadata |
+| `/tilgjengelighet` | public | INDEX | eks. metadata | `/tilgjengelighet` | ja | canonical+OG+merkenavn i metadata |
+| `/vilkar` | public | INDEX | ny layout | `/vilkar` | ja (rettet fra /vilkår) | per-route metadata + sitemap |
+| `/personvern` | public | INDEX | ny layout | `/personvern` | ja | per-route metadata |
+| `/cookies` | public | INDEX | ny layout | `/cookies` | ja | per-route metadata |
+| `/login` | public (auth-inngang) | INDEX (sitemap-intent) | ny layout | `/login` | ja (beholdt) | per-route metadata |
+| `/register` | redirect → `/login` | n/a (307) | — | dest. `/login` | nei | kun kartlagt (fjerning = PD-7, urørt) |
+| `/register/vipps` | private/payment-state (prod-404) | NOINDEX | — | — | nei | noindex i eks. layout |
+| `/dashboard` (+conversation) | PRIVATE | NOINDEX | — | — | nei | noindex (layout → server + DashboardShell) |
+| `/chat` (+`/chat/[id]`) | PRIVATE | NOINDEX | — | — | nei | noindex (eks. server-layout) |
+| `/matching` | PRIVATE (kø-state) | NOINDEX | — | — | nei | ny noindex-layout |
+| `/onboarding` (+`/onboarding/start`) | PRIVATE | NOINDEX | — | — | nei | noindex (eks. layout + ny `(auth)`-gruppe-layout) |
+| `/settings` | PRIVATE | NOINDEX | — | — | nei | noindex (eks. layout; unødvendig 'use client' fjernet) |
+| `/profile` (+`/profile/edit`) | PRIVATE | NOINDEX | — | — | nei | ny noindex-layout |
+| `/questions` | prod-404 (G-06b) | n/a | — | — | nei | urørt (unreachable i prod) |
+| `/samtykke` | PRIVATE (consent-flow) | NOINDEX | — | — | nei | ny noindex-layout |
+| `/glemt-passord` | PRIVATE (reset-flow) | NOINDEX | — | — | nei | ny noindex-layout |
+| `/nytt-passord` | PRIVATE (reset-flow) | NOINDEX | — | — | nei | ny noindex-layout |
+| `/dev-login` | PRIVATE (dev-verktøy) | NOINDEX | — | — | nei | ny noindex-layout |
+| `/betaling` | PRIVATE (payment-state) | NOINDEX | — | — | nei | ny noindex-layout |
+| `/maintenance` | state-side | NOINDEX | — | — | nei | noindex (server-page) |
+| `/design-system` | prod-404 (PL-20) | n/a | — | — | nei | urørt (unreachable i prod) |
+| `/blogg` (+`/blogg/[slug]`) | prod-404 (PL-21) | n/a | — | — | nei | urørt (unreachable i prod; IKKE lagt i sitemap) |
+| `/admin` + panel-runder | PRIVATE | NOINDEX | eks. +robots | — | nei | robots noindex+nofollow i eks. layout |
+| `/reisen/avslutning` | PRIVATE (reiseinnhold) | NOINDEX | — | — | nei | ny noindex-layout |
+| `404` (not-found) | — | n/a (statuscode) | — | — | nei | urørt |
+
+### Aliases / redirects
+| SOURCE | DESTINATION | STATUS | INDEXING INTENT | SITEMAP | CANONICAL DEST |
+|---|---|---|---|---|---|
+| `/vilkår` (og URL-encoded) | `/vilkar` | 301 (middleware) | n/a (redirect) | nei (bare dest.) | `/vilkar` ✓ prod-bevist |
+| `/slik` | `/slik-fungerer-det` | 308 (next.config) | n/a | nei | `/slik-fungerer-det` ✓ |
+| `/register` | `/login` | 307 (Next redirect) | n/a | nei | `/login` ✓ (fjerning = PD-7, urørt) |
+| `tosom.no` (apex) | `www.tosom.no` | 307 (infra/Cloudflare — IKKE repo) | n/a | n/a | `www.tosom.no` ✓ |
+| `http://*` | `https://*` | 308 (infra) | n/a | n/a | https ✓ |
+
+### SEO-verifikasjon (SEO-01…15) — verifisert mot bygd `.next`-output 26.10.2026
+- **SEO-01** ✅ Forsiden selv-canonical: `https://www.tosom.no` (index.html).
+- **SEO-02** ✅ 15 public undersider har route-korrekt canonical (prerendret HTML inspisert per rute).
+- **SEO-03** ✅ Ingen public underside deklarerer «/» som canonical (grep over alle prerenderte HTML-filer).
+- **SEO-04** ✅ Private brukerflater noindex (dashboard, chat, matching, onboarding, settings, profile, samtykke, passordreset, betaling, dev-login — meta `noindex, nofollow` i bygd HTML; chat = force-dynamic, metadata i layout renderes per request).
+- **SEO-05** ✅ Admin noindex+nofollow (admin.html: `noindex, nofollow`).
+- **SEO-06** ✅ Sitemap inneholder ingen private ruter (16 entries, alle public).
+- **SEO-07** ✅ Ingen 404-ruter i sitemap (alle 16 verifisert mot app/-struktur; /vilkår 404-treff fjernet).
+- **SEO-08** ✅ Sitemap bruker kanonisk sti `/vilkar`.
+- **SEO-09** ✅ metadataBase = `https://www.tosom.no` (prod-verifisert host).
+- **SEO-10** ✅ robots.txt peker til `https://www.tosom.no/sitemap.xml` (bygd output).
+- **SEO-11** ✅ Ingen google-site-verification-placeholder (grep = 0 treff i app/ + public/ — klassifisering: NOT PRESENT; inget å fjerne, ingen dummy-token).
+- **SEO-12** ✅ JSON-LD (Organization + WebSite) bruker `https://www.tosom.no` (bygd HTML inspisert).
+- **SEO-13** ✅ Ingen matchgaranti i metadata (alle beskrivelinger forsøks-basert; grep «får du en match|garanter|match hver» i layout-filer = 0 treff).
+- **SEO-14** ✅ Bokmål + «Tosom» (språkvakt grønn over 858 filer inkl. nye; tilgjengelighet-metadata ToSom→Tosom i metadata-blokken).
+- **SEO-15** ✅ Ingen brukerdata i metadata (alle verdier statiske konstanter).
+
+### Production verification som fortsatt kreves (etter deploy av denne commit-en)
+1. Prod (etter deploy): `curl -s https://www.tosom.no/hvorfor` → `<link rel="canonical" href="https://www.tosom.no/hvorfor">` (bekrefter at bygd output er deployt).
+2. Prod: `https://www.tosom.no/sitemap.xml` + `/robots.txt` viser www-URLer.
+3. Google Search Console (dersom satt opp): innsend oppdatert sitemap; private ruter slettes fra indeks over tid (noindex er ikke umiddelbart).
+4. Ops-avgjørelse (ikke blocker): apex→www kjører som 307 (temporary) — vurder 301 i Cloudflare/Vercel for søkemotorværdi.
+5. P2 ASSET: lever `public/og-image.png` (1200×630, Tosom-brand) — se TC-12.

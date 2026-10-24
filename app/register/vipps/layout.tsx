@@ -8,6 +8,12 @@ import { notFound } from 'next/navigation';
  * siden sidefilen er 'use client'. I produksjon: 404. I utvikling:
  * placeholderen fungerer som før.
  */
+
+// TC-11: betalings-state-rute — skal ikke indexeres.
+export const metadata = {
+  robots: { index: false, follow: false },
+};
+
 export default function VippsRegisterLayout({
   children,
 }: {

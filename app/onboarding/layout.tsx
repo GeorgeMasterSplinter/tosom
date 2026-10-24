@@ -4,11 +4,14 @@
  * UniversalMenu rendres automatisk via root-layout.
  */
 
-'use client';
-
 interface OnboardingLayoutProps {
   children: React.ReactNode;
 }
+
+// TC-11: onboarding (personlig profiloppretting) — skal ikke indexeres.
+export const metadata = {
+  robots: { index: false, follow: false },
+};
 
 export default function OnboardingLayout({ children }: OnboardingLayoutProps) {
   return (

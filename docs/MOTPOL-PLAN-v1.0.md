@@ -383,6 +383,15 @@ Primær: «Start reisen» → `/register` (redirect → /login auto-registrering
 | D6 | Endelig copy-godkjenning (sks. 8 er forhandler) | **Må ges før implementerings-ACT** — copy er kjernen i siden |
 | D7 | OG-image (seksjon 22.I) | Separat P2, kan komme etter live |
 
+**D1 — v2-oppdatering (25.10.2026, avgjort av George):** Motpol inn i hovedmenyen
+(`UniversalMenu`). Desktop-menyen (≥1280px) blir **4+4 i to rader**:
+rad 1 = Motpol, Hvorfor Tosom, Slik fungerer det, Reisen;
+rad 2 = Metoder, Tips, Priser, Trygghet. «Logg inn»/«Start reisen» stables
+under hverandre på desktop. Mobil-drawer viser alle 8 lenker. I tillegg:
+alle 12 innholdsseksjonene på /motpol rammet med `GlassCard` (samme ramme
+som de andre landingssidene); hero og slutt-CTA er uløyst.
+Se commit `e166612`.
+
 ## 25. IMPLEMENTERINGSREKKERØLDE (neste ACT, ikke nå)
 
 1. D1–D6 besluttet + sluttcopy godkjent (D6).

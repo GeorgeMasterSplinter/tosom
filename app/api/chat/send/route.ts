@@ -104,7 +104,7 @@ async function postHandler(request: NextRequest) {
       );
     }
 
-    // Reisen fullført (dag 30) — samtalen er lukket.
+    // Reisen fullført (dag 14) — samtalen er lukket.
     if (conversation.endedAt) {
       return NextResponse.json(
         { error: "Reisen er fullført. Samtalen er avsluttet." },

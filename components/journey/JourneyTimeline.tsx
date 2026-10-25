@@ -1,12 +1,13 @@
 /* ═══════════════════════════════════════════
    Tosom JourneyTimeline — Design System 1.1
-   Viser 30-dagers reise med fase-indikatorar.
+   Viser 14-dagers reise med fase-indikatorar.
    Bruk i dashboard og journey-sider.
    ═══════════════════════════════════════════ */
 
 'use client';
 
 import { PHASE_CONFIGS } from '@/lib/journey/engine'; // ST3.1
+import { JOURNEY_TOTAL_DAYS } from '@/config/journey';
 
 interface JourneyTimelineProps {
   currentDay: number;
@@ -36,7 +37,7 @@ export const JourneyTimeline = ({ currentDay, completedDays, phases = defaultPha
         className="text-xl md:text-2xl font-semibold text-center mb-6"
         style={{ color: '#FFFFFF' }}
       >
-        Din reise — dag {currentDay} av 30
+        Din reise — dag {currentDay} av 14
       </h3>
 
       {/* Progresjonsbake */}
@@ -50,7 +51,7 @@ export const JourneyTimeline = ({ currentDay, completedDays, phases = defaultPha
         <div
           className="absolute top-1/2 left-0 h-1 -translate-y-1/2 rounded-full transition-all duration-500"
           style={{
-            width: `${(currentDay / 30) * 100}%`,
+            width: `${(currentDay / JOURNEY_TOTAL_DAYS) * 100}%`,
             background: 'linear-gradient(90deg, #D4AF37, #E8C766)',
             boxShadow: '0 0 12px rgba(212, 175, 55, 0.3)',
           }}

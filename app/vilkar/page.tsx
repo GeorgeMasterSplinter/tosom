@@ -42,7 +42,7 @@ const clauses: Clause[] = [
     id: '2',
     title: 'Hva Tosom er',
     paragraphs: [
-      'Tosom er en relasjonsplattform for voksne. Vi kobler to personer og gir dere et privat rom med en guidet reise over 30 dager.',
+      'Tosom er en relasjonsplattform for voksne. Vi kobler to personer og gir dere et privat rom med en guidet reise over 14 dager.',
       'Tosom er ikke en datingapp. Det finnes ingen strøm av profiler, ingen sveiping og ingen mulighet til å velge mellom flere personer. Du får én kobling om gangen.',
     ],
   },
@@ -178,7 +178,7 @@ const clauses: Clause[] = [
     id: '14',
     title: 'Pris og betaling',
     paragraphs: [
-      `Tosom er gratis i dag for de ${PRICING.freeUserCap.toLocaleString('nb-NO')} første personene. Senere er planen ${PRICING.journeyPrice} kroner for én 30-dagersreise, betalt én gang med Vipps. Det er ingen abonnement og ingen løpende kostnader.`,
+      `Tosom er gratis i dag for de ${PRICING.freeUserCap.toLocaleString('nb-NO')} første personene. Senere er planen ${PRICING.journeyPrice} kroner for én 14-dagersreise, betalt én gang med Vipps. Det er ingen abonnement og ingen løpende kostnader.`,
       'Du blir aldri belastet uten at du har godkjent det på forhånd.',
     ],
   },

@@ -7,6 +7,7 @@ import prisma from "@/lib/prisma";
 import { getServerSession } from "@/lib/auth/session";
 import { captureError } from "@/lib/system/errors";
 import { logInfo } from "@/lib/system/log";
+import { JOURNEY_TOTAL_DAYS } from "@/config/journey";
 
 export const dynamic = 'force-dynamic';
 
@@ -80,10 +81,10 @@ export async function GET(request: Request): Promise<NextResponse> {
       if (content) todayContent = content;
     }
 
-    // Rekn ut dager att (30 dagers reise)
+    // Rekn ut dager att (14 dagers reise)
     let daysRemaining: number | null = null;
     if (journeyProgress?.startedAt) {
-      const totalDays = 30;
+      const totalDays = JOURNEY_TOTAL_DAYS;
       const elapsed = Math.floor(
         (Date.now() - journeyProgress.startedAt.getTime()) / (1000 * 60 * 60 * 24)
       );
@@ -91,20 +92,20 @@ export async function GET(request: Request): Promise<NextResponse> {
     }
 
     // Kan brukeren fullføre reisen?
-    const canComplete = journeyProgress ? (journeyProgress.day >= 30 || daysRemaining === 0 || isActive) : false;
+    const canComplete = journeyProgress ? (journeyProgress.day >= JOURNEY_TOTAL_DAYS || daysRemaining === 0 || isActive) : false;
 
     // Melding basert på status
     let message: string;
     if (!journeyProgress || !isActive) {
       message = "Du har ingen pågående reise. Vent på en match eller fullfør onboarding.";
     } else if (journeyProgress.pausedAt) {
-      message = `Reisen din er satt på pause. Dag ${journeyProgress.day}/30 — du kan holde fram når du vil.`;
+      message = `Reisen din er satt på pause. Dag ${journeyProgress.day}/${JOURNEY_TOTAL_DAYS} — du kan holde fram når du vil.`;
     } else if (journeyProgress.endedAt) {
       message = "Reisen din er fullført. Gratulerer! 🎉";
     } else if (daysRemaining && daysRemaining <= 7) {
       message = `Kun ${daysRemaining} dag igjen av reisen din — du er nær målet!`;
     } else if (daysRemaining) {
-      message = `Dag ${journeyProgress.day}/30 — ${daysRemaining} dager igjen av reisen din.`;
+      message = `Dag ${journeyProgress.day}/${JOURNEY_TOTAL_DAYS} — ${daysRemaining} dager igjen av reisen din.`;
     } else {
       message = "Reisen din er i gang.";
     }

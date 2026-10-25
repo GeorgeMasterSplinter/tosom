@@ -10,6 +10,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireAdmin } from '@/lib/auth/requireAuth';
+import { JOURNEY_TOTAL_DAYS } from '@/config/journey';
 
 export const dynamic = 'force-dynamic';
 
@@ -47,12 +48,12 @@ export async function GET(req: NextRequest) {
     }
 
     // Fullføringsgrad per resonansnivå
-    // "Fullført" = found_each_other eller daysCompleted >= 30
+    // "Fullført" = found_each_other eller daysCompleted >= 14
     const completionRateByResonance: Record<string, { completed: number; total: number }> = {};
     for (const level of ['DEEP', 'STRONG', 'MODERATE', 'GENTLE']) {
       const levelStats = stats.filter((s) => s.resonanceLevel === level);
       const completed = levelStats.filter(
-        (s) => s.outcome === 'found_each_other' || s.daysCompleted >= 30
+        (s) => s.outcome === 'found_each_other' || s.daysCompleted >= JOURNEY_TOTAL_DAYS
       ).length;
       completionRateByResonance[level] = { completed, total: levelStats.length };
     }

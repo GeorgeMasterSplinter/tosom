@@ -8,13 +8,14 @@ import { requireAuth } from '@/lib/auth/requireAuth';
 import { csrfCheck } from '@/lib/auth/csrf';
 import { endJourney } from '@/lib/journey/endJourney';
 import { tryParseJsonBody } from '@/lib/api/validation';
+import { JOURNEY_TOTAL_DAYS } from '@/config/journey';
 
 export const dynamic = 'force-dynamic';
 
 /**
  * POST /api/journey/exit
  *
- * Avslutt en aktiv 30-dagers reise.
+ * Avslutt en aktiv 14-dagers reise.
  * Kaller endJourney() som sletter alt innhold verifiserbart (I-6).
  *
  * Body: { reason?: string }
@@ -155,7 +156,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
 
     // 5. Logg avslutning
-    console.log(`[journey/exit] Bruker ${user.id} ${outcome === 'blocked' ? 'blokkerte' : 'avsluttet'} reise dag ${journey.day}/30 (outcome=${outcome})`, {
+    console.log(`[journey/exit] Bruker ${user.id} ${outcome === 'blocked' ? 'blokkerte' : 'avsluttet'} reise dag ${journey.day}/${JOURNEY_TOTAL_DAYS} (outcome=${outcome})`, {
       matchId: activeMatch.id,
       day: journey.day,
       reason,
@@ -173,7 +174,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             ? 'Reisen er fullført. Begge kontoene er slettet.'
             : outcome === 'new_journey'
               ? 'Reisen er avsluttet. Du sendes tilbake til onboarding.'
-              : `Reisen din ble avsluttet. Du nådde dag ${journey.day} av 30.`,
+              : `Reisen din ble avsluttet. Du nådde dag ${journey.day} av ${JOURNEY_TOTAL_DAYS}.`,
       nextStep: outcome === 'new_journey' ? 'onboarding' : 'Du kan starte en ny reise når du vil.',
       deleted,
     });

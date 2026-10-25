@@ -70,7 +70,7 @@ async function getHandler(request: Request) {
     const me = session.user.id;
 
     // K-8: Partnerens profilbilde vises kun når imageShareAllowedAt
-    // (dag 15) er satt og passert. Egne meldinger kan vise eget bilde.
+    // (dag 8) er satt og passert. Egne meldinger kan vise eget bilde.
     const imageAllowed = conversation.imageShareAllowedAt
       ? new Date() >= conversation.imageShareAllowedAt
       : false;

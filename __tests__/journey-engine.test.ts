@@ -18,78 +18,78 @@ import { MATCH_DELAY_HOURS } from '@/config/matching';
 import { DIMENSION_WEIGHTS } from '@/lib/matching/unifiedScorer';
 
 describe('Journey Engine', () => {
-  // ── Faseoverganger (dag 14→15, 21→22, 25→26) ──
+  // ── Faseoverganger (dag 7→8, 10→11, 12→13) ──
 
   describe('getPhaseForDay', () => {
     test('EARLY: dag 1 skal være EARLY', () => {
       expect(getPhaseForDay(1).phase).toBe(JourneyPhase.EARLY);
     });
 
-    test('EARLY: dag 14 skal være EARLY (siste dag i fase 1)', () => {
-      expect(getPhaseForDay(14).phase).toBe(JourneyPhase.EARLY);
+    test('EARLY: dag 7 skal være EARLY (siste dag i fase 1)', () => {
+      expect(getPhaseForDay(7).phase).toBe(JourneyPhase.EARLY);
     });
 
-    test('BUILDING_TRUST: dag 15 skal være BUILDING_TRUST (første dag i fase 2)', () => {
-      expect(getPhaseForDay(15).phase).toBe(JourneyPhase.BUILDING_TRUST);
+    test('BUILDING_TRUST: dag 8 skal være BUILDING_TRUST (første dag i fase 2)', () => {
+      expect(getPhaseForDay(8).phase).toBe(JourneyPhase.BUILDING_TRUST);
     });
 
-    test('BUILDING_TRUST: dag 21 skal være BUILDING_TRUST', () => {
-      expect(getPhaseForDay(21).phase).toBe(JourneyPhase.BUILDING_TRUST);
+    test('BUILDING_TRUST: dag 10 skal være BUILDING_TRUST', () => {
+      expect(getPhaseForDay(10).phase).toBe(JourneyPhase.BUILDING_TRUST);
     });
 
-    test('DEEPER: dag 22 skal være DEEPER (første dag i fase 3)', () => {
-      expect(getPhaseForDay(22).phase).toBe(JourneyPhase.DEEPER);
+    test('DEEPER: dag 11 skal være DEEPER (første dag i fase 3)', () => {
+      expect(getPhaseForDay(11).phase).toBe(JourneyPhase.DEEPER);
     });
 
-    test('DEEPER: dag 25 skal være DEEPER', () => {
-      expect(getPhaseForDay(25).phase).toBe(JourneyPhase.DEEPER);
+    test('DEEPER: dag 12 skal være DEEPER', () => {
+      expect(getPhaseForDay(12).phase).toBe(JourneyPhase.DEEPER);
     });
 
-    test('CHECKIN: dag 26 skal være CHECKIN (første dag i fase 4)', () => {
-      expect(getPhaseForDay(26).phase).toBe(JourneyPhase.CHECKIN);
+    test('CHECKIN: dag 13 skal være CHECKIN (første dag i fase 4)', () => {
+      expect(getPhaseForDay(13).phase).toBe(JourneyPhase.CHECKIN);
     });
 
-    test('CHECKIN: dag 30 skal være CHECKIN (siste dag)', () => {
-      expect(getPhaseForDay(30).phase).toBe(JourneyPhase.CHECKIN);
+    test('CHECKIN: dag 14 skal være CHECKIN (siste dag)', () => {
+      expect(getPhaseForDay(14).phase).toBe(JourneyPhase.CHECKIN);
     });
 
-    test('Ukjent dag > 30 skal falle tilbake til CHECKIN', () => {
-      expect(getPhaseForDay(31).phase).toBe(JourneyPhase.CHECKIN);
+    test('Ukjent dag > 14 skal falle tilbake til CHECKIN', () => {
+      expect(getPhaseForDay(15).phase).toBe(JourneyPhase.CHECKIN);
     });
   });
 
-  // M-5: journeySync importerer dayToPhase — pin CHECKIN på dag 26-30.
+  // M-5: journeySync importerer dayToPhase — pin CHECKIN på dag 13-14.
   describe('dayToPhase (M-5: CHECKIN oppnåelig)', () => {
-    test('dag 26-30 skal være CHECKIN', () => {
-      for (const day of [26, 27, 28, 29, 30]) {
+    test('dag 13-14 skal være CHECKIN', () => {
+      for (const day of [13, 14]) {
         expect(dayToPhase(day)).toBe(JourneyPhase.CHECKIN);
       }
     });
 
-    test('dag 22-25 skal være DEEPER (ikke CHECKIN)', () => {
-      for (const day of [22, 23, 24, 25]) {
+    test('dag 11-12 skal være DEEPER (ikke CHECKIN)', () => {
+      for (const day of [11, 12]) {
         expect(dayToPhase(day)).toBe(JourneyPhase.DEEPER);
       }
     });
   });
 
-  // ── Bildesperre (før dag 14) ──
+  // ── Bildesperre (før dag 8) ──
 
   describe('isPhotosAllowed', () => {
     test('dag 1: bilder IKKE tillatt', () => {
       expect(isPhotosAllowed(1)).toBe(false);
     });
 
-    test('dag 14: bilder IKKE tillatt (siste dag i EARLY)', () => {
-      expect(isPhotosAllowed(14)).toBe(false);
+    test('dag 7: bilder IKKE tillatt (siste dag i EARLY)', () => {
+      expect(isPhotosAllowed(7)).toBe(false);
     });
 
-    test('dag 15: bilder tillatt (første dag BUILDING_TRUST)', () => {
-      expect(isPhotosAllowed(15)).toBe(true);
+    test('dag 8: bilder tillatt (første dag BUILDING_TRUST)', () => {
+      expect(isPhotosAllowed(8)).toBe(true);
     });
 
-    test('dag 30: bilder tillatt', () => {
-      expect(isPhotosAllowed(30)).toBe(true);
+    test('dag 14: bilder tillatt', () => {
+      expect(isPhotosAllowed(14)).toBe(true);
     });
   });
 
@@ -101,14 +101,14 @@ describe('Journey Engine', () => {
       expect(isJourneyCompleted(1)).toBe(false);
     });
 
-    test('dag 30: aktiv, ikke fullført', () => {
-      expect(isJourneyActive(30)).toBe(true);
-      expect(isJourneyCompleted(30)).toBe(false);
+    test('dag 14: aktiv, ikke fullført', () => {
+      expect(isJourneyActive(14)).toBe(true);
+      expect(isJourneyCompleted(14)).toBe(false);
     });
 
-    test('dag 31: IKKE aktiv, fullført', () => {
-      expect(isJourneyActive(31)).toBe(false);
-      expect(isJourneyCompleted(31)).toBe(true);
+    test('dag 15: IKKE aktiv, fullført', () => {
+      expect(isJourneyActive(15)).toBe(false);
+      expect(isJourneyCompleted(15)).toBe(true);
     });
 
     test('dag 0: IKKE aktiv', () => {
@@ -119,8 +119,8 @@ describe('Journey Engine', () => {
   // ── JOURNEY_TOTAL_DAYS ──
 
   describe('JOURNEY_TOTAL_DAYS', () => {
-    test('skal være 30 dager', () => {
-      expect(JOURNEY_TOTAL_DAYS).toBe(30);
+    test('skal være 14 dager', () => {
+      expect(JOURNEY_TOTAL_DAYS).toBe(14);
     });
   });
 
@@ -135,16 +135,16 @@ describe('Journey Engine', () => {
       expect(getThemeForDay(6)).toBe('trygghet');
     });
 
-    test('dag 13: fordydning', () => {
-      expect(getThemeForDay(13)).toBe('fordypning');
+    test('dag 8: fordypning', () => {
+      expect(getThemeForDay(8)).toBe('fordypning');
     });
 
-    test('dag 21: modning', () => {
-      expect(getThemeForDay(21)).toBe('modning');
+    test('dag 11: modning', () => {
+      expect(getThemeForDay(11)).toBe('modning');
     });
 
-    test('dag 27: integrasjon', () => {
-      expect(getThemeForDay(27)).toBe('integrasjon');
+    test('dag 14: integrasjon', () => {
+      expect(getThemeForDay(14)).toBe('integrasjon');
     });
   });
 });

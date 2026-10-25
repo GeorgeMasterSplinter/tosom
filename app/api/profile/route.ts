@@ -50,7 +50,7 @@ export async function PUT(request: Request) {
 
   if (journey && journey.phase !== null) {
     return Response.json(
-      { error: "Profilen er låst under reise. Du kan ikke endre profilen mens du er i en aktiv 30-dagers reise." },
+      { error: "Profilen er låst under reise. Du kan ikke endre profilen mens du er i en aktiv 14-dagers reise." },
       { status: 409 }
     );
   }

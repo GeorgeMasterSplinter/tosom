@@ -1862,3 +1862,42 @@ vilkårenes juridiske innhold (angrerett-punktet beholdes med gratisbeta-sperren
 **Verifisering (25.10.2026):** FB-01…FB-19 grønne — se ACT P1A-sluttrapport.
 
 **COMMIT/PUSH/DEPLOY:** NO / NO / NO (instruks §33 — stopp før commit).
+
+## ACT J1 — JOURNEY 7/14 MODEL (25.10.2026)
+
+**Scope:** Reise forkortes 30→14 dager. Bilde-lås flyttes dag 15→dag 8. Start-vindu 7 dager. 4 faser. Ny kanonisk konfig i `config/journey.ts` (re-eksportert fra `lib/journey/engine.ts`). 82 filer (API/logic/UI/tests) + prisma-kommentar oppdatert. Se `docs/JOURNEY-7-14-IMPACT-PLAN-v1.0.md`.
+
+**Status (faktisk resultat, verifisert mot kode + tester):**
+
+| OMRÅDE | STATUS |
+|---|---|
+| JOURNEY MODEL | **7/14 IMPLEMENTED LOCALLY** (reise 14 dager, bilde-lås dag 8, start-vindu 7 dager, 4 faser) |
+| JOURNEY END | **DAY 14** |
+| PHOTO REVEAL | **DAY 8** |
+| START WINDOW | **7 DAYS** |
+| SATURDAY CADENCE | **OPPRETTHOLDT** (uendret) |
+| PRODUCTION | **NOT DEPLOYED** |
+| REAL USER MIGRATION | **NOT REQUIRED** (ingen ekte brukere på gammel 30-dagersmodell) |
+| ACTIVE PROD JOURNEY | **TEST/DEMO ONLY** (Georges 2 testkontoer; 0 ekte brukere påvirket) |
+| PRISMA SCHEMA | **UENDRET** (kun kommentar `day<=30`→`14`; ingen migrasjon) |
+| VERIFY | **PASS** (838 passed / 1 skip, 80 av 81 suiter) |
+| LINT | **PASS** (0 warnings) |
+| BUILD | **PASS** (EXIT=0, 68/68 sider) |
+| INTEGRATION (live DB) | **5/5 PASS** |
+
+**Endringer:**
+- Ny kanonisk konfig `config/journey.ts`: `JOURNEY_TOTAL_DAYS=14`, `PHOTO_REVEAL_DAY=8`, `START_WINDOW_DAYS=7`, 4 `JOURNEY_PHASES`; re-eksportert fra `lib/journey/engine.ts` (én kilde)
+- API-ruter (journey/match/profile/chat/admin) leser nå konstantene i stedet for hardkodet 30/15
+- `lib/` (journey/match/profile/email/atmosphere/system/user-state) + UI-sider + komponenter oppdatert mot nye grenser
+- Prisma-skjemakommentar rettet `day <= 30` → `day <= 14` (ingen migrasjon)
+- Tests (unit + integrasjon) oppdatert mot nye grenser: 14 dager, dag-8 bilde, 7-dagers start-vindu
+- `docs/JOURNEY-7-14-IMPACT-PLAN-v1.0.md` inkludert i commit (J1-impactplan)
+
+**Ikke endret:** matching-motor, weights, MIN_SCORE, free-quota, Vipps, payment-arkitektur
+(`Order`/`WebhookEvent`/`PaymentProvider` beholdes), Prisma-schema-struktur, auth, identity,
+`lib/journeyTasks.ts` (død kode — eget oppryddingstask). `docs/IDENTITY-TRUST-PLAN-v1.0.md`
+utelatt fra denne commit-en (separat fremtidig spor).
+
+**Verifisering (25.10.2026):** J-01…J-19 + re-kjørte eksisterende journey/match/profile/e-post/integrasjonstester grønne.
+
+**COMMIT/PUSH/DEPLOY:** YES (J1-commit) / NO / NO.

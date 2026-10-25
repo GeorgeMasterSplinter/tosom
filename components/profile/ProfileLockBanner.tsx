@@ -8,11 +8,12 @@
  */
 
 import { radius, color } from '@/config/design-tokens';
+import { JOURNEY_TOTAL_DAYS } from '@/config/journey';
 
 interface ProfileLockBannerProps {
   /** Partnerens navn — vises i teksten */
   partnerName?: string;
-  /** Dagen de er på (f.eks. 7 av 30) */
+  /** Dagen de er på (f.eks. 7 av 14) */
   currentDay?: number;
   /** Totalt antal dager i reise */
   totalDays?: number;
@@ -21,7 +22,7 @@ interface ProfileLockBannerProps {
 export function ProfileLockBanner({
   partnerName = 'partneren din',
   currentDay = 1,
-  totalDays = 30,
+  totalDays = JOURNEY_TOTAL_DAYS,
 }: ProfileLockBannerProps) {
   return (
     <div

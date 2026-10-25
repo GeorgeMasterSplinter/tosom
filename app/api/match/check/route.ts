@@ -7,6 +7,7 @@ import prisma from "@/lib/prisma";
 import { getServerSession } from "@/lib/auth/session";
 import { captureError } from "@/lib/system/errors";
 import { logInfo } from "@/lib/system/log";
+import { JOURNEY_TOTAL_DAYS } from "@/config/journey";
 
 export const dynamic = 'force-dynamic';
 
@@ -109,7 +110,7 @@ export async function POST(request: Request): Promise<NextResponse> {
           select: { day: true, startedAt: true },
         });
         if (jp?.startedAt) {
-          const totalDays = 30;
+          const totalDays = JOURNEY_TOTAL_DAYS;
           const elapsed = Math.floor(
             (Date.now() - jp.startedAt.getTime()) / (1000 * 60 * 60 * 24)
           );

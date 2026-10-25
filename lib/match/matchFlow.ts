@@ -80,7 +80,7 @@ export const matchFlowAPI = {
       ready_for_match: "Klar for match",
       searching: "Leter etter en match",
       matched: "Du har en match!",
-      in_journey: "Du er i en 30-dagers reise",
+      in_journey: "Du er i en 14-dagers reise",
       completed: "Reisen er ferdig – du kan starte en ny match",
     };
     return labels[state];
@@ -95,7 +95,7 @@ export const matchFlowAPI = {
         "Vi leter etter en match til deg. Matcherunden kjører natt til lørdag.",
       matched: "Gratulerer! Du har fått en match. Aksepter å starte reisen.",
       in_journey:
-        "Du er i en 30-dagers reise med din match. Når den er over kan du starte på nytt.",
+        "Du er i en 14-dagers reise med din match. Når den er over kan du starte på nytt.",
       completed:
         "Denne matchen er ferdig. Du kan starte en ny reise når du er klar.",
     };

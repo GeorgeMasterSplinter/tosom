@@ -2,6 +2,7 @@
 
 import { color, radius, shadow, typography } from '@/config/design-tokens';
 import PremiumButton from '@/components/ui/PremiumButton';
+import { JOURNEY_TOTAL_DAYS } from '@/config/journey';
 
 /* ═══════════════════════════════════════
    Journey Section — Forenklet "Veileder"
@@ -56,7 +57,7 @@ function getDayGuide(day: number): { theme: string; question: string; note?: str
     13: { theme: 'Drømmer og visjoner', question: 'Hvis alt kunne blitt som du ville — hva hadde da vært annerledes om 5 år?' },
     14: { theme: 'Fysisk tiltrukning', question: 'Hva tenker du om fysisk nærhet i et nytt forhold?', note: '💛 Dette er et naturlig sted å vise bilder dersom dere ønsker det. Helt greit å vente — eller ikke vise noe i det hele tatt.' },
 
-    // Dybde-fasen (dag 15-23)
+    // Dybde-fasen (dag 11-12)
     15: { theme: 'Å stole', question: 'Hva trenger du for virkelig å stole på noen? Kan tillit bygges raskt, eller må den vokse?' },
     16: { theme: 'Sårbarhet', question: 'Når var du sist sårbar mot noen? Hva skjedde etterpå — godt eller vondt?' },
     17: { theme: 'Drømmer sammen', question: 'Hva ønsker du at dere skal ha bygt sammen om 5 år? Et hjem, reiser, erfaringer?' },
@@ -67,7 +68,7 @@ function getDayGuide(day: number): { theme: string; question: string; note?: str
     22: { theme: 'Tåre og latter', question: 'Hva får deg til å grine? Hva får deg til å le så magen gjør vondt?' },
     23: { theme: 'Å være partner', question: 'Hva tror du er det viktigste du bidrar med som partner i et forhold?' },
 
-    // Forpliktelsesfasen (dag 24-30)
+    // Forpliktelsesfasen (dag 13-14)
     24: { theme: 'Sammen eller hver for seg', question: 'Hvordan balanserer du fellesskap og egenrom — og hva trenger dere av hverandre?' },
     25: { theme: 'Å møte fremtiden', question: 'Hva er det største skreddet dere står over som par?' },
     26: { theme: 'Grunnlighet', question: 'Hva ønsker du å si til partneren din som takk for reisen deres så langt?' },
@@ -128,7 +129,7 @@ const JourneySection = ({ currentDay, daysCompleted, phaseLabel }: JourneySectio
           color: color.text.primary,
         }}
       >
-        Din reise — dag {currentDay} av 30
+        Din reise — dag {currentDay} av 14
       </h2>
       <p
         className="mb-6"
@@ -155,7 +156,7 @@ const JourneySection = ({ currentDay, daysCompleted, phaseLabel }: JourneySectio
           <div
             className="absolute left-0 top-0 bottom-0 rounded-full transition-all duration-700 ease-out"
             style={{
-              width: `${(currentDay / 30) * 100}%`,
+              width: `${(currentDay / JOURNEY_TOTAL_DAYS) * 100}%`,
               background: 'linear-gradient(90deg, #D4AF37, #E8C766)',
             }}
           />
@@ -164,7 +165,7 @@ const JourneySection = ({ currentDay, daysCompleted, phaseLabel }: JourneySectio
           <div
             className="absolute top-1/2 -translate-y-1/2 w-5 h-5 rounded-full shadow-lg transition-all duration-500"
             style={{
-              left: `calc(${(currentDay / 30) * 100}% - 10px)`,
+              left: `calc(${(currentDay / JOURNEY_TOTAL_DAYS) * 100}% - 10px)`,
               background: '#D4AF37',
               boxShadow: '0 0 12px rgba(212, 175, 55, 0.5)',
             }}
@@ -183,7 +184,7 @@ const JourneySection = ({ currentDay, daysCompleted, phaseLabel }: JourneySectio
         <div className="flex justify-between mt-2">
           <span style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.6)' }}>Dag 1</span>
           <span style={{ fontSize: '10px', color: '#D4AF37', fontWeight: 600 }}>{currentPhase}</span>
-          <span style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.6)' }}>Dag 30</span>
+          <span style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.6)' }}>Dag 14</span>
         </div>
       </div>
 
@@ -268,7 +269,7 @@ const JourneySection = ({ currentDay, daysCompleted, phaseLabel }: JourneySectio
         </PremiumButton>
       )}
 
-      {currentDay >= 30 && (
+      {currentDay >= JOURNEY_TOTAL_DAYS && (
         <div
           className="p-4 rounded-xl text-center"
           style={{

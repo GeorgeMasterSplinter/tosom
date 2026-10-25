@@ -12,6 +12,7 @@
 import Image from 'next/image';
 import { useState, useRef, useEffect, Fragment } from "react";
 import { color } from "@/config/design-tokens";
+import { JOURNEY_TOTAL_DAYS, PHOTO_REVEAL_DAY } from "@/config/journey";
 import { useChat } from "@/app/chat/context/ChatContext";
 import { MessageBubble, MessageBubbleStyles } from "@/app/chat/components/MessageBubble";
 import { ChatHeader } from "@/app/chat/components/ChatHeader";
@@ -181,7 +182,7 @@ function MessageList({ partner, journeyDay }: {
       }}
     >
       {allMessages.map((msg, idx) => {
-        // Vis en dag-skiljer når kalenderdagen endres (30-dagers reise)
+        // Vis en dag-skiljer når kalenderdagen endres (14-dagers reise)
         const ts = msg.metadata?.timestamp;
         const dayKey = toDayKey(ts);
         const prevKey = idx > 0 ? toDayKey(allMessages[idx - 1].metadata?.timestamp) : null;
@@ -467,7 +468,7 @@ function ChatInput({
           transition: 'border-color 0.3s ease, box-shadow 0.3s ease, background 0.5s ease',
         }}
       >
-        {/* Bilde-ikon — Premium glass-knapp (låst før dag 15) */}
+        {/* Bilde-ikon — Premium glass-knapp (låst før dag 8) */}
         <input
           ref={fileInputRef}
           type="file"
@@ -487,7 +488,7 @@ function ChatInput({
             opacity: imageShareAllowed ? 1 : 0.5,
             transition: 'color 1.2s ease-in-out',
           }}
-          title={uploading ? "Laster opp..." : imageShareAllowed ? "Send bilde" : "🔒 Bildedeling låses opp dag 15"}
+          title={uploading ? "Laster opp..." : imageShareAllowed ? "Send bilde" : `🔒 Bildedeling låses opp dag ${PHOTO_REVEAL_DAY}`}
         >
           <span className="text-sm">📷</span>
           {!imageShareAllowed && (
@@ -664,12 +665,12 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
           <MessageList partner={partner} journeyDay={journeyDay} />
         </div>
 
-        {/* DAG 30 — Reisen er fullført. Vis valg i stedet for input. */}
-        {journeyDay >= 30 ? (
+        {/* DAG 14 — Reisen er fullført. Vis valg i stedet for input. */}
+        {journeyDay >= JOURNEY_TOTAL_DAYS ? (
           <div className="shrink-0 border-t px-4 py-6" style={{ borderColor: color.glass.border, background: color.bg.surface }}>
             <div className="max-w-md mx-auto text-center space-y-4">
               <p className="text-sm" style={{ color: color.text.primary }}>
-                Reisen er fullført. 30 dager sammen.
+                Reisen er fullført. {JOURNEY_TOTAL_DAYS} dager sammen.
               </p>
               <div className="space-y-3">
                 <a

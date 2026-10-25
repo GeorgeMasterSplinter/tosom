@@ -9,6 +9,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { JOURNEY_TOTAL_DAYS } from "@/config/journey";
 
 // B5.4: Matcherunde-data
 interface MatchingRound {
@@ -292,7 +293,7 @@ export default function AdminResonancePage() {
                 {/* X-axis labels */}
                 <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, display: "flex", justifyContent: "space-between", fontSize: "10px", color: "rgba(255,255,255,0.6)" }}>
                   {chartData.filter((_, i) => i % Math.max(1, Math.floor(chartData.length / 8)) === 0).map((d, i) => (
-                    <span key={i} style={{ position: "absolute", bottom: 0, left: `${(d.day / 30) * 100}%`, transform: "translateX(-50%)" }}>
+                    <span key={i} style={{ position: "absolute", bottom: 0, left: `${(d.day / JOURNEY_TOTAL_DAYS) * 100}%`, transform: "translateX(-50%)" }}>
                       D{d.day}
                     </span>
                   ))}
@@ -305,7 +306,7 @@ export default function AdminResonancePage() {
 
                 {/* Dots */}
                 {chartData.map((d, i) => {
-                  const x = (d.day / 30) * (100 - 10);
+                  const x = (d.day / JOURNEY_TOTAL_DAYS) * (100 - 10);
                   const y = ((d.depth / maxDepth) * (chartH - 56)) + 16;
                   return (
                     <div
@@ -328,7 +329,7 @@ export default function AdminResonancePage() {
                 {/* Lines */}
                 <svg style={{ position: "absolute", left: 8, top: 16, right: 8, bottom: 20, pointerEvents: "none" }}>
                   {chartData.filter((_, i) => i % Math.max(1, Math.floor(chartData.length / 8)) === 0).map((d, i) => {
-                    const x = (d.day / 30) * (100 - 10);
+                    const x = (d.day / JOURNEY_TOTAL_DAYS) * (100 - 10);
                     return <line key={i} x1={`${x}%`} y1="0" x2={`${x}%`} y2="100%" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />;
                   })}
                 </svg>

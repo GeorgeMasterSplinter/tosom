@@ -3,6 +3,8 @@
 // TODO: Her kan vi senere koble til AI-generering av meldinger.
 // TODO: Her kan vi hente meldinger fra en konfigurasjonsfil eller CMS.
 
+import { JOURNEY_TOTAL_DAYS, PHOTO_REVEAL_DAY } from "@/config/journey";
+
 // SM2 — Definer SystemEvent-type
 export type SystemEvent =
   | "match_requested"
@@ -64,7 +66,7 @@ const messagesMap: Record<SystemEvent, SystemMessage> = {
   journey_completed: {
     event: "journey_completed",
     title: "Reisen er ferdig.",
-    body: "Takk for at dere ga hverandre 30 dager. Når du er klar, kan du starte på nytt.",
+    body: "Takk for at dere ga hverandre 14 dager. Når du er klar, kan du starte på nytt.",
     level: "warning",
   },
   milestone_reached: {
@@ -116,9 +118,9 @@ export function getMessagesForState(
       const day = currentDay ?? 1;
       messages.push(getMessageForEvent("journey_started"));
 
-      if (day >= 1 && day <= 14) {
+      if (day >= 1 && day < PHOTO_REVEAL_DAY) {
         messages.push(getMessageForEvent("phase1_active"));
-        if (day === 14) {
+        if (day === PHOTO_REVEAL_DAY - 1) {
           messages.push({
             event: "phase1_active",
             title: "I morgen blir bilder tilgjengelige.",
@@ -128,15 +130,15 @@ export function getMessagesForState(
         }
       }
 
-      if (day >= 15 && day < 30) {
+      if (day >= PHOTO_REVEAL_DAY && day < JOURNEY_TOTAL_DAYS) {
         messages.push(getMessageForEvent("phase2_active"));
       }
 
-      if (day >= 30) {
+      if (day >= JOURNEY_TOTAL_DAYS) {
         messages.push({
           event: "journey_completed",
           title: "Reisen er ferdig.",
-          body: "Takk for at dere ga hverandre 30 dager.",
+          body: "Takk for at dere ga hverandre 14 dager.",
           level: "warning",
         });
       }

@@ -122,8 +122,8 @@ const steps = [
   },
   {
     icon: <IconPhotos />,
-    title: 'Bilder etter 14 dager',
-    content: 'Trygghet før utseende. Muligheten til å sende bilder til hverandre åpnes først etter 14 dager — da kjenner dere hverandre som mennesker, ikke som profiler. Ordene først, bildet etter.',
+    title: 'Bilder fra dag 8',
+    content: 'Trygghet før utseende. Den første uken er uten bilder — da kjenner dere hverandre som mennesker, ikke som profiler. Bildedelingen åpnes på dag 8. Ordene først, bildet etter.',
   },
 ];
 
@@ -280,7 +280,7 @@ export default function LandingPage() {
                   lineHeight: '1.8',
                 }}
               >
-                Ingen kredittkort, ingen abonnement. Senere er planen {PRICING.journeyPrice} kr for én 30-dagersreise — betalt én gang med Vipps.
+                Ingen kredittkort, ingen abonnement. Senere er planen {PRICING.journeyPrice} kr for én 14-dagersreise — betalt én gang med Vipps.
               </p>
             </GlassCard>
           </div>

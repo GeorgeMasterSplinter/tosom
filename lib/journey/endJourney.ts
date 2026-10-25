@@ -260,7 +260,7 @@ export async function endJourney(
 
     // 11. B4.5: Utfallet bestemmer hva som skjer med kontoene
     // - no_action: SLETT begge kontoer permanent (behold MatchHistory + Report + AuditLog)
-    //   (no_action = reisen fullførte 30 dager, ingen handlet innen 24 t → auto-sletting)
+    //   (no_action = reisen fullførte 14 dager, ingen handlet innen 24 t → auto-sletting)
     // - found_each_other: kontoene OVERLEVER (D: 24-timers grace — satt til COMPLETED over)
     // - new_journey / andre: Reset til IDLE (kontoen lever videre)
     if (outcome === 'no_action') {
@@ -324,7 +324,7 @@ export async function endJourney(
   }
 
   // B-2 / G: «Reisen er slutt»-e-post — sendes kun når reisen er endelig over.
-  // no_action: kontoene er slettet (dag 30). found_each_other: grace-period —
+  // no_action: kontoene er slettet (dag 14). found_each_other: grace-period —
   // kontoene lever 24 t mer (eposten forteller om PDF-vinduet).
   // Best-effort: e-postfeil skal aldri blokkere reiseslutt. E-post og navn
   // leses fra de in-memory-objektene.
@@ -336,7 +336,7 @@ export async function endJourney(
       if (u.email) {
         pendingEndEmails.push({
           to: u.email,
-          label: found ? 'fant-hverandre-epost' : 'reiseslutt-epost (dag 30)',
+          label: found ? 'fant-hverandre-epost' : 'reiseslutt-epost (dag 14)',
           promise: sendJourneyEndEmail(u.email, u.name || undefined, found),
         });
       } else {

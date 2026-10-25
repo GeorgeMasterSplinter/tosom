@@ -2,7 +2,7 @@
  * Tosom — Journey Reset API 🟡⭐
  * POST /api/journey/reset
  *
- * Kjøres når brukeren velger "Ja til tosommhet" eller "Start ny reise" på dag 30.
+ * Kjøres når brukeren velger "Ja til tosommhet" eller "Start ny reise" på dag 14.
  * Sletter chat, markerer match som completed, og resetter journey.
  */
 
@@ -11,6 +11,7 @@ import { getServerSession } from "@/lib/auth/session";
 import prisma from "@/lib/prisma";
 import { tryParseJsonBody } from "@/lib/api/validation";
 import { csrfCheck } from "@/lib/auth/csrf";
+import { JOURNEY_TOTAL_DAYS } from "@/config/journey";
 
 export async function POST(req: NextRequest) {
   try {
@@ -81,7 +82,7 @@ export async function POST(req: NextRequest) {
         where: { id: journey.id },
         data: {
           completedAt: new Date(),
-          day: 30,
+          day: JOURNEY_TOTAL_DAYS,
         },
       });
     }

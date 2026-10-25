@@ -5,8 +5,8 @@ import prisma from "@/lib/prisma";
 import type { JourneyPhase } from "@prisma/client";
 // M-5/M-6: Én kilde for fasedefinisjon og bilde-lås — importerer fra engine.
 import { dayToPhase, isPhotosAllowed } from "@/lib/journey/engine";
-
-const TOTAL_DAYS = 30;
+// Dagstall — én kilde: @/config/journey
+import { JOURNEY_TOTAL_DAYS } from "@/config/journey";
 
 // findFirst uses WhereInput — simple { userId, matchId } works
 const whereForFind = (userId: string, matchId: string) => ({ userId, matchId });
@@ -23,7 +23,7 @@ export async function startJourneyOnMatch(
       data: { userId, matchId, phase: "EARLY" as JourneyPhase, day: 0 },
     });
   }
-  // M-6: bilde-lås på dag >= 15 (kanonisk isPhotosAllowed), ikke dag >= 13.
+  // M-6: bilde-lås på dag >= 8 (kanonisk isPhotosAllowed).
   return { day: jp.day, phase: jp.phase, photosEnabled: isPhotosAllowed(jp.day) };
 }
 
@@ -38,7 +38,7 @@ export async function advanceMatchJourney(
     });
     return { day: 1, changed: false, completed: false, phase: "EARLY" };
   }
-  if (jp.day >= TOTAL_DAYS) {
+  if (jp.day >= JOURNEY_TOTAL_DAYS) {
     return { day: jp.day, changed: false, completed: true, phase: jp.phase };
   }
   const newDay = jp.day + 1;
@@ -46,7 +46,7 @@ export async function advanceMatchJourney(
     where: whereUnique(userId, matchId),
     data: { day: newDay, phase: dayToPhase(newDay) },
   });
-  return { day: jp.day, changed: true, completed: jp.day >= TOTAL_DAYS, phase: jp.phase };
+  return { day: jp.day, changed: true, completed: jp.day >= JOURNEY_TOTAL_DAYS, phase: jp.phase };
 }
 
 export async function resetMatchJourney(
@@ -64,7 +64,7 @@ export async function resetMatchJourney(
 
 export async function isMatchJourneyComplete(userId: string, matchId: string): Promise<boolean> {
   const jp = await prisma.journeyProgress.findFirst({ where: whereForFind(userId, matchId) });
-  return jp ? jp.day >= TOTAL_DAYS : false;
+  return jp ? jp.day >= JOURNEY_TOTAL_DAYS : false;
 }
 
 export async function getMatchJourney(
@@ -73,6 +73,6 @@ export async function getMatchJourney(
 ): Promise<{ day: number; phase: string; photosEnabled: boolean }> {
   const jp = await prisma.journeyProgress.findFirst({ where: whereForFind(userId, matchId) });
   if (!jp) { return { day: 0, phase: "EARLY", photosEnabled: false }; }
-  // M-6: bilde-lås på dag >= 15 (kanonisk isPhotosAllowed), ikke dag >= 13.
+  // M-6: bilde-lås på dag >= 8 (kanonisk isPhotosAllowed).
   return { day: jp.day, phase: jp.phase, photosEnabled: isPhotosAllowed(jp.day) };
 }

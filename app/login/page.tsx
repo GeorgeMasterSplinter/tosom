@@ -201,7 +201,7 @@ export default function LoginPage() {
           >
             En guidet reise for to. Du bygger en dyp profil,
             og natt til lørdag leter vi etter noen som passer
-            deg godt. Finner vi det, går dere inn i en 30-dagers
+            deg godt. Finner vi det, går dere inn i en 14-dagers
             reise sammen.
           </p>
         </div>

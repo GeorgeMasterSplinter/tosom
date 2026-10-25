@@ -6,7 +6,7 @@
  * - Match-revelasjon modal (første gang, 12 sek)
  * - Resonanse-kort (2 kort + ORD i midten)
  * - Knapper: [Samtale] [⚙]
- * - Kalendar (30 dager, 4 faser)
+ * - Kalendar (14 dager, 4 faser)
  * - Milepæler (gjeldende dag)
  * - Profil privat
  *
@@ -20,6 +20,7 @@ import { useRouter } from 'next/navigation';
 import { Footer } from '@/components/ui/layout/Footer';
 import { InstallPrompt } from '@/components/pwa/InstallPrompt';
 import { color, typographyToStyle } from '@/config/design-tokens';
+import { JOURNEY_TOTAL_DAYS } from '@/config/journey';
 import GlassCard from '@/components/ui/cards/GlassCard';
 
 /* ═══════════════════════════════════════
@@ -55,14 +56,13 @@ interface DashboardData {
    ═══════════════════════════════════════ */
 
 // Fasegrensene speiler den kanoniske journey-motoren
-// (lib/journey/engine.ts → PHASE_CONFIGS: 1–14 / 15–21 / 22–25 / 26–30).
-// Dashboardet hadde tidligere egne grenser (1–7 / 8–14 / 15–21 / 22–30) —
-// slått sammen med motoren, som driver den faktiske reisen.
+// (config/journey.ts → JOURNEY_PHASES: 1–7 / 8–10 / 11–12 / 13–14).
+// Dashboardet bruker samme grenser som motoren, som driver den faktiske reisen.
 const PHASES = [
-  { key: 'EARLY', name: 'Bli kjent', start: 1, end: 14, color: '#5B9BD5' },
-  { key: 'BUILDING_TRUST', name: 'Bygger tillit', start: 15, end: 21, color: '#D4AF37' },
-  { key: 'DEEPER', name: 'Dypere samvær', start: 22, end: 25, color: '#4ECDC4' },
-  { key: 'CHECKIN', name: 'Refleksjon', start: 26, end: 30, color: '#E8875B' },
+  { key: 'EARLY', name: 'Bli kjent', start: 1, end: 7, color: '#5B9BD5' },
+  { key: 'BUILDING_TRUST', name: 'Bygger tillit', start: 8, end: 10, color: '#D4AF37' },
+  { key: 'DEEPER', name: 'Dypere samvær', start: 11, end: 12, color: '#4ECDC4' },
+  { key: 'CHECKIN', name: 'Refleksjon', start: 13, end: 14, color: '#E8875B' },
 ];
 
 function getPhaseForDay(day: number) {
@@ -213,7 +213,7 @@ function MatchRevealModal({
           Vi koblet dere basert på resonans — verdier, livsstil og emosjonell rytme.
         </p>
         <p className="text-sm mt-3 font-medium" style={{ color: 'rgba(255,255,255,0.7)' }}>
-          Reisen starter nå. 30 dager. Fire faser.
+          Reisen starter nå. 14 dager. Fire faser.
         </p>
       </div>
     </div>
@@ -256,8 +256,8 @@ function JourneyCalendar({ currentDay }: { currentDay: number }) {
       </div>
 
       {/* Day grid */}
-      <div className="grid grid-cols-10 gap-1">
-        {Array.from({ length: 30 }, (_, i) => i + 1).map(day => {
+      <div className="grid grid-cols-7 gap-1">
+        {Array.from({ length: JOURNEY_TOTAL_DAYS }, (_, i) => i + 1).map(day => {
           const phase = getPhaseForDay(day);
           const isCurrent = day === markedDay;
           const isPast = day < currentDay;
@@ -307,12 +307,11 @@ function JourneyCalendar({ currentDay }: { currentDay: number }) {
 
 const MILESTONES: Array<{ day: number; label: string; description: string }> = [
   { day: 1, label: 'Reisen starter', description: 'Dag 1. Si hei til hverandre.' },
-  { day: 5, label: 'Første oppgave', description: 'Del en liten ting fra dagen din. Noe enkelt, noe ærlig.' },
-  { day: 10, label: 'Bygg tillit', description: 'Nå kan dere dele mer. Hva gjør at du føler deg trygg i en samtale?' },
-  { day: 15, label: 'Bilder åpnes', description: 'Fra dag 15 kan dere dele bilder med hverandre. Grunnlaget er lagt.' },
-  { day: 21, label: 'Dypere samtaler', description: 'Snakk om verdier, drømmer og hva som betyr mest for dere.' },
-  { day: 25, label: 'Nærmere slutten', description: 'Reflekter over hva reisen har gitt dere. Hva tar dere med videre?' },
-  { day: 30, label: 'Avslutning', description: 'Dag 30: Velg hvordan reisen skal ende.' },
+  { day: 3, label: 'Refleksjon', description: 'Tre dager inn i reisen. Hva har overrasket deg så langt?' },
+  { day: 7, label: 'Én uke sammen', description: 'Én uke har gått. Dere har latt samtalen lede — nå kommer bildet deres.' },
+  { day: 8, label: 'Bilder åpnes', description: 'Fra dag 8 kan dere dele bilder med hverandre. Ta det rolig, uten press.' },
+  { day: 10, label: 'Vendepunkt', description: 'Nå har dere kommet et stykke. Det er vanlig å kjenne usikkerhet — og det er helt greit.' },
+  { day: 14, label: 'Avslutning', description: 'Dag 14: Velg hvordan reisen skal ende.' },
 ];
 
 function Milestones({ currentDay }: { currentDay: number }) {
@@ -384,7 +383,7 @@ function ProfilePrivateSection() {
         {[
           'Bare din match kan se profilen din. Ingen andre brukere har tilgang.',
           'Profildata er kryptert og lagret sikkert.',
-          'Bilder deles først etter 14 dager.',
+          'Bilder deles først på dag 8.',
           'Du kan når som helst slette profilen din.',
           'Ingen deling med tredjepart.',
         ].map((text, i) => (

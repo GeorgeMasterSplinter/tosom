@@ -25,7 +25,7 @@ export function PremiumJourneyProgressTracker({ completedDays, currentDay, onDay
       maxWidth: '360px',
       margin: '24px auto',
     }}>
-      {Array.from({ length: 30 }, (_, i) => i + 1).map(day => {
+      {Array.from({ length: 14 }, (_, i) => i + 1).map(day => {
         const isCompleted = completedDays.includes(day);
         const isCurrent = day === currentDay;
         const isSelected = day === selectedDay;

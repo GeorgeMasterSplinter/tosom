@@ -11,6 +11,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import { JOURNEY_TOTAL_DAYS } from "@/config/journey";
 
 /* ═══════════════════════════════════════
    THEME TOKENS
@@ -118,7 +119,7 @@ export function MilestoneBubble({
           className="text-xs font-medium uppercase tracking-widest mb-2"
           style={{ color: G.gold, letterSpacing: "0.1em" }}
         >
-          Dag {day} av 30
+          Dag {day} av {JOURNEY_TOTAL_DAYS}
         </p>
 
         {/* Tittel — stor typografi */}

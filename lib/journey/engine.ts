@@ -9,12 +9,12 @@
 //   - lib/journey/journeyEngine.ts      (DB-funksjonar, advanceJourney) ⚠️ SLEPP
 //   - lib/journey/journeyStateEngine.ts (MatchFlow + systemMessages) ⚠️ SLEPP
 //   - lib/journey/getJourneyState.ts    (getOrCreateJourney) ⚠️ SLEPP
-//   - components/journey/journeyEngine.ts (dagetekster 1-30, theme-ranges) ⚠️ SLETTES
+//   - components/journey/journeyEngine.ts (dagetekster 1-14, theme-ranges) ⚠️ SLETTES
 //   - lib/resonance.ts                  (resonans-berekning)
 //   - lib/warmIndicator.ts              (warmth-score)
 //   - lib/silentMoments.ts              (silent moments detection)
 //   - lib/generateFirstMessage.ts       (match-melding)
-//   - lib/getJourneyImpulse.ts          (daglige prompts 1-30)
+//   - lib/getJourneyImpulse.ts          (daglige prompts 1-14)
 
 // ═══════════════════════════════════════════
 // TYPE DEFINISJONAR
@@ -22,6 +22,18 @@
 
 import { JourneyPhase } from "@prisma/client";
 import type { SystemMessage, SystemEvent } from "../system/systemMessages";
+import {
+  JOURNEY_TOTAL_DAYS,
+  PHOTO_REVEAL_DAY,
+  JOURNEY_START_WINDOW_DAYS,
+  JOURNEY_PHASES,
+  JOURNEY_THEME_RANGES,
+} from "@/config/journey";
+import type { JourneyTheme } from "@/config/journey";
+
+// Re-eksporterer dagstallene fra @/config/journey slik at eksisterende import
+// fra engine fremdeles fungerer. @/config/journey er den eneste kilden.
+export { JOURNEY_TOTAL_DAYS, PHOTO_REVEAL_DAY, JOURNEY_START_WINDOW_DAYS };
 
 /* ---------- JourneyState — én interface for heile systemet ---------- */
 
@@ -64,12 +76,7 @@ export interface MatchContext {
 
 /* ---------- UserProgress — progresjonshantering ---------- */
 
-export type Theme =
-  | "intro"
-  | "trygghet"
-  | "fordypning"
-  | "modning"
-  | "integrasjon";
+export type Theme = JourneyTheme;
 
 export interface UserProgress {
   userId: string;
@@ -181,53 +188,21 @@ export interface DayConfig {
 }
 
 // ═══════════════════════════════════════════
-// KONSTANTAR — én kilde for alt
+// KONSTANTER — én kilde for alt
+// (De faktiske dagstallene ligger i @/config/journey)
 // ═══════════════════════════════════════════
 
-/** Totalt antal dager i journey — ENKELT svar */
-export const JOURNEY_TOTAL_DAYS = 30;
-
-/** Fase-konfigurasjon — 4 faser over 30 dager (fra journeyPhases) */
+/** Fase-konfigurasjon — 4 faser over 14 dager (fra @/config/journey) */
 export const PHASE_CONFIGS: Array<{
   phase: JourneyPhase;
   startDay: number;
   endDay: number;
   description: string;
-}> = [
-  {
-    phase: JourneyPhase.EARLY,
-    startDay: 1,
-    endDay: 14,
-    description: "Denne delen av reisen er uten bilder.",
-  },
-  {
-    phase: JourneyPhase.BUILDING_TRUST,
-    startDay: 15,
-    endDay: 21,
-    description: "Nå kan dere se hverandres bilder. Ta det rolig.",
-  },
-  {
-    phase: JourneyPhase.DEEPER,
-    startDay: 22,
-    endDay: 25,
-    description: "Dypere samtaler. Kjenne etter retning og forventninger.",
-  },
-  {
-    phase: JourneyPhase.CHECKIN,
-    startDay: 26,
-    endDay: 30,
-    description: "Tid for refleksjon og oppsummering av reisen så langt.",
-  },
-];
+}> = JOURNEY_PHASES;
 
-/** Theme-progresjon — 5 tema over 30 dager (fra progression.ts) */
-export const THEME_RANGES: Array<{ start: number; end: number; theme: Theme }> = [
-  { start: 1, end: 5, theme: "intro" },
-  { start: 6, end: 12, theme: "trygghet" },
-  { start: 13, end: 20, theme: "fordypning" },
-  { start: 21, end: 26, theme: "modning" },
-  { start: 27, end: 30, theme: "integrasjon" },
-];
+/** Theme-progresjon — 5 tema over 14 dager (fra @/config/journey) */
+export const THEME_RANGES: Array<{ start: number; end: number; theme: Theme }> =
+  JOURNEY_THEME_RANGES;
 
 /** Phase labels for UI */
 const PHASE_LABELS: Record<JourneyPhase, string> = {
@@ -295,7 +270,7 @@ export function getThemeForDay(day: number): Theme {
 }
 
 export function isPhotosAllowed(day: number): boolean {
-  return day >= 15;
+  return day >= PHOTO_REVEAL_DAY;
 }
 
 export function isJourneyActive(day: number): boolean {
@@ -316,7 +291,7 @@ export function dayToPhase(day: number): JourneyPhase {
  *
  * Dag 1 er startdøgnet (norsk tid). Differansen er alltid hele kalenderdøgn,
  * også over overgangen mellom sommertid og vintertid, fordi begge
- * tidspunktene snapes til Oslo-dato før de trekkes fra. Begrenset til 1–30.
+ * tidspunktene snapes til Oslo-dato før de trekkes fra. Begrenset til 1–14.
  *
  * Begge partnere deler samme bothSeenAt og får derfor alltid samme dag,
  * uavhengig av når hver sin reiserad prosesseres.
@@ -351,38 +326,20 @@ const MILESTONE_MESSAGES: Milestone[] = [
   },
   {
     day: 7,
-    title: "Dag 7 – innsikt",
-    body: "En uke med selvoppdagelse. Hva har du forstått bedre om deg selv?",
+    title: "Dag 7 – en uke sammen",
+    body: "Én uke har gått. Dere har latt samtalen lede. Nå kommer bildet deres – ta det rolig, uten press.",
     level: "success",
   },
   {
     day: 10,
     title: "Dag 10 – vendepunkt",
-    body: "Nå har du kommet et stykke. Det er vanlig å kjenne usikkerhet nå – og det er helt greit.",
+    body: "Nå har dere kommet et stykke. Det er vanlig å kjenne usikkerhet – og det er helt greit.",
     level: "info",
   },
   {
     day: 14,
-    title: "Dag 14 – fordypning",
-    body: "Du er nå djupt inne i reisen. La deg ikke skremme av følelser som kommer – de er en del av veksten.",
-    level: "success",
-  },
-  {
-    day: 21,
-    title: "Dag 21 – sammenheng",
-    body: "Tre uker med reise. Hva tråder ser du nå som ikke var tydelige tidligere?",
-    level: "success",
-  },
-  {
-    day: 28,
-    title: "Dag 28 – modning",
-    body: "Seks uker. Du har lært noe om deg selv som du ikke visste før. Ta det med deg.",
-    level: "success",
-  },
-  {
-    day: 30,
-    title: "Dag 30 – avslutning",
-    body: "Reisen er nå over. Takk for at du gav deg selv 30 dager med innsikt og vekst.",
+    title: "Dag 14 – reisen avsluttes",
+    body: "Den guidede Tosom-reisen er nå ferdig. Dere velger hva som skjer videre – helt fritt.",
     level: "warning",
   },
 ];
@@ -426,25 +383,25 @@ function buildMessages(matchState: MatchState, day: number): SystemMessage[] {
   if (photosAllowed) {
     raw.push({
       event: "phase2_active" as const,
-      title: "Nå kan dere dele bilder hvis dere ønsker.",
-      body: "Bildene kommer til å gi dere en ny dimensjon sammen.",
+      title: "Bildet deres er nå tilgjengelig.",
+      body: "Dere har hatt én uke der samtalen kom først. Fysisk tiltrekning er en del av bildet – men bildet alene er ikke hele personen. Ta det rolig, begge to.",
       level: "success",
     });
   } else {
     raw.push({
       event: "phase1_active" as const,
-      title: "Denne delen av reisen er uten bilder.",
+      title: "Denne uken er uten bilder.",
       body: "La ord og tanker være veien mellom dere – i alle fall for nå.",
       level: "info",
     });
   }
 
-  /* Dag 30 avslutning */
-  if (day >= 30) {
+  /* Dag 14 – reisen avsluttes */
+  if (day >= JOURNEY_TOTAL_DAYS) {
     raw.push({
       event: "journey_completed" as const,
       title: "Reisen er ferdig.",
-      body: "Takk for at dere ga hverandre 30 dager.",
+      body: "Den guidede reisen er over. Dere velger hva som skjer videre – helt fritt.",
       level: "warning",
     });
   }
@@ -561,7 +518,7 @@ export function advanceOneDay(
     progress.completedDays = [...progress.completedDays, previousDay];
   }
 
-  progress.photosEnabled = progress.currentDay >= 15;
+  progress.photosEnabled = isPhotosAllowed(progress.currentDay);
 
   // Lagre tilbake til store så neste kall ser oppdateringa
   if (progressStore) {
@@ -873,8 +830,8 @@ export function shouldTriggerSilentMoment(
 }
 
 // ═══════════════════════════════════════════
-// DAY TEXTS — 30 dager med tema og prompts
-// (fra components/journey/journeyEngine.ts)
+// DAY TEXTS — 14 dager med tema og prompts (7/14-modell)
+// Uke 1 (1–7): personen først, uten bilder. Uke 2 (8–14): helheten, med bilde.
 // ═══════════════════════════════════════════
 
 const dayData: Record<number, {
@@ -884,36 +841,20 @@ const dayData: Record<number, {
   microInsight: string;
   progressionHint: string;
 }> = {
-  1: { title: "Start", focus: "Bli kjent med deg selv i denne reisen.", reflectionPrompt: "Hvorfor valgte du å starte denne reisen?", microInsight: "Det første steget er alltid det viktigste.", progressionHint: "I morgen utforsker vi hva trygghet betyr for deg." },
-  2: { title: "Nysgjerrig", focus: "La nysgjerrigheten føre deg.", reflectionPrompt: "Hva er du mest nysgjerrig på om deg selv?", microInsight: "Små steg betyr mer enn du tror.", progressionHint: "Fortsett med et rolig blikk på deg selv." },
-  3: { title: "Rolig start", focus: "Ta det rolig – det er plass til alt du kjenner.", reflectionPrompt: "Hva gir deg ro i hverdagen?", microInsight: "Ro er et startpunkt, ikke et mål.", progressionHint: "Neste dag bygger vi videre på dette." },
-  4: { title: "Åpen", focus: "Hold dørene åpne for det ukjente.", reflectionPrompt: "Hva er vanskeligst ved å åpne seg for nye ting?", microInsight: "Åpenhet krever mot, men gir frihet.", progressionHint: "I morgen snakker vi om grenser." },
-  5: { title: "Reflekter", focus: "Tilbakeblikk på de første dagene.", reflectionPrompt: "Hva har overrasket deg de første dagene?", microInsight: "Selvrefleksjon er en styrke, ikke en svakhet.", progressionHint: "Nå går vi dypere." },
-  6: { title: "Trygghet", focus: "Utforsk hva trygghet betyr for deg.", reflectionPrompt: "Hva gjør deg trygg i et møte med en annen?", microInsight: "Trygghet bygges i små, konsistente øyeblikk.", progressionHint: "Vi tar dette med oss dypere." },
-  7: { title: "Verdier", focus: "Snakk om hva som betyr noe for deg.", reflectionPrompt: "Hvilke verdier styrer valene dine?", microInsight: "Verdier er kompasset ditt – følg dem.", progressionHint: "I morgen utforsker vi verdiene videre." },
-  8: { title: "Dypde", focus: "Ta det neste steget inn i deg selv.", reflectionPrompt: "Hvilke ting i livet er viktigst for deg?", microInsight: "Dypde kommer når man tør å bli værende.", progressionHint: "Nå går vi i dybden." },
-  9: { title: "Grenser", focus: "Kjenne igjen egne grenser.", reflectionPrompt: "Hva er dine viktigste grenser i en relasjon?", microInsight: "Grenser er en form for omsorg – mot andre og deg selv.", progressionHint: "I morgen handler det om å sette ord på det." },
-  10: { title: "Mot", focus: "Kjente til motet ditt.", reflectionPrompt: "Hva krever mot av deg?", microInsight: "Mot er ikke fravær av redsel – det er valg om redsler.", progressionHint: "Vi bygger videre på dette motet." },
-  11: { title: "Forventning", focus: "Hva du forventer av deg selv og andre.", reflectionPrompt: "Hva forventer du av en trygg relasjon?", microInsight: "Forventninger kan være en bro eller en mur.", progressionHint: "I morgen ser vi på hva som bygger bro." },
-  12: { title: "Halvvegs", focus: "Halvveis i trygghetsdelen.", reflectionPrompt: "Hva har endret syn underveis?", microInsight: "Å endre sinn er styrke, ikke svikt.", progressionHint: "Nå går vi inn i fordypningen." },
-  13: { title: "Fordypning", focus: "Dykk dypere inn i deg selv.", reflectionPrompt: "Hva føler du har vært viktigst hittil?", microInsight: "Fordypning krever tid – og vilje til å bli værende.", progressionHint: "Vi tar det dypere i morgen." },
-  14: { title: "Sjølinnsikt", focus: "Innsikt i egne mønster.", reflectionPrompt: "Hvilke mønster gjentar du med deg selv?", microInsight: "Å se mønsteret er første steg til endring.", progressionHint: "I morgen handler det om å bryte mønsteret." },
-  15: { title: "Følelser", focus: "Gi rom for hva du føler.", reflectionPrompt: "Hvilke følelser har dukket opp hos deg?", microInsight: "Følelser er meldinger – ikke instruksjoner.", progressionHint: "Vi tar videre med rolighet." },
-  16: { title: "Sårbarhet", focus: "Tør å være sårbar.", reflectionPrompt: "Hva gjør deg sårbar, og hvorfor er det viktig?", microInsight: "Sårbarhet er like modig som det er vakkert.", progressionHint: "I morgen utforsker vi tillit." },
-  17: { title: "Tillit", focus: "Bygge og forstå tillit.", reflectionPrompt: "Hva trenger du for å bygge tillit?", microInsight: "Tillit bygges i øyeblikk, ikke i ord.", progressionHint: "Vi går dypere inn i det samme rommet." },
-  18: { title: "Egne styrker", focus: "Kjenne igjen styrkene dine.", reflectionPrompt: "Hva er de sterkeste sidene dine?", microInsight: "Styrker er ofte det vi ikke ser selv.", progressionHint: "I morgen handler det om aksept." },
-  19: { title: "Aksept", focus: "Akseptere seg selv slik en er.", reflectionPrompt: "Hva er vanskelig for deg å akseptere ved deg selv?", microInsight: "Aksept er ikke resignasjon – det er startpunkt.", progressionHint: "Vi bygger videre på denne aksepten." },
-  20: { title: "Samling", focus: "Samle trådene fra fordypning.", reflectionPrompt: "Hva har gitt deg mest innsikt så langt?", microInsight: "Innsikt kommer ikke av å haste – men av å være tilstede.", progressionHint: "Nå går vi inn i modningsdelen." },
-  21: { title: "Modning", focus: "Modning handler om tid, ikke perfektjon.", reflectionPrompt: "Hva har fått deg til å modne i livet?", microInsight: "Modning er ikke å bli fullkommen – det er å bli hel.", progressionHint: "I morgen utforsker vi hva modning betyr for relasjoner." },
-  22: { title: "Vokse", focus: "Vokse gjennom utfordringer.", reflectionPrompt: "Hva har krevd mest av deg å vokse gjennom?", microInsight: "Vekst kommer ofte når man minst tror på det.", progressionHint: "Vi ser på hva som har formet deg." },
-  23: { title: "Redsel og mot", focus: "Møte det du er redd for.", reflectionPrompt: "Hva er du redd for i relasjoner?", microInsight: "Redsel er en vaktmester – ikke en dommer.", progressionHint: "I morgen handler det om å møtes." },
-  24: { title: "Håp", focus: "Hva du håper å finne.", reflectionPrompt: "Hva håper du å finne i en partner?", microInsight: "Håp er et kompass, ikke et kart.", progressionHint: "Vi ser på hva som fyller håpet." },
-  25: { title: "Trygghet med andre", focus: "Trygghet i møte med et annet menneske.", reflectionPrompt: "Hva får deg til å kjenne trygghet med et annet menneske?", microInsight: "Trygghet er et felles verk.", progressionHint: "I morgen handler det om å gi og ta." },
-  26: { title: "Giv og ta", focus: "Hva du kan gi og hva du kan ta imot.", reflectionPrompt: "Hva er viktigst for deg i å gi og ta imot?", microInsight: "Å kunne ta imot er like viktig som å gi.", progressionHint: "Vi ser på balansen mellom gi og ta." },
-  27: { title: "Balansen", focus: "Finn balansen i deg selv.", reflectionPrompt: "Hva handler balansen om for deg?", microInsight: "Balansen er ikke stillstand – det er bevegelse.", progressionHint: "I morgen nærmer vi oss slutten av modningen." },
-  28: { title: "Oppsummering modning", focus: "Hva du har vært gjennom.", reflectionPrompt: "Hva har modningsdelen lært deg om deg selv?", microInsight: "Du har kommet lenger enn du tror.", progressionHint: "Nå går vi inn i integrasjonen." },
-  29: { title: "Integrasjon", focus: "Samle alt du har lært.", reflectionPrompt: "Hva tar du med deg videre fra hele reisen?", microInsight: "Integrasjon er ikke slutten – det er en overgang.", progressionHint: "I morgen er siste dag." },
-  30: { title: "Framover", focus: "Ta med reisen videre.", reflectionPrompt: "Hva vil du si til deg selv som startet denne reisen?", microInsight: "Du er ikke den samme som da du startet – og det er nettopp poenget.", progressionHint: "Reisen din fortsetter – nå med mer kunnskap." },
+  1: { title: "Start", focus: "Første møte – ta det i deres eget tempo.", reflectionPrompt: "Hva håper du denne uken gir dere?", microInsight: "Det første steget er alltid det viktigste.", progressionHint: "I morgen handler det om hverdagen." },
+  2: { title: "Hverdagen", focus: "La hverdagen bli del av samtalen.", reflectionPrompt: "Hva gjør en hverdagsgod dag for deg?", microInsight: "Små steg betyr mer enn du tror.", progressionHint: "I morgen: hva betyr noe for dere?" },
+  3: { title: "Det som betyr noe", focus: "Snakk om det dere brenner for.", reflectionPrompt: "Hva er noe du virkelig setter pris på?", microInsight: "Interesser er en dør inn til hverandre.", progressionHint: "I morgen blir det lettere." },
+  4: { title: "Letthet", focus: "Det er lov å le – og å være lett.", reflectionPrompt: "Hva får dere til å le?", microInsight: "Humor er en form for tillit.", progressionHint: "I morgen blir det litt mer personlig." },
+  5: { title: "Litt personlig", focus: "Hold døren åpen for noe mer personlig.", reflectionPrompt: "Hva er noe du ikke forteller ofte?", microInsight: "Åpenhet krever mot – og gir frihet.", progressionHint: "I morgen: hvordan er dere med andre?" },
+  6: { title: "Med andre", focus: "Hvordan er dere i møte med andre mennesker?", reflectionPrompt: "Hva gjør dere trygge i et møte?", microInsight: "Trygghet bygges i små, jevne øyeblikk.", progressionHint: "I morgen: en refleksjon før bildet." },
+  7: { title: "Før bildet", focus: "Én uke der samtalen kom først.", reflectionPrompt: "Hva har overrasket deg denne uken?", microInsight: "Bildet er bare en del av personen – ikke hele.", progressionHint: "Snart får dere se hverandre. Ta det rolig." },
+  8: { title: "Følelser", focus: "Nå ser dere hverandre. Gi rom for hva dere kjenner.", reflectionPrompt: "Hva kjenner du nå, når du kan se dem?", microInsight: "Fysisk tiltrekning er en del av bildet – ikke hele.", progressionHint: "I morgen handler det om tillit." },
+  9: { title: "Sårbarhet og tillit", focus: "Sårbarhet bygger tillit – i det tempo dere begge er trygge med.", reflectionPrompt: "Hva gjør det lettere for deg å åpne deg?", microInsight: "Å våge litt er ofte nok.", progressionHint: "I morgen: hva håper dere?" },
+  10: { title: "Håp", focus: "Snakk om hva dere håper på.", reflectionPrompt: "Hva håper du å finne i en partner?", microInsight: "Håp er et kompass, ikke et kart.", progressionHint: "I morgen: trygghet med hverandre." },
+  11: { title: "Trygghet med andre", focus: "Trygghet er et felles verk.", reflectionPrompt: "Hva får deg til å kjenne trygghet ved dem?", microInsight: "Trygghet bygges sammen, ikke alene.", progressionHint: "I morgen: gi og ta." },
+  12: { title: "Giv og ta", focus: "Balansen mellom å gi og å ta imot.", reflectionPrompt: "Hva er viktigst for deg i å gi og ta imot?", microInsight: "Å kunne ta imot er like viktig som å gi.", progressionHint: "I morgen: vokse og møte redsler." },
+  13: { title: "Vokse", focus: "Vokse – og møte det som krever mot.", reflectionPrompt: "Hva har krevd mot av deg?", microInsight: "Mot er ikke fravær av redsel – det er et valg.", progressionHint: "I morgen er siste dag." },
+  14: { title: "Helheten", focus: "Se helheten – og velg hva som skjer videre.", reflectionPrompt: "Hva tar dere med dere videre?", microInsight: "Reisen er ferdig. Valget er deres.", progressionHint: "Takk for at dere ga hverandre denne reisen." },
 };
 
 const FALLBACK_DAY: DayConfig = {
@@ -971,35 +912,19 @@ export function getCurrentDay(): number {
 export function getJourneyImpulse({ day, name }: { day: number; name: string }): string | null {
   const impulses: Record<number, string> = {
     1: `Det er helt fint å ta det rolig. Et enkelt hei til ${name} kan være en god start.`,
-    2: `Hvis du føler for det, kan du dele noe lite om deg selv. Det trenger ikke være stort.`,
-    3: `Samtaler vokser ofte av små ting. En tanke, en observasjon, noe du liker.`,
-    4: `Noen ganger kan det være fint å dele noe du setter pris på i hverdagen. Det kan åpne for en god samtale.`,
-    5: `${name} kan være nysgjerrig på hvem du er. En liten historie eller tanke kan være en fin invitasjon.`,
-    6: `Samtaler vokser ofte når man deler noe ekte, men lite. Det trenger ikke være personlig – bare ærlig.`,
-    7: `Hvis du føler deg komfortabel, kan du spørre ${name} om noe enkelt. Det viser interesse uten press.`,
-    8: `Noen ganger kan det være fint å dele noe du ser frem til. Det åpner ofte for gode samtaler.`,
-    9: `${name} kan sette pris på å høre om noe som betyr noe for deg – stort eller lite.`,
-    10: `Hvis du føler deg komfortabel, kan du dele en liten tanke om hva du liker i mennesker. Det kan skape nærhet.`,
-    11: `Samtaler blir ofte dypere når man deler noe ekte, men fortsatt trygt. En liten refleksjon kan være nok.`,
-    12: `Du kan spørre ${name} om noe som betyr noe for dem. Det viser interesse uten press.`,
-    13: `Det er helt fint å være litt personlig hvis du føler for det. Små ærlige ting bygger tillit.`,
-    14: `Hvis du vil, kan du dele noe du setter pris på i relasjoner. Det kan åpne for en fin samtale.`,
-    15: `Noen ganger kan det være fint å dele noe som har gjort deg glad i det siste. Det åpner for varme samtaler.`,
-    16: `${name} kan sette pris på å høre om noe som inspirerer deg – stort eller lite.`,
-    17: `Hvis du føler deg komfortabel, kan du dele en liten tanke om hva som gir deg trygghet i relasjoner.`,
-    18: `Samtaler blir ofte dypere når man deler noe som betyr noe for en, uten at det blir for personlig.`,
-    19: `Du kan spørre ${name} om noe de setter pris på i hverdagen. Det skaper nærhet uten press.`,
-    20: `Hvis du vil, kan du dele noe du verdsetter i mennesker. Det kan åpne for en fin resonans.`,
-    21: `Det er helt fint å være litt mer åpen hvis du føler deg trygg. Små ærlige ting bygger ekte kontakt.`,
-    22: `Noen ganger kan det være fint å dele noe du har lært om deg selv i det siste. Det åpner for ekte samtaler.`,
-    23: `${name} kan sette pris på å høre om hva som gir deg ro eller balanse i hverdagen.`,
-    24: `Hvis du føler deg trygg, kan du dele en liten refleksjon om hva som betyr noe for deg i relasjoner.`,
-    25: `Samtaler blir ofte dypere når man deler noe som har formet en – uten at det blir for personlig.`,
-    26: `Du kan spørre ${name} om noe som inspirerer dem. Det skaper en fin emosjonell resonans.`,
-    27: `Hvis du vil, kan du dele noe du setter pris på ved mennesker du føler deg trygg med.`,
-    28: `Det er helt fint å være litt mer åpen hvis du føler deg komfortabel. Små refleksjoner bygger ekte kontakt.`,
-    29: `Noen ganger kan det være fint å dele noe som gir deg stabilitet i livet. Det åpner for rolige, gode samtaler.`,
-    30: `Reisen nærmer seg slutten. Del gjerne noe du setter pris på ved måten samtalen deres har utviklet seg.`,
+    2: `Hvis du føler for det, kan du dele noe lite om hverdagen din. Det trenger ikke være stort.`,
+    3: `Samtaler vokser ofte av det dere brenner for. En interesse, noe du liker, en tanke.`,
+    4: `Noen ganger er det fint bare å le. Del gjerne noe som fikk deg til å le denne uken.`,
+    5: `Hvis du føler for det, kan du dele noe litt mer personlig. Små ærlige ting bygger tillit.`,
+    6: `Du kan spørre ${name} om hvordan de er i møte med andre. Det viser interesse uten press.`,
+    7: `Én uke er bak dere. Del gjerne noe som overrasket deg denne uken – og ta det rolig før bildet åpnes.`,
+    8: `Nå kan dere se hverandre. Det er helt greit å la det synke inn – i deres eget tempo.`,
+    9: `Hvis dere er trygge med det, kan en liten åpen tanke bygge tillit. I deres eget tempo.`,
+    10: `Du kan dele litt av hva du håper på. Det åpner ofte for en god samtale.`,
+    11: `Samtaler blir dypere når dere deler hva som gir trygghet. Del gjerne en liten refleksjon.`,
+    12: `Hvis du vil, kan du dele litt om hvordan du liker at det er med å gi og ta imot.`,
+    13: `Noen ganger er det fint å dele noe som har krevd litt mot. Det skaper ekte kontakt.`,
+    14: `Reisen avsluttes snart. Del gjerne noe du setter pris på ved måten dere har vært sammen.`,
   };
 
   return impulses[day] ?? null;

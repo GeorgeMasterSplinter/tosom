@@ -140,7 +140,7 @@ export default function ReisenPage() {
                 color: 'rgba(255,255,255,0.92)',
               }}
             >
-              30 dager som kan endre alt
+              14 dager som kan endre alt
             </h1>
 
             <p
@@ -227,10 +227,10 @@ export default function ReisenPage() {
                 color: color.text.primary,
               }}
             >
-              Reisen består av tre faser
+              Reisen består av fire faser
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               {/* Fase 1 */}
               <GlassCard padding="lg" gold interactive className="space-y-3">
                 <div className="flex justify-center">
@@ -245,7 +245,7 @@ export default function ReisenPage() {
                     textAlign: 'center',
                   }}
                 >
-                  Fase 1 — Uten bilder (dag 1–14)
+                  Fase 1 — Uten bilder (dag 1–7)
                 </h3>
                 <p
                   style={{
@@ -292,7 +292,7 @@ export default function ReisenPage() {
                     textAlign: 'center',
                   }}
                 >
-                  Fase 2 — Med bilder (dag 15–21)
+                  Fase 2 — Med bilder (dag 8–10)
                 </h3>
                 <p
                   style={{
@@ -301,7 +301,7 @@ export default function ReisenPage() {
                     lineHeight: '1.7',
                   }}
                 >
-                  Når dere har snakket sammen i to uker, åpner muligheten for bilder. Det er helt valgfritt — du deler hvis det føles naturlig.
+                  Når dere har snakket sammen i én uke, åpner muligheten for bilder. Det er helt valgfritt — du deler hvis det føles naturlig.
                 </p>
                 <p
                   style={{
@@ -339,7 +339,7 @@ export default function ReisenPage() {
                     textAlign: 'center',
                   }}
                 >
-                  Fase 3 — Felles reise (dag 22–30)
+                  Fase 3 — Dypere (dag 11–12)
                 </h3>
                 <p
                   style={{
@@ -348,7 +348,7 @@ export default function ReisenPage() {
                     lineHeight: '1.7',
                   }}
                 >
-                  Her handler det om hvordan dere møter fremtiden — ikke sammen, men som to mennesker som vurderer om de passer.
+                  Samtalen går dypere. Dere snakker om mål, drømmer og hva som betyr mest for dere.
                 </p>
                 <p
                   style={{
@@ -357,7 +357,7 @@ export default function ReisenPage() {
                     lineHeight: '1.7',
                   }}
                 >
-                  Dere snakker om mål, grenser, styrker og utfordringer. Dere ser hvordan dere håndterer forskjeller, og hvordan dere bygger videre på tryggheten dere har skapt.
+                  Dere ser hvordan dere håndterer forskjeller — og bygger videre på tryggheten dere har skapt.
                 </p>
                 <p
                   style={{
@@ -367,6 +367,53 @@ export default function ReisenPage() {
                   }}
                 >
                   Det er en fase som gir innsikt, ikke forventning.
+                </p>
+              </GlassCard>
+
+              {/* Fase 4 */}
+              <GlassCard padding="lg" gold interactive className="space-y-3">
+                <div className="flex justify-center">
+                  <GoldPulseIcon size={48}>
+                    <IconContinue />
+                  </GoldPulseIcon>
+                </div>
+                <h3
+                  style={{
+                    ...typographyToStyle('heading-md'),
+                    color: color.brand.gold,
+                    textAlign: 'center',
+                  }}
+                >
+                  Fase 4 — Avslutning (dag 13–14)
+                </h3>
+                <p
+                  style={{
+                    ...typographyToStyle('body'),
+                    color: color.text.secondary,
+                    lineHeight: '1.7',
+                  }}
+                >
+                  Her handler det om fremtiden. Dere vurderer fritt om dere passer — uten press, uten forventning.
+                </p>
+                <p
+                  style={{
+                    ...typographyToStyle('body'),
+                    color: color.text.secondary,
+                    lineHeight: '1.7',
+                  }}
+                >
+                  Dere reflekterer over hva reisen har gitt dere, og velger selv hva som skjer videre.
+                </p>
+                <p
+                  style={{
+                    ...typographyToStyle('body'),
+                    color: color.brand.gold,
+                    lineHeight: '1.7',
+                    textAlign: 'center',
+                    fontStyle: 'italic',
+                  }}
+                >
+                  Uansett valg, har dere fått tiden og rommet til å vite.
                 </p>
               </GlassCard>
             </div>
@@ -449,7 +496,7 @@ export default function ReisenPage() {
           </div>
         </ToSomSection>
 
-        {/* ===== ETTER 30 DAGER ===== */}
+        {/* ===== ETTER 14 DAGER ===== */}
         <ToSomSection
           spotlight="blue"
           className="px-6"
@@ -462,7 +509,7 @@ export default function ReisenPage() {
                 color: color.text.primary,
               }}
             >
-              Hva skjer etter 30 dager?
+              Hva skjer etter 14 dager?
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

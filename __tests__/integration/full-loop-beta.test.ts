@@ -6,7 +6,7 @@
  * derfor kan ikke loopen deles opp i flere `it`-blokker):
  *
  *   onboarding (profil) → kø → matcherunde (scoring) → match
- *   → reise (faser + bildesperre) → chat → dag 30 → found_each_other
+ *   → reise (faser + bildesperre) → chat → dag 14 → found_each_other
  *   → full sletting → MatchHistory beholdt
  *
  * Bruker reelle funksjoner: unifiedScore, toResonanceLevel, dayToPhase,
@@ -24,25 +24,25 @@ const db = testPrisma;
 describe('BETA-ACCESS §7.8 — Full loop: onboarding → match → reise → sletting', () => {
   // Inngangs-verdier som er data-uavhengige (kjører uavhengig av DB-state)
   it('faser, tema og bildesperre (I-5, I-6)', () => {
-    // Fase 1 (dag 1-14): EARLY
+    // Fase 1 (dag 1-7): EARLY
     expect(dayToPhase(1)).toBe('EARLY');
-    expect(dayToPhase(14)).toBe('EARLY');
-    // Fase 2 (dag 15-21): BUILDING_TRUST
-    expect(dayToPhase(15)).toBe('BUILDING_TRUST');
-    expect(dayToPhase(21)).toBe('BUILDING_TRUST');
-    // Fase 3 (dag 22-25): DEEPER
-    expect(dayToPhase(22)).toBe('DEEPER');
-    expect(dayToPhase(25)).toBe('DEEPER');
-    // Fase 4 (dag 26-30): CHECKIN
-    expect(dayToPhase(26)).toBe('CHECKIN');
-    expect(dayToPhase(30)).toBe('CHECKIN');
-    // I-6: Ingen bilder før dag 15
+    expect(dayToPhase(7)).toBe('EARLY');
+    // Fase 2 (dag 8-10): BUILDING_TRUST
+    expect(dayToPhase(8)).toBe('BUILDING_TRUST');
+    expect(dayToPhase(10)).toBe('BUILDING_TRUST');
+    // Fase 3 (dag 11-12): DEEPER
+    expect(dayToPhase(11)).toBe('DEEPER');
+    expect(dayToPhase(12)).toBe('DEEPER');
+    // Fase 4 (dag 13-14): CHECKIN
+    expect(dayToPhase(13)).toBe('CHECKIN');
+    expect(dayToPhase(14)).toBe('CHECKIN');
+    // I-6: Ingen bilder før dag 8
     expect(isPhotosAllowed(1)).toBe(false);
-    expect(isPhotosAllowed(14)).toBe(false);
-    expect(isPhotosAllowed(15)).toBe(true);
-    expect(isPhotosAllowed(30)).toBe(true);
-    // 30 dager totalt (I-5)
-    expect(JOURNEY_TOTAL_DAYS).toBe(30);
+    expect(isPhotosAllowed(7)).toBe(false);
+    expect(isPhotosAllowed(8)).toBe(true);
+    expect(isPhotosAllowed(14)).toBe(true);
+    // 14 dager totalt (I-5)
+    expect(JOURNEY_TOTAL_DAYS).toBe(14);
   });
 
   // Den store sammenhengende loopen — ÉN test
@@ -137,16 +137,16 @@ describe('BETA-ACCESS §7.8 — Full loop: onboarding → match → reise → sl
     const msgs = await db.message.findMany({ where: { conversationId: conversation.id }, orderBy: { createdAt: 'asc' } });
     expect(msgs).toHaveLength(2);
 
-    // ── STEP 5: Bildeopplasting avvises før dag 15 (I-6) ──
+    // ── STEP 5: Bildeopplasting avvises før dag 8 (I-6) ──
     const journeyDay1 = await db.journeyProgress.findFirst({ where: { userId: userA.id, matchId } });
     expect(journeyDay1).not.toBeNull();
     expect(journeyDay1!.day).toBe(1);
     expect(isPhotosAllowed(journeyDay1!.day)).toBe(false);
 
-    // ── STEP 6: Dag 30 — CHECKIN-fase ──
-    await db.journeyProgress.update({ where: { jp_user_match: { userId: userA.id, matchId } }, data: { day: 30, completedAt: new Date() } });
-    await db.journeyProgress.update({ where: { jp_user_match: { userId: userB.id, matchId } }, data: { day: 30, completedAt: new Date() } });
-    expect(dayToPhase(30)).toBe('CHECKIN');
+    // ── STEP 6: Dag 14 — CHECKIN-fase ──
+    await db.journeyProgress.update({ where: { jp_user_match: { userId: userA.id, matchId } }, data: { day: 14, completedAt: new Date() } });
+    await db.journeyProgress.update({ where: { jp_user_match: { userId: userB.id, matchId } }, data: { day: 14, completedAt: new Date() } });
+    expect(dayToPhase(14)).toBe('CHECKIN');
 
     // ── STEP 7: found_each_other → grace-period (D: 24 t til begge kan PDF) ──
     const delResult = await endJourney(matchId, 'found_each_other');

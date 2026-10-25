@@ -78,14 +78,13 @@ describe('M-6: bilde-lås server-side i /api/chat/image', () => {
     });
   });
 
-  it('isPhotosAllowed: dag 13 og 14 er låst, dag 15 er åpnet (grensen)', () => {
-    expect(isPhotosAllowed(13)).toBe(false);
-    expect(isPhotosAllowed(14)).toBe(false);
-    expect(isPhotosAllowed(15)).toBe(true);
+  it('isPhotosAllowed: dag 7 er låst, dag 8 er åpnet (grensen)', () => {
+    expect(isPhotosAllowed(7)).toBe(false);
+    expect(isPhotosAllowed(8)).toBe(true);
   });
 
-  it('nekter (423) når journey er på dag 13', async () => {
-    findFirst.mockResolvedValue({ day: 13 });
+  it('nekter (423) når journey er på dag 7', async () => {
+    findFirst.mockResolvedValue({ day: 7 });
     const res = await POST(makeRequest('conv-1', 'msg-1'));
     expect(res.status).toBe(423);
     // Låsen skal stoppe FØR lagring/meldingsvalidering.
@@ -99,8 +98,8 @@ describe('M-6: bilde-lås server-side i /api/chat/image', () => {
     expect(res.status).toBe(423);
   });
 
-  it('slipper gjennom (2xx) når journey er på dag 15 og melding er gyldig', async () => {
-    findFirst.mockResolvedValue({ day: 15 });
+  it('slipper gjennom (2xx) når journey er på dag 8 og melding er gyldig', async () => {
+    findFirst.mockResolvedValue({ day: 8 });
     messageFindUnique.mockResolvedValue({
       id: 'msg-1',
       type: 'image',
@@ -124,13 +123,13 @@ describe('M-6: bilde-lås server-side i /api/chat/image', () => {
   });
 
   it('nekter (400) når messageId mangler (bildet må knyttes til en melding)', async () => {
-    findFirst.mockResolvedValue({ day: 15 });
+    findFirst.mockResolvedValue({ day: 8 });
     const res = await POST(makeRequest('conv-1'));
     expect(res.status).toBe(400);
   });
 
   it('nekter (409) ved idempotens: meldingen har allerede et bilde', async () => {
-    findFirst.mockResolvedValue({ day: 15 });
+    findFirst.mockResolvedValue({ day: 8 });
     messageFindUnique.mockResolvedValue({
       id: 'msg-1',
       type: 'image',

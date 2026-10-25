@@ -2,7 +2,7 @@
 // ToSom — journeyDayFor (PL-06 / K-4) unit tests
 // ═══════════════════════════════════════════
 // Dag 1 = startdøgnet (norsk tid), beregnet deterministisk fra bothSeenAt.
-// Begrenset til 1–30, og DST-sikker (Oslo-kalenderdager).
+// Begrenset til 1–14, og DST-sikker (Oslo-kalenderdager).
 //
 
 import { journeyDayFor, JOURNEY_TOTAL_DAYS } from '@/lib/journey/engine';
@@ -25,13 +25,13 @@ describe('journeyDayFor (PL-06 / K-4)', () => {
     expect(journeyDayFor(oslo('2026-01-01'), oslo('2026-01-14'))).toBe(14);
   });
 
-  test('den siste dagen er dag 30', () => {
-    expect(journeyDayFor(oslo('2026-01-01'), oslo('2026-01-30'))).toBe(30);
+  test('den siste dagen er dag 14', () => {
+    expect(journeyDayFor(oslo('2026-01-01'), oslo('2026-01-14'))).toBe(14);
   });
 
-  test('klampes til 30 etter reisens slutt', () => {
+  test('klampes til 14 etter reisens slutt', () => {
     const dag = journeyDayFor(oslo('2026-01-01'), oslo('2026-06-01'));
-    expect(dag).toBe(30);
+    expect(dag).toBe(14);
     expect(dag).toBe(JOURNEY_TOTAL_DAYS);
   });
 
@@ -51,11 +51,11 @@ describe('journeyDayFor (PL-06 / K-4)', () => {
 
   test('begge partnere med felles bothSeenAt får identisk dag', () => {
     const bothSeenAt = oslo('2026-02-03');
-    const now = oslo('2026-02-17');
+    const now = oslo('2026-02-14');
     const partnerA = journeyDayFor(bothSeenAt, now);
     const partnerB = journeyDayFor(bothSeenAt, now);
     expect(partnerA).toBe(partnerB);
-    expect(partnerA).toBe(15); // 14 døgn etter start = dag 15
+    expect(partnerA).toBe(12); // 11 døgn etter start = dag 12
   });
 
   test('cron fanger opp utilsatte døgn (beregnet, ikke talt)', () => {

@@ -143,8 +143,8 @@ describe('PL-01d: kontosletting med aktiv reise (K-1)', () => {
     const conversation = await db.conversation.create({
       data: { matchId: match.id, userAId: userA.id, userBId: userB.id, endedAt: new Date() },
     });
-    await db.journeyProgress.create({ data: { userId: userA.id, matchId: match.id, day: 30, endedAt: new Date() } });
-    await db.journeyProgress.create({ data: { userId: userB.id, matchId: match.id, day: 30, endedAt: new Date() } });
+    await db.journeyProgress.create({ data: { userId: userA.id, matchId: match.id, day: 14, endedAt: new Date() } });
+    await db.journeyProgress.create({ data: { userId: userB.id, matchId: match.id, day: 14, endedAt: new Date() } });
     await db.message.create({ data: { conversationId: conversation.id, senderId: userA.id, content: 'Hei!' } });
     await db.message.create({ data: { conversationId: conversation.id, senderId: userB.id, content: 'Heisann!' } });
 

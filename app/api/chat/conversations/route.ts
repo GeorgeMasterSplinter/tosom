@@ -150,7 +150,7 @@ export async function GET(request: Request) {
       const matchId = c.matchId;
       const resonance = matchId ? resonanceByMatch.get(matchId) : undefined;
       // K-8: Partnerens profilbilde vises kun når imageShareAllowedAt
-      // (dag 15) er satt og passert. Før det: undefined.
+      // (dag 8) er satt og passert. Før det: undefined.
       const imageAllowed = c.imageShareAllowedAt
         ? new Date() >= c.imageShareAllowedAt
         : false;

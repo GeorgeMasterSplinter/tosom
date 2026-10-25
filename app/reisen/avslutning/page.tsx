@@ -3,7 +3,7 @@
 /**
  * Tosom — Avslutnings-side (2 valg)
  *
- * Vises etter 30-dagers reise. Brukeren får 2 valg:
+ * Vises etter 14-dagers reise. Brukeren får 2 valg:
  * 1. "Vi fant hverandre" — `found_each_other` → grace-period (24 t) → lokal takkeside
  * 2. "Start ny reise" — `ny_reise` → beholdt profil → ny onboarding (prefylt)
  *
@@ -13,6 +13,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { JOURNEY_TOTAL_DAYS } from '@/config/journey';
 import { color, typography } from '@/config/design-tokens';
 import { csrfFetch } from '@/lib/api/csrfClient';
 
@@ -202,7 +203,7 @@ export default function AvslutningSide() {
   // viser en lokal takkeside med PDF-nedlasting + kontosletting.
   const [finishedTogether, setFinishedTogether] = useState(false);
 
-  // Sjekk om dag 30 er nådd ved side-lasting
+  // Sjekk om dag 14 er nådd ved side-lasting
   useEffect(() => {
     const checkJourneyComplete = async () => {
       try {
@@ -212,7 +213,7 @@ export default function AvslutningSide() {
           if (json.journey) {
             const day = json.journey.day;
             setJourneyDay(day);
-            if (day < 30 && day > 0) {
+            if (day < JOURNEY_TOTAL_DAYS && day > 0) {
               // Ikke fullført enda — gå tilbake til dashboard
               router.push('/dashboard');
               return;
@@ -359,7 +360,7 @@ export default function AvslutningSide() {
               margin: '20px 0 0',
             }}
           >
-            Tusen takk for 30 dager med åpenhet. Minnet er deres — last ned
+            Tusen takk for 14 dager med åpenhet. Minnet er deres — last ned
             PDF-en i løpet av 24 timer, så slettes alt automatisk.
           </p>
           <button

@@ -16,6 +16,7 @@ import Link from 'next/link';
 import { ProfileSkeleton as ProfileLoadSkeleton } from '@/components/ui/LoadingSkeleton';
 import ErrorState from '@/components/ui/ErrorState';
 import { ProfileSecurityCard } from '@/components/profile/ProfileSecurityCard';
+import { JOURNEY_TOTAL_DAYS } from '@/config/journey';
 
 interface ProfileData {
   identityName: string;
@@ -56,7 +57,7 @@ export default function ProfilePage() {
           bio: 'Bygger reisen min...',
           tags: [],
           currentDay: 1,
-          daysRemaining: 30,
+          daysRemaining: JOURNEY_TOTAL_DAYS,
           matchScore: 0,
           photoUrl: null,
         });
@@ -68,7 +69,7 @@ export default function ProfilePage() {
         bio: 'Bygger reisen min...',
         tags: [],
         currentDay: 1,
-        daysRemaining: 30,
+        daysRemaining: JOURNEY_TOTAL_DAYS,
         matchScore: 0,
         photoUrl: null,
       });
@@ -113,7 +114,7 @@ export default function ProfilePage() {
           border: `1px solid ${phaseColor}30`,
           color: phaseColor,
         }}>
-          Dag {profile.currentDay}/30
+          Dag {profile.currentDay}/{JOURNEY_TOTAL_DAYS}
         </span>
       </div>
 

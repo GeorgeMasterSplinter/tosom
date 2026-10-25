@@ -50,7 +50,7 @@ function JourneyProgress({ day, total }: { day: number; total: number }) {
 
 /* ─── JourneyRow */
 function JourneyRow({ journey }: { journey: JourneyData }) {
-  const statusColors: Record<string, string> = { 'På reise': '#4ADE80', 'Ferdig': '#D4AF37', 'Dag 30': '#FBBF24' };
+  const statusColors: Record<string, string> = { 'På reise': '#4ADE80', 'Ferdig': '#D4AF37', 'Dag 14': '#FBBF24' };
   const initials = (name: string) => name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
 
   return (
@@ -132,7 +132,7 @@ export default function AdminJourneysPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold mb-1" style={{ color: 'rgba(255,255,255,0.95)' }}>🕓 Reiser</h1>
-        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>Oversikt over alle Tosom-reiser (30-dagers guiding)</p>
+        <p className="text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>Oversikt over alle Tosom-reiser (14-dagers guiding)</p>
       </div>
 
       {loading ? (

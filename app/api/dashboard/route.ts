@@ -121,7 +121,7 @@ export async function GET(request: Request) {
     // Formatter reise-info
     let journeyInfo: JourneyInfo | null = null;
     if (journey) {
-      const totalDays = JOURNEY_TOTAL_DAYS; // 30
+      const totalDays = JOURNEY_TOTAL_DAYS; // 14
       journeyInfo = {
         day: journey.day,
         totalDays,

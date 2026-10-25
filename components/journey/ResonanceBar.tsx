@@ -4,7 +4,7 @@
  * 
  * Design:
  * - 30 små bokser for hvar dag
- * - Fase-fargar: grønn (dag 1-10), gull (dag 11-20), lila (dag 21-30)
+ * - Fase-fargar: grønn (dag 1-7), gull (dag 8-12), lila (dag 13-14)
  * - Hover → tooltip med reflection, emotionalTone, depthLevel
  * - Animert fade-in ved lasting
  * 
@@ -142,7 +142,7 @@ function Tooltip({
               className="text-xs font-bold"
               style={{ color: G.textPrimary }}
             >
-              Dag {day} av 30 · {phaseInfo.label}
+              Dag {day} av 14 · {phaseInfo.label}
             </span>
           </div>
 
@@ -264,7 +264,7 @@ function DayBox({
    PROGRESS BAR (mini version)
    ═══════════════════════════════════════ */
 
-function ProgressIndicator({ currentDay, totalDays = 30 }: { 
+function ProgressIndicator({ currentDay, totalDays = 14 }: { 
   currentDay?: number;
   totalDays?: number;
 }) {
@@ -318,13 +318,13 @@ export function ResonanceBar({ sessions, journeyDay }: ResonanceBarProps) {
     }
   }
 
-  // Generate days 1-30
-  const days = Array.from({ length: 30 }, (_, i) => i + 1);
+  // Generate days 1-14
+  const days = Array.from({ length: 14 }, (_, i) => i + 1);
 
   // Phase distribution for legend
-  const earlyCount = sessions.filter(s => s.day <= 10).length;
-  const trustCount = sessions.filter(s => s.day > 10 && s.day <= 20).length;
-  const deeperCount = sessions.filter(s => s.day > 20).length;
+  const earlyCount = sessions.filter(s => s.day <= 7).length;
+  const trustCount = sessions.filter(s => s.day > 7 && s.day <= 12).length;
+  const deeperCount = sessions.filter(s => s.day > 12).length;
 
   return (
     <div

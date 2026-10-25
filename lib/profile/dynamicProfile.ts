@@ -2,6 +2,8 @@
  * ToSom — Dynamic Profile Engine (Produktnivå)
  */
 
+import { JOURNEY_TOTAL_DAYS } from "@/config/journey";
+
 export interface DynamicProfileData {
   identityName: string;
   bio: string;
@@ -18,7 +20,7 @@ export function updateProfileFromJourney(profile: Partial<DynamicProfileData>, p
   const phaseLabels = ['', 'Fase 1', 'Fase 2', 'Fase 3', 'Fase 4', 'Fase 5'];
   return {
     ...profile,
-    bio: profile.bio ? `${profile.bio}\nPå reise: ${phaseLabels[phaseOrder] || 'Ukjent'} — Dag ${currentDay}/30` : `På reise: ${phaseLabels[phaseOrder] || 'Ukjent'} — Dag ${currentDay}/30`,
+    bio: profile.bio ? `${profile.bio}\nPå reise: ${phaseLabels[phaseOrder] || 'Ukjent'} — Dag ${currentDay}/${JOURNEY_TOTAL_DAYS}` : `På reise: ${phaseLabels[phaseOrder] || 'Ukjent'} — Dag ${currentDay}/${JOURNEY_TOTAL_DAYS}`,
     tags: [...(profile.tags || []), phaseNames[phaseOrder] || 'Introduksjon'],
     journeyPhase: phaseNames[phaseOrder] || 'Introduksjon',
     lastUpdated: new Date().toISOString(),

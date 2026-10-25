@@ -5,7 +5,7 @@
  *
  * «Et annet svar på moderne dating» — siden som forklarer hvorfor Tosom
  * er bygget annerledes: én match om gangen, ingen sveiping, bilder først
- * på dag 15, et mer privat rom.
+ * på dag 8, et mer privat rom.
  *
  * Påstandsdisiplin (MOTPOL-PLAN-v1.0 §6): hver setning er typet i en
  * kodekommentar — PF (product fact), PH (philosophy), OB (observation),
@@ -112,8 +112,8 @@ function Quote({ children }: { children: React.ReactNode }) {
 
 const comparisonRows = [
   { standard: 'Mange profiler å vurdere', tosom: 'Én match om gangen' }, // PF
-  { standard: 'Utseende før innhold', tosom: 'Samtalen først, bildet på dag 15' }, // PF
-  { standard: 'Sveiping og øyeblikksvalg', tosom: 'Guidet 30-dagers reise' }, // PF
+  { standard: 'Utseende før innhold', tosom: 'Samtalen først, bildet på dag 8' }, // PF
+  { standard: 'Sveiping og øyeblikksvalg', tosom: 'Guidet 14-dagers reise' }, // PF
   { standard: 'Flere parallelle samtaler', tosom: 'Én aktiv reise' }, // PF
   { standard: 'Profilen er vitrine', tosom: 'Profilen er privat' }, // PF
 ];
@@ -137,7 +137,7 @@ const kanPasse = [
 const prisene = [
   'Du kan måtte vente. Match er ikke garantert hver lørdag.', // PF
   'Du får ikke hundredvis av profiler å velge mellom. Du får én — eller ingen.', // PF
-  'Du ser ikke bildet med en gang. Bildet kommer på dag 15.', // PF
+  'Du ser ikke bildet med en gang. Bildet kommer på dag 8.', // PF
   'Den første matchen trenger ikke å bli noe. Og da starter du på nytt.', // PH
   'Fysisk tiltrekning kan utebli. Det skjer, og vi skjuler det ikke.', // PH
   'Noen opplever tempoet som for langsomt. Det er en bevisst avgjørelse — og en pris.', // PH
@@ -310,9 +310,9 @@ export default function MotpolPage() {
             </Prose>
           </GlassCard>
 
-        {/* ===== 5. DERFOR 14 DAGER UTEN BILDER ===== */}
+        {/* ===== 5. DERFOR DEN FØRSTE UKEN UTEN BILDER ===== */}
           <GlassCard padding="xl">
-            <H2>Derfor 14 dager uten bilder</H2>
+            <H2>Derfor er den første uken uten bilder</H2>
             <Prose>
               {/* [PH] */}
               <P>
@@ -326,7 +326,7 @@ export default function MotpolPage() {
               </P>
               {/* [PF] F5 — lenke: /reisen (plan §14) */}
               <P>
-                Hos oss åpnes bildene først på dag 15. De første 14 dagene
+                Hos oss åpnes bildene først på dag 8. Den første uken
                 handler dere med ord — <InlineLink href="/reisen">les om reisen</InlineLink>.
               </P>
               {/* [PH] */}

@@ -15,6 +15,8 @@
 
 // ─── TYPE DEFINISJONAR ────────────────────────────────────
 
+import { JOURNEY_TOTAL_DAYS } from "@/config/journey";
+
 export type AtmospherePreset = 
   | 'midnight-gold'     // Midnight + gull (standard)
   | 'dawn-blue'         // Morgon-blå
@@ -328,7 +330,7 @@ export interface DisclosureState {
  */
 export function calculateDisclosure(journeyPhase: string, day: number): DisclosureState {
   const totalSections = 10
-  const revealedCount = Math.floor((day / 30) * totalSections)
+  const revealedCount = Math.floor((day / JOURNEY_TOTAL_DAYS) * totalSections)
   const progress = (revealedCount / totalSections) * 100
 
   const allSections = [

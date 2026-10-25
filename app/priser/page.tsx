@@ -280,7 +280,7 @@ export default function PriserPage() {
                         color: color.text.primary,
                       }}
                     >
-                      30 dagers guidet reise
+                      14 dagers guidet reise
                     </h3>
                     <p
                       style={{
@@ -289,7 +289,7 @@ export default function PriserPage() {
                         lineHeight: '1.8',
                       }}
                     >
-                      Dere går gjennom en strukturert 30-dagers reise med daglige refleksjonsspørsmål, samtaletema, små oppgaver og resonansmåling. Dette er kjernen i Tosom — en prosess som hjelper dere å bli kjent.
+                      Dere går gjennom en strukturert 14-dagers reise med daglige refleksjonsspørsmål, samtaletema, små oppgaver og resonansmåling. Dette er kjernen i Tosom — en prosess som hjelper dere å bli kjent.
                     </p>
                   </div>
                 </div>
@@ -345,7 +345,7 @@ export default function PriserPage() {
                   lineHeight: '1.7',
                 }}
               >
-                Senere er planen {PRICING.journeyPrice} kr for én 30-dagersreise, betalt én gang med Vipps. Ingen abonnement, ingen løpende kostnader.
+                Senere er planen {PRICING.journeyPrice} kr for én 14-dagersreise, betalt én gang med Vipps. Ingen abonnement, ingen løpende kostnader.
               </p>
 
             </GlassCard>

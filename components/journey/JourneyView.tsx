@@ -3,9 +3,10 @@
 import { journeyAPI, buildJourneyState, dummyMatchContext } from "@/lib/journey/engine";
 import { JourneyTimeline } from "./JourneyTimeline";
 import SystemMessageBox from "../system/SystemMessageBox";
+import { JOURNEY_TOTAL_DAYS } from "@/config/journey";
 // ReflectionBox import removed — component archived per dashboard redesign
 
-/** JourneyView – dagvisning for Dag 1–30. */
+/** JourneyView – dagvisning for Dag 1–14. */
 
 interface JourneyViewProps {
   currentDay?: number;
@@ -145,7 +146,7 @@ export default function JourneyView({ currentDay }: JourneyViewProps) {
         </button>
 
         <button
-          disabled={day >= 30}
+          disabled={day >= JOURNEY_TOTAL_DAYS}
           className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Neste dag →

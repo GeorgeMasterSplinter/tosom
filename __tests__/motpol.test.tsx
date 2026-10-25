@@ -118,14 +118,14 @@ describe('MOT-04 — ingen matchgaranti', () => {
 });
 
 describe('MOT-05 — 14-dagerscopy samsvarer med implementasjon (M-6)', () => {
-  it('konfigen sier dag 15 / 30 dager (ingen drift mellom copy og engine)', () => {
-    expect(JOURNEY.imageUnlockDay).toBe(15);
-    expect(JOURNEY.totalDays).toBe(30);
+  it('konfigen sier dag 8 / 14 dager (ingen drift mellom copy og engine)', () => {
+    expect(JOURNEY.imageUnlockDay).toBe(8);
+    expect(JOURNEY.totalDays).toBe(14);
   });
 
-  it('siden sier «dag 15» og «de første 14 dagene»', () => {
-    expect(TEXT).toContain('dag 15');
-    expect(TEXT.toLowerCase()).toContain('de første 14 dagene');
+  it('siden sier «dag 8» og «den første uken»', () => {
+    expect(TEXT).toContain('dag 8');
+    expect(TEXT.toLowerCase()).toContain('første uke');
   });
 });
 

@@ -106,8 +106,8 @@ const steps: Array<{
   },
   {
     icon: <IconJourney />,
-    title: 'En guidet 30 dagers reise',
-    intro: 'Når dere matcher, får dere en rolig 30 dagers reise med små, trygge steg som hjelper dere å bli kjent på en naturlig måte. Ingen press. Ingen forventninger. Bare en struktur som gjør det lettere å åpne seg.',
+    title: 'En guidet 14 dagers reise',
+    intro: 'Når dere matcher, får dere en rolig 14 dagers reise med små, trygge steg som hjelper dere å bli kjent på en naturlig måte. Ingen press. Ingen forventninger. Bare en struktur som gjør det lettere å åpne seg.',
     points: [
       'daglige små oppgaver',
       'fokus på trygghet og kommunikasjon',
@@ -257,7 +257,7 @@ export default function SlikPage() {
                       color: color.brand.gold,
                     }}
                   >
-                    Muligheten for bilder åpnes etter 14 dager
+                    Muligheten for bilder åpnes på dag 8
                   </h3>
                   <p
                     className="mx-auto max-w-xl"
@@ -267,10 +267,10 @@ export default function SlikPage() {
                       lineHeight: '1.8',
                     }}
                   >
-                    Trygghet før utseende. Etter 14 dager åpnes muligheten til å sende bilder til hverandre — da har dere lært å kjenne hverandre som mennesker, ikke som profiler. Hver av dere bestemmer selv om, og når, dere vil sende. Ordene først, bildet etter.
+                    Trygghet før utseende. Den første uken er uten bilder. Fra dag 8 åpnes muligheten til å sende bilder til hverandre — da har dere lært å kjenne hverandre som mennesker, ikke som profiler. Hver av dere bestemmer selv om, og når, dere vil sende. Ordene først, bildet etter.
                   </p>
                   <div className="mx-auto max-w-md grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2">
-                    {['14 dager uten bilder', 'fokus på personen og meningen', 'muligheten åpnes ved dag 15', 'du bestemmer selv om og når'].map((point, pIdx) => (
+                    {['Den første uken uten bilder', 'fokus på personen og meningen', 'muligheten åpnes på dag 8', 'du bestemmer selv om og når'].map((point, pIdx) => (
                       <p
                         key={pIdx}
                         style={{

@@ -2,7 +2,7 @@
  * ToSom — «Reisen er slutt»-e-post (sendJourneyEndEmail).
  *
  * De to utfallene der reisen er endelig over: found_each_other (gratulerende,
- * 24-timers PDF-grace) og no_action (dag 30, nøytral, alt slettet).
+ * 24-timers PDF-grace) og no_action (dag 14, nøytral, alt slettet).
  * Verifiserer avsender, mottaker, emne og tekst.
  */
 
@@ -38,7 +38,7 @@ describe('sendJourneyEndEmail', () => {
     expect(arg.text).not.toContain('slettet alt');
   });
 
-  it('sender nøytral e-post ved no_action (dag 30)', async () => {
+  it('sender nøytral e-post ved no_action (dag 14)', async () => {
     const { sendJourneyEndEmail } = await import('@/lib/email');
     const res = await sendJourneyEndEmail('hei@tosom.no');
     expect(res.success).toBe(true);
@@ -46,7 +46,7 @@ describe('sendJourneyEndEmail', () => {
     const arg = mockSendMail.mock.calls[0][0];
     expect(arg.subject).toBe('Reisen er fullført');
     expect(arg.text).toContain('hei'); // standard hilsen uten navn
-    expect(arg.text).toContain('30 dagene');
+    expect(arg.text).toContain('14 dagene');
     // no_action: alt slettes umiddelbart (ingen grace)
     expect(arg.text).toContain('slettet alt');
   });

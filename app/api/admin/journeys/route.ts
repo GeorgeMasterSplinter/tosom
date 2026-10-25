@@ -9,6 +9,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth/requireAuth";
+import { JOURNEY_TOTAL_DAYS, PHOTO_REVEAL_DAY } from "@/config/journey";
 
 export const dynamic = "force-dynamic";
 
@@ -102,10 +103,10 @@ export async function GET(req: NextRequest) {
             userName: user?.name || user?.email || "Ukjent",
             day: j.day || 1,
             currentDay: j.day || 1,
-            totalDays: 30,
-            profileLocked: (j.day || 1) <= 29,
-            imageLocked: (j.day || 1) < 15,
-            status: j.completedAt ? "Ferdig" : (j.day || 1) >= 30 ? "Dag 30" : "På reise",
+            totalDays: JOURNEY_TOTAL_DAYS,
+            profileLocked: (j.day || 1) <= JOURNEY_TOTAL_DAYS - 1,
+            imageLocked: (j.day || 1) < PHOTO_REVEAL_DAY,
+            status: j.completedAt ? "Ferdig" : (j.day || 1) >= JOURNEY_TOTAL_DAYS ? "Dag 14" : "På reise",
             startDate: j.startedAt.toISOString().split("T")[0],
             completedAt: j.completedAt?.toISOString() ?? null,
             partnerName: null,
@@ -121,10 +122,10 @@ export async function GET(req: NextRequest) {
           userName: user?.name || user?.email || "Ukjent",
           day: j.day || 1,
           currentDay: j.day || 1,
-          totalDays: 30,
-          profileLocked: (j.day || 1) <= 29,
-          imageLocked: (j.day || 1) < 15,
-          status: j.completedAt ? "Ferdig" : (j.day || 1) >= 30 ? "Dag 30" : "På reise",
+          totalDays: JOURNEY_TOTAL_DAYS,
+          profileLocked: (j.day || 1) <= JOURNEY_TOTAL_DAYS - 1,
+          imageLocked: (j.day || 1) < PHOTO_REVEAL_DAY,
+          status: j.completedAt ? "Ferdig" : (j.day || 1) >= JOURNEY_TOTAL_DAYS ? "Dag 14" : "På reise",
           startDate: j.startedAt.toISOString().split("T")[0],
           completedAt: j.completedAt?.toISOString() ?? null,
           partnerName: partner?.name || "Ukjent",

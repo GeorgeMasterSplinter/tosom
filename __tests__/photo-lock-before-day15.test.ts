@@ -1,5 +1,5 @@
 /**
- * K-8 — Bildesperre før dag 15 (PL-03)
+ * K-8 — Bildesperre før dag 8 (PL-03)
  *
  * For hver av de fire bildesvarene: imageShareAllowedAt = null →
  * partnerens bilde er undefined/null. imageShareAllowedAt i fortiden

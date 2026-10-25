@@ -445,7 +445,7 @@ export default function MatchingPage() {
                 </div>
               )}
               <p className="mt-6 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
-                Reisen deres er i gang. Dere har 30 dager — rolig og i deres tempo.
+                Reisen deres er i gang. Dere har 14 dager — rolig og i deres tempo.
               </p>
               <button
                 onClick={() => {

@@ -1,3 +1,5 @@
+import { JOURNEY_TOTAL_DAYS, PHOTO_REVEAL_DAY } from "./journey";
+
 /**
  * Tosom — Juridiske konstanter
  *
@@ -104,7 +106,7 @@ export const PRICING = {
  *   – Fram til koblingen natt til lørdag: full refusjon.
  *   – Etter koblingen: ingen refusjon. Tjenesten er levert.
  *
- * Begrunnelsen er at leveransen er koblingen selv, ikke de 30 dagene.
+ * Begrunnelsen er at leveransen er koblingen selv, ikke de 14 dagene.
  * Koblingen er ugjenkallelig og båndlegger en annen bruker den uken.
  *
  * ⚠️ Modellen forutsetter at reisen regnes som digitalt innhold etter
@@ -130,9 +132,9 @@ export const MATCH_ROUND = {
 
 /** Reisens lengde og bildesperre. Invariant I-5 og I-6. */
 export const JOURNEY = {
-  totalDays: 30,
+  totalDays: JOURNEY_TOTAL_DAYS,
   /** Første dag bilder kan deles. */
-  imageUnlockDay: 15,
+  imageUnlockDay: PHOTO_REVEAL_DAY,
 } as const;
 
 /**

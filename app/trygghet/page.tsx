@@ -6,7 +6,7 @@
  * Beskriver rutinene som faktisk finnes i koden:
  * rapportering (POST /api/report), blokkering (UserBlock),
  * utestengelse (User.bannedAt), frysing (Conversation.frozenAt),
- * aldersgrense (selvrapportert) og bildesperre til dag 15.
+ * aldersgrense (selvrapportert) og bildesperre til dag 8.
  *
  * Ingenting her lover mer enn plattformen kan holde.
  * Se docs/JURIDISK-GRUNNLAG-v1.0.md §3 for kartleggingen.
@@ -37,7 +37,7 @@ const sections: Section[] = [
     title: 'Slik er Tosom bygget',
     paragraphs: [
       'Trygghet er ikke en funksjon vi la til på slutten. Det er grunnen til at plattformen ser ut som den gjør.',
-      'Du møter én person om gangen. Det finnes ingen strøm av profiler, ingen sveiping og ingen uleste meldinger fra fremmede. Profilen din er privat, og bilder kommer først etter to uker.',
+      'Du møter én person om gangen. Det finnes ingen strøm av profiler, ingen sveiping og ingen uleste meldinger fra fremmede. Profilen din er privat, og bilder kommer først på dag 8.',
       'Alt dette er valg som gjør det vanskeligere å vokse raskt — og lettere å føle seg trygg.',
     ],
   },
@@ -55,7 +55,7 @@ const sections: Section[] = [
     title: 'Bilder kommer senere',
     paragraphs: [
       `Bilder kan først deles fra dag ${JOURNEY.imageUnlockDay} av reisen. Sperren ligger i systemet og kan ikke omgås — heller ikke av oss.`,
-      'Grunnen er enkel: når dere først ser hverandre, har dere allerede snakket sammen i to uker. Da vet dere noe om hverandre som et bilde ikke kan fortelle.',
+      'Grunnen er enkel: når dere først ser hverandre, har dere allerede snakket sammen i én uke. Da vet dere noe om hverandre som et bilde ikke kan fortelle.',
       'Du bestemmer selv om du vil dele bilde i det hele tatt.',
     ],
   },

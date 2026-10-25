@@ -46,7 +46,7 @@ async function fetchPartnerInfo(
       // Min bruker-id fra det autentiserte API-kallet — brukes som sessionUserId
       userId: data.userId ?? null,
       // Dela reisedag for samtalen (max av begge partene) — sikrer at begge ser
-      // samme status, inkludert slutt-tilstanden ved dag 30.
+      // samme status, inkludert slutt-tilstanden ved dag 14.
       journeyDay: data.journeyDay ?? 1,
     };
   } catch {

@@ -11,6 +11,7 @@ import prisma from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth/requireAuth";
 import { withMetrics } from "@/lib/observability/withMetrics";
 import { trackError } from "@/lib/errorTracker";
+import { JOURNEY_TOTAL_DAYS } from "@/config/journey";
 
 export const dynamic = 'force-dynamic';
 
@@ -130,7 +131,7 @@ async function getHandler(req: NextRequest) {
     return NextResponse.json({
       day: journey.day,
       phase: responsePhase,
-      totalDays: 30,
+      totalDays: JOURNEY_TOTAL_DAYS,
       source: fromDB ? 'database' : 'fallback',
       task: fallbackTask,
       // Ekstra felt fra JourneyDayContent dersom tilgjengelig

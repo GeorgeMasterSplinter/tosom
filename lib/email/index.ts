@@ -9,7 +9,7 @@
  * Support: support@tosom.no.
  *
  * E-poster: driftsvarsel (alltid), match (bak BETA_MATCH_EMAIL), velkomst
- * (fullført onboarding), reise slutt (dag 30 / fant hverandre), passord-reset
+ * (fullført onboarding), reise slutt (dag 14 / fant hverandre), passord-reset
  * og sletting-bekreftelse. Ingen e-postverifisering. Bevisst.
  */
 
@@ -176,13 +176,13 @@ export async function sendWelcomeEmail(
   return sendEmail({
     to: userEmail,
     subject: 'Velkommen til Tosom',
-    text: `Hei ${name},\n\nVelkommen til Tosom.\n\nHer starter reisen med ord, tid og én reise av gangen — 30 dager. Bildene åpnes først fra dag 15.\n\nNår vi har funnet en passende person for deg, får du vite det i appen. Da starter reisen.\n\nTa deg tid til å svare ærlig på spørsmålene. Det er det som gir de beste koblingene.\n\nRo, varme og én reise av gangen.\n\n— Tosom`,
+    text: `Hei ${name},\n\nVelkommen til Tosom.\n\nHer starter reisen med ord, tid og én reise av gangen — 14 dager. Bildene åpnes først fra dag 8.\n\nNår vi har funnet en passende person for deg, får du vite det i appen. Da starter reisen.\n\nTa deg tid til å svare ærlig på spørsmålene. Det er det som gir de beste koblingene.\n\nRo, varme og én reise av gangen.\n\n— Tosom`,
     html: `
       <div style="font-family: Inter, -apple-system, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px; background: #0A1A2A; color: #ffffff; border-radius: 16px;">
         <h1 style="font-size: 24px; font-weight: 600; color: #D4AF37; margin-bottom: 16px;">Velkommen til Tosom</h1>
         <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">Hei ${name},</p>
         <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">
-          Her starter reisen med ord, tid og én reise av gangen — 30 dager. Bildene åpnes først fra dag 15.
+          Her starter reisen med ord, tid og én reise av gangen — 14 dager. Bildene åpnes først fra dag 8.
         </p>
         <p style="font-size: 16px; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 16px;">
           Når vi har funnet en passende person for deg, får du vite det i appen. Da starter reisen.
@@ -230,7 +230,7 @@ export async function sendPasswordResetEmail(
 }
 
 /**
- * Send «reisen er slutt»-e-post ved fullført reise (dag 30) eller når brukerne
+ * Send «reisen er slutt»-e-post ved fullført reise (dag 14) eller når brukerne
  * fant hverandre. Takk + bekrefter at alle data er slettet (GDPR art. 17).
  *
  * foundEachOther: gratulerende variant (de ble en ekte kontakt).
@@ -244,7 +244,7 @@ export async function sendJourneyEndEmail(
   const name = userName || 'hei';
   const opening = foundEachOther
     ? 'Gratulerer — dere fant hverandre. Nettopp det er det Tosom er laget for.'
-    : 'De 30 dagene sammen er fullført. Takk for at du var med på reisen.';
+    : 'De 14 dagene sammen er fullført. Takk for at du var med på reisen.';
   const closing = foundEachOther
     ? 'God reise videre — sammen, i det virkelige liv.'
     : 'Hvis du noen gang ønsker en ny reise, kan du registrere deg på nytt.';

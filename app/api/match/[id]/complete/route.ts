@@ -7,6 +7,7 @@ import prisma from "@/lib/prisma";
 import { getServerSession } from "@/lib/auth/session";
 import { captureError } from "@/lib/system/errors";
 import { logInfo } from "@/lib/system/log";
+import { JOURNEY_TOTAL_DAYS } from "@/config/journey";
 
 export const dynamic = 'force-dynamic';
 
@@ -156,9 +157,9 @@ export async function PUT(
         });
         conversationId = convo.id;
 
-        // Lås bruker i 30 dager fra nå av
+        // Lås bruker for reiselengden (14 dager) fra nå av
         const lockedUntilDate = new Date();
-        lockedUntilDate.setDate(lockedUntilDate.getDate() + 30);
+        lockedUntilDate.setDate(lockedUntilDate.getDate() + JOURNEY_TOTAL_DAYS);
         lockedUntil = lockedUntilDate.toISOString();
 
         await tx.user.update({

@@ -15,6 +15,7 @@
 import { useChat } from "@/app/chat/context/ChatContext";
 import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
+import { JOURNEY_TOTAL_DAYS } from "@/config/journey";
 
 /* ═══════════════════════════════════════
    THEME TOKENS — PREMIUM GLASS V2
@@ -160,7 +161,7 @@ function MilestoneBubble({ message }: { message: MessageData }) {
             className="text-lg font-bold mb-1"
             style={{ color: G.goldLight }}
           >
-            ✨ Dag {day} av 30
+            ✨ Dag {day} av {JOURNEY_TOTAL_DAYS}
           </p>
           <p 
             className="text-sm font-medium"
@@ -481,7 +482,7 @@ export function MessageBubble({ message, index = 0 }: MessageBubbleProps) {
   const delay = Math.min(index * 50, 400);
 
   // ═══ MILESTONE BUBBLE — milestone-feiring ═══
-  if (isMilestone || (type === "system" && content.includes("Dag") && content.includes("av 30"))) {
+  if (isMilestone || (type === "system" && content.includes("Dag") && content.includes("av 14"))) {
     return (
       <div className="message-enter-scale" style={{ marginBottom: "24px", animationDelay: `${delay}ms` }}>
         <MilestoneBubble message={message} />

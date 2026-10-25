@@ -21,15 +21,15 @@ const blogPosts = {
     `,
   },
   'reisetemaer': {
-    title: 'Hvorfor reisen varer 30 dager',
+    title: 'Hvorfor reisen varer 14 dager',
     date: '20. juni 2026',
     readTime: '4 min lesing',
     content: `
-      <p>Tretti dager er ikke en vitenskapelig standard, og vi påstår ikke at forskning har fastslått en «perfekt» tidsramme for å bygge tillit. Det er et bevisst designvalg — og vi vil være ærlige om at akkurat det er det.</p>
+      <p>Fjorten dager er ikke en vitenskapelig standard, og vi påstår ikke at forskning har fastslått en «perfekt» tidsramme for å bygge tillit. Det er et bevisst designvalg — og vi vil være ærlige om at akkurat det er det.</p>
 
-      <p>Det vi forsøkte å oppnå med lengden: kort nok til at dere ikke mister tråden, og lang nok til at samtalen faktisk kan bli dyp. Den første uken handler om å bli kjent. Den andre om sårbarhet. Den tredje om dype samtaler. Den fjerde om felles framtid.</p>
+      <p>Det vi forsøkte å oppnå med lengden: kort nok til at dere ikke mister tråden, og lang nok til at samtalen faktisk kan bli dyp. Den første uken handler om å bli kjent — uten bilder, kun ord. Da bildene åpner seg på dag 8, har dere allerede noe ekte å se i ansiktet til. De siste dagene handler om dypere samtale og refleksjon, til avslutningen på dag 14.</p>
 
-      <p>30 dager er derfor ikke en grense dere skal rekke — det er et rom dere får. Trenger dere mer tid, fortsetter dere på egne premisser.</p>
+      <p>Fjorten dager er derfor ikke en grense dere skal rekke — det er et rom dere får. Trenger dere mer tid, fortsetter dere på egne premisser.</p>
 
       <p>Reisen er designet for å støtte nettopp denne prosessen med daglige refleksjoner, samtaletema og små oppgaver — i eget tempo, uten press.</p>
     `,

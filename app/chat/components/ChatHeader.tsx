@@ -13,7 +13,7 @@
 
 "use client";
 
-import { getPhaseForDay } from '@/lib/journey/engine';
+import { getPhaseForDay, isMilestoneDay } from '@/lib/journey/engine';
 import { usePresence } from '@/hooks/usePresence';
 import { useChat } from '@/app/chat/context/ChatContext';
 import { MoodTheme } from '@/app/chat/lib/mood';
@@ -131,7 +131,7 @@ export function ChatHeader({
   moodTheme,
 }: ChatHeaderProps) {
   const router = useRouter();
-  const isMilestone = journeyDay === 10 || journeyDay === 20 || journeyDay === 30;
+  const isMilestone = isMilestoneDay(journeyDay);
 
   // Ett symbol for hvert av de 4 reisestega. Fasen kommer fra journey-motoren
   // (getPhaseForDay — samme grenser som driver den faktiske reisen).
@@ -204,7 +204,7 @@ export function ChatHeader({
             <PresenceDot partnerId={partner?.id} accent={accent} tMuted={tMuted} />
           </div>
 
-          {/* Fase-symbol + milestone — «Dag X av 30» er fjernet;
+          {/* Fase-symbol + milestone — «Dag X av 14» er fjernet;
               symbolet viser hvilket av de 4 stega dere er i (én kilde:
               journey-motorens fasegrenser, ikke egne tall her). */}
           <div className="flex items-center gap-1.5 mt-0.5">

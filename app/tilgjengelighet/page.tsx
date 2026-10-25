@@ -100,7 +100,7 @@ export default function TilgjengelighetPage() {
             items={[
               'Realtidsoppdateringer i chatten kan i enkelttilfeller ikke annonseres skjært av skjermleseren. Vi jobber med å forbedre dette.',
               'Mood-temaene bytter farger i hele grensesnittet. For brukere med fargeblindhet er dette noe å være obs på. Alle Mood-temaer har likevel tilstrekkelig kontrast.',
-              'Billedeling (fra dag 15) inkluderer alt-tekst, men dette er tomt ved opplasting. Vi jobber med å gjøre dette smartere.',
+              'Billedeling (fra dag 8) inkluderer alt-tekst, men dette er tomt ved opplasting. Vi jobber med å gjøre dette smartere.',
             ]}
           />
         </Section>

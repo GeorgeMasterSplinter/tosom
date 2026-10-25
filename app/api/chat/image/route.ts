@@ -14,6 +14,7 @@ import { withMetrics } from '@/lib/observability/withMetrics';
 import { getServerSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/prisma';
 import { isPhotosAllowed } from '@/lib/journey/engine';
+import { PHOTO_REVEAL_DAY } from '@/config/journey';
 import { getImageStorage, buildImageKey, assertSafeImageKey } from '@/lib/storage';
 import { pgCheck } from '@/lib/rate-limit-pg';
 
@@ -121,7 +122,7 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // Reisen fullført (dag 30) — samtalen er lukket, ingen flere bilder.
+    // Reisen fullført (dag 14) — samtalen er lukket, ingen flere bilder.
     if (conversation.endedAt) {
       return NextResponse.json(
         { error: 'Reisen er fullført. Samtalen er avsluttet.' },
@@ -129,7 +130,7 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // M-6: Bilde-lås håndheves server-side på journey-dag (kanonisk isPhotosAllowed: dag >= 15).
+    // M-6: Bilde-lås håndheves server-side på journey-dag (kanonisk isPhotosAllowed: dag >= 8).
     // Denne sjekken kjører FØR opplastning, slik at ingen bilde når lagringen før låsen er opphøyet.
     if (conversation.matchId) {
       const journey = await prisma.journeyProgress.findFirst({
@@ -139,7 +140,7 @@ async function postHandler(request: NextRequest): Promise<NextResponse> {
       if (!journey || !isPhotosAllowed(journey.day)) {
         const day = journey?.day ?? 0;
         return NextResponse.json(
-          { error: `Bilder blir låst opp på dag 15 av reisen (nå: dag ${day}).` },
+          { error: `Bilder blir låst opp på dag ${PHOTO_REVEAL_DAY} av reisen (nå: dag ${day}).` },
           { status: 423 }
         );
       }

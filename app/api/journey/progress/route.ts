@@ -12,6 +12,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth/requireAuth";
+import { JOURNEY_TOTAL_DAYS } from "@/config/journey";
 import { requireNotBanned } from "@/lib/auth/session";
 
 export const dynamic = 'force-dynamic';
@@ -74,7 +75,7 @@ export async function GET(req: NextRequest) {
       : [];
 
     // 5. Berekn progresjon
-    const totalDays = 30;
+    const totalDays = JOURNEY_TOTAL_DAYS;
     const progressPercent = Math.min(100, Math.round((journey.completedDays / totalDays) * 100));
 
     // 6. Hent alle dag-content for ref

@@ -2,9 +2,9 @@
  * Tosom — Velkomst-e-post: ingen absolutte «ingen bilder/ingen navn»-påstander (P1-1).
  *
  * P1-1: velkomst-eposten sa «Her er det ingen bilder, ingen navn og ingen
- * overflatelighet» — men bilder åpnes fra dag 15 (M-6) og kallenavn vises i
+ * overflatelighet» — men bilder åpnes fra dag 8 (M-6) og kallenavn vises i
  * chatten. E-posten skal beskrive det faktiske produktet: ord først, bilder
- * fra dag 15, varsel i appen.
+ * fra dag 8, varsel i appen.
  */
 
 const mockSendMailWelcome = jest.fn().mockResolvedValue({ messageId: 'test' });
@@ -24,14 +24,14 @@ describe('sendWelcomeEmail — faktisk produktbeskrivelse (P1-1)', () => {
     delete process.env.EMAIL_FROM;
   });
 
-  it('inneholder ikke «ingen bilder»/«ingen navn» og nevner bilder fra dag 15 + varsel i appen', async () => {
+  it('inneholder ikke «ingen bilder»/«ingen navn» og nevner bilder fra dag 8 + varsel i appen', async () => {
     const { sendWelcomeEmail } = await import('@/lib/email');
     const res = await sendWelcomeEmail('hei@tosom.no', 'Asta');
     expect(res.success).toBe(true);
     const arg = mockSendMailWelcome.mock.calls[0][0];
     expect(arg.text).not.toContain('ingen bilder');
     expect(arg.text).not.toContain('ingen navn');
-    expect(arg.text).toContain('dag 15');
+    expect(arg.text).toContain('dag 8');
     expect(arg.text).toContain('i appen');
   });
 });

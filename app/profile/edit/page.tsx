@@ -49,7 +49,7 @@ export default function ProfileEditPage() {
           </p>
         </div>
 
-        {/* Profil-låst banner (dag 1-29) */}
+        {/* Profil-låst banner (dag 1-13) */}
         {locked && !error && (
           <div className="text-amber-200 text-sm bg-amber-950/30 border border-amber-700/30 rounded-xl px-5 py-4">
             <div className="flex items-start gap-3">
@@ -57,8 +57,8 @@ export default function ProfileEditPage() {
               <div>
                 <p className="font-medium mb-1">Profilen er låst</p>
                 <p className="text-amber-300/70 text-xs leading-relaxed">
-                  Du har en aktiv reise pågåande. Profilen kan ikke redigerast mens du er i dag 1–29.
-                  Etter at reisen er fullført (dag 30) opnar låsen seg automatisk.
+                  Du har en aktiv reise pågående. Profilen kan ikke redigeres mens du er i dag 1–13.
+                  Etter at reisen er fullført (dag 14) åpner låsen seg automatisk.
                 </p>
               </div>
             </div>

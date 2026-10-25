@@ -16,7 +16,7 @@ export interface ProfileFormData {
   maturityLevel: number | null;
 }
 
-// Sjekk om brukeren har aktiv match/journey (dag 1-29)
+// Sjekk om brukeren har aktiv match/journey (dag 1-13)
 async function hasActiveMatch(userId: string): Promise<boolean> {
   try {
     const activeMatch = await prisma.match.findFirst({
@@ -83,7 +83,7 @@ export async function updateProfile(formData: ProfileFormData): Promise<{ succes
 
   const locked = await hasActiveMatch(session.user.id);
   if (locked) {
-    return { error: "Profilen er låst mens du har aktiv reise. Du kan redigere etter dag 30." };
+    return { error: "Profilen er låst mens du har aktiv reise. Du kan redigere etter dag 14." };
   }
 
   try {

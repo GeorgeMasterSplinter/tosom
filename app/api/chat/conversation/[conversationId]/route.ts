@@ -87,7 +87,7 @@ export async function GET(
     // Dela reisedag for samtalen = max av begge partenes dag.
     // Journey-day ligger per bruker (24t-lås per dag), så partene kan drive
     // litt fra hverandre. Samtalen skal vise samme status for begge — inkludert
-    // slutt-tilstanden ved dag 30 — derfor bruker vi den mest fremskredne dagen.
+    // slutt-tilstanden ved dag 14 — derfor bruker vi den mest fremskredne dagen.
     const journeyWhere = (userId: string) => ({
       userId,
       ...(conversation.matchId ? { matchId: conversation.matchId } : {}),

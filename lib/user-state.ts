@@ -4,12 +4,13 @@
  */
 
 import prisma from "@/lib/prisma";
+import { JOURNEY_TOTAL_DAYS } from "@/config/journey";
 
 export type UserState =
   | 'ONBOARDING'
   | 'WAITING_FOR_MATCH'
   | 'ACTIVE_JOURNEY'
-  | 'DAY_30_CHOICE'
+  | 'DAY_14_CHOICE'
   | 'JOURNEY_COMPLETE'
   | 'LOOP_BACK';
 
@@ -25,7 +26,7 @@ const PERMISSIONS: Record<UserState, StatePermissions> = {
   ONBOARDING: { canAccessOnboarding: true, canAccessDashboard: false, canAccessChat: false, canAccessReiseEnd: false, canEditProfile: false },
   WAITING_FOR_MATCH: { canAccessOnboarding: false, canAccessDashboard: true, canAccessChat: false, canAccessReiseEnd: false, canEditProfile: false },
   ACTIVE_JOURNEY: { canAccessOnboarding: false, canAccessDashboard: true, canAccessChat: true, canAccessReiseEnd: true, canEditProfile: false },
-  DAY_30_CHOICE: { canAccessOnboarding: false, canAccessDashboard: true, canAccessChat: false, canAccessReiseEnd: true, canEditProfile: false },
+  DAY_14_CHOICE: { canAccessOnboarding: false, canAccessDashboard: true, canAccessChat: false, canAccessReiseEnd: true, canEditProfile: false },
   JOURNEY_COMPLETE: { canAccessOnboarding: false, canAccessDashboard: true, canAccessChat: false, canAccessReiseEnd: false, canEditProfile: false },
   LOOP_BACK: { canAccessOnboarding: true, canAccessDashboard: true, canAccessChat: false, canAccessReiseEnd: false, canEditProfile: true },
 };
@@ -77,9 +78,9 @@ export async function getUserState(userId: string): Promise<UserStateResult> {
 
     const currentDay = journey.day ?? 1;
 
-    if (currentDay >= 30) {
+    if (currentDay >= JOURNEY_TOTAL_DAYS) {
       if (journey.completedAt) return defaultState('JOURNEY_COMPLETE');
-      return defaultState('DAY_30_CHOICE', 30);
+      return defaultState('DAY_14_CHOICE', JOURNEY_TOTAL_DAYS);
     }
 
     return defaultState('ACTIVE_JOURNEY', currentDay);

@@ -39,10 +39,10 @@ describe('endJourney() — Integrasjonstest mot Postgres', () => {
 
     // JourneyProgress for begge (B4: composite [userId, matchId])
     const journeyA = await db.journeyProgress.create({
-      data: { userId: userA.id, matchId: match.id, day: 30, completedAt: new Date() },
+      data: { userId: userA.id, matchId: match.id, day: 14, completedAt: new Date() },
     });
     const journeyB = await db.journeyProgress.create({
-      data: { userId: userB.id, matchId: match.id, day: 30, completedAt: new Date() },
+      data: { userId: userB.id, matchId: match.id, day: 14, completedAt: new Date() },
     });
 
     // Meldinger (senderId ikke userId)

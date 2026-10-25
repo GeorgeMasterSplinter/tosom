@@ -63,9 +63,9 @@ const articles = [
     dato: '20. juni 2026',
     lesetid: '4 min',
     kategori: 'Tid og nærhet',
-    tittel: 'Hvorfor reisen varer 30 dager',
+    tittel: 'Hvorfor reisen varer 14 dager',
     excerpt:
-      'Tretti dager er ikke en vitenskapelig standard — det er et bevisst designvalg. Så langt er det nok tid til å bli kjent, og så kort at dere ikke mister tråden. Her er hvorfor vi la reisen ta akkurat denne tida.',
+      'Fjorten dager er ikke en vitenskapelig standard — det er et bevisst designvalg. Langt nok til å bli kjent som mennesker, og kort nok til at dere ikke mister tråden. Her er hvorfor vi la reisen ta akkurat denne tida.',
     icon: <IconTime />,
   },
   {

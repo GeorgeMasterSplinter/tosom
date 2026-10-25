@@ -2,12 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireAdmin } from '@/lib/auth/requireAuth';
 import { getPhaseForDay } from '@/lib/journey/engine';
+import { JOURNEY_TOTAL_DAYS, PHOTO_REVEAL_DAY } from '@/config/journey';
 
 export const dynamic = 'force-dynamic';
 
 /**
  * POST /api/admin/journeys/timeline
- * Body: { matchId?: string, userId?: string, targetDay: number (1-30) }
+ * Body: { matchId?: string, userId?: string, targetDay: number (1-14) }
  * 
  * Setter reise(r) til en spesifikk dag (Time Machine).
  * - matchId: setter BEGGE brukere i matchen til samme dag
@@ -27,9 +28,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'matchId eller userId kreves' }, { status: 400 });
     }
 
-    const day = Math.max(1, Math.min(30, parseInt(targetDay, 10)));
+    const day = Math.max(1, Math.min(JOURNEY_TOTAL_DAYS, parseInt(targetDay, 10)));
     const now = new Date();
-    const nextDayAt = day < 30 ? new Date(now.getTime() + 24 * 60 * 60 * 1000) : null;
+    const nextDayAt = day < JOURNEY_TOTAL_DAYS ? new Date(now.getTime() + 24 * 60 * 60 * 1000) : null;
     const { phase } = getPhaseForDay(day);
 
     // Collect journeys to update
@@ -121,8 +122,8 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Dag 15+: Lås opp bildedeling i samtalen (samme logikk som cron)
-    if (day >= 15) {
+    // Dag 8+: Lås opp bildedeling i samtalen (samme logikk som cron)
+    if (day >= PHOTO_REVEAL_DAY) {
       for (const result of results) {
         const journey = journeys.find((j: any) => j.userId === result.userId);
         if (journey) {

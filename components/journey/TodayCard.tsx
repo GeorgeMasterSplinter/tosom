@@ -4,7 +4,7 @@
  * 
  * Design:
  * - Premium glass-panel med backdrop-blur
- * - Fase-fargar: grønn (dag 1-10), gull (dag 11-20), lila (dag 21-30)
+ * - Fase-fargar: grønn (dag 1-7), gull (dag 8-12), lila (dag 13-14)
  * - Hver seksjon har eget ikon og typografi
  * - Fade-in animasjon ved lasting
  * 

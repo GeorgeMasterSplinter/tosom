@@ -9,6 +9,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { color } from '@/config/design-tokens';
+import { JOURNEY_TOTAL_DAYS } from '@/config/journey';
 
 interface ConversationData {
   id: string;
@@ -67,7 +68,7 @@ function ConversationRow({ conv, onClick }: { conv: ConversationData; onClick: (
           <span style={{ color: color.text.primary, fontWeight: 600, fontSize: '16px' }}>
             {conv.partnerName}{conv.partnerAge ? `, ${conv.partnerAge}` : ''}
           </span>
-          <span style={{ color: color.brand.gold, fontSize: '12px' }}>Dag {conv.journeyDay}/30</span>
+          <span style={{ color: color.brand.gold, fontSize: '12px' }}>Dag {conv.journeyDay}/{JOURNEY_TOTAL_DAYS}</span>
         </div>
 
         <div className="flex items-center gap-2">

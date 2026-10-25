@@ -4,9 +4,9 @@
  * GET /api/cron/journey
  * - Øker JourneyProgress.day +1 for alle brukere som har passert nextDayAt
  * - Sjekkar fase-endring og sender notification
- * - Avslutt reise ved dag 30
+ * - Avslutt reise ved dag 14
  * - B9: Reisen starter først når begge har vært innom (bothSeenAt ≠ null)
- * - B9: Utløp for reiser >14 dager uten at begge har vært innom
+ * - B9: Utløp for reiser >7 dager uten at begge har vært innom
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -21,6 +21,7 @@ import { runRetention } from '@/lib/privacy/retention'; // S-10
 import { recordMetric, recordEvent } from '@/lib/observability/metric'; // O-3
 import { endJourney } from '@/lib/journey/endJourney'; // B-D: no-action auto-sletting
 import { getImageStorage } from '@/lib/storage'; // D: grace-period — bildeobjekter
+import { JOURNEY_TOTAL_DAYS, PHOTO_REVEAL_DAY, JOURNEY_START_WINDOW_DAYS } from '@/config/journey';
 import {
   thresholdQueueSize,
   thresholdRoundDuration,
@@ -163,8 +164,8 @@ export async function GET(req: NextRequest) {
             continue;
           }
 
-          // Sjekk om dag 30 er nådd — avslutt reise
-          if (journey.day >= 30) {
+          // Sjekk om dag 14 er nådd — avslutt reise
+          if (journey.day >= JOURNEY_TOTAL_DAYS) {
             await prisma.journeyProgress.update({
               where: { id: journey.id },
               data: { endedAt: new Date() },
@@ -177,7 +178,7 @@ export async function GET(req: NextRequest) {
               data: {
                 userId: journey.userId,
                 type: 'JOURNEY',
-                message: 'Reisen deres er fullført. Takk for at dere ga hverandre 30 dager.',
+                message: 'Den guidede reisen er ferdig. Dere velger hva som skjer videre – helt fritt.',
               },
             });
             continue;
@@ -210,8 +211,8 @@ export async function GET(req: NextRequest) {
             },
           });
 
-          // Dag 15: Lås opp bildedeling i samtalen
-          if (newDay >= 15) {
+          // Dag 8: Lås opp bildedeling i samtalen (idempotent)
+          if (newDay >= PHOTO_REVEAL_DAY) {
             const conv = await prisma.conversation.findFirst({
               where: { matchId: activeMatch.id },
               select: { id: true, imageShareAllowedAt: true },
@@ -234,7 +235,7 @@ export async function GET(req: NextRequest) {
               progressId: journey.id,
               day: newDay,
               title: `Dag ${newDay}`,
-              summary: `Ny dag i reisen: Dag ${newDay} av 30.`,
+              summary: `Ny dag i reisen: Dag ${newDay} av ${JOURNEY_TOTAL_DAYS}.`,
             },
           }).catch((err) => {
             // Ignorer duplikat-feil (kan hende ved race condition, STEG 5.4 fanger dette)
@@ -263,12 +264,12 @@ export async function GET(req: NextRequest) {
         }
       }
 
-      // B9: Utløp — finn reiser der begge ALDRI har vært innom og matchen er >14 dager gammel
-      const fourteenDaysAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
+      // B9: Utløp — finn reiser der begge ALDRI har vært innom og matchen er eldre enn startvinduet (7 dager)
+      const startWindowAgo = new Date(Date.now() - JOURNEY_START_WINDOW_DAYS * 24 * 60 * 60 * 1000);
       const expiredMatches = await prisma.match.findMany({
         where: {
           status: 'active',
-          createdAt: { lt: fourteenDaysAgo },
+          createdAt: { lt: startWindowAgo },
         },
         select: { id: true, userAId: true, userBId: true },
         take: 50,
@@ -303,7 +304,7 @@ export async function GET(req: NextRequest) {
                 data: {
                   userId: j.userId,
                   type: 'JOURNEY',
-                  message: 'Reisen har utløpt fordi dere ikke rakk å starte innen 14 dager.',
+                  message: `Reisen har utløpt fordi dere ikke rakk å starte innen ${JOURNEY_START_WINDOW_DAYS} dager.`,
                 },
               });
             }
@@ -314,7 +315,7 @@ export async function GET(req: NextRequest) {
               data: { status: 'expired' },
             });
 
-            console.log(`[cron/journey] Match ${match.id} utløpt — ingen startet reisen innen 14 dager`);
+            console.log(`[cron/journey] Match ${match.id} utløpt — ingen startet reisen innen ${JOURNEY_START_WINDOW_DAYS} dager`);
           }
         } catch (expiryError) {
           console.error(`[cron/journey] Feil ved utløp for match ${match.id}:`, expiryError);
@@ -322,18 +323,18 @@ export async function GET(req: NextRequest) {
         }
       }
 
-      // B-D: AUTO-SLETTING — reiser som fullførte dag 30, men ingen har handlet.
-      // Når reisen når dag 30 setter cronen endedAt (se over) — dette skjer ~24 t
-      // etter at dag 30 ble nådd (journey må passere nextDayAt). Når endedAt er satt
+      // B-D: AUTO-SLETTING — reiser som fullførte dag 14, men ingen har handlet.
+      // Når reisen når dag 14 setter cronen endedAt (se over) — dette skjer ~24 t
+      // etter at dag 14 ble nådd (journey må passere nextDayAt). Når endedAt er satt
       // OG matchen fortsatt er 'active', har verken bruker trykket "Vi fant hverandre"
       // eller "Start ny reise" → slett begge kontoene (data skal ikke ligge uvoktet).
-      // Det gir ~24 t gransetid fra dag 30. Løste matcher (deleted via endJourney) hoppes over.
+      // Det gir ~24 t gransetid fra dag 14. Løste matcher (deleted via endJourney) hoppes over.
       let noActionDeleted = 0;
       try {
         const day30EndedJourneys = await prisma.journeyProgress.findMany({
           where: {
-            day: { gte: 30 },
-            endedAt: { not: null }, // reisen er markert slutt (dag 30 nådd)
+            day: { gte: JOURNEY_TOTAL_DAYS },
+            endedAt: { not: null }, // reisen er markert slutt (dag 14 nådd)
           },
           select: { id: true, matchId: true },
           take: 50,
@@ -353,17 +354,17 @@ export async function GET(req: NextRequest) {
             await endJourney(jp.matchId, 'no_action');
             noActionDeleted++;
             recordEvent('journey.no_action_deleted', { matchId: jp.matchId });
-            console.log(`[cron/journey] Auto-sletting: match ${jp.matchId} (dag 30 fullført, ingen handling)`);
+            console.log(`[cron/journey] Auto-sletting: match ${jp.matchId} (dag 14 fullført, ingen handling)`);
           } catch (noActionError) {
             console.error(`[cron/journey] Feil ved auto-sletting for match ${jp.matchId}:`, noActionError);
             errors.push(`no_action match ${jp.matchId}: ${(noActionError as Error).message}`);
           }
         }
         if (noActionDeleted > 0) {
-          console.log(`[cron/journey] Auto-sletting: ${noActionDeleted} reiser (dag 30, ingen handling)`);
+          console.log(`[cron/journey] Auto-sletting: ${noActionDeleted} reiser (dag 14, ingen handling)`);
         }
       } catch (day30Error) {
-        console.error('[cron/journey] Feil ved dag-30 auto-sletting:', day30Error);
+        console.error('[cron/journey] Feil ved dag-14 auto-sletting:', day30Error);
         errors.push(`day30 no_action: ${(day30Error as Error).message}`);
       }
 

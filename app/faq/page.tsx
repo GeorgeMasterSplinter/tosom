@@ -10,27 +10,27 @@ import { PRICING } from '@/config/legal';
 const FAQS = [
   {
     q: 'Hva er Tosom egentlig?',
-    a: 'Tosom er en 30-dagers samtale mellom to mennesker som ikke kjenner hverandre. Dere blir koblet basert på de seks dimensjonene vi ser på. Dere kan se hverandres fornavn og alder fra start, og fra dag 15 kan dere dele bilder om dere vil. Det hele er privat, varmt og i eget tempo.',
+    a: 'Tosom er en 14-dagers samtale mellom to mennesker som ikke kjenner hverandre. Dere blir koblet basert på de seks dimensjonene vi ser på. Dere kan se hverandres fornavn og alder fra start, og fra dag 8 kan dere dele bilder om dere vil. Det hele er privat, varmt og i eget tempo.',
   },
   {
     q: 'Hvordan fungerer matching?',
     a: 'Vi sammenligner dere på seks dimensjoner — verdier, tilknytning, personlighet, kommunikasjon, emosjonsregulering og livssituasjon. Matcherunden kjører natt til lørdag, og vi forsøker å finne personen som passer deg best. Finner vi ingen god nok denne runden, står du i kø til neste. Finner vi deg en match, venter den på deg når du logger inn.',
   },
   {
-    q: 'Hva skjer i de 30 dagene?',
-    a: 'Hver dag får dere et nytt guidet spørsmål eller en samtale-impuls. Dere kan også velge fra 135 oppgaver i 9 kategorier — «Kunne-vil-du-si», «Fortell meg om», «Hvis vi var sammen», og mange flere. Alt sendes som tekst i chatten. Ved dag 15 låses bildedeling opp, slik at dere kan dele bilder om dere vil.',
+    q: 'Hva skjer i de 14 dagene?',
+    a: 'Hver dag får dere et nytt guidet spørsmål eller en samtale-impuls. Dere kan også velge fra 135 oppgaver i 9 kategorier — «Kunne-vil-du-si», «Fortell meg om», «Hvis vi var sammen», og mange flere. Alt sendes som tekst i chatten. Ved dag 8 låses bildedeling opp, slik at dere kan dele bilder om dere vil.',
   },
   {
     q: 'Hvorfor ingen bilder fra start?',
-    a: 'Fordi vi tror at ord er dypere enn utseende. I 14 dager får dere tid til å lære hverandre å kjenne som mennesker — ikke som profiler. Da bildene åpner seg ved dag 15, har dere allerede noe ekte å se i ansiktet til. Eller kanskje ikke. Kanskje ordene var nok.',
+    a: 'Fordi vi tror at ord er dypere enn utseende. Den første uken får dere tid til å lære hverandre å kjenne som mennesker — ikke som profiler. Da bildene åpner seg på dag 8, har dere allerede noe ekte å se i ansiktet til. Eller kanskje ikke. Kanskje ordene var nok.',
   },
   {
-    q: 'Hva skjer etter dag 30?',
+    q: 'Hva skjer etter dag 14?',
     a: 'To valg. «Vi fant hverandre» — dere har 24 timer på dere til å laste ned minnet som PDF, så slettes alt: alle samtaler, bilder, spørsmål og svar — alt forsvinner permanent. Bare en følelse gjenstår. Eller «Start ny reise» — dere slettes, og begge kan stille seg i køen igjen for en ny reise. Ingen hard landing. Bare videre.',
   },
   {
     q: 'Hva koster Tosom?',
-    a: `De ${PRICING.freeUserCap.toLocaleString('nb-NO')} første personene får bruke Tosom gratis. Senere er planen én engangsbetaling per 30-dagersreise — ${PRICING.journeyPrice} kr, betalt én gang med Vipps. Ingen abonnement. Ingen skjulte kostnader.`,
+    a: `De ${PRICING.freeUserCap.toLocaleString('nb-NO')} første personene får bruke Tosom gratis. Senere er planen én engangsbetaling per 14-dagersreise — ${PRICING.journeyPrice} kr, betalt én gang med Vipps. Ingen abonnement. Ingen skjulte kostnader.`,
   },
   {
     q: 'Hvor er dataene mine?',
@@ -45,7 +45,7 @@ const FAQS = [
   },
   {
     q: 'Hva om partneren min forsvinner?',
-    a: 'Livet skjer. Hvis begge er stille i 48 timer, får dere en mild impuls fra oss. Hvis reisen aldri starter (begge har ikke logget inn innen 14 dager), utgår den stille. Ingen dramatikk. Bare ro.',
+    a: 'Livet skjer. Hvis begge er stille i 48 timer, får dere en mild impuls fra oss. Hvis reisen aldri starter (begge har ikke logget inn innen 7 dager), utgår den stille. Ingen dramatikk. Bare ro.',
   },
   {
     q: 'Er det trygt? Blir dataene mine solgt?',

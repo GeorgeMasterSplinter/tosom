@@ -207,14 +207,14 @@ model Message {
   @@index([conversationId, createdAt])
 }
 
-// ⚠️ TODO: Legg til CHECK constraint (day >= 1 AND day <= 30) etter at vi migrerer til Prisma v6+ (supportar @@check)
+// ⚠️ TODO: Legg til CHECK constraint (day >= 1 AND day <= 14) etter at vi migrerer til Prisma v6+ (supportar @@check)
 // STEG B4 — match-scoped JourneyProgress: ONE record per user per match
 model JourneyProgress {
   id            String             @id @default(cuid())
   userId        String
   matchId       String
   phase         JourneyPhase       @default(EARLY)
-  day           Int                @default(0) // 0 = ikke startet; validering i API-nivå (day >= 1 AND day <= 30)
+  day           Int                @default(0) // 0 = ikke startet; validering i API-nivå (day >= 1 AND day <= 14)
   completedDays Int                @default(0)
   userASeenAt   DateTime?
   userBSeenAt   DateTime?

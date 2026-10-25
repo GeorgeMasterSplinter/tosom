@@ -1,5 +1,5 @@
 /**
- * ToSom — S-9: Verifiser at sletting er fullstendig (no_action — dag 30 auto-sletting)
+ * ToSom — S-9: Verifiser at sletting er fullstendig (no_action — dag 14 auto-sletting)
  *
  * Kaller den EKTEN endJourney()-funksjonen (ikke en simulert transaksjon) og
  * bekrefter:
@@ -29,7 +29,7 @@ const CONV_ID = 's9-test-conversation';
 // Nøkkelen bildet får i lagringen (format: {conversationId}/{uuid}.{ext})
 const IMAGE_KEY = 's9-test-conversation/bilde.jpg';
 
-describe('S-9: endJourney(no_action) — fullstendig sletting (auto-sveip dag 30)', () => {
+describe('S-9: endJourney(no_action) — fullstendig sletting (auto-sveip dag 14)', () => {
   let storageDir: string;
   let storage: LocalImageStorage;
 
@@ -73,8 +73,8 @@ describe('S-9: endJourney(no_action) — fullstendig sletting (auto-sveip dag 30
     const conversation = await db.conversation.create({
       data: { id: CONV_ID, matchId: match.id, userAId: userA.id, userBId: userB.id },
     });
-    await db.journeyProgress.create({ data: { userId: userA.id, matchId: match.id, day: 30 } });
-    await db.journeyProgress.create({ data: { userId: userB.id, matchId: match.id, day: 30 } });
+    await db.journeyProgress.create({ data: { userId: userA.id, matchId: match.id, day: 14 } });
+    await db.journeyProgress.create({ data: { userId: userB.id, matchId: match.id, day: 14 } });
 
     // Meldinger: to tekst + ein bilde-melding KNYTT TIL ETT OBJEKT I LAGRINGA
     await db.message.create({ data: { conversationId: conversation.id, senderId: userA.id, content: 'Hei!' } });

@@ -45,9 +45,9 @@ const sections: Section[] = [
     id: '2',
     title: 'Hvem som slipper inn',
     paragraphs: [
-      `Du lager konto og logger inn med Vipps, som bekrefter at du er minst ${MIN_AGE} år. I dagens beta er også e-post og passord tilgjengelig.`,
+      `I dagens beta lager du konto og logger inn med e-post og passord. Når Vipps-innlogging aktiveres, vil den bekrefte at du er minst ${MIN_AGE} år.`,
       `Aldersgrensen er ${MIN_AGE} år. Én person kan bare ha én konto.`,
-      'Vi gjør ingen bakgrunnssjekk. Vipps bekrefter identitet og alder — utover det vet vi ikke, og vi later ikke som noe annet.',
+      'Vi gjør ingen bakgrunnssjekk. Alderen din bekrefter du selv — utover det vet vi ikke, og vi later ikke som noe annet.',
     ],
   },
   {
@@ -123,7 +123,7 @@ const sections: Section[] = [
     id: '9',
     title: 'Kjenn igjen svindel',
     paragraphs: [
-      'Vipps-innlogging gjør det vanskelig å opprette falske profiler, men ingen plattform er helt fri for forsøk. Vær oppmerksom hvis noen:',
+      'Hver konto krever en e-postadresse, men ingen plattform er helt fri for forsøk på falske profiler. Vær oppmerksom hvis noen:',
     ],
     list: [
       'Ber om penger, uansett hvor god historien er',

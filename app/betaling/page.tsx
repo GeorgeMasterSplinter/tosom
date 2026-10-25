@@ -1,9 +1,9 @@
 /**
  * Tosom — Start reisen (B4.2)
  *
- * Prismodell: de første 5 000 reisene er gratis. Betalingsveien er Vipps og
- * aktiveres via config/features.ts (PAYMENTS_ENABLED); inntil da sendes reisen
- * direkte til kø uten belastning.
+ * Prismodell: de 5 000 første personene får bruke Tosom gratis. Betalingsveien
+ * er planlagt (Vipps) og aktiveres via config/features.ts (PAYMENTS_ENABLED);
+ * inntil da sendes reisen direkte til kø uten belastning.
  *
  * B4.2: Samtykket om oppstart lagres som withdrawalWaiverAt. Teksten oppfyller
  * kravet i angrerettloven § 22 om uttrykkelig forhåndssamtykke og erkjennelse
@@ -21,6 +21,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { csrfFetch } from '@/lib/api/csrfClient';
+import { PRICING } from '@/config/legal';
 
 export default function BetalingPage() {
   const router = useRouter();
@@ -83,7 +84,7 @@ export default function BetalingPage() {
             Klar til å starte reisen?
           </h1>
           <p className="text-lg" style={{ color: 'rgba(255,255,255,0.6)', lineHeight: '1.6' }}>
-            De første 5 000 reiser er gratis. Deretter koster én reise 349 kroner, betalt én gang med Vipps.
+            Tosom er gratis i dag for de {PRICING.freeUserCap.toLocaleString('nb-NO')} første personene — du betaler ingenting.
           </p>
         </div>
 

@@ -5,6 +5,7 @@ import { Footer } from '@/components/ui/layout/Footer';
 import { ResonanceLogo } from '@/components/branding/LogoVariants';
 import { ToSomSection, ToSomButton } from '@/components/ui/system';
 import { color, typographyToStyle } from '@/config/design-tokens';
+import { PRICING } from '@/config/legal';
 import GlassCard from '@/components/ui/cards/GlassCard';
 import GoldPulseIcon from '@/components/ui/feedback/GoldPulseIcon';
 
@@ -94,7 +95,7 @@ export default function PriserPage() {
               lineHeight: '1.8',
             }}
           >
-            Én enkel pris. Ingen abonnement. Ingen skjulte kostnader. Bare ro, trygghet og en gjennomtenkt prosess.
+            Gratis for de {PRICING.freeUserCap.toLocaleString('nb-NO')} første personene. Ingen abonnement. Ingen skjulte kostnader. Bare ro, trygghet og en gjennomtenkt prosess.
           </p>
 
           {/* Standard ToSom-logo — rett under innledningen */}
@@ -135,7 +136,7 @@ export default function PriserPage() {
                   lineHeight: '1.8',
                 }}
               >
-                Du får alt fra første dag. Du betaler kun når du er klar til å starte reisen. Ingen binding. Ingen overraskelser. Ingen &ldquo;premium-pakker&rdquo;.
+                Du får alt fra første dag. I dag betaler du ingenting. Ingen binding. Ingen overraskelser. Ingen &ldquo;premium-pakker&rdquo;.
               </p>
 
               <p
@@ -324,7 +325,7 @@ export default function PriserPage() {
                   color: color.brand.gold,
                 }}
               >
-                349 kr
+                Gratis
               </div>
 
               <p
@@ -334,7 +335,7 @@ export default function PriserPage() {
                   lineHeight: '1.8',
                 }}
               >
-                Per reise, betalt én gang med Vipps. Ingen abonnement, ingen løpende kostnader.
+                De {PRICING.freeUserCap.toLocaleString('nb-NO')} første personene får bruke Tosom gratis. Ingen kredittkort, ingen abonnement.
               </p>
 
               <p
@@ -344,7 +345,7 @@ export default function PriserPage() {
                   lineHeight: '1.7',
                 }}
               >
-                De første 5 000 reiser er gratis.
+                Senere er planen {PRICING.journeyPrice} kr for én 30-dagersreise, betalt én gang med Vipps. Ingen abonnement, ingen løpende kostnader.
               </p>
 
             </GlassCard>

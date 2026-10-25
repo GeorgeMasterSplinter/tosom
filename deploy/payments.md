@@ -11,7 +11,7 @@
 ## Hva finnes
 
 - **Innlogging til beta** virker allerede via e-postlenke (`lib/auth/config.ts:21`, `EmailProvider` med SMTP). Inviterte betatester logger inn uten Vipps.
-- **Gratiskvote** på 10 000 brukere (`lib/payment/freeQuota.ts:11`, `FREE_QUOTA_LIMIT = 10_000`). Koblet i `app/api/journey/queue/route.ts`. Bærer funnelen inntil videre.
+- **Gratiskvote** på 5 000 brukere/personer (`lib/payment/freeQuota.ts`, `FREE_QUOTA_LIMIT = PRICING.freeUserCap = 5 000`). Telleren er per person: én atomisk claim ved kø-inngang, og den beholder seg gjennom `new_journey`. Koblet i `app/api/journey/queue/route.ts`. Bærer funnelen inntil videre.
 
 ## Hva er forkastet
 
@@ -28,4 +28,4 @@ Vipps er eneste planlagte betalingsvei. Nøkkelen ventes om ca. to uker. Når de
 
 ## Observasjon til beta
 
-`lib/payment/freeQuota.ts`-kommentaren sier at telleren «caches i Redis (60 s)», men koden i `countFreeQuotaOrders` (`:23`) gjør en direkte `prisma.order.count` uten caching. Atferden ved grensen er klar: bruker 10 001 blokkeres (10 000 < 10 000 = false). Manglende caching er ikke feil i dag — kun en observasjon dersom belastningen ved grensen blir relevant.
+`lib/payment/freeQuota.ts`-kommentaren sier at telleren «caches i Redis (60 s)», men koden i `countFreeQuotaOrders` (`:23`) gjør en direkte `prisma.order.count` uten caching. Atferden ved grensen er klar: person 5 001 blokkeres (5 000 < 5 000 = false). Manglende caching er ikke feil i dag — kun en observasjon dersom belastningen ved grensen blir relevant.

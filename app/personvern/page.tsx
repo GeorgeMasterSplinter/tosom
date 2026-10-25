@@ -60,7 +60,7 @@ const sections: Section[] = [
     title: 'Hva vi samler inn',
     paragraphs: [
       'Vi deler opplysningene i fire grupper.',
-      'Alderen din verifiseres ved innlogging med Vipps. I dagens beta, der innlogging fortsatt skjer med e-post og passord, bekrefter du alderen selv.',
+      'Når Vipps-innlogging aktiveres, vil alderen din bli verifisert ved innlogging. I dagens beta, der innlogging skjer med e-post og passord, bekrefter du alderen selv.',
     ],
     table: {
       headers: ['Gruppe', 'Hva det er', 'Grunnlag', 'Oppbevaring'],

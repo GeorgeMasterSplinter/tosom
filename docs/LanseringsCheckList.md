@@ -1822,3 +1822,43 @@ Full `npm run verify` / `npm run lint` / `npm run build` / `npx jest`: se ACT F1
 `docs/METHODS-SCIENTIFIC-AUDIT-v1.0.md` (seksjon R), denne filen.
 
 **COMMIT/PUSH/DEPLOY:** NO / NO / NO (instruks §28 — stopp før commit).
+
+---
+
+## ACT P1A — FREE BETA TRUTH ALIGNMENT (25.10.2026, COPY ONLY)
+
+**Scope:** Alle offentlige landing/infosider + `/betaling` + e-postmaler +
+`deploy/payments.md`. Mål: hele det offentlige Tosom beskriver den samme
+virkeligheten — gratis beta for de 5 000 første personene, planlagt betalt V1
+senere. Produktbeslutning (George): **TOSOM LANSERES FØRST MED GRATIS BETA.**
+Vipps bygges IKKE nå (se `docs/PAYMENT-VIPPS-TRUTH-PLAN-v1.0.md`, D1–D7).
+
+**Status (faktisk resultat, verifisert mot kode + FB-01…FB-19):**
+
+| OMRÅDE | STATUS |
+|---|---|
+| FREE BETA | **READY** (produkt/kode/copy — ingen launch blocker for gratis beta; driftspostene G-xx ligger uendret) |
+| FREE QUOTA | **5000 PERSONS/USERS** (`PRICING.freeUserCap`; atomisk claim per person ved kø-inngang, beholdes gjennom `new_journey`) |
+| PAID V1 | **PLANNED – NOT IMPLEMENTED** |
+| VIPPS PAYMENT | **NOT IMPLEMENTED** (ikke markert FIXED; ingen adapter/checkout/webhook/capture) |
+| PAYMENT LEGAL REVIEW | **REQUIRED BEFORE ENABLEMENT** |
+| REFUND/CREDIT POLICY | **PENDING PAID V1** (D3: retning = bounded replacement journey/credit, endelig regel venter) |
+
+**Endringer:**
+- Copy: «5 000 reiser» → «5 000 personer» overalt (landing, `/priser`, `/priser` meta, `/faq`, `/betaling`, `/vilkar`)
+- 349 kr markert som «Senere er planen …» der den fremmes (landing, `/priser`, `/faq`, `/vilkar`) — ikke som betaling som kreves nå
+- `/priser`: prisblokken skiller gratis nå («Gratis») fra planlagt pris
+- `/betaling`: «Tosom er gratis i dag … du betaler ingenting» (pris-kortet viste allerede Gratis)
+- Vipps-identitet/alder-claims tonet ned til fremtidig tid (`/vilkar` §5/§6, `/trygghet` ×3, `/personvern`)
+- `deploy/payments.md`: 10 000 → 5 000 (implementert sannhet)
+- Pris/kvote leses nå fra `config/legal.ts` `PRICING` i landing, `/priser` (page+layout), `/faq`, `/betaling`, `/vilkar` (én kilde)
+- Ny test: `__tests__/free-beta-truth.test.tsx` (FB-01…FB-19)
+
+**Ikke endret:** quota-logikk, matching, journey, auth, betalt betalingsarkitektur
+(`Order`/`WebhookEvent`/`PaymentProvider` beholdes for fremtidig arbeidspakke),
+vilkårenes juridiske innhold (angrerett-punktet beholdes med gratisbeta-sperren
+«Så lenge reisen er gratis, har dette punktet ingen økonomisk betydning»).
+
+**Verifisering (25.10.2026):** FB-01…FB-19 grønne — se ACT P1A-sluttrapport.
+
+**COMMIT/PUSH/DEPLOY:** NO / NO / NO (instruks §33 — stopp før commit).

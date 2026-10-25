@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Footer } from '@/components/ui/layout/Footer';
 import { ToSomSection } from '@/components/ui/system';
 import { typographyToStyle } from '@/config/design-tokens';
+import { PRICING } from '@/config/legal';
 
 const FAQS = [
   {
@@ -29,7 +30,7 @@ const FAQS = [
   },
   {
     q: 'Hva koster Tosom?',
-    a: 'De første 5 000 reiser er gratis. Deretter én engangsbetaling per 30-dagers reise, betalt med Vipps. Ingen abonnement. Ingen skjulte kostnader. Du betaler for reisen, ikke for å være der.',
+    a: `De ${PRICING.freeUserCap.toLocaleString('nb-NO')} første personene får bruke Tosom gratis. Senere er planen én engangsbetaling per 30-dagersreise — ${PRICING.journeyPrice} kr, betalt én gang med Vipps. Ingen abonnement. Ingen skjulte kostnader.`,
   },
   {
     q: 'Hvor er dataene mine?',

@@ -4,6 +4,7 @@ import { Footer } from '@/components/ui/layout/Footer';
 import { Hero } from '@/components/ui/layout/Hero';
 import { ToSomSection, ToSomButton } from '@/components/ui/system';
 import { color, typographyToStyle } from '@/config/design-tokens';
+import { PRICING } from '@/config/legal';
 import GlassCard from '@/components/ui/cards/GlassCard';
 import { Reveal } from '@/components/motion/Reveal';
 import GoldPulseIcon from '@/components/ui/feedback/GoldPulseIcon';
@@ -254,7 +255,7 @@ export default function LandingPage() {
                 color: color.text.primary,
               }}
             >
-              De første 5 000 reiser er gratis
+              De {PRICING.freeUserCap.toLocaleString('nb-NO')} første personene får bruke Tosom gratis
             </h2>
 
             <GlassCard
@@ -279,7 +280,7 @@ export default function LandingPage() {
                   lineHeight: '1.8',
                 }}
               >
-                Ingen kredittkort, ingen abonnement. Når de 5 000 første er tatt, koster én reise 349 kroner — betalt én gang med Vipps.
+                Ingen kredittkort, ingen abonnement. Senere er planen {PRICING.journeyPrice} kr for én 30-dagersreise — betalt én gang med Vipps.
               </p>
             </GlassCard>
           </div>

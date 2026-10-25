@@ -81,7 +81,7 @@ const clauses: Clause[] = [
     id: '5',
     title: `Aldersgrense — ${MIN_AGE} år`,
     paragraphs: [
-      `Du må ha fylt ${MIN_AGE} år for å bruke Tosom. Alderen din verifiseres ved innlogging med Vipps, som bekrefter at du er ${MIN_AGE} år eller eldre. I dagens beta, der innlogging fortsatt skjer med e-post og passord, bekrefter du alderen selv.`,
+      `Du må ha fylt ${MIN_AGE} år for å bruke Tosom. Når Vipps-innlogging aktiveres, vil alderen din bli verifisert ved innlogging. I dagens beta, der innlogging skjer med e-post og passord, bekrefter du alderen selv.`,
       `Oppdager vi at en bruker er under ${MIN_AGE} år, stenges kontoen umiddelbart og alle opplysninger slettes.`,
     ],
   },
@@ -89,7 +89,7 @@ const clauses: Clause[] = [
     id: '6',
     title: 'Konto og innlogging',
     paragraphs: [
-      'Du logger inn med Vipps, som bekrefter både identitet og alder. I dagens beta kan du i tillegg opprette konto med e-post og passord. Kontoen er personlig, og du kan bare ha én.',
+      'Når Vipps-innlogging aktiveres, logger du inn med Vipps, som bekrefter både identitet og alder. I dagens beta oppretter du konto med e-post og passord. Kontoen er personlig, og du kan bare ha én.',
       'Du er ansvarlig for aktiviteten på kontoen din. Mistenker du at noen andre har fått tilgang, skal du si fra til oss.',
       'Du kan ikke overdra kontoen til andre, og du kan ikke opptre på vegne av noen andre.',
     ],
@@ -178,7 +178,7 @@ const clauses: Clause[] = [
     id: '14',
     title: 'Pris og betaling',
     paragraphs: [
-      `De første ${PRICING.freeUserCap.toLocaleString('nb-NO')} reiser er gratis. Deretter koster én reise ${PRICING.journeyPrice} kroner, betalt én gang med Vipps. Det er ingen abonnement og ingen løpende kostnader.`,
+      `Tosom er gratis i dag for de ${PRICING.freeUserCap.toLocaleString('nb-NO')} første personene. Senere er planen ${PRICING.journeyPrice} kroner for én 30-dagersreise, betalt én gang med Vipps. Det er ingen abonnement og ingen løpende kostnader.`,
       'Du blir aldri belastet uten at du har godkjent det på forhånd.',
     ],
   },

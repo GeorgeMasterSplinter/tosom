@@ -28,6 +28,7 @@ jest.mock("@/lib/prisma", () => {
   const prisma = {
     user: { findUnique: jest.fn(), create: jest.fn(), update: jest.fn() },
     profile: { create: jest.fn() },
+    betaInvite: { findUnique: jest.fn(), update: jest.fn() },
     $queryRaw: jest.fn(),
   };
   return { __esModule: true, default: prisma, prisma };
@@ -68,6 +69,13 @@ beforeEach(() => {
   (prisma.user.create as jest.Mock).mockReset();
   (prisma.user.update as jest.Mock).mockReset();
   (prisma.profile.create as jest.Mock).mockReset().mockResolvedValue({ id: "profile-1" });
+  // BETA-INVITE-GATE: default = invitert, slik at eksisterende tests som
+  // registrerer en NY e-post ikke blir blokkert av gaten. Gate-tester bor i
+  // beta-invite-gate.test.ts.
+  (prisma.betaInvite.findUnique as jest.Mock)
+    .mockReset()
+    .mockResolvedValue({ id: "inv-1" });
+  (prisma.betaInvite.update as jest.Mock).mockReset().mockResolvedValue({});
   csrfCheckMock.mockReset().mockResolvedValue(true);
 });
 

@@ -1,15 +1,15 @@
 {
   "version": "1.0",
-  "updatedAt": "2026-10-25",
-  "commit": "2629f7f",
+  "updatedAt": "2026-10-26",
+  "commit": "0abac74",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
-    "tests": "JOURNEY-7-14 re-measured 25.10 (ACT J1: reise 30→14 dager, bilde-lås 15→8, start-vindu 7 dager; 12 journey/match/profile/email + UI + tests oppdatert; 838 passed); 838 passed / 1 skipped (80 av 81 suiter) — målt 25.10 (ACT P1A free-beta truth alignment, +19 tester __tests__/free-beta-truth.test.tsx FB-01–FB-19); 24.10 (ACT C1): 819; 24.10 (/motpol-layout): 716; 15.10: 564 etter watchdog-fiks (B5.6, +11 tester __tests__/matching-watchdog.test.ts); 13.10: 553; 11.10: 545",
+    "tests": "26.10 (ACT J1.1 Beta Opening): 849 passed / 1 skipped (81 av 82 suiter) — +10 BETA-invite-gate (BETA-01–10, __tests__/beta-invite-gate.test.ts) + FB-20 (free-beta truth); tsc 0. [tidl. 25.10 ACT J1: 838]",
     "e2e": "07.10 (611a577): onboarding 20/20 lokalt (chromium+firefox, workers:1) etter CI-fix: samtykke i seed (K-2), skalasvar (PL-08), sessionStorage (PL-17). Tidligere: 0 fixme igjen. Onboarding: 20/20 lokalt 29.08 (10 chromium + 10 firefox, inkl. full flow). Dashboard/journey/match: 90/90 fra 28.08-kjøringen (ingen kodeendringer som rakk dem siden). Totalt 110 passed / 0 failed. 5/6 prosjekt lokalt (Mobile Safari/webkit krever system-bibliotek — installeres i CI med --with-deps). Dev-login (storageState) fungerer — alle tester kjører innlogget. playwright.config: workers: 1 alltid (lokal kjøring = CI) — onboarding-testene deler en E2E-bruker som full-flow-testen muterer; parallelle workere racet på server-draften",
-    "typecheck": "0 errors utover Prisma-klient (prisma generate kan ikke kjøre i sandbox — løses i CI)",
-    "lint": "re-verifisert 25.10 etter ACT J1 (npx next lint --max-warnings 0 = 0); 0 warnings (npx next lint --max-warnings 0)",
+    "typecheck": "0 errors (tsc --noEmit, 26.10 ACT J1.1 Beta Opening) utover Prisma-klient (prisma generate kjører i CI)",
+    "lint": "re-verifisert 26.10 (ACT J1.1 Beta Opening): 0 warnings (npx next lint --max-warnings 0)",
     "ciGuards": "7/7 grønne (lang, ai, concept, one-engine, 05:00, cron + lang-guard) — lang-guard utvidet 02.09: ~125 ord, case-insensitiv, skanner __tests__/ + ai/ + rotnivåets .md, SPRAKREF-blokk for bevisste nynorsk-eksempler",
-    "productionBuild": "25.10 (ACT J1 journey 7/14): npx next build EXIT=0, 68/68 sider; verified 25.10 etter ACT P1A — npx next build EXIT=0; 06.10 etter PL-08 (next 15.5.27) EXIT=0, 69/69 sider; også verifisert 06.10 etter PL-04"
+    "productionBuild": "26.10 (ACT J1.1 Beta Opening): npx next build EXIT=0, 68/68 sider [tidl. 25.10 ACT J1: EXIT=0, 68/68]"
   },
   "currentPhaseId": "apen-beta-test",
   "blockers": [
@@ -625,6 +625,12 @@
       "id": "ACT-J1-JOURNEY-7-14",
       "title": "ACT J1 — Journey forkortet 30→14 dager: bilde-lås 15→8, start-vindu 7 dager, 4 faser; kanonisk konfig config/journey.ts",
       "content": "Georges beslutning: reisen forkortes 30→14 dager, bilde-lås 15→8, start-vindu 7 dager (4 faser). SCOPE: (1) kanonisk konfig config/journey.ts (JOURNEY_TOTAL_DAYS=14, PHOTO_REVEAL_DAY=8, START_WINDOW_DAYS=7, 4 JOURNEY_PHASES) — re-eksportert fra lib/journey/engine.ts; (2) 82 filer endret: API-ruter (journey/match/profile/chat/admin), lib (journey/match/profile/email/atmosphere/system/user-state), UI-sider + komponenter, tests + prisma-kommentar (day<=30→14); (3) docs/LanseringsCheckList.md + docs/ACT-STATE.json status-blokk (J1); (4) docs/JOURNEY-7-14-IMPACT-PLAN-v1.0.md (J1-impactplan). UENDRET (bevisst): matching-motor, weights, MIN_SCORE, free-quota, Vipps, payment-arkitektur (Order/WebhookEvent/PaymentProvider beholdes), Prisma-schema-struktur (kun kommentar), auth, identity, lib/journeyTasks.ts (død kode — eget oppryddingstask). MIGRASJON: ingen — ingen ekte brukere på gammel 30-dagersmodell; aktive prod-journey-kontoer = TEST/DEMO (Georges 2 testkontoer); 0 ekte brukere påvirket. IKKE i denne commit-en: docs/IDENTITY-TRUST-PLAN-v1.0.md (separat fremtidig spor). TESTER: J-01…J-19 grønne; eksisterende journey/match/profile/e-post/integrasjonstester re-kjørt mot nye grenser (day-advance, photo-lock, engine, end-journey, motpol, delete, s9, full-loop). verify 25.10: 838 passed/1 skip (80 av 81 suiter) · next lint 0 · next build EXIT=0 (68/68 sider) · integrasjon (live DB) 5/5. COMMIT: YES (denne commit-en). PUSH: NO. DEPLOY: NO."
+    },
+    {
+      "dato": "2026-10-26",
+      "id": "ACT-J11-BETA-OPENING",
+      "title": "ACT J1.1 Beta Opening — invite-only gate (BETA-01–10) + runbook + legal review package + final free-beta audit (GO, 0 P0)",
+      "content": "INVITE-GATE: app/api/auth/register/route.ts tvinger BetaInvite-sjekk ETTER dup-sjekk (eksisterende brukere uendret) og FØR opprettelse; isInviteGateEnabled (BETA_INVITE_GATE default PÅ, LIVE env, ingen deploy for avlasting); normalisert oppslag (lowercase/trim) via lib/beta/invites (isInvitedEmail/markInviteUsed/normalizeEmail); 403 generic (ingen e-post-echo, ingen liste-lekkasje); rate-limit (5/IP/time) + CSRF beholdes først. TEST: __tests__/beta-invite-gate.test.ts BETA-01–10 (grønn); login-rate-limit.test.ts mocket ny betaInvite-calls. DOCS: docs/BETA-OPENING-RUNBOOK-v1.0.md (§1–21: pre-flight, freeze, invite gate, test/demo inventory, backup/sentry/email/R2/pusher/cron, admin + safety runbook A–G, support, kohort 6–10, invite copy, feedback, daglig/lørdag/dag8/dag14 checklists), docs/LEGAL-REVIEW-PACKAGE-v1.0.md (§1–7: datastrømmer, processors, 10 jurist-spørsmål, alvorlighetsgrad), docs/FINAL-FREE-BETA-GO-NO-GO-v1.0.md (audit GO 0 P0). VERIFISERT 26.10: verify 849 passed/1 skip (81/82 suiter), lint 0, build EXIT=0 (68/68). UENDRET: matching-motor/weights/MIN_SCORE, free-quota, Vipps, payment, Prisma-schema, journey 7/14, personlighet v2. IDENTITY-TRUST-PLAN separat (IKKE i denne commit). REAL USERS INVITED: NO."
     }
   ],
   "verifiedFlow": {
@@ -632,9 +638,13 @@
     "navigasjon": "UniversalMenu er levende meny (Hvorfor/Slik fungerer det/Reisen/Priser). Header.tsx og GlobalHeaderWrapper.tsx var død kode — slettet.",
     "glemtPassord": "POST /api/auth/request-reset → e-post med lenke til /nytt-passord?email=…&token=… (1 time, single-use) → POST /api/auth/reset-password setter passord og sletter øvrige sesjoner (PL-07)"
   },
-  "nextAction": "25.10 (ACT J1) — JOURNEY MODEL: 7/14 IMPLEMENTED LOCALLY (JOURNEY END: DAY 14, PHOTO REVEAL: DAY 8, START WINDOW: 7 DAYS, 4 faser; Saturday-cadence opprettholdt; kanonisk konfig config/journey.ts re-eksportert fra lib/journey/engine.ts; 82 filer API/logic/UI/tests + prisma-kommentar). PRODUCTION: NOT DEPLOYED. REAL USER MIGRATION: NOT REQUIRED. ACTIVE PROD JOURNEY: TEST/DEMO ONLY (Georges 2 testkontoer; 0 ekte brukere påvirket). UENDRET: matching-motor, weights, MIN_SCORE, free-quota, Vipps, payment-arkitektur, Prisma-schema-struktur, auth, identity, lib/journeyTasks.ts. verify 838 passed/1 skip (80/81 suiter) · lint 0 · build EXIT=0 (68/68) · integrasjon (live DB) 5/5. COMMIT: YES (denne commit-en); PUSH: NO; DEPLOY: NO. NESTE (George): (1) push+deploy når du bestemmer (alle gates grønn); (2) reset av 2 testjourney-kontoer etter deploy (valgfritt); (3) docs/IDENTITY-TRUST-PLAN-v1.0.md = separat fremtidig spor (IKKE i J1-commit); (4) opprydding lib/journeyTasks.ts (død kode) som eget task.",
+  "nextAction": "26.10 (ACT J1.1 Beta Opening) — INVITE-ONLY GATE IMPLEMENTERT + (deploy etter push). verify 849/1 skip · lint 0 · build EXIT=0. Runbook + Legal Review package + Final Free-Beta audit (GO, 0 P0) lagt inn. IDENTITY-TRUST-PLAN holdt separat (IKKE i denne commit). NESTE (George): 'INVITER FØRSTE KOHORT' — små, håndplukkede, 21+, bevisst på at det er beta. Før utvidelse: (1) backup B5.7 restore-test dokumentert, (2) Sentry DSN verifisert i Vercel, (3) test/demo (astrid/magnus) ut av kø eller reset, (4) legal review (Art 9 / DPIA / DPA-SCC / bruksvarsling 72t).",
   "gjenstaarFoerBeta": [
-    "Manuell sjekkliste — nå konsolidert i GEORGE.md (steg 2–9, env-liste, kill switches)"
+    "Backup: B5.7 gjenopprettingstest dokumentert + prod-backup-kavitet bekreftet (managed DB)",
+    "Sentry: SENTRY_DSN verifisert satt i Vercel (status UNKNOWN fra repo)",
+    "Test/demo (astrid/magnus): ut av kø/matching (A) eller reset (B) før første lørdagsrunde",
+    "Legal review: 10 spørsmål (LEGAL-REVIEW-PACKAGE §5) til jurist — Art 9, DPIA, GPS, DPA/SCC, retensjon, Art 22, alder, umyndige, data-rights, bruksvarsling 72t",
+    "Manuell sjekkliste konsolidert i GEORGE.md (steg 2–9, env-liste, kill switches)"
   ],
   "gjenstaarFoerLansering": [
     "Alle «Før lansering»-punkter i docs/LanseringsCheckList.md §6 (K-1…K-8 + utvalgte V-punkter)",

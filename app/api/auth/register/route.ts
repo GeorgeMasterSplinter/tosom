@@ -6,7 +6,8 @@
  * Innlogging oppretter ALDRI konto (auto-registrering fjernet i
  * lib/auth/config.ts). Kun denne ruten lager nye brukere.
  *
- * Rekkefølge: CSRF → Zod → rate-limit (per IP) → eksistenssjekk.
+ * Rekkefølge: CSRF → Zod → rate-limit (per IP) → eksistenssjekk →
+ * beta-invite-gate → opprettelse.
  * Eksisterende e-post får EXAKT samme svar som suksess — vi avslører
  * aldri om en e-post allerede er registrert (V-15/K-6).
  *
@@ -19,6 +20,8 @@ import { csrfCheck } from "@/lib/auth/csrf";
 import { pgCheck } from "@/lib/rate-limit-pg";
 import { hashPassword } from "@/lib/auth/hash";
 import { registerSchema } from "@/lib/validation/auth";
+import { isInvitedEmail, markInviteUsed } from "@/lib/beta/invites";
+import { isInviteGateEnabled } from "@/config/features";
 
 export const dynamic = "force-dynamic";
 
@@ -64,6 +67,25 @@ export async function POST(req: NextRequest) {
     });
     if (existing) {
       return NextResponse.json({ ok: true });
+    }
+
+    // 4b. BETA INVITE GATE (limited invite-only beta).
+    // Kun e-poster i BetaInvite-tabellen kan opprette NY konto.
+    // Eksisterende brukere (steg 4) er ikke påvirket. Server-side,
+    // normalisert oppslag (lowercase/trim) via isInvitedEmail.
+    // Ikke-invitert e-post → 403 med GENERIC melding (ingen echo av
+    // e-post, ingen liste-lekkasje; rate-limited via pgCheck over).
+    // En invitert e-post kan kun opprette ÉN konto — dup-sjekk (steg 4)
+    // blokkerer gjenbruk til en 2. konto for samme adresse.
+    if (isInviteGateEnabled()) {
+      const invited = await isInvitedEmail(email);
+      if (!invited) {
+        return NextResponse.json(
+          { ok: false, error: "Registrering skjer kun via invitasjon." },
+          { status: 403 }
+        );
+      }
+      await markInviteUsed(email);
     }
 
     // 5. Opprett User + minimal Profile (onboarding fyller resten).

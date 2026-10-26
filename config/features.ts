@@ -105,3 +105,15 @@ export const isRetentionEnabled = (): boolean => process.env.RETENTION_ENABLED =
  * kun en env-oppdatering i Vercel-dashboardet.
  */
 export const isBetaMatchEmailEnabled = (): boolean => process.env.BETA_MATCH_EMAIL === 'true';
+
+/**
+ * BETA: Sjekk om invite-gaten er aktiv (limited invite-only beta).
+ *
+ * Når PÅ (default): kun e-poster som finnes i BetaInvite-tabellen kan
+ * opprette NY beta-konto via /api/auth/register. Eksisterende kontoer er
+ * ikke påvirket (dup-sjekk i ruten går først).
+ *
+ * Leses LIVE fra env slik at den kan slås av i en nødsituasjon uten deploy
+ * — kun `BETA_INVITE_GATE=false` i Vercel-dashboardet. Default: PÅ.
+ */
+export const isInviteGateEnabled = (): boolean => process.env.BETA_INVITE_GATE !== 'false';

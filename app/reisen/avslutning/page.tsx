@@ -466,7 +466,7 @@ export default function AvslutningSide() {
           {/* Valg 2: Start ny reise */}
           <ChoiceCard
             title="Start ny reise 🔄"
-            description="Ble ikke match. Prøv igjen med ny partner."
+            description="Det ble ingen match denne gangen. Prøv igjen — med en ny person."
             icon={<IconRefresh />}
             gradientFrom="#A78BFA"
             gradientTo="#C4B5FD"

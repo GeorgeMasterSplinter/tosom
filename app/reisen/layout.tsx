@@ -5,12 +5,12 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Reisen",
   description:
-    "Den guiderte 14-dagers reisen: fire faser, daglige temaer og samtaler som bygger tillit i eget tempo.",
+    "Den guiderte 14-dagers reisen: fire faser, daglige temaer og spørsmål for dere to — i eget tempo.",
   alternates: { canonical: "/reisen" },
   openGraph: {
     title: "Reisen",
     description:
-      "Den guiderte 14-dagers reisen: fire faser, daglige temaer og samtaler som bygger tillit i eget tempo.",
+      "Den guiderte 14-dagers reisen: fire faser, daglige temaer og spørsmål for dere to — i eget tempo.",
     url: "/reisen",
   },
 };

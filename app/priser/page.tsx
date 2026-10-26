@@ -95,7 +95,7 @@ export default function PriserPage() {
               lineHeight: '1.8',
             }}
           >
-            Gratis for de {PRICING.freeUserCap.toLocaleString('nb-NO')} første personene. Ingen abonnement. Ingen skjulte kostnader. Bare ro, trygghet og en gjennomtenkt prosess.
+            Gratis for de {PRICING.freeUserCap.toLocaleString('nb-NO')} første personene. Ingen abonnement. Ingen skjulte kostnader. Bare ro og tid til å bli kjent.
           </p>
 
           {/* Standard ToSom-logo — rett under innledningen */}
@@ -175,13 +175,13 @@ export default function PriserPage() {
                 color: color.text.secondary,
               }}
             >
-              Tosom gir deg en komplett, trygg prosess — underbygd av etablerte relasjonsmodeller (
+              Tosom gir deg en komplett prosess — fra profil til reise (
                 <Link
                   href="/metoder"
                   className="underline decoration-[rgba(212,175,55,0.35)] decoration-1 underline-offset-4 hover:decoration-[#D4AF37] transition-all duration-300"
                   style={{ color: color.brand.gold }}
                 >
-                  se det vi bygger på
+                  se hva vi bygger på
                 </Link>
               ) — for å møte én person, valgt med omtanke.
             </p>
@@ -199,7 +199,7 @@ export default function PriserPage() {
                         color: color.text.primary,
                       }}
                     >
-                      Veiledet profil, underbygd av relasjonsmodeller
+                      En veiledet profil
                     </h3>
                     <p
                       style={{
@@ -208,7 +208,7 @@ export default function PriserPage() {
                         lineHeight: '1.8',
                       }}
                     >
-                      Du svarer på et gjennomtenkt sett med spørsmål om livet ditt, verdiene dine, personligheten din og hva du søker i et forhold. Profilene dine blir målt mot hverandre gjennom resonansmålingen — for å finne den rytmen som svinger med din.
+                      Du svarer på et gjennomtenkt sett med spørsmål om livet ditt, verdiene dine, personligheten din og hva du søker i et forhold. Vi sammenligner svarene dine med svarene til andre — for å finne en person som passer deg godt.
                     </p>
                   </div>
                 </div>
@@ -235,7 +235,7 @@ export default function PriserPage() {
                         lineHeight: '1.8',
                       }}
                     >
-                      Natt til lørdag måler vi resonansen. Vi leter ikke etter den som ser lik deg ut — vi leter etter den som får svingen din til å vokse. Én person om gangen — og heller ingen match enn en dårlig.
+                      Natt til lørdag leter vi etter en person som passer deg godt — ikke etter en som ser lik deg ut. Én person om gangen — og heller ingen match enn en dårlig.
                     </p>
                   </div>
                 </div>
@@ -262,7 +262,7 @@ export default function PriserPage() {
                         lineHeight: '1.8',
                       }}
                     >
-                      Når dere matcher, får dere et helt privat rom med guidede samtaler, refleksjoner, oppgaver og resonansmåling. Et rom designet for trygghet og dybde — uten distraksjoner.
+                      Når dere matcher, får dere et helt privat rom med daglige spørsmål, samtaletema og små oppgaver. Uten distraksjoner.
                     </p>
                   </div>
                 </div>
@@ -289,7 +289,7 @@ export default function PriserPage() {
                         lineHeight: '1.8',
                       }}
                     >
-                      Dere går gjennom en strukturert 14-dagers reise med daglige refleksjonsspørsmål, samtaletema, små oppgaver og resonansmåling. Dette er kjernen i Tosom — en prosess som hjelper dere å bli kjent.
+                      Dere går gjennom en guidet 14-dagersreise med daglige spørsmål, samtaletema og små oppgaver. Dette er kjernen i Tosom — et rom for dere to.
                     </p>
                   </div>
                 </div>

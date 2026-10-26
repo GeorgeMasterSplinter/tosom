@@ -73,7 +73,7 @@ const tipsSections: Array<{
     points: [
       'Natt til lørdag forsøker vi å finne deg en match. Profilen din må være klar før matchrunden for å være med — og får du ingen god nok denne gangen, står du i kø til neste runde.',
       'Matchingen bygger på onboarding-svarene dine: verdier, tilknytning, personlighet, kommunikasjon, emosjonsregulering og livssituasjon.',
-      'Dealbreakere (barn, modenhetsnivå, avstand) er hardsjekk — da slipper du å møte noen som aldri ville passet.',
+      'Dealbreakere — barn, avstand, tro og noen andre grenser — er avgjørende: passer de ikke, kobler vi dere ikke.',
       'Ingen liker, ingen swiping, ingen scoringer. En match er et utgangspunkt, ikke en dom — du bestemmer alltid selv.',
     ],
   },
@@ -91,12 +91,12 @@ const tipsSections: Array<{
   {
     icon: <IconTime />,
     title: 'Tosom er for alle',
-    intro: 'Tosom er for alle livsfaser — skole, studier, barn, jobb eller livet ellers. Du trenger ikke være til stede hele tiden for at reisen skal fungere.',
+    intro: 'Tosom er for ulike livsfaser — skole, studier, familieliv eller karriere. Du trenger ikke være til stede hele tiden for at reisen skal fungere.',
     points: [
-      'Vær åpen om hvor mye tid du har og når du er mest til stede — det hjelper matchingen, og den andre.',
+      'Vær åpen om hvor mye tid du har og når du er mest til stede — det hjelper matchingen, og den du blir koblet med.',
       'Planlegg «dates»: faste tider i uken når dere kan være litt ekstra til stede i chatten.',
       'Det er greit å være borte en stund. Reisen venter der du er.',
-      'Rytmen sies fra, ikke gjettes — si ifra når du trenger pause.',
+      'Si fra når du trenger pause — det trenger ingen å gjette.',
     ],
   },
   {
@@ -104,10 +104,10 @@ const tipsSections: Array<{
     title: 'Bruk reisen — rolig og kreativt',
     intro: 'De 14 dagene er en struktur for trygghet, ikke en øvelse i å imponere.',
     points: [
-      'Gjør de daglige små oppgavene med mening — de er laget for å bygge resonans, ikke rus',
-      'Strukturen er ment å gi deg og den andre rom.',
+      'Gjør de daglige små oppgavene med mening — de er laget for at dere skal bli kjent, ikke for konkurranse',
+      'Strukturen er ment å gi dere to rom.',
       'Bruk oppgavene som samtalestoff — de er skrevet for å få dere i gang.',
-      'Vær proaktiv, men gi plass.',
+      'Ta initiativ, men gi plass.',
     ],
     goldPoints: [3],
   },

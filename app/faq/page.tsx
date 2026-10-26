@@ -14,7 +14,7 @@ const FAQS = [
   },
   {
     q: 'Hvordan fungerer matching?',
-    a: 'Vi sammenligner dere på seks dimensjoner — verdier, tilknytning, personlighet, kommunikasjon, emosjonsregulering og livssituasjon. Matcherunden kjører natt til lørdag, og vi forsøker å finne personen som passer deg best. Finner vi ingen god nok denne runden, står du i kø til neste. Finner vi deg en match, venter den på deg når du logger inn.',
+    a: 'Vi sammenligner dere på seks dimensjoner — verdier, tilknytning, personlighet, kommunikasjon, emosjonsregulering og livssituasjon. Matcherunden kjører natt til lørdag, og vi forsøker å finne personen som passer deg best. Finner vi ingen god nok denne runden, står du i kø til neste. Finner vi en person, venter koblingen på deg når du logger inn.',
   },
   {
     q: 'Hva skjer i de 14 dagene?',
@@ -22,7 +22,7 @@ const FAQS = [
   },
   {
     q: 'Hvorfor ingen bilder fra start?',
-    a: 'Fordi vi tror at ord er dypere enn utseende. Den første uken får dere tid til å lære hverandre å kjenne som mennesker — ikke som profiler. Da bildene åpner seg på dag 8, har dere allerede noe ekte å se i ansiktet til. Eller kanskje ikke. Kanskje ordene var nok.',
+    a: 'Fordi vi tror at ord betyr mer enn utseende. Den første uken får dere tid til å lære hverandre å kjenne som mennesker — ikke som profiler. Da bildene åpner seg på dag 8, har dere allerede noe å by på hverandre. Eller kanskje ordene var nok.',
   },
   {
     q: 'Hva skjer etter dag 14?',
@@ -36,7 +36,7 @@ const FAQS = [
     q: 'Hvor er dataene mine?',
     a: (
       <>Alt ligger i Europa (PostgreSQL, EU-region). Driftsleverandørene våre (Vercel, Cloudflare og Sentry) behandler teknisk informasjon som IP-adresse for å levere og sikre tjenesten — les mer i{' '}
-        <Link href="/personvern" style={{ color: '#D4AF37' }}>personvernerklæringen</Link>. Ved reiseslutt eller kontosletting slettes ALT — senest 24 timer etter, verifisert og irreversibelt. Det som gjenstår er to anonyme ID-er for statistikk. Alt annet er borte.</>
+        <Link href="/personvern" style={{ color: '#D4AF37' }}>personvernerklæringen</Link>. Ved reiseslutt slettes alt senest 24 timer etter. Sletter du kontoen din, forsvinner alt med en gang. Det er verifisert og irreversibelt. Det som gjenstår er to anonyme ID-er for statistikk. Alt annet er borte.</>
     ),
   },
   {
@@ -45,11 +45,11 @@ const FAQS = [
   },
   {
     q: 'Hva om partneren min forsvinner?',
-    a: 'Livet skjer. Hvis begge er stille i 48 timer, får dere en mild impuls fra oss. Hvis reisen aldri starter (begge har ikke logget inn innen 7 dager), utgår den stille. Ingen dramatikk. Bare ro.',
+    a: 'Livet skjer. Hvis begge er stille i 48 timer, får dere en mild impuls fra oss. Hvis reisen aldri starter (ingen av dere har logget inn innen 7 dager), utgår den stille. Ingen dramatikk. Bare ro.',
   },
   {
     q: 'Er det trygt? Blir dataene mine solgt?',
-    a: 'Nei. Aldri. Vi selger ikke data. Vi deler ikke data. Vi bruker ikke data til annonser. Alle forbindelser er TLS-krypterte. Du kan slette alt når som helst. Tosom er bygget slik at vi ikke KAN gjøre noe med dataene dine etter at de er slettet.',
+    a: 'Nei. Aldri. Vi selger ikke data. Vi deler ikke data. Vi bruker ikke data til annonser. Alle forbindelser er TLS-krypterte. Du kan slette alt når som helst. Tosom er bygget slik at vi ikke kan gjøre noe med dataene dine etter at de er slettet.',
   },
 ];
 

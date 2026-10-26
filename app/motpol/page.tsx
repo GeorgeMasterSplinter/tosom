@@ -333,7 +333,7 @@ export default function MotpolPage() {
               {/* [PF] F5 — lenke: /reisen (plan §14) */}
               <P>
                 Hos oss åpnes bildene først på dag 8. Den første uken
-                handler dere med ord — <InlineLink href="/reisen">les om reisen</InlineLink>.
+                bygger dere på ord — <InlineLink href="/reisen">les om reisen</InlineLink>.
               </P>
               {/* [PH] */}
               <P>

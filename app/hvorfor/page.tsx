@@ -214,7 +214,7 @@ export default function HvorforPage() {
                 letterSpacing: '0.25px',
               }}
             >
-              Tosomhet handler ikke bare om romantikk. Det handler om modenhet, utvikling, trygghet og tilstedeværelse.
+              Tosomhet er ikke bare romantikk. Det er modenhet, trygghet og tilstedeværelse.
             </p>
 
             <p
@@ -247,7 +247,7 @@ export default function HvorforPage() {
                 letterSpacing: '0.25px',
               }}
             >
-              Det er ikke perfekt. Det er ikke alltid lett. Men det er ekte. Og det er verdt det.
+              Det er ikke perfekt, og det er ikke alltid lett. Men det er verdt det.
             </p>
           </div>
         </section>
@@ -413,7 +413,7 @@ export default function HvorforPage() {
                   lineHeight: '1.7',
                 }}
               >
-                For deg som vet at relasjoner krever tid, trygghet bygges sakte, kjemi kommer fra dybde ikke overflate, modenhet er viktigere enn perfeksjon, og det er bedre å være to enn å være alene om alt.
+                For deg som vet at relasjoner krever tid, at trygghet bygges sakte, at kjemi kommer fra dybde ikke overflate, at modenhet er viktigere enn perfeksjon, og at det er bedre å være to enn å være alene om alt.
               </p>
               <p
                 style={{
@@ -471,16 +471,6 @@ export default function HvorforPage() {
                 }}
               >
                 Noe som kan vokse.
-              </p>
-              <p
-                style={{
-                  ...typographyToStyle('body'),
-                  color: 'rgba(255,255,255,0.88)',
-                  lineHeight: '1.7',
-                  letterSpacing: '0.25px',
-                }}
-              >
-                Noe som kan bli til noe.
               </p>
 
               <p

@@ -4,12 +4,12 @@
   "commit": "0abac74",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
-    "tests": "26.10 (ACT J1.1 Beta Opening): 849 passed / 1 skipped (81 av 82 suiter) — +10 BETA-invite-gate (BETA-01–10, __tests__/beta-invite-gate.test.ts) + FB-20 (free-beta truth); tsc 0. [tidl. 25.10 ACT J1: 838]",
+    "tests": "26.10 (ACT Grand Finale Copy): 996 passed / 1 skipped (82 av 83 suiter) — +147 GF-copy-truth-guards (GF-01/02/03 × 49 aktive offentlige filer, __tests__/grand-finale-copy-truth.test.tsx); tsc 0. [tidl. 26.10 ACT J1.1 Beta Opening: 849]",
     "e2e": "07.10 (611a577): onboarding 20/20 lokalt (chromium+firefox, workers:1) etter CI-fix: samtykke i seed (K-2), skalasvar (PL-08), sessionStorage (PL-17). Tidligere: 0 fixme igjen. Onboarding: 20/20 lokalt 29.08 (10 chromium + 10 firefox, inkl. full flow). Dashboard/journey/match: 90/90 fra 28.08-kjøringen (ingen kodeendringer som rakk dem siden). Totalt 110 passed / 0 failed. 5/6 prosjekt lokalt (Mobile Safari/webkit krever system-bibliotek — installeres i CI med --with-deps). Dev-login (storageState) fungerer — alle tester kjører innlogget. playwright.config: workers: 1 alltid (lokal kjøring = CI) — onboarding-testene deler en E2E-bruker som full-flow-testen muterer; parallelle workere racet på server-draften",
-    "typecheck": "0 errors (tsc --noEmit, 26.10 ACT J1.1 Beta Opening) utover Prisma-klient (prisma generate kjører i CI)",
-    "lint": "re-verifisert 26.10 (ACT J1.1 Beta Opening): 0 warnings (npx next lint --max-warnings 0)",
+    "typecheck": "0 errors (tsc --noEmit, 26.10 ACT Grand Finale Copy) utover Prisma-klient (prisma generate kjører i CI)",
+    "lint": "re-verifisert 26.10 (ACT Grand Finale Copy): 0 warnings (npx next lint)",
     "ciGuards": "7/7 grønne (lang, ai, concept, one-engine, 05:00, cron + lang-guard) — lang-guard utvidet 02.09: ~125 ord, case-insensitiv, skanner __tests__/ + ai/ + rotnivåets .md, SPRAKREF-blokk for bevisste nynorsk-eksempler",
-    "productionBuild": "26.10 (ACT J1.1 Beta Opening): npx next build EXIT=0, 68/68 sider [tidl. 25.10 ACT J1: EXIT=0, 68/68]"
+    "productionBuild": "26.10 (ACT Grand Finale Copy): npx next build EXIT=0, 68/68 sider [tidl. 26.10 ACT J1.1 Beta Opening: EXIT=0, 68/68]"
   },
   "currentPhaseId": "apen-beta-test",
   "blockers": [
@@ -638,7 +638,7 @@
     "navigasjon": "UniversalMenu er levende meny (Hvorfor/Slik fungerer det/Reisen/Priser). Header.tsx og GlobalHeaderWrapper.tsx var død kode — slettet.",
     "glemtPassord": "POST /api/auth/request-reset → e-post med lenke til /nytt-passord?email=…&token=… (1 time, single-use) → POST /api/auth/reset-password setter passord og sletter øvrige sesjoner (PL-07)"
   },
-  "nextAction": "26.10 (ACT J1.1 Beta Opening) — INVITE-ONLY GATE IMPLEMENTERT + (deploy etter push). verify 849/1 skip · lint 0 · build EXIT=0. Runbook + Legal Review package + Final Free-Beta audit (GO, 0 P0) lagt inn. IDENTITY-TRUST-PLAN holdt separat (IKKE i denne commit). NESTE (George): 'INVITER FØRSTE KOHORT' — små, håndplukkede, 21+, bevisst på at det er beta. Før utvidelse: (1) backup B5.7 restore-test dokumentert, (2) Sentry DSN verifisert i Vercel, (3) test/demo (astrid/magnus) ut av kø eller reset, (4) legal review (Art 9 / DPIA / DPA-SCC / bruksvarsling 72t).",
+  "nextAction": "26.10 (ACT Grand Finale Copy Round) — ALLE aktive offentlige tekstflater omskrevet til rolig, ærlig, menneskelig copy (landing/hero, metadata, reisen, priser, faq, tips, om-oss, hvorfor, kontakt, vilkar, personvern, matching, avslutning, velkomst-e-post) + GF-01/02/03 truth-guards. Ingen produktlogikk endret. verify 996/1 skip · lint 0 · build EXIT=0 (68/68). STANS FØR COMMIT — commit: NEI. NESTE (George): commit av Grand Finale Round + 'INVITER FØRSTE KOHORT' (juristens svar på A-1–A-5 uavhengig)",
   "gjenstaarFoerBeta": [
     "Backup: B5.7 gjenopprettingstest dokumentert + prod-backup-kavitet bekreftet (managed DB)",
     "Sentry: SENTRY_DSN verifisert satt i Vercel (status UNKNOWN fra repo)",

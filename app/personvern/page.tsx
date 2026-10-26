@@ -142,7 +142,7 @@ const sections: Section[] = [
     paragraphs: [
       'Matching-motoren er den eneste automatiserte funksjonen i Tosom. Den leser profilen din og finner én person å koble deg med.',
       'Vurderingen bygger på verdier, livssituasjon, relasjonsstil og de opplysningene du har delt. Bilder og utseende brukes aldri.',
-      'Du får aldri en tallskår, og du blir aldri rangert mot andre. Du får heller ikke valget mellom flere personer — du får én kobling om gangen.',
+      'Du får aldri et poengtall, og du blir aldri rangert mot andre. Du får heller ikke valget mellom flere personer — du får én kobling om gangen.',
       'Er du uenig i en kobling, kan du avslutte reisen og stille deg i kø til neste runde. Du kan også kontakte oss, så ser vi på saken manuelt.',
     ],
   },

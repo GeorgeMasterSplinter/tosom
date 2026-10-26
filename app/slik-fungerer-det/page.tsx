@@ -74,21 +74,22 @@ const steps: Array<{
     title: 'Veiledet profil',
     intro: (
       <>
-        Du starter med en guidet profil, underbygd av etablerte relasjonsmodeller (
+        Du starter med en guidet profil som hjelper deg å forstå hvem du er, hva du
+        trenger og hva som kan passe deg i en relasjon. ({' '}
         <Link
           href="/metoder"
           className="underline decoration-[rgba(212,175,55,0.35)] decoration-1 underline-offset-4 hover:decoration-[#D4AF37] transition-all duration-300"
           style={{ color: color.brand.gold }}
         >
-          se det vi bygger på
-        </Link>
-        ), som hjelper deg å forstå hvem du er, hva du trenger og hva som kan passe deg i en relasjon.
+          se hva vi bygger på
+        </Link>{' '}
+        )
       </>
     ),
     points: [
-      'basert på relasjonspsykologi',
+      'spørsmål vi har laget for Tosom',
       'hjelper deg å forstå dine behov',
-      'gir et helhetlig bilde av hvem du er',
+      'gir et bredt bilde av hvem du er',
       'ingen stress, ingen tidspress',
     ],
   },
@@ -106,12 +107,12 @@ const steps: Array<{
   },
   {
     icon: <IconJourney />,
-    title: 'En guidet 14 dagers reise',
-    intro: 'Når dere matcher, får dere en rolig 14 dagers reise med små, trygge steg som hjelper dere å bli kjent på en naturlig måte. Ingen press. Ingen forventninger. Bare en struktur som gjør det lettere å åpne seg.',
+    title: 'En guidet 14-dagersreise',
+    intro: 'Når dere matcher, får dere en rolig 14-dagersreise med små steg som hjelper dere å bli kjent. Ingen press. Bare en struktur som gjør det lettere å åpne seg.',
     points: [
       'daglige små oppgaver',
       'fokus på trygghet og kommunikasjon',
-      'bygger emosjonell tilstedeværelse',
+      'tid til å bli kjent',
       'ingen hastverk',
     ],
   },

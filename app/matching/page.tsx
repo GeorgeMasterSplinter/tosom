@@ -511,7 +511,7 @@ export default function MatchingPage() {
               <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '16px', lineHeight: '1.7' }}>
                 Profilen din er fullført. Når du starter reisen, stiller du deg i
                 køen. Natt til lørdag forsøker vi å finne noen som passer deg —
-                og lar deg heller vente enn å koble tilfeldig.
+                og hellere la deg vente enn å koble tilfeldig.
               </p>
               <button
                 onClick={handleStartJourney}

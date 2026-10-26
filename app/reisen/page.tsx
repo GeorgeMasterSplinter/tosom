@@ -140,7 +140,7 @@ export default function ReisenPage() {
                 color: 'rgba(255,255,255,0.92)',
               }}
             >
-              14 dager som kan endre alt
+              To uker i eget tempo
             </h1>
 
             <p
@@ -152,7 +152,7 @@ export default function ReisenPage() {
                 letterSpacing: '0.25px',
               }}
             >
-              Når dere matcher, starter en guidet reise — skapt for å bygge ekte forbindelse mellom to mennesker. Ingen sveiping. Ingen distraksjoner. Bare dere to, i et rom som gir trygghet, tid og struktur.
+              Når dere matcher, starter en guidet reise over 14 dager. Ingen sveiping. Ingen distraksjoner. Bare dere to, i et rom med tid og struktur.
             </p>
           </div>
         </section>
@@ -177,7 +177,7 @@ export default function ReisenPage() {
                 letterSpacing: '0.25px',
               }}
             >
-              De fleste relasjoner stopper før de får sjansen til å bli noe ekte. Tempoet er for høyt. Distraksjonene er for mange. Folk hopper videre før de rekker å forstå hverandre.
+              Reisen er bygget rundt tempoet dere faktisk har. Hver dag gir dere ett fokus — et spørsmål, et tema eller en liten oppgave. Resten er opp til dere.
             </p>
 
             <p
@@ -198,7 +198,7 @@ export default function ReisenPage() {
                 letterSpacing: '0.25px',
               }}
             >
-              Vi gir dere: tid, fokus, trygghet, struktur — og en reise som bygger nærhet steg for steg.
+              Vi gir dere tid, fokus og struktur — og en reise som gir dere noe å ta fatt på hver dag.
             </p>
 
             <p
@@ -209,7 +209,7 @@ export default function ReisenPage() {
                 letterSpacing: '0.25px',
               }}
             >
-              Dette er ikke en test. Det er en opplevelse — designet for å hjelpe to mennesker å møtes på en måte som føles naturlig, varm og ekte.
+              Dette er ikke en test. Det er et rom for dere to — med en struktur som gjør det lettere å bli kjent.
             </p>
           </div>
         </section>
@@ -263,7 +263,7 @@ export default function ReisenPage() {
                     lineHeight: '1.7',
                   }}
                 >
-                  Ekte forbindelse bygges gjennom ord, tanker og sårbarhet — ikke gjennom utseende. Når dere ikke ser hverandre, lytter dere dypere.
+                  Spørsmålene gir dere noe å starte med, og tid til å høre på hverandre.
                 </p>
                 <p
                   style={{
@@ -274,7 +274,7 @@ export default function ReisenPage() {
                     fontStyle: 'italic',
                   }}
                 >
-                  Dere får rom til å føle, forstå og bli sett for den dere er.
+                  Dere får tid til å bli kjent.
                 </p>
               </GlassCard>
 
@@ -348,7 +348,7 @@ export default function ReisenPage() {
                     lineHeight: '1.7',
                   }}
                 >
-                  Samtalen går dypere. Dere snakker om mål, drømmer og hva som betyr mest for dere.
+                  Dagene handler om hverdagen deres — mål, drømmer og hva som betyr mest.
                 </p>
                 <p
                   style={{
@@ -357,7 +357,7 @@ export default function ReisenPage() {
                     lineHeight: '1.7',
                   }}
                 >
-                  Dere ser hvordan dere håndterer forskjeller — og bygger videre på tryggheten dere har skapt.
+                  Og om forskjellene: hva dere har felles, og hva dere ikke har.
                 </p>
                 <p
                   style={{
@@ -366,7 +366,7 @@ export default function ReisenPage() {
                     lineHeight: '1.7',
                   }}
                 >
-                  Det er en fase som gir innsikt, ikke forventning.
+                  Denne fasen er for å bli kjent — ikke for å finne ut av alt.
                 </p>
               </GlassCard>
 
@@ -459,7 +459,7 @@ export default function ReisenPage() {
                         lineHeight: '1.8',
                       }}
                     >
-                      Dere har mulighet til å velge mange spørsmål som hjelper dere å bli kjent dypere. 12 kategorier med over 240 spørsmål — fra lek og humor til nærhet, intimitet og modne samtaler. Dere velger selv hvor dyp dere vil grave.
+                      Velg spørsmål som hjelper dere å bli kjent. 12 kategorier med 240 spørsmål — fra lek og humor til nærhet og modne samtaler. Dere velger selv hvor dypt dere vil grave.
                     </p>
                   </div>
                 </div>
@@ -559,7 +559,7 @@ export default function ReisenPage() {
                     lineHeight: '1.8',
                   }}
                 >
-                  Hvis reisen har oppfylt sitt formål, kan dere avslutte med takknemlighet og klarhet.
+                  Hvis reisen har gitt det den skulle, kan dere avslutte den.
                 </p>
               </GlassCard>
 
@@ -584,7 +584,7 @@ export default function ReisenPage() {
                     lineHeight: '1.8',
                   }}
                 >
-                  Hvis dere ønsker det, kan dere starte en ny reise med en ny match — én om gangen.
+                  Hvis dere ønsker det, kan dere starte en ny reise med en ny person — én om gangen.
                 </p>
               </GlassCard>
             </div>

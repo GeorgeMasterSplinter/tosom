@@ -319,7 +319,7 @@ export default function LandingPage() {
                 marginRight: 'auto',
               }}
             >
-              Fordi mennesker ikke er skapt for å gå gjennom livet alene. Tosomhet handler om trygghet, utvikling, hverdagsmagi og å dele livet i to.
+              Tosom er laget for deg som vil ta deg tid. Det handler om trygghet, ærlighet og å bli kjent — med én person om gangen.
             </p>
 
             <p
@@ -333,7 +333,7 @@ export default function LandingPage() {
                 marginRight: 'auto',
               }}
             >
-              Tosom gir deg ro, tid og gjennomtenkt matching — slik at du kan bli kjent.
+              Tosom gir deg ro, tid og en god start — slik at du kan bli kjent.
             </p>
           </div>
           </Reveal>
@@ -363,7 +363,7 @@ export default function LandingPage() {
                 lineHeight: '1.8',
               }}
             >
-              Logg inn og bygg profilen din. Neste matcherunde er natt til lørdag.
+              Opprett kontoen din og bygg profilen. Neste matcherunde er natt til lørdag.
 
             </p>
 
@@ -383,7 +383,7 @@ export default function LandingPage() {
                 lineHeight: '1.7',
               }}
             >
-              Når innlogging er godkjent, blir du sendt til første steg i onboarding for å lage profilen din.
+              Ny her? Opprett en konto — så starter du med onboarding, der lager du profilen din.
             </p>
           </div>
 

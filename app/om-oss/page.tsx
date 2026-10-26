@@ -123,7 +123,7 @@ export default function OmOssPage() {
                 lineHeight: '1.8',
               }}
             >
-              I en verden som går fort, hvor mennesker sveiper, vurderer og forsvinner før de rekker å kjenne etter, ville vi bygge det motsatte:
+              Mange møteplasser i dag går fort: folk sveiper, vurderer og forsvinner før de rekker å kjenne etter. Vi ville bygge det motsatte:
             </p>
 
             <p
@@ -152,7 +152,7 @@ export default function OmOssPage() {
                 fontStyle: 'italic',
               }}
             >
-              Tosom er ikke en markedsplass. Det er ikke en app som jager effektivitet. Det er en prosess — en reise — som hjelper to mennesker å bli kjent på ordentlig.
+              Tosom er ikke en markedsplass, og det er ikke en app som jager effektivitet. Det er en reise som hjelper to mennesker å bli kjent på ordentlig.
             </p>
           </div>
         </ToSomSection>
@@ -192,7 +192,7 @@ export default function OmOssPage() {
                   lineHeight: '1.8',
                 }}
               >
-                Tosomhet er et ord som finnes dypt i norsk språk og kultur. Det beskriver noe stille, varmt og modent — et rom mellom to mennesker hvor det er plass til begge.
+                Tosomhet er vårt ord for noe stille, varmt og modent — et rom mellom to mennesker der det er plass til begge.
               </p>
 
               <p
@@ -246,7 +246,7 @@ export default function OmOssPage() {
                   textAlign: 'center',
                 }}
               >
-                Det er ikke bare &ldquo;to personer&rdquo;. Det er et mellomrom — et rom som oppstår når man møter noen som passer, og man gir det tid til å vokse.
+                Det er ikke bare &ldquo;to personer&rdquo;. Det er et rom som oppstår når to mennesker møtes, og gir det tid til å vokse.
               </p>
 
               <p
@@ -302,7 +302,7 @@ export default function OmOssPage() {
                     lineHeight: '1.8',
                   }}
                 >
-                  Moderne dating er rask, støyende og fragmentert. Folk sveiper, vurderer og hopper videre før de rekker å kjenne etter.
+                  Moderne dating er rask og støyende. Folk sveiper, vurderer og hopper videre før de rekker å kjenne etter.
                 </p>
               </GlassCard>
 
@@ -328,7 +328,7 @@ export default function OmOssPage() {
                     lineHeight: '1.8',
                   }}
                 >
-                  Vi ønsket å skape det motsatte: et rom hvor to mennesker kan ta tiden tilbake, kjenne etter, og møtes på en måte som betyr noe.
+                  Vi ønsket å skape det motsatte: et rom der to mennesker kan ta tiden tilbake, kjenne etter og møtes — i eget tempo.
                 </p>
               </GlassCard>
 
@@ -353,7 +353,7 @@ export default function OmOssPage() {
                     lineHeight: '1.8',
                   }}
                 >
-                  Relasjoner er ikke effektivitet — de er tilstedeværelse. Vi bygger på etablerte relasjonsmodeller som peker i retning av ekte kontakt — når mennesker møtes med ro, struktur og nysgjerrighet.
+                  Relasjoner er ikke effektivitet — de er tilstedeværelse. Vi bygger på rammeverk vi kjenner, og spørsmål vi har laget for Tosom — for at mennesker skal møtes med ro, struktur og nysgjerrighet.
                 </p>
               </GlassCard>
             </div>
@@ -400,7 +400,7 @@ export default function OmOssPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <ToSomCard icon={<IconRo />} title="Ro" iconWrapperClassName="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)]">
-                Alt i Tosom er designet for trygghet, fokus og lav puls. Ingen støy. Ingen press. Bare et rolig rom hvor to mennesker kan bli kjent uten hastverk.
+                Alt i Tosom er laget for trygghet, fokus og lav puls. Ingen støy. Ingen press. Bare et rolig rom der to mennesker kan bli kjent uten hastverk.
               </ToSomCard>
 
               <ToSomCard icon={<IconVerdighet />} title="Verdighet" iconWrapperClassName="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)]">
@@ -436,7 +436,7 @@ export default function OmOssPage() {
 
             <GlassCard padding="xl" gold glow interactive className="space-y-6">
               <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
-                Tosom er utviklet og driftet fra Norge av et lite, dedikert team som tror på relasjoner, teknologi og menneskelig varme.
+                Tosom er utviklet og driftet fra Norge av et lite team.
               </p>
 
               <p style={{ ...typographyToStyle('body-lg'), color: color.text.primary, lineHeight: '1.8' }}>
@@ -448,7 +448,7 @@ export default function OmOssPage() {
               </p>
 
               <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
-                Et rom der mennesker kan møtes på en trygg, moden og meningsfull måte.
+                Et sted der to mennesker kan bli kjent uten stress og jag.
               </p>
             </GlassCard>
           </div>

@@ -120,7 +120,7 @@ export default function KontaktPage() {
               color: color.text.secondary,
             }}
           >
-            Vi er her for å hjelpe deg. Ta kontakt hvis du har spørsmål, tilbakemeldinger eller trenger støtte.
+            Vi er her for å hjelpe deg. Ta kontakt hvis du har spørsmål, tilbakemeldinger eller trenger hjelp.
           </p>
         </ToSomSection>
 
@@ -284,7 +284,7 @@ export default function KontaktPage() {
               </ToSomCard>
 
               <ToSomCard icon={<IconCode />} title="Tekniske utfordringer" iconWrapperClassName="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)]">
-                Tech-problemer fikses raskt — skriv gjerne til oss.
+                Tekniske problemer løser vi raskt — skriv gjerne til oss.
               </ToSomCard>
 
               <ToSomCard icon={<IconMessage />} title="Tilbakemeldinger eller forslag" iconWrapperClassName="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)]">

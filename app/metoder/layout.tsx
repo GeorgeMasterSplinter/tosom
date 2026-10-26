@@ -4,12 +4,12 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Metoder vi bruker",
   description:
-    "Seks dimensjoner — verdier, tilknytning, personlighet, kommunikasjon, emosjonsregulering og livssituasjon — og hvordan de inngår i matchingen.",
+    "Seks områder — verdier, tilknytning, personlighet, kommunikasjon, emosjonsregulering og livssituasjon — og hva vi bruker svarene til.",
   alternates: { canonical: "/metoder" },
   openGraph: {
     title: "Metoder vi bruker",
     description:
-      "Seks dimensjoner — verdier, tilknytning, personlighet, kommunikasjon, emosjonsregulering og livssituasjon — og hvordan de inngår i matchingen.",
+      "Seks områder — verdier, tilknytning, personlighet, kommunikasjon, emosjonsregulering og livssituasjon — og hva vi bruker svarene til.",
     url: "/metoder",
   },
 };

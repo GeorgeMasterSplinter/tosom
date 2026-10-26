@@ -300,10 +300,10 @@ const clauses: Clause[] = [
   },
   {
     id: '24',
-    title: 'Reklamasjon, klag og tvister',
+    title: 'Reklamasjon, klage og tvister',
     paragraphs: [
       'Er du uenig i noe, håper vi du tar kontakt med oss først. De fleste ting løser seg i en samtale.',
-      `Reklamasjoner og klag sendes skriftlig til ${COMPANY.email} med en beskrivelse av hva som er galt og hva du vil at vi skal gjøre. Oppgi e-postadressen til kontoen din, slik at vi raskt finner saken.`,
+      `Reklamasjoner og klager sendes skriftlig til ${COMPANY.email} med en beskrivelse av hva som er galt og hva du vil at vi skal gjøre. Oppgi e-postadressen til kontoen din, slik at vi raskt finner saken.`,
       'Vi svarer innen 10 virkedager.',
       'Reklamasjoner på tjenesten skal reises innen to år fra tjenesten er levert, jf. Forbrukerkjøpsloven. Reisen regnes som levert når koblingen er gjennomført.',
       'Kommer vi ikke til enighet, kan du bringe saken inn for Forbrukerklageutvalget eller Forbrukertilsynet. Tvister kan også bringes inn for de alminnelige domstolene, med Oslo tingrett som verneting.',

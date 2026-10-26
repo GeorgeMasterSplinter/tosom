@@ -267,10 +267,10 @@ describe('F1 — psykometrisk avgrensning og ærlighetsprinsipper beholdt/styrke
     expect(TEXT).toMatch(/veiviser, ikke som et bevis/);
   });
 
-  it('eksisterende prinsipper beholdes (ikke egne studier, ikke bevis, veiviser)', () => {
+  it('eksisterende prinsipper beholdes (ikke egne studier, vår egen modell, veiviser ikke bevis)', () => {
     expect(TEXT).toMatch(/Vi har ikke selv gjennomført studier/);
-    expect(TEXT).toMatch(/Vi har ikke selv gjennomført studier, og vi påstår ikke å «vitenskapelig bevise»/);
-    expect(TEXT).toMatch(/veiviser, ikke en fasit/);
+    expect(TEXT).toMatch(/selve matchingen er vår egen modell/);
+    expect(TEXT).toMatch(/veiviser, ikke som et bevis/);
     expect(TEXT).toContain('Hva vi ikke lover');
   });
 

@@ -4,7 +4,7 @@
  * ToSom — Metoder vi bruker
  *
  * Vi sier det vi gjør. Denne siden dokumenterer (oppdatert ACT F1, 24.10.2026):
- *  1. Vi har ikke selv gjennomført studier — vi bygger på etablerte rammeverk
+ *  1. Bakgrunn for spørsmålene — etablert psykologi som utgangspunkt, vår egen matchingmodell
  *  2. De seks områdene: rammeverk vs egne spørsmål vs praktiske preferanser
  *  3. Spørsmålene vi stiller — hva som er etablert, tilpasset eller vårt eget
  *  4. Hva resonans er — Tosoms merkebegrep, ikke et publisert instrument
@@ -238,18 +238,15 @@ export default function MetoderPage() {
             className="max-w-2xl mx-auto"
             style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}
           >
-            Tosom vurderer seks områder ved matchingen. Noen bygger på etablerte
-            psykologiske rammeverk, andre består av egne spørsmål og praktiske
-            preferanser utviklet for Tosoms matchingmodell. Vi har ikke selv
-            gjennomført studier — rammeverkene vi viser til har vært gjennom tiår
-            av testing. Her er hva vi gjør, og hva vi ikke lover.
+            Tosom vurderer seks områder ved matchingen. Vi har ikke selv
+            gjennomført studier. Her er hva vi gjør, og hva vi ikke lover.
           </p>
 
           {/* Standard ToSom-logo — rett under innledningen */}
           <ResonanceLogo className="mt-10" />
         </ToSomSection>
 
-        {/* ===== 1. VI BYGGER PÅ ETABLERTE MODELLER ===== */}
+        {/* ===== 1. BAKGRUNN FOR SPØRSMÅLENE ===== */}
         <ToSomSection spotlight="blue" className="px-6">
           <div
             className="mx-auto max-w-3xl space-y-6"
@@ -264,17 +261,16 @@ export default function MetoderPage() {
             }}
           >
             <h2 style={{ ...typographyToStyle('heading-lg'), color: color.text.primary }}>
-              Vi bygger på etablerte modeller
+              Bakgrunn for spørsmålene
             </h2>
             <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
-              Vi har ikke selv gjennomført studier, og vi påstår ikke å «vitenskapelig bevise» at
-              to mennesker passer sammen. Det kan ingen plattform gjøre.
+              Tosom bruker kunnskap fra etablert psykologi som utgangspunkt for noen av
+              spørsmålene. Men selve matchingen er vår egen modell.
             </p>
             <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
-              Det vi gjør, er å la etablerte psykologiske rammeverk veilede hva vi spør om
-              og hvordan vi vekter det. Vektingen er en faglig vurdering av hva vi vet —
-              ikke et empirisk funn fra våre egne data.
-              Resonansmålingen er en veiviser, ikke en fasit.
+              Vi vet ikke om to mennesker kommer til å få kjemi, bli forelsket eller
+              passe sammen i hverdagen. Det finner dere ut selv. Tosom prøver bare å
+              finne én person det kan være verdt å bli kjent med.
             </p>
           </div>
         </ToSomSection>
@@ -312,38 +308,6 @@ export default function MetoderPage() {
                 </GlassCard>
               ))}
             </div>
-          </div>
-        </ToSomSection>
-
-        {/* ===== 3. GAMMALT TRE, NYE GRENER ===== */}
-        <ToSomSection spotlight="blue" className="px-6">
-          <div
-            className="mx-auto max-w-3xl space-y-6"
-            style={{
-              background: 'rgba(255,255,255,0.045)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              boxShadow: '0 18px 48px rgba(0,0,0,0.28), 0 0 40px rgba(212,175,55,0.16)',
-              borderRadius: '28px',
-              padding: `${spacing.lg}px`,
-            }}
-          >
-            <h2 style={{ ...typographyToStyle('heading-lg'), color: color.text.primary }}>
-              Gammelt tre, nye grener
-            </h2>
-            <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
-              Modellene vi bygger på er ikke fra forrige lekegård. Men de er gamle nok til å ha ro i seg.
-            </p>
-            <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
-              Bowlby, Big Five, Schwartz — de kom i 1960- til 1990-tallet. Og de holder fortsatt.
-              Ikke fordi psykologien har stått stille, men fordi godt håndverk ikke blir gammelt.
-              Et tre plantet riktig bærer i tiår.
-            </p>
-            <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
-              Vi har bare vasket støvet av, og lagt nyere referanser under
-              hvert område — slik at du kan se at grenene fortsatt vokser.
-            </p>
           </div>
         </ToSomSection>
 

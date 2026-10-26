@@ -102,7 +102,7 @@ const tipsSections: Array<{
   {
     icon: <IconJourney />,
     title: 'Bruk reisen — rolig og kreativt',
-    intro: 'De 30 dagene er en struktur for trygghet, ikke en øvelse i å imponere.',
+    intro: 'De 14 dagene er en struktur for trygghet, ikke en øvelse i å imponere.',
     points: [
       'Gjør de daglige små oppgavene med mening — de er laget for å bygge resonans, ikke rus',
       'Strukturen er ment å gi deg og den andre rom.',

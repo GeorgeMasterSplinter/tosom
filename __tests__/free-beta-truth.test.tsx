@@ -292,4 +292,43 @@ describe('ACT P1A — free beta truth (FB-01…FB-19)', () => {
       }
     }
   });
+
+  test('FB-20 (J1.1): ingen stale 30-dagers journey-claims i aktiv brukerrettet copy', () => {
+    // J1.1 truth-guard: fanger også definitiv norsk bøying («30 dagene»),
+    // «tretti», «fire uker» og gammelt dag-15-bildeclaim. Måler KUN journey-sider
+    // — IKKE personvern/cookies/retention/milestones som lovlig har 30-dagersfrister.
+    const patterns = [
+      /30 ?dag/i, // 30 dager / 30 dagene / 30 dags
+      /tretti/i, // tretti dager
+      /fire uker/i, // fire uker (28–30 dager) motsier 14-dagers reise
+      /\bdag 15\b/i, // gammelt bilde-løft (dag 15) — nå dag 8
+    ];
+    const rendered: Array<[string, string]> = [
+      [LANDING_TEXT, 'landing'],
+      [MOTPOL_TEXT, '/motpol'],
+      [PRISER_TEXT, '/priser'],
+    ];
+    for (const [text, page] of rendered) {
+      for (const p of patterns) {
+        if (p.test(text)) throw new Error(`stale journey-claim på ${page} (${p})`);
+      }
+    }
+    const srcFiles = [
+      'app/tips/page.tsx',
+      'app/slik-fungerer-det/page.tsx',
+      'app/metoder/page.tsx',
+      'app/faq/page.tsx',
+      'app/reisen/page.tsx',
+      'app/reisen/avslutning/page.tsx',
+      ...listFiles('app/hvorfor'),
+      ...listFiles('app/trygghet'),
+      ...listFiles('app/om-oss'),
+    ];
+    for (const rel of srcFiles) {
+      const src = read(rel);
+      for (const p of patterns) {
+        if (p.test(src)) throw new Error(`stale journey-claim i ${rel} (${p})`);
+      }
+    }
+  });
 });

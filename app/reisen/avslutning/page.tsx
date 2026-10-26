@@ -445,7 +445,7 @@ export default function AvslutningSide() {
               margin: 0,
             }}
           >
-            30 dagene har gått. Hva vil du gjøre nå?
+            {JOURNEY_TOTAL_DAYS} dagene har gått. Hva vil du gjøre nå?
           </p>
         </div>
 

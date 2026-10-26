@@ -387,9 +387,14 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* Lær mer — sekundær, like bred som Logg inn */}
+          {/* Lær mer — sekundær, like bred som Logg inn · bakgrunn lik «Logg inn»-knappen i menyen */}
           <div className="mx-auto flex max-w-md flex-col items-center pt-4">
-            <ToSomButton href="/slik-fungerer-det" variant="dark" size="lg">
+            <ToSomButton
+              href="/slik-fungerer-det"
+              variant="dark"
+              size="lg"
+              style={{ background: 'rgba(255,255,255,0.04)' }}
+            >
               Lær mer
             </ToSomButton>
           </div>

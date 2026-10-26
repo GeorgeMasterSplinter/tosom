@@ -220,7 +220,13 @@ export default function MotpolPage() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
               {/* «Start reisen» fjernet fra hero 24.10.2026 (godkjent av George) —
                   CTA-knappen nederst på siden er uendret. */}
-              <ToSomButton href="#hva-er-motpol" variant="dark" size="lg">
+              {/* Bakgrunn lik «Logg inn»-knappen i menyen (glass, ikke svart) */}
+              <ToSomButton
+                href="#hva-er-motpol"
+                variant="dark"
+                size="lg"
+                style={{ background: 'rgba(255,255,255,0.04)' }}
+              >
                 Se hvorfor
               </ToSomButton>
             </div>

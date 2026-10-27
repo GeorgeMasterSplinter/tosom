@@ -123,7 +123,7 @@ const DIMENSIONS: Array<{
   {
     icon: <IconPersonlighet />,
     name: 'Personlighet',
-    why: 'Alle har en rytme. Noen er stille, noen er fulle av energi. Vi ser om rytmen deres kan danne en melodi sammen — ikke om den er «riktig».',
+    why: 'Personlighet er ett av flere områder vi ser på. Noen er mer stille, andre mer utadvendte. Vi bruker svarene sammen med resten av informasjonen du har gitt oss.',
     modern: 'Big Five er et utbredt rammeverk for å beskrive brede personlighetstrekk. Våre spørsmål bruker rammeverket som inspirasjon — ikke som test. Vi vekter verdier og tilknytning tyngst i modellen.',
   },
   {

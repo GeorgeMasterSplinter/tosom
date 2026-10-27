@@ -16,6 +16,7 @@
  *  PLAIN-08: ingen garanti for at brukere «kjenner hverandre» ved dag 8
  *  PLAIN-09: ingen «mennesker er ikke skapt for å gå gjennom livet alene»
  *  PLAIN-10: ingen «de to som svinger sammen»-matchinglove
+ *  PLAIN-11: Metoder-copy inneholder ikke rytme/melodi-metaforer
  */
 
 import { readFileSync, readdirSync, statSync } from 'fs';
@@ -201,4 +202,26 @@ describe('PLAIN-10: ingen «de to som svinger sammen»-matchinglove', () => {
       }
     });
   }
+});
+
+describe('PLAIN-11: aktiv Metoder-copy inneholder ikke rytme/melodi-metaforer', () => {
+  // Scopet til Metoder-siden: «melodi» og «rytme» er vanlige norske ord
+  // ellers — kun metaforbruken i matchforklaringen er uønsket.
+  const rel = 'app/metoder/page.tsx';
+  // «rytme» må være et selvstendig ord (metaforbruken «Alle har en rytme») —
+  // konkrete sammennævningsfaktorer som «hverdagsrytme»/«livsrytme» i
+  // praktisk resonans er tillatt produktfakt.
+  const patterns = [
+    /melodi/i,
+    /\brytme(?:n)?\b/i,
+    /riktig takt/i,
+    /svinger sammen/i,
+    /forsterker hverandre/i,
+  ];
+  test(`${rel}: ingen rytme/melodi/riktig-takt/svinge-metaforer`, () => {
+    const src = stripComments(read(rel));
+    for (const p of patterns) {
+      if (p.test(src)) throw new Error(`${rel} inneholder metafore: ${p}`);
+    }
+  });
 });

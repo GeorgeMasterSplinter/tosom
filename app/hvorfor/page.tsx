@@ -129,7 +129,7 @@ export default function HvorforPage() {
                 letterSpacing: '0.25px',
               }}
             >
-              Fordi mennesker ikke er skapt for å gå gjennom livet alene. Ikke nødvendigvis for å være i et forhold hele tiden — men for å ha muligheten til å møte noen som ser dem, forstår dem og vil dem vel.
+              Tosom er laget for deg som heller vil bli kjent med én person enn å bla gjennom mange. Du får én kobling om gangen. Den første uken er uten bilder, slik at samtalen får komme først. Fra dag 8 blir bildet tilgjengelig. Vi prøver å gi dere en god start. Resten finner dere ut av selv.
             </p>
           </div>
         </section>
@@ -143,18 +143,18 @@ export default function HvorforPage() {
             {[
               {
                 icon: <IconHeart />,
-                title: 'Modenhet',
-                content: 'For deg som har levd litt og vet at modenhet er viktigere enn perfeksjon.',
+                title: 'Én person om gangen',
+                content: 'Du får én kobling om gangen. Ingen liste med profiler å velge mellom mens samtalen pågår.',
               },
               {
                 icon: <IconRo />,
-                title: 'Trygghet',
-                content: 'For deg som vil ha en trygg, moden og rolig prosess — ikke stress og jag.',
+                title: 'Samtalen før bildet',
+                content: 'Den første uken er uten bilder. Dere begynner med samtalen, og fra dag 8 blir bildet tilgjengelig.',
               },
               {
                 icon: <IconSeek />,
-                title: 'Tilstedeværelse',
-                content: 'For deg som ønsker å dele livet i to, ikke bære alt alene.',
+                title: 'En reise på to uker',
+                content: 'Hver dag får dere et spørsmål eller et tema, og samtalen ligger der gjennom hele reisen. Avslutning skjer på dag 14.',
               },
             ].map((item, idx) => (
               <GlassCard key={idx} padding="xl" gold interactive className="space-y-4 text-center">
@@ -214,7 +214,7 @@ export default function HvorforPage() {
                 letterSpacing: '0.25px',
               }}
             >
-              Tosomhet er ikke bare romantikk. Det er modenhet, trygghet og tilstedeværelse.
+              Tosomhet er navnet vårt på måten å bli kjent: én person om gangen, samtalen først, med tid.
             </p>
 
             <p
@@ -225,7 +225,7 @@ export default function HvorforPage() {
                 letterSpacing: '0.25px',
               }}
             >
-              Det handler om å dele hverdagen med noen, å vokse sammen, å ha en person som lytter, og å slippe å bære alt alene.
+              Det er et ord vi valgte fordi vi tror tempoet betyr noe. Hos oss kommer samtalen først — og dere bestemmer selv hvor langt den fører.
             </p>
 
             <p
@@ -236,18 +236,7 @@ export default function HvorforPage() {
                 fontStyle: 'italic',
               }}
             >
-              Tosomhet er ikke det motsatte av ensomhet. Det er det som oppstår når to mennesker velger hverandre — med ro, med tid, med intensjon.
-            </p>
-
-            <p
-              style={{
-                ...typographyToStyle('body-lg'),
-                color: 'rgba(255,255,255,0.88)',
-                lineHeight: '1.7',
-                letterSpacing: '0.25px',
-              }}
-            >
-              Det er ikke perfekt, og det er ikke alltid lett. Men det er verdt det.
+              Vi kan ikke vite om dere kommer til å passe sammen. Vi prøver å gi dere en god start. Resten finner dere ut av selv.
             </p>
           </div>
         </section>
@@ -281,7 +270,7 @@ export default function HvorforPage() {
                   lineHeight: '1.7',
                 }}
               >
-                Fordi moderne dating har gjort det vanskelig å finne dette. Tempoet er for høyt. Valgene er for mange. Oppmerksomheten er for kort. Folk hopper videre før de rekker å kjenne etter.
+                Mange tjenester byr på store utvalg av profiler og rask vurdering. For mange fungerer det fint. For andre blir det støy — de hopper videre før de rekker å kjenne etter.
               </p>
 
               <p
@@ -294,7 +283,7 @@ export default function HvorforPage() {
               </p>
 
               <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-                {['ro', 'trygghet', 'én match', 'én prosess', 'én reise', 'én mulighet til å bli kjent'].map((item, idx) => (
+                {['én kobling om gangen', 'kobling natt til lørdag', 'første uke uten bilder', 'bilde fra dag 8', 'reise på 14 dager', 'neste runde hvis ingen god nok'].map((item, idx) => (
                   <p
                     key={idx}
                     style={{
@@ -326,7 +315,7 @@ export default function HvorforPage() {
                   fontWeight: 600,
                 }}
               >
-                Bare deg — og én person som passer deg.
+                Vi vil heller la deg vente enn å koble deg tilfeldig.
               </p>
             </GlassCard>
 
@@ -342,7 +331,7 @@ export default function HvorforPage() {
                     color: color.brand.gold,
                   }}
                 >
-                  For deg som søker noe ekte
+                  Hvem er Tosom for?
                 </h3>
               </div>
 
@@ -358,12 +347,9 @@ export default function HvorforPage() {
 
               <div className="space-y-2">
                 {[
-                  'vil ha din første voksne relasjon',
-                  'vil utvikle deg som menneske',
-                  'vil møte noen som matcher verdiene dine',
-                  'vil bygge familie',
-                  'vil dele livet i to',
-                  'vil ha en trygg, moden og rolig prosess',
+                  'ønsker en seriøs relasjon',
+                  'heller vil bli kjent med én person enn å bla gjennom mange',
+                  'setter verdier, livssituasjon og relasjoner høyt',
                   'eller bare vil se hva som skjer når du gir én person tid',
                 ].map((item, idx) => (
                   <p
@@ -387,7 +373,7 @@ export default function HvorforPage() {
                   fontWeight: 600,
                 }}
               >
-                Tosom er laget for deg.
+                Da kan dette passe deg.
               </p>
             </GlassCard>
 
@@ -403,7 +389,7 @@ export default function HvorforPage() {
                     color: color.brand.gold,
                   }}
                 >
-                  For deg som har levd litt
+                  For deg som vet at det tar tid
                 </h3>
               </div>
               <p
@@ -413,7 +399,7 @@ export default function HvorforPage() {
                   lineHeight: '1.7',
                 }}
               >
-                For deg som vet at relasjoner krever tid, at trygghet bygges sakte, at kjemi kommer fra dybde ikke overflate, at modenhet er viktigere enn perfeksjon, og at det er bedre å være to enn å være alene om alt.
+                Noen ting tar tid — å bli kjent med noen, å vite hva man vil, å finne ordene. Reisen er bygd for at dere skal få den tiden: to uker, ett fokus om gangen.
               </p>
               <p
                 style={{
@@ -422,7 +408,7 @@ export default function HvorforPage() {
                   fontWeight: 600,
                 }}
               >
-                Tosom er laget for deg.
+                Slik er reisen bygd.
               </p>
             </GlassCard>
 
@@ -438,7 +424,7 @@ export default function HvorforPage() {
                     color: color.brand.gold,
                   }}
                 >
-                  For deg som vil noe mer
+                  Hva du får
                 </h3>
               </div>
 
@@ -450,29 +436,8 @@ export default function HvorforPage() {
                   letterSpacing: '0.25px',
                 }}
               >
-                Noe rolig.
+                En guidet 14-dagers reise der samtalen kommer først. Fra dag 8 kan dere dele bilder. Når dere er ferdige, avslutter dere reisen.
               </p>
-              <p
-                style={{
-                  ...typographyToStyle('body'),
-                  color: 'rgba(255,255,255,0.88)',
-                  lineHeight: '1.7',
-                  letterSpacing: '0.25px',
-                }}
-              >
-                Noe ekte.
-              </p>
-              <p
-                style={{
-                  ...typographyToStyle('body'),
-                  color: 'rgba(255,255,255,0.88)',
-                  lineHeight: '1.7',
-                  letterSpacing: '0.25px',
-                }}
-              >
-                Noe som kan vokse.
-              </p>
-
               <p
                 style={{
                   ...typographyToStyle('body'),
@@ -481,7 +446,7 @@ export default function HvorforPage() {
                   fontStyle: 'italic',
                 }}
               >
-                Tosom er ikke en app. Det er en prosess. En reise. Et rom hvor to mennesker kan møtes på ordentlig.
+                Tosom er en datingside. Forskjellen er at du blir kjent med én person om gangen — ikke i en strøm av profiler.
               </p>
             </GlassCard>
           </div>
@@ -518,7 +483,7 @@ export default function HvorforPage() {
               color: color.text.primary,
             }}
           >
-            Klar til å finne din tosomhet?
+            Klar til å starte?
           </h2>
 
           <p
@@ -527,7 +492,7 @@ export default function HvorforPage() {
               color: color.text.secondary,
             }}
           >
-            Lag profilen din i ditt eget tempo og møt noen som passer deg — på ordentlig.
+            Lag profilen din. Neste matcherunde er natt til lørdag.
           </p>
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 pt-4">

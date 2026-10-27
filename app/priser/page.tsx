@@ -235,7 +235,7 @@ export default function PriserPage() {
                         lineHeight: '1.8',
                       }}
                     >
-                      Natt til lørdag leter vi etter en person som passer deg godt — ikke etter en som ser lik deg ut. Én person om gangen — og heller ingen match enn en dårlig.
+                      Natt til lørdag forsøker vi å finne en person som passer deg godt. Én person om gangen — og heller ingen match enn en dårlig.
                     </p>
                   </div>
                 </div>
@@ -373,7 +373,7 @@ export default function PriserPage() {
               color: color.text.secondary,
             }}
           >
-            Lag profilen din i ditt eget tempo og møt én person, valgt med omtanke — på ordentlig.
+            Lag profilen din. Neste matcherunde er natt til lørdag.
           </p>
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 pt-4">

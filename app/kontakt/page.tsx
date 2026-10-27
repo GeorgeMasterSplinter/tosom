@@ -314,7 +314,7 @@ export default function KontaktPage() {
               color: color.text.secondary,
             }}
           >
-            Lag profilen din i ditt eget tempo og møt noen som passer deg — på ordentlig.
+            Lag profilen din. Neste matcherunde er natt til lørdag.
           </p>
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 pt-4">

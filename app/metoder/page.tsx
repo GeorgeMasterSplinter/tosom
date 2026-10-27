@@ -376,21 +376,17 @@ export default function MetoderPage() {
               Hva resonans er — og hva den ikke er
             </h2>
             <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
-              Hver person har en egen rytme. En natur. Noen svinger bredt, noen smalt.
-              Noen trenger tid før de åpner seg, noen er åpne fra første øyeblikk.
-            </p>
-            <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
-              Resonans er det som skjer når to rytmer møter hverandre i riktig takt.
-              Ikke når de er identiske — men når de forsterker hverandre.
-            </p>
-            <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
               Resonans er Tosoms navn på den samlede matchvurderingen. Det er et
               merkebegrep — ikke et etablert psykologisk instrument eller en klinisk skår.
             </p>
             <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
+              Den bygger på svarene deres innen områdene vi spør om. Den kan ikke
+              fortelle om dere får kjemi eller blir forelsket. Den brukes bare som
+              støtte når Tosom ser etter en mulig kobling.
+            </p>
+            <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
               Vår resonansmåling er ikke en kjærlighetsdiagnose. Den er ikke en bedømmelse av verdi.
-              Den er et utgangspunkt — en veiviser som forteller om de to rytmene deres kan svinge sammen.
-              Resten er opp til dere. Små, jevne steg i rett takt.
+              Resten er opp til dere.
             </p>
           </div>
         </ToSomSection>

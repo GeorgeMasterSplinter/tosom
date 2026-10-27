@@ -88,9 +88,8 @@ const steps: Array<{
     ),
     points: [
       'spørsmål vi har laget for Tosom',
-      'hjelper deg å forstå dine behov',
-      'gir et bredt bilde av hvem du er',
-      'ingen stress, ingen tidspress',
+      'om livssituasjon, verdier og hva som betyr noe for deg',
+      'tar tid — ingen tidspress',
     ],
   },
   {
@@ -103,12 +102,12 @@ const steps: Array<{
       'ingen konkurranse',
       'fokus og ro',
     ],
-    closing: 'Du blir med når tiden er riktig – og vi kobler deg først når det betyr noe.',
+    closing: 'Du blir med i køen når profilen er klar. Kobler vi ingen god nok, venter du til neste runde.',
   },
   {
     icon: <IconJourney />,
     title: 'En guidet 14-dagersreise',
-    intro: 'Når dere matcher, får dere en rolig 14-dagersreise med små steg som hjelper dere å bli kjent. Ingen press. Bare en struktur som gjør det lettere å åpne seg.',
+    intro: 'Når dere matcher, får dere en guidet 14-dagersreise. Hver dag får dere ett fokus — et spørsmål, et tema eller en liten oppgave — og samtalen ligger der hele veien.',
     points: [
       'daglige små oppgaver',
       'fokus på trygghet og kommunikasjon',
@@ -176,7 +175,7 @@ export default function SlikPage() {
               lineHeight: '1.8',
             }}
           >
-            En rolig og trygg prosess som hjelper deg å møte én person, valgt med omtanke. Ingen stress. Ingen sveiping. Bare ro.
+            Tosom er en datingside der du blir kjent med én person om gangen. Her er helheten — fra profil til dag 14.
           </p>
 
           {/* Standard ToSom-logo — rett under innledningen */}
@@ -268,7 +267,7 @@ export default function SlikPage() {
                       lineHeight: '1.8',
                     }}
                   >
-                    Trygghet før utseende. Den første uken er uten bilder. Fra dag 8 åpnes muligheten til å sende bilder til hverandre — da har dere lært å kjenne hverandre som mennesker, ikke som profiler. Hver av dere bestemmer selv om, og når, dere vil sende. Ordene først, bildet etter.
+                    Den første uken er uten bilder, slik at samtalen får komme først. Fra dag 8 åpnes muligheten til å sende bilder til hverandre. Hver av dere bestemmer selv om, og når, dere vil sende.
                   </p>
                   <div className="mx-auto max-w-md grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2">
                     {['Den første uken uten bilder', 'fokus på personen og meningen', 'muligheten åpnes på dag 8', 'du bestemmer selv om og når'].map((point, pIdx) => (
@@ -331,7 +330,7 @@ export default function SlikPage() {
               color: color.text.secondary,
             }}
           >
-            Lag profilen din i ditt eget tempo og møt én person, valgt med omtanke — på ordentlig.
+            Lag profilen din. Neste matcherunde er natt til lørdag.
           </p>
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 pt-4">

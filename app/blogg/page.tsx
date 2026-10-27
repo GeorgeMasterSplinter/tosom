@@ -115,7 +115,7 @@ export default function BloggPage() {
             className="max-w-2xl mx-auto"
             style={{ ...typographyToStyle('body-lg'), color: color.text.secondary }}
           >
-            I bloggen deler vi innsikt om relasjoner, emosjonell trygghet og langsomme, meningsfulle forbindelser.
+            I bloggen deler vi innsikt om relasjoner, trygghet og det å bli kjent i eget tempo.
           </p>
         </ToSomSection>
 
@@ -186,7 +186,7 @@ export default function BloggPage() {
             Klar til å starte?
           </h2>
           <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary }}>
-            Lag profilen din i ditt eget tempo og møt én person, valgt med omtanke — på ordentlig.
+            Lag profilen din. Neste matcherunde er natt til lørdag.
           </p>
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 pt-4">

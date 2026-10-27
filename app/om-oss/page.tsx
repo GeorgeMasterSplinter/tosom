@@ -92,7 +92,7 @@ export default function OmOssPage() {
               color: color.text.secondary,
             }}
           >
-            Tosom ble skapt med én tanke: at ekte forbindelse fortsatt er mulig — når vi gir rom for den.
+            Tosom er en datingside der du blir kjent med én person om gangen. Reisen varer i to uker, og den første uken er uten bilder.
           </p>
 
           {/* Standard ToSom-logo — rett under innledningen */}
@@ -123,7 +123,7 @@ export default function OmOssPage() {
                 lineHeight: '1.8',
               }}
             >
-              Mange møteplasser i dag går fort: folk sveiper, vurderer og forsvinner før de rekker å kjenne etter. Vi ville bygge det motsatte:
+              Mange tjenester byr på store utvalg av profiler og rask vurdering. Vi har valgt en annen vei:
             </p>
 
             <p
@@ -132,7 +132,7 @@ export default function OmOssPage() {
                 color: color.brand.gold,
               }}
             >
-              Et rolig rom.
+              Én person om gangen.
             </p>
 
             <p
@@ -142,7 +142,7 @@ export default function OmOssPage() {
                 lineHeight: '1.8',
               }}
             >
-              Et sted der to mennesker kan senke skuldrene, være til stede og møtes.
+              Du får én kobling om gangen, og du slipper å velge mellom en liste med profiler mens samtalen pågår.
             </p>
 
             <p
@@ -152,7 +152,7 @@ export default function OmOssPage() {
                 fontStyle: 'italic',
               }}
             >
-              Tosom er ikke en markedsplass, og det er ikke en app som jager effektivitet. Det er en reise som hjelper to mennesker å bli kjent på ordentlig.
+              Vi bruker det du forteller oss — blant annet livssituasjon, verdier og hva som er viktig for deg — når vi ser etter en mulig kobling.
             </p>
           </div>
         </ToSomSection>
@@ -192,7 +192,7 @@ export default function OmOssPage() {
                   lineHeight: '1.8',
                 }}
               >
-                Tosomhet er vårt ord for noe stille, varmt og modent — et rom mellom to mennesker der det er plass til begge.
+                Tosomhet er navnet vårt på måten å bli kjent: én person om gangen, samtalen først, med tid.
               </p>
 
               <p
@@ -202,7 +202,7 @@ export default function OmOssPage() {
                   lineHeight: '1.8',
                 }}
               >
-                Tosomhet er ikke det motsatte av ensomhet. Det er det som oppstår når to mennesker våger å være åpne nok til å bli sett, og rolige nok til å se tilbake.
+                Det er et ord vi valgte fordi vi tror tempoet betyr noe. Hos oss kommer samtalen først — og dere bestemmer selv hvor langt den fører.
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-8">
@@ -213,7 +213,7 @@ export default function OmOssPage() {
                       color: color.brand.gold,
                     }}
                   >
-                    Trygghet uten støy
+                    Trygghet i detaljene
                   </p>
                 </GlassCard>
                 <GlassCard padding="lg" interactive className="text-center">
@@ -223,7 +223,7 @@ export default function OmOssPage() {
                       color: color.brand.gold,
                     }}
                   >
-                    Nærhet uten hastverk
+                    Tid til å bli kjent
                   </p>
                 </GlassCard>
                 <GlassCard padding="lg" interactive className="text-center">
@@ -233,7 +233,7 @@ export default function OmOssPage() {
                       color: color.brand.gold,
                     }}
                   >
-                    Kontakt uten spill
+                    Uten spill og sveiping
                   </p>
                 </GlassCard>
               </div>
@@ -246,7 +246,7 @@ export default function OmOssPage() {
                   textAlign: 'center',
                 }}
               >
-                Det er ikke bare &ldquo;to personer&rdquo;. Det er et rom som oppstår når to mennesker møtes, og gir det tid til å vokse.
+                Vi kan ikke vite om dere passer sammen. Vi prøver å gi dere en god start — resten finner dere ut av selv.
               </p>
 
               <p
@@ -258,7 +258,7 @@ export default function OmOssPage() {
                   fontWeight: 600,
                 }}
               >
-                Det er dette Tosom bygger.
+                Det er dette Tosom prøver å gjøre.
               </p>
             </div>
           </div>
@@ -302,7 +302,7 @@ export default function OmOssPage() {
                     lineHeight: '1.8',
                   }}
                 >
-                  Moderne dating er rask og støyende. Folk sveiper, vurderer og hopper videre før de rekker å kjenne etter.
+                  Mange tjenester byr på store utvalg av profiler og rask vurdering. For mange fungerer det fint. For andre blir det støy.
                 </p>
               </GlassCard>
 
@@ -328,7 +328,7 @@ export default function OmOssPage() {
                     lineHeight: '1.8',
                   }}
                 >
-                  Vi ønsket å skape det motsatte: et rom der to mennesker kan ta tiden tilbake, kjenne etter og møtes — i eget tempo.
+                  Vi valgte en annen måte: én person om gangen, samtalen før bildet, og en reise som varer i to uker.
                 </p>
               </GlassCard>
 
@@ -353,7 +353,7 @@ export default function OmOssPage() {
                     lineHeight: '1.8',
                   }}
                 >
-                  Relasjoner er ikke effektivitet — de er tilstedeværelse. Vi bygger på rammeverk vi kjenner, og spørsmål vi har laget for Tosom — for at mennesker skal møtes med ro, struktur og nysgjerrighet.
+                  Vi bygger på kunnskap fra etablert psykologi, og spørsmål vi har laget for Tosom. På metoder-siden står hva vi bygger på — og hva vi ikke lover.
                 </p>
               </GlassCard>
             </div>
@@ -367,7 +367,7 @@ export default function OmOssPage() {
                 fontWeight: 600,
               }}
             >
-              Tosom finnes fordi mennesker fortjener mer enn tilfeldige matcher.
+              Tosom finnes for deg som heller vil bli kjent med én person enn å bla gjennom mange.
             </p>
           </div>
         </ToSomSection>
@@ -395,20 +395,20 @@ export default function OmOssPage() {
                 color: color.text.secondary,
               }}
             >
-              Hver detalje i Tosom reflekterer verdiene vi bærer.
+              Slik jobber vi:
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <ToSomCard icon={<IconRo />} title="Ro" iconWrapperClassName="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)]">
-                Alt i Tosom er laget for trygghet, fokus og lav puls. Ingen støy. Ingen press. Bare et rolig rom der to mennesker kan bli kjent uten hastverk.
+                Én samtale om gangen. Ingen støy, ingen press, ingen endeløse lister med profiler.
               </ToSomCard>
 
               <ToSomCard icon={<IconVerdighet />} title="Verdighet" iconWrapperClassName="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)]">
-                Alle mennesker fortjener en plattform som behandler dem med respekt og varme. Hvert element, hver tekst og hvert valg er laget med omtanke.
+                Profilen din er privat. Den eneste personen som ser den, er den du kobles med.
               </ToSomCard>
 
               <ToSomCard icon={<IconModeller />} title="Metoder" iconWrapperClassName="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)]">
-                Vi bygger på etablerte psykologiske modeller og relasjonsmodeller — ikke trender. Se nøyaktig hva vi bygger på, og hva vi ikke lover.
+                Vi bygger på kunnskap fra etablert psykologi — ikke trender. Se nøyaktig hva vi bygger på, og hva vi ikke lover.
               </ToSomCard>
 
               <ToSomCard icon={<IconPersonvern />} title="Personvern" iconWrapperClassName="w-14 h-14 rounded-full bg-[rgba(212,175,55,0.1)]">
@@ -440,15 +440,11 @@ export default function OmOssPage() {
               </p>
 
               <p style={{ ...typographyToStyle('body-lg'), color: color.text.primary, lineHeight: '1.8' }}>
-                Vi bygger ikke en app.
-              </p>
-
-              <p style={{ ...typographyToStyle('heading-sm'), color: color.brand.gold }}>
-                Vi bygger et rom.
+                Vi bygger en datingside — med én person om gangen, samtalen først, og en reise på to uker.
               </p>
 
               <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
-                Et sted der to mennesker kan bli kjent uten stress og jag.
+                Vi holder produktet bevisst enkelt, og vi er ærlige om hva vi ikke kan.
               </p>
             </GlassCard>
           </div>
@@ -474,7 +470,7 @@ export default function OmOssPage() {
               color: color.text.secondary,
             }}
           >
-            Lag profilen din i ditt eget tempo og møt noen som passer deg — på ordentlig.
+            Lag profilen din. Neste matcherunde er natt til lørdag.
           </p>
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 pt-4">

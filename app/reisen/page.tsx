@@ -152,7 +152,7 @@ export default function ReisenPage() {
                 letterSpacing: '0.25px',
               }}
             >
-              Når dere matcher, starter en guidet reise over 14 dager. Ingen sveiping. Ingen distraksjoner. Bare dere to, i et rom med tid og struktur.
+              Når dere matcher, starter en guidet reise over 14 dager. Ingen andre profiler, ingen sveiping. Bare dere to og samtalen.
             </p>
           </div>
         </section>
@@ -209,7 +209,7 @@ export default function ReisenPage() {
                 letterSpacing: '0.25px',
               }}
             >
-              Dette er ikke en test. Det er et rom for dere to — med en struktur som gjør det lettere å bli kjent.
+              Dette er ikke en test. Spørsmålene er der for å gjøre det lettere å komme i gang.
             </p>
           </div>
         </section>
@@ -310,7 +310,7 @@ export default function ReisenPage() {
                     lineHeight: '1.7',
                   }}
                 >
-                  Bildene kommer sent av en grunn: Først trygghet, så ansikt. Først samtalen, så bekreftelsen.
+                  Den første uken er uten bilder, slik at samtalen får komme først. Fra dag 8 er bildene åpne.
                 </p>
                 <p
                   style={{
@@ -321,7 +321,7 @@ export default function ReisenPage() {
                     fontStyle: 'italic',
                   }}
                 >
-                  Bildene bygger videre på det dere allerede har skapt.
+                  Bildene kommer inn i en samtale dere allerede har.
                 </p>
               </GlassCard>
 
@@ -413,7 +413,7 @@ export default function ReisenPage() {
                     fontStyle: 'italic',
                   }}
                 >
-                  Uansett valg, har dere fått tiden og rommet til å vite.
+                  Det er greit uansett hva dere velger.
                 </p>
               </GlassCard>
             </div>
@@ -611,7 +611,7 @@ export default function ReisenPage() {
               color: color.text.secondary,
             }}
           >
-            Lag profilen din i ditt eget tempo og møt noen som passer deg.
+            Lag profilen din. Neste matcherunde er natt til lørdag.
           </p>
 
           <div className="flex flex-col items-center gap-4 pt-4 w-full max-w-md mx-auto">

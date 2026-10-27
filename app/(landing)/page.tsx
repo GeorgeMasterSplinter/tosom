@@ -96,34 +96,34 @@ function ResonanceDivider() {
 const steps = [
   {
     icon: <IconWellbeing />,
-    title: 'Velvære først',
-    content: 'Vi senker tempoet, ikke kvaliteten. Trygghet og emosjonell komfort kommer før alt annet.',
+    title: 'Ditt tempo',
+    content: 'Én samtale om gangen, i et tempo du kan være med på. Du kan avslutte reisen når du vil.',
   },
   {
     icon: <IconPrivacy />,
     title: 'Privat profil',
-    content: 'Profilen din er helt privat og aldri offentlig. Du deler kun med én person du matcher med – og bare når du selv vil.',
+    content: 'Profilen din er privat og vises aldri offentlig. Den eneste personen som ser den, er den du kobles med.',
   },
   {
     icon: <IconMatch />,
     title: 'Én match om gangen',
-    content: 'Vi samler mennesker gjennom uken og kobler natt til lørdag. Én person om gangen — valgt med omtanke, ikke tilfeldighet. Finner vi ingen god nok, lar vi deg vente til neste runde. Ingen endeløs sveiping. Ingen overveldende valg.',
+    content: 'Vi samler mennesker gjennom uken og kobler natt til lørdag. Én person om gangen. Finner vi ingen som passer godt nok med grensene dine, venter du til neste runde. Ingen endeløs sveiping.',
     featured: true,
   },
   {
     icon: <IconResearch />,
     title: 'Gjennomtenkt matching',
-    content: 'Vi måler resonans på livssituasjon, verdier, relasjonsstil og emosjonell rytme. Ikke overflate. Ikke tilfeldigheter. Bare de to som svinger sammen.',
+    content: 'Vi bruker det du har svart om — blant annet livssituasjon, verdier og relasjonsstil — når vi ser etter en mulig kobling.',
   },
   {
     icon: <IconDepth />,
-    title: 'Bygget for dybde',
-    content: 'Samtaler, spørsmål og små oppgaver som hjelper dere å komme nærmere. Mindre overflate. Mer mening.',
+    title: 'En guidet reise',
+    content: 'Reisen varer i 14 dager. Hver dag får dere et spørsmål eller et tema, og samtalen ligger der gjennom hele reisen.',
   },
   {
     icon: <IconPhotos />,
     title: 'Bilder fra dag 8',
-    content: 'Trygghet før utseende. Den første uken er uten bilder — da kjenner dere hverandre som mennesker, ikke som profiler. Bildedelingen åpnes på dag 8. Ordene først, bildet etter.',
+    content: 'Den første uken er uten bilder. Dere begynner med samtalen, og fra dag 8 blir bildet tilgjengelig. Bildedelingen er valgfri — du bestemmer selv.',
   },
 ];
 
@@ -182,7 +182,7 @@ export default function LandingPage() {
                 color: color.text.secondary,
               }}
             >
-              Tosom er bygget for kvalitet, ikke kvantitet. Her er hvordan det fungerer.
+              Tosom er en datingside der du blir kjent med én person om gangen. Her er hvordan det fungerer.
             </p>
             </Reveal>
 
@@ -319,7 +319,7 @@ export default function LandingPage() {
                 marginRight: 'auto',
               }}
             >
-              Tosom er laget for deg som vil ta deg tid. Det handler om trygghet, ærlighet og å bli kjent — med én person om gangen.
+              Tosom er laget for deg som heller vil bli kjent med én person enn å bla gjennom mange.
             </p>
 
             <p
@@ -333,7 +333,7 @@ export default function LandingPage() {
                 marginRight: 'auto',
               }}
             >
-              Tosom gir deg ro, tid og en god start — slik at du kan bli kjent.
+              Vi prøver å gi dere en god start. Resten finner dere ut av selv.
             </p>
           </div>
           </Reveal>

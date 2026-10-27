@@ -10,7 +10,7 @@ import { PRICING } from '@/config/legal';
 const FAQS = [
   {
     q: 'Hva er Tosom egentlig?',
-    a: 'Tosom er en 14-dagers samtale mellom to mennesker som ikke kjenner hverandre. Dere blir koblet basert på de seks dimensjonene vi ser på. Dere kan se hverandres fornavn og alder fra start, og fra dag 8 kan dere dele bilder om dere vil. Det hele er privat, varmt og i eget tempo.',
+    a: 'Tosom er en 14-dagers samtale mellom to mennesker som ikke kjenner hverandre. Dere blir koblet basert på de seks dimensjonene vi ser på. Dere kan se hverandres fornavn og alder fra start, og fra dag 8 kan dere dele bilder om dere vil. Det hele er privat, og det går i eget tempo.',
   },
   {
     q: 'Hvordan fungerer matching?',
@@ -22,11 +22,11 @@ const FAQS = [
   },
   {
     q: 'Hvorfor ingen bilder fra start?',
-    a: 'Fordi vi tror at ord betyr mer enn utseende. Den første uken får dere tid til å lære hverandre å kjenne som mennesker — ikke som profiler. Da bildene åpner seg på dag 8, har dere allerede noe å by på hverandre. Eller kanskje ordene var nok.',
+    a: 'Den første uken er uten bilder, slik at samtalen får komme først. Bildene åpnes på dag 8. Hver av dere bestemmer selv om, og når, dere vil dele.',
   },
   {
     q: 'Hva skjer etter dag 14?',
-    a: 'To valg. «Vi fant hverandre» — dere har 24 timer på dere til å laste ned minnet som PDF, så slettes alt: alle samtaler, bilder, spørsmål og svar — alt forsvinner permanent. Bare en følelse gjenstår. Eller «Start ny reise» — dere slettes, og begge kan stille seg i køen igjen for en ny reise. Ingen hard landing. Bare videre.',
+    a: 'To valg. «Vi fant hverandre» — dere har 24 timer på dere til å laste ned minnet som PDF, så slettes alt: alle samtaler, bilder, spørsmål og svar — alt forsvinner permanent. Eller «Start ny reise» — dere slettes, og begge kan stille seg i køen igjen for en ny reise.',
   },
   {
     q: 'Hva koster Tosom?',

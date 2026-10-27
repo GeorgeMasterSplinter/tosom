@@ -16,9 +16,7 @@ export default function Maintenance() {
           Under arbeid
         </p>
         <p className="text-white/60 max-w-xl mx-auto leading-relaxed text-lg">
-          Vi bygger noe rolig. Noe ekte. Noe som ikke haster.
-          <br />
-          Tosom åpner dørene snart — i stillhet, med omtanke.
+          Vi jobber litt på saken. Tosom er snart tilbake.
         </p>
         <div className="mx-auto w-4 h-4 rounded-full bg-[#D4AF37]/40 animate-ping" />
       </div>

@@ -1,15 +1,15 @@
 {
   "version": "1.0",
   "updatedAt": "2026-10-26",
-  "commit": "0abac74",
+  "commit": "ef85a91",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
-    "tests": "26.10 (ACT Grand Finale Copy): 996 passed / 1 skipped (82 av 83 suiter) — +147 GF-copy-truth-guards (GF-01/02/03 × 49 aktive offentlige filer, __tests__/grand-finale-copy-truth.test.tsx); tsc 0. [tidl. 26.10 ACT J1.1 Beta Opening: 849]",
+    "tests": "26.10 (ACT Legal Prep L1): 1006 passed / 1 skipped (83 av 84 suiter) — +10 LEGAL-01..10 truth-guards (__tests__/legal-pages-truth.test.ts), FB-04/FB-08 oppdatert til ny godkjent copy; tsc 0. [tidl. 26.10 (ACT Grand Finale Copy): 996 passed]",
     "e2e": "07.10 (611a577): onboarding 20/20 lokalt (chromium+firefox, workers:1) etter CI-fix: samtykke i seed (K-2), skalasvar (PL-08), sessionStorage (PL-17). Tidligere: 0 fixme igjen. Onboarding: 20/20 lokalt 29.08 (10 chromium + 10 firefox, inkl. full flow). Dashboard/journey/match: 90/90 fra 28.08-kjøringen (ingen kodeendringer som rakk dem siden). Totalt 110 passed / 0 failed. 5/6 prosjekt lokalt (Mobile Safari/webkit krever system-bibliotek — installeres i CI med --with-deps). Dev-login (storageState) fungerer — alle tester kjører innlogget. playwright.config: workers: 1 alltid (lokal kjøring = CI) — onboarding-testene deler en E2E-bruker som full-flow-testen muterer; parallelle workere racet på server-draften",
     "typecheck": "0 errors (tsc --noEmit, 26.10 ACT Grand Finale Copy) utover Prisma-klient (prisma generate kjører i CI)",
-    "lint": "re-verifisert 26.10 (ACT Grand Finale Copy): 0 warnings (npx next lint)",
+    "lint": "re-verifisert 26.10 (ACT Legal Prep L1): 0 warnings (npm run lint)",
     "ciGuards": "7/7 grønne (lang, ai, concept, one-engine, 05:00, cron + lang-guard) — lang-guard utvidet 02.09: ~125 ord, case-insensitiv, skanner __tests__/ + ai/ + rotnivåets .md, SPRAKREF-blokk for bevisste nynorsk-eksempler",
-    "productionBuild": "26.10 (ACT Grand Finale Copy): npx next build EXIT=0, 68/68 sider [tidl. 26.10 ACT J1.1 Beta Opening: EXIT=0, 68/68]"
+    "productionBuild": "26.10 (ACT Legal Prep L1): npm run build EXIT=0 [tidl. 26.10 (ACT Grand Finale Copy): EXIT=0, 68/68 sider]"
   },
   "currentPhaseId": "apen-beta-test",
   "blockers": [
@@ -638,7 +638,7 @@
     "navigasjon": "UniversalMenu er levende meny (Hvorfor/Slik fungerer det/Reisen/Priser). Header.tsx og GlobalHeaderWrapper.tsx var død kode — slettet.",
     "glemtPassord": "POST /api/auth/request-reset → e-post med lenke til /nytt-passord?email=…&token=… (1 time, single-use) → POST /api/auth/reset-password setter passord og sletter øvrige sesjoner (PL-07)"
   },
-  "nextAction": "26.10 (ACT Grand Finale Copy Round) — ALLE aktive offentlige tekstflater omskrevet til rolig, ærlig, menneskelig copy (landing/hero, metadata, reisen, priser, faq, tips, om-oss, hvorfor, kontakt, vilkar, personvern, matching, avslutning, velkomst-e-post) + GF-01/02/03 truth-guards. Ingen produktlogikk endret. verify 996/1 skip · lint 0 · build EXIT=0 (68/68). STANS FØR COMMIT — commit: NEI. NESTE (George): commit av Grand Finale Round + 'INVITER FØRSTE KOHORT' (juristens svar på A-1–A-5 uavhengig)",
+  "nextAction": "26.10 (ACT Legal Prep L1) — Legal pages deployed og PENDING LAWYER REVIEW: send docs/LEGAL-PAGES-PRELAWYER-REVIEW-v1.0.md (13 spørsmål) + docs/LEGAL-REVIEW-PACKAGE-v1.0.md (11 spørsmål, Q11 = art. 9-utbred) til advokat. Åpent: [L1] DPA/SCC-signatur, DPIA-signatur (produktfakta nå 14 dager), profiling/art. 22, art. 9-omfang, backups/retensjon, Upstash-verifisering; [L2] retensjon + grunnlag; [L3] frister; [L4] ansvar/verneting + Paid V1 kjøpsvilkår (deferred). IDENTITY-PLAN: DEFERRED (ingen Vipps). IKKE invitere brukere før juristens svar på de kritiske punktene",
   "gjenstaarFoerBeta": [
     "Backup: B5.7 gjenopprettingstest dokumentert + prod-backup-kavitet bekreftet (managed DB)",
     "Sentry: SENTRY_DSN verifisert satt i Vercel (status UNKNOWN fra repo)",
@@ -672,7 +672,8 @@
     "E-post: reisen-slutt/takk (sendJourneyEndEmail) bygd + koblet i endJourney (dag 30 / fant hverandre) + test (45e7bf0, 08.10); verifisert (jest 541)",
     "24.10 (ACT C1): Cookie/Analytics truth alignment commit — Speed Insights fjernet (komponent + dep), /cookies + /personvern oppdatert mot faktisk runtime, CSRF Secure (prod), PubNub-CSP fjernet, privacy-guard CA-01–CA-15 + ny auditfil; verify/lint/build grønn",
     "25.10 (ACT P1A): Free Beta Truth Alignment — alle publicke sider i tråd med gratis beta (5 000 personer, 349 kr kun som plan, ingen aktive Vipps-claims); PRICING = én kilde (landing/priser/faq/betaling/vilkar); ny __tests__/free-beta-truth.test.tsx (FB-01…FB-19); deploy/payments.md 10 000→5 000; PLAN-dok + checklista med D1–D7 statusblokk. verify 838/1 skip · lint 0 · build EXIT=0. Commit: YES; push/deploy: NO",
-    "25.10 (ACT J1): Journey forkortet 30→14 dager — bilde-lås 15→8, start-vindu 7 dager, 4 faser; kanonisk konfig config/journey.ts (re-eksportert fra engine); 82 filer (API/logic/UI/tests) + prisma-kommentar; matching/weights/MIN_SCORE/kvote/Vipps/payment/schema-struktur/auth/identity uendret; aktive prod-journey-kontoer = TEST/DEMO (0 ekte brukere påvirket), ingen migrasjon; IDENTITY-TRUST-PLAN utelatt (separat spor). verify 838/1 skip · lint 0 · build EXIT=0 (68/68) · integrasjon 5/5. Commit: YES; push/deploy: NO"
+    "25.10 (ACT J1): Journey forkortet 30→14 dager — bilde-lås 15→8, start-vindu 7 dager, 4 faser; kanonisk konfig config/journey.ts (re-eksportert fra engine); 82 filer (API/logic/UI/tests) + prisma-kommentar; matching/weights/MIN_SCORE/kvote/Vipps/payment/schema-struktur/auth/identity uendret; aktive prod-journey-kontoer = TEST/DEMO (0 ekte brukere påvirket), ingen migrasjon; IDENTITY-TRUST-PLAN utelatt (separat spor). verify 838/1 skip · lint 0 · build EXIT=0 (68/68) · integrasjon 5/5. Commit: YES; push/deploy: NO",
+    "26.10 (ACT Legal Prep L1): /personvern + /vilkar truth-aligned mot faktisk runtime — absolutte claims fjernet (deler aldri / EU-EØS / SCC på plass / 3-år-rapport), datakategorier kartlagt mot prisma (inkl. art. 9 religion/livssyn), matching faktuelt beskrevet uten juridisk konklusjon, retention kun kodeverifisert fakta, aktive leverandører (Upstash IKKE listet — ikke verifiserbar fra repo), LEGAL-01..10 guards, DPIA produktfakta rettet 30→14 (risiko/konklusjoner uendret), jurist-dokumentasjon LEGAL-PAGES-PRELAWYER-REVIEW + REVIEW-PACKAGE (Q11 = art. 9-utbred). Ingen juridisk konklusjon tatt; Paid V1 kjøpsvilkår deferred; IDENTITY-TRUST-PLAN utelatt (separat spor). verify 1006/1 skip · lint 0 · build EXIT=0. Methods Micro-Final = commit A ef85a91"
   ],
   "blocked": []
 }

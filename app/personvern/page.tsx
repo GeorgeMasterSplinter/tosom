@@ -6,11 +6,12 @@
  * Bygget på faktisk datamodell i prisma/schema.prisma, ikke på antakelser.
  * Versjonert via config/legal.ts.
  *
- * ⚠️ Utkast til advokatgjennomgang. Se docs/JURIDISK-GRUNNLAG-v1.0.md —
- * særlig A-2 (særlige kategorier, art. 9), A-3 (automatisert avgjørelse,
- * art. 22) og A-5 (sletting vs. dokumentasjonsplikt).
- *
- * TODO før publisering: bekreft lokasjon for hver databehandler i §7.
+ * ⚠️ Pre-lawyer review (26.10.2026): absolutte claims er fjernet, og
+ * datakategorier, formål, leverandører, retensjon og sletting er kartlagt
+ * mot faktisk kode (HEAD). Åpne juridiske spørsmål — art. 6/9-grunnlag,
+ * profilering, art. 22, DPA/SCC/overføring, digitalytelsesloven — er merket
+ * i docs/LEGAL-PAGES-PRELAWYER-REVIEW-v1.0.md og docs/LEGAL-REVIEW-PACKAGE-v1.0.md,
+ * ikke på denne siden.
  */
 
 import Link from 'next/link';
@@ -40,61 +41,86 @@ interface Section {
 const sections: Section[] = [
   {
     id: '1',
-    title: 'Kort fortalt',
+    title: 'Hvem er ansvarlig?',
     paragraphs: [
-      'Tosom er bygget rundt et enkelt prinsipp: profilen din er privat. Den vises aldri offentlig, og den selges aldri videre.',
-      'Vi samler inn en god del om deg — fordi matching krever det. Til gjengjeld bruker vi det bare til å finne én person å koble deg med, og vi sletter det når du er ferdig.',
-      'Denne erklæringen forteller nøyaktig hva vi lagrer, hvorfor, hvor lenge, og hva du kan kreve av oss.',
+      `${companyIdentification()} er behandlingsansvarlig for personopplysningene dine.`,
+      `Spørsmål om personvern rettes til ${COMPANY.email}. Vi svarer normalt raskere, men senest innen 30 dager.`,
     ],
   },
   {
     id: '2',
-    title: 'Hvem er behandlingsansvarlig',
+    title: 'Kort fortalt',
     paragraphs: [
-      `${companyIdentification()} er behandlingsansvarlig for personopplysningene dine.`,
-      `Har du spørsmål om personvern, kan du kontakte oss på ${COMPANY.email}. Vi svarer så raskt vi kan, og senest innen 30 dager.`,
+      'Tosom er et sted der to voksne kan møtes — og vi vet at det krever tillit. Profilen din er privat: den vises ikke offentlig, og den personen du kobles med ser bare et lite utvalg av den.',
+      'Vi selger ikke personopplysninger, og vi bruker dem ikke til markedsføring. Noen leverandører hjelper oss med å drive tjenesten — hosting, database, bilder, chat, e-post og feilovervåking. De står listet i punkt 7, og de behandler opplysningene for oss, ikke for seg selv.',
+      'Tosom er kun for voksne (21+). Vi retter oss ikke mot barn, og oppdager vi at en bruker er under aldersgrensen, slettes kontoen.',
+      'Denne erklæringen forteller nøyaktig hva vi lagrer, hvorfor, hvor lenge — og hva du kan kreve av oss.',
     ],
   },
   {
     id: '3',
-    title: 'Hva vi samler inn',
+    title: 'Opplysninger vi behandler',
     paragraphs: [
-      'Vi deler opplysningene i fire grupper.',
-      'Når Vipps-innlogging aktiveres, vil alderen din bli verifisert ved innlogging. I dagens beta, der innlogging skjer med e-post og passord, bekrefter du alderen selv.',
+      'Dette er alt vi kan lagre om deg. Grunnlag-kolonnen viser det behandlingsgrunnlaget vi i dag opererer med; den endelige juridiske vurderingen av grunnlaget er i gang.',
+      'I dagens beta bekrefter du alderen selv ved onboarding. Når Vipps-innlogging aktiveres, vil alderen bli verifisert ved innlogging.',
     ],
     table: {
-      headers: ['Gruppe', 'Hva det er', 'Grunnlag', 'Oppbevaring'],
+      headers: ['Gruppe', 'Hva det er', 'Grunnlag (i dag)', 'Oppbevaring'],
       rows: [
         {
           cells: [
             'Konto',
-            'E-postadresse, navn, telefonnummer og alder',
+            'E-postadresse, passord (lagret som kryptografisk hash, aldri i klartekst), visningsnavn, innlogging og sesjonsdata',
             'Avtale (art. 6.1.b)',
             'Til kontoen slettes',
           ],
         },
         {
           cells: [
-            'Profil',
-            'Alder, bosted, bilde, presentasjon, interesser, livssituasjon, livsstil, personlighet, relasjonsstil, kommunikasjonsmåte, framtidsønsker',
-            'Avtale (art. 6.1.b)',
+            'Profil (onboarding)',
+            'Alder, kjønn og hvem du søker, bosted (postnummer — og omtrentlig posisjon dersom du oppgir den), presentasjon, bilde, interesser, livssituasjon, livsstil, personlighet, relasjonsstil, kommunikasjon, verdier, følelsesmessige behov, grenser, religion/livssyn (se punkt 5)',
+            'Avtale (art. 6.1.b); særlige kategorier: uttrykkelig samtykke (art. 9.2.a)',
             'Til kontoen slettes',
           ],
         },
         {
           cells: [
-            'Sensitive opplysninger',
-            'Se punkt 4 nedenfor',
-            'Uttrykkelig samtykke (art. 9.2.a)',
-            'Til kontoen slettes (slik trekkes samtykket tilbake)',
+            'Matching og reise',
+            'Kompatibilitetsvurderinger og score fra matcherunden, reise-status, framdrift, faser og valg, «vi fant hverandre»-status',
+            'Avtale (art. 6.1.b)',
+            'Til reisen avsluttes — vurderingene slettes med reisen',
           ],
         },
         {
           cells: [
-            'Bruk',
-            'Meldinger, bilder du deler, framdrift i reisen, innlogginger, tekniske logger',
-            'Avtale og berettiget interesse (art. 6.1.b og f)',
-            'Til reisen avsluttes (inntil 24 timer etter «vi fant hverandre»). Logger inntil 90 dager.',
+            'Kommunikasjon og bilder',
+            'Meldinger i samtalen (tekst og systemmeldinger), bilder du deler fra dag 8, levert- og lest-tidspunkter',
+            'Avtale (art. 6.1.b)',
+            'Til reisen avsluttes (24 timer etter «vi fant hverandre», deretter permanent slettet)',
+          ],
+        },
+        {
+          cells: [
+            'Sikkerhet',
+            'Rapporter, blokkeringer, øyeblikksbilde av de siste meldingene ved rapport (bevis), stengte kontoer',
+            'Berettiget interesse (art. 6.1.f)',
+            'Bevis: inntil 90 dager fra rapporten. Rapport og blokkering: til saken er behandlet (se punkt 9 og 10)',
+          ],
+        },
+        {
+          cells: [
+            'Teknisk',
+            'Tekniske logger og feildata (personopplysninger skrives ut automatisk fra feilmeldingene), sikkerhetstall for rate limiting, driftsdata',
+            'Berettiget interesse (art. 6.1.f)',
+            'Inntil de ikke lenger trengs for sikkerhet og feilretting',
+          ],
+        },
+        {
+          cells: [
+            'Gratis-beta',
+            'Invitasjonsdata (e-postadresse), tellertall for gratisperioden (de første 5 000)',
+            'Berettiget interesse (art. 6.1.f)',
+            'Invitasjonen: til den brukes. Telleren: så lenge betaen varer',
           ],
         },
         {
@@ -110,135 +136,153 @@ const sections: Section[] = [
   },
   {
     id: '4',
-    title: 'Sensitive opplysninger',
-    callout:
-      'Dette er den viktigste delen av erklæringen. Les den før du fullfører onboarding.',
+    title: 'Hva vi bruker dem til',
     paragraphs: [
-      'For å kunne koble deg med noen som passer, spør vi om ting som er personlige. Noen av dem regnes som særlige kategorier av personopplysninger etter personvernforordningen artikkel 9, og har ekstra sterkt vern.',
-      'Dette gjelder opplysninger som kan si noe om:',
+      'Hver opplysning er der for én konkret ting — ikke for å «forbedre tjenesten» i alminnelighet:',
     ],
     list: [
-      'Synet ditt på nærhet og intimitet',
-      'Følelsesmessige behov, som kan si noe om psykisk helse',
-      'Grenser og tidligere erfaringer, som kan berøre vanskelige hendelser',
-      'Trygghetsnivå og livssituasjon',
-      'Religiøs overbevisning, dersom du velger å oppgi det',
-      'Kjønn og hvem du søker, som kan si noe om seksuell orientering',
+      'Konto-data: opprette og sikre kontoen din, håndtere innlogging, og gjennomføre sletting når du ber om det.',
+      'Profilsvar: gjennomføre onboarding og bygge profilen du velger å fullføre.',
+      'Matching: vurdere mulige koblinger. Noen av grensene dine utelukker kandidater helt (for eksempel alder, avstand og religion/livssyn); de øvrige svarene inngår som signaler i en samlet vurdering. Finnes det ingen egnet kandidat, får du ingen kobling den runden og står i kø til neste lørdag.',
+      'Reisen: drive 14-dagersreisen — daglige spørsmål, faser, billeddeling fra dag 8, samtale, og PDF-eksport i enden.',
+      'Bilder: vise bildene i samtalen din med personen du er koblet med — og ingen andre.',
+      'Sikkerhet: behandle rapporter og blokkeringer, og hindre at kjente farlige situasjoner gjentar seg — også etter at en konto er slettet.',
+      'Teknisk: stoppe brute-force og misbruk (rate limiting), finne og rette feil, og holde tjenesten i gang.',
+      'Rettigheter: besvare henvendelsene dine — innsyn, kopi, retting og sletting.',
+      'Gratis-beta: holde styr på invitasjonene og at de første 5 000 personene får reisen gratis.',
     ],
   },
   {
     id: '5',
-    title: 'Om samtykket ditt',
+    title: 'Særlige kategorier og samtykke',
+    callout:
+      'Dette er den viktigste delen av erklæringen. Les den før du fullfører onboarding.',
     paragraphs: [
-      'Sensitive opplysninger behandles kun hvis du gir uttrykkelig samtykke. Du får spørsmål om dette særskilt, ikke som en del av vilkårene.',
-      'Du kan la være å svare på disse spørsmålene. Da blir grunnlaget for koblingen tynnere, men du kan fortsatt bruke Tosom.',
-      'Du kan trekke samtykket tilbake når som helst. I Tosom gjør du dette ved å slette kontoen din under Innstillinger. Da slettes sensitive opplysninger om deg, og de brukes ikke i framtidige koblinger. Det påvirker ikke lovligheten av behandlingen som har skjedd fram til den tid.',
-      'Opplysningene leses aldri av oss manuelt, deles aldri med andre brukere, og brukes utelukkende av matching-motoren.',
+      'For å kunne vurdere mulige koblinger, spør vi om ting som er personlige. Noen av svarene kan regnes som særlige kategorier av personopplysninger etter personvernforordningen artikkel 9. Disse har ekstra sterkt vern.',
+      'Vi behandler disse opplysningene bare hvis du gir samtykke. Du får spørsmål om det i en egen samtykkesskjerm, separat fra vilkårene, før du går videre i onboarding. Du kan også velge å hoppe over spørsmålene — da blir grunnlaget for koblingen tynnere, men du kan fortsatt bruke Tosom.',
+      'Du kan trekke samtykket tilbake når som helst. I dag gjør du det ved å slette kontoen din (Innstillinger). Da slettes også opplysningene fra særlige kategorier, og de brukes ikke i matcherunden lenger. Det påvirker ikke behandlingen som allerede har skjedd.',
+      'Vi bruker svarene ikke til noe annet enn matching og reisen. De vises ikke for andre brukere, selges ikke, og brukes ikke til markedsføring. Dersom du rapporterer en alvorlig situasjon, ser den som behandler saken på meldingene i samtalen — ikke onboarding-svarene dine.',
+      'Opplysningene kan si noe om:',
+    ],
+    list: [
+      'Religion og livssyn, dersom du svarer på spørsmålene om det',
+      'Synet ditt på intimitet og seksualliv',
+      'Følelsesmessige behov, som kan si noe om psykisk helse',
+      'Grenser og tidligere erfaringer, som kan berøre vanskelige hendelser',
+      'Kjønn og hvem du søker, som kan si noe om seksuell orientering',
     ],
   },
   {
     id: '6',
-    title: 'Hvordan koblingen skjer',
+    title: 'Matching og automatisering',
     paragraphs: [
-      'Matching-motoren er den eneste automatiserte funksjonen i Tosom. Den leser profilen din og finner én person å koble deg med.',
-      'Vurderingen bygger på verdier, livssituasjon, relasjonsstil og de opplysningene du har delt. Bilder og utseende brukes aldri.',
-      'Du får aldri et poengtall, og du blir aldri rangert mot andre. Du får heller ikke valget mellom flere personer — du får én kobling om gangen.',
-      'Er du uenig i en kobling, kan du avslutte reisen og stille deg i kø til neste runde. Du kan også kontakte oss, så ser vi på saken manuelt.',
+      'Koblingen skjer fullt automatisk én gang i uken, natt til lørdag. Det er den eneste delen av Tosom som tar avgjørelser uten at du gjør noe selv.',
+      'Slik ser vurderingen ut: først sjekker motoren grensene dine — enkelte svar utelukker kandidater helt (for eksempel aldersgrenser, avstand og religion/livssyn). De øvrige svarene inngår deretter som signaler i en samlet vurdering over seks områder: verdier, tilknytning, personlighet, kommunikasjon, emosjonsregulering og livssituasjon. Det er et minimumsnivå for vurderingen; når ingen kandidat når opp, får du ingen kobling den runden, og du står i kø til neste lørdag.',
+      'Bilder og utseende inngår aldri i vurderingen. Motoren er regelbasert og kjører likt for alle — det finnes ingen AI som tolker deg, og vi gjør ingen kliniske vurderinger. Du får aldri se et poengtall, og du blir aldri rangert mot andre.',
+      'En kobling er ikke en garanti. Den betyr at to profiler nådde minimumsnivået — ikke at dere kommer til å klikke. Er du uenig i en kobling, kan du avslutte reisen og stille deg i kø til neste runde.',
     ],
   },
   {
     id: '7',
-    title: 'Hvem vi deler med',
+    title: 'Leverandører vi bruker',
     paragraphs: [
-      'Vi selger aldri opplysninger, og vi bruker dem ikke til reklame.',
-      'For å drive tjenesten bruker vi noen underleverandører. Alle er databehandlere for oss, og de har ikke lov til å bruke opplysningene til egne formål.',
+      'Vi selger ikke opplysningene dine, og vi bruker dem ikke til annonsering. For å drive tjenesten bruker vi en håndfull leverandører. De skal behandle opplysningene for oss, ikke for egne formål — vi arbeider med databehandleravtaler med alle (se også punkt 8).',
     ],
     table: {
       headers: ['Leverandør', 'Hva de behandler', 'Formål'],
       rows: [
-        { cells: ['Vercel', 'IP-adresse og tekniske logger', 'Drift av nettsiden og serverfunksjoner'] },
-        { cells: ['Cloudflare', 'IP-adresse', 'Nettverk og sikkerhet foran nettsiden'] },
-        { cells: ['Neon (EU, Frankfurt)', 'All lagret data', 'Drift av databasen'] },
-        { cells: ['Pusher', 'Meldinger i sanntid', 'Levere chat uten forsinkelse'] },
-        { cells: ['Cloudflare R2', 'Bilder du deler', 'Sikker lagring av bilder'] },
-        { cells: ['Sentry', 'Tekniske feilmeldinger og driftsdata', 'Feil- og driftsmonitorering'] },
-        { cells: ['Resend', 'E-postadresse', 'Sende passordlenker og nødvendige varsler'] },
-        { cells: ['Vipps (ved lansering)', 'Identitet og alder', 'Innlogging og aldersverifisering'] },
+        { cells: ['Vercel', 'Drift av nettsiden og API-ene. Leverandørens egne driftslogger kan inneholde e-postadresse og IP-adresse', 'Hosting og serverfunksjoner'] },
+        { cells: ['Neon (managed Postgres, EU/Frankfurt)', 'Databasen — opplysningene i punkt 3', 'Drift av databasen'] },
+        { cells: ['Cloudflare', 'Nettverkssikkerhet (CDN/WAF) foran nettsiden, og bildene dine i Cloudflare R2 (EU)', 'Nettverksbeskyttelse og bildefillagring'] },
+        { cells: ['Pusher', 'Meldingene dine i sanntid under sendingen', 'Chat uten forsinkelse'] },
+        { cells: ['Resend (via SMTP)', 'E-postadresse og innhold i transaksjonelle e-poster (passord-reset, varsler)', 'Send e-poster til deg'] },
+        { cells: ['Sentry', 'Tekniske feil og driftsdata — personopplysninger skrives ut automatisk før sending', 'Feil- og driftsmonitorering'] },
       ],
     },
+    references: [
+      {
+        label: 'Innlogging og betaling (framtidig)',
+        url: '/priser',
+        note: 'Når Vipps aktiveres for innlogging og betaling, vil det brukes til akkurat det — ingenting annet. I dag er ingen betalings- eller Vipps-vei aktiv.',
+      },
+    ],
   },
   {
     id: '8',
-    title: 'Hvor opplysningene lagres',
+    title: 'Overføring og lagring',
     paragraphs: [
-      'Vi tilstreber at data lagres innenfor EU eller EØS.',
-      'Der en leverandør behandler opplysninger utenfor EØS, skjer det på grunnlag av EU-kommisjonens standard personvernbestemmelser eller en gyldig beslutning om tilstrekkelig beskyttelsesnivå.',
-      `Vil du vite nøyaktig hvor en bestemt tjeneste lagrer data, spør oss på ${COMPANY.email}, så svarer vi konkret.`,
+      'Databasen (Neon) og bildene (Cloudflare R2) ligger i EU (Frankfurt).',
+      'Noen leverandører har base eller datacentre utenfor EØS — blant annet Pusher, Resend og Sentry. Hva som går gjennom dem, står i tabellen i punkt 7: i hovedsak meldinger under sendingen, e-postadresser, og tekniske feildata uten personopplysninger.',
+      'Vi arbeider med databehandleravtaler og overføringsgrunnlag (for eksempel EU-kommisjonens standardavtaler) med alle leverandørene. Inntil dette er på plass: opplysningene dine sendes kun til leverandørene i punkt 7, kun for de oppgitte formålene, og aldri til noen andre.',
+      `Vil du vite nøyaktig hvor en bestemt tjeneste ligger, spør oss på ${COMPANY.email} — så svarer vi konkret.`,
     ],
   },
   {
     id: '9',
-    title: 'Hvor lenge vi lagrer',
+    title: 'Hvor lenge vi beholder opplysninger',
     table: {
       headers: ['Hva', 'Hvor lenge'],
       rows: [
-        { cells: ['Konto og profil', 'Til du sletter kontoen'] },
-        { cells: ['Samtaler og bilder', 'Til reisen avsluttes (inntil 24 timer etter «vi fant hverandre», deretter permanent slettet)'] },
-        { cells: ['Sensitive opplysninger', 'Til kontoen slettes (slik trekkes samtykket tilbake)'] },
-        { cells: ['Tekniske logger', 'Inntil 90 dager'] },
-        { cells: ['Rapporter om alvorlige forhold', 'Inntil 3 år, i anonymisert form'] },
-        { cells: ['Regnskapsopplysninger ved betaling', '5 år, som bokføringsloven krever'] },
+        { cells: ['Konto og profil (inklusive særlige kategorier)', 'Til du sletter kontoen'] },
+        { cells: ['Samtaler og bilder', 'Til reisen avsluttes. Velger dere «vi fant hverandre», beholdes de 24 timer (slik at begge kan laste ned minnet som PDF) og slettes deretter permanent'] },
+        { cells: ['Reise-data (status, framdrift, valg) og kompatibilitetsvurderinger', 'Til reisen avsluttes'] },
+        { cells: ['Bevis ved rapport (øyeblikksbilde av meldingene)', 'Inntil 90 dager fra rapporten, deretter slettes det automatisk'] },
+        { cells: ['Rapporter og blokkeringer', 'Til saken er behandlet — beholdes også etter kontosletting, fordi de holder tjenesten trygg (se punkt 10)'] },
+        { cells: ['Tekniske logger og feildata', 'Inntil de ikke lenger trengs for sikkerhet og feilretting'] },
+        { cells: ['Invitasjoner og kvote for gratisperioden', 'Invitasjonen til den brukes. Kvote-telleren så lenge betaen varer'] },
+        { cells: ['Regnskapsopplysninger', 'Gjelder først når betaling innføres — da beholdes betalingsopplysninger så lenge bokføringsloven krever (5 år)'] },
       ],
     },
     paragraphs: [
-      'Velger dere «vi fant hverandre», beholdes samtalen i 24 timer slik at begge kan laste ned minnet som PDF. Deretter slettes begge kontoer, samtalen, bildene og svarene — permanent og irreversibelt.',
-      'Ett unntak: har noen rapportert et alvorlig forhold, beholder vi rapporten selv om kontoen slettes. Det er nødvendig for å kunne håndtere saken og beskytte andre brukere. Rapporten inneholder da ikke mer enn det som trengs.',
+      'Når du sletter kontoen, eller reisen avsluttes, fjerner vi dataene umiddelbart fra hoveddatabasen. Data som da ligger i tekniske sikkerhetskopier, kan forbli inntil kopien utløper.',
     ],
   },
   {
     id: '10',
+    title: 'Når du sletter kontoen',
+    paragraphs: [
+      'Sletting skjer umiddelbart — ikke etter et varsel. Du sletter kontoen når du vil, under Innstillinger, og du behøver ikke oppgi grunn.',
+      'Da slettes: kontoen, profilen og alle svarene (inklusive særlige kategorier), alle samtaler du har vært en del av — både dine meldinger og den andres i de samme samtalen — bildene, reisen, matcher, innlogginger og tekniske nøkler.',
+      'Et lite antall poster beholdes, fordi de holder tjenesten trygg — også for deg: rapporter om alvorlige forhold, blokkeringer, og en post om at en kobling fant sted (uten innhold). Disse postene knytter seg ikke lenger til en personprofil, og de vises bare for den som behandler sikkerhetssaker.',
+      'Velger dere «vi fant hverandre», er det motsatt: dere får 24 timer til å laste ned samtalen som PDF. Deretter slettes begge kontoer, samtalen og bildene — permanent. Dette kan ikke angres, og begge må bekrefte.',
+      'Data som ligger i tekniske sikkerhetskopier, kan forbli inntil kopien utløper.',
+    ],
+  },
+  {
+    id: '11',
     title: 'Rettighetene dine',
     paragraphs: [
-      'Du har disse rettighetene, og du trenger ikke begrunne hvorfor du bruker dem:',
+      'Avhengig av behandlingen kan du ha rett til — og du trenger ikke begrunne hvorfor du bruker dem:',
     ],
     list: [
       'Innsyn — få vite hva vi har lagret om deg',
       'Kopi — få opplysningene tilsendt i et lesbart format',
       'Retting — få rettet noe som er feil',
-      'Sletting — få alt slettet',
+      'Sletting — få opplysningene dine slettet (i dag: ved å slette kontoen)',
       'Begrensning — be oss stanse bruken midlertidig',
-      'Innsigelse — protestere mot behandling basert på berettiget interesse',
-      'Dataportabilitet — få opplysningene i et format du kan ta med deg',
-      'Trekke samtykke — når som helst, ved å slette kontoen din',
-    ],
-  },
-  {
-    id: '11',
-    title: 'Slik bruker du rettighetene',
-    paragraphs: [
-      'Det meste ordner du selv under Innstillinger: se profilen, laste ned en kopi, rette opplysninger eller slette kontoen (som også trekker samtykket).',
-      `Trenger du hjelp, skriv til ${COMPANY.email}. Vi svarer innen 30 dager. Er saken omfattende, sier vi fra underveis.`,
-      'Vi tar aldri betalt for at du bruker rettighetene dine.',
+      'Innsigelse — protestere mot behandling vi bygger på berettiget interesse',
+      'Dataportabilitet — få opplysningene i et format du kan ta med deg (Innstillinger → Eksport)',
+      'Trekke samtykke tilbake — når som helst; i dag ved å slette kontoen',
+      'Selvbetjening — det meste ordner du selv under Innstillinger: se og rette profilen, laste ned en kopi av opplysningene dine, eller slette kontoen',
     ],
   },
   {
     id: '12',
-    title: 'Klage til Datatilsynet',
+    title: 'Cookies',
     paragraphs: [
-      'Mener du at vi behandler opplysningene dine feil, håper vi du sier fra til oss først. Da får vi rettet det.',
-      'Du har uansett rett til å klage til Datatilsynet. De kan kontaktes på Postboks 458 Sentrum, 0105 Oslo.',
+      'Vi bruker et minimum av informasjonskapsler — og ingen til reklame eller sporing på tvers av nettsteder. De nødvendige cookies brukes til innlogging og sikkerhet (inntil ca. 30 dager). Detaljene står på cookie-siden vår.',
     ],
     references: [
       {
-        label: LEGISLATION.datatilsynet.label,
-        url: LEGISLATION.datatilsynet.url,
-        note: 'Datatilsynets nettsted — også der du kan søke veiledning om dine rettigheter.',
+        label: 'Cookie-siden vår',
+        url: '/cookies',
+        note: 'Hvilke cookies og lokalt lagring Tosom bruker, og hvordan du styrer dem.',
       },
     ],
   },
   {
     id: '13',
-    title: 'Slik sikrer vi opplysningene',
+    title: 'Sikkerhet',
     list: [
       'All trafikk er kryptert med TLS',
       'Passord lagres aldri i klartekst, kun som kryptografisk hash',
@@ -253,26 +297,19 @@ const sections: Section[] = [
   },
   {
     id: '14',
-    title: 'Informasjonskapsler',
+    title: 'Kontakt og klage',
     paragraphs: [
-      'Vi bruker et minimum av informasjonskapsler, og ingen til reklame eller sporing på tvers av nettsteder.',
-    ],
-  },
-  {
-    id: '15',
-    title: 'Barn',
-    paragraphs: [
-      'Tosom er kun for voksne. Vi retter oss ikke mot barn, og vi samler bevisst aldri inn opplysninger om personer under aldersgrensen.',
-      'Oppdager vi at en bruker er under aldersgrensen, slettes kontoen og alle opplysninger umiddelbart.',
-    ],
-  },
-  {
-    id: '16',
-    title: 'Gjeldende regelverk',
-    paragraphs: [
-      'Behandlingen av opplysningene dine er basert på personvernforordningen (GDPR) og den norske personopplysningsloven. Det er disse reglene som ligger bak punktene over.',
+      `Spørsmål om personvern: ${COMPANY.email}. Vi svarer normalt raskere, men senest innen 30 dager — og det koster aldri noe å bruke rettighetene dine.`,
+      'Mener du at vi behandler opplysningene dine feil, håper vi du sier fra til oss først — da får vi rettet det. Du har uansett rett til å klage til Datatilsynet: Postboks 458 Sentrum, 0105 Oslo, eller på datatilsynet.no.',
+      'Behandlingen av opplysningene dine følger personvernforordningen (GDPR) og den norske personopplysningsloven.',
+      'Vi oppdaterer denne erklæringen når tjenesten endres eller regelverket krever det. Ved vesentlige endringer varsler vi deg før de trer i kraft; gjelder endringen særlige kategorier, ber vi om nytt samtykke. Versjon og dato står øverst på siden.',
     ],
     references: [
+      {
+        label: LEGISLATION.datatilsynet.label,
+        url: LEGISLATION.datatilsynet.url,
+        note: 'Datatilsynets nettsted — også der du kan søke veiledning om dine rettigheter.',
+      },
       {
         label: LEGISLATION.gdpr.label,
         url: LEGISLATION.gdpr.url,
@@ -284,23 +321,6 @@ const sections: Section[] = [
         url: LEGISLATION.bokforing.url,
         note: 'Grunnlaget for at regnskapsopplysninger ved betaling beholdes i fem år.',
       },
-    ],
-  },
-  {
-    id: '17',
-    title: 'Bevis ved rapport og blokkering',
-    paragraphs: [
-      'Når du rapporterer en bruker eller blokkerer en match, lagrer vi et øyeblikksbilde av de siste meldingene i samtalen som bevis for saksbehandling.',
-      'Beviset lagres i inntil 90 dager etter at saken er avsluttet, og slettes deretter automatisk. Kun den som behandler rapporten kan se det, og det vises aldri for den rapporterte.',
-    ],
-  },
-  {
-    id: '18',
-    title: 'Endringer i erklæringen',
-    paragraphs: [
-      'Vi oppdaterer denne erklæringen når tjenesten endres eller regelverket krever det.',
-      'Ved vesentlige endringer varsler vi deg før de trer i kraft. Gjelder endringen sensitive opplysninger, ber vi om nytt samtykke.',
-      'Versjon og dato står øverst på siden.',
     ],
   },
 ];

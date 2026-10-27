@@ -65,13 +65,20 @@ export function companyFooterLine(): string {
 /**
  * Gjeldende versjon av vilkårene. Lagres på bruker ved aksept.
  * 15.10: forretningsadresse lagt inn i avtaleparten (registrert i Foretaksregisteret).
+ * 26.10: LEGAL PREP L1 — gratis-beta-avklaring, betalings/angrerettspunkt
+ *        flyttet til fremtidige kjøpsvilkår (Paid V1), slette-/24t-PDF-
+ *        beskrivning satt i samsvar med runtime.
  */
-export const TERMS_VERSION = '2026-10-15';
-export const TERMS_UPDATED = '15. oktober 2026';
+export const TERMS_VERSION = '2026-10-26';
+export const TERMS_UPDATED = '26. oktober 2026';
 
-/** Gjeldende versjon av personvernerklæringen. */
-export const PRIVACY_VERSION = '2026-10-15';
-export const PRIVACY_UPDATED = '15. oktober 2026';
+/**
+ * Gjeldende versjon av personvernerklæringen.
+ * 26.10: LEGAL PREP L1 — struktur ombygd til 14 punkter, absolutte claims
+ *        fjernet, datakategorier/leverandører/retensjon kartlagt mot HEAD.
+ */
+export const PRIVACY_VERSION = '2026-10-26';
+export const PRIVACY_UPDATED = '26. oktober 2026';
 
 /**
  * Aldersgrense. Invariant I-14.

@@ -6,8 +6,11 @@
  * Versjonert via config/legal.ts. Ved endring: bump TERMS_VERSION der,
  * slik at User.termsVersion dokumenterer hvilken tekst brukeren aksepterte.
  *
- * ⚠️ Utkast til advokatgjennomgang. Se docs/JURIDISK-GRUNNLAG-v1.0.md
- * for åpne spørsmål — særlig A-1 (angrerett) og A-4 (ansvarsbegrensning).
+ * ⚠️ Pre-lawyer review (26.10.2026): copyen beskriver dagens faktiske
+ * gratis-beta (invite-gate, ingen betaling). Juridiske valg som fortsatt er
+ * åpne — angrerett/kjøpsvilkår ved fremtidig betaling, ansvarsbegrensning,
+ * digitalytelsesloven, kjøpsvilkår for Paid V1 — er merket i
+ * docs/LEGAL-PAGES-PRELAWYER-REVIEW-v1.0.md, ikke i disse vilkårene.
  */
 
 import Link from 'next/link';
@@ -34,6 +37,7 @@ const clauses: Clause[] = [
     title: 'Avtalen og partene',
     paragraphs: [
       `Disse vilkårene utgjør avtalen mellom deg som bruker og ${companyIdentification()}.`,
+      'Tosom er i dag en invitert beta: du trenger en invitasjon for å komme inn. Så lenge betaen varer, er tjenesten gratis.',
       'Ved å opprette konto bekrefter du at du har lest og godtatt vilkårene. Godtar du dem ikke, kan du ikke bruke Tosom.',
       'Avtalen gjelder fra du oppretter konto, og til kontoen er slettet.',
     ],
@@ -178,53 +182,31 @@ const clauses: Clause[] = [
     id: '14',
     title: 'Pris og betaling',
     paragraphs: [
-      `Tosom er gratis i dag for de ${PRICING.freeUserCap.toLocaleString('nb-NO')} første personene. Senere er planen ${PRICING.journeyPrice} kroner for én 14-dagersreise, betalt én gang med Vipps. Det er ingen abonnement og ingen løpende kostnader.`,
-      'Du blir aldri belastet uten at du har godkjent det på forhånd.',
+      `Tosom er gratis i dag for de ${PRICING.freeUserCap.toLocaleString('nb-NO')} første personene. Det er ingen betaling, ingen kredittkrav og ingen abonnement.`,
+      'Når betaling innføres, informerer vi om pris og betalingsvilkår i god tid før det skjer. Da kan du velge å slette kontoen.',
     ],
   },
   {
     id: '15',
-    title: 'Angrerett, retur og refusjon',
+    title: 'Angrerett og refusjon',
     paragraphs: [
-      'Så lenge reisen er gratis, har dette punktet ingen økonomisk betydning. Det gjelder når reisen betales.',
-      'Norsk lov gir deg som forbruker angrerett på digitale tjenester. Retten faller bort når leveringen har begynt, forutsatt at du på forhånd har samtykket til det og forstått hva det innebærer. Du blir bedt om begge deler før du betaler. Det finnes ingen vare å returnere: Tosom er en digital tjeneste, og refundering reguleres i fullt omfang av dette punktet.',
-      'Grensen går ved koblingen:',
-    ],
-    list: [
-      'Fram til koblingen er gjort natt til lørdag, kan du melde deg ut og få hele beløpet tilbake. Uten spørsmål.',
-      'Når koblingen er gjort, er tjenesten levert, og angreretten er bortfalt.',
-    ],
-    references: [
-      {
-        label: LEGISLATION.angrerett.label,
-        url: LEGISLATION.angrerett.url,
-        note: 'Angrerett på digitale tjenester følger av angrerettloven, § 22 bokstav n. Retten bortfaller når leveringen har begynt med ditt uttrykkelige samtykke og din bekreftelse på at angreretten da går tapt.',
-      },
+      'I dag er reisen gratis, så det er ikke noe å angre eller refundere.',
+      'Når betaling innføres, følger kjøpet egne kjøpsvilkår som du får se før du betaler. Da gjelder også angreretten norsk lov gir deg, med de begrensningene loven setter for digitale tjenester.',
     ],
   },
   {
     id: '16',
-    title: 'Hvorfor grensen går ved koblingen',
+    title: 'Avslutning og sletting',
     paragraphs: [
-      'Vi vil at du skal forstå hvorfor, ikke bare at det er slik.',
-      `Det du betaler for er koblingen til én bestemt person. I det øyeblikket koblingen skjer, har vi levert det du kjøpte — uavhengig av hva som skjer videre i de ${JOURNEY.totalDays} dagene.`,
-      'Koblingen kan heller ikke gjøres om. En annen person er tildelt deg, og den personen er dermed ikke tilgjengelig for noen andre den uken. Leveransen berører et annet menneske, og den kan ikke tas tilbake.',
-      'Derfor er refusjonsretten romslig helt fram til koblingen, og opphører idet den er gjort.',
+      'Du kan avslutte reisen eller slette kontoen når som helst, uten å oppgi grunn.',
+      'Velger dere «vi fant hverandre», får dere 24 timer til å laste ned samtalen som PDF. Deretter slettes begge kontoer, samtalen og bildene — permanent. Dette kan ikke angres, og begge må bekrefte.',
+      'Ved sletting fjernes profil, samtaler og bilder umiddelbart. Enkelte opplysninger beholdes for sikkerheten til tjenesten, for eksempel rapporter om alvorlige forhold og blokkeringer — personvernerklæringen beskriver nøyaktig hva.',
+      'Du kan laste ned en kopi av opplysningene dine før sletting (Innstillinger → Eksport).',
+      'Vi kan suspendere eller stenge kontoen ved brudd på vilkårene eller av sikkerhetsmessige hensyn. Ved nedleggelse av tjenesten varsler vi i god tid.',
     ],
   },
   {
     id: '17',
-    title: 'Avslutning og sletting',
-    paragraphs: [
-      'Du kan avslutte reisen eller slette kontoen når som helst, uten å oppgi grunn.',
-      'Velger dere «vi fant hverandre», slettes begge kontoene og hele samtalen. Dette kan ikke angres, og begge må bekrefte.',
-      'Ved sletting fjernes profil, samtaler og bilder. Enkelte opplysninger kan beholdes der loven krever det, eller der de er nødvendige for å håndtere en rapport om alvorlige forhold.',
-      'Du kan be om en kopi av opplysningene dine før sletting.',
-      'Vi kan avslutte avtalen med deg ved brudd på vilkårene, eller hvis vi legger ned tjenesten. Ved nedleggelse varsler vi i god tid.',
-    ],
-  },
-  {
-    id: '18',
     title: 'Vårt ansvar',
     paragraphs: [
       'Tosom formidler kontakt mellom voksne mennesker. Vi er ikke part i det som skjer mellom dere.',
@@ -235,7 +217,7 @@ const clauses: Clause[] = [
     ],
   },
   {
-    id: '19',
+    id: '18',
     title: 'Driftsavbrudd',
     paragraphs: [
       'Vi arbeider for at Tosom skal være tilgjengelig, men kan ikke garantere sammenhengende drift.',
@@ -244,7 +226,7 @@ const clauses: Clause[] = [
     ],
   },
   {
-    id: '20',
+    id: '19',
     title: 'Immaterielle rettigheter',
     paragraphs: [
       `Tosom, med navn, logo, design, tekster og programvare, tilhører ${COMPANY.name}.`,
@@ -253,15 +235,15 @@ const clauses: Clause[] = [
     ],
   },
   {
-    id: '21',
+    id: '20',
     title: 'Personvern',
     paragraphs: [
-      'Hvordan vi behandler personopplysningene dine står i personvernerklæringen, som er en del av denne avtalen.',
-      'Enkelte av opplysningene du deler i onboarding er særlig sensitive. Disse behandles kun med ditt uttrykkelige samtykke, og brukes utelukkende av matching-motoren.',
+      'Hvordan vi behandler personopplysningene dine, står i personvernerklæringen.',
+      'Enkelte av opplysningene du deler i onboarding er særlig sensitive. Disse behandles kun med ditt uttrykkelige samtykke, og brukes til matching og reisen.',
     ],
   },
   {
-    id: '22',
+    id: '21',
     title: 'Endringer i vilkårene',
     paragraphs: [
       'Vi kan endre vilkårene, for eksempel når tjenesten utvikles eller regelverket endres.',
@@ -270,7 +252,7 @@ const clauses: Clause[] = [
     ],
   },
   {
-    id: '23',
+    id: '22',
     title: 'Gjeldende lovverk',
     paragraphs: [
       'Avtalen mellom oss er basert på norsk rett. Disse lovene ligger bak punktene over.',
@@ -299,7 +281,7 @@ const clauses: Clause[] = [
     ],
   },
   {
-    id: '24',
+    id: '23',
     title: 'Reklamasjon, klage og tvister',
     paragraphs: [
       'Er du uenig i noe, håper vi du tar kontakt med oss først. De fleste ting løser seg i en samtale.',

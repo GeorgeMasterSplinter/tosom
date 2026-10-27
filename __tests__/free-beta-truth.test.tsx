@@ -134,8 +134,9 @@ describe('ACT P1A — free beta truth (FB-01…FB-19)', () => {
     expect(MOTPOL_TEXT).not.toContain('349');
     // Kjøpestart-siden (/betaling) viser ingen pris i det hele tatt i gratisbetaen
     expect(read('app/betaling/page.tsx')).not.toMatch(/\b349\b/);
-    // Vilkar og FAQ refererer til prisen via PRICING med plan-merking
-    expect(read('app/vilkar/page.tsx')).toMatch(/Senere er planen \$\{PRICING\.journeyPrice\}/);
+    // 26.10 (Legal Prep L1): aktuelle avtalevilkår er en gratis-beta-avtale —
+    // prisplanen holdes på /priser og i FAQ (med plan-merking), ikke i vilkårene.
+    expect(read('app/vilkar/page.tsx')).not.toContain('349');
     expect(read('app/faq/page.tsx')).toMatch(/Senere er planen/);
   });
 
@@ -166,9 +167,11 @@ describe('ACT P1A — free beta truth (FB-01…FB-19)', () => {
   test('FB-08: vilkår motsier ikke gratisflyt', () => {
     const src = read('app/vilkar/page.tsx');
     expect(src).toMatch(/gratis i dag/);
-    expect(src).toMatch(/Senere er planen/);
-    // Gratisbeta-sperren i angrerett-punktet er intakt:
-    expect(src).toMatch(/Så lenge reisen er gratis, har dette punktet ingen økonomisk betydning/);
+    // 26.10 (Legal Prep L1): fremtidig prisplan holdes på /priser — ikke i
+    // aktuelle avtalevilkår. Ingen pris, ingen «senere er planen X kroner».
+    expect(src).toMatch(/ingen betaling/i);
+    expect(src).not.toMatch(/349/i);
+    expect(src).not.toMatch(/Senere er planen/i);
     expect(src).not.toMatch(/\breiser\b[^\n]{0,60}er gratis/i);
   });
 

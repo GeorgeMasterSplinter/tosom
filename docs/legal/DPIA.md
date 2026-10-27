@@ -13,7 +13,7 @@
 ## 1. Behandlingens beskrivelse
 
 ### 1.1 Formål
-ToSom er et guidet 30-dagers reise- og matching-produkt for enslige 21+. Målet er å redusere ensomhet gjennom strukturert self-work og trygg matching med én person av gangen.
+ToSom er et guidet 14-dagers reise- og matching-produkt for enslige 21+. Målet er å redusere ensomhet gjennom strukturert self-work og trygg matching med én person av gangen.
 
 ### 1.2 Behandlinger (per GDPR art. 13)
 
@@ -21,7 +21,7 @@ ToSom er et guidet 30-dagers reise- og matching-produkt for enslige 21+. Målet 
 |---|---|---|
 | Registrering og identitet | Art. 6(1)(b) — avtaleinngåelse | E-post, navn, alder, telefon (valgfritt) |
 | Onboarding og psykometrisk profil | Art. 6(1)(a) samtykke | Svar om livssituasjon, livsstil, personlighetstest, relasjonshistorikk |
-| Guidet 30-dagers reise | Art. 6(1)(b) | Daglig progresjon, svar, refleksjonsnotater |
+| Guidet 14-dagers reise | Art. 6(1)(b) | Daglig progresjon, svar, refleksjonsnotater |
 | Matching med én person | Art. 6(1)(f) berettiget interesse (produktkjerne) | Profillag, preferanser, postnummer |
 | Privat chat mellom matchet par | Art. 6(1)(b) | Meldingsinnhold, bilder |
 | Transaksjonell e-post | Art. 6(1)(f) | E-postadresse, emne |

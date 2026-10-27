@@ -10,6 +10,42 @@
 
 ---
 
+## 0. Executive summary (oppdatert 26.10.2026 — Legal Pages Prep L1)
+
+**WHAT TOSOM IS**
+Relasjonsplattform for 21+ (ikke datingapp: ingen profilstrøm, ingen sveiping). Onboarding → én automatisk kobling om gangen (cron natt til lørdag) → privat 14-dagersreise med guidet innhold → dag 8: bilder → chat via Pusher → avslutning (fullført / avsluttet / «vi fant hverandre»).
+
+**WHAT BETA IS**
+Limited free beta: invitasjonsbasert (invite-gate PÅ), de første 5 000 personene gratis, ingen betaling i dag (PAYMENTS_ENABLED=false, ingen betalingsvei implementert), ingen web-analytics.
+
+**WHAT DATA WE PROCESS**
+Konto (e-post, passord-hash, sesjoner), full profil fra onboarding (alder, kjønn/hvem du søker, bosted + valgfri omtrentlig posisjon, personlighet/relasjonsstil/verdier m.m.), **særlige kategorier art. 9 (religion/livssyn, intimitet, seksuell orientering-indikatorer)** med separat uttrykkelig samtykke, matching-data (score 0–100 + breakdown, kun internt), reise-data, chat (tekst + bilder i R2), sikkerhet (rapporter, blokkering, bevis 90 dgr), teknisk (logger, rate-limit, Sentry PII-skrubba), beta (invitasjon, kvote-teller). IP lagres IKKE i vår DB; telefonnummer samles IKKE i dag. Fullstendig matrise: `docs/LEGAL-PAGES-PRELAWYER-REVIEW-v1.0.md` §2.
+
+**WHAT AUTOMATION WE USE**
+Deterministisk matching (ingen AI): sperreliste → hårde dealbreakers (inkl. religion/livssyn-gjensidig aksept, avstand) → 6-dimensjons-score (0–100, MIN_SCORE 40) → én kobling eller kø til neste runde. Reise-progressjon via daglig cron. Ingen klinisk vurdering, ingen bilder i vurderingen.
+
+**WHAT WE DO NOT DO**
+Selger ikke personopplysninger · ingen markedsføring/analytikk med brukerdata · ingen AI som tolker eller skriver til brukeren · ingen kontinuerlig overvåking av samtaler (kun ved rapport) · ingen IP-lagring i vår DB · ingen profil vises offentlig · ingen match-/resultatgaranti.
+
+**CURRENT LEGAL DOCUMENTS**
+`/vilkar` v2026-10-26 · `/personvern` v2026-10-26 (ombygd til 14 punkter, absolutte claims fjernet) · `/samtykke` (separat uttrykkelig art. 9-samtykke) · `/cookies` · `docs/JURIDISK-GRUNNLAG-v1.0.md` (A-1…A-7) · `docs/legal/DPA.md` + `docs/legal/DPIA.md` · `docs/LEGAL-PAGES-PRELAWYER-REVIEW-v1.0.md` (claim-tabell + [L1]–[L4]-merker) — dette er den konkrete saksakten.
+
+**TOP OPEN LEGAL DECISIONS**
+1. Art. 6-bokstav per formål (matrise i PRELAWYER §4)
+2. Art. 9 / religion — 9.2.a + explicit consent-kvalitet
+3. Samtykke: gyldighet + uttaks-mekanisme (i dag: slette konto) + konsekvens for matching-data
+4. Profiling-klassifisering (art. 4(4))
+5. Art. 22 (automatiserte avgjørelser)
+6. DPIA: rettes (30→14 dager) og signeres
+7. Processors: DPA-signatur + SCC/transfer (Pusher/Resend/Sentry/Upstash/Vercel = US-påvirkning)
+8. Retensjon: rapporter/blocklist/MatchHistory/logger + backups
+9. digitalytelsesloven / gratis beta
+10. Paid V1: kjøpsvilkår + angrerett (§ 22 n) + service commencement
+
+**STATUS: PREPARED FOR LAWYER REVIEW** (ikke «legal approved» / «GDPR compliant»).
+
+---
+
 ## 1. Produktet (kort)
 
 - ToSom er en app for 21+ som bygger en gradvis, **14-dagers «reise»** mellom to personer: matching natt til lørdag → 7-dagers startvindu → **dag 8 foto-avsløring** → **dag 14 fullføring**.
@@ -39,7 +75,7 @@
 | Processor | Tjeneste | Data | DPA? | SCC (EU→utland)? | Region |
 |---|---|---|---|---|---|
 | Vercel | Hosting/serverless (Next.js, cron) | Alt (flaten) | ? | ? | (avklare) |
-| Managed Postgres (leverandør å bekrefte: Neon/Supabase/RDS/…) | DB | Alt PII | ? | ? | ? |
+| Managed Postgres (per docs/legal/DPA.md: **Neon**, eu-central-1/Frankfurt — verifiser i dashboard) | DB | Alt PII | ? | ? | EU (Frankfurt per DPA.md) |
 | Cloudflare R2 | Bilde-lagring | Foto (fra dag 8) | ? | ? | ? |
 | Pusher | Realtime-chat | Chat (transient) | ? | ? | ? |
 | Resend | E-post | E-postadresse + reise-emails | ? | ? | ? |
@@ -91,6 +127,9 @@
 10. **Bruksvarsling (art. 33/34) – 72 timer**
     **Spørsmål:** Er prosessen beskrevet i safety-runbook (D: datalekk) tilstrekkelig for 72-timers-varselplikt til Datatilsynet + varsling til berørte? Hvem (George? advokat?) har ansvaret for varselet, og hva bør skrives i personvernerklæringen?
 
+11. **Art. 9 – utbred av særlige kategorier (bortsett fra religion/livssyn)**
+   **Spørsmål:** Hvilke av Tosoms konkrete opplysninger omfattes etter deres vurdering av GDPR artikkel 9? Tosom behandler religion/livssyn eksplisitt. Vurder også om andre profil-, preferanse- eller relasjonsopplysninger direkte eller indirekte kan innebære behandling av særlige kategorier. (Dokumentert særlig kategori i dag: religion/livssyn. Andre konkrete data vurderes separat — ingen auto-klassifisering av f.eks. «personlighet».)
+
 ## 6. Hva er ALLEREDE på plass (ikke re-spør)
 
 - `/samtykke` — uttrykkelig art. 9-samtykke (religion/livssyn) innhentes og lagres.
@@ -118,4 +157,4 @@
 
 **Samlet:** For LIMITED FREE BETA (6–10 kjente brukere, gratis, ingen public) er de mest kritiske **Q1 (art. 9), Q4 (DPA/SCC), Q10 (bruksvarsling)**. Q2 (DPIA) bør avklares men kan sannsynligvis dokumenteres enkelt for en så liten skala. Resten kan dokumenteres før WIDER/paid.
 
-**Neste steg:** George sender §5 (ti spørsmål) til advokaten med referanse til `JURIDISK-GRUNNLAG-v1.0.md`. Advokaten svarer → oppdater dette dokumentet + personvernerklæringen om nødvendig.
+**Neste steg:** George sender §5 (elleve spørsmål) til advokaten med referanse til `JURIDISK-GRUNNLAG-v1.0.md`. Advokaten svarer → oppdater dette dokumentet + personvernerklæringen om nødvendig.

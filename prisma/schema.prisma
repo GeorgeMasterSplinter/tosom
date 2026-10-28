@@ -118,30 +118,30 @@ model Profile {
 
 // B8: Samtykkefelt fjernet — se TOSOM-MASTERPLAN-v3.0 DEL 2
 model Match {
-  id               String         @id @default(cuid())
-  userAId          String
-  userBId          String
-  status           MatchStatus    @default(active)
-  score            Int            @default(0)
-  normalizedScore  Float
-  type             String         @default("standard")
-  explanation      Json?
-  scoringBreakdown Json?
-  resonanceLevel   ResonanceLevel @default(GENTLE)
-  reviewed         Boolean        @default(false)
-  lockedAt         DateTime?
-  expiresAt        DateTime?
+  id                   String          @id @default(cuid())
+  userAId              String
+  userBId              String
+  status               MatchStatus     @default(active)
+  score                Int             @default(0)
+  normalizedScore      Float
+  type                 String          @default("standard")
+  explanation          Json?
+  scoringBreakdown     Json?
+  resonanceLevel       ResonanceLevel  @default(GENTLE)
+  reviewed             Boolean         @default(false)
+  lockedAt             DateTime?
+  expiresAt            DateTime?
   // RT1 (D4) — Bilateral fullførelse: kvart deltakers eige val på dag 14.
   // PENDING = har ikkje valt. Resultatet (mutual FOUND / not mutual) avgjerast
   // når BEGGE har valt — aldri ved éin deltaker. PDF krev mutual FOUND.
-  completionA        JourneyDecision @default(PENDING)
+  completionA          JourneyDecision @default(PENDING)
   completionADecidedAt DateTime?
-  completionB        JourneyDecision @default(PENDING)
+  completionB          JourneyDecision @default(PENDING)
   completionBDecidedAt DateTime?
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
-  userA            User           @relation("UserAMatches", fields: [userAId], references: [id])
-  userB            User           @relation("UserBMatches", fields: [userBId], references: [id])
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+  userA                User            @relation("UserAMatches", fields: [userAId], references: [id])
+  userB                User            @relation("UserBMatches", fields: [userBId], references: [id])
 
   @@unique([userAId, userBId])
   @@index([status])

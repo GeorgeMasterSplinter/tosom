@@ -385,9 +385,9 @@ export default function MotpolPage() {
               {/* [PH] — ingen evne-påstander (plan §29.5) */}
               <P>
                 Vi kan ikke love at alle profiler er like sanne — ingen
-                plattform kan det. Men vi kan si hva vi har valgt: her er ingen
-                profil et vitrinasjestykke. Den er utgangspunkt for en samtale
-                mellom to som allerede har snakket.
+                plattform kan det. Men vi kan si hva vi har valgt: Profilen
+                din ligger ikke ute i en katalog. Den brukes som utgangspunkt
+                for matchingen og når dere blir kjent.
               </P>
               {/* [PF] F11 — lenke: /vilkar (plan §14) */}
               <P>

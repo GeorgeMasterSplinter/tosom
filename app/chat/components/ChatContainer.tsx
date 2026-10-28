@@ -587,6 +587,26 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
   const [isOppgaverOpen, setIsOppgaverOpen] = useState(false);
   const [isMoodsOpen, setIsMoodsOpen] = useState(false);
 
+  // RT1 (D4): Bilateral fullførelse — min egen dag-14-status (aldri
+  // partnerens). Hentes kun når dag 14 er nådd.
+  const [completion, setCompletion] = useState<{
+    decision: string;
+    mutualFound: boolean;
+  } | null>(null);
+  useEffect(() => {
+    if (journeyDay < JOURNEY_TOTAL_DAYS) return;
+    let cancelled = false;
+    fetch('/api/journey/check', { credentials: 'include' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => {
+        if (!cancelled && j?.data?.completion) setCompletion(j.data.completion);
+      })
+      .catch(() => { /* tilstandsfetch er best-effort — knappene vises */ });
+    return () => {
+      cancelled = true;
+    };
+  }, [journeyDay]);
+
   // Hent sessionUserId + mood fra ChatContext
   const ctx = useChat();
   const sessionUserId = ctx.sessionUserId;
@@ -665,29 +685,60 @@ export function ChatContainer({ conversationId, partner, journeyDay = 1, imageSh
           <MessageList partner={partner} journeyDay={journeyDay} />
         </div>
 
-        {/* DAG 14 — Reisen er fullført. Vis valg i stedet for input. */}
+        {/* DAG 14 — Reisen er fullført. Vis valg i stedet for input.
+            RT1 (D4): valg er bilateralt — hver deltaker velger for seg selv;
+            utfallet avgjøres når begge har valgt. */}
         {journeyDay >= JOURNEY_TOTAL_DAYS ? (
           <div className="shrink-0 border-t px-4 py-6" style={{ borderColor: color.glass.border, background: color.bg.surface }}>
             <div className="max-w-md mx-auto text-center space-y-4">
-              <p className="text-sm" style={{ color: color.text.primary }}>
-                Reisen er fullført. {JOURNEY_TOTAL_DAYS} dager sammen.
-              </p>
-              <div className="space-y-3">
-                <a
-                  href="/reisen/avslutning?choice=found"
-                  className="block w-full py-3 rounded-xl text-sm font-medium"
-                  style={{ background: color.ambient.gold.soft, border: `1px solid ${color.border.gold}`, color: color.brand.gold }}
-                >
-                  ♥  Vi fant hverandre
-                </a>
-                <a
-                  href="/reisen/avslutning?choice=new"
-                  className="block w-full py-3 rounded-xl text-sm font-medium"
-                  style={{ background: color.glass.bg, border: `1px solid ${color.glass.border}`, color: color.text.primary }}
-                >
-                  ↻  Start ny reise
-                </a>
-              </div>
+              {completion && completion.decision !== 'PENDING' && completion.mutualFound ? (
+                /* MUTUAL FOUND — begge valgt; grace-vindu (PDF) er åpent */
+                <>
+                  <p className="text-sm" style={{ color: color.text.primary }}>
+                    Dere har valgt «Vi fant hverandre» 💛 {JOURNEY_TOTAL_DAYS} dager sammen.
+                  </p>
+                  <p className="text-xs" style={{ color: color.text.secondary }}>
+                    Begge kan laste ned teksten fra samtalen som PDF i 24 timer — bilder blir ikke med.
+                  </p>
+                  <a
+                    href="/reisen/avslutning"
+                    className="block w-full py-3 rounded-xl text-sm font-medium"
+                    style={{ background: color.ambient.gold.soft, border: `1px solid ${color.border.gold}`, color: color.brand.gold }}
+                  >
+                    Last ned minnet (PDF)
+                  </a>
+                </>
+              ) : completion && completion.decision !== 'PENDING' ? (
+                /* WAITING — mitt valg er registrert, partneren har ikke tatt stilling */
+                <p className="text-sm" style={{ color: color.text.primary }}>
+                  Valget ditt er registrert 💛<br />
+                  <span className="text-xs" style={{ color: color.text.secondary }}>
+                    Når begge har tatt stilling, avgjøres reisen — senest 72 timer etter dag 14. Dere hører mer i e-post.
+                  </span>
+                </p>
+              ) : (
+                <>
+                  <p className="text-sm" style={{ color: color.text.primary }}>
+                    Reisen er fullført. {JOURNEY_TOTAL_DAYS} dager sammen.
+                  </p>
+                  <div className="space-y-3">
+                    <a
+                      href="/reisen/avslutning?choice=found"
+                      className="block w-full py-3 rounded-xl text-sm font-medium"
+                      style={{ background: color.ambient.gold.soft, border: `1px solid ${color.border.gold}`, color: color.brand.gold }}
+                    >
+                      ♥  Vi fant hverandre
+                    </a>
+                    <a
+                      href="/reisen/avslutning?choice=new"
+                      className="block w-full py-3 rounded-xl text-sm font-medium"
+                      style={{ background: color.glass.bg, border: `1px solid ${color.glass.border}`, color: color.text.primary }}
+                    >
+                      ↻  Start ny reise
+                    </a>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         ) : (

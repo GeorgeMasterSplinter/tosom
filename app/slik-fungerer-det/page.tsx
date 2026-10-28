@@ -109,7 +109,7 @@ const steps: Array<{
     title: 'En guidet 14-dagersreise',
     intro: 'Når dere matcher, får dere en guidet 14-dagersreise. Hver dag får dere ett fokus — et spørsmål, et tema eller en liten oppgave — og samtalen ligger der hele veien.',
     points: [
-      'daglige små oppgaver',
+      'små oppgaver dere kan velge',
       'fokus på trygghet og kommunikasjon',
       'tid til å bli kjent',
       'ingen hastverk',
@@ -175,7 +175,7 @@ export default function SlikPage() {
               lineHeight: '1.8',
             }}
           >
-            Tosom er en datingside der du blir kjent med én person om gangen. Her er helheten — fra profil til dag 14.
+            Tosom er en datingtjeneste bygget for ekte relasjoner. Du blir kjent med én person om gangen. Her er helheten — fra profil til dag 14.
           </p>
 
           {/* Standard ToSom-logo — rett under innledningen */}

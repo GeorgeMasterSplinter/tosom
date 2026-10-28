@@ -227,6 +227,23 @@ export async function GET(_request: Request) {
         beskrivelse: getPhaseDescription(journey.phase),
         bothSeenAt: journey.bothSeenAt?.toISOString() ?? null,
       };
+
+      // RT1 (D4): Fullførings-status (dag 14) — kun brukerens eget valg,
+      // aldri partnerens (D5). mutualFound = begge har valgt «Vi fant hverandre».
+      if (journey.matchId) {
+        const compMatch = await prisma.match.findUnique({
+          where: { id: journey.matchId },
+          select: { userAId: true, completionA: true, completionADecidedAt: true, completionB: true, completionBDecidedAt: true },
+        });
+        if (compMatch) {
+          const isA = compMatch.userAId === userId;
+          journeyInfo.completion = {
+            decision: isA ? compMatch.completionA : compMatch.completionB,
+            decidedAt: (isA ? compMatch.completionADecidedAt : compMatch.completionBDecidedAt)?.toISOString() ?? null,
+            mutualFound: compMatch.completionA === 'FOUND_EACH_OTHER' && compMatch.completionB === 'FOUND_EACH_OTHER',
+          };
+        }
+      }
     }
 
     // Match reveal: sjekk om det finnes ulest MATCH-notifikasjon

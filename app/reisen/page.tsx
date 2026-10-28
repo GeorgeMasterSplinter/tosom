@@ -209,6 +209,20 @@ export default function ReisenPage() {
                 letterSpacing: '0.25px',
               }}
             >
+              Dere bestemmer tempoet. Dere kan chatte fritt og velge blant
+              spørsmål og enkle oppgaver når dere ønsker det. Reisen har også
+              små refleksjoner underveis, men dere trenger ikke fullføre noe
+              bestemt hver dag. Bruk det som passer når det passer.
+            </p>
+
+            <p
+              style={{
+                ...typographyToStyle('body-lg'),
+                color: 'rgba(255,255,255,0.88)',
+                lineHeight: '1.7',
+                letterSpacing: '0.25px',
+              }}
+            >
               Dette er ikke en test. Spørsmålene er der for å gjøre det lettere å komme i gang.
             </p>
           </div>

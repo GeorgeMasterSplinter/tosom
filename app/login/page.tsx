@@ -204,6 +204,16 @@ export default function LoginPage() {
             deg godt. Finner vi det, går dere inn i en 14-dagers
             reise sammen.
           </p>
+          <p
+            style={{
+              fontSize: "14px",
+              lineHeight: "1.6",
+              color: "rgba(255, 255, 255, 0.4)",
+              margin: "12px 0 0",
+            }}
+          >
+            Tosom er foreløpig i en begrenset beta — registrering skjer via invitasjon.
+          </p>
         </div>
 
         {/* Form: «Logg inn» eller «Ny her? Opprett konto» (D-7) */}

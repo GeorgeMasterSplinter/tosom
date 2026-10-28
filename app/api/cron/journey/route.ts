@@ -19,7 +19,8 @@ import { matchingRoundMissed } from '@/lib/cron/matchingWatchdog'; // B5.6: uken
 import { getPhaseForDay, journeyDayFor } from '@/lib/journey/engine'; // ST3.1, PL-06
 import { runRetention } from '@/lib/privacy/retention'; // S-10
 import { recordMetric, recordEvent } from '@/lib/observability/metric'; // O-3
-import { endJourney } from '@/lib/journey/endJourney'; // B-D: no-action auto-sletting
+import { endJourney } from '@/lib/journey/endJourney'; // B-D: reise-lukking ved utløpt 72-timers-vindu
+import { decisionWindowState } from '@/lib/journey/completion'; // RT1-final: deterministisk fullførings-tilstand
 import { getImageStorage } from '@/lib/storage'; // D: grace-period — bildeobjekter
 import { JOURNEY_TOTAL_DAYS, PHOTO_REVEAL_DAY, JOURNEY_START_WINDOW_DAYS } from '@/config/journey';
 import {
@@ -323,62 +324,83 @@ export async function GET(req: NextRequest) {
         }
       }
 
-      // B-D: AUTO-SLETTING — reiser som fullførte dag 14, men ingen har handlet.
-      // Når reisen når dag 14 setter cronen endedAt (se over) — dette skjer ~24 t
-      // etter at dag 14 ble nådd (journey må passere nextDayAt). Når endedAt er satt
-      // OG matchen fortsatt er 'active', har verken bruker trykket "Vi fant hverandre"
-      // eller "Start ny reise" → slett begge kontoene (data skal ikke ligge uvoktet).
-      // Det gir ~24 t gransetid fra dag 14. Løste matcher (deleted via endJourney) hoppes over.
+      // B-D: REISE-LUKKING NÅR 72-TIMERS-VINDUET UTØPER (RT1-final: D8 + D9).
+      // Når reisen når dag 14 setter cronen endedAt (se over).
+      // Beslutningsvinduet er 72 timer fra dag 14
+      // (COMPLETION_DECISION_WINDOW_MS, config/journey — produkregel).
+      // Når vinduet er utløpt og matchen fortsatt er 'active', må den være
+      // i WAITING:
+      //   PENDING + PENDING  → NO_ACTION (reise lukket uten gjensidig resultat)
+      //   FOUND + PENDING    → NOT MUTUAL / NO_ACTION-ekvivalent
+      // endJourney('no_action') sletter journey-data, chat, bilder og match —
+      // MEN IKKE bruker-kontoer, profiler, onboarding eller gratisordren
+      // (D8: JOURNEY END != ACCOUNT DELETION).
+      // Løste matcher (allerede endJourney-et) hoppes over.
       let noActionDeleted = 0;
       try {
-        const day30EndedJourneys = await prisma.journeyProgress.findMany({
+        const nowTs = new Date();
+        const day14EndedJourneys = await prisma.journeyProgress.findMany({
           where: {
             day: { gte: JOURNEY_TOTAL_DAYS },
             endedAt: { not: null }, // reisen er markert slutt (dag 14 nådd)
           },
-          select: { id: true, matchId: true },
+          select: { id: true, matchId: true, endedAt: true },
           take: 50,
         });
 
         const handledMatchIds = new Set<string>();
-        for (const jp of day30EndedJourneys) {
-          if (!jp.matchId || handledMatchIds.has(jp.matchId)) continue;
+        for (const jp of day14EndedJourneys) {
+          if (!jp.matchId || !jp.endedAt || handledMatchIds.has(jp.matchId)) continue;
           handledMatchIds.add(jp.matchId);
           try {
             const m = await prisma.match.findUnique({
               where: { id: jp.matchId },
-              select: { id: true, status: true },
+              select: { id: true, status: true, completionA: true, completionB: true },
             });
-            // Kun om matchen fortsatt er aktiv = ingen har handlet
+            // Kun om matchen fortsatt er aktiv = avgjørelsen er ikke tatt
             if (m?.status !== 'active') continue;
+            // 72-timers-vinduet (D9) — samme deterministiske tilstandsmaskin
+            // som exit-ruten (lib/journey/completion).
+            const win = decisionWindowState(
+              jp.endedAt,
+              nowTs,
+              m.completionA,
+              m.completionB,
+            );
+            if (win.cronOutcome !== 'no_action') continue;
             await endJourney(jp.matchId, 'no_action');
             noActionDeleted++;
-            recordEvent('journey.no_action_deleted', { matchId: jp.matchId });
-            console.log(`[cron/journey] Auto-sletting: match ${jp.matchId} (dag 14 fullført, ingen handling)`);
+            recordEvent('journey.no_action_deleted', {
+              matchId: jp.matchId,
+              completionA: m.completionA,
+              completionB: m.completionB,
+            });
+            console.log(`[cron/journey] Vinduet utløpt: match ${jp.matchId} (${m.completionA} + ${m.completionB}) → no_action (reise lukket, konto beholdes)`);
           } catch (noActionError) {
-            console.error(`[cron/journey] Feil ved auto-sletting for match ${jp.matchId}:`, noActionError);
+            console.error(`[cron/journey] Feil ved reise-lukking for match ${jp.matchId}:`, noActionError);
             errors.push(`no_action match ${jp.matchId}: ${(noActionError as Error).message}`);
           }
         }
         if (noActionDeleted > 0) {
-          console.log(`[cron/journey] Auto-sletting: ${noActionDeleted} reiser (dag 14, ingen handling)`);
+          console.log(`[cron/journey] 72-timers-vinduet utløpt: ${noActionDeleted} reiser lukket (no_action)`);
         }
       } catch (day30Error) {
-        console.error('[cron/journey] Feil ved dag-14 auto-sletting:', day30Error);
+        console.error('[cron/journey] Feil ved dag-14 reise-lukking:', day30Error);
         errors.push(`day30 no_action: ${(day30Error as Error).message}`);
       }
 
       // D: 24-timers grace-period for «Vi fant hverandre».
-      // endJourney('found_each_other') BEHOLDER innhold + kontoer (status='ended',
+      // endJourney('found_each_other') BEHOLDER reisens innhold (status='ended',
       // expiresAt=+24 t) slik at begge kan eksportere PDF. Når fristen har gått:
-      // slett alt — innhold, bildeobjekter, match og begge kontoer (om de
-      // fortsatt finnes — brukeren kan ha slettet kontoen selv under perioden).
+      // slett reisen — innhold, bildeobjekter og match.
+      // RT1-final (D8: ACCOUNT != JOURNEY): kontoer, profiler og onboarding
+      // beholdes — reiseslutt er aldri kontosletting.
       let graceCleaned = 0;
       try {
         const now = new Date();
         const graceMatches = await prisma.match.findMany({
           where: { status: 'ended', expiresAt: { not: null, lt: now } },
-          select: { id: true, userAId: true, userBId: true },
+          select: { id: true },
           take: 20,
         });
 
@@ -426,23 +448,9 @@ export async function GET(req: NextRequest) {
             // Match
             await prisma.match.delete({ where: { id: m.id } });
 
-            // Begge kontoer — kun om de fortsatt finnes
-            for (const uid of [m.userAId, m.userBId]) {
-              const u = await prisma.user.findUnique({ where: { id: uid }, select: { id: true, email: true } });
-              if (!u) continue;
-              await prisma.$transaction(async (tx) => {
-                await tx.notification.deleteMany({ where: { userId: uid } });
-                await tx.phoneVerification.deleteMany({ where: { userId: uid } });
-                await tx.passwordResetToken.deleteMany({ where: { userId: uid } });
-                await tx.magicLinkToken.deleteMany({ where: { email: u.email } });
-                await tx.session.deleteMany({ where: { userId: uid } });
-                await tx.account.deleteMany({ where: { userId: uid } });
-                await tx.order.deleteMany({ where: { userId: uid } });
-                await tx.twoFactorSecret.deleteMany({ where: { userId: uid } });
-                await tx.profile.deleteMany({ where: { userId: uid } });
-                await tx.user.delete({ where: { id: uid } });
-              });
-            }
+            // RT1-final (D8): ingen konto-sletting her. Reiseslutt (også
+            // mutual-found) er aldri kontosletting — brukere, profiler,
+            // onboarding og ordres beholdes.
 
             graceCleaned++;
             recordEvent('journey.grace_period_expired', { matchId: m.id });

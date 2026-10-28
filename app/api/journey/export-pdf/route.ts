@@ -8,8 +8,11 @@
 // brukeren åpner i nytt vindu og lagrer som PDF (browser-innbygd — ingen
 // ny avhengighet, i tråd med den eksisterende JSON-eksporten under /settings).
 //
-// Sikkerhet: kun eier kan hente. Bruker må ha en AKTIV match/samtale
-// (før sletting). Ingen data for andres samtaler.
+// Sikkerhet: kun deltaker kan hente. RT1 (D5): PDF krev at BEGGE har valgt
+// «Vi fant hverandre» (mutual FOUND) — én deltakers valg er ikke nok.
+// Tilgjengelig under aktiv reise (etter mutual) og i 24-timers grace.
+// RT1 (D6): PDF inneholder KUN tekst — bilde-meldinger (og deres interne
+// stier) utelates helt.
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
@@ -46,9 +49,21 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     }
     const userId = result.user.id;
 
+    // RT1: Suspendert konto får ikke eksport («not banned where relevant»).
+    const me = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { bannedAt: true, deletedAt: true },
+    });
+    if (!me || me.deletedAt || me.bannedAt) {
+      return NextResponse.json(
+        { error: 'Kontoen er suspendert eller slettet — eksport er ikke tilgjengelig.' },
+        { status: 403 }
+      );
+    }
+
     // 2. Finn brukerens match + samtale. 'active' = reisen pågår; 'ended' =
-    // grace-periode etter «vi fant hverandre» (innholdet holdes en tid slik at
-    // PARTNEREN også kan laste ned minnet før det slettes).
+    // grace-periode etter at BEGGE har valgt «vi fant hverandre» (innholdet
+    // holdes 24 t slik at begge kan laste ned minnet før det slettes).
     const activeMatch = await prisma.match.findFirst({
       where: {
         status: { in: ['active', 'ended'] },
@@ -67,6 +82,29 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       );
     }
 
+    // RT1 (D4/D5): PDF krev MUTUAL FOUND — begge deltakere må ha valgt
+    // «Vi fant hverandre». Én deltakers valg er ikke nok.
+    const mutualFound =
+      activeMatch.completionA === 'FOUND_EACH_OTHER' &&
+      activeMatch.completionB === 'FOUND_EACH_OTHER';
+    if (!mutualFound) {
+      return NextResponse.json(
+        { error: 'PDF er tilgjengelig når begge har valgt «Vi fant hverandre».' },
+        { status: 409 }
+      );
+    }
+
+    // Grace/access-state: i 'ended'-status må 24-timers-vinduet fortsatt være
+    // åpent (etter utløpet er alt slettet — ingen samtale å eksportere).
+    if (activeMatch.status === 'ended') {
+      if (!activeMatch.expiresAt || activeMatch.expiresAt < new Date()) {
+        return NextResponse.json(
+          { error: 'Vinduet for nedlasting er utløpt — samtalen er slettet.' },
+          { status: 410 }
+        );
+      }
+    }
+
     const conversation = await prisma.conversation.findUnique({
       where: { matchId: activeMatch.id },
     });
@@ -77,9 +115,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // 3. Hent meldingene (tidligst først)
+    // 3. Hent meldingene (tidligst først). RT1 (D6): TEKST KUN — bilde-meldinger
+    // (type 'image') utelates helt: verken bilde eller interne image-stier må
+    // forekomme i PDF-en.
     const messages = await prisma.message.findMany({
-      where: { conversationId: conversation.id, deletedAt: null },
+      where: { conversationId: conversation.id, deletedAt: null, type: { not: 'image' } },
       orderBy: { createdAt: 'asc' },
     });
 
@@ -167,8 +207,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       <div class="sub">Samtalen mellom ${escapeHtml(meName)} og ${escapeHtml(partnerName)}</div>
     </header>
     <div class="note">
-      Dette er minnet fra reisen deres på Tosom. Lagre det som PDF, så kan dere ha det for alltid —
-      plattformen sletter alt utover dette.
+      Dette er minnet fra reisen deres på Tosom. PDF-en inneholder teksten fra samtalen — bilder blir ikke med.
+      Lagre den som PDF, så kan dere ha den for alltid — plattformen sletter alt utover dette.
     </div>
     ${
       messages.length === 0

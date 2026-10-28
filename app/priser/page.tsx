@@ -262,7 +262,7 @@ export default function PriserPage() {
                         lineHeight: '1.8',
                       }}
                     >
-                      Når dere matcher, får dere et helt privat rom med daglige spørsmål, samtaletema og små oppgaver. Uten distraksjoner.
+                      Når dere matcher, får dere et helt privat rom med daglige refleksjoner, samtaletema og enkle oppgaver dere kan velge. Uten distraksjoner.
                     </p>
                   </div>
                 </div>
@@ -289,7 +289,7 @@ export default function PriserPage() {
                         lineHeight: '1.8',
                       }}
                     >
-                      Dere går gjennom en guidet 14-dagersreise med daglige spørsmål, samtaletema og små oppgaver. Dette er kjernen i Tosom — et rom for dere to.
+                      Dere går gjennom en guidet 14-dagersreise med daglige refleksjoner, samtaletema og enkle oppgaver dere kan velge. Dette er kjernen i Tosom — et rom for dere to.
                     </p>
                   </div>
                 </div>

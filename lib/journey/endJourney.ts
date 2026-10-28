@@ -6,8 +6,13 @@
  *
  * found_each_other (D — 24-timers grace): innhold og kontoer BEHOLDES slik at
  * begge kan eksportere PDF (match.status='ended', expiresAt=+24 t).
- * cron/journey sletter alt når grace-perioden utløper.
- * Alle andre utfall: full sletting umiddelbart (rekkefølgen under).
+ * cron/journey sletter reisens innhold når grace-perioden utløper.
+ * RT1-final (D8: ACCOUNT != JOURNEY): ingen utfall sletter User-kontoer.
+ * no_action = reisen lukkes uten gjensidig resultat (72-timers-vinduet
+ * utløpt): journey-data, chat, bilder og match slettes; konto, profil,
+ * onboarding og gratisorden beholdes (kvoten er person-basert — ingen
+ * journey-basert recycling). Alle andre utfall: journey-data slettes
+ * umiddelbart (rekkefølgen under).
  *
  * Rekkefølgen følger fremmednøkkelavhengighetene:
  *   1. Message deleteMany     { conversationId }
@@ -259,32 +264,18 @@ export async function endJourney(
     });
 
     // 11. B4.5: Utfallet bestemmer hva som skjer med kontoene
-    // - no_action: SLETT begge kontoer permanent (behold MatchHistory + Report + AuditLog)
-    //   (no_action = reisen fullførte 14 dager, ingen handlet innen 24 t → auto-sletting)
+    // - no_action: JOURNEY END (RT1-final D8: ACCOUNT != JOURNEY).
+    //   Reisen lukkes uten gjensidig resultat (72-timers-vinduet utløpt).
+    //   Journey-data, chat, bilder og match slettes —
+    //   USER, ACCOUNT, PROFILE, ONBOARDING og FREE ORDER beholdes
+    //   (kvoten er person-basert — ingen journey-basert recycling).
+    //   Ingen automatisk kontosletting ved inaktivitet. Reset til IDLE
+    //   (kontoen lever videre og kan starte ny reise etter vanlige
+    //   kvalifikasjonsregler).
     // - found_each_other: kontoene OVERLEVER (D: 24-timers grace — satt til COMPLETED over)
     // - new_journey / andre: Reset til IDLE (kontoen lever videre)
-    if (outcome === 'no_action') {
-      // Full kontosletting — brukeren har funnet hverandre utenfor ToSom
-      // Behold: MatchHistory (to ID-er), Report (må overleve), AuditLog (admin-handlinger)
-      for (const user of [userA, userB]) {
-        // Slett brukerdata i riktig rekkefølge (FK-avhengigheter)
-        await tx.notification.deleteMany({ where: { userId: user.id } });
-        await tx.phoneVerification.deleteMany({ where: { userId: user.id } });
-        await tx.passwordResetToken.deleteMany({ where: { userId: user.id } });
-        await tx.magicLinkToken.deleteMany({ where: { email: user.email } });
-        await tx.session.deleteMany({ where: { userId: user.id } });
-        await tx.account.deleteMany({ where: { userId: user.id } });
-        await tx.order.deleteMany({ where: { userId: user.id } });
-        await tx.twoFactorSecret.deleteMany({ where: { userId: user.id } });
-        // S-9: Profile har INGEN cascade fra User (Profile_userId_fkey = Restrict)
-        await tx.profile.deleteMany({ where: { userId: user.id } });
-        // User slettes til slutt
-        await tx.user.delete({ where: { id: user.id } });
-        deleted.User = (deleted.User ?? 0) + 1;
-      }
-    } else if (!isGrace) {
+    if (!isGrace) {
       // Reset both users to IDLE — kontoen lever videre
-      // (isGrace: brukerne er allerede satt til COMPLETED i grace-greina over)
       await tx.user.update({
         where: { id: userA.id },
         data: { journeyState: 'IDLE', matchQueuedAt: null, lastMatchAt: null, lockedUntil: null },
@@ -324,8 +315,9 @@ export async function endJourney(
   }
 
   // B-2 / G: «Reisen er slutt»-e-post — sendes kun når reisen er endelig over.
-  // no_action: kontoene er slettet (dag 14). found_each_other: grace-period —
-  // kontoene lever 24 t mer (eposten forteller om PDF-vinduet).
+  // no_action: reisen lukkes (72-timers-vinduet utløpt) — kontoen beholdes.
+  // found_each_other: grace-period — innholdet lever 24 t mer for PDF
+  // (eposten forteller om PDF-vinduet).
   // Best-effort: e-postfeil skal aldri blokkere reiseslutt. E-post og navn
   // leses fra de in-memory-objektene.
   type EndEmail = { to: string; label: string; promise: Promise<EmailResult> };

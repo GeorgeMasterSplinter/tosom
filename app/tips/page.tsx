@@ -14,6 +14,7 @@ import { ToSomSection, ToSomButton } from '@/components/ui/system';
 import { color, typographyToStyle } from '@/config/design-tokens';
 import GlassCard from '@/components/ui/cards/GlassCard';
 import GoldPulseIcon from '@/components/ui/feedback/GoldPulseIcon';
+import Link from 'next/link';
 
 /* ========================
    INLINE SVG-ikoner
@@ -104,12 +105,23 @@ const tipsSections: Array<{
     title: 'Bruk reisen — rolig og kreativt',
     intro: 'De 14 dagene er en struktur for trygghet, ikke en øvelse i å imponere.',
     points: [
-      'Gjør de daglige små oppgavene med mening — de er laget for at dere skal bli kjent, ikke for konkurranse',
+      'Gjør små oppgaver sammen med mening — de er laget for at dere skal bli kjent, ikke for konkurranse',
       'Strukturen er ment å gi dere to rom.',
       'Bruk oppgavene som samtalestoff — de er skrevet for å få dere i gang.',
       'Ta initiativ, men gi plass.',
     ],
     goldPoints: [3],
+  },
+  {
+    icon: <IconTime />,
+    title: 'Før dere møtes',
+    intro: 'En første date trenger ikke være imponerende. Velg noe enkelt der dere faktisk kan snakke sammen — en kaffe, en gåtur eller et rolig sted kan være nok.',
+    points: [
+      'Avtal gjerne omtrent hvor lenge dere skal møtes. Det gjør det enklere for begge å kjenne etter uten at kvelden må bli noe bestemt.',
+      'Dere har allerede snakket sammen i Tosom. Dere trenger ikke gjenta hele reisen — se hva som skjer når samtalen får fortsette ansikt til ansikt.',
+      'Møt hverandre på et offentlig sted første gang, og fortell gjerne noen du stoler på hvor du skal.',
+    ],
+    goldPoints: [2],
   },
 ];
 
@@ -217,6 +229,17 @@ export default function TipsPage() {
                 </div>
               </GlassCard>
             ))}
+          </div>
+
+          {/* Trygghet-krysslenk — «Før dere møtes»-kortet viser veien videre */}
+          <div className="mx-auto max-w-5xl mt-6 text-center">
+            <Link
+              href="/trygghet"
+              className="text-sm font-medium hover:opacity-80 transition-opacity"
+              style={{ color: color.brand.gold }}
+            >
+              Les mer om trygghet →
+            </Link>
           </div>
         </ToSomSection>
 

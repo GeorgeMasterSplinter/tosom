@@ -1,15 +1,15 @@
 {
   "version": "1.0",
-  "updatedAt": "2026-10-26",
-  "commit": "ef85a91",
+  "updatedAt": "2026-10-27",
+  "commit": "0df1c7f",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
-    "tests": "26.10 (ACT Legal Prep L1): 1006 passed / 1 skipped (83 av 84 suiter) — +10 LEGAL-01..10 truth-guards (__tests__/legal-pages-truth.test.ts), FB-04/FB-08 oppdatert til ny godkjent copy; tsc 0. [tidl. 26.10 (ACT Grand Finale Copy): 996 passed]",
-    "e2e": "07.10 (611a577): onboarding 20/20 lokalt (chromium+firefox, workers:1) etter CI-fix: samtykke i seed (K-2), skalasvar (PL-08), sessionStorage (PL-17). Tidligere: 0 fixme igjen. Onboarding: 20/20 lokalt 29.08 (10 chromium + 10 firefox, inkl. full flow). Dashboard/journey/match: 90/90 fra 28.08-kjøringen (ingen kodeendringer som rakk dem siden). Totalt 110 passed / 0 failed. 5/6 prosjekt lokalt (Mobile Safari/webkit krever system-bibliotek — installeres i CI med --with-deps). Dev-login (storageState) fungerer — alle tester kjører innlogget. playwright.config: workers: 1 alltid (lokal kjøring = CI) — onboarding-testene deler en E2E-bruker som full-flow-testen muterer; parallelle workere racet på server-draften",
-    "typecheck": "0 errors (tsc --noEmit, 26.10 ACT Grand Finale Copy) utover Prisma-klient (prisma generate kjører i CI)",
-    "lint": "re-verifisert 26.10 (ACT Legal Prep L1): 0 warnings (npm run lint)",
+    "tests": "27.10 (RT1 FINAL): 2266 passed / 1 skipped (86 av 87 suiter) — bilateral completion (JourneyDecision + match A/B), 72-timers-vindu (config), no_action = journey-end only (User-sletting fjernet fra endJourney + cron), PDF mutual-only/tekst-only. Ny: __tests__/rt1-final-decisions.test.ts (RT-C01–C18) + __tests__/rt1-runtime-truth.test.ts (RT-01–12); integration/s9-deletion.test.ts omskrevet (konti beholdes). [tidl. 26.10 (ACT Legal Prep L1): 1006 passed]",
+    "e2e": "27.10 (RT1 FINAL): 90/90 lokalt (chromium+firefox dashboard/onboarding + Mobile Chrome) — chat/match/matching-journey. WebKit (Mobile Safari) kjørt ikke lokalt: host mangler system-bibliotek (pre-eksisterende; CI er E2E-gaten). [tidl. 07.10 (611a577): 110 passed]",
+    "typecheck": "0 errors (tsc --noEmit, 27.10 RT1 FINAL) utover Prisma-klient (prisma generate kjører i CI)",
+    "lint": "0 warnings (27.10 RT1 FINAL, npm run lint)",
     "ciGuards": "7/7 grønne (lang, ai, concept, one-engine, 05:00, cron + lang-guard) — lang-guard utvidet 02.09: ~125 ord, case-insensitiv, skanner __tests__/ + ai/ + rotnivåets .md, SPRAKREF-blokk for bevisste nynorsk-eksempler",
-    "productionBuild": "26.10 (ACT Legal Prep L1): npm run build EXIT=0 [tidl. 26.10 (ACT Grand Finale Copy): EXIT=0, 68/68 sider]"
+    "productionBuild": "27.10 (RT1 FINAL): npm run build EXIT=0 [tidl. 26.10 (ACT Legal Prep L1): EXIT=0, 68/68 sider]"
   },
   "currentPhaseId": "apen-beta-test",
   "blockers": [
@@ -251,6 +251,12 @@
     ]
   },
   "leveranser": [
+    {
+      "dato": "2026-10-27",
+      "id": "RT1-FINAL",
+      "title": "RT1 FINAL: bilateral completion + 72-timers-vindu + no_action = journey-end only (konto-sletting fjernet) + tekst-only mutual-PDF + public runtime truth + canonical branding",
+      "content": "PRODUKTBESLUTNING (George): (D8) ACCOUNT != JOURNEY — no_action avslutter reisen, IKKE kontoen; full konto-sletting krever separat eksplisitt/safety/legal-flow. (D9) 72-timers beslutningsvindu (produkregel, ikke forskningsbasert). IMPLEMENTERT: (1) Bilateral completion — JourneyDecision-enum + per-deltaker felt på Match (completionA/B + decided-tidspunkter), migrasjon 20261027000000_bilateral_completion (non-destructive). (2) Delt statisk statmaskin lib/journey/completion.ts (resolveCompletionState + decisionWindowState) brukt av exit-route og cron — FOUND+FOUND→MUTUAL (grace 24h + PDF), FOUND+NEW/NEW+NEW→NOT MUTUAL (umiddelbart), én valgt/PENDING+PENDING→WAITING (inntil 72h); ved utløpt vindu: PENDING+PENDING→NO_ACTION, FOUND+PENDING→NOT MUTUAL (no_action-ekvivalent); valg etter vindu→410. (3) no_action = reise lukkes uten gjensidig resultat: journey/chat/bilder/match slettes, MatchHistory/Report/UserBlock/AuditLog beholdes, User/Profile/Onboarding/Order+Quota beholdes, begge resettes til IDLE. Destruktiv User-sletting fjernet fra endJourney no_action-greina og crons grace-cleanup (grace-cleanup slettet begge kontoer selv for mutual-found-par — latent feil avdekket). (4) PDF: mutual FOUND + grace + autentisert deltaker, tekst-only (type != 'image'), no-store, ingen persistering; R2-bildene beholdes (brukernes egne bilder). (5) Free quota uendret: person-basert, refunderes IKKE ved reiseslutt (Order beholdes — fikser også Quota/Order-drift). (6) Public truth: /vilkar+/personvern (reise-inaktivitet sletter aldri konto), /faq, /reisen/avslutning (72h + ny nøytral 'avsluttet'-side for FOUND-valger i NEW+FOUND; outcome-nøkling), ChatContainer, e-posttekster. (7) Brand: datingtjeneste-terminologi (5 sider), 'Bygget for ekte relasjoner', canonical to-sirkler-logo i UniversalMenu/ToSomLogo, Tips (første date), invite-beta-notis, llms.txt til current truth. (8) Legal docs: nytt produktfaktum 'JOURNEY END vs ACCOUNT DELETION' i lawyer-package + C-19 oppdatert — PENDING LAWYER REVIEW. TESTS: RT-C01–C18 (rt1-final-decisions.test.ts, 28 tests) + RT-01–12 (rt1-runtime-truth.test.ts) + s9-deletion-rewrite (konti beholdes, test-DB) + delete-account (GDPR-sletting intakt). VERIFISERT: verify 2266 passed/1 skipped, lint 0, build EXIT=0, E2E 90/90 (WebKit ikke kjørt lokalt — manglende host-libs, pre-eksisterende). DOCS: RUNTIME-DOCUMENTATION-TRUTH-PLAN §S.1 + RT1-RUNTIME-TRUTH-ACT §17–22. PRIS UENDRET: 349 fremtidig plan, 249 DEFERRED. IDENTITY-TRUST-PLAN: DEFERRED (IKKE committet)."
+    },
     {
       "dato": "2026-10-05",
       "id": "JURIDISK-LOVREFERANSE-VIPPS",
@@ -638,7 +644,7 @@
     "navigasjon": "UniversalMenu er levende meny (Hvorfor/Slik fungerer det/Reisen/Priser). Header.tsx og GlobalHeaderWrapper.tsx var død kode — slettet.",
     "glemtPassord": "POST /api/auth/request-reset → e-post med lenke til /nytt-passord?email=…&token=… (1 time, single-use) → POST /api/auth/reset-password setter passord og sletter øvrige sesjoner (PL-07)"
   },
-  "nextAction": "26.10 (ACT Legal Prep L1) — Legal pages deployed og PENDING LAWYER REVIEW: send docs/LEGAL-PAGES-PRELAWYER-REVIEW-v1.0.md (13 spørsmål) + docs/LEGAL-REVIEW-PACKAGE-v1.0.md (11 spørsmål, Q11 = art. 9-utbred) til advokat. Åpent: [L1] DPA/SCC-signatur, DPIA-signatur (produktfakta nå 14 dager), profiling/art. 22, art. 9-omfang, backups/retensjon, Upstash-verifisering; [L2] retensjon + grunnlag; [L3] frister; [L4] ansvar/verneting + Paid V1 kjøpsvilkår (deferred). IDENTITY-PLAN: DEFERRED (ingen Vipps). IKKE invitere brukere før juristens svar på de kritiske punktene",
+  "nextAction": "27.10 (RT1 FINAL DEPLOY) — commit+push → full CI → CD (prisma migrate deploy mot prod → Vercel READY → health). RT1 i produksjon: bilateral completion, 72-timers-vindu, no_action = journey-end only (konto slettes ALDRI ved reiseslutt), PDF mutual-only/tekst-only, public truth aligned, 349 fremtidig plan, 249 DEFERRED. IDENTITY-PLAN: DEFERRED (IKKE committet — docs/IDENTITY-TRUST-PLAN-v1.0.md ubehandlet i working tree). Lawyer review fortsatt PENDING (faktum oppdatert i docs). IKKE invitere brukere automatisk.",
   "gjenstaarFoerBeta": [
     "Backup: B5.7 gjenopprettingstest dokumentert + prod-backup-kavitet bekreftet (managed DB)",
     "Sentry: SENTRY_DSN verifisert satt i Vercel (status UNKNOWN fra repo)",

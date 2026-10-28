@@ -3,12 +3,17 @@
 /**
  * Tosom — Avslutnings-side (2 valg)
  *
- * Vises etter 14-dagers reise. Brukeren får 2 valg:
- * 1. "Vi fant hverandre" — `found_each_other` → grace-period (24 t) → lokal takkeside
- * 2. "Start ny reise" — `ny_reise` → beholdt profil → ny onboarding (prefylt)
+ * Vises etter 14-dagers reise. Hver deltaker velger for seg selv (RT1 D4):
+ * 1. "Vi fant hverandre" — valget registreres. Når BEGGE har valgt:
+ *    `found_each_other` → grace-period (24 t, PDF tilgjengelig) → takkeside.
+ * 2. "Start ny reise" — valget registreres. Når begge har tatt stilling
+ *    og utfallet ikke er mutual FOUND: reisen avsluttes, profil beholdes,
+ *    ny onboarding (prefylt).
  *
- * Begge kaller /api/journey/exit som mapper reason → endJourney-outcome.
- * Bekreftelsesdialog er påkrevd med ordrett tekst fra konseptet.
+ * Én deltakers valg slutter aldri reisen alene — resultatet avgjøres når
+ * begge har valgt (WAITING i mellomtiden).
+ * Begge valg kaller /api/journey/exit som mapper reason → utfall.
+ * Bekreftelsesdialog er påkrevd.
  */
 
 import { useState, useEffect } from 'react';
@@ -202,6 +207,12 @@ export default function AvslutningSide() {
   // "Vi fant hverandre" (D: grace-period) — kontoen overlever 24 t, så vi
   // viser en lokal takkeside med PDF-nedlasting + kontosletting.
   const [finishedTogether, setFinishedTogether] = useState(false);
+  // RT1 (D4): mitt valg er registrert, men reisen er ikke avgjort enda
+  // (partneren har ikke tatt stilling) — WAITING.
+  const [waitingDecision, setWaitingDecision] = useState<string | null>(null);
+  // RT1-final: ikke-mutual avgjort der JEG valgte «Vi fant hverandre» —
+  // nøytral «Reisen er avsluttet»-side (partnerens valg eksponeres ikke).
+  const [finishedAlone, setFinishedAlone] = useState(false);
 
   // Sjekk om dag 14 er nådd ved side-lasting
   useEffect(() => {
@@ -213,6 +224,22 @@ export default function AvslutningSide() {
           if (json.journey) {
             const day = json.journey.day;
             setJourneyDay(day);
+
+            // RT1 (D4): har jeg allerede tatt stilling?
+            const completion = json.journey.completion as
+              | { decision: string; mutualFound: boolean }
+              | undefined;
+            if (completion && completion.decision && completion.decision !== 'PENDING') {
+              if (completion.mutualFound) {
+                // Begge har valgt «Vi fant hverandre» → takkeside (PDF-vindu).
+                setFinishedTogether(true);
+              } else {
+                // Mitt valg er registrert — reisen venter på partneren.
+                setWaitingDecision(completion.decision);
+              }
+              return;
+            }
+
             if (day < JOURNEY_TOTAL_DAYS && day > 0) {
               // Ikke fullført enda — gå tilbake til dashboard
               router.push('/dashboard');
@@ -230,8 +257,6 @@ export default function AvslutningSide() {
     checkJourneyComplete();
   }, [router]);
 
-  // B4.4: PDF-eksport — åpner samtalen som print-vennlig PDF før sletting (B-3)
-  const [showPdfOffer, setShowPdfOffer] = useState(false);
   // Feil-feedback: uten dette lå brukeren "fast" uten noe tilbakemelding når
   // /api/journey/exit svarte med feil (t.d. 409/500) — nå viser vi meldingen.
   const [error, setError] = useState<string | null>(null);
@@ -267,17 +292,16 @@ export default function AvslutningSide() {
     }
   };
 
-  // Begge valg kaller /api/journey/exit med riktig reason:
-  //   "Vi fant hverandre" (1) → found_each_other → begge kontoer slettes
-  //   "Start ny reise"    (2) → ny_reise         → beholdt profil, ny onboarding
+  // Begge valg kaller /api/journey/exit med riktig reason (RT1 D4 — bilateralt):
+  //   "Vi fant hverandre" (1) → found_each_other → valget mitt registreres.
+  //     Mutual (begge valgt) → takkeside med 24-timers PDF-vindu.
+  //     Partner valgte ny reise → nøytral «Reisen er avsluttet»-side.
+  //     Ellers → WAITING (partneren har ikke tatt stilling; senest 72 timer
+  //     etter dag 14 lukker cronen reisen — kontoen beholdes).
+  //   "Start ny reise"    (2) → ny_reise → valget mitt registreres.
+  //     Avgjort (ikke mutual) → onboarding. Ellers → WAITING.
   const confirmChoice = async () => {
     if (!selected) return;
-
-    // B4.4: Ved "Vi fant hverandre" — tilby PDF-eksport FØR sletting
-    if (selected === 1 && !showPdfOffer) {
-      setShowPdfOffer(true);
-      return;
-    }
 
     setLoading(true);
     setError(null);
@@ -290,14 +314,30 @@ export default function AvslutningSide() {
       });
 
       if (res.ok) {
-        if (selected === 1) {
-          // "Vi fant hverandre" (D: grace-period) — reisen er fullført, innholdet
-          // beholdes 24 t slik at begge kan laste ned PDF-en. Vis lokal takkeside.
+        // Les utfallet fra serveren: 'found_each_other' (mutual), 'new_journey'
+        // (avgjort ikke-mutual) eller 'waiting' (venter på partneren).
+        let outcome: string | undefined;
+        try {
+          const j = await res.json();
+          outcome = j?.outcome;
+        } catch {
+          /* ikke-JSON svar */
+        }
+        if (outcome === 'waiting') {
+          setWaitingDecision(selected === 2 ? 'NEW_JOURNEY' : 'FOUND_EACH_OTHER');
+        } else if (outcome === 'found_each_other') {
+          // Mutual: reisen er fullført for begge — takkeside med PDF-vindu.
           setFinishedTogether(true);
-        } else {
-          // "Start ny reise" — profilen er beholdt og onboarding låst opp.
+        } else if (outcome === 'new_journey' && selected === 2) {
+          // Ikke-mutual avgjort, jeg valgte «Start ny reise» — profilen er
+          // beholdt og onboarding låst opp.
           // Gå til onboarding (prefylt fra profilen — de justerer, skriver ikke på nytt).
           router.push('/onboarding');
+        } else if (outcome === 'new_journey') {
+          // Ikke-mutual avgjort, jeg valgte «Vi fant hverandre» (partneren
+          // valgte ny reise). Nøytral avslutning — partnerens valg
+          // eksponeres ikke.
+          setFinishedAlone(true);
         }
         return; // Naviger / byt side — ikke nullstill modaltasten.
       }
@@ -312,12 +352,10 @@ export default function AvslutningSide() {
       }
       setError(msg);
       setSelected(null);
-      setShowPdfOffer(false);
     } catch (err) {
       console.error('Feil ved journey-avslutning:', err);
       setError('Nettverksfeil. Kontroller tilgangen og prøv igjen.');
       setSelected(null);
-      setShowPdfOffer(false);
     } finally {
       setLoading(false);
     }
@@ -361,7 +399,9 @@ export default function AvslutningSide() {
             }}
           >
             Tusen takk for 14 dager med åpenhet. Minnet er deres — last ned
-            PDF-en i løpet av 24 timer, så slettes alt automatisk.
+            teksten fra samtalen som PDF i løpet av 24 timer (bilder blir
+            ikke med). Deretter slettes samtalen, bildene og reisen
+            automatisk. Kontoen deres beholdes.
           </p>
           <button
             onClick={handleExportPdf}
@@ -378,8 +418,101 @@ export default function AvslutningSide() {
             Slett kontoen min (umiddelbart)
           </button>
           <p style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.4)' }}>
-            Eller la den slettes automatisk etter 24 timer.
+            Kontoen din beholdes — bare reisen slettes automatisk etter 24 timer.
           </p>
+        </div>
+      </main>
+    );
+  }
+
+  // RT1-final: ikke-mutual avgjort (jeg valgte «Vi fant hverandre»).
+  // Nøytral avslutning — vi sier IKKE hva partneren valgte.
+  if (finishedAlone) {
+    return (
+      <main className="relative min-h-screen overflow-hidden">
+        <div
+          className="fixed inset-0 pointer-events-none"
+          style={{ background: 'linear-gradient(180deg, #0B1520 0%, #121E2E 40%, #0B1520 100%)' }}
+        />
+        <div className="relative z-10 w-full max-w-[540px] mx-auto px-6 py-24 flex flex-col items-center text-center">
+          <h1
+            style={{
+              fontSize: '40px',
+              fontWeight: 300,
+              color: '#D4AF37',
+              letterSpacing: '-0.02em',
+              lineHeight: '1.15',
+              margin: 0,
+            }}
+          >
+            Reisen er avsluttet 💛
+          </h1>
+          <p
+            style={{
+              fontSize: '18px',
+              lineHeight: '1.7',
+              color: 'rgba(255, 255, 255, 0.6)',
+              margin: '20px 0 0',
+            }}
+          >
+            Tusen takk for 14 dager med åpenhet. Samtalen, bildene og reisen
+            slettes — kontoen din beholdes, og du kan logge inn som vanlig.
+          </p>
+          <button
+            onClick={() => router.push('/dashboard')}
+            className="mt-10 w-full px-10 py-3 rounded-2xl font-medium text-sm transition-all duration-300 hover:opacity-80"
+            style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.25)', color: 'rgba(255, 255, 255, 0.7)' }}
+          >
+            Tilbake til oversikt
+          </button>
+        </div>
+      </main>
+    );
+  }
+
+  // RT1 (D4): WAITING — mitt valg er registrert, men partneren har ikke tatt
+  // stilling enda. Reisen er fortsatt aktiv (verken slettet eller avsluttet).
+  if (waitingDecision) {
+    return (
+      <main className="relative min-h-screen overflow-hidden">
+        <div
+          className="fixed inset-0 pointer-events-none"
+          style={{ background: 'linear-gradient(180deg, #0B1520 0%, #121E2E 40%, #0B1520 100%)' }}
+        />
+        <div className="relative z-10 w-full max-w-[540px] mx-auto px-6 py-24 flex flex-col items-center text-center">
+          <div className="mb-8">
+            {waitingDecision === 'FOUND_EACH_OTHER' ? <IconHeart /> : <IconRefresh />}
+          </div>
+          <h1
+            style={{
+              fontSize: '40px',
+              fontWeight: 300,
+              color: '#D4AF37',
+              letterSpacing: '-0.02em',
+              lineHeight: '1.15',
+              margin: 0,
+            }}
+          >
+            Valget ditt er registrert 💛
+          </h1>
+          <p
+            style={{
+              fontSize: '18px',
+              lineHeight: '1.7',
+              color: 'rgba(255, 255, 255, 0.6)',
+              margin: '20px 0 0',
+            }}
+          >
+            Når begge har tatt stilling, avgjøres reisen — senest 72 timer
+            etter dag 14. Dere hører mer i e-post.
+          </p>
+          <button
+            onClick={() => router.push('/dashboard')}
+            className="mt-10 w-full px-10 py-3 rounded-2xl font-medium text-sm transition-all duration-300 hover:opacity-80"
+            style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid rgba(212,175,55,0.25)', color: 'rgba(255, 255, 255, 0.7)' }}
+          >
+            Tilbake til oversikt
+          </button>
         </div>
       </main>
     );
@@ -466,7 +599,7 @@ export default function AvslutningSide() {
           {/* Valg 2: Start ny reise */}
           <ChoiceCard
             title="Start ny reise 🔄"
-            description="Det ble ingen match denne gangen. Prøv igjen — med en ny person."
+            description="Reisen avsluttes når begge har tatt stilling. Profilen din beholdes — du starter på nytt med en ny person."
             icon={<IconRefresh />}
             gradientFrom="#A78BFA"
             gradientTo="#C4B5FD"
@@ -487,32 +620,15 @@ export default function AvslutningSide() {
 
       </div>
 
-      {/* B10 + B4.4: Confirm Modal med PDF-tilbud */}
-      {selected === 1 && !showPdfOffer && (
+      {/* B10: Confirm Modal (valget registreres; avgjørelse når begge har valgt) */}
+      {selected === 1 && (
         <ConfirmModal
           title="Vi fant hverandre?"
           message="Dere møtes utenom Tosom. Lykke til!"
-          warningText="Samtalen kan lastes ned som PDF av begge i 24 timer. Deretter slettes alt permanent."
+          warningText="Valget ditt registreres. Når begge har valgt «Vi fant hverandre», får dere 24 timer til å laste ned teksten fra samtalen som PDF — bilder blir ikke med. Deretter slettes samtalen, bildene og reisen permanent. Kontoen deres beholdes."
           confirmText={loading ? "Behandler..." : "Ja, det var noe 💛"}
           onCancel={() => setSelected(null)}
           onConfirm={confirmChoice}
-        />
-      )}
-
-      {/* B4.4: PDF-eksport modal — tilby nedlasting FØR sletting */}
-      {selected === 1 && showPdfOffer && (
-        <ConfirmModal
-          title="Ta med deg minnet?"
-          message="Du kan laste ned en PDF av samtalen deres før den slettes. Tosom sletter alt — men minnet er ditt."
-          warningText="Etter nedlasting (eller hvis du velger å hoppe over) er reisen fullført. Alt slettes permanent etter 24 timer — begge kan laste ned den inntil da."
-          confirmText={loading ? "Behandler..." : "Last ned PDF og avslutt 💛"}
-          onCancel={() => { setShowPdfOffer(false); setSelected(null); }}
-          onConfirm={() => {
-            setLoading(true); // Vis "Behandler..." med ein gang
-            // Hent + skriv inn PDF-innholdet FØR vi kjører slettinga (unngår race),
-            // deretter fortsett til /api/journey/exit.
-            handleExportPdf().then(() => confirmChoice());
-          }}
         />
       )}
 
@@ -520,7 +636,7 @@ export default function AvslutningSide() {
         <ConfirmModal
           title="Start ny reise?"
           message="Onboarding låses opp. Du kan endre profil før ny match."
-          warningText="Dette sletter samtalen for dere begge. Det kan ikke angres."
+          warningText="Valget ditt registreres. Når begge har tatt stilling — senest 72 timer etter dag 14 — avsluttes reisen, samtalen slettes og profilen din beholdes. Det kan ikke angres."
           confirmText={loading ? "Behandler..." : "Start ny reise 🔄"}
           onCancel={() => setSelected(null)}
           onConfirm={confirmChoice}

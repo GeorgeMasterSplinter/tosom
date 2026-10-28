@@ -26,17 +26,17 @@ const FAQS = [
   },
   {
     q: 'Hva skjer etter dag 14?',
-    a: 'To valg. «Vi fant hverandre» — dere har 24 timer på dere til å laste ned minnet som PDF, så slettes alt: alle samtaler, bilder, spørsmål og svar — alt forsvinner permanent. Eller «Start ny reise» — dere slettes, og begge kan stille seg i køen igjen for en ny reise.',
+    a: 'Hver av dere velger for seg selv: «Vi fant hverandre» eller «Start ny reise» — dere har 72 timer fra dag 14 til å ta stilling. Når begge har valgt «Vi fant hverandre», får dere 24 timer til å laste ned teksten fra samtalen som PDF — bilder blir ikke med. Deretter slettes samtalen, bildene og reisen permanent. Velger dere «Start ny reise», avsluttes reisen når begge har tatt stilling, og begge kan starte på nytt. Velger ingen av dere noe innen de 72 timene, avsluttes reisen automatisk. Uansett utfall beholdes kontoen deres — det er bare reisen, samtalen og bildene som slettes.',
   },
   {
     q: 'Hva koster Tosom?',
-    a: `De ${PRICING.freeUserCap.toLocaleString('nb-NO')} første personene får bruke Tosom gratis. Senere er planen én engangsbetaling per 14-dagersreise — ${PRICING.journeyPrice} kr, betalt én gang med Vipps. Ingen abonnement. Ingen skjulte kostnader.`,
+    a: `Tosom er foreløpig i en begrenset beta, og registrering skjer via invitasjon. De ${PRICING.freeUserCap.toLocaleString('nb-NO')} første personene får bruke Tosom gratis. Senere er planen én engangsbetaling per 14-dagersreise — ${PRICING.journeyPrice} kr, betalt én gang med Vipps. Ingen abonnement. Ingen skjulte kostnader.`,
   },
   {
     q: 'Hvor er dataene mine?',
     a: (
       <>Alt ligger i Europa (PostgreSQL, EU-region). Driftsleverandørene våre (Vercel, Cloudflare og Sentry) behandler teknisk informasjon som IP-adresse for å levere og sikre tjenesten — les mer i{' '}
-        <Link href="/personvern" style={{ color: '#D4AF37' }}>personvernerklæringen</Link>. Ved reiseslutt slettes alt senest 24 timer etter. Sletter du kontoen din, forsvinner alt med en gang. Det er verifisert og irreversibelt. Det som gjenstår er to anonyme ID-er for statistikk. Alt annet er borte.</>
+        <Link href="/personvern" style={{ color: '#D4AF37' }}>personvernerklæringen</Link>. Ved reiseslutt slettes samtalen, bildene og reisen senest 24 timer etter — kontoen din beholdes. Sletter du kontoen din, forsvinner alt med en gang. Det er verifisert og irreversibelt. Det som gjenstår er to anonyme ID-er for statistikk. Alt annet er borte.</>
     ),
   },
   {

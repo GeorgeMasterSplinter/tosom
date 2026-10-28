@@ -1,6 +1,6 @@
 # Tosom
 
-Tosom er en rolig, privat plattform for ekte relasjoner. For voksne (21+).
+Tosom er en datingtjeneste bygget for ekte relasjoner. For voksne (21+).
 
 ## Hva er Tosom
 
@@ -11,20 +11,31 @@ Ingen swipe. Ingen feed. Ingen overflate.
 
 ## Slik fungerer det
 
-1. **Onboarding** — Du bygger en dyp, veiledet profil basert på forskning:
-   verdier, relasjonsstil, personlighet, emosjonell regulering.
+1. **Onboarding** — Du bygger en dyp, veiledet profil med Tosoms egne
+   spørsmål om blant annet verdier, tilknytning, personlighet,
+   kommunikasjon, emosjonsregulering og livssituasjon.
 2. **Matching** — Når profilen er klar, stiller du deg i kø. Natt til lørdag
-   forsøker vi å finne én person som passer deg godt, valgt basert på resonans —
-   ikke tilfeldighet. Finner vi ingen god nok, venter du til neste runde.
-3. **Reisen** — Paret går på en guidet 30-dagers reise med refleksjoner,
-   oppgaver og samtalehjelp. Bilder låst til dag 15.
+   forsøker vi å finne én person som passer deg godt, basert på resonans
+   mellom profilene — ikke tilfeldighet. Finner vi ingen god nok, venter du
+   til neste runde.
+3. **Reisen** — Paret går på en guidet 14-dagers reise med daglige
+   refleksjoner, selvvalgte spørsmål og enkle oppgaver. Alle deler er
+   valgfrie — dere bestemmer tempoet. Bilder blir tilgjengelige fra dag 8.
 
 ## Verdifundament
 
 - Privat — profilen din ses aldri av andre enn matchen
-- Forskningsbasert — PVQ-10, BFI-10, ERQ-6, egne spørsmål inspirert av tilknytningsforskning
+- Egne spørsmål — inspirert av etablert psykologi, men ikke psykologiske
+  tester eller kliniske skjemaer
 - Ro og trygghet — ingen stress, ingen press, ingen gamification
 - Nordisk design — rolig, premium, med dybde
+
+## Priser og tilgjengelighet
+
+- Tosom er foreløpig i en begrenset beta og registrering skjer via invitasjon.
+- Betaen er gratis. Ingen betaling er aktiv i dag.
+- Fremtidig plan (ikke aktiv): én engangsbetaling på 349 NOK per 14-dagers
+  reise. Ingen abonnement.
 
 ## Sider
 

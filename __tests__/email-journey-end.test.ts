@@ -38,7 +38,7 @@ describe('sendJourneyEndEmail', () => {
     expect(arg.text).not.toContain('slettet alt');
   });
 
-  it('sender nøytral e-post ved no_action (dag 14)', async () => {
+  it('sender nøytral e-post ved no_action (dag 14) — reisen slettet, kontoen beholdes', async () => {
     const { sendJourneyEndEmail } = await import('@/lib/email');
     const res = await sendJourneyEndEmail('hei@tosom.no');
     expect(res.success).toBe(true);
@@ -47,8 +47,9 @@ describe('sendJourneyEndEmail', () => {
     expect(arg.subject).toBe('Reisen er fullført');
     expect(arg.text).toContain('hei'); // standard hilsen uten navn
     expect(arg.text).toContain('14 dagene');
-    // no_action: alt slettes umiddelbart (ingen grace)
-    expect(arg.text).toContain('slettet alt');
+    // RT1-final (D8): reisen er slettet, men kontoen beholdes
+    expect(arg.text).toContain('Kontoen din beholdes');
+    expect(arg.text).not.toContain('slettet alt');
   });
 
   it('returnerer feil (og sender ikke) når e-post ikke er konfigurert', async () => {

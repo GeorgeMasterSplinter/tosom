@@ -446,7 +446,7 @@ export default function HvorforPage() {
                   fontStyle: 'italic',
                 }}
               >
-                Tosom er en datingside. Forskjellen er at du blir kjent med én person om gangen — ikke i en strøm av profiler.
+                Tosom er en datingtjeneste. Forskjellen er at du blir kjent med én person om gangen — ikke i en strøm av profiler.
               </p>
             </GlassCard>
           </div>

@@ -48,6 +48,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       where: { userId },
       select: {
         id: true,
+        matchId: true,
         phase: true,
         day: true,
         completedDays: true,
@@ -112,6 +113,28 @@ export async function GET(request: Request): Promise<NextResponse> {
 
     await logInfo("journey/check fetched", "journey_check", { userId, active: isActive, day: journeyProgress?.day });
 
+    // RT1 (D4): Fullførings-status — KUN brukerens eget valg eksponeres
+    // aldri partnerens (D5: ingen deltaker skal se den andres valg før
+    // eget valg er sendt). mutualFound er kun informativt når reisen er
+    // avgjort (begge valgt found).
+    let completion:
+      | { decision: string; decidedAt: string | null; mutualFound: boolean }
+      | null = null;
+    if (journeyProgress?.matchId) {
+      const compMatch = await prisma.match.findUnique({
+        where: { id: journeyProgress.matchId },
+        select: { userAId: true, completionA: true, completionADecidedAt: true, completionB: true, completionBDecidedAt: true },
+      });
+      if (compMatch) {
+        const isA = compMatch.userAId === userId;
+        completion = {
+          decision: isA ? compMatch.completionA : compMatch.completionB,
+          decidedAt: (isA ? compMatch.completionADecidedAt : compMatch.completionBDecidedAt)?.toISOString() ?? null,
+          mutualFound: compMatch.completionA === 'FOUND_EACH_OTHER' && compMatch.completionB === 'FOUND_EACH_OTHER',
+        };
+      }
+    }
+
     return NextResponse.json(
       {
         success: true,
@@ -122,6 +145,7 @@ export async function GET(request: Request): Promise<NextResponse> {
           todayContent,
           daysRemaining,
           canComplete,
+          completion,
           message,
         },
       },

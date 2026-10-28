@@ -244,12 +244,13 @@ export async function sendJourneyEndEmail(
     : 'De 14 dagene sammen er fullført. Takk for at du var med på reisen.';
   const closing = foundEachOther
     ? 'God reise videre — sammen, i det virkelige liv.'
-    : 'Hvis du noen gang ønsker en ny reise, kan du registrere deg på nytt.';
+    : 'Kontoen din er intakt — du kan logge inn som vanlig.';
   // D: Grace-period — ved «fant hverandre» beholdes innholdet 24 timer slik
-  // at begge kan eksportere PDF. Ved no_action er alt slettet umiddelbart.
+  // at begge kan eksportere PDF. Ved no_action er reisen slettet, men
+  // kontoen beholdes (RT1-final D8: JOURNEY END != ACCOUNT DELETION).
   const dataNote = foundEachOther
-    ? 'Samtalen er trygt lagret i 24 timer, slik at begge kan laste ned minnet som PDF (logg inn og last den ned fra reisen). Etter 24 timer slettes alt permanent.'
-    : 'Som lovet har vi nå slettet alt: samtalene, bildene og svarene er borte. Vi har ikke lagret noe.';
+    ? 'Samtalen er trygt lagret i 24 timer, slik at begge kan laste ned minnet som PDF (logg inn og last den ned fra reisen). Etter 24 timer slettes samtalen, bildene og reisen permanent — kontoen deres beholdes.'
+    : 'Som lovet har vi slettet reisen: samtalene, bildene og svarene er borte. Kontoen din beholdes — bare reisen er slettet.';
 
   return sendEmail({
     to: userEmail,

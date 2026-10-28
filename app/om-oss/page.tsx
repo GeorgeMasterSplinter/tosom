@@ -92,7 +92,7 @@ export default function OmOssPage() {
               color: color.text.secondary,
             }}
           >
-            Tosom er en datingside der du blir kjent med én person om gangen. Reisen varer i to uker, og den første uken er uten bilder.
+            Tosom er en datingtjeneste bygget for ekte relasjoner — du blir kjent med én person om gangen. Reisen varer i to uker, og den første uken er uten bilder.
           </p>
 
           {/* Standard ToSom-logo — rett under innledningen */}
@@ -440,7 +440,7 @@ export default function OmOssPage() {
               </p>
 
               <p style={{ ...typographyToStyle('body-lg'), color: color.text.primary, lineHeight: '1.8' }}>
-                Vi bygger en datingside — med én person om gangen, samtalen først, og en reise på to uker.
+                Vi bygger en datingtjeneste — med én person om gangen, samtalen først, og en reise på to uker.
               </p>
 
               <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>

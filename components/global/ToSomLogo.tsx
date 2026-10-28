@@ -1,43 +1,47 @@
 /**
  * Tosom — Global Logo Component
- * 
- * Identisk logo som brukes på landing-siden (Hero-seksjonen).
- * Importer fra '@/components/global/ToSomLogo' for konsistent branding.
+ *
+ * Canonical ToSom-logo (RT1 D3): samme to-sirkler-resonansmerke som
+ * landing-hero, footer og header (UniversalMenu). Statisk variant for
+ * header/dashboard (ingen orbit-animasjon).
+ * Importer fra "@/components/global/ToSomLogo" for konsistent branding.
  */
 
-'use client';
+"use client";
 
-import { FC } from 'react';
-import { Logo } from '@/components/ui/branding/Logo';
-import { color } from '@/config/design-tokens';
-import Link from 'next/link';
+import { FC } from "react";
+import { ResonanceMark } from "@/components/branding/LogoVariants";
+import Link from "next/link";
 
 interface ToSomLogoProps {
   href?: string;
   showTagline?: boolean;
   className?: string;
+  /** Størrelse på resonansmerket i px. Standard: 44. */
+  size?: number;
 }
 
 /**
  * Stacked logo med "Made in Norway" under.
- * Identisk med LogoAnimated fra hero-seksjonen, men statisk (ingen animasjon).
+ * To sirkler (resonansmerket) — canonical merke, ikke wordmark.
  */
 export const ToSomLogo: FC<ToSomLogoProps> = ({
-  href = '/',
+  href = "/",
   showTagline = true,
-  className = '',
+  className = "",
+  size = 44,
 }) => {
   return (
     <Link
       href={href}
       className={`flex flex-col items-center ${className}`}
-      aria-label="Tosom — rolig, privat relasjonsplattform"
+      aria-label="Tosom — Bygget for ekte relasjoner"
     >
-      <Logo size="lg" colorVariant="gold" />
+      <ResonanceMark size={size} strokeWidth={1.5} glow resonate />
       {showTagline && (
         <span
           className="mt-3 text-xs font-medium tracking-[0.3em] uppercase"
-          style={{ color: 'rgba(212,175,55,0.55)' }}
+          style={{ color: "rgba(212,175,55,0.55)" }}
         >
           Made in Norway
         </span>

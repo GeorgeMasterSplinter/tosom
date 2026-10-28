@@ -199,7 +199,7 @@ const clauses: Clause[] = [
     title: 'Avslutning og sletting',
     paragraphs: [
       'Du kan avslutte reisen eller slette kontoen når som helst, uten å oppgi grunn.',
-      'Velger dere «vi fant hverandre», får dere 24 timer til å laste ned samtalen som PDF. Deretter slettes begge kontoer, samtalen og bildene — permanent. Dette kan ikke angres, og begge må bekrefte.',
+      'Velger dere «vi fant hverandre», får dere 24 timer til å laste ned samtalen som PDF. Deretter slettes samtalen, bildene og reisen permanent — kontoen deres beholdes. Begge må bekrefte hver for seg.',
       'Ved sletting fjernes profil, samtaler og bilder umiddelbart. Enkelte opplysninger beholdes for sikkerheten til tjenesten, for eksempel rapporter om alvorlige forhold og blokkeringer — personvernerklæringen beskriver nøyaktig hva.',
       'Du kan laste ned en kopi av opplysningene dine før sletting (Innstillinger → Eksport).',
       'Vi kan suspendere eller stenge kontoen ved brudd på vilkårene eller av sikkerhetsmessige hensyn. Ved nedleggelse av tjenesten varsler vi i god tid.',

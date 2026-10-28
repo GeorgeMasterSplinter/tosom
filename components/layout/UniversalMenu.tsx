@@ -13,7 +13,7 @@
 import { useState, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Logo } from '@/components/ui/branding/Logo';
+import { ResonanceMark } from '@/components/branding/LogoVariants';
 import { color } from '@/config/design-tokens';
 
 // 8 lenker (avgjørelse 25.10.2026): på desktop (≥1280px) vises de som 4 + 4 i to rader:
@@ -88,9 +88,14 @@ export const UniversalMenu = () => {
 
       <header className="fixed top-0 left-0 right-0 z-50">
         <div className="mx-auto max-w-7xl px-6 lg:px-8 h-[64px] xl:h-auto xl:py-3 flex items-center justify-between">
-          {/* Venstre: Logo */}
-          <Link href="/" className="flex-shrink-0">
-            <Logo size="xl" colorVariant="gold" />
+          {/* Venstre: Logo — canonical to-sirkler-merket (RT1 D3), samme som
+              landing-hero og footer. */}
+          <Link
+            href="/"
+            className="flex-shrink-0 flex items-center"
+            aria-label="Tosom — Bygget for ekte relasjoner"
+          >
+            <ResonanceMark size={40} strokeWidth={1.5} glow />
           </Link>
 
           {/* Midten: Meny (desktop) */}

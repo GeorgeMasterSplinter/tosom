@@ -1,16 +1,21 @@
 /**
- * ToSom — S-9: Verifiser at sletting er fullstendig (no_action — dag 14 auto-sletting)
+ * ToSom — S-9 (RT1-final): endJourney('no_action') — reise-lukking med
+ * BEHOLDTE kontoer (D8: ACCOUNT != JOURNEY, 72-timers-vinduet utløpt)
  *
  * Kaller den EKTEN endJourney()-funksjonen (ikke en simulert transaksjon) og
  * bekrefter:
- *   1. User, Profile, Message, Conversation, JourneyProgress er BORTE for begge
- *   2. MatchHistory, Report, AuditLog BESTÅR (overlever kontosletting)
- *   3. Opplaaste bilde-OBJEKTA i lagringen er slettet (GDPR art. 17 — reell
- *      lekkasjevei). Testen kjører mot local-driver mot ein isolert tempdir,
- *      slik at vi kan verifisere at fila faktisk er borte frå disken.
+ *   RT-C08/C09: Reisen lukkes: JourneyProgress, Message, Conversation,
+ *               Match og bilde-objekter i lagringen er GONE.
+ *   RT-C10:  User-konto slettes ALDRI (begge brukere finnes fortsatt).
+ *   RT-C11:  Profile + onboarding beholdes; journeyState resettes til IDLE
+ *            (brukeren kan starte ny reise etter vanlige
+ *            kvalifikasjonsregler).
+ *   RT-C13:  Gratisorden (free quota) beholdes — kvoten er person-basert,
+ *            ingen journey-basert recycling (Quota-telleren er uendret).
+ *   (MatchHistory, Report, AuditLog BESTÅR — revisjon/trygghet overlever.)
  *
- * (found_each_other har no 24-timers grace-period (D) og sletter IKKE umiddelbart —
- * se full-loop-beta STEP 7. no_action er det ubrodde fullsletter-utfallet.)
+ * (found_each_other har 24-timers grace-period (D) og sletter IKKE
+ * umiddelbart — se full-loop-beta STEP 7.)
  *
  * (Oppdatert: bildet knyttest no til meldingen via imageKey og slettast per
  * nøkkel via lib/storage — ikke lenger som mappe-rydding i public/.)
@@ -29,7 +34,7 @@ const CONV_ID = 's9-test-conversation';
 // Nøkkelen bildet får i lagringen (format: {conversationId}/{uuid}.{ext})
 const IMAGE_KEY = 's9-test-conversation/bilde.jpg';
 
-describe('S-9: endJourney(no_action) — fullstendig sletting (auto-sveip dag 14)', () => {
+describe('S-9: endJourney(no_action) — reise lukkes, kontoer beholdes (RT1-final D8)', () => {
   let storageDir: string;
   let storage: LocalImageStorage;
 
@@ -50,7 +55,7 @@ describe('S-9: endJourney(no_action) — fullstendig sletting (auto-sveip dag 14
     await fs.rm(storageDir, { recursive: true, force: true }).catch(() => {});
   });
 
-  it('sletter konto+innhold+bilde-objekt, men behold MatchHistory/Report/AuditLog', async () => {
+  it('lukker reisen (innhold borte) men beholder konto, profil, onboarding og gratisorden', async () => {
     const suffix = Date.now();
     const userA = await db.user.create({
       data: { id: `s9-a-${suffix}`, email: `s9a${suffix}@example.com`, journeyState: 'MATCHED' },
@@ -93,7 +98,7 @@ describe('S-9: endJourney(no_action) — fullstendig sletting (auto-sveip dag 14
     await storage.putImage(IMAGE_KEY, Buffer.from([0xff, 0xd8, 0xff, 0xe0]), { contentType: 'image/jpeg' });
     expect(await storage.exists(IMAGE_KEY)).toBe(true);
 
-    // Report som MÅ overleve kontosletting
+    // Report som MÅ overleve reise-lukking
     const report = await db.report.create({
       data: {
         reporterId: userA.id,
@@ -104,19 +109,53 @@ describe('S-9: endJourney(no_action) — fullstendig sletting (auto-sveip dag 14
       },
     });
 
+    // Gratisordren (free quota) — person-basert, må BEHOLDES ved
+    // no_action (RT-C13: ingen journey-basert recycling).
+    for (const u of [userA, userB]) {
+      await db.order.create({
+        data: {
+          userId: u.id,
+          amount: 0,
+          currency: 'NOK',
+          status: 'PAID',
+          provider: 'free_quota',
+          freeQuota: true,
+          withdrawalWaiver: false,
+          completedAt: new Date(),
+        },
+      });
+    }
+    const quotaBefore = await db.quota.findUnique({ where: { id: 'free_users' } });
+
     // --- Kall den EKTEN endJourney ---
     await endJourney(match.id, 'no_action');
 
-    // 1) Konto + innhold er borte for begge
-    expect(await db.user.findUnique({ where: { id: userA.id } })).toBeNull();
-    expect(await db.user.findUnique({ where: { id: userB.id } })).toBeNull();
-    expect(await db.profile.findUnique({ where: { userId: userA.id } })).toBeNull();
-    expect(await db.profile.findUnique({ where: { userId: userB.id } })).toBeNull();
+    // RT-C08/C09: Reisen lukkes — innholdet er borte
     expect(await db.message.count({ where: { conversationId: conversation.id } })).toBe(0);
     expect(await db.conversation.findUnique({ where: { id: conversation.id } })).toBeNull();
     expect(await db.journeyProgress.findFirst({ where: { userId: userA.id } })).toBeNull();
     expect(await db.journeyProgress.findFirst({ where: { userId: userB.id } })).toBeNull();
     expect(await db.match.findUnique({ where: { id: match.id } })).toBeNull();
+
+    // RT-C10: User-konto slettes ALDRI ved no_action (D8)
+    expect(await db.user.findUnique({ where: { id: userA.id } })).not.toBeNull();
+    expect(await db.user.findUnique({ where: { id: userB.id } })).not.toBeNull();
+
+    // RT-C11: Profile + onboarding beholdes; journeyState resettes til IDLE
+    expect(await db.profile.findUnique({ where: { userId: userA.id } })).not.toBeNull();
+    expect(await db.profile.findUnique({ where: { userId: userB.id } })).not.toBeNull();
+    const aAfter = await db.user.findUnique({ where: { id: userA.id } });
+    const bAfter = await db.user.findUnique({ where: { id: userB.id } });
+    expect(aAfter?.journeyState).toBe('IDLE');
+    expect(bAfter?.journeyState).toBe('IDLE');
+
+    // RT-C13: Gratisorden beholdes; Quota-telleren uendret
+    const remainingOrders = await db.order.findMany({
+      where: { userId: { in: [userA.id, userB.id] }, freeQuota: true },
+    });
+    expect(remainingOrders).toHaveLength(2);
+    const quotaAfter = await db.quota.findUnique({ where: { id: 'free_users' } });
+    expect(quotaAfter?.used).toBe(quotaBefore?.used ?? 0);
 
     // 2) MatchHistory, Report og AuditLog BESTÅR
     const [first, second] = userA.id < userB.id ? [userA.id, userB.id] : [userB.id, userA.id];
@@ -128,11 +167,12 @@ describe('S-9: endJourney(no_action) — fullstendig sletting (auto-sveip dag 14
 
     expect(await db.report.findUnique({ where: { id: report.id } })).not.toBeNull();
 
-    const survivingAudit = await db.auditLog.findFirst({
-      where: { action: 'JOURNEY_RESET' },
-    });
-    expect(survivingAudit).not.toBeNull();
-    expect(survivingAudit?.adminId).toBeNull();
+    // AuditLog for KJØRINGA (matchId i metadata)
+    const audits = await db.auditLog.findMany({ where: { action: 'JOURNEY_RESET' } });
+    const survivingAudit = audits.find(
+      (a) => a.metadata && JSON.parse(a.metadata).matchId === match.id,
+    );
+    expect(survivingAudit).toBeDefined();
     expect(JSON.parse(survivingAudit!.metadata!)).toMatchObject({ outcome: 'no_action' });
 
     // 3) Bilde-OBJEKTA i lagringa er slettet (GDPR art. 17 — reell lekkasjevei)

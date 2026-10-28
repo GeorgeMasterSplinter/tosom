@@ -131,6 +131,13 @@ model Match {
   reviewed         Boolean        @default(false)
   lockedAt         DateTime?
   expiresAt        DateTime?
+  // RT1 (D4) — Bilateral fullførelse: kvart deltakers eige val på dag 14.
+  // PENDING = har ikkje valt. Resultatet (mutual FOUND / not mutual) avgjerast
+  // når BEGGE har valt — aldri ved éin deltaker. PDF krev mutual FOUND.
+  completionA        JourneyDecision @default(PENDING)
+  completionADecidedAt DateTime?
+  completionB        JourneyDecision @default(PENDING)
+  completionBDecidedAt DateTime?
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
   userA            User           @relation("UserAMatches", fields: [userAId], references: [id])
@@ -530,6 +537,13 @@ enum ResonanceLevel {
   MODERATE
   STRONG
   DEEP
+}
+
+/// RT1 (D4) — Bilateral reise-avslutting: kvart deltakers eige val på dag 14.
+enum JourneyDecision {
+  PENDING
+  FOUND_EACH_OTHER
+  NEW_JOURNEY
 }
 
 // STEG B8: Fra 6 verdier til 3

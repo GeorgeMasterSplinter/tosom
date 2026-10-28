@@ -244,7 +244,7 @@ const sections: Section[] = [
       'Sletting skjer umiddelbart — ikke etter et varsel. Du sletter kontoen når du vil, under Innstillinger, og du behøver ikke oppgi grunn.',
       'Da slettes: kontoen, profilen og alle svarene (inklusive særlige kategorier), alle samtaler du har vært en del av — både dine meldinger og den andres i de samme samtalen — bildene, reisen, matcher, innlogginger og tekniske nøkler.',
       'Et lite antall poster beholdes, fordi de holder tjenesten trygg — også for deg: rapporter om alvorlige forhold, blokkeringer, og en post om at en kobling fant sted (uten innhold). Disse postene knytter seg ikke lenger til en personprofil, og de vises bare for den som behandler sikkerhetssaker.',
-      'Velger dere «vi fant hverandre», er det motsatt: dere får 24 timer til å laste ned samtalen som PDF. Deretter slettes begge kontoer, samtalen og bildene — permanent. Dette kan ikke angres, og begge må bekrefte.',
+      'Velger dere «vi fant hverandre», er det motsatt: dere får 24 timer til å laste ned samtalen som PDF. Deretter slettes samtalen, bildene og reisen permanent — kontoen deres beholdes. Dette kan ikke angres, og begge må bekrefte hver for seg.',
       'Data som ligger i tekniske sikkerhetskopier, kan forbli inntil kopien utløper.',
     ],
   },

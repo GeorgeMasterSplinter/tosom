@@ -325,16 +325,15 @@ export default function MetoderPage() {
             }}
           >
             <h2 style={{ ...typographyToStyle('heading-lg'), color: color.text.primary, textAlign: 'center' }}>
-              Spørsmålene vi stiller
+              Spørsmålene vi bruker
             </h2>
             <p style={{ ...typographyToStyle('body-lg'), color: color.text.secondary, lineHeight: '1.8' }}>
-              Nå er ærligheten: ikke alle delene er publiserte instrumenter.
-              Personligheten består av Tosoms egne spørsmål inspirert av brede
-              personlighetstrekk fra Big Five-rammeverket — laget for vår
-              matchingmodell, ikke et standardisert eller klinisk skjema.
-              Tilknytning, verdier,
-              emosjonsregulering og kommunikasjon består av egne spørsmål inspirert av
-              forskningen. Livssituasjon består av praktiske preferanser.
+              Tosom har laget egne spørsmål om blant annet personlighet,
+              verdier, tilknytning, kommunikasjon, emosjonsregulering og
+              livssituasjon. Noen av områdene er inspirert av etablert
+              psykologi, men dette er ikke psykologiske tester eller kliniske
+              skjemaer. Svarene brukes som en del av matchingen, sammen med
+              grensene og preferansene du har oppgitt.
               Under hvert spørsmålssett sier vi hva som er hva.
             </p>
             <div className="space-y-4">

@@ -24,6 +24,9 @@ Konto (e-post, passord-hash, sesjoner), full profil fra onboarding (alder, kjøn
 **WHAT AUTOMATION WE USE**
 Deterministisk matching (ingen AI): sperreliste → hårde dealbreakers (inkl. religion/livssyn-gjensidig aksept, avstand) → 6-dimensjons-score (0–100, MIN_SCORE 40) → én kobling eller kø til neste runde. Reise-progressjon via daglig cron. Ingen klinisk vurdering, ingen bilder i vurderingen.
 
+**JOURNEY END vs ACCOUNT DELETION (PRODUKTFAKTUM, RT1-final 27.10.2026)**
+Fullføring på dag 14 er bilateralt: hver part velger hver for seg («Vi fant hverandre» / «Start ny reise»), 72-timers beslutningsvindu (produkregel — ikke forskningsbasert). Hvert reise-utfall sletter reisens data (samtale, bilder, reiseinnhold, match) — **men sletter ALDRI User-konto, profil eller onboarding**. Det finnes ingen automatisk kontosletting ved inaktivitet. Konto-sletting skjer kun gjennom eksplisitte, dokumenterte fløyer: brukerens egen GDPR-sletting (`/api/settings/delete-account`), admin-sletting, blokkering/safety og oppdaget aldersgrense-brudd. Gratisorden/kvote er person-basert og refunderes ikke ved reiseslutt.
+
 **WHAT WE DO NOT DO**
 Selger ikke personopplysninger · ingen markedsføring/analytikk med brukerdata · ingen AI som tolker eller skriver til brukeren · ingen kontinuerlig overvåking av samtaler (kun ved rapport) · ingen IP-lagring i vår DB · ingen profil vises offentlig · ingen match-/resultatgaranti.
 
@@ -135,8 +138,8 @@ Selger ikke personopplysninger · ingen markedsføring/analytikk med brukerdata 
 - `/samtykke` — uttrykkelig art. 9-samtykke (religion/livssyn) innhentes og lagres.
 - `/personvern` + `/vilkar` — publisert, versjon v2026-10-15, lagres per bruker (`termsVersion`).
 - PII-scrubbing i Sentry + `sendDefaultPii:false`.
-- Retensjon: auto-slette 24t + 2 anon ID-er (testet i `privacy-retention-s10`).
-- Slettermekanisme (GDPR) + journey-end cleanup.
+- Retensjon: reiseinnhold auto-slettes senest 24 t etter reiseslutt (kun mutual-found har grace; ellers umiddelbart) + 2 anon ID-er (testet i `privacy-retention-s10`). **Kontoer slettes aldri automatisk ved reiseslutt** (RT1-final 27.10.2026 — D8: ACCOUNT != JOURNEY).
+- Slettermekanisme (GDPR, kun eksplisitt: `/api/settings/delete-account` m.fl.) + journey-end cleanup (reise-data; konto/profil/onboarding beholdes).
 - `JURIDISK-GRUNNLAG-v1.0.md` — bakgrunn + A-1…A-7 (betalingsrelaterte deferred).
 - Aldersgrense 21+ i valideringsskjema + invariant I-14.
 

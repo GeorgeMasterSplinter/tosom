@@ -182,7 +182,7 @@ export default function LandingPage() {
                 color: color.text.secondary,
               }}
             >
-              Tosom er en datingside der du blir kjent med én person om gangen. Her er hvordan det fungerer.
+              Tosom er en datingtjeneste bygget for ekte relasjoner. Du blir kjent med én person om gangen. Her er hvordan det fungerer.
             </p>
             </Reveal>
 
@@ -364,6 +364,7 @@ export default function LandingPage() {
               }}
             >
               Opprett kontoen din og bygg profilen. Neste matcherunde er natt til lørdag.
+              Tosom er foreløpig i en begrenset beta — registrering skjer via invitasjon.
 
             </p>
 

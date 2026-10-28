@@ -29,6 +29,21 @@ export const PHOTO_REVEAL_DAY = 8;
 /** Startvindu (i dager) før en match som aldri startet utløper. */
 export const JOURNEY_START_WINDOW_DAYS = 7;
 
+/**
+ * Fullføringsbeslutningsvindu etter dag 14 (timer).
+ *
+ * Produkregel (George, RT1-finalbeslutning 27.10.2026): deltakerne har
+ * 72 timer fra dag 14 til å gjøre fullføringsvalget. Dette er en
+ * produkregel — IKKE forskningsbasert, og må ikke presenteres som det.
+ *
+ * Én kilde: cron/journey (timeout) og journey/exit (vinduet håndheves)
+ * importerer fra her. Offentlig copy bruker samme tall.
+ */
+export const COMPLETION_DECISION_WINDOW_HOURS = 72;
+
+export const COMPLETION_DECISION_WINDOW_MS =
+  COMPLETION_DECISION_WINDOW_HOURS * 60 * 60 * 1000;
+
 /** Tema-ranger for dagtekstene (5 tema over 14 dager). */
 export type JourneyTheme =
   | "intro"

@@ -58,7 +58,7 @@ export function toOnboardingData(
   if (!profile) return { data: {}, complete: false };
 
   const data: Record<string, unknown> = {};
-  const put = (key: string, value: string | number | undefined) => {
+  const put = (key: string, value: string | number | null | undefined) => {
     if (value !== undefined) data[key] = value;
   };
 
@@ -143,7 +143,10 @@ export function toOnboardingData(
   const dp = profile.deepProfileData;
   put('distancePref', toNum(dp?.distancePref));
   put('agePrefMin', toNum(dp?.agePrefMin));
-  put('agePrefMax', toNum(dp?.agePrefMax));
+  // REV 1.2: agePrefMax === null = 99+ (åpen øvre grense, ingen maks-alder-
+  // dealbreaker). Må pre-fylles som EKSPLISITT null — undefined ville bety
+  // «ikke satt» og 99+-valget ville forsvinne ved re-inngang (fallback 40).
+  put('agePrefMax', dp?.agePrefMax === null ? null : toNum(dp?.agePrefMax));
   put('religion', toStr(dp?.religion));
   // Lansering: akseptliste (hard kompatibilitet) — pre-fyller for re-inngang
   put('acceptedReligions', toStr(dp?.acceptedReligions));

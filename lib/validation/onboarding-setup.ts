@@ -64,7 +64,10 @@ export const basicProfileSchema = z
     postalCode: z.string().regex(/^\d{4}$/, 'Postnummer må ha fire siffer'),
     distancePref: z.coerce.number(),
     agePrefMin: z.coerce.number().min(21).max(99),
-    agePrefMax: z.coerce.number().min(21).max(99),
+    // REV 1.2 (produktbeslutning): agePrefMax = null betyr 99+ — ingen øvre
+    // aldersgrense i matchingen. Endelig maks alder er 21–98 (99 kun via
+    // 99+). Brukerens EGEN alder (max 99) er et annet felt og uendret.
+    agePrefMax: z.coerce.number().min(21).max(98).nullable(),
 
   })
   .superRefine((val, ctx) => {

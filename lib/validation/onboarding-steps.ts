@@ -131,11 +131,16 @@ function validateBasicStep(data: Record<string, unknown>): StepFieldError[] {
     if (minAge < MIN_AGE || minAge > 99) errors.push({ field: 'agePrefMin', message: `Minste alder må være mellom ${MIN_AGE} og 99.` });
   }
 
-  if (isMissingNumber(data['agePrefMax'])) {
-    errors.push({ field: 'agePrefMax', message: 'Velg høyeste alder du søker.' });
+  // REV 1.2 (produktbeslutning): agePrefMax = null betyr 99+ — INGEN øvre
+  // aldersgrense i matchingen. Endelig maks alder: 21–98 (99 kun via 99+).
+  // Brukerens EGEN alder (max 99) er et annet felt og uendret.
+  if (data['agePrefMax'] === null) {
+    // 99+ — gyldig åpen øvre grense.
+  } else if (isMissingNumber(data['agePrefMax'])) {
+    errors.push({ field: 'agePrefMax', message: 'Velg høyeste alder du søker, eller 99+.' });
   } else {
     const maxAge = Number(data['agePrefMax']);
-    if (maxAge < MIN_AGE || maxAge > 99) errors.push({ field: 'agePrefMax', message: `Høyeste alder må være mellom ${MIN_AGE} og 99.` });
+    if (maxAge < MIN_AGE || maxAge > 98) errors.push({ field: 'agePrefMax', message: `Høyeste alder må være mellom ${MIN_AGE} og 98, eller 99+.` });
   }
 
   return errors;
@@ -261,7 +266,7 @@ export function validateOnboardingStep(step: number, data: Record<string, unknow
     if (missing.length > 0) {
       errors.push({
         field: missing[0],
-        message: 'Svar på alle påstandene — det finnes ingen fasit.',
+        message: 'Svar på alle påstandene.',
       });
     }
   }

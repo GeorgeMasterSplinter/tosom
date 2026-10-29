@@ -57,7 +57,8 @@ interface ProfileData extends Record<string, unknown> {
   city: string;
   distancePref: number;
   agePrefMin: number;
-  agePrefMax: number;
+  // REV 1.2: null = 99+ (åpen øvre grense — ingen øvre aldersgrense).
+  agePrefMax: number | null;
   // Legacy support for Step1
   firstName: string;
   seeking: string;
@@ -402,17 +403,24 @@ export default function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
            // Base: defaultene fra initialData (f.eks. distancePref=50) —
            // uten dem validerer steg 1 feil (Number(undefined) = NaN).
            const merged: ProfileData = { ...initialData, ...prefill.data } as ProfileData;
+           // REV 1.2: agePrefMax = null er 99+ (åpen øvre grense) — et
+           // meningsbærende valg, ikke «tomt». Null må vinne over
+           // prefill/default i sammenslåingen, ellers forsvinner 99+ ved
+           // reload uten server-draft (f.eks. når brukeren er på steg 1).
+           const isMeaningful = (k: string, v: unknown) =>
+             v !== '' && v !== undefined && (v !== null || k === 'agePrefMax');
+
            const localDraft = loadDraft();
            if (localDraft) {
              for (const [k, v] of Object.entries(localDraft)) {
-               if (v !== '' && v !== null && v !== undefined) {
+               if (isMeaningful(k, v)) {
                  merged[k] = v;
                }
              }
            }
            for (const [k, v] of Object.entries(prev)) {
              const isUserInput =
-               v !== '' && v !== null && v !== undefined &&
+               isMeaningful(k, v) &&
                String(v) !== String(initialData[k] ?? '');
              if (isUserInput) {
                merged[k] = v;

@@ -193,10 +193,15 @@ function checkGenderSeeking(a: ProfileData, b: ProfileData): DealbreakerResult {
 /**
  * checkAgePreference — alderspreferanse er en AKTIV dealbreaker (bidireksjonell).
  *
- * Steg 1 lar brukeren velge min/maks alder (agePrefMin/agePrefMax i
- * deepProfileData). Kandidatens alder (Profile.age) må ligge i begge parters
- * intervall. Manglende/ugyldig preferanse eller alder → blokkerer IKKE
- * (forsvarlig, samme mønster som radius).
+ * Steg 1 lar brukeren velge min alder (agePrefMin) og maks alder (agePrefMax)
+ * i deepProfileData. Kandidatens alder (Profile.age) må ligge innenfor begge
+ * parters intervall.
+ *
+ * REV 1.2 (produktbeslutning): agePrefMax = null er 99+ — ÅPEN øvre grense
+ * (ingen øvre aldersgrense). Da er det ingen maks-alder-dealbreaker; minimum
+ * gjelder uendret. Endelig maks (21–98) blokkerer som før: kandidat-alder
+ * over maks. Manglende/ugyldig preferanse eller manglende kandidat-alder →
+ * blokkerer IKKE (forsvarlig, samme mønster som radius).
  */
 export function toAgeNumber(raw: unknown): number | null {
   if (typeof raw === 'number') return Number.isFinite(raw) ? raw : null;

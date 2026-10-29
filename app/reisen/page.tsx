@@ -473,7 +473,7 @@ export default function ReisenPage() {
                         lineHeight: '1.8',
                       }}
                     >
-                      Velg spørsmål som hjelper dere å bli kjent. 12 kategorier med 240 spørsmål — fra lek og humor til nærhet og modne samtaler. Dere velger selv hvor dypt dere vil grave.
+                      Velg spørsmål som hjelper dere å bli kjent. 12 kategorier med 180 spørsmål — fra lek og humor til nærhet og modne samtaler. Dere velger selv hvor dypt dere vil grave.
                     </p>
                   </div>
                 </div>

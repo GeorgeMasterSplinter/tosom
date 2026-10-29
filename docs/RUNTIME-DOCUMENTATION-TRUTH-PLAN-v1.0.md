@@ -89,7 +89,7 @@ Alle omtaler (live-verifisert 27.10):
 | Får brukeren ett nytt spørsmål hver dag? | **Ja — som forslag, ikke plikt.** | JourneyDayContent (DB, én rad per dag): theme, reflectionQuestion, conversationPrompt, task (kan være null), resonanceGoal. Serveres av GET /api/journey/today + /api/journey/check og vises i dashboard-kortet (components/journey/TodayCard.tsx). Ingen completion-flagg, ingen gating, ingen konsekvens ved å ikke svare. |
 | Får brukeren én obligatorisk oppgave hver dag? | **Nei.** | task-feltet er nullable; ingenting håndheves. Dagkortet kan inneholde en oppgave; brukeren kan ignorere den. |
 | Finnes daglige tema? | **Ja** (tema-label + fokus-tekst per dag). | JOURNEY_THEME_RANGES + JourneyDayContent.theme. |
-| Eller velger brukeren selv blant spørsmål? | **Ja — i tillegg til dagkortet.** | 240 BliKjent-spørsmål (12×20), fritt valgt, ingen daglig grense (se D). |
+| Eller velger brukeren selv blant spørsmål? | **Ja — i tillegg til dagkortet.** | 180 BliKjent-spørsmål (12×15), fritt valgt, ingen daglig grense (se D). |
 | Kan flere spørsmål brukes samme dag? | **Ja**, ingen grense. | — |
 | Kan ingen spørsmål brukes? | **Ja** — alt er valgfritt; fri chat er alltid der. | — |
 | Hvordan velges oppgaver? | Brukeren velger fra 9 kategorier × 15 («Gjør sammen») og sender dem som vanlige chat-meldinger (source 'oppgave'). | app/chat/data/tasks.ts + OppgaverPanel. |
@@ -124,7 +124,7 @@ Alle omtaler (live-verifisert 27.10):
 
 ## D. Questions (BliKjent)
 
-- **Canonical source (aktiv):** app/questions/data/questions.ts — **240 spørsmål, 12 kategorier** (Personlighet & identitet, Forhold & tilknytning, Kommunikasjon & konflikter, …), 20 per kategori. Hardkodet frontend-data, «samme for alle brukere».
+- **Canonical source (aktiv):** app/questions/data/questions.ts — **180 spørsmål, 12 kategorier** (Personlighet & identitet, Forhold & tilknytning, Kommunikasjon & konflikter, …), 15 per kategori (Library V2, 28.10; tidl. 240/12×20). Hardkodet frontend-data, «samme for alle brukere».
 - **Valgmodell:** MANUELL. Brukeren åpner «Bli kjent»-panelet i chatten → velger kategori → velger spørsmål → «Send til partner?». Ingen systemvalg.
 - **Daglig grense:** ingen.
 - **Repeat prevention:** myk — brukte spørsmål (metadata.source='bli_kjent') markeres «✓ brukt» og dempes, men kan likevel velges igjen.
@@ -345,7 +345,7 @@ Konklusjon: 6 av 7 setninger stemmer med runtime; mood-setningen må endres før
 | PRODUCT CATEGORY | «datingside» (4 sider) | datingtjeneste, én person om gangen, 14-dagers reise | PARTLY ALIGNED (uenhet) | «Tosom er en datingtjeneste bygget for ekte relasjoner.» | app/(landing)/page.tsx, app/om-oss, app/hvorfor, app/slik-fungerer-det | P2 (besluttning) |
 | JOURNEY CONTENT | «Hver dag får dere et nytt guidet spørsmål eller en samtale-impuls.» | ett fokus-kort per dag, valgfritt; fri chat alltid | ALIGNED | behold | FAQ, landing, reisen | — |
 | DAILY TASKS | «daglige små oppgaver» / «Gjør de daglige små oppgavene» | selvvalgt pulj (135); dagkort-oppave kan være null; ingenting er plikt | PARTLY ALIGNED | «små oppgaver dere kan velge til dere — hver dag ligger også et forslag i reisen» (tilpasset per side) | slik-fungerer-det:112, priser:265/292, tips:107 | P2 |
-| QUESTIONS | «135 oppgaver i 9 kategorier» / BliKjent-panelet | 240 spørsmål 12×20, manuelt valg, ingen grense, myk «brukt» | ALIGNED | — | FAQ | — |
+| QUESTIONS | «135 oppgaver i 9 kategorier» / BliKjent-panelet | 180 spørsmål 12×15 (Library V2, 28.10; tidl. 12×20), manuelt valg, ingen grense, myk «brukt» | ALIGNED | — | FAQ | — |
 | MOOD | (ingen public claim) | privat per bruker, localStorage, kun eget rom | N/A (ingen claim) | evt. «din egen stemning i chatten» (ALDRI «å vise» — vises ikke for partner) | — | — |
 | COMPLETION | «begge må bekrefte» (vilkar, personvern) | ENSIDIG valg er nok; 24 t grace; deretter sletting | **FALSE** | «Velger én av dere «Vi fant hverandre», avsluttes reisen for dere begge. Begge kan laste ned samtalen som PDF i 24 timer. Deretter slettes alt permanent.» | vilkar §16 (linje 202), personvern §10 (linje 247) | **P1** |
 | PDF | «24 timer … slettes alt» (FAQ) | korrekt + URL-linjer for bilde-meldinger | PARTLY ALIGNED (URL) | copy behold; generator fikses (ingen image-sti) | FAQ, personvern, vilkar + app/api/journey/export-pdf | **P1** |

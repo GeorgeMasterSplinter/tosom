@@ -1,15 +1,15 @@
 {
   "version": "1.0",
-  "updatedAt": "2026-10-27",
-  "commit": "0df1c7f",
+  "updatedAt": "2026-10-29",
+  "commit": "2ab3b8b",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
-    "tests": "27.10 (RT1 FINAL): 2266 passed / 1 skipped (86 av 87 suiter) — bilateral completion (JourneyDecision + match A/B), 72-timers-vindu (config), no_action = journey-end only (User-sletting fjernet fra endJourney + cron), PDF mutual-only/tekst-only. Ny: __tests__/rt1-final-decisions.test.ts (RT-C01–C18) + __tests__/rt1-runtime-truth.test.ts (RT-01–12); integration/s9-deletion.test.ts omskrevet (konti beholdes). [tidl. 26.10 (ACT Legal Prep L1): 1006 passed]",
-    "e2e": "27.10 (RT1 FINAL): 90/90 lokalt (chromium+firefox dashboard/onboarding + Mobile Chrome) — chat/match/matching-journey. WebKit (Mobile Safari) kjørt ikke lokalt: host mangler system-bibliotek (pre-eksisterende; CI er E2E-gaten). [tidl. 07.10 (611a577): 110 passed]",
-    "typecheck": "0 errors (tsc --noEmit, 27.10 RT1 FINAL) utover Prisma-klient (prisma generate kjører i CI)",
-    "lint": "0 warnings (27.10 RT1 FINAL, npm run lint)",
+    "tests": "29.10 (OPPV2): 2299 passed / 1 skipped (88 av 89 suiter) — BKV2 (180 spørsmål, BQ-01–BQ-15) + OPPV2 (135 oppgaver, OT-01–OT-18). [tidl. 28.10 (BKV2-MICRO): 2281 passed / 1 skipped (87 av 88 suiter)]",
+    "e2e": "28.10 (BKV2-SURGICAL): chat.spec.ts 8/8 lokalt (chromium-dashboard; BliKjentPanel i chat). [tidl. 27.10 (RT1 FINAL): 90/90 lokalt (chromium+firefox dashboard/onboarding + Mobile Chrome) — chat/match/matching-journey. WebKit (Mobile Safari) kjørt ikke lokalt: host mangler system-bibliotek (pre-eksisterende; CI er E2E-gaten)]",
+    "typecheck": "0 errors (tsc --noEmit, 29.10 OPPV2 via npm run verify) utover Prisma-klient (prisma generate kjører i CI)",
+    "lint": "0 warnings (29.10 OPPV2, npm run lint)",
     "ciGuards": "7/7 grønne (lang, ai, concept, one-engine, 05:00, cron + lang-guard) — lang-guard utvidet 02.09: ~125 ord, case-insensitiv, skanner __tests__/ + ai/ + rotnivåets .md, SPRAKREF-blokk for bevisste nynorsk-eksempler",
-    "productionBuild": "27.10 (RT1 FINAL): npm run build EXIT=0 [tidl. 26.10 (ACT Legal Prep L1): EXIT=0, 68/68 sider]"
+    "productionBuild": "29.10 (OPPV2): npm run build EXIT=0, Compiled successfully, 68/68 statiske sider — /questions (static), /chat + /chat/[id] OK. [tidl. 28.10 (BKV2-MICRO): EXIT=0, 60 side-ruter (180 ruter inkl. API)]"
   },
   "currentPhaseId": "apen-beta-test",
   "blockers": [
@@ -251,6 +251,30 @@
     ]
   },
   "leveranser": [
+    {
+      "dato": "2026-10-29",
+      "id": "OPPV2",
+      "title": "OPPGAVER V2: 135 oppgaver (9×15) holdt, innhold gjennomsyret — redaksjonell gjenoppbygging",
+      "content": "Redaksjonell gjenoppbygging av Oppgaver-biblioteket (Tosom Oppgaver, 9 kategorier × 15 = 135, struktur + category IDs uendret). 25 ubrettet, 70 omvretta, 30 nye, 10 erstattet; 40 opprinnelige formuleringer fjernet (10 erstattet + 30 fjernet). Tone vasket til LEK/NYSGJERRIGHET/SAMTALE/SMÅ HISTORIER/LAVTERSKEL KONTAKT. Foto-reveal (PHOTO DAY 8) intakt: TASK-056 (utseende) fjernet. Sensitive-content fjernet: TASK-078 (fetish), TASK-045 (såret deg + 'noengang'), TASK-108 (Landsby/Stum di/Dance Monkey), TASK-116 (fødselsår), TASK-125 (ukeend + 'og så døde de'), TASK-128 (Refrengets + sangtekst), nordisk (tynn pels / enrett-toretter / festet stemning / Motiver på ett ord). Kanonisk source app/chat/data/tasks.ts (9 arrays + 2 kategori-kommentarer). OT-01..OT-18 i __tests__/oppgaver-library.test.ts (18/18 PASS). Nye docs: docs/OPPGAVER-INVENTORY-v2.0.md (T2-001..T2-135 + mapping) + docs/OPPGAVER-V2-EDITORIAL-REPORT.md. OppgaverPanel.tsx uendret (fullt data-drevet, ingen hardkodet antallsavhengighet). Bli Kjent V2 FROZEN (questions.ts/BliKjentPanel.tsx/page.tsx SHA-256 uendret). Truth-claims om '135 oppgaver i 9 kategorier' forblir sanne (ingen endring). Verif: OT-01–18 18/18 + BQ-01–15 15/15; full jest 2299 passed/1 skipped (88 av 89 suiter); tsc 0; lint 0; build EXIT=0. IKKE committet — avventer Georges 'kjør'."
+    },
+    {
+      "dato": "2026-10-28",
+      "id": "BKV2-MICRO",
+      "title": "BLI KJENT V2 — MICRO CLEANUP: Q2-087 + Q2-139 korrigert, typo fikset, biblioteket FROZEN",
+      "content": "FINAL MICRO CLEANUP (3 endringer, alt annet låst): (1) Q2-087 → «Hvordan liker du at noen tar opp noe de er uenige med deg i?» (fjernhet det sterkeste near-dup-paret med Q2-027). (2) Q2-139 → «Er det noe ved livet ditt i dag du håper ser helt annerledes ut om ti år?» (fjernet near-dup-paret med Q2-148). (3) Inventory-typo «NÆRHET & INTIMHET» → «NÆRHET & INTIMITET». Canonical source og inventory identiske (180/180 rader, 0 mismatches, script-verifisert). 12×15=180 bevart, 0 eksakte duplikater, 0 normaliserte duplikater, 0 tomme. 34/34 human-godkjente tekster present & unique; alle 16 gamle feil-strenger GONE. Inventory notat + editorial report §7 synket (34 korrigert totalt, 14 rewritten). Verifisering: BQ-01–BQ-15 15/15; npm run verify / lint / build: se health. Biblioteket er nå FROZEN (LIBRARY STATUS: FROZEN) — human review CLOSED. IKKE committet — avventer Georges «kjør»."
+    },
+    {
+      "dato": "2026-10-28",
+      "id": "BKV2-SURGICAL",
+      "title": "BLI KJENT V2 — SURGICAL HUMAN REVIEW: 32 spørsmål korrigert (12×15=180 bevart)",
+      "content": "Final manuell lesing av alle 180 (George + Copilot) → 32 surgical korreksjoner, ingen andre endringer: Q2-027, -028, -029, -030, -036, -049, -057, -059, -090, -104, -106, -107, -110, -113, -122, -132, -134, -145, -146, -148, -150, -169–-174, -176–-180. Kategori-ID-er/rekkefølge/antall uendret (12×15=180; 0 eksakte duplikater; 0 tomme). Runden fjernet grammatikkfeil («et klem», «mest trygt», «hva var de feil i»), formelle/terapeutiske formuleringer («krenket i en relasjon», «intimt øyeblikk», «favorittbeskjeftigelse»), AI-poetikk («reiser deg for», «vil overraske deg med deg selv») og fantompar-antagelser i Moden («hvis dere bor sammen», «ta dere tid til»). Inventory v2.0 synket (Q2-tekster identiske med source; 13 «rewritten», 2 trivielle beholdt kilde-type, 17 «Nytt»). Editorial report §7 «Final human surgical review» lagt til. Verifisering: BQ-01–BQ-15 15/15; npm run verify 2281 passed/1 skipped; lint 0 warnings; build EXIT=0 (68/68 sider); chat E2E 8/8 (chromium-dashboard); preview /questions (12 kategorier × «15 spørsmål», generering OK, mobil OK) + BliKjentPanel (12 kategorier, 15 spørsmål/kategori, send virker, ✓ brukt-markør OK, mobil OK). «Hva er noe du...» 22 % → 18,9 %. IKKE committet — avventer Georges «kjør»."
+    },
+    {
+      "dato": "2026-10-28",
+      "id": "BKV2",
+      "title": "BLI KJENT LIBRARY V2: 240 → 180 spørsmål (12×15), redaksjonell gjenoppbygging",
+      "content": "Redaksjonell gjenoppbygging av Bli-kjent-biblioteket etter fem George-review-runder: 12×20=240 → 12×15=180. 55 ubrettet, 40 omvrett, 84 nye, 1 erstatning (Q-220), 145 fjernet (inkl. Q-108 overgrepsspørsmålet — fjernet, ingen erstatning). Terapistemmen fjernet (sårbar/tillate deg selv/kropp og sinn/serien 'gjør deg mest X'). Moden-kategorien: 20 mekaniske 'lurer på om'-linjer → 15 naturlige relasjonsspørsmål. BQ-01..BQ-15 i __tests__/bli-kjent-library.test.ts (15/15 PASS). Truth-claims oppdatert: questions.ts header, questions/page.tsx (8→12 kategorier), BliKjentPanel.tsx, reisen/page.tsx (240→180), ai/system_prompt.md §3.3, RUNTIME-DOCUMENTATION-TRUTH-PLAN (3 linjer). Nye docs: docs/BLI-KJENT-INVENTORY-v2.0.md (Q2-001..Q2-180 + mapping) + docs/BLI-KJENT-V2-EDITORIAL-REPORT.md. public/llms.txt uendret (ingen tellingsclaim). Kjørbar, IKKE committet — avventer George review + 'kjør'."
+    },
     {
       "dato": "2026-10-27",
       "id": "RT1-FINAL",
@@ -644,7 +668,7 @@
     "navigasjon": "UniversalMenu er levende meny (Hvorfor/Slik fungerer det/Reisen/Priser). Header.tsx og GlobalHeaderWrapper.tsx var død kode — slettet.",
     "glemtPassord": "POST /api/auth/request-reset → e-post med lenke til /nytt-passord?email=…&token=… (1 time, single-use) → POST /api/auth/reset-password setter passord og sletter øvrige sesjoner (PL-07)"
   },
-  "nextAction": "27.10 (RT1 FINAL DEPLOY) — commit+push → full CI → CD (prisma migrate deploy mot prod → Vercel READY → health). RT1 i produksjon: bilateral completion, 72-timers-vindu, no_action = journey-end only (konto slettes ALDRI ved reiseslutt), PDF mutual-only/tekst-only, public truth aligned, 349 fremtidig plan, 249 DEFERRED. IDENTITY-PLAN: DEFERRED (IKKE committet — docs/IDENTITY-TRUST-PLAN-v1.0.md ubehandlet i working tree). Lawyer review fortsatt PENDING (faktum oppdatert i docs). IKKE invitere brukere automatisk.",
+  "nextAction": "28.10 (BKV2-MICRO) — FINAL MICRO CLEANUP komplett: Q2-087 + Q2-139 korrigert + inventory-typo (INTIMHET→INTIMITET). 12×15=180 bevart, 0 eksakte duplikater; BQ-01–BQ-15 15/15; verify/lint/build: se health. Biblioteket er FROZEN (human review CLOSED). IKKE committet — vent på Georges «kjør» (commit). Deretter: RT1 FINAL DEPLOY (commit+push → full CI → CD) og B1-B7 plan fra RUNTIME-DOCUMENTATION-TRUTH-PLAN. IDENTITY-PLAN: DEFERRED. Lawyer review fortsatt PENDING. IKKE invitere brukere automatisk.",
   "gjenstaarFoerBeta": [
     "Backup: B5.7 gjenopprettingstest dokumentert + prod-backup-kavitet bekreftet (managed DB)",
     "Sentry: SENTRY_DSN verifisert satt i Vercel (status UNKNOWN fra repo)",
@@ -662,6 +686,9 @@
     "Kostnadsplan: Vercel Pro/Fluid, Pusher/Resend betalte tier, R2-lagring"
   ],
   "done": [
+    "28.10 (BKV2-MICRO): BLI KJENT V2 FINAL MICRO CLEANUP — Q2-087 → «Hvordan liker du at noen tar opp noe de er uenige med deg i?»; Q2-139 → «Er det noe ved livet ditt i dag du håper ser helt annerledes ut om ti år?»; inventory-typo INTIMHET→INTIMITET. 12×15=180 bevart, 0 eksakte duplikater, 34/34 human-tekster present & unique, 16 gamle feil-strenger GONE, inventory 180/180 identiske med source (14 rewritten). BQ-01–BQ-15 15/15 · verify/lint/build: se health. Biblioteket FROZEN (LIBRARY STATUS: FROZEN). Commit: IKKE (avventer George «kjør»)",
+    "28.10 (BKV2-SURGICAL): BLI KJENT V2 surgical human review — 32 spørsmål korrigert (Q2-027, -028, -029, -030, -036, -049, -057, -059, -090, -104, -106, -107, -110, -113, -122, -132, -134, -145, -146, -148, -150, -169–-174, -176–-180), 12×15=180 bevart, 0 eksakte duplikater, 0 tomme. Inventory v2.0 + editorial report synket. BQ-01–BQ-15 15/15 · verify 2281/1 skip · lint 0 · build EXIT=0 (68/68) · chat E2E 8/8 · preview OK (desktop + mobile). «Hva er noe du...» 22 % → 18,9 %. Commit: IKKE (avventer George «kjør»)",
+    "28.10 (ACT BKV2): BLI KJENT LIBRARY V2 — 240 (12×20) → 180 (12×15) spørsmål. Redaksjonell gjenoppbygging etter 5 George-review-runder: 55 ubrettet / 40 omvrett / 84 nye / 1 erstatning (Q-220) / 145 fjernet (inkl. Q-108 overgrepsspørsmålet — fjernet, ingen erstatning). Terapistemmen borte fra spørsmålene; 'Hva er noe du...' 56 % → 22 %. Moden: 20 'lurer på om'-linjer → 15 naturlige relasjonsspørsmål. BQ-01–BQ-15 (__tests__/bli-kjent-library.test.ts) 15/15 PASS. Truth-claims: questions.ts header, questions/page.tsx (8→12), BliKjentPanel.tsx, reisen (240→180), ai/system_prompt.md §3.3, RUNTIME-DOC-TRUTH (3 linjer). Nye docs: BLI-KJENT-INVENTORY-v2.0.md + BLI-KJENT-V2-EDITORIAL-REPORT.md. verify 2281/1 skip · lint 0 · build EXIT=0. Commit: IKKE (avventer George review + 'kjør')",
     "26.10: «Se hvorfor» (/motpol hero) + «Lær mer» (landing) — bakgrunnen byttet fra svart (dark-variant, rgba(5,10,15,0.95)) til samme glass som «Logg inn»-knappen i menyen (rgba(255,255,255,0.04)) via style-overstyring på ToSomButton; gull-rand og glass-blur fra dark-varianten beholdes. ToSomButton-komponenten uendret; den tredje dark-knappen «Lær mer om metoden» nederst på /motpol er uendret (venter Georges avgjørelse). Verifisert: tsc 0 · jest 849 passed / 1 skipped (81 av 82 suiter) · verify:lang grønn. Ikke commited (venter Georges commit).",
     "24.10: /motpol layout per George — «Start reisen»-knappen fjernet fra hero (CTA nederst uendret); seksjonene 2–13 i 2-kolonnes grid, 6 rader, på lg (laptop/PC), én kolonne på mobil/nettbrett; «Se hvorfor»-anker (#hva-er-motpol) beholdt med scroll-mt-24 under fixed-menyen; seksjon 12s indre liste-grid stables til én kolonne på lg (halv bredde). DOM-rekkefølgen 2→13, all copy, PF/PH/OB/MC-typer og ComparisonRows uendret. Verifisert: tsc 0 · jest 716 passed / 1 skipped (74 av 75 suiter) · verify:lang grønn. Ikke commited (venter Georges commit).",
     "15.10: Forretningsadresse publisert — TOSOM AS, Henrik Ibsens gate 90, 0255 Oslo (registrert i Foretaksregisteret 15.10, ref. 2026 0075 4800 82; Brønnøysund-bekreftelse mottatt). config/legal.ts: COMPANY.address fylt (renderes automatisk i vilkår/footer/kontakt), TERMS_VERSION + PRIVACY_VERSION → 2026-10-15 (eksisterende brukere får rolig om-aksept). G-07-adressekravet avkrysset i begge sjekklistene + kontrollplan post 9. Privat adresse (daglig leder) er ALDRI skrevet i repoet.",

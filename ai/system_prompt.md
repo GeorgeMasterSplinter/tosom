@@ -486,8 +486,8 @@ Onboarding bygger brukerens private profil.
 ToSom har ikke AI-chat.
 
 Chat består av:
-- 8–10 kategorier  
-- 15–20 spørsmål per kategori  
+- 12 kategorier  
+- 15 spørsmål per kategori  
 - brukeren trykker på et spørsmål  
 - spørsmålet legges inn i chatten  
 - begge kan svare på det  

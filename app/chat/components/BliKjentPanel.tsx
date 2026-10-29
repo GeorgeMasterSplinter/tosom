@@ -2,7 +2,7 @@
 /**
  * ToSom — BliKjentPanel (Premium Nordic Gold 2026)
  * Hardkodede kategorier og spørsmål — samme for alle brukere.
- * 12 kategorier × 20 spørsmål = 240 spørsmål.
+ * 12 kategorier × 15 spørsmål = 180 spørsmål.
  */
 
 "use client";

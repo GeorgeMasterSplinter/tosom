@@ -204,7 +204,7 @@ describe('PL-08 (K-3): Ubesvarte skalaspørsmål gir ikke høy resonans', () => 
   it('validateOnboardingStep avviser skalasteg med manglende svar', () => {
     // Steg 1 (Personlighet V2): ingen skalasvar + gyldig selfDesc.
     const empty = validateOnboardingStep(1, { selfDesc: 'Jeg liker natur og gode samtaler.' });
-    expect(empty.errors.some((e) => e.message === 'Svar på alle påstandene — det finnes ingen fasit.')).toBe(true);
+    expect(empty.errors.some((e) => e.message === 'Svar på alle påstandene.')).toBe(true);
 
     // Alle 15 V2-items svart (1–5) → ingen feil.
     const allAnswered: Record<string, unknown> = { selfDesc: 'Jeg liker natur og gode samtaler.' };
@@ -215,7 +215,7 @@ describe('PL-08 (K-3): Ubesvarte skalaspørsmål gir ikke høy resonans', () => 
     // Steg 8 (COMMUNICATION): to av seks items svart → avvises.
     const partial: Record<string, unknown> = { comm1: 4, comm2: 2 };
     const step8 = validateOnboardingStep(8, partial);
-    expect(step8.errors.some((e) => e.message === 'Svar på alle påstandene — det finnes ingen fasit.')).toBe(true);
+    expect(step8.errors.some((e) => e.message === 'Svar på alle påstandene.')).toBe(true);
 
     // Alle COMMUNICATION-items svart → ingen feil.
     const all8: Record<string, unknown> = {};

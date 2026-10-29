@@ -16,7 +16,9 @@ import {
 } from '@/lib/validation/onboarding-steps';
 import { ERQ6, ALL_ITEMS } from '@/lib/psychometrics/instruments';
 
-const SCALE_ERROR = 'Svar på alle påstandene — det finnes ingen fasit.';
+// LANGUAGE & CLARITY ACT O1: meldingen er forkortet (repetisjonen
+// «det finnes ingen fasit» beholdes kun i steg 2 skalaintro).
+const SCALE_ERROR = 'Svar på alle påstandene.';
 
 /** Alle aktive skalasvar (1–5) — fullt datagrunnlag for skalastegene. */
 function allScaleAnswers(): Record<string, number> {

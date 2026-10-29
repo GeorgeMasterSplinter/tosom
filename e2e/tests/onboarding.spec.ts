@@ -272,6 +272,73 @@ test.describe('Onboarding Flow (13-stegs)', () => {
     await clickNext(page);
     await expectStep(page, 2);
   });
+
+  // -------------------------------------------------------------------------
+  // Steg 1 (Grunnprofil): aldersspenn 21–99+ (LANGUAGE & CLARITY ACT, REV 1.2)
+  // 99+ = ingen øvre aldersgrense (lagres som null)
+  // -------------------------------------------------------------------------
+
+  test('skal tillate eget endelig aldersspenn (min/max) på steg 1', async ({ page }) => {
+    await page.goto('/onboarding');
+    await expectStep(page, 1, 'Grunnprofil');
+
+    await page.getByTestId('ob-age-pref-min').fill('25');
+    await page.getByTestId('ob-age-pref-max').fill('45');
+    await expect(page.getByTestId('ob-age-pref-min')).toHaveValue('25');
+    await expect(page.getByTestId('ob-age-pref-max')).toHaveValue('45');
+
+    // 99+ er ikke valgt
+    await expect(page.getByTestId('ob-age-pref-99')).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  test('skal velge 99+ som maks alder på steg 1 (21–99+)', async ({ page }) => {
+    await page.goto('/onboarding');
+    await expectStep(page, 1, 'Grunnprofil');
+
+    await page.getByTestId('ob-age-pref-99').click();
+    await expect(page.getByTestId('ob-age-pref-99')).toHaveAttribute('aria-pressed', 'true');
+    // Feltet vises tomt — 99+ er åpen øvre grense (null), ikke tallet 99.
+    await expect(page.getByTestId('ob-age-pref-max')).toHaveValue('');
+  });
+
+  test('skal velge eget minimum + 99+ (35–99+)', async ({ page }) => {
+    await page.goto('/onboarding');
+    await expectStep(page, 1, 'Grunnprofil');
+
+    await page.getByTestId('ob-age-pref-min').fill('35');
+    await page.getByTestId('ob-age-pref-99').click();
+    await expect(page.getByTestId('ob-age-pref-min')).toHaveValue('35');
+    await expect(page.getByTestId('ob-age-pref-99')).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.getByTestId('ob-age-pref-max')).toHaveValue('');
+  });
+
+  test('skal beholde 99+ etter autosave og reload (save/resume)', async ({ page }) => {
+    // Isolasjon: fjern server-draft fra tidligere tests (delte E2E-bruker) —
+    // ellers kan asynkron draft-restaurering race med chip-klikket.
+    await page.request.delete('/api/onboarding/draft');
+    await page.goto('/onboarding');
+    await expectStep(page, 1, 'Grunnprofil');
+
+    await page.getByTestId('ob-age-pref-99').click();
+    await expect(page.getByTestId('ob-age-pref-99')).toHaveAttribute('aria-pressed', 'true');
+
+    // Vent deterministisk på autosave: draft må inneholde eksplisitt null.
+    await expect
+      .poll(async () => {
+        const raw = await page.evaluate(
+          () => sessionStorage.getItem('tosom_onboarding_draft'),
+        );
+        if (!raw) return undefined;
+        return (JSON.parse(raw) as { agePrefMax?: unknown })['agePrefMax'];
+      })
+      .toBe(null);
+
+    // Oppfrisk siden — 99+ (null) må restaureres, ikke 99/40/blank.
+    await page.reload();
+    await expect.poll(
+      async () => page.getByTestId('ob-age-pref-99').getAttribute('aria-pressed'),
+    ).toBe('true');
+  });
   // -------------------------------------------------------------------------
   // Autosave (sessionStorage siden PL-17)
   // -------------------------------------------------------------------------
@@ -342,10 +409,19 @@ test.describe('Onboarding Flow (13-stegs)', () => {
   test('skal fullføre hele 13-stegs onboarding-flyten', async ({ page }) => {
     // 13 steg + ~35 felt + to API-kall — gi margin på sakte maskiner.
     test.setTimeout(180_000);
+    // Isolasjon: fjern server-draft fra tidligere tests (delte E2E-bruker) —
+    // ellers kan asynkron draft-restaurering overskrive 99+-valget (null).
+    await page.request.delete('/api/onboarding/draft');
     await page.goto('/onboarding');
 
     const fillers: Array<(p: Page) => Promise<void>> = [
-      fillStep1, fillStep2, fillStep3, fillStep4,
+      // REV 1.2: fullflyten tester 21–99+ (åpen øvre grense) — oppsummeringen
+      // må vise «21–99+» på steg 12.
+      async (p: Page) => {
+        await fillStep1(p);
+        await p.getByTestId('ob-age-pref-99').click();
+      },
+      fillStep2, fillStep3, fillStep4,
       fillStep5, fillStep6, fillStep7, fillStep8,
       answerScales, // Steg 9 (humor): COMMUNICATION-skala (PL-08)
       fillStep10, fillStep11,
@@ -356,8 +432,9 @@ test.describe('Onboarding Flow (13-stegs)', () => {
       await clickNext(page);
     }
 
-    // Steg 12 (Oppsummering): fortsett
-    await expectStep(page, 12, 'Oppsummering');
+    // Steg 12 (Oppsummering): aldersspennet er 21–99+ (REV 1.2)
+    await expectStep(page, 12, 'Se over før du går videre');
+    await expect(page.getByText('21–99+')).toBeVisible();
     await clickNext(page);
 
     // Siste steg: «Start reisen» lagrer profilen og stiller brukeren i køen.

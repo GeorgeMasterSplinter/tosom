@@ -89,6 +89,9 @@ const EXTRA_PATTERNS = ["ver vennleg", "ver glad"];
 // (verdien ligger allerede i profiler i databasen).
 const ALLOWED_LINE = [
   /value:\s*'roleg'/,
+  // ACT O1: LABELS-kartet i oppsummeringen bruker den lagrede
+  // enum-verdien «roleg» som nøkkel (lagret verdi endres aldri).
+  /['"]?roleg['"]?\s*:/,
 ];
 
 // Skanningsområde: bokmål gjelder overalt — kode, scripts, e2e og docs.

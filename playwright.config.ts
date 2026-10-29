@@ -59,6 +59,14 @@ export default defineConfig({
       testMatch: [/.*onboarding\.spec\.ts$/],
       use: { ...devices['Desktop Firefox'], storageState: onboardingState },
     },
+    {
+      // LANGUAGE & CLARITY ACT O1: mobil-preview av hele onboarding-flyten
+      // (Pixel 5). Kjøreresekvens er workers:1 + resetOnboardingUser i
+      // beforeAll, så en tredje onboarding-prosjekt er trygt.
+      name: 'mobile-chrome-onboarding',
+      testMatch: [/.*onboarding\.spec\.ts$/],
+      use: { ...devices['Pixel 5'], storageState: onboardingState },
+    },
 
     // ─── Mobile ───
     {

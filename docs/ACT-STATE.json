@@ -1,15 +1,15 @@
 {
   "version": "1.0",
   "updatedAt": "2026-10-29",
-  "commit": "acc0214",
+  "commit": "0a3aca8",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
-    "tests": "29.10 (BRAND-HEADER): 2304 passed / 1 skipped (89 av 90 suiter) — BRAND-01–05 (header brand guards: to-sirkler + wordmark «Tosom» = én lenke til /). [tidl. 29.10 (OPPV2): 2299 passed / 1 skipped (88 av 89 suiter) — BKV2 (180 spørsmål, BQ-01–BQ-15) + OPPV2 (135 oppgaver, OT-01–OT-18).]",
-    "e2e": "28.10 (BKV2-SURGICAL): chat.spec.ts 8/8 lokalt (chromium-dashboard; BliKjentPanel i chat). [tidl. 27.10 (RT1 FINAL): 90/90 lokalt (chromium+firefox dashboard/onboarding + Mobile Chrome) — chat/match/matching-journey. WebKit (Mobile Safari) kjørt ikke lokalt: host mangler system-bibliotek (pre-eksisterende; CI er E2E-gaten)]",
-    "typecheck": "0 errors (tsc --noEmit, 29.10 BRAND-HEADER via npm run verify) utover Prisma-klient (prisma generate kjører i CI)",
-    "lint": "0 warnings (29.10 BRAND-HEADER, npm run lint)",
-    "ciGuards": "7/7 grønne (lang, ai, concept, one-engine, 05:00, cron + lang-guard) — lang-guard utvidet 02.09: ~125 ord, case-insensitiv, skanner __tests__/ + ai/ + rotnivåets .md, SPRAKREF-blokk for bevisste nynorsk-eksempler",
-    "productionBuild": "29.10 (BRAND-HEADER): npm run build EXIT=0, Compiled successfully. [tidl. 29.10 (OPPV2): EXIT=0, 68/68 statiske sider — /questions (static), /chat + /chat/[id] OK.]"
+    "tests": "29.10 (O1+AGE99): 2338 passed / 1 skipped (91 av 92 suiter) — OCL-01–21 (onboarding language & clarity guards) + AGE99-01–13 (99+ open-ended) + consent/dealbreaker/matching/prefill/resume regression. [tidl. 29.10 (BRAND-HEADER): 2304 passed / 1 skipped (89 av 90 suiter) — BRAND-01–05.]",
+    "e2e": "29.10 (O1+AGE99): 42/42 lokalt — chromium-onboarding + firefox-onboarding + mobile-chrome-onboarding (Pixel 5), 14 test × 3 (default 21–40, finite 25–45, 21–99+, 35–99+, save/reload/resume 99+, hard boundary, religion/livssyn, summary edit, full 13-step + queue, validation). WebKit kjører kun i CI (host-mangler system-bibliotek). [tidl. 28.10 (BKV2-SURGICAL): chat.spec.ts 8/8 lokalt.]",
+    "typecheck": "0 errors (29.10 O1+AGE99 via npm run verify) utover Prisma-klient (prisma generate kjører i CI)",
+    "lint": "0 warnings (29.10 O1+AGE99, npm run lint)",
+    "ciGuards": "7/7 grønne (lang, ai, concept, one-engine, 05:00, cron + lang-guard) — lang-guard tillater «roleg» som LABELS-nøkkel i oppsummeringen (lagret enum-verdi endres aldri).",
+    "productionBuild": "29.10 (O1+AGE99): npm run build EXIT=0, Compiled successfully, 68/68 statiske sider. [tidl. 29.10 (BRAND-HEADER): EXIT=0.]"
   },
   "currentPhaseId": "apen-beta-test",
   "blockers": [
@@ -668,7 +668,7 @@
     "navigasjon": "UniversalMenu er levende meny (Hvorfor/Slik fungerer det/Reisen/Priser). Header.tsx og GlobalHeaderWrapper.tsx var død kode — slettet.",
     "glemtPassord": "POST /api/auth/request-reset → e-post med lenke til /nytt-passord?email=…&token=… (1 time, single-use) → POST /api/auth/reset-password setter passord og sletter øvrige sesjoner (PL-07)"
   },
-  "nextAction": "28.10 (BKV2-MICRO) — FINAL MICRO CLEANUP komplett: Q2-087 + Q2-139 korrigert + inventory-typo (INTIMHET→INTIMITET). 12×15=180 bevart, 0 eksakte duplikater; BQ-01–BQ-15 15/15; verify/lint/build: se health. Biblioteket er FROZEN (human review CLOSED). IKKE committet — vent på Georges «kjør» (commit). Deretter: RT1 FINAL DEPLOY (commit+push → full CI → CD) og B1-B7 plan fra RUNTIME-DOCUMENTATION-TRUTH-PLAN. IDENTITY-PLAN: DEFERRED. Lawyer review fortsatt PENDING. IKKE invitere brukere automatisk.",
+  "nextAction": "29.10 (O1+AGE99 RELEASE): Onboarding Language & Clarity ACT O1 + REV 1.2 (99+ = open-ended, agePrefMax=null) committet i 3 logiske commits og pushet → full CI → CD (Vercel git-integration) → live smoke → ONBOARDING LANGUAGE FROZEN. Age: 21–99+ (99+ = ingen øvre match-alder); default 21–40 synlig/redigerbart; finite 21–98. Matching uendret (kun approved null-dokumentasjon i dealbreaker.ts). Consent uendret. Religion/livssyn-mekanikk uendret. Bli Kjent V2 + Oppgaver V2 FROZEN (hasher låst). Lawyer review: PENDING (religion/livssyn hard-boundary, barn, «vises ikke offentlig»). IKKE invitere brukere automatisk. IDENTITY-PLAN: DEFERRED.",
   "gjenstaarFoerBeta": [
     "Backup: B5.7 gjenopprettingstest dokumentert + prod-backup-kavitet bekreftet (managed DB)",
     "Sentry: SENTRY_DSN verifisert satt i Vercel (status UNKNOWN fra repo)",
@@ -706,7 +706,8 @@
     "24.10 (ACT C1): Cookie/Analytics truth alignment commit — Speed Insights fjernet (komponent + dep), /cookies + /personvern oppdatert mot faktisk runtime, CSRF Secure (prod), PubNub-CSP fjernet, privacy-guard CA-01–CA-15 + ny auditfil; verify/lint/build grønn",
     "25.10 (ACT P1A): Free Beta Truth Alignment — alle publicke sider i tråd med gratis beta (5 000 personer, 349 kr kun som plan, ingen aktive Vipps-claims); PRICING = én kilde (landing/priser/faq/betaling/vilkar); ny __tests__/free-beta-truth.test.tsx (FB-01…FB-19); deploy/payments.md 10 000→5 000; PLAN-dok + checklista med D1–D7 statusblokk. verify 838/1 skip · lint 0 · build EXIT=0. Commit: YES; push/deploy: NO",
     "25.10 (ACT J1): Journey forkortet 30→14 dager — bilde-lås 15→8, start-vindu 7 dager, 4 faser; kanonisk konfig config/journey.ts (re-eksportert fra engine); 82 filer (API/logic/UI/tests) + prisma-kommentar; matching/weights/MIN_SCORE/kvote/Vipps/payment/schema-struktur/auth/identity uendret; aktive prod-journey-kontoer = TEST/DEMO (0 ekte brukere påvirket), ingen migrasjon; IDENTITY-TRUST-PLAN utelatt (separat spor). verify 838/1 skip · lint 0 · build EXIT=0 (68/68) · integrasjon 5/5. Commit: YES; push/deploy: NO",
-    "26.10 (ACT Legal Prep L1): /personvern + /vilkar truth-aligned mot faktisk runtime — absolutte claims fjernet (deler aldri / EU-EØS / SCC på plass / 3-år-rapport), datakategorier kartlagt mot prisma (inkl. art. 9 religion/livssyn), matching faktuelt beskrevet uten juridisk konklusjon, retention kun kodeverifisert fakta, aktive leverandører (Upstash IKKE listet — ikke verifiserbar fra repo), LEGAL-01..10 guards, DPIA produktfakta rettet 30→14 (risiko/konklusjoner uendret), jurist-dokumentasjon LEGAL-PAGES-PRELAWYER-REVIEW + REVIEW-PACKAGE (Q11 = art. 9-utbred). Ingen juridisk konklusjon tatt; Paid V1 kjøpsvilkår deferred; IDENTITY-TRUST-PLAN utelatt (separat spor). verify 1006/1 skip · lint 0 · build EXIT=0. Methods Micro-Final = commit A ef85a91"
+    "26.10 (ACT Legal Prep L1): /personvern + /vilkar truth-aligned mot faktisk runtime — absolutte claims fjernet (deler aldri / EU-EØS / SCC på plass / 3-år-rapport), datakategorier kartlagt mot prisma (inkl. art. 9 religion/livssyn), matching faktuelt beskrevet uten juridisk konklusjon, retention kun kodeverifisert fakta, aktive leverandører (Upstash IKKE listet — ikke verifiserbar fra repo), LEGAL-01..10 guards, DPIA produktfakta rettet 30→14 (risiko/konklusjoner uendret), jurist-dokumentasjon LEGAL-PAGES-PRELAWYER-REVIEW + REVIEW-PACKAGE (Q11 = art. 9-utbred). Ingen juridisk konklusjon tatt; Paid V1 kjøpsvilkår deferred; IDENTITY-TRUST-PLAN utelatt (separat spor). verify 1006/1 skip · lint 0 · build EXIT=0. Methods Micro-Final = commit A ef85a91",
+    "29.10 (O1+AGE99): Onboarding Language & Clarity ACT O1 (13 steg, 123 inputs / 71 required / 52 optional uendret) + REV 1.2: 99+ = open-ended maximum (agePrefMax=null gjennom UI→state→validation→setup→prefill→resume→summary→matching), finite 21–98, default 21–40 synlig/redigerbart («Vi har foreslått et utgangspunkt»). Oppsummering redesignet («Se over før du går videre», seksjoner A–F, ærlig profilstatus, «Endre» via goToStep). Hard-boundary-forklaring kun der runtime faktisk blokkerer; neverCrossBoundary IKKE dealbreaker; «Må stemme»-terminologi + konsekvens «Dette er en hard grense: hvis dere ikke passer sammen her, blir dere ikke koblet.» ERQ: «Følelser i hverdagen». Queue: natt til lørdag, ingen match-garanti. Brokne fraser borte (Sparar/Serîg/Hva grense/kruses/Romslighet i kjønnsrelaterte roller). OCL-01–21 + AGE99-01–13 + Playwright desktop+mobil 42/42 + CI. FROZEN etter deploy. LAWYER REVIEW: PENDING (religion/livssyn, barn, «vises ikke offentlig»)."
   ],
   "blocked": []
 }

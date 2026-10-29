@@ -99,7 +99,7 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
       {/* ARBEID */}
       {/* ────────────────────────────────────── */}
       <OnboardingSelectGrid
-        label="Hva jobber du med? *"
+        label="Hva jobber du med?"
         mikroguiding="Velg det som passer best for deg nå"
         options={[
           { value: 'anstatt-fulltid', label: 'Ansett på fulltid', icon: '💼' },
@@ -126,7 +126,7 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
       {/* BOSETTING */}
       {/* ────────────────────────────────────── */}
       <OnboardingSelectGrid
-        label="Hva bor du i? *"
+        label="Hva bor du i?"
         options={[
           { value: 'leilighet', label: 'Leilighet', icon: '🏢' },
           { value: 'hus', label: 'Hus (eiendom)', icon: '🏡' },
@@ -146,7 +146,7 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
 
       <OnboardingSelectGrid
-        label="Hvor mange bor det i hjemmet? *"
+        label="Hvor mange bor det i hjemmet?"
         mikroguiding="Inkluder deg selv i tellingen"
         options={[
           { value: '1', label: 'Jeg alene', icon: '🧍' },
@@ -166,7 +166,7 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
       {/* ØKONOMI */}
       {/* ────────────────────────────────────── */}
       <OnboardingSelectGrid
-        label="Økonomisk stabilitet? *"
+        label="Økonomisk stabilitet?"
         mikroguiding="Ingen detaljer trengs — bare hva som passer best"
         options={[
           { value: 'stabil', label: 'Stabil økonomi', icon: '💰' },
@@ -188,6 +188,14 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
       {/* HVERDAG (LIVSSTIL-2026, D-2/D-4) — alt valgfritt */}
       {/* ────────────────────────────────────── */}
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
+
+      {/* ÉN gang her: hva viktighetsnivåene betyr — første sted Valgvikt
+          vises. «Må stemme» er en hard grense i matchingmotoren (D-4). */}
+      <p className="text-[13px] leading-relaxed mb-4" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+        På disse kan du også si hvor viktig svaret er for deg. Velger du
+        «Må stemme», er det en hard grense: passer dere ikke sammen der,
+        blir dere ikke koblet.
+      </p>
 
       <div>
         <OnboardingSelectGrid
@@ -333,7 +341,7 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
 
       <OnboardingSelectGrid
         label="Hvordan starter en typisk dag for deg?"
-        mikroguiding="Hverdagsrytmen din — ingen rette svar."
+        mikroguiding="Velg det som kjennes mest kjente."
         options={[
           { value: 'i-ro', label: 'I ro og mak', icon: '🌅', description: 'Tid til kaffe før dagen tar til' },
           { value: 'rett-i-det', label: 'Rett i det', icon: '⚡', description: 'Ute av døra uten varsel' },
@@ -345,10 +353,6 @@ export default function Step2Livssituasjon({ data, onChange, onBack, onNext }: P
         testId="ob-daily-routine"
       />
 
-      {/* Trust text */}
-      <p className="text-center text-xs mt-8" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
-        Svarene dine hjelper oss å finne noen som passer din hverdagsrytme.
-      </p>
 
       {/* Knapper — Back + CTA */}
       <div className="mt-8 space-y-4">

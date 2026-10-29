@@ -17,7 +17,7 @@ const validate = (d: Record<string, unknown>): ValidationError[] => {
   // kort fritekst. Kun ERQ-6-skalaen må svares.
   // PL-08b (D-1): skalasvarene er påkrevd per steg.
   const missing = missingScaleItems(d, ERQ6);
-  if (missing.length > 0) e.push({ field: missing[0], message: 'Svar på alle påstandene — det finnes ingen fasit.' });
+  if (missing.length > 0) e.push({ field: missing[0], message: 'Svar på alle påstandene.' });
   return e;
 };
 export default function Step8ModenNysgjerrighet({ data, onChange, onBack, onNext }: Props) {
@@ -38,7 +38,7 @@ export default function Step8ModenNysgjerrighet({ data, onChange, onBack, onNext
       accentColor={OB.section.boundaries}>
       {errors.length > 0 && (<div className="mb-8 rounded-xl p-4 border" style={{ background: 'rgba(255,77,77,0.08)', borderColor: 'rgba(255,77,77,0.2)' }}><p className="text-sm font-medium mb-2" style={{ color: '#FF4D4D' }}>Vennligst fyll ut alle påkrevde felt:</p><ul className="text-sm space-y-1" style={{ color: 'rgba(255,255,255,0.7)' }}>{errors.map((x) => (<li key={x.field}>• {x.message}</li>))}</ul></div>)}
       {/* LIVSSTIL-2026 (D-5): 4 felt konvertert til valg-grid; boundary valgfri */}
-      <OnboardingSelectGrid label={`${labels['intimacySafety'].replace('?', '')} *`} mikroguiding="Velg det som gjør at du kan senke vaktene." options={[
+      <OnboardingSelectGrid label={labels['intimacySafety']} mikroguiding="Velg det som gjør at du kan senke vaktene." options={[
         { value: 'tydelighet', label: 'Tydelighet', icon: '💎' },
         { value: 'langsomt-tempo', label: 'Langsommere tempo', icon: '🐢' },
         { value: 'ord-for-naerhet', label: 'Ord før nærhet', icon: '💬' },
@@ -68,10 +68,13 @@ export default function Step8ModenNysgjerrighet({ data, onChange, onBack, onNext
         { value: 'noen-uker', label: 'Noen uker', icon: '🗓️' },
         { value: 'eget-tempo', label: 'Mitt eget tempo', icon: '🐢' },
       ]} selectedValue={getValue('needsTime', '')} onChange={(v) => onChange('needsTime', v)} columns={2} testId="ob-needs-time" />
-      {/* FORSKNINGSMOTOR F-5 — ERQ-6 (emotiv romslighet) */}
+      {/* Følelser i hverdagen — spørsmålene handler om hvordan man vanligvis
+          håndterer og uttrykker følelser (internen kilde: ERQ-6, usynlig
+          for brukeren). */}
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '28px', marginBottom: '8px' }} />
       <p className="text-sm mb-4" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
-        Romslighet i kjønnsrelaterte roller. Svar det som kjennes mest riktig.
+        Følelser i hverdagen. Disse spørsmålene handler om hvordan du vanligvis
+        forholder deg til og uttrykker følelser.
       </p>
       <div className="space-y-3">
         {ERQ6.map((item) => (
@@ -84,7 +87,6 @@ export default function Step8ModenNysgjerrighet({ data, onChange, onBack, onNext
           />
         ))}
       </div>
-      <p className="text-center text-xs mt-8" style={{ color: 'rgba(255,255,255,0.6)' }}>Modne svar viser hvem du er — del bare det du kjenner deg trygg med.</p>
       <div className="mt-8 space-y-4"><BackButton onClick={onBack} /><PremiumCTAButton onClick={handleNext} label={!canProceed ? 'Fyll ut alle påkrevde felt' : 'Fortsett til neste steg'} disabled={!canProceed} fullWidth /></div>
     </OnboardingSlide>
   );

@@ -31,7 +31,7 @@ export default function Step10StartReisen({ step, goToStep, loading, onStart }: 
     <OnboardingSlide
       title="Start reisen"
       subtitle="Du er klar. Nå stiller du deg i kø — vi leter rolig og presist, basert på det du har delt."
-      guidingText="Trykk på «Start reisen» så stiller vi deg i køen. Natt til lørdag forsøker vi å finne noen som passer deg."
+      guidingText="Når du trykker «Start reisen», lagres profilen og du stilles i kø. Vi kobler natt til lørdag — og hvis ingen passer godt nok, venter du til neste runde."
       slideIndex={12}
       totalSlides={13}
       accentColor={OB.section.summary}
@@ -60,7 +60,7 @@ export default function Step10StartReisen({ step, goToStep, loading, onStart }: 
       {/* CTA med loading-state */}
       <PremiumCTAButton
         onClick={onStart}
-        label={loading ? 'Stiller deg i kø…' : 'Start reisen'}
+        label={loading ? 'Lagrer og stiller deg i kø…' : 'Start reisen'}
         disabled={loading}
         isLoading={loading}
         fullWidth

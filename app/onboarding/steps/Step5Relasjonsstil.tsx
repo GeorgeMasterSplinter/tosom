@@ -41,12 +41,12 @@ export default function Step5Relasjonsstil({ data, onChange, onBack, onNext }: P
 
        {/* Relasjonsstilar — vel hva type relasjon du søker */}
        <OnboardingSelectGrid
-         label="Hva type relasjon søker du? *"
+         label="Hva type relasjon søker du?"
          mikroguiding="Velg det som passer deg. Vennskap, dating og langvarig parforhold kan kombineres — «Åpen & uforpliktende» velges alltid alene."
          options={[
-           { value: 'dyp vennskap', label: 'Dyp Vennskap', icon: '🤝', description: 'Meningsfulle og varige vennskapsband' },
+           { value: 'dyp vennskap', label: 'Dyp vennskap', icon: '🤝', description: 'Meningsfulle og varige vennskapsband' },
            { value: 'dating', label: 'Dating', icon: '💛', description: 'Romantisk møting med rom for utvikling' },
-           { value: 'langvarig parforhold', label: 'Langvarig Parforhold', icon: '💍', description: 'Serîg langsiktig og engasjert forhold' },
+           { value: 'langvarig parforhold', label: 'Langvarig parforhold', icon: '💍', description: 'Et seriøst og langsiktig forhold' },
            { value: 'åpen uforpliktende', label: 'Åpen & Uforpliktende', icon: '🌊', description: 'Lette og naturlige møter uten krav' },
          ]}
          selectedValue={getValue('relationshipSeeking', '')}
@@ -59,8 +59,8 @@ export default function Step5Relasjonsstil({ data, onChange, onBack, onNext }: P
 
        {/* Næringsbehov — kor mye nærhet du treng */}
        <OnboardingSelectGrid
-         label="Hvor mye nærhet trenger du i en relasjon? *"
-         mikroguiding="Tenk på din naturlige rytme — ingen riktig eller feil svar her."
+         label="Hvor mye nærhet trenger du i en relasjon?"
+         mikroguiding="Tenk på din naturlige rytme."
          options={[
            { value: 'mye tid sammen hver dag', label: 'Mye Samvær', icon: '☀️', description: 'Jeg trives med mye felles tid og nærhet' },
            { value: 'balansert samvær', label: 'Balansert', icon: '⚖️', description: 'Begge deler — sammen og hver for oss' },
@@ -75,8 +75,7 @@ export default function Step5Relasjonsstil({ data, onChange, onBack, onNext }: P
 
        {/* Sjølvstende vs. fellesskap — fritt tekstfelt */}
        <OnboardingTextField label="Hvordan balanserer du selvstendighet med fellesskap?" value={getValue('independenceBalance', '')} onChange={(v) => onChange('independenceBalance', v)} placeholder="Hva trenger du for å finne balansen mellom eget rom og fellesskap?" mikroguiding="Skriv f.eks. Jeg trenger tid alene for å lade batteriene, men elsker også å dele hverdagen" maxLength={300} rows={2} multiline />
-      <p className="text-center text-xs mt-8" style={{ color: 'rgba(255,255,255,0.6)' }}>Relasjonsstilen din er viktig for å finne noen som passer deg.</p>
-      <div className="mt-8 space-y-4"><BackButton onClick={onBack} /><PremiumCTAButton onClick={handleNext} label={!canProceed ? 'Fyll ut alle påkrevde felt' : 'Fortsett til neste steg'} disabled={!canProceed} fullWidth /></div>
+            <div className="mt-8 space-y-4"><BackButton onClick={onBack} /><PremiumCTAButton onClick={handleNext} label={!canProceed ? 'Fyll ut alle påkrevde felt' : 'Fortsett til neste steg'} disabled={!canProceed} fullWidth /></div>
     </OnboardingSlide>
   );
 }

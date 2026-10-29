@@ -31,6 +31,7 @@ const TRENNING: Array<{ value: string; label: string }> = [
 
 export function Valgvikt({ value, onChange, accentColor = OB.section.identity, testId }: ValgviktProps) {
   return (
+    <div className="space-y-1.5">
     <div
       className="flex items-center gap-2 flex-wrap"
       style={{ marginTop: '10px' }}
@@ -65,6 +66,18 @@ export function Valgvikt({ value, onChange, accentColor = OB.section.identity, t
           </button>
         );
       })}
+      </div>
+      {/* D-4: konsekvensen av «Må stemme» vises når den faktisk velges —
+          ikke gjemt i en generell fotnot, men der handlingen skjer. */}
+      {value === 'ma-stemme' && (
+        <p
+          className="text-[12px] leading-relaxed"
+          style={{ color: OB.textSecondary }}
+          data-testid="ob-ma-stemme-note"
+        >
+          Dette er en hard grense: hvis dere ikke passer sammen her, blir dere ikke koblet.
+        </p>
+      )}
     </div>
   );
 }

@@ -50,7 +50,7 @@ const validate = (data: Record<string, unknown>): ValidationError[] => {
   // PL-08b (D-1): skalasvarene er påkrevd per steg.
   const missing = missingScaleItems(data, TOSOM_PERSONALITY);
   if (missing.length > 0) {
-    errors.push({ field: missing[0], message: 'Svar på alle påstandene — det finnes ingen fasit.' });
+    errors.push({ field: missing[0], message: 'Svar på alle påstandene.' });
   }
 
   return errors;
@@ -110,7 +110,7 @@ export default function Step2Personlighet({ data, onChange, onBack, onNext }: Pr
 
       {/* selfDesc med mikroguiding */}
       <OnboardingTextField
-        label="Hvem er du når ting flyter naturlig? *"
+        label="Hvem er du når ting flyter naturlig?"
         value={getValue('selfDesc', '')}
         onChange={(v) => onChange('selfDesc', v)}
         placeholder="Fortell litt om hvem du er når ting flyter..."
@@ -219,11 +219,6 @@ export default function Step2Personlighet({ data, onChange, onBack, onNext }: Pr
           />
         ))}
       </div>
-
-      {/* Trust text */}
-      <p className="text-center text-xs mt-8" style={{ color: OB.textSubtle }}>
-        Det er ingen rette eller gale svar. Svarene dine hjelper oss å forstå deg bedre.
-      </p>
 
       {/* Knapper — Back + CTA */}
       <div className="mt-8 space-y-4">

@@ -33,7 +33,7 @@ export default function Step6FramtidVisjon({ data, onChange, onBack, onNext }: P
       {errors.length > 0 && (<div className="mb-8 rounded-xl p-4 border" style={{ background: 'rgba(255,77,77,0.08)', borderColor: 'rgba(255,77,77,0.2)' }}><p className="text-sm font-medium mb-2" style={{ color: '#FF4D4D' }}>Vennligst fyll ut alle påkrevde felt:</p><ul className="text-sm space-y-1" style={{ color: 'rgba(255,255,255,0.7)' }}>{errors.map((x) => (<li key={x.field}>• {x.message}</li>))}</ul></div>)}
       {/* LIVSSTIL-2026 (D-5): 3 felt konvertert til valg-grid; dreamGoal valgfri;
           buildTogether beholdes som det «varme» feltet. */}
-      <OnboardingSelectGrid label={`${labels['futureVision'].replace('?', '')} *`} mikroguiding="Velg det som kjennes mest riktig." options={[
+      <OnboardingSelectGrid label={labels['futureVision']} mikroguiding="Velg det som kjennes mest riktig." options={[
         { value: 'ro-og-stabilitet', label: 'Ro og stabilitet', icon: '🌿' },
         { value: 'vekst-og-maal', label: 'Vekst og mål', icon: '📈' },
         { value: 'familie-og-hjem', label: 'Familie og hjem', icon: '🏡' },
@@ -42,7 +42,7 @@ export default function Step6FramtidVisjon({ data, onChange, onBack, onNext }: P
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
       <OnboardingTextField label={labels['dreamGoal']} value={getValue('dreamGoal', '')} onChange={(v) => onChange('dreamGoal', v)} placeholder="Noe du drømmer om — del det hvis du kjenner deg trygg med det" mikroguiding={guiding['dreamGoal']} maxLength={300} rows={2} multiline testId="ob-dream-goal" />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
-      <OnboardingTextField label={`${labels['buildTogether']} *`} value={getValue('buildTogether', '')} onChange={(v) => onChange('buildTogether', v)} placeholder="Hva kan dere skape sammen over tid?" mikroguiding={guiding['buildTogether']} maxLength={300} minChars={10} rows={2} multiline testId="ob-build-together" />
+      <OnboardingTextField label={labels['buildTogether']} value={getValue('buildTogether', '')} onChange={(v) => onChange('buildTogether', v)} placeholder="Hva kan dere skape sammen over tid?" mikroguiding={guiding['buildTogether']} maxLength={300} minChars={10} rows={2} multiline testId="ob-build-together" />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
       <OnboardingSelectGrid label={labels['experienceAlone']} mikroguiding="Velg det som betyr mest for deg." options={[
         { value: 'reiser', label: 'Reiser', icon: '✈️' },
@@ -57,7 +57,6 @@ export default function Step6FramtidVisjon({ data, onChange, onBack, onNext }: P
         { value: 'bygge-noe-felles', label: 'Bygge noe felles', icon: '🏗️' },
         { value: 'kos-og-fellesskap', label: 'Kos og fellesskap', icon: '🫶' },
       ]} selectedValue={getValue('experienceTogether', '')} onChange={(v) => onChange('experienceTogether', v)} columns={2} testId="ob-experience-together" />
-      <p className="text-center text-xs mt-8" style={{ color: 'rgba(255,255,255,0.6)' }}>Framtidsønsker viser veien for hva dere kan bygge sammen.</p>
       <div className="mt-8 space-y-4"><BackButton onClick={onBack} /><PremiumCTAButton onClick={handleNext} label={!canProceed ? 'Fyll ut alle påkrevde felt' : 'Fortsett til neste steg'} disabled={!canProceed} fullWidth /></div>
     </OnboardingSlide>
   );

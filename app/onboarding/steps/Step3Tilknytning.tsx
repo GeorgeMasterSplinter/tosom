@@ -32,7 +32,7 @@ const validate = (data: Record<string, unknown>): ValidationError[] => {
   const errors: ValidationError[] = [];
   // PL-08b (D-1): skalasvarene er påkrevd per steg.
   const missing = missingScaleItems(data, ATTACHMENT);
-  if (missing.length > 0) errors.push({ field: missing[0], message: 'Svar på alle påstandene — det finnes ingen fasit.' });
+  if (missing.length > 0) errors.push({ field: missing[0], message: 'Svar på alle påstandene.' });
   return errors;
 };
 
@@ -55,7 +55,7 @@ export default function Step3Tilknytning({ data, onChange, onBack, onNext }: Pro
     <OnboardingSlide 
       title="Tilknytning & trygghet" 
       subtitle="Dette hjelper oss å forstå hva du trenger for å kjenne deg trygg." 
-      guidingText="Tilknytningsmønsteret ditt sier mye om hvordan du møter andre mennesker." 
+      guidingText="Svarene dine forteller oss hva du trenger for å føle deg trygg — og hva som skaper avstand." 
       slideIndex={3} 
       totalSlides={13}
       accentColor={OB.section.personality}
@@ -76,7 +76,7 @@ export default function Step3Tilknytning({ data, onChange, onBack, onNext }: Pro
         { value: 'humor', label: 'Humor', icon: '😄' },
       ]} selectedValue={getValue('safetyNeed', '')} onChange={(v) => onChange('safetyNeed', v)} maxSelected={3} testId="ob-safety-need" />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
-      <OnboardingSelectGrid label="Hva utløser usikkerhet hos deg?" mikroguiding="Velg opptil tre — det finnes ingen fasit." options={[
+      <OnboardingSelectGrid label="Hva utløser usikkerhet hos deg?" mikroguiding="Velg opptil tre — det som kjennes mest kjent." options={[
         { value: 'endringer-uten-avtale', label: 'Endringer uten avtale', icon: '🌪️' },
         { value: 'taushet', label: 'Taushet og stille', icon: '🤐' },
         { value: 'avstand', label: 'Avstand', icon: '↔️' },
@@ -100,11 +100,11 @@ export default function Step3Tilknytning({ data, onChange, onBack, onNext }: Pro
       ]} selectedValue={getValue('stressNeed', '')} onChange={(v) => onChange('stressNeed', v)} columns={2} testId="ob-stress-need" />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
       {/* Valgfri kort fritekst — det personlige du selv vil fremheve */}
-      <OnboardingTextField label="Hva grenser er viktigst for deg?" value={getValue('importantBoundary', '')} onChange={(v) => onChange('importantBoundary', v)} placeholder="Noe konkret du trenger at partneren din respekterer" mikroguiding="Skriv f.eks. Jeg trenger tid alene etter en tung dag" maxLength={300} rows={2} multiline testId="ob-important-boundary" />
+      <OnboardingTextField label="Hvilken grense er viktigst for deg?" value={getValue('importantBoundary', '')} onChange={(v) => onChange('importantBoundary', v)} placeholder="Noe konkret du trenger at partneren din respekterer" mikroguiding="Skriv f.eks. Jeg trenger tid alene etter en tung dag" maxLength={300} rows={2} multiline testId="ob-important-boundary" />
       {/* FORSKNINGSMOTOR F-5 — Tilknytning (egne items, Bowlby/Ainsworth/Hazan-Shaver) */}
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '28px', marginBottom: '8px' }} />
       <p className="text-sm mb-4" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
-        Noen påstander om trygghet og nærhet. Svar det som kjennes riktigst — det finnes ingen fasit.
+        Noen påstander om trygghet og nærhet. Svar det som kjennes mest riktig.
       </p>
       <div className="space-y-3">
         {ATTACHMENT.map((item) => (
@@ -117,7 +117,6 @@ export default function Step3Tilknytning({ data, onChange, onBack, onNext }: Pro
           />
         ))}
       </div>
-      <p className="text-center text-xs mt-8" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>Tilknytningsmønsteret ditt sier mye om hvordan du møter andre mennesker.</p>
       <div className="mt-8 space-y-4">
         <BackButton onClick={onBack} />
          <PremiumCTAButton onClick={handleNext} label={!canProceed ? 'Fyll ut alle påkrevde felt' : 'Fortsett til neste steg'} disabled={!canProceed} fullWidth />

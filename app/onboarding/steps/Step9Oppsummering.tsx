@@ -1,7 +1,23 @@
 /**
- * Tosom — Steg 9: Oppsummering (Premium rebuild 2026 — Fase 4)
- * 
- * Menneskeleselig oppsummering av hele profilen, gruppert i seksjoner med gull-rammer.
+ * Tosom — Steg 12: Oppsummering (LANGUAGE & CLARITY ACT O1 — rebuild)
+ *
+ * Ryddig, ærlig gjennomgang av de viktigste valgene — IKKE en dump av
+ * alle svar. Struktur:
+ *   A. OM DEG                     B. HVEM DU ØNSKER Å MØTE
+ *   C. DET SOM MÅ STEMME          D. LIVSSYN / RELIGION
+ *   E. PROFILSTATUS               F. NESTE STEG
+ * + organiserte detaljseksjoner med «Endre» (goToStep) for det øvrige.
+ *
+ * Regler fra ACT:
+ * - Aldersspennet leses fra CANONICAL feltene agePrefMin/agePrefMax
+ *   (P1-fix: leste tidligere de døde feltene minAge/maxAge → viste alltid 21–40).
+ * - Aldersspennet vises via formatAgePrefRange (lib/onboarding/age-label):
+ *   99+ (null-maks) renderes «21–99+», endelige verdier som faktiske tall.
+ *   REV 1.2: null = åpen øvre grense (produktbeslutning).
+ * - Ingen påstand om at siden viser «hele profilen» / at profilen er
+ *   «komplett». Skala-svarene (49) vises som fullført seksjon, ikke rause.
+ * - Religion/livssyn vises kun som brukerens eget valg + akseptstatus —
+ *   ingen sensitiv detalj utover det.
  */
 
 'use client';
@@ -10,6 +26,7 @@ import { OnboardingSlide } from '@/app/onboarding/components/OnboardingSlide';
 import { OB } from '@/app/onboarding/theme';
 import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { BackButton } from '@/components/onboarding/BackButton';
+import { formatAgePrefRange } from '@/lib/onboarding/age-label';
 
 interface Props {
   data: Record<string, unknown>;
@@ -22,10 +39,6 @@ const val = (f: string, fb = '—') => (d: Record<string, unknown>) => {
   const v = d[f];
   return v !== undefined && v !== null ? String(v) : fb;
 };
-const num = (f: string, fb = 0) => (d: Record<string, unknown>) => {
-  const v = d[f];
-  return v !== undefined && v !== null ? Number(v) : fb;
-};
 
 /**
  * Verdi→etikett for flervalgsfelt i oppsummeringen.
@@ -36,6 +49,7 @@ const LABELS: Record<string, Record<string, string>> = {
   lifestyle: { Aktiv: 'Aktiv', Rolig: 'Rolig', Balansert: 'Balansert', Eventyrlysten: 'Eventyrlysten', Hjemmekjær: 'Hjemmekjær' },
   smoking: { 'Roker-snuser-ikke': 'Røyker/Snuser ikke', 'Roker-av-og-til': 'Røyker av og til', Snuser: 'Snuser', Roker: 'Røyker' },
   religion: { Kristen: 'Kristen', Katolsk: 'Katolsk', Agnostiker: 'Agnostiker', Ateist: 'Ateist', Muslim: 'Muslim', 'Jehovas-vitne': 'Jehovas vitne', Hindu: 'Hindu', Judedom: 'Jødedom', Buddhist: 'Buddhist', Spirituell: 'Spirituell', Annet: 'Annet' },
+  acceptedReligions: { Kristen: 'Kristen', Katolsk: 'Katolsk', Agnostiker: 'Agnostiker', Ateist: 'Ateist', Muslim: 'Muslim', 'Jehovas-vitne': 'Jehovas vitne', Hindu: 'Hindu', Judedom: 'Jødedom', Buddhist: 'Buddhist', Spirituell: 'Spirituell', Annet: 'Annet' },
   children: { 'Har-små-barn': 'Har små barn', 'Har-barn': 'Har barn', 'Har-vaksen-barn': 'Har voksne barn', 'Har-ikke-barn': 'Har ikke barn' },
   wantChildren: { Ja: 'Ja', Usikker: 'Usikker', Nei: 'Nei', Bonusfamilie: 'Åpen for bonusfamilie' },
   workType: { 'anstatt-fulltid': 'Ansett på fulltid', 'anstatt-deltid': 'Ansett på deltid', 'egen-næring': 'Selvstendig næringsdrivende', studier: 'Studier', frivillig: 'Frivillig arbeid', 'husmor-husmann': 'Husmor / Husmann', pensjonist: 'Pensjonist', permisjon: 'Permisjon', nav: 'Ungdomskontakt / NAV', annet: 'Annet' },
@@ -45,7 +59,9 @@ const LABELS: Record<string, Record<string, string>> = {
   loveReceive: { ord: 'Ord og ros', tjenester: 'Gjør ting for meg', tid: 'Kvalitetstid sammen', kjønnlig: 'Fysiske klemmer og berøring', gaver: 'Å få gaver' },
   highPriority: { karriere: 'Karriere og mål', familie: 'Familie og nære relasjoner', venner: 'Venner og fellesskap', 'personlig-vekst': 'Personlig vekst og læring', frihet: 'Frihet og selvstendighet', spirituell: 'Spirituell/religiøst livssyn' },
   lowPriority: { materiell: 'Materielle ting', status: 'Status og anerkjennelse', 'sosial-media': 'Sosialt mediabruk', sport: 'Sport og konkurranse', underholdning: 'Underholdning og kos' },
-  desiredLifestyle: { rolig: 'Rolig og forutsigbart', eventyr: 'Eventyr og endring', balansert: 'Balansen mellom ro og aktivitet', skapende: 'Skapende og kunstnerisk' },
+  // Verdiene er de faktiske alternativ-verdiene fra stegene (ACT O1:
+  // «rolig»/«ensom» er de lagrede verdiene — kartleggingen ble feil).
+  desiredLifestyle: { roleg: 'Rolig og forutsigbart', eventyr: 'Eventyr og endring', balansert: 'Balansen mellom ro og aktivitet', skapende: 'Skapende og kunstnerisk' },
   undesiredLifestyle: { ensam: 'Alene og isolert', stress: 'Konstant stress', rutine: 'Monoton rutine', 'økonomisk-utrygg': 'Økonomisk utrygghet' },
   closenessNeed: { 'mye tid sammen hver dag': 'Mye samvær', 'balansert samvær': 'Balansert', 'mye egen rom og autonomi': 'Mye egenrom' },
   neverCrossBoundary: { respekt: 'Respekt for meg som person', 'tid-aleine': 'Tid alene hver dag', venner: 'Kontakt med venner/familie', selvstende: 'Eget rom og selvstendighet', sandhet: 'Ærlighet og sannferdighet' },
@@ -95,8 +111,7 @@ const fmt = (f: string) => (d: Record<string, unknown>) => {
     .join(', ');
 };
 
-// LIVSSTIL-2026 (D-4): viktighetsnivået for vektmodell-feltene — vises i
-// oppsummeringen bak selve verdien.
+// LIVSSTIL-2026 (D-4): viktighetsnivået for vektmodell-feltene.
 const viktSuffix = (f: string) => (d: Record<string, unknown>) => {
   const v = d[f];
   if (v === 'ma-stemme') return ' — må stemme';
@@ -108,72 +123,167 @@ const viktSuffix = (f: string) => (d: Record<string, unknown>) => {
 const gatedVal = (f: string, vf: string) => (d: Record<string, unknown>) =>
   d[f] ? `${fmt(f)(d)}${viktSuffix(vf)(d)}` : '—';
 
+/**
+ * D-4: de feltene der «Må stemme» faktisk blokkerer i matchingmotoren
+ * (lib/matching/dealbreaker.ts → checkLifestyle2026). Kun disse hører
+ * hjemme i «Det som må stemme».
+ */
+const MA_STEMME_FIELDS: Array<{ key: string; label: string }> = [
+  { key: 'arbeidsrytme', label: 'Arbeidsrytme' },
+  { key: 'bosted', label: 'Bosted' },
+  { key: 'reiser', label: 'Reiser' },
+  { key: 'dyr', label: 'Dyr' },
+  { key: 'skjerm', label: 'Skjerm' },
+  { key: 'bil', label: 'Bil' },
+  { key: 'kosthold', label: 'Kosthold' },
+  { key: 'alkohol', label: 'Alkohol' },
+  { key: 'aktivitet', label: 'Aktivitet' },
+];
+
 export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
-  // Helper-funksjon for å gjøre felt synlege bare dersom de har verdi
-  const Field = ({ label, value, showIf }: { label: string; value: string; showIf?: boolean }) => {
+  // Én kilde for aldersspennet: CANONICAL feltene agePrefMin/agePrefMax.
+  const ageRange = formatAgePrefRange(data['agePrefMin'], data['agePrefMax']);
+
+  const religionOpen = val('religionOpen', '')(data) === '1';
+  const acceptedLabel = religionOpen
+    ? 'Åpen for alle religioner og livssyn'
+    : fmt('acceptedReligions')(data);
+
+  const hardL2026 = MA_STEMME_FIELDS.filter(
+    (f) => data[f.key] && data[`${f.key}Viktig`] === 'ma-stemme',
+  );
+
+  const Field = ({
+    label,
+    value,
+    showIf,
+    testId,
+  }: {
+    label: string;
+    value: string;
+    showIf?: boolean;
+    testId?: string;
+  }) => {
     if (showIf && !value) return null;
     return (
-      <div className="flex justify-between">
-        <span style={{ color: 'rgba(255, 255, 255, 0.6)' }}>{label}</span>
-        <span style={{ color: 'rgba(255, 255, 255, 0.85)' }}>{value || '—'}</span>
+      <div className="flex justify-between gap-4" data-testid={testId}>
+        <span className="text-left" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>{label}</span>
+        <span className="text-right" style={{ color: 'rgba(255, 255, 255, 0.85)' }}>{value || '—'}</span>
       </div>
     );
   };
 
-  const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
-    <section className="rounded-2xl p-6 border" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(212,175,55,0.2)' }}>
-      <h2 className="text-xl font-semibold mb-4" style={{ color: '#D4AF37' }}>{title}</h2>
+  const Section = ({
+    title,
+    editStep,
+    children,
+  }: {
+    title: string;
+    editStep?: number;
+    children: React.ReactNode;
+  }) => (
+    <section
+      className="rounded-2xl p-6 border"
+      style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(212,175,55,0.2)' }}
+    >
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-semibold" style={{ color: '#D4AF37' }}>{title}</h2>
+        {editStep !== undefined && (
+          <button
+            type="button"
+            onClick={() => goToStep(editStep)}
+            data-testid={`ob-summary-edit-${editStep}`}
+            className="text-[13px] font-medium"
+            style={{ color: OB.gold }}
+          >
+            Endre
+          </button>
+        )}
+      </div>
       <div className="space-y-3">{children}</div>
     </section>
   );
 
-  const getName = val('identityName');
-  const getAge = val('age');
-  const getHeight = val('height');
-  const getDistance = num('distancePref', 50);
-  const getMinAge = num('minAge', 21);
-
-  const getMaxAge = num('maxAge', 40);
+  const name = val('identityName', '')(data);
+  const age = val('age', '')(data);
+  const height = val('height', '')(data);
+  const city = val('city', '')(data);
+  const distance = val('distancePref', '')(data);
 
   return (
     <OnboardingSlide
-      title="Oppsummering"
-      subtitle="Se over det du har delt. Du kan endre alt senere."
-       guidingText="Dette er hele profilen din — rolig, trygg og komplett."
+      title="Se over før du går videre"
+      subtitle="Her ser du de viktigste valgene dine. Gå tilbake hvis du vil endre noe før profilen fullføres."
       slideIndex={11}
       totalSlides={13}
       accentColor={OB.section.summary}
     >
       <div className="space-y-6">
-        {/* Grunnprofil */}
-        <Section title="Grunnprofil">
-          <Field label="Navn" value={getName(data)} />
-          <Field label="Alder" value={getAge(data) !== '—' ? `${getAge(data)} år` : '—'} />
+        {/* A. OM DEG */}
+        <Section title="Om deg" editStep={0}>
+          <Field label="Navn" value={name} testId="ob-summary-name" />
+          <Field label="Alder" value={age ? `${age} år` : '—'} />
           <Field label="Kjønn" value={val('gender')(data)} />
-          <Field label="Søker" value={val('seekingGender')(data)} />
-          <Field label="Bosted" value={val('city')(data)} />
-          <Field label="Høyde" value={getHeight(data) !== '—' ? `${getHeight(data)} cm` : '—'} showIf />
-          <Field label="Livsstil" value={fmt('lifestyle')(data)} showIf />
-          <Field label="Røyking/snus" value={fmt('smoking')(data)} showIf />
+          <Field label="Bosted" value={city} showIf />
+          <Field label="Type relasjon" value={fmt('relationshipSeeking')(data)} showIf />
           <Field label="Barn" value={fmt('children')(data)} showIf />
-          <Field label="Ønsker barn" value={fmt('wantChildren')(data)} showIf />
+          <Field label="Røyking/snus" value={fmt('smoking')(data)} showIf />
+          <Field label="Høyde" value={height ? `${height} cm` : '—'} showIf />
         </Section>
 
-        {/* Livsstil & verdier */}
-        <Section title="Livsstil & verdier">
-          <Field label="Høyeste prioritet" value={fmt('highPriority')(data)} showIf />
-          <Field label="God hverdag" value={val('goodEveryday')(data)} showIf />
-           <Field label="Ønsket livsstil" value={fmt('desiredLifestyle')(data)} showIf />
+        {/* B. HVEM DU ØNSKER Å MØTE */}
+        <Section title="Hvem du ønsker å møte" editStep={0}>
+          <Field label="Hvem du søker" value={val('seekingGender')(data)} />
+          <Field label="Aldersspenn" value={ageRange} testId="ob-summary-age" />
+          <Field label="Maks avstand" value={distance ? `${distance} km` : '—'} showIf />
         </Section>
 
-        {/* Avstand & alder */}
-        <Section title="Avstand & alderspref">
-          <Field label="Maks avstand" value={`${getDistance(data)} km`} />
-          <Field label="Aldersintervall" value={`${getMinAge(data)}–${getMaxAge(data)} år`} />
+        {/* C. DET SOM MÅ STEMME — kun aktive hard boundaries */}
+        <Section title="Det som må stemme">
+          <Field label="Alder, avstand og kjønnsvalg" value="Gjelder alltid" />
+          <Field
+            label="Religion/livssyn"
+            value={religionOpen ? 'Ikke en grense — du er åpen for alle' : 'Din akseptliste gjelder'}
+          />
+          <Field label="Barn" value={fmt('wantChildren')(data)} showIf />
+          {hardL2026.map((f) => (
+            <Field
+              key={f.key}
+              label={f.label}
+              value={`${fmt(f.key)(data)} — må stemme`}
+            />
+          ))}
         </Section>
+
+        {/* D. LIVSSYN / RELIGION — kun brukerens eget valg + status */}
+        <Section title="Livssyn og religion" editStep={0}>
+          <Field label="Religion/livssyn" value={fmt('religion')(data)} showIf />
+          <Field label="Åpen for" value={acceptedLabel} showIf />
+        </Section>
+
+        {/* E. PROFILSTATUS — ærlig: ikke alle svar vises */}
+        <Section title="Profilstatus">
+          <Field label="Obligatoriske deler" value="Fullført" />
+          <Field label="Personlighet og samspill (49 spørsmål)" value="Fullført" />
+          <Field label="Valgfrie deler" value="Kan være utelatt" />
+          <p className="text-[12px] leading-relaxed" style={{ color: 'rgba(255, 255, 255, 0.5)' }}>
+            Denne siden viser de viktigste valgene dine — ikke samtlige svar.
+            Du kan endre profilen din senere fra venterommet.
+          </p>
+        </Section>
+
+        {/* F. NESTE STEG */}
+        <Section title="Neste steg">
+          <p className="text-sm leading-relaxed" style={{ color: 'rgba(255, 255, 255, 0.85)' }}>
+            Når du fullfører, settes du i kø. Vi kobler natt til lørdag.
+            Finner vi ingen som passer godt nok, venter du til neste runde.
+          </p>
+        </Section>
+
+        {/* ── Detaljer — resten av svarene, organisert ── */}
 
         {/* Personlighet */}
-        <Section title="Personlighet">
+        <Section title="Personlighet" editStep={1}>
           <Field label="Om deg" value={val('selfDesc')(data)} showIf />
           <Field label="Gir deg energi" value={fmt('energyGiver')(data)} showIf />
           <Field label="Tappar energi" value={fmt('energyDrainer')(data)} showIf />
@@ -182,22 +292,25 @@ export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
         </Section>
 
         {/* Livssituasjon */}
-        <Section title="Livssituasjon">
+        <Section title="Livssituasjon" editStep={2}>
           <Field label="Arbeid" value={fmt('workType')(data)} showIf />
-          <Field label="Boetype" value={fmt('housingType')(data)} showIf />
+          <Field label="Boform" value={fmt('housingType')(data)} showIf />
           <Field label="Husholdning" value={val('householdSize')(data)} showIf />
           <Field label="Økonomi" value={fmt('economicStability')(data)} showIf />
           <Field label="Ansvar" value={fmt('responsibilities')(data)} showIf />
-           <Field label="Hverdagsrutine" value={fmt('dailyRoutine')(data)} showIf />
+          <Field label="Hverdagsrutine" value={fmt('dailyRoutine')(data)} showIf />
         </Section>
 
-        {/* Hverdagsvalg (LIVSSTIL-2026, D-2/D-4) */}
-        <Section title="Hverdagsvalg">
+        {/* Hverdagsvalg (LIVSSTIL-2026) — steg 3 og steg 6 */}
+        <Section title="Hverdagsvalg — livssituasjon" editStep={2}>
           <Field label="Arbeidsrytme" value={gatedVal('arbeidsrytme', 'arbeidsrytmeViktig')(data)} showIf />
-          <Field label="Bosted" value={gatedVal('bosted', 'bostedViktig')(data)} showIf />
+          <Field label="Bostedstype" value={gatedVal('bosted', 'bostedViktig')(data)} showIf />
           <Field label="Reiser" value={gatedVal('reiser', 'reiserViktig')(data)} showIf />
           <Field label="Dyr" value={gatedVal('dyr', 'dyrViktig')(data)} showIf />
           <Field label="Skjerm" value={gatedVal('skjerm', 'skjermViktig')(data)} showIf />
+        </Section>
+
+        <Section title="Hverdagsvalg — livsstil" editStep={5}>
           <Field label="Bil" value={gatedVal('bil', 'bilViktig')(data)} showIf />
           <Field label="Kosthold" value={gatedVal('kosthold', 'kostholdViktig')(data)} showIf />
           <Field label="Klima" value={fmt('klima')(data)} showIf />
@@ -206,32 +319,39 @@ export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
         </Section>
 
         {/* Tilknytning */}
-        <Section title="Tilknytning & trygghet">
+        <Section title="Tilknytning og trygghet" editStep={3}>
           <Field label="Trygghet" value={fmt('safetyNeed')(data)} showIf />
-           <Field label="Usikkerhetsutløser" value={fmt('insecurityTrigger')(data)} showIf />
-           <Field label="Når du er lei" value={fmt('sadnessNeed')(data)} showIf />
-           <Field label="Når du er stresset" value={fmt('stressNeed')(data)} showIf />
+          <Field label="Usikkerhetsutløser" value={fmt('insecurityTrigger')(data)} showIf />
+          <Field label="Når du er lei" value={fmt('sadnessNeed')(data)} showIf />
+          <Field label="Når du er stresset" value={fmt('stressNeed')(data)} showIf />
           <Field label="Viktig grense" value={val('importantBoundary')(data)} showIf />
         </Section>
 
         {/* Kjærlighetsspråk */}
-        <Section title="Kjærlighetsspråk & nærhet">
+        <Section title="Kjærlighetsspråk og nærhet" editStep={4}>
           <Field label="Viser kjærlighet" value={fmt('loveGive')(data)} showIf />
           <Field label="Mottar kjærlighet" value={fmt('loveReceive')(data)} showIf />
           <Field label="Bygger nærhet" value={fmt('closenessBuilder')(data)} showIf />
           <Field label="Skaper avstand" value={fmt('distanceCreator')(data)} showIf />
-           <Field label="Liten ting som betyr mye" value={val('smallThing')(data)} showIf />
+          <Field label="Liten ting som betyr mye" value={val('smallThing')(data)} showIf />
+        </Section>
+
+        {/* Livsstil & verdier */}
+        <Section title="Livsstil og verdier" editStep={5}>
+          <Field label="Høyeste prioritet" value={fmt('highPriority')(data)} showIf />
+          <Field label="God hverdag" value={val('goodEveryday')(data)} showIf />
+          <Field label="Ønsket livsstil" value={fmt('desiredLifestyle')(data)} showIf />
         </Section>
 
         {/* Relasjonsstil */}
-        <Section title="Relasjonsstil">
+        <Section title="Relasjonsstil" editStep={6}>
           <Field label="Søker" value={fmt('relationshipSeeking')(data)} showIf />
           <Field label="Nærhetsbehov" value={fmt('closenessNeed')(data)} showIf />
-           <Field label="Selvstendighet vs fellesskap" value={val('independenceBalance')(data)} showIf />
+          <Field label="Selvstendighet vs fellesskap" value={val('independenceBalance')(data)} showIf />
         </Section>
 
         {/* Framtid */}
-        <Section title="Fremtid og visjon">
+        <Section title="Fremtid og visjon" editStep={7}>
           <Field label="Din fremtidsvisjon" value={fmt('futureVision')(data)} showIf />
           <Field label="Din største drøm" value={val('dreamGoal')(data)} showIf />
           <Field label="Bygge sammen" value={val('buildTogether')(data)} showIf />
@@ -239,25 +359,16 @@ export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
           <Field label="Oppleve sammen" value={fmt('experienceTogether')(data)} showIf />
         </Section>
 
-        {/* Humor */}
-        <Section title="Humor & personlighet">
-          <Field label="Får deg til å le" value={val('laughterTrigger')(data)} showIf />
-          <Field label="Quirky vane" value={val('quirkyHabit')(data)} showIf />
-          <Field label="Guilty pleasure" value={val('guiltyPleasure')(data)} showIf />
-          <Field label="Helt deg" value={val('totallyYou')(data)} showIf />
-          <Field label="Partneren ville le av" value={val('partnerWouldLaugh')(data)} showIf />
-        </Section>
-
         {/* Grenser */}
-        <Section title="Grenser & behov">
-          <Field label="Aldri krysse" value={fmt('neverCrossBoundary')(data)} showIf />
-           <Field label="Forstå partnerens grenser" value={val('understandPartnersBoundaries')(data)} showIf />
-           <Field label="Dine avgrensninger" value={val('limitations')(data)} showIf />
+        <Section title="Grenser og behov" editStep={9}>
+          <Field label="Grenser" value={fmt('neverCrossBoundary')(data)} showIf />
+          <Field label="Forstå partnerens grenser" value={val('understandPartnersBoundaries')(data)} showIf />
+          <Field label="Dine avgrensninger" value={val('limitations')(data)} showIf />
           <Field label="Partner må forstå" value={val('partnerMustUnderstand')(data)} showIf />
         </Section>
 
         {/* Moden nysgjerrighet */}
-        <Section title="Moden nysgjerrighet">
+        <Section title="Moden nysgjerrighet" editStep={10}>
           <Field label="Intimitet trygg" value={fmt('intimacySafety')(data)} showIf />
           <Field label="Komfortabel med" value={fmt('comfortableWith')(data)} showIf />
           <Field label="Personlig grense" value={val('boundary')(data)} showIf />
@@ -267,9 +378,6 @@ export default function Step9Oppsummering({ data, onNext, goToStep }: Props) {
 
         {/* CTA */}
         <div className="mt-8 space-y-4">
-           <p className="text-center text-xs" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
-            Du har fullført hele profilen din! Nå er det klart for matching.
-          </p>
           <BackButton onClick={() => goToStep(10)} />
           <PremiumCTAButton onClick={onNext} label="Fortsett" fullWidth />
         </div>

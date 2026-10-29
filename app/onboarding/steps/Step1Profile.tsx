@@ -77,9 +77,18 @@ const validate = (data: Record<string, unknown>): ValidationError[] => {
     errors.push({ field: 'agePrefMin', message: `Minste alder må være ${MIN_AGE}.` });
   }
 
-  const maxAgeVal = parseInt(String(data['agePrefMax'] ?? ''));
-  if (isNaN(maxAgeVal) || maxAgeVal < minAge) {
-    errors.push({ field: 'agePrefMax', message: 'Maks alder må være over minste alder.' });
+  // REV 1.2 (produktbeslutning): agePrefMax = null betyr 99+ — ingen øvre
+  // aldersgrense i matchingen (gyldig valg). Endelig maks alder: 21–98.
+  const maxRaw = data['agePrefMax'];
+  if (maxRaw !== null) {
+    const maxAgeVal = parseInt(String(maxRaw ?? ''));
+    if (isNaN(maxAgeVal)) {
+      errors.push({ field: 'agePrefMax', message: 'Velg maks alder, eller 99+.' });
+    } else if (maxAgeVal < minAge) {
+      errors.push({ field: 'agePrefMax', message: 'Maks alder må være over minste alder.' });
+    } else if (maxAgeVal > 98) {
+      errors.push({ field: 'agePrefMax', message: `Høyeste alder må være mellom ${MIN_AGE} og 98, eller 99+.` });
+    }
   }
 
   return errors;
@@ -141,6 +150,13 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
     return !isNaN(v) && v >= safeMinAge ? v : 40;
   })();
 
+  // REV 1.2 (produktbeslutning): 99+ er et EGENSTANDIG valg = null i
+  // state/payload (ingen magisk sentinel). null betyr «ingen øvre
+  // aldersgrense» — matchingen (checkAgePreferenceOneWay i
+  // lib/matching/dealbreaker.ts) gjør da ingen maks-alder-sjekk. Feltet
+  // vises tomt mens chippen er aktiv; skrives det et tall, slippes chippen.
+  const isNinetyNinePlus = data['agePrefMax'] === null;
+
   const errorFields = new Set(errors.map(e => e.field));
 
   const postalCodeValue = String(data['postalCode'] ?? '').trim();
@@ -159,7 +175,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
     <OnboardingSlide
       title="Grunnprofil"
       subtitle="La oss starte rolig. Vi vil gjerne bli litt kjent med deg — på en måte som føles trygg og ekte."
-      guidingText="Dette er starten på reisen din. Vi holder det enkelt."
+      guidingText="Dette er starten på reisen din. Vi holder det enkelt — svarene dine lagres underveis, så du kan fortsette senere."
       slideIndex={0}
       totalSlides={13}
       accentColor={OB.section.identity}
@@ -189,7 +205,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
       >
         <div className="space-y-5">
           <OnboardingTextField
-            label="Hva vil du at vi skal kalle deg? *"
+            label="Hva vil du at vi skal kalle deg?"
             value={val('identityName', '')(data)}
             onChange={(v) => onChange('identityName', v)}
             placeholder="Ikke ditt ekte navn"
@@ -225,7 +241,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
           </div>
 
           <OnboardingTextField
-            label="Alder *"
+            label="Alder"
             value={val('age', '')(data)}
             onChange={(v) => onChange('age', v)}
             placeholder="25"
@@ -236,7 +252,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
           />
 
           <OnboardingSelectGrid
-            label="Ditt kjønn *"
+            label="Ditt kjønn"
             mikroguiding="Velg det som passer best for deg"
             options={[
               { value: 'Mann', label: 'Mann', icon: '♂' },
@@ -251,8 +267,8 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
           />
 
           <OnboardingSelectGrid
-            label="Hvem søker du? *"
-            mikroguiding="Velg hvem du ønsker å møte"
+            label="Hvem søker du?"
+            mikroguiding="Velg hvem du ønsker å møte. For at en kobling skal skje, må begge være åpne for hverandre."
             options={[
               { value: 'Mann', label: 'Mann', icon: '♂' },
               { value: 'Kvinne', label: 'Kvinne', icon: '♀' },
@@ -278,13 +294,13 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
 
       {/* SEKSJON B — Bosted og avstand */}
       <OnboardingSection
-        title="Bosted og avstand!"
+        title="Bosted og avstand"
         accentColor={OB.section.location}
-        description="Obs! Fyll inn bosted og postnummer — vi bruker det til å finne noen i riktig avstand."
+        description="Vi bruker postnummeret til å finne noen i riktig avstand — ikke den nøyaktige posisjonen."
       >
         <div className="space-y-5">
           <OnboardingTextField
-            label="Bosted *"
+            label="Bosted"
             value={val('city', '')(data)}
             onChange={(v) => onChange('city', v)}
             placeholder="Hvor bor du?"
@@ -296,7 +312,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
 
           <div>
             <OnboardingTextField
-              label="Postnummer *"
+              label="Postnummer"
               value={val('postalCode', '')(data)}
               onChange={(v) => onChange('postalCode', v.replace(/[^0-9]/g, '').slice(0, 4))}
               placeholder="F.eks. 0150"
@@ -321,7 +337,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
           {/* distancePref slider */}
           <div className="space-y-2">
             <label className="block text-[14px] font-medium" style={{ color: OB.textSecondary }}>
-              Maks avstand *
+              Maks avstand
             </label>
             <div className="flex items-center gap-4">
               <input
@@ -338,32 +354,67 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
               </span>
             </div>
             <p className="text-[12px] mt-1 ml-1" style={{ color: OB.textSubtle }}>
-              Velg mellom {distanceRange.min} og {distanceRange.max} km
+              Velg mellom {distanceRange.min} og {distanceRange.max} km — lenger unna kobler vi deg ikke.
             </p>
           </div>
 
-          {/* minAge + maxAge */}
-          <div className="grid grid-cols-2 gap-4" style={{ minWidth: 0 }}>
-            <div style={{ minWidth: 0 }}>
-              <OnboardingTextField
-                label="Min alder *"
-                value={val('agePrefMin', '')(data)}
-                onChange={(v) => onChange('agePrefMin', v)}
-                placeholder={String(safeMinAge)}
-                maxLength={3}
-                minChars={2}
-              />
+          {/* Aldersspenn du ønsker å møte — synlig default (21–40 pre-fylt),
+              endrbart, med 99+ (null) som åpen øvre grense (D1–D3, REV 1.2). */}
+          <div>
+            <p className="text-[15px] font-medium mb-1" style={{ color: OB.textSecondary }}>
+              Alder du ønsker å møte
+            </p>
+            <p className="text-[12px] leading-relaxed mb-3" style={{ color: OB.textMuted }}>
+              Velg det aldersspennet du er komfortabel med. Vi har foreslått et
+              utgangspunkt — endre det hvis du ønsker.
+            </p>
+            <div className="grid grid-cols-2 gap-4" style={{ minWidth: 0 }}>
+              <div style={{ minWidth: 0 }}>
+                <OnboardingTextField
+                  label="Min alder"
+                  value={val('agePrefMin', '')(data)}
+                  onChange={(v) => onChange('agePrefMin', v)}
+                  placeholder={String(safeMinAge)}
+                  maxLength={3}
+                  minChars={2}
+                  testId="ob-age-pref-min"
+                />
+              </div>
+              <div style={{ minWidth: 0 }}>
+                <OnboardingTextField
+                  label="Maks alder"
+                  value={val('agePrefMax', '')(data)}
+                  onChange={(v) => onChange('agePrefMax', v)}
+                  placeholder={String(safeMaxAge)}
+                  maxLength={3}
+                  minChars={2}
+                  testId="ob-age-pref-max"
+                />
+              </div>
             </div>
-            <div style={{ minWidth: 0 }}>
-              <OnboardingTextField
-                label="Maks alder *"
-                value={val('agePrefMax', '')(data)}
-                onChange={(v) => onChange('agePrefMax', v)}
-                placeholder={String(safeMaxAge)}
-                maxLength={3}
-                minChars={2}
-              />
+            <div className="mt-2 flex items-center gap-2 flex-wrap">
+              <button
+                type="button"
+                onClick={() => onChange('agePrefMax', null)}
+                aria-pressed={isNinetyNinePlus}
+                data-testid="ob-age-pref-99"
+                className="rounded-full text-[12px] font-medium transition-all duration-200 ease-out"
+                style={{
+                  padding: '5px 12px',
+                  background: isNinetyNinePlus ? OB.section.location : OB.glassBg,
+                  color: isNinetyNinePlus ? '#0A1A2A' : OB.textSecondary,
+                  border: `1px solid ${isNinetyNinePlus ? OB.section.location : OB.glassBorder}`,
+                }}
+              >
+                99+
+              </button>
+              <span className="text-[11px]" style={{ color: OB.textSubtle }}>
+                99+ betyr at du ikke setter noen øvre aldersgrense.
+              </span>
             </div>
+            <p className="text-[12px] mt-2 ml-1" style={{ color: OB.textMuted }}>
+              Dette er en hard grense: vi kobler deg ikke med noen utenfor dette spennet.
+            </p>
           </div>
         </div>
       </OnboardingSection>
@@ -492,6 +543,13 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             accentColor={OB.section.lifestyle}
           />
 
+          {/* D-6: religion/livssyn er en hard grense i matchingen —
+              akseptlisten (eller «åpen for alle») må gå begge veier.
+              Copy endret i LANGUAGE & CLARITY ACT — LAWYER REVIEW REQUIRED. */}
+          <p className="text-[12px] leading-relaxed" style={{ color: OB.textMuted }}>
+            Dette er en hard grense: en kobling skjer bare hvis dere er åpne for hverandre her.
+          </p>
+
           {/* R-12 UX-hjelp (Phase 1.5): rolig informasjon hvis egen religion/livssyn
               mangler i akseptlisten. Ikke en feil, ikke obligatorisk, ikke valgt
               automatisk — brukerens valg beholdes. Vises ikke når «Åpen for alle»
@@ -549,6 +607,12 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             maxSelected={2}
             accentColor={OB.section.lifestyle}
           />
+
+          {/* D-6: barneønske (Ja/Nei) er en hard grense i matchingen (D-3).
+              Copy endret i LANGUAGE & CLARITY ACT — LAWYER REVIEW REQUIRED. */}
+          <p className="text-[12px] leading-relaxed" style={{ color: OB.textMuted }}>
+            Hvis dere svarer helt motsatt («Ja» og «Nei»), kobles dere ikke sammen.
+          </p>
         </div>
       </OnboardingSection>
 
@@ -562,7 +626,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
         />
 
         <p className="text-center text-[12px]" style={{ color: OB.textSubtle }}>
-          Svarene dine brukes kun til å bygge profilen din og finne en god match.
+          Svarene dine brukes i matchingen — de vises ikke offentlig.
         </p>
       </div>
     </OnboardingSlide>

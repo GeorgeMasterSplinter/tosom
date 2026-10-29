@@ -1,15 +1,15 @@
 {
   "version": "1.0",
   "updatedAt": "2026-10-29",
-  "commit": "2ab3b8b",
+  "commit": "acc0214",
   "canonicalSource": "docs/TOSOM-SUPER-MASTERPLAN-v2.0.md",
   "health": {
-    "tests": "29.10 (OPPV2): 2299 passed / 1 skipped (88 av 89 suiter) — BKV2 (180 spørsmål, BQ-01–BQ-15) + OPPV2 (135 oppgaver, OT-01–OT-18). [tidl. 28.10 (BKV2-MICRO): 2281 passed / 1 skipped (87 av 88 suiter)]",
+    "tests": "29.10 (BRAND-HEADER): 2304 passed / 1 skipped (89 av 90 suiter) — BRAND-01–05 (header brand guards: to-sirkler + wordmark «Tosom» = én lenke til /). [tidl. 29.10 (OPPV2): 2299 passed / 1 skipped (88 av 89 suiter) — BKV2 (180 spørsmål, BQ-01–BQ-15) + OPPV2 (135 oppgaver, OT-01–OT-18).]",
     "e2e": "28.10 (BKV2-SURGICAL): chat.spec.ts 8/8 lokalt (chromium-dashboard; BliKjentPanel i chat). [tidl. 27.10 (RT1 FINAL): 90/90 lokalt (chromium+firefox dashboard/onboarding + Mobile Chrome) — chat/match/matching-journey. WebKit (Mobile Safari) kjørt ikke lokalt: host mangler system-bibliotek (pre-eksisterende; CI er E2E-gaten)]",
-    "typecheck": "0 errors (tsc --noEmit, 29.10 OPPV2 via npm run verify) utover Prisma-klient (prisma generate kjører i CI)",
-    "lint": "0 warnings (29.10 OPPV2, npm run lint)",
+    "typecheck": "0 errors (tsc --noEmit, 29.10 BRAND-HEADER via npm run verify) utover Prisma-klient (prisma generate kjører i CI)",
+    "lint": "0 warnings (29.10 BRAND-HEADER, npm run lint)",
     "ciGuards": "7/7 grønne (lang, ai, concept, one-engine, 05:00, cron + lang-guard) — lang-guard utvidet 02.09: ~125 ord, case-insensitiv, skanner __tests__/ + ai/ + rotnivåets .md, SPRAKREF-blokk for bevisste nynorsk-eksempler",
-    "productionBuild": "29.10 (OPPV2): npm run build EXIT=0, Compiled successfully, 68/68 statiske sider — /questions (static), /chat + /chat/[id] OK. [tidl. 28.10 (BKV2-MICRO): EXIT=0, 60 side-ruter (180 ruter inkl. API)]"
+    "productionBuild": "29.10 (BRAND-HEADER): npm run build EXIT=0, Compiled successfully. [tidl. 29.10 (OPPV2): EXIT=0, 68/68 statiske sider — /questions (static), /chat + /chat/[id] OK.]"
   },
   "currentPhaseId": "apen-beta-test",
   "blockers": [

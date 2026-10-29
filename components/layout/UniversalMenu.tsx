@@ -88,14 +88,21 @@ export const UniversalMenu = () => {
 
       <header className="fixed top-0 left-0 right-0 z-50">
         <div className="mx-auto max-w-7xl px-6 lg:px-8 h-[64px] xl:h-auto xl:py-3 flex items-center justify-between">
-          {/* Venstre: Logo — canonical to-sirkler-merket (RT1 D3), samme som
+          {/* Venstre: Brand — canonical to-sirkler-merket (RT1 D3) + synlig
+              wordmark «Tosom», én samlet lenke til /. Samme merke som
               landing-hero og footer. */}
           <Link
             href="/"
-            className="flex-shrink-0 flex items-center"
+            className="flex-shrink-0 flex items-center gap-3 min-h-[48px] transition-opacity duration-150 hover:opacity-80"
             aria-label="Tosom — Bygget for ekte relasjoner"
           >
             <ResonanceMark size={40} strokeWidth={1.5} glow />
+            <span
+              className="text-lg font-semibold tracking-[0.15em]"
+              style={{ color: color.brand.gold }}
+            >
+              Tosom
+            </span>
           </Link>
 
           {/* Midten: Meny (desktop) */}

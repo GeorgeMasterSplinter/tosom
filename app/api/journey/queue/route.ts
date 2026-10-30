@@ -8,6 +8,7 @@
  *
  * Forutsetninger:
  *   - onboardingComplete === true
+ *   - profil-alder >= MIN_AGE (A18, D2: ingen under 18 i matching-køen)
  *   - journeyState === 'IDLE'
  *   - ikke bannedAt / deletedAt
  *
@@ -29,6 +30,7 @@ import { recordEvent } from '@/lib/observability/metric';
 import { isPaymentsEnabled } from '@/config/features';
 import { claimFreeQuota, releaseFreeQuota } from '@/lib/payment/freeQuota';
 import { pgCheck } from '@/lib/rate-limit-pg';
+import { MIN_AGE } from '@/config/legal';
 
 export const dynamic = 'force-dynamic';
 
@@ -83,6 +85,7 @@ async function postHandler(req: NextRequest) {
         matchQueuedAt: true,
         bannedAt: true,
         deletedAt: true,
+        profile: { select: { age: true } },
       },
     });
 
@@ -97,6 +100,16 @@ async function postHandler(req: NextRequest) {
     if (!user.onboardingComplete) {
       return NextResponse.json(
         { error: 'Onboarding er ikke fullført' },
+        { status: 409 }
+      );
+    }
+
+    // A18 (D2): eksplicit under-18-guard. Forsvarsdybde: onboarding-valideringen
+    // (server, MIN_AGE) skal aldri la en profil under MIN_AGE bli fullført —
+    // denne sjekken sikrer at ingen slik profil (uansett kilde) når matching-køen.
+    if (user.profile && user.profile.age != null && user.profile.age < MIN_AGE) {
+      return NextResponse.json(
+        { error: `Tosom er for personer som har fylt ${MIN_AGE} år.` },
         { status: 409 }
       );
     }

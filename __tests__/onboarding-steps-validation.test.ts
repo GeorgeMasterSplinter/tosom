@@ -56,9 +56,14 @@ describe('validateOnboardingStep — steg 0 (grunnprofil)', () => {
     }
   });
 
-  it('flagger alder under 21', () => {
-    const { errors } = validateOnboardingStep(0, { ...completeBasic, age: 18 });
+  it('flagger alder under 18 (A18)', () => {
+    const { errors } = validateOnboardingStep(0, { ...completeBasic, age: 17 });
     expect(errors.some((e) => e.field === 'age')).toBe(true);
+  });
+
+  it('A18-02: alder 18 godtas (minimumsalder)', () => {
+    const { errors } = validateOnboardingStep(0, { ...completeBasic, age: 18 });
+    expect(errors.some((e) => e.field === 'age')).toBe(false);
   });
 
   it('flagger alder over 99', () => {
@@ -76,9 +81,14 @@ describe('validateOnboardingStep — steg 0 (grunnprofil)', () => {
     expect(errors.some((e) => e.field === 'distancePref')).toBe(true);
   });
 
-  it('flagger alderspreferanse under 21', () => {
-    const { errors } = validateOnboardingStep(0, { ...completeBasic, agePrefMin: 20 });
+  it('flagger alderspreferanse under 18 (A18)', () => {
+    const { errors } = validateOnboardingStep(0, { ...completeBasic, agePrefMin: 17 });
     expect(errors.some((e) => e.field === 'agePrefMin')).toBe(true);
+  });
+
+  it('A18-04: alderspreferanse min 18 godtas (A18)', () => {
+    const { errors } = validateOnboardingStep(0, { ...completeBasic, agePrefMin: 18 });
+    expect(errors.some((e) => e.field === 'agePrefMin')).toBe(false);
   });
 });
 

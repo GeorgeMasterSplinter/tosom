@@ -1,7 +1,7 @@
 /**
  * Tosom – Spørsmålmodul (Bli Kjent)
  * Side med 12 kategorier og 15 spørsmål per kategori.
- * Tilfeldig spørmsgenerator. Designet for voksne (21+) og støtter en dyp,
+ * Tilfeldig spørmsgenerator. Designet for voksne (18+) og støtter en dyp,
  * men rolig utforskning.
  */
 

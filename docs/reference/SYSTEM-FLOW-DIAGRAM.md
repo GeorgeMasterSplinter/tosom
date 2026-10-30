@@ -298,7 +298,7 @@ flowchart TB
 | I-11 | Uten match → vent til neste lørdag | Venterom | Ingen manual-match |
 | I-12 | Brukeren ser ord, aldri tall | Frontend | «Sterk resonans» |
 | I-13 | «Vi fant hverandre» sletter kontoer | Endreise | `endJourney()` |
-| I-14 | Aldersgrense 21+ | Onboarding | `MIN_AGE = 21` |
+| I-14 | Aldersgrense 18+ | Onboarding | `MIN_AGE = 18` |
 
 **Kilde:** `docs/TOSOM-SUPER-MASTERPLAN-v2.0.md` §16
 

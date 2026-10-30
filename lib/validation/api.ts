@@ -7,6 +7,7 @@
  */
 
 import { z } from 'zod';
+import { MIN_AGE } from '@/config/legal';
 
 /* ============================================================
    AUTH SCHEMAS
@@ -110,7 +111,7 @@ export type JourneyAdvanceInput = z.infer<typeof journeyAdvanceSchema>;
 export const profileSetupSchema = z.object({
   basic: z.object({
     identityName: z.string().min(1, 'identityName er påkrevd').max(50),
-    age: z.number().min(21).max(100).optional(),
+    age: z.number().min(MIN_AGE).max(100).optional(),
 
     gender: z.string().optional(),
     seekingGender: z.string().optional(),

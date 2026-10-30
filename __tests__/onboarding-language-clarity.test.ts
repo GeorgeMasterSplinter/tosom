@@ -134,9 +134,9 @@ describe('ONBOARDING LANGUAGE & CLARITY ACT O1', () => {
     expect(deal).toContain('religionOpen === true');
   });
 
-  test('OCL-10: 21 som laveste alder er bevart', () => {
+  test('OCL-10: 18 som laveste alder er bevart (A18)', () => {
     const { MIN_AGE } = require('@/config/legal');
-    expect(MIN_AGE).toBe(21);
+    expect(MIN_AGE).toBe(18);
     const step1 = stripComments(read('app/onboarding/steps/Step1Profile.tsx'));
     expect(step1).toContain('MIN_AGE');
   });
@@ -279,15 +279,15 @@ describe('ONBOARDING LANGUAGE & CLARITY ACT O1', () => {
     expect(sha256('lib/matching/scoreRound.ts')).toBe(
       '75261b984f241f027d04b3fba591011742c031019c5f8992e49cb54d18386a7f',
     );
-    // Profilskjemaet er oppdatert NØYACT som REV 1.2 krever: agePrefMax
+    // Profilskjemaet er oppdatert NØYACT som REV 1.2 + A18 krever: agePrefMax
     // blir nullable med endelig tak 98 — og brukerens EGEN alder (maks 99)
-    // er uendret.
+    // er uendret. A18: minimumsalder leser MIN_AGE (18) — ingen hardkodet 21.
     expect(sha256('lib/validation/onboarding-setup.ts')).toBe(
-      'ec07d756bdc0c8abf2d7c9cb594e8f3ef28d60cb93edf1e369cab67f78294a85',
+      '2494bf0667bf65d79e503a32caf9a7a5ab0c708be15263495d970d8a9ac17200',
     );
     const setup = read('lib/validation/onboarding-setup.ts');
-    expect(setup).toContain('agePrefMax: z.coerce.number().min(21).max(98).nullable(),');
-    expect(setup).toContain("age: z.coerce.number().min(21, 'Du må være minst 21 år').max(99, 'Alder kan ikke være over 99'),");
+    expect(setup).toContain('agePrefMax: z.coerce.number().min(MIN_AGE).max(98).nullable(),');
+    expect(setup).toContain('age: z.coerce.number().min(MIN_AGE, `Du må være minst ${MIN_AGE} år`).max(99, \'Alder kan ikke være over 99\'),');
   });
 
   test('OCL-20: personvern-claims unngår feil eksklusivitet', () => {

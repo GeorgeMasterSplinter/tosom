@@ -118,11 +118,11 @@ Dette dokumentet er din permanente referanse.
 
 ## 1. TOSOM IDENTITET & KJERNEFILOSOFI
 
-ToSom er en rolig, moderne og forskningsbasert relasjonsplattform for voksne (21+). 
+ToSom er en rolig, moderne og forskningsbasert relasjonsplattform for voksne (18+). 
 Plattformen hjelper to mennesker å møtes på en trygg, moden og strukturert måte — uten støy, uten jag, uten overflate.
 
 Brukeren bygger en dyp, veiledet profil, og når profilen er fullført, mottar de én gjennomtenkt match i uken (matchrunden kjører natt til lørdag). 
-Deretter går paret inn i en guidet 30-dagers reise som hjelper dem å bli kjent på en trygg, moden og fokusert måte.
+Deretter går paret inn i en guidet 14-dagers reise (to uker) som hjelper dem å bli kjent på en trygg, moden og fokusert måte.
 
 ### 1.1 ToSom er
 - privat  
@@ -171,7 +171,7 @@ Deretter går paret inn i en guidet 30-dagers reise som hjelper dem å bli kjent
 
 ## 1.6 PLATTFORMSKISSE (svart-hvitt)
 
-Rolig relasjonsplattform bygget på trygghet, struktur og 30-dagers reise.
+Rolig relasjonsplattform bygget på trygghet, struktur og 14-dagers reise.
 
 ### ONBOARDING
 Formål: bygge grunnprofil + starte reisen  
@@ -199,8 +199,8 @@ Innhold: avatar, navn, alder, avstand, special power, bio, interesser, bilder (l
 Flyt: DASHBOARD → MATCH-PROFIL → CHAT
 
 ### REISE (/journey)
-Formål: 30-dagers trygghetsreise  
-Innhold: dag 1–30, oppgaver, faser, låste bilder, systemmeldinger  
+Formål: 14-dagers trygghetsreise  
+Innhold: dag 1–14, oppgaver, faser, låste bilder, systemmeldinger  
 Flyt: DASHBOARD → REISE → CHAT
 
 ### CHAT (/chat)
@@ -214,7 +214,7 @@ Innhold: konto, varsler, personvern, språk, tema, slett konto
 Flyt: DASHBOARD → INNSTILLINGER
 
 ### LOOP-SYSTEM
-MATCH → REISE (30 dager) → CHAT → FULLFØRT  
+MATCH → REISE (14 dager) → CHAT → FULLFØRT  
 Valg: fortsette relasjonen eller avslutte → dashboard → ny match
 
 ## 2. TOSOM SPRÅKMANUAL (v2.0 – 2026)
@@ -519,13 +519,13 @@ Uten stress.
 
 ## 3.4 JOURNEY (REGELSYSTEM)
 
-Reisen er 30 dager, strukturert og rolig.
+Reisen er 14 dager (to uker), strukturert og rolig.
 
 ### Faser (4 faser — 4 aktive)
-- **Fase 1 (EARLY) — dag 1-14**: uten bilder
-- **Fase 2 (BUILDING_TRUST) — dag 15-21**: bilder tillatt
-- **Fase 3 (DEEPER) — dag 22-25**: dypere samtaler
-- **Fase 4 (CHECKIN) — dag 26-30**: refleksjon og oppsummering
+- **Fase 1 (EARLY) — dag 1-7**: uten bilder
+- **Fase 2 (BUILDING_TRUST) — dag 8-10**: bilder tillatt
+- **Fase 3 (DEEPER) — dag 11-12**: dypere samtaler
+- **Fase 4 (CHECKIN) — dag 13-14**: refleksjon og oppsummering
 
 ### Reisen inneholder:
 - daglige temaer  
@@ -1691,7 +1691,7 @@ ToSom består av fem hovedsystemer:
 
 1. **Onboarding-systemet**  
 2. **Matching-motoren (AI)**  
-3. **Journey-systemet (30 dager)**  
+3. **Journey-systemet (14 dager)**  
 4. **Chat-systemet (guidede spørsmål)**  
 5. **UI/Frontend (Nordic Gold + ToSom Blue)**  
 

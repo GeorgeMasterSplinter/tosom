@@ -13,7 +13,7 @@
 ## 0. Executive summary (oppdatert 26.10.2026 — Legal Pages Prep L1)
 
 **WHAT TOSOM IS**
-Relasjonsplattform for 21+ (ikke datingapp: ingen profilstrøm, ingen sveiping). Onboarding → én automatisk kobling om gangen (cron natt til lørdag) → privat 14-dagersreise med guidet innhold → dag 8: bilder → chat via Pusher → avslutning (fullført / avsluttet / «vi fant hverandre»).
+Relasjonsplattform for 18+ (ikke datingapp: ingen profilstrøm, ingen sveiping). Onboarding → én automatisk kobling om gangen (cron natt til lørdag) → privat 14-dagersreise med guidet innhold → dag 8: bilder → chat via Pusher → avslutning (fullført / avsluttet / «vi fant hverandre»).
 
 **WHAT BETA IS**
 Limited free beta: invitasjonsbasert (invite-gate PÅ), de første 5 000 personene gratis, ingen betaling i dag (PAYMENTS_ENABLED=false, ingen betalingsvei implementert), ingen web-analytics.
@@ -31,7 +31,7 @@ Fullføring på dag 14 er bilateralt: hver part velger hver for seg («Vi fant h
 Selger ikke personopplysninger · ingen markedsføring/analytikk med brukerdata · ingen AI som tolker eller skriver til brukeren · ingen kontinuerlig overvåking av samtaler (kun ved rapport) · ingen IP-lagring i vår DB · ingen profil vises offentlig · ingen match-/resultatgaranti.
 
 **CURRENT LEGAL DOCUMENTS**
-`/vilkar` v2026-10-26 · `/personvern` v2026-10-26 (ombygd til 14 punkter, absolutte claims fjernet) · `/samtykke` (separat uttrykkelig art. 9-samtykke) · `/cookies` · `docs/JURIDISK-GRUNNLAG-v1.0.md` (A-1…A-7) · `docs/legal/DPA.md` + `docs/legal/DPIA.md` · `docs/LEGAL-PAGES-PRELAWYER-REVIEW-v1.0.md` (claim-tabell + [L1]–[L4]-merker) — dette er den konkrete saksakten.
+`/vilkar` v2026-10-29 · `/personvern` v2026-10-29 (ombygd til 14 punkter, absolutte claims fjernet; 29.10: A18 minimumsalder 18+) · `/samtykke` (separat uttrykkelig art. 9-samtykke) · `/cookies` · `docs/JURIDISK-GRUNNLAG-v1.0.md` (A-1…A-7) · `docs/legal/DPA.md` + `docs/legal/DPIA.md` · `docs/LEGAL-PAGES-PRELAWYER-REVIEW-v1.0.md` (claim-tabell + [L1]–[L4]-merker) — dette er den konkrete saksakten.
 
 **TOP OPEN LEGAL DECISIONS**
 1. Art. 6-bokstav per formål (matrise i PRELAWYER §4)
@@ -49,9 +49,44 @@ Selger ikke personopplysninger · ingen markedsføring/analytikk med brukerdata 
 
 ---
 
+## A18 — PRODUKTEÅNDRING (29.10.2026): minimumsalder 21 → 18
+
+**Faktum (ingen juridisk vurdering her):**
+
+- Tossoms intended minimum user age endres fra **21** til **18** (godkjent
+  produktbeslutning D1–D8, 29.10.2026). Implementert i working tree, IKKE deployet
+  før advokatgjennomgang er avklart.
+- Alderen er **selvrapportert** (ingen identitetsverifisering) — både før og etter.
+- Server-side: validering `age >= 18` ved onboarding/profil + ny eksplicit kø-guard
+  (under 18 kan ikke bli matching-eligible). 18+ er produktgrense, ikke
+  target-gruppe-posisjonering (plattformen forblir voksenrettet relasjonsprodukt).
+- `/vilkar` + `/personvern` viser nå 18+ (versjon bump 2026-10-29; eksisterende
+  brukere får rolig om-aksept ved neste innlogging).
+- Eksisterende brukeres lagrede alderspreferanser endres IKKE; nye brukere får
+  synlig/redigerbar default 18–40 («foreslått utgangspunkt» — ingen
+  anbefalings-claim). 99+ = åpen øvre grense (uendret). Bidireksjonell alders-
+  matching (uendret). Ingen skjult aldersgap-regel.
+- Slettes/ban-fløyen ved oppdaget aldersgrense-brudd er uendret (runbook: «under 18»).
+
+**Spørsmål til advokaten (besvares IKKE på deres vegne):**
+
+1. Noen juridisk grunn til å beholde 21 som minimumsalder (f.eks.
+   digitalytelsesloven, markedsføringsloven, ansvarshensyn)?
+2. Krever 18–20-årige spesiell personvern-ordlyd — særlig art. 9-samtykke
+   (religion/livssyn, intimitet, seksuell orientering-indikatorer) for nyelig
+   myndige, og/eller ekstra tydelighet i `/personvern` for de nyelig eligible?
+3. Påvirkning på art. 9-samtykke-mekanismen (gyldighet, uttak, dokumentasjon) for
+   brukere 18–20?
+4. Markedsførings- og safety-hensyn: målrettelse, annonsering, selvrapportert
+   alder uten verifisering ved lavere grense, og hensyn i modereringsfløyer?
+
+**LEGAL REVIEW: PENDING.**
+
+---
+
 ## 1. Produktet (kort)
 
-- ToSom er en app for 21+ som bygger en gradvis, **14-dagers «reise»** mellom to personer: matching natt til lørdag → 7-dagers startvindu → **dag 8 foto-avsløring** → **dag 14 fullføring**.
+- ToSom er en app for 18+ som bygger en gradvis, **14-dagers «reise»** mellom to personer: matching natt til lørdag → 7-dagers startvindu → **dag 8 foto-avsløring** → **dag 14 fullføring**.
 - **Ingen AI-scoring**; deterministisk matching med 10 hard dealbreakers + scoring (`MIN_SCORE 40`, `MIN_COHORT 2`).
 - Gratis: 5 000 reiser (free quota), deretter betaling (IKKE aktivert).
 - Beta nå: **kun inviterte brukere** (invite gate), ingen public, ingen betaling, ingen web-analytics.

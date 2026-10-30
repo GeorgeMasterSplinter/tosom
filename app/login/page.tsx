@@ -330,11 +330,11 @@ export default function LoginPage() {
               />
             </div>
 
-            {/* P1-5 (ACT E, 24.10): 21+-kravet synlig ved registrering. Alderen
+            {/* P1-5 (ACT E, 24.10): 18+-kravet synlig ved registrering. Alderen
                 håndheves server-side i onboarding (MIN_AGE i config/legal.ts)
                 og er selvrapportert — copyen lover ingen verifikasjon. */}
             <p className="pt-1 text-center text-sm" style={{ color: "rgba(255,255,255,0.55)" }}>
-              Tosom er for deg som har fylt 21 år.
+              Tosom er for deg som har fylt 18 år.
             </p>
 
             <button type="submit" disabled={status === "loading"} style={buttonStyle}>

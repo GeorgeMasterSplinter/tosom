@@ -636,7 +636,7 @@ export default function ReisenPage() {
                   color: color.text.muted,
                 }}
               >
-                Tosom er for deg som har fylt 21
+                Tosom er for deg som har fylt 18
               </span>
             </div>
 

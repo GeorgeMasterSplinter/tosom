@@ -1,6 +1,11 @@
 /**
  * Seed-skript for JourneyDayContent
  *
+ * LEGACY (30-dagersmodell): skriptet seedet 30 poster for dag 1–30 med tema,
+ * refleksjonsspørsmål og samtaleprompt. Kanonisk reisevarighet er nå 14 dager
+ * (config/journey.ts → JOURNEY_TOTAL_DAYS, 7/14-modell). Ikke kjør dette
+ * skriptet uten en ny 14-dagers innholdsjobb.
+ *
  * Oppretter 30 poster for dag 1–30 med tema, refleksjonsspørsmål og samtaleprompt.
  * Fase-inndeling fra engine.ts (kanonisk, PHASE_CONFIGS):
  *   Dag 1–14:  EARLY          (bryt isen, uten bilder)

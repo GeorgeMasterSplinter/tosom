@@ -68,27 +68,32 @@ export function companyFooterLine(): string {
  * 26.10: LEGAL PREP L1 — gratis-beta-avklaring, betalings/angrerettspunkt
  *        flyttet til fremtidige kjøpsvilkår (Paid V1), slette-/24t-PDF-
  *        beskrivning satt i samsvar med runtime.
+ * 29.10: A18 — minimumsalder 21 → 18 (faktisk produktendring; advokatgjennomgang
+ *        PENDING — se docs/AGE-18-CONVERSION-ACT-v1.0.md).
  */
-export const TERMS_VERSION = '2026-10-26';
-export const TERMS_UPDATED = '26. oktober 2026';
+export const TERMS_VERSION = '2026-10-29';
+export const TERMS_UPDATED = '29. oktober 2026';
 
 /**
  * Gjeldende versjon av personvernerklæringen.
  * 26.10: LEGAL PREP L1 — struktur ombygd til 14 punkter, absolutte claims
  *        fjernet, datakategorier/leverandører/retensjon kartlagt mot HEAD.
+ * 29.10: A18 — minimumsalder 21 → 18 (faktisk produktendring; advokatgjennomgang
+ *         PENDING — se docs/AGE-18-CONVERSION-ACT-v1.0.md).
  */
-export const PRIVACY_VERSION = '2026-10-26';
-export const PRIVACY_UPDATED = '26. oktober 2026';
+export const PRIVACY_VERSION = '2026-10-29';
+export const PRIVACY_UPDATED = '29. oktober 2026';
 
 /**
  * Aldersgrense. Invariant I-14.
- * Endres denne, må også valideringsskjemaene endres:
+ * A18 (29.10.2026): 21 → 18 (produktbeslutning D1/D8). Endres denne, må
+ * også valideringsskjemaene endres:
  *   lib/validation/onboarding-setup.ts
  *   lib/validation/profile.ts
  *   lib/validation/api.ts
  *   lib/api/validation.ts
  */
-export const MIN_AGE = 21;
+export const MIN_AGE = 18;
 
 /**
  * Prismodell.

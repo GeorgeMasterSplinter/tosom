@@ -245,7 +245,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             value={val('age', '')(data)}
             onChange={(v) => onChange('age', v)}
             placeholder="25"
-            mikroguiding="Må være minst 21"
+            mikroguiding={`Må være minst ${MIN_AGE}`}
             maxLength={3}
             minChars={2}
             testId="ob-age"
@@ -358,7 +358,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
             </p>
           </div>
 
-          {/* Aldersspenn du ønsker å møte — synlig default (21–40 pre-fylt),
+          {/* Aldersspenn du ønsker å møte — synlig default (18–40 pre-fylt, A18),
               endrbart, med 99+ (null) som åpen øvre grense (D1–D3, REV 1.2). */}
           <div>
             <p className="text-[15px] font-medium mb-1" style={{ color: OB.textSecondary }}>

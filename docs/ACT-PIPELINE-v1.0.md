@@ -189,7 +189,7 @@ Før hver patch: sjekk om noen berøres.
 | I-11 | Uten match → vent til neste lørdag |
 | I-12 | Brukeren ser ord, aldri tall |
 | I-13 | «Vi fant hverandre» sletter begge kontoer |
-| I-14 | Aldersgrense 21+ (`MIN_AGE` i `config/legal.ts`) |
+| I-14 | Aldersgrense 18+ (A18 29.10; `MIN_AGE` i `config/legal.ts`) |
 
 **Berører patchen en invariant → stopp og spør.** Uansett hvor åpenbart det virker.
 

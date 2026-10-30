@@ -64,7 +64,7 @@ interface HeroProps {
 
 export const Hero: FC<HeroProps> = ({
   title = 'Én person. To uker. Første uke uten bilder.',
-  subtitle = 'Tosom er en rolig, privat plattform for voksne (21+).\nDu forteller oss hvem du er, og vi leter etter en person som kan passe deg.\nResten er opp til dere.',
+  subtitle = 'Tosom er en rolig, privat plattform for voksne (18+).\nDu forteller oss hvem du er, og vi leter etter en person som kan passe deg.\nResten er opp til dere.',
 }) => {
   const heroRef = useRef<HTMLDivElement | null>(null);
   useParallax(heroRef);

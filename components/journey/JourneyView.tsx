@@ -47,13 +47,13 @@ export default function JourneyView({ currentDay }: JourneyViewProps) {
   const phaseBg = phaseColorMap[phaseConfig.phase] ?? phaseColorMap.EARLY;
 
   const faseTekst = journeyState.journeyCompleted
-    ? "Denne matchen er ferdig. Reisen varer i 30 dager."
+    ? `Denne matchen er ferdig. Reisen varer i ${JOURNEY_TOTAL_DAYS} dager.`
     : !journeyState.journeyActive
     ? "Reisen din er ikke startet ennå."
     : `Fase ${phaseConfig.phase === "EARLY" ? "1" : "2"}`;
 
   const faseUnderTekst = journeyState.journeyCompleted
-    ? "Takk for at dere gav hverandre 30 dager."
+    ? `Takk for at dere gav hverandre ${JOURNEY_TOTAL_DAYS} dager.`
     : !journeyState.journeyActive
     ? "Du kan starte reisen når du er klar."
     : journeyState.photosAllowed

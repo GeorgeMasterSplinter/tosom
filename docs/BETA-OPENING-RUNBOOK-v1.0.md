@@ -155,9 +155,9 @@ For hvert scenario: **HVA / ADMIN‑AKSJON / KOMMUNIKASJON / ESKALERING.**
 - ESKALERING: Akutt livsfare → **113** umiddelbart.
 
 **C. Mindreårige / feil alder**
-- HVA: Mistanke om at en bruker er under 21 (eller under 18).
+- HVA: Mistanke om at en bruker er under 18 (minimumsalderen, A18).
 - ADMIN‑AKSJON: Stopp matching for kontoen, bevisstgjør sletting (GDPR) dersom bekreftet.
-- KOMMUNIKASJON: Bekreft alderskravet (21+); erklær sletting.
+- KOMMUNIKASJON: Bekreft alderskravet (18+); erklær sletting.
 - ESKALERING: Mindreårig i en dating‑kontekst → advokat + vurder politianmeldelse.
 
 **D. Datalekk / mistenkt PII‑eksponering**
@@ -193,7 +193,7 @@ For hvert scenario: **HVA / ADMIN‑AKSJON / KOMMUNIKASJON / ESKALERING.**
 
 **Anbefalt startstørrelse: 6–10 håndplukkede brukere** (gulv 4, tak ~12).
 - **Hvorfor:** Matching krever `MIN_COHORT=2` per kohort og danner par under strenge hard‑dealbreakers (kjønn, alder, radius, livssyn, livsstil). For at RUNDE 1 skal gi minst 1–2 ekte par, trengs en liten gruppe som er **kompatible med hverandre**.
-- **Kriterier:** Alle 21+, kjente/anbefalte, bevisst på at det er beta; balansert kjønnsfordeling; innenfor kompatibel radius; kompatible på hard‑dealbreakers (livssyn/barn/livsstil/alder).
+- **Kriterier:** Alle 18+, kjente/anbefalte, bevisst på at det er beta; balansert kjønnsfordeling; innenfor kompatibel radius; kompatible på hard‑dealbreakers (livssyn/barn/livsstil/alder).
 - **Merk:** Anbefaling basert på matching‑konfig i repo; faktisk matchkapasitet kan ikke verifiseres fra her. George justerer opp/ned.
 - **Tidspunkt:** Alle fullfører onboarding FØR den første lørdag 02:00–04:00 (matching‑cron).
 
@@ -207,7 +207,7 @@ Jeg åpner nå en svært begrenset, gratis beta av ToSom. Det er kun en håndful
 Hva ToSom er: en 14-dagers "reise" der du gradvis blir kjent med én person – med fokus på god samtale og trygghet, ikke raskt "swiping". Kun invitasjonskoder, så det er trygt og begrenset.
 
 Hva jeg trenger av deg:
-- Være 21+ og ærlig i profilene
+- Være 18+ og ærlig i profilene
 - Fullføre onboarding (ca. 15–20 min)
 - Prøve kjernen: matching → reise → chat
 - Gi ærlig tilbakemelding (jeg sender et kort spørreskjema)

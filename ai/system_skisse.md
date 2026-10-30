@@ -8,7 +8,7 @@
 ## 1. PLATTFORMOVERSIKT
 
 ### Konsept
-ToSom er en rolig, moden og forskningsbasert relasjonsplattform for voksne (21+). Plattformen hjelper to mennesker å møtes på en trygg, strukturert måte — uten støy, uten jag, uten overflate.
+ToSom er en rolig, moden og forskningsbasert relasjonsplattform for voksne (18+). Plattformen hjelper to mennesker å møtes på en trygg, strukturert måte — uten støy, uten jag, uten overflate.
 
 ### Kjerneverdier
 - Privat · Forskningsbasert · Moden · Rolig · High-tech · Premium
@@ -18,7 +18,7 @@ ToSom er en rolig, moden og forskningsbasert relasjonsplattform for voksne (21+)
 - Én god match — ikke mange dårlige
 - En trygg, moden og rolig opplevelse
 - En dyp, veiledet profil (13 steg)
-- En 30-dagers reise som hjelper deg
+- En 14-dagers reise som hjelper deg
 - Null stress, null jag, null overfladiskhet
 
 ### Språkregel
@@ -35,7 +35,7 @@ Ingen nynorsk. Ingen slang. Ingen teknisk språk mot bruker.
 | `/` | Landing | Første inntrykk, "Bygg forhold", CTA til Register/Login |
 | `/login` | Logg inn | Vipps OAuth for eksisterende brukere |
 | `/register` | Registrer | Ny bruker, Vipps OAuth |
-| `/slik-fungerer-det` | Slik fungerer det | Plattform-forklaring (30 dager, én match, etc.) |
+| `/slik-fungerer-det` | Slik fungerer det | Plattform-forklaring (14 dager, én match, etc.) |
 | `/priser` | Priser | Abonnementsinformasjon |
 | `/om-oss` | Om oss | ToSom-historikk og team |
 | `/personvern` | Personvernerklæring | GDPR-info |
@@ -51,8 +51,8 @@ Ingen nynorsk. Ingen slang. Ingen teknisk språk mot bruker.
 | `/chat` | Chat-oversikt | Liste over aktive samtaler |
 | `/chat/[id]` | Chat-rom | Aktiv chat med partner |
 | `/profile` | Min profil | Se egen profil (visning) |
-| `/profile/edit` | Rediger profil | Endre profil (låst dag 1-29) |
-| `/reisen/avslutning` | Avslutning | Dag 30 valg: Ja til tosommhet / Start ny reise |
+| `/profile/edit` | Rediger profil | Endre profil (låst dag 1-14) |
+| `/reisen/avslutning` | Avslutning | Dag 14 valg: Ja til tosommhet / Start ny reise |
 | `/settings` | Innstillinger | Konto, personvern, varsler |
 
 ---
@@ -130,24 +130,24 @@ Ingen nynorsk. Ingen slang. Ingen teknisk språk mot bruker.
    ├── DASHBOARD ("Din oversikt"):
    │   ├── Handlinger: "Gå til samtalen" / "Innstillinger"
    │   ├── Profil + Partner-kort
-   │   ├── Journey-progresjon (dag-N/30)
+   │   ├── Journey-progresjon (dag-N/14)
    │   └── "Avslutt reisen" knapp (rød)
    ├── CHAT:
    │   ├── ChatHeader: Partner-navn, dag-teller, "Bli kjent"-knapp
    │   ├── Mood-selector: 5 farger (🌊☀️🔮🌿✨), valgfri
    │   ├── Meldingsbobler med animasjon
    │   ├── "Bli kjent" panel: 12 kategorier × ~20 spørsmål = 240+ spørsmål
-   │   └── Bilder låst til dag 15
+   │   └── Bilder låst til dag 8
    ├── REISE (i Dashboard):
    │   ├── Daglig tema + refleksjonsprompt (frivillig)
    │   ├── Kalender/tidslinje
    │   └── Progresjonsbar (0-30%)
    ├── PROFIL: Kun visning, 🔒 redigering låst
-   └── DAG 15: Bilder åpnes (ImageShareLockBanner)
+   └── DAG 8: Bilder åpnes (ImageShareLockBanner)
 
-5. DAG 30 — AVLUTNING ("/reisen/avslutning")
+5. DAG 14 — AVLUTNING ("/reisen/avslutning")
    │ "Reisen din er fullført 🎉"
-   │ "30 dagene har gått. Hva vil du gjøre nå?"
+   │ "14 dagene har gått. Hva vil du gjøre nå?"
    ├── Valg 1: "Ja til tosommhet 💛"
    │   → Chat slettes via POST /api/journey/reset?choice=complete
    │   → Match.status = 'COMPLETED'
@@ -173,7 +173,7 @@ Ingen nynorsk. Ingen slang. Ingen teknisk språk mot bruker.
 ### LANDING (`/`)
 - Hero: "Bygg forhold" eller liknende hovedmelding
 - CTA-knapper: "Registrer deg" → `/register`, "Allerede medlem?" → `/login`
-- Verdi-proposisjon: Én match, 30 dager, trygg og rolig
+- Verdi-proposisjon: Én match, 14 dager, trygg og rolig
 
 ### REGISTRER (`/register`)
 - Vipps OAuth som eneste login-metode
@@ -223,23 +223,23 @@ Ingen nynorsk. Ingen slang. Ingen teknisk språk mot bruker.
 **Mood-selector:** 5 alternativer (🌊☀️🔮🌿✨), valgfri knapp per bruker
 **Meldinger:** `MessageBubble` komponenter med animasjon
 **"Bli kjent":** Panel med 12 kategorier, velg → velg spørsmål → send i chat
-**Input:** Tekstfelt + bilde-knapp (dag ≥ 15) + send-knapp
+**Input:** Tekstfelt + bilde-knapp (dag ≥ 8) + send-knapp
 
 ### MIN PROFIL (`/profile`)
 - Foto/avatar med fase-farge border
-- Identitetsnavn + fase-badge ("Introduksjon · Dag X/30")
+- Identitetsnavn + fase-badge ("Introduksjon · Dag X/14")
 - Varme-score (%)
 - Profil-tags (gull-stil)
 - ProfileSecurityCard (lås-ikon, "Profilen din er privat")
 - Navigasjon: "Journey Dashboard" / "Til Chat"
 
 ### REDIGER PROFIL (`/profile/edit`)
-**Når ACTIVE_JOURNEY (dag 1-29):** Låse-banner med 🔒 + "← Tilbake til profil"
+**Når ACTIVE_JOURNEY (dag 1-14):** Låse-banner med 🔒 + "← Tilbake til profil"
 **Når ÅPEN:** Full redigeringsformular med alle onboarding-felter
 
 ### AVLUTNING (`/reisen/avslutning`)
 - H1: "Reisen din er fullført 🎉"
-- Tekst: "30 dagene har gått. Hva vil du gjøre nå?"
+- Tekst: "14 dagene har gått. Hva vil du gjøre nå?"
 - Valg 1: "Ja til tosommhet 💛" — "Dere fant hverandre. Møtes utenom ToSom, og lykke til! 🤍"
 - Valg 2: "Start ny reise 🔄" — "Ble ikke match. Prøv igjen med ny partner."
 - Begge valger sletter chat via API
@@ -249,7 +249,7 @@ Ingen nynorsk. Ingen slang. Ingen teknisk språk mot bruker.
 ## 6. API-RUTER
 
 ### `POST /api/journey/reset`
-**Formål:** Slett chat og fullfør/restart journey ved dag 30
+**Formål:** Slett chat og fullfør/restart journey ved dag 14
 **Body:** `{ "choice": "complete" | "loop_back" }`
 **Gjør:**
 1. Finn aktiv match for bruker
@@ -357,7 +357,7 @@ Text Muted:    rgba(255,255,255,0.4)
 - ✅ Én match i uken (natt til lørdag)
 - ✅ Guided spørsmål ("Bli kjent" — 12 kategorier × ~20 spørsmål)
 - ✅ Valgfri mood-farger i chat (5 alternativer)
-- ✅ Bilder fra dag 15
+- ✅ Bilder fra dag 8
 - ✅ Refleksjonsprompts (frivillige, i journey)
 
 ---

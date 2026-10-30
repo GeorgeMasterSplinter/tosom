@@ -9,7 +9,7 @@ import { SentryErrorBoundary } from "@/components/system/SentryErrorBoundary";
 import { COMPANY } from "@/config/legal";
 
 const BESKRIVELSE =
-  "Tosom er en rolig, privat plattform for voksne som søker ekte relasjoner. Én gjennomtenkt kobling om gangen, én guidet 14-dagers reise. For 21+.";
+  "Tosom er en rolig, privat plattform for voksne som søker ekte relasjoner. Én gjennomtenkt kobling om gangen, én guidet 14-dagers reise. For 18+.";
 
 const JSONLD_ORGANIZATION = {
   "@context": "https://schema.org",

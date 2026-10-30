@@ -274,7 +274,8 @@ test.describe('Onboarding Flow (13-stegs)', () => {
   });
 
   // -------------------------------------------------------------------------
-  // Steg 1 (Grunnprofil): aldersspenn 21–99+ (LANGUAGE & CLARITY ACT, REV 1.2)
+  // Steg 1 (Grunnprofil): aldersspenn med default 18–40 (A18) + 99+
+  // (LANGUAGE & CLARITY ACT, REV 1.2)
   // 99+ = ingen øvre aldersgrense (lagres som null)
   // -------------------------------------------------------------------------
 
@@ -291,7 +292,7 @@ test.describe('Onboarding Flow (13-stegs)', () => {
     await expect(page.getByTestId('ob-age-pref-99')).toHaveAttribute('aria-pressed', 'false');
   });
 
-  test('skal velge 99+ som maks alder på steg 1 (21–99+)', async ({ page }) => {
+  test('skal velge 99+ som maks alder på steg 1 (18–99+ med A18-default)', async ({ page }) => {
     await page.goto('/onboarding');
     await expectStep(page, 1, 'Grunnprofil');
 
@@ -399,6 +400,59 @@ test.describe('Onboarding Flow (13-stegs)', () => {
   });
 
   // -------------------------------------------------------------------------
+  // A18 (29.10.2026): minimumsalder 21 → 18, default preferanse 18–40
+  // Server-side under-18-kø-garde dekkes av __tests__/age18-conversion.test.ts
+  // (A18-13/15) — en under-18-profil kan ikke opprettes via støttet flyt,
+  // så den veien testes mot API-et, ikke E2E.
+  // -------------------------------------------------------------------------
+
+  test('A18: alder 17 blokkerer steg 1 (CTA av, hjelpetekst sier 18)', async ({ page }) => {
+    await page.goto('/onboarding');
+    await expectStep(page, 1, 'Grunnprofil');
+
+    await page.getByTestId('ob-name').fill('Testbruker');
+    await page.getByTestId('ob-age').fill('17');
+    await page.getByTestId('ob-gender').getByRole('button', { name: /Mann/ }).click();
+    await page.getByTestId('ob-seeking').getByRole('button', { name: /Kvinne/ }).click();
+    await page.getByTestId('ob-city').fill('Oslo');
+    await page.getByTestId('ob-postal').fill('0150');
+
+    // Alder 17 er under minimumsalder → steget er ikke gyldig, CTA av.
+    await expect(page.getByTestId('ob-next')).toHaveText('Fyll ut alle påkrevde felt');
+    await expect(page.getByTestId('ob-next')).toBeDisabled();
+    // Hjelpeteksten beskriver minimumsalderen som 18 — ingen stamme 21.
+    await expect(page.getByText('Må være minst 18')).toBeVisible();
+  });
+
+  test('A18: alder 18 godtas (CTA på, kan gå til steg 2)', async ({ page }) => {
+    await page.goto('/onboarding');
+    await expectStep(page, 1, 'Grunnprofil');
+
+    await fillStep1(page);
+    await page.getByTestId('ob-age').fill('18');
+    await expect(page.getByTestId('ob-next')).toHaveText('Fortsett til neste steg');
+    await clickNext(page);
+    await expect(page.getByTestId('ob-step-indicator')).toHaveText(`Steg 2 av ${TOTAL_STEPS}`);
+  });
+
+  test('A18: ny bruker får synlig, redigerbar default 18–40 (pre-fill)', async ({ page }) => {
+    // Isolasjon: fjern server-draft (delte E2E-bruker) — default gjelder kun
+    // når ingen lagret preferanse finnes (D3/D4).
+    await page.request.delete('/api/onboarding/draft');
+    await page.goto('/onboarding');
+    await expectStep(page, 1, 'Grunnprofil');
+
+    // Default er synlig i feltene (ikke skjult) — poll for async restaurering.
+    await expect.poll(() => page.getByTestId('ob-age-pref-min').inputValue()).toBe('18');
+    await expect(page.getByTestId('ob-age-pref-max')).toHaveValue('40');
+    // Hjelpeteksten: foreslått utgangspunkt — aldri «anbefalt»/«best» (D3).
+    await expect(page.getByText(/Vi har foreslått et/)).toBeVisible();
+    // Brukeren kan endre det (pre-fill er ikke låst).
+    await page.getByTestId('ob-age-pref-min').fill('21');
+    await expect(page.getByTestId('ob-age-pref-min')).toHaveValue('21');
+  });
+
+  // -------------------------------------------------------------------------
   // Hele flyten: alle 13 steg → matching
   //
   // KJØRER SISTE: fullfører onboarding for den delte E2E-brukeren
@@ -415,8 +469,8 @@ test.describe('Onboarding Flow (13-stegs)', () => {
     await page.goto('/onboarding');
 
     const fillers: Array<(p: Page) => Promise<void>> = [
-      // REV 1.2: fullflyten tester 21–99+ (åpen øvre grense) — oppsummeringen
-      // må vise «21–99+» på steg 12.
+      // REV 1.2 + A18: fullflyten tester 18–99+ (default min 18 + åpen øvre
+      // grense) — oppsummeringen må vise «18–99+» på steg 12.
       async (p: Page) => {
         await fillStep1(p);
         await p.getByTestId('ob-age-pref-99').click();
@@ -432,9 +486,9 @@ test.describe('Onboarding Flow (13-stegs)', () => {
       await clickNext(page);
     }
 
-    // Steg 12 (Oppsummering): aldersspennet er 21–99+ (REV 1.2)
+    // Steg 12 (Oppsummering): aldersspennet er 18–99+ (REV 1.2 + A18)
     await expectStep(page, 12, 'Se over før du går videre');
-    await expect(page.getByText('21–99+')).toBeVisible();
+    await expect(page.getByText('18–99+')).toBeVisible();
     await clickNext(page);
 
     // Siste steg: «Start reisen» lagrer profilen og stiller brukeren i køen.

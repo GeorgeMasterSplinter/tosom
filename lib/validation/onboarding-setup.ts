@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { getDistancePrefRange } from '@/config/distance-prefs';
 import { lookupPostalCode } from '@/lib/geo/lookup';
 import { ALL_ITEMS } from '@/lib/psychometrics/instruments';
+import { MIN_AGE } from '@/config/legal';
 
 /* ============================================================
    HJELPERE — tolerant input fra frontend (STEG 13.1 FIX)
@@ -47,7 +48,7 @@ function optEnum(values: string[]) {
 export const basicProfileSchema = z
   .object({
     identityName: z.string().min(2, 'Navn må være minst 2 tegn').max(50, 'Navn kan være maks 50 tegn'),
-    age: z.coerce.number().min(21, 'Du må være minst 21 år').max(99, 'Alder kan ikke være over 99'),
+    age: z.coerce.number().min(MIN_AGE, `Du må være minst ${MIN_AGE} år`).max(99, 'Alder kan ikke være over 99'),
     gender: z.string().min(1, 'Velg et kjønn'),
     seekingGender: z.string().min(1, 'Velg hvem du søker'),
     height: z.preprocess(blankToUndefined, z.coerce.number().min(100).max(250).optional()),
@@ -63,11 +64,11 @@ export const basicProfileSchema = z
     city: z.string().min(1, 'Hvor bor du?').max(100),
     postalCode: z.string().regex(/^\d{4}$/, 'Postnummer må ha fire siffer'),
     distancePref: z.coerce.number(),
-    agePrefMin: z.coerce.number().min(21).max(99),
+    agePrefMin: z.coerce.number().min(MIN_AGE).max(99),
     // REV 1.2 (produktbeslutning): agePrefMax = null betyr 99+ — ingen øvre
-    // aldersgrense i matchingen. Endelig maks alder er 21–98 (99 kun via
+    // aldersgrense i matchingen. Endelig maks alder er 18–98 (99 kun via
     // 99+). Brukerens EGEN alder (max 99) er et annet felt og uendret.
-    agePrefMax: z.coerce.number().min(21).max(98).nullable(),
+    agePrefMax: z.coerce.number().min(MIN_AGE).max(98).nullable(),
 
   })
   .superRefine((val, ctx) => {

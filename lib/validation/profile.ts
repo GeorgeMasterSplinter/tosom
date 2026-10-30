@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { MIN_AGE } from "@/config/legal";
 
 /**
  * Validering for onboarding (app/api/profile/route.ts).
@@ -6,7 +7,7 @@ import { z } from "zod";
 export const profileCreateSchema = z.object({
   firstName: z.string().min(1, "Fornamn er påkrevd"),
   lastName: z.string().min(1, "Etternamn er påkrevd"),
-  age: z.coerce.number().min(21).max(100),
+  age: z.coerce.number().min(MIN_AGE).max(100),
   gender: z.string().min(1, "Kjønn er påkrevd"),
   bio: z.string().max(1000).optional(),
   interests: z.array(z.string()).min(1, "Minst éin interesse er påkrevd"),
@@ -20,7 +21,7 @@ export type ProfileCreateInput = z.infer<typeof profileCreateSchema>;
 export const profileUpdateSchema = z.object({
   firstName: z.string().min(1).optional(),
   lastName: z.string().min(1).optional(),
-  age: z.coerce.number().min(21).max(100).default(25),
+  age: z.coerce.number().min(MIN_AGE).max(100).default(25),
 
   gender: z.string().min(1).optional(),
   bio: z.string().max(1000).optional(),

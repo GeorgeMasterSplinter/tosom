@@ -28,7 +28,7 @@ Konseptet er ikke endret i dette dokumentet. Det er beskrevet, verifisert og må
 ## 1. Kjerne
 
 ### 🔵 KONSEPT
-Tosom er en relasjonsplattform for voksne (21+). Ikke en datingapp.
+Tosom er en relasjonsplattform for voksne (18+). Ikke en datingapp.
 
 Brukeren bygger en dyp, veiledet profil. Når profilen er ferdig, stiller brukeren seg i kø. **Natt til lørdag** kjøres én matcherunde. Får du en match, går dere inn i en guidet **30-dagers reise**.
 
@@ -43,7 +43,7 @@ Matching-motoren er **den eneste** AI-funksjonen i Tosom.
 ### 🟢 IMPLEMENTERT
 Invariantene holder gjennom hele kodebasen. Det finnes ingen feed-rute, ingen swipe-komponent, ingen AI-tekstgenerering mot brukere. `config/features.ts` har ingen bryter som kan slå på noe av det.
 
-Aldersgrensen (21+, invariant I-14) håndheves i `config/legal.ts` (`MIN_AGE = 21`), `components/AgeRequirement.tsx` og onboarding-validering.
+Aldersgrensen (18+, invariant I-14) håndheves i `config/legal.ts` (`MIN_AGE = 18`), `components/AgeRequirement.tsx` og onboarding-validering.
 
 ---
 
@@ -415,7 +415,7 @@ Detaljert utførelse: `ACT-PIPELINE-v1.0.md`.
 | I-11 | Uten match → vent til neste lørdag |
 | I-12 | Brukeren ser ord, aldri tall |
 | I-13 | «Vi fant hverandre» sletter begge kontoer |
-| I-14 | Aldersgrense 21+ |
+| I-14 | Aldersgrense 18+ |
 
 Enhver endring som bryter en invariant krever eksplisitt godkjenning fra George. **Eneste dokumenterte avvik i dag:** I-4 under beta, flagget i `BETA-TEST` §4 bak `BETA_MATCH_EMAIL` (av som standard).
 
@@ -438,7 +438,7 @@ Det gjenstår ikke arkitektur. Det gjenstår **kontakt**: la tester inn, se dem,
 | Auth | Beta-modell dokumentert (e-post + passord), Vipps flyttet til lansering | `BETA-TEST` §3, `VIPPS-INTEGRATION-PLAN` |
 | Avvisningsobservasjon | `rejectReasons` med `kjonn`/`alder`-kategorier | WP1, `cron/matching` |
 | Størrelser | 116 API-ruter, 2 scheduled crons, 35 suiter / 311 tester | Verifisert 2026-08-24 |
-| Alder | I-14: 21+ (var 23+ i eldre utgaver) | `config/legal.ts` |
+| Alder | I-14: 18+ (A18 29.10; var 21+ før A18, 23+ i eldre utgaver) | `config/legal.ts` |
 
 ---
 

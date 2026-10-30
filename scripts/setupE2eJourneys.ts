@@ -69,7 +69,7 @@ async function main() {
           progressId: journey.id,
           day: 1,
           title: 'Dag 1 — Velkommen til reisen',
-          summary: 'Reisen din har begynt. Dette er starten på 30 dager sammen med din match.',
+          summary: 'Reisen din har begynt. Dette er starten på 14 dager sammen med din match.',
         },
       })
     } else {

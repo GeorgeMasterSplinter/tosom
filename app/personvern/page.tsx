@@ -53,7 +53,7 @@ const sections: Section[] = [
     paragraphs: [
       'Tosom er et sted der to voksne kan møtes — og vi vet at det krever tillit. Profilen din er privat: den vises ikke offentlig, og den personen du kobles med ser bare et lite utvalg av den.',
       'Vi selger ikke personopplysninger, og vi bruker dem ikke til markedsføring. Noen leverandører hjelper oss med å drive tjenesten — hosting, database, bilder, chat, e-post og feilovervåking. De står listet i punkt 7, og de behandler opplysningene for oss, ikke for seg selv.',
-      'Tosom er kun for voksne (21+). Vi retter oss ikke mot barn, og oppdager vi at en bruker er under aldersgrensen, slettes kontoen.',
+      'Tosom er kun for voksne (18+). Vi retter oss ikke mot barn, og oppdager vi at en bruker er under aldersgrensen, slettes kontoen.',
       'Denne erklæringen forteller nøyaktig hva vi lagrer, hvorfor, hvor lenge — og hva du kan kreve av oss.',
     ],
   },

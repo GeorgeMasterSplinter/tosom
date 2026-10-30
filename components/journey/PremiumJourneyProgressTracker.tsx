@@ -1,4 +1,5 @@
-// components/journey/PremiumJourneyProgressTracker.tsx — Viser 30 dager som grid med gull-farge for utfylte dager
+// components/journey/PremiumJourneyProgressTracker.tsx — LEGACY/UKNYTT: grid for gammel 30-dagersmodell.
+// Kanonisk reisevarighet er 14 dager (config/journey.ts → JOURNEY_TOTAL_DAYS). Komponent er ikke importert noe sted.
 'use client';
 
 import { useState } from 'react';

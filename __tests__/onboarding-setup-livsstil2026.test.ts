@@ -77,12 +77,17 @@ describe('validateOnboarding — livsstil2026', () => {
 
   it('avviser ugyldig verdi på valg-felt', () => {
     const result = validateOnboarding(
-      fullPayload({ livsstil2026: { kosthold: 'spiser-mykke-mat' } })
+      fullPayload({ livsstil2026: { bil: 'spiser-mykke-mat' } })
     );
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.errors.map((e) => e.field)).toContain('livsstil2026.kosthold');
+      expect(result.errors.map((e) => e.field)).toContain('livsstil2026.bil');
     }
+  });
+
+  it('O2 P1: kosthold er nå flervalg (kommaseparert) — godtar 1–2 token', () => {
+    expect(validateOnboarding(fullPayload({ livsstil2026: { kosthold: 'vegan' } })).success).toBe(true);
+    expect(validateOnboarding(fullPayload({ livsstil2026: { kosthold: 'vegetar,vegan' } })).success).toBe(true);
   });
 
   it('avviser ugyldig viktighetsnivå (D-4)', () => {

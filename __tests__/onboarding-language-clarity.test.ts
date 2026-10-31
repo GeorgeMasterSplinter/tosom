@@ -253,13 +253,16 @@ describe('ONBOARDING LANGUAGE & CLARITY ACT O1', () => {
     );
   });
 
-  test('OCL-19: matching — REV 1.2 tillater kun åpen maks-alder-semantikk', () => {
-    // REV 1.2 (produktbeslutning): den ENSTE tillatte matching-endringen er
-    // at agePrefMax = null betyr 99+ (åpen øvre grense — ingen maks-alder-
-    // dealbreaker). dealbreaker.ts er oppdatert for nettopp dette;
-    // atferdslinjene er låst byte-nøyaktig under.
+  test('OCL-19: matching — REV 1.2 + O2 P1 er de tillatte endringene', () => {
+    // Tillatte matching-endringer:
+    //  (1) REV 1.2 (produktbeslutning): agePrefMax = null betyr 99+ (åpen øvre
+    //      grense — ingen maks-alder-dealbreaker).
+    //  (2) O2 P1 (godkjent spes): kosthold er nå flervalg (maks 2) — isKompatibel/
+    //      isL2026Kompatibel generaliserer single-verdi-tjekk til én kompatibel
+    //      par. Ingen ny hard grense; scoring (dimensions.ts) er uendret.
+    // Atferdslinjene for alder er låst byte-nøyaktig under.
     expect(sha256('lib/matching/dealbreaker.ts')).toBe(
-      '13c0ca85d8152d12b986ccb3657ca0ddb0eba7be5947c93fbb647eb788b919a7',
+      '6621f2b800f3896c07d89260ee34f4e80ebd589f3f35fc40b1ecd8aff2fa25e6',
     );
     const dealbreaker = read('lib/matching/dealbreaker.ts');
     // Endelig maks blokkerer fortsatt kun ved alder > maks; minimum ved
@@ -268,7 +271,7 @@ describe('ONBOARDING LANGUAGE & CLARITY ACT O1', () => {
     expect(dealbreaker).toContain('if (max != null && age > max) {');
     // Alt annet i matchingen er uendret (identiske hashes):
     expect(sha256('lib/matching/cheapFeatures.ts')).toBe(
-      '86cb7c78e72ad52c7f088bc9f8a38e9f9e3552c904e588daf91c28f22d879dcd',
+      '9aa2b3e79cb13f232dc57a6fd245a30f4a0a3df8b32349c2124311bcde8a1440',
     );
     expect(sha256('lib/matching/dimensions.ts')).toBe(
       'e4077caa71c933fa292695615767baee9175391e48d471c465bbcb6ed0c470c8',
@@ -283,7 +286,7 @@ describe('ONBOARDING LANGUAGE & CLARITY ACT O1', () => {
     // blir nullable med endelig tak 98 — og brukerens EGEN alder (maks 99)
     // er uendret. A18: minimumsalder leser MIN_AGE (18) — ingen hardkodet 21.
     expect(sha256('lib/validation/onboarding-setup.ts')).toBe(
-      '2494bf0667bf65d79e503a32caf9a7a5ab0c708be15263495d970d8a9ac17200',
+      '98247e33f2763a6f9d82ef0a392f91b7cbd01758ed46f954af58207c85993707',
     );
     const setup = read('lib/validation/onboarding-setup.ts');
     expect(setup).toContain('agePrefMax: z.coerce.number().min(MIN_AGE).max(98).nullable(),');

@@ -8,7 +8,6 @@
 import { useState } from 'react';
 import { OnboardingSlide } from '@/app/onboarding/components/OnboardingSlide';
 import { OB } from '@/app/onboarding/theme';
-import { OnboardingTextField } from '@/app/onboarding/components/OnboardingTextField';
 import { OnboardingSelectGrid } from '@/app/onboarding/components/OnboardingSelectGrid';
 import { Valgvikt } from '@/app/onboarding/components/Valgvikt';
 import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
@@ -22,8 +21,6 @@ interface ValidationError { field: string; message: string; }
 
 const validate = (d: Record<string, unknown>): ValidationError[] => {
   const e: ValidationError[] = [];
-  const ge = String(d['goodEveryday'] ?? '').trim();
-  if (!ge || ge.length < 10) e.push({ field: 'goodEveryday', message: 'Skriv minst 10 tegn om din gode hverdag.' });
   // PL-08b (D-1): skalasvarene er påkrevd per steg.
   const missing = missingScaleItems(d, PVQ10);
   if (missing.length > 0) e.push({ field: missing[0], message: 'Svar på alle påstandene.' });
@@ -36,19 +33,22 @@ export default function Step5LivsstilVerdier({ data, onChange, onBack, onNext, s
   const handleNext = () => { const ve = validate(data); if (ve.length > 0) { setErrors(ve); return; } setErrors([]); onNext(); };
   const getValue = (f: string, fb = '') => { const v = data[f]; return v !== undefined && v !== null ? String(v) : fb; };
 
+  // O2 P1: kosthold maks 2 — «Spiser det meste» (spiser-koett) kan ikke kombineres
+  // med vegetar/vegan. Velger man en konflikt, fjernes spiser-koett (beholder de strenge).
+  const handleKostholdChange = (v: string) => {
+    const parts = v.split(',').map((s) => s.trim()).filter(Boolean);
+    if (parts.includes('spiser-koett') && (parts.includes('vegetar') || parts.includes('vegan'))) {
+      onChange('kosthold', parts.filter((p) => p !== 'spiser-koett').join(','));
+      return;
+    }
+    onChange('kosthold', v);
+  };
+
   return (
     <OnboardingSlide title="Livsstil & verdier" subtitle="Hva prioriterer du i hverdagen?" guidingText="Livsstilssvarene dine hjelper oss å finne noen som trives i hverdag sammen med deg." slideIndex={5} totalSlides={13}
       accentColor={OB.section.lifestyle}>
       {errors.length > 0 && (<div className="mb-8 rounded-xl p-4 border" style={{ background: 'rgba(255,77,77,0.08)', borderColor: 'rgba(255,77,77,0.2)' }}><p className="text-sm font-medium mb-2" style={{ color: '#FF4D4D' }}>Vennligst fyll ut alle påkrevde felt:</p><ul className="text-sm space-y-1" style={{ color: 'rgba(255,255,255,0.7)' }}>{errors.map((x) => (<li key={x.field}>• {x.message}</li>))}</ul></div>)}
       <OnboardingSelectGrid label="Hva er viktigst for deg nå?" mikroguiding="Velg det som kjennes mest riktig" options={[{ value: 'karriere', label: 'Karriere og mål', icon: '🎯' }, { value: 'familie', label: 'Familie og nære relasjoner', icon: '👨‍👩‍👧‍👦' }, { value: 'venner', label: 'Venner og fellesskap', icon: '🤝' }, { value: 'personlig-vekst', label: 'Personlig vekst og læring', icon: '🌱' }, { value: 'frihet', label: 'Frihet og selvstendighet', icon: '🕊️' }, { value: 'spirituell', label: 'Spirituell/religiøst livssyn', icon: '✨' }]} selectedValue={getValue('highPriority', '')} onChange={(v) => onChange('highPriority', v)} maxSelected={2} />
-      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
-      <OnboardingSelectGrid label="Hva er mindre viktig for deg?" mikroguiding="Velg det som betyr minst for deg nå" options={[{ value: 'materiell', label: 'Materielle ting', icon: '💰' }, { value: 'status', label: 'Status og anerkjennelse', icon: '🏆' }, { value: 'sosial-media', label: 'Sosialt mediabruk', icon: '📱' }, { value: 'sport', label: 'Sport og konkurranse', icon: '⚽' }, { value: 'underholdning', label: 'Underholdning og kos', icon: '🎬' }]} selectedValue={getValue('lowPriority', '')} onChange={(v) => onChange('lowPriority', v)} maxSelected={2} />
-      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
-      <OnboardingTextField label="Hva gjør en god hverdag for deg?" value={getValue('goodEveryday', '')} onChange={(v) => onChange('goodEveryday', v)} placeholder="Beskriv en ideal-dag for deg — fra morgen til kveld — med konkrete elementer som gir deg mening og tilfredsstillelse i hverdagen" mikroguiding="Skriv f.eks. Frokost sammen med noen jeg bryr meg om" maxLength={300} minChars={10} rows={4} multiline testId="ob-good-everyday" />
-      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
-      <OnboardingSelectGrid label="Hvordan ønsker du å leve?" mikroguiding="Dette er hva du drømmer om" options={[{ value: 'roleg', label: 'Rolig og forutsigbart', icon: '🌿' }, { value: 'eventyr', label: 'Eventyr og endring', icon: '🧭' }, { value: 'balansert', label: 'Balansen mellom ro og aktivitet', icon: '⚖️' }, { value: 'skapende', label: 'Skapende og kunstnerisk', icon: '🎨' }]} selectedValue={getValue('desiredLifestyle', '')} onChange={(v) => onChange('desiredLifestyle', v)} maxSelected={2} />
-      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
-      <OnboardingSelectGrid label="Hvordan ønsker du IKKE å leve?" mikroguiding="Hva du vil unngå" options={[{ value: 'ensom', label: 'Alene og isolert', icon: '😔' }, { value: 'stress', label: 'Konstant stress', icon: '🌀' }, { value: 'rutine', label: 'Monoton rutine', icon: '😐' }, { value: 'økonomisk-utrygg', label: 'Økonomisk utrygghet', icon: '💸' }]} selectedValue={getValue('undesiredLifestyle', '')} onChange={(v) => onChange('undesiredLifestyle', v)} maxSelected={2} />
 
       {/* ────────────────────────────────────────────────────── */}
       {/* Nye hverdagsvalg (LIVSSTIL-2026, D-2/D-4) — alle valgfrie */}
@@ -70,13 +70,13 @@ export default function Step5LivsstilVerdier({ data, onChange, onBack, onNext, s
 
       {/* kosthold + vektmodell */}
       <div>
-        <OnboardingSelectGrid label="Hvordan spiser du?" mikroguiding="Velg det som gjelder for deg nå." options={[
-          { value: 'spiser-koett', label: 'Spiser kjøtt', icon: '🍖' },
-          { value: 'fleksitar', label: 'Fleksitar', icon: '🥗' },
+        <OnboardingSelectGrid label="Hvordan spiser du?" mikroguiding="Velg opptil to." options={[
+          { value: 'spiser-koett', label: 'Spiser det meste', icon: '🍖' },
+          { value: 'fleksitar', label: 'Mest plantebasert', icon: '🥗' },
           { value: 'vegetar', label: 'Vegetar', icon: '🥦' },
           { value: 'vegan', label: 'Vegan', icon: '🌱' },
           { value: 'fisk', label: 'Fokus på fisk', icon: '🐟' },
-        ]} selectedValue={getValue('kosthold', '')} onChange={(v) => onChange('kosthold', v)} columns={2} testId="ob-l2026-kosthold" />
+        ]} selectedValue={getValue('kosthold', '')} onChange={(v) => handleKostholdChange(v)} maxSelected={2} columns={2} testId="ob-l2026-kosthold" />
         <Valgvikt value={getValue('kostholdViktig', '')} onChange={(v) => onChange('kostholdViktig', v)} testId="ob-l2026-kosthold-viktig" />
       </div>
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
@@ -108,7 +108,7 @@ export default function Step5LivsstilVerdier({ data, onChange, onBack, onNext, s
           { value: 'lop-turer', label: 'Løping og turer', icon: '🏃' },
           { value: 'lagidrett', label: 'Lagidrett', icon: '⚽' },
           { value: 'natur-fritid', label: 'Natur og fritid', icon: '🥾' },
-          { value: 'lite', label: 'Lite aktiv', icon: '🛋️' },
+          { value: 'lite', label: 'Tar det rolig', icon: '🛋️' },
         ]} selectedValue={getValue('aktivitet', '')} onChange={(v) => onChange('aktivitet', v)} maxSelected={3} columns={2} testId="ob-l2026-aktivitet" />
         <Valgvikt value={getValue('aktivitetViktig', '')} onChange={(v) => onChange('aktivitetViktig', v)} testId="ob-l2026-aktivitet-viktig" />
       </div>

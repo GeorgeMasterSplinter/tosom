@@ -46,12 +46,22 @@ async function clickNext(page: Page) {
  * Kun ScaleQuestion-gruppene har «Både og (3 av 5)» som nøytralt svar
  * (1–5) — Valgvikt-radioknappene («Må stemme» osv.) ignoreres.
  * Steg uten skalaspørsmål har ingen slike radios og påverkes ikke.
+ *
+ * Robust mot langsom re-rendering (firefox/Gecko): skalamatrisen kan ikke
+ * være ferdig tegnet når antall hentes, så vi klikker på nytt til CTA-en er
+ * aktiv. (Chromium/mobil bryter etter én omgang.)
  */
 async function answerScales(page: Page) {
-  const radios = page.getByRole('radio', { name: 'Både og (3 av 5)' });
-  const count = await radios.count();
-  for (let i = 0; i < count; i++) {
-    await radios.nth(i).click();
+  const next = page.getByTestId('ob-next');
+  for (let attempt = 0; attempt < 12; attempt++) {
+    const radios = page.getByRole('radio', { name: 'Både og (3 av 5)' });
+    const count = await radios.count();
+    if (count === 0) break; // ingen skalaer på dette steget
+    for (let i = 0; i < count; i++) {
+      await radios.nth(i).click();
+    }
+    if (await next.isEnabled().catch(() => false)) break; // skalan er full
+    await page.waitForTimeout(150); // gir firefox tid til å rendre ferdig
   }
 }
 
@@ -66,50 +76,51 @@ async function fillStep1(page: Page) {
 }
 
 /**
- * Steg 2 (Personlighet & identitet): selfDesc + quirk som lengdefelt,
- * energyGiver/energyDrainer/pressureReact som valg-grid (LIVSSTIL-2026)
- * + Personlighet-V2-skala (PL-08).
+ * Steg 2 (Personlighet & identitet): energyGiver/energyDrainer/pressureReact
+ * som valg-grid (LIVSSTIL-2026) + TOSOM_PERSONALITY-skala (PL-08).
+ * O2 P1: selfDesc + quirk er fjernet (fritekst-sletting) — ingen lengdefelt.
  */
 async function fillStep2(page: Page) {
-  await page.getByTestId('ob-self-desc').fill('Jeg er en rolig og balansert person som verdsetter dype samtaler og ærlighet.');
   await page.getByTestId('ob-energy-giver').getByRole('button', { name: /Dype samtaler/ }).click();
   await page.getByTestId('ob-energy-drainer').getByRole('button', { name: /Store folkemengder/ }).click();
   await page.getByTestId('ob-pressure-react').getByRole('button', { name: /Trekker meg tilbake/ }).click();
-  await page.getByTestId('ob-quirk').fill('Jeg må alltid ha orden på ting før jeg kan slappe av.');
   await answerScales(page);
 }
 
-/** Steg 3 (Livssituasjon): seks valg-gridene (LIVSSTIL-2026). */
+/**
+ * Steg 3 (Livssituasjon): O2 P1 fjernet de seks dagligdags-gridene
+ * (workType/housingType/householdSize/economicStability/responsibilities/
+ * dailyRoutine). Livsstil-2026-feltene er valgfrie — ingenting blokkerer
+ * steget. Vi tester skjerm-valget (valgfritt).
+ */
 async function fillStep3(page: Page) {
-  await page.getByTestId('ob-work-type').getByRole('button', { name: /fulltid/i }).click();
-  await page.getByTestId('ob-housing').getByRole('button', { name: /Leilighet/ }).click();
-  await page.getByTestId('ob-household').getByRole('button', { name: /Jeg alene/ }).click();
-  await page.getByTestId('ob-economy').getByRole('button', { name: /Stabil økonomi/ }).click();
-  await page.getByTestId('ob-responsibilities').getByRole('button', { name: /Små barn/ }).click();
-  await page.getByTestId('ob-daily-routine').getByRole('button', { name: /I ro og mak/ }).click();
+  await page.getByTestId('ob-l2026-skjerm').getByRole('button', { name: /Moderat/ }).click();
 }
 
-/** Steg 4 (Tilknytning & trygghet): fire valg-gridene (LIVSSTIL-2026) + ett lengdefelt. */
+/** Steg 4 (Tilknytning & trygghet): fire valg-gridene (LIVSSTIL-2026) + ATTACHMENT-skala (PL-08). */
 async function fillStep4(page: Page) {
   await page.getByTestId('ob-safety-need').getByRole('button', { name: /Ærlighet/ }).click();
   await page.getByTestId('ob-insecurity-trigger').getByRole('button', { name: /Ubestemthet/ }).click();
   await page.getByTestId('ob-sadness-need').getByRole('button', { name: /Bare tilstedeværelse/ }).click();
   await page.getByTestId('ob-stress-need').getByRole('button', { name: /Rom til å roe meg/ }).click();
-  await page.getByTestId('ob-important-boundary').fill('Jeg trenger tid alene etter en tung dag.');
   await answerScales(page);
 }
-/** Steg 5 (Kjærlighetsspråk & nærhet): to gridene + tre lengdefelt. */
+/** Steg 5 (Kjærlighetsspråk & nærhet): fire valg-gridene (giv/mottar, nærhet/avstand). */
 async function fillStep5(page: Page) {
   await page.getByTestId('ob-love-give').getByRole('button', { name: /Ord og ros/ }).click();
   await page.getByTestId('ob-love-receive').getByRole('button', { name: /Ord og ros/ }).click();
   await page.getByTestId('ob-closeness-builder').getByRole('button', { name: /Dype samtaler/ }).click();
   await page.getByTestId('ob-distance-creator').getByRole('button', { name: /Stress og press/ }).click();
-  await page.getByTestId('ob-small-thing').fill('At noen husker at jeg vil ha kaffe på morgenen uten at jeg ber om det.');
 }
 
-/** Steg 6 (Livsstil & verdier): ett lengdefelt (gridene er valfrie) + PVQ10-skala (PL-08). */
+/**
+ * Steg 6 (Livsstil & verdier): O2 P1 fjernet «goodEveryday» (fritekst).
+ * Kosthold (maks 2) + aktivitet (maks 3) er valgfrie LIVSSTIL-2026-felt — vi
+ * tester begge. PVQ10-skala er påkrevd (PL-08).
+ */
 async function fillStep6(page: Page) {
-  await page.getByTestId('ob-good-everyday').fill('Frokost i ro, en tur ute, og en kveld med dype samtaler med noen jeg bryr meg om.');
+  await page.getByTestId('ob-l2026-kosthold').getByRole('button', { name: /Mest plantebasert/ }).click();
+  await page.getByTestId('ob-l2026-aktivitet').getByRole('button', { name: /Gym og trening/ }).click();
   await answerScales(page);
 }
 
@@ -119,11 +130,9 @@ async function fillStep7(page: Page) {
   await page.getByTestId('ob-closeness-need').getByRole('button', { name: /Balansert/ }).click();
 }
 
-/** Steg 8 (Framtid & visjon): tre valg-gridene (LIVSSTIL-2026) + to lengdefelt. */
+/** Steg 8 (Framtid & visjon): tre valg-gridene (LIVSSTIL-2026). */
 async function fillStep8(page: Page) {
   await page.getByTestId('ob-future-vision').getByRole('button', { name: /Familie og hjem/ }).click();
-  await page.getByTestId('ob-dream-goal').fill('Å bygge et eget hus i naturen sammen med noen jeg elsker.');
-  await page.getByTestId('ob-build-together').fill('En hverdag der vi deler både moro og utfordringer uten å tape oss selv.');
   await page.getByTestId('ob-experience-alone').getByRole('button', { name: /Reiser/ }).click();
   await page.getByTestId('ob-experience-together').getByRole('button', { name: /Kos og fellesskap/ }).click();
 }
@@ -131,21 +140,18 @@ async function fillStep8(page: Page) {
 // Steg 9 (Humor & personlighet): ingen tekstfelt — men COMMUNICATION-skala
 // er påkrevd (PL-08). Svares med answerScales i fullflyt-testen.
 
-/** Steg 10 (Grenser & behov): to gridene + to lengdefelt. */
+/** Steg 10 (Grenser & behov): to gridene. */
 async function fillStep10(page: Page) {
   await page.getByTestId('ob-never-cross').getByRole('button', { name: /Respekt for meg som person/ }).click();
   await page.getByTestId('ob-understand-partner').getByRole('button', { name: /Jeg lytter aktivt/ }).click();
-  await page.getByTestId('ob-limitations').fill('Jeg trenger aldri å bli møtt med høye stemmer eller skuldret skyld.');
-  await page.getByTestId('ob-partner-must-understand').fill('At jeg trenger tid alene for å bearbeide følelser før jeg kan dele dem.');
 }
 
-/** Steg 11 (Moden nysgjerrighet): fire valg-gridene (LIVSSTIL-2026) + ett lengdefelt + ERQ6-skala (PL-08). */
+/**
+ * Steg 11 (Moden nysgjerrighet): O2 P1 fjernet alle fem moden-feltene
+ * (intimacySafety/comfortableWith/boundary/nearerType/needsTime). Kun
+ * ERQ6-skalaen blokkerer steget (PL-08).
+ */
 async function fillStep11(page: Page) {
-  await page.getByTestId('ob-intimacy-safety').getByRole('button', { name: /Ord før nærhet/ }).click();
-  await page.getByTestId('ob-comfortable-with').getByRole('button', { name: /Sårbarhet/ }).click();
-  await page.getByTestId('ob-personal-boundary').fill('Jeg trenger tydelige signaler om når ting blir for mye.');
-  await page.getByTestId('ob-nearer-type').getByRole('button', { name: /Ro og stille/ }).click();
-  await page.getByTestId('ob-needs-time').getByRole('button', { name: /Mitt eget tempo/ }).click();
   await answerScales(page);
 }
 
@@ -210,7 +216,7 @@ test.describe('Onboarding Flow (13-stegs)', () => {
   // Steg 2 (Personlighet): valideringsporten — CTA deaktivert
   // -------------------------------------------------------------------------
 
-  test('skal blokkere framgang ved tom selfDesc (CTA deaktivert)', async ({ page }) => {
+  test('skal blokkere framgang ved ufullstendig steg 2 (CTA deaktivert)', async ({ page }) => {
     await page.goto('/onboarding');
     await advanceTo(page, 2);
 
@@ -226,7 +232,7 @@ test.describe('Onboarding Flow (13-stegs)', () => {
     await expect(next).toHaveText('Fortsett til neste steg');
   });
 
-  test('skal gå videre fra steg 2 med gyldig selfDesc', async ({ page }) => {
+  test('skal gå videre fra steg 2 (personlighet)', async ({ page }) => {
     await page.goto('/onboarding');
     await advanceTo(page, 2);
     await fillStep2(page);
@@ -238,7 +244,7 @@ test.describe('Onboarding Flow (13-stegs)', () => {
   // Steg 3 (Livssituasjon): validering
   // -------------------------------------------------------------------------
 
-  test('skal gå videre fra steg 3 med gyldig responsibilities', async ({ page }) => {
+  test('skal gå videre fra steg 3 (livssituasjon)', async ({ page }) => {
     await page.goto('/onboarding');
     await advanceTo(page, 3);
     await fillStep3(page);

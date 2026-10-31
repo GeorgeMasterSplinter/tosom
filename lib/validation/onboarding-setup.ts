@@ -126,7 +126,9 @@ export type BasicProfileInput = z.infer<typeof basicProfileSchema>;
    ============================================================ */
 
 export const personlighetSchema = z.object({
-  selfDesc: z.string().min(10, 'Skriv minst 10 tegn om hvem du er').max(500),
+  // O2 P1: selfDesc er tatt ut av aktiv innsamling — VALGFRI (behov ikke blokkere;
+  // historisk verdi bevares via prefill→payload→write, så tom verdi for nye brukere er OK).
+  selfDesc: optStr(500),
   // LIVSSTIL-2026 (D-5): konvertert til valg-grid — korte option-verdier, ingen min-lengde.
   energyGiver: optStr(300),
   energyDrainer: optStr(300),
@@ -190,7 +192,8 @@ export type KjærlighetsspråkInput = z.infer<typeof kjærlighetsspråkSchema>;
 export const livsstilSchema = z.object({
   highPriority: optStr(),
   lowPriority: optStr(),
-  goodEveryday: optStr(300, 10),
+  // O2 P1: goodEveryday er tatt ut av aktiv innsamling (fritekst-sletting) — VALGFRI.
+  goodEveryday: optStr(300),
   desiredLifestyle: optStr(),
   undesiredLifestyle: optStr(),
 });
@@ -215,10 +218,10 @@ export type RelasjonsStilInput = z.infer<typeof relasjonsStilSchema>;
 
 export const fremtidSchema = z.object({
   // LIVSSTIL-2026 (D-5): futureVision/experienceAlone/experienceTogether konvertert
-  // til valg-grid; dreamGoal er valgfri kort; buildTogether beholdes (varme, min 10).
+  // til valg-grid. O2 P1: dreamGoal + buildTogether tatt ut av aktiv innsamling — VALGFRIE.
   futureVision: optStr(200),
   dreamGoal: optStr(300),
-  buildTogether: optStr(300, 10),
+  buildTogether: optStr(300),
   experienceAlone: optStr(200),
   experienceTogether: optStr(200),
 });
@@ -298,7 +301,8 @@ export const livsstil2026Schema = z.object({
   // Steg 5a — livsstil & verdier
   bil: optEnum(['full-el', 'phev', 'bensin', 'diesel', 'esykkel-ingen']),
   bilViktig: optEnum([...VIKTIGHET]),
-  kosthold: optEnum(['spiser-koett', 'fleksitar', 'vegetar', 'vegan', 'fisk']),
+  // O2 P1: kosthold er flervalg (maks 2), kommaseparert — som aktivitet.
+  kosthold: optStr(100),
   kostholdViktig: optEnum([...VIKTIGHET]),
   klima: optEnum(['veldig-viktig', 'viktig', 'ikke-stor-sak']),
   alkohol: optEnum(['aldri', 'sjelden', 'helligdager', 'ofte']),

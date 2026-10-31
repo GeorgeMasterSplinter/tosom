@@ -222,6 +222,19 @@ function isL2026Kompatibel(felt: string, va: string, vb: string): boolean {
   }
   const matrise = LIVSSTIL2026_KOMPAT[felt];
   if (!matrise) return true; // ukjent felt/verdi → ikke blokkér (forsvarlig)
+  // O2 P1: kosthold er flervalg (maks 2) — speiler isKompatibel i dealbreaker.ts
+  // eksakt (ekvivalens). Kompatibel om én par (av∈A, bv∈B) er gjensidig kompatibelt.
+  if (felt === 'kosthold') {
+    const sa = va.split(',').map((s) => s.trim()).filter(Boolean);
+    const sb = vb.split(',').map((s) => s.trim()).filter(Boolean);
+    if (sa.length === 0 || sb.length === 0) return true;
+    for (const av of sa) {
+      for (const bv of sb) {
+        if ((matrise[av]?.includes(bv) ?? true) && (matrise[bv]?.includes(av) ?? true)) return true;
+      }
+    }
+    return false;
+  }
   return (matrise[va]?.includes(vb) ?? true) && (matrise[vb]?.includes(va) ?? true);
 }
 

@@ -480,7 +480,7 @@ export default function Step1Profile({ data, onChange, onNext }: Props) {
 
           <OnboardingSelectGrid
             label="Religion / livssyn"
-            mikroguiding="Velg opptil fire som beskriver deg. Mange har røtter i flere tradisjoner — det er helt naturlig."
+            mikroguiding="Velg det som beskriver deg."
             options={[
               { value: 'Kristen', label: 'Kristen', icon: '✝️' },
               { value: 'Katolsk', label: 'Katolsk', icon: '⛪' },

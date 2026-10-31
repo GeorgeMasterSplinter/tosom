@@ -146,13 +146,14 @@ function validateBasicStep(data: Record<string, unknown>): StepFieldError[] {
   return errors;
 }
 
-/** Steg 1 — Personlighet (speiler personlighetSchema: kun selfDesc er obligatorisk). */
-function validatePersonlighetStep(data: Record<string, unknown>): StepFieldError[] {
-  const errors: StepFieldError[] = [];
-  const selfDesc = str(data, 'selfDesc');
-  if (!selfDesc) errors.push({ field: 'selfDesc', message: 'Skriv litt om hvem du er.' });
-  else if (selfDesc.length < 10) errors.push({ field: 'selfDesc', message: 'Skriv minst 10 tegn om hvem du er.' });
-  return errors;
+/**
+ * Steg 1 — Personlighet.
+ * O2 P1: selfDesc er tatt ut av aktiv innsamling (fritekst-sletting). Kun
+ * TOSOM_PERSONALITY-skalaen blokkerer steget (via SCALE_STEPS under). Historisk
+ * selfDesc beholder seg i DB via prefill → payload → write, men kreves ikke lenger.
+ */
+function validatePersonlighetStep(_data: Record<string, unknown>): StepFieldError[] {
+  return [];
 }
 
 /**
@@ -177,16 +178,21 @@ const L2026_SINGLE: Record<string, string[]> = {
   // Steg 5 — livsstil & verdier
   bil: ['full-el', 'phev', 'bensin', 'diesel', 'esykkel-ingen'],
   bilViktig: L2026_VIKTIGHET,
-  kosthold: ['spiser-koett', 'fleksitar', 'vegetar', 'vegan', 'fisk'],
+  // O2 P1: kosthold er nå flervalg (se L2026_KOSTHOLD under) — ikke i L2026_SINGLE.
   kostholdViktig: L2026_VIKTIGHET,
   klima: ['veldig-viktig', 'viktig', 'ikke-stor-sak'],
   alkohol: ['aldri', 'sjelden', 'helligdager', 'ofte'],
   alkoholViktig: L2026_VIKTIGHET,
 };
 
-// Aktivitet er det eneste flervalgsfeltet (kommaseparert, maks 3).
+// Aktivitet er flervalg (kommaseparert, maks 3) — overlap-scoring, ingen numerisk avstand.
 const L2026_AKTIVITET = ['gym', 'lop-turer', 'lagidrett', 'natur-fritid', 'lite'];
 const L2026_AKTIVITET_MAKS = 3;
+
+// O2 P1: kosthold er flervalg (kommaseparert, maks 2). «Spiser det meste»
+// (spiser-koett) kan ikke kombineres med vegetar/vegan — UI og validering samstemmer.
+const L2026_KOSTHOLD = ['spiser-koett', 'fleksitar', 'vegetar', 'vegan', 'fisk'];
+const L2026_KOSTHOLD_MAKS = 2;
 
 /** Hvilke livsstil2026-felt hører til hvilket steg (renderStep-indeks). */
 const L2026_STEP_FIELDS: Record<number, string[]> = {
@@ -233,6 +239,22 @@ export function validateLivsstil2026Step(
         errors.push({ field, message: `Velg opptil ${L2026_AKTIVITET_MAKS} aktiviteter.` });
       } else if (ukjent) {
         errors.push({ field, message: 'Velg aktiviteter fra listen — og prøv igjen.' });
+      }
+      continue;
+    }
+
+    // O2 P1: kosthold er flervalg (maks 2) med en eksklusiv kombinasjon.
+    if (field === 'kosthold') {
+      const parts = raw.split(',').map((s) => s.trim()).filter(Boolean);
+      const overMaks = parts.length > L2026_KOSTHOLD_MAKS;
+      const konflikt = parts.includes('spiser-koett') && (parts.includes('vegetar') || parts.includes('vegan'));
+      const ukjent = parts.some((p) => !L2026_KOSTHOLD.includes(p));
+      if (overMaks) {
+        errors.push({ field, message: `Velg opptil ${L2026_KOSTHOLD_MAKS} alternativer.` });
+      } else if (konflikt) {
+        errors.push({ field, message: '«Spiser det meste» kan ikke kombineres med vegetar/vegan.' });
+      } else if (ukjent) {
+        errors.push({ field, message: 'Velg kosthold fra listen — og prøv igjen.' });
       }
       continue;
     }

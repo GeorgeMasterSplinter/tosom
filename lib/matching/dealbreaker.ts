@@ -449,6 +449,21 @@ function isKompatibel(felt: string, a: string, b: string): boolean {
   }
   const matrise = LIVSSTIL2026_KOMPAT[felt];
   if (!matrise) return true; // ukjent felt/verdi → ikke blokkér (forsvarlig)
+  // O2 P1: kosthold er flervalg (maks 2). Direkte generalisering av single-verdi-tjekk:
+  // kompatibel om det finnes ÉN par (av∈A, bv∈B) som er gjensidig kompatibelt
+  // (matrise[av]∋bv OG matrise[bv]∋av). For single-verdier er dette identisk med
+  // dagens oppførsel (ingen regresjon); overlap brukes IKKE (bevarer hierarkiet).
+  if (felt === 'kosthold') {
+    const sa = a.split(',').map((s) => s.trim()).filter(Boolean);
+    const sb = b.split(',').map((s) => s.trim()).filter(Boolean);
+    if (sa.length === 0 || sb.length === 0) return true;
+    for (const av of sa) {
+      for (const bv of sb) {
+        if ((matrise[av]?.includes(bv) ?? true) && (matrise[bv]?.includes(av) ?? true)) return true;
+      }
+    }
+    return false;
+  }
   return (matrise[a]?.includes(b) ?? true) && (matrise[b]?.includes(a) ?? true);
 }
 

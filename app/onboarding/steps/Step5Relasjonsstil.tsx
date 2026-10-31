@@ -6,7 +6,6 @@
 import { useState } from 'react';
 import { OnboardingSlide } from '@/app/onboarding/components/OnboardingSlide';
 import { OB } from '@/app/onboarding/theme';
-import { OnboardingTextField } from '@/app/onboarding/components/OnboardingTextField';
 import { OnboardingSelectGrid } from '@/app/onboarding/components/OnboardingSelectGrid';
 import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { BackButton } from '@/components/onboarding/BackButton';
@@ -72,9 +71,6 @@ export default function Step5Relasjonsstil({ data, onChange, onBack, onNext }: P
          columns={1}
          testId="ob-closeness-need"
        />
-
-       {/* Sjølvstende vs. fellesskap — fritt tekstfelt */}
-       <OnboardingTextField label="Hvordan balanserer du selvstendighet med fellesskap?" value={getValue('independenceBalance', '')} onChange={(v) => onChange('independenceBalance', v)} placeholder="Hva trenger du for å finne balansen mellom eget rom og fellesskap?" mikroguiding="Skriv f.eks. Jeg trenger tid alene for å lade batteriene, men elsker også å dele hverdagen" maxLength={300} rows={2} multiline />
             <div className="mt-8 space-y-4"><BackButton onClick={onBack} /><PremiumCTAButton onClick={handleNext} label={!canProceed ? 'Fyll ut alle påkrevde felt' : 'Fortsett til neste steg'} disabled={!canProceed} fullWidth /></div>
     </OnboardingSlide>
   );

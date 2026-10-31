@@ -13,7 +13,6 @@
 
 import { useState } from 'react';
 import { OnboardingSlide } from '@/app/onboarding/components/OnboardingSlide';
-import { OnboardingTextField } from '@/app/onboarding/components/OnboardingTextField';
 import { OnboardingSelectGrid } from '@/app/onboarding/components/OnboardingSelectGrid';
 import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { BackButton } from '@/components/onboarding/BackButton';
@@ -39,13 +38,7 @@ interface ValidationError {
 const validate = (data: Record<string, unknown>): ValidationError[] => {
   const errors: ValidationError[] = [];
 
-  const selfDesc = String(data['selfDesc'] ?? '').trim();
-  if (!selfDesc || selfDesc.length < 10) {
-    errors.push({ field: 'selfDesc', message: 'Skriv minst 10 tegn om hvem du er.' });
-  }
-
-  // LIVSSTIL-2026 (D-5): energyGiver/energyDrainer/pressureReact er nå valg-grid
-  // (ingen min-lengde lenger); quirk er valgfri kort. Kun selfDesc blokkerer.
+  // O2 P1: selfDesc er tatt ut av aktiv innsamling (fritekst-sletting) — blokkerer ikke.
 
   // PL-08b (D-1): skalasvarene er påkrevd per steg.
   const missing = missingScaleItems(data, TOSOM_PERSONALITY);
@@ -108,23 +101,6 @@ export default function Step2Personlighet({ data, onChange, onBack, onNext }: Pr
       {/* ────────────────────────────────────── */}
       {/* Ingen space-y — jeg legger til separatorer manuelt */}
 
-      {/* selfDesc med mikroguiding */}
-      <OnboardingTextField
-        label="Hvem er du når ting flyter naturlig?"
-        value={getValue('selfDesc', '')}
-        onChange={(v) => onChange('selfDesc', v)}
-        placeholder="Fortell litt om hvem du er når ting flyter..."
-        mikroguiding="Skriv f.eks. Den som alltid lytter først og tenker etter før jeg snakker"
-        maxLength={500}
-        minChars={10}
-        rows={4}
-        multiline
-        testId="ob-self-desc"
-      />
-
-      {/* Separator */}
-      <div style={{ borderTop: `1px solid ${OB.divider}`, marginTop: '20px', marginBottom: '20px' }} />
-
       {/* energyGiver — LIVSSTIL-2026 (D-5): flervalg-grid i stedet for fritekst */}
       <OnboardingSelectGrid
         label="Hva gir deg energi?"
@@ -185,22 +161,6 @@ export default function Step2Personlighet({ data, onChange, onBack, onNext }: Pr
           columns={2}
           testId="ob-pressure-react"
         />
-
-        {/* Separator */}
-        <div style={{ borderTop: `1px solid ${OB.divider}`, marginTop: '20px', marginBottom: '20px' }} />
-
-        {/* quirk — valgfri kort fritekst (varme i profilen) */}
-      <OnboardingTextField
-        label="Hva er en egenskap eller vane du ler av deg selv?"
-        value={getValue('quirk', '')}
-        onChange={(v) => onChange('quirk', v)}
-        placeholder="Noe lite og spesielt med deg som du finner morsomt?"
-        mikroguiding="Skriv f.eks. Jeg har alltid målt ha orden på ting før jeg kan slappe av"
-        maxLength={200}
-        rows={2}
-        multiline
-        testId="ob-quirk"
-      />
 
       {/* PERSONALITY V2 — Tosoms egne personlighetsspørsmål (15) */}
       <div style={{ borderTop: `1px solid ${OB.divider}`, marginTop: '28px', marginBottom: '8px' }} />

@@ -8,7 +8,6 @@
 import { useState } from 'react';
 import { OnboardingSlide } from '@/app/onboarding/components/OnboardingSlide';
 import { OB } from '@/app/onboarding/theme';
-import { OnboardingTextField } from '@/app/onboarding/components/OnboardingTextField';
 import { OnboardingSelectGrid } from '@/app/onboarding/components/OnboardingSelectGrid';
 import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { BackButton } from '@/components/onboarding/BackButton';
@@ -35,9 +34,9 @@ export default function Step4Kjærlighetsspråk({ data, onChange, onBack, onNext
     <OnboardingSlide title="Kjærlighetsspråk & nærhet" subtitle="Hvordan viser og mottar du kjærlighet?" guidingText="Hvordan du viser kjærlighet er viktig for å finne noen som passer deg." slideIndex={4} totalSlides={13}
       accentColor={OB.section.values}>
       {errors.length > 0 && (<div className="mb-8 rounded-xl p-4 border" style={{ background: 'rgba(255,77,77,0.08)', borderColor: 'rgba(255,77,77,0.2)' }}><p className="text-sm font-medium mb-2" style={{ color: '#FF4D4D' }}>Vennligst fyll ut alle påkrevde felt:</p><ul className="text-sm space-y-1" style={{ color: 'rgba(255,255,255,0.7)' }}>{errors.map((x) => (<li key={x.field}>• {x.message}</li>))}</ul></div>)}
-      <OnboardingSelectGrid label="Hvordan viser du kjærlighet?" mikroguiding="Velg det som passer best" options={[{ value: 'ord', label: 'Ord og ros', icon: '💬' }, { value: 'tjenester', label: 'Gjør ting for andre', icon: '🎁' }, { value: 'tid', label: 'Kvalitetstid sammen', icon: '⏰' }, { value: 'kjønnlig', label: 'Fysiske klemmer og berøring', icon: '🤗' }, { value: 'gaver', label: 'Å gi gaver', icon: '🎀' }]} selectedValue={getValue('loveGive', '')} onChange={(v) => onChange('loveGive', v)} maxSelected={2} testId="ob-love-give" />
+      <OnboardingSelectGrid label="Hvordan viser du kjærlighet?" mikroguiding="Velg opptil tre." options={[{ value: 'ord', label: 'Ord og ros', icon: '💬' }, { value: 'tjenester', label: 'Gjør ting for andre', icon: '🎁' }, { value: 'tid', label: 'Kvalitetstid sammen', icon: '⏰' }, { value: 'kjønnlig', label: 'Fysiske klemmer og berøring', icon: '🤗' }, { value: 'gaver', label: 'Å gi gaver', icon: '🎀' }]} selectedValue={getValue('loveGive', '')} onChange={(v) => onChange('loveGive', v)} maxSelected={3} testId="ob-love-give" />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
-      <OnboardingSelectGrid label="Hvordan ønsker du kjærlighet?" mikroguiding="Velg det som får deg til å kjenne deg elsket" options={[{ value: 'ord', label: 'Ord og ros', icon: '💬' }, { value: 'tjenester', label: 'Gjør ting for meg', icon: '🎁' }, { value: 'tid', label: 'Kvalitetstid sammen', icon: '⏰' }, { value: 'kjønnlig', label: 'Fysiske klemmer og berøring', icon: '🤗' }, { value: 'gaver', label: 'Å få gaver', icon: '🎀' }]} selectedValue={getValue('loveReceive', '')} onChange={(v) => onChange('loveReceive', v)} maxSelected={2} testId="ob-love-receive" />
+      <OnboardingSelectGrid label="Hvordan ønsker du kjærlighet?" mikroguiding="Velg opptil tre." options={[{ value: 'ord', label: 'Ord og ros', icon: '💬' }, { value: 'tjenester', label: 'Gjør ting for meg', icon: '🎁' }, { value: 'tid', label: 'Kvalitetstid sammen', icon: '⏰' }, { value: 'kjønnlig', label: 'Fysiske klemmer og berøring', icon: '🤗' }, { value: 'gaver', label: 'Å få gaver', icon: '🎀' }]} selectedValue={getValue('loveReceive', '')} onChange={(v) => onChange('loveReceive', v)} maxSelected={3} testId="ob-love-receive" />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
       {/* LIVSSTIL-2026 (D-5): fritekst konvertert til valg-grid */}
       <OnboardingSelectGrid label="Hva bygger nærhet mellom mennesker?" mikroguiding="Velg det som betyr mest for deg." options={[
@@ -54,8 +53,6 @@ export default function Step4Kjærlighetsspråk({ data, onChange, onBack, onNext
         { value: 'taushet-eller-avstand', label: 'Taushet eller avstand', icon: '↔️' },
       ]} selectedValue={getValue('distanceCreator', '')} onChange={(v) => onChange('distanceCreator', v)} columns={2} testId="ob-distance-creator" />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
-      {/* Valgfri kort fritekst — det lille som betyr mye */}
-      <OnboardingTextField label="Hva er de små tingene som betyr mest for deg?" value={getValue('smallThing', '')} onChange={(v) => onChange('smallThing', v)} placeholder="En liten, hverdagslig gest som får deg til å kjenne deg sett" mikroguiding="Skriv f.eks. At noen husker at jeg vil ha kaffe på morgenen" maxLength={200} rows={2} multiline testId="ob-small-thing" />
       <div className="mt-8 space-y-4"><BackButton onClick={onBack} /><PremiumCTAButton onClick={handleNext} label={!canProceed ? 'Fyll ut alle påkrevde felt' : 'Fortsett til neste steg'} disabled={!canProceed} fullWidth /></div>
     </OnboardingSlide>
   );

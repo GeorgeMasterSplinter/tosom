@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { OnboardingSlide } from '@/app/onboarding/components/OnboardingSlide';
 import { OB } from '@/app/onboarding/theme';
-import { OnboardingTextField } from '@/app/onboarding/components/OnboardingTextField';
 import { OnboardingSelectGrid } from '@/app/onboarding/components/OnboardingSelectGrid';
 import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { BackButton } from '@/components/onboarding/BackButton';
@@ -28,11 +27,6 @@ export default function Step8Grenser({ data, onChange, onBack, onNext }: Props) 
       <OnboardingSelectGrid label="Hvilke grenser er avgjørende for deg?" mikroguiding="Velg opptil to — det som betyr mest for deg" options={[{ value: 'respekt', label: 'Respekt for meg som person', icon: '🛡️' }, { value: 'tid-aleine', label: 'Tid alene hver dag', icon: '🧘' }, { value: 'venner', label: 'Kontakt med venner/familie', icon: '👥' }, { value: 'selvstende', label: 'Eget rom og selvstendighet', icon: '🏔️' }, { value: 'sandhet', label: 'Ærlighet og sannferdighet', icon: '💎' }]} selectedValue={getValue('neverCrossBoundary', '')} onChange={(v) => onChange('neverCrossBoundary', v)} maxSelected={2} testId="ob-never-cross" />
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
       <OnboardingSelectGrid label="Hvordan forstår du partnerens grenser?" mikroguiding="Velg det som passer best" options={[{ value: 'lyttar', label: 'Jeg lytter aktivt når de sier noe', icon: '👂' }, { value: 'observerer', label: 'Jeg observerer hva de trenger', icon: '👀' }, { value: 'sporar', label: 'Jeg spør rett ut om de trenger rom', icon: '❓' }, { value: 'lar', label: 'Jeg gir rom uten at de ber om det', icon: '🕊️' }]} selectedValue={getValue('understandPartnersBoundaries', '')} onChange={(v) => onChange('understandPartnersBoundaries', v)} testId="ob-understand-partner" />
-      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
-      <OnboardingTextField label="Hva er dine viktigste avgrensninger?" value={getValue('limitations', '')} onChange={(v) => onChange('limitations', v)} placeholder="Noe konkret du trenger at partneren din respekterer" mikroguiding="Skriv f.eks. Jeg trenger aldri å bli møtt med høye stemmer" maxLength={300} rows={2} multiline testId="ob-limitations" />
-      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
-      {/* D-3 (18.10): valgfri — del bare det du kjenner deg trygg med */}
-      <OnboardingTextField label="Hva må partneren din forstå om deg?" value={getValue('partnerMustUnderstand', '')} onChange={(v) => onChange('partnerMustUnderstand', v)} placeholder="Noe viktig å dele for at den andre kan møte deg trygt" mikroguiding="Skriv f.eks. At jeg trenger tid til å bearbeide følelser alene" maxLength={300} rows={2} multiline testId="ob-partner-must-understand" />
       <p className="text-center text-xs mt-8" style={{ color: 'rgba(255,255,255,0.6)' }}>Grenser beskytter deg selv — og den du elsker. Del bare det du kjenner deg trygg med.</p>
       <div className="mt-8 space-y-4"><BackButton onClick={onBack} /><PremiumCTAButton onClick={handleNext} label={!canProceed ? 'Fyll ut alle påkrevde felt' : 'Fortsett til neste steg'} disabled={!canProceed} fullWidth /></div>
     </OnboardingSlide>

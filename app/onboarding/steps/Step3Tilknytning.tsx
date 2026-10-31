@@ -7,7 +7,6 @@
 import { useState } from 'react';
 import { OnboardingSlide } from '@/app/onboarding/components/OnboardingSlide';
 import { OB } from '@/app/onboarding/theme';
-import { OnboardingTextField } from '@/app/onboarding/components/OnboardingTextField';
 import { OnboardingSelectGrid } from '@/app/onboarding/components/OnboardingSelectGrid';
 import { PremiumCTAButton } from '@/app/onboarding/components/PremiumCTAButton';
 import { BackButton } from '@/components/onboarding/BackButton';
@@ -98,9 +97,6 @@ export default function Step3Tilknytning({ data, onChange, onBack, onNext }: Pro
         { value: 'a-snakke-det-gjennom', label: 'Å snakke det gjennom', icon: '🗣️' },
         { value: 'fysisk-naerhet', label: 'Fysisk nærhet', icon: '🤗' },
       ]} selectedValue={getValue('stressNeed', '')} onChange={(v) => onChange('stressNeed', v)} columns={2} testId="ob-stress-need" />
-      <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '20px', marginBottom: '20px' }} />
-      {/* Valgfri kort fritekst — det personlige du selv vil fremheve */}
-      <OnboardingTextField label="Hvilken grense er viktigst for deg?" value={getValue('importantBoundary', '')} onChange={(v) => onChange('importantBoundary', v)} placeholder="Noe konkret du trenger at partneren din respekterer" mikroguiding="Skriv f.eks. Jeg trenger tid alene etter en tung dag" maxLength={300} rows={2} multiline testId="ob-important-boundary" />
       {/* FORSKNINGSMOTOR F-5 — Tilknytning (egne items, Bowlby/Ainsworth/Hazan-Shaver) */}
       <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', marginTop: '28px', marginBottom: '8px' }} />
       <p className="text-sm mb-4" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>

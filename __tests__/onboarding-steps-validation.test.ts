@@ -97,14 +97,15 @@ describe('validateOnboardingStep — steg 1 (personlighet)', () => {
     expect(validateOnboardingStep(1, { selfDesc: 'Jeg er veldig kreativ', ...allScaleAnswers() }).errors).toEqual([]);
   });
 
-  it('flagger tom selfDesc', () => {
-    const { errors } = validateOnboardingStep(1, { selfDesc: '' });
-    expect(errors.some((e) => e.field === 'selfDesc')).toBe(true);
+  it('O2 P1: tom selfDesc blokkerer ikke steg 1 (tatt ut av aktiv innsamling)', () => {
+    const { errors } = validateOnboardingStep(1, { selfDesc: '', ...allScaleAnswers() });
+    expect(errors.some((e) => e.field === 'selfDesc')).toBe(false);
+    expect(errors).toEqual([]);
   });
 
-  it('flagger selfDesc under 10 tegn', () => {
-    const { errors } = validateOnboardingStep(1, { selfDesc: 'For kort' });
-    expect(errors.some((e) => e.field === 'selfDesc')).toBe(true);
+  it('O2 P1: kort selfDesc blokkerer ikke steg 1', () => {
+    const { errors } = validateOnboardingStep(1, { selfDesc: 'For kort', ...allScaleAnswers() });
+    expect(errors.some((e) => e.field === 'selfDesc')).toBe(false);
   });
 
   it('PL-08a: flagger manglende V2-personlighetssvar selv med god selfDesc', () => {
@@ -162,10 +163,10 @@ describe('firstIncompleteOnboardingStep / validateAllOnboardingSteps', () => {
     expect(missing?.errors.map((e) => e.field)).toContain('identityName');
   });
 
-  it('returnerer steg 1 når grunnprofil er fullstendig men selfDesc mangler', () => {
-    const missing = firstIncompleteOnboardingStep({ ...completeBasic, selfDesc: '' });
+  it('returnerer steg 1 når grunnprofil er fullstendig men skalasvar mangler', () => {
+    const missing = firstIncompleteOnboardingStep({ ...completeBasic });
     expect(missing?.step).toBe(1);
-    expect(missing?.errors.map((e) => e.field)).toContain('selfDesc');
+    expect(missing?.errors.some((e) => e.message === SCALE_ERROR)).toBe(true);
   });
 
   it('PL-08a: tom profil returnerer alle ufullstendige steg (0, 1 + skalasteg)', () => {
